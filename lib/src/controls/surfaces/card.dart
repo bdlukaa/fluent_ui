@@ -14,15 +14,42 @@ class Card extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = CardTheme.of(context).copyWith(this.style);
     return Container(
-      child: child,
+      margin: style.margin,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-          ),
-        )
+        boxShadow: elevationShadow(
+          style.elevation ?? 2,
+          color: style.elevationColor,
+        ),
       ),
+      child: ClipRRect(
+        borderRadius: style.borderRadius,
+        child: Container(
+          padding: style.padding,
+          decoration: BoxDecoration(
+            border: _buildBorder(style),
+            color: style.color,
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Border _buildBorder(CardThemeData style) {
+    final BorderSide Function(CardHighlightPosition) buildSide = (p) {
+      if (style.highlightPosition == p)
+        return BorderSide(
+          color: style.highlightColor ?? Colors.blue,
+          width: style.highlightSize ?? 1.8,
+        );
+      else
+        return BorderSide.none;
+    };
+    return Border(
+      bottom: buildSide(CardHighlightPosition.bottom),
+      left: buildSide(CardHighlightPosition.left),
+      top: buildSide(CardHighlightPosition.top),
+      right: buildSide(CardHighlightPosition.right),
     );
   }
 }
@@ -37,6 +64,10 @@ class CardThemeData {
   final int elevation;
   final Color elevationColor;
 
+  final Color highlightColor;
+  final CardHighlightPosition highlightPosition;
+  final double highlightSize;
+
   CardThemeData({
     this.borderRadius,
     this.padding,
@@ -44,14 +75,20 @@ class CardThemeData {
     this.color,
     this.elevation,
     this.elevationColor,
+    this.highlightColor,
+    this.highlightPosition,
+    this.highlightSize,
   });
 
   static CardThemeData defaultTheme(Brightness brightness) {
     final def = CardThemeData(
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(12),
-      elevation: 8,
+      elevation: 2,
+      highlightPosition: CardHighlightPosition.top,
+      highlightColor: Colors.blue,
+      highlightSize: 1.8,
     );
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(CardThemeData(
@@ -66,7 +103,7 @@ class CardThemeData {
   }
 
   CardThemeData copyWith(CardThemeData style) {
-    if (style != null) return this;
+    if (style == null) return this;
     return CardThemeData(
       borderRadius: style?.borderRadius ?? borderRadius,
       padding: style?.padding ?? padding,
@@ -74,10 +111,14 @@ class CardThemeData {
       color: style?.color ?? color,
       elevation: style?.elevation ?? elevation,
       elevationColor: style?.elevationColor ?? elevationColor,
+      highlightColor: style?.highlightColor ?? highlightColor,
+      highlightPosition: style?.highlightPosition ?? highlightPosition,
+      highlightSize: style?.highlightSize ?? highlightSize,
     );
   }
 }
 
+enum CardHighlightPosition { top, bottom, left, right }
 
 class CardTheme extends InheritedTheme {
   /// Creates a tooltip theme that controls the configurations for

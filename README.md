@@ -8,7 +8,6 @@ Since flutter has Windows support, it's necessary to have support to its ui guid
 See [this](https://github.com/flutter/flutter/issues/46481) for more info on the offical fluent ui support
 
 ## Documentation
-
 ### Icons
 
 [[Article]](https://developer.microsoft.com/en-us/fluentui#/styles/web/icons#available-icons)
@@ -47,3 +46,9 @@ To use a Color, just call `Colors.(colorName)`.
 final black = Colors.black;
 final blue = Colors.blue;
 ```
+
+## Avaiable widgets
+- Scaffold
+- [AppBar](https://developer.microsoft.com/en-us/fluentui#/controls/android/topappbar)
+- [Button](https://developer.microsoft.com/en-us/fluentui#/controls/web/button). Implementation for DefaultButton, PrimaryButton and CompoundButton, all in one.
+- [Card](https://developer.microsoft.com/en-us/fluentui#/controls/web/modal)

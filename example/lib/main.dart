@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/material.dart' show Icons, FloatingActionButton;
 
 void main() {
   runApp(MyApp());
@@ -49,7 +49,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Card(),
+            Card(
+              child: Text('hahaha'),
+            ),
+            Button.compound(
+              text: Text('Next page =>'),
+              subtext: Text('Select ingredients'),
+              onPressed: () {
+                print('pressed');
+              },
+            ),
           ],
         ),
       ),

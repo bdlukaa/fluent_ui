@@ -185,13 +185,15 @@ class FluentApp extends StatelessWidget {
 
     final data = (useDarkTheme ? darkTheme ?? theme : theme) ??
         ThemeData.fallback(
+          context,
           useDarkTheme ? Brightness.dark : Brightness.light,
         );
-    return data.build();
+    return data.build(context);
   }
 
   Widget _builder(BuildContext context, Widget child) {
-    return Theme(data: _themeData(context), child: _themeData(context).provider(child));
+    return Theme(
+        data: _themeData(context), child: _themeData(context).provider(child));
   }
 
   Widget _buildApp(BuildContext context) {
