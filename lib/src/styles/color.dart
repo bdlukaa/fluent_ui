@@ -64,17 +64,17 @@ class Colors {
   });
 
   static final ShadedColor blue = ShadedColor(
-    0x000078d4, // primary
+    0xFF0078d4, // primary
     <int, Color>{
-      90: Color(0x00004578), // darker
-      80: Color(0x00005a9e), // dark
-      70: Color(0x00106ebe), // dark alt
-      60: Color(0x000078d4), // primary
-      50: Color(0x002b88d8), // secondary
-      40: Color(0x0071afe5), // tertiary
-      30: Color(0x00c7e0f4), // light
-      20: Color(0x00deecf9), // lighter
-      10: Color(0x00eff6fc), // lighter alt
+      90: Color(0xFF004578), // darker
+      80: Color(0xFF005a9e), // dark
+      70: Color(0xFF106ebe), // dark alt
+      60: Color(0xFF0078d4), // primary
+      50: Color(0xFF2b88d8), // secondary
+      40: Color(0xFF71afe5), // tertiary
+      30: Color(0xFFc7e0f4), // light
+      20: Color(0xFFdeecf9), // lighter
+      10: Color(0xFFeff6fc), // lighter alt
     },
   );
 

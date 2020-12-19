@@ -2,10 +2,10 @@ name: fluent_ui
 description: Implements fluent ui in flutter
 version: 0.0.1
 author: bdlukaa
-homepage:
+homepage: https://github.com/bdlukaa/fluent_ui
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:

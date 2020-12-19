@@ -11,8 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fluent_ui:
+    path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  uses-material-design: true
