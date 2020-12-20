@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' show Icons, FloatingActionButton;
+import 'package:flutter/material.dart' as material;
 
 void main() {
   runApp(MyApp());
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FluentApp(
       title: 'Fluent ui app showcase',
-      theme: ThemeData(
+      style: Style(
         brightness: Brightness.light,
       ),
       home: MyHomePage(),
@@ -58,6 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 print('pressed');
               },
+            ),
+            material.TextButton(
+              child: Text('aha'),
+              onPressed: null,
+            ),
+            IconButton(
+              icon: Icon(material.Icons.add),
+              onPressed: () {},
             ),
           ],
         ),

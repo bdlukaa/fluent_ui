@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
 class Button extends StatelessWidget {
-  /// Implementation of DefaultButton, PrimaryButton and CompoundButton.
+  /// Implementation for DefaultButton, PrimaryButton and CompoundButton.
   ///
   /// More info at https://developer.microsoft.com/en-us/fluentui#/controls/web/button
   const Button({
@@ -11,6 +11,7 @@ class Button extends StatelessWidget {
     @required this.text,
     this.style,
     this.onPressed,
+    this.onLongPress,
     this.semanticsLabel,
   })  : subtext = null,
         super(key: key);
@@ -21,6 +22,7 @@ class Button extends StatelessWidget {
     @required this.subtext,
     this.style,
     this.onPressed,
+    this.onLongPress,
     this.semanticsLabel,
   }) : super(key: key);
 
@@ -31,16 +33,18 @@ class Button extends StatelessWidget {
   final Widget subtext;
 
   /// The style of the button
-  final ButtonThemeData style;
+  final ButtonStyle style;
 
-  /// Callback to when the function get pressed. If this is null, the
-  /// button will be considered disabled
+  /// Callback to when the button get pressed. If this and onLongPress == null,
+  /// the button will be considered disabled
   final VoidCallback onPressed;
+
+  /// Callback to when the button gets pressed for a long time. If this and onPressed
+  /// == null, the button will be considered disabled
+  final VoidCallback onLongPress;
 
   /// The semantics label to allow screen readers to read the screen
   final String semanticsLabel;
-
-  bool get _isDisabled => onPressed == null;
 
   @override
   Widget build(BuildContext context) {
@@ -48,22 +52,17 @@ class Button extends StatelessWidget {
     return Semantics(
       label: semanticsLabel,
       child: HoverButton(
-        cursor: _isDisabled ? style.disabledCursor : style.cursor,
+        cursor: (_, state) => style.cursor?.call(state),
         onPressed: onPressed,
-        builder: (context, hovering) {
+        onLongPress: onLongPress,
+        builder: (context, state) {
           return Container(
             padding: style.padding,
             margin: style.margin,
             decoration: BoxDecoration(
-              color: _isDisabled
-                  ? style.disabledColor
-                  : hovering
-                      ? style.hoverColor
-                      : style.backgroundColor,
+              color: style.color?.call(state),
               borderRadius: style.borderRadius,
-              border: _isDisabled
-                  ? style.disabledBorder ?? style.border
-                  : style.border,
+              border: style.border?.call(state),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -71,18 +70,12 @@ class Button extends StatelessWidget {
               children: [
                 if (text != null)
                   DefaultTextStyle(
-                    style: (_isDisabled
-                            ? style.disabledTextStyle
-                            : style?.textStyle) ??
-                        TextStyle(),
+                    style: (style.textStyle?.call(state)) ?? TextStyle(),
                     child: text,
                   ),
                 if (subtext != null)
                   DefaultTextStyle(
-                    style: (_isDisabled
-                            ? style.disabledSubtextStyle
-                            : style?.subtextStyle) ??
-                        TextStyle(),
+                    style: (style.subtextStyle?.call(state)) ?? TextStyle(),
                     child: subtext,
                   )
               ],
@@ -94,135 +87,123 @@ class Button extends StatelessWidget {
   }
 }
 
-class ButtonThemeData {
-  final Color backgroundColor;
-  final Color hoverColor;
-  final Color disabledColor;
+class ButtonStyle {
+  final ButtonState<Color> color;
 
-  final Border border;
-  final Border disabledBorder;
+  final ButtonState<Border> border;
   final BorderRadiusGeometry borderRadius;
 
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
 
-  final MouseCursor cursor;
-  final MouseCursor disabledCursor;
+  final ButtonState<MouseCursor> cursor;
 
-  final TextStyle textStyle;
-  final TextStyle disabledTextStyle;
+  final ButtonState<TextStyle> textStyle;
 
   // compoused button
-  final TextStyle subtextStyle;
-  final TextStyle disabledSubtextStyle;
+  final ButtonState<TextStyle> subtextStyle;
 
-  ButtonThemeData({
-    this.backgroundColor,
-    this.hoverColor,
-    this.disabledColor,
+  ButtonStyle({
+    this.color,
     this.border,
-    this.disabledBorder,
     this.borderRadius,
     this.padding,
     this.margin,
     this.cursor,
-    this.disabledCursor,
     this.textStyle,
-    this.disabledTextStyle,
     this.subtextStyle,
-    this.disabledSubtextStyle,
   });
 
-  static ButtonThemeData defaultTheme([Brightness brightness]) {
-    final defButton = ButtonThemeData(
-      cursor: SystemMouseCursors.click,
-      disabledCursor: SystemMouseCursors.forbidden,
+  static ButtonStyle defaultTheme([Brightness brightness]) {
+    final defButton = ButtonStyle(
+      cursor: (state) {
+        if (state.isDisabled)
+          return SystemMouseCursors.forbidden;
+        else if (state.isHovering || state.isPressing)
+          return SystemMouseCursors.click;
+        else
+          return MouseCursor.defer;
+      },
       borderRadius: BorderRadius.circular(2),
-      hoverColor: Colors.grey[20],
-      backgroundColor: Colors.transparent,
-      disabledColor: Colors.grey[40],
-      disabledTextStyle: TextStyle(
-        color: Colors.grey[100],
-        fontWeight: FontWeight.bold,
-      ),
+      color: (state) {
+        if (state.isDisabled)
+          return Colors.grey[40];
+        else if (state.isPressing)
+          return Colors.grey[30];
+        else if (state.isHovering)
+          return Colors.grey[20];
+        else
+          return Colors.transparent;
+      },
       padding: EdgeInsets.all(12),
       margin: EdgeInsets.all(4),
-      disabledBorder: Border.all(style: BorderStyle.none),
+    );
+    final disabledBorder = Border.all(style: BorderStyle.none);
+    final disabledTextStyle = TextStyle(
+      color: Colors.grey[100],
+      fontWeight: FontWeight.bold,
     );
     if (brightness == null || brightness == Brightness.light)
-      return defButton.copyWith(ButtonThemeData(
-        border: Border.all(color: Colors.grey[100], width: 0.8),
-        textStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-        subtextStyle: TextStyle(color: Colors.black, fontSize: 12),
+      return defButton.copyWith(ButtonStyle(
+        border: (state) => state.isDisabled
+            ? disabledBorder
+            : Border.all(color: Colors.grey[100], width: 0.8),
+        textStyle: (state) => state.isDisabled
+            ? disabledTextStyle
+            : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        subtextStyle: (state) => TextStyle(color: Colors.black, fontSize: 12),
       ));
     else
-      return defButton.copyWith(ButtonThemeData(
-        border: Border.all(color: Colors.white, width: 0.8),
-        textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        subtextStyle: TextStyle(color: Colors.white, fontSize: 12),
+      return defButton.copyWith(ButtonStyle(
+        border: (state) => state.isDisabled
+            ? disabledBorder
+            : Border.all(color: Colors.white, width: 0.8),
+        textStyle: (state) => state.isDisabled
+            ? disabledTextStyle
+            : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        subtextStyle: (state) => TextStyle(color: Colors.white, fontSize: 12),
       ));
   }
 
-  ButtonThemeData copyWith(ButtonThemeData style) {
+  ButtonStyle copyWith(ButtonStyle style) {
     if (style == null) return this;
-    return ButtonThemeData(
-      backgroundColor: style?.backgroundColor ?? backgroundColor,
+    return ButtonStyle(
       border: style?.border ?? border,
-      disabledBorder: style?.disabledBorder ?? disabledBorder,
       borderRadius: style?.borderRadius ?? borderRadius,
       cursor: style?.cursor ?? cursor,
-      disabledCursor: style?.disabledCursor ?? disabledCursor,
-      disabledColor: style?.disabledColor ?? disabledColor,
-      hoverColor: style?.hoverColor ?? hoverColor,
       textStyle: style?.textStyle ?? textStyle,
-      disabledTextStyle: style?.disabledTextStyle ?? disabledTextStyle,
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       subtextStyle: style?.subtextStyle ?? subtextStyle,
-      disabledSubtextStyle: style?.disabledSubtextStyle ?? disabledSubtextStyle,
+      color: style?.color ?? color,
     );
   }
 }
 
-class ButtonTheme extends InheritedTheme {
-  /// Creates a tooltip theme that controls the configurations for
-  /// [Tooltip].
+class ButtonTheme extends TreeTheme<ButtonStyle> {
+  /// Creates a theme style that controls design for
+  /// [Button].
   ///
   /// The data argument must not be null.
   const ButtonTheme({
     Key key,
-    @required this.data,
+    @required ButtonStyle data,
     Widget child,
   })  : assert(data != null),
-        super(key: key, child: child);
-
-  /// The properties for descendant [Tooltip] widgets.
-  final ButtonThemeData data;
+        super(key: key, child: child, data: data);
 
   /// Returns the [data] from the closest [ButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.ButtonTheme]. Applications can assume
+  /// no ancestor, it returns [Style.ButtonTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
   ///
   /// ```dart
-  /// ButtonThemeData theme = ButtonTheme.of(context);
+  /// ButtonStyle theme = ButtonTheme.of(context);
   /// ```
-  static ButtonThemeData of(BuildContext context) {
+  static ButtonStyle of(BuildContext context) {
     final ButtonTheme theme =
         context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
-    return theme?.data ?? ButtonThemeData();
+    return theme?.data ?? ButtonStyle.defaultTheme(context.theme?.brightness);
   }
-
-  @override
-  Widget wrap(BuildContext context, Widget child) {
-    final ButtonTheme ancestorTheme =
-        context.findAncestorWidgetOfExactType<ButtonTheme>();
-    return identical(this, ancestorTheme)
-        ? child
-        : ButtonTheme(data: data, child: child);
-  }
-
-  @override
-  bool updateShouldNotify(ButtonTheme oldWidget) => data != oldWidget.data;
 }

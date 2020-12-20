@@ -1,14 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// Add the fluent theme to your application.
-///
-/// Simple usage:
-/// ```dart
-/// FluentTheme(
-///   child: MaterialApp(),
-/// )
-/// ```
 class FluentApp extends StatelessWidget {
   const FluentApp({
     Key key,
@@ -39,8 +31,8 @@ class FluentApp extends StatelessWidget {
     this.inspectorSelectButtonBuilder,
     this.shortcuts,
     this.actions,
-    this.darkTheme,
-    this.theme,
+    this.style,
+    this.darkStyle,
     this.themeMode,
   })  : routeInformationProvider = null,
         routeInformationParser = null,
@@ -50,8 +42,8 @@ class FluentApp extends StatelessWidget {
 
   FluentApp.router({
     Key key,
-    this.theme,
-    this.darkTheme,
+    this.style,
+    this.darkStyle,
     this.themeMode,
     this.routeInformationProvider,
     @required this.routeInformationParser,
@@ -99,8 +91,8 @@ class FluentApp extends StatelessWidget {
         initialRoute = null,
         super(key: key);
 
-  final ThemeData theme;
-  final ThemeData darkTheme;
+  final Style style;
+  final Style darkStyle;
   final ThemeMode themeMode;
 
   final GlobalKey<NavigatorState> navigatorKey;
@@ -177,23 +169,22 @@ class FluentApp extends StatelessWidget {
     return _buildApp(context);
   }
 
-  ThemeData _themeData(BuildContext context) {
+  Style theme(BuildContext context) {
     final mode = themeMode ?? ThemeMode.system;
     final platformBrightness = MediaQuery.platformBrightnessOf(context);
-    final useDarkTheme = mode == ThemeMode.dark ||
+    final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    final data = (useDarkTheme ? darkTheme ?? theme : theme) ??
-        ThemeData.fallback(
+    final data = (usedarkStyle ? darkStyle ?? style : style) ??
+        Style.fallback(
           context,
-          useDarkTheme ? Brightness.dark : Brightness.light,
+          usedarkStyle ? Brightness.dark : Brightness.light,
         );
     return data.build(context);
   }
 
   Widget _builder(BuildContext context, Widget child) {
-    return Theme(
-        data: _themeData(context), child: _themeData(context).provider(child));
+    return Theme(data: theme(context), child: theme(context).provider(child));
   }
 
   Widget _buildApp(BuildContext context) {
@@ -201,7 +192,7 @@ class FluentApp extends StatelessWidget {
 
     /// This is the fallback text style
     final textStyle = TextStyle(
-      color: _themeData(context).brightness == Brightness.dark
+      color: theme(context).brightness == Brightness.dark
           ? Colors.white
           : Colors.black,
     );

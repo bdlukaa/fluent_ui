@@ -13,7 +13,9 @@ export 'src/utils.dart';
 
 export 'src/layout/scaffold.dart';
 
+export 'src/controls/inputs/hover_button.dart';
 export 'src/controls/inputs/button.dart';
+export 'src/controls/inputs/icon_button.dart';
 
 export 'src/controls/menus/app_bar.dart';
 

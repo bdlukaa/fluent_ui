@@ -1,13 +1,37 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+class TreeTheme<T> extends InheritedTheme {
+  const TreeTheme({
+    Key key,
+    @required this.data,
+    Widget child,
+  })  : assert(data != null),
+        super(key: key, child: child);
+
+  /// The properties for descendant [Tooltip] widgets.
+  final T data;
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    final TreeTheme<T> ancestorTheme =
+        context.findAncestorWidgetOfExactType<TreeTheme<T>>();
+    return identical(this, ancestorTheme)
+        ? child
+        : TreeTheme<T>(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(TreeTheme<T> oldWidget) => data != oldWidget.data;
+}
+
 class Theme extends InheritedWidget {
   const Theme({Key key, @required this.data, @required this.child})
       : super(key: key, child: child);
 
-  final ThemeData data;
+  final Style data;
   final Widget child;
 
-  static ThemeData of(BuildContext context) {
+  static Style of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<Theme>()
         ?.data
@@ -18,7 +42,11 @@ class Theme extends InheritedWidget {
   bool updateShouldNotify(covariant Theme oldWidget) => oldWidget.data != data;
 }
 
-class ThemeData {
+extension themeContext on BuildContext {
+  Style get theme => Theme.of(this);
+}
+
+class Style {
   final Color accentColor;
 
   final Brightness brightness;
@@ -26,55 +54,55 @@ class ThemeData {
   final Color scaffoldBackgroundColor;
   final Color bottomNavigationBackgroundColor;
 
-  final AppBarThemeData appBarTheme;
-  final ButtonThemeData buttonTheme;
-  final CardThemeData cardTheme;
+  final AppBarStyle appBarStyle;
+  final ButtonStyle buttonStyle;
+  final CardStyle cardStyle;
+  final IconButtonStyle iconButtonStyle;
 
-  ThemeData({
+  Style({
     this.accentColor,
     this.brightness,
     this.scaffoldBackgroundColor,
     this.bottomNavigationBackgroundColor,
-    this.appBarTheme,
-    this.buttonTheme,
-    this.cardTheme,
+    this.appBarStyle,
+    this.buttonStyle,
+    this.cardStyle,
+    this.iconButtonStyle,
   });
 
-  ThemeData build(BuildContext context) {
+  Style build(BuildContext context) {
     if (this.brightness == null || this.brightness == Brightness.light)
-      return ThemeData(
+      return Style(
         accentColor: Colors.blue,
         brightness: brightness ?? Brightness.light,
         scaffoldBackgroundColor: Colors.white,
         bottomNavigationBackgroundColor: Colors.white,
-        appBarTheme:
-            appBarTheme ?? AppBarThemeData.defaultTheme(Brightness.light),
-        buttonTheme:
-            buttonTheme ?? ButtonThemeData.defaultTheme(Brightness.light),
-        cardTheme: cardTheme ?? CardThemeData.defaultTheme(Brightness.light),
+        appBarStyle: appBarStyle ?? AppBarStyle.defaultTheme(Brightness.light),
+        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
+        cardStyle: cardStyle ?? CardStyle.defaultTheme(Brightness.light),
       );
     else
-      return ThemeData(
+      return Style(
         accentColor: Colors.blue,
         brightness: brightness ?? Brightness.dark,
         scaffoldBackgroundColor: Colors.grey[160],
-        appBarTheme:
-            appBarTheme ?? AppBarThemeData.defaultTheme(Brightness.dark),
-        buttonTheme:
-            buttonTheme ?? ButtonThemeData.defaultTheme(Brightness.dark),
-        cardTheme: cardTheme ?? CardThemeData.defaultTheme(Brightness.dark),
+        appBarStyle: appBarStyle ?? AppBarStyle.defaultTheme(Brightness.dark),
+        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
+        cardStyle: cardStyle ?? CardStyle.defaultTheme(Brightness.dark),
       );
   }
 
-  static ThemeData fallback(BuildContext context, [Brightness brightness]) {
-    return ThemeData(brightness: brightness).build(context);
+  static Style fallback(BuildContext context, [Brightness brightness]) {
+    return Style(brightness: brightness).build(context);
   }
 
   Widget provider(Widget child) {
     Widget w = child;
-    if (appBarTheme != null) w = AppBarTheme(data: appBarTheme, child: w);
-    if (buttonTheme != null) w = ButtonTheme(data: buttonTheme, child: w);
-    if (cardTheme != null) w = CardTheme(data: cardTheme, child: w);
+    if (appBarStyle != null) w = AppBarTheme(data: appBarStyle, child: w);
+    if (buttonStyle != null) w = ButtonTheme(data: buttonStyle, child: w);
+    if (cardStyle != null) w = CardTheme(data: cardStyle, child: w);
+    if (iconButtonStyle != null)
+      w = IconButtonTheme(data: iconButtonStyle, child: w);
     return w;
   }
 }

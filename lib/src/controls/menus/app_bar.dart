@@ -29,7 +29,7 @@ class AppBar extends StatelessWidget {
 
   final bool insertTopPadding;
 
-  final AppBarThemeData style;
+  final AppBarStyle style;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class AppBar extends StatelessWidget {
   }
 }
 
-class AppBarThemeData {
+class AppBarStyle {
   final Color backgroundColor;
   final BorderRadiusGeometry borderRadius;
   final EdgeInsetsGeometry margin;
@@ -100,7 +100,7 @@ class AppBarThemeData {
   final TextStyle titleTextStyle;
   final TextStyle subtitleTextStyle;
 
-  AppBarThemeData({
+  AppBarStyle({
     this.backgroundColor,
     this.borderRadius,
     this.margin,
@@ -111,15 +111,15 @@ class AppBarThemeData {
     this.subtitleTextStyle,
   });
 
-  static AppBarThemeData defaultTheme(Brightness brightness) {
-    final def = AppBarThemeData(
+  static AppBarStyle defaultTheme(Brightness brightness) {
+    final def = AppBarStyle(
       borderRadius: BorderRadius.zero,
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(12),
       elevation: 8,
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(AppBarThemeData(
+      return def.copyWith(AppBarStyle(
         backgroundColor: Colors.blue,
         elevationColor: Colors.black.withOpacity(0.1),
         titleTextStyle: TextStyle(
@@ -133,7 +133,7 @@ class AppBarThemeData {
         ),
       ));
     else
-      return def.copyWith(AppBarThemeData(
+      return def.copyWith(AppBarStyle(
         backgroundColor: Colors.grey[200],
         elevationColor: Colors.white.withOpacity(0.1),
         titleTextStyle: TextStyle(
@@ -148,9 +148,9 @@ class AppBarThemeData {
       ));
   }
 
-  AppBarThemeData copyWith(AppBarThemeData style) {
+  AppBarStyle copyWith(AppBarStyle style) {
     if (style == null) return this;
-    return AppBarThemeData(
+    return AppBarStyle(
       backgroundColor: style?.backgroundColor ?? backgroundColor,
       borderRadius: style?.borderRadius ?? borderRadius,
       elevation: style?.elevation ?? elevation,
@@ -176,21 +176,21 @@ class AppBarTheme extends InheritedTheme {
         super(key: key, child: child);
 
   /// The properties for descendant [Tooltip] widgets.
-  final AppBarThemeData data;
+  final AppBarStyle data;
 
   /// Returns the [data] from the closest [AppBarTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.AppBarTheme]. Applications can assume
+  /// no ancestor, it returns [Style.AppBarTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
   ///
   /// ```dart
-  /// AppBarThemeData theme = AppBarTheme.of(context);
+  /// AppBarStyle theme = AppBarTheme.of(context);
   /// ```
-  static AppBarThemeData of(BuildContext context) {
+  static AppBarStyle of(BuildContext context) {
     final AppBarTheme theme =
         context.dependOnInheritedWidgetOfExactType<AppBarTheme>();
-    return theme?.data ?? AppBarThemeData();
+    return theme?.data ?? AppBarStyle();
   }
 
   @override

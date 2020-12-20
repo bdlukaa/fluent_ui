@@ -8,7 +8,7 @@ class Card extends StatelessWidget {
   }) : super(key: key);
 
   final Widget child;
-  final CardThemeData style;
+  final CardStyle style;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class Card extends StatelessWidget {
     );
   }
 
-  Border _buildBorder(CardThemeData style) {
+  Border _buildBorder(CardStyle style) {
     final BorderSide Function(CardHighlightPosition) buildSide = (p) {
       if (style.highlightPosition == p)
         return BorderSide(
@@ -54,7 +54,7 @@ class Card extends StatelessWidget {
   }
 }
 
-class CardThemeData {
+class CardStyle {
   final BorderRadiusGeometry borderRadius;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
@@ -68,7 +68,7 @@ class CardThemeData {
   final CardHighlightPosition highlightPosition;
   final double highlightSize;
 
-  CardThemeData({
+  CardStyle({
     this.borderRadius,
     this.padding,
     this.margin,
@@ -80,8 +80,8 @@ class CardThemeData {
     this.highlightSize,
   });
 
-  static CardThemeData defaultTheme(Brightness brightness) {
-    final def = CardThemeData(
+  static CardStyle defaultTheme(Brightness brightness) {
+    final def = CardStyle(
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(12),
@@ -91,20 +91,20 @@ class CardThemeData {
       highlightSize: 1.8,
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(CardThemeData(
+      return def.copyWith(CardStyle(
         elevationColor: Colors.black.withOpacity(0.1),
         color: Colors.white,
       ));
     else
-      return def.copyWith(CardThemeData(
+      return def.copyWith(CardStyle(
         elevationColor: Colors.white.withOpacity(0.1),
         color: Colors.grey,
       ));
   }
 
-  CardThemeData copyWith(CardThemeData style) {
+  CardStyle copyWith(CardStyle style) {
     if (style == null) return this;
-    return CardThemeData(
+    return CardStyle(
       borderRadius: style?.borderRadius ?? borderRadius,
       padding: style?.padding ?? padding,
       margin: style?.margin ?? margin,
@@ -133,21 +133,21 @@ class CardTheme extends InheritedTheme {
         super(key: key, child: child);
 
   /// The properties for descendant [Tooltip] widgets.
-  final CardThemeData data;
+  final CardStyle data;
 
   /// Returns the [data] from the closest [CardTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.CardTheme]. Applications can assume
+  /// no ancestor, it returns [Style.CardTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
   ///
   /// ```dart
-  /// CardThemeData theme = CardTheme.of(context);
+  /// CardStyle theme = CardTheme.of(context);
   /// ```
-  static CardThemeData of(BuildContext context) {
+  static CardStyle of(BuildContext context) {
     final CardTheme theme =
         context.dependOnInheritedWidgetOfExactType<CardTheme>();
-    return theme?.data ?? CardThemeData();
+    return theme?.data ?? CardStyle();
   }
 
   @override
