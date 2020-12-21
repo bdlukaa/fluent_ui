@@ -1,26 +1,28 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/rendering.dart';
 
-class Checkbox extends StatelessWidget {
-  const Checkbox({
+class Toggle extends StatelessWidget {
+  const Toggle({
     Key key,
     @required this.checked,
     @required this.onChange,
     this.style,
     this.semanticsLabel,
+    this.thumb,
   }) : super(key: key);
 
   final bool checked;
   final ValueChanged<bool> onChange;
 
-  final CheckboxStyle style;
+  final Widget thumb;
+
+  final ToggleStyle style;
 
   final String semanticsLabel;
 
   @override
   Widget build(BuildContext context) {
-    final style = context.theme.checkboxStyle.copyWith(this.style);
+    final style = context.theme.toggleStyle.copyWith(this.style);
     return Semantics(
       label: semanticsLabel,
       child: HoverButton(
@@ -28,6 +30,12 @@ class Checkbox extends StatelessWidget {
         onPressed: onChange == null ? null : () => onChange(!checked),
         builder: (context, state) {
           return AnimatedContainer(
+            alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
+            constraints: BoxConstraints(
+              // maxHeight: 18,
+              minHeight: 34,
+              minWidth: 34,
+            ),
             duration: style.animationDuration,
             curve: style.animationCurve,
             padding: style.padding,
@@ -41,17 +49,21 @@ class Checkbox extends StatelessWidget {
                   : style.uncheckedBorder(state),
               borderRadius: style.borderRadius,
             ),
-            child: AnimatedSwitcher(
-              duration: style.animationDuration,
-              switchInCurve: style.animationCurve,
-              child: Icon(
-                style.icon,
-                color: checked
-                    ? style.checkedIconColor(state)
-                    : style.uncheckedIconColor(state),
-                key: ValueKey(state),
-              ),
-            ),
+            child: thumb ??
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: 8,
+                    minWidth: 8,
+                    maxHeight: 16,
+                    maxWidth: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: checked
+                        ? style.checkedThumbColor(state)
+                        : style.uncheckedThumbColor(state),
+                    borderRadius: style.thumbBorderRadius,
+                  ),
+                ),
           );
         },
       ),
@@ -59,13 +71,13 @@ class Checkbox extends StatelessWidget {
   }
 }
 
-class CheckboxStyle {
+class ToggleStyle {
   final ButtonState<Color> checkedColor;
   final ButtonState<Color> uncheckedColor;
 
-  final IconData icon;
-  final ButtonState<Color> checkedIconColor;
-  final ButtonState<Color> uncheckedIconColor;
+  final ButtonState<Color> checkedThumbColor;
+  final ButtonState<Color> uncheckedThumbColor;
+  final BorderRadiusGeometry thumbBorderRadius;
 
   final ButtonState<MouseCursor> cursor;
 
@@ -79,7 +91,7 @@ class CheckboxStyle {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  CheckboxStyle({
+  ToggleStyle({
     this.checkedColor,
     this.uncheckedColor,
     this.cursor,
@@ -88,20 +100,21 @@ class CheckboxStyle {
     this.borderRadius,
     this.padding,
     this.margin,
-    this.icon,
-    this.checkedIconColor,
-    this.uncheckedIconColor,
     this.animationDuration,
     this.animationCurve,
+    this.checkedThumbColor,
+    this.uncheckedThumbColor,
+    this.thumbBorderRadius,
   });
 
-  static CheckboxStyle defaultTheme([Brightness brightness]) {
+  static ToggleStyle defaultTheme([Brightness brightness]) {
     Color disabledColor = Colors.grey[100].withOpacity(0.6);
-    final def = CheckboxStyle(
+    final def = ToggleStyle(
       cursor: (state) => state.isDisabled
           ? SystemMouseCursors.forbidden
           : SystemMouseCursors.click,
-      borderRadius: BorderRadius.circular(2),
+      borderRadius: BorderRadius.circular(25),
+      thumbBorderRadius: BorderRadius.circular(100),
       checkedColor: (state) {
         if (state.isDisabled)
           return disabledColor;
@@ -111,42 +124,38 @@ class CheckboxStyle {
           return Colors.blue[50];
       },
       checkedBorder: (state) => Border.all(style: BorderStyle.none),
-      padding: EdgeInsets.all(4),
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       margin: EdgeInsets.all(4),
-      icon: FluentIcons.checkbox_checked_24_filled,
       uncheckedColor: (_) => Colors.transparent,
       animationDuration: Duration(milliseconds: 200),
       animationCurve: Curves.linear,
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(CheckboxStyle(
+      return def.copyWith(ToggleStyle(
         uncheckedBorder: (state) => Border.all(
           width: 0.6,
           color: state.isDisabled ? disabledColor : Colors.black,
         ),
-        checkedIconColor: (_) => Colors.white,
-        uncheckedIconColor: (state) {
+        checkedThumbColor: (_) => Colors.white,
+        uncheckedThumbColor: (state) {
           if (state.isHovering || state.isPressing) return Colors.black;
           return Colors.transparent;
         },
       ));
     else
-      return def.copyWith(CheckboxStyle(
+      return def.copyWith(ToggleStyle(
         uncheckedBorder: (state) => Border.all(
           width: 0.6,
           color: state.isDisabled ? disabledColor : Colors.white,
         ),
-        checkedIconColor: (_) => Colors.white,
-        uncheckedIconColor: (state) {
-          if (state.isHovering || state.isPressing) return Colors.white;
-          return Colors.transparent;
-        },
+        checkedThumbColor: (_) => Colors.black,
+        uncheckedThumbColor: (_) => Colors.white,
       ));
   }
 
-  CheckboxStyle copyWith(CheckboxStyle style) {
+  ToggleStyle copyWith(ToggleStyle style) {
     if (style == null) return this;
-    return CheckboxStyle(
+    return ToggleStyle(
       checkedBorder: style?.checkedBorder ?? checkedBorder,
       uncheckedBorder: style?.uncheckedBorder ?? uncheckedBorder,
       borderRadius: style?.borderRadius ?? borderRadius,
@@ -155,11 +164,11 @@ class CheckboxStyle {
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,
-      icon: style?.icon ?? icon,
-      checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
-      uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
+      checkedThumbColor: style?.checkedThumbColor ?? checkedThumbColor,
+      uncheckedThumbColor: style?.uncheckedThumbColor ?? uncheckedThumbColor,
+      thumbBorderRadius: style?.thumbBorderRadius ?? thumbBorderRadius,
     );
   }
 }

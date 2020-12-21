@@ -34,6 +34,7 @@ class Style {
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
   final IconButtonStyle iconButtonStyle;
+  final ToggleStyle toggleStyle;
 
   final ButtonStyle buttonStyle;
   final ButtonStyle compoundButtonStyle;
@@ -53,6 +54,7 @@ class Style {
     this.cardStyle,
     this.iconButtonStyle,
     this.checkboxStyle,
+    this.toggleStyle,
   });
 
   Style build(BuildContext context) {
@@ -70,6 +72,7 @@ class Style {
         contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
         iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.light),
         checkboxStyle: CheckboxStyle.defaultTheme(Brightness.light),
+        toggleStyle: ToggleStyle.defaultTheme(Brightness.light)
       );
     else
       return Style(
@@ -84,6 +87,7 @@ class Style {
         contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
         iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.dark),
         checkboxStyle: CheckboxStyle.defaultTheme(Brightness.dark),
+        toggleStyle: ToggleStyle.defaultTheme(Brightness.dark),
       );
   }
 

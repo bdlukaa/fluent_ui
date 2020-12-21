@@ -26,7 +26,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   bool value = false;
 
   @override
@@ -78,6 +77,14 @@ class _MyHomePageState extends State<MyHomePage> {
               checked: value,
               onChange: (v) => setState(() => value = v),
               // onChange: null,
+            ),
+            SizedBox(
+              // height: 30,
+              width: 70,
+              child: Toggle(
+                checked: value,
+                onChange: (v) => setState(() => value = v),
+              ),
             ),
           ],
         ),
