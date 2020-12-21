@@ -115,7 +115,7 @@ class AppBarStyle {
     final def = AppBarStyle(
       borderRadius: BorderRadius.zero,
       margin: EdgeInsets.zero,
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(8),
       elevation: 8,
     );
     if (brightness == null || brightness == Brightness.light)

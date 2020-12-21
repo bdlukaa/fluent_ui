@@ -6,13 +6,13 @@ class Checkbox extends StatelessWidget {
   const Checkbox({
     Key key,
     @required this.checked,
-    @required this.onChange,
+    @required this.onChanged,
     this.style,
     this.semanticsLabel,
   }) : super(key: key);
 
   final bool checked;
-  final ValueChanged<bool> onChange;
+  final ValueChanged<bool> onChanged;
 
   final CheckboxStyle style;
 
@@ -25,7 +25,7 @@ class Checkbox extends StatelessWidget {
       label: semanticsLabel,
       child: HoverButton(
         cursor: (_, state) => style.cursor?.call(state),
-        onPressed: onChange == null ? null : () => onChange(!checked),
+        onPressed: onChanged == null ? null : () => onChanged(!checked),
         builder: (context, state) {
           return AnimatedContainer(
             duration: style.animationDuration,
@@ -98,9 +98,7 @@ class CheckboxStyle {
   static CheckboxStyle defaultTheme([Brightness brightness]) {
     Color disabledColor = Colors.grey[100].withOpacity(0.6);
     final def = CheckboxStyle(
-      cursor: (state) => state.isDisabled
-          ? SystemMouseCursors.forbidden
-          : SystemMouseCursors.click,
+      cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),
       checkedColor: (state) {
         if (state.isDisabled)

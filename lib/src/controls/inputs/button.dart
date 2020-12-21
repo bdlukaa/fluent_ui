@@ -2,22 +2,45 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
-Color darkButtonBackgroundColor(ButtonStates state) {
+Color darkButtonBackgroundColor(
+  ButtonStates state, {
+  Color disabledColor,
+  Color pressingColor,
+  Color hoveringColor,
+  Color defaultColor,
+}) {
   if (state.isDisabled)
-    return Colors.grey[40];
+    return disabledColor ?? Colors.grey[40];
   else if (state.isPressing)
-    return Colors.grey[140].withOpacity(0.6);
-  else if (state.isHovering) return Colors.grey[150].withOpacity(0.6);
-  return Colors.transparent;
+    return pressingColor ?? Colors.grey[140].withOpacity(0.6);
+  else if (state.isHovering)
+    return hoveringColor ?? Colors.grey[150].withOpacity(0.6);
+  return defaultColor ?? Colors.transparent;
 }
 
-Color lightButtonBackgroundColor(ButtonStates state) {
+Color lightButtonBackgroundColor(
+  ButtonStates state, {
+  Color disabledColor,
+  Color pressingColor,
+  Color hoveringColor,
+  Color defaultColor,
+}) {
   if (state.isDisabled)
-    return Colors.grey[40];
+    return disabledColor ?? Colors.grey[40];
   else if (state.isPressing)
-    return Colors.grey[30].withOpacity(0.6);
-  else if (state.isHovering) return Colors.grey[20].withOpacity(0.6);
-  return Colors.transparent;
+    return pressingColor ?? Colors.grey[30].withOpacity(0.6);
+  else if (state.isHovering)
+    return hoveringColor ?? Colors.grey[20].withOpacity(0.6);
+  return defaultColor ?? Colors.transparent;
+}
+
+MouseCursor buttonCursor(ButtonStates state) {
+  if (state.isDisabled)
+    return SystemMouseCursors.forbidden;
+  else if (state.isHovering || state.isPressing)
+    return SystemMouseCursors.click;
+  else
+    return MouseCursor.defer;
 }
 
 enum _ButtonType { def, compound, action, contextual, icon }
@@ -245,14 +268,7 @@ class ButtonStyle {
 
   static ButtonStyle defaultTheme([Brightness brightness]) {
     final defButton = ButtonStyle(
-      cursor: (state) {
-        if (state.isDisabled)
-          return SystemMouseCursors.forbidden;
-        else if (state.isHovering || state.isPressing)
-          return SystemMouseCursors.click;
-        else
-          return MouseCursor.defer;
-      },
+      cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),
       padding: EdgeInsets.all(12),
       margin: EdgeInsets.all(4),

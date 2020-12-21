@@ -5,14 +5,14 @@ class Toggle extends StatelessWidget {
   const Toggle({
     Key key,
     @required this.checked,
-    @required this.onChange,
+    @required this.onChanged,
     this.style,
     this.semanticsLabel,
     this.thumb,
   }) : super(key: key);
 
   final bool checked;
-  final ValueChanged<bool> onChange;
+  final ValueChanged<bool> onChanged;
 
   final Widget thumb;
 
@@ -27,12 +27,12 @@ class Toggle extends StatelessWidget {
       label: semanticsLabel,
       child: HoverButton(
         cursor: (_, state) => style.cursor?.call(state),
-        onPressed: onChange == null ? null : () => onChange(!checked),
+        onPressed: onChanged == null ? null : () => onChanged(!checked),
         builder: (context, state) {
           return AnimatedContainer(
             alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
             height: 30,
-            width: 90,
+            width: 70,
             duration: style.animationDuration,
             curve: style.animationCurve,
             padding: style.padding,

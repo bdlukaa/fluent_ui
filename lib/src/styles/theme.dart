@@ -34,7 +34,10 @@ class Style {
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
   final IconButtonStyle iconButtonStyle;
+  final IconStyle iconStyle;
+  final ListCellStyle listCellStyle;
   final PivotItemStyle pivotItemStyle;
+  final SplitButtonStyle splitButtonStyle;
   final ToggleStyle toggleStyle;
 
   final ButtonStyle buttonStyle;
@@ -57,6 +60,9 @@ class Style {
     this.checkboxStyle,
     this.toggleStyle,
     this.pivotItemStyle,
+    this.iconStyle,
+    this.splitButtonStyle,
+    this.listCellStyle,
   });
 
   Style build(BuildContext context) {
@@ -76,6 +82,9 @@ class Style {
         checkboxStyle: CheckboxStyle.defaultTheme(Brightness.light),
         toggleStyle: ToggleStyle.defaultTheme(Brightness.light),
         pivotItemStyle: PivotItemStyle.defaultTheme(Brightness.light),
+        iconStyle: IconStyle.defaultTheme(Brightness.light),
+        splitButtonStyle: SplitButtonStyle.defaultTheme(Brightness.light),
+        listCellStyle: ListCellStyle.defaultTheme(Brightness.light),
       );
     else
       return Style(
@@ -92,6 +101,9 @@ class Style {
         checkboxStyle: CheckboxStyle.defaultTheme(Brightness.dark),
         toggleStyle: ToggleStyle.defaultTheme(Brightness.dark),
         pivotItemStyle: PivotItemStyle.defaultTheme(Brightness.dark),
+        iconStyle: IconStyle.defaultTheme(Brightness.dark),
+        splitButtonStyle: SplitButtonStyle.defaultTheme(Brightness.dark),
+        listCellStyle: ListCellStyle.defaultTheme(Brightness.dark),
       );
   }
 

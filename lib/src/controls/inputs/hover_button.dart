@@ -43,7 +43,7 @@ class _HoverButtonState extends State<HoverButton> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: widget.cursor?.call(context, state) ?? SystemMouseCursors.click,
+      cursor: widget.cursor?.call(context, state) ?? buttonCursor,
       onEnter: (_) => update(() => _hovering = true),
       onHover: (_) => update(() => _hovering = true),
       onExit: (_) => update(() => _hovering = false),

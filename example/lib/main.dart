@@ -1,19 +1,29 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+
+final appKey = GlobalKey<_MyAppState>();
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(appKey));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  MyApp(Key key) : super(key: key);
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _mode = ThemeMode.light;
+  get mode => _mode;
+  set mode(m) => setState(() => _mode = m);
+
   @override
   Widget build(BuildContext context) {
     return FluentApp(
       title: 'Fluent ui app showcase',
-      style: Style(
-        // brightness: Brightness.light,
-        brightness: Brightness.dark,
-      ),
+      themeMode: _mode,
       home: MyHomePage(),
     );
   }
@@ -36,6 +46,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       header: AppBar(
         title: Text('Fluent UI App Showcase'),
+        leading: IconButton(
+          icon: AnimatedSwitcher(
+            duration: Duration(milliseconds: 600),
+            child: Icon(
+              appKey.currentState.mode == ThemeMode.light
+                  ? FluentIcons.lightbulb_24_filled
+                  : FluentIcons.lightbulb_24_regular,
+              color: Colors.white,
+              key: ValueKey<ThemeMode>(appKey.currentState.mode),
+            ),
+          ),
+          style: IconButtonStyle(
+            border: (_) => Border.all(color: Colors.white, width: 0.6),
+            margin: EdgeInsets.all(8),
+          ),
+          onPressed: () {
+            appKey.currentState.mode =
+                appKey.currentState.mode == ThemeMode.light
+                    ? ThemeMode.dark
+                    : ThemeMode.light;
+          },
+        ),
         bottom: Pivot(
           currentIndex: index,
           onChanged: (i) => setState(() => index = i),
@@ -48,39 +80,42 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PivotView(
         currentIndex: index,
         pages: <Widget>[
-          Column(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.start,
             children: [
               Button(
-                text: Text('Next page =>'),
+                text: Text('Next page'),
                 subtext: Text('Select ingredients'),
-                icon: Icon(material.Icons.add),
-                trailingIcon: Icon(material.Icons.add),
+                icon: Icon(FluentIcons.food_24_regular),
+                trailingIcon: Icon(FluentIcons.arrow_next_24_regular),
                 onPressed: () {
                   print('pressed');
                 },
               ),
               Button.action(
-                icon: Icon(material.Icons.add),
+                icon: Icon(FluentIcons.person_24_filled),
                 text: Text('Action Button'),
                 onPressed: () {},
               ),
               Button.icon(
-                icon: Icon(material.Icons.add),
-                menu: Icon(material.Icons.add),
+                icon: Icon(FluentIcons.add_24_regular),
+                menu: Icon(FluentIcons.swipe_down_24_regular),
                 onPressed: () {},
               ),
               Checkbox(
                 checked: value,
-                onChange: (v) => setState(() => value = v),
+                onChanged: (v) => setState(() => value = v),
                 // onChange: null,
               ),
-              SizedBox(
-                // height: 30,
-                width: 70,
-                child: Toggle(
-                  checked: value,
-                  onChange: (v) => setState(() => value = v),
-                ),
+              Toggle(
+                checked: value,
+                onChanged: (v) => setState(() => value = v),
+              ),
+              ToggleListCell(
+                title: Text('Title'),
+                checked: value,
+                onChanged: (v) => setState(() => value = v),
+                opposite: Icon(FluentIcons.person_28_filled),
               ),
             ],
           ),

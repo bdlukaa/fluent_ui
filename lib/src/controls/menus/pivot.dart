@@ -7,6 +7,7 @@ class Pivot extends StatelessWidget {
     @required this.currentIndex,
     @required this.onChanged,
     @required this.pivots,
+    this.scrollPhysics,
   })  : assert(pivots != null),
         assert(currentIndex != null),
         assert(currentIndex >= 0 && currentIndex < pivots.length),
@@ -21,61 +22,67 @@ class Pivot extends StatelessWidget {
   /// The list of pivots. This can't be null
   final List<PivotItem> pivots;
 
+  final ScrollPhysics scrollPhysics;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(pivots.length, (index) {
-        final pivot = pivots[index];
-        final style = context.theme.pivotItemStyle.copyWith(pivot.style);
-        final bool selected = currentIndex == index;
-        style.padding.flipped;
-        return HoverButton(
-          cursor: (_, state) => style.cursor(state),
-          onPressed: () => onChanged?.call(index),
-          builder: (context, state) => Stack(
-            children: [
-              Container(
-                padding: style.padding,
-                margin: style.margin,
-                color: style.color(state),
-                child: Row(
-                  children: [
-                    if (pivot.leading != null) pivot.leading,
-                    if (pivot.text != null)
-                      AnimatedDefaultTextStyle(
-                        child: pivot.text,
-                        style: selected
-                            ? style.selectedTextStyle
-                            : style.unselectedTextStyle,
-                        duration: style.animationDuration,
-                      ),
-                    if (pivot.trailing != null) pivot.trailing,
-                  ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: scrollPhysics,
+      child: Row(
+        children: List.generate(pivots.length, (index) {
+          final pivot = pivots[index];
+          final style = context.theme.pivotItemStyle.copyWith(pivot.style);
+          final bool selected = currentIndex == index;
+          style.padding.flipped;
+          return HoverButton(
+            cursor: (_, state) => style.cursor(state),
+            onPressed: () => onChanged?.call(index),
+            builder: (context, state) => Stack(
+              children: [
+                Container(
+                  padding: style.padding,
+                  margin: style.margin,
+                  color: style.color(state),
+                  child: Row(
+                    children: [
+                      if (pivot.leading != null) pivot.leading,
+                      if (pivot.text != null)
+                        AnimatedDefaultTextStyle(
+                          child: pivot.text,
+                          style: selected
+                              ? style.selectedTextStyle
+                              : style.unselectedTextStyle,
+                          duration: style.animationDuration,
+                        ),
+                      if (pivot.trailing != null) pivot.trailing,
+                    ],
+                  ),
                 ),
-              ),
-              if (currentIndex == index)
-                AnimatedPositioned(
-                  duration: style.animationDuration,
-                  curve: style.animationCurve,
-                  bottom: 0,
-                  left: state.isHovering || state.isPressing
-                      ? 0
-                      : style?.padding?.left ?? 0,
-                  right: state.isHovering || state.isPressing
-                      ? 0
-                      : style?.padding?.right ?? 0,
-                  child: pivot.indicator?.call(state) ??
-                      AnimatedContainer(
-                        duration: style.animationDuration,
-                        curve: style.animationCurve,
-                        height: style.indicatorHeight,
-                        decoration: style.indicatorDecoration,
-                      ),
-                ),
-            ],
-          ),
-        );
-      }),
+                if (currentIndex == index)
+                  AnimatedPositioned(
+                    duration: style.animationDuration,
+                    curve: style.animationCurve,
+                    bottom: 0,
+                    left: state.isHovering || state.isPressing
+                        ? 0
+                        : style?.padding?.left ?? 0,
+                    right: state.isHovering || state.isPressing
+                        ? 0
+                        : style?.padding?.right ?? 0,
+                    child: pivot.indicator?.call(state) ??
+                        AnimatedContainer(
+                          duration: style.animationDuration,
+                          curve: style.animationCurve,
+                          height: style.indicatorHeight,
+                          decoration: style.indicatorDecoration,
+                        ),
+                  ),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }
@@ -211,6 +218,7 @@ class PivotView extends StatelessWidget {
 
   /// The pages. This can NOT be null
   final List<Widget> pages;
+
   /// The current index. This can NOT be null
   final int currentIndex;
 

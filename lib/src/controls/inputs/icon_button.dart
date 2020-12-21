@@ -83,6 +83,7 @@ class IconButtonStyle {
 
   static IconButtonStyle defaultTheme([Brightness brightness]) {
     final def = IconButtonStyle(
+      cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),
       border: (_) => Border.all(style: BorderStyle.none),
       padding: EdgeInsets.all(4),
