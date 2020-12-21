@@ -2,6 +2,24 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
+Color darkButtonBackgroundColor(ButtonStates state) {
+  if (state.isDisabled)
+    return Colors.grey[40];
+  else if (state.isPressing)
+    return Colors.grey[140].withOpacity(0.6);
+  else if (state.isHovering) return Colors.grey[150].withOpacity(0.6);
+  return Colors.transparent;
+}
+
+Color lightButtonBackgroundColor(ButtonStates state) {
+  if (state.isDisabled)
+    return Colors.grey[40];
+  else if (state.isPressing)
+    return Colors.grey[30].withOpacity(0.6);
+  else if (state.isHovering) return Colors.grey[20].withOpacity(0.6);
+  return Colors.transparent;
+}
+
 enum _ButtonType { def, compound, action, contextual, icon }
 
 class Button extends StatelessWidget {
@@ -253,14 +271,7 @@ class ButtonStyle {
             ? disabledTextStyle
             : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.black, fontSize: 12),
-        color: (state) {
-          if (state.isDisabled)
-            return Colors.grey[40];
-          else if (state.isPressing)
-            return Colors.grey[30];
-          else if (state.isHovering) return Colors.grey[20];
-          return Colors.transparent;
-        },
+        color: lightButtonBackgroundColor,
       ));
     else
       return defButton.copyWith(ButtonStyle(
@@ -271,14 +282,7 @@ class ButtonStyle {
             ? disabledTextStyle
             : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.white, fontSize: 12),
-        color: (state) {
-          if (state.isDisabled)
-            return Colors.grey[40];
-          else if (state.isPressing)
-            return Colors.grey[140];
-          else if (state.isHovering) return Colors.grey[150];
-          return Colors.transparent;
-        },
+        color: darkButtonBackgroundColor,
       ));
   }
 
@@ -296,31 +300,3 @@ class ButtonStyle {
     );
   }
 }
-
-// class ButtonTheme extends TreeTheme<ButtonStyle> {
-//   /// Creates a theme style that controls design for
-//   /// [Button].
-//   ///
-//   /// The data argument must not be null.
-//   const ButtonTheme({
-//     Key key,
-//     @required ButtonStyle data,
-//     Widget child,
-//   })  : assert(data != null),
-//         super(key: key, child: child, data: data);
-
-//   /// Returns the [data] from the closest [ButtonTheme] ancestor. If there is
-//   /// no ancestor, it returns [Style.ButtonTheme]. Applications can assume
-//   /// that the returned value will not be null.
-//   ///
-//   /// Typical usage is as follows:
-//   ///
-//   /// ```dart
-//   /// ButtonStyle theme = ButtonTheme.of(context);
-//   /// ```
-//   static ButtonStyle of(BuildContext context) {
-//     final ButtonTheme theme =
-//         context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
-//     return theme?.data;
-//   }
-// }

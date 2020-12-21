@@ -31,11 +31,8 @@ class Toggle extends StatelessWidget {
         builder: (context, state) {
           return AnimatedContainer(
             alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
-            constraints: BoxConstraints(
-              // maxHeight: 18,
-              minHeight: 34,
-              minWidth: 34,
-            ),
+            height: 30,
+            width: 90,
             duration: style.animationDuration,
             curve: style.animationCurve,
             padding: style.padding,
@@ -137,10 +134,7 @@ class ToggleStyle {
           color: state.isDisabled ? disabledColor : Colors.black,
         ),
         checkedThumbColor: (_) => Colors.white,
-        uncheckedThumbColor: (state) {
-          if (state.isHovering || state.isPressing) return Colors.black;
-          return Colors.transparent;
-        },
+        uncheckedThumbColor: (_) => Colors.black,
       ));
     else
       return def.copyWith(ToggleStyle(

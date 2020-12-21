@@ -121,7 +121,7 @@ class AppBarStyle {
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(AppBarStyle(
         backgroundColor: Colors.blue,
-        elevationColor: Colors.black.withOpacity(0.1),
+        elevationColor: lightElevationColor,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,
@@ -135,7 +135,7 @@ class AppBarStyle {
     else
       return def.copyWith(AppBarStyle(
         backgroundColor: Colors.grey[200],
-        elevationColor: Colors.white.withOpacity(0.1),
+        elevationColor: darkElevationColor,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,

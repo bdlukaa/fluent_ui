@@ -92,12 +92,12 @@ class CardStyle {
     );
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(CardStyle(
-        elevationColor: Colors.black.withOpacity(0.1),
+        elevationColor: lightElevationColor,
         color: Colors.white,
       ));
     else
       return def.copyWith(CardStyle(
-        elevationColor: Colors.white.withOpacity(0.1),
+        elevationColor: darkElevationColor,
         color: Colors.grey,
       ));
   }

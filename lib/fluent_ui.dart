@@ -20,6 +20,7 @@ export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/toggle.dart';
 
 export 'src/controls/menus/app_bar.dart';
+export 'src/controls/menus/pivot.dart';
 
 export 'src/controls/surfaces/card.dart';
 

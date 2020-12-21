@@ -8,6 +8,34 @@ Since flutter has Windows support, it's necessary to have support to its ui guid
 See [this](https://github.com/flutter/flutter/issues/46481) for more info on the offical fluent ui support
 
 ## Documentation
+
+### Layout
+
+You can use a `Scaffold` to create your layout.
+
+```dart
+Scaffold(
+  header: AppBar(
+    title: Text('Fluent UI App Showcase'),
+    bottom: Pivot(
+      currentIndex: index,
+      onChanged: (i) => setState(() => index = i),
+      pivots: [
+        PivotItem(text: Text('Buttons')),
+        PivotItem(text: Text('Surfaces')),
+      ],
+    ),
+  ),
+  body: PivotView(
+    currentIndex: index,
+    pages: <Widget>[
+      Page1(),
+      Page2(),
+    ]
+  ),
+)
+```
+
 ### [Icons](https://developer.microsoft.com/en-us/fluentui#/styles/web/icons#available-icons)
 To use icons, add `fluentui_system_icons` to your dependencies in `pubspec.yaml` file:
 
@@ -15,7 +43,7 @@ To use icons, add `fluentui_system_icons` to your dependencies in `pubspec.yaml`
 dependencies:
     ...
     fluentui_system_icons: ^1.1.89
-```
+````
 
 Simple usage example:
 
@@ -36,6 +64,7 @@ class MyFlutterWidget extends StatelessWidget {
 For more info see [this](https://pub.dev/packages/fluentui_system_icons)
 
 ### [Colors](https://developer.microsoft.com/en-us/fluentui#/styles/web/colors/)
+
 To use a Color, just call `Colors.(colorName)`.
 
 ```dart
@@ -43,8 +72,10 @@ final black = Colors.black;
 final blue = Colors.blue;
 ```
 
-### [Buttons](https://developer.microsoft.com/en-us/fluentui#/controls/web/button) 
+### [Buttons](https://developer.microsoft.com/en-us/fluentui#/controls/web/button)
+
 You can create the buttons using the `Button` widget. It's the default implementation for `DefaultButton`, `PrimaryButton`, `CompoundButton`, `ActionButton` and `ContextualButton`
+
 - Button
   ```dart
   Button(
@@ -78,9 +109,11 @@ You can create the buttons using the `Button` widget. It's the default implement
   ```
 
 ## Avaiable widgets
+
 - Scaffold
 - [AppBar](https://developer.microsoft.com/en-us/fluentui#/controls/android/topappbar)
 - Button
 - IconButton
 - [Card](https://developer.microsoft.com/en-us/fluentui#/controls/web/modal)
 - [Checkbox](https://developer.microsoft.com/en-us/fluentui#/controls/web/checkbox#usage)
+- [Pivot](https://developer.microsoft.com/en-us/fluentui#/controls/web/pivot), PivotView

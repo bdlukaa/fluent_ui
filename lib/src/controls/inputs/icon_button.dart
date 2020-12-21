@@ -88,27 +88,9 @@ class IconButtonStyle {
       padding: EdgeInsets.all(4),
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(IconButtonStyle(
-        color: (state) {
-          if (state.isDisabled)
-            return Colors.grey[40];
-          else if (state.isPressing)
-            return Colors.grey[30];
-          else if (state.isHovering) return Colors.grey[20];
-          return Colors.transparent;
-        },
-      ));
+      return def.copyWith(IconButtonStyle(color: lightButtonBackgroundColor));
     else
-      return def.copyWith(IconButtonStyle(
-        color: (state) {
-          if (state.isDisabled)
-            return Colors.grey[40];
-          else if (state.isPressing)
-            return Colors.grey[140];
-          else if (state.isHovering) return Colors.grey[150];
-          return Colors.transparent;
-        },
-      ));
+      return def.copyWith(IconButtonStyle(color: darkButtonBackgroundColor));
   }
 
   IconButtonStyle copyWith(IconButtonStyle style) {

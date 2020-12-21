@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
     return FluentApp(
       title: 'Fluent ui app showcase',
       style: Style(
+        // brightness: Brightness.light,
         brightness: Brightness.dark,
       ),
       home: MyHomePage(),
@@ -28,72 +29,70 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool value = false;
 
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       header: AppBar(
-        // leading: Icon(Icons.add),
         title: Text('Fluent UI App Showcase'),
-        subtitle: Text('sub'),
-        // trailing: [Icon(Icons.add), Icon(Icons.add)],
-        bottom: Container(
-          width: double.infinity,
-          margin: EdgeInsets.only(top: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.blue[70],
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Text('Search', style: TextStyle(color: Colors.white)),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Card(
-              child: Text('hahaha'),
-            ),
-            Button(
-              text: Text('Next page =>'),
-              subtext: Text('Select ingredients'),
-              icon: Icon(material.Icons.add),
-              trailingIcon: Icon(material.Icons.add),
-              onPressed: () {
-                print('pressed');
-              },
-            ),
-            Button.action(
-              icon: Icon(material.Icons.add),
-              text: Text('Action Button'),
-              onPressed: () {},
-            ),
-            Button.icon(
-              icon: Icon(material.Icons.add),
-              menu: Icon(material.Icons.add),
-              onPressed: () {},
-            ),
-            Checkbox(
-              checked: value,
-              onChange: (v) => setState(() => value = v),
-              // onChange: null,
-            ),
-            SizedBox(
-              // height: 30,
-              width: 70,
-              child: Toggle(
-                checked: value,
-                onChange: (v) => setState(() => value = v),
-              ),
-            ),
+        bottom: Pivot(
+          currentIndex: index,
+          onChanged: (i) => setState(() => index = i),
+          pivots: [
+            PivotItem(text: Text('Buttons')),
+            PivotItem(text: Text('Surfaces')),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ),
+      body: PivotView(
+        currentIndex: index,
+        pages: <Widget>[
+          Column(
+            children: [
+              Button(
+                text: Text('Next page =>'),
+                subtext: Text('Select ingredients'),
+                icon: Icon(material.Icons.add),
+                trailingIcon: Icon(material.Icons.add),
+                onPressed: () {
+                  print('pressed');
+                },
+              ),
+              Button.action(
+                icon: Icon(material.Icons.add),
+                text: Text('Action Button'),
+                onPressed: () {},
+              ),
+              Button.icon(
+                icon: Icon(material.Icons.add),
+                menu: Icon(material.Icons.add),
+                onPressed: () {},
+              ),
+              Checkbox(
+                checked: value,
+                onChange: (v) => setState(() => value = v),
+                // onChange: null,
+              ),
+              SizedBox(
+                // height: 30,
+                width: 70,
+                child: Toggle(
+                  checked: value,
+                  onChange: (v) => setState(() => value = v),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Card(
+                child: Text('hahaha'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
