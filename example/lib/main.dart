@@ -52,19 +52,23 @@ class _MyHomePageState extends State<MyHomePage> {
             Card(
               child: Text('hahaha'),
             ),
-            Button.compound(
+            Button(
               text: Text('Next page =>'),
               subtext: Text('Select ingredients'),
+              icon: Icon(material.Icons.add),
+              trailingIcon: Icon(material.Icons.add),
               onPressed: () {
                 print('pressed');
               },
             ),
-            material.TextButton(
-              child: Text('aha'),
-              onPressed: null,
-            ),
-            IconButton(
+            Button.action(
               icon: Icon(material.Icons.add),
+              text: Text('Action Button'),
+              onPressed: () {},
+            ),
+            Button.icon(
+              icon: Icon(material.Icons.add),
+              menu: Icon(material.Icons.add),
               onPressed: () {},
             ),
           ],

@@ -55,10 +55,14 @@ class Style {
   final Color bottomNavigationBackgroundColor;
 
   final AppBarStyle appBarStyle;
-  final ButtonStyle buttonStyle;
   final CardStyle cardStyle;
   final IconButtonStyle iconButtonStyle;
 
+  final ButtonStyle buttonStyle;
+  final ButtonStyle compoundButtonStyle;
+  final ButtonStyle actionButtonStyle;
+  final ButtonStyle contextualButtonStyle;
+  
   Style({
     this.accentColor,
     this.brightness,
@@ -66,6 +70,9 @@ class Style {
     this.bottomNavigationBackgroundColor,
     this.appBarStyle,
     this.buttonStyle,
+    this.actionButtonStyle,
+    this.compoundButtonStyle,
+    this.contextualButtonStyle,
     this.cardStyle,
     this.iconButtonStyle,
   });
@@ -78,8 +85,12 @@ class Style {
         scaffoldBackgroundColor: Colors.white,
         bottomNavigationBackgroundColor: Colors.white,
         appBarStyle: appBarStyle ?? AppBarStyle.defaultTheme(Brightness.light),
-        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
         cardStyle: cardStyle ?? CardStyle.defaultTheme(Brightness.light),
+        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
+        actionButtonStyle: actionButtonStyle ?? ButtonStyle.defaultActionButtonTheme(Brightness.light),
+        compoundButtonStyle: compoundButtonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
+        contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
+        iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.light),
       );
     else
       return Style(
@@ -87,8 +98,12 @@ class Style {
         brightness: brightness ?? Brightness.dark,
         scaffoldBackgroundColor: Colors.grey[160],
         appBarStyle: appBarStyle ?? AppBarStyle.defaultTheme(Brightness.dark),
-        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
         cardStyle: cardStyle ?? CardStyle.defaultTheme(Brightness.dark),
+        buttonStyle: buttonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
+        actionButtonStyle: actionButtonStyle ?? ButtonStyle.defaultActionButtonTheme(Brightness.dark),
+        compoundButtonStyle: compoundButtonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
+        contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
+        iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.dark),
       );
   }
 
@@ -99,7 +114,6 @@ class Style {
   Widget provider(Widget child) {
     Widget w = child;
     if (appBarStyle != null) w = AppBarTheme(data: appBarStyle, child: w);
-    if (buttonStyle != null) w = ButtonTheme(data: buttonStyle, child: w);
     if (cardStyle != null) w = CardTheme(data: cardStyle, child: w);
     if (iconButtonStyle != null)
       w = IconButtonTheme(data: iconButtonStyle, child: w);

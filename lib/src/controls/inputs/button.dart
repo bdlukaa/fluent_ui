@@ -2,21 +2,28 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
+enum _ButtonType { def, compound, action, contextual, icon }
+
 class Button extends StatelessWidget {
-  /// Implementation for DefaultButton, PrimaryButton and CompoundButton.
+  /// Implementation for DefaultButton, PrimaryButton, CompoundButton, ActionButton
+  /// and ContextualButton
   ///
   /// More info at https://developer.microsoft.com/en-us/fluentui#/controls/web/button
   const Button({
     Key key,
     @required this.text,
+    this.subtext,
+    this.icon,
+    this.trailingIcon,
     this.style,
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
-  })  : subtext = null,
+  })  : type = _ButtonType.def,
         super(key: key);
 
-  Button.compound({
+  /// Creates a CompoundButton
+  const Button.compound({
     Key key,
     @required this.text,
     @required this.subtext,
@@ -24,7 +31,69 @@ class Button extends StatelessWidget {
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
-  }) : super(key: key);
+  })  : icon = null,
+        trailingIcon = null,
+        type = _ButtonType.compound,
+        super(key: key);
+
+  /// Creates an Icon Button. Uses [IconButton] under the hood
+  Button.icon({
+    Key key,
+    @required this.icon,
+    Widget menu,
+    IconButtonStyle style,
+    this.onPressed,
+    this.onLongPress,
+    this.semanticsLabel,
+  })  : text = IconButton.menu(
+          icon: icon,
+          menu: menu,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          semanticsLabel: semanticsLabel,
+          style: style,
+        ),
+        subtext = null,
+        style = null,
+        trailingIcon = null,
+        type = _ButtonType.icon,
+        super(key: key);
+
+  /// Creates a ContextualButton
+  const Button.contextual({
+    Key key,
+    @required this.icon,
+    @required this.text,
+    @required this.trailingIcon,
+    this.onLongPress,
+    this.onPressed,
+    this.style,
+    this.semanticsLabel,
+  })  : subtext = null,
+        type = _ButtonType.contextual,
+        super(key: key);
+
+  /// Creates an ActionButton
+  const Button.action({
+    Key key,
+    @required this.icon,
+    @required this.text,
+    this.onLongPress,
+    this.onPressed,
+    this.style,
+    this.semanticsLabel,
+  })  : trailingIcon = null,
+        subtext = null,
+        type = _ButtonType.action,
+        super(key: key);
+
+  final _ButtonType type;
+
+  /// The icon used for ActionButton and ContextualIcon
+  final Widget icon;
+
+  /// The icon used for ContextualIcon
+  final Widget trailingIcon;
 
   /// The main text of the button
   final Widget text;
@@ -48,7 +117,25 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = ButtonTheme.of(context).copyWith(this.style);
+    // Create only the IconButton
+    if (type == _ButtonType.icon) return text;
+    ButtonStyle style;
+    switch (type) {
+      case _ButtonType.contextual:
+        style = context.theme.contextualButtonStyle;
+        break;
+      case _ButtonType.action:
+        style = context.theme.actionButtonStyle;
+        break;
+      case _ButtonType.compound:
+        style = context.theme.compoundButtonStyle;
+        break;
+      case _ButtonType.def:
+      default:
+        style = context.theme.buttonStyle;
+        break;
+    }
+    style = style.copyWith(this.style);
     return Semantics(
       label: semanticsLabel,
       child: HoverButton(
@@ -64,20 +151,27 @@ class Button extends StatelessWidget {
               borderRadius: style.borderRadius,
               border: style.border?.call(state),
             ),
-            child: Column(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (text != null)
-                  DefaultTextStyle(
-                    style: (style.textStyle?.call(state)) ?? TextStyle(),
-                    child: text,
-                  ),
-                if (subtext != null)
-                  DefaultTextStyle(
-                    style: (style.subtextStyle?.call(state)) ?? TextStyle(),
-                    child: subtext,
-                  )
+                if (icon != null) icon,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (text != null)
+                      DefaultTextStyle(
+                        style: (style.textStyle?.call(state)) ?? TextStyle(),
+                        child: text,
+                      ),
+                    if (subtext != null)
+                      DefaultTextStyle(
+                        style: (style.subtextStyle?.call(state)) ?? TextStyle(),
+                        child: subtext,
+                      )
+                  ],
+                ),
+                if (trailingIcon != null) trailingIcon,
               ],
             ),
           );
@@ -113,6 +207,23 @@ class ButtonStyle {
     this.textStyle,
     this.subtextStyle,
   });
+
+  static ButtonStyle defaultActionButtonTheme([Brightness brightness]) {
+    brightness ??= Brightness.light;
+    return defaultTheme(brightness).copyWith(ButtonStyle(
+      border: (_) => Border.all(style: BorderStyle.none),
+      color: (_) => Colors.transparent,
+      textStyle: (state) => state.isDisabled
+          ? TextStyle(color: Colors.grey[100])
+          : state.isHovering || state.isPressing
+              ? TextStyle(color: Colors.blue)
+              : TextStyle(
+                  color: brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
+    ));
+  }
 
   static ButtonStyle defaultTheme([Brightness brightness]) {
     final defButton = ButtonStyle(
@@ -180,30 +291,30 @@ class ButtonStyle {
   }
 }
 
-class ButtonTheme extends TreeTheme<ButtonStyle> {
-  /// Creates a theme style that controls design for
-  /// [Button].
-  ///
-  /// The data argument must not be null.
-  const ButtonTheme({
-    Key key,
-    @required ButtonStyle data,
-    Widget child,
-  })  : assert(data != null),
-        super(key: key, child: child, data: data);
+// class ButtonTheme extends TreeTheme<ButtonStyle> {
+//   /// Creates a theme style that controls design for
+//   /// [Button].
+//   ///
+//   /// The data argument must not be null.
+//   const ButtonTheme({
+//     Key key,
+//     @required ButtonStyle data,
+//     Widget child,
+//   })  : assert(data != null),
+//         super(key: key, child: child, data: data);
 
-  /// Returns the [data] from the closest [ButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [Style.ButtonTheme]. Applications can assume
-  /// that the returned value will not be null.
-  ///
-  /// Typical usage is as follows:
-  ///
-  /// ```dart
-  /// ButtonStyle theme = ButtonTheme.of(context);
-  /// ```
-  static ButtonStyle of(BuildContext context) {
-    final ButtonTheme theme =
-        context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
-    return theme?.data ?? ButtonStyle.defaultTheme(context.theme?.brightness);
-  }
-}
+//   /// Returns the [data] from the closest [ButtonTheme] ancestor. If there is
+//   /// no ancestor, it returns [Style.ButtonTheme]. Applications can assume
+//   /// that the returned value will not be null.
+//   ///
+//   /// Typical usage is as follows:
+//   ///
+//   /// ```dart
+//   /// ButtonStyle theme = ButtonTheme.of(context);
+//   /// ```
+//   static ButtonStyle of(BuildContext context) {
+//     final ButtonTheme theme =
+//         context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
+//     return theme?.data;
+//   }
+// }

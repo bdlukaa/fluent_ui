@@ -12,7 +12,8 @@ class IconButton extends StatelessWidget {
   })  : menu = null,
         super(key: key);
 
-  IconButton.menu({
+  const IconButton.menu({
+    Key key,
     @required this.icon,
     @required this.menu,
     this.onPressed,

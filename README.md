@@ -44,18 +44,17 @@ final blue = Colors.blue;
 ```
 
 ### [Buttons](https://developer.microsoft.com/en-us/fluentui#/controls/web/button) 
-You can create the buttons using the `Button` widget. It's the default implementation for `DefaultButton`, `PrimaryButton` and `CompoundButton`
+You can create the buttons using the `Button` widget. It's the default implementation for `DefaultButton`, `PrimaryButton`, `CompoundButton`, `ActionButton` and `ContextualButton`
 - Button
   ```dart
   Button(
     text: Text('I am your button :)'),
     onPressed: () => print('pressed'),
   ),
-  Button.compound(
-    text: Text('I am the title'),
-    subtext: Text('I am the subtitle'),
-    onPressed: null, // disable the button
-  )
+  Button.action(...), // Creates an ActionButton
+  Button.compound(...), // Creates a CompoundButton
+  Button.contextual(...), // Creates a ContextualButton
+  Button.icon(...) /// Creates an IconButton
   ```
 - IconButton
   ```dart
