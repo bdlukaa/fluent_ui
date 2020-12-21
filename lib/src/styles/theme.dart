@@ -1,29 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class TreeTheme<T> extends InheritedTheme {
-  const TreeTheme({
-    Key key,
-    @required this.data,
-    Widget child,
-  })  : assert(data != null),
-        super(key: key, child: child);
-
-  /// The properties for descendant [Tooltip] widgets.
-  final T data;
-
-  @override
-  Widget wrap(BuildContext context, Widget child) {
-    final TreeTheme<T> ancestorTheme =
-        context.findAncestorWidgetOfExactType<TreeTheme<T>>();
-    return identical(this, ancestorTheme)
-        ? child
-        : TreeTheme<T>(data: data, child: child);
-  }
-
-  @override
-  bool updateShouldNotify(TreeTheme<T> oldWidget) => data != oldWidget.data;
-}
-
 class Theme extends InheritedWidget {
   const Theme({Key key, @required this.data, @required this.child})
       : super(key: key, child: child);
@@ -56,6 +32,7 @@ class Style {
 
   final AppBarStyle appBarStyle;
   final CardStyle cardStyle;
+  final CheckboxStyle checkboxStyle;
   final IconButtonStyle iconButtonStyle;
 
   final ButtonStyle buttonStyle;
@@ -75,6 +52,7 @@ class Style {
     this.contextualButtonStyle,
     this.cardStyle,
     this.iconButtonStyle,
+    this.checkboxStyle,
   });
 
   Style build(BuildContext context) {
@@ -91,6 +69,7 @@ class Style {
         compoundButtonStyle: compoundButtonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
         contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.light),
         iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.light),
+        checkboxStyle: CheckboxStyle.defaultTheme(Brightness.light),
       );
     else
       return Style(
@@ -104,6 +83,7 @@ class Style {
         compoundButtonStyle: compoundButtonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
         contextualButtonStyle: contextualButtonStyle ?? ButtonStyle.defaultTheme(Brightness.dark),
         iconButtonStyle: IconButtonStyle.defaultTheme(Brightness.dark),
+        checkboxStyle: CheckboxStyle.defaultTheme(Brightness.dark),
       );
   }
 
@@ -111,12 +91,4 @@ class Style {
     return Style(brightness: brightness).build(context);
   }
 
-  Widget provider(Widget child) {
-    Widget w = child;
-    if (appBarStyle != null) w = AppBarTheme(data: appBarStyle, child: w);
-    if (cardStyle != null) w = CardTheme(data: cardStyle, child: w);
-    if (iconButtonStyle != null)
-      w = IconButtonTheme(data: iconButtonStyle, child: w);
-    return w;
-  }
 }

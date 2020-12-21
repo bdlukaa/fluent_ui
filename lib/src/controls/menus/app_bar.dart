@@ -33,7 +33,7 @@ class AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = AppBarTheme.of(context).copyWith(this.style);
+    final style = context.theme.appBarStyle.copyWith(this.style);
     final topPadding = insertTopPadding ? MediaQuery.of(context).viewPadding.top : 0;
     return Container(
       constraints: BoxConstraints(
@@ -161,47 +161,4 @@ class AppBarStyle {
       subtitleTextStyle: style?.subtitleTextStyle ?? subtitleTextStyle,
     );
   }
-}
-
-class AppBarTheme extends InheritedTheme {
-  /// Creates a tooltip theme that controls the configurations for
-  /// [Tooltip].
-  ///
-  /// The data argument must not be null.
-  const AppBarTheme({
-    Key key,
-    @required this.data,
-    Widget child,
-  })  : assert(data != null),
-        super(key: key, child: child);
-
-  /// The properties for descendant [Tooltip] widgets.
-  final AppBarStyle data;
-
-  /// Returns the [data] from the closest [AppBarTheme] ancestor. If there is
-  /// no ancestor, it returns [Style.AppBarTheme]. Applications can assume
-  /// that the returned value will not be null.
-  ///
-  /// Typical usage is as follows:
-  ///
-  /// ```dart
-  /// AppBarStyle theme = AppBarTheme.of(context);
-  /// ```
-  static AppBarStyle of(BuildContext context) {
-    final AppBarTheme theme =
-        context.dependOnInheritedWidgetOfExactType<AppBarTheme>();
-    return theme?.data ?? AppBarStyle();
-  }
-
-  @override
-  Widget wrap(BuildContext context, Widget child) {
-    final AppBarTheme ancestorTheme =
-        context.findAncestorWidgetOfExactType<AppBarTheme>();
-    return identical(this, ancestorTheme)
-        ? child
-        : AppBarTheme(data: data, child: child);
-  }
-
-  @override
-  bool updateShouldNotify(AppBarTheme oldWidget) => data != oldWidget.data;
 }

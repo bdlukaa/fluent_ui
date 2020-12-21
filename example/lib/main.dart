@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return FluentApp(
       title: 'Fluent ui app showcase',
       style: Style(
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
       ),
       home: MyHomePage(),
     );
@@ -26,6 +26,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  bool value = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(material.Icons.add),
               menu: Icon(material.Icons.add),
               onPressed: () {},
+            ),
+            Checkbox(
+              checked: value,
+              onChange: (v) => setState(() => value = v),
+              // onChange: null,
             ),
           ],
         ),

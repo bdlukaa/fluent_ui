@@ -12,7 +12,7 @@ class Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = CardTheme.of(context).copyWith(this.style);
+    final style = context.theme.cardStyle.copyWith(this.style);
     return Container(
       margin: style.margin,
       decoration: BoxDecoration(
@@ -119,46 +119,3 @@ class CardStyle {
 }
 
 enum CardHighlightPosition { top, bottom, left, right }
-
-class CardTheme extends InheritedTheme {
-  /// Creates a tooltip theme that controls the configurations for
-  /// [Tooltip].
-  ///
-  /// The data argument must not be null.
-  const CardTheme({
-    Key key,
-    @required this.data,
-    Widget child,
-  })  : assert(data != null),
-        super(key: key, child: child);
-
-  /// The properties for descendant [Tooltip] widgets.
-  final CardStyle data;
-
-  /// Returns the [data] from the closest [CardTheme] ancestor. If there is
-  /// no ancestor, it returns [Style.CardTheme]. Applications can assume
-  /// that the returned value will not be null.
-  ///
-  /// Typical usage is as follows:
-  ///
-  /// ```dart
-  /// CardStyle theme = CardTheme.of(context);
-  /// ```
-  static CardStyle of(BuildContext context) {
-    final CardTheme theme =
-        context.dependOnInheritedWidgetOfExactType<CardTheme>();
-    return theme?.data ?? CardStyle();
-  }
-
-  @override
-  Widget wrap(BuildContext context, Widget child) {
-    final CardTheme ancestorTheme =
-        context.findAncestorWidgetOfExactType<CardTheme>();
-    return identical(this, ancestorTheme)
-        ? child
-        : CardTheme(data: data, child: child);
-  }
-
-  @override
-  bool updateShouldNotify(CardTheme oldWidget) => data != oldWidget.data;
-}

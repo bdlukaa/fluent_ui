@@ -236,16 +236,6 @@ class ButtonStyle {
           return MouseCursor.defer;
       },
       borderRadius: BorderRadius.circular(2),
-      color: (state) {
-        if (state.isDisabled)
-          return Colors.grey[40];
-        else if (state.isPressing)
-          return Colors.grey[30];
-        else if (state.isHovering)
-          return Colors.grey[20];
-        else
-          return Colors.transparent;
-      },
       padding: EdgeInsets.all(12),
       margin: EdgeInsets.all(4),
     );
@@ -258,21 +248,37 @@ class ButtonStyle {
       return defButton.copyWith(ButtonStyle(
         border: (state) => state.isDisabled
             ? disabledBorder
-            : Border.all(color: Colors.grey[100], width: 0.8),
+            : Border.all(color: Colors.grey[100], width: 0.6),
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.black, fontSize: 12),
+        color: (state) {
+          if (state.isDisabled)
+            return Colors.grey[40];
+          else if (state.isPressing)
+            return Colors.grey[30];
+          else if (state.isHovering) return Colors.grey[20];
+          return Colors.transparent;
+        },
       ));
     else
       return defButton.copyWith(ButtonStyle(
         border: (state) => state.isDisabled
             ? disabledBorder
-            : Border.all(color: Colors.white, width: 0.8),
+            : Border.all(color: Colors.white, width: 0.6),
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.white, fontSize: 12),
+        color: (state) {
+          if (state.isDisabled)
+            return Colors.grey[40];
+          else if (state.isPressing)
+            return Colors.grey[140];
+          else if (state.isHovering) return Colors.grey[150];
+          return Colors.transparent;
+        },
       ));
   }
 

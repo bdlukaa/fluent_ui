@@ -68,6 +68,14 @@ You can create the buttons using the `Button` widget. It's the default implement
     onPressed: openMenu,
   ),
   ```
+- [Checkbox](https://developer.microsoft.com/en-us/fluentui#/controls/web/checkbox#usage)
+  ```dart
+  bool value = true;
+  Checkbox(
+    checked: value,
+    onChange: (v) => setState(() => value = v),
+  ),
+  ```
 
 ## Avaiable widgets
 - Scaffold
@@ -75,3 +83,4 @@ You can create the buttons using the `Button` widget. It's the default implement
 - Button
 - IconButton
 - [Card](https://developer.microsoft.com/en-us/fluentui#/controls/web/modal)
+- [Checkbox](https://developer.microsoft.com/en-us/fluentui#/controls/web/checkbox#usage)

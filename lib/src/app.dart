@@ -184,7 +184,7 @@ class FluentApp extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, Widget child) {
-    return Theme(data: theme(context), child: theme(context).provider(child));
+    return Theme(data: theme(context), child: child);
   }
 
   Widget _buildApp(BuildContext context) {
