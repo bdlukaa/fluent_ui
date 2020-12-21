@@ -43,7 +43,7 @@ MouseCursor buttonCursor(ButtonStates state) {
     return MouseCursor.defer;
 }
 
-enum _ButtonType { def, compound, action, contextual, icon }
+enum _ButtonType { def, compound, action, contextual, icon, primary }
 
 class Button extends StatelessWidget {
   /// Implementation for DefaultButton, PrimaryButton, CompoundButton, ActionButton
@@ -62,6 +62,18 @@ class Button extends StatelessWidget {
     this.semanticsLabel,
   })  : type = _ButtonType.def,
         super(key: key);
+
+  /// Creates a PrimaryButton
+  const Button.primary({
+    @required this.text,
+    this.style,
+    this.onPressed,
+    this.onLongPress,
+    this.semanticsLabel,
+  })  : subtext = null,
+        icon = null,
+        trailingIcon = null,
+        type = _ButtonType.primary;
 
   /// Creates a CompoundButton
   const Button.compound({
@@ -171,6 +183,9 @@ class Button extends StatelessWidget {
       case _ButtonType.compound:
         style = context.theme.compoundButtonStyle;
         break;
+      case _ButtonType.primary:
+        style = context.theme.primaryButtonStyle;
+        break;
       case _ButtonType.def:
       default:
         style = context.theme.buttonStyle;
@@ -266,11 +281,48 @@ class ButtonStyle {
     ));
   }
 
+  static ButtonStyle defaultCompoundButtonTheme([Brightness brightness]) {
+    return defaultTheme(brightness).copyWith(ButtonStyle(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+    ));
+  }
+
+  static ButtonStyle defaultPrimaryButtonTheme([Brightness brightness]) {
+    final def = defaultTheme(brightness).copyWith(ButtonStyle(
+      border: (_) => Border.all(style: BorderStyle.none),
+      textStyle: (state) => state.isDisabled
+          ? TextStyle(color: Colors.grey[100])
+          : TextStyle(color: Colors.white),
+    ));
+    if (brightness == null || brightness == Brightness.light)
+      return def.copyWith(ButtonStyle(
+        color: (state) {
+          if (state.isDisabled)
+            return lightButtonBackgroundColor(ButtonStates.disabled);
+          else if (state.isPressing)
+            return Colors.blue[80];
+          else if (state.isHovering) return Colors.blue[70];
+          return Colors.blue;
+        },
+      ));
+    else
+      return def.copyWith(ButtonStyle(
+        color: (state) {
+          if (state.isDisabled)
+            return darkButtonBackgroundColor(ButtonStates.disabled);
+          else if (state.isPressing)
+            return Colors.blue[80];
+          else if (state.isHovering) return Colors.blue[70];
+          return Colors.blue;
+        },
+      ));
+  }
+
   static ButtonStyle defaultTheme([Brightness brightness]) {
     final defButton = ButtonStyle(
       cursor: buttonCursor,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(2),
-      padding: EdgeInsets.all(12),
       margin: EdgeInsets.all(4),
     );
     final disabledBorder = Border.all(style: BorderStyle.none);

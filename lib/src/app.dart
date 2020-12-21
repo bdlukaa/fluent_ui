@@ -229,7 +229,7 @@ class FluentApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       navigatorObservers: navigatorObservers,
       pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
-        return MaterialPageRoute<T>(settings: settings, builder: builder);
+        return FluentPageRoute<T>(settings: settings, builder: builder);
       },
       home: home,
       routes: routes,

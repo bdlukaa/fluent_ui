@@ -36,7 +36,7 @@ class Card extends StatelessWidget {
   }
 
   Border _buildBorder(CardStyle style) {
-    final BorderSide Function(CardHighlightPosition) buildSide = (p) {
+    final BorderSide Function(HighlightPosition) buildSide = (p) {
       if (style.highlightPosition == p)
         return BorderSide(
           color: style.highlightColor ?? Colors.blue,
@@ -46,10 +46,10 @@ class Card extends StatelessWidget {
         return BorderSide.none;
     };
     return Border(
-      bottom: buildSide(CardHighlightPosition.bottom),
-      left: buildSide(CardHighlightPosition.left),
-      top: buildSide(CardHighlightPosition.top),
-      right: buildSide(CardHighlightPosition.right),
+      bottom: buildSide(HighlightPosition.bottom),
+      left: buildSide(HighlightPosition.left),
+      top: buildSide(HighlightPosition.top),
+      right: buildSide(HighlightPosition.right),
     );
   }
 }
@@ -65,7 +65,7 @@ class CardStyle {
   final Color elevationColor;
 
   final Color highlightColor;
-  final CardHighlightPosition highlightPosition;
+  final HighlightPosition highlightPosition;
   final double highlightSize;
 
   CardStyle({
@@ -80,13 +80,13 @@ class CardStyle {
     this.highlightSize,
   });
 
-  static CardStyle defaultTheme(Brightness brightness) {
+  static CardStyle defaultTheme([Brightness brightness]) {
     final def = CardStyle(
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(12),
       elevation: 2,
-      highlightPosition: CardHighlightPosition.top,
+      highlightPosition: HighlightPosition.top,
       highlightColor: Colors.blue,
       highlightSize: 1.8,
     );
@@ -118,4 +118,4 @@ class CardStyle {
   }
 }
 
-enum CardHighlightPosition { top, bottom, left, right }
+enum HighlightPosition { top, bottom, left, right }

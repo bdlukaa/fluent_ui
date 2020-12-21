@@ -142,7 +142,7 @@ class ToggleStyle {
           width: 0.6,
           color: state.isDisabled ? disabledColor : Colors.white,
         ),
-        checkedThumbColor: (_) => Colors.black,
+        checkedThumbColor: (_) => Colors.white,
         uncheckedThumbColor: (_) => Colors.white,
       ));
   }

@@ -111,7 +111,7 @@ class AppBarStyle {
     this.subtitleTextStyle,
   });
 
-  static AppBarStyle defaultTheme(Brightness brightness) {
+  static AppBarStyle defaultTheme([Brightness brightness]) {
     final def = AppBarStyle(
       borderRadius: BorderRadius.zero,
       margin: EdgeInsets.zero,
