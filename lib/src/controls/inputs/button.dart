@@ -170,6 +170,7 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     // Create only the IconButton
     if (type == _ButtonType.icon) return text;
     ButtonStyle style;

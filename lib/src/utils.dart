@@ -3,9 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 Color get lightElevationColor => Colors.black.withOpacity(0.1);
 Color get darkElevationColor => Colors.grey[130].withOpacity(0.1);
 
-/// [[Article]](https://developer.microsoft.com/en-us/fluentui#/styles/web/elevation) 
+/// [[Article]](https://developer.microsoft.com/en-us/fluentui#/styles/web/elevation)
 /// Get the elevation shadow.
-/// 
+///
 /// [factor], [right], [left], [bottom], [top] can't be null. The default [color] is Black
 List<BoxShadow> elevationShadow(
   int factor, {
@@ -50,4 +50,14 @@ List<BoxShadow> elevationShadow(
         offset: Offset(0, -1),
       ),
   ];
+}
+
+void debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
+  assert(check != null);
+  if (check)
+    assert(
+      context.theme != null,
+      'A Theme widget is necessary to draw this layout. It is implemented by default in FluentApp. ' +
+          'To fix this, wrap a Theme widget upper in this layout or implement a FluentApp.',
+    );
 }

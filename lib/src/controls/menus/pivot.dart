@@ -234,6 +234,7 @@ class PivotView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.pivotItemStyle;
     return AnimatedSwitcher(
       duration: transitionDuration ?? style?.animationDuration,

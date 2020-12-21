@@ -79,6 +79,7 @@ class ListCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_otherCell != null) return _otherCell;
+    debugCheckHasFluentTheme(context);
     final style = context.theme.listCellStyle.copyWith(this.style);
     return HoverButton(
       cursor: (_, state) => style.cursor(state),
@@ -153,6 +154,7 @@ class CheckboxListCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.listCellStyle.copyWith(cellStyle);
     return ListCell(
       title: title,

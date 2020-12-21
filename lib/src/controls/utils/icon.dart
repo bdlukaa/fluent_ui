@@ -144,6 +144,7 @@ class Icon extends StatelessWidget {
     final TextDirection textDirection =
         this.textDirection ?? Directionality.of(context);
 
+    debugCheckHasFluentTheme(context);
     final iconTheme = context.theme.iconStyle;
 
     final double iconSize = size ?? iconTheme.size;

@@ -39,30 +39,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    material.Tooltip(message: '');
     return Scaffold(
       header: AppBar(
         title: Text('Fluent UI App Showcase'),
         // leading: IconButton(
-          // icon: AnimatedSwitcher(
-          //   duration: Duration(milliseconds: 600),
-          //   child: Icon(
-          //     appKey.currentState.mode == ThemeMode.light
-          //         ? FluentIcons.lightbulb_24_filled
-          //         : FluentIcons.lightbulb_24_regular,
-          //     color: Colors.white,
-          //     key: ValueKey<ThemeMode>(appKey.currentState.mode),
-          //   ),
-          // ),
-          // style: IconButtonStyle(
-          //   border: (_) => Border.all(color: Colors.white, width: 0.6),
-          //   margin: EdgeInsets.all(8),
-          // ),
-          // onPressed: () {
-          //   appKey.currentState.mode =
-          //       appKey.currentState.mode == ThemeMode.light
-          //           ? ThemeMode.dark
-          //           : ThemeMode.light;
-          // },
+        // icon: AnimatedSwitcher(
+        //   duration: Duration(milliseconds: 600),
+        //   child: Icon(
+        //     appKey.currentState.mode == ThemeMode.light
+        //         ? FluentIcons.lightbulb_24_filled
+        //         : FluentIcons.lightbulb_24_regular,
+        //     color: Colors.white,
+        //     key: ValueKey<ThemeMode>(appKey.currentState.mode),
+        //   ),
+        // ),
+        // style: IconButtonStyle(
+        //   border: (_) => Border.all(color: Colors.white, width: 0.6),
+        //   margin: EdgeInsets.all(8),
+        // ),
+        // onPressed: () {
+        //   appKey.currentState.mode =
+        //       appKey.currentState.mode == ThemeMode.light
+        //           ? ThemeMode.dark
+        //           : ThemeMode.light;
+        // },
         // ),
         bottom: Pivot(
           currentIndex: index,
@@ -90,9 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (_) {
                         return Dialog(
                           title: Text('Missing Subject'),
-                          body: Text('Do you want to send this message without a subject?'),
+                          body: Text(
+                              'Do you want to send this message without a subject?'),
                           footer: [
-                            Button.primary(text: Text('Save'), onPressed: () {}),
+                            Button.primary(
+                                text: Text('Save'), onPressed: () {}),
                             Button(text: Text('Cancel'), onPressed: () {}),
                           ],
                         );
@@ -124,12 +127,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 onChanged: (v) => setState(() => value = v),
                 opposite: Icon(FluentIcons.person_28_filled),
               ),
+              Divider(),
             ],
           ),
           Column(
             children: [
-              Card(
-                child: Text('hahaha'),
+              Tooltip(
+                message: Text('my message'),
+                child: Card(
+                  child: Text('hahaha'),
+                ),
               ),
             ],
           ),

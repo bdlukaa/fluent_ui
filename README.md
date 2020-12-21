@@ -87,6 +87,7 @@ You can create the buttons using the `Button` widget. It's the default implement
   Button.compound(...), // Creates a CompoundButton
   Button.contextual(...), // Creates a ContextualButton
   Button.icon(...) /// Creates an IconButton
+  Button.primary(...) /// Creates a PrimaryButton
   ```
 - IconButton
   ```dart
@@ -121,6 +122,66 @@ Divider(),
 ListCell.toggle(...),
 ```
 
+### [Dialog](https://developer.microsoft.com/en-us/fluentui#/controls/web/dialog)
+Implementation for `Dialog` and `Modal`
+```dart
+showDialog(
+  context: context,
+  builder: (context) => Dialog(
+    title: Text('My title'),
+    body: Text('The body'),
+    footer: [
+      Button.primary(text: Text('Button 1')),
+      Button(text: Text('Button 1')),
+    ],
+  ),
+);
+```
+
+## Theming
+Almost every widget has a style in `Theme`. There isn't a specific class for any widget theme, all of them are in `Theme`.
+
+```dart
+Theme(
+  cardStyle: CardStyle(...),
+),
+```
+### ButtonState
+You'll find `ButtonState<T>` in some props in `Style`. That's because you need to handle what will be rendered in different button states. For example:
+```dart
+ButtonStyle(
+  color: (state) {
+    if (state.isDisabled) return disabledColor;
+    else if (state.isHovering) return hoveringColor;
+    else if (state.isPressing) return pressingColor;
+    else return defaultColor;
+  },
+),
+```
+
+There are four states:
+- Disabled - When the button is disabled. Usually when `onPressed` is `null`
+- Hovering - When the mouse is over the button. This collor is lighter than `pressing`'s
+- Pressing - When the mouse is clicking the button or when the screen is being tapped.
+- None - When nothing is happening to the button.
+
+# Material equivalents
+| Material |  Fluent  |
+| :------  | :------  |
+| Scaffold | Scaffold | 
+| AppBar   | AppBar   |
+| Dialog   | Dialog   |
+| Card     | Card     |
+| Checkbox | Checkbox |
+| Divider  | Divider  |
+| TabBar   | Pivot    |
+| TabBarView | PivotView |
+| ListTile | ListCell |
+| Switch   | Toggle   |
+| Icon     | Icon     |
+| IconButton | IconButton |
+| TextButton | Button |
+
 ## Avaiable widgets
 
 - Scaffold
@@ -129,7 +190,18 @@ ListCell.toggle(...),
 - IconButton
 - [Card](https://developer.microsoft.com/en-us/fluentui#/controls/web/modal)
 - [Checkbox](https://developer.microsoft.com/en-us/fluentui#/controls/web/checkbox#usage)
+- [Dialog](https://developer.microsoft.com/en-us/fluentui#/controls/web/dialog)
+- Divider
 - [Pivot](https://developer.microsoft.com/en-us/fluentui#/controls/web/pivot), PivotView
 - ListCell
 - CheckboxListCell
 - ToggleListCell
+
+# Other
+### Null safety
+Null safety support will be avaiable once it reaches stable
+
+### TODO:
+- Fix tooltip fidelity
+- Implement slider
+- Implement dropdown

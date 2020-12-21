@@ -22,6 +22,7 @@ class Toggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.toggleStyle.copyWith(this.style);
     return Semantics(
       label: semanticsLabel,

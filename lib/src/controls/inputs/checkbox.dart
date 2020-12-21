@@ -20,6 +20,7 @@ class Checkbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.checkboxStyle.copyWith(this.style);
     return Semantics(
       label: semanticsLabel,

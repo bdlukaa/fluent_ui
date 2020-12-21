@@ -35,6 +35,7 @@ class Dialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.dialogStyle.copyWith(this.style);
     return Stack(
       children: [

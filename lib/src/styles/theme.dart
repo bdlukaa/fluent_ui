@@ -34,12 +34,14 @@ class Style {
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
   final DialogStyle dialogStyle;
+  final DividerStyle dividerStyle;
   final IconButtonStyle iconButtonStyle;
   final IconStyle iconStyle;
   final ListCellStyle listCellStyle;
   final PivotItemStyle pivotItemStyle;
   final SplitButtonStyle splitButtonStyle;
   final ToggleStyle toggleStyle;
+  final TooltipStyle tooltipStyle;
 
   final ButtonStyle buttonStyle;
   final ButtonStyle compoundButtonStyle;
@@ -67,6 +69,8 @@ class Style {
     this.splitButtonStyle,
     this.listCellStyle,
     this.dialogStyle,
+    this.tooltipStyle,
+    this.dividerStyle,
   });
 
   Style build(BuildContext context) {
@@ -91,6 +95,8 @@ class Style {
         splitButtonStyle: SplitButtonStyle.defaultTheme().copyWith(splitButtonStyle),
         listCellStyle: ListCellStyle.defaultTheme().copyWith(listCellStyle),
         dialogStyle: DialogStyle.defaultTheme().copyWith(dialogStyle),
+        tooltipStyle: TooltipStyle.defaultTheme().copyWith(tooltipStyle),
+        dividerStyle: DividerStyle.defaultTheme().copyWith(dividerStyle),
       );
     else
       return Style(
@@ -112,6 +118,8 @@ class Style {
         splitButtonStyle: SplitButtonStyle.defaultTheme(brightness).copyWith(splitButtonStyle),
         listCellStyle: ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
         dialogStyle: DialogStyle.defaultTheme(brightness).copyWith(dialogStyle),
+        tooltipStyle: TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
+        dividerStyle: DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
       );
   }
 

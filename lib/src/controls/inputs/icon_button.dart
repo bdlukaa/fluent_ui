@@ -37,6 +37,7 @@ class IconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.iconButtonStyle.copyWith(this.style);
     return Button(
       text: Row(

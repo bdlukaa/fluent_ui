@@ -33,6 +33,8 @@ class AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasMediaQuery(context));
     final style = context.theme.appBarStyle.copyWith(this.style);
     final topPadding = insertTopPadding ? MediaQuery.of(context).viewPadding.top : 0;
     return Container(

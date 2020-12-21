@@ -23,7 +23,7 @@ class Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = backgroundColor ??
-        Theme.of(context)?.scaffoldBackgroundColor ??
+        context.theme?.scaffoldBackgroundColor ??
         Colors.white;
     return Container(
       color: color,

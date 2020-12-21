@@ -12,6 +12,7 @@ class Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme.cardStyle.copyWith(this.style);
     return Container(
       margin: style.margin,
