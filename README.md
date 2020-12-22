@@ -122,23 +122,38 @@ Divider(),
 ListCell.toggle(...),
 ```
 
-### [Dialog](https://developer.microsoft.com/en-us/fluentui#/controls/web/dialog)
-Implementation for `Dialog` and `Modal`
-```dart
-showDialog(
-  context: context,
-  builder: (context) => Dialog(
-    title: Text('My title'),
-    body: Text('The body'),
-    footer: [
-      Button.primary(text: Text('Button 1')),
-      Button(text: Text('Button 1')),
-    ],
-  ),
-);
-```
+### Pop-ups
+
+- `Dialog` and `Modal`
+  ```dart
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      title: Text('My title'),
+      body: Text('The body'),
+      footer: [
+        Button.primary(text: Text('Button 1')),
+        Button(text: Text('Button 1')),
+      ],
+    ),
+  );
+  ```
+- `Snackbar`
+  ```dart
+  showSnackbar(
+    context: context,
+    snackbar: Snackbar(
+      title: Text('My beautiful snackbar'),
+        button: Button.primary(
+          text: Text('Button'),
+          onPressed: () {},
+        ),
+      ),
+    );
+  ```
 
 ## Theming
+
 Almost every widget has a style in `Theme`. There isn't a specific class for any widget theme, all of them are in `Theme`.
 
 ```dart
@@ -146,8 +161,11 @@ Theme(
   cardStyle: CardStyle(...),
 ),
 ```
+
 ### ButtonState
+
 You'll find `ButtonState<T>` in some props in `Style`. That's because you need to handle what will be rendered in different button states. For example:
+
 ```dart
 ButtonStyle(
   color: (state) {
@@ -160,32 +178,37 @@ ButtonStyle(
 ```
 
 There are four states:
+
 - Disabled - When the button is disabled. Usually when `onPressed` is `null`
 - Hovering - When the mouse is over the button. This collor is lighter than `pressing`'s
 - Pressing - When the mouse is clicking the button or when the screen is being tapped.
 - None - When nothing is happening to the button.
 
 # Material equivalents
-| Material |  Fluent  |
-| :------  | :------  |
-| Scaffold | Scaffold | 
-| AppBar   | AppBar   |
-| Dialog   | Dialog   |
-| Card     | Card     |
-| Checkbox | Checkbox |
-| Divider  | Divider  |
-| TabBar   | Pivot    |
-| TabBarView | PivotView |
-| ListTile | ListCell |
-| Switch   | Toggle   |
-| Icon     | Icon     |
-| IconButton | IconButton |
-| TextButton | Button |
+
+| Material            | Fluent           |
+| :------------------ | :--------------- |
+| Scaffold            | Scaffold         |
+| AppBar              | AppBar           |
+| Dialog              | Dialog           |
+| Card                | Card             |
+| Checkbox            | Checkbox         |
+| Divider             | Divider          |
+| TabBar              | Pivot            |
+| TabBarView          | PivotView        |
+| ListTile            | ListCell         |
+| Switch              | Toggle           |
+| Icon                | Icon             |
+| IconButton          | IconButton       |
+| TextButton          | Button           |
+| Snackbar            | Snackbar         |
+| BottomNavigationBar | BottomNavigation |
 
 ## Avaiable widgets
 
 - Scaffold
-- [AppBar](https://developer.microsoft.com/en-us/fluentui#/controls/android/topappbar)
+- AppBar. Implementation for [Android Top App Bar](https://developer.microsoft.com/en-us/fluentui#/controls/android/topappbar) and [iOS Navigation Bar](https://developer.microsoft.com/en-us/fluentui#/controls/ios/navigationbar)
+- BottomNavigation. Implementation for [Android Bottom Navigation](https://developer.microsoft.com/en-us/fluentui#/controls/android/bottomnavigation) and [iOS Tab Bar](https://developer.microsoft.com/en-us/fluentui#/controls/ios/tabbar)
 - Button
 - IconButton
 - [Card](https://developer.microsoft.com/en-us/fluentui#/controls/web/modal)
@@ -195,13 +218,17 @@ There are four states:
 - [Pivot](https://developer.microsoft.com/en-us/fluentui#/controls/web/pivot), PivotView
 - ListCell
 - CheckboxListCell
+- [Snackbar](https://developer.microsoft.com/en-us/fluentui#/controls/android/snackbar)
 - ToggleListCell
 
 # Other
+
 ### Null safety
+
 Null safety support will be avaiable once it reaches stable
 
 ### TODO:
+
 - Fix tooltip fidelity
 - Implement slider
 - Implement dropdown

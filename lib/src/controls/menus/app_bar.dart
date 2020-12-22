@@ -36,11 +36,13 @@ class AppBar extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     assert(debugCheckHasMediaQuery(context));
     final style = context.theme.appBarStyle.copyWith(this.style);
-    final topPadding = insertTopPadding ? MediaQuery.of(context).viewPadding.top : 0;
+    final topPadding =
+        insertTopPadding ? MediaQuery.of(context).viewPadding.top : 0;
     return Container(
       constraints: BoxConstraints(
         minHeight: (minHeight ?? 52.0) + topPadding,
-        maxHeight: (maxHeight ?? (bottom != null ? 64 + 48.0 : 64)) + topPadding,
+        maxHeight:
+            (maxHeight ?? (bottom != null ? 64 + 48.0 : 64)) + topPadding,
       ),
       margin: style?.margin,
       padding: ((style?.padding ?? EdgeInsets.zero) as EdgeInsets) +
@@ -49,7 +51,7 @@ class AppBar extends StatelessWidget {
           borderRadius: style?.borderRadius,
           color: style?.backgroundColor,
           boxShadow: elevationShadow(
-            style?.elevation,
+            factor: style?.elevation,
             color: style?.elevationColor,
           )),
       child: Column(
@@ -96,7 +98,7 @@ class AppBarStyle {
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
 
-  final int elevation;
+  final double elevation;
   final Color elevationColor;
 
   final TextStyle titleTextStyle;
@@ -118,7 +120,7 @@ class AppBarStyle {
       borderRadius: BorderRadius.zero,
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(8),
-      elevation: 8,
+      elevation: 0,
     );
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(AppBarStyle(

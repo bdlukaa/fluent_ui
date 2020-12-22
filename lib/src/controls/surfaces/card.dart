@@ -18,7 +18,7 @@ class Card extends StatelessWidget {
       margin: style.margin,
       decoration: BoxDecoration(
         boxShadow: elevationShadow(
-          style.elevation ?? 2,
+          factor: style.elevation ?? 2,
           color: style.elevationColor,
         ),
       ),
@@ -62,7 +62,7 @@ class CardStyle {
 
   final Color color;
 
-  final int elevation;
+  final double elevation;
   final Color elevationColor;
 
   final Color highlightColor;
@@ -86,7 +86,7 @@ class CardStyle {
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(12),
-      elevation: 2,
+      elevation: 0,
       highlightPosition: HighlightPosition.top,
       highlightColor: Colors.blue,
       highlightSize: 1.8,

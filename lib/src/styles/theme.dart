@@ -31,6 +31,7 @@ class Style {
   final Color bottomNavigationBackgroundColor;
 
   final AppBarStyle appBarStyle;
+  final BottomNavigationStyle bottomNavigationStyle;
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
   final DialogStyle dialogStyle;
@@ -39,6 +40,7 @@ class Style {
   final IconStyle iconStyle;
   final ListCellStyle listCellStyle;
   final PivotItemStyle pivotItemStyle;
+  final SnackbarStyle snackbarStyle;
   final SplitButtonStyle splitButtonStyle;
   final ToggleStyle toggleStyle;
   final TooltipStyle tooltipStyle;
@@ -71,6 +73,8 @@ class Style {
     this.dialogStyle,
     this.tooltipStyle,
     this.dividerStyle,
+    this.snackbarStyle,
+    this.bottomNavigationStyle,
   });
 
   Style build(BuildContext context) {
@@ -97,6 +101,8 @@ class Style {
         dialogStyle: DialogStyle.defaultTheme().copyWith(dialogStyle),
         tooltipStyle: TooltipStyle.defaultTheme().copyWith(tooltipStyle),
         dividerStyle: DividerStyle.defaultTheme().copyWith(dividerStyle),
+        snackbarStyle: SnackbarStyle.defaultTheme().copyWith(snackbarStyle),
+        bottomNavigationStyle: BottomNavigationStyle.defaultTheme().copyWith(bottomNavigationStyle),
       );
     else
       return Style(
@@ -120,6 +126,8 @@ class Style {
         dialogStyle: DialogStyle.defaultTheme(brightness).copyWith(dialogStyle),
         tooltipStyle: TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
         dividerStyle: DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
+        snackbarStyle: SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
+        bottomNavigationStyle: BottomNavigationStyle.defaultTheme(brightness).copyWith(bottomNavigationStyle),
       );
   }
 

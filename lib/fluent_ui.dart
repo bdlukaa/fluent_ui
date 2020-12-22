@@ -25,10 +25,12 @@ export 'src/controls/inputs/toggle.dart';
 export 'src/controls/items/list_cell.dart';
 
 export 'src/controls/menus/app_bar.dart';
+export 'src/controls/menus/bottom_navigation.dart';
 export 'src/controls/menus/pivot.dart';
 
 export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/dialog.dart';
+export 'src/controls/surfaces/snackbar.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/icon.dart';

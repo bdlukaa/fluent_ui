@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FluentApp(
       title: 'Fluent ui app showcase',
-      // themeMode: _mode,
+      themeMode: ThemeMode.light,
+      // themeMode: ThemeMode.dark,
       initialRoute: '/',
       routes: {
         '/': (_) => MyHomePage(key: homeKey),
@@ -104,8 +105,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Button.action(
                 icon: Icon(FluentIcons.person_24_filled),
-                text: Text('Action Button'),
-                onPressed: () {},
+                text: Text('Show snackbar'),
+                onPressed: () {
+                  showSnackbar(
+                    context: context,
+                    snackbar: Snackbar(
+                      title: Text('My beautiful snackbar'),
+                      button: Button.primary(
+                        text: Text('Button'),
+                        onPressed: () {},
+                      ),
+                    ),
+                  );
+                },
               ),
               Button.icon(
                 icon: Icon(FluentIcons.add_24_regular),
@@ -139,6 +151,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+      footer: BottomNavigation(
+        currentIndex: index,
+        onChanged: (i) => setState(() => index = i),
+        items: [
+          BottomNavigationItem(
+            icon: Icon(FluentIcons.radio_button_24_filled),
+            label: Text('label'),
+          ),
+          BottomNavigationItem(
+            icon: Icon(FluentIcons.radio_button_24_filled),
+            label: Text('label'),
           ),
         ],
       ),
