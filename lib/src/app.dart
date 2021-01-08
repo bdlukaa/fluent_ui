@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class FluentApp extends StatelessWidget {
@@ -188,14 +187,11 @@ class FluentApp extends StatelessWidget {
   }
 
   Widget _buildApp(BuildContext context) {
-    final fluentColor = color ?? Colors.blue;
-
-    /// This is the fallback text style
-    final textStyle = TextStyle(
-      color: theme(context).brightness == Brightness.dark
-          ? Colors.white
-          : Colors.black,
+    final TextStyle _textStyle = TextStyle(
+      fontSize: 14,
+      color: Colors.black,
     );
+    final fluentColor = color ?? Colors.blue;
     if (_usesRouter) {
       return WidgetsApp.router(
         key: GlobalObjectKey(this),
@@ -206,10 +202,8 @@ class FluentApp extends StatelessWidget {
         builder: _builder,
         title: title,
         onGenerateTitle: onGenerateTitle,
-        textStyle: textStyle,
         color: fluentColor,
         locale: locale,
-        localizationsDelegates: _localizationsDelegates,
         localeResolutionCallback: localeResolutionCallback,
         localeListResolutionCallback: localeListResolutionCallback,
         supportedLocales: supportedLocales,
@@ -218,9 +212,9 @@ class FluentApp extends StatelessWidget {
         checkerboardOffscreenLayers: checkerboardOffscreenLayers,
         showSemanticsDebugger: showSemanticsDebugger,
         debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-        inspectorSelectButtonBuilder: _inspectorSelectButtonBuilder,
         shortcuts: shortcuts,
         actions: actions,
+        textStyle: _textStyle,
       );
     }
 
@@ -240,10 +234,8 @@ class FluentApp extends StatelessWidget {
       builder: _builder,
       title: title,
       onGenerateTitle: onGenerateTitle,
-      textStyle: textStyle,
       color: fluentColor,
       locale: locale,
-      localizationsDelegates: _localizationsDelegates,
       localeResolutionCallback: localeResolutionCallback,
       localeListResolutionCallback: localeListResolutionCallback,
       supportedLocales: supportedLocales,
@@ -252,20 +244,10 @@ class FluentApp extends StatelessWidget {
       checkerboardOffscreenLayers: checkerboardOffscreenLayers,
       showSemanticsDebugger: showSemanticsDebugger,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      inspectorSelectButtonBuilder: _inspectorSelectButtonBuilder,
       shortcuts: shortcuts,
       actions: actions,
+      textStyle: _textStyle,
     );
   }
 
-  Iterable<LocalizationsDelegate<dynamic>> get _localizationsDelegates sync* {
-    if (localizationsDelegates != null) yield* localizationsDelegates;
-    yield DefaultMaterialLocalizations.delegate;
-    yield DefaultCupertinoLocalizations.delegate;
-  }
-
-  Widget _inspectorSelectButtonBuilder(
-      BuildContext context, VoidCallback onPressed) {
-    return SizedBox();
-  }
 }

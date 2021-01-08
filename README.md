@@ -73,6 +73,29 @@ final black = Colors.black;
 final blue = Colors.blue;
 ```
 
+### [Motion](https://docs.microsoft.com/en-us/windows/uwp/design/motion/)
+
+Flutter already provides a great set of Motion/Animation Widgets. All of them are supported.
+[Learn more](https://flutter.dev/docs/development/ui/widgets/animation)
+
+### [Page transition](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions)
+
+#### [Page refresh](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#page-refresh)
+
+Use an AnimatedSwitcher to achieve the same effect:
+```dart
+AnimatedSwitcher(
+  child: [widget1(), widget2()][currentPage],
+  transitionBuilder: (child, animation) {
+    return PageRefreshTransition(child: child, animation: animation);
+  }
+)
+```
+
+#### [Drill](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#drill)
+
+It's the same as a [Hero](https://flutter.dev/docs/development/ui/animations/hero-animations) animation.
+
 ### [Buttons](https://developer.microsoft.com/en-us/fluentui#/controls/web/button)
 
 You can create the buttons using the `Button` widget. It's the default implementation for `DefaultButton`, `PrimaryButton`, `CompoundButton`, `ActionButton` and `ContextualButton`
@@ -232,3 +255,4 @@ Null safety support will be avaiable once it reaches stable
 - Fix tooltip fidelity
 - Implement slider
 - Implement dropdown
+- [Sound](https://docs.microsoft.com/en-us/windows/uwp/design/style/sound)

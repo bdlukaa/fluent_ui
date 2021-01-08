@@ -84,7 +84,7 @@ class CardStyle {
   static CardStyle defaultTheme([Brightness brightness]) {
     final def = CardStyle(
       borderRadius: BorderRadius.circular(2),
-      margin: EdgeInsets.zero,
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(12),
       elevation: 0,
       highlightPosition: HighlightPosition.top,

@@ -214,7 +214,7 @@ class Button extends StatelessWidget {
                 if (icon != null) icon,
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (text != null)
                       DefaultTextStyle(

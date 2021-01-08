@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
+import 'screens/buttons.dart';
+
 // final appKey = GlobalKey<_MyAppState>();
 final homeKey = GlobalKey();
 
@@ -17,7 +19,6 @@ class MyApp extends StatelessWidget {
     return FluentApp(
       title: 'Fluent ui app showcase',
       themeMode: ThemeMode.light,
-      // themeMode: ThemeMode.dark,
       initialRoute: '/',
       routes: {
         '/': (_) => MyHomePage(key: homeKey),
@@ -70,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
           currentIndex: index,
           onChanged: (i) => setState(() => index = i),
           pivots: [
-            PivotItem(text: Text('Buttons')),
+            PivotItem(text: Text('Inputs')),
             PivotItem(text: Text('Surfaces')),
           ],
         ),
@@ -78,70 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PivotView(
         currentIndex: index,
         pages: <Widget>[
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.start,
-            children: [
-              Button.compound(
-                text: Text('Next page'),
-                subtext: Text('Select ingredients'),
-                // icon: Icon(FluentIcons.food_24_regular),
-                // trailingIcon: Icon(FluentIcons.arrow_next_24_regular),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (_) {
-                        return Dialog(
-                          title: Text('Missing Subject'),
-                          body: Text(
-                              'Do you want to send this message without a subject?'),
-                          footer: [
-                            Button.primary(
-                                text: Text('Save'), onPressed: () {}),
-                            Button(text: Text('Cancel'), onPressed: () {}),
-                          ],
-                        );
-                      });
-                },
-              ),
-              Button.action(
-                icon: Icon(FluentIcons.person_24_filled),
-                text: Text('Show snackbar'),
-                onPressed: () {
-                  showSnackbar(
-                    context: context,
-                    snackbar: Snackbar(
-                      title: Text('My beautiful snackbar'),
-                      button: Button.primary(
-                        text: Text('Button'),
-                        onPressed: () {},
-                      ),
-                    ),
-                  );
-                },
-              ),
-              Button.icon(
-                icon: Icon(FluentIcons.add_24_regular),
-                menu: Icon(FluentIcons.swipe_down_24_regular),
-                onPressed: () {},
-              ),
-              Checkbox(
-                checked: value,
-                onChanged: (v) => setState(() => value = v),
-                // onChange: null,
-              ),
-              Toggle(
-                checked: value,
-                onChanged: (v) => setState(() => value = v),
-              ),
-              ToggleListCell(
-                title: Text('Title'),
-                checked: value,
-                onChanged: (v) => setState(() => value = v),
-                opposite: Icon(FluentIcons.person_28_filled),
-              ),
-              Divider(),
-            ],
-          ),
+          InputsPage(),
           Column(
             children: [
               Tooltip(

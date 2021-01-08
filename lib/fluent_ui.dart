@@ -21,6 +21,7 @@ export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/icon_button.dart';
 export 'src/controls/inputs/split_button.dart';
 export 'src/controls/inputs/toggle.dart';
+export 'src/controls/inputs/drop_down_button.dart';
 
 export 'src/controls/items/list_cell.dart';
 

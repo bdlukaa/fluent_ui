@@ -21,6 +21,7 @@ class HoverButton extends StatefulWidget {
 }
 
 class _HoverButtonState extends State<HoverButton> {
+  final FocusNode node = FocusNode();
   bool _hovering = false;
   bool _pressing = false;
 
@@ -37,30 +38,37 @@ class _HoverButtonState extends State<HoverButton> {
   void update(Function f) {
     if (isDisabled) return;
     if (!mounted) return f();
+    if (_pressing)
+      node.requestFocus();
+    else
+      node.unfocus();
     setState(f);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: widget.cursor?.call(context, state) ?? buttonCursor(state),
-      onEnter: (_) => update(() => _hovering = true),
-      onHover: (_) => update(() => _hovering = true),
-      onExit: (_) => update(() => _hovering = false),
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        onTapDown: (_) => update(() => _pressing = true),
-        onTapUp: (_) async {
-          if (isDisabled) return;
-          await Future.delayed(Duration(milliseconds: 100));
-          update(() => _pressing = false);
-        },
-        onTapCancel: () => update(() => _pressing = false),
-        onLongPress: widget.onLongPress,
-        onLongPressStart: (_) => update(() => _pressing = true),
-        onLongPressEnd: (_) => update(() => _pressing = false),
-        // onTapCancel: () => update(() => _pressing = false),
-        child: widget.builder?.call(context, state) ?? SizedBox(),
+    return Focus(
+      focusNode: node,
+      child: MouseRegion(
+        cursor: widget.cursor?.call(context, state) ?? buttonCursor(state),
+        onEnter: (_) => update(() => _hovering = true),
+        onHover: (_) => update(() => _hovering = true),
+        onExit: (_) => update(() => _hovering = false),
+        child: GestureDetector(
+          onTap: widget.onPressed,
+          onTapDown: (_) => update(() => _pressing = true),
+          onTapUp: (_) async {
+            if (isDisabled) return;
+            await Future.delayed(Duration(milliseconds: 100));
+            update(() => _pressing = false);
+          },
+          onTapCancel: () => update(() => _pressing = false),
+          onLongPress: widget.onLongPress,
+          onLongPressStart: (_) => update(() => _pressing = true),
+          onLongPressEnd: (_) => update(() => _pressing = false),
+          // onTapCancel: () => update(() => _pressing = false),
+          child: widget.builder?.call(context, state) ?? SizedBox(),
+        ),
       ),
     );
   }
