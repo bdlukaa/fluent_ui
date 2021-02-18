@@ -34,19 +34,28 @@ class _InputsPageState extends State<InputsPage> {
                     subtext: Text('Select ingredients'),
                     onPressed: () {
                       showDialog(
-                          context: context,
-                          builder: (_) {
-                            return Dialog(
-                              title: Text('Missing Subject'),
-                              body: Text(
-                                  'Do you want to send this message without a subject?'),
-                              footer: [
-                                Button.primary(
-                                    text: Text('Save'), onPressed: () {}),
-                                Button(text: Text('Cancel'), onPressed: () {}),
-                              ],
-                            );
-                          });
+                        context: context,
+                        builder: (_) {
+                          return Dialog(
+                            title: Text('Missing Subject'),
+                            body: Text(
+                              'Do you want to send this message without a subject?',
+                            ),
+                            footer: [
+                              Button.primary(
+                                text: Text('Save'),
+                                onPressed: () {},
+                              ),
+                              Button(
+                                text: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   ),
                   Button.action(
@@ -67,14 +76,13 @@ class _InputsPageState extends State<InputsPage> {
                   ),
                   Button.icon(
                     icon: Icon(FluentIcons.add_24_regular),
-                    menu: Icon(FluentIcons.swipe_down_24_regular),
                     onPressed: () {},
                   ),
                   DropDownButton(
-                    content: Text('Content haha'),
+                    content: Text('Hover me :)'),
                     dropdown: Dropdown.sections(
                       sectionTitles: [Text('title'), Text('ajaa')],
-                      sectionBodies: [Text('body'),Text('haha')],
+                      sectionBodies: [Text('body'), Text('haha')],
                     ),
                   ),
                 ],
@@ -91,12 +99,16 @@ class _InputsPageState extends State<InputsPage> {
                 spacing: 6,
                 runSpacing: 6,
                 children: [
-                  Toggle(
+                  ToggleSwitch(
                     checked: value,
                     onChanged: (v) => setState(() => value = v),
                   ),
                   Checkbox(
                     checked: value,
+                    onChanged: (v) => setState(() => value = v),
+                  ),
+                  RadioButton(
+                    selected: value,
                     onChanged: (v) => setState(() => value = v),
                   ),
                 ],

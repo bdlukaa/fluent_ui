@@ -8,6 +8,9 @@ class HoverButton extends StatefulWidget {
     this.onPressed,
     this.onLongPress,
     this.builder,
+    this.focusNode,
+    this.margin,
+    this.semanticsLabel,
   }) : super(key: key);
 
   final MouseCursor Function(BuildContext, ButtonStates) cursor;
@@ -16,12 +19,24 @@ class HoverButton extends StatefulWidget {
 
   final Widget Function(BuildContext, ButtonStates state) builder;
 
+  final FocusNode focusNode;
+
+  final EdgeInsetsGeometry margin;
+  final String semanticsLabel;
+
   @override
   _HoverButtonState createState() => _HoverButtonState();
 }
 
 class _HoverButtonState extends State<HoverButton> {
-  final FocusNode node = FocusNode();
+  FocusNode node;
+
+  @override
+  void initState() {
+    node = widget.focusNode ?? FocusNode();
+    super.initState();
+  }
+
   bool _hovering = false;
   bool _pressing = false;
 
@@ -47,7 +62,7 @@ class _HoverButtonState extends State<HoverButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
+    Widget w = Focus(
       focusNode: node,
       child: MouseRegion(
         cursor: widget.cursor?.call(context, state) ?? buttonCursor(state),
@@ -71,6 +86,13 @@ class _HoverButtonState extends State<HoverButton> {
         ),
       ),
     );
+    if (widget.margin != null) w = Padding(padding: widget.margin, child: w);
+    if (widget.semanticsLabel != null)
+      w = Semantics(
+        label: widget.semanticsLabel,
+        child: w,
+      );
+    return w;
   }
 }
 

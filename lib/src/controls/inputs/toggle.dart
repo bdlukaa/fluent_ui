@@ -1,14 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-class Toggle extends StatelessWidget {
-  const Toggle({
+class ToggleSwitch extends StatelessWidget {
+  const ToggleSwitch({
     Key key,
     @required this.checked,
     @required this.onChanged,
     this.style,
     this.semanticsLabel,
     this.thumb,
+    this.focusNode,
   }) : super(key: key);
 
   final bool checked;
@@ -16,60 +17,64 @@ class Toggle extends StatelessWidget {
 
   final Widget thumb;
 
-  final ToggleStyle style;
+  final ToggleSwitchStyle style;
 
   final String semanticsLabel;
+  final FocusNode focusNode;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.toggleStyle.copyWith(this.style);
+    final style = context.theme.toggleSwitchStyle.copyWith(this.style);
     return Semantics(
       label: semanticsLabel,
-      child: HoverButton(
-        cursor: (_, state) => style.cursor?.call(state),
-        onPressed: onChanged == null ? null : () => onChanged(!checked),
-        builder: (context, state) {
-          return AnimatedContainer(
-            alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
-            height: 30,
-            width: 70,
-            duration: style.animationDuration,
-            curve: style.animationCurve,
-            padding: style.padding,
-            margin: style.margin,
-            decoration: BoxDecoration(
-              color: checked
-                  ? style.checkedColor(state)
-                  : style.uncheckedColor(state),
-              border: checked
-                  ? style.checkedBorder(state)
-                  : style.uncheckedBorder(state),
-              borderRadius: style.borderRadius,
-            ),
-            child: thumb ??
-                Container(
-                  constraints: BoxConstraints(
-                    minHeight: 8,
-                    minWidth: 8,
-                    maxHeight: 16,
-                    maxWidth: 16,
+      child: Padding(
+        padding: style.margin,
+        child: HoverButton(
+          focusNode: focusNode,
+          cursor: (_, state) => style.cursor?.call(state),
+          onPressed: onChanged == null ? null : () => onChanged(!checked),
+          builder: (context, state) {
+            return AnimatedContainer(
+              alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
+              height: 25,
+              width: 60,
+              duration: style.animationDuration,
+              curve: style.animationCurve,
+              padding: style.padding,
+              decoration: BoxDecoration(
+                color: checked
+                    ? style.checkedColor(state)
+                    : style.uncheckedColor(state),
+                border: checked
+                    ? style.checkedBorder(state)
+                    : style.uncheckedBorder(state),
+                borderRadius: style.borderRadius,
+              ),
+              child: thumb ??
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 8,
+                      minWidth: 8,
+                      maxHeight: 13,
+                      maxWidth: 13,
+                    ),
+                    decoration: BoxDecoration(
+                      color: checked
+                          ? style.checkedThumbColor(state)
+                          : style.uncheckedThumbColor(state),
+                      borderRadius: style.thumbBorderRadius,
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: checked
-                        ? style.checkedThumbColor(state)
-                        : style.uncheckedThumbColor(state),
-                    borderRadius: style.thumbBorderRadius,
-                  ),
-                ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-class ToggleStyle {
+class ToggleSwitchStyle {
   final ButtonState<Color> checkedColor;
   final ButtonState<Color> uncheckedColor;
 
@@ -89,7 +94,7 @@ class ToggleStyle {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  ToggleStyle({
+  ToggleSwitchStyle({
     this.checkedColor,
     this.uncheckedColor,
     this.cursor,
@@ -105,9 +110,9 @@ class ToggleStyle {
     this.thumbBorderRadius,
   });
 
-  static ToggleStyle defaultTheme([Brightness brightness]) {
+  static ToggleSwitchStyle defaultTheme([Brightness brightness]) {
     Color disabledColor = Colors.grey[100].withOpacity(0.6);
-    final def = ToggleStyle(
+    final def = ToggleSwitchStyle(
       cursor: (state) => state.isDisabled
           ? SystemMouseCursors.forbidden
           : SystemMouseCursors.click,
@@ -129,18 +134,18 @@ class ToggleStyle {
       animationCurve: Curves.linear,
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(ToggleStyle(
+      return def.copyWith(ToggleSwitchStyle(
         uncheckedBorder: (state) => Border.all(
-          width: 0.6,
-          color: state.isDisabled ? disabledColor : Colors.black,
+          width: 0.8,
+          color: state.isDisabled ? disabledColor : Colors.grey[220],
         ),
         checkedThumbColor: (_) => Colors.white,
         uncheckedThumbColor: (_) => Colors.black,
       ));
     else
-      return def.copyWith(ToggleStyle(
+      return def.copyWith(ToggleSwitchStyle(
         uncheckedBorder: (state) => Border.all(
-          width: 0.6,
+          width: 0.8,
           color: state.isDisabled ? disabledColor : Colors.white,
         ),
         checkedThumbColor: (_) => Colors.white,
@@ -148,9 +153,9 @@ class ToggleStyle {
       ));
   }
 
-  ToggleStyle copyWith(ToggleStyle style) {
+  ToggleSwitchStyle copyWith(ToggleSwitchStyle style) {
     if (style == null) return this;
-    return ToggleStyle(
+    return ToggleSwitchStyle(
       checkedBorder: style?.checkedBorder ?? checkedBorder,
       uncheckedBorder: style?.uncheckedBorder ?? uncheckedBorder,
       borderRadius: style?.borderRadius ?? borderRadius,

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class DropDownButton extends StatefulWidget {
-  DropDownButton({
+  const DropDownButton({
     Key key,
     @required this.content,
     @required this.dropdown,
@@ -11,6 +11,8 @@ class DropDownButton extends StatefulWidget {
     this.startOpen = false,
     this.adoptDropdownWidth = true,
     this.horizontal = false,
+    this.semanticsLabel,
+    this.openWhen,
   })  : assert(content != null),
         assert(dropdown != null),
         assert(disabled != null),
@@ -25,22 +27,26 @@ class DropDownButton extends StatefulWidget {
   final Widget dropdown;
   final bool adoptDropdownWidth;
   final bool horizontal;
+  final String semanticsLabel;
 
   final bool disabled;
   final bool startOpen;
   final FocusNode focusNode;
+
+  final List<ButtonState> openWhen;
 
   @override
   _DropDownButtonState createState() => _DropDownButtonState();
 }
 
 class _DropDownButtonState extends State<DropDownButton> {
-  FocusNode node = FocusNode();
   GlobalKey _key = LabeledGlobalKey(UniqueKey().toString());
   Offset buttonPosition;
   Size buttonSize;
   OverlayEntry _overlayEntry;
+
   bool isOpen = false;
+  bool get isClosed => !isOpen;
 
   @override
   void initState() {
@@ -58,11 +64,10 @@ class _DropDownButtonState extends State<DropDownButton> {
   }
 
   void close() {
-    if (!isOpen) return;
+    if (isClosed) return;
     setState(() => _overlayEntry?.remove());
     _overlayEntry = null;
     isOpen = false;
-    node.unfocus();
   }
 
   void open() {
@@ -71,7 +76,6 @@ class _DropDownButtonState extends State<DropDownButton> {
     _overlayEntry = _overlayEntryBuilder();
     Overlay.of(context).insert(_overlayEntry);
     isOpen = true;
-    node.requestFocus();
   }
 
   void toggle() {
@@ -86,24 +90,33 @@ class _DropDownButtonState extends State<DropDownButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      focusNode: node,
-      onFocusChange: (focused) {
-        if (!focused && isOpen) close();
-      },
-      child: Button(
-        key: _key,
-        text: widget.content,
-        style: widget.style,
-        onPressed: widget.disabled
-            ? null
-            : () {
-                toggle();
-                // if (node.hasFocus)
-                //   node.unfocus();
-                // else
-                //   node.requestFocus();
-              },
+    return Padding(
+      padding: widget.style?.margin ?? EdgeInsets.zero,
+      child: HoverButton(
+        onPressed: widget.disabled ? null : toggle,
+        builder: (c, states) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final openWhen = widget.openWhen ??
+                <ButtonStates>[
+                  ButtonStates.hovering,
+                  ButtonStates.pressing,
+                ];
+            if (openWhen.contains(states)) {
+              open();
+            } else {
+              close();
+            }
+          });
+          return Button(
+            key: _key,
+            focusNode: widget.focusNode,
+            text: widget.content,
+            style: (widget.style ?? Theme.of(context).buttonStyle)
+                .copyWith(ButtonStyle(margin: EdgeInsets.zero)),
+            semanticsLabel: widget.semanticsLabel,
+            onPressed: widget.disabled ? null : () {},
+          );
+        },
       ),
     );
   }
@@ -138,7 +151,7 @@ class _DropDownButtonState extends State<DropDownButton> {
   }
 }
 
-class Dropdown extends StatelessWidget {
+class Dropdown extends StatefulWidget {
   const Dropdown({Key key, @required this.child}) : super(key: key);
 
   final Widget child;
@@ -165,14 +178,47 @@ class Dropdown extends StatelessWidget {
         super(key: key);
 
   @override
+  _DropdownState createState() => _DropdownState();
+}
+
+class _DropdownState extends State<Dropdown>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: elevationShadow(),
+    return FadeTransition(
+      opacity: controller,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: Offset(0, -0.1),
+          end: Offset(0, 0.01),
+        ).animate(controller),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: elevationShadow(),
+          ),
+          child: widget.child,
+        ),
       ),
-      child: child,
     );
   }
 }

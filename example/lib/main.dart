@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'screens/buttons.dart';
 
@@ -20,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Fluent ui app showcase',
       themeMode: ThemeMode.light,
       initialRoute: '/',
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (_) => MyHomePage(key: homeKey),
       },
@@ -92,20 +92,20 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      footer: BottomNavigation(
-        currentIndex: index,
-        onChanged: (i) => setState(() => index = i),
-        items: [
-          BottomNavigationItem(
-            icon: Icon(FluentIcons.radio_button_24_filled),
-            label: Text('label'),
-          ),
-          BottomNavigationItem(
-            icon: Icon(FluentIcons.radio_button_24_filled),
-            label: Text('label'),
-          ),
-        ],
-      ),
+      // left: NavigationPanel(
+      //   currentIndex: index,
+      //   onChanged: (i) => setState(() => index = i),
+      //   items: [
+      //     NavigationPanelItem(
+      //       icon: Icon(FluentIcons.radio_button_24_filled),
+      //       label: Text('Inputs'),
+      //     ),
+      //     NavigationPanelItem(
+      //       icon: Icon(FluentIcons.radio_button_24_filled),
+      //       label: Text('Surface'),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

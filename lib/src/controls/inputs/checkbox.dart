@@ -9,6 +9,7 @@ class Checkbox extends StatelessWidget {
     @required this.onChanged,
     this.style,
     this.semanticsLabel,
+    this.focusNode,
   }) : super(key: key);
 
   final bool checked;
@@ -18,44 +19,45 @@ class Checkbox extends StatelessWidget {
 
   final String semanticsLabel;
 
+  final FocusNode focusNode;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.checkboxStyle.copyWith(this.style);
-    return Semantics(
-      label: semanticsLabel,
-      child: HoverButton(
-        cursor: (_, state) => style.cursor?.call(state),
-        onPressed: onChanged == null ? null : () => onChanged(!checked),
-        builder: (context, state) {
-          return AnimatedContainer(
+    return HoverButton(
+      semanticsLabel: semanticsLabel,
+      margin: style.margin,
+      focusNode: focusNode,
+      cursor: (_, state) => style.cursor?.call(state),
+      onPressed: onChanged == null ? null : () => onChanged(!checked),
+      builder: (context, state) {
+        return AnimatedContainer(
+          duration: style.animationDuration,
+          curve: style.animationCurve,
+          padding: style.padding,
+          decoration: BoxDecoration(
+            color: checked
+                ? style.checkedColor(state)
+                : style.uncheckedColor(state),
+            border: checked
+                ? style.checkedBorder(state)
+                : style.uncheckedBorder(state),
+            borderRadius: style.borderRadius,
+          ),
+          child: AnimatedSwitcher(
             duration: style.animationDuration,
-            curve: style.animationCurve,
-            padding: style.padding,
-            margin: style.margin,
-            decoration: BoxDecoration(
+            switchInCurve: style.animationCurve,
+            child: Icon(
+              style.icon,
               color: checked
-                  ? style.checkedColor(state)
-                  : style.uncheckedColor(state),
-              border: checked
-                  ? style.checkedBorder(state)
-                  : style.uncheckedBorder(state),
-              borderRadius: style.borderRadius,
+                  ? style.checkedIconColor(state)
+                  : style.uncheckedIconColor(state),
+              key: ValueKey(state),
             ),
-            child: AnimatedSwitcher(
-              duration: style.animationDuration,
-              switchInCurve: style.animationCurve,
-              child: Icon(
-                style.icon,
-                color: checked
-                    ? style.checkedIconColor(state)
-                    : style.uncheckedIconColor(state),
-                key: ValueKey(state),
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

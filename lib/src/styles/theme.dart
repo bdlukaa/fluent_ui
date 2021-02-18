@@ -31,7 +31,7 @@ class Style {
   final Color bottomNavigationBackgroundColor;
 
   final AppBarStyle appBarStyle;
-  final BottomNavigationStyle bottomNavigationStyle;
+  final NavigationPanelStyle bottomNavigationStyle;
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
   final DialogStyle dialogStyle;
@@ -40,9 +40,10 @@ class Style {
   final IconStyle iconStyle;
   final ListCellStyle listCellStyle;
   final PivotItemStyle pivotItemStyle;
+  final RadioButtonStyle radioButtonStyle;
   final SnackbarStyle snackbarStyle;
   final SplitButtonStyle splitButtonStyle;
-  final ToggleStyle toggleStyle;
+  final ToggleSwitchStyle toggleSwitchStyle;
   final TooltipStyle tooltipStyle;
 
   final ButtonStyle buttonStyle;
@@ -50,7 +51,7 @@ class Style {
   final ButtonStyle actionButtonStyle;
   final ButtonStyle contextualButtonStyle;
   final ButtonStyle primaryButtonStyle;
-  
+
   Style({
     this.accentColor,
     this.brightness,
@@ -65,7 +66,7 @@ class Style {
     this.cardStyle,
     this.iconButtonStyle,
     this.checkboxStyle,
-    this.toggleStyle,
+    this.toggleSwitchStyle,
     this.pivotItemStyle,
     this.iconStyle,
     this.splitButtonStyle,
@@ -75,64 +76,93 @@ class Style {
     this.dividerStyle,
     this.snackbarStyle,
     this.bottomNavigationStyle,
+    this.radioButtonStyle,
   });
 
   Style build(BuildContext context) {
     if (this.brightness == null || this.brightness == Brightness.light)
       return Style(
-        accentColor: Colors.blue,
-        brightness: brightness ?? Brightness.light,
-        scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.white,
-        bottomNavigationBackgroundColor: bottomNavigationBackgroundColor ?? Colors.white,
-        appBarStyle: AppBarStyle.defaultTheme().copyWith(appBarStyle),
-        cardStyle: CardStyle.defaultTheme().copyWith(cardStyle),
-        buttonStyle: ButtonStyle.defaultTheme().copyWith(buttonStyle),
-        actionButtonStyle: ButtonStyle.defaultActionButtonTheme().copyWith(actionButtonStyle),
-        compoundButtonStyle: ButtonStyle.defaultCompoundButtonTheme().copyWith(compoundButtonStyle),
-        contextualButtonStyle: ButtonStyle.defaultTheme().copyWith(contextualButtonStyle),
-        primaryButtonStyle: ButtonStyle.defaultPrimaryButtonTheme().copyWith(primaryButtonStyle),
-        iconButtonStyle: IconButtonStyle.defaultTheme().copyWith(iconButtonStyle),
-        checkboxStyle: CheckboxStyle.defaultTheme().copyWith(checkboxStyle),
-        toggleStyle: ToggleStyle.defaultTheme().copyWith(toggleStyle),
-        pivotItemStyle: PivotItemStyle.defaultTheme().copyWith(pivotItemStyle),
-        iconStyle: IconStyle.defaultTheme().copyWith(iconStyle),
-        splitButtonStyle: SplitButtonStyle.defaultTheme().copyWith(splitButtonStyle),
-        listCellStyle: ListCellStyle.defaultTheme().copyWith(listCellStyle),
-        dialogStyle: DialogStyle.defaultTheme().copyWith(dialogStyle),
-        tooltipStyle: TooltipStyle.defaultTheme().copyWith(tooltipStyle),
-        dividerStyle: DividerStyle.defaultTheme().copyWith(dividerStyle),
-        snackbarStyle: SnackbarStyle.defaultTheme().copyWith(snackbarStyle),
-        bottomNavigationStyle: BottomNavigationStyle.defaultTheme().copyWith(bottomNavigationStyle),
-      );
+          accentColor: Colors.blue,
+          brightness: brightness ?? Brightness.light,
+          scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.white,
+          bottomNavigationBackgroundColor:
+              bottomNavigationBackgroundColor ?? Colors.white,
+          appBarStyle: AppBarStyle.defaultTheme().copyWith(appBarStyle),
+          cardStyle: CardStyle.defaultTheme().copyWith(cardStyle),
+          buttonStyle: ButtonStyle.defaultTheme().copyWith(buttonStyle),
+          actionButtonStyle: ButtonStyle.defaultActionButtonTheme()
+              .copyWith(actionButtonStyle),
+          compoundButtonStyle: ButtonStyle.defaultCompoundButtonTheme()
+              .copyWith(compoundButtonStyle),
+          contextualButtonStyle:
+              ButtonStyle.defaultTheme().copyWith(contextualButtonStyle),
+          primaryButtonStyle: ButtonStyle.defaultPrimaryButtonTheme()
+              .copyWith(primaryButtonStyle),
+          iconButtonStyle:
+              IconButtonStyle.defaultTheme().copyWith(iconButtonStyle),
+          checkboxStyle: CheckboxStyle.defaultTheme().copyWith(checkboxStyle),
+          toggleSwitchStyle:
+              ToggleSwitchStyle.defaultTheme().copyWith(toggleSwitchStyle),
+          pivotItemStyle:
+              PivotItemStyle.defaultTheme().copyWith(pivotItemStyle),
+          iconStyle: IconStyle.defaultTheme().copyWith(iconStyle),
+          splitButtonStyle:
+              SplitButtonStyle.defaultTheme().copyWith(splitButtonStyle),
+          listCellStyle: ListCellStyle.defaultTheme().copyWith(listCellStyle),
+          dialogStyle: DialogStyle.defaultTheme().copyWith(dialogStyle),
+          tooltipStyle: TooltipStyle.defaultTheme().copyWith(tooltipStyle),
+          dividerStyle: DividerStyle.defaultTheme().copyWith(dividerStyle),
+          snackbarStyle: SnackbarStyle.defaultTheme().copyWith(snackbarStyle),
+          bottomNavigationStyle: NavigationPanelStyle.defaultTheme()
+              .copyWith(bottomNavigationStyle),
+          radioButtonStyle:
+              RadioButtonStyle.defaultTheme().copyWith(radioButtonStyle));
     else
       return Style(
-        accentColor: Colors.blue,
-        brightness: brightness ?? Brightness.dark,
-        scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.grey[160],
-        appBarStyle: AppBarStyle.defaultTheme(brightness).copyWith(appBarStyle),
-        cardStyle: CardStyle.defaultTheme(brightness).copyWith(cardStyle),
-        buttonStyle: ButtonStyle.defaultTheme(brightness).copyWith(buttonStyle),
-        actionButtonStyle: ButtonStyle.defaultActionButtonTheme(brightness).copyWith(actionButtonStyle),
-        compoundButtonStyle: ButtonStyle.defaultCompoundButtonTheme(brightness),
-        contextualButtonStyle: ButtonStyle.defaultTheme(brightness).copyWith(contextualButtonStyle),
-        primaryButtonStyle: ButtonStyle.defaultPrimaryButtonTheme(brightness).copyWith(primaryButtonStyle),
-        iconButtonStyle: IconButtonStyle.defaultTheme(brightness).copyWith(iconButtonStyle),
-        checkboxStyle: CheckboxStyle.defaultTheme(brightness).copyWith(checkboxStyle),
-        toggleStyle: ToggleStyle.defaultTheme(brightness).copyWith(toggleStyle),
-        pivotItemStyle: PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
-        iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
-        splitButtonStyle: SplitButtonStyle.defaultTheme(brightness).copyWith(splitButtonStyle),
-        listCellStyle: ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
-        dialogStyle: DialogStyle.defaultTheme(brightness).copyWith(dialogStyle),
-        tooltipStyle: TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
-        dividerStyle: DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
-        snackbarStyle: SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
-        bottomNavigationStyle: BottomNavigationStyle.defaultTheme(brightness).copyWith(bottomNavigationStyle),
-      );
+          accentColor: Colors.blue,
+          brightness: brightness ?? Brightness.dark,
+          scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.grey[160],
+          appBarStyle:
+              AppBarStyle.defaultTheme(brightness).copyWith(appBarStyle),
+          cardStyle: CardStyle.defaultTheme(brightness).copyWith(cardStyle),
+          buttonStyle:
+              ButtonStyle.defaultTheme(brightness).copyWith(buttonStyle),
+          actionButtonStyle: ButtonStyle.defaultActionButtonTheme(brightness)
+              .copyWith(actionButtonStyle),
+          compoundButtonStyle:
+              ButtonStyle.defaultCompoundButtonTheme(brightness),
+          contextualButtonStyle: ButtonStyle.defaultTheme(brightness)
+              .copyWith(contextualButtonStyle),
+          primaryButtonStyle: ButtonStyle.defaultPrimaryButtonTheme(brightness)
+              .copyWith(primaryButtonStyle),
+          iconButtonStyle: IconButtonStyle.defaultTheme(brightness)
+              .copyWith(iconButtonStyle),
+          checkboxStyle:
+              CheckboxStyle.defaultTheme(brightness).copyWith(checkboxStyle),
+          toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(brightness)
+              .copyWith(toggleSwitchStyle),
+          pivotItemStyle:
+              PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
+          iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
+          splitButtonStyle: SplitButtonStyle.defaultTheme(brightness)
+              .copyWith(splitButtonStyle),
+          listCellStyle:
+              ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
+          dialogStyle:
+              DialogStyle.defaultTheme(brightness).copyWith(dialogStyle),
+          tooltipStyle:
+              TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
+          dividerStyle:
+              DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
+          snackbarStyle:
+              SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
+          bottomNavigationStyle: NavigationPanelStyle.defaultTheme(brightness)
+              .copyWith(bottomNavigationStyle),
+          radioButtonStyle: RadioButtonStyle.defaultTheme(brightness)
+              .copyWith(radioButtonStyle));
   }
 
   static Style fallback(BuildContext context, [Brightness brightness]) {
     return Style(brightness: brightness).build(context);
   }
-
 }

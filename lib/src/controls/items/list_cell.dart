@@ -42,7 +42,7 @@ class ListCell extends StatelessWidget {
   ListCell.toggle({
     Key key,
     Widget opposite,
-    ToggleStyle toggleStyle,
+    ToggleSwitchStyle toggleStyle,
     ListCellStyle cellStyle,
     @required bool checked,
     @required ValueChanged<bool> onChanged,
@@ -198,7 +198,7 @@ class ToggleListCell extends StatelessWidget {
   final Widget subtitle;
   final Widget opposite;
   final ListCellStyle cellStyle;
-  final ToggleStyle toggleStyle;
+  final ToggleSwitchStyle toggleStyle;
 
   final bool checked;
   final ValueChanged<bool> onChanged;
@@ -222,7 +222,7 @@ class ToggleListCell extends StatelessWidget {
   }
 
   Widget _buildToggle(BuildContext context) {
-    return Toggle(
+    return ToggleSwitch(
       checked: checked,
       onChanged: onChanged,
       style: toggleStyle,

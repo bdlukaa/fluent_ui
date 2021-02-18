@@ -11,7 +11,22 @@ Future<void> showSnackbar({
   VoidCallback onDismiss,
 }) {
   debugCheckHasFluentTheme(context);
-  final style = context.theme.snackbarStyle;
+  var style = context.theme.snackbarStyle;
+  if (snackbar is Snackbar) {
+    style = style.copyWith(snackbar.style);
+    return showToast(
+      context: context,
+      child: snackbar,
+      alignment: alignment ?? style?.alignment,
+      interactive: true,
+      animationDuration: animationDuration ?? style?.animationDuration,
+      duration: showDuration ?? style?.showDuration,
+      animationBuilder: animationBuilder ?? style?.animationBuilder,
+      onDismiss: onDismiss,
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+    );
+  }
   return showToast(
     context: context,
     child: snackbar,
@@ -28,12 +43,14 @@ Future<void> showSnackbar({
 
 enum _SnackbarType { normal, multiLine }
 
+// ignore: must_be_immutable
 class Snackbar extends StatelessWidget {
-  const Snackbar({
+  Snackbar({
     Key key,
     @required this.title,
     this.button,
     this.style,
+    this.stopCountingWhenPressing,
   })  : _type = _SnackbarType.normal,
         super(key: key);
 
@@ -41,11 +58,16 @@ class Snackbar extends StatelessWidget {
   final Widget button;
 
   final SnackbarStyle style;
+  final bool stopCountingWhenPressing;
 
   final _SnackbarType _type;
 
-  const Snackbar.multiLine({@required this.title, this.button, this.style})
-      : _type = _SnackbarType.multiLine;
+  Snackbar.multiLine({
+    @required this.title,
+    this.button,
+    this.style,
+    this.stopCountingWhenPressing,
+  }) : _type = _SnackbarType.multiLine;
 
   Future<void> show({
     @required BuildContext context,
@@ -86,9 +108,11 @@ class Snackbar extends StatelessWidget {
                 children: [
                   if (title != null)
                     Expanded(
-                      child: DefaultTextStyle(
-                        child: title,
-                        style: style.textStyle,
+                      child: IgnorePointer(
+                        child: DefaultTextStyle(
+                          child: title,
+                          style: style.textStyle,
+                        ),
                       ),
                     ),
                   if (button != null) button,
@@ -102,9 +126,11 @@ class Snackbar extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: DefaultTextStyle(
-                            child: title,
-                            style: style.textStyle,
+                          child: IgnorePointer(
+                            child: DefaultTextStyle(
+                              child: title,
+                              style: style.textStyle,
+                            ),
                           ),
                         ),
                       ],
@@ -115,7 +141,6 @@ class Snackbar extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class SnackbarStyle {

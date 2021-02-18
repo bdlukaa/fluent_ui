@@ -81,7 +81,7 @@ Future<void> showToastWidget({
 
   ToastManager.insert(entry);
 
-  await Future.delayed(toast.duration ?? _defaultDuration, () {
+  await Future.delayed(toast.duration ?? _defaultDuration, () async {
     ToastManager.dismiss(entry);
     toast.onDismiss?.call();
   });

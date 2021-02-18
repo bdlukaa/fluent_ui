@@ -1,3 +1,20 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.2] - [18/02/2021]
 
-* TODO: Describe initial release.
+- The whole library was rewritten following [this](https://docs.microsoft.com/en-us/windows/uwp/design/)
+- Tooltip's background color is now opaque (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tooltips))
+- Dropdown button now works as expected
+- **FIXED**:
+  - Snackbar now is dismissed even if pressing or hovering
+  - Margin is no longer used as part of the clickable button
+- **BREAKING**:
+  - Renamed `Toggle` to `ToggleSwitch` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/toggles))
+  - Removed `BottomNavigationBar`. It's recommended to use top navigation (pivots)
+  - Removed `IconButton.menu`
+- **NEW**:
+  - NavigationPanel (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/layout/page-layout#left-nav))
+  - Windows project on example
+  - RadioButton (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button))
+
+## [0.0.1]
+
+- Initial release

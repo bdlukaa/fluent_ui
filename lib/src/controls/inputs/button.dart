@@ -43,7 +43,7 @@ MouseCursor buttonCursor(ButtonStates state) {
     return MouseCursor.defer;
 }
 
-enum _ButtonType { def, compound, action, contextual, icon, primary }
+enum _ButtonType { def, compound, action, contextual, icon, primary, dropdown }
 
 class Button extends StatelessWidget {
   /// Implementation for DefaultButton, PrimaryButton, CompoundButton, ActionButton
@@ -60,6 +60,7 @@ class Button extends StatelessWidget {
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
+    this.focusNode,
   })  : type = _ButtonType.def,
         super(key: key);
 
@@ -70,6 +71,7 @@ class Button extends StatelessWidget {
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
+    this.focusNode,
   })  : subtext = null,
         icon = null,
         trailingIcon = null,
@@ -84,6 +86,7 @@ class Button extends StatelessWidget {
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
+    this.focusNode,
   })  : icon = null,
         trailingIcon = null,
         type = _ButtonType.compound,
@@ -93,14 +96,13 @@ class Button extends StatelessWidget {
   Button.icon({
     Key key,
     @required this.icon,
-    Widget menu,
     IconButtonStyle style,
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
-  })  : text = IconButton.menu(
+    this.focusNode,
+  })  : text = IconButton(
           icon: icon,
-          menu: menu,
           onPressed: onPressed,
           onLongPress: onLongPress,
           semanticsLabel: semanticsLabel,
@@ -113,16 +115,17 @@ class Button extends StatelessWidget {
         super(key: key);
 
   /// Creates a ContextualButton
-  const Button.contextual({
-    Key key,
-    @required this.icon,
-    @required this.text,
-    @required this.trailingIcon,
-    this.onLongPress,
-    this.onPressed,
-    this.style,
-    this.semanticsLabel,
-  })  : subtext = null,
+  const Button.contextual(
+      {Key key,
+      @required this.icon,
+      @required this.text,
+      @required this.trailingIcon,
+      this.onLongPress,
+      this.onPressed,
+      this.style,
+      this.semanticsLabel,
+      this.focusNode})
+      : subtext = null,
         type = _ButtonType.contextual,
         super(key: key);
 
@@ -135,9 +138,47 @@ class Button extends StatelessWidget {
     this.onPressed,
     this.style,
     this.semanticsLabel,
+    this.focusNode,
   })  : trailingIcon = null,
         subtext = null,
         type = _ButtonType.action,
+        super(key: key);
+
+  Button.dropdown({
+    Key key,
+    @required Widget content,
+    @required Widget dropdown,
+    this.style,
+    bool disabled = false,
+    bool startOpen = false,
+    bool adoptDropdownWidth = true,
+    bool horizontal = false,
+    this.semanticsLabel,
+    this.focusNode,
+  })  : text = DropDownButton(
+          key: key,
+          content: content,
+          dropdown: dropdown,
+          adoptDropdownWidth: adoptDropdownWidth,
+          disabled: disabled,
+          horizontal: horizontal,
+          semanticsLabel: semanticsLabel,
+          startOpen: startOpen,
+          style: style,
+          focusNode: focusNode,
+        ),
+        icon = null,
+        onLongPress = null,
+        onPressed = null,
+        subtext = null,
+        trailingIcon = null,
+        type = _ButtonType.dropdown,
+        assert(content != null),
+        assert(dropdown != null),
+        assert(disabled != null),
+        assert(adoptDropdownWidth != null),
+        assert(startOpen != null),
+        assert(horizontal != null),
         super(key: key);
 
   final _ButtonType type;
@@ -168,13 +209,16 @@ class Button extends StatelessWidget {
   /// The semantics label to allow screen readers to read the screen
   final String semanticsLabel;
 
+  final FocusNode focusNode;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    // Create only the IconButton
-    if (type == _ButtonType.icon) return text;
     ButtonStyle style;
     switch (type) {
+      case _ButtonType.icon:
+      case _ButtonType.dropdown:
+        return text;
       case _ButtonType.contextual:
         style = context.theme.contextualButtonStyle;
         break;
@@ -193,49 +237,48 @@ class Button extends StatelessWidget {
         break;
     }
     style = style.copyWith(this.style);
-    return Semantics(
-      label: semanticsLabel,
-      child: HoverButton(
-        cursor: (_, state) => style.cursor?.call(state),
-        onPressed: onPressed,
-        onLongPress: onLongPress,
-        builder: (context, state) {
-          return Container(
-            padding: style.padding,
-            margin: style.margin,
-            decoration: BoxDecoration(
-              color: style.color?.call(state),
-              borderRadius: style.borderRadius,
-              border: style.border?.call(state),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icon != null) icon,
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (text != null)
-                      DefaultTextStyle(
-                        style: (style.textStyle?.call(state)) ?? TextStyle(),
-                        textAlign: TextAlign.center,
-                        child: text,
-                      ),
-                    if (subtext != null)
-                      DefaultTextStyle(
-                        style: (style.subtextStyle?.call(state)) ?? TextStyle(),
-                        textAlign: TextAlign.center,
-                        child: subtext,
-                      )
-                  ],
-                ),
-                if (trailingIcon != null) trailingIcon,
-              ],
-            ),
-          );
-        },
-      ),
+    return HoverButton(
+      semanticsLabel: semanticsLabel,
+      margin: style.margin,
+      focusNode: focusNode,
+      cursor: (_, state) => style.cursor?.call(state),
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      builder: (context, state) {
+        return Container(
+          padding: style.padding,
+          decoration: BoxDecoration(
+            color: style.color?.call(state),
+            borderRadius: style.borderRadius,
+            border: style.border?.call(state),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) icon,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (text != null)
+                    DefaultTextStyle(
+                      style: (style.textStyle?.call(state)) ?? TextStyle(),
+                      textAlign: TextAlign.center,
+                      child: text,
+                    ),
+                  if (subtext != null)
+                    DefaultTextStyle(
+                      style: (style.subtextStyle?.call(state)) ?? TextStyle(),
+                      textAlign: TextAlign.center,
+                      child: subtext,
+                    )
+                ],
+              ),
+              if (trailingIcon != null) trailingIcon,
+            ],
+          ),
+        );
+      },
     );
   }
 }

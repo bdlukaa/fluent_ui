@@ -20,9 +20,7 @@ class SplitButtonBar extends StatelessWidget {
         newButtons.add(Divider(direction: Axis.vertical));
     }
     return Container(
-      child: Row(
-        children: List.generate(buttons.length, (index) => null),
-      ),
+      child: Row(children: List.generate(buttons.length, (index) => null)),
     );
   }
 }

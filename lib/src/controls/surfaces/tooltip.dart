@@ -409,34 +409,6 @@ class _TooltipOverlay extends StatelessWidget {
   }
 }
 
-// TODO: there's no current way to get the tooltip direction,
-// so it can't be drawed
-class TooltipDecoration extends Decoration {
-  final Color color;
-
-  TooltipDecoration(this.color);
-
-  @override
-  BoxPainter createBoxPainter([void Function() onChanged]) {
-    return _TooltipDecorationPainter(color);
-  }
-}
-
-class _TooltipDecorationPainter extends BoxPainter {
-  final Color color;
-  _TooltipDecorationPainter(this.color);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    final Rect bounds = offset & configuration.size;
-    _drawDecoration(canvas, bounds);
-  }
-
-  void _drawDecoration(Canvas canvas, Rect bounds) {
-
-  }
-}
-
 class TooltipStyle {
   final double height;
   final double verticalOffset;
@@ -478,22 +450,20 @@ class TooltipStyle {
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(TooltipStyle(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
+          boxShadow: elevationShadow(),
         ),
-        textStyle: TextStyle(
-          color: Colors.black,
-        ),
+        textStyle: TextStyle(color: Colors.black),
       ));
     else
       return def.copyWith(TooltipStyle(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
+          boxShadow: elevationShadow(),
         ),
-        textStyle: TextStyle(
-          color: Colors.black,
-        ),
+        textStyle: TextStyle(color: Colors.black),
       ));
   }
 

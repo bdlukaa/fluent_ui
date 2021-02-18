@@ -9,21 +9,11 @@ class IconButton extends StatelessWidget {
     this.onLongPress,
     this.style,
     this.semanticsLabel,
-  })  : menu = null,
+    this.focusNode,
+  })  : 
         super(key: key);
 
-  const IconButton.menu({
-    Key key,
-    @required this.icon,
-    @required this.menu,
-    this.onPressed,
-    this.onLongPress,
-    this.style,
-    this.semanticsLabel,
-  }) : super(key: key);
-
   final Widget icon;
-  final Widget menu;
 
   final VoidCallback onPressed;
   final VoidCallback onLongPress;
@@ -31,22 +21,15 @@ class IconButton extends StatelessWidget {
   final IconButtonStyle style;
 
   final String semanticsLabel;
-
-  // TODO: tooltip
-  // final String tooltip;
+  final FocusNode focusNode;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.iconButtonStyle.copyWith(this.style);
     return Button(
-      text: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) icon,
-          if (menu != null) menu,
-        ],
-      ),
+      focusNode: focusNode,
+      text: icon,
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticsLabel: semanticsLabel,
