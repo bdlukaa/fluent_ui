@@ -17,8 +17,10 @@ List<BoxShadow> elevationShadow({
   double factor = 0,
 }) {
   assert(factor != null, 'The elevation factor is necessary');
-  // assert([right, left, bottom, top].contains(null),
-  //     'Right, left, top and bottom can\'t be null');
+  assert(
+    ![right, left, bottom, top].contains(null),
+    'Right, left, top and bottom can\'t be null',
+  );
   color ??= Colors.black.withOpacity(0.2);
   return [
     if (right)

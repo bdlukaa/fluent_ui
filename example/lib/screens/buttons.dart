@@ -29,7 +29,7 @@ class _InputsPageState extends State<InputsPage> {
                 spacing: 6,
                 runSpacing: 6,
                 children: [
-                  Button.compound(
+                  Button(
                     text: Text('Next page'),
                     subtext: Text('Select ingredients'),
                     onPressed: () {
@@ -42,7 +42,7 @@ class _InputsPageState extends State<InputsPage> {
                               'Do you want to send this message without a subject?',
                             ),
                             footer: [
-                              Button.primary(
+                              Button(
                                 text: Text('Save'),
                                 onPressed: () {},
                               ),
@@ -58,7 +58,7 @@ class _InputsPageState extends State<InputsPage> {
                       );
                     },
                   ),
-                  Button.action(
+                  Button(
                     icon: Icon(FluentIcons.person_24_filled),
                     text: Text('Show snackbar'),
                     onPressed: () {
@@ -66,7 +66,7 @@ class _InputsPageState extends State<InputsPage> {
                         context: context,
                         snackbar: Snackbar(
                           title: Text('My beautiful snackbar'),
-                          button: Button.primary(
+                          button: Button(
                             text: Text('Button'),
                             onPressed: () {},
                           ),

@@ -10,7 +10,8 @@ class ToggleSwitch extends StatelessWidget {
     this.semanticsLabel,
     this.thumb,
     this.focusNode,
-  }) : super(key: key);
+  })  : assert(checked != null),
+        super(key: key);
 
   final bool checked;
   final ValueChanged<bool> onChanged;
@@ -26,53 +27,63 @@ class ToggleSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.toggleSwitchStyle.copyWith(this.style);
-    return Semantics(
-      label: semanticsLabel,
-      child: Padding(
-        padding: style.margin,
-        child: HoverButton(
-          focusNode: focusNode,
-          cursor: (_, state) => style.cursor?.call(state),
-          onPressed: onChanged == null ? null : () => onChanged(!checked),
-          builder: (context, state) {
-            return AnimatedContainer(
-              alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
-              height: 25,
-              width: 60,
-              duration: style.animationDuration,
-              curve: style.animationCurve,
-              padding: style.padding,
-              decoration: BoxDecoration(
-                color: checked
-                    ? style.checkedColor(state)
-                    : style.uncheckedColor(state),
-                border: checked
-                    ? style.checkedBorder(state)
-                    : style.uncheckedBorder(state),
-                borderRadius: style.borderRadius,
+    return HoverButton(
+      semanticsLabel: semanticsLabel,
+      margin: style.margin,
+      focusNode: focusNode,
+      cursor: (_, state) => style.cursor?.call(state),
+      onPressed: onChanged == null ? null : () => onChanged(!checked),
+      builder: (context, state) {
+        return AnimatedContainer(
+          alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
+          height: 25,
+          width: 60,
+          duration: style.animationDuration,
+          curve: style.animationCurve,
+          padding: style.padding,
+          decoration: BoxDecoration(
+            color: checked
+                ? style.checkedColor(state)
+                : style.uncheckedColor(state),
+            border: checked
+                ? style.checkedBorder(state)
+                : style.uncheckedBorder(state),
+            borderRadius: style.borderRadius,
+          ),
+          child: thumb ??
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: 8,
+                  minWidth: 8,
+                  maxHeight: 13,
+                  maxWidth: 13,
+                ),
+                decoration: BoxDecoration(
+                  color: checked
+                      ? style.checkedThumbColor(state)
+                      : style.uncheckedThumbColor(state),
+                  borderRadius: style.thumbBorderRadius,
+                ),
               ),
-              child: thumb ??
-                  Container(
-                    constraints: BoxConstraints(
-                      minHeight: 8,
-                      minWidth: 8,
-                      maxHeight: 13,
-                      maxWidth: 13,
-                    ),
-                    decoration: BoxDecoration(
-                      color: checked
-                          ? style.checkedThumbColor(state)
-                          : style.uncheckedThumbColor(state),
-                      borderRadius: style.thumbBorderRadius,
-                    ),
-                  ),
-            );
-          },
-        ),
-      ),
+        );
+      },
     );
   }
 }
+
+// class DefaultToggleSwitchThumb extends StatelessWidget {
+//   const DefaultToggleSwitchThumb({Key key}) : super(key: key);
+
+//   final bool checked;
+//   final 
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: child,
+//     );
+//   }
+// }
 
 class ToggleSwitchStyle {
   final ButtonState<Color> checkedColor;
@@ -94,7 +105,7 @@ class ToggleSwitchStyle {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  ToggleSwitchStyle({
+  const ToggleSwitchStyle({
     this.checkedColor,
     this.uncheckedColor,
     this.cursor,
@@ -110,7 +121,7 @@ class ToggleSwitchStyle {
     this.thumbBorderRadius,
   });
 
-  static ToggleSwitchStyle defaultTheme([Brightness brightness]) {
+  static ToggleSwitchStyle defaultTheme(Style style, [Brightness brightness]) {
     Color disabledColor = Colors.grey[100].withOpacity(0.6);
     final def = ToggleSwitchStyle(
       cursor: (state) => state.isDisabled

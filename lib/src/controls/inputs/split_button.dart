@@ -43,13 +43,13 @@ class SplitButtonStyle {
   final BorderRadiusGeometry borderRadius;
   final ButtonState<Border> border;
 
-  SplitButtonStyle({
+  const SplitButtonStyle({
     this.color,
     this.borderRadius,
     this.border,
   });
 
-  static SplitButtonStyle defaultTheme([Brightness brightness]) {
+  static SplitButtonStyle defaultTheme(Style style, [Brightness brightness]) {
     return SplitButtonStyle();
   }
 

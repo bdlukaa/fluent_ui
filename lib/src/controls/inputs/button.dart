@@ -43,7 +43,7 @@ MouseCursor buttonCursor(ButtonStates state) {
     return MouseCursor.defer;
 }
 
-enum _ButtonType { def, compound, action, contextual, icon, primary, dropdown }
+enum _ButtonType { def, icon, dropdown }
 
 class Button extends StatelessWidget {
   /// Implementation for DefaultButton, PrimaryButton, CompoundButton, ActionButton
@@ -62,34 +62,6 @@ class Button extends StatelessWidget {
     this.semanticsLabel,
     this.focusNode,
   })  : type = _ButtonType.def,
-        super(key: key);
-
-  /// Creates a PrimaryButton
-  const Button.primary({
-    @required this.text,
-    this.style,
-    this.onPressed,
-    this.onLongPress,
-    this.semanticsLabel,
-    this.focusNode,
-  })  : subtext = null,
-        icon = null,
-        trailingIcon = null,
-        type = _ButtonType.primary;
-
-  /// Creates a CompoundButton
-  const Button.compound({
-    Key key,
-    @required this.text,
-    @required this.subtext,
-    this.style,
-    this.onPressed,
-    this.onLongPress,
-    this.semanticsLabel,
-    this.focusNode,
-  })  : icon = null,
-        trailingIcon = null,
-        type = _ButtonType.compound,
         super(key: key);
 
   /// Creates an Icon Button. Uses [IconButton] under the hood
@@ -112,36 +84,6 @@ class Button extends StatelessWidget {
         style = null,
         trailingIcon = null,
         type = _ButtonType.icon,
-        super(key: key);
-
-  /// Creates a ContextualButton
-  const Button.contextual(
-      {Key key,
-      @required this.icon,
-      @required this.text,
-      @required this.trailingIcon,
-      this.onLongPress,
-      this.onPressed,
-      this.style,
-      this.semanticsLabel,
-      this.focusNode})
-      : subtext = null,
-        type = _ButtonType.contextual,
-        super(key: key);
-
-  /// Creates an ActionButton
-  const Button.action({
-    Key key,
-    @required this.icon,
-    @required this.text,
-    this.onLongPress,
-    this.onPressed,
-    this.style,
-    this.semanticsLabel,
-    this.focusNode,
-  })  : trailingIcon = null,
-        subtext = null,
-        type = _ButtonType.action,
         super(key: key);
 
   Button.dropdown({
@@ -219,18 +161,6 @@ class Button extends StatelessWidget {
       case _ButtonType.icon:
       case _ButtonType.dropdown:
         return text;
-      case _ButtonType.contextual:
-        style = context.theme.contextualButtonStyle;
-        break;
-      case _ButtonType.action:
-        style = context.theme.actionButtonStyle;
-        break;
-      case _ButtonType.compound:
-        style = context.theme.compoundButtonStyle;
-        break;
-      case _ButtonType.primary:
-        style = context.theme.primaryButtonStyle;
-        break;
       case _ButtonType.def:
       default:
         style = context.theme.buttonStyle;
@@ -299,7 +229,7 @@ class ButtonStyle {
   // compoused button
   final ButtonState<TextStyle> subtextStyle;
 
-  ButtonStyle({
+  const ButtonStyle({
     this.color,
     this.border,
     this.borderRadius,
@@ -310,61 +240,7 @@ class ButtonStyle {
     this.subtextStyle,
   });
 
-  static ButtonStyle defaultActionButtonTheme([Brightness brightness]) {
-    brightness ??= Brightness.light;
-    return defaultTheme(brightness).copyWith(ButtonStyle(
-      border: (_) => Border.all(style: BorderStyle.none),
-      color: (_) => Colors.transparent,
-      textStyle: (state) => state.isDisabled
-          ? TextStyle(color: Colors.grey[100])
-          : state.isHovering || state.isPressing
-              ? TextStyle(color: Colors.blue)
-              : TextStyle(
-                  color: brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                ),
-    ));
-  }
-
-  static ButtonStyle defaultCompoundButtonTheme([Brightness brightness]) {
-    return defaultTheme(brightness).copyWith(ButtonStyle(
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-    ));
-  }
-
-  static ButtonStyle defaultPrimaryButtonTheme([Brightness brightness]) {
-    final def = defaultTheme(brightness).copyWith(ButtonStyle(
-      border: (_) => Border.all(style: BorderStyle.none),
-      textStyle: (state) => state.isDisabled
-          ? TextStyle(color: Colors.grey[100])
-          : TextStyle(color: Colors.white),
-    ));
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(ButtonStyle(
-        color: (state) {
-          if (state.isDisabled)
-            return lightButtonBackgroundColor(ButtonStates.disabled);
-          else if (state.isPressing)
-            return Colors.blue[80];
-          else if (state.isHovering) return Colors.blue[70];
-          return Colors.blue;
-        },
-      ));
-    else
-      return def.copyWith(ButtonStyle(
-        color: (state) {
-          if (state.isDisabled)
-            return darkButtonBackgroundColor(ButtonStates.disabled);
-          else if (state.isPressing)
-            return Colors.blue[80];
-          else if (state.isHovering) return Colors.blue[70];
-          return Colors.blue;
-        },
-      ));
-  }
-
-  static ButtonStyle defaultTheme([Brightness brightness]) {
+  static ButtonStyle defaultTheme(Style style, [Brightness brightness]) {
     final defButton = ButtonStyle(
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

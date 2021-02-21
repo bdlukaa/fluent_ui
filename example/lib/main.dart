@@ -43,39 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     material.Tooltip(message: '');
     return Scaffold(
-      header: AppBar(
-        title: Text('Fluent UI App Showcase'),
-        // leading: IconButton(
-        // icon: AnimatedSwitcher(
-        //   duration: Duration(milliseconds: 600),
-        //   child: Icon(
-        //     appKey.currentState.mode == ThemeMode.light
-        //         ? FluentIcons.lightbulb_24_filled
-        //         : FluentIcons.lightbulb_24_regular,
-        //     color: Colors.white,
-        //     key: ValueKey<ThemeMode>(appKey.currentState.mode),
-        //   ),
-        // ),
-        // style: IconButtonStyle(
-        //   border: (_) => Border.all(color: Colors.white, width: 0.6),
-        //   margin: EdgeInsets.all(8),
-        // ),
-        // onPressed: () {
-        //   appKey.currentState.mode =
-        //       appKey.currentState.mode == ThemeMode.light
-        //           ? ThemeMode.dark
-        //           : ThemeMode.light;
-        // },
-        // ),
-        bottom: Pivot(
-          currentIndex: index,
-          onChanged: (i) => setState(() => index = i),
-          pivots: [
-            PivotItem(text: Text('Inputs')),
-            PivotItem(text: Text('Surfaces')),
-          ],
-        ),
-      ),
       body: PivotView(
         currentIndex: index,
         pages: <Widget>[

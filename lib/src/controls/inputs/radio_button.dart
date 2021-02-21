@@ -42,7 +42,7 @@ class RadioButtonStyle {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  RadioButtonStyle({
+  const RadioButtonStyle({
     this.cursor,
     this.animationDuration,
     this.animationCurve,
@@ -50,7 +50,7 @@ class RadioButtonStyle {
     this.uncheckedDecoration,
   });
 
-  static RadioButtonStyle defaultTheme([Brightness brightness]) {
+  static RadioButtonStyle defaultTheme(Style style, [Brightness brightness]) {
     Color disabledColor = Colors.grey[100].withOpacity(0.6);
     final def = RadioButtonStyle(
       cursor: (state) => state.isDisabled

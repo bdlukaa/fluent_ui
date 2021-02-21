@@ -22,9 +22,7 @@ export 'src/controls/inputs/toggle.dart';
 
 export 'src/controls/items/list_cell.dart';
 
-export 'src/controls/menus/app_bar.dart';
-export 'src/controls/menus/pivot.dart';
-
+export 'src/controls/navigation/pivot.dart';
 export 'src/controls/navigation/navigation_panel.dart';
 
 export 'src/controls/surfaces/card.dart';

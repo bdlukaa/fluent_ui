@@ -56,7 +56,7 @@ class IconButtonStyle {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
 
-  IconButtonStyle({
+  const IconButtonStyle({
     this.color,
     this.cursor,
     this.border,
@@ -65,7 +65,7 @@ class IconButtonStyle {
     this.margin,
   });
 
-  static IconButtonStyle defaultTheme([Brightness brightness]) {
+  static IconButtonStyle defaultTheme(Style style, [Brightness brightness]) {
     final def = IconButtonStyle(
       cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),
