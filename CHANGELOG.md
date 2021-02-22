@@ -1,5 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [0.0.4] - [22/02/2021]
+
+- New fluent icons library: [fluentui_icons](https://pub.dev/packages/fluentui_icons)
+- Re-made checkbox with more fidelity
+- Refactored the following widgets to follow the theme accent color:
+  - `Checkbox`
+  - `ToggleSwitch`
+  - `RadioButton`
+- Added accent colors to widget. Use [this](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/windows-controls.svg) as a base
+
 ## [0.0.3] - Theming update - [21/02/2021]
 
 - **HIGHLIGHT** A whole new [documentation](https://github.com/bdlukaa/fluent_ui/wiki)

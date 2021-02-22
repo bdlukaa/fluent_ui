@@ -22,7 +22,9 @@
 </div>
 
 Implements Fluent UI to [Flutter](flutter.dev).
-It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
+It's written based on the following documentations:
+  - https://docs.microsoft.com/en-us/windows/uwp/design/
+  - https://developer.microsoft.com/pt-br/fluentui#/controls/web
 
 ## Motivation
 

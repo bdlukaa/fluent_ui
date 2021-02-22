@@ -75,7 +75,7 @@ class ToggleSwitch extends StatelessWidget {
 //   const DefaultToggleSwitchThumb({Key key}) : super(key: key);
 
 //   final bool checked;
-//   final 
+//   final
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -122,21 +122,14 @@ class ToggleSwitchStyle {
   });
 
   static ToggleSwitchStyle defaultTheme(Style style, [Brightness brightness]) {
-    Color disabledColor = Colors.grey[100].withOpacity(0.6);
+    final accent = style.accentColor;
     final def = ToggleSwitchStyle(
       cursor: (state) => state.isDisabled
           ? SystemMouseCursors.forbidden
           : SystemMouseCursors.click,
       borderRadius: BorderRadius.circular(25),
       thumbBorderRadius: BorderRadius.circular(100),
-      checkedColor: (state) {
-        if (state.isDisabled)
-          return disabledColor;
-        else if (state.isHovering || state.isPressing)
-          return Colors.blue[60];
-        else
-          return Colors.blue[50];
-      },
+      checkedColor: (state) => inputColor(accent, state),
       checkedBorder: (state) => Border.all(style: BorderStyle.none),
       padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       margin: EdgeInsets.all(4),
@@ -148,7 +141,8 @@ class ToggleSwitchStyle {
       return def.copyWith(ToggleSwitchStyle(
         uncheckedBorder: (state) => Border.all(
           width: 0.8,
-          color: state.isDisabled ? disabledColor : Colors.grey[220],
+          color:
+              state.isDisabled ? kDefaultButtonDisabledColor : Colors.grey[220],
         ),
         checkedThumbColor: (_) => Colors.white,
         uncheckedThumbColor: (_) => Colors.black,
@@ -157,7 +151,7 @@ class ToggleSwitchStyle {
       return def.copyWith(ToggleSwitchStyle(
         uncheckedBorder: (state) => Border.all(
           width: 0.8,
-          color: state.isDisabled ? disabledColor : Colors.white,
+          color: state.isDisabled ? kDefaultButtonDisabledColor : Colors.white,
         ),
         checkedThumbColor: (_) => Colors.white,
         uncheckedThumbColor: (_) => Colors.white,

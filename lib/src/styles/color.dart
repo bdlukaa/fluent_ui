@@ -86,7 +86,7 @@ class Colors {
 
   static final AccentColor green = AccentColor('normal', <String, Color>{
     'dark': Color(0XFF004b1c),
-    'green': Color(0XFF107c10),
+    'normal': Color(0XFF107c10),
     'light': Color(0XFFbad80a),
   });
 }

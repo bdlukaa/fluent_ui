@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as material;
+// import 'package:flutter/material.dart' as material;
 
 import 'screens/buttons.dart';
 
@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (_) => MyHomePage(key: homeKey),
       },
+      style: Style(
+        accentColor: Colors.green,
+      ),
     );
   }
 }
@@ -41,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    material.Tooltip(message: '');
     return Scaffold(
       body: PivotView(
         currentIndex: index,

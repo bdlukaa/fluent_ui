@@ -56,14 +56,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.3"
-  fluentui_system_icons:
+    version: "0.0.4"
+  fluentui_icons:
     dependency: transitive
     description:
-      name: fluentui_system_icons
+      name: fluentui_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.89"
+    version: "0.2.0"
   flutter:
     dependency: "direct main"
     description: flutter

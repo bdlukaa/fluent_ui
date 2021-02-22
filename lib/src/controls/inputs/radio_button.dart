@@ -51,48 +51,33 @@ class RadioButtonStyle {
   });
 
   static RadioButtonStyle defaultTheme(Style style, [Brightness brightness]) {
-    Color disabledColor = Colors.grey[100].withOpacity(0.6);
+    final accent = style.accentColor;
     final def = RadioButtonStyle(
       cursor: (state) => state.isDisabled
           ? SystemMouseCursors.forbidden
           : SystemMouseCursors.click,
       animationDuration: Duration(milliseconds: 200),
       animationCurve: Curves.linear,
+      checkedDecoration: (state) => BoxDecoration(
+        border: Border.all(
+          color: inputColor(accent, state),
+          width: 4.5,
+        ),
+        shape: BoxShape.circle,
+      ),
+      uncheckedDecoration: (state) => BoxDecoration(
+        border: Border.all(
+          width: 1.3,
+          color:
+              state.isDisabled ? kDefaultButtonDisabledColor : Colors.grey[220],
+        ),
+        shape: BoxShape.circle,
+      ),
     );
     if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(RadioButtonStyle(
-        uncheckedDecoration: (state) => BoxDecoration(
-          border: Border.all(
-            width: 1.3,
-            color: state.isDisabled ? disabledColor : Colors.grey[220],
-          ),
-          shape: BoxShape.circle,
-        ),
-        checkedDecoration: (state) => BoxDecoration(
-          border: Border.all(
-            color: Colors.blue,
-            width: 4.5,
-          ),
-          shape: BoxShape.circle,
-        ),
-      ));
+      return def.copyWith(RadioButtonStyle());
     else
-      return def.copyWith(RadioButtonStyle(
-        uncheckedDecoration: (state) => BoxDecoration(
-          border: Border.all(
-            width: 1.3,
-            color: state.isDisabled ? disabledColor : Colors.grey[220],
-          ),
-          shape: BoxShape.circle,
-        ),
-        checkedDecoration: (state) => BoxDecoration(
-          border: Border.all(
-            color: Colors.blue,
-            width: 4.5,
-          ),
-          shape: BoxShape.circle,
-        ),
-      ));
+      return def.copyWith(RadioButtonStyle());
   }
 
   RadioButtonStyle copyWith(RadioButtonStyle style) {

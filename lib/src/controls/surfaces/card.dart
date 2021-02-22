@@ -69,7 +69,7 @@ class CardStyle {
   final HighlightPosition highlightPosition;
   final double highlightSize;
 
-  CardStyle({
+  const CardStyle({
     this.borderRadius,
     this.padding,
     this.margin,

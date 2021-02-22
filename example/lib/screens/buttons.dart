@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:fluentui_icons/fluentui_icons.dart';
 
 class InputsPage extends StatefulWidget {
   const InputsPage({Key key}) : super(key: key);
@@ -59,7 +59,7 @@ class _InputsPageState extends State<InputsPage> {
                     },
                   ),
                   Button(
-                    icon: Icon(FluentIcons.person_24_filled),
+                    icon: Icon(FluentSystemIcons.ic_fluent_person_filled),
                     text: Text('Show snackbar'),
                     onPressed: () {
                       showSnackbar(
@@ -75,7 +75,7 @@ class _InputsPageState extends State<InputsPage> {
                     },
                   ),
                   Button.icon(
-                    icon: Icon(FluentIcons.add_24_regular),
+                    icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
                     onPressed: () {},
                   ),
                   DropDownButton(
@@ -105,7 +105,10 @@ class _InputsPageState extends State<InputsPage> {
                   ),
                   Checkbox(
                     checked: value,
-                    onChanged: (v) => setState(() => value = v),
+                    onChanged: (v) {
+                      if (v == null) return;
+                      setState(() => value = v);
+                    },
                   ),
                   RadioButton(
                     selected: value,

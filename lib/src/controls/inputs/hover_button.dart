@@ -112,3 +112,20 @@ class ButtonStates {
 }
 
 typedef ButtonState<T> = T Function(ButtonStates);
+
+// Button color
+
+Color kDefaultButtonDisabledColor = Colors.grey[100].withOpacity(0.6);
+
+Color inputColor(
+  Color from,
+  ButtonStates state, {
+  Color disabledColor,
+}) {
+  disabledColor ??= kDefaultButtonDisabledColor;
+  Color color = from;
+  if (state.isDisabled)
+    color = disabledColor;
+  else if (state.isHovering || state.isPressing) color = from.withOpacity(0.9);
+  return color;
+}
