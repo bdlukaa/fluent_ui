@@ -34,9 +34,9 @@ class IconButton extends StatelessWidget {
       onLongPress: onLongPress,
       semanticsLabel: semanticsLabel,
       style: ButtonStyle(
-        border: style.border,
-        borderRadius: style.borderRadius,
-        color: style.color,
+        // border: style.border,
+        // borderRadius: style.borderRadius,
+        // color: style.color,
         cursor: style.cursor,
         margin: style.margin,
         padding: style.padding,

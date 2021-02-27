@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/utils/toast/toast.dart';
+import 'package:fl_toast/fl_toast.dart';
 
 Future<void> showSnackbar({
   @required BuildContext context,
@@ -18,12 +18,10 @@ Future<void> showSnackbar({
       context: context,
       child: snackbar,
       alignment: alignment ?? style?.alignment,
-      interactive: true,
       animationDuration: animationDuration ?? style?.animationDuration,
       duration: showDuration ?? style?.showDuration,
       animationBuilder: animationBuilder ?? style?.animationBuilder,
       onDismiss: onDismiss,
-      margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
     );
   }
@@ -31,12 +29,10 @@ Future<void> showSnackbar({
     context: context,
     child: snackbar,
     alignment: alignment ?? style?.alignment,
-    interactive: true,
     animationDuration: animationDuration ?? style?.animationDuration,
     duration: showDuration ?? style?.showDuration,
     animationBuilder: animationBuilder ?? style?.animationBuilder,
     onDismiss: onDismiss,
-    margin: EdgeInsets.zero,
     padding: EdgeInsets.zero,
   );
 }

@@ -41,6 +41,7 @@ class Style {
   final RadioButtonStyle radioButtonStyle;
   final SnackbarStyle snackbarStyle;
   final SplitButtonStyle splitButtonStyle;
+  final ToggleButtonStyle toggleButtonStyle;
   final ToggleSwitchStyle toggleSwitchStyle;
   final TooltipStyle tooltipStyle;
 
@@ -67,6 +68,7 @@ class Style {
     this.snackbarStyle,
     this.bottomNavigationStyle,
     this.radioButtonStyle,
+    this.toggleButtonStyle,
   });
 
   Style build(BuildContext context) {
@@ -81,6 +83,8 @@ class Style {
           .copyWith(iconButtonStyle),
       checkboxStyle:
           CheckboxStyle.defaultTheme(this, brightness).copyWith(checkboxStyle),
+      toggleButtonStyle: ToggleButtonStyle.defaultTheme(this, brightness)
+          .copyWith(toggleButtonStyle),
       toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(this, brightness)
           .copyWith(toggleSwitchStyle),
       pivotItemStyle:

@@ -40,6 +40,8 @@ See also:
 
 To use this package, please [read the documentation](https://github.com/bdlukaa/fluent_ui/wiki)
 
+![](screenshots/controls.png)
+
 ### TODO:
 
 - Implement slider

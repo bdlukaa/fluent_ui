@@ -60,24 +60,21 @@ class RadioButtonStyle {
       animationCurve: Curves.linear,
       checkedDecoration: (state) => BoxDecoration(
         border: Border.all(
-          color: inputColor(accent, state),
+          color: checkedInputColor(accent, state),
           width: 4.5,
         ),
         shape: BoxShape.circle,
       ),
       uncheckedDecoration: (state) => BoxDecoration(
+        color: uncheckedInputColor(state),
         border: Border.all(
-          width: 1.3,
-          color:
-              state.isDisabled ? kDefaultButtonDisabledColor : Colors.grey[220],
+          width: 1,
+          color: state.isNone ? Colors.grey[150] : uncheckedInputColor(state),
         ),
         shape: BoxShape.circle,
       ),
     );
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(RadioButtonStyle());
-    else
-      return def.copyWith(RadioButtonStyle());
+    return def;
   }
 
   RadioButtonStyle copyWith(RadioButtonStyle style) {

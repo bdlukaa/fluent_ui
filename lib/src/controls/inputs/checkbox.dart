@@ -113,7 +113,7 @@ class CheckboxStyle {
       cursor: buttonCursor,
       checkedDecoration: (state) => BoxDecoration(
         borderRadius: radius,
-        color: inputColor(accent, state),
+        color: checkedInputColor(accent, state),
         border: Border.all(style: BorderStyle.none),
       ),
       uncheckedDecoration: (state) => BoxDecoration(
@@ -126,7 +126,7 @@ class CheckboxStyle {
       ),
       thirdstateDecoration: (state) => BoxDecoration(
         borderRadius: radius,
-        border: Border.all(width: 6.5, color: inputColor(accent, state)),
+        border: Border.all(width: 6.5, color: checkedInputColor(accent, state)),
       ),
       checkedIconColor: (_) => Colors.white,
       uncheckedIconColor: (state) {

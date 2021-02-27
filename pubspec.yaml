@@ -1,6 +1,6 @@
 name: fluent_ui
 description: Implements fluent ui in flutter
-version: 0.0.4
+version: 0.0.5
 author: bdlukaa
 homepage: https://github.com/bdlukaa/fluent_ui
 
@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fl_toast: ^2.0.0
   fluentui_icons: ^0.2.0
 
 dev_dependencies:

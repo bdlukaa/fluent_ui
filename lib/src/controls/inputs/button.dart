@@ -26,11 +26,11 @@ Color lightButtonBackgroundColor(
   Color defaultColor,
 }) {
   if (state.isDisabled)
-    return disabledColor ?? Colors.grey[40];
+    return disabledColor ?? Colors.grey[70];
   else if (state.isPressing)
-    return pressingColor ?? Colors.grey[30].withOpacity(0.6);
+    return pressingColor ?? Colors.grey[80].withOpacity(0.6);
   else if (state.isHovering)
-    return hoveringColor ?? Colors.grey[20].withOpacity(0.6);
+    return hoveringColor ?? Colors.grey[50].withOpacity(0.6);
   return defaultColor ?? Colors.transparent;
 }
 
@@ -175,13 +175,11 @@ class Button extends StatelessWidget {
       onPressed: onPressed,
       onLongPress: onLongPress,
       builder: (context, state) {
-        return Container(
+        return AnimatedContainer(
+          duration: style?.animationDuration,
+          curve: style?.animationCurve,
           padding: style.padding,
-          decoration: BoxDecoration(
-            color: style.color?.call(state),
-            borderRadius: style.borderRadius,
-            border: style.border?.call(state),
-          ),
+          decoration: style.decoration(state),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -214,10 +212,7 @@ class Button extends StatelessWidget {
 }
 
 class ButtonStyle {
-  final ButtonState<Color> color;
-
-  final ButtonState<Border> border;
-  final BorderRadiusGeometry borderRadius;
+  final ButtonState<Decoration> decoration;
 
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
@@ -229,64 +224,77 @@ class ButtonStyle {
   // compoused button
   final ButtonState<TextStyle> subtextStyle;
 
+  final Duration animationDuration;
+  final Curve animationCurve;
+
   const ButtonStyle({
-    this.color,
-    this.border,
-    this.borderRadius,
+    this.decoration,
     this.padding,
     this.margin,
     this.cursor,
     this.textStyle,
     this.subtextStyle,
+    this.animationDuration,
+    this.animationCurve,
   });
 
   static ButtonStyle defaultTheme(Style style, [Brightness brightness]) {
+    final defaultDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(2),
+    );
+
+    final borderColor = brightness == null || brightness == Brightness.light
+        ? Colors.grey[220]
+        : Colors.white;
+
     final defButton = ButtonStyle(
+      animationDuration: Duration(milliseconds: 200),
+      animationCurve: Curves.linear,
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.all(4),
+      decoration: (state) {
+        return defaultDecoration.copyWith(
+          border: Border.all(
+            color: state.isNone ? borderColor : uncheckedInputColor(state),
+            width: 0.6,
+          ),
+          color: lightButtonBackgroundColor(state),
+        );
+      },
     );
-    final disabledBorder = Border.all(style: BorderStyle.none);
     final disabledTextStyle = TextStyle(
       color: Colors.grey[100],
       fontWeight: FontWeight.bold,
     );
+
     if (brightness == null || brightness == Brightness.light)
       return defButton.copyWith(ButtonStyle(
-        border: (state) => state.isDisabled
-            ? disabledBorder
-            : Border.all(color: Colors.grey[100], width: 0.6),
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.black, fontSize: 12),
-        color: lightButtonBackgroundColor,
       ));
     else
       return defButton.copyWith(ButtonStyle(
-        border: (state) => state.isDisabled
-            ? disabledBorder
-            : Border.all(color: Colors.white, width: 0.6),
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         subtextStyle: (state) => TextStyle(color: Colors.white, fontSize: 12),
-        color: darkButtonBackgroundColor,
       ));
   }
 
   ButtonStyle copyWith(ButtonStyle style) {
     if (style == null) return this;
     return ButtonStyle(
-      border: style?.border ?? border,
-      borderRadius: style?.borderRadius ?? borderRadius,
+      decoration: style?.decoration ?? decoration,
       cursor: style?.cursor ?? cursor,
       textStyle: style?.textStyle ?? textStyle,
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       subtextStyle: style?.subtextStyle ?? subtextStyle,
-      color: style?.color ?? color,
+      animationCurve: style?.animationCurve ?? animationCurve,
+      animationDuration: style?.animationDuration ?? animationDuration,
     );
   }
 }

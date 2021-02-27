@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0-nullsafety.1"
+  fl_toast:
+    dependency: "direct main"
+    description:
+      name: fl_toast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   fluentui_icons:
     dependency: "direct main"
     description:

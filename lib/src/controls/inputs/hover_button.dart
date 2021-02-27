@@ -109,6 +109,7 @@ class ButtonStates {
   bool get isDisabled => this == disabled;
   bool get isHovering => this == hovering;
   bool get isPressing => this == pressing;
+  bool get isNone => this == none;
 }
 
 typedef ButtonState<T> = T Function(ButtonStates);
@@ -117,7 +118,7 @@ typedef ButtonState<T> = T Function(ButtonStates);
 
 Color kDefaultButtonDisabledColor = Colors.grey[100].withOpacity(0.6);
 
-Color inputColor(
+Color checkedInputColor(
   Color from,
   ButtonStates state, {
   Color disabledColor,
@@ -126,6 +127,12 @@ Color inputColor(
   Color color = from;
   if (state.isDisabled)
     color = disabledColor;
-  else if (state.isHovering || state.isPressing) color = from.withOpacity(0.9);
+  else if (state.isHovering || state.isPressing) color = from.withOpacity(0.75);
   return color;
+}
+
+Color uncheckedInputColor(ButtonStates state) {
+  if (state.isDisabled) return kDefaultButtonDisabledColor;
+  if (state.isHovering || state.isPressing) return Colors.grey[40];
+  return Colors.transparent;
 }

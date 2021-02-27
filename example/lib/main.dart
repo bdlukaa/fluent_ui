@@ -1,17 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart' as material;
 
-import 'screens/buttons.dart';
+import 'screens/inputs.dart';
 
-// final appKey = GlobalKey<_MyAppState>();
-final homeKey = GlobalKey();
+final appKey = GlobalKey<_MyAppState>();
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(key: appKey));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _mode = ThemeMode.light;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (_) => MyHomePage(key: homeKey),
+        '/': (_) => MyHomePage(
+              mode: _mode,
+              onThemeChange: (mode) {
+                setState(() => _mode = mode);
+              },
+            ),
       },
       style: Style(
         accentColor: Colors.green,
@@ -31,7 +41,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({
+    Key key,
+    @required this.mode,
+    @required this.onThemeChange,
+  }) : super(key: key);
+
+  final ThemeMode mode;
+  final Function(ThemeMode mode) onThemeChange;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -45,19 +62,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PivotView(
-        currentIndex: index,
-        pages: <Widget>[
-          InputsPage(),
-          Column(
-            children: [
-              Tooltip(
-                message: Text('my message'),
-                child: Card(
-                  child: Text('hahaha'),
-                ),
-              ),
-            ],
+      body: ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: [
+          Text(
+            'Inputs',
+            style: cardTitleTextStyle.copyWith(color: Colors.white),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: InputsPage(),
           ),
         ],
       ),

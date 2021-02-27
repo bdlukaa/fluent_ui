@@ -1,5 +1,13 @@
 Date format: DD/MM/YYYY
 
+## [0.0.5] - [26/02/2021]
+
+- `ToggleSwitch` is now stable 🎉
+- **NEW** `DefaultToggleSwitchThumb`
+- **NEW** `HoverButton`
+- New toast lib: [fl_toast](https://pub.dev/packages/fl_toast)
+- Screenshot on the readme. (Fixes [#1](https://github.com/bdlukaa/fluent_ui/issues/1))
+
 ## [0.0.4] - [22/02/2021]
 
 - New fluent icons library: [fluentui_icons](https://pub.dev/packages/fluentui_icons)
