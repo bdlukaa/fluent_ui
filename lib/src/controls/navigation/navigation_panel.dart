@@ -178,7 +178,7 @@ class NavigationPanelStyle {
         unselectedTextStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
-        color: lightButtonBackgroundColor,
+        // color: lightButtonBackgroundColor,
       ));
     else
       return defButton.copyWith(NavigationPanelStyle(
@@ -191,7 +191,7 @@ class NavigationPanelStyle {
         unselectedTextStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        color: darkButtonBackgroundColor,
+        // color: darkButtonBackgroundColor,
       ));
   }
 

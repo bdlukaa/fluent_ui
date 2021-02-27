@@ -82,7 +82,7 @@ class ListCell extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme.listCellStyle.copyWith(this.style);
     return HoverButton(
-      cursor: (_, state) => style.cursor(state),
+      cursor: style.cursor,
       onPressed: onPressed,
       onLongPress: onLongPress,
       builder: (context, state) => Container(
@@ -269,10 +269,10 @@ class ListCellStyle {
     );
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(ListCellStyle(
-        backgroundColor: (state) => lightButtonBackgroundColor(
-          state,
-          disabledColor: Colors.transparent,
-        ),
+        // backgroundColor: (state) => lightButtonBackgroundColor(
+        //   state,
+        //   disabledColor: Colors.transparent,
+        // ),
         titleStyle: (_) => TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
@@ -282,10 +282,10 @@ class ListCellStyle {
       ));
     else
       return def.copyWith(ListCellStyle(
-        backgroundColor: (state) => darkButtonBackgroundColor(
-          state,
-          disabledColor: Colors.transparent,
-        ),
+        // backgroundColor: (state) => darkButtonBackgroundColor(
+        //   state,
+        //   disabledColor: Colors.transparent,
+        // ),
         titleStyle: (_) => TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,

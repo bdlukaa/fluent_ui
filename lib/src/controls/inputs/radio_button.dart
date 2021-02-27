@@ -51,25 +51,24 @@ class RadioButtonStyle {
   });
 
   static RadioButtonStyle defaultTheme(Style style, [Brightness brightness]) {
-    final accent = style.accentColor;
     final def = RadioButtonStyle(
-      cursor: (state) => state.isDisabled
-          ? SystemMouseCursors.forbidden
-          : SystemMouseCursors.click,
-      animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
+      cursor: buttonCursor,
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
       checkedDecoration: (state) => BoxDecoration(
         border: Border.all(
-          color: checkedInputColor(accent, state),
+          color: checkedInputColor(style, state),
           width: 4.5,
         ),
         shape: BoxShape.circle,
       ),
       uncheckedDecoration: (state) => BoxDecoration(
-        color: uncheckedInputColor(state),
+        color: uncheckedInputColor(style, state),
         border: Border.all(
           width: 1,
-          color: state.isNone ? Colors.grey[150] : uncheckedInputColor(state),
+          color: state.isNone
+              ? Colors.grey[150]
+              : uncheckedInputColor(style, state),
         ),
         shape: BoxShape.circle,
       ),

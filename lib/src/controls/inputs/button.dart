@@ -2,47 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
-Color darkButtonBackgroundColor(
-  ButtonStates state, {
-  Color disabledColor,
-  Color pressingColor,
-  Color hoveringColor,
-  Color defaultColor,
-}) {
-  if (state.isDisabled)
-    return disabledColor ?? Colors.grey[40];
-  else if (state.isPressing)
-    return pressingColor ?? Colors.grey[140].withOpacity(0.6);
-  else if (state.isHovering)
-    return hoveringColor ?? Colors.grey[150].withOpacity(0.6);
-  return defaultColor ?? Colors.transparent;
-}
-
-Color lightButtonBackgroundColor(
-  ButtonStates state, {
-  Color disabledColor,
-  Color pressingColor,
-  Color hoveringColor,
-  Color defaultColor,
-}) {
-  if (state.isDisabled)
-    return disabledColor ?? Colors.grey[70];
-  else if (state.isPressing)
-    return pressingColor ?? Colors.grey[80].withOpacity(0.6);
-  else if (state.isHovering)
-    return hoveringColor ?? Colors.grey[50].withOpacity(0.6);
-  return defaultColor ?? Colors.transparent;
-}
-
-MouseCursor buttonCursor(ButtonStates state) {
-  if (state.isDisabled)
-    return SystemMouseCursors.forbidden;
-  else if (state.isHovering || state.isPressing)
-    return SystemMouseCursors.click;
-  else
-    return MouseCursor.defer;
-}
-
 enum _ButtonType { def, icon, dropdown }
 
 class Button extends StatelessWidget {
@@ -171,7 +130,7 @@ class Button extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       margin: style.margin,
       focusNode: focusNode,
-      cursor: (_, state) => style.cursor?.call(state),
+      cursor: style.cursor,
       onPressed: onPressed,
       onLongPress: onLongPress,
       builder: (context, state) {
@@ -243,23 +202,21 @@ class ButtonStyle {
       borderRadius: BorderRadius.circular(2),
     );
 
-    final borderColor = brightness == null || brightness == Brightness.light
-        ? Colors.grey[220]
-        : Colors.white;
-
     final defButton = ButtonStyle(
-      animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
       decoration: (state) {
         return defaultDecoration.copyWith(
           border: Border.all(
-            color: state.isNone ? borderColor : uncheckedInputColor(state),
+            color: state.isNone
+                ? style.inactiveColor
+                : uncheckedInputColor(style, state),
             width: 0.6,
-          ),
-          color: lightButtonBackgroundColor(state),
+          ), 
+          color: uncheckedInputColor(style, state),
         );
       },
     );

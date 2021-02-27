@@ -10,8 +10,7 @@ class IconButton extends StatelessWidget {
     this.style,
     this.semanticsLabel,
     this.focusNode,
-  })  : 
-        super(key: key);
+  }) : super(key: key);
 
   final Widget icon;
 
@@ -71,11 +70,9 @@ class IconButtonStyle {
       borderRadius: BorderRadius.circular(2),
       border: (_) => Border.all(style: BorderStyle.none),
       padding: EdgeInsets.all(4),
+      color: (state) => uncheckedInputColor(style, state),
     );
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(IconButtonStyle(color: lightButtonBackgroundColor));
-    else
-      return def.copyWith(IconButtonStyle(color: darkButtonBackgroundColor));
+    return def;
   }
 
   IconButtonStyle copyWith(IconButtonStyle style) {

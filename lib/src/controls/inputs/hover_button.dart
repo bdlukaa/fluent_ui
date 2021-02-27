@@ -13,7 +13,7 @@ class HoverButton extends StatefulWidget {
     this.semanticsLabel,
   }) : super(key: key);
 
-  final MouseCursor Function(BuildContext, ButtonStates) cursor;
+  final MouseCursor Function(ButtonStates) cursor;
   final VoidCallback onPressed;
   final VoidCallback onLongPress;
 
@@ -44,10 +44,10 @@ class _HoverButtonState extends State<HoverButton> {
 
   ButtonStates get state => isDisabled
       ? ButtonStates.disabled
-      : _hovering
-          ? ButtonStates.hovering
-          : _pressing
-              ? ButtonStates.pressing
+      : _pressing
+          ? ButtonStates.pressing
+          : _hovering
+              ? ButtonStates.hovering
               : ButtonStates.none;
 
   void update(Function f) {
@@ -65,7 +65,7 @@ class _HoverButtonState extends State<HoverButton> {
     Widget w = Focus(
       focusNode: node,
       child: MouseRegion(
-        cursor: widget.cursor?.call(context, state) ?? buttonCursor(state),
+        cursor: widget.cursor?.call(state) ?? buttonCursor(state),
         onEnter: (_) => update(() => _hovering = true),
         onHover: (_) => update(() => _hovering = true),
         onExit: (_) => update(() => _hovering = false),
@@ -116,23 +116,27 @@ typedef ButtonState<T> = T Function(ButtonStates);
 
 // Button color
 
-Color kDefaultButtonDisabledColor = Colors.grey[100].withOpacity(0.6);
-
-Color checkedInputColor(
-  Color from,
-  ButtonStates state, {
-  Color disabledColor,
-}) {
-  disabledColor ??= kDefaultButtonDisabledColor;
-  Color color = from;
+Color checkedInputColor(Style style, ButtonStates state) {
+  Color color = style.accentColor;
   if (state.isDisabled)
-    color = disabledColor;
-  else if (state.isHovering || state.isPressing) color = from.withOpacity(0.75);
+    return style.disabledColor;
+  else if (state.isHovering) return color.withOpacity(0.70);
+  else if (state.isPressing) return color.withOpacity(0.90);
   return color;
 }
 
-Color uncheckedInputColor(ButtonStates state) {
-  if (state.isDisabled) return kDefaultButtonDisabledColor;
-  if (state.isHovering || state.isPressing) return Colors.grey[40];
+Color uncheckedInputColor(Style style, ButtonStates state) {
+  if (state.isDisabled) return style.disabledColor;
+  if (state.isPressing) return Colors.grey[70];
+  if (state.isHovering) return Colors.grey[40];
   return Colors.transparent;
+}
+
+MouseCursor buttonCursor(ButtonStates state) {
+  if (state.isDisabled)
+    return SystemMouseCursors.forbidden;
+  else if (state.isHovering || state.isPressing)
+    return SystemMouseCursors.click;
+  else
+    return MouseCursor.defer;
 }

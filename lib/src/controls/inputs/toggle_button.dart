@@ -8,6 +8,8 @@ class ToggleButton extends StatelessWidget {
     @required this.onChanged,
     this.child,
     this.style,
+    this.semanticsLabel,
+    this.focusNode,
   }) : super(key: key);
 
   final Widget child;
@@ -17,23 +19,37 @@ class ToggleButton extends StatelessWidget {
 
   final ToggleButtonStyle style;
 
+  final String semanticsLabel;
+  final FocusNode focusNode;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.toggleButtonStyle.copyWith(this.style);
     return HoverButton(
-      cursor: (context, state) => style.cursor(state),
+      focusNode: focusNode,
+      semanticsLabel: semanticsLabel,
+      cursor: style.cursor,
       margin: style.margin,
       onPressed: onChanged == null ? null : () => onChanged(!checked),
       builder: (context, state) {
         return AnimatedContainer(
-          duration: style?.animationDuration,
-          curve: style?.animationCurve,
+          duration: style.animationDuration,
+          curve: style.animationCurve,
           padding: style.padding,
           decoration: checked
               ? style.checkedDecoration(state)
               : style.uncheckedDecoration(state),
-          child: child,
+          child: AnimatedDefaultTextStyle(
+            duration: style?.animationDuration,
+            curve: style?.animationCurve,
+            style: TextStyle(
+              color: checked
+                  ? context.theme?.activeColor
+                  : context.theme?.inactiveColor,
+            ),
+            child: child ?? SizedBox(),
+          ),
         );
       },
     );
@@ -63,8 +79,6 @@ class ToggleButtonStyle {
   });
 
   static ToggleButtonStyle defaultTheme(Style style, [Brightness brightness]) {
-    final accent = style.accentColor;
-
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
@@ -73,30 +87,31 @@ class ToggleButtonStyle {
         : Colors.white;
 
     final def = ToggleButtonStyle(
-      cursor: (state) => state.isDisabled
-          ? SystemMouseCursors.forbidden
-          : SystemMouseCursors.click,
+      cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: checkedInputColor(accent, state),
-        border: Border.all(width: 0.6, color: checkedInputColor(accent, state)),
+        color: checkedInputColor(style, state),
+        border: Border.all(width: 0.6, color: checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)
           return defaultDecoration.copyWith(
-            color: uncheckedInputColor(state),
-            border: Border.all(width: 0.6, color: uncheckedInputColor(state)),
+            color: uncheckedInputColor(style, state),
+            border: Border.all(
+              width: 0.6,
+              color: uncheckedInputColor(style, state),
+            ),
           );
         return defaultDecoration.copyWith(
           border: Border.all(
             width: 0.6,
-            color: state.isDisabled ? kDefaultButtonDisabledColor : borderColor,
+            color: state.isDisabled ? style.disabledColor : borderColor,
           ),
         );
       },
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
-      animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
     );
 
     return def;

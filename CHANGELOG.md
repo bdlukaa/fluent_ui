@@ -1,10 +1,23 @@
 Date format: DD/MM/YYYY
 
-## [0.0.5] - [26/02/2021]
+## [0.0.6] - [27/02/2021]
+
+- **FIXED** Button now detect pressing
+- **FIXED** `ToggleSwitch` default thumb is now animated
+- **FIXED** Improved `ToggleSwitch` fidelity
+  **FIXED** Darker color for button press.
+- **NEW** **THEMING**
+  - `Style.activeColor`
+  - `Style.inactiveColor`
+  - `Style.disabledColor`
+  - `Style.animationDuration`
+  - `Style.animationCurve`
+
+## [0.0.5] - [27/02/2021]
 
 - `ToggleSwitch` is now stable 🎉
 - **NEW** `DefaultToggleSwitchThumb`
-- **NEW** `HoverButton`
+- **NEW** `ToggleButton`
 - New toast lib: [fl_toast](https://pub.dev/packages/fl_toast)
 - Screenshot on the readme. (Fixes [#1](https://github.com/bdlukaa/fluent_ui/issues/1))
 

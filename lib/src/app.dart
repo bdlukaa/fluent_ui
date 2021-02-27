@@ -249,5 +249,4 @@ class FluentApp extends StatelessWidget {
       textStyle: _textStyle,
     );
   }
-
 }

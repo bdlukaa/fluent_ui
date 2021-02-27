@@ -24,6 +24,12 @@ extension themeContext on BuildContext {
 
 class Style {
   final Color accentColor;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color disabledColor;
+
+  final Duration animationDuration;
+  final Curve animationCurve;
 
   final Brightness brightness;
 
@@ -50,6 +56,11 @@ class Style {
 
   const Style({
     this.accentColor,
+    this.activeColor,
+    this.inactiveColor,
+    this.disabledColor,
+    this.animationDuration,
+    this.animationCurve,
     this.brightness,
     this.scaffoldBackgroundColor,
     this.bottomNavigationBackgroundColor,
@@ -72,25 +83,31 @@ class Style {
   });
 
   Style build(BuildContext context) {
-    return Style(
-      accentColor: Colors.blue,
+    final defaultStyle = Style(
+      animationDuration: Duration(milliseconds: 200),
+      animationCurve: Curves.linear,
       brightness: brightness ?? Brightness.light,
+      accentColor: accentColor ?? Colors.blue,
+      activeColor: activeColor ?? Colors.white,
+      inactiveColor: inactiveColor ?? Colors.black,
+      disabledColor: Colors.grey[100].withOpacity(0.6),
       scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.grey[160],
+    );
+    return defaultStyle.copyWith(Style(
       cardStyle: CardStyle.defaultTheme(brightness).copyWith(cardStyle),
-      buttonStyle:
-          ButtonStyle.defaultTheme(this, brightness).copyWith(buttonStyle),
-      iconButtonStyle: IconButtonStyle.defaultTheme(this, brightness)
-          .copyWith(iconButtonStyle),
+      buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
+      iconButtonStyle:
+          IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
       checkboxStyle:
-          CheckboxStyle.defaultTheme(this, brightness).copyWith(checkboxStyle),
-      toggleButtonStyle: ToggleButtonStyle.defaultTheme(this, brightness)
+          CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
+      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle)
           .copyWith(toggleButtonStyle),
-      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(this, brightness)
+      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
           .copyWith(toggleSwitchStyle),
       pivotItemStyle:
           PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
       iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
-      splitButtonStyle: SplitButtonStyle.defaultTheme(this, brightness)
+      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
           .copyWith(splitButtonStyle),
       listCellStyle:
           ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
@@ -103,12 +120,43 @@ class Style {
           SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
       bottomNavigationStyle: NavigationPanelStyle.defaultTheme(brightness)
           .copyWith(bottomNavigationStyle),
-      radioButtonStyle: RadioButtonStyle.defaultTheme(this, brightness)
+      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
           .copyWith(radioButtonStyle),
-    );
+    ));
   }
 
   static Style fallback(BuildContext context, [Brightness brightness]) {
     return Style(brightness: brightness).build(context);
+  }
+
+  Style copyWith(Style other) {
+    if (other == null) return this;
+    return Style(
+      accentColor: other?.accentColor ?? accentColor,
+      activeColor: other?.activeColor ?? activeColor,
+      bottomNavigationBackgroundColor: other?.bottomNavigationBackgroundColor ??
+          bottomNavigationBackgroundColor,
+      bottomNavigationStyle:
+          other?.bottomNavigationStyle ?? bottomNavigationStyle,
+      brightness: other?.brightness ?? brightness,
+      buttonStyle: other?.buttonStyle ?? buttonStyle,
+      cardStyle: other?.cardStyle ?? cardStyle,
+      checkboxStyle: other?.checkboxStyle ?? checkboxStyle,
+      dialogStyle: other?.dialogStyle ?? dialogStyle,
+      dividerStyle: other?.dividerStyle ?? dividerStyle,
+      iconButtonStyle: other?.iconButtonStyle ?? iconButtonStyle,
+      iconStyle: other?.iconStyle ?? iconStyle,
+      inactiveColor: other?.inactiveColor ?? inactiveColor,
+      listCellStyle: other?.listCellStyle ?? listCellStyle,
+      pivotItemStyle: other?.pivotItemStyle ?? pivotItemStyle,
+      radioButtonStyle: other?.radioButtonStyle ?? radioButtonStyle,
+      scaffoldBackgroundColor:
+          other?.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
+      snackbarStyle: other?.snackbarStyle ?? snackbarStyle,
+      splitButtonStyle: other?.splitButtonStyle ?? splitButtonStyle,
+      toggleButtonStyle: other?.toggleButtonStyle ?? toggleButtonStyle,
+      toggleSwitchStyle: other?.toggleSwitchStyle ?? toggleSwitchStyle,
+      tooltipStyle: other?.tooltipStyle ?? tooltipStyle,
+    );
   }
 }

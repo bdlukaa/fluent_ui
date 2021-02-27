@@ -31,13 +31,13 @@ class ToggleSwitch extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       margin: style.margin,
       focusNode: focusNode,
-      cursor: (_, state) => style.cursor?.call(state),
+      cursor: style.cursor,
       onPressed: onChanged == null ? null : () => onChanged(!checked),
       builder: (context, state) {
         return AnimatedContainer(
           alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
-          height: 25,
-          width: 60,
+          height: 20,
+          width: 45,
           duration: style.animationDuration,
           curve: style.animationCurve,
           padding: style.padding,
@@ -73,12 +73,14 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: style?.animationDuration,
+      curve: style?.animationCurve,
       constraints: BoxConstraints(
         minHeight: 8,
         minWidth: 8,
-        maxHeight: 13,
-        maxWidth: 13,
+        maxHeight: 12,
+        maxWidth: 12,
       ),
       decoration: checked
           ? style.checkedThumbDecoration(state)
@@ -114,46 +116,38 @@ class ToggleSwitchStyle {
     this.uncheckedDecoration,
   });
 
-  static ToggleSwitchStyle defaultTheme(Style style, [Brightness brightness]) {
-    final accent = style.accentColor;
-
-    final defaultThumbDecoration = BoxDecoration(
-      color: brightness == null || brightness == Brightness.light
-          ? Colors.black
-          : Colors.white,
-      shape: BoxShape.circle,
-    );
+  static ToggleSwitchStyle defaultTheme(Style style) {
+    final defaultThumbDecoration = BoxDecoration(shape: BoxShape.circle);
 
     final defaultDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(30),
     );
 
     final def = ToggleSwitchStyle(
-      cursor: (state) => state.isDisabled
-          ? SystemMouseCursors.forbidden
-          : SystemMouseCursors.click,
+      cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: checkedInputColor(accent, state),
+        color: checkedInputColor(style, state),
         border: Border.all(style: BorderStyle.none),
       ),
       uncheckedDecoration: (state) {
-        final borderColor = brightness == null || brightness == Brightness.light
-            ? Colors.grey[220]
-            : Colors.white;
         return defaultDecoration.copyWith(
-          color: uncheckedInputColor(state),
+          color: uncheckedInputColor(style, state),
           border: Border.all(
             width: 0.8,
-            color: state.isNone ? borderColor : uncheckedInputColor(state),
+            color: state.isNone
+                ? style.inactiveColor
+                : uncheckedInputColor(style, state),
           ),
         );
       },
-      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
       margin: EdgeInsets.all(4),
-      animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
-      checkedThumbDecoration: (_) => defaultThumbDecoration,
-      uncheckedThumbDecoration: (_) => defaultThumbDecoration,
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
+      checkedThumbDecoration: (_) =>
+          defaultThumbDecoration.copyWith(color: style?.activeColor),
+      uncheckedThumbDecoration: (_) =>
+          defaultThumbDecoration.copyWith(color: style?.inactiveColor),
     );
 
     return def;

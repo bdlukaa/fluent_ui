@@ -36,7 +36,7 @@ class Pivot extends StatelessWidget {
           final bool selected = currentIndex == index;
           style.padding.flipped;
           return HoverButton(
-            cursor: (_, state) => style.cursor(state),
+            cursor: style.cursor,
             onPressed: () => onChanged?.call(index),
             builder: (context, state) => Stack(
               children: [
@@ -180,10 +180,11 @@ class PivotItemStyle {
       indicatorHeight: 1.5,
       indicatorDecoration: BoxDecoration(color: Colors.white),
     );
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(PivotItemStyle(color: lightButtonBackgroundColor));
-    else
-      return def.copyWith(PivotItemStyle(color: darkButtonBackgroundColor));
+    return def;
+    // if (brightness == null || brightness == Brightness.light)
+    //   return def.copyWith(PivotItemStyle(color: lightButtonBackgroundColor));
+    // else
+    //   return def.copyWith(PivotItemStyle(color: darkButtonBackgroundColor));
   }
 
   PivotItemStyle copyWith(PivotItemStyle style) {

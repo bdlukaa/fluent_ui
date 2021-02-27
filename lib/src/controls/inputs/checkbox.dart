@@ -30,7 +30,7 @@ class Checkbox extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       margin: style.margin,
       focusNode: focusNode,
-      cursor: (_, state) => style.cursor?.call(state),
+      cursor: style.cursor,
       onPressed: onChanged == null
           ? null
           : () => onChanged(checked == null ? null : !checked),
@@ -103,7 +103,6 @@ class CheckboxStyle {
 
   static CheckboxStyle defaultTheme(Style style, [Brightness brightness]) {
     final radius = BorderRadius.circular(3);
-    final Color accent = style.accentColor ?? Colors.blue;
     final Color unselected = () {
       if (brightness == null || brightness == Brightness.light)
         return Colors.black;
@@ -113,32 +112,35 @@ class CheckboxStyle {
       cursor: buttonCursor,
       checkedDecoration: (state) => BoxDecoration(
         borderRadius: radius,
-        color: checkedInputColor(accent, state),
-        border: Border.all(style: BorderStyle.none),
+        color: checkedInputColor(style, state),
+        border: Border.all(width: 0.6, color: checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) => BoxDecoration(
         border: Border.all(
           width: 0.6,
-          color: state.isDisabled ? kDefaultButtonDisabledColor : unselected,
+          color: state.isDisabled ? style.disabledColor : unselected,
         ),
         color: Colors.transparent,
         borderRadius: radius,
       ),
       thirdstateDecoration: (state) => BoxDecoration(
         borderRadius: radius,
-        border: Border.all(width: 6.5, color: checkedInputColor(accent, state)),
+        border: Border.all(
+          width: 6.5,
+          color: checkedInputColor(style, state),
+        ),
       ),
-      checkedIconColor: (_) => Colors.white,
+      checkedIconColor: (_) => style.activeColor,
       uncheckedIconColor: (state) {
         if (state.isHovering || state.isPressing)
-          return unselected.withOpacity(0.8);
+          return style.inactiveColor.withOpacity(0.8);
         return Colors.transparent;
       },
       thirdstateIconColor: (_) => Colors.transparent,
       margin: EdgeInsets.all(4),
       icon: FluentSystemIcons.ic_fluent_checkmark_regular,
-      animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
     );
   }
 
