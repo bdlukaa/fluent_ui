@@ -112,6 +112,29 @@ class Button extends StatelessWidget {
 
   final FocusNode focusNode;
 
+  bool get enabled => onPressed != null || onLongPress != null;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty(
+      'enabled',
+      value: enabled,
+      ifFalse: 'disabled',
+    ));
+    // TODO(bdlukaa): make style a `Diagnosticable`
+    // properties.add(DiagnosticsProperty<ButtonStyle>(
+    //   'style',
+    //   style,
+    //   defaultValue: null,
+    // ));
+    properties.add(DiagnosticsProperty<FocusNode>(
+      'focusNode',
+      focusNode,
+      defaultValue: null,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
@@ -215,7 +238,7 @@ class ButtonStyle {
                 ? style.inactiveColor
                 : uncheckedInputColor(style, state),
             width: 0.6,
-          ), 
+          ),
           color: uncheckedInputColor(style, state),
         );
       },

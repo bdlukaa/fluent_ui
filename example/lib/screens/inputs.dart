@@ -16,6 +16,8 @@ TextStyle get cardTitleTextStyle => TextStyle(
 class _InputsPageState extends State<InputsPage> {
   bool value = false;
 
+  double sliderValue = 10;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -24,6 +26,7 @@ class _InputsPageState extends State<InputsPage> {
         _buildCheckboxes(),
         _buildToggleSwitches(),
         _buildRadioButtons(),
+        _buildSliders(),
       ]),
     );
   }
@@ -37,7 +40,7 @@ class _InputsPageState extends State<InputsPage> {
           ...[
             Button(
               text: Text('Enabled button'),
-              onPressed: () {},
+              onPressed: () => print('pressed button'),
             ),
             Button(
               text: Text('Disabled button'),
@@ -50,7 +53,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             Button.icon(
               icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
-              onPressed: () {},
+              onPressed: () => print('pressed icon button'),
             ),
             // DropDownButton(
             //   content: Text('Hover me :)'),
@@ -134,6 +137,36 @@ class _InputsPageState extends State<InputsPage> {
               'Disabled On',
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSliders() {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Sliders', style: cardTitleTextStyle),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 8),
+            width: 200,
+            child: Slider(
+              label: '${sliderValue.toInt()}',
+              value: sliderValue,
+              onChanged: (v) => setState(() => sliderValue = v),
+              divisions: 10,
+            ),
+          ),
+          SizedBox(height: 12),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 8),
+            width: 200,
+            child: Slider(
+              value: sliderValue,
+              onChanged: null,
+            ),
+          )
         ],
       ),
     );

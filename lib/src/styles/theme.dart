@@ -45,6 +45,7 @@ class Style {
   final ListCellStyle listCellStyle;
   final PivotItemStyle pivotItemStyle;
   final RadioButtonStyle radioButtonStyle;
+  final SliderStyle sliderStyle;
   final SnackbarStyle snackbarStyle;
   final SplitButtonStyle splitButtonStyle;
   final ToggleButtonStyle toggleButtonStyle;
@@ -80,6 +81,7 @@ class Style {
     this.bottomNavigationStyle,
     this.radioButtonStyle,
     this.toggleButtonStyle,
+    this.sliderStyle,
   });
 
   Style build(BuildContext context) {
@@ -122,6 +124,7 @@ class Style {
           .copyWith(bottomNavigationStyle),
       radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
           .copyWith(radioButtonStyle),
+      sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
     ));
   }
 
@@ -157,6 +160,10 @@ class Style {
       toggleButtonStyle: other?.toggleButtonStyle ?? toggleButtonStyle,
       toggleSwitchStyle: other?.toggleSwitchStyle ?? toggleSwitchStyle,
       tooltipStyle: other?.tooltipStyle ?? tooltipStyle,
+      sliderStyle: other?.sliderStyle ?? sliderStyle,
+      animationCurve: other?.animationCurve ?? animationCurve,
+      animationDuration: other?.animationDuration ?? animationDuration,
+      disabledColor: other?.disabledColor ?? disabledColor,
     );
   }
 }

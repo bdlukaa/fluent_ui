@@ -212,11 +212,12 @@ class _DropdownState extends State<Dropdown>
         ).animate(controller),
         child: Container(
           padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: elevationShadow(),
+          decoration: BoxDecoration(color: Colors.white),
+          child: PhysicalModel(
+            color: Colors.black,
+            elevation: 6,
+            child: widget.child,
           ),
-          child: widget.child,
         ),
       ),
     );

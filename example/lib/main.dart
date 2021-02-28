@@ -66,10 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(8.0),
         children: [
           Text(
-            'Inputs',
+            'Inputs showcase',
             style: cardTitleTextStyle.copyWith(color: Colors.white),
           ),
-          Padding(
+          Container(
+            // color: Colors.white,
             padding: EdgeInsets.symmetric(vertical: 6),
             child: InputsPage(),
           ),

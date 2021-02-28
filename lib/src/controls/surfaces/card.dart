@@ -16,21 +16,19 @@ class Card extends StatelessWidget {
     final style = context.theme.cardStyle.copyWith(this.style);
     return Container(
       margin: style.margin,
-      decoration: BoxDecoration(
-        boxShadow: elevationShadow(
-          factor: style.elevation ?? 2,
-          color: style.elevationColor,
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: style.borderRadius,
-        child: Container(
-          padding: style.padding,
-          decoration: BoxDecoration(
-            border: _buildBorder(style),
-            color: style.color,
+      child: PhysicalModel(
+        color: Colors.black,
+        elevation: style.elevation ?? 6,
+        child: ClipRRect(
+          borderRadius: style.borderRadius,
+          child: Container(
+            padding: style.padding,
+            decoration: BoxDecoration(
+              border: _buildBorder(style),
+              color: style.color,
+            ),
+            child: child,
           ),
-          child: child,
         ),
       ),
     );
@@ -86,7 +84,7 @@ class CardStyle {
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(12),
-      elevation: 0,
+      elevation: 6,
       highlightPosition: HighlightPosition.top,
       highlightColor: Colors.blue,
       highlightSize: 1.8,

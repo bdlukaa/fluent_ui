@@ -93,10 +93,10 @@ class Snackbar extends StatelessWidget {
         padding: style.padding,
         decoration: BoxDecoration(
           borderRadius: style.borderRadius,
-          boxShadow: elevationShadow(
-            factor: style.elevation,
-            color: style.elevationColor,
-          ),
+          // boxShadow: elevationShadow(
+          //   factor: style.elevation,
+          //   color: style.elevationColor,
+          // ),
           color: style.color,
         ),
         child: _type == _SnackbarType.normal

@@ -452,7 +452,7 @@ class TooltipStyle {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
-          boxShadow: elevationShadow(),
+          // boxShadow: elevationShadow(),
         ),
         textStyle: TextStyle(color: Colors.black),
       ));
@@ -461,7 +461,7 @@ class TooltipStyle {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
-          boxShadow: elevationShadow(),
+          // boxShadow: elevationShadow(),
         ),
         textStyle: TextStyle(color: Colors.black),
       ));

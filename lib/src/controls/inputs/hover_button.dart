@@ -120,7 +120,8 @@ Color checkedInputColor(Style style, ButtonStates state) {
   Color color = style.accentColor;
   if (state.isDisabled)
     return style.disabledColor;
-  else if (state.isHovering) return color.withOpacity(0.70);
+  else if (state.isHovering)
+    return color.withOpacity(0.70);
   else if (state.isPressing) return color.withOpacity(0.90);
   return color;
 }

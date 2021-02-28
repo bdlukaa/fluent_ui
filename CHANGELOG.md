@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [0.0.7] - [28/02/2021]
+
+- **NEW** Slider 🎉
+- Use physical model for elevation instead of box shadows
+- Improved TODO
+
 ## [0.0.6] - [27/02/2021]
 
 - **FIXED** Button now detect pressing
