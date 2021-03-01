@@ -1,8 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [0.0.8] - [01/03/2021]
+
+- **NEW** `ContentDialog` 🎉
+- **NEW** `RatingControl` 🎉
+- **NEW** `NavigationPanel` 🎉
+- Improved `Button` fidelity
+
 ## [0.0.7] - [28/02/2021]
 
-- **NEW** Slider 🎉
+- **NEW** `Slider` 🎉
 - Use physical model for elevation instead of box shadows
 - Improved TODO
 

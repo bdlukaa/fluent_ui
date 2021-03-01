@@ -84,6 +84,8 @@ class Slider extends StatelessWidget {
             inactiveColor: style.inactiveColor,
             divisions: divisions,
             mouseCursor: style?.cursor,
+            // TODO: improve label fidelity
+            // Image example: https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png
             label: label,
             focusNode: focusNode,
           ),
@@ -127,17 +129,18 @@ class SliderStyle {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  const SliderStyle(
-      {this.cursor,
-      this.margin,
-      this.animationDuration,
-      this.animationCurve,
-      this.thumbColor,
-      this.disabledThumbColor,
-      this.activeColor,
-      this.disabledActiveColor,
-      this.inactiveColor,
-      this.disabledInactiveColor});
+  const SliderStyle({
+    this.cursor,
+    this.margin,
+    this.animationDuration,
+    this.animationCurve,
+    this.thumbColor,
+    this.disabledThumbColor,
+    this.activeColor,
+    this.disabledActiveColor,
+    this.inactiveColor,
+    this.disabledInactiveColor,
+  });
 
   static SliderStyle defaultTheme(Style style) {
     final def = SliderStyle(
@@ -149,7 +152,7 @@ class SliderStyle {
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
       disabledActiveColor: style?.disabledColor,
-      disabledThumbColor: style?.disabledColor.withOpacity(1),
+      disabledThumbColor: style?.disabledColor?.withOpacity(1),
       disabledInactiveColor: style?.inactiveColor,
     );
 

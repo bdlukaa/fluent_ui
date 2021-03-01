@@ -1,111 +1,174 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-// enum NavigationPanelDisplayMode {
-//   open,
-//   compact,
-//   minimal,
-// }
+// TODO: NavigationPanelHeader
+// TODO: NavigationPanelTileSeparator
 
-// class NavigationPanel extends StatelessWidget {
-//   const NavigationPanel({
-//     Key key,
-//     @required this.currentIndex,
-//     @required this.items,
-//     @required this.onChanged,
-//     this.displayMode,
-//     this.style,
-//   })  : assert(items != null && items.length >= 2),
-//         assert(currentIndex != null &&
-//             currentIndex >= 0 &&
-//             currentIndex < items.length),
-//         super(key: key);
+enum NavigationPanelDisplayMode {
+  open,
+  compact,
+  minimal,
+}
 
-//   final int currentIndex;
-//   final List<NavigationPanelItem> items;
-//   final ValueChanged<int> onChanged;
+class NavigationPanel extends StatelessWidget {
+  const NavigationPanel({
+    Key key,
+    @required this.currentIndex,
+    @required this.items,
+    @required this.onChanged,
+    this.top,
+    this.bottom,
+    this.displayMode,
+  })  : assert(items != null && items.length >= 2),
+        assert(currentIndex != null &&
+            currentIndex >= 0 &&
+            currentIndex < items.length),
+        super(key: key);
 
-//   final NavigationPanelStyle style;
-//   final NavigationPanelDisplayMode displayMode;
+  final int currentIndex;
+  final ValueChanged<int> onChanged;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     debugCheckHasFluentTheme(context);
-//     final style = context.theme.bottomNavigationStyle.copyWith(this.style);
-//     return LayoutBuilder(builder: (context, consts) {
-//       NavigationPanelDisplayMode displayMode = this.displayMode;
-//       final width = consts.biggest.width;
-//       if (width < 640) {
-//         displayMode = NavigationPanelDisplayMode.minimal;
-//       } else if (width == 0) {
+  // TODO: rename top to menu
+  final Widget top;
+  final List<NavigationPanelItem> items;
+  final NavigationPanelItem bottom;
 
-//       }
-//       return Container();
-//     });
-//     return Container(
-//       height: 58,
-//       margin: style.margin,
-//       decoration: BoxDecoration(
-//         color: style.backgroundColor,
-//         borderRadius: style.borderRadius,
-//         border: style.border,
-//         boxShadow: elevationShadow(
-//           factor: style.elevation,
-//           color: style.elevationColor,
-//         ),
-//       ),
-//       child: Row(
-//         children: List.generate(items.length, (index) {
-//           final item = items[index];
-//           bool selected = currentIndex == index;
-//           return Expanded(
-//             child: HoverButton(
-//               builder: (context, state) => Container(
-//                 padding: style.padding,
-//                 decoration: BoxDecoration(
-//                   color: style.color(state),
-//                 ),
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     if (item.icon != null) item.icon,
-//                     if (item.label != null)
-//                       AnimatedSwitcher(
-//                         duration: Duration(milliseconds: 200),
-//                         child: style.labelVisibility(state) ==
-//                                     NavigationPanelItemLabelVisibility.always ||
-//                                 (style.labelVisibility(state) ==
-//                                         NavigationPanelItemLabelVisibility
-//                                             .selected &&
-//                                     selected)
-//                             ? AnimatedDefaultTextStyle(
-//                                 duration: Duration(milliseconds: 200),
-//                                 child: item.label,
-//                                 style: selected
-//                                     ? style.selectedTextStyle(state)
-//                                     : style.unselectedTextStyle(state),
-//                               )
-//                             : SizedBox(),
-//                         transitionBuilder: (child, animation) {
-//                           return ScaleTransition(
-//                             scale: animation,
-//                             child: child,
-//                           );
-//                         },
-//                       ),
-//                   ],
-//                 ),
-//               ),
-//               onPressed: onChanged == null ? null : () => onChanged(index),
-//             ),
-//           );
-//         }),
-//       ),
-//     );
-//   }
-// }
+  final NavigationPanelDisplayMode displayMode;
 
-enum NavigationPanelItemLabelVisibility { always, selected, never }
+  @override
+  Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
+    return LayoutBuilder(builder: (context, consts) {
+      NavigationPanelDisplayMode displayMode = this.displayMode;
+      if (displayMode == null) {
+        double width = consts.biggest.width;
+        if (width.isInfinite) width = MediaQuery.of(context).size.width;
+        if (width >= 680) {
+          displayMode = NavigationPanelDisplayMode.open;
+        } else if (width >= 400) {
+          displayMode = NavigationPanelDisplayMode.compact;
+        } else
+          displayMode = NavigationPanelDisplayMode.minimal;
+      }
+      switch (displayMode) {
+        case NavigationPanelDisplayMode.compact:
+        case NavigationPanelDisplayMode.open:
+          final width =
+              displayMode == NavigationPanelDisplayMode.compact ? 50.0 : 320.0;
+          return AnimatedContainer(
+            duration: context.theme.animationDuration,
+            curve: context.theme.animationCurve,
+            width: width,
+            color: context.theme.navigationPanelBackgroundColor,
+            child: ListView(
+              children: [
+                if (top != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
+                    child: top,
+                  ),
+                ...List.generate(items.length, (index) {
+                  final item = items[index];
+                  // Use this to avoid overflow when animation is happening
+                  return SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: width,
+                      child: NavigationPanelItemTile(
+                        item: item,
+                        selected: currentIndex == index,
+                        onTap:
+                            onChanged == null ? null : () => onChanged(index),
+                        compact:
+                            displayMode == NavigationPanelDisplayMode.compact,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          );
+        case NavigationPanelDisplayMode.minimal:
+        default:
+          return SizedBox();
+      }
+    });
+  }
+}
+
+class NavigationPanelItemTile extends StatelessWidget {
+  const NavigationPanelItemTile({
+    Key key,
+    @required this.item,
+    this.onTap,
+    this.selected = false,
+    this.compact = false,
+  })  : assert(item != null),
+        assert(compact != null),
+        assert(selected != null),
+        super(key: key);
+
+  final NavigationPanelItem item;
+  final bool selected;
+  final Function onTap;
+
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = context.theme.navigationPanelStyle.copyWith(item.style);
+    return SizedBox(
+      height: 44,
+      child: HoverButton(
+        onPressed: onTap,
+        builder: (context, state) {
+          return AnimatedContainer(
+            duration: style.animationDuration ?? Duration.zero,
+            curve: style.animationCurve ?? Curves.linear,
+            color: uncheckedInputColor(context.theme, state),
+            child: Row(
+              children: [
+                AnimatedSwitcher(
+                  duration: style.animationDuration ?? Duration.zero,
+                  transitionBuilder: (child, animation) {
+                    return SlideTransition(
+                      position: Tween<Offset>(
+                        begin: Offset(-1, 0),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: style.animationCurve ?? Curves.linear,
+                      )),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    key: ValueKey<bool>(selected),
+                    height: double.infinity,
+                    width: 4,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    color: selected ? style.highlightColor : Colors.transparent,
+                  ),
+                ),
+                if (item.icon != null)
+                  Padding(
+                    padding: style.iconPadding ?? EdgeInsets.zero,
+                    child: item.icon,
+                  ),
+                if (item.label != null && !compact)
+                  Padding(
+                    padding: style.labelPadding ?? EdgeInsets.zero,
+                    child: item.label,
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
 class NavigationPanelItem {
   /// The icon of the item. Usually an [Icon] widget
@@ -120,96 +183,67 @@ class NavigationPanelItem {
 }
 
 class NavigationPanelStyle {
-  final Color backgroundColor;
   final ButtonState<Color> color;
+  final Color highlightColor;
 
-  final Border border;
-  final BorderRadiusGeometry borderRadius;
-
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry labelPadding;
+  final EdgeInsetsGeometry iconPadding;
 
   final ButtonState<MouseCursor> cursor;
 
   final ButtonState<TextStyle> selectedTextStyle;
   final ButtonState<TextStyle> unselectedTextStyle;
 
-  final double elevation;
-  final Color elevationColor;
+  final Duration animationDuration;
+  final Curve animationCurve;
 
-  final ButtonState<NavigationPanelItemLabelVisibility> labelVisibility;
-
-  NavigationPanelStyle({
+  const NavigationPanelStyle({
     this.color,
-    this.border,
-    this.borderRadius,
-    this.padding,
-    this.margin,
+    this.highlightColor,
+    this.labelPadding,
+    this.iconPadding,
     this.cursor,
     this.selectedTextStyle,
     this.unselectedTextStyle,
-    this.elevation,
-    this.elevationColor,
-    this.backgroundColor,
-    this.labelVisibility,
+    this.animationDuration,
+    this.animationCurve,
   });
 
-  static NavigationPanelStyle defaultTheme([Brightness brightness]) {
-    final defButton = NavigationPanelStyle(
-      cursor: buttonCursor,
-      padding: EdgeInsets.zero,
-      margin: EdgeInsets.zero,
-      borderRadius: BorderRadius.circular(2),
-      elevation: 0,
-      labelVisibility: (_) => NavigationPanelItemLabelVisibility.always,
-    );
+  static NavigationPanelStyle defaultTheme(Style style,
+      [Brightness brightness]) {
     final disabledTextStyle = TextStyle(
-      color: Colors.grey[100],
+      color: style.disabledColor,
       fontWeight: FontWeight.bold,
     );
-    if (brightness == null || brightness == Brightness.light)
-      return defButton.copyWith(NavigationPanelStyle(
-        backgroundColor: Colors.white,
-        border: Border.all(color: Colors.grey[100], width: 0.6),
-        elevationColor: lightElevationColor,
-        selectedTextStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.blue, fontSize: 16),
-        unselectedTextStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
-        // color: lightButtonBackgroundColor,
-      ));
-    else
-      return defButton.copyWith(NavigationPanelStyle(
-        backgroundColor: Colors.grey,
-        border: Border.all(color: Colors.white, width: 0.6),
-        elevationColor: darkElevationColor,
-        selectedTextStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        unselectedTextStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        // color: darkButtonBackgroundColor,
-      ));
+    return NavigationPanelStyle(
+      animationDuration: style.animationDuration,
+      animationCurve: style.animationCurve,
+      color: (state) => uncheckedInputColor(style, state),
+      highlightColor: style.accentColor,
+      selectedTextStyle: (state) => state.isDisabled
+          ? disabledTextStyle
+          : TextStyle(color: style.accentColor, fontSize: 16),
+      unselectedTextStyle: (state) => state.isDisabled
+          ? disabledTextStyle
+          : TextStyle(color: style.inactiveColor, fontWeight: FontWeight.w500),
+      cursor: buttonCursor,
+      labelPadding: EdgeInsets.zero,
+      iconPadding: EdgeInsets.only(right: 10, left: 8),
+    );
   }
 
   NavigationPanelStyle copyWith(NavigationPanelStyle style) {
     if (style == null) return this;
     return NavigationPanelStyle(
-      border: style?.border ?? border,
-      borderRadius: style?.borderRadius ?? borderRadius,
       cursor: style?.cursor ?? cursor,
-      margin: style?.margin ?? margin,
-      padding: style?.padding ?? padding,
+      iconPadding: style?.iconPadding ?? iconPadding,
+      labelPadding: style?.labelPadding ?? labelPadding,
       color: style?.color ?? color,
-      elevation: style?.elevation ?? elevation,
-      elevationColor: style?.elevationColor ?? elevationColor,
       selectedTextStyle: style?.selectedTextStyle ?? selectedTextStyle,
       unselectedTextStyle: style?.unselectedTextStyle ?? unselectedTextStyle,
-      backgroundColor: style?.backgroundColor ?? backgroundColor,
-      labelVisibility: style?.labelVisibility ?? labelVisibility,
+      highlightColor: style?.highlightColor ?? highlightColor,
+      animationCurve: style?.animationCurve ?? animationCurve,
+      animationDuration: style?.animationDuration ?? animationDuration,
     );
   }
 }

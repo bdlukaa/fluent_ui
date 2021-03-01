@@ -16,7 +16,8 @@ TextStyle get cardTitleTextStyle => TextStyle(
 class _InputsPageState extends State<InputsPage> {
   bool value = false;
 
-  double sliderValue = 10;
+  double sliderValue = 5;
+  double get max => 9;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,29 @@ class _InputsPageState extends State<InputsPage> {
           ...[
             Button(
               text: Text('Enabled button'),
-              onPressed: () => print('pressed button'),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => ContentDialog(
+                    title: Text('Delete file permanently?'),
+                    content: Text(
+                      'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+                    ),
+                    actions: [
+                      Button(
+                        text: Text('Delete'),
+                        onPressed: () {
+                          // Delete file here
+                        },
+                      ),
+                      Button(
+                        text: Text('Cancel'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             Button(
               text: Text('Disabled button'),
@@ -54,6 +77,14 @@ class _InputsPageState extends State<InputsPage> {
             Button.icon(
               icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
               onPressed: () => print('pressed icon button'),
+            ),
+            SplitButtonBar(
+              buttons: List.generate(2, (index) {
+                return SplitButton(
+                  child: Text('$index'),
+                  onPressed: () => print(index),
+                );
+              }),
             ),
             // DropDownButton(
             //   content: Text('Hover me :)'),
@@ -152,6 +183,7 @@ class _InputsPageState extends State<InputsPage> {
             margin: EdgeInsets.symmetric(horizontal: 8),
             width: 200,
             child: Slider(
+              max: max,
               label: '${sliderValue.toInt()}',
               value: sliderValue,
               onChanged: (v) => setState(() => sliderValue = v),
@@ -163,40 +195,20 @@ class _InputsPageState extends State<InputsPage> {
             margin: EdgeInsets.symmetric(horizontal: 8),
             width: 200,
             child: Slider(
+              max: max,
               value: sliderValue,
               onChanged: null,
             ),
-          )
+          ),
+          RatingBar(
+            amount: max.toInt(),
+            rating: sliderValue,
+            onChanged: (v) => setState(() => sliderValue = v),
+          ),
         ],
       ),
     );
   }
-}
-
-void a(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (_) {
-      return Dialog(
-        title: Text('Missing Subject'),
-        body: Text(
-          'Do you want to send this message without a subject?',
-        ),
-        footer: [
-          Button(
-            text: Text('Save'),
-            onPressed: () {},
-          ),
-          Button(
-            text: Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      );
-    },
-  );
 }
 
 List<Widget> buildStateColumn(List<Widget> boxes, List<String> texts) {

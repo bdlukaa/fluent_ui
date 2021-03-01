@@ -1,5 +1,93 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+class ContentDialog extends StatelessWidget {
+  const ContentDialog({
+    Key key,
+    this.title,
+    this.content,
+    this.actions,
+    this.style,
+    this.backgroundDismiss,
+  }) : super(key: key);
+
+  final Widget title;
+  final Widget content;
+  final List<Widget> actions;
+
+  final ContentDialogStyle style;
+
+  final bool backgroundDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
+    final style = context.theme.dialogStyle.copyWith(this.style);
+    return Dialog(
+      backgroundDismiss: backgroundDismiss ?? true,
+      barrierColor: style.barrierColor,
+      child: PhysicalModel(
+        color: style?.elevationColor ?? Colors.black,
+        elevation: style?.elevation ?? 0,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 408),
+          decoration: style?.decoration,
+          padding: style?.padding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (title != null)
+                Padding(
+                  padding: style.titlePadding,
+                  child: DefaultTextStyle(
+                    style: style.titleStyle,
+                    child: title,
+                  ),
+                ),
+              if (content != null)
+                Padding(
+                  padding: style.bodyPadding,
+                  child: DefaultTextStyle(
+                    style: style?.bodyStyle,
+                    child: content,
+                  ),
+                ),
+              if (actions != null)
+                Theme(
+                  data: context.theme.copyWith(Style(
+                    buttonStyle: style.actionStyle,
+                  )),
+                  child: Row(
+                    children: () {
+                      if (actions.length >= 2)
+                        return actions.map((e) {
+                          final index = actions.indexOf(e);
+                          return Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                right: index != (actions.length - 1)
+                                    ? style.actionsSpacing ?? 3
+                                    : 0,
+                              ),
+                              child: e,
+                            ),
+                          );
+                        }).toList();
+                      return [
+                        Spacer(),
+                        Expanded(child: actions.first),
+                      ];
+                    }(),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 Future<void> showDialog({
   @required BuildContext context,
   @required Widget Function(BuildContext) builder,
@@ -9,166 +97,121 @@ Future<void> showDialog({
   return showGeneralDialog(
     context: context,
     barrierColor: Colors.transparent,
-    barrierDismissible: false,
+    barrierDismissible: true,
     pageBuilder: (context, _, a) => builder(context),
+    barrierLabel: '',
   );
 }
 
 class Dialog extends StatelessWidget {
   const Dialog({
     Key key,
-    this.title,
-    this.body,
-    this.footer,
+    this.child,
     this.backgroundDismiss = true,
-    this.style,
+    this.barrierColor,
   })  : assert(backgroundDismiss != null),
         super(key: key);
 
   final bool backgroundDismiss;
+  final Color barrierColor;
 
-  final Widget title;
-  final Widget body;
-  final List<Widget> footer;
-
-  final DialogStyle style;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.dialogStyle.copyWith(this.style);
     return Stack(
+      alignment: Alignment.center,
       children: [
         Positioned.fill(
           child: GestureDetector(
             onTap: () {
               if (backgroundDismiss) Navigator.pop(context);
             },
-            child: Container(color: style.barrierColor),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null)
-                  DefaultTextStyle(
-                    style: style.titleStyle,
-                    child: title,
-                  ),
-                if (body != null)
-                  Container(
-                    padding: style.bodyPadding,
-                    child: DefaultTextStyle(
-                      style: style.bodyStyle,
-                      child: body,
-                    ),
-                  ),
-                if (footer != null)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Wrap(children: footer),
-                  ),
-              ],
-            ),
-            style: CardStyle(
-              borderRadius: style.borderRadius,
-              color: style.color,
-              elevation: 0,
-              elevationColor: Colors.transparent,
-              highlightColor: style.highlightColor,
-              highlightPosition: style.highlightPosition,
-              highlightSize: style.highlightSize,
-              margin: style.margin,
-              padding: style.padding,
+            child: Container(
+              color: barrierColor ?? Colors.grey[200].withOpacity(0.8),
             ),
           ),
         ),
+        child,
       ],
     );
   }
 }
 
-class DialogStyle {
-  final BorderRadiusGeometry borderRadius;
+class ContentDialogStyle {
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry titlePadding;
   final EdgeInsetsGeometry bodyPadding;
-  final EdgeInsetsGeometry margin;
+  final double actionsSpacing;
 
+  final Decoration decoration;
   final Color barrierColor;
-  final Color color;
-
-  final Color highlightColor;
-  final HighlightPosition highlightPosition;
-  final double highlightSize;
 
   final TextStyle titleStyle;
   final TextStyle bodyStyle;
+  final ButtonStyle actionStyle;
 
-  DialogStyle({
+  final double elevation;
+  final Color elevationColor;
+
+  const ContentDialogStyle({
+    this.decoration,
     this.barrierColor,
-    this.borderRadius,
+    this.titlePadding,
     this.bodyPadding,
     this.padding,
-    this.margin,
-    this.color,
-    this.highlightColor,
-    this.highlightPosition,
-    this.highlightSize,
+    this.actionsSpacing,
     this.titleStyle,
     this.bodyStyle,
+    this.actionStyle,
+    this.elevation,
+    this.elevationColor,
   });
 
-  static DialogStyle defaultTheme([Brightness brightness]) {
-    final def = DialogStyle(
-      borderRadius: BorderRadius.circular(2),
-      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      padding: EdgeInsets.all(12),
-      bodyPadding: EdgeInsets.symmetric(vertical: 12),
-      highlightPosition: HighlightPosition.top,
-      highlightColor: Colors.blue,
-      highlightSize: 2.5,
-      barrierColor: Colors.grey[200].withOpacity(0.8),
-    );
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(DialogStyle(
+  static ContentDialogStyle defaultTheme(Style style, [Brightness brightness]) {
+    final def = ContentDialogStyle(
+      decoration: BoxDecoration(
         color: Colors.white,
-        titleStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.blue,
+        border: Border.all(
+          color: style.disabledColor,
+          width: 1.2,
         ),
-        bodyStyle: TextStyle(color: Colors.grey[100]),
-      ));
-    else
-      return def.copyWith(DialogStyle(
-        color: Colors.grey,
-        titleStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.white,
+      ),
+      padding: EdgeInsets.all(20),
+      titlePadding: EdgeInsets.only(bottom: 12),
+      bodyPadding: EdgeInsets.only(bottom: 30),
+      actionsSpacing: 3,
+      barrierColor: Colors.grey[200].withOpacity(0.8),
+      titleStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyStyle: TextStyle(color: Colors.black),
+      actionStyle: ButtonStyle(
+        margin: EdgeInsets.zero,
+        decoration: (state) => BoxDecoration(
+          color: buttonColor(style, state),
         ),
-        bodyStyle: TextStyle(color: Colors.grey[80]),
-      ));
+      ),
+      elevation: 8,
+      elevationColor: Colors.black,
+    );
+    return def;
   }
 
-  DialogStyle copyWith(DialogStyle style) {
+  ContentDialogStyle copyWith(ContentDialogStyle style) {
     if (style == null) return this;
-    return DialogStyle(
-      borderRadius: style?.borderRadius ?? borderRadius,
+    return ContentDialogStyle(
+      decoration: style?.decoration ?? decoration,
       padding: style?.padding ?? padding,
       bodyPadding: style?.bodyPadding ?? bodyPadding,
-      margin: style?.margin ?? margin,
-      color: style?.color ?? color,
-      highlightColor: style?.highlightColor ?? highlightColor,
-      highlightPosition: style?.highlightPosition ?? highlightPosition,
-      highlightSize: style?.highlightSize ?? highlightSize,
       barrierColor: style?.barrierColor ?? barrierColor,
       titleStyle: style?.titleStyle ?? titleStyle,
       bodyStyle: style?.bodyStyle ?? bodyStyle,
+      titlePadding: style?.titlePadding ?? titlePadding,
+      actionsSpacing: style?.actionsSpacing ?? actionsSpacing,
+      actionStyle: style?.actionStyle ?? actionStyle,
     );
   }
 }

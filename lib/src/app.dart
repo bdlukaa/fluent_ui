@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as m;
 
 class FluentApp extends StatelessWidget {
   const FluentApp({
@@ -163,6 +164,7 @@ class FluentApp extends StatelessWidget {
   static bool debugAllowBannerOverride = true;
 
   bool get _usesRouter => routerDelegate != null;
+  
   @override
   Widget build(BuildContext context) {
     return _buildApp(context);
@@ -183,17 +185,19 @@ class FluentApp extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, Widget child) {
-    return Theme(data: theme(context), child: child);
+    return m.Material(
+      child: Theme(data: theme(context), child: child),
+    );
   }
 
   Widget _buildApp(BuildContext context) {
-    final TextStyle _textStyle = TextStyle(
-      fontSize: 14,
-      color: Colors.black,
-    );
+    // final TextStyle _textStyle = TextStyle(
+    //   fontSize: 14,
+    //   color: Colors.black,
+    // );
     final fluentColor = color ?? Colors.blue;
     if (_usesRouter) {
-      return WidgetsApp.router(
+      return m.MaterialApp.router(
         key: GlobalObjectKey(this),
         routeInformationProvider: routeInformationProvider,
         routeInformationParser: routeInformationParser,
@@ -214,17 +218,17 @@ class FluentApp extends StatelessWidget {
         debugShowCheckedModeBanner: debugShowCheckedModeBanner,
         shortcuts: shortcuts,
         actions: actions,
-        textStyle: _textStyle,
+        // textStyle: _textStyle,
       );
     }
 
-    return WidgetsApp(
+    return m.MaterialApp(
       key: GlobalObjectKey(this),
       navigatorKey: navigatorKey,
       navigatorObservers: navigatorObservers,
-      pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
-        return FluentPageRoute<T>(settings: settings, builder: builder);
-      },
+      // pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
+      //   return FluentPageRoute<T>(settings: settings, builder: builder);
+      // },
       home: home,
       routes: routes,
       initialRoute: initialRoute,
@@ -246,7 +250,7 @@ class FluentApp extends StatelessWidget {
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       shortcuts: shortcuts,
       actions: actions,
-      textStyle: _textStyle,
+      // textStyle: _textStyle,
     );
   }
 }

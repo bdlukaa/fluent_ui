@@ -34,12 +34,12 @@ class Style {
   final Brightness brightness;
 
   final Color scaffoldBackgroundColor;
-  final Color bottomNavigationBackgroundColor;
+  final Color navigationPanelBackgroundColor;
 
-  final NavigationPanelStyle bottomNavigationStyle;
+  final NavigationPanelStyle navigationPanelStyle;
   final CardStyle cardStyle;
   final CheckboxStyle checkboxStyle;
-  final DialogStyle dialogStyle;
+  final ContentDialogStyle dialogStyle;
   final DividerStyle dividerStyle;
   final IconStyle iconStyle;
   final ListCellStyle listCellStyle;
@@ -64,7 +64,7 @@ class Style {
     this.animationCurve,
     this.brightness,
     this.scaffoldBackgroundColor,
-    this.bottomNavigationBackgroundColor,
+    this.navigationPanelBackgroundColor,
     this.buttonStyle,
     this.cardStyle,
     this.iconButtonStyle,
@@ -78,7 +78,7 @@ class Style {
     this.tooltipStyle,
     this.dividerStyle,
     this.snackbarStyle,
-    this.bottomNavigationStyle,
+    this.navigationPanelStyle,
     this.radioButtonStyle,
     this.toggleButtonStyle,
     this.sliderStyle,
@@ -94,6 +94,7 @@ class Style {
       inactiveColor: inactiveColor ?? Colors.black,
       disabledColor: Colors.grey[100].withOpacity(0.6),
       scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.grey[160],
+      navigationPanelBackgroundColor: Color.fromARGB(255, 246, 246, 246),
     );
     return defaultStyle.copyWith(Style(
       cardStyle: CardStyle.defaultTheme(brightness).copyWith(cardStyle),
@@ -109,19 +110,21 @@ class Style {
       pivotItemStyle:
           PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
       iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
-      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
+      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle, brightness)
           .copyWith(splitButtonStyle),
       listCellStyle:
           ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
-      dialogStyle: DialogStyle.defaultTheme(brightness).copyWith(dialogStyle),
+      dialogStyle: ContentDialogStyle.defaultTheme(defaultStyle, brightness)
+          .copyWith(dialogStyle),
       tooltipStyle:
           TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
       dividerStyle:
           DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
       snackbarStyle:
           SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
-      bottomNavigationStyle: NavigationPanelStyle.defaultTheme(brightness)
-          .copyWith(bottomNavigationStyle),
+      navigationPanelStyle:
+          NavigationPanelStyle.defaultTheme(defaultStyle, brightness)
+              .copyWith(navigationPanelStyle),
       radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
           .copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
@@ -137,10 +140,9 @@ class Style {
     return Style(
       accentColor: other?.accentColor ?? accentColor,
       activeColor: other?.activeColor ?? activeColor,
-      bottomNavigationBackgroundColor: other?.bottomNavigationBackgroundColor ??
-          bottomNavigationBackgroundColor,
-      bottomNavigationStyle:
-          other?.bottomNavigationStyle ?? bottomNavigationStyle,
+      navigationPanelBackgroundColor: other?.navigationPanelBackgroundColor ??
+          navigationPanelBackgroundColor,
+      navigationPanelStyle: other?.navigationPanelStyle ?? navigationPanelStyle,
       brightness: other?.brightness ?? brightness,
       buttonStyle: other?.buttonStyle ?? buttonStyle,
       cardStyle: other?.cardStyle ?? cardStyle,

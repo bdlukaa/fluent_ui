@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluentui_icons/fluentui_icons.dart';
 
+import 'screens/forms.dart';
 import 'screens/inputs.dart';
 
 final appKey = GlobalKey<_MyAppState>();
@@ -34,8 +36,8 @@ class _MyAppState extends State<MyApp> {
             ),
       },
       style: Style(
-        // accentColor: Colors.green,
-      ),
+          // accentColor: Colors.green,
+          ),
     );
   }
 }
@@ -62,34 +64,69 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.all(8.0),
-        children: [
-          Text(
-            'Inputs showcase',
-            style: cardTitleTextStyle.copyWith(color: Colors.white),
+      left: NavigationPanel(
+        top: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(FluentSystemIcons.ic_fluent_navigation_regular),
+            // SizedBox(width: 6),
+            // Text('Showcase', style: TextStyle(
+            //   fontWeight: FontWeight.bold,
+            //   fontSize: 16,
+            // )),
+          ],
+        ),
+        currentIndex: index,
+        items: [
+          NavigationPanelItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_radio_button_filled),
+            label: Text('Inputs'),
           ),
-          Container(
-            // color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: InputsPage(),
+          NavigationPanelItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_text_align_center_filled),
+            label: Text('Forms'),
+          ),
+          NavigationPanelItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_time_picker_regular),
+            label: Text('Pickers'),
+          ),
+          NavigationPanelItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_none_regular),
+            label: Text('Others'),
           ),
         ],
+        onChanged: (i) => setState(() => index = i),
       ),
-      // left: NavigationPanel(
-      //   currentIndex: index,
-      //   onChanged: (i) => setState(() => index = i),
-      //   items: [
-      //     NavigationPanelItem(
-      //       icon: Icon(FluentIcons.radio_button_24_filled),
-      //       label: Text('Inputs'),
-      //     ),
-      //     NavigationPanelItem(
-      //       icon: Icon(FluentIcons.radio_button_24_filled),
-      //       label: Text('Surface'),
-      //     ),
-      //   ],
-      // ),
+      body: IndexedStack(
+        index: index,
+        children: [
+          ListView(
+            padding: const EdgeInsets.all(8.0),
+            children: [
+              Text(
+                'Inputs showcase',
+                style: cardTitleTextStyle.copyWith(color: Colors.white),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: InputsPage(),
+              ),
+            ],
+          ),
+          ListView(
+            padding: const EdgeInsets.all(8.0),
+            children: [
+              Text(
+                'Forms showcase',
+                style: cardTitleTextStyle.copyWith(color: Colors.white),
+              ),
+              Forms(),
+            ],
+          ),
+          SizedBox(),
+          SizedBox(),
+        ],
+      ),
     );
   }
 }

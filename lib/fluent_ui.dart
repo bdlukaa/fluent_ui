@@ -1,6 +1,6 @@
 library fluent_ui;
 
-export 'package:flutter/widgets.dart' hide Icon, IconTheme;
+export 'package:flutter/widgets.dart' hide Icon, IconTheme, TextBox;
 export 'package:flutter/material.dart'
     show Brightness, ThemeMode, Feedback, DefaultMaterialLocalizations;
 
@@ -17,6 +17,7 @@ export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/drop_down_button.dart';
 export 'src/controls/inputs/icon_button.dart';
 export 'src/controls/inputs/radio_button.dart';
+export 'src/controls/inputs/rating.dart';
 export 'src/controls/inputs/split_button.dart';
 export 'src/controls/inputs/toggle_button.dart';
 export 'src/controls/inputs/toggle_switch.dart';
@@ -34,6 +35,8 @@ export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';
+
+export 'src/controls/form/text_box.dart';
 
 export 'src/styles/color.dart';
 export 'src/styles/theme.dart';

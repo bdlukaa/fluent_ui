@@ -5,14 +5,9 @@ import 'hover_button.dart';
 enum _ButtonType { def, icon, dropdown }
 
 class Button extends StatelessWidget {
-  /// Implementation for DefaultButton, PrimaryButton, CompoundButton, ActionButton
-  /// and ContextualButton
-  ///
-  /// More info at https://developer.microsoft.com/en-us/fluentui#/controls/web/button
   const Button({
     Key key,
     @required this.text,
-    this.subtext,
     this.icon,
     this.trailingIcon,
     this.style,
@@ -39,7 +34,6 @@ class Button extends StatelessWidget {
           semanticsLabel: semanticsLabel,
           style: style,
         ),
-        subtext = null,
         style = null,
         trailingIcon = null,
         type = _ButtonType.icon,
@@ -71,7 +65,6 @@ class Button extends StatelessWidget {
         icon = null,
         onLongPress = null,
         onPressed = null,
-        subtext = null,
         trailingIcon = null,
         type = _ButtonType.dropdown,
         assert(content != null),
@@ -92,9 +85,6 @@ class Button extends StatelessWidget {
 
   /// The main text of the button
   final Widget text;
-
-  /// The secondary text of the button. Used with [CompoundButton]
-  final Widget subtext;
 
   /// The style of the button
   final ButtonStyle style;
@@ -164,25 +154,13 @@ class Button extends StatelessWidget {
           decoration: style.decoration(state),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) icon,
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (text != null)
-                    DefaultTextStyle(
-                      style: (style.textStyle?.call(state)) ?? TextStyle(),
-                      textAlign: TextAlign.center,
-                      child: text,
-                    ),
-                  if (subtext != null)
-                    DefaultTextStyle(
-                      style: (style.subtextStyle?.call(state)) ?? TextStyle(),
-                      textAlign: TextAlign.center,
-                      child: subtext,
-                    )
-                ],
+              DefaultTextStyle(
+                style: (style.textStyle?.call(state)) ?? TextStyle(),
+                textAlign: TextAlign.center,
+                child: text,
               ),
               if (trailingIcon != null) trailingIcon,
             ],
@@ -191,6 +169,19 @@ class Button extends StatelessWidget {
       },
     );
   }
+}
+
+Color buttonColor(Style style, ButtonStates state) {
+  Color color;
+  if (state.isDisabled)
+    color = style.disabledColor;
+  else if (state.isPressing)
+    color = Colors.grey[70];
+  else if (state.isHovering)
+    color = Colors.grey[40];
+  else
+    color = Colors.grey[50];
+  return color;
 }
 
 class ButtonStyle {
@@ -203,9 +194,6 @@ class ButtonStyle {
 
   final ButtonState<TextStyle> textStyle;
 
-  // compoused button
-  final ButtonState<TextStyle> subtextStyle;
-
   final Duration animationDuration;
   final Curve animationCurve;
 
@@ -215,33 +203,21 @@ class ButtonStyle {
     this.margin,
     this.cursor,
     this.textStyle,
-    this.subtextStyle,
     this.animationDuration,
     this.animationCurve,
   });
 
   static ButtonStyle defaultTheme(Style style, [Brightness brightness]) {
-    final defaultDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(2),
-    );
-
     final defButton = ButtonStyle(
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
-      decoration: (state) {
-        return defaultDecoration.copyWith(
-          border: Border.all(
-            color: state.isNone
-                ? style.inactiveColor
-                : uncheckedInputColor(style, state),
-            width: 0.6,
-          ),
-          color: uncheckedInputColor(style, state),
-        );
-      },
+      decoration: (state) => BoxDecoration(
+        borderRadius: BorderRadius.circular(2),
+        color: buttonColor(style, state),
+      ),
     );
     final disabledTextStyle = TextStyle(
       color: Colors.grey[100],
@@ -253,14 +229,12 @@ class ButtonStyle {
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-        subtextStyle: (state) => TextStyle(color: Colors.black, fontSize: 12),
       ));
     else
       return defButton.copyWith(ButtonStyle(
         textStyle: (state) => state.isDisabled
             ? disabledTextStyle
             : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        subtextStyle: (state) => TextStyle(color: Colors.white, fontSize: 12),
       ));
   }
 
@@ -272,7 +246,6 @@ class ButtonStyle {
       textStyle: style?.textStyle ?? textStyle,
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
-      subtextStyle: style?.subtextStyle ?? subtextStyle,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
     );

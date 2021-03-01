@@ -130,7 +130,7 @@ Color uncheckedInputColor(Style style, ButtonStates state) {
   if (state.isDisabled) return style.disabledColor;
   if (state.isPressing) return Colors.grey[70];
   if (state.isHovering) return Colors.grey[40];
-  return Colors.transparent;
+  return Colors.grey[40].withOpacity(0);
 }
 
 MouseCursor buttonCursor(ButtonStates state) {
