@@ -44,7 +44,8 @@ See also:
 
 To use this package, please [read the documentation](https://github.com/bdlukaa/fluent_ui/wiki)
 
-![Controls Preview](screenshots/controls.png)
+![Inputs Preview](screenshots/inputs.png)
+![Forms Preview](screenshots/forms.png)
 
 ### Widgets:
 
@@ -53,7 +54,7 @@ To use this package, please [read the documentation](https://github.com/bdlukaa/
 (2) = Medium priority\
 (3) = Low priority
 
-**NOTE**: The example for all the images below can be found on the [example folder](example/)
+**NOTE**: The code for all the images below can be found on the [example folder](example/)
 
 Basic Inputs:
 
@@ -70,10 +71,14 @@ Basic Inputs:
   1. ![Toggle Switch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 - (3) [DropDownButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#example---drop-down-button)
 - (3) [SplitButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#example---split-button)
-- (2) [ComboBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)
 - ✔️ [RatingControl](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/rating)
   1. ![Rating Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
-- (1) [Forms](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/forms)
+
+[Forms](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/forms): 
+- ✔️ [TextBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/forms)
+  1. ![TextBox Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box.png)
+- (3) [Auto suggest box](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box)
+- (2) [ComboBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)
 
 [Overlays](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/):
 

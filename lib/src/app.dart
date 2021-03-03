@@ -164,7 +164,7 @@ class FluentApp extends StatelessWidget {
   static bool debugAllowBannerOverride = true;
 
   bool get _usesRouter => routerDelegate != null;
-  
+
   @override
   Widget build(BuildContext context) {
     return _buildApp(context);

@@ -93,7 +93,7 @@ class Style {
       activeColor: activeColor ?? Colors.white,
       inactiveColor: inactiveColor ?? Colors.black,
       disabledColor: Colors.grey[100].withOpacity(0.6),
-      scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.grey[160],
+      scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.white,
       navigationPanelBackgroundColor: Color.fromARGB(255, 246, 246, 246),
     );
     return defaultStyle.copyWith(Style(

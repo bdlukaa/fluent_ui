@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [0.0.9] - [03/03/2021]
+
+- Export the icons library
+- **NEW** `TextBox`
+
 ## [0.0.8] - [01/03/2021]
 
 - **NEW** `ContentDialog` 🎉

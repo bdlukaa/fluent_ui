@@ -100,33 +100,52 @@ class _MyHomePageState extends State<MyHomePage> {
       body: IndexedStack(
         index: index,
         children: [
-          ListView(
-            padding: const EdgeInsets.all(8.0),
-            children: [
-              Text(
-                'Inputs showcase',
-                style: cardTitleTextStyle.copyWith(color: Colors.white),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 6),
-                child: InputsPage(),
-              ),
-            ],
+          _Panel(
+            title: 'Inputs showcase',
+            child: InputsPage(),
           ),
-          ListView(
-            padding: const EdgeInsets.all(8.0),
-            children: [
-              Text(
-                'Forms showcase',
-                style: cardTitleTextStyle.copyWith(color: Colors.white),
-              ),
-              Forms(),
-            ],
+          _Panel(
+            title: 'Forms showcase',
+            child: Forms(),
           ),
-          SizedBox(),
-          SizedBox(),
+          _Panel(
+            title: 'Pickers',
+            child: SizedBox(),
+          ),
+          _Panel(
+            title: 'Others',
+            child: SizedBox(),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _Panel extends StatelessWidget {
+  const _Panel({
+    Key key,
+    this.title,
+    this.child,
+  }) : super(key: key);
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(8.0),
+      children: [
+        Text(
+          title,
+          style: cardTitleTextStyle,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 6),
+          child: child,
+        ),
+      ],
     );
   }
 }

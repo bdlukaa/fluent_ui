@@ -4,6 +4,8 @@ export 'package:flutter/widgets.dart' hide Icon, IconTheme, TextBox;
 export 'package:flutter/material.dart'
     show Brightness, ThemeMode, Feedback, DefaultMaterialLocalizations;
 
+export 'package:fluentui_icons/fluentui_icons.dart';
+
 export 'src/app.dart';
 export 'src/utils.dart';
 
