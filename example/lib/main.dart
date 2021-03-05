@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
@@ -11,7 +10,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -44,9 +43,9 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({
-    Key key,
-    @required this.mode,
-    @required this.onThemeChange,
+    Key? key,
+    required this.mode,
+    required this.onThemeChange,
   }) : super(key: key);
 
   final ThemeMode mode;
@@ -68,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         top: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(FluentSystemIcons.ic_fluent_navigation_regular),
+            Icon(Icons.navigation_regular),
             // SizedBox(width: 6),
             // Text('Showcase', style: TextStyle(
             //   fontWeight: FontWeight.bold,
@@ -78,20 +77,24 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         currentIndex: index,
         items: [
+          NavigationPanelSectionHeader(
+            header: Text('Cool Navigation Panel Header')
+          ),
           NavigationPanelItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_radio_button_filled),
+            icon: Icon(Icons.radio_button_filled),
             label: Text('Inputs'),
           ),
           NavigationPanelItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_text_align_center_filled),
+            icon: Icon(Icons.text_align_center_filled),
             label: Text('Forms'),
           ),
+          NavigationPanelTileSeparator(),
           NavigationPanelItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_time_picker_regular),
+            icon: Icon(Icons.time_picker_regular),
             label: Text('Pickers'),
           ),
           NavigationPanelItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_none_regular),
+            icon: Icon(Icons.none_regular),
             label: Text('Others'),
           ),
         ],
@@ -124,13 +127,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class _Panel extends StatelessWidget {
   const _Panel({
-    Key key,
+    Key? key,
     this.title,
     this.child,
   }) : super(key: key);
 
-  final String title;
-  final Widget child;
+  final String? title;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +141,7 @@ class _Panel extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       children: [
         Text(
-          title,
+          title!,
           style: cardTitleTextStyle,
         ),
         Padding(

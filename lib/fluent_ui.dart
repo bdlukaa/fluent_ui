@@ -4,8 +4,6 @@ export 'package:flutter/widgets.dart' hide Icon, IconTheme, TextBox;
 export 'package:flutter/material.dart'
     show Brightness, ThemeMode, Feedback, DefaultMaterialLocalizations;
 
-export 'package:fluentui_icons/fluentui_icons.dart';
-
 export 'src/app.dart';
 export 'src/utils.dart';
 
@@ -32,7 +30,6 @@ export 'src/controls/navigation/navigation_panel.dart';
 
 export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/dialog.dart';
-export 'src/controls/surfaces/snackbar.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/icon.dart';
@@ -41,4 +38,5 @@ export 'src/controls/utils/divider.dart';
 export 'src/controls/form/text_box.dart';
 
 export 'src/styles/color.dart';
+export 'src/styles/icons.dart';
 export 'src/styles/theme.dart';

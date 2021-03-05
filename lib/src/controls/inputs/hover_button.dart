@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 
 class HoverButton extends StatefulWidget {
   HoverButton({
-    Key key,
+    Key? key,
     this.cursor,
     this.onPressed,
     this.onLongPress,
@@ -13,23 +13,23 @@ class HoverButton extends StatefulWidget {
     this.semanticsLabel,
   }) : super(key: key);
 
-  final MouseCursor Function(ButtonStates) cursor;
-  final VoidCallback onPressed;
-  final VoidCallback onLongPress;
+  final MouseCursor Function(ButtonStates)? cursor;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
-  final Widget Function(BuildContext, ButtonStates state) builder;
+  final Widget Function(BuildContext, ButtonStates state)? builder;
 
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
-  final EdgeInsetsGeometry margin;
-  final String semanticsLabel;
+  final EdgeInsetsGeometry? margin;
+  final String? semanticsLabel;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
 }
 
 class _HoverButtonState extends State<HoverButton> {
-  FocusNode node;
+  FocusNode? node;
 
   @override
   void initState() {
@@ -54,10 +54,10 @@ class _HoverButtonState extends State<HoverButton> {
     if (isDisabled) return;
     if (!mounted) return f();
     if (_pressing)
-      node.requestFocus();
+      node!.requestFocus();
     else
-      node.unfocus();
-    setState(f);
+      node!.unfocus();
+    setState(f as void Function());
   }
 
   @override
@@ -86,7 +86,7 @@ class _HoverButtonState extends State<HoverButton> {
         ),
       ),
     );
-    if (widget.margin != null) w = Padding(padding: widget.margin, child: w);
+    if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
     if (widget.semanticsLabel != null)
       w = Semantics(
         label: widget.semanticsLabel,
@@ -116,21 +116,21 @@ typedef ButtonState<T> = T Function(ButtonStates);
 
 // Button color
 
-Color checkedInputColor(Style style, ButtonStates state) {
-  Color color = style.accentColor;
+Color? checkedInputColor(Style style, ButtonStates state) {
+  Color? color = style.accentColor;
   if (state.isDisabled)
     return style.disabledColor;
   else if (state.isHovering)
-    return color.withOpacity(0.70);
-  else if (state.isPressing) return color.withOpacity(0.90);
+    return color!.withOpacity(0.70);
+  else if (state.isPressing) return color!.withOpacity(0.90);
   return color;
 }
 
-Color uncheckedInputColor(Style style, ButtonStates state) {
-  if (state.isDisabled) return style.disabledColor;
+Color? uncheckedInputColor(Style? style, ButtonStates state) {
+  if (state.isDisabled) return style!.disabledColor;
   if (state.isPressing) return Colors.grey[70];
   if (state.isHovering) return Colors.grey[40];
-  return Colors.grey[40].withOpacity(0);
+  return Colors.grey[40]!.withOpacity(0);
 }
 
 MouseCursor buttonCursor(ButtonStates state) {

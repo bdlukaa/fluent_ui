@@ -3,8 +3,8 @@ import 'package:flutter/rendering.dart';
 
 class IconButton extends StatelessWidget {
   const IconButton({
-    Key key,
-    @required this.icon,
+    Key? key,
+    required this.icon,
     this.onPressed,
     this.onLongPress,
     this.style,
@@ -12,20 +12,20 @@ class IconButton extends StatelessWidget {
     this.focusNode,
   }) : super(key: key);
 
-  final Widget icon;
+  final Widget? icon;
 
-  final VoidCallback onPressed;
-  final VoidCallback onLongPress;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
-  final IconButtonStyle style;
+  final IconButtonStyle? style;
 
-  final String semanticsLabel;
-  final FocusNode focusNode;
+  final String? semanticsLabel;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.iconButtonStyle.copyWith(this.style);
+    final style = context.theme!.iconButtonStyle!.copyWith(this.style);
     return Button(
       focusNode: focusNode,
       text: icon,
@@ -34,9 +34,9 @@ class IconButton extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       style: ButtonStyle(
         decoration: (state) => BoxDecoration(
-          border: style.border(state),
+          border: style.border!(state),
           borderRadius: style.borderRadius,
-          color: style.color(state),
+          color: style.color!(state),
         ),
         cursor: style.cursor,
         margin: style.margin,
@@ -47,15 +47,15 @@ class IconButton extends StatelessWidget {
 }
 
 class IconButtonStyle {
-  final ButtonState<Color> color;
+  final ButtonState<Color?>? color;
 
-  final ButtonState<MouseCursor> cursor;
+  final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<Border> border;
-  final BorderRadiusGeometry borderRadius;
+  final ButtonState<Border>? border;
+  final BorderRadiusGeometry? borderRadius;
 
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
   const IconButtonStyle({
     this.color,
@@ -66,7 +66,7 @@ class IconButtonStyle {
     this.margin,
   });
 
-  static IconButtonStyle defaultTheme(Style style, [Brightness brightness]) {
+  static IconButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
     final def = IconButtonStyle(
       cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),
@@ -77,8 +77,7 @@ class IconButtonStyle {
     return def;
   }
 
-  IconButtonStyle copyWith(IconButtonStyle style) {
-    if (style == null) return this;
+  IconButtonStyle copyWith(IconButtonStyle? style) {
     return IconButtonStyle(
       border: style?.border ?? border,
       borderRadius: style?.borderRadius ?? borderRadius,

@@ -3,47 +3,46 @@ import 'package:flutter/rendering.dart';
 
 class ToggleSwitch extends StatelessWidget {
   const ToggleSwitch({
-    Key key,
-    @required this.checked,
-    @required this.onChanged,
+    Key? key,
+    required this.checked,
+    required this.onChanged,
     this.style,
     this.semanticsLabel,
     this.thumb,
     this.focusNode,
-  })  : assert(checked != null),
-        super(key: key);
+  }) : super(key: key);
 
   final bool checked;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
-  final Widget thumb;
+  final Widget? thumb;
 
-  final ToggleSwitchStyle style;
+  final ToggleSwitchStyle? style;
 
-  final String semanticsLabel;
-  final FocusNode focusNode;
+  final String? semanticsLabel;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.toggleSwitchStyle.copyWith(this.style);
+    final style = context.theme!.toggleSwitchStyle!.copyWith(this.style);
     return HoverButton(
       semanticsLabel: semanticsLabel,
       margin: style.margin,
       focusNode: focusNode,
       cursor: style.cursor,
-      onPressed: onChanged == null ? null : () => onChanged(!checked),
+      onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         return AnimatedContainer(
           alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
           height: 20,
           width: 45,
-          duration: style.animationDuration,
-          curve: style.animationCurve,
+          duration: style.animationDuration!,
+          curve: style.animationCurve!,
           padding: style.padding,
           decoration: checked
-              ? style.checkedDecoration(state)
-              : style.uncheckedDecoration(state),
+              ? style.checkedDecoration!(state)
+              : style.uncheckedDecoration!(state),
           child: thumb ??
               DefaultToggleSwitchThumb(
                 checked: checked,
@@ -58,14 +57,11 @@ class ToggleSwitch extends StatelessWidget {
 
 class DefaultToggleSwitchThumb extends StatelessWidget {
   const DefaultToggleSwitchThumb({
-    Key key,
-    @required this.checked,
-    @required this.style,
-    @required this.state,
-  })  : assert(checked != null),
-        assert(style != null),
-        assert(state != null),
-        super(key: key);
+    Key? key,
+    required this.checked,
+    required this.style,
+    required this.state,
+  }) : super(key: key);
 
   final bool checked;
   final ToggleSwitchStyle style;
@@ -74,8 +70,8 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: style?.animationDuration,
-      curve: style?.animationCurve,
+      duration: style.animationDuration ?? Duration.zero,
+      curve: style.animationCurve!,
       constraints: BoxConstraints(
         minHeight: 8,
         minWidth: 8,
@@ -83,26 +79,26 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
         maxWidth: 12,
       ),
       decoration: checked
-          ? style.checkedThumbDecoration(state)
-          : style.uncheckedThumbDecoration(state),
+          ? style.checkedThumbDecoration!(state)
+          : style.uncheckedThumbDecoration!(state),
     );
   }
 }
 
 class ToggleSwitchStyle {
-  final ButtonState<Decoration> checkedThumbDecoration;
-  final ButtonState<Decoration> uncheckedThumbDecoration;
+  final ButtonState<Decoration>? checkedThumbDecoration;
+  final ButtonState<Decoration>? uncheckedThumbDecoration;
 
-  final ButtonState<MouseCursor> cursor;
+  final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<Decoration> checkedDecoration;
-  final ButtonState<Decoration> uncheckedDecoration;
+  final ButtonState<Decoration>? checkedDecoration;
+  final ButtonState<Decoration>? uncheckedDecoration;
 
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
   const ToggleSwitchStyle({
     this.cursor,
@@ -135,8 +131,8 @@ class ToggleSwitchStyle {
           border: Border.all(
             width: 0.8,
             color: state.isNone
-                ? style.inactiveColor
-                : uncheckedInputColor(style, state),
+                ? style.inactiveColor!
+                : uncheckedInputColor(style, state)!,
           ),
         );
       },
@@ -145,16 +141,15 @@ class ToggleSwitchStyle {
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
       checkedThumbDecoration: (_) =>
-          defaultThumbDecoration.copyWith(color: style?.activeColor),
+          defaultThumbDecoration.copyWith(color: style.activeColor),
       uncheckedThumbDecoration: (_) =>
-          defaultThumbDecoration.copyWith(color: style?.inactiveColor),
+          defaultThumbDecoration.copyWith(color: style.inactiveColor),
     );
 
     return def;
   }
 
-  ToggleSwitchStyle copyWith(ToggleSwitchStyle style) {
-    if (style == null) return this;
+  ToggleSwitchStyle copyWith(ToggleSwitchStyle? style) {
     return ToggleSwitchStyle(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,

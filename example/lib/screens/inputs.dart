@@ -1,8 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 
 class InputsPage extends StatefulWidget {
-  const InputsPage({Key key}) : super(key: key);
+  const InputsPage({Key? key}) : super(key: key);
 
   @override
   _InputsPageState createState() => _InputsPageState();
@@ -75,7 +74,7 @@ class _InputsPageState extends State<InputsPage> {
               onChanged: (value) => setState(() => this.value = value),
             ),
             Button.icon(
-              icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
+              icon: Icon(Icons.add_regular),
               onPressed: () => print('pressed icon button'),
             ),
             SplitButtonBar(

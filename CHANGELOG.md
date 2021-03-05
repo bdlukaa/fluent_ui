@@ -1,5 +1,12 @@
 Date format: DD/MM/YYYY
 
+## [1.0.0] - [04/03/2021]
+
+- **NEW** Null-safety
+- **NEW** New Icons Library
+- **NEW** `NavigationPanelSectionHeader` and `NavigationPanelTileSeparator`
+- **BREAKING** Removed `Snackbar`
+
 ## [0.0.9] - [03/03/2021]
 
 - Export the icons library

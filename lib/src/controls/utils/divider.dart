@@ -2,21 +2,21 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class Divider extends StatelessWidget {
   const Divider({
-    Key key,
+    Key? key,
     this.direction = Axis.vertical,
     this.style,
   }) : super(key: key);
 
   final Axis direction;
-  final DividerStyle style;
+  final DividerStyle? style;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.dividerStyle.copyWith(this.style);
+    final style = context.theme!.dividerStyle!.copyWith(this.style);
     return Container(
-      height: direction == Axis.horizontal ? style.thickness : 0,
-      width: direction == Axis.vertical ? style.thickness : 0,
+      height: direction == Axis.horizontal ? style.thickness : double.infinity,
+      width: direction == Axis.vertical ? style.thickness : double.infinity,
       margin: style.margin,
       decoration: style.decoration,
     );
@@ -24,15 +24,15 @@ class Divider extends StatelessWidget {
 }
 
 class DividerStyle {
-  final double thickness;
-  final Decoration decoration;
-  final EdgeInsetsGeometry margin;
+  final double? thickness;
+  final Decoration? decoration;
+  final EdgeInsetsGeometry? margin;
 
   DividerStyle({this.thickness, this.decoration, this.margin});
 
-  static DividerStyle defaultTheme([Brightness brightness]) {
+  static DividerStyle defaultTheme([Brightness? brightness]) {
     final def = DividerStyle(
-      thickness: 1,
+      thickness: 5,
       margin: EdgeInsets.zero,
     );
     if (brightness == null || brightness == Brightness.light)
@@ -45,8 +45,7 @@ class DividerStyle {
       ));
   }
 
-  DividerStyle copyWith(DividerStyle style) {
-    if (style == null) return this;
+  DividerStyle copyWith(DividerStyle? style) {
     return DividerStyle(
       decoration: style?.decoration ?? decoration,
       margin: style?.margin ?? margin,

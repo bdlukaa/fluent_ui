@@ -32,8 +32,8 @@ enum OverlayVisibilityMode {
 class _TextBoxSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
   _TextBoxSelectionGestureDetectorBuilder({
-    @required _TextBoxState state,
-  })  : _state = state,
+    required _TextBoxState state,
+  })   : _state = state,
         super(delegate: state);
 
   final _TextBoxState _state;
@@ -41,8 +41,8 @@ class _TextBoxSelectionGestureDetectorBuilder
   @override
   void onSingleTapUp(TapUpDetails details) {
     if (_state._clearGlobalKey.currentContext != null) {
-      final RenderBox renderBox =
-          _state._clearGlobalKey.currentContext.findRenderObject() as RenderBox;
+      final RenderBox renderBox = _state._clearGlobalKey.currentContext!
+          .findRenderObject() as RenderBox;
       final Offset localOffset =
           renderBox.globalToLocal(details.globalPosition);
       if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
@@ -51,7 +51,7 @@ class _TextBoxSelectionGestureDetectorBuilder
     }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
-    if (_state.widget.onTap != null) _state.widget.onTap();
+    if (_state.widget.onTap != null) _state.widget.onTap!();
   }
 
   @override
@@ -62,7 +62,7 @@ class _TextBoxSelectionGestureDetectorBuilder
 
 class TextBox extends StatefulWidget {
   const TextBox({
-    Key key,
+    Key? key,
     this.controller,
     this.focusNode,
     this.decoration = _kDefaultRoundedBorderDecoration,
@@ -75,21 +75,21 @@ class TextBox extends StatefulWidget {
     this.suffix,
     this.outsideSuffix,
     this.suffixMode = OverlayVisibilityMode.always,
-    TextInputType keyboardType,
+    TextInputType? keyboardType,
     this.textInputAction,
     this.style,
     this.strutStyle,
     this.textAlign = TextAlign.start,
     this.textAlignVertical,
     this.readOnly = false,
-    ToolbarOptions toolbarOptions,
+    ToolbarOptions? toolbarOptions,
     this.showCursor,
     this.autofocus = false,
     this.obscuringCharacter = '•',
     this.obscureText = false,
     this.autocorrect = true,
-    SmartDashesType smartDashesType,
-    SmartQuotesType smartQuotesType,
+    SmartDashesType? smartDashesType,
+    SmartQuotesType? smartQuotesType,
     this.enableSuggestions = true,
     this.maxLines,
     this.minLines,
@@ -120,29 +120,17 @@ class TextBox extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.header,
     this.headerStyle,
-  })  : assert(textAlign != null),
-        assert(readOnly != null),
-        assert(autofocus != null),
-        assert(obscuringCharacter != null && obscuringCharacter.length == 1),
-        assert(obscureText != null),
-        assert(autocorrect != null),
+  })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
         smartQuotesType = smartQuotesType ??
             (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
-        assert(enableSuggestions != null),
-        assert(maxLengthEnforced != null),
-        assert(scrollPadding != null),
-        assert(dragStartBehavior != null),
-        assert(selectionHeightStyle != null),
-        assert(selectionWidthStyle != null),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
           (maxLines == null) || (minLines == null) || (maxLines >= minLines),
           "minLines can't be greater than maxLines",
         ),
-        assert(expands != null),
         assert(
           !expands || (maxLines == null && minLines == null),
           'minLines and maxLines must be null when expands is true.',
@@ -150,8 +138,6 @@ class TextBox extends StatefulWidget {
         assert(!obscureText || maxLines == 1,
             'Obscured fields cannot be multiline.'),
         assert(maxLength == null || maxLength > 0),
-        assert(prefixMode != null),
-        assert(suffixMode != null),
         assert(
             !identical(textInputAction, TextInputAction.newline) ||
                 maxLines == 1 ||
@@ -173,45 +159,45 @@ class TextBox extends StatefulWidget {
                   )),
         super(key: key);
 
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
 
   final BoxDecoration decoration;
   final EdgeInsetsGeometry padding;
 
-  final String placeholder;
-  final TextStyle placeholderStyle;
+  final String? placeholder;
+  final TextStyle? placeholderStyle;
 
-  final String header;
-  final TextStyle headerStyle;
+  final String? header;
+  final TextStyle? headerStyle;
 
-  final Widget outsidePrefix;
-  final Widget prefix;
+  final Widget? outsidePrefix;
+  final Widget? prefix;
   final OverlayVisibilityMode prefixMode;
 
-  final Widget outsideSuffix;
-  final Widget suffix;
+  final Widget? outsideSuffix;
+  final Widget? suffix;
   final OverlayVisibilityMode suffixMode;
 
   final TextInputType keyboardType;
 
-  final TextInputAction textInputAction;
+  final TextInputAction? textInputAction;
 
   final TextCapitalization textCapitalization;
 
-  final TextStyle style;
+  final TextStyle? style;
 
-  final StrutStyle strutStyle;
+  final StrutStyle? strutStyle;
 
   final TextAlign textAlign;
 
   final ToolbarOptions toolbarOptions;
 
-  final TextAlignVertical textAlignVertical;
+  final TextAlignVertical? textAlignVertical;
 
   final bool readOnly;
 
-  final bool showCursor;
+  final bool? showCursor;
 
   final bool autofocus;
 
@@ -227,36 +213,36 @@ class TextBox extends StatefulWidget {
 
   final bool enableSuggestions;
 
-  final int maxLines;
-  final int minLines;
-  final double minHeight;
+  final int? maxLines;
+  final int? minLines;
+  final double? minHeight;
 
   final bool expands;
 
-  final int maxLength;
+  final int? maxLength;
 
   final bool maxLengthEnforced;
 
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
-  final VoidCallback onEditingComplete;
+  final VoidCallback? onEditingComplete;
 
-  final ValueChanged<String> onSubmitted;
+  final ValueChanged<String>? onSubmitted;
 
-  final List<TextInputFormatter> inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
 
-  final bool enabled;
+  final bool? enabled;
 
   final double cursorWidth;
-  final double cursorHeight;
+  final double? cursorHeight;
   final Radius cursorRadius;
-  final Color cursorColor;
+  final Color? cursorColor;
 
   final ui.BoxHeightStyle selectionHeightStyle;
 
   final ui.BoxWidthStyle selectionWidthStyle;
 
-  final Brightness keyboardAppearance;
+  final Brightness? keyboardAppearance;
 
   final EdgeInsets scrollPadding;
 
@@ -264,17 +250,17 @@ class TextBox extends StatefulWidget {
 
   final DragStartBehavior dragStartBehavior;
 
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
 
-  final ScrollPhysics scrollPhysics;
+  final ScrollPhysics? scrollPhysics;
 
   bool get selectionEnabled => enableInteractiveSelection;
 
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
-  final Iterable<String> autofillHints;
+  final Iterable<String>? autofillHints;
 
-  final String restorationId;
+  final String? restorationId;
 
   @override
   _TextBoxState createState() => _TextBoxState();
@@ -359,17 +345,17 @@ class _TextBoxState extends State<TextBox>
     implements TextSelectionGestureDetectorBuilderDelegate {
   final GlobalKey _clearGlobalKey = GlobalKey();
 
-  RestorableTextEditingController _controller;
+  RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
-      widget.controller ?? _controller.value;
+      widget.controller ?? _controller!.value;
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
   FocusNode get _effectiveFocusNode =>
       widget.focusNode ?? (_focusNode ??= FocusNode());
 
   bool _showSelectionHandles = false;
 
-  _TextBoxSelectionGestureDetectorBuilder _selectionGestureDetectorBuilder;
+  late _TextBoxSelectionGestureDetectorBuilder _selectionGestureDetectorBuilder;
 
   @override
   bool get forcePressEnabled => true;
@@ -396,10 +382,10 @@ class _TextBoxState extends State<TextBox>
   void didUpdateWidget(TextBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller == null && oldWidget.controller != null) {
-      _createLocalController(oldWidget.controller.value);
+      _createLocalController(oldWidget.controller!.value);
     } else if (widget.controller != null && oldWidget.controller == null) {
-      unregisterFromRestoration(_controller);
-      _controller.dispose();
+      unregisterFromRestoration(_controller!);
+      _controller!.dispose();
       _controller = null;
     }
     final bool isEnabled = widget.enabled ?? true;
@@ -410,7 +396,7 @@ class _TextBoxState extends State<TextBox>
   }
 
   @override
-  void restoreState(RestorationBucket oldBucket, bool initialRestore) {
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     if (_controller != null) {
       _registerController();
     }
@@ -418,11 +404,11 @@ class _TextBoxState extends State<TextBox>
 
   void _registerController() {
     assert(_controller != null);
-    registerForRestoration(_controller, 'controller');
-    _controller.value.addListener(updateKeepAlive);
+    registerForRestoration(_controller!, 'controller');
+    _controller!.value.addListener(updateKeepAlive);
   }
 
-  void _createLocalController([TextEditingValue value]) {
+  void _createLocalController([TextEditingValue? value]) {
     assert(_controller == null);
     _controller = value == null
         ? RestorableTextEditingController()
@@ -433,7 +419,7 @@ class _TextBoxState extends State<TextBox>
   }
 
   @override
-  String get restorationId => widget.restorationId;
+  String? get restorationId => widget.restorationId;
 
   bool get showActiveBorder => _effectiveFocusNode.hasFocus;
 
@@ -444,13 +430,13 @@ class _TextBoxState extends State<TextBox>
     super.dispose();
   }
 
-  EditableTextState get _editableText => editableTextKey.currentState;
+  EditableTextState? get _editableText => editableTextKey.currentState;
 
   void _requestKeyboard() {
     _editableText?.requestKeyboard();
   }
 
-  bool _shouldShowSelectionHandles(SelectionChangedCause cause) {
+  bool _shouldShowSelectionHandles(SelectionChangedCause? cause) {
     if (!_selectionGestureDetectorBuilder.shouldShowSelectionToolbar)
       return false;
 
@@ -464,7 +450,7 @@ class _TextBoxState extends State<TextBox>
   }
 
   void _handleSelectionChanged(
-      TextSelection selection, SelectionChangedCause cause) {
+      TextSelection selection, SelectionChangedCause? cause) {
     if (cause == SelectionChangedCause.longPress) {
       _editableText?.bringIntoView(selection.base);
     }
@@ -477,11 +463,11 @@ class _TextBoxState extends State<TextBox>
   }
 
   @override
-  bool get wantKeepAlive => _controller?.value?.text?.isNotEmpty == true;
+  bool get wantKeepAlive => _controller?.value.text.isNotEmpty == true;
 
   bool _shouldShowAttachment({
-    OverlayVisibilityMode attachment,
-    bool hasText,
+    required OverlayVisibilityMode attachment,
+    required bool hasText,
   }) {
     switch (attachment) {
       case OverlayVisibilityMode.never:
@@ -493,8 +479,6 @@ class _TextBoxState extends State<TextBox>
       case OverlayVisibilityMode.notEditing:
         return !hasText;
     }
-    assert(false);
-    return null;
   }
 
   bool _showOutsidePrefixWidget(TextEditingValue text) {
@@ -544,10 +528,6 @@ class _TextBoxState extends State<TextBox>
     TextStyle textStyle,
     TextStyle placeholderStyle,
   ) {
-    assert(editableText != null);
-    assert(textStyle != null);
-    assert(placeholderStyle != null);
-
     if (!_hasDecoration) {
       return editableText;
     }
@@ -555,11 +535,11 @@ class _TextBoxState extends State<TextBox>
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
       child: editableText,
-      builder: (BuildContext context, TextEditingValue text, Widget child) {
+      builder: (BuildContext context, TextEditingValue text, Widget? child) {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            if (_showPrefixWidget(text)) widget.prefix,
+            if (_showPrefixWidget(text)) widget.prefix!,
             Expanded(
               child: Stack(
                 children: <Widget>[
@@ -568,18 +548,18 @@ class _TextBoxState extends State<TextBox>
                       width: double.infinity,
                       padding: widget.padding,
                       child: Text(
-                        widget.placeholder,
+                        widget.placeholder!,
                         maxLines: widget.maxLines,
                         overflow: TextOverflow.ellipsis,
                         style: placeholderStyle,
                         textAlign: widget.textAlign,
                       ),
                     ),
-                  child,
+                  if (child != null) child,
                 ],
               ),
             ),
-            if (_showSuffixWidget(text)) widget.suffix
+            if (_showSuffixWidget(text)) widget.suffix!
           ],
         );
       },
@@ -600,24 +580,24 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: context.theme.inactiveColor,
+      color: context.theme!.inactiveColor,
     );
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: context.theme.disabledColor,
+          color: context.theme!.disabledColor,
           fontWeight: FontWeight.w400,
         );
 
     final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? Theme.of(context).brightness;
-    final Color cursorColor = context.theme.inactiveColor;
-    final Color disabledColor = context.theme.disabledColor;
+        widget.keyboardAppearance ?? Theme.of(context)!.brightness!;
+    final Color cursorColor = context.theme!.inactiveColor!;
+    final Color? disabledColor = context.theme!.disabledColor;
 
-    final Color decorationColor = widget.decoration?.color;
+    final Color? decorationColor = widget.decoration.color;
 
-    final BoxBorder border = widget.decoration?.border;
-    Border resolvedBorder = border as Border;
+    final BoxBorder? border = widget.decoration.border;
+    Border? resolvedBorder = border as Border?;
     if (border is Border) {
       BorderSide resolveBorderSide(BorderSide side) {
         return side == BorderSide.none
@@ -626,12 +606,12 @@ class _TextBoxState extends State<TextBox>
                 style: enabled ? BorderStyle.solid : BorderStyle.none,
                 width: (showActiveBorder ? 1 : null),
                 color: (showActiveBorder
-                    ? context.theme.accentColor
-                    : context.theme.inactiveColor),
+                    ? context.theme!.accentColor
+                    : context.theme!.inactiveColor),
               );
       }
 
-      resolvedBorder = border == null || border.runtimeType != Border
+      resolvedBorder = border.runtimeType != Border
           ? border
           : Border(
               top: resolveBorderSide(border.top),
@@ -641,16 +621,12 @@ class _TextBoxState extends State<TextBox>
             );
     }
 
-    final BoxDecoration effectiveDecoration = widget.decoration?.copyWith(
-          border: resolvedBorder,
-          color: enabled ? decorationColor : (decorationColor ?? disabledColor),
-        ) ??
-        BoxDecoration(
-          border: resolvedBorder,
-          color: enabled ? decorationColor : (decorationColor ?? disabledColor),
-        );
+    final BoxDecoration effectiveDecoration = widget.decoration.copyWith(
+      border: resolvedBorder,
+      color: enabled ? decorationColor : (decorationColor ?? disabledColor),
+    );
 
-    final Color selectionColor = context.theme.accentColor.withOpacity(0.2);
+    final Color selectionColor = context.theme!.accentColor!.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -697,7 +673,7 @@ class _TextBoxState extends State<TextBox>
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
             backgroundCursorColor:
-                context.theme.disabledColor ?? Colors.grey[120],
+                context.theme!.disabledColor ?? Colors.grey[120]!,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -727,8 +703,8 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme.animationDuration ?? Duration.zero,
-          curve: context.theme.animationCurve ?? Curves.linear,
+          duration: context.theme!.animationDuration ?? Duration.zero,
+          curve: context.theme!.animationCurve ?? Curves.linear,
           decoration: effectiveDecoration,
           constraints: BoxConstraints(
             minHeight: widget.minHeight ?? 0,
@@ -760,20 +736,20 @@ class _TextBoxState extends State<TextBox>
             Padding(
               padding: const EdgeInsets.only(bottom: 5.0),
               child: Text(
-                widget.header,
+                widget.header!,
                 style: widget.headerStyle ??
                     TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: context.theme.inactiveColor,
+                      color: context.theme!.inactiveColor,
                       fontSize: 14,
                     ),
               ),
             ),
           Row(
             children: [
-              if (_showOutsidePrefixWidget(text)) widget.outsidePrefix,
+              if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
               Expanded(child: child),
-              if (_showOutsideSuffixWidget(text)) widget.outsideSuffix,
+              if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
             ],
           ),
         ],

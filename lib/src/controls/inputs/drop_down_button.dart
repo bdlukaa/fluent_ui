@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class DropDownButton extends StatefulWidget {
   const DropDownButton({
-    Key key,
-    @required this.content,
-    @required this.dropdown,
+    Key? key,
+    required this.content,
+    required this.dropdown,
     this.style,
     this.disabled = false,
     this.focusNode,
@@ -13,27 +13,21 @@ class DropDownButton extends StatefulWidget {
     this.horizontal = false,
     this.semanticsLabel,
     this.openWhen,
-  })  : assert(content != null),
-        assert(dropdown != null),
-        assert(disabled != null),
-        assert(adoptDropdownWidth != null),
-        assert(startOpen != null),
-        assert(horizontal != null),
-        super(key: key);
+  }) : super(key: key);
 
-  final ButtonStyle style;
+  final ButtonStyle? style;
 
   final Widget content;
-  final Widget dropdown;
+  final Widget? dropdown;
   final bool adoptDropdownWidth;
   final bool horizontal;
-  final String semanticsLabel;
+  final String? semanticsLabel;
 
   final bool disabled;
   final bool startOpen;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
-  final List<ButtonState> openWhen;
+  final List<ButtonState>? openWhen;
 
   @override
   _DropDownButtonState createState() => _DropDownButtonState();
@@ -41,9 +35,9 @@ class DropDownButton extends StatefulWidget {
 
 class _DropDownButtonState extends State<DropDownButton> {
   GlobalKey _key = LabeledGlobalKey(UniqueKey().toString());
-  Offset buttonPosition;
-  Size buttonSize;
-  OverlayEntry _overlayEntry;
+  late Offset buttonPosition;
+  late Size buttonSize;
+  OverlayEntry? _overlayEntry;
 
   bool isOpen = false;
   bool get isClosed => !isOpen;
@@ -51,14 +45,14 @@ class _DropDownButtonState extends State<DropDownButton> {
   @override
   void initState() {
     if (widget.startOpen)
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         open();
       });
     super.initState();
   }
 
   void findButton() {
-    RenderBox renderBox = _key.currentContext.findRenderObject();
+    RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     buttonSize = renderBox.size;
     buttonPosition = renderBox.localToGlobal(Offset.zero);
   }
@@ -74,7 +68,7 @@ class _DropDownButtonState extends State<DropDownButton> {
     if (isOpen) return;
     findButton();
     _overlayEntry = _overlayEntryBuilder();
-    Overlay.of(context).insert(_overlayEntry);
+    Overlay.of(context)!.insert(_overlayEntry!);
     isOpen = true;
   }
 
@@ -86,7 +80,7 @@ class _DropDownButtonState extends State<DropDownButton> {
   }
 
   ButtonStyle style(BuildContext context) =>
-      context.theme.buttonStyle.copyWith(widget.style);
+      context.theme!.buttonStyle!.copyWith(widget.style!);
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +89,7 @@ class _DropDownButtonState extends State<DropDownButton> {
       child: HoverButton(
         onPressed: widget.disabled ? null : toggle,
         builder: (c, states) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
             final openWhen = widget.openWhen ??
                 <ButtonStates>[
                   ButtonStates.hovering,
@@ -111,7 +105,7 @@ class _DropDownButtonState extends State<DropDownButton> {
             key: _key,
             focusNode: widget.focusNode,
             text: widget.content,
-            style: (widget.style ?? Theme.of(context).buttonStyle)
+            style: (widget.style ?? Theme.of(context)!.buttonStyle)!
                 .copyWith(ButtonStyle(margin: EdgeInsets.zero)),
             semanticsLabel: widget.semanticsLabel,
             onPressed: widget.disabled ? null : () {},
@@ -125,17 +119,17 @@ class _DropDownButtonState extends State<DropDownButton> {
     return OverlayEntry(
       builder: (context) {
         final style = this.style(context);
-        double top, bottom, right, left, width;
+        double? top, bottom, right, left, width;
         if (widget.adoptDropdownWidth) {
-          width = buttonSize.width - (style?.margin?.horizontal ?? 0);
+          width = buttonSize.width - (style.margin?.horizontal ?? 0);
         }
 
         if (widget.horizontal) {
           left = buttonPosition.dx + buttonSize.width;
-          top = buttonPosition.dy + (style?.margin?.vertical ?? 0) / 2;
+          top = buttonPosition.dy + (style.margin?.vertical ?? 0) / 2;
         } else {
           top = buttonPosition.dy + buttonSize.height;
-          left = buttonPosition.dx + (style?.margin?.horizontal ?? 0) / 2;
+          left = buttonPosition.dx + (style.margin?.horizontal ?? 0) / 2;
         }
 
         return Positioned(
@@ -152,16 +146,16 @@ class _DropDownButtonState extends State<DropDownButton> {
 }
 
 class Dropdown extends StatefulWidget {
-  const Dropdown({Key key, @required this.child}) : super(key: key);
+  const Dropdown({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 
   Dropdown.sections({
-    Key key,
-    Widget divider,
-    List<Widget> sectionTitles,
-    List<Widget> sectionBodies,
-  })  : assert(sectionBodies.length == sectionTitles.length),
+    Key? key,
+    Widget? divider,
+    required List<Widget> sectionTitles,
+    required List<Widget> sectionBodies,
+  })   : assert(sectionBodies.length == sectionTitles.length),
         child = Column(
           children: List.generate(sectionTitles.length, (index) {
             divider ??= Divider();
@@ -170,7 +164,7 @@ class Dropdown extends StatefulWidget {
               children: [
                 sectionTitles[index],
                 sectionBodies[index],
-                if (sectionTitles.length - 1 != index) divider,
+                if (sectionTitles.length - 1 != index) divider!,
               ],
             );
           }),
@@ -183,7 +177,7 @@ class Dropdown extends StatefulWidget {
 
 class _DropdownState extends State<Dropdown>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  late AnimationController controller;
 
   @override
   void initState() {

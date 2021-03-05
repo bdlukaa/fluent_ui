@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class FluentPageRoute<T> extends PageRoute<T> {
   FluentPageRoute({
-    @required this.builder,
-    RouteSettings settings,
+    required this.builder,
+    RouteSettings? settings,
   }) : super(settings: settings);
 
   final WidgetBuilder builder;

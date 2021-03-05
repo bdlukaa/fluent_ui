@@ -4,9 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class Slider extends StatelessWidget {
   const Slider({
-    Key key,
-    @required this.value,
-    @required this.onChanged,
+    Key? key,
+    required this.value,
+    required this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
     this.min = 0.0,
@@ -15,28 +15,25 @@ class Slider extends StatelessWidget {
     this.style,
     this.label,
     this.focusNode,
-  })  : assert(value != null),
-        assert(min != null),
-        assert(max != null),
-        assert(value >= min && value <= max),
+  })  : assert(value >= min && value <= max),
         assert(divisions == null || divisions > 0),
         super(key: key);
 
   final double value;
 
-  final ValueChanged<double> onChanged;
-  final ValueChanged<double> onChangeStart;
-  final ValueChanged<double> onChangeEnd;
+  final ValueChanged<double>? onChanged;
+  final ValueChanged<double>? onChangeStart;
+  final ValueChanged<double>? onChangeEnd;
 
   final double min;
   final double max;
 
-  final int divisions;
-  final SliderStyle style;
+  final int? divisions;
+  final SliderStyle? style;
 
-  final String label;
+  final String? label;
 
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -53,7 +50,7 @@ class Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.theme.sliderStyle.copyWith(this.style);
+    final style = context.theme!.sliderStyle!.copyWith(this.style);
     return Padding(
       padding: style.margin ?? EdgeInsets.zero,
       child: m.Material(
@@ -70,8 +67,8 @@ class Slider extends StatelessWidget {
             trackHeight: 0.25,
             trackShape: _CustomTrackShape(),
             disabledThumbColor: style.disabledThumbColor,
-            disabledInactiveTrackColor: style?.disabledInactiveColor,
-            disabledActiveTrackColor: style?.disabledActiveColor,
+            disabledInactiveTrackColor: style.disabledInactiveColor,
+            disabledActiveTrackColor: style.disabledActiveColor,
           ),
           child: m.Slider(
             value: value,
@@ -83,7 +80,7 @@ class Slider extends StatelessWidget {
             activeColor: style.activeColor,
             inactiveColor: style.inactiveColor,
             divisions: divisions,
-            mouseCursor: style?.cursor,
+            mouseCursor: style.cursor,
             // TODO: improve label fidelity
             // Image example: https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png
             label: label,
@@ -97,13 +94,13 @@ class Slider extends StatelessWidget {
 
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
   Rect getPreferredRect({
-    @required RenderBox parentBox,
+    required RenderBox parentBox,
     Offset offset = Offset.zero,
-    @required m.SliderThemeData sliderTheme,
+    required m.SliderThemeData sliderTheme,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    final double trackHeight = sliderTheme.trackHeight;
+    final double trackHeight = sliderTheme.trackHeight!;
     final double trackLeft = offset.dx;
     final double trackTop =
         offset.dy + (parentBox.size.height - trackHeight) / 2;
@@ -113,21 +110,21 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
 }
 
 class SliderStyle {
-  final Color thumbColor;
-  final Color disabledThumbColor;
+  final Color? thumbColor;
+  final Color? disabledThumbColor;
 
-  final MouseCursor cursor;
+  final MouseCursor? cursor;
 
-  final Color activeColor;
-  final Color inactiveColor;
+  final Color? activeColor;
+  final Color? inactiveColor;
 
-  final Color disabledActiveColor;
-  final Color disabledInactiveColor;
+  final Color? disabledActiveColor;
+  final Color? disabledInactiveColor;
 
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? margin;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
   const SliderStyle({
     this.cursor,
@@ -142,15 +139,15 @@ class SliderStyle {
     this.disabledInactiveColor,
   });
 
-  static SliderStyle defaultTheme(Style style) {
+  static SliderStyle defaultTheme(Style? style) {
     final def = SliderStyle(
       cursor: SystemMouseCursors.click,
-      thumbColor: style.accentColor,
-      activeColor: style.accentColor,
-      inactiveColor: style.inactiveColor,
+      thumbColor: style?.accentColor,
+      activeColor: style?.accentColor,
+      inactiveColor: style?.inactiveColor,
       margin: EdgeInsets.zero,
-      animationDuration: style.animationDuration,
-      animationCurve: style.animationCurve,
+      animationDuration: style?.animationDuration,
+      animationCurve: style?.animationCurve,
       disabledActiveColor: style?.disabledColor,
       disabledThumbColor: style?.disabledColor?.withOpacity(1),
       disabledInactiveColor: style?.inactiveColor,
@@ -159,8 +156,7 @@ class SliderStyle {
     return def;
   }
 
-  SliderStyle copyWith(SliderStyle style) {
-    if (style == null) return this;
+  SliderStyle copyWith(SliderStyle? style) {
     return SliderStyle(
       margin: style?.margin ?? margin,
       cursor: style?.cursor ?? cursor,

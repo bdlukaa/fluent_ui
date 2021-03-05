@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class ContentDialog extends StatelessWidget {
   const ContentDialog({
-    Key key,
+    Key? key,
     this.title,
     this.content,
     this.actions,
@@ -10,21 +10,21 @@ class ContentDialog extends StatelessWidget {
     this.backgroundDismiss,
   }) : super(key: key);
 
-  final Widget title;
-  final Widget content;
-  final List<Widget> actions;
+  final Widget? title;
+  final Widget? content;
+  final List<Widget>? actions;
 
-  final ContentDialogStyle style;
+  final ContentDialogStyle? style;
 
-  final bool backgroundDismiss;
+  final bool? backgroundDismiss;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.dialogStyle.copyWith(this.style);
+    final style = context.theme!.dialogStyle?.copyWith(this.style);
     return Dialog(
       backgroundDismiss: backgroundDismiss ?? true,
-      barrierColor: style.barrierColor,
+      barrierColor: style?.barrierColor,
       child: PhysicalModel(
         color: style?.elevationColor ?? Colors.black,
         elevation: style?.elevation ?? 0,
@@ -38,35 +38,35 @@ class ContentDialog extends StatelessWidget {
             children: [
               if (title != null)
                 Padding(
-                  padding: style.titlePadding,
+                  padding: style?.titlePadding ?? EdgeInsets.zero,
                   child: DefaultTextStyle(
-                    style: style.titleStyle,
-                    child: title,
+                    style: style?.titleStyle ?? TextStyle(),
+                    child: title!,
                   ),
                 ),
               if (content != null)
                 Padding(
-                  padding: style.bodyPadding,
+                  padding: style?.bodyPadding ?? EdgeInsets.zero,
                   child: DefaultTextStyle(
-                    style: style?.bodyStyle,
-                    child: content,
+                    style: style?.bodyStyle ?? TextStyle(),
+                    child: content!,
                   ),
                 ),
               if (actions != null)
                 Theme(
-                  data: context.theme.copyWith(Style(
-                    buttonStyle: style.actionStyle,
+                  data: context.theme!.copyWith(Style(
+                    buttonStyle: style?.actionStyle,
                   )),
                   child: Row(
                     children: () {
-                      if (actions.length >= 2)
-                        return actions.map((e) {
-                          final index = actions.indexOf(e);
+                      if (actions!.length >= 2)
+                        return actions!.map((e) {
+                          final index = actions!.indexOf(e);
                           return Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(
-                                right: index != (actions.length - 1)
-                                    ? style.actionsSpacing ?? 3
+                                right: index != (actions!.length - 1)
+                                    ? style?.actionsSpacing ?? 3
                                     : 0,
                               ),
                               child: e,
@@ -75,7 +75,7 @@ class ContentDialog extends StatelessWidget {
                         }).toList();
                       return [
                         Spacer(),
-                        Expanded(child: actions.first),
+                        Expanded(child: actions!.first),
                       ];
                     }(),
                   ),
@@ -89,11 +89,9 @@ class ContentDialog extends StatelessWidget {
 }
 
 Future<void> showDialog({
-  @required BuildContext context,
-  @required Widget Function(BuildContext) builder,
+  required BuildContext context,
+  required Widget Function(BuildContext) builder,
 }) {
-  assert(context != null);
-  assert(builder != null);
   return showGeneralDialog(
     context: context,
     barrierColor: Colors.transparent,
@@ -105,17 +103,16 @@ Future<void> showDialog({
 
 class Dialog extends StatelessWidget {
   const Dialog({
-    Key key,
+    Key? key,
     this.child,
     this.backgroundDismiss = true,
     this.barrierColor,
-  })  : assert(backgroundDismiss != null),
-        super(key: key);
+  }) : super(key: key);
 
   final bool backgroundDismiss;
-  final Color barrierColor;
+  final Color? barrierColor;
 
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -128,31 +125,31 @@ class Dialog extends StatelessWidget {
               if (backgroundDismiss) Navigator.pop(context);
             },
             child: Container(
-              color: barrierColor ?? Colors.grey[200].withOpacity(0.8),
+              color: barrierColor ?? Colors.grey[200]!.withOpacity(0.8),
             ),
           ),
         ),
-        child,
+        child!,
       ],
     );
   }
 }
 
 class ContentDialogStyle {
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry titlePadding;
-  final EdgeInsetsGeometry bodyPadding;
-  final double actionsSpacing;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? titlePadding;
+  final EdgeInsetsGeometry? bodyPadding;
+  final double? actionsSpacing;
 
-  final Decoration decoration;
-  final Color barrierColor;
+  final Decoration? decoration;
+  final Color? barrierColor;
 
-  final TextStyle titleStyle;
-  final TextStyle bodyStyle;
-  final ButtonStyle actionStyle;
+  final TextStyle? titleStyle;
+  final TextStyle? bodyStyle;
+  final ButtonStyle? actionStyle;
 
-  final double elevation;
-  final Color elevationColor;
+  final double? elevation;
+  final Color? elevationColor;
 
   const ContentDialogStyle({
     this.decoration,
@@ -168,12 +165,13 @@ class ContentDialogStyle {
     this.elevationColor,
   });
 
-  static ContentDialogStyle defaultTheme(Style style, [Brightness brightness]) {
+  static ContentDialogStyle defaultTheme(Style style,
+      [Brightness? brightness]) {
     final def = ContentDialogStyle(
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: style.disabledColor,
+          color: style.disabledColor!,
           width: 1.2,
         ),
       ),
@@ -181,7 +179,7 @@ class ContentDialogStyle {
       titlePadding: EdgeInsets.only(bottom: 12),
       bodyPadding: EdgeInsets.only(bottom: 30),
       actionsSpacing: 3,
-      barrierColor: Colors.grey[200].withOpacity(0.8),
+      barrierColor: Colors.grey[200]!.withOpacity(0.8),
       titleStyle: TextStyle(
         color: Colors.black,
         fontSize: 20,
@@ -200,8 +198,7 @@ class ContentDialogStyle {
     return def;
   }
 
-  ContentDialogStyle copyWith(ContentDialogStyle style) {
-    if (style == null) return this;
+  ContentDialogStyle copyWith(ContentDialogStyle? style) {
     return ContentDialogStyle(
       decoration: style?.decoration ?? decoration,
       padding: style?.padding ?? padding,

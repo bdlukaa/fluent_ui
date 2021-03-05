@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' as m;
 
 class FluentApp extends StatelessWidget {
   const FluentApp({
-    Key key,
+    Key? key,
     this.navigatorKey,
     this.onGenerateRoute,
     this.onGenerateInitialRoutes,
@@ -41,18 +41,18 @@ class FluentApp extends StatelessWidget {
         super(key: key);
 
   FluentApp.router({
-    Key key,
+    Key? key,
     this.style,
     this.darkStyle,
     this.themeMode,
     this.routeInformationProvider,
-    @required this.routeInformationParser,
-    @required this.routerDelegate,
-    BackButtonDispatcher backButtonDispatcher,
+    required this.routeInformationParser,
+    required this.routerDelegate,
+    BackButtonDispatcher? backButtonDispatcher,
     this.builder,
     this.title = '',
     this.onGenerateTitle,
-    @required this.color,
+    required Color this.color,
     this.locale,
     this.localizationsDelegates,
     this.localeListResolutionCallback,
@@ -69,15 +69,7 @@ class FluentApp extends StatelessWidget {
     this.actions,
   })  : assert(routeInformationParser != null && routerDelegate != null,
             'The routeInformationParser and routerDelegate cannot be null.'),
-        assert(title != null),
-        assert(color != null),
-        assert(supportedLocales != null && supportedLocales.isNotEmpty),
-        assert(showPerformanceOverlay != null),
-        assert(checkerboardRasterCacheImages != null),
-        assert(checkerboardOffscreenLayers != null),
-        assert(showSemanticsDebugger != null),
-        assert(debugShowCheckedModeBanner != null),
-        assert(debugShowWidgetInspector != null),
+        assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
         backButtonDispatcher =
             backButtonDispatcher ?? RootBackButtonDispatcher(),
@@ -91,51 +83,51 @@ class FluentApp extends StatelessWidget {
         initialRoute = null,
         super(key: key);
 
-  final Style style;
-  final Style darkStyle;
-  final ThemeMode themeMode;
+  final Style? style;
+  final Style? darkStyle;
+  final ThemeMode? themeMode;
 
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
-  final RouteFactory onGenerateRoute;
+  final RouteFactory? onGenerateRoute;
 
-  final InitialRouteListFactory onGenerateInitialRoutes;
+  final InitialRouteListFactory? onGenerateInitialRoutes;
 
-  final PageRouteFactory pageRouteBuilder;
+  final PageRouteFactory? pageRouteBuilder;
 
-  final RouteInformationParser<Object> routeInformationParser;
+  final RouteInformationParser<Object>? routeInformationParser;
 
-  final RouterDelegate<Object> routerDelegate;
+  final RouterDelegate<Object>? routerDelegate;
 
-  final BackButtonDispatcher backButtonDispatcher;
+  final BackButtonDispatcher? backButtonDispatcher;
 
-  final RouteInformationProvider routeInformationProvider;
+  final RouteInformationProvider? routeInformationProvider;
 
-  final Widget home;
+  final Widget? home;
 
-  final Map<String, WidgetBuilder> routes;
+  final Map<String, WidgetBuilder>? routes;
 
-  final RouteFactory onUnknownRoute;
+  final RouteFactory? onUnknownRoute;
 
-  final String initialRoute;
+  final String? initialRoute;
 
-  final List<NavigatorObserver> navigatorObservers;
+  final List<NavigatorObserver>? navigatorObservers;
 
-  final TransitionBuilder builder;
+  final TransitionBuilder? builder;
 
   final String title;
 
-  final GenerateAppTitle onGenerateTitle;
+  final GenerateAppTitle? onGenerateTitle;
 
-  final Color color;
+  final Color? color;
 
-  final Locale locale;
+  final Locale? locale;
 
-  final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
+  final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
-  final LocaleListResolutionCallback localeListResolutionCallback;
+  final LocaleListResolutionCallback? localeListResolutionCallback;
 
-  final LocaleResolutionCallback localeResolutionCallback;
+  final LocaleResolutionCallback? localeResolutionCallback;
 
   final Iterable<Locale> supportedLocales;
 
@@ -149,13 +141,13 @@ class FluentApp extends StatelessWidget {
 
   final bool debugShowWidgetInspector;
 
-  final InspectorSelectButtonBuilder inspectorSelectButtonBuilder;
+  final InspectorSelectButtonBuilder? inspectorSelectButtonBuilder;
 
   final bool debugShowCheckedModeBanner;
 
-  final Map<LogicalKeySet, Intent> shortcuts;
+  final Map<LogicalKeySet, Intent>? shortcuts;
 
-  final Map<Type, Action<Intent>> actions;
+  final Map<Type, Action<Intent>>? actions;
 
   static bool showPerformanceOverlayOverride = false;
 
@@ -184,9 +176,9 @@ class FluentApp extends StatelessWidget {
     return data.build(context);
   }
 
-  Widget _builder(BuildContext context, Widget child) {
+  Widget _builder(BuildContext context, Widget? child) {
     return m.Material(
-      child: Theme(data: theme(context), child: child),
+      child: Theme(data: theme(context), child: child!),
     );
   }
 
@@ -200,8 +192,8 @@ class FluentApp extends StatelessWidget {
       return m.MaterialApp.router(
         key: GlobalObjectKey(this),
         routeInformationProvider: routeInformationProvider,
-        routeInformationParser: routeInformationParser,
-        routerDelegate: routerDelegate,
+        routeInformationParser: routeInformationParser!,
+        routerDelegate: routerDelegate!,
         backButtonDispatcher: backButtonDispatcher,
         builder: _builder,
         title: title,
@@ -225,12 +217,12 @@ class FluentApp extends StatelessWidget {
     return m.MaterialApp(
       key: GlobalObjectKey(this),
       navigatorKey: navigatorKey,
-      navigatorObservers: navigatorObservers,
+      navigatorObservers: navigatorObservers!,
       // pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
       //   return FluentPageRoute<T>(settings: settings, builder: builder);
       // },
       home: home,
-      routes: routes,
+      routes: routes!,
       initialRoute: initialRoute,
       onGenerateRoute: onGenerateRoute,
       onGenerateInitialRoutes: onGenerateInitialRoutes,

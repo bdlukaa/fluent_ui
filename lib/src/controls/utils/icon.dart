@@ -58,7 +58,7 @@ class Icon extends StatelessWidget {
   /// The [size] and [color] default to the value given by the current [IconTheme].
   const Icon(
     this.icon, {
-    Key key,
+    Key? key,
     this.size,
     this.color,
     this.semanticLabel,
@@ -69,7 +69,7 @@ class Icon extends StatelessWidget {
   ///
   /// The icon can be null, in which case the widget will render as an empty
   /// space of the specified [size].
-  final IconData icon;
+  final IconData? icon;
 
   /// The size of the icon in logical pixels.
   ///
@@ -83,7 +83,7 @@ class Icon extends StatelessWidget {
   /// [IconButton.iconSize] instead, so that the [IconButton] can make the splash
   /// area the appropriate size as well. The [IconButton] uses an [IconTheme] to
   /// pass down the size to the [Icon].
-  final double size;
+  final double? size;
 
   /// The color to use when drawing the icon.
   ///
@@ -112,7 +112,7 @@ class Icon extends StatelessWidget {
   /// )
   /// ```
   /// {@end-tool}
-  final Color color;
+  final Color? color;
 
   /// Semantic label for the icon.
   ///
@@ -121,7 +121,7 @@ class Icon extends StatelessWidget {
   ///
   ///  * [SemanticsProperties.label], which is set to [semanticLabel] in the
   ///    underlying	 [Semantics] widget.
-  final String semanticLabel;
+  final String? semanticLabel;
 
   /// The text direction to use for rendering the icon.
   ///
@@ -136,7 +136,7 @@ class Icon extends StatelessWidget {
   /// This property has no effect if the [icon]'s [IconData.matchTextDirection]
   /// field is false, but for consistency a text direction value must always be
   /// specified, either directly using this property or using [Directionality].
-  final TextDirection textDirection;
+  final TextDirection? textDirection;
 
   @override
   Widget build(BuildContext context) {
@@ -145,9 +145,9 @@ class Icon extends StatelessWidget {
         this.textDirection ?? Directionality.of(context);
 
     debugCheckHasFluentTheme(context);
-    final iconTheme = context.theme.iconStyle;
+    final iconTheme = context.theme!.iconStyle;
 
-    final double iconSize = size ?? iconTheme.size;
+    final double? iconSize = size ?? iconTheme!.size;
 
     if (icon == null) {
       return Semantics(
@@ -156,28 +156,28 @@ class Icon extends StatelessWidget {
       );
     }
 
-    final double iconOpacity = iconTheme.opacity;
-    Color iconColor = color ?? iconTheme.color;
+    final double? iconOpacity = iconTheme!.opacity;
+    Color? iconColor = color ?? iconTheme.color;
     if (iconOpacity != 1.0)
-      iconColor = iconColor.withOpacity(iconColor.opacity * iconOpacity);
+      iconColor = iconColor!.withOpacity(iconColor.opacity * iconOpacity!);
 
     Widget iconWidget = RichText(
       overflow: TextOverflow.visible, // Never clip.
       textDirection:
           textDirection, // Since we already fetched it for the assert...
       text: TextSpan(
-        text: String.fromCharCode(icon.codePoint),
+        text: String.fromCharCode(icon!.codePoint),
         style: TextStyle(
           inherit: false,
           color: iconColor,
           fontSize: iconSize,
-          fontFamily: icon.fontFamily,
-          package: icon.fontPackage,
+          fontFamily: icon!.fontFamily,
+          package: icon!.fontPackage,
         ),
       ),
     );
 
-    if (icon.matchTextDirection) {
+    if (icon!.matchTextDirection) {
       switch (textDirection) {
         case TextDirection.rtl:
           iconWidget = Transform(
@@ -208,13 +208,13 @@ class Icon extends StatelessWidget {
 }
 
 class IconStyle {
-  final Color color;
-  final double size;
-  final double opacity;
+  final Color? color;
+  final double? size;
+  final double? opacity;
 
   IconStyle({this.color, this.size, this.opacity});
 
-  static IconStyle defaultTheme([Brightness brightness]) {
+  static IconStyle defaultTheme([Brightness? brightness]) {
     final def = IconStyle(size: 24, opacity: 1);
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(IconStyle(color: Colors.black));
@@ -222,8 +222,7 @@ class IconStyle {
       return def.copyWith(IconStyle(color: Colors.white));
   }
 
-  IconStyle copyWith(IconStyle style) {
-    if (style == null) return this;
+  IconStyle copyWith(IconStyle? style) {
     return IconStyle(
       color: style?.color ?? color,
       size: style?.size ?? size,

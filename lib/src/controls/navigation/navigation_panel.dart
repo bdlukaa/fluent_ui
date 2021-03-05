@@ -1,9 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-// TODO: NavigationPanelHeader
-// TODO: NavigationPanelTileSeparator
-
 enum NavigationPanelDisplayMode {
   open,
   compact,
@@ -12,34 +9,31 @@ enum NavigationPanelDisplayMode {
 
 class NavigationPanel extends StatelessWidget {
   const NavigationPanel({
-    Key key,
-    @required this.currentIndex,
-    @required this.items,
-    @required this.onChanged,
-    this.top,
+    Key? key,
+    required this.currentIndex,
+    required this.items,
+    required this.onChanged,
+    this.menu,
     this.bottom,
     this.displayMode,
-  })  : assert(items != null && items.length >= 2),
-        assert(currentIndex != null &&
-            currentIndex >= 0 &&
-            currentIndex < items.length),
+  })  : assert(items.length >= 2),
+        assert(currentIndex >= 0 && currentIndex < items.length),
         super(key: key);
 
   final int currentIndex;
-  final ValueChanged<int> onChanged;
+  final ValueChanged<int>? onChanged;
 
-  // TODO: rename top to menu
-  final Widget top;
+  final Widget? menu;
   final List<NavigationPanelItem> items;
-  final NavigationPanelItem bottom;
+  final NavigationPanelItem? bottom;
 
-  final NavigationPanelDisplayMode displayMode;
+  final NavigationPanelDisplayMode? displayMode;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     return LayoutBuilder(builder: (context, consts) {
-      NavigationPanelDisplayMode displayMode = this.displayMode;
+      NavigationPanelDisplayMode? displayMode = this.displayMode;
       if (displayMode == null) {
         double width = consts.biggest.width;
         if (width.isInfinite) width = MediaQuery.of(context).size.width;
@@ -56,33 +50,57 @@ class NavigationPanel extends StatelessWidget {
           final width =
               displayMode == NavigationPanelDisplayMode.compact ? 50.0 : 320.0;
           return AnimatedContainer(
-            duration: context.theme.animationDuration,
-            curve: context.theme.animationCurve,
+            duration: context.theme!.animationDuration!,
+            curve: context.theme!.animationCurve!,
             width: width,
-            color: context.theme.navigationPanelBackgroundColor,
+            color: context.theme!.navigationPanelBackgroundColor,
             child: ListView(
               children: [
-                if (top != null)
+                if (menu != null)
                   Padding(
                     padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
-                    child: top,
+                    child: menu,
                   ),
                 ...List.generate(items.length, (index) {
                   final item = items[index];
+                  if (item is NavigationPanelSectionHeader &&
+                      displayMode == NavigationPanelDisplayMode.compact)
+                    return SizedBox();
                   // Use this to avoid overflow when animation is happening
                   return SingleChildScrollView(
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: SizedBox(
                       width: width,
-                      child: NavigationPanelItemTile(
-                        item: item,
-                        selected: currentIndex == index,
-                        onTap:
-                            onChanged == null ? null : () => onChanged(index),
-                        compact:
-                            displayMode == NavigationPanelDisplayMode.compact,
-                      ),
+                      child: () {
+                        if (item is NavigationPanelSectionHeader)
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8,
+                            ),
+                            child: DefaultTextStyle(
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              child: item.label!,
+                            ),
+                          );
+                        else if (item is NavigationPanelTileSeparator) {
+                          // TODO: NavigationPanelTileSeparator
+                          return SizedBox();
+                        }
+                        return NavigationPanelItemTile(
+                          item: item,
+                          selected: currentIndex == index,
+                          onTap: onChanged == null
+                              ? null
+                              : () => onChanged!(index),
+                          compact:
+                              displayMode == NavigationPanelDisplayMode.compact,
+                        );
+                      }(),
                     ),
                   );
                 }),
@@ -99,29 +117,26 @@ class NavigationPanel extends StatelessWidget {
 
 class NavigationPanelItemTile extends StatelessWidget {
   const NavigationPanelItemTile({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
     this.onTap,
     this.selected = false,
     this.compact = false,
-  })  : assert(item != null),
-        assert(compact != null),
-        assert(selected != null),
-        super(key: key);
+  }) : super(key: key);
 
   final NavigationPanelItem item;
   final bool selected;
-  final Function onTap;
+  final Function? onTap;
 
   final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    final style = context.theme.navigationPanelStyle.copyWith(item.style);
+    final style = context.theme!.navigationPanelStyle!.copyWith(item.style);
     return SizedBox(
       height: 44,
       child: HoverButton(
-        onPressed: onTap,
+        onPressed: onTap as void Function()?,
         builder: (context, state) {
           return AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
@@ -172,30 +187,50 @@ class NavigationPanelItemTile extends StatelessWidget {
 
 class NavigationPanelItem {
   /// The icon of the item. Usually an [Icon] widget
-  final Widget icon;
+  final Widget? icon;
 
   /// The label of the item. Usually a [Text] widget
-  final Widget label;
+  final Widget? label;
 
-  final NavigationPanelStyle style;
+  final NavigationPanelStyle? style;
 
-  NavigationPanelItem({this.icon, this.label, this.style});
+  final bool header;
+
+  const NavigationPanelItem({
+    this.icon,
+    this.label,
+    this.style,
+    this.header = false,
+  });
+}
+
+class NavigationPanelSectionHeader extends NavigationPanelItem {
+  const NavigationPanelSectionHeader({
+    required Widget header,
+  }) : super(
+          header: true,
+          label: header,
+        );
+}
+
+class NavigationPanelTileSeparator extends NavigationPanelItem {
+  const NavigationPanelTileSeparator() : super();
 }
 
 class NavigationPanelStyle {
-  final ButtonState<Color> color;
-  final Color highlightColor;
+  final ButtonState<Color?>? color;
+  final Color? highlightColor;
 
-  final EdgeInsetsGeometry labelPadding;
-  final EdgeInsetsGeometry iconPadding;
+  final EdgeInsetsGeometry? labelPadding;
+  final EdgeInsetsGeometry? iconPadding;
 
-  final ButtonState<MouseCursor> cursor;
+  final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<TextStyle> selectedTextStyle;
-  final ButtonState<TextStyle> unselectedTextStyle;
+  final ButtonState<TextStyle>? selectedTextStyle;
+  final ButtonState<TextStyle>? unselectedTextStyle;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
   const NavigationPanelStyle({
     this.color,
@@ -210,7 +245,7 @@ class NavigationPanelStyle {
   });
 
   static NavigationPanelStyle defaultTheme(Style style,
-      [Brightness brightness]) {
+      [Brightness? brightness]) {
     final disabledTextStyle = TextStyle(
       color: style.disabledColor,
       fontWeight: FontWeight.bold,
@@ -232,8 +267,7 @@ class NavigationPanelStyle {
     );
   }
 
-  NavigationPanelStyle copyWith(NavigationPanelStyle style) {
-    if (style == null) return this;
+  NavigationPanelStyle copyWith(NavigationPanelStyle? style) {
     return NavigationPanelStyle(
       cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,

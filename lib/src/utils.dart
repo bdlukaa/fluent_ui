@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 Color get lightElevationColor => Colors.black.withOpacity(0.1);
-Color get darkElevationColor => Colors.grey[150].withOpacity(0.1);
+Color get darkElevationColor => Colors.grey[150]!.withOpacity(0.1);
 
 // /// [[Article]](https://developer.microsoft.com/en-us/fluentui#/styles/web/elevation)
 // /// Get the elevation shadow.
@@ -55,7 +55,6 @@ Color get darkElevationColor => Colors.grey[150].withOpacity(0.1);
 // }
 
 void debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
-  assert(check != null);
   if (check)
     assert(
       context.theme != null,

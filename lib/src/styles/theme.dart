@@ -1,17 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Theme extends InheritedWidget {
-  const Theme({Key key, @required this.data, @required this.child})
+  const Theme({Key? key, required this.data, required this.child})
       : super(key: key, child: child);
 
   final Style data;
   final Widget child;
 
-  static Style of(BuildContext context) {
+  static Style? of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<Theme>()
         ?.data
-        ?.build(context);
+        .build(context);
   }
 
   @override
@@ -19,41 +19,40 @@ class Theme extends InheritedWidget {
 }
 
 extension themeContext on BuildContext {
-  Style get theme => Theme.of(this);
+  Style? get theme => Theme.of(this);
 }
 
 class Style {
-  final Color accentColor;
-  final Color activeColor;
-  final Color inactiveColor;
-  final Color disabledColor;
+  final Color? accentColor;
+  final Color? activeColor;
+  final Color? inactiveColor;
+  final Color? disabledColor;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
-  final Brightness brightness;
+  final Brightness? brightness;
 
-  final Color scaffoldBackgroundColor;
-  final Color navigationPanelBackgroundColor;
+  final Color? scaffoldBackgroundColor;
+  final Color? navigationPanelBackgroundColor;
 
-  final NavigationPanelStyle navigationPanelStyle;
-  final CardStyle cardStyle;
-  final CheckboxStyle checkboxStyle;
-  final ContentDialogStyle dialogStyle;
-  final DividerStyle dividerStyle;
-  final IconStyle iconStyle;
-  final ListCellStyle listCellStyle;
-  final PivotItemStyle pivotItemStyle;
-  final RadioButtonStyle radioButtonStyle;
-  final SliderStyle sliderStyle;
-  final SnackbarStyle snackbarStyle;
-  final SplitButtonStyle splitButtonStyle;
-  final ToggleButtonStyle toggleButtonStyle;
-  final ToggleSwitchStyle toggleSwitchStyle;
-  final TooltipStyle tooltipStyle;
+  final NavigationPanelStyle? navigationPanelStyle;
+  final CardStyle? cardStyle;
+  final CheckboxStyle? checkboxStyle;
+  final ContentDialogStyle? dialogStyle;
+  final DividerStyle? dividerStyle;
+  final IconStyle? iconStyle;
+  final ListCellStyle? listCellStyle;
+  final PivotItemStyle? pivotItemStyle;
+  final RadioButtonStyle? radioButtonStyle;
+  final SliderStyle? sliderStyle;
+  final SplitButtonStyle? splitButtonStyle;
+  final ToggleButtonStyle? toggleButtonStyle;
+  final ToggleSwitchStyle? toggleSwitchStyle;
+  final TooltipStyle? tooltipStyle;
 
-  final ButtonStyle buttonStyle;
-  final IconButtonStyle iconButtonStyle;
+  final ButtonStyle? buttonStyle;
+  final IconButtonStyle? iconButtonStyle;
 
   const Style({
     this.accentColor,
@@ -77,7 +76,6 @@ class Style {
     this.dialogStyle,
     this.tooltipStyle,
     this.dividerStyle,
-    this.snackbarStyle,
     this.navigationPanelStyle,
     this.radioButtonStyle,
     this.toggleButtonStyle,
@@ -92,7 +90,7 @@ class Style {
       accentColor: accentColor ?? Colors.blue,
       activeColor: activeColor ?? Colors.white,
       inactiveColor: inactiveColor ?? Colors.black,
-      disabledColor: Colors.grey[100].withOpacity(0.6),
+      disabledColor: Colors.grey[100]!.withOpacity(0.6),
       scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.white,
       navigationPanelBackgroundColor: Color.fromARGB(255, 246, 246, 246),
     );
@@ -120,8 +118,6 @@ class Style {
           TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
       dividerStyle:
           DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
-      snackbarStyle:
-          SnackbarStyle.defaultTheme(brightness).copyWith(snackbarStyle),
       navigationPanelStyle:
           NavigationPanelStyle.defaultTheme(defaultStyle, brightness)
               .copyWith(navigationPanelStyle),
@@ -131,41 +127,39 @@ class Style {
     ));
   }
 
-  static Style fallback(BuildContext context, [Brightness brightness]) {
+  static Style fallback(BuildContext context, [Brightness? brightness]) {
     return Style(brightness: brightness).build(context);
   }
 
   Style copyWith(Style other) {
-    if (other == null) return this;
     return Style(
-      accentColor: other?.accentColor ?? accentColor,
-      activeColor: other?.activeColor ?? activeColor,
-      navigationPanelBackgroundColor: other?.navigationPanelBackgroundColor ??
+      accentColor: other.accentColor ?? accentColor,
+      activeColor: other.activeColor ?? activeColor,
+      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ??
           navigationPanelBackgroundColor,
-      navigationPanelStyle: other?.navigationPanelStyle ?? navigationPanelStyle,
-      brightness: other?.brightness ?? brightness,
-      buttonStyle: other?.buttonStyle ?? buttonStyle,
-      cardStyle: other?.cardStyle ?? cardStyle,
-      checkboxStyle: other?.checkboxStyle ?? checkboxStyle,
-      dialogStyle: other?.dialogStyle ?? dialogStyle,
-      dividerStyle: other?.dividerStyle ?? dividerStyle,
-      iconButtonStyle: other?.iconButtonStyle ?? iconButtonStyle,
-      iconStyle: other?.iconStyle ?? iconStyle,
-      inactiveColor: other?.inactiveColor ?? inactiveColor,
-      listCellStyle: other?.listCellStyle ?? listCellStyle,
-      pivotItemStyle: other?.pivotItemStyle ?? pivotItemStyle,
-      radioButtonStyle: other?.radioButtonStyle ?? radioButtonStyle,
+      navigationPanelStyle: other.navigationPanelStyle ?? navigationPanelStyle,
+      brightness: other.brightness ?? brightness,
+      buttonStyle: other.buttonStyle ?? buttonStyle,
+      cardStyle: other.cardStyle ?? cardStyle,
+      checkboxStyle: other.checkboxStyle ?? checkboxStyle,
+      dialogStyle: other.dialogStyle ?? dialogStyle,
+      dividerStyle: other.dividerStyle ?? dividerStyle,
+      iconButtonStyle: other.iconButtonStyle ?? iconButtonStyle,
+      iconStyle: other.iconStyle ?? iconStyle,
+      inactiveColor: other.inactiveColor ?? inactiveColor,
+      listCellStyle: other.listCellStyle ?? listCellStyle,
+      pivotItemStyle: other.pivotItemStyle ?? pivotItemStyle,
+      radioButtonStyle: other.radioButtonStyle ?? radioButtonStyle,
       scaffoldBackgroundColor:
-          other?.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
-      snackbarStyle: other?.snackbarStyle ?? snackbarStyle,
-      splitButtonStyle: other?.splitButtonStyle ?? splitButtonStyle,
-      toggleButtonStyle: other?.toggleButtonStyle ?? toggleButtonStyle,
-      toggleSwitchStyle: other?.toggleSwitchStyle ?? toggleSwitchStyle,
-      tooltipStyle: other?.tooltipStyle ?? tooltipStyle,
-      sliderStyle: other?.sliderStyle ?? sliderStyle,
-      animationCurve: other?.animationCurve ?? animationCurve,
-      animationDuration: other?.animationDuration ?? animationDuration,
-      disabledColor: other?.disabledColor ?? disabledColor,
+          other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
+      splitButtonStyle: other.splitButtonStyle ?? splitButtonStyle,
+      toggleButtonStyle: other.toggleButtonStyle ?? toggleButtonStyle,
+      toggleSwitchStyle: other.toggleSwitchStyle ?? toggleSwitchStyle,
+      tooltipStyle: other.tooltipStyle ?? tooltipStyle,
+      sliderStyle: other.sliderStyle ?? sliderStyle,
+      animationCurve: other.animationCurve ?? animationCurve,
+      animationDuration: other.animationDuration ?? animationDuration,
+      disabledColor: other.disabledColor ?? disabledColor,
     );
   }
 }

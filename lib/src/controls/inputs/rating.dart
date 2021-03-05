@@ -1,10 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 
 class RatingBar extends StatelessWidget {
   const RatingBar({
-    Key key,
-    @required this.rating,
+    Key? key,
+    required this.rating,
     this.onChanged,
     this.amount = 5,
     this.animationDuration,
@@ -14,25 +13,23 @@ class RatingBar extends StatelessWidget {
     this.ratedIconColor,
     this.unratedIconColor,
     // TODO: starSpacing
-  })  : assert(rating != null),
-        assert(amount != null),
-        assert(rating <= amount && rating <= amount),
+  })  : assert(rating <= amount && rating <= amount),
         super(key: key);
 
   final int amount;
   final double rating;
 
-  final ValueChanged<double> onChanged;
+  final ValueChanged<double>? onChanged;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
-  final IconData icon;
-  final double iconSize;
-  final Color ratedIconColor;
-  final Color unratedIconColor;
+  final IconData? icon;
+  final double? iconSize;
+  final Color? ratedIconColor;
+  final Color? unratedIconColor;
 
-  void _handleUpdate(double x, double size) {
+  void _handleUpdate(double x, double? size) {
     final iSize = (iconSize ?? size ?? 24);
     final value = x / iSize;
     if (value <= amount && !value.isNegative) onChanged?.call(value);
@@ -40,7 +37,7 @@ class RatingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = context.theme.iconStyle.size;
+    final size = context.theme!.iconStyle!.size;
     return GestureDetector(
       onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
       onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx, size),
@@ -76,38 +73,39 @@ class RatingBar extends StatelessWidget {
 
 class RatingIcon extends StatelessWidget {
   const RatingIcon({
-    Key key,
-    @required this.rating,
+    Key? key,
+    required this.rating,
     this.ratedColor,
     this.unratedColor,
     this.icon,
     this.size,
-  })  : assert(rating != null),
-        assert(rating >= 0.0 && rating <= 1.0),
+  })  : assert(rating >= 0.0 && rating <= 1.0),
         super(key: key);
 
   final double rating;
-  final IconData icon;
-  final Color ratedColor;
-  final Color unratedColor;
-  final double size;
+  final IconData? icon;
+  final Color? ratedColor;
+  final Color? unratedColor;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
-    final icon = this.icon ?? FluentSystemIcons.ic_fluent_star_filled;
+    final icon = this.icon ?? Icons.star_filled;
     final size = this.size;
     if (rating == 1.0)
-      return Icon(icon, color: ratedColor ?? style.accentColor, size: size);
+      return Icon(icon, color: ratedColor ?? style!.accentColor, size: size);
     else if (rating == 0.0)
-      return Icon(icon, color: unratedColor ?? style.disabledColor, size: size);
+      return Icon(icon,
+          color: unratedColor ?? style!.disabledColor, size: size);
     return Stack(
       children: [
-        Icon(icon, color: unratedColor ?? style.disabledColor, size: size),
+        Icon(icon, color: unratedColor ?? style!.disabledColor, size: size),
         ClipRect(
           clipper: _StarClipper(rating),
-          child: Icon(icon, color: ratedColor ?? style.accentColor, size: size),
+          child:
+              Icon(icon, color: ratedColor ?? style!.accentColor, size: size),
         ),
       ],
     );

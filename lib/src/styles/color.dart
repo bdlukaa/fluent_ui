@@ -104,22 +104,22 @@ class AccentColor extends ShadedColor {
   final Map<String, Color> swatch;
 
   AccentColor(this.primary, this.swatch)
-      : super(swatch[primary].value, swatch.convertStringtoInt());
+      : super(swatch[primary]!.value, swatch.convertStringtoInt());
 
   /// The darkest shade of the color. This can be not avaiable in some colors
-  Color get darkest => swatch['darkest'];
+  Color? get darkest => swatch['darkest'];
 
   /// The dark shade of the color. This can be not avaiable in some colors
-  Color get dark => swatch['dark'];
+  Color? get dark => swatch['dark'];
 
   /// The default shade of the color. This is avaiable for all supported colors
-  Color get normal => swatch['normal'];
+  Color? get normal => swatch['normal'];
 
   /// The light shade of the color. This can be not avaiable in some colors
-  Color get light => swatch['light'];
+  Color? get light => swatch['light'];
 
   /// The lighter shade of the color. This can be not avaiable in some colors
-  Color get lighter => swatch['lighter'];
+  Color? get lighter => swatch['lighter'];
 }
 
 extension _sToInt on Map<String, Color> {

@@ -6,8 +6,8 @@ enum _ButtonType { def, icon, dropdown }
 
 class Button extends StatelessWidget {
   const Button({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.icon,
     this.trailingIcon,
     this.style,
@@ -20,9 +20,9 @@ class Button extends StatelessWidget {
 
   /// Creates an Icon Button. Uses [IconButton] under the hood
   Button.icon({
-    Key key,
-    @required this.icon,
-    IconButtonStyle style,
+    Key? key,
+    required this.icon,
+    IconButtonStyle? style,
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
@@ -40,9 +40,9 @@ class Button extends StatelessWidget {
         super(key: key);
 
   Button.dropdown({
-    Key key,
-    @required Widget content,
-    @required Widget dropdown,
+    Key? key,
+    required Widget content,
+    required Widget dropdown,
     this.style,
     bool disabled = false,
     bool startOpen = false,
@@ -67,40 +67,34 @@ class Button extends StatelessWidget {
         onPressed = null,
         trailingIcon = null,
         type = _ButtonType.dropdown,
-        assert(content != null),
-        assert(dropdown != null),
-        assert(disabled != null),
-        assert(adoptDropdownWidth != null),
-        assert(startOpen != null),
-        assert(horizontal != null),
         super(key: key);
 
   final _ButtonType type;
 
   /// The icon used for ActionButton and ContextualIcon
-  final Widget icon;
+  final Widget? icon;
 
   /// The icon used for ContextualIcon
-  final Widget trailingIcon;
+  final Widget? trailingIcon;
 
   /// The main text of the button
-  final Widget text;
+  final Widget? text;
 
   /// The style of the button
-  final ButtonStyle style;
+  final ButtonStyle? style;
 
   /// Callback to when the button get pressed. If this and onLongPress == null,
   /// the button will be considered disabled
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Callback to when the button gets pressed for a long time. If this and onPressed
   /// == null, the button will be considered disabled
-  final VoidCallback onLongPress;
+  final VoidCallback? onLongPress;
 
   /// The semantics label to allow screen readers to read the screen
-  final String semanticsLabel;
+  final String? semanticsLabel;
 
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   bool get enabled => onPressed != null || onLongPress != null;
 
@@ -128,41 +122,45 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    ButtonStyle style;
+    ButtonStyle? style;
     switch (type) {
       case _ButtonType.icon:
       case _ButtonType.dropdown:
-        return text;
+        return text!;
       case _ButtonType.def:
       default:
-        style = context.theme.buttonStyle;
+        style = context.theme!.buttonStyle;
         break;
     }
-    style = style.copyWith(this.style);
+    if (this.style != null) style = style!.copyWith(this.style!);
     return HoverButton(
       semanticsLabel: semanticsLabel,
-      margin: style.margin,
+      margin: style?.margin,
       focusNode: focusNode,
-      cursor: style.cursor,
+      cursor: style?.cursor,
       onPressed: onPressed,
       onLongPress: onLongPress,
       builder: (context, state) {
         return AnimatedContainer(
-          duration: style?.animationDuration,
-          curve: style?.animationCurve,
-          padding: style.padding,
-          decoration: style.decoration(state),
+          duration: style?.animationDuration ??
+              context.theme?.animationDuration ??
+              Duration.zero,
+          curve: style?.animationCurve ??
+              context.theme?.animationCurve ??
+              Curves.linear,
+          padding: style!.padding,
+          decoration: style.decoration!(state),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) icon,
+              if (icon != null) icon!,
               DefaultTextStyle(
                 style: (style.textStyle?.call(state)) ?? TextStyle(),
                 textAlign: TextAlign.center,
-                child: text,
+                child: text!,
               ),
-              if (trailingIcon != null) trailingIcon,
+              if (trailingIcon != null) trailingIcon!,
             ],
           ),
         );
@@ -171,8 +169,8 @@ class Button extends StatelessWidget {
   }
 }
 
-Color buttonColor(Style style, ButtonStates state) {
-  Color color;
+Color? buttonColor(Style style, ButtonStates state) {
+  Color? color;
   if (state.isDisabled)
     color = style.disabledColor;
   else if (state.isPressing)
@@ -185,17 +183,17 @@ Color buttonColor(Style style, ButtonStates state) {
 }
 
 class ButtonStyle {
-  final ButtonState<Decoration> decoration;
+  final ButtonState<Decoration>? decoration;
 
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
-  final ButtonState<MouseCursor> cursor;
+  final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<TextStyle> textStyle;
+  final ButtonState<TextStyle>? textStyle;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
+  final Duration? animationDuration;
+  final Curve? animationCurve;
 
   const ButtonStyle({
     this.decoration,
@@ -207,7 +205,7 @@ class ButtonStyle {
     this.animationCurve,
   });
 
-  static ButtonStyle defaultTheme(Style style, [Brightness brightness]) {
+  static ButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
     final defButton = ButtonStyle(
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
@@ -238,8 +236,7 @@ class ButtonStyle {
       ));
   }
 
-  ButtonStyle copyWith(ButtonStyle style) {
-    if (style == null) return this;
+  ButtonStyle copyWith(ButtonStyle? style) {
     return ButtonStyle(
       decoration: style?.decoration ?? decoration,
       cursor: style?.cursor ?? cursor,

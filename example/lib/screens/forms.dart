@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Forms extends StatefulWidget {
-  const Forms({Key key}) : super(key: key);
+  const Forms({Key? key}) : super(key: key);
 
   @override
   _FormsState createState() => _FormsState();
@@ -35,7 +35,7 @@ class _FormsState extends State<Forms> {
           suffixMode: OverlayVisibilityMode.always,
           minHeight: 100,
           suffix: IconButton(
-            icon: Icon(FluentSystemIcons.ic_fluent_share_close_tray_filled),
+            icon: Icon(Icons.share_close_tray_filled),
             style: IconButtonStyle(
               // padding: EdgeInsets.zero,
               margin: EdgeInsets.zero,

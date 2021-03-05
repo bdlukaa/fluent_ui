@@ -1,20 +1,40 @@
 name: fluent_ui
 description: Implements Fluent Ui in flutter. Based on the official documentation
-version: 0.0.8
+version: 1.0.0
 homepage: https://github.com/bdlukaa/fluent_ui
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  fl_toast: ^2.0.0
-  fluentui_icons: ^0.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter: null
+flutter:
+  fonts:
+    - family: FluentSystemIconsP1
+      fonts:
+        - asset: fonts/FluentSystemIconsP1.ttf
+    - family: FluentSystemIconsP2
+      fonts:
+        - asset: fonts/FluentSystemIconsP2.ttf
+    - family: FluentSystemIconsP3
+      fonts:
+        - asset: fonts/FluentSystemIconsP3.ttf
+    - family: FluentSystemIconsP4
+      fonts:
+        - asset: fonts/FluentSystemIconsP4.ttf
+    - family: FluentSystemIconsP5
+      fonts:
+        - asset: fonts/FluentSystemIconsP5.ttf
+    - family: FluentSystemIconsP6
+      fonts:
+        - asset: fonts/FluentSystemIconsP6.ttf
+    - family: FluentSystemIconsP7
+      fonts:
+        - asset: fonts/FluentSystemIconsP7.ttf

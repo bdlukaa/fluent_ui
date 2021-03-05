@@ -2,20 +2,19 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class SplitButtonBar extends StatelessWidget {
   const SplitButtonBar({
-    Key key,
-    @required this.buttons,
+    Key? key,
+    required this.buttons,
     this.style,
-  })  : assert(buttons != null),
-        assert(buttons.length > 1, 'There must 2 or more buttons'),
+  })  : assert(buttons.length > 1, 'There must 2 or more buttons'),
         super(key: key);
 
   final List<SplitButton> buttons;
-  final SplitButtonStyle style;
+  final SplitButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.splitButtonStyle.copyWith(this.style);
+    final style = context.theme!.splitButtonStyle?.copyWith(this.style);
     // List<Widget> newButtons = [];
     // for (final button in buttons) {
     //   newButtons.add(button.child);
@@ -34,7 +33,7 @@ class SplitButtonBar extends StatelessWidget {
           );
           if (index == 0 || index == buttons.length - 1) return b;
           return Padding(
-            padding: EdgeInsets.only(left: style?.interval),
+            padding: EdgeInsets.only(left: style?.interval ?? 0),
             child: b,
           );
         }),
@@ -45,21 +44,21 @@ class SplitButtonBar extends StatelessWidget {
 
 class SplitButton {
   final Widget child;
-  final ButtonStyle style;
-  final VoidCallback onPressed;
+  final ButtonStyle? style;
+  final VoidCallback? onPressed;
 
   const SplitButton({
-    @required this.child,
+    required this.child,
     this.style,
     this.onPressed,
-  }) : assert(child != null);
+  });
 }
 
 class SplitButtonStyle {
-  final BorderRadiusGeometry borderRadius;
-  final double interval;
+  final BorderRadius? borderRadius;
+  final double? interval;
 
-  final ButtonStyle defaultButtonStyle;
+  final ButtonStyle? defaultButtonStyle;
 
   const SplitButtonStyle({
     this.borderRadius,
@@ -67,7 +66,7 @@ class SplitButtonStyle {
     this.defaultButtonStyle,
   });
 
-  static SplitButtonStyle defaultTheme(Style style, [Brightness brightness]) {
+  static SplitButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
     return SplitButtonStyle(
       borderRadius: BorderRadius.circular(4),
       interval: 2,
@@ -75,7 +74,7 @@ class SplitButtonStyle {
     );
   }
 
-  static ButtonStyle defaultButtonTheme(Style style, [Brightness brightness]) {
+  static ButtonStyle defaultButtonTheme(Style style, [Brightness? brightness]) {
     final defButton = ButtonStyle(
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
@@ -105,8 +104,7 @@ class SplitButtonStyle {
       ));
   }
 
-  SplitButtonStyle copyWith(SplitButtonStyle style) {
-    if (style == null) return this;
+  SplitButtonStyle copyWith(SplitButtonStyle? style) {
     return SplitButtonStyle(
       borderRadius: style?.borderRadius ?? borderRadius,
       interval: style?.interval ?? interval,

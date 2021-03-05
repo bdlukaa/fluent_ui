@@ -2,25 +2,25 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class Card extends StatelessWidget {
   const Card({
-    Key key,
+    Key? key,
     this.child,
     this.style,
   }) : super(key: key);
 
-  final Widget child;
-  final CardStyle style;
+  final Widget? child;
+  final CardStyle? style;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.cardStyle.copyWith(this.style);
+    final style = context.theme!.cardStyle!.copyWith(this.style);
     return Container(
       margin: style.margin,
       child: PhysicalModel(
         color: Colors.black,
         elevation: style.elevation ?? 6,
         child: ClipRRect(
-          borderRadius: style.borderRadius,
+          borderRadius: style.borderRadius as BorderRadius?,
           child: Container(
             padding: style.padding,
             decoration: BoxDecoration(
@@ -54,18 +54,18 @@ class Card extends StatelessWidget {
 }
 
 class CardStyle {
-  final BorderRadiusGeometry borderRadius;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
+  final BorderRadiusGeometry? borderRadius;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
-  final Color color;
+  final Color? color;
 
-  final double elevation;
-  final Color elevationColor;
+  final double? elevation;
+  final Color? elevationColor;
 
-  final Color highlightColor;
-  final HighlightPosition highlightPosition;
-  final double highlightSize;
+  final Color? highlightColor;
+  final HighlightPosition? highlightPosition;
+  final double? highlightSize;
 
   const CardStyle({
     this.borderRadius,
@@ -79,7 +79,7 @@ class CardStyle {
     this.highlightSize,
   });
 
-  static CardStyle defaultTheme([Brightness brightness]) {
+  static CardStyle defaultTheme([Brightness? brightness]) {
     final def = CardStyle(
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.all(10),
@@ -101,8 +101,7 @@ class CardStyle {
       ));
   }
 
-  CardStyle copyWith(CardStyle style) {
-    if (style == null) return this;
+  CardStyle copyWith(CardStyle? style) {
     return CardStyle(
       borderRadius: style?.borderRadius ?? borderRadius,
       padding: style?.padding ?? padding,
