@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-class ToggleButton extends StatelessWidget {
+class ToggleButton extends StatefulWidget {
   const ToggleButton({
     Key? key,
     required this.checked,
@@ -23,32 +23,58 @@ class ToggleButton extends StatelessWidget {
   final FocusNode? focusNode;
 
   @override
+  _ToggleButtonState createState() => _ToggleButtonState();
+}
+
+class _ToggleButtonState extends State<ToggleButton> {
+  double buttonScale = 1;
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.toggleButtonStyle?.copyWith(this.style);
+    final style = context.theme!.toggleButtonStyle?.copyWith(this.widget.style);
     return HoverButton(
-      focusNode: focusNode,
-      semanticsLabel: semanticsLabel,
+      focusNode: widget.focusNode,
+      semanticsLabel: widget.semanticsLabel,
       cursor: style?.cursor,
       margin: style?.margin,
-      onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      onTapDown: () {
+        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+      },
+      onLongPressStart: () {
+        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+      },
+      onLongPressEnd: () {
+        if (mounted) setState(() => buttonScale = 1);
+      },
+      onPressed: widget.onChanged == null
+          ? null
+          : () async {
+              widget.onChanged!(!widget.checked);
+              if (mounted)
+                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+              await Future.delayed(Duration(milliseconds: 120));
+              if (mounted) setState(() => buttonScale = 1);
+            },
       builder: (context, state) {
         return AnimatedContainer(
+          transformAlignment: Alignment.center,
+          transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style?.animationDuration ?? Duration.zero,
           curve: style?.animationCurve ?? Curves.linear,
           padding: style?.padding,
-          decoration: checked
+          decoration: widget.checked
               ? style?.checkedDecoration!(state)
               : style?.uncheckedDecoration!(state),
           child: AnimatedDefaultTextStyle(
             duration: style?.animationDuration ?? Duration.zero,
             curve: style?.animationCurve ?? Curves.linear,
             style: TextStyle(
-              color: checked
+              color: widget.checked
                   ? context.theme?.activeColor
                   : context.theme?.inactiveColor,
             ),
-            child: child ?? SizedBox(),
+            child: widget.child ?? SizedBox(),
           ),
         );
       },
@@ -61,6 +87,8 @@ class ToggleButtonStyle {
 
   final ButtonState<Decoration>? checkedDecoration;
   final ButtonState<Decoration>? uncheckedDecoration;
+
+  final double? scaleFactor;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -76,6 +104,7 @@ class ToggleButtonStyle {
     this.animationCurve,
     this.checkedDecoration,
     this.uncheckedDecoration,
+    this.scaleFactor,
   });
 
   static ToggleButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
@@ -87,6 +116,7 @@ class ToggleButtonStyle {
         : Colors.white;
 
     final def = ToggleButtonStyle(
+      scaleFactor: 0.95,
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
@@ -126,6 +156,7 @@ class ToggleButtonStyle {
       animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
+      scaleFactor: style?.scaleFactor ?? scaleFactor,
     );
   }
 }

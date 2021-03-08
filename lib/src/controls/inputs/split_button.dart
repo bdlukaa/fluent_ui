@@ -8,7 +8,7 @@ class SplitButtonBar extends StatelessWidget {
   })  : assert(buttons.length > 1, 'There must 2 or more buttons'),
         super(key: key);
 
-  final List<SplitButton> buttons;
+  final List<Widget> buttons;
   final SplitButtonStyle? style;
 
   @override
@@ -21,37 +21,36 @@ class SplitButtonBar extends StatelessWidget {
     //   if (buttons.last != button)
     //     newButtons.add(Divider(direction: Axis.vertical));
     // }
-    return ClipRRect(
-      borderRadius: style?.borderRadius ?? BorderRadius.zero,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(buttons.length, (index) {
-          Widget b = Button(
-            text: buttons[index].child,
-            onPressed: buttons[index].onPressed,
-            style: buttons[index].style ?? style?.defaultButtonStyle,
-          );
-          if (index == 0 || index == buttons.length - 1) return b;
-          return Padding(
-            padding: EdgeInsets.only(left: style?.interval ?? 0),
-            child: b,
-          );
-        }),
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(buttons.length, (index) {
+        final button = buttons[index];
+        Widget b = Theme(
+          data: context.theme!.copyWith(Style(
+              buttonStyle: ButtonStyle(
+            decoration: (state) => BoxDecoration(
+              borderRadius: (index == 0 || index == buttons.length - 1)
+                  ? BorderRadius.horizontal(
+                      left: index == 0 ? Radius.circular(2) : Radius.zero,
+                      right: index == buttons.length - 1
+                          ? Radius.circular(2)
+                          : Radius.zero,
+                    )
+                  : null,
+              color: buttonColor(context.theme!, state),
+            ),
+            margin: EdgeInsets.zero,
+          ))),
+          child: button,
+        );
+        if (index == 0) return b;
+        return Padding(
+          padding: EdgeInsets.only(left: style?.interval ?? 0),
+          child: b,
+        );
+      }),
     );
   }
-}
-
-class SplitButton {
-  final Widget child;
-  final ButtonStyle? style;
-  final VoidCallback? onPressed;
-
-  const SplitButton({
-    required this.child,
-    this.style,
-    this.onPressed,
-  });
 }
 
 class SplitButtonStyle {
@@ -69,7 +68,7 @@ class SplitButtonStyle {
   static SplitButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
     return SplitButtonStyle(
       borderRadius: BorderRadius.circular(4),
-      interval: 2,
+      interval: 1,
       defaultButtonStyle: defaultButtonTheme(style, brightness),
     );
   }

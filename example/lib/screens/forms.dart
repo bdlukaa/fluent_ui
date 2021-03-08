@@ -10,6 +10,8 @@ class Forms extends StatefulWidget {
 class _FormsState extends State<Forms> {
   final _clearController = TextEditingController();
 
+  bool _showPassword = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,9 +51,16 @@ class _FormsState extends State<Forms> {
         TextBox(
           header: 'Password',
           placeholder: 'Type your placeholder here',
-          obscureText: true,
+          obscureText: !_showPassword,
           maxLines: 1,
-          suffixMode: OverlayVisibilityMode.always,
+          suffixMode: OverlayVisibilityMode.editing,
+          suffix: IconButton(
+            icon: Icon(!_showPassword
+                ? Icons.eye_show_regular
+                : Icons.eye_hide_regular),
+            onPressed: () => setState(() => _showPassword = !_showPassword),
+            style: IconButtonStyle(margin: EdgeInsets.zero),
+          ),
           outsideSuffix: Button(
             style: ButtonStyle(margin: EdgeInsets.symmetric(horizontal: 4)),
             text: Text('Done'),

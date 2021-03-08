@@ -4,7 +4,7 @@ import 'hover_button.dart';
 
 enum _ButtonType { def, icon, dropdown }
 
-class Button extends StatelessWidget {
+class Button extends StatefulWidget {
   const Button({
     Key? key,
     required this.text,
@@ -96,7 +96,12 @@ class Button extends StatelessWidget {
 
   final FocusNode? focusNode;
 
-  bool get enabled => onPressed != null || onLongPress != null;
+  @override
+  _ButtonState createState() => _ButtonState();
+}
+
+class _ButtonState extends State<Button> {
+  bool get enabled => widget.onPressed != null || widget.onLongPress != null;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -114,34 +119,54 @@ class Button extends StatelessWidget {
     // ));
     properties.add(DiagnosticsProperty<FocusNode>(
       'focusNode',
-      focusNode,
+      widget.focusNode,
       defaultValue: null,
     ));
   }
+
+  double buttonScale = 1;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     ButtonStyle? style;
-    switch (type) {
+    switch (widget.type) {
       case _ButtonType.icon:
       case _ButtonType.dropdown:
-        return text!;
+        return widget.text!;
       case _ButtonType.def:
       default:
         style = context.theme!.buttonStyle;
         break;
     }
-    if (this.style != null) style = style!.copyWith(this.style!);
+    style = style?.copyWith(this.widget.style);
     return HoverButton(
-      semanticsLabel: semanticsLabel,
+      semanticsLabel: widget.semanticsLabel,
       margin: style?.margin,
-      focusNode: focusNode,
+      focusNode: widget.focusNode,
       cursor: style?.cursor,
-      onPressed: onPressed,
-      onLongPress: onLongPress,
+      onTapDown: () {
+        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+      },
+      onLongPressStart: () {
+        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+      },
+      onLongPressEnd: () {
+        if (mounted) setState(() => buttonScale = 1);
+      },
+      onPressed: widget.onPressed == null
+          ? null
+          : () async {
+              widget.onPressed!();
+              if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+              await Future.delayed(Duration(milliseconds: 120));
+              if (mounted) setState(() => buttonScale = 1);
+            },
+      onLongPress: widget.onLongPress,
       builder: (context, state) {
         return AnimatedContainer(
+          transformAlignment: Alignment.center,
+          transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style?.animationDuration ??
               context.theme?.animationDuration ??
               Duration.zero,
@@ -154,13 +179,13 @@ class Button extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) icon!,
+              if (widget.icon != null) widget.icon!,
               DefaultTextStyle(
                 style: (style.textStyle?.call(state)) ?? TextStyle(),
                 textAlign: TextAlign.center,
-                child: text!,
+                child: widget.text!,
               ),
-              if (trailingIcon != null) trailingIcon!,
+              if (widget.trailingIcon != null) widget.trailingIcon!,
             ],
           ),
         );
@@ -188,6 +213,8 @@ class ButtonStyle {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
+  final double? scaleFactor;
+
   final ButtonState<MouseCursor>? cursor;
 
   final ButtonState<TextStyle>? textStyle;
@@ -199,6 +226,7 @@ class ButtonStyle {
     this.decoration,
     this.padding,
     this.margin,
+    this.scaleFactor,
     this.cursor,
     this.textStyle,
     this.animationDuration,
@@ -216,6 +244,7 @@ class ButtonStyle {
         borderRadius: BorderRadius.circular(2),
         color: buttonColor(style, state),
       ),
+      scaleFactor: 0.95,
     );
     final disabledTextStyle = TextStyle(
       color: Colors.grey[100],
@@ -245,6 +274,7 @@ class ButtonStyle {
       padding: style?.padding ?? padding,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
+      scaleFactor: style?.scaleFactor ?? scaleFactor,
     );
   }
 }

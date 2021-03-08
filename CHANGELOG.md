@@ -1,6 +1,14 @@
 Date format: DD/MM/YYYY
 
-## [1.0.0] - [04/03/2021]
+## [1.0.1] - [06/03/2021]
+
+- **FIX** `NavigationPanel` navigation index
+- **FIX** `Slider`'s inactive color
+- **FIDELITY** Scale animation of button press
+- **FIDELITY** Improved `Slider` label fidelity
+- **NEW** Split Button
+
+## [1.0.0] - [05/03/2021]
 
 - **NEW** Null-safety
 - **NEW** New Icons Library

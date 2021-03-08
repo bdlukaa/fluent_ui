@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart' as m;
 
 class InputsPage extends StatefulWidget {
   const InputsPage({Key? key}) : super(key: key);
@@ -32,6 +33,7 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildButtons() {
+    final splitButtonHeight = 50.0;
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,10 +66,7 @@ class _InputsPageState extends State<InputsPage> {
                 );
               },
             ),
-            Button(
-              text: Text('Disabled button'),
-              onPressed: null,
-            ),
+            Button(text: Text('Disabled button'), onPressed: null),
             ToggleButton(
               child: Text('Toggle Button'),
               checked: value,
@@ -77,21 +76,27 @@ class _InputsPageState extends State<InputsPage> {
               icon: Icon(Icons.add_regular),
               onPressed: () => print('pressed icon button'),
             ),
-            SplitButtonBar(
-              buttons: List.generate(2, (index) {
-                return SplitButton(
-                  child: Text('$index'),
-                  onPressed: () => print(index),
-                );
-              }),
-            ),
-            // DropDownButton(
-            //   content: Text('Hover me :)'),
-            //   dropdown: Dropdown.sections(
-            //     sectionTitles: [Text('title'), Text('ajaa')],
-            //     sectionBodies: [Text('body'), Text('haha')],
-            //   ),
-            // ),
+            SplitButtonBar(buttons: [
+              SizedBox(
+                height: splitButtonHeight,
+                child: Button(
+                  text: Container(
+                    color: context.theme!.accentColor,
+                    height: 24,
+                    width: 24,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              SizedBox(
+                height: splitButtonHeight,
+                child: Button(
+                  text: Icon(Icons.chevron_down_regular),
+                  onPressed: () {},
+                  style: ButtonStyle(padding: EdgeInsets.all(6)),
+                ),
+              ),
+            ]),
           ],
         ],
       ),

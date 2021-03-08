@@ -23,7 +23,7 @@ class NavigationPanel extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int>? onChanged;
 
-  final Widget? menu;
+  final NavigationPanelMenuItem? menu;
   final List<NavigationPanelItem> items;
   final NavigationPanelItem? bottom;
 
@@ -57,9 +57,18 @@ class NavigationPanel extends StatelessWidget {
             child: ListView(
               children: [
                 if (menu != null)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
-                    child: menu,
+                  SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      width: width,
+                      padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
+                      child: NavigationPanelMenu(
+                        item: menu!,
+                        collapsed:
+                            displayMode == NavigationPanelDisplayMode.compact,
+                      ),
+                    ),
                   ),
                 ...List.generate(items.length, (index) {
                   final item = items[index];
@@ -91,12 +100,18 @@ class NavigationPanel extends StatelessWidget {
                           // TODO: NavigationPanelTileSeparator
                           return SizedBox();
                         }
+                        final itens = [...items]..removeWhere((i) {
+                            return i.runtimeType != NavigationPanelItem;
+                          });
+                        final index = itens.indexOf(item);
                         return NavigationPanelItemTile(
                           item: item,
                           selected: currentIndex == index,
                           onTap: onChanged == null
                               ? null
-                              : () => onChanged!(index),
+                              : () {
+                                  onChanged!(index);
+                                },
                           compact:
                               displayMode == NavigationPanelDisplayMode.compact,
                         );
@@ -215,6 +230,48 @@ class NavigationPanelSectionHeader extends NavigationPanelItem {
 
 class NavigationPanelTileSeparator extends NavigationPanelItem {
   const NavigationPanelTileSeparator() : super();
+}
+
+class NavigationPanelMenuItem {
+  final Widget icon;
+  final Widget? label;
+
+  const NavigationPanelMenuItem({
+    required this.icon,
+    this.label,
+  });
+}
+
+class NavigationPanelMenu extends StatelessWidget {
+  const NavigationPanelMenu({
+    Key? key,
+    required this.item,
+    this.collapsed = false,
+  }) : super(key: key);
+
+  final NavigationPanelMenuItem item;
+  final bool collapsed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        item.icon,
+        if (!collapsed && item.label != null) ...[
+          SizedBox(width: 6),
+          DefaultTextStyle(
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.black,
+            ),
+            child: item.label!,
+          ),
+        ],
+      ],
+    );
+  }
 }
 
 class NavigationPanelStyle {

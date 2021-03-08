@@ -11,11 +11,22 @@ class HoverButton extends StatefulWidget {
     this.focusNode,
     this.margin,
     this.semanticsLabel,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
+    this.onLongPressEnd,
+    this.onLongPressStart,
   }) : super(key: key);
 
   final MouseCursor Function(ButtonStates)? cursor;
-  final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
+  final VoidCallback? onLongPressStart;
+  final VoidCallback? onLongPressEnd;
+
+  final VoidCallback? onPressed;
+  final VoidCallback? onTapUp;
+  final VoidCallback? onTapDown;
+  final VoidCallback? onTapCancel;
 
   final Widget Function(BuildContext, ButtonStates state)? builder;
 
@@ -71,16 +82,29 @@ class _HoverButtonState extends State<HoverButton> {
         onExit: (_) => update(() => _hovering = false),
         child: GestureDetector(
           onTap: widget.onPressed,
-          onTapDown: (_) => update(() => _pressing = true),
+          onTapDown: (_) {
+            update(() => _pressing = true);
+            widget.onTapDown?.call();
+          },
           onTapUp: (_) async {
+            widget.onTapUp?.call();
             if (isDisabled) return;
             await Future.delayed(Duration(milliseconds: 100));
             update(() => _pressing = false);
           },
-          onTapCancel: () => update(() => _pressing = false),
+          onTapCancel: () {
+            widget.onTapCancel?.call();
+            update(() => _pressing = false);
+          },
           onLongPress: widget.onLongPress,
-          onLongPressStart: (_) => update(() => _pressing = true),
-          onLongPressEnd: (_) => update(() => _pressing = false),
+          onLongPressStart: (_) {
+            widget.onLongPressStart?.call();
+            update(() => _pressing = true);
+          },
+          onLongPressEnd: (_) {
+            widget.onLongPressEnd?.call();
+            update(() => _pressing = false);
+          },
           // onTapCancel: () => update(() => _pressing = false),
           child: widget.builder?.call(context, state) ?? SizedBox(),
         ),

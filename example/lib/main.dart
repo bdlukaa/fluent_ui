@@ -35,8 +35,8 @@ class _MyAppState extends State<MyApp> {
             ),
       },
       style: Style(
-          // accentColor: Colors.green,
-          ),
+        accentColor: Colors.green,
+      ),
     );
   }
 }
@@ -64,22 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       left: NavigationPanel(
-        top: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.navigation_regular),
-            // SizedBox(width: 6),
-            // Text('Showcase', style: TextStyle(
-            //   fontWeight: FontWeight.bold,
-            //   fontSize: 16,
-            // )),
-          ],
-        ),
+        menu: NavigationPanelMenuItem(
+            icon: Icon(Icons.navigation_regular),
+            label: Text(
+              'Showcase',
+            )),
         currentIndex: index,
         items: [
           NavigationPanelSectionHeader(
-            header: Text('Cool Navigation Panel Header')
-          ),
+              header: Text('Cool Navigation Panel Header')),
           NavigationPanelItem(
             icon: Icon(Icons.radio_button_filled),
             label: Text('Inputs'),
@@ -100,26 +93,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         onChanged: (i) => setState(() => index = i),
       ),
-      body: IndexedStack(
-        index: index,
-        children: [
-          _Panel(
-            title: 'Inputs showcase',
-            child: InputsPage(),
-          ),
-          _Panel(
-            title: 'Forms showcase',
-            child: Forms(),
-          ),
-          _Panel(
-            title: 'Pickers',
-            child: SizedBox(),
-          ),
-          _Panel(
-            title: 'Others',
-            child: SizedBox(),
-          ),
-        ],
+      body: AnimatedSwitcher(
+        duration:
+            context.theme!.animationDuration ?? Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              child: child,
+              scale: Tween<double>(begin: 0.85, end: 1.0).animate(animation),
+            ),
+          );
+        },
+        child: IndexedStack(
+          key: ValueKey<int>(index),
+          index: index,
+          children: [
+            _Panel(
+              title: 'Inputs showcase',
+              child: InputsPage(),
+            ),
+            _Panel(
+              title: 'Forms showcase',
+              child: Forms(),
+            ),
+            _Panel(
+              title: 'Pickers',
+              child: SizedBox(),
+            ),
+            _Panel(
+              title: 'Others',
+              child: SizedBox(),
+            ),
+          ],
+        ),
       ),
     );
   }

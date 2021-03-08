@@ -72,9 +72,11 @@ class TextBox extends StatefulWidget {
     this.prefix,
     this.outsidePrefix,
     this.prefixMode = OverlayVisibilityMode.always,
+    this.outsidePrefixMode = OverlayVisibilityMode.always,
     this.suffix,
     this.outsideSuffix,
     this.suffixMode = OverlayVisibilityMode.always,
+    this.outsideSuffixMode = OverlayVisibilityMode.always,
     TextInputType? keyboardType,
     this.textInputAction,
     this.style,
@@ -91,7 +93,7 @@ class TextBox extends StatefulWidget {
     SmartDashesType? smartDashesType,
     SmartQuotesType? smartQuotesType,
     this.enableSuggestions = true,
-    this.maxLines,
+    this.maxLines = 1,
     this.minLines,
     this.minHeight,
     this.expands = false,
@@ -174,10 +176,12 @@ class TextBox extends StatefulWidget {
   final Widget? outsidePrefix;
   final Widget? prefix;
   final OverlayVisibilityMode prefixMode;
+  final OverlayVisibilityMode outsidePrefixMode;
 
   final Widget? outsideSuffix;
   final Widget? suffix;
   final OverlayVisibilityMode suffixMode;
+  final OverlayVisibilityMode outsideSuffixMode;
 
   final TextInputType keyboardType;
 
@@ -484,7 +488,7 @@ class _TextBoxState extends State<TextBox>
   bool _showOutsidePrefixWidget(TextEditingValue text) {
     return widget.outsidePrefix != null &&
         _shouldShowAttachment(
-          attachment: widget.prefixMode,
+          attachment: widget.outsidePrefixMode,
           hasText: text.text.isNotEmpty,
         );
   }
@@ -508,7 +512,7 @@ class _TextBoxState extends State<TextBox>
   bool _showOutsideSuffixWidget(TextEditingValue text) {
     return widget.outsideSuffix != null &&
         _shouldShowAttachment(
-          attachment: widget.suffixMode,
+          attachment: widget.outsideSuffixMode,
           hasText: text.text.isNotEmpty,
         );
   }
