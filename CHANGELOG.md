@@ -1,6 +1,10 @@
 Date format: DD/MM/YYYY
 
-## [1.0.1] - [06/03/2021]
+## [1.0.1+1] - [09/03/2021]
+
+- **NEW** Screenshots
+
+## [1.0.1] - [07/03/2021]
 
 - **FIX** `NavigationPanel` navigation index
 - **FIX** `Slider`'s inactive color

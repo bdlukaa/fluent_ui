@@ -59,6 +59,6 @@ void debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
     assert(
       context.theme != null,
       'A Theme widget is necessary to draw this layout. It is implemented by default in FluentApp. '
-          'To fix this, wrap a Theme widget upper in this layout or implement a FluentApp.',
+      'To fix this, wrap a Theme widget upper in this layout or implement a FluentApp.',
     );
 }

@@ -158,7 +158,8 @@ class _ButtonState extends State<Button> {
           ? null
           : () async {
               widget.onPressed!();
-              if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+              if (mounted)
+                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
               await Future.delayed(Duration(milliseconds: 120));
               if (mounted) setState(() => buttonScale = 1);
             },
