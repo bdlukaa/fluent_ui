@@ -150,11 +150,18 @@ Color? checkedInputColor(Style style, ButtonStates state) {
   return color;
 }
 
-Color? uncheckedInputColor(Style? style, ButtonStates state) {
-  if (state.isDisabled) return style!.disabledColor;
-  if (state.isPressing) return Colors.grey[70];
-  if (state.isHovering) return Colors.grey[40];
-  return Colors.grey[40]!.withOpacity(0);
+Color uncheckedInputColor(Style style, ButtonStates state) {
+  if (style.brightness == Brightness.light) {
+    if (state.isDisabled) return style.disabledColor!;
+    if (state.isPressing) return Colors.grey[70]!;
+    if (state.isHovering) return Colors.grey[40]!;
+    return Colors.grey[40]!.withOpacity(0);
+  } else {
+    if (state.isDisabled) return style.disabledColor!;
+    if (state.isPressing) return Colors.grey[130]!;
+    if (state.isHovering) return Colors.grey[150]!;
+    return Colors.grey[80]!.withOpacity(0);
+  }
 }
 
 MouseCursor buttonCursor(ButtonStates state) {

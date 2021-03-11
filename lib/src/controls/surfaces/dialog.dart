@@ -165,11 +165,10 @@ class ContentDialogStyle {
     this.elevationColor,
   });
 
-  static ContentDialogStyle defaultTheme(Style style,
-      [Brightness? brightness]) {
+  static ContentDialogStyle defaultTheme(Style style) {
     final def = ContentDialogStyle(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: style.scaffoldBackgroundColor,
         border: Border.all(
           color: style.disabledColor!,
           width: 1.2,
@@ -180,12 +179,8 @@ class ContentDialogStyle {
       bodyPadding: EdgeInsets.only(bottom: 30),
       actionsSpacing: 3,
       barrierColor: Colors.grey[200]!.withOpacity(0.8),
-      titleStyle: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      bodyStyle: TextStyle(color: Colors.black),
+      titleStyle: style.typography?.title,
+      bodyStyle: style.typography?.body,
       actionStyle: ButtonStyle(
         margin: EdgeInsets.zero,
         decoration: (state) => BoxDecoration(

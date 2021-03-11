@@ -9,7 +9,6 @@ class Forms extends StatefulWidget {
 
 class _FormsState extends State<Forms> {
   final _clearController = TextEditingController();
-
   bool _showPassword = false;
 
   @override
@@ -33,6 +32,7 @@ class _FormsState extends State<Forms> {
         ),
         SizedBox(height: 20),
         TextBox(
+          maxLines: null,
           controller: _clearController,
           suffixMode: OverlayVisibilityMode.always,
           minHeight: 100,

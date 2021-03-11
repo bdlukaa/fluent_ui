@@ -8,12 +8,8 @@ class InputsPage extends StatefulWidget {
   _InputsPageState createState() => _InputsPageState();
 }
 
-TextStyle get cardTitleTextStyle => TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.bold,
-    );
-
 class _InputsPageState extends State<InputsPage> {
+  TextStyle? get cardTitleTextStyle => context.theme!.typography?.base;
   bool value = false;
 
   double sliderValue = 5;
@@ -105,75 +101,67 @@ class _InputsPageState extends State<InputsPage> {
 
   Widget _buildCheckboxes() {
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Checkboxes', style: cardTitleTextStyle),
-          ...buildStateColumn([
-            Checkbox(checked: false, onChanged: (v) {}),
-            Checkbox(checked: true, onChanged: (v) {}),
-            Checkbox(checked: null, onChanged: (v) {}),
-            Checkbox(checked: true, onChanged: null),
-          ], [
-            'Checked',
-            'Unchecked',
-            'Third state',
-            'Disabled',
-          ]),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Checkboxes', style: cardTitleTextStyle),
+        ...buildStateColumn(context, [
+          Checkbox(checked: false, onChanged: (v) {}),
+          Checkbox(checked: true, onChanged: (v) {}),
+          Checkbox(checked: null, onChanged: (v) {}),
+          Checkbox(checked: true, onChanged: null),
+        ], [
+          'Unchecked',
+          'Checked',
+          'Third state',
+          'Disabled',
+        ]),
+      ]),
     );
   }
 
   Widget _buildToggleSwitches() {
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Toggles', style: cardTitleTextStyle),
-          ...buildStateColumn([
-            ToggleSwitch(checked: false, onChanged: (v) {}),
-            ToggleSwitch(checked: true, onChanged: (v) {}),
-            ToggleSwitch(checked: false, onChanged: null),
-            ToggleSwitch(checked: true, onChanged: null),
-          ], [
-            'Off',
-            'On',
-            'Disabled Off',
-            'Disabled On',
-          ]),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Toggles', style: cardTitleTextStyle),
+        ...buildStateColumn(context, [
+          ToggleSwitch(checked: false, onChanged: (v) {}),
+          ToggleSwitch(checked: true, onChanged: (v) {}),
+          ToggleSwitch(checked: false, onChanged: null),
+          ToggleSwitch(checked: true, onChanged: null),
+        ], [
+          'Off',
+          'On',
+          'Disabled Off',
+          'Disabled On',
+        ]),
+      ]),
     );
   }
 
   Widget _buildRadioButtons() {
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Radio Buttons', style: cardTitleTextStyle),
-          ...buildStateColumn(
-            [
-              RadioButton(selected: false, onChanged: (v) {}),
-              RadioButton(selected: true, onChanged: (v) {}),
-              RadioButton(selected: false, onChanged: null),
-              RadioButton(selected: true, onChanged: null),
-            ]
-                .map((e) => Padding(
-                      padding: EdgeInsets.all(5),
-                      child: e,
-                    ))
-                .toList(),
-            [
-              'Off',
-              'On',
-              'Disabled Off',
-              'Disabled On',
-            ],
-          ),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Radio Buttons', style: cardTitleTextStyle),
+        ...buildStateColumn(
+          context,
+          [
+            RadioButton(selected: false, onChanged: (v) {}),
+            RadioButton(selected: true, onChanged: (v) {}),
+            RadioButton(selected: false, onChanged: null),
+            RadioButton(selected: true, onChanged: null),
+          ]
+              .map((e) => Padding(
+                    padding: EdgeInsets.all(5),
+                    child: e,
+                  ))
+              .toList(),
+          [
+            'Off',
+            'On',
+            'Disabled Off',
+            'Disabled On',
+          ],
+        ),
+      ]),
     );
   }
 
@@ -215,13 +203,18 @@ class _InputsPageState extends State<InputsPage> {
   }
 }
 
-List<Widget> buildStateColumn(List<Widget> boxes, List<String> texts) {
+List<Widget> buildStateColumn(
+  BuildContext context,
+  List<Widget> boxes,
+  List<String> texts,
+) {
+  debugCheckHasFluentTheme(context);
   return List.generate(4, (index) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         boxes[index],
-        Text(texts[index]),
+        Text(texts[index], style: context.theme!.typography?.body),
       ],
     );
   });

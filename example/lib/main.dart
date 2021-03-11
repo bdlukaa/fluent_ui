@@ -1,3 +1,4 @@
+import 'package:example/screens/others.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'screens/forms.dart';
@@ -35,7 +36,7 @@ class _MyAppState extends State<MyApp> {
             ),
       },
       style: Style(
-        accentColor: Colors.green,
+        brightness: Brightness.dark,
       ),
     );
   }
@@ -65,14 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
-            icon: Icon(Icons.navigation_regular),
-            label: Text(
-              'Showcase',
-            )),
+          icon: Icon(Icons.navigation_regular),
+          label: Text(
+            'Showcase',
+          ),
+        ),
         currentIndex: index,
         items: [
           NavigationPanelSectionHeader(
-              header: Text('Cool Navigation Panel Header')),
+            header: Text('Cool Navigation Panel Header'),
+          ),
           NavigationPanelItem(
             icon: Icon(Icons.radio_button_filled),
             label: Text('Inputs'),
@@ -109,22 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
           key: ValueKey<int>(index),
           index: index,
           children: [
-            _Panel(
-              title: 'Inputs showcase',
-              child: InputsPage(),
-            ),
-            _Panel(
-              title: 'Forms showcase',
-              child: Forms(),
-            ),
-            _Panel(
-              title: 'Pickers',
-              child: SizedBox(),
-            ),
-            _Panel(
-              title: 'Others',
-              child: SizedBox(),
-            ),
+            _Panel(title: 'Inputs showcase', child: InputsPage()),
+            _Panel(title: 'Forms showcase', child: Forms()),
+            _Panel(title: 'Pickers', child: SizedBox()),
+            _Panel(title: 'Others', child: Others()),
           ],
         ),
       ),
@@ -147,10 +138,7 @@ class _Panel extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(8.0),
       children: [
-        Text(
-          title!,
-          style: cardTitleTextStyle,
-        ),
+        Text(title!, style: context.theme!.typography?.subtitle),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6),
           child: child,

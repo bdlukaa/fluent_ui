@@ -79,8 +79,8 @@ class CardStyle {
     this.highlightSize,
   });
 
-  static CardStyle defaultTheme([Brightness? brightness]) {
-    final def = CardStyle(
+  static CardStyle defaultTheme(Style style) {
+    return CardStyle(
       borderRadius: BorderRadius.circular(2),
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(12),
@@ -88,17 +88,9 @@ class CardStyle {
       highlightPosition: HighlightPosition.top,
       highlightColor: Colors.blue,
       highlightSize: 1.8,
+      color: style.navigationPanelBackgroundColor,
+      elevationColor: Colors.black,
     );
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(CardStyle(
-        elevationColor: lightElevationColor,
-        color: Colors.white,
-      ));
-    else
-      return def.copyWith(CardStyle(
-        elevationColor: darkElevationColor,
-        color: Colors.grey,
-      ));
   }
 
   CardStyle copyWith(CardStyle? style) {

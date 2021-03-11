@@ -37,6 +37,7 @@ class RatingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final size = context.theme!.iconStyle!.size;
     return GestureDetector(
       onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),

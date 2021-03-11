@@ -266,10 +266,6 @@ class ListCellStyle {
     );
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(ListCellStyle(
-        // backgroundColor: (state) => lightButtonBackgroundColor(
-        //   state,
-        //   disabledColor: Colors.transparent,
-        // ),
         titleStyle: (_) => TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
@@ -279,10 +275,6 @@ class ListCellStyle {
       ));
     else
       return def.copyWith(ListCellStyle(
-        // backgroundColor: (state) => darkButtonBackgroundColor(
-        //   state,
-        //   disabledColor: Colors.transparent,
-        // ),
         titleStyle: (_) => TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,

@@ -40,3 +40,4 @@ export 'src/controls/form/text_box.dart';
 export 'src/styles/color.dart';
 export 'src/styles/icons.dart';
 export 'src/styles/theme.dart';
+export 'src/styles/typography.dart';

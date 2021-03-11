@@ -574,6 +574,7 @@ class _TextBoxState extends State<TextBox>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasDirectionality(context));
+    debugCheckHasFluentTheme(context);
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -741,21 +742,14 @@ class _TextBoxState extends State<TextBox>
               padding: const EdgeInsets.only(bottom: 5.0),
               child: Text(
                 widget.header!,
-                style: widget.headerStyle ??
-                    TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: context.theme!.inactiveColor,
-                      fontSize: 14,
-                    ),
+                style: widget.headerStyle ?? context.theme!.typography?.body,
               ),
             ),
-          Row(
-            children: [
-              if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-              Expanded(child: child),
-              if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
-            ],
-          ),
+          Row(children: [
+            if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
+            Expanded(child: child),
+            if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
+          ]),
         ],
       ),
     );

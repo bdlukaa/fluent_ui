@@ -15,12 +15,6 @@ class SplitButtonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme!.splitButtonStyle?.copyWith(this.style);
-    // List<Widget> newButtons = [];
-    // for (final button in buttons) {
-    //   newButtons.add(button.child);
-    //   if (buttons.last != button)
-    //     newButtons.add(Divider(direction: Axis.vertical));
-    // }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {

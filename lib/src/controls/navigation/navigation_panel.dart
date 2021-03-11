@@ -1,11 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-enum NavigationPanelDisplayMode {
-  open,
-  compact,
-  minimal,
-}
+enum NavigationPanelDisplayMode { open, compact, minimal }
 
 class NavigationPanel extends StatelessWidget {
   const NavigationPanel({
@@ -54,73 +50,69 @@ class NavigationPanel extends StatelessWidget {
             curve: context.theme!.animationCurve!,
             width: width,
             color: context.theme!.navigationPanelBackgroundColor,
-            child: ListView(
-              children: [
-                if (menu != null)
-                  SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Container(
-                      width: width,
-                      padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
-                      child: NavigationPanelMenu(
-                        item: menu!,
-                        collapsed:
-                            displayMode == NavigationPanelDisplayMode.compact,
-                      ),
+            child: ListView(children: [
+              if (menu != null)
+                SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    width: width,
+                    padding: EdgeInsets.only(bottom: 22, top: 22, left: 14),
+                    child: NavigationPanelMenu(
+                      item: menu!,
+                      collapsed:
+                          displayMode == NavigationPanelDisplayMode.compact,
                     ),
                   ),
-                ...List.generate(items.length, (index) {
-                  final item = items[index];
-                  if (item is NavigationPanelSectionHeader &&
-                      displayMode == NavigationPanelDisplayMode.compact)
-                    return SizedBox();
-                  // Use this to avoid overflow when animation is happening
-                  return SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: SizedBox(
-                      width: width,
-                      child: () {
-                        if (item is NavigationPanelSectionHeader)
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 8,
-                            ),
-                            child: DefaultTextStyle(
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              child: item.label!,
-                            ),
-                          );
-                        else if (item is NavigationPanelTileSeparator) {
-                          // TODO: NavigationPanelTileSeparator
-                          return SizedBox();
-                        }
-                        final itens = [...items]..removeWhere((i) {
-                            return i.runtimeType != NavigationPanelItem;
-                          });
-                        final index = itens.indexOf(item);
-                        return NavigationPanelItemTile(
-                          item: item,
-                          selected: currentIndex == index,
-                          onTap: onChanged == null
-                              ? null
-                              : () {
-                                  onChanged!(index);
-                                },
-                          compact:
-                              displayMode == NavigationPanelDisplayMode.compact,
+                ),
+              ...List.generate(items.length, (index) {
+                final item = items[index];
+                if (item is NavigationPanelSectionHeader &&
+                    displayMode == NavigationPanelDisplayMode.compact)
+                  return SizedBox();
+                // Use this to avoid overflow when animation is happening
+                return SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: width,
+                    child: () {
+                      if (item is NavigationPanelSectionHeader)
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8,
+                          ),
+                          child: DefaultTextStyle(
+                            style: context.theme!.typography?.base ??
+                                const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                            child: item.label!,
+                          ),
                         );
-                      }(),
-                    ),
-                  );
-                }),
-              ],
-            ),
+                      else if (item is NavigationPanelTileSeparator) {
+                        // TODO: NavigationPanelTileSeparator
+                        return SizedBox();
+                      }
+                      final itens = [...items]..removeWhere((i) {
+                          return i.runtimeType != NavigationPanelItem;
+                        });
+                      final index = itens.indexOf(item);
+                      return NavigationPanelItemTile(
+                        item: item,
+                        selected: currentIndex == index,
+                        onTap:
+                            onChanged == null ? null : () => onChanged!(index),
+                        compact:
+                            displayMode == NavigationPanelDisplayMode.compact,
+                      );
+                    }(),
+                  ),
+                );
+              }),
+            ]),
           );
         case NavigationPanelDisplayMode.minimal:
         default:
@@ -147,6 +139,7 @@ class NavigationPanelItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme!.navigationPanelStyle!.copyWith(item.style);
     return SizedBox(
       height: 44,
@@ -156,7 +149,7 @@ class NavigationPanelItemTile extends StatelessWidget {
           return AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? Curves.linear,
-            color: uncheckedInputColor(context.theme, state),
+            color: uncheckedInputColor(context.theme!, state),
             child: Row(
               children: [
                 AnimatedSwitcher(
@@ -184,13 +177,33 @@ class NavigationPanelItemTile extends StatelessWidget {
                 if (item.icon != null)
                   Padding(
                     padding: style.iconPadding ?? EdgeInsets.zero,
-                    child: item.icon,
+                    child: Theme(
+                      data: context.theme!.copyWith(Style(
+                        iconStyle: context.theme!.iconStyle!.copyWith(IconStyle(
+                          color: selected
+                              ? style.selectedIconColor!(state)
+                              : style.unselectedIconColor!(state),
+                        )),
+                      )),
+                      child: item.icon!,
+                    ),
                   ),
                 if (item.label != null && !compact)
-                  Padding(
-                    padding: style.labelPadding ?? EdgeInsets.zero,
-                    child: item.label,
-                  ),
+                  () {
+                    final textStyle = selected
+                        ? style.selectedTextStyle!(state)
+                        : style.unselectedTextStyle!(state);
+                    return Padding(
+                      padding: style.labelPadding ?? EdgeInsets.zero,
+                      child: AnimatedDefaultTextStyle(
+                        duration: style.animationDuration ??
+                            context.theme!.animationDuration ??
+                            Duration.zero,
+                        style: textStyle,
+                        child: item.label!,
+                      ),
+                    );
+                  }(),
               ],
             ),
           );
@@ -222,10 +235,7 @@ class NavigationPanelItem {
 class NavigationPanelSectionHeader extends NavigationPanelItem {
   const NavigationPanelSectionHeader({
     required Widget header,
-  }) : super(
-          header: true,
-          label: header,
-        );
+  }) : super(header: true, label: header);
 }
 
 class NavigationPanelTileSeparator extends NavigationPanelItem {
@@ -236,10 +246,7 @@ class NavigationPanelMenuItem {
   final Widget icon;
   final Widget? label;
 
-  const NavigationPanelMenuItem({
-    required this.icon,
-    this.label,
-  });
+  const NavigationPanelMenuItem({required this.icon, this.label});
 }
 
 class NavigationPanelMenu extends StatelessWidget {
@@ -254,6 +261,7 @@ class NavigationPanelMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -261,11 +269,12 @@ class NavigationPanelMenu extends StatelessWidget {
         if (!collapsed && item.label != null) ...[
           SizedBox(width: 6),
           DefaultTextStyle(
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.black,
-            ),
+            style: context.theme!.typography?.base ??
+                TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
             child: item.label!,
           ),
         ],
@@ -285,6 +294,8 @@ class NavigationPanelStyle {
 
   final ButtonState<TextStyle>? selectedTextStyle;
   final ButtonState<TextStyle>? unselectedTextStyle;
+  final ButtonState<Color?>? selectedIconColor;
+  final ButtonState<Color?>? unselectedIconColor;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
@@ -299,10 +310,11 @@ class NavigationPanelStyle {
     this.unselectedTextStyle,
     this.animationDuration,
     this.animationCurve,
+    this.selectedIconColor,
+    this.unselectedIconColor,
   });
 
-  static NavigationPanelStyle defaultTheme(Style style,
-      [Brightness? brightness]) {
+  static NavigationPanelStyle defaultTheme(Style style) {
     final disabledTextStyle = TextStyle(
       color: style.disabledColor,
       fontWeight: FontWeight.bold,
@@ -314,13 +326,14 @@ class NavigationPanelStyle {
       highlightColor: style.accentColor,
       selectedTextStyle: (state) => state.isDisabled
           ? disabledTextStyle
-          : TextStyle(color: style.accentColor, fontSize: 16),
-      unselectedTextStyle: (state) => state.isDisabled
-          ? disabledTextStyle
-          : TextStyle(color: style.inactiveColor, fontWeight: FontWeight.w500),
+          : style.typography!.base!.copyWith(color: style.accentColor),
+      unselectedTextStyle: (state) =>
+          state.isDisabled ? disabledTextStyle : style.typography!.base!,
       cursor: buttonCursor,
       labelPadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.only(right: 10, left: 8),
+      selectedIconColor: (_) => style.accentColor!,
+      unselectedIconColor: (_) => null,
     );
   }
 
@@ -335,6 +348,8 @@ class NavigationPanelStyle {
       highlightColor: style?.highlightColor ?? highlightColor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
+      selectedIconColor: style?.selectedIconColor ?? selectedIconColor,
+      unselectedIconColor: style?.unselectedIconColor ?? unselectedIconColor,
     );
   }
 }

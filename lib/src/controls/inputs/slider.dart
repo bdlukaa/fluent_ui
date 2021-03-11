@@ -52,6 +52,7 @@ class Slider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme!.sliderStyle?.copyWith(this.style);
     return Padding(
       padding: style?.margin ?? EdgeInsets.zero,
@@ -146,7 +147,6 @@ class SliderStyle {
 
   static SliderStyle defaultTheme(Style? style) {
     final def = SliderStyle(
-      cursor: SystemMouseCursors.click,
       thumbColor: style?.accentColor,
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor?.withOpacity(1),

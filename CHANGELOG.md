@@ -1,5 +1,14 @@
 Date format: DD/MM/YYYY
 
+## [1.0.2] - Typography update - [10/03/2021]
+
+- **NEW** Typography
+  - Migrated all the widgets to use typography
+- **NEW** Tooltip
+- **NEW** Dark theme
+- **FIX** Disabled button press effect if disabled
+- **FIX** Grey color resulting in green color
+
 ## [1.0.1+1] - [09/03/2021]
 
 - **NEW** Screenshots

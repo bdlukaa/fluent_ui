@@ -102,11 +102,6 @@ class CheckboxStyle {
 
   static CheckboxStyle defaultTheme(Style style, [Brightness? brightness]) {
     final radius = BorderRadius.circular(3);
-    final Color unselected = () {
-      if (brightness == null || brightness == Brightness.light)
-        return Colors.black;
-      return Colors.white;
-    }();
     return CheckboxStyle(
       cursor: buttonCursor,
       checkedDecoration: (state) => BoxDecoration(
@@ -117,13 +112,14 @@ class CheckboxStyle {
       uncheckedDecoration: (state) => BoxDecoration(
         border: Border.all(
           width: 0.6,
-          color: state.isDisabled ? style.disabledColor! : unselected,
+          color: state.isDisabled ? style.disabledColor! : style.inactiveColor!,
         ),
         color: Colors.transparent,
         borderRadius: radius,
       ),
       thirdstateDecoration: (state) => BoxDecoration(
         borderRadius: radius,
+        color: Colors.white,
         border: Border.all(
           width: 6.5,
           color: checkedInputColor(style, state)!,

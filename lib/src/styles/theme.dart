@@ -23,6 +23,8 @@ extension themeContext on BuildContext {
 }
 
 class Style {
+  final Typography? typography;
+
   final Color? accentColor;
   final Color? activeColor;
   final Color? inactiveColor;
@@ -55,6 +57,7 @@ class Style {
   final IconButtonStyle? iconButtonStyle;
 
   const Style({
+    this.typography,
     this.accentColor,
     this.activeColor,
     this.inactiveColor,
@@ -83,19 +86,40 @@ class Style {
   });
 
   Style build(BuildContext context) {
+    final brightness = this.brightness ?? Brightness.light;
     final defaultStyle = Style(
-      animationDuration: Duration(milliseconds: 200),
+      animationDuration: Duration(milliseconds: 250),
       animationCurve: Curves.linear,
-      brightness: brightness ?? Brightness.light,
+      brightness: brightness,
       accentColor: accentColor ?? Colors.blue,
       activeColor: activeColor ?? Colors.white,
-      inactiveColor: inactiveColor ?? Colors.black,
+      inactiveColor: inactiveColor ??
+          () {
+            if (brightness == Brightness.light)
+              return Colors.black;
+            else
+              return Colors.white;
+          }(),
       disabledColor: Colors.grey[100]!.withOpacity(0.6),
-      scaffoldBackgroundColor: scaffoldBackgroundColor ?? Colors.white,
-      navigationPanelBackgroundColor: Color.fromARGB(255, 246, 246, 246),
+      scaffoldBackgroundColor: scaffoldBackgroundColor ??
+          () {
+            if (brightness == Brightness.light)
+              return Colors.white;
+            else
+              return Colors.black;
+          }(),
+      navigationPanelBackgroundColor: navigationPanelBackgroundColor ??
+          () {
+            if (brightness == Brightness.light)
+              return Color.fromARGB(255, 246, 246, 246);
+            else
+              return Color.fromARGB(255, 31, 31, 31);
+          }(),
+      typography: Typography.defaultTypography(brightness: brightness)
+          .copyWith(typography),
     );
     return defaultStyle.copyWith(Style(
-      cardStyle: CardStyle.defaultTheme(brightness).copyWith(cardStyle),
+      cardStyle: CardStyle.defaultTheme(defaultStyle).copyWith(cardStyle),
       buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
       iconButtonStyle:
           IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
@@ -112,15 +136,14 @@ class Style {
           .copyWith(splitButtonStyle),
       listCellStyle:
           ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
-      dialogStyle: ContentDialogStyle.defaultTheme(defaultStyle, brightness)
-          .copyWith(dialogStyle),
+      dialogStyle:
+          ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
       tooltipStyle:
-          TooltipStyle.defaultTheme(brightness).copyWith(tooltipStyle),
+          TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
       dividerStyle:
           DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
-      navigationPanelStyle:
-          NavigationPanelStyle.defaultTheme(defaultStyle, brightness)
-              .copyWith(navigationPanelStyle),
+      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle)
+          .copyWith(navigationPanelStyle),
       radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
           .copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
@@ -160,6 +183,7 @@ class Style {
       animationCurve: other.animationCurve ?? animationCurve,
       animationDuration: other.animationDuration ?? animationDuration,
       disabledColor: other.disabledColor ?? disabledColor,
+      typography: other.typography ?? typography,
     );
   }
 }

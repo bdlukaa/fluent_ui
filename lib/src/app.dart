@@ -183,10 +183,6 @@ class FluentApp extends StatelessWidget {
   }
 
   Widget _buildApp(BuildContext context) {
-    // final TextStyle _textStyle = TextStyle(
-    //   fontSize: 14,
-    //   color: Colors.black,
-    // );
     final fluentColor = color ?? Colors.blue;
     if (_usesRouter) {
       return m.MaterialApp.router(

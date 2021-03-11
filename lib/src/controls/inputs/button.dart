@@ -126,6 +126,8 @@ class _ButtonState extends State<Button> {
 
   double buttonScale = 1;
 
+  bool get isDisabled => widget.onPressed == null;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
@@ -145,16 +147,24 @@ class _ButtonState extends State<Button> {
       margin: style?.margin,
       focusNode: widget.focusNode,
       cursor: style?.cursor,
-      onTapDown: () {
-        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
-      },
-      onLongPressStart: () {
-        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
-      },
-      onLongPressEnd: () {
-        if (mounted) setState(() => buttonScale = 1);
-      },
-      onPressed: widget.onPressed == null
+      onTapDown: isDisabled
+          ? null
+          : () {
+              if (mounted)
+                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+            },
+      onLongPressStart: isDisabled
+          ? null
+          : () {
+              if (mounted)
+                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+            },
+      onLongPressEnd: isDisabled
+          ? null
+          : () {
+              if (mounted) setState(() => buttonScale = 1);
+            },
+      onPressed: isDisabled
           ? null
           : () async {
               widget.onPressed!();
@@ -195,17 +205,30 @@ class _ButtonState extends State<Button> {
   }
 }
 
-Color? buttonColor(Style style, ButtonStates state) {
-  Color? color;
-  if (state.isDisabled)
-    color = style.disabledColor;
-  else if (state.isPressing)
-    color = Colors.grey[70];
-  else if (state.isHovering)
-    color = Colors.grey[40];
-  else
-    color = Colors.grey[50];
-  return color;
+Color buttonColor(Style style, ButtonStates state) {
+  if (style.brightness == Brightness.light) {
+    late Color? color;
+    if (state.isDisabled)
+      color = style.disabledColor;
+    else if (state.isPressing)
+      color = Colors.grey[70];
+    else if (state.isHovering)
+      color = Colors.grey[40];
+    else
+      color = Colors.grey[50];
+    return color ?? Colors.transparent;
+  } else {
+    late Color? color;
+    if (state.isDisabled)
+      color = style.disabledColor;
+    else if (state.isPressing)
+      color = Color.fromARGB(255, 102, 102, 102);
+    else if (state.isHovering)
+      color = Color.fromARGB(255, 25, 25, 25);
+    else
+      color = Color.fromARGB(255, 51, 51, 51);
+    return color ?? Colors.transparent;
+  }
 }
 
 class ButtonStyle {
@@ -234,8 +257,8 @@ class ButtonStyle {
     this.animationCurve,
   });
 
-  static ButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
-    final defButton = ButtonStyle(
+  static ButtonStyle defaultTheme(Style style) {
+    return ButtonStyle(
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
       cursor: buttonCursor,
@@ -246,24 +269,12 @@ class ButtonStyle {
         color: buttonColor(style, state),
       ),
       scaleFactor: 0.95,
+      textStyle: (state) =>
+          style.typography?.body?.copyWith(
+            color: state.isDisabled ? Colors.grey[100] : null,
+          ) ??
+          TextStyle(),
     );
-    final disabledTextStyle = TextStyle(
-      color: Colors.grey[100],
-      fontWeight: FontWeight.bold,
-    );
-
-    if (brightness == null || brightness == Brightness.light)
-      return defButton.copyWith(ButtonStyle(
-        textStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-      ));
-    else
-      return defButton.copyWith(ButtonStyle(
-        textStyle: (state) => state.isDisabled
-            ? disabledTextStyle
-            : TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-      ));
   }
 
   ButtonStyle copyWith(ButtonStyle? style) {

@@ -128,7 +128,7 @@ class ToggleButtonStyle {
             color: uncheckedInputColor(style, state),
             border: Border.all(
               width: 0.6,
-              color: uncheckedInputColor(style, state)!,
+              color: uncheckedInputColor(style, state),
             ),
           );
         return defaultDecoration.copyWith(

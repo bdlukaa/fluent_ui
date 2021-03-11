@@ -87,7 +87,8 @@ Basic Inputs:
   1. ![Dialog preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)
 - (3) [Flyouts](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/flyouts)
 - (3) [Teaching tip](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/teaching-tip)
-- (2) [Tooltip](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tooltips)
+- ✔️ [Tooltip](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tooltips)
+  - ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
 
 [Navigation](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/master-details):
 

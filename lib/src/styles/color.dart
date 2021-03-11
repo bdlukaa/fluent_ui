@@ -15,7 +15,7 @@ class Colors {
       160: Color(0XFF323130),
       150: Color(0XFF3B3A39),
       140: Color(0XFF484644),
-      130: Color(0XFF505E5C),
+      130: Color(0XFF605E5C),
       120: Color(0XFF797775),
       110: Color(0XFF8A8886),
       100: Color(0XFF979593),

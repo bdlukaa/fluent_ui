@@ -132,7 +132,7 @@ class ToggleSwitchStyle {
             width: 0.8,
             color: state.isNone
                 ? style.inactiveColor!
-                : uncheckedInputColor(style, state)!,
+                : uncheckedInputColor(style, state),
           ),
         );
       },
@@ -140,8 +140,12 @@ class ToggleSwitchStyle {
       margin: EdgeInsets.all(4),
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
-      checkedThumbDecoration: (_) =>
-          defaultThumbDecoration.copyWith(color: style.activeColor),
+      checkedThumbDecoration: (_) => defaultThumbDecoration.copyWith(color: () {
+        if (style.brightness == Brightness.light)
+          return style.activeColor;
+        else
+          return style.inactiveColor;
+      }()),
       uncheckedThumbDecoration: (_) =>
           defaultThumbDecoration.copyWith(color: style.inactiveColor),
     );

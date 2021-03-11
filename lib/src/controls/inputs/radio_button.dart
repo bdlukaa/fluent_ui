@@ -16,6 +16,7 @@ class RadioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = context.theme?.radioButtonStyle?.copyWith(this.style);
     return HoverButton(
       onPressed: onChanged == null ? null : () => onChanged!(!selected),
@@ -50,8 +51,8 @@ class RadioButtonStyle {
     this.uncheckedDecoration,
   });
 
-  static RadioButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
-    final def = RadioButtonStyle(
+  static RadioButtonStyle defaultTheme(Style style) {
+    return RadioButtonStyle(
       cursor: buttonCursor,
       animationDuration: style.animationDuration,
       animationCurve: style.animationCurve,
@@ -61,19 +62,20 @@ class RadioButtonStyle {
           width: 4.5,
         ),
         shape: BoxShape.circle,
+        color: Colors.white,
       ),
       uncheckedDecoration: (state) => BoxDecoration(
         color: uncheckedInputColor(style, state),
         border: Border.all(
+          style: state.isNone ? BorderStyle.solid : BorderStyle.none,
           width: 1,
           color: state.isNone
-              ? Colors.grey[150]!
-              : uncheckedInputColor(style, state)!,
+              ? style.disabledColor!
+              : uncheckedInputColor(style, state),
         ),
         shape: BoxShape.circle,
       ),
     );
-    return def;
   }
 
   RadioButtonStyle copyWith(RadioButtonStyle? style) {
