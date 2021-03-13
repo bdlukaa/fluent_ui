@@ -105,8 +105,11 @@ class RatingIcon extends StatelessWidget {
         Icon(icon, color: unratedColor ?? style!.disabledColor, size: size),
         ClipRect(
           clipper: _StarClipper(rating),
-          child:
-              Icon(icon, color: ratedColor ?? style!.accentColor, size: size),
+          child: Icon(
+            icon,
+            color: ratedColor ?? style!.accentColor,
+            size: size,
+          ),
         ),
       ],
     );
@@ -120,12 +123,7 @@ class _StarClipper extends CustomClipper<Rect> {
 
   @override
   Rect getClip(Size size) {
-    final rect = Rect.fromLTWH(
-      0,
-      0,
-      size.width * value,
-      size.height,
-    );
+    final rect = Rect.fromLTWH(0, 0, size.width * value, size.height);
     return rect;
   }
 

@@ -6,7 +6,7 @@ class Others extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Card(
+      Acrylic(
         child: Column(children: [
           Text('Surfaces', style: context.theme!.typography?.subtitle),
           Tooltip(

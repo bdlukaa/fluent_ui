@@ -26,9 +26,8 @@ export 'src/controls/inputs/slider.dart';
 export 'src/controls/items/list_cell.dart';
 
 export 'src/controls/navigation/pivot.dart';
-export 'src/controls/navigation/navigation_panel.dart';
+export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
 
-export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
@@ -37,6 +36,7 @@ export 'src/controls/utils/divider.dart';
 
 export 'src/controls/form/text_box.dart';
 
+export 'src/styles/acrylic.dart';
 export 'src/styles/color.dart';
 export 'src/styles/icons.dart';
 export 'src/styles/theme.dart';

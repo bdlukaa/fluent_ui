@@ -107,23 +107,19 @@ class CheckboxStyle {
       checkedDecoration: (state) => BoxDecoration(
         borderRadius: radius,
         color: checkedInputColor(style, state),
-        border: Border.all(width: 0.6, color: checkedInputColor(style, state)!),
       ),
       uncheckedDecoration: (state) => BoxDecoration(
         border: Border.all(
           width: 0.6,
           color: state.isDisabled ? style.disabledColor! : style.inactiveColor!,
         ),
-        color: Colors.transparent,
+        color: checkedInputColor(style, state).withOpacity(0),
         borderRadius: radius,
       ),
       thirdstateDecoration: (state) => BoxDecoration(
         borderRadius: radius,
         color: Colors.white,
-        border: Border.all(
-          width: 6.5,
-          color: checkedInputColor(style, state)!,
-        ),
+        border: Border.all(width: 6.5, color: checkedInputColor(style, state)),
       ),
       checkedIconColor: (_) => style.activeColor,
       uncheckedIconColor: (state) {

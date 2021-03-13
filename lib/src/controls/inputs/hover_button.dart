@@ -140,14 +140,14 @@ typedef ButtonState<T> = T Function(ButtonStates);
 
 // Button color
 
-Color? checkedInputColor(Style style, ButtonStates state) {
+Color checkedInputColor(Style style, ButtonStates state) {
   Color? color = style.accentColor;
   if (state.isDisabled)
-    return style.disabledColor;
+    return style.disabledColor!;
   else if (state.isHovering)
     return color!.withOpacity(0.70);
   else if (state.isPressing) return color!.withOpacity(0.90);
-  return color;
+  return color!;
 }
 
 Color uncheckedInputColor(Style style, ButtonStates state) {
@@ -160,7 +160,7 @@ Color uncheckedInputColor(Style style, ButtonStates state) {
     if (state.isDisabled) return style.disabledColor!;
     if (state.isPressing) return Colors.grey[130]!;
     if (state.isHovering) return Colors.grey[150]!;
-    return Colors.grey[80]!.withOpacity(0);
+    return Colors.grey[150]!.withOpacity(0);
   }
 }
 

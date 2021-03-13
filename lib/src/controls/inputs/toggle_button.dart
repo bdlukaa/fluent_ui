@@ -120,7 +120,7 @@ class ToggleButtonStyle {
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
-        border: Border.all(width: 0.6, color: checkedInputColor(style, state)!),
+        border: Border.all(width: 0.6, color: checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)

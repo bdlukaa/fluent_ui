@@ -1,6 +1,15 @@
 Date format: DD/MM/YYYY
 
-## [1.0.2] - Typography update - [10/03/2021]
+## [1.1.0] - Fidelity update - [14/03/2021]
+
+- **BREAKING** Removed `Card` widget
+- **NEW** `Acrylic` widget
+- **NEW** **NAVIGATION PANEL** `bottom` property
+- **FIDELITY** Improved the corder radius of some widgets (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/style/rounded-corner#page-or-app-wide-cornerradius-changes))
+- **FIX** **FIDELITY** Dark theme hovering color
+- Improved documentation
+
+## [1.0.2] - Typography update - [11/03/2021]
 
 - **NEW** Typography
   - Migrated all the widgets to use typography

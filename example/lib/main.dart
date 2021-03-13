@@ -4,53 +4,32 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
 
-final appKey = GlobalKey<_MyAppState>();
-
 void main() {
-  runApp(MyApp(key: appKey));
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  ThemeMode _mode = ThemeMode.light;
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FluentApp(
       title: 'Fluent ui app showcase',
       themeMode: ThemeMode.light,
-      initialRoute: '/',
       debugShowCheckedModeBanner: false,
+      initialRoute: '/',
       routes: {
-        '/': (_) => MyHomePage(
-              mode: _mode,
-              onThemeChange: (mode) {
-                setState(() => _mode = mode);
-              },
-            ),
+        '/': (_) => MyHomePage(),
       },
       style: Style(
-        brightness: Brightness.dark,
-      ),
+          // brightness: Brightness.dark,
+          ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    Key? key,
-    required this.mode,
-    required this.onThemeChange,
-  }) : super(key: key);
-
-  final ThemeMode mode;
-  final Function(ThemeMode mode) onThemeChange;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -67,9 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
           icon: Icon(Icons.navigation_regular),
-          label: Text(
-            'Showcase',
-          ),
+          label: Text('Showcase'),
         ),
         currentIndex: index,
         items: [
@@ -77,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
             header: Text('Cool Navigation Panel Header'),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.radio_button_filled),
+            icon: Icon(Icons.checkbox_checked_regular),
             label: Text('Inputs'),
           ),
           NavigationPanelItem(
@@ -94,6 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
             label: Text('Others'),
           ),
         ],
+        bottom: NavigationPanelItem(
+          icon: Icon(Icons.settings_regular),
+          label: Text('Settings'),
+        ),
         onChanged: (i) => setState(() => index = i),
       ),
       body: AnimatedSwitcher(
@@ -116,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _Panel(title: 'Forms showcase', child: Forms()),
             _Panel(title: 'Pickers', child: SizedBox()),
             _Panel(title: 'Others', child: Others()),
+            _Panel(title: 'Settings', child: SizedBox()),
           ],
         ),
       ),

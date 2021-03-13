@@ -11,7 +11,7 @@ class Theme extends InheritedWidget {
     return context
         .dependOnInheritedWidgetOfExactType<Theme>()
         ?.data
-        .build(context);
+        .build();
   }
 
   @override
@@ -20,6 +20,13 @@ class Theme extends InheritedWidget {
 
 extension themeContext on BuildContext {
   Style? get theme => Theme.of(this);
+}
+
+extension brightnessExtension on Brightness {
+
+  bool get isLight => this == Brightness.light;
+  bool get isDark => this == Brightness.dark;
+
 }
 
 class Style {
@@ -39,7 +46,6 @@ class Style {
   final Color? navigationPanelBackgroundColor;
 
   final NavigationPanelStyle? navigationPanelStyle;
-  final CardStyle? cardStyle;
   final CheckboxStyle? checkboxStyle;
   final ContentDialogStyle? dialogStyle;
   final DividerStyle? dividerStyle;
@@ -68,7 +74,6 @@ class Style {
     this.scaffoldBackgroundColor,
     this.navigationPanelBackgroundColor,
     this.buttonStyle,
-    this.cardStyle,
     this.iconButtonStyle,
     this.checkboxStyle,
     this.toggleSwitchStyle,
@@ -85,7 +90,7 @@ class Style {
     this.sliderStyle,
   });
 
-  Style build(BuildContext context) {
+  Style build() {
     final brightness = this.brightness ?? Brightness.light;
     final defaultStyle = Style(
       animationDuration: Duration(milliseconds: 250),
@@ -95,7 +100,7 @@ class Style {
       activeColor: activeColor ?? Colors.white,
       inactiveColor: inactiveColor ??
           () {
-            if (brightness == Brightness.light)
+            if (brightness.isLight)
               return Colors.black;
             else
               return Colors.white;
@@ -103,15 +108,15 @@ class Style {
       disabledColor: Colors.grey[100]!.withOpacity(0.6),
       scaffoldBackgroundColor: scaffoldBackgroundColor ??
           () {
-            if (brightness == Brightness.light)
+            if (brightness.isLight)
               return Colors.white;
             else
               return Colors.black;
           }(),
       navigationPanelBackgroundColor: navigationPanelBackgroundColor ??
           () {
-            if (brightness == Brightness.light)
-              return Color.fromARGB(255, 246, 246, 246);
+            if (brightness.isLight)
+              return Color.fromARGB(255, 230, 230, 230);
             else
               return Color.fromARGB(255, 31, 31, 31);
           }(),
@@ -119,7 +124,6 @@ class Style {
           .copyWith(typography),
     );
     return defaultStyle.copyWith(Style(
-      cardStyle: CardStyle.defaultTheme(defaultStyle).copyWith(cardStyle),
       buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
       iconButtonStyle:
           IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
@@ -150,11 +154,12 @@ class Style {
     ));
   }
 
-  static Style fallback(BuildContext context, [Brightness? brightness]) {
-    return Style(brightness: brightness).build(context);
+  static Style fallback([Brightness? brightness]) {
+    return Style(brightness: brightness).build();
   }
 
-  Style copyWith(Style other) {
+  Style copyWith(Style? other) {
+    if (other == null) return this;
     return Style(
       accentColor: other.accentColor ?? accentColor,
       activeColor: other.activeColor ?? activeColor,
@@ -163,7 +168,6 @@ class Style {
       navigationPanelStyle: other.navigationPanelStyle ?? navigationPanelStyle,
       brightness: other.brightness ?? brightness,
       buttonStyle: other.buttonStyle ?? buttonStyle,
-      cardStyle: other.cardStyle ?? cardStyle,
       checkboxStyle: other.checkboxStyle ?? checkboxStyle,
       dialogStyle: other.dialogStyle ?? dialogStyle,
       dividerStyle: other.dividerStyle ?? dividerStyle,

@@ -66,7 +66,7 @@ class IconButtonStyle {
     this.margin,
   });
 
-  static IconButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
+  static IconButtonStyle defaultTheme(Style style) {
     final def = IconButtonStyle(
       cursor: buttonCursor,
       borderRadius: BorderRadius.circular(2),

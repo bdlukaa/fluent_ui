@@ -9,7 +9,7 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  TextStyle? get cardTitleTextStyle => context.theme!.typography?.base;
+  TextStyle? get titleTextStyle => context.theme!.typography?.base;
   bool value = false;
 
   double sliderValue = 5;
@@ -24,17 +24,18 @@ class _InputsPageState extends State<InputsPage> {
         _buildToggleSwitches(),
         _buildRadioButtons(),
         _buildSliders(),
-      ]),
+      ], runSpacing: 10, spacing: 10),
     );
   }
 
   Widget _buildButtons() {
     final splitButtonHeight = 50.0;
-    return Card(
+    return Acrylic(
+      padding: EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Buttons', style: cardTitleTextStyle),
+          Text('Buttons', style: titleTextStyle),
           ...[
             Button(
               text: Text('Enabled button'),
@@ -100,9 +101,10 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildCheckboxes() {
-    return Card(
+    return Acrylic(
+      padding: EdgeInsets.all(8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Checkboxes', style: cardTitleTextStyle),
+        Text('Checkboxes', style: titleTextStyle),
         ...buildStateColumn(context, [
           Checkbox(checked: false, onChanged: (v) {}),
           Checkbox(checked: true, onChanged: (v) {}),
@@ -119,9 +121,10 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildToggleSwitches() {
-    return Card(
+    return Acrylic(
+      padding: EdgeInsets.all(8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Toggles', style: cardTitleTextStyle),
+        Text('Toggles', style: titleTextStyle),
         ...buildStateColumn(context, [
           ToggleSwitch(checked: false, onChanged: (v) {}),
           ToggleSwitch(checked: true, onChanged: (v) {}),
@@ -138,9 +141,10 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildRadioButtons() {
-    return Card(
+    return Acrylic(
+      padding: EdgeInsets.all(8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Radio Buttons', style: cardTitleTextStyle),
+        Text('Radio Buttons', style: titleTextStyle),
         ...buildStateColumn(
           context,
           [
@@ -166,11 +170,12 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildSliders() {
-    return Card(
+    return Acrylic(
+      padding: EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sliders', style: cardTitleTextStyle),
+          Text('Sliders', style: titleTextStyle),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 8),
             width: 200,

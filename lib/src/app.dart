@@ -168,18 +168,13 @@ class FluentApp extends StatelessWidget {
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    final data = (usedarkStyle ? darkStyle ?? style : style) ??
-        Style.fallback(
-          context,
-          usedarkStyle ? Brightness.dark : Brightness.light,
-        );
-    return data.build(context);
+    final data = (usedarkStyle ? (darkStyle ?? style) : style) ??
+        Style.fallback(usedarkStyle ? Brightness.dark : Brightness.light);
+    return data.build();
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    return m.Material(
-      child: Theme(data: theme(context), child: child!),
-    );
+    return m.Material(child: Theme(data: theme(context), child: child!));
   }
 
   Widget _buildApp(BuildContext context) {
@@ -206,7 +201,6 @@ class FluentApp extends StatelessWidget {
         debugShowCheckedModeBanner: debugShowCheckedModeBanner,
         shortcuts: shortcuts,
         actions: actions,
-        // textStyle: _textStyle,
       );
     }
 
@@ -214,9 +208,6 @@ class FluentApp extends StatelessWidget {
       key: GlobalObjectKey(this),
       navigatorKey: navigatorKey,
       navigatorObservers: navigatorObservers!,
-      // pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
-      //   return FluentPageRoute<T>(settings: settings, builder: builder);
-      // },
       home: home,
       routes: routes!,
       initialRoute: initialRoute,
@@ -238,7 +229,6 @@ class FluentApp extends StatelessWidget {
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       shortcuts: shortcuts,
       actions: actions,
-      // textStyle: _textStyle,
     );
   }
 }

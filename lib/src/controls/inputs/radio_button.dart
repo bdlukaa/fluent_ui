@@ -58,7 +58,7 @@ class RadioButtonStyle {
       animationCurve: style.animationCurve,
       checkedDecoration: (state) => BoxDecoration(
         border: Border.all(
-          color: checkedInputColor(style, state)!,
+          color: checkedInputColor(style, state),
           width: 4.5,
         ),
         shape: BoxShape.circle,

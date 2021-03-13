@@ -111,7 +111,7 @@ class _ButtonState extends State<Button> {
       value: enabled,
       ifFalse: 'disabled',
     ));
-    // TODO(bdlukaa): make style a `Diagnosticable`
+    // TODO: make style a `Diagnosticable`
     // properties.add(DiagnosticsProperty<ButtonStyle>(
     //   'style',
     //   style,
@@ -224,7 +224,7 @@ Color buttonColor(Style style, ButtonStates state) {
     else if (state.isPressing)
       color = Color.fromARGB(255, 102, 102, 102);
     else if (state.isHovering)
-      color = Color.fromARGB(255, 25, 25, 25);
+      color = Color.fromARGB(255, 31, 31, 31);
     else
       color = Color.fromARGB(255, 51, 51, 51);
     return color ?? Colors.transparent;

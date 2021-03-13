@@ -739,7 +739,7 @@ class _TextBoxState extends State<TextBox>
         children: [
           if (widget.header != null)
             Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
+              padding: const EdgeInsets.only(bottom: 4.0),
               child: Text(
                 widget.header!,
                 style: widget.headerStyle ?? context.theme!.typography?.body,

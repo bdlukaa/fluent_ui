@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Typography {
-
   final TextStyle? header;
   final TextStyle? subheader;
   final TextStyle? title;
@@ -36,11 +35,7 @@ class Typography {
         color: color,
         fontWeight: FontWeight.w300,
       ),
-      title: TextStyle(
-        fontSize: 24,
-        color: color,
-        fontWeight: FontWeight.w600
-      ),
+      title: TextStyle(fontSize: 24, color: color, fontWeight: FontWeight.w600),
       subtitle: TextStyle(
         fontSize: 20,
         color: color,
@@ -76,5 +71,4 @@ class Typography {
       caption: typography.caption ?? caption,
     );
   }
-
 }

@@ -26,26 +26,23 @@ class Scaffold extends StatelessWidget {
     final color = backgroundColor ??
         context.theme?.scaffoldBackgroundColor ??
         Colors.white;
-    return LayoutBuilder(builder: (context, consts) {
-      Widget? left = this.left;
-      return Container(
-        color: color,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (this.left != null) left!,
-            Expanded(
-              child: Column(
-                children: [
-                  if (header != null) header!,
-                  if (body != null) Expanded(child: body!),
-                  if (footer != null) footer!,
-                ],
-              ),
+    return Container(
+      color: color,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (this.left != null) left!,
+          Expanded(
+            child: Column(
+              children: [
+                if (header != null) header!,
+                if (body != null) Expanded(child: body!),
+                if (footer != null) footer!,
+              ],
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }
