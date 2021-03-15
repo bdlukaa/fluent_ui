@@ -130,7 +130,7 @@ class CheckboxStyle {
       thirdstateIconColor: (_) => Colors.transparent,
       margin: EdgeInsets.all(4),
       icon: Icons.checkmark_regular,
-      animationDuration: style.animationDuration,
+      animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
     );
   }

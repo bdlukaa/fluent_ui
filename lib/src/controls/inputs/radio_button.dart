@@ -54,7 +54,7 @@ class RadioButtonStyle {
   static RadioButtonStyle defaultTheme(Style style) {
     return RadioButtonStyle(
       cursor: buttonCursor,
-      animationDuration: style.animationDuration,
+      animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       checkedDecoration: (state) => BoxDecoration(
         border: Border.all(

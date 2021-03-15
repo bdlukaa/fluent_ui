@@ -11,11 +11,14 @@ class NavigationPanelItem {
 
   final bool header;
 
+  final void Function()? onTapped;
+
   const NavigationPanelItem({
     this.icon,
     this.label,
     this.style,
     this.header = false,
+    this.onTapped,
   });
 }
 
@@ -85,13 +88,13 @@ class NavigationPanelItemTile extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme!.navigationPanelStyle!.copyWith(item.style);
     return SizedBox(
-      height: 44,
+      height: 41.0,
       child: HoverButton(
         onPressed: onTap,
         builder: (context, state) {
           return AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? Curves.linear,
+            curve: style.animationCurve ?? standartCurve,
             color: uncheckedInputColor(context.theme!, state),
             child: Row(children: [
               AnimatedSwitcher(
@@ -103,7 +106,7 @@ class NavigationPanelItemTile extends StatelessWidget {
                       end: Offset.zero,
                     ).animate(CurvedAnimation(
                       parent: animation,
-                      curve: style.animationCurve ?? Curves.linear,
+                      curve: style.animationCurve ?? standartCurve,
                     )),
                     child: child,
                   );
@@ -140,10 +143,14 @@ class NavigationPanelItemTile extends StatelessWidget {
                       padding: style.labelPadding ?? EdgeInsets.zero,
                       child: AnimatedDefaultTextStyle(
                         duration: style.animationDuration ??
-                            context.theme!.animationDuration ??
+                            context.theme!.mediumAnimationDuration ??
                             Duration.zero,
+                        curve: style.animationCurve ?? standartCurve,
                         style: textStyle,
                         child: item.label!,
+                        softWrap: false,
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
                       ),
                     ),
                   );

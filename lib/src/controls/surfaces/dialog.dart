@@ -91,13 +91,18 @@ class ContentDialog extends StatelessWidget {
 Future<void> showDialog({
   required BuildContext context,
   required Widget Function(BuildContext) builder,
+  Duration? transitionDuration,
+  Color? barrierColor,
 }) {
+  debugCheckHasFluentTheme(context);
   return showGeneralDialog(
     context: context,
-    barrierColor: Colors.transparent,
-    barrierDismissible: true,
+    barrierColor: barrierColor ?? Colors.transparent,
+    barrierDismissible: false,
     pageBuilder: (context, _, a) => builder(context),
-    barrierLabel: '',
+    transitionDuration: transitionDuration ??
+        context.theme!.mediumAnimationDuration ??
+        Duration(milliseconds: 300),
   );
 }
 
@@ -105,7 +110,7 @@ class Dialog extends StatelessWidget {
   const Dialog({
     Key? key,
     this.child,
-    this.backgroundDismiss = true,
+    this.backgroundDismiss = false,
     this.barrierColor,
   }) : super(key: key);
 
@@ -125,7 +130,7 @@ class Dialog extends StatelessWidget {
               if (backgroundDismiss) Navigator.pop(context);
             },
             child: Container(
-              color: barrierColor ?? Colors.grey[200]!.withOpacity(0.8),
+              color: barrierColor ?? Colors.black.withOpacity(0.8),
             ),
           ),
         ),

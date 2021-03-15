@@ -179,11 +179,11 @@ class _ButtonState extends State<Button> {
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style?.animationDuration ??
-              context.theme?.animationDuration ??
+              context.theme!.fastAnimationDuration ??
               Duration.zero,
           curve: style?.animationCurve ??
               context.theme?.animationCurve ??
-              Curves.linear,
+              standartCurve,
           padding: style!.padding,
           decoration: style.decoration!(state),
           child: Row(
@@ -232,7 +232,7 @@ Color buttonColor(Style style, ButtonStates state) {
 }
 
 class ButtonStyle {
-  final ButtonState<Decoration>? decoration;
+  final ButtonState<Decoration?>? decoration;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -259,7 +259,7 @@ class ButtonStyle {
 
   static ButtonStyle defaultTheme(Style style) {
     return ButtonStyle(
-      animationDuration: style.animationDuration,
+      animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

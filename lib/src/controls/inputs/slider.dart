@@ -151,7 +151,7 @@ class SliderStyle {
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor?.withOpacity(1),
       margin: EdgeInsets.zero,
-      animationDuration: style?.animationDuration,
+      animationDuration: style?.mediumAnimationDuration,
       animationCurve: style?.animationCurve,
       disabledActiveColor: style?.disabledColor?.withOpacity(1),
       disabledThumbColor: style?.disabledColor?.withOpacity(1),

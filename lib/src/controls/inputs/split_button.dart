@@ -69,7 +69,7 @@ class SplitButtonStyle {
 
   static ButtonStyle defaultButtonTheme(Style style, [Brightness? brightness]) {
     final defButton = ButtonStyle(
-      animationDuration: style.animationDuration,
+      animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       cursor: buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

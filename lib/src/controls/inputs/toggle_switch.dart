@@ -138,7 +138,7 @@ class ToggleSwitchStyle {
       },
       padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
       margin: EdgeInsets.all(4),
-      animationDuration: style.animationDuration,
+      animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       checkedThumbDecoration: (_) => defaultThumbDecoration.copyWith(color: () {
         if (style.brightness == Brightness.light)

@@ -37,7 +37,7 @@ class NavigationPanelStyle {
       fontWeight: FontWeight.bold,
     );
     return NavigationPanelStyle(
-      animationDuration: style.animationDuration,
+      animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       color: (state) => uncheckedInputColor(style, state),
       highlightColor: style.accentColor,

@@ -65,7 +65,7 @@ class RatingBar extends StatelessWidget {
           );
         },
         duration: animationDuration ?? Duration.zero,
-        curve: animationCurve ?? Curves.linear,
+        curve: animationCurve ?? standartCurve,
         tween: Tween<double>(begin: 0, end: rating),
       ),
     );

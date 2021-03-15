@@ -140,7 +140,7 @@ class PivotItemStyle {
   /// The duration of the animations. Default to [Duration(milliseconds: 200)]
   final Duration? animationDuration;
 
-  /// The curve of the animations. Default to [Curves.linear]
+  /// The curve of the animations. Default to [standartCurve]
   final Curve? animationCurve;
 
   /// The height of the indicator. Defaults to 1.5
@@ -171,7 +171,7 @@ class PivotItemStyle {
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(8),
       animationDuration: Duration(milliseconds: 200),
-      animationCurve: Curves.linear,
+      animationCurve: standartCurve,
       unselectedTextStyle: TextStyle(color: Colors.white),
       selectedTextStyle:
           TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
@@ -221,7 +221,7 @@ class PivotView extends StatelessWidget {
   /// The duration of the transition. Defaults to [Duration(milliseconds: 200)]
   final Duration? transitionDuration;
 
-  /// The curve of the transition. Defaults to [Curves.linear]
+  /// The curve of the transition. Defaults to [standartCurve]
   final Curve? transitionCurve;
 
   /// The transition. Defaults to a [FadeTransition]

@@ -1,28 +1,41 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class FluentPageRoute<T> extends PageRoute<T> {
+  late WidgetBuilder _builder;
+  bool _maintainState = true;
+  String? _barrierLabel;
+
   FluentPageRoute({
-    required this.builder,
-    RouteSettings? settings,
-  }) : super(settings: settings);
-
-  final WidgetBuilder builder;
-
-  @override
-  Color get barrierColor => Colors.transparent;
+    bool maintainState = true,
+    String? barrierLabel,
+    required WidgetBuilder builder,
+  })   : _maintainState = maintainState,
+        _barrierLabel = barrierLabel,
+        _builder = builder;
 
   @override
-  String get barrierLabel => 'Dismiss ';
+  Color? get barrierColor => Colors.transparent;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return builder(context);
+  String? get barrierLabel => _barrierLabel;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    final Widget result = _builder(context);
+    return Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      child: result,
+    );
   }
 
   @override
-  bool get maintainState => true;
+  bool get maintainState => _maintainState;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
+  Duration get transitionDuration => Duration(milliseconds: 300);
 }

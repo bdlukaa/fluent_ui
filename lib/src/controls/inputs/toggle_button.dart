@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-class ToggleButton extends StatefulWidget {
+class ToggleButton extends StatelessWidget {
   const ToggleButton({
     Key? key,
     required this.checked,
@@ -23,61 +23,23 @@ class ToggleButton extends StatefulWidget {
   final FocusNode? focusNode;
 
   @override
-  _ToggleButtonState createState() => _ToggleButtonState();
-}
-
-class _ToggleButtonState extends State<ToggleButton> {
-  double buttonScale = 1;
-
-  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.toggleButtonStyle?.copyWith(this.widget.style);
-    return HoverButton(
-      focusNode: widget.focusNode,
-      semanticsLabel: widget.semanticsLabel,
-      cursor: style?.cursor,
-      margin: style?.margin,
-      onTapDown: () {
-        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
-      },
-      onLongPressStart: () {
-        if (mounted) setState(() => buttonScale = style?.scaleFactor ?? 0.95);
-      },
-      onLongPressEnd: () {
-        if (mounted) setState(() => buttonScale = 1);
-      },
-      onPressed: widget.onChanged == null
-          ? null
-          : () async {
-              widget.onChanged!(!widget.checked);
-              if (mounted)
-                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
-              await Future.delayed(Duration(milliseconds: 120));
-              if (mounted) setState(() => buttonScale = 1);
-            },
-      builder: (context, state) {
-        return AnimatedContainer(
-          transformAlignment: Alignment.center,
-          transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
-          duration: style?.animationDuration ?? Duration.zero,
-          curve: style?.animationCurve ?? Curves.linear,
-          padding: style?.padding,
-          decoration: widget.checked
-              ? style?.checkedDecoration!(state)
-              : style?.uncheckedDecoration!(state),
-          child: AnimatedDefaultTextStyle(
-            duration: style?.animationDuration ?? Duration.zero,
-            curve: style?.animationCurve ?? Curves.linear,
-            style: TextStyle(
-              color: widget.checked
-                  ? context.theme?.activeColor
-                  : context.theme?.inactiveColor,
-            ),
-            child: widget.child ?? SizedBox(),
-          ),
-        );
-      },
+    final style = context.theme!.toggleButtonStyle?.copyWith(this.style);
+    return Button(
+      text: child,
+      onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      style: ButtonStyle(
+        decoration: (state) => checked
+            ? style?.checkedDecoration!(state)
+            : style?.uncheckedDecoration!(state),
+        padding: style?.padding,
+        animationCurve: style?.animationCurve,
+        animationDuration: style?.animationDuration,
+        cursor: style?.cursor,
+        margin: style?.margin,
+        scaleFactor: style?.scaleFactor,
+      ),
     );
   }
 }
@@ -111,10 +73,6 @@ class ToggleButtonStyle {
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
-    Color? borderColor = brightness == null || brightness == Brightness.light
-        ? Colors.grey[220]
-        : Colors.white;
-
     final def = ToggleButtonStyle(
       scaleFactor: 0.95,
       cursor: buttonCursor,
@@ -132,15 +90,13 @@ class ToggleButtonStyle {
             ),
           );
         return defaultDecoration.copyWith(
-          border: Border.all(
-            width: 0.6,
-            color: state.isDisabled ? style.disabledColor! : borderColor!,
-          ),
+          color: buttonColor(style, state),
+          border: Border.all(width: 0.6, color: Colors.transparent),
         );
       },
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
-      animationDuration: style.animationDuration,
+      animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
     );
 
@@ -148,15 +104,16 @@ class ToggleButtonStyle {
   }
 
   ToggleButtonStyle copyWith(ToggleButtonStyle? style) {
+    if (style == null) return this;
     return ToggleButtonStyle(
-      margin: style?.margin ?? margin,
-      padding: style?.padding ?? padding,
-      cursor: style?.cursor ?? cursor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
-      checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
-      uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
-      scaleFactor: style?.scaleFactor ?? scaleFactor,
+      margin: style.margin ?? margin,
+      padding: style.padding ?? padding,
+      cursor: style.cursor ?? cursor,
+      animationCurve: style.animationCurve ?? animationCurve,
+      animationDuration: style.animationDuration ?? animationDuration,
+      checkedDecoration: style.checkedDecoration ?? checkedDecoration,
+      uncheckedDecoration: style.uncheckedDecoration ?? uncheckedDecoration,
+      scaleFactor: style.scaleFactor ?? scaleFactor,
     );
   }
 }

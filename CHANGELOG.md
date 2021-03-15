@@ -1,8 +1,25 @@
 Date format: DD/MM/YYYY
 
+## [1.2.0] - Timing and easing - Page transitioning - [15/03/2021]
+
+- **FIDELITY** Improved `ToggleButton` fidelity
+- **NEW** `NavigationPanelBody`
+- **NEW** Page transitions
+  - `EntrancePageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#page-refresh))
+  - `DrillInPageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#drill))
+  - `HorizontalSlidePageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#horizontal-slide))
+  - `SuppressPageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#suppress))
+- Add timing and easing to style. (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/timing-and-easing))
+  - **NEW** `Style.fastAnimationDuration` (Defaults to 150ms)
+  - **NEW** `Style.mediumAnimationDuration` (Defaults to 300ms)
+  - **NEW** `Style.slowAnimationDuration` (Defaults to 500ms)
+  - Default `animationCurve` is now `Curves.easeInOut` (standart) instead of `Curves.linear`
+  - **BREAKING** Removed `Style.animationDuration`
+- Refactored Navigation Panel
+
 ## [1.1.0] - Fidelity update - [14/03/2021]
 
-- **BREAKING** Removed `Card` widget
+- **BREAKING** Removed `Card` widget. Use `Acrylic` instead
 - **NEW** `Acrylic` widget
 - **NEW** **NAVIGATION PANEL** `bottom` property
 - **FIDELITY** Improved the corder radius of some widgets (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/style/rounded-corner#page-or-app-wide-cornerradius-changes))

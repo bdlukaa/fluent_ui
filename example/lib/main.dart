@@ -21,9 +21,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (_) => MyHomePage(),
       },
-      style: Style(
-          // brightness: Brightness.dark,
-          ),
+      style: Style(brightness: Brightness.dark),
     );
   }
 }
@@ -56,51 +54,38 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationPanelItem(
             icon: Icon(Icons.checkbox_checked_regular),
             label: Text('Inputs'),
+            onTapped: () => setState(() => index = 0),
           ),
           NavigationPanelItem(
             icon: Icon(Icons.text_align_center_filled),
             label: Text('Forms'),
+            onTapped: () => setState(() => index = 1),
           ),
           NavigationPanelTileSeparator(),
           NavigationPanelItem(
             icon: Icon(Icons.time_picker_regular),
             label: Text('Pickers'),
+            onTapped: () => setState(() => index = 2),
           ),
           NavigationPanelItem(
             icon: Icon(Icons.none_regular),
             label: Text('Others'),
+            onTapped: () => setState(() => index = 3),
           ),
         ],
         bottom: NavigationPanelItem(
           icon: Icon(Icons.settings_regular),
           label: Text('Settings'),
-        ),
-        onChanged: (i) => setState(() => index = i),
-      ),
-      body: AnimatedSwitcher(
-        duration:
-            context.theme!.animationDuration ?? Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: ScaleTransition(
-              child: child,
-              scale: Tween<double>(begin: 0.85, end: 1.0).animate(animation),
-            ),
-          );
-        },
-        child: IndexedStack(
-          key: ValueKey<int>(index),
-          index: index,
-          children: [
-            _Panel(title: 'Inputs showcase', child: InputsPage()),
-            _Panel(title: 'Forms showcase', child: Forms()),
-            _Panel(title: 'Pickers', child: SizedBox()),
-            _Panel(title: 'Others', child: Others()),
-            _Panel(title: 'Settings', child: SizedBox()),
-          ],
+          onTapped: () => setState(() => index = 4),
         ),
       ),
+      body: NavigationPanelBody(index: index, children: [
+        _Panel(title: 'Inputs showcase', child: InputsPage()),
+        _Panel(title: 'Forms showcase', child: Forms()),
+        _Panel(title: 'Pickers', child: SizedBox()),
+        _Panel(title: 'Others', child: Others()),
+        _Panel(title: 'Settings', child: SizedBox()),
+      ]),
     );
   }
 }

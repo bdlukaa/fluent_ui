@@ -215,7 +215,7 @@ class IconStyle {
   IconStyle({this.color, this.size, this.opacity});
 
   static IconStyle defaultTheme([Brightness? brightness]) {
-    final def = IconStyle(size: 24, opacity: 1);
+    final def = IconStyle(size: 22, opacity: 1);
     if (brightness == null || brightness == Brightness.light)
       return def.copyWith(IconStyle(color: Colors.black));
     else

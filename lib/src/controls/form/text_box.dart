@@ -708,8 +708,8 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme!.animationDuration ?? Duration.zero,
-          curve: context.theme!.animationCurve ?? Curves.linear,
+          duration: context.theme!.mediumAnimationDuration ?? Duration.zero,
+          curve: context.theme!.animationCurve ?? standartCurve,
           decoration: effectiveDecoration,
           constraints: BoxConstraints(
             minHeight: widget.minHeight ?? 0,

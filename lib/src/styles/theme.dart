@@ -8,10 +8,7 @@ class Theme extends InheritedWidget {
   final Widget child;
 
   static Style? of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<Theme>()
-        ?.data
-        .build();
+    return context.dependOnInheritedWidgetOfExactType<Theme>()?.data.build();
   }
 
   @override
@@ -23,11 +20,11 @@ extension themeContext on BuildContext {
 }
 
 extension brightnessExtension on Brightness {
-
   bool get isLight => this == Brightness.light;
   bool get isDark => this == Brightness.dark;
-
 }
+
+const standartCurve = Curves.easeInOut;
 
 class Style {
   final Typography? typography;
@@ -37,7 +34,9 @@ class Style {
   final Color? inactiveColor;
   final Color? disabledColor;
 
-  final Duration? animationDuration;
+  final Duration? fastAnimationDuration;
+  final Duration? mediumAnimationDuration;
+  final Duration? slowAnimationDuration;
   final Curve? animationCurve;
 
   final Brightness? brightness;
@@ -68,7 +67,9 @@ class Style {
     this.activeColor,
     this.inactiveColor,
     this.disabledColor,
-    this.animationDuration,
+    this.fastAnimationDuration,
+    this.mediumAnimationDuration,
+    this.slowAnimationDuration,
     this.animationCurve,
     this.brightness,
     this.scaffoldBackgroundColor,
@@ -93,8 +94,10 @@ class Style {
   Style build() {
     final brightness = this.brightness ?? Brightness.light;
     final defaultStyle = Style(
-      animationDuration: Duration(milliseconds: 250),
-      animationCurve: Curves.linear,
+      fastAnimationDuration: Duration(milliseconds: 150),
+      mediumAnimationDuration: Duration(milliseconds: 300),
+      slowAnimationDuration: Duration(milliseconds: 500),
+      animationCurve: standartCurve,
       brightness: brightness,
       accentColor: accentColor ?? Colors.blue,
       activeColor: activeColor ?? Colors.white,
@@ -118,7 +121,7 @@ class Style {
             if (brightness.isLight)
               return Color.fromARGB(255, 230, 230, 230);
             else
-              return Color.fromARGB(255, 31, 31, 31);
+              return Color.fromARGB(255, 25, 25, 25);
           }(),
       typography: Typography.defaultTypography(brightness: brightness)
           .copyWith(typography),
@@ -185,9 +188,14 @@ class Style {
       tooltipStyle: other.tooltipStyle ?? tooltipStyle,
       sliderStyle: other.sliderStyle ?? sliderStyle,
       animationCurve: other.animationCurve ?? animationCurve,
-      animationDuration: other.animationDuration ?? animationDuration,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
+      fastAnimationDuration:
+          other.fastAnimationDuration ?? fastAnimationDuration,
+      mediumAnimationDuration:
+          other.mediumAnimationDuration ?? mediumAnimationDuration,
+      slowAnimationDuration:
+          other.slowAnimationDuration ?? slowAnimationDuration,
     );
   }
 }
