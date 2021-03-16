@@ -27,8 +27,9 @@ class Button extends StatefulWidget {
     this.onLongPress,
     this.semanticsLabel,
     this.focusNode,
-  })  : text = IconButton(
-          icon: icon,
+  })  : assert(icon != null),
+        text = IconButton(
+          icon: icon!,
           onPressed: onPressed,
           onLongPress: onLongPress,
           semanticsLabel: semanticsLabel,

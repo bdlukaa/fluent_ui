@@ -12,7 +12,7 @@ class IconButton extends StatelessWidget {
     this.focusNode,
   }) : super(key: key);
 
-  final Widget? icon;
+  final Widget icon;
 
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
@@ -28,7 +28,10 @@ class IconButton extends StatelessWidget {
     final style = context.theme!.iconButtonStyle!.copyWith(this.style);
     return Button(
       focusNode: focusNode,
-      text: icon,
+      text: Theme(
+        data: context.theme!.copyWith(Style(iconStyle: style.iconStyle)),
+        child: icon,
+      ),
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticsLabel: semanticsLabel,
@@ -51,11 +54,13 @@ class IconButtonStyle {
 
   final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<Border>? border;
+  final ButtonState<Border?>? border;
   final BorderRadiusGeometry? borderRadius;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+
+  final IconStyle? iconStyle;
 
   const IconButtonStyle({
     this.color,
@@ -64,6 +69,7 @@ class IconButtonStyle {
     this.borderRadius,
     this.padding,
     this.margin,
+    this.iconStyle,
   });
 
   static IconButtonStyle defaultTheme(Style style) {
@@ -73,6 +79,7 @@ class IconButtonStyle {
       border: (_) => Border.all(style: BorderStyle.none),
       padding: EdgeInsets.all(4),
       color: (state) => uncheckedInputColor(style, state),
+      iconStyle: style.iconStyle,
     );
     return def;
   }
@@ -85,6 +92,7 @@ class IconButtonStyle {
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,
+      iconStyle: style?.iconStyle,
     );
   }
 }

@@ -122,6 +122,7 @@ class TextBox extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.header,
     this.headerStyle,
+    this.iconButtonStyle,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -265,6 +266,8 @@ class TextBox extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   final String? restorationId;
+
+  final IconButtonStyle? iconButtonStyle;
 
   @override
   _TextBoxState createState() => _TextBoxState();
@@ -731,7 +734,7 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    return ValueListenableBuilder<TextEditingValue>(
+    Widget listener = ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
       builder: (context, text, _) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -752,6 +755,25 @@ class _TextBoxState extends State<TextBox>
           ]),
         ],
       ),
+    );
+
+    return Theme(
+      data: context.theme!.copyWith(
+        Style(
+          iconButtonStyle: IconButtonStyle.defaultTheme(context.theme!)
+              .copyWith(
+                IconButtonStyle(
+                  iconStyle: context.theme!.iconStyle?.copyWith(
+                    IconStyle(
+                      size: 18,
+                    ),
+                  ),
+                ),
+              )
+              .copyWith(widget.iconButtonStyle),
+        ),
+      ),
+      child: listener,
     );
   }
 }

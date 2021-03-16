@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.2.1] - [16/03/2021]
+
+- **NEW** `Divider`
+
 ## [1.2.0] - Timing and easing - Page transitioning - [15/03/2021]
 
 - **FIDELITY** Improved `ToggleButton` fidelity

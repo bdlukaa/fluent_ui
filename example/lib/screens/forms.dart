@@ -52,6 +52,7 @@ class _FormsState extends State<Forms> {
           header: 'Password',
           placeholder: 'Type your placeholder here',
           obscureText: !_showPassword,
+          obscuringCharacter: '#',
           maxLines: 1,
           suffixMode: OverlayVisibilityMode.editing,
           suffix: IconButton(

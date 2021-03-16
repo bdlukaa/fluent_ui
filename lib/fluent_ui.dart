@@ -2,7 +2,12 @@ library fluent_ui;
 
 export 'package:flutter/widgets.dart' hide Icon, IconTheme, TextBox;
 export 'package:flutter/material.dart'
-    show Brightness, ThemeMode, Feedback, DefaultMaterialLocalizations, PageTransitionsBuilder;
+    show
+        Brightness,
+        ThemeMode,
+        Feedback,
+        DefaultMaterialLocalizations,
+        PageTransitionsBuilder;
 
 export 'src/app.dart';
 export 'src/utils.dart';

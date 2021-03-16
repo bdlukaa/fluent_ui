@@ -64,8 +64,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                       ),
                     );
                   else if (item is NavigationPanelTileSeparator) {
-                    // TODO: NavigationPanelTileSeparator
-                    return SizedBox();
+                    return Divider();
                   }
                   final index = itens.indexOf(item);
                   return NavigationPanelItemTile(
@@ -121,8 +120,8 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                        duration:
-                            context.theme!.mediumAnimationDuration ?? Duration.zero,
+                        duration: context.theme!.mediumAnimationDuration ??
+                            Duration.zero,
                         curve: context.theme!.animationCurve ?? standartCurve,
                         child: item.label!,
                         softWrap: false,
@@ -131,8 +130,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                       ),
                     );
                   else if (item is NavigationPanelTileSeparator) {
-                    // TODO: NavigationPanelTileSeparator
-                    return SizedBox();
+                    return Divider();
                   }
                   final index = itens.indexOf(item);
                   return NavigationPanelItemTile(

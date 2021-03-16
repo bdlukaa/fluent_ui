@@ -148,7 +148,7 @@ class Style {
       tooltipStyle:
           TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
       dividerStyle:
-          DividerStyle.defaultTheme(brightness).copyWith(dividerStyle),
+          DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
       navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle)
           .copyWith(navigationPanelStyle),
       radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)

@@ -91,13 +91,15 @@ Theme(
 
 ### Icons
 
+![Icons Preview](https://github.com/microsoft/fluentui-system-icons/raw/master/art/readme-banner.png)
+
 Inside your app, you use icons to represent an action, such as copying text or navigating to the settings page. This library includes an icon library with it, so you can just call `Icons.[icon_name]` in any `Icon` widget:
 
 ```dart
 Icon(Icons.add_regular)
 ```
 
-To style icons, you can use `IconStyle` in the app `Style` or use the property `style` in the `Icon` widget
+To style icons, you can use `IconStyle` in the app `Style` or use the property `style` in the `Icon` widget. You can see the list of icons [here](https://github.com/microsoft/fluentui-system-icons/blob/master/icons.md)
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
 
