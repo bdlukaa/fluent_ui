@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.2.2] - [17/03/2021]
+
+- **BREAKING** Removed `_regular` from the name of the icons.
+- **NEW** `InfoBar` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar))
+
 ## [1.2.1] - [16/03/2021]
 
 - **NEW** `Divider`

@@ -56,9 +56,7 @@ class _FormsState extends State<Forms> {
           maxLines: 1,
           suffixMode: OverlayVisibilityMode.editing,
           suffix: IconButton(
-            icon: Icon(!_showPassword
-                ? Icons.eye_show_regular
-                : Icons.eye_hide_regular),
+            icon: Icon(!_showPassword ? Icons.eye_show : Icons.eye_hide),
             onPressed: () => setState(() => _showPassword = !_showPassword),
             style: IconButtonStyle(margin: EdgeInsets.zero),
           ),

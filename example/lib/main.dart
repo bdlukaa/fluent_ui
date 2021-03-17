@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
         '/': (_) => MyHomePage(),
       },
       style: Style(
-          // brightness: Brightness.dark,
-          ),
+        brightness: Brightness.dark,
+      ),
     );
   }
 }
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
-          icon: Icon(Icons.navigation_regular),
+          icon: Icon(Icons.navigation),
           label: Text('Showcase'),
         ),
         currentIndex: index,
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
             header: Text('Cool Navigation Panel Header'),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.checkbox_checked_regular),
+            icon: Icon(Icons.checkbox_checked),
             label: Text('Inputs'),
             onTapped: () => setState(() => index = 0),
           ),
@@ -65,18 +65,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           NavigationPanelTileSeparator(),
           NavigationPanelItem(
-            icon: Icon(Icons.time_picker_regular),
+            icon: Icon(Icons.time_picker),
             label: Text('Pickers'),
             onTapped: () => setState(() => index = 2),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.none_regular),
+            icon: Icon(Icons.none),
             label: Text('Others'),
             onTapped: () => setState(() => index = 3),
           ),
         ],
         bottom: NavigationPanelItem(
-          icon: Icon(Icons.settings_regular),
+          icon: Icon(Icons.settings),
           label: Text('Settings'),
           onTapped: () => setState(() => index = 4),
         ),

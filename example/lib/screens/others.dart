@@ -5,8 +5,9 @@ class Others extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Acrylic(
+        margin: EdgeInsets.only(bottom: 10),
         child: Column(children: [
           Text('Surfaces', style: context.theme!.typography?.subtitle),
           Tooltip(
@@ -18,6 +19,23 @@ class Others extends StatelessWidget {
           ),
         ]),
       ),
+      for (final severity in InfoBarSeverity.values)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: InfoBar(
+            title: Text('This is a title'),
+            content: Text('This is a long content lol content let'),
+            isLong: InfoBarSeverity.values.indexOf(severity).isEven,
+            severity: severity,
+            action: Button(
+              text: Text('This is an action'),
+              onPressed: () => print('action pressed'),
+            ),
+            onClose: () {
+              print('closed');
+            },
+          ),
+        ),
     ]);
   }
 }

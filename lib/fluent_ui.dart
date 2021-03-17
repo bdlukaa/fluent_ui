@@ -35,6 +35,7 @@ export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
 
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/tooltip.dart';
+export 'src/controls/surfaces/info_bar.dart';
 
 export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';

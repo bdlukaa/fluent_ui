@@ -70,7 +70,7 @@ class _InputsPageState extends State<InputsPage> {
               onChanged: (value) => setState(() => this.value = value),
             ),
             Button.icon(
-              icon: Icon(Icons.add_regular),
+              icon: Icon(Icons.add),
               onPressed: () => print('pressed icon button'),
             ),
             SplitButtonBar(buttons: [
@@ -88,7 +88,7 @@ class _InputsPageState extends State<InputsPage> {
               SizedBox(
                 height: splitButtonHeight,
                 child: Button(
-                  text: Icon(Icons.chevron_down_regular),
+                  text: Icon(Icons.chevron_down),
                   onPressed: () {},
                   style: ButtonStyle(padding: EdgeInsets.all(6)),
                 ),

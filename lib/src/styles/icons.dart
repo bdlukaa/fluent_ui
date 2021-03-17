@@ -16,2485 +16,2147 @@ class Icons {
   static const _kFontFamP1 = 'FluentSystemIconsP1';
   static const IconData accessibility_filled =
       _FUIIconData(0xe800, _kFontFamP1);
-  static const IconData accessibility_regular =
-      _FUIIconData(0xe801, _kFontFamP1);
+  static const IconData accessibility = _FUIIconData(0xe801, _kFontFamP1);
   static const IconData access_time_filled = _FUIIconData(0xe802, _kFontFamP1);
-  static const IconData access_time_regular = _FUIIconData(0xe803, _kFontFamP1);
+  static const IconData access_time = _FUIIconData(0xe803, _kFontFamP1);
   static const IconData activity_filled = _FUIIconData(0xe804, _kFontFamP1);
-  static const IconData activity_regular = _FUIIconData(0xe805, _kFontFamP1);
+  static const IconData activity = _FUIIconData(0xe805, _kFontFamP1);
   static const IconData add_circle_filled = _FUIIconData(0xe806, _kFontFamP1);
-  static const IconData add_circle_regular = _FUIIconData(0xe807, _kFontFamP1);
+  static const IconData add_circle = _FUIIconData(0xe807, _kFontFamP1);
   static const IconData add_filled = _FUIIconData(0xe808, _kFontFamP1);
-  static const IconData add_regular = _FUIIconData(0xe809, _kFontFamP1);
+  static const IconData add = _FUIIconData(0xe809, _kFontFamP1);
   static const IconData airplane_filled = _FUIIconData(0xe80a, _kFontFamP1);
-  static const IconData airplane_regular = _FUIIconData(0xe80b, _kFontFamP1);
+  static const IconData airplane = _FUIIconData(0xe80b, _kFontFamP1);
   static const IconData alert_filled = _FUIIconData(0xe80c, _kFontFamP1);
   static const IconData alert_off_filled = _FUIIconData(0xe80d, _kFontFamP1);
-  static const IconData alert_off_regular = _FUIIconData(0xe80e, _kFontFamP1);
+  static const IconData alert_off = _FUIIconData(0xe80e, _kFontFamP1);
   static const IconData alert_on_filled = _FUIIconData(0xe80f, _kFontFamP1);
-  static const IconData alert_on_regular = _FUIIconData(0xe810, _kFontFamP1);
-  static const IconData alert_regular = _FUIIconData(0xe811, _kFontFamP1);
+  static const IconData alert_on = _FUIIconData(0xe810, _kFontFamP1);
+  static const IconData alert = _FUIIconData(0xe811, _kFontFamP1);
   static const IconData alert_snooze_filled = _FUIIconData(0xe812, _kFontFamP1);
-  static const IconData alert_snooze_regular =
-      _FUIIconData(0xe813, _kFontFamP1);
+  static const IconData alert_snooze = _FUIIconData(0xe813, _kFontFamP1);
   static const IconData alert_urgent_filled = _FUIIconData(0xe814, _kFontFamP1);
-  static const IconData alert_urgent_regular =
-      _FUIIconData(0xe815, _kFontFamP1);
+  static const IconData alert_urgent = _FUIIconData(0xe815, _kFontFamP1);
   static const IconData app_folder_filled = _FUIIconData(0xe816, _kFontFamP1);
-  static const IconData app_folder_regular = _FUIIconData(0xe817, _kFontFamP1);
+  static const IconData app_folder = _FUIIconData(0xe817, _kFontFamP1);
   static const IconData app_generic_filled = _FUIIconData(0xe818, _kFontFamP1);
-  static const IconData app_generic_regular = _FUIIconData(0xe819, _kFontFamP1);
+  static const IconData app_generic = _FUIIconData(0xe819, _kFontFamP1);
   static const IconData app_recent_filled = _FUIIconData(0xe81a, _kFontFamP1);
-  static const IconData app_recent_regular = _FUIIconData(0xe81b, _kFontFamP1);
+  static const IconData app_recent = _FUIIconData(0xe81b, _kFontFamP1);
   static const IconData apps_add_in_filled = _FUIIconData(0xe81c, _kFontFamP1);
-  static const IconData apps_add_in_regular = _FUIIconData(0xe81d, _kFontFamP1);
+  static const IconData apps_add_in = _FUIIconData(0xe81d, _kFontFamP1);
   static const IconData apps_filled = _FUIIconData(0xe81e, _kFontFamP1);
   static const IconData apps_list_filled = _FUIIconData(0xe81f, _kFontFamP1);
-  static const IconData apps_list_regular = _FUIIconData(0xe820, _kFontFamP1);
+  static const IconData apps_list = _FUIIconData(0xe820, _kFontFamP1);
   static const IconData app_span_filled = _FUIIconData(0xe821, _kFontFamP1);
-  static const IconData app_span_regular = _FUIIconData(0xe822, _kFontFamP1);
-  static const IconData apps_regular = _FUIIconData(0xe823, _kFontFamP1);
+  static const IconData app_span = _FUIIconData(0xe822, _kFontFamP1);
+  static const IconData apps = _FUIIconData(0xe823, _kFontFamP1);
   static const IconData app_store_filled = _FUIIconData(0xe824, _kFontFamP1);
-  static const IconData app_store_regular = _FUIIconData(0xe825, _kFontFamP1);
+  static const IconData app_store = _FUIIconData(0xe825, _kFontFamP1);
   static const IconData app_title_filled = _FUIIconData(0xe826, _kFontFamP1);
-  static const IconData app_title_regular = _FUIIconData(0xe827, _kFontFamP1);
+  static const IconData app_title = _FUIIconData(0xe827, _kFontFamP1);
   static const IconData app_unspan_filled = _FUIIconData(0xe828, _kFontFamP1);
-  static const IconData app_unspan_regular = _FUIIconData(0xe829, _kFontFamP1);
+  static const IconData app_unspan = _FUIIconData(0xe829, _kFontFamP1);
   static const IconData archive_filled = _FUIIconData(0xe82a, _kFontFamP1);
-  static const IconData archive_regular = _FUIIconData(0xe82b, _kFontFamP1);
+  static const IconData archive = _FUIIconData(0xe82b, _kFontFamP1);
   static const IconData arrow_clockwise_filled =
       _FUIIconData(0xe82c, _kFontFamP1);
-  static const IconData arrow_clockwise_regular =
-      _FUIIconData(0xe82d, _kFontFamP1);
+  static const IconData arrow_clockwise = _FUIIconData(0xe82d, _kFontFamP1);
   static const IconData arrow_counterclockwise_filled =
       _FUIIconData(0xe82e, _kFontFamP1);
-  static const IconData arrow_counterclockwise_regular =
+  static const IconData arrow_counterclockwise =
       _FUIIconData(0xe82f, _kFontFamP1);
   static const IconData arrow_curve_right_filled =
       _FUIIconData(0xe830, _kFontFamP1);
-  static const IconData arrow_curve_right_regular =
-      _FUIIconData(0xe831, _kFontFamP1);
+  static const IconData arrow_curve_right = _FUIIconData(0xe831, _kFontFamP1);
   static const IconData arrow_down_filled = _FUIIconData(0xe832, _kFontFamP1);
   static const IconData arrow_down_left_filled =
       _FUIIconData(0xe833, _kFontFamP1);
-  static const IconData arrow_down_left_regular =
-      _FUIIconData(0xe834, _kFontFamP1);
+  static const IconData arrow_down_left = _FUIIconData(0xe834, _kFontFamP1);
   static const IconData arrow_download_filled =
       _FUIIconData(0xe835, _kFontFamP1);
-  static const IconData arrow_download_regular =
-      _FUIIconData(0xe836, _kFontFamP1);
-  static const IconData arrow_down_regular = _FUIIconData(0xe837, _kFontFamP1);
+  static const IconData arrow_download = _FUIIconData(0xe836, _kFontFamP1);
+  static const IconData arrow_down = _FUIIconData(0xe837, _kFontFamP1);
   static const IconData arrow_down_right_circle_filled =
       _FUIIconData(0xe838, _kFontFamP1);
-  static const IconData arrow_down_right_circle_regular =
+  static const IconData arrow_down_right_circle =
       _FUIIconData(0xe839, _kFontFamP1);
   static const IconData arrow_enter_filled = _FUIIconData(0xe83a, _kFontFamP1);
-  static const IconData arrow_enter_regular = _FUIIconData(0xe83b, _kFontFamP1);
+  static const IconData arrow_enter = _FUIIconData(0xe83b, _kFontFamP1);
   static const IconData arrow_expand_filled = _FUIIconData(0xe83c, _kFontFamP1);
-  static const IconData arrow_expand_regular =
-      _FUIIconData(0xe83d, _kFontFamP1);
+  static const IconData arrow_expand = _FUIIconData(0xe83d, _kFontFamP1);
   static const IconData arrow_forward_filled =
       _FUIIconData(0xe83e, _kFontFamP1);
-  static const IconData arrow_forward_regular =
-      _FUIIconData(0xe83f, _kFontFamP1);
+  static const IconData arrow_forward = _FUIIconData(0xe83f, _kFontFamP1);
   static const IconData arrow_import_filled = _FUIIconData(0xe840, _kFontFamP1);
-  static const IconData arrow_import_regular =
-      _FUIIconData(0xe841, _kFontFamP1);
+  static const IconData arrow_import = _FUIIconData(0xe841, _kFontFamP1);
   static const IconData arrow_left_filled = _FUIIconData(0xe842, _kFontFamP1);
-  static const IconData arrow_left_regular = _FUIIconData(0xe843, _kFontFamP1);
+  static const IconData arrow_left = _FUIIconData(0xe843, _kFontFamP1);
   static const IconData arrow_maximize_filled =
       _FUIIconData(0xe844, _kFontFamP1);
-  static const IconData arrow_maximize_regular =
-      _FUIIconData(0xe845, _kFontFamP1);
+  static const IconData arrow_maximize = _FUIIconData(0xe845, _kFontFamP1);
   static const IconData arrow_minimize_filled =
       _FUIIconData(0xe846, _kFontFamP1);
-  static const IconData arrow_minimize_regular =
-      _FUIIconData(0xe847, _kFontFamP1);
+  static const IconData arrow_minimize = _FUIIconData(0xe847, _kFontFamP1);
   static const IconData arrow_next_filled = _FUIIconData(0xe848, _kFontFamP1);
-  static const IconData arrow_next_regular = _FUIIconData(0xe849, _kFontFamP1);
+  static const IconData arrow_next = _FUIIconData(0xe849, _kFontFamP1);
   static const IconData arrow_previous_filled =
       _FUIIconData(0xe84a, _kFontFamP1);
-  static const IconData arrow_previous_regular =
-      _FUIIconData(0xe84b, _kFontFamP1);
+  static const IconData arrow_previous = _FUIIconData(0xe84b, _kFontFamP1);
   static const IconData arrow_redo_filled = _FUIIconData(0xe84c, _kFontFamP1);
-  static const IconData arrow_redo_regular = _FUIIconData(0xe84d, _kFontFamP1);
+  static const IconData arrow_redo = _FUIIconData(0xe84d, _kFontFamP1);
   static const IconData arrow_repeat_all_filled =
       _FUIIconData(0xe84e, _kFontFamP1);
   static const IconData arrow_repeat_all_off_filled =
       _FUIIconData(0xe84f, _kFontFamP1);
-  static const IconData arrow_repeat_all_off_regular =
+  static const IconData arrow_repeat_all_off =
       _FUIIconData(0xe850, _kFontFamP1);
-  static const IconData arrow_repeat_all_regular =
-      _FUIIconData(0xe851, _kFontFamP1);
+  static const IconData arrow_repeat_all = _FUIIconData(0xe851, _kFontFamP1);
   static const IconData arrow_reply_all_filled =
       _FUIIconData(0xe852, _kFontFamP1);
-  static const IconData arrow_reply_all_regular =
-      _FUIIconData(0xe853, _kFontFamP1);
+  static const IconData arrow_reply_all = _FUIIconData(0xe853, _kFontFamP1);
   static const IconData arrow_reply_filled = _FUIIconData(0xe854, _kFontFamP1);
-  static const IconData arrow_reply_regular = _FUIIconData(0xe855, _kFontFamP1);
+  static const IconData arrow_reply = _FUIIconData(0xe855, _kFontFamP1);
   static const IconData arrow_right_circle_filled =
       _FUIIconData(0xe856, _kFontFamP1);
-  static const IconData arrow_right_circle_regular =
-      _FUIIconData(0xe857, _kFontFamP1);
+  static const IconData arrow_right_circle = _FUIIconData(0xe857, _kFontFamP1);
   static const IconData arrow_right_filled = _FUIIconData(0xe858, _kFontFamP1);
-  static const IconData arrow_right_regular = _FUIIconData(0xe859, _kFontFamP1);
+  static const IconData arrow_right = _FUIIconData(0xe859, _kFontFamP1);
   static const IconData arrow_rotate_clockwise_filled =
       _FUIIconData(0xe85a, _kFontFamP1);
-  static const IconData arrow_rotate_clockwise_regular =
+  static const IconData arrow_rotate_clockwise =
       _FUIIconData(0xe85b, _kFontFamP1);
   static const IconData arrow_rotate_counterclockwise_filled =
       _FUIIconData(0xe85c, _kFontFamP1);
-  static const IconData arrow_rotate_counterclockwise_regular =
+  static const IconData arrow_rotate_counterclockwise =
       _FUIIconData(0xe85d, _kFontFamP1);
   static const IconData arrow_rotate_icon_filled =
       _FUIIconData(0xe85e, _kFontFamP1);
-  static const IconData arrow_rotate_icon_regular =
-      _FUIIconData(0xe85f, _kFontFamP1);
+  static const IconData arrow_rotate_icon = _FUIIconData(0xe85f, _kFontFamP1);
   static const IconData arrows_bidirectional_filled =
       _FUIIconData(0xe860, _kFontFamP1);
-  static const IconData arrows_bidirectional_regular =
+  static const IconData arrows_bidirectional =
       _FUIIconData(0xe861, _kFontFamP1);
   static const IconData arrow_sort_filled = _FUIIconData(0xe862, _kFontFamP1);
-  static const IconData arrow_sort_regular = _FUIIconData(0xe863, _kFontFamP1);
+  static const IconData arrow_sort = _FUIIconData(0xe863, _kFontFamP1);
   static const IconData arrow_swap_filled = _FUIIconData(0xe864, _kFontFamP1);
-  static const IconData arrow_swap_regular = _FUIIconData(0xe865, _kFontFamP1);
+  static const IconData arrow_swap = _FUIIconData(0xe865, _kFontFamP1);
   static const IconData arrow_sync_circle_filled =
       _FUIIconData(0xe866, _kFontFamP1);
-  static const IconData arrow_sync_circle_regular =
-      _FUIIconData(0xe867, _kFontFamP1);
+  static const IconData arrow_sync_circle = _FUIIconData(0xe867, _kFontFamP1);
   static const IconData arrow_sync_filled = _FUIIconData(0xe868, _kFontFamP1);
-  static const IconData arrow_sync_regular = _FUIIconData(0xe869, _kFontFamP1);
+  static const IconData arrow_sync = _FUIIconData(0xe869, _kFontFamP1);
   static const IconData arrow_trending_filled =
       _FUIIconData(0xe86a, _kFontFamP1);
-  static const IconData arrow_trending_regular =
-      _FUIIconData(0xe86b, _kFontFamP1);
+  static const IconData arrow_trending = _FUIIconData(0xe86b, _kFontFamP1);
   static const IconData arrow_undo_filled = _FUIIconData(0xe86c, _kFontFamP1);
-  static const IconData arrow_undo_regular = _FUIIconData(0xe86d, _kFontFamP1);
+  static const IconData arrow_undo = _FUIIconData(0xe86d, _kFontFamP1);
   static const IconData arrow_up_circle_filled =
       _FUIIconData(0xe86e, _kFontFamP1);
-  static const IconData arrow_up_circle_regular =
-      _FUIIconData(0xe86f, _kFontFamP1);
+  static const IconData arrow_up_circle = _FUIIconData(0xe86f, _kFontFamP1);
   static const IconData arrow_up_filled = _FUIIconData(0xe870, _kFontFamP1);
   static const IconData arrow_up_left_filled =
       _FUIIconData(0xe871, _kFontFamP1);
-  static const IconData arrow_up_left_regular =
-      _FUIIconData(0xe872, _kFontFamP1);
-  static const IconData arrow_up_regular = _FUIIconData(0xe873, _kFontFamP1);
+  static const IconData arrow_up_left = _FUIIconData(0xe872, _kFontFamP1);
+  static const IconData arrow_up = _FUIIconData(0xe873, _kFontFamP1);
   static const IconData arrow_up_right_filled =
       _FUIIconData(0xe874, _kFontFamP1);
-  static const IconData arrow_up_right_regular =
-      _FUIIconData(0xe875, _kFontFamP1);
+  static const IconData arrow_up_right = _FUIIconData(0xe875, _kFontFamP1);
   static const IconData assignments_filled = _FUIIconData(0xe876, _kFontFamP1);
-  static const IconData assignments_regular = _FUIIconData(0xe877, _kFontFamP1);
+  static const IconData assignments = _FUIIconData(0xe877, _kFontFamP1);
   static const IconData attach_filled = _FUIIconData(0xe878, _kFontFamP1);
-  static const IconData attach_regular = _FUIIconData(0xe879, _kFontFamP1);
+  static const IconData attach = _FUIIconData(0xe879, _kFontFamP1);
   static const IconData attach_with_text_filled =
       _FUIIconData(0xe87a, _kFontFamP1);
-  static const IconData attach_with_text_regular =
-      _FUIIconData(0xe87b, _kFontFamP1);
+  static const IconData attach_with_text = _FUIIconData(0xe87b, _kFontFamP1);
   static const IconData autocorrect_filled = _FUIIconData(0xe87c, _kFontFamP1);
-  static const IconData autocorrect_regular = _FUIIconData(0xe87d, _kFontFamP1);
+  static const IconData autocorrect = _FUIIconData(0xe87d, _kFontFamP1);
   static const IconData autosum_filled = _FUIIconData(0xe87e, _kFontFamP1);
-  static const IconData autosum_regular = _FUIIconData(0xe87f, _kFontFamP1);
+  static const IconData autosum = _FUIIconData(0xe87f, _kFontFamP1);
   static const IconData backspace_filled = _FUIIconData(0xe880, _kFontFamP1);
-  static const IconData backspace_regular = _FUIIconData(0xe881, _kFontFamP1);
+  static const IconData backspace = _FUIIconData(0xe881, _kFontFamP1);
   static const IconData backward_filled = _FUIIconData(0xe882, _kFontFamP1);
-  static const IconData backward_regular = _FUIIconData(0xe883, _kFontFamP1);
+  static const IconData backward = _FUIIconData(0xe883, _kFontFamP1);
   static const IconData badge_filled = _FUIIconData(0xe884, _kFontFamP1);
-  static const IconData badge_regular = _FUIIconData(0xe885, _kFontFamP1);
+  static const IconData badge = _FUIIconData(0xe885, _kFontFamP1);
   static const IconData bank_filled = _FUIIconData(0xe886, _kFontFamP1);
-  static const IconData bank_regular = _FUIIconData(0xe887, _kFontFamP1);
+  static const IconData bank = _FUIIconData(0xe887, _kFontFamP1);
   static const IconData battery_0_filled = _FUIIconData(0xe888, _kFontFamP1);
-  static const IconData battery_0_regular = _FUIIconData(0xe889, _kFontFamP1);
+  static const IconData battery_0 = _FUIIconData(0xe889, _kFontFamP1);
   static const IconData battery_1_filled = _FUIIconData(0xe88a, _kFontFamP1);
-  static const IconData battery_1_regular = _FUIIconData(0xe88b, _kFontFamP1);
+  static const IconData battery_1 = _FUIIconData(0xe88b, _kFontFamP1);
   static const IconData battery_2_filled = _FUIIconData(0xe88c, _kFontFamP1);
-  static const IconData battery_2_regular = _FUIIconData(0xe88d, _kFontFamP1);
+  static const IconData battery_2 = _FUIIconData(0xe88d, _kFontFamP1);
   static const IconData battery_3_filled = _FUIIconData(0xe88e, _kFontFamP1);
-  static const IconData battery_3_regular = _FUIIconData(0xe88f, _kFontFamP1);
+  static const IconData battery_3 = _FUIIconData(0xe88f, _kFontFamP1);
   static const IconData battery_4_filled = _FUIIconData(0xe890, _kFontFamP1);
-  static const IconData battery_4_regular = _FUIIconData(0xe891, _kFontFamP1);
+  static const IconData battery_4 = _FUIIconData(0xe891, _kFontFamP1);
   static const IconData battery_5_filled = _FUIIconData(0xe892, _kFontFamP1);
-  static const IconData battery_5_regular = _FUIIconData(0xe893, _kFontFamP1);
+  static const IconData battery_5 = _FUIIconData(0xe893, _kFontFamP1);
   static const IconData battery_6_filled = _FUIIconData(0xe894, _kFontFamP1);
-  static const IconData battery_6_regular = _FUIIconData(0xe895, _kFontFamP1);
+  static const IconData battery_6 = _FUIIconData(0xe895, _kFontFamP1);
   static const IconData battery_7_filled = _FUIIconData(0xe896, _kFontFamP1);
-  static const IconData battery_7_regular = _FUIIconData(0xe897, _kFontFamP1);
+  static const IconData battery_7 = _FUIIconData(0xe897, _kFontFamP1);
   static const IconData battery_8_filled = _FUIIconData(0xe898, _kFontFamP1);
-  static const IconData battery_8_regular = _FUIIconData(0xe899, _kFontFamP1);
+  static const IconData battery_8 = _FUIIconData(0xe899, _kFontFamP1);
   static const IconData battery_9_filled = _FUIIconData(0xe89a, _kFontFamP1);
-  static const IconData battery_9_regular = _FUIIconData(0xe89b, _kFontFamP1);
+  static const IconData battery_9 = _FUIIconData(0xe89b, _kFontFamP1);
   static const IconData battery_charge_filled =
       _FUIIconData(0xe89c, _kFontFamP1);
-  static const IconData battery_charge_regular =
-      _FUIIconData(0xe89d, _kFontFamP1);
+  static const IconData battery_charge = _FUIIconData(0xe89d, _kFontFamP1);
   static const IconData battery_full_filled = _FUIIconData(0xe89e, _kFontFamP1);
-  static const IconData battery_full_regular =
-      _FUIIconData(0xe89f, _kFontFamP1);
+  static const IconData battery_full = _FUIIconData(0xe89f, _kFontFamP1);
   static const IconData battery_saver_filled =
       _FUIIconData(0xe8a0, _kFontFamP1);
-  static const IconData battery_saver_regular =
-      _FUIIconData(0xe8a1, _kFontFamP1);
+  static const IconData battery_saver = _FUIIconData(0xe8a1, _kFontFamP1);
   static const IconData battery_warning_filled =
       _FUIIconData(0xe8a2, _kFontFamP1);
-  static const IconData battery_warning_regular =
-      _FUIIconData(0xe8a3, _kFontFamP1);
+  static const IconData battery_warning = _FUIIconData(0xe8a3, _kFontFamP1);
   static const IconData beaker_filled = _FUIIconData(0xe8a4, _kFontFamP1);
-  static const IconData beaker_regular = _FUIIconData(0xe8a5, _kFontFamP1);
+  static const IconData beaker = _FUIIconData(0xe8a5, _kFontFamP1);
   static const IconData bed_filled = _FUIIconData(0xe8a6, _kFontFamP1);
-  static const IconData bed_regular = _FUIIconData(0xe8a7, _kFontFamP1);
+  static const IconData bed = _FUIIconData(0xe8a7, _kFontFamP1);
   static const IconData block_filled = _FUIIconData(0xe8a8, _kFontFamP1);
-  static const IconData block_regular = _FUIIconData(0xe8a9, _kFontFamP1);
+  static const IconData block = _FUIIconData(0xe8a9, _kFontFamP1);
   static const IconData bluetooth_connected_filled =
       _FUIIconData(0xe8aa, _kFontFamP1);
-  static const IconData bluetooth_connected_regular =
-      _FUIIconData(0xe8ab, _kFontFamP1);
+  static const IconData bluetooth_connected = _FUIIconData(0xe8ab, _kFontFamP1);
   static const IconData bluetooth_disabled_filled =
       _FUIIconData(0xe8ac, _kFontFamP1);
-  static const IconData bluetooth_disabled_regular =
-      _FUIIconData(0xe8ad, _kFontFamP1);
+  static const IconData bluetooth_disabled = _FUIIconData(0xe8ad, _kFontFamP1);
   static const IconData bluetooth_filled = _FUIIconData(0xe8ae, _kFontFamP1);
-  static const IconData bluetooth_regular = _FUIIconData(0xe8af, _kFontFamP1);
+  static const IconData bluetooth = _FUIIconData(0xe8af, _kFontFamP1);
   static const IconData bluetooth_searching_filled =
       _FUIIconData(0xe8b0, _kFontFamP1);
-  static const IconData bluetooth_searching_regular =
-      _FUIIconData(0xe8b1, _kFontFamP1);
+  static const IconData bluetooth_searching = _FUIIconData(0xe8b1, _kFontFamP1);
   static const IconData board_filled = _FUIIconData(0xe8b2, _kFontFamP1);
-  static const IconData board_regular = _FUIIconData(0xe8b3, _kFontFamP1);
+  static const IconData board = _FUIIconData(0xe8b3, _kFontFamP1);
   static const IconData book_formula_compatibility_filled =
       _FUIIconData(0xe8b4, _kFontFamP1);
-  static const IconData book_formula_compatibility_regular =
+  static const IconData book_formula_compatibility =
       _FUIIconData(0xe8b5, _kFontFamP1);
   static const IconData book_formula_database_filled =
       _FUIIconData(0xe8b6, _kFontFamP1);
-  static const IconData book_formula_database_regular =
+  static const IconData book_formula_database =
       _FUIIconData(0xe8b7, _kFontFamP1);
   static const IconData book_formula_date_filled =
       _FUIIconData(0xe8b8, _kFontFamP1);
-  static const IconData book_formula_date_regular =
-      _FUIIconData(0xe8b9, _kFontFamP1);
+  static const IconData book_formula_date = _FUIIconData(0xe8b9, _kFontFamP1);
   static const IconData book_formula_engineering_filled =
       _FUIIconData(0xe8ba, _kFontFamP1);
-  static const IconData book_formula_engineering_regular =
+  static const IconData book_formula_engineering =
       _FUIIconData(0xe8bb, _kFontFamP1);
   static const IconData book_formula_financial_filled =
       _FUIIconData(0xe8bc, _kFontFamP1);
-  static const IconData book_formula_financial_regular =
+  static const IconData book_formula_financial =
       _FUIIconData(0xe8bd, _kFontFamP1);
   static const IconData book_formula_information_filled =
       _FUIIconData(0xe8be, _kFontFamP1);
-  static const IconData book_formula_information_regular =
+  static const IconData book_formula_information =
       _FUIIconData(0xe8bf, _kFontFamP1);
   static const IconData book_formula_logical_filled =
       _FUIIconData(0xe8c0, _kFontFamP1);
-  static const IconData book_formula_logical_regular =
+  static const IconData book_formula_logical =
       _FUIIconData(0xe8c1, _kFontFamP1);
   static const IconData book_formula_lookup_filled =
       _FUIIconData(0xe8c2, _kFontFamP1);
-  static const IconData book_formula_lookup_regular =
-      _FUIIconData(0xe8c3, _kFontFamP1);
+  static const IconData book_formula_lookup = _FUIIconData(0xe8c3, _kFontFamP1);
   static const IconData book_formula_math_filled =
       _FUIIconData(0xe8c4, _kFontFamP1);
-  static const IconData book_formula_math_regular =
-      _FUIIconData(0xe8c5, _kFontFamP1);
+  static const IconData book_formula_math = _FUIIconData(0xe8c5, _kFontFamP1);
   static const IconData book_formula_recent_filled =
       _FUIIconData(0xe8c6, _kFontFamP1);
-  static const IconData book_formula_recent_regular =
-      _FUIIconData(0xe8c7, _kFontFamP1);
+  static const IconData book_formula_recent = _FUIIconData(0xe8c7, _kFontFamP1);
   static const IconData book_formula_statistics_filled =
       _FUIIconData(0xe8c8, _kFontFamP1);
-  static const IconData book_formula_statistics_regular =
+  static const IconData book_formula_statistics =
       _FUIIconData(0xe8c9, _kFontFamP1);
   static const IconData book_formula_text_filled =
       _FUIIconData(0xe8ca, _kFontFamP1);
-  static const IconData book_formula_text_regular =
-      _FUIIconData(0xe8cb, _kFontFamP1);
+  static const IconData book_formula_text = _FUIIconData(0xe8cb, _kFontFamP1);
   static const IconData bookmark_filled = _FUIIconData(0xe8cc, _kFontFamP1);
   static const IconData bookmark_off_filled = _FUIIconData(0xe8cd, _kFontFamP1);
-  static const IconData bookmark_off_regular =
-      _FUIIconData(0xe8ce, _kFontFamP1);
-  static const IconData bookmark_regular = _FUIIconData(0xe8cf, _kFontFamP1);
+  static const IconData bookmark_off = _FUIIconData(0xe8ce, _kFontFamP1);
+  static const IconData bookmark = _FUIIconData(0xe8cf, _kFontFamP1);
   static const IconData book_number_filled = _FUIIconData(0xe8d0, _kFontFamP1);
-  static const IconData book_number_regular = _FUIIconData(0xe8d1, _kFontFamP1);
+  static const IconData book_number = _FUIIconData(0xe8d1, _kFontFamP1);
   static const IconData bot_add_filled = _FUIIconData(0xe8d2, _kFontFamP1);
-  static const IconData bot_add_regular = _FUIIconData(0xe8d3, _kFontFamP1);
+  static const IconData bot_add = _FUIIconData(0xe8d3, _kFontFamP1);
   static const IconData bot_filled = _FUIIconData(0xe8d4, _kFontFamP1);
-  static const IconData bot_regular = _FUIIconData(0xe8d5, _kFontFamP1);
+  static const IconData bot = _FUIIconData(0xe8d5, _kFontFamP1);
   static const IconData branch_filled = _FUIIconData(0xe8d6, _kFontFamP1);
-  static const IconData branch_regular = _FUIIconData(0xe8d7, _kFontFamP1);
+  static const IconData branch = _FUIIconData(0xe8d7, _kFontFamP1);
   static const IconData briefcase_filled = _FUIIconData(0xe8d8, _kFontFamP1);
-  static const IconData briefcase_regular = _FUIIconData(0xe8d9, _kFontFamP1);
+  static const IconData briefcase = _FUIIconData(0xe8d9, _kFontFamP1);
   static const IconData bring_to_front_filled =
       _FUIIconData(0xe8da, _kFontFamP1);
-  static const IconData bring_to_front_regular =
-      _FUIIconData(0xe8db, _kFontFamP1);
+  static const IconData bring_to_front = _FUIIconData(0xe8db, _kFontFamP1);
   static const IconData broad_activity_feed_filled =
       _FUIIconData(0xe8dc, _kFontFamP1);
-  static const IconData broad_activity_feed_regular =
-      _FUIIconData(0xe8dd, _kFontFamP1);
+  static const IconData broad_activity_feed = _FUIIconData(0xe8dd, _kFontFamP1);
   static const IconData bug_report_filled = _FUIIconData(0xe8de, _kFontFamP1);
-  static const IconData bug_report_regular = _FUIIconData(0xe8df, _kFontFamP1);
+  static const IconData bug_report = _FUIIconData(0xe8df, _kFontFamP1);
   static const IconData building_filled = _FUIIconData(0xe8e0, _kFontFamP1);
-  static const IconData building_regular = _FUIIconData(0xe8e1, _kFontFamP1);
+  static const IconData building = _FUIIconData(0xe8e1, _kFontFamP1);
   static const IconData calendar_3_day_filled =
       _FUIIconData(0xe8e2, _kFontFamP1);
-  static const IconData calendar_3_day_regular =
-      _FUIIconData(0xe8e3, _kFontFamP1);
+  static const IconData calendar_3_day = _FUIIconData(0xe8e3, _kFontFamP1);
   static const IconData calendar_add_filled = _FUIIconData(0xe8e4, _kFontFamP1);
-  static const IconData calendar_add_regular =
-      _FUIIconData(0xe8e5, _kFontFamP1);
+  static const IconData calendar_add = _FUIIconData(0xe8e5, _kFontFamP1);
   static const IconData calendar_agenda_filled =
       _FUIIconData(0xe8e6, _kFontFamP1);
-  static const IconData calendar_agenda_regular =
-      _FUIIconData(0xe8e7, _kFontFamP1);
+  static const IconData calendar_agenda = _FUIIconData(0xe8e7, _kFontFamP1);
   static const IconData calendar_availability_filled =
       _FUIIconData(0xe8e8, _kFontFamP1);
-  static const IconData calendar_availability_regular =
+  static const IconData calendar_availability =
       _FUIIconData(0xe8e9, _kFontFamP1);
   static const IconData calendar_cancel_filled =
       _FUIIconData(0xe8ea, _kFontFamP1);
-  static const IconData calendar_cancel_regular =
-      _FUIIconData(0xe8eb, _kFontFamP1);
+  static const IconData calendar_cancel = _FUIIconData(0xe8eb, _kFontFamP1);
   static const IconData calendar_date_filled =
       _FUIIconData(0xe8ec, _kFontFamP1);
-  static const IconData calendar_date_regular =
-      _FUIIconData(0xe8ed, _kFontFamP1);
+  static const IconData calendar_date = _FUIIconData(0xe8ed, _kFontFamP1);
   static const IconData calendar_day_filled = _FUIIconData(0xe8ee, _kFontFamP1);
-  static const IconData calendar_day_regular =
-      _FUIIconData(0xe8ef, _kFontFamP1);
+  static const IconData calendar_day = _FUIIconData(0xe8ef, _kFontFamP1);
   static const IconData calendar_empty_filled =
       _FUIIconData(0xe8f0, _kFontFamP1);
-  static const IconData calendar_empty_regular =
-      _FUIIconData(0xe8f1, _kFontFamP1);
+  static const IconData calendar_empty = _FUIIconData(0xe8f1, _kFontFamP1);
   static const IconData calendar_filled = _FUIIconData(0xe8f2, _kFontFamP1);
   static const IconData calendar_later_filled =
       _FUIIconData(0xe8f3, _kFontFamP1);
-  static const IconData calendar_later_regular =
-      _FUIIconData(0xe8f4, _kFontFamP1);
+  static const IconData calendar_later = _FUIIconData(0xe8f4, _kFontFamP1);
   static const IconData calendar_month_filled =
       _FUIIconData(0xe8f5, _kFontFamP1);
-  static const IconData calendar_month_regular =
-      _FUIIconData(0xe8f6, _kFontFamP1);
+  static const IconData calendar_month = _FUIIconData(0xe8f6, _kFontFamP1);
   static const IconData calendar_overdue_filled =
       _FUIIconData(0xe8f7, _kFontFamP1);
-  static const IconData calendar_overdue_regular =
-      _FUIIconData(0xe8f8, _kFontFamP1);
+  static const IconData calendar_overdue = _FUIIconData(0xe8f8, _kFontFamP1);
   static const IconData calendar_recurring_filled =
       _FUIIconData(0xe8f9, _kFontFamP1);
-  static const IconData calendar_recurring_regular =
-      _FUIIconData(0xe8fa, _kFontFamP1);
-  static const IconData calendar_regular = _FUIIconData(0xe8fb, _kFontFamP1);
+  static const IconData calendar_recurring = _FUIIconData(0xe8fa, _kFontFamP1);
+  static const IconData calendar = _FUIIconData(0xe8fb, _kFontFamP1);
   static const IconData calendar_starred_filled =
       _FUIIconData(0xe8fc, _kFontFamP1);
-  static const IconData calendar_starred_regular =
-      _FUIIconData(0xe8fd, _kFontFamP1);
+  static const IconData calendar_starred = _FUIIconData(0xe8fd, _kFontFamP1);
   static const IconData calendar_sync_filled =
       _FUIIconData(0xe8fe, _kFontFamP1);
-  static const IconData calendar_sync_regular =
-      _FUIIconData(0xe8ff, _kFontFamP1);
+  static const IconData calendar_sync = _FUIIconData(0xe8ff, _kFontFamP1);
   static const IconData calendar_week_numbers_filled =
       _FUIIconData(0xe900, _kFontFamP1);
-  static const IconData calendar_week_numbers_regular =
+  static const IconData calendar_week_numbers =
       _FUIIconData(0xe901, _kFontFamP1);
   static const IconData calendar_week_start_filled =
       _FUIIconData(0xe902, _kFontFamP1);
-  static const IconData calendar_week_start_regular =
-      _FUIIconData(0xe903, _kFontFamP1);
+  static const IconData calendar_week_start = _FUIIconData(0xe903, _kFontFamP1);
   static const IconData call_add_filled = _FUIIconData(0xe904, _kFontFamP1);
-  static const IconData call_add_regular = _FUIIconData(0xe905, _kFontFamP1);
+  static const IconData call_add = _FUIIconData(0xe905, _kFontFamP1);
   static const IconData call_end_filled = _FUIIconData(0xe906, _kFontFamP1);
-  static const IconData call_end_regular = _FUIIconData(0xe907, _kFontFamP1);
+  static const IconData call_end = _FUIIconData(0xe907, _kFontFamP1);
   static const IconData call_forward_filled = _FUIIconData(0xe908, _kFontFamP1);
-  static const IconData call_forward_regular =
-      _FUIIconData(0xe909, _kFontFamP1);
+  static const IconData call_forward = _FUIIconData(0xe909, _kFontFamP1);
   /*Part 1*/
 
   /*Part 2*/
   static const _kFontFamP2 = 'FluentSystemIconsP2';
   static const IconData calligraphy_pen_filled =
       _FUIIconData(0xe800, _kFontFamP2);
-  static const IconData calligraphy_pen_regular =
-      _FUIIconData(0xe801, _kFontFamP2);
+  static const IconData calligraphy_pen = _FUIIconData(0xe801, _kFontFamP2);
   static const IconData call_inbound_filled = _FUIIconData(0xe802, _kFontFamP2);
-  static const IconData call_inbound_regular =
-      _FUIIconData(0xe803, _kFontFamP2);
+  static const IconData call_inbound = _FUIIconData(0xe803, _kFontFamP2);
   static const IconData call_missed_filled = _FUIIconData(0xe804, _kFontFamP2);
-  static const IconData call_missed_regular = _FUIIconData(0xe805, _kFontFamP2);
+  static const IconData call_missed = _FUIIconData(0xe805, _kFontFamP2);
   static const IconData call_outbound_filled =
       _FUIIconData(0xe806, _kFontFamP2);
-  static const IconData call_outbound_regular =
-      _FUIIconData(0xe807, _kFontFamP2);
+  static const IconData call_outbound = _FUIIconData(0xe807, _kFontFamP2);
   static const IconData call_park_filled = _FUIIconData(0xe808, _kFontFamP2);
-  static const IconData call_park_regular = _FUIIconData(0xe809, _kFontFamP2);
+  static const IconData call_park = _FUIIconData(0xe809, _kFontFamP2);
   static const IconData camera_add_filled = _FUIIconData(0xe80a, _kFontFamP2);
-  static const IconData camera_add_regular = _FUIIconData(0xe80b, _kFontFamP2);
+  static const IconData camera_add = _FUIIconData(0xe80b, _kFontFamP2);
   static const IconData camera_filled = _FUIIconData(0xe80c, _kFontFamP2);
-  static const IconData camera_regular = _FUIIconData(0xe80d, _kFontFamP2);
+  static const IconData camera = _FUIIconData(0xe80d, _kFontFamP2);
   static const IconData camera_switch_filled =
       _FUIIconData(0xe80e, _kFontFamP2);
-  static const IconData camera_switch_regular =
-      _FUIIconData(0xe80f, _kFontFamP2);
+  static const IconData camera_switch = _FUIIconData(0xe80f, _kFontFamP2);
   static const IconData cast_filled = _FUIIconData(0xe810, _kFontFamP2);
-  static const IconData cast_regular = _FUIIconData(0xe811, _kFontFamP2);
+  static const IconData cast = _FUIIconData(0xe811, _kFontFamP2);
   static const IconData cellular_3g_filled = _FUIIconData(0xe812, _kFontFamP2);
-  static const IconData cellular_3g_regular = _FUIIconData(0xe813, _kFontFamP2);
+  static const IconData cellular_3g = _FUIIconData(0xe813, _kFontFamP2);
   static const IconData cellular_4g_filled = _FUIIconData(0xe814, _kFontFamP2);
-  static const IconData cellular_4g_regular = _FUIIconData(0xe815, _kFontFamP2);
+  static const IconData cellular_4g = _FUIIconData(0xe815, _kFontFamP2);
   static const IconData cellular_data_1_filled =
       _FUIIconData(0xe816, _kFontFamP2);
-  static const IconData cellular_data_1_regular =
-      _FUIIconData(0xe817, _kFontFamP2);
+  static const IconData cellular_data_1 = _FUIIconData(0xe817, _kFontFamP2);
   static const IconData cellular_data_2_filled =
       _FUIIconData(0xe818, _kFontFamP2);
-  static const IconData cellular_data_2_regular =
-      _FUIIconData(0xe819, _kFontFamP2);
+  static const IconData cellular_data_2 = _FUIIconData(0xe819, _kFontFamP2);
   static const IconData cellular_data_3_filled =
       _FUIIconData(0xe81a, _kFontFamP2);
-  static const IconData cellular_data_3_regular =
-      _FUIIconData(0xe81b, _kFontFamP2);
+  static const IconData cellular_data_3 = _FUIIconData(0xe81b, _kFontFamP2);
   static const IconData cellular_data_4_filled =
       _FUIIconData(0xe81c, _kFontFamP2);
-  static const IconData cellular_data_4_regular =
-      _FUIIconData(0xe81d, _kFontFamP2);
+  static const IconData cellular_data_4 = _FUIIconData(0xe81d, _kFontFamP2);
   static const IconData cellular_data_5_filled =
       _FUIIconData(0xe81e, _kFontFamP2);
-  static const IconData cellular_data_5_regular =
-      _FUIIconData(0xe81f, _kFontFamP2);
+  static const IconData cellular_data_5 = _FUIIconData(0xe81f, _kFontFamP2);
   static const IconData cellular_data_off_filled =
       _FUIIconData(0xe820, _kFontFamP2);
-  static const IconData cellular_data_off_regular =
-      _FUIIconData(0xe821, _kFontFamP2);
+  static const IconData cellular_data_off = _FUIIconData(0xe821, _kFontFamP2);
   static const IconData cellular_off_filled = _FUIIconData(0xe822, _kFontFamP2);
-  static const IconData cellular_off_regular =
-      _FUIIconData(0xe823, _kFontFamP2);
+  static const IconData cellular_off = _FUIIconData(0xe823, _kFontFamP2);
   static const IconData cellular_unavailable_filled =
       _FUIIconData(0xe824, _kFontFamP2);
-  static const IconData cellular_unavailable_regular =
+  static const IconData cellular_unavailable =
       _FUIIconData(0xe825, _kFontFamP2);
   static const IconData certificate_filled = _FUIIconData(0xe826, _kFontFamP2);
-  static const IconData certificate_regular = _FUIIconData(0xe827, _kFontFamP2);
+  static const IconData certificate = _FUIIconData(0xe827, _kFontFamP2);
   static const IconData channel_filled = _FUIIconData(0xe828, _kFontFamP2);
   static const IconData channel_follow_filled =
       _FUIIconData(0xe829, _kFontFamP2);
-  static const IconData channel_follow_regular =
-      _FUIIconData(0xe82a, _kFontFamP2);
+  static const IconData channel_follow = _FUIIconData(0xe82a, _kFontFamP2);
   static const IconData channel_notifications_filled =
       _FUIIconData(0xe82b, _kFontFamP2);
-  static const IconData channel_notifications_regular =
+  static const IconData channel_notifications =
       _FUIIconData(0xe82c, _kFontFamP2);
-  static const IconData channel_regular = _FUIIconData(0xe82d, _kFontFamP2);
+  static const IconData channel = _FUIIconData(0xe82d, _kFontFamP2);
   static const IconData channel_unfollow_filled =
       _FUIIconData(0xe82e, _kFontFamP2);
-  static const IconData channel_unfollow_regular =
-      _FUIIconData(0xe82f, _kFontFamP2);
+  static const IconData channel_unfollow = _FUIIconData(0xe82f, _kFontFamP2);
   static const IconData chat_filled = _FUIIconData(0xe830, _kFontFamP2);
   static const IconData chat_help_filled = _FUIIconData(0xe831, _kFontFamP2);
-  static const IconData chat_help_regular = _FUIIconData(0xe832, _kFontFamP2);
-  static const IconData chat_regular = _FUIIconData(0xe833, _kFontFamP2);
+  static const IconData chat_help = _FUIIconData(0xe832, _kFontFamP2);
+  static const IconData chat = _FUIIconData(0xe833, _kFontFamP2);
   static const IconData checkbox_checked_filled =
       _FUIIconData(0xe834, _kFontFamP2);
-  static const IconData checkbox_checked_regular =
-      _FUIIconData(0xe835, _kFontFamP2);
+  static const IconData checkbox_checked = _FUIIconData(0xe835, _kFontFamP2);
   static const IconData checkbox_unchecked_filled =
       _FUIIconData(0xe836, _kFontFamP2);
-  static const IconData checkbox_unchecked_regular =
-      _FUIIconData(0xe837, _kFontFamP2);
+  static const IconData checkbox_unchecked = _FUIIconData(0xe837, _kFontFamP2);
   static const IconData checkmark_circle_filled =
       _FUIIconData(0xe838, _kFontFamP2);
-  static const IconData checkmark_circle_regular =
-      _FUIIconData(0xe839, _kFontFamP2);
+  static const IconData checkmark_circle = _FUIIconData(0xe839, _kFontFamP2);
   static const IconData checkmark_filled = _FUIIconData(0xe83a, _kFontFamP2);
   static const IconData checkmark_lock_filled =
       _FUIIconData(0xe83b, _kFontFamP2);
-  static const IconData checkmark_lock_regular =
-      _FUIIconData(0xe83c, _kFontFamP2);
-  static const IconData checkmark_regular = _FUIIconData(0xe83d, _kFontFamP2);
+  static const IconData checkmark_lock = _FUIIconData(0xe83c, _kFontFamP2);
+  static const IconData checkmark = _FUIIconData(0xe83d, _kFontFamP2);
   static const IconData checkmark_square_filled =
       _FUIIconData(0xe83e, _kFontFamP2);
-  static const IconData checkmark_square_regular =
-      _FUIIconData(0xe83f, _kFontFamP2);
+  static const IconData checkmark_square = _FUIIconData(0xe83f, _kFontFamP2);
   static const IconData chevron_down_circle_filled =
       _FUIIconData(0xe840, _kFontFamP2);
-  static const IconData chevron_down_circle_regular =
-      _FUIIconData(0xe841, _kFontFamP2);
+  static const IconData chevron_down_circle = _FUIIconData(0xe841, _kFontFamP2);
   static const IconData chevron_down_filled = _FUIIconData(0xe842, _kFontFamP2);
-  static const IconData chevron_down_regular =
-      _FUIIconData(0xe843, _kFontFamP2);
+  static const IconData chevron_down = _FUIIconData(0xe843, _kFontFamP2);
   static const IconData chevron_left_filled = _FUIIconData(0xe844, _kFontFamP2);
-  static const IconData chevron_left_regular =
-      _FUIIconData(0xe845, _kFontFamP2);
+  static const IconData chevron_left = _FUIIconData(0xe845, _kFontFamP2);
   static const IconData chevron_right_filled =
       _FUIIconData(0xe846, _kFontFamP2);
-  static const IconData chevron_right_regular =
-      _FUIIconData(0xe847, _kFontFamP2);
+  static const IconData chevron_right = _FUIIconData(0xe847, _kFontFamP2);
   static const IconData chevron_up_filled = _FUIIconData(0xe848, _kFontFamP2);
-  static const IconData chevron_up_regular = _FUIIconData(0xe849, _kFontFamP2);
+  static const IconData chevron_up = _FUIIconData(0xe849, _kFontFamP2);
   static const IconData city_filled = _FUIIconData(0xe84a, _kFontFamP2);
-  static const IconData city_regular = _FUIIconData(0xe84b, _kFontFamP2);
+  static const IconData city = _FUIIconData(0xe84b, _kFontFamP2);
   static const IconData class_filled = _FUIIconData(0xe84c, _kFontFamP2);
   static const IconData classification_filled =
       _FUIIconData(0xe84d, _kFontFamP2);
-  static const IconData classification_regular =
-      _FUIIconData(0xe84e, _kFontFamP2);
+  static const IconData classification = _FUIIconData(0xe84e, _kFontFamP2);
   static const IconData class_regular = _FUIIconData(0xe84f, _kFontFamP2);
   static const IconData clear_formatting_filled =
       _FUIIconData(0xe850, _kFontFamP2);
-  static const IconData clear_formatting_regular =
-      _FUIIconData(0xe851, _kFontFamP2);
+  static const IconData clear_formatting = _FUIIconData(0xe851, _kFontFamP2);
   static const IconData clipboard_code_filled =
       _FUIIconData(0xe852, _kFontFamP2);
-  static const IconData clipboard_code_regular =
-      _FUIIconData(0xe853, _kFontFamP2);
+  static const IconData clipboard_code = _FUIIconData(0xe853, _kFontFamP2);
   static const IconData clipboard_filled = _FUIIconData(0xe854, _kFontFamP2);
   static const IconData clipboard_letter_filled =
       _FUIIconData(0xe855, _kFontFamP2);
-  static const IconData clipboard_letter_regular =
-      _FUIIconData(0xe856, _kFontFamP2);
+  static const IconData clipboard_letter = _FUIIconData(0xe856, _kFontFamP2);
   static const IconData clipboard_link_filled =
       _FUIIconData(0xe857, _kFontFamP2);
-  static const IconData clipboard_link_regular =
-      _FUIIconData(0xe858, _kFontFamP2);
+  static const IconData clipboard_link = _FUIIconData(0xe858, _kFontFamP2);
   static const IconData clipboard_paste_filled =
       _FUIIconData(0xe859, _kFontFamP2);
-  static const IconData clipboard_paste_regular =
-      _FUIIconData(0xe85a, _kFontFamP2);
-  static const IconData clipboard_regular = _FUIIconData(0xe85b, _kFontFamP2);
+  static const IconData clipboard_paste = _FUIIconData(0xe85a, _kFontFamP2);
+  static const IconData clipboard = _FUIIconData(0xe85b, _kFontFamP2);
   static const IconData clipboard_search_filled =
       _FUIIconData(0xe85c, _kFontFamP2);
-  static const IconData clipboard_search_regular =
-      _FUIIconData(0xe85d, _kFontFamP2);
+  static const IconData clipboard_search = _FUIIconData(0xe85d, _kFontFamP2);
   static const IconData clipboard_text_filled =
       _FUIIconData(0xe85e, _kFontFamP2);
-  static const IconData clipboard_text_regular =
-      _FUIIconData(0xe85f, _kFontFamP2);
+  static const IconData clipboard_text = _FUIIconData(0xe85f, _kFontFamP2);
   static const IconData clock_filled = _FUIIconData(0xe860, _kFontFamP2);
-  static const IconData clock_regular = _FUIIconData(0xe861, _kFontFamP2);
+  static const IconData clock = _FUIIconData(0xe861, _kFontFamP2);
   static const IconData closed_caption_filled =
       _FUIIconData(0xe862, _kFontFamP2);
-  static const IconData closed_caption_regular =
-      _FUIIconData(0xe863, _kFontFamP2);
+  static const IconData closed_caption = _FUIIconData(0xe863, _kFontFamP2);
   static const IconData cloud_backup_filled = _FUIIconData(0xe864, _kFontFamP2);
-  static const IconData cloud_backup_regular =
-      _FUIIconData(0xe865, _kFontFamP2);
+  static const IconData cloud_backup = _FUIIconData(0xe865, _kFontFamP2);
   static const IconData cloud_download_filled =
       _FUIIconData(0xe866, _kFontFamP2);
-  static const IconData cloud_download_regular =
-      _FUIIconData(0xe867, _kFontFamP2);
+  static const IconData cloud_download = _FUIIconData(0xe867, _kFontFamP2);
   static const IconData cloud_filled = _FUIIconData(0xe868, _kFontFamP2);
   static const IconData cloud_off_filled = _FUIIconData(0xe869, _kFontFamP2);
   static const IconData cloud_offline_filled =
       _FUIIconData(0xe86a, _kFontFamP2);
-  static const IconData cloud_offline_regular =
-      _FUIIconData(0xe86b, _kFontFamP2);
-  static const IconData cloud_off_regular = _FUIIconData(0xe86c, _kFontFamP2);
-  static const IconData cloud_regular = _FUIIconData(0xe86d, _kFontFamP2);
+  static const IconData cloud_offline = _FUIIconData(0xe86b, _kFontFamP2);
+  static const IconData cloud_off = _FUIIconData(0xe86c, _kFontFamP2);
+  static const IconData cloud = _FUIIconData(0xe86d, _kFontFamP2);
   static const IconData cloud_sync_complete_filled =
       _FUIIconData(0xe86e, _kFontFamP2);
-  static const IconData cloud_sync_complete_regular =
-      _FUIIconData(0xe86f, _kFontFamP2);
+  static const IconData cloud_sync_complete = _FUIIconData(0xe86f, _kFontFamP2);
   static const IconData code_filled = _FUIIconData(0xe870, _kFontFamP2);
-  static const IconData code_regular = _FUIIconData(0xe871, _kFontFamP2);
+  static const IconData code = _FUIIconData(0xe871, _kFontFamP2);
   static const IconData collections_add_filled =
       _FUIIconData(0xe872, _kFontFamP2);
-  static const IconData collections_add_regular =
-      _FUIIconData(0xe873, _kFontFamP2);
+  static const IconData collections_add = _FUIIconData(0xe873, _kFontFamP2);
   static const IconData collections_filled = _FUIIconData(0xe874, _kFontFamP2);
-  static const IconData collections_regular = _FUIIconData(0xe875, _kFontFamP2);
+  static const IconData collections = _FUIIconData(0xe875, _kFontFamP2);
   static const IconData color_background_filled =
       _FUIIconData(0xe876, _kFontFamP2);
-  static const IconData color_background_regular =
-      _FUIIconData(0xe877, _kFontFamP2);
+  static const IconData color_background = _FUIIconData(0xe877, _kFontFamP2);
   static const IconData color_filled = _FUIIconData(0xe878, _kFontFamP2);
   static const IconData color_fill_filled = _FUIIconData(0xe879, _kFontFamP2);
-  static const IconData color_fill_regular = _FUIIconData(0xe87a, _kFontFamP2);
+  static const IconData color_fill = _FUIIconData(0xe87a, _kFontFamP2);
   static const IconData color_line_filled = _FUIIconData(0xe87b, _kFontFamP2);
-  static const IconData color_line_regular = _FUIIconData(0xe87c, _kFontFamP2);
-  static const IconData color_regular = _FUIIconData(0xe87d, _kFontFamP2);
+  static const IconData color_line = _FUIIconData(0xe87c, _kFontFamP2);
+  static const IconData color = _FUIIconData(0xe87d, _kFontFamP2);
   static const IconData column_triple_filled =
       _FUIIconData(0xe87e, _kFontFamP2);
-  static const IconData column_triple_regular =
-      _FUIIconData(0xe87f, _kFontFamP2);
+  static const IconData column_triple = _FUIIconData(0xe87f, _kFontFamP2);
   static const IconData comment_add_filled = _FUIIconData(0xe880, _kFontFamP2);
-  static const IconData comment_add_regular = _FUIIconData(0xe881, _kFontFamP2);
+  static const IconData comment_add = _FUIIconData(0xe881, _kFontFamP2);
   static const IconData comment_delete_filled =
       _FUIIconData(0xe882, _kFontFamP2);
-  static const IconData comment_delete_regular =
-      _FUIIconData(0xe883, _kFontFamP2);
+  static const IconData comment_delete = _FUIIconData(0xe883, _kFontFamP2);
   static const IconData comment_filled = _FUIIconData(0xe884, _kFontFamP2);
   static const IconData comment_mention_filled =
       _FUIIconData(0xe885, _kFontFamP2);
-  static const IconData comment_mention_regular =
-      _FUIIconData(0xe886, _kFontFamP2);
+  static const IconData comment_mention = _FUIIconData(0xe886, _kFontFamP2);
   static const IconData comment_next_filled = _FUIIconData(0xe887, _kFontFamP2);
-  static const IconData comment_next_regular =
-      _FUIIconData(0xe888, _kFontFamP2);
+  static const IconData comment_next = _FUIIconData(0xe888, _kFontFamP2);
   static const IconData comment_previous_filled =
       _FUIIconData(0xe889, _kFontFamP2);
-  static const IconData comment_previous_regular =
-      _FUIIconData(0xe88a, _kFontFamP2);
-  static const IconData comment_regular = _FUIIconData(0xe88b, _kFontFamP2);
+  static const IconData comment_previous = _FUIIconData(0xe88a, _kFontFamP2);
+  static const IconData comment = _FUIIconData(0xe88b, _kFontFamP2);
   static const IconData comment_resolve_filled =
       _FUIIconData(0xe88c, _kFontFamP2);
-  static const IconData comment_resolve_regular =
-      _FUIIconData(0xe88d, _kFontFamP2);
+  static const IconData comment_resolve = _FUIIconData(0xe88d, _kFontFamP2);
   static const IconData compose_filled = _FUIIconData(0xe88e, _kFontFamP2);
-  static const IconData compose_regular = _FUIIconData(0xe88f, _kFontFamP2);
+  static const IconData compose = _FUIIconData(0xe88f, _kFontFamP2);
   static const IconData conference_room_filled =
       _FUIIconData(0xe890, _kFontFamP2);
-  static const IconData conference_room_regular =
-      _FUIIconData(0xe891, _kFontFamP2);
+  static const IconData conference_room = _FUIIconData(0xe891, _kFontFamP2);
   static const IconData connector_filled = _FUIIconData(0xe892, _kFontFamP2);
-  static const IconData connector_regular = _FUIIconData(0xe893, _kFontFamP2);
+  static const IconData connector = _FUIIconData(0xe893, _kFontFamP2);
   static const IconData contact_card_filled = _FUIIconData(0xe894, _kFontFamP2);
   static const IconData contact_card_group_filled =
       _FUIIconData(0xe895, _kFontFamP2);
-  static const IconData contact_card_group_regular =
-      _FUIIconData(0xe896, _kFontFamP2);
-  static const IconData contact_card_regular =
-      _FUIIconData(0xe897, _kFontFamP2);
+  static const IconData contact_card_group = _FUIIconData(0xe896, _kFontFamP2);
+  static const IconData contact_card = _FUIIconData(0xe897, _kFontFamP2);
   static const IconData contacts_filled = _FUIIconData(0xe898, _kFontFamP2);
-  static const IconData contacts_regular = _FUIIconData(0xe899, _kFontFamP2);
+  static const IconData contacts = _FUIIconData(0xe899, _kFontFamP2);
   static const IconData content_settings_filled =
       _FUIIconData(0xe89a, _kFontFamP2);
-  static const IconData content_settings_regular =
-      _FUIIconData(0xe89b, _kFontFamP2);
+  static const IconData content_settings = _FUIIconData(0xe89b, _kFontFamP2);
   static const IconData convert_to_table_filled =
       _FUIIconData(0xe89c, _kFontFamP2);
-  static const IconData convert_to_table_regular =
-      _FUIIconData(0xe89d, _kFontFamP2);
+  static const IconData convert_to_table = _FUIIconData(0xe89d, _kFontFamP2);
   static const IconData convert_to_text_filled =
       _FUIIconData(0xe89e, _kFontFamP2);
-  static const IconData convert_to_text_regular =
-      _FUIIconData(0xe89f, _kFontFamP2);
+  static const IconData convert_to_text = _FUIIconData(0xe89f, _kFontFamP2);
   static const IconData cookies_filled = _FUIIconData(0xe8a0, _kFontFamP2);
-  static const IconData cookies_regular = _FUIIconData(0xe8a1, _kFontFamP2);
+  static const IconData cookies = _FUIIconData(0xe8a1, _kFontFamP2);
   static const IconData copy_filled = _FUIIconData(0xe8a2, _kFontFamP2);
   static const IconData copy_image_filled = _FUIIconData(0xe8a3, _kFontFamP2);
-  static const IconData copy_image_regular = _FUIIconData(0xe8a4, _kFontFamP2);
+  static const IconData copy_image = _FUIIconData(0xe8a4, _kFontFamP2);
   static const IconData copy_link_filled = _FUIIconData(0xe8a5, _kFontFamP2);
-  static const IconData copy_link_regular = _FUIIconData(0xe8a6, _kFontFamP2);
+  static const IconData copy_link = _FUIIconData(0xe8a6, _kFontFamP2);
   static const IconData copy_move_filled = _FUIIconData(0xe8a7, _kFontFamP2);
-  static const IconData copy_move_regular = _FUIIconData(0xe8a8, _kFontFamP2);
-  static const IconData copy_regular = _FUIIconData(0xe8a9, _kFontFamP2);
+  static const IconData copy_move = _FUIIconData(0xe8a8, _kFontFamP2);
+  static const IconData copy = _FUIIconData(0xe8a9, _kFontFamP2);
   static const IconData crop_filled = _FUIIconData(0xe8aa, _kFontFamP2);
   static const IconData crop_interim_filled = _FUIIconData(0xe8ab, _kFontFamP2);
   static const IconData crop_interim_off_filled =
       _FUIIconData(0xe8ac, _kFontFamP2);
-  static const IconData crop_interim_off_regular =
-      _FUIIconData(0xe8ad, _kFontFamP2);
-  static const IconData crop_interim_regular =
-      _FUIIconData(0xe8ae, _kFontFamP2);
-  static const IconData crop_regular = _FUIIconData(0xe8af, _kFontFamP2);
+  static const IconData crop_interim_off = _FUIIconData(0xe8ad, _kFontFamP2);
+  static const IconData crop_interim = _FUIIconData(0xe8ae, _kFontFamP2);
+  static const IconData crop = _FUIIconData(0xe8af, _kFontFamP2);
   static const IconData cube_filled = _FUIIconData(0xe8b0, _kFontFamP2);
-  static const IconData cube_regular = _FUIIconData(0xe8b1, _kFontFamP2);
+  static const IconData cube = _FUIIconData(0xe8b1, _kFontFamP2);
   static const IconData currency_filled = _FUIIconData(0xe8b2, _kFontFamP2);
-  static const IconData currency_regular = _FUIIconData(0xe8b3, _kFontFamP2);
+  static const IconData currency = _FUIIconData(0xe8b3, _kFontFamP2);
   static const IconData dark_theme_filled = _FUIIconData(0xe8b4, _kFontFamP2);
-  static const IconData dark_theme_regular = _FUIIconData(0xe8b5, _kFontFamP2);
+  static const IconData dark_theme = _FUIIconData(0xe8b5, _kFontFamP2);
   static const IconData data_area_filled = _FUIIconData(0xe8b6, _kFontFamP2);
-  static const IconData data_area_regular = _FUIIconData(0xe8b7, _kFontFamP2);
+  static const IconData data_area = _FUIIconData(0xe8b7, _kFontFamP2);
   static const IconData data_bar_horizontal_filled =
       _FUIIconData(0xe8b8, _kFontFamP2);
-  static const IconData data_bar_horizontal_regular =
-      _FUIIconData(0xe8b9, _kFontFamP2);
+  static const IconData data_bar_horizontal = _FUIIconData(0xe8b9, _kFontFamP2);
   static const IconData data_bar_vertical_filled =
       _FUIIconData(0xe8ba, _kFontFamP2);
-  static const IconData data_bar_vertical_regular =
-      _FUIIconData(0xe8bb, _kFontFamP2);
+  static const IconData data_bar_vertical = _FUIIconData(0xe8bb, _kFontFamP2);
   static const IconData data_funnel_filled = _FUIIconData(0xe8bc, _kFontFamP2);
-  static const IconData data_funnel_regular = _FUIIconData(0xe8bd, _kFontFamP2);
+  static const IconData data_funnel = _FUIIconData(0xe8bd, _kFontFamP2);
   static const IconData data_histogram_filled =
       _FUIIconData(0xe8be, _kFontFamP2);
-  static const IconData data_histogram_regular =
-      _FUIIconData(0xe8bf, _kFontFamP2);
+  static const IconData data_histogram = _FUIIconData(0xe8bf, _kFontFamP2);
   static const IconData data_line_filled = _FUIIconData(0xe8c0, _kFontFamP2);
-  static const IconData data_line_regular = _FUIIconData(0xe8c1, _kFontFamP2);
+  static const IconData data_line = _FUIIconData(0xe8c1, _kFontFamP2);
   static const IconData data_pie_filled = _FUIIconData(0xe8c2, _kFontFamP2);
-  static const IconData data_pie_regular = _FUIIconData(0xe8c3, _kFontFamP2);
+  static const IconData data_pie = _FUIIconData(0xe8c3, _kFontFamP2);
   static const IconData data_scatter_filled = _FUIIconData(0xe8c4, _kFontFamP2);
-  static const IconData data_scatter_regular =
-      _FUIIconData(0xe8c5, _kFontFamP2);
+  static const IconData data_scatter = _FUIIconData(0xe8c5, _kFontFamP2);
   static const IconData data_sunburst_filled =
       _FUIIconData(0xe8c6, _kFontFamP2);
-  static const IconData data_sunburst_regular =
-      _FUIIconData(0xe8c7, _kFontFamP2);
+  static const IconData data_sunburst = _FUIIconData(0xe8c7, _kFontFamP2);
   static const IconData data_treemap_filled = _FUIIconData(0xe8c8, _kFontFamP2);
-  static const IconData data_treemap_regular =
-      _FUIIconData(0xe8c9, _kFontFamP2);
+  static const IconData data_treemap = _FUIIconData(0xe8c9, _kFontFamP2);
   static const IconData data_usage_filled = _FUIIconData(0xe8ca, _kFontFamP2);
-  static const IconData data_usage_regular = _FUIIconData(0xe8cb, _kFontFamP2);
+  static const IconData data_usage = _FUIIconData(0xe8cb, _kFontFamP2);
   static const IconData data_waterfall_filled =
       _FUIIconData(0xe8cc, _kFontFamP2);
-  static const IconData data_waterfall_regular =
-      _FUIIconData(0xe8cd, _kFontFamP2);
+  static const IconData data_waterfall = _FUIIconData(0xe8cd, _kFontFamP2);
   static const IconData data_whisker_filled = _FUIIconData(0xe8ce, _kFontFamP2);
-  static const IconData data_whisker_regular =
-      _FUIIconData(0xe8cf, _kFontFamP2);
+  static const IconData data_whisker = _FUIIconData(0xe8cf, _kFontFamP2);
   static const IconData delete_filled = _FUIIconData(0xe8d0, _kFontFamP2);
   static const IconData delete_forever_filled =
       _FUIIconData(0xe8d1, _kFontFamP2);
-  static const IconData delete_forever_regular =
-      _FUIIconData(0xe8d2, _kFontFamP2);
+  static const IconData delete_forever = _FUIIconData(0xe8d2, _kFontFamP2);
   static const IconData delete_off_filled = _FUIIconData(0xe8d3, _kFontFamP2);
-  static const IconData delete_off_regular = _FUIIconData(0xe8d4, _kFontFamP2);
-  static const IconData delete_regular = _FUIIconData(0xe8d5, _kFontFamP2);
+  static const IconData delete_off = _FUIIconData(0xe8d4, _kFontFamP2);
+  static const IconData delete = _FUIIconData(0xe8d5, _kFontFamP2);
   static const IconData design_ideas_filled = _FUIIconData(0xe8d6, _kFontFamP2);
-  static const IconData design_ideas_regular =
-      _FUIIconData(0xe8d7, _kFontFamP2);
+  static const IconData design_ideas = _FUIIconData(0xe8d7, _kFontFamP2);
   static const IconData desktop_filled = _FUIIconData(0xe8d8, _kFontFamP2);
-  static const IconData desktop_regular = _FUIIconData(0xe8d9, _kFontFamP2);
+  static const IconData desktop = _FUIIconData(0xe8d9, _kFontFamP2);
   static const IconData developer_board_filled =
       _FUIIconData(0xe8da, _kFontFamP2);
-  static const IconData developer_board_regular =
-      _FUIIconData(0xe8db, _kFontFamP2);
+  static const IconData developer_board = _FUIIconData(0xe8db, _kFontFamP2);
   static const IconData device_eq_filled = _FUIIconData(0xe8dc, _kFontFamP2);
-  static const IconData device_eq_regular = _FUIIconData(0xe8dd, _kFontFamP2);
+  static const IconData device_eq = _FUIIconData(0xe8dd, _kFontFamP2);
   static const IconData dialpad_filled = _FUIIconData(0xe8de, _kFontFamP2);
   static const IconData dialpad_off_filled = _FUIIconData(0xe8df, _kFontFamP2);
-  static const IconData dialpad_off_regular = _FUIIconData(0xe8e0, _kFontFamP2);
-  static const IconData dialpad_regular = _FUIIconData(0xe8e1, _kFontFamP2);
+  static const IconData dialpad_off = _FUIIconData(0xe8e0, _kFontFamP2);
+  static const IconData dialpad = _FUIIconData(0xe8e1, _kFontFamP2);
   static const IconData dictionary_add_filled =
       _FUIIconData(0xe8e2, _kFontFamP2);
-  static const IconData dictionary_add_regular =
-      _FUIIconData(0xe8e3, _kFontFamP2);
+  static const IconData dictionary_add = _FUIIconData(0xe8e3, _kFontFamP2);
   static const IconData dictionary_filled = _FUIIconData(0xe8e4, _kFontFamP2);
-  static const IconData dictionary_regular = _FUIIconData(0xe8e5, _kFontFamP2);
+  static const IconData dictionary = _FUIIconData(0xe8e5, _kFontFamP2);
   static const IconData directions_filled = _FUIIconData(0xe8e6, _kFontFamP2);
-  static const IconData directions_regular = _FUIIconData(0xe8e7, _kFontFamP2);
+  static const IconData directions = _FUIIconData(0xe8e7, _kFontFamP2);
   static const IconData dismiss_circle_filled =
       _FUIIconData(0xe8e8, _kFontFamP2);
-  static const IconData dismiss_circle_regular =
-      _FUIIconData(0xe8e9, _kFontFamP2);
+  static const IconData dismiss_circle = _FUIIconData(0xe8e9, _kFontFamP2);
   static const IconData dismiss_filled = _FUIIconData(0xe8ea, _kFontFamP2);
-  static const IconData dismiss_regular = _FUIIconData(0xe8eb, _kFontFamP2);
+  static const IconData dismiss = _FUIIconData(0xe8eb, _kFontFamP2);
   static const IconData divider_short_filled =
       _FUIIconData(0xe8ec, _kFontFamP2);
-  static const IconData divider_short_regular =
-      _FUIIconData(0xe8ed, _kFontFamP2);
+  static const IconData divider_short = _FUIIconData(0xe8ed, _kFontFamP2);
   static const IconData divider_tall_filled = _FUIIconData(0xe8ee, _kFontFamP2);
-  static const IconData divider_tall_regular =
-      _FUIIconData(0xe8ef, _kFontFamP2);
+  static const IconData divider_tall = _FUIIconData(0xe8ef, _kFontFamP2);
   static const IconData dock_filled = _FUIIconData(0xe8f0, _kFontFamP2);
   static const IconData dock_left_filled = _FUIIconData(0xe8f1, _kFontFamP2);
-  static const IconData dock_left_regular = _FUIIconData(0xe8f2, _kFontFamP2);
-  static const IconData dock_regular = _FUIIconData(0xe8f3, _kFontFamP2);
+  static const IconData dock_left = _FUIIconData(0xe8f2, _kFontFamP2);
+  static const IconData dock = _FUIIconData(0xe8f3, _kFontFamP2);
   static const IconData dock_row_filled = _FUIIconData(0xe8f4, _kFontFamP2);
-  static const IconData dock_row_regular = _FUIIconData(0xe8f5, _kFontFamP2);
+  static const IconData dock_row = _FUIIconData(0xe8f5, _kFontFamP2);
   static const IconData document_autosave_filled =
       _FUIIconData(0xe8f6, _kFontFamP2);
-  static const IconData document_autosave_regular =
-      _FUIIconData(0xe8f7, _kFontFamP2);
+  static const IconData document_autosave = _FUIIconData(0xe8f7, _kFontFamP2);
   static const IconData document_briefcase_filled =
       _FUIIconData(0xe8f8, _kFontFamP2);
-  static const IconData document_briefcase_regular =
-      _FUIIconData(0xe8f9, _kFontFamP2);
+  static const IconData document_briefcase = _FUIIconData(0xe8f9, _kFontFamP2);
   static const IconData document_catch_up_filled =
       _FUIIconData(0xe8fa, _kFontFamP2);
-  static const IconData document_catch_up_regular =
-      _FUIIconData(0xe8fb, _kFontFamP2);
+  static const IconData document_catch_up = _FUIIconData(0xe8fb, _kFontFamP2);
   /*Part 2*/
 
   /*Part 3*/
   static const _kFontFamP3 = 'FluentSystemIconsP3';
   static const IconData document_copy_filled =
       _FUIIconData(0xe800, _kFontFamP3);
-  static const IconData document_copy_regular =
-      _FUIIconData(0xe801, _kFontFamP3);
+  static const IconData document_copy = _FUIIconData(0xe801, _kFontFamP3);
   static const IconData document_dismiss_filled =
       _FUIIconData(0xe802, _kFontFamP3);
-  static const IconData document_dismiss_regular =
-      _FUIIconData(0xe803, _kFontFamP3);
+  static const IconData document_dismiss = _FUIIconData(0xe803, _kFontFamP3);
   static const IconData document_edit_filled =
       _FUIIconData(0xe804, _kFontFamP3);
-  static const IconData document_edit_regular =
-      _FUIIconData(0xe805, _kFontFamP3);
+  static const IconData document_edit = _FUIIconData(0xe805, _kFontFamP3);
   static const IconData document_endnote_filled =
       _FUIIconData(0xe806, _kFontFamP3);
-  static const IconData document_endnote_regular =
-      _FUIIconData(0xe807, _kFontFamP3);
+  static const IconData document_endnote = _FUIIconData(0xe807, _kFontFamP3);
   static const IconData document_error_filled =
       _FUIIconData(0xe808, _kFontFamP3);
-  static const IconData document_error_regular =
-      _FUIIconData(0xe809, _kFontFamP3);
+  static const IconData document_error = _FUIIconData(0xe809, _kFontFamP3);
   static const IconData document_filled = _FUIIconData(0xe80a, _kFontFamP3);
   static const IconData document_footer_filled =
       _FUIIconData(0xe80b, _kFontFamP3);
-  static const IconData document_footer_regular =
-      _FUIIconData(0xe80c, _kFontFamP3);
+  static const IconData document_footer = _FUIIconData(0xe80c, _kFontFamP3);
   static const IconData document_footer_remove_filled =
       _FUIIconData(0xe80d, _kFontFamP3);
-  static const IconData document_footer_remove_regular =
+  static const IconData document_footer_remove =
       _FUIIconData(0xe80e, _kFontFamP3);
   static const IconData document_header_filled =
       _FUIIconData(0xe80f, _kFontFamP3);
   static const IconData document_header_footer_filled =
       _FUIIconData(0xe810, _kFontFamP3);
-  static const IconData document_header_footer_regular =
+  static const IconData document_header_footer =
       _FUIIconData(0xe811, _kFontFamP3);
-  static const IconData document_header_regular =
-      _FUIIconData(0xe812, _kFontFamP3);
+  static const IconData document_header = _FUIIconData(0xe812, _kFontFamP3);
   static const IconData document_header_remove_filled =
       _FUIIconData(0xe813, _kFontFamP3);
-  static const IconData document_header_remove_regular =
+  static const IconData document_header_remove =
       _FUIIconData(0xe814, _kFontFamP3);
   static const IconData document_landscape_filled =
       _FUIIconData(0xe815, _kFontFamP3);
-  static const IconData document_landscape_regular =
-      _FUIIconData(0xe816, _kFontFamP3);
+  static const IconData document_landscape = _FUIIconData(0xe816, _kFontFamP3);
   static const IconData document_margins_filled =
       _FUIIconData(0xe817, _kFontFamP3);
-  static const IconData document_margins_regular =
-      _FUIIconData(0xe818, _kFontFamP3);
+  static const IconData document_margins = _FUIIconData(0xe818, _kFontFamP3);
   static const IconData document_none_filled =
       _FUIIconData(0xe819, _kFontFamP3);
-  static const IconData document_none_regular =
-      _FUIIconData(0xe81a, _kFontFamP3);
+  static const IconData document_none = _FUIIconData(0xe81a, _kFontFamP3);
   static const IconData document_one_page_filled =
       _FUIIconData(0xe81b, _kFontFamP3);
-  static const IconData document_one_page_regular =
-      _FUIIconData(0xe81c, _kFontFamP3);
+  static const IconData document_one_page = _FUIIconData(0xe81c, _kFontFamP3);
   static const IconData document_page_bottom_center_filled =
       _FUIIconData(0xe81d, _kFontFamP3);
-  static const IconData document_page_bottom_center_regular =
+  static const IconData document_page_bottom_center =
       _FUIIconData(0xe81e, _kFontFamP3);
   static const IconData document_page_bottom_left_filled =
       _FUIIconData(0xe81f, _kFontFamP3);
-  static const IconData document_page_bottom_left_regular =
+  static const IconData document_page_bottom_left =
       _FUIIconData(0xe820, _kFontFamP3);
   static const IconData document_page_bottom_right_filled =
       _FUIIconData(0xe821, _kFontFamP3);
-  static const IconData document_page_bottom_right_regular =
+  static const IconData document_page_bottom_right =
       _FUIIconData(0xe822, _kFontFamP3);
   static const IconData document_page_break_filled =
       _FUIIconData(0xe823, _kFontFamP3);
-  static const IconData document_page_break_regular =
-      _FUIIconData(0xe824, _kFontFamP3);
+  static const IconData document_page_break = _FUIIconData(0xe824, _kFontFamP3);
   static const IconData document_page_filled =
       _FUIIconData(0xe825, _kFontFamP3);
   static const IconData document_page_number_filled =
       _FUIIconData(0xe826, _kFontFamP3);
-  static const IconData document_page_number_regular =
+  static const IconData document_page_number =
       _FUIIconData(0xe827, _kFontFamP3);
   static const IconData document_page_top_center_filled =
       _FUIIconData(0xe828, _kFontFamP3);
-  static const IconData document_page_top_center_regular =
+  static const IconData document_page_top_center =
       _FUIIconData(0xe829, _kFontFamP3);
   static const IconData document_page_top_left_filled =
       _FUIIconData(0xe82a, _kFontFamP3);
-  static const IconData document_page_top_left_regular =
+  static const IconData document_page_top_left =
       _FUIIconData(0xe82b, _kFontFamP3);
   static const IconData document_page_top_right_filled =
       _FUIIconData(0xe82c, _kFontFamP3);
-  static const IconData document_page_regular =
-      _FUIIconData(0xe82d, _kFontFamP3);
-  static const IconData document_page_top_right_regular =
+  static const IconData document_page = _FUIIconData(0xe82d, _kFontFamP3);
+  static const IconData document_page_top_right =
       _FUIIconData(0xe82e, _kFontFamP3);
   static const IconData document_pdf_filled = _FUIIconData(0xe82f, _kFontFamP3);
-  static const IconData document_pdf_regular =
-      _FUIIconData(0xe830, _kFontFamP3);
-  static const IconData document_regular = _FUIIconData(0xe831, _kFontFamP3);
+  static const IconData document_pdf = _FUIIconData(0xe830, _kFontFamP3);
+  static const IconData document = _FUIIconData(0xe831, _kFontFamP3);
   static const IconData document_search_filled =
       _FUIIconData(0xe832, _kFontFamP3);
-  static const IconData document_search_regular =
-      _FUIIconData(0xe833, _kFontFamP3);
+  static const IconData document_search = _FUIIconData(0xe833, _kFontFamP3);
   static const IconData document_toolbox_filled =
       _FUIIconData(0xe834, _kFontFamP3);
-  static const IconData document_toolbox_regular =
-      _FUIIconData(0xe835, _kFontFamP3);
+  static const IconData document_toolbox = _FUIIconData(0xe835, _kFontFamP3);
   static const IconData document_unknown_filled =
       _FUIIconData(0xe836, _kFontFamP3);
-  static const IconData document_unknown_regular =
-      _FUIIconData(0xe837, _kFontFamP3);
+  static const IconData document_unknown = _FUIIconData(0xe837, _kFontFamP3);
   static const IconData document_width_filled =
       _FUIIconData(0xe838, _kFontFamP3);
-  static const IconData document_width_regular =
-      _FUIIconData(0xe839, _kFontFamP3);
+  static const IconData document_width = _FUIIconData(0xe839, _kFontFamP3);
   static const IconData double_swipe_down_filled =
       _FUIIconData(0xe83a, _kFontFamP3);
-  static const IconData double_swipe_down_regular =
-      _FUIIconData(0xe83b, _kFontFamP3);
+  static const IconData double_swipe_down = _FUIIconData(0xe83b, _kFontFamP3);
   static const IconData double_swipe_up_filled =
       _FUIIconData(0xe83c, _kFontFamP3);
-  static const IconData double_swipe_up_regular =
-      _FUIIconData(0xe83d, _kFontFamP3);
+  static const IconData double_swipe_up = _FUIIconData(0xe83d, _kFontFamP3);
   static const IconData double_tap_swipe_down_filled =
       _FUIIconData(0xe83e, _kFontFamP3);
-  static const IconData double_tap_swipe_down_regular =
+  static const IconData double_tap_swipe_down =
       _FUIIconData(0xe83f, _kFontFamP3);
   static const IconData double_tap_swipe_up_filled =
       _FUIIconData(0xe840, _kFontFamP3);
-  static const IconData double_tap_swipe_up_regular =
-      _FUIIconData(0xe841, _kFontFamP3);
+  static const IconData double_tap_swipe_up = _FUIIconData(0xe841, _kFontFamP3);
   static const IconData drafts_filled = _FUIIconData(0xe842, _kFontFamP3);
-  static const IconData drafts_regular = _FUIIconData(0xe843, _kFontFamP3);
+  static const IconData drafts = _FUIIconData(0xe843, _kFontFamP3);
   static const IconData drag_filled = _FUIIconData(0xe844, _kFontFamP3);
-  static const IconData drag_regular = _FUIIconData(0xe845, _kFontFamP3);
+  static const IconData drag = _FUIIconData(0xe845, _kFontFamP3);
   static const IconData drink_filled = _FUIIconData(0xe846, _kFontFamP3);
-  static const IconData drink_regular = _FUIIconData(0xe847, _kFontFamP3);
+  static const IconData drink = _FUIIconData(0xe847, _kFontFamP3);
   static const IconData drive_mode_filled = _FUIIconData(0xe848, _kFontFamP3);
-  static const IconData drive_mode_regular = _FUIIconData(0xe849, _kFontFamP3);
+  static const IconData drive_mode = _FUIIconData(0xe849, _kFontFamP3);
   static const IconData duo_add_filled = _FUIIconData(0xe84a, _kFontFamP3);
-  static const IconData duo_add_regular = _FUIIconData(0xe84b, _kFontFamP3);
+  static const IconData duo_add = _FUIIconData(0xe84b, _kFontFamP3);
   static const IconData duo_desktop_filled = _FUIIconData(0xe84c, _kFontFamP3);
-  static const IconData duo_desktop_regular = _FUIIconData(0xe84d, _kFontFamP3);
+  static const IconData duo_desktop = _FUIIconData(0xe84d, _kFontFamP3);
   static const IconData duo_error_filled = _FUIIconData(0xe84e, _kFontFamP3);
-  static const IconData duo_error_regular = _FUIIconData(0xe84f, _kFontFamP3);
+  static const IconData duo_error = _FUIIconData(0xe84f, _kFontFamP3);
   static const IconData duo_filled = _FUIIconData(0xe850, _kFontFamP3);
   static const IconData duo_group_filled = _FUIIconData(0xe851, _kFontFamP3);
-  static const IconData duo_group_regular = _FUIIconData(0xe852, _kFontFamP3);
+  static const IconData duo_group = _FUIIconData(0xe852, _kFontFamP3);
   static const IconData duo_home_lock_filled =
       _FUIIconData(0xe853, _kFontFamP3);
-  static const IconData duo_home_lock_regular =
-      _FUIIconData(0xe854, _kFontFamP3);
+  static const IconData duo_home_lock = _FUIIconData(0xe854, _kFontFamP3);
   static const IconData duo_link_setup_filled =
       _FUIIconData(0xe855, _kFontFamP3);
-  static const IconData duo_link_setup_regular =
-      _FUIIconData(0xe856, _kFontFamP3);
+  static const IconData duo_link_setup = _FUIIconData(0xe856, _kFontFamP3);
   static const IconData duo_page_header_filled =
       _FUIIconData(0xe857, _kFontFamP3);
-  static const IconData duo_page_header_regular =
-      _FUIIconData(0xe858, _kFontFamP3);
+  static const IconData duo_page_header = _FUIIconData(0xe858, _kFontFamP3);
   static const IconData duo_pagination_filled =
       _FUIIconData(0xe859, _kFontFamP3);
-  static const IconData duo_pagination_regular =
-      _FUIIconData(0xe85a, _kFontFamP3);
-  static const IconData duo_regular = _FUIIconData(0xe85b, _kFontFamP3);
+  static const IconData duo_pagination = _FUIIconData(0xe85a, _kFontFamP3);
+  static const IconData duo = _FUIIconData(0xe85b, _kFontFamP3);
   static const IconData duo_screen_time_filled =
       _FUIIconData(0xe85c, _kFontFamP3);
-  static const IconData duo_screen_time_regular =
-      _FUIIconData(0xe85d, _kFontFamP3);
+  static const IconData duo_screen_time = _FUIIconData(0xe85d, _kFontFamP3);
   static const IconData duo_status_bar_filled =
       _FUIIconData(0xe85e, _kFontFamP3);
-  static const IconData duo_status_bar_regular =
-      _FUIIconData(0xe85f, _kFontFamP3);
+  static const IconData duo_status_bar = _FUIIconData(0xe85f, _kFontFamP3);
   static const IconData duo_tablet_filled = _FUIIconData(0xe860, _kFontFamP3);
-  static const IconData duo_tablet_regular = _FUIIconData(0xe861, _kFontFamP3);
+  static const IconData duo_tablet = _FUIIconData(0xe861, _kFontFamP3);
   static const IconData duo_to_pc_filled = _FUIIconData(0xe862, _kFontFamP3);
-  static const IconData duo_to_pc_regular = _FUIIconData(0xe863, _kFontFamP3);
+  static const IconData duo_to_pc = _FUIIconData(0xe863, _kFontFamP3);
   static const IconData duo_update_filled = _FUIIconData(0xe864, _kFontFamP3);
-  static const IconData duo_update_regular = _FUIIconData(0xe865, _kFontFamP3);
+  static const IconData duo_update = _FUIIconData(0xe865, _kFontFamP3);
   static const IconData duo_vertical_scroll_filled =
       _FUIIconData(0xe866, _kFontFamP3);
-  static const IconData duo_vertical_scroll_regular =
-      _FUIIconData(0xe867, _kFontFamP3);
+  static const IconData duo_vertical_scroll = _FUIIconData(0xe867, _kFontFamP3);
   static const IconData duo_vibrate_filled = _FUIIconData(0xe868, _kFontFamP3);
-  static const IconData duo_vibrate_regular = _FUIIconData(0xe869, _kFontFamP3);
+  static const IconData duo_vibrate = _FUIIconData(0xe869, _kFontFamP3);
   static const IconData earth_filled = _FUIIconData(0xe86a, _kFontFamP3);
-  static const IconData earth_regular = _FUIIconData(0xe86b, _kFontFamP3);
+  static const IconData earth = _FUIIconData(0xe86b, _kFontFamP3);
   static const IconData edit_filled = _FUIIconData(0xe86c, _kFontFamP3);
-  static const IconData edit_regular = _FUIIconData(0xe86d, _kFontFamP3);
+  static const IconData edit = _FUIIconData(0xe86d, _kFontFamP3);
   static const IconData emoji_add_filled = _FUIIconData(0xe86e, _kFontFamP3);
-  static const IconData emoji_add_regular = _FUIIconData(0xe86f, _kFontFamP3);
+  static const IconData emoji_add = _FUIIconData(0xe86f, _kFontFamP3);
   static const IconData emoji_angry_filled = _FUIIconData(0xe870, _kFontFamP3);
-  static const IconData emoji_angry_regular = _FUIIconData(0xe871, _kFontFamP3);
+  static const IconData emoji_angry = _FUIIconData(0xe871, _kFontFamP3);
   static const IconData emoji_filled = _FUIIconData(0xe872, _kFontFamP3);
-  static const IconData emoji_regular = _FUIIconData(0xe873, _kFontFamP3);
+  static const IconData emoji = _FUIIconData(0xe873, _kFontFamP3);
   static const IconData emoji_sad_filled = _FUIIconData(0xe874, _kFontFamP3);
-  static const IconData emoji_sad_regular = _FUIIconData(0xe875, _kFontFamP3);
+  static const IconData emoji_sad = _FUIIconData(0xe875, _kFontFamP3);
   static const IconData emoji_surprise_filled =
       _FUIIconData(0xe876, _kFontFamP3);
-  static const IconData emoji_surprise_regular =
-      _FUIIconData(0xe877, _kFontFamP3);
+  static const IconData emoji_surprise = _FUIIconData(0xe877, _kFontFamP3);
   static const IconData erase_filled = _FUIIconData(0xe878, _kFontFamP3);
-  static const IconData erase_regular = _FUIIconData(0xe879, _kFontFamP3);
+  static const IconData erase = _FUIIconData(0xe879, _kFontFamP3);
   static const IconData eraser_tool_filled = _FUIIconData(0xe87a, _kFontFamP3);
-  static const IconData eraser_tool_regular = _FUIIconData(0xe87b, _kFontFamP3);
+  static const IconData eraser_tool = _FUIIconData(0xe87b, _kFontFamP3);
   static const IconData error_circle_filled = _FUIIconData(0xe87c, _kFontFamP3);
-  static const IconData error_circle_regular =
-      _FUIIconData(0xe87d, _kFontFamP3);
+  static const IconData error_circle = _FUIIconData(0xe87d, _kFontFamP3);
   static const IconData export_filled = _FUIIconData(0xe87e, _kFontFamP3);
-  static const IconData export_regular = _FUIIconData(0xe87f, _kFontFamP3);
+  static const IconData export = _FUIIconData(0xe87f, _kFontFamP3);
   static const IconData extended_dock_filled =
       _FUIIconData(0xe880, _kFontFamP3);
-  static const IconData extended_dock_regular =
-      _FUIIconData(0xe881, _kFontFamP3);
+  static const IconData extended_dock = _FUIIconData(0xe881, _kFontFamP3);
   static const IconData extension_filled = _FUIIconData(0xe882, _kFontFamP3);
-  static const IconData extension_regular = _FUIIconData(0xe883, _kFontFamP3);
+  static const IconData extension = _FUIIconData(0xe883, _kFontFamP3);
   static const IconData eye_hide_filled = _FUIIconData(0xe884, _kFontFamP3);
-  static const IconData eye_hide_regular = _FUIIconData(0xe885, _kFontFamP3);
+  static const IconData eye_hide = _FUIIconData(0xe885, _kFontFamP3);
   static const IconData eye_show_filled = _FUIIconData(0xe886, _kFontFamP3);
-  static const IconData eye_show_regular = _FUIIconData(0xe887, _kFontFamP3);
+  static const IconData eye_show = _FUIIconData(0xe887, _kFontFamP3);
   static const IconData fast_acceleration_filled =
       _FUIIconData(0xe888, _kFontFamP3);
-  static const IconData fast_acceleration_regular =
-      _FUIIconData(0xe889, _kFontFamP3);
+  static const IconData fast_acceleration = _FUIIconData(0xe889, _kFontFamP3);
   static const IconData fast_forward_filled = _FUIIconData(0xe88a, _kFontFamP3);
-  static const IconData fast_forward_regular =
-      _FUIIconData(0xe88b, _kFontFamP3);
+  static const IconData fast_forward = _FUIIconData(0xe88b, _kFontFamP3);
   static const IconData fast_mode_filled = _FUIIconData(0xe88c, _kFontFamP3);
-  static const IconData fast_mode_regular = _FUIIconData(0xe88d, _kFontFamP3);
+  static const IconData fast_mode = _FUIIconData(0xe88d, _kFontFamP3);
   static const IconData favorites_filled = _FUIIconData(0xe88e, _kFontFamP3);
-  static const IconData favorites_regular = _FUIIconData(0xe88f, _kFontFamP3);
+  static const IconData favorites = _FUIIconData(0xe88f, _kFontFamP3);
   static const IconData filter_filled = _FUIIconData(0xe890, _kFontFamP3);
-  static const IconData filter_regular = _FUIIconData(0xe891, _kFontFamP3);
+  static const IconData filter = _FUIIconData(0xe891, _kFontFamP3);
   static const IconData fingerprint_filled = _FUIIconData(0xe892, _kFontFamP3);
-  static const IconData fingerprint_regular = _FUIIconData(0xe893, _kFontFamP3);
+  static const IconData fingerprint = _FUIIconData(0xe893, _kFontFamP3);
   static const IconData fit_width_filled = _FUIIconData(0xe894, _kFontFamP3);
-  static const IconData fit_width_regular = _FUIIconData(0xe895, _kFontFamP3);
+  static const IconData fit_width = _FUIIconData(0xe895, _kFontFamP3);
   static const IconData flag_filled = _FUIIconData(0xe896, _kFontFamP3);
   static const IconData flag_off_filled = _FUIIconData(0xe897, _kFontFamP3);
-  static const IconData flag_off_regular = _FUIIconData(0xe898, _kFontFamP3);
+  static const IconData flag_off = _FUIIconData(0xe898, _kFontFamP3);
   static const IconData flag_pride_filled = _FUIIconData(0xe899, _kFontFamP3);
-  static const IconData flag_regular = _FUIIconData(0xe89a, _kFontFamP3);
+  static const IconData flag = _FUIIconData(0xe89a, _kFontFamP3);
   static const IconData flash_auto_filled = _FUIIconData(0xe89b, _kFontFamP3);
-  static const IconData flash_auto_regular = _FUIIconData(0xe89c, _kFontFamP3);
+  static const IconData flash_auto = _FUIIconData(0xe89c, _kFontFamP3);
   static const IconData flashlight_filled = _FUIIconData(0xe89d, _kFontFamP3);
   static const IconData flashlight_off_filled =
       _FUIIconData(0xe89e, _kFontFamP3);
-  static const IconData flashlight_off_regular =
-      _FUIIconData(0xe89f, _kFontFamP3);
-  static const IconData flashlight_regular = _FUIIconData(0xe8a0, _kFontFamP3);
+  static const IconData flashlight_off = _FUIIconData(0xe89f, _kFontFamP3);
+  static const IconData flashlight = _FUIIconData(0xe8a0, _kFontFamP3);
   static const IconData flash_off_filled = _FUIIconData(0xe8a1, _kFontFamP3);
-  static const IconData flash_off_regular = _FUIIconData(0xe8a2, _kFontFamP3);
+  static const IconData flash_off = _FUIIconData(0xe8a2, _kFontFamP3);
   static const IconData flash_on_filled = _FUIIconData(0xe8a3, _kFontFamP3);
-  static const IconData flash_on_regular = _FUIIconData(0xe8a4, _kFontFamP3);
+  static const IconData flash_on = _FUIIconData(0xe8a4, _kFontFamP3);
   static const IconData folder_add_filled = _FUIIconData(0xe8a5, _kFontFamP3);
-  static const IconData folder_add_regular = _FUIIconData(0xe8a6, _kFontFamP3);
+  static const IconData folder_add = _FUIIconData(0xe8a6, _kFontFamP3);
   static const IconData folder_filled = _FUIIconData(0xe8a7, _kFontFamP3);
   static const IconData folder_junk_filled = _FUIIconData(0xe8a8, _kFontFamP3);
-  static const IconData folder_junk_regular = _FUIIconData(0xe8a9, _kFontFamP3);
+  static const IconData folder_junk = _FUIIconData(0xe8a9, _kFontFamP3);
   static const IconData folder_link_filled = _FUIIconData(0xe8aa, _kFontFamP3);
-  static const IconData folder_link_regular = _FUIIconData(0xe8ab, _kFontFamP3);
+  static const IconData folder_link = _FUIIconData(0xe8ab, _kFontFamP3);
   static const IconData folder_move_filled = _FUIIconData(0xe8ac, _kFontFamP3);
-  static const IconData folder_move_regular = _FUIIconData(0xe8ad, _kFontFamP3);
+  static const IconData folder_move = _FUIIconData(0xe8ad, _kFontFamP3);
   static const IconData folder_open_filled = _FUIIconData(0xe8ae, _kFontFamP3);
-  static const IconData folder_open_regular = _FUIIconData(0xe8af, _kFontFamP3);
+  static const IconData folder_open = _FUIIconData(0xe8af, _kFontFamP3);
   static const IconData folder_public_filled =
       _FUIIconData(0xe8b0, _kFontFamP3);
-  static const IconData folder_public_regular =
-      _FUIIconData(0xe8b1, _kFontFamP3);
-  static const IconData folder_regular = _FUIIconData(0xe8b2, _kFontFamP3);
+  static const IconData folder_public = _FUIIconData(0xe8b1, _kFontFamP3);
+  static const IconData folder = _FUIIconData(0xe8b2, _kFontFamP3);
   static const IconData folder_zip_filled = _FUIIconData(0xe8b3, _kFontFamP3);
-  static const IconData folder_zip_regular = _FUIIconData(0xe8b4, _kFontFamP3);
+  static const IconData folder_zip = _FUIIconData(0xe8b4, _kFontFamP3);
   static const IconData font_decrease_filled =
       _FUIIconData(0xe8b5, _kFontFamP3);
-  static const IconData font_decrease_regular =
-      _FUIIconData(0xe8b6, _kFontFamP3);
+  static const IconData font_decrease = _FUIIconData(0xe8b6, _kFontFamP3);
   static const IconData font_increase_filled =
       _FUIIconData(0xe8b7, _kFontFamP3);
-  static const IconData font_increase_regular =
-      _FUIIconData(0xe8b8, _kFontFamP3);
+  static const IconData font_increase = _FUIIconData(0xe8b8, _kFontFamP3);
   static const IconData font_space_tracking_in_filled =
       _FUIIconData(0xe8b9, _kFontFamP3);
-  static const IconData font_space_tracking_in_regular =
+  static const IconData font_space_tracking_in =
       _FUIIconData(0xe8ba, _kFontFamP3);
   static const IconData font_space_tracking_out_filled =
       _FUIIconData(0xe8bb, _kFontFamP3);
-  static const IconData font_space_tracking_out_regular =
+  static const IconData font_space_tracking_out =
       _FUIIconData(0xe8bc, _kFontFamP3);
   static const IconData food_filled = _FUIIconData(0xe8bd, _kFontFamP3);
-  static const IconData food_regular = _FUIIconData(0xe8be, _kFontFamP3);
+  static const IconData food = _FUIIconData(0xe8be, _kFontFamP3);
   static const IconData form_new_filled = _FUIIconData(0xe8bf, _kFontFamP3);
-  static const IconData form_new_regular = _FUIIconData(0xe8c0, _kFontFamP3);
+  static const IconData form_new = _FUIIconData(0xe8c0, _kFontFamP3);
   static const IconData forward_filled = _FUIIconData(0xe8c1, _kFontFamP3);
-  static const IconData forward_regular = _FUIIconData(0xe8c2, _kFontFamP3);
+  static const IconData forward = _FUIIconData(0xe8c2, _kFontFamP3);
   static const IconData fps0_filled = _FUIIconData(0xe8c3, _kFontFamP3);
-  static const IconData fps0_regular = _FUIIconData(0xe8c4, _kFontFamP3);
+  static const IconData fps0 = _FUIIconData(0xe8c4, _kFontFamP3);
   static const IconData fps_960_filled = _FUIIconData(0xe8c5, _kFontFamP3);
-  static const IconData fps_960_regular = _FUIIconData(0xe8c6, _kFontFamP3);
+  static const IconData fps_960 = _FUIIconData(0xe8c6, _kFontFamP3);
   static const IconData full_screen_zoom_filled =
       _FUIIconData(0xe8c7, _kFontFamP3);
-  static const IconData full_screen_zoom_regular =
-      _FUIIconData(0xe8c8, _kFontFamP3);
+  static const IconData full_screen_zoom = _FUIIconData(0xe8c8, _kFontFamP3);
   static const IconData games_filled = _FUIIconData(0xe8c9, _kFontFamP3);
-  static const IconData games_regular = _FUIIconData(0xe8ca, _kFontFamP3);
+  static const IconData games = _FUIIconData(0xe8ca, _kFontFamP3);
   static const IconData gesture_filled = _FUIIconData(0xe8cb, _kFontFamP3);
-  static const IconData gesture_regular = _FUIIconData(0xe8cc, _kFontFamP3);
+  static const IconData gesture = _FUIIconData(0xe8cc, _kFontFamP3);
   static const IconData gif_filled = _FUIIconData(0xe8cd, _kFontFamP3);
-  static const IconData gif_regular = _FUIIconData(0xe8ce, _kFontFamP3);
+  static const IconData gif = _FUIIconData(0xe8ce, _kFontFamP3);
   static const IconData gift_filled = _FUIIconData(0xe8cf, _kFontFamP3);
-  static const IconData gift_regular = _FUIIconData(0xe8d0, _kFontFamP3);
+  static const IconData gift = _FUIIconData(0xe8d0, _kFontFamP3);
   static const IconData glance_filled = _FUIIconData(0xe8d1, _kFontFamP3);
-  static const IconData glance_regular = _FUIIconData(0xe8d2, _kFontFamP3);
+  static const IconData glance = _FUIIconData(0xe8d2, _kFontFamP3);
   static const IconData globe_add_filled = _FUIIconData(0xe8d3, _kFontFamP3);
-  static const IconData globe_add_regular = _FUIIconData(0xe8d4, _kFontFamP3);
+  static const IconData globe_add = _FUIIconData(0xe8d4, _kFontFamP3);
   static const IconData globe_desktop_filled =
       _FUIIconData(0xe8d5, _kFontFamP3);
-  static const IconData globe_desktop_regular =
-      _FUIIconData(0xe8d6, _kFontFamP3);
+  static const IconData globe_desktop = _FUIIconData(0xe8d6, _kFontFamP3);
   static const IconData globe_filled = _FUIIconData(0xe8d7, _kFontFamP3);
   static const IconData globe_location_filled =
       _FUIIconData(0xe8d8, _kFontFamP3);
-  static const IconData globe_location_regular =
-      _FUIIconData(0xe8d9, _kFontFamP3);
-  static const IconData globe_regular = _FUIIconData(0xe8da, _kFontFamP3);
+  static const IconData globe_location = _FUIIconData(0xe8d9, _kFontFamP3);
+  static const IconData globe = _FUIIconData(0xe8da, _kFontFamP3);
   static const IconData globe_search_filled = _FUIIconData(0xe8db, _kFontFamP3);
-  static const IconData globe_search_regular =
-      _FUIIconData(0xe8dc, _kFontFamP3);
+  static const IconData globe_search = _FUIIconData(0xe8dc, _kFontFamP3);
   static const IconData globe_video_filled = _FUIIconData(0xe8dd, _kFontFamP3);
-  static const IconData globe_video_regular = _FUIIconData(0xe8de, _kFontFamP3);
+  static const IconData globe_video = _FUIIconData(0xe8de, _kFontFamP3);
   static const IconData grid_filled = _FUIIconData(0xe8df, _kFontFamP3);
-  static const IconData grid_regular = _FUIIconData(0xe8e0, _kFontFamP3);
+  static const IconData grid = _FUIIconData(0xe8e0, _kFontFamP3);
   static const IconData group_filled = _FUIIconData(0xe8e1, _kFontFamP3);
   static const IconData group_list_filled = _FUIIconData(0xe8e2, _kFontFamP3);
-  static const IconData group_list_regular = _FUIIconData(0xe8e3, _kFontFamP3);
-  static const IconData group_regular = _FUIIconData(0xe8e4, _kFontFamP3);
+  static const IconData group_list = _FUIIconData(0xe8e3, _kFontFamP3);
+  static const IconData group = _FUIIconData(0xe8e4, _kFontFamP3);
   static const IconData guest_filled = _FUIIconData(0xe8e5, _kFontFamP3);
-  static const IconData guest_regular = _FUIIconData(0xe8e6, _kFontFamP3);
-  static const IconData hand_raise_regular = _FUIIconData(0xe8e7, _kFontFamP3);
+  static const IconData guest = _FUIIconData(0xe8e6, _kFontFamP3);
+  static const IconData hand_raise = _FUIIconData(0xe8e7, _kFontFamP3);
   static const IconData handshake_filled = _FUIIconData(0xe8e8, _kFontFamP3);
-  static const IconData handshake_regular = _FUIIconData(0xe8e9, _kFontFamP3);
+  static const IconData handshake = _FUIIconData(0xe8e9, _kFontFamP3);
   static const IconData hdr_filled = _FUIIconData(0xe8ea, _kFontFamP3);
-  static const IconData hdr_regular = _FUIIconData(0xe8eb, _kFontFamP3);
+  static const IconData hdr = _FUIIconData(0xe8eb, _kFontFamP3);
   static const IconData headphones_filled = _FUIIconData(0xe8ec, _kFontFamP3);
-  static const IconData headphones_regular = _FUIIconData(0xe8ed, _kFontFamP3);
+  static const IconData headphones = _FUIIconData(0xe8ed, _kFontFamP3);
   static const IconData headset_filled = _FUIIconData(0xe8ee, _kFontFamP3);
-  static const IconData headset_regular = _FUIIconData(0xe8ef, _kFontFamP3);
+  static const IconData headset = _FUIIconData(0xe8ef, _kFontFamP3);
   static const IconData headset_vr_filled = _FUIIconData(0xe8f0, _kFontFamP3);
-  static const IconData headset_vr_regular = _FUIIconData(0xe8f1, _kFontFamP3);
+  static const IconData headset_vr = _FUIIconData(0xe8f1, _kFontFamP3);
   static const IconData heart_filled = _FUIIconData(0xe8f2, _kFontFamP3);
-  static const IconData heart_regular = _FUIIconData(0xe8f3, _kFontFamP3);
+  static const IconData heart = _FUIIconData(0xe8f3, _kFontFamP3);
   static const IconData help_circle_filled = _FUIIconData(0xe8f4, _kFontFamP3);
-  static const IconData help_circle_regular = _FUIIconData(0xe8f5, _kFontFamP3);
+  static const IconData help_circle = _FUIIconData(0xe8f5, _kFontFamP3);
   static const IconData highlight_accent_filled =
       _FUIIconData(0xe8f6, _kFontFamP3);
   static const IconData highlight_filled = _FUIIconData(0xe8f7, _kFontFamP3);
-  static const IconData highlight_regular = _FUIIconData(0xe8f8, _kFontFamP3);
+  static const IconData highlight = _FUIIconData(0xe8f8, _kFontFamP3);
   static const IconData history_filled = _FUIIconData(0xe8f9, _kFontFamP3);
-  static const IconData history_regular = _FUIIconData(0xe8fa, _kFontFamP3);
+  static const IconData history = _FUIIconData(0xe8fa, _kFontFamP3);
   static const IconData home_add_filled = _FUIIconData(0xe8fb, _kFontFamP3);
-  static const IconData home_add_regular = _FUIIconData(0xe8fc, _kFontFamP3);
+  static const IconData home_add = _FUIIconData(0xe8fc, _kFontFamP3);
   static const IconData home_filled = _FUIIconData(0xe8fd, _kFontFamP3);
-  static const IconData home_regular = _FUIIconData(0xe8fe, _kFontFamP3);
+  static const IconData home = _FUIIconData(0xe8fe, _kFontFamP3);
   static const IconData icons_filled = _FUIIconData(0xe8ff, _kFontFamP3);
-  static const IconData icons_regular = _FUIIconData(0xe900, _kFontFamP3);
+  static const IconData icons = _FUIIconData(0xe900, _kFontFamP3);
   static const IconData image_add_filled = _FUIIconData(0xe901, _kFontFamP3);
-  static const IconData image_add_regular = _FUIIconData(0xe902, _kFontFamP3);
+  static const IconData image_add = _FUIIconData(0xe902, _kFontFamP3);
   /*Part 3*/
 
   /*Part 4*/
   static const _kFontFamP4 = 'FluentSystemIconsP4';
   static const IconData image_alt_text_filled =
       _FUIIconData(0xe800, _kFontFamP4);
-  static const IconData image_alt_text_regular =
-      _FUIIconData(0xe801, _kFontFamP4);
+  static const IconData image_alt_text = _FUIIconData(0xe801, _kFontFamP4);
   static const IconData image_copy_filled = _FUIIconData(0xe802, _kFontFamP4);
-  static const IconData image_copy_regular = _FUIIconData(0xe803, _kFontFamP4);
+  static const IconData image_copy = _FUIIconData(0xe803, _kFontFamP4);
   static const IconData image_edit_filled = _FUIIconData(0xe804, _kFontFamP4);
-  static const IconData image_edit_regular = _FUIIconData(0xe805, _kFontFamP4);
+  static const IconData image_edit = _FUIIconData(0xe805, _kFontFamP4);
   static const IconData image_filled = _FUIIconData(0xe806, _kFontFamP4);
   static const IconData image_library_filled =
       _FUIIconData(0xe807, _kFontFamP4);
-  static const IconData image_library_regular =
-      _FUIIconData(0xe808, _kFontFamP4);
-  static const IconData image_regular = _FUIIconData(0xe809, _kFontFamP4);
+  static const IconData image_library = _FUIIconData(0xe808, _kFontFamP4);
+  static const IconData image = _FUIIconData(0xe809, _kFontFamP4);
   static const IconData image_search_filled = _FUIIconData(0xe80a, _kFontFamP4);
-  static const IconData image_search_regular =
-      _FUIIconData(0xe80b, _kFontFamP4);
+  static const IconData image_search = _FUIIconData(0xe80b, _kFontFamP4);
   static const IconData immersive_reader_filled =
       _FUIIconData(0xe80c, _kFontFamP4);
-  static const IconData immersive_reader_regular =
-      _FUIIconData(0xe80d, _kFontFamP4);
+  static const IconData immersive_reader = _FUIIconData(0xe80d, _kFontFamP4);
   static const IconData important_filled = _FUIIconData(0xe80e, _kFontFamP4);
-  static const IconData important_regular = _FUIIconData(0xe80f, _kFontFamP4);
+  static const IconData important = _FUIIconData(0xe80f, _kFontFamP4);
   static const IconData incognito_filled = _FUIIconData(0xe810, _kFontFamP4);
-  static const IconData incognito_regular = _FUIIconData(0xe811, _kFontFamP4);
+  static const IconData incognito = _FUIIconData(0xe811, _kFontFamP4);
   static const IconData info_filled = _FUIIconData(0xe812, _kFontFamP4);
-  static const IconData info_regular = _FUIIconData(0xe813, _kFontFamP4);
+  static const IconData info = _FUIIconData(0xe813, _kFontFamP4);
   static const IconData inking_tool_accent_filled =
       _FUIIconData(0xe814, _kFontFamP4);
   static const IconData inking_tool_filled = _FUIIconData(0xe815, _kFontFamP4);
-  static const IconData inking_tool_regular = _FUIIconData(0xe816, _kFontFamP4);
+  static const IconData inking_tool = _FUIIconData(0xe816, _kFontFamP4);
   static const IconData inprivate_account_filled =
       _FUIIconData(0xe817, _kFontFamP4);
-  static const IconData inprivate_account_regular =
-      _FUIIconData(0xe818, _kFontFamP4);
+  static const IconData inprivate_account = _FUIIconData(0xe818, _kFontFamP4);
   static const IconData inspect_filled = _FUIIconData(0xe819, _kFontFamP4);
-  static const IconData inspect_regular = _FUIIconData(0xe81a, _kFontFamP4);
+  static const IconData inspect = _FUIIconData(0xe81a, _kFontFamP4);
   static const IconData ios_arrow_left_filled =
       _FUIIconData(0xe81b, _kFontFamP4);
-  static const IconData ios_arrow_left_regular =
-      _FUIIconData(0xe81c, _kFontFamP4);
+  static const IconData ios_arrow_left = _FUIIconData(0xe81c, _kFontFamP4);
   static const IconData ios_chevron_filled = _FUIIconData(0xe81d, _kFontFamP4);
-  static const IconData ios_chevron_regular = _FUIIconData(0xe81e, _kFontFamP4);
+  static const IconData ios_chevron = _FUIIconData(0xe81e, _kFontFamP4);
   static const IconData javascript_filled = _FUIIconData(0xe81f, _kFontFamP4);
-  static const IconData javascript_regular = _FUIIconData(0xe820, _kFontFamP4);
+  static const IconData javascript = _FUIIconData(0xe820, _kFontFamP4);
   static const IconData keyboard_dock_filled =
       _FUIIconData(0xe821, _kFontFamP4);
-  static const IconData keyboard_dock_regular =
-      _FUIIconData(0xe822, _kFontFamP4);
+  static const IconData keyboard_dock = _FUIIconData(0xe822, _kFontFamP4);
   static const IconData keyboard_filled = _FUIIconData(0xe823, _kFontFamP4);
   static const IconData keyboard_layout_float_filled =
       _FUIIconData(0xe824, _kFontFamP4);
-  static const IconData keyboard_layout_float_regular =
+  static const IconData keyboard_layout_float =
       _FUIIconData(0xe825, _kFontFamP4);
   static const IconData keyboard_layout_one_handed_left_filled =
       _FUIIconData(0xe826, _kFontFamP4);
-  static const IconData keyboard_layout_one_handed_left_regular =
+  static const IconData keyboard_layout_one_handed_left =
       _FUIIconData(0xe827, _kFontFamP4);
   static const IconData keyboard_layout_resize_filled =
       _FUIIconData(0xe828, _kFontFamP4);
-  static const IconData keyboard_layout_resize_regular =
+  static const IconData keyboard_layout_resize =
       _FUIIconData(0xe829, _kFontFamP4);
   static const IconData keyboard_layout_split_filled =
       _FUIIconData(0xe82a, _kFontFamP4);
-  static const IconData keyboard_layout_split_regular =
+  static const IconData keyboard_layout_split =
       _FUIIconData(0xe82b, _kFontFamP4);
-  static const IconData keyboard_regular = _FUIIconData(0xe82c, _kFontFamP4);
+  static const IconData keyboard = _FUIIconData(0xe82c, _kFontFamP4);
   static const IconData keyboard_shift_filled =
       _FUIIconData(0xe82d, _kFontFamP4);
-  static const IconData keyboard_shift_regular =
-      _FUIIconData(0xe82e, _kFontFamP4);
+  static const IconData keyboard_shift = _FUIIconData(0xe82e, _kFontFamP4);
   static const IconData keyboard_shift_uppercase_filled =
       _FUIIconData(0xe82f, _kFontFamP4);
-  static const IconData keyboard_shift_uppercase_regular =
+  static const IconData keyboard_shift_uppercase =
       _FUIIconData(0xe830, _kFontFamP4);
   static const IconData keyboard_tab_filled = _FUIIconData(0xe831, _kFontFamP4);
-  static const IconData keyboard_tab_regular =
-      _FUIIconData(0xe832, _kFontFamP4);
+  static const IconData keyboard_tab = _FUIIconData(0xe832, _kFontFamP4);
   static const IconData key_filled = _FUIIconData(0xe833, _kFontFamP4);
-  static const IconData key_regular = _FUIIconData(0xe834, _kFontFamP4);
+  static const IconData key = _FUIIconData(0xe834, _kFontFamP4);
   static const IconData laptop_filled = _FUIIconData(0xe835, _kFontFamP4);
-  static const IconData laptop_regular = _FUIIconData(0xe836, _kFontFamP4);
+  static const IconData laptop = _FUIIconData(0xe836, _kFontFamP4);
   static const IconData large_filled = _FUIIconData(0xe837, _kFontFamP4);
-  static const IconData large_regular = _FUIIconData(0xe838, _kFontFamP4);
+  static const IconData large = _FUIIconData(0xe838, _kFontFamP4);
   static const IconData lasso_filled = _FUIIconData(0xe839, _kFontFamP4);
-  static const IconData lasso_regular = _FUIIconData(0xe83a, _kFontFamP4);
+  static const IconData lasso = _FUIIconData(0xe83a, _kFontFamP4);
   static const IconData launcher_settings_filled =
       _FUIIconData(0xe83b, _kFontFamP4);
-  static const IconData launcher_settings_regular =
-      _FUIIconData(0xe83c, _kFontFamP4);
+  static const IconData launcher_settings = _FUIIconData(0xe83c, _kFontFamP4);
   static const IconData layer_filled = _FUIIconData(0xe83d, _kFontFamP4);
-  static const IconData layer_regular = _FUIIconData(0xe83e, _kFontFamP4);
+  static const IconData layer = _FUIIconData(0xe83e, _kFontFamP4);
   static const IconData leaf_filled = _FUIIconData(0xe83f, _kFontFamP4);
-  static const IconData leaf_regular = _FUIIconData(0xe840, _kFontFamP4);
+  static const IconData leaf = _FUIIconData(0xe840, _kFontFamP4);
   static const IconData leaf_two_filled = _FUIIconData(0xe841, _kFontFamP4);
-  static const IconData leaf_two_regular = _FUIIconData(0xe842, _kFontFamP4);
+  static const IconData leaf_two = _FUIIconData(0xe842, _kFontFamP4);
   static const IconData library_filled = _FUIIconData(0xe843, _kFontFamP4);
-  static const IconData library_regular = _FUIIconData(0xe844, _kFontFamP4);
+  static const IconData library = _FUIIconData(0xe844, _kFontFamP4);
   static const IconData lightbulb_circle_filled =
       _FUIIconData(0xe845, _kFontFamP4);
-  static const IconData lightbulb_circle_regular =
-      _FUIIconData(0xe846, _kFontFamP4);
+  static const IconData lightbulb_circle = _FUIIconData(0xe846, _kFontFamP4);
   static const IconData lightbulb_filament_filled =
       _FUIIconData(0xe847, _kFontFamP4);
-  static const IconData lightbulb_filament_regular =
-      _FUIIconData(0xe848, _kFontFamP4);
+  static const IconData lightbulb_filament = _FUIIconData(0xe848, _kFontFamP4);
   static const IconData lightbulb_filled = _FUIIconData(0xe849, _kFontFamP4);
-  static const IconData lightbulb_regular = _FUIIconData(0xe84a, _kFontFamP4);
+  static const IconData lightbulb = _FUIIconData(0xe84a, _kFontFamP4);
   static const IconData likert_filled = _FUIIconData(0xe84b, _kFontFamP4);
-  static const IconData likert_regular = _FUIIconData(0xe84c, _kFontFamP4);
+  static const IconData likert = _FUIIconData(0xe84c, _kFontFamP4);
   static const IconData link_filled = _FUIIconData(0xe84d, _kFontFamP4);
-  static const IconData link_regular = _FUIIconData(0xe84e, _kFontFamP4);
+  static const IconData link = _FUIIconData(0xe84e, _kFontFamP4);
   static const IconData link_square_filled = _FUIIconData(0xe84f, _kFontFamP4);
-  static const IconData link_square_regular = _FUIIconData(0xe850, _kFontFamP4);
+  static const IconData link_square = _FUIIconData(0xe850, _kFontFamP4);
   static const IconData list_filled = _FUIIconData(0xe851, _kFontFamP4);
-  static const IconData list_regular = _FUIIconData(0xe852, _kFontFamP4);
+  static const IconData list = _FUIIconData(0xe852, _kFontFamP4);
   static const IconData live_filled = _FUIIconData(0xe853, _kFontFamP4);
-  static const IconData live_regular = _FUIIconData(0xe854, _kFontFamP4);
+  static const IconData live = _FUIIconData(0xe854, _kFontFamP4);
   static const IconData local_language_filled =
       _FUIIconData(0xe855, _kFontFamP4);
-  static const IconData local_language_regular =
-      _FUIIconData(0xe856, _kFontFamP4);
+  static const IconData local_language = _FUIIconData(0xe856, _kFontFamP4);
   static const IconData location_filled = _FUIIconData(0xe857, _kFontFamP4);
   static const IconData location_not_found_filled =
       _FUIIconData(0xe858, _kFontFamP4);
-  static const IconData location_not_found_regular =
-      _FUIIconData(0xe859, _kFontFamP4);
-  static const IconData location_regular = _FUIIconData(0xe85a, _kFontFamP4);
+  static const IconData location_not_found = _FUIIconData(0xe859, _kFontFamP4);
+  static const IconData location = _FUIIconData(0xe85a, _kFontFamP4);
   static const IconData lock_filled = _FUIIconData(0xe85b, _kFontFamP4);
-  static const IconData lock_regular = _FUIIconData(0xe85c, _kFontFamP4);
+  static const IconData lock = _FUIIconData(0xe85c, _kFontFamP4);
   static const IconData lock_shield_filled = _FUIIconData(0xe85d, _kFontFamP4);
-  static const IconData lock_shield_regular = _FUIIconData(0xe85e, _kFontFamP4);
+  static const IconData lock_shield = _FUIIconData(0xe85e, _kFontFamP4);
   static const IconData magic_wand_filled = _FUIIconData(0xe85f, _kFontFamP4);
-  static const IconData magic_wand_regular = _FUIIconData(0xe860, _kFontFamP4);
+  static const IconData magic_wand = _FUIIconData(0xe860, _kFontFamP4);
   static const IconData mail_add_filled = _FUIIconData(0xe861, _kFontFamP4);
-  static const IconData mail_add_regular = _FUIIconData(0xe862, _kFontFamP4);
+  static const IconData mail_add = _FUIIconData(0xe862, _kFontFamP4);
   static const IconData mail_all_accounts_filled =
       _FUIIconData(0xe863, _kFontFamP4);
-  static const IconData mail_all_accounts_regular =
-      _FUIIconData(0xe864, _kFontFamP4);
+  static const IconData mail_all_accounts = _FUIIconData(0xe864, _kFontFamP4);
   static const IconData mail_all_filled = _FUIIconData(0xe865, _kFontFamP4);
-  static const IconData mail_all_regular = _FUIIconData(0xe866, _kFontFamP4);
+  static const IconData mail_all = _FUIIconData(0xe866, _kFontFamP4);
   static const IconData mail_copy_filled = _FUIIconData(0xe867, _kFontFamP4);
-  static const IconData mail_copy_regular = _FUIIconData(0xe868, _kFontFamP4);
+  static const IconData mail_copy = _FUIIconData(0xe868, _kFontFamP4);
   static const IconData mail_filled = _FUIIconData(0xe869, _kFontFamP4);
   static const IconData mail_inbox_filled = _FUIIconData(0xe86a, _kFontFamP4);
-  static const IconData mail_inbox_regular = _FUIIconData(0xe86b, _kFontFamP4);
+  static const IconData mail_inbox = _FUIIconData(0xe86b, _kFontFamP4);
   static const IconData mail_move_to_focussed_filled =
       _FUIIconData(0xe86c, _kFontFamP4);
-  static const IconData mail_move_to_focussed_regular =
+  static const IconData mail_move_to_focussed =
       _FUIIconData(0xe86d, _kFontFamP4);
   static const IconData mail_outbox_filled = _FUIIconData(0xe86e, _kFontFamP4);
-  static const IconData mail_outbox_regular = _FUIIconData(0xe86f, _kFontFamP4);
+  static const IconData mail_outbox = _FUIIconData(0xe86f, _kFontFamP4);
   static const IconData mail_read_filled = _FUIIconData(0xe870, _kFontFamP4);
-  static const IconData mail_read_regular = _FUIIconData(0xe871, _kFontFamP4);
-  static const IconData mail_regular = _FUIIconData(0xe872, _kFontFamP4);
+  static const IconData mail_read = _FUIIconData(0xe871, _kFontFamP4);
+  static const IconData mail = _FUIIconData(0xe872, _kFontFamP4);
   static const IconData mail_unread_filled = _FUIIconData(0xe873, _kFontFamP4);
-  static const IconData mail_unread_regular = _FUIIconData(0xe874, _kFontFamP4);
+  static const IconData mail_unread = _FUIIconData(0xe874, _kFontFamP4);
   static const IconData mail_unsubscribe_filled =
       _FUIIconData(0xe875, _kFontFamP4);
-  static const IconData mail_unsubscribe_regular =
-      _FUIIconData(0xe876, _kFontFamP4);
+  static const IconData mail_unsubscribe = _FUIIconData(0xe876, _kFontFamP4);
   static const IconData malware_detected_filled =
       _FUIIconData(0xe877, _kFontFamP4);
-  static const IconData malware_detected_regular =
-      _FUIIconData(0xe878, _kFontFamP4);
+  static const IconData malware_detected = _FUIIconData(0xe878, _kFontFamP4);
   static const IconData manufacturer_filled = _FUIIconData(0xe879, _kFontFamP4);
-  static const IconData manufacturer_regular =
-      _FUIIconData(0xe87a, _kFontFamP4);
+  static const IconData manufacturer = _FUIIconData(0xe87a, _kFontFamP4);
   static const IconData map_drive_filled = _FUIIconData(0xe87b, _kFontFamP4);
-  static const IconData map_drive_regular = _FUIIconData(0xe87c, _kFontFamP4);
+  static const IconData map_drive = _FUIIconData(0xe87c, _kFontFamP4);
   static const IconData map_filled = _FUIIconData(0xe87d, _kFontFamP4);
-  static const IconData map_regular = _FUIIconData(0xe87e, _kFontFamP4);
+  static const IconData map = _FUIIconData(0xe87e, _kFontFamP4);
   static const IconData mark_read_filled = _FUIIconData(0xe87f, _kFontFamP4);
-  static const IconData mark_read_regular = _FUIIconData(0xe880, _kFontFamP4);
+  static const IconData mark_read = _FUIIconData(0xe880, _kFontFamP4);
   static const IconData mark_unread_filled = _FUIIconData(0xe881, _kFontFamP4);
-  static const IconData mark_unread_regular = _FUIIconData(0xe882, _kFontFamP4);
+  static const IconData mark_unread = _FUIIconData(0xe882, _kFontFamP4);
   static const IconData match_app_layout_filled =
       _FUIIconData(0xe883, _kFontFamP4);
-  static const IconData match_app_layout_regular =
-      _FUIIconData(0xe884, _kFontFamP4);
+  static const IconData match_app_layout = _FUIIconData(0xe884, _kFontFamP4);
   static const IconData meet_now_filled = _FUIIconData(0xe885, _kFontFamP4);
-  static const IconData meet_now_regular = _FUIIconData(0xe886, _kFontFamP4);
+  static const IconData meet_now = _FUIIconData(0xe886, _kFontFamP4);
   static const IconData megaphone_filled = _FUIIconData(0xe887, _kFontFamP4);
   static const IconData megaphone_off_filled =
       _FUIIconData(0xe888, _kFontFamP4);
-  static const IconData megaphone_off_regular =
-      _FUIIconData(0xe889, _kFontFamP4);
-  static const IconData megaphone_regular = _FUIIconData(0xe88a, _kFontFamP4);
+  static const IconData megaphone_off = _FUIIconData(0xe889, _kFontFamP4);
+  static const IconData megaphone = _FUIIconData(0xe88a, _kFontFamP4);
   static const IconData mention_filled = _FUIIconData(0xe88b, _kFontFamP4);
-  static const IconData mention_regular = _FUIIconData(0xe88c, _kFontFamP4);
+  static const IconData mention = _FUIIconData(0xe88c, _kFontFamP4);
   static const IconData mic_off_filled = _FUIIconData(0xe88d, _kFontFamP4);
-  static const IconData mic_off_regular = _FUIIconData(0xe88e, _kFontFamP4);
+  static const IconData mic_off = _FUIIconData(0xe88e, _kFontFamP4);
   static const IconData mic_on_filled = _FUIIconData(0xe88f, _kFontFamP4);
-  static const IconData mic_on_regular = _FUIIconData(0xe890, _kFontFamP4);
+  static const IconData mic_on = _FUIIconData(0xe890, _kFontFamP4);
   static const IconData mic_settings_filled = _FUIIconData(0xe891, _kFontFamP4);
-  static const IconData mic_settings_regular =
-      _FUIIconData(0xe892, _kFontFamP4);
+  static const IconData mic_settings = _FUIIconData(0xe892, _kFontFamP4);
   static const IconData midi_filled = _FUIIconData(0xe893, _kFontFamP4);
-  static const IconData midi_regular = _FUIIconData(0xe894, _kFontFamP4);
+  static const IconData midi = _FUIIconData(0xe894, _kFontFamP4);
   static const IconData missing_metadata_filled =
       _FUIIconData(0xe895, _kFontFamP4);
-  static const IconData missing_metadata_regular =
-      _FUIIconData(0xe896, _kFontFamP4);
+  static const IconData missing_metadata = _FUIIconData(0xe896, _kFontFamP4);
   static const IconData mobile_optimized_filled =
       _FUIIconData(0xe897, _kFontFamP4);
-  static const IconData mobile_optimized_regular =
-      _FUIIconData(0xe898, _kFontFamP4);
+  static const IconData mobile_optimized = _FUIIconData(0xe898, _kFontFamP4);
   static const IconData more_filled = _FUIIconData(0xe899, _kFontFamP4);
-  static const IconData more_regular = _FUIIconData(0xe89a, _kFontFamP4);
+  static const IconData more = _FUIIconData(0xe89a, _kFontFamP4);
   static const IconData more_vertical_filled =
       _FUIIconData(0xe89b, _kFontFamP4);
-  static const IconData more_vertical_regular =
-      _FUIIconData(0xe89c, _kFontFamP4);
+  static const IconData more_vertical = _FUIIconData(0xe89c, _kFontFamP4);
   static const IconData movies_and_tv_filled =
       _FUIIconData(0xe89d, _kFontFamP4);
-  static const IconData movies_and_tv_regular =
-      _FUIIconData(0xe89e, _kFontFamP4);
+  static const IconData movies_and_tv = _FUIIconData(0xe89e, _kFontFamP4);
   static const IconData multiselect_filled = _FUIIconData(0xe89f, _kFontFamP4);
-  static const IconData multiselect_regular = _FUIIconData(0xe8a0, _kFontFamP4);
+  static const IconData multiselect = _FUIIconData(0xe8a0, _kFontFamP4);
   static const IconData music_filled = _FUIIconData(0xe8a1, _kFontFamP4);
-  static const IconData music_regular = _FUIIconData(0xe8a2, _kFontFamP4);
+  static const IconData music = _FUIIconData(0xe8a2, _kFontFamP4);
   static const IconData my_location_filled = _FUIIconData(0xe8a3, _kFontFamP4);
-  static const IconData my_location_regular = _FUIIconData(0xe8a4, _kFontFamP4);
+  static const IconData my_location = _FUIIconData(0xe8a4, _kFontFamP4);
   static const IconData navigation_filled = _FUIIconData(0xe8a5, _kFontFamP4);
-  static const IconData navigation_regular = _FUIIconData(0xe8a6, _kFontFamP4);
+  static const IconData navigation = _FUIIconData(0xe8a6, _kFontFamP4);
   static const IconData network_check_filled =
       _FUIIconData(0xe8a7, _kFontFamP4);
-  static const IconData network_check_regular =
-      _FUIIconData(0xe8a8, _kFontFamP4);
+  static const IconData network_check = _FUIIconData(0xe8a8, _kFontFamP4);
   static const IconData new_filled = _FUIIconData(0xe8a9, _kFontFamP4);
   static const IconData new_regular = _FUIIconData(0xe8aa, _kFontFamP4);
   static const IconData news_filled = _FUIIconData(0xe8ab, _kFontFamP4);
-  static const IconData news_regular = _FUIIconData(0xe8ac, _kFontFamP4);
+  static const IconData news = _FUIIconData(0xe8ac, _kFontFamP4);
   static const IconData next_filled = _FUIIconData(0xe8ad, _kFontFamP4);
-  static const IconData next_regular = _FUIIconData(0xe8ae, _kFontFamP4);
+  static const IconData next = _FUIIconData(0xe8ae, _kFontFamP4);
   static const IconData none_filled = _FUIIconData(0xe8af, _kFontFamP4);
-  static const IconData none_regular = _FUIIconData(0xe8b0, _kFontFamP4);
+  static const IconData none = _FUIIconData(0xe8b0, _kFontFamP4);
   static const IconData note_add_filled = _FUIIconData(0xe8b1, _kFontFamP4);
-  static const IconData note_add_regular = _FUIIconData(0xe8b2, _kFontFamP4);
+  static const IconData note_add = _FUIIconData(0xe8b2, _kFontFamP4);
   static const IconData notebook_error_filled =
       _FUIIconData(0xe8b3, _kFontFamP4);
-  static const IconData notebook_error_regular =
-      _FUIIconData(0xe8b4, _kFontFamP4);
+  static const IconData notebook_error = _FUIIconData(0xe8b4, _kFontFamP4);
   static const IconData notebook_filled = _FUIIconData(0xe8b5, _kFontFamP4);
   static const IconData notebook_lightning_filled =
       _FUIIconData(0xe8b6, _kFontFamP4);
-  static const IconData notebook_lightning_regular =
-      _FUIIconData(0xe8b7, _kFontFamP4);
+  static const IconData notebook_lightning = _FUIIconData(0xe8b7, _kFontFamP4);
   static const IconData notebook_question_mark_filled =
       _FUIIconData(0xe8b8, _kFontFamP4);
-  static const IconData notebook_question_mark_regular =
+  static const IconData notebook_question_mark =
       _FUIIconData(0xe8b9, _kFontFamP4);
-  static const IconData notebook_regular = _FUIIconData(0xe8ba, _kFontFamP4);
+  static const IconData notebook = _FUIIconData(0xe8ba, _kFontFamP4);
   static const IconData notebook_section_filled =
       _FUIIconData(0xe8bb, _kFontFamP4);
-  static const IconData notebook_section_regular =
-      _FUIIconData(0xe8bc, _kFontFamP4);
+  static const IconData notebook_section = _FUIIconData(0xe8bc, _kFontFamP4);
   static const IconData notebook_sync_filled =
       _FUIIconData(0xe8bd, _kFontFamP4);
-  static const IconData notebook_sync_regular =
-      _FUIIconData(0xe8be, _kFontFamP4);
+  static const IconData notebook_sync = _FUIIconData(0xe8be, _kFontFamP4);
   static const IconData note_filled = _FUIIconData(0xe8bf, _kFontFamP4);
   static const IconData notepad_filled = _FUIIconData(0xe8c0, _kFontFamP4);
-  static const IconData notepad_regular = _FUIIconData(0xe8c1, _kFontFamP4);
-  static const IconData note_regular = _FUIIconData(0xe8c2, _kFontFamP4);
+  static const IconData notepad = _FUIIconData(0xe8c1, _kFontFamP4);
+  static const IconData note = _FUIIconData(0xe8c2, _kFontFamP4);
   static const IconData number_row_filled = _FUIIconData(0xe8c3, _kFontFamP4);
-  static const IconData number_row_regular = _FUIIconData(0xe8c4, _kFontFamP4);
+  static const IconData number_row = _FUIIconData(0xe8c4, _kFontFamP4);
   static const IconData number_symbol_filled =
       _FUIIconData(0xe8c5, _kFontFamP4);
-  static const IconData number_symbol_regular =
-      _FUIIconData(0xe8c6, _kFontFamP4);
+  static const IconData number_symbol = _FUIIconData(0xe8c6, _kFontFamP4);
   static const IconData office_apps_filled = _FUIIconData(0xe8c7, _kFontFamP4);
-  static const IconData office_apps_regular = _FUIIconData(0xe8c8, _kFontFamP4);
+  static const IconData office_apps = _FUIIconData(0xe8c8, _kFontFamP4);
   static const IconData open_filled = _FUIIconData(0xe8c9, _kFontFamP4);
   static const IconData open_folder_filled = _FUIIconData(0xe8ca, _kFontFamP4);
-  static const IconData open_folder_regular = _FUIIconData(0xe8cb, _kFontFamP4);
+  static const IconData open_folder = _FUIIconData(0xe8cb, _kFontFamP4);
   static const IconData open_in_browser_filled =
       _FUIIconData(0xe8cc, _kFontFamP4);
-  static const IconData open_in_browser_regular =
-      _FUIIconData(0xe8cd, _kFontFamP4);
-  static const IconData open_regular = _FUIIconData(0xe8ce, _kFontFamP4);
+  static const IconData open_in_browser = _FUIIconData(0xe8cd, _kFontFamP4);
+  static const IconData open = _FUIIconData(0xe8ce, _kFontFamP4);
   static const IconData organization_chart_filled =
       _FUIIconData(0xe8cf, _kFontFamP4);
-  static const IconData organization_chart_regular =
-      _FUIIconData(0xe8d0, _kFontFamP4);
+  static const IconData organization_chart = _FUIIconData(0xe8d0, _kFontFamP4);
   static const IconData owner_filled = _FUIIconData(0xe8d1, _kFontFamP4);
-  static const IconData owner_regular = _FUIIconData(0xe8d2, _kFontFamP4);
+  static const IconData owner = _FUIIconData(0xe8d2, _kFontFamP4);
   static const IconData page_fit_filled = _FUIIconData(0xe8d3, _kFontFamP4);
-  static const IconData page_fit_regular = _FUIIconData(0xe8d4, _kFontFamP4);
+  static const IconData page_fit = _FUIIconData(0xe8d4, _kFontFamP4);
   static const IconData paint_brush_filled = _FUIIconData(0xe8d5, _kFontFamP4);
-  static const IconData paint_brush_regular = _FUIIconData(0xe8d6, _kFontFamP4);
+  static const IconData paint_brush = _FUIIconData(0xe8d6, _kFontFamP4);
   static const IconData paint_bucket_filled = _FUIIconData(0xe8d7, _kFontFamP4);
-  static const IconData paint_bucket_regular =
-      _FUIIconData(0xe8d8, _kFontFamP4);
+  static const IconData paint_bucket = _FUIIconData(0xe8d8, _kFontFamP4);
   static const IconData pair_filled = _FUIIconData(0xe8d9, _kFontFamP4);
-  static const IconData pair_regular = _FUIIconData(0xe8da, _kFontFamP4);
+  static const IconData pair = _FUIIconData(0xe8da, _kFontFamP4);
   static const IconData pane_close_filled = _FUIIconData(0xe8db, _kFontFamP4);
-  static const IconData pane_close_regular = _FUIIconData(0xe8dc, _kFontFamP4);
+  static const IconData pane_close = _FUIIconData(0xe8dc, _kFontFamP4);
   static const IconData pane_open_filled = _FUIIconData(0xe8dd, _kFontFamP4);
-  static const IconData pane_open_regular = _FUIIconData(0xe8de, _kFontFamP4);
+  static const IconData pane_open = _FUIIconData(0xe8de, _kFontFamP4);
   static const IconData patient_filled = _FUIIconData(0xe8df, _kFontFamP4);
-  static const IconData patient_regular = _FUIIconData(0xe8e0, _kFontFamP4);
+  static const IconData patient = _FUIIconData(0xe8e0, _kFontFamP4);
   static const IconData pause_filled = _FUIIconData(0xe8e1, _kFontFamP4);
-  static const IconData pause_regular = _FUIIconData(0xe8e2, _kFontFamP4);
+  static const IconData pause = _FUIIconData(0xe8e2, _kFontFamP4);
   static const IconData payment_filled = _FUIIconData(0xe8e3, _kFontFamP4);
-  static const IconData payment_regular = _FUIIconData(0xe8e4, _kFontFamP4);
+  static const IconData payment = _FUIIconData(0xe8e4, _kFontFamP4);
   static const IconData pen_settings_filled = _FUIIconData(0xe8e5, _kFontFamP4);
-  static const IconData pen_settings_regular =
-      _FUIIconData(0xe8e6, _kFontFamP4);
+  static const IconData pen_settings = _FUIIconData(0xe8e6, _kFontFamP4);
   static const IconData people_add_filled = _FUIIconData(0xe8e7, _kFontFamP4);
-  static const IconData people_add_regular = _FUIIconData(0xe8e8, _kFontFamP4);
+  static const IconData people_add = _FUIIconData(0xe8e8, _kFontFamP4);
   static const IconData people_community_add_filled =
       _FUIIconData(0xe8e9, _kFontFamP4);
-  static const IconData people_community_add_regular =
+  static const IconData people_community_add =
       _FUIIconData(0xe8ea, _kFontFamP4);
   static const IconData people_community_filled =
       _FUIIconData(0xe8eb, _kFontFamP4);
-  static const IconData people_community_regular =
-      _FUIIconData(0xe8ec, _kFontFamP4);
+  static const IconData people_community = _FUIIconData(0xe8ec, _kFontFamP4);
   static const IconData people_filled = _FUIIconData(0xe8ed, _kFontFamP4);
-  static const IconData people_regular = _FUIIconData(0xe8ee, _kFontFamP4);
+  static const IconData people = _FUIIconData(0xe8ee, _kFontFamP4);
   static const IconData people_search_filled =
       _FUIIconData(0xe8ef, _kFontFamP4);
-  static const IconData people_search_regular =
-      _FUIIconData(0xe8f0, _kFontFamP4);
+  static const IconData people_search = _FUIIconData(0xe8f0, _kFontFamP4);
   static const IconData people_team_filled = _FUIIconData(0xe8f1, _kFontFamP4);
-  static const IconData people_team_regular = _FUIIconData(0xe8f2, _kFontFamP4);
+  static const IconData people_team = _FUIIconData(0xe8f2, _kFontFamP4);
   static const IconData person_accounts_filled =
       _FUIIconData(0xe8f3, _kFontFamP4);
-  static const IconData person_accounts_regular =
-      _FUIIconData(0xe8f4, _kFontFamP4);
+  static const IconData person_accounts = _FUIIconData(0xe8f4, _kFontFamP4);
   /*Part 4*/
 
   /*Part 5*/
   static const _kFontFamP5 = 'FluentSystemIconsP5';
   static const IconData person_add_filled = _FUIIconData(0xe800, _kFontFamP5);
-  static const IconData person_add_regular = _FUIIconData(0xe801, _kFontFamP5);
+  static const IconData person_add = _FUIIconData(0xe801, _kFontFamP5);
   static const IconData person_arrow_right_filled =
       _FUIIconData(0xe802, _kFontFamP5);
-  static const IconData person_arrow_right_regular =
-      _FUIIconData(0xe803, _kFontFamP5);
+  static const IconData person_arrow_right = _FUIIconData(0xe803, _kFontFamP5);
   static const IconData person_available_filled =
       _FUIIconData(0xe804, _kFontFamP5);
-  static const IconData person_available_regular =
-      _FUIIconData(0xe805, _kFontFamP5);
+  static const IconData person_available = _FUIIconData(0xe805, _kFontFamP5);
   static const IconData person_block_filled = _FUIIconData(0xe806, _kFontFamP5);
-  static const IconData person_block_regular =
-      _FUIIconData(0xe807, _kFontFamP5);
+  static const IconData person_block = _FUIIconData(0xe807, _kFontFamP5);
   static const IconData person_board_filled = _FUIIconData(0xe808, _kFontFamP5);
-  static const IconData person_board_regular =
-      _FUIIconData(0xe809, _kFontFamP5);
+  static const IconData person_board = _FUIIconData(0xe809, _kFontFamP5);
   static const IconData person_delete_filled =
       _FUIIconData(0xe80a, _kFontFamP5);
-  static const IconData person_delete_regular =
-      _FUIIconData(0xe80b, _kFontFamP5);
+  static const IconData person_delete = _FUIIconData(0xe80b, _kFontFamP5);
   static const IconData person_feedback_filled =
       _FUIIconData(0xe80c, _kFontFamP5);
-  static const IconData person_feedback_regular =
-      _FUIIconData(0xe80d, _kFontFamP5);
+  static const IconData person_feedback = _FUIIconData(0xe80d, _kFontFamP5);
   static const IconData person_filled = _FUIIconData(0xe80e, _kFontFamP5);
   static const IconData person_leave_filled = _FUIIconData(0xe80f, _kFontFamP5);
-  static const IconData person_leave_regular =
-      _FUIIconData(0xe810, _kFontFamP5);
-  static const IconData person_regular = _FUIIconData(0xe811, _kFontFamP5);
+  static const IconData person_leave = _FUIIconData(0xe810, _kFontFamP5);
+  static const IconData person = _FUIIconData(0xe811, _kFontFamP5);
   static const IconData person_support_filled =
       _FUIIconData(0xe812, _kFontFamP5);
-  static const IconData person_support_regular =
-      _FUIIconData(0xe813, _kFontFamP5);
+  static const IconData person_support = _FUIIconData(0xe813, _kFontFamP5);
   static const IconData person_swap_filled = _FUIIconData(0xe814, _kFontFamP5);
-  static const IconData person_swap_regular = _FUIIconData(0xe815, _kFontFamP5);
+  static const IconData person_swap = _FUIIconData(0xe815, _kFontFamP5);
   static const IconData person_tentative_filled =
       _FUIIconData(0xe816, _kFontFamP5);
-  static const IconData person_tentative_regular =
-      _FUIIconData(0xe817, _kFontFamP5);
+  static const IconData person_tentative = _FUIIconData(0xe817, _kFontFamP5);
   static const IconData person_voice_filled = _FUIIconData(0xe818, _kFontFamP5);
-  static const IconData person_voice_regular =
-      _FUIIconData(0xe819, _kFontFamP5);
+  static const IconData person_voice = _FUIIconData(0xe819, _kFontFamP5);
   static const IconData phone_add_new_app_filled =
       _FUIIconData(0xe81a, _kFontFamP5);
-  static const IconData phone_add_new_app_regular =
-      _FUIIconData(0xe81b, _kFontFamP5);
+  static const IconData phone_add_new_app = _FUIIconData(0xe81b, _kFontFamP5);
   static const IconData phone_desktop_filled =
       _FUIIconData(0xe81c, _kFontFamP5);
-  static const IconData phone_desktop_regular =
-      _FUIIconData(0xe81d, _kFontFamP5);
+  static const IconData phone_desktop = _FUIIconData(0xe81d, _kFontFamP5);
   static const IconData phone_error_filled = _FUIIconData(0xe81e, _kFontFamP5);
-  static const IconData phone_error_regular = _FUIIconData(0xe81f, _kFontFamP5);
+  static const IconData phone_error = _FUIIconData(0xe81f, _kFontFamP5);
   static const IconData phone_filled = _FUIIconData(0xe820, _kFontFamP5);
   static const IconData phone_home_lock_filled =
       _FUIIconData(0xe821, _kFontFamP5);
-  static const IconData phone_home_lock_regular =
-      _FUIIconData(0xe822, _kFontFamP5);
+  static const IconData phone_home_lock = _FUIIconData(0xe822, _kFontFamP5);
   static const IconData phone_laptop_filled = _FUIIconData(0xe823, _kFontFamP5);
-  static const IconData phone_laptop_regular =
-      _FUIIconData(0xe824, _kFontFamP5);
+  static const IconData phone_laptop = _FUIIconData(0xe824, _kFontFamP5);
   static const IconData phone_link_setup_filled =
       _FUIIconData(0xe825, _kFontFamP5);
-  static const IconData phone_link_setup_regular =
-      _FUIIconData(0xe826, _kFontFamP5);
+  static const IconData phone_link_setup = _FUIIconData(0xe826, _kFontFamP5);
   static const IconData phone_mobile_filled = _FUIIconData(0xe827, _kFontFamP5);
-  static const IconData phone_mobile_regular =
-      _FUIIconData(0xe828, _kFontFamP5);
+  static const IconData phone_mobile = _FUIIconData(0xe828, _kFontFamP5);
   static const IconData phone_page_header_filled =
       _FUIIconData(0xe829, _kFontFamP5);
-  static const IconData phone_page_header_regular =
-      _FUIIconData(0xe82a, _kFontFamP5);
+  static const IconData phone_page_header = _FUIIconData(0xe82a, _kFontFamP5);
   static const IconData phone_pagination_filled =
       _FUIIconData(0xe82b, _kFontFamP5);
-  static const IconData phone_pagination_regular =
-      _FUIIconData(0xe82c, _kFontFamP5);
-  static const IconData phone_regular = _FUIIconData(0xe82d, _kFontFamP5);
+  static const IconData phone_pagination = _FUIIconData(0xe82c, _kFontFamP5);
+  static const IconData phone = _FUIIconData(0xe82d, _kFontFamP5);
   static const IconData phone_screen_time_filled =
       _FUIIconData(0xe82e, _kFontFamP5);
-  static const IconData phone_screen_time_regular =
-      _FUIIconData(0xe82f, _kFontFamP5);
+  static const IconData phone_screen_time = _FUIIconData(0xe82f, _kFontFamP5);
   static const IconData phone_shake_filled = _FUIIconData(0xe830, _kFontFamP5);
-  static const IconData phone_shake_regular = _FUIIconData(0xe831, _kFontFamP5);
+  static const IconData phone_shake = _FUIIconData(0xe831, _kFontFamP5);
   static const IconData phone_status_bar_filled =
       _FUIIconData(0xe832, _kFontFamP5);
-  static const IconData phone_status_bar_regular =
-      _FUIIconData(0xe833, _kFontFamP5);
+  static const IconData phone_status_bar = _FUIIconData(0xe833, _kFontFamP5);
   static const IconData phone_tablet_filled = _FUIIconData(0xe834, _kFontFamP5);
-  static const IconData phone_tablet_regular =
-      _FUIIconData(0xe835, _kFontFamP5);
+  static const IconData phone_tablet = _FUIIconData(0xe835, _kFontFamP5);
   static const IconData phone_to_pc_filled = _FUIIconData(0xe836, _kFontFamP5);
-  static const IconData phone_to_pc_regular = _FUIIconData(0xe837, _kFontFamP5);
+  static const IconData phone_to_pc = _FUIIconData(0xe837, _kFontFamP5);
   static const IconData phone_update_filled = _FUIIconData(0xe838, _kFontFamP5);
-  static const IconData phone_update_regular =
-      _FUIIconData(0xe839, _kFontFamP5);
+  static const IconData phone_update = _FUIIconData(0xe839, _kFontFamP5);
   static const IconData phone_vertical_scroll_filled =
       _FUIIconData(0xe83a, _kFontFamP5);
-  static const IconData phone_vertical_scroll_regular =
+  static const IconData phone_vertical_scroll =
       _FUIIconData(0xe83b, _kFontFamP5);
   static const IconData phone_vibrate_filled =
       _FUIIconData(0xe83c, _kFontFamP5);
-  static const IconData phone_vibrate_regular =
-      _FUIIconData(0xe83d, _kFontFamP5);
+  static const IconData phone_vibrate = _FUIIconData(0xe83d, _kFontFamP5);
   static const IconData photo_filter_filled = _FUIIconData(0xe83e, _kFontFamP5);
-  static const IconData photo_filter_regular =
-      _FUIIconData(0xe83f, _kFontFamP5);
+  static const IconData photo_filter = _FUIIconData(0xe83f, _kFontFamP5);
   static const IconData picture_in_picture_filled =
       _FUIIconData(0xe840, _kFontFamP5);
-  static const IconData picture_in_picture_regular =
-      _FUIIconData(0xe841, _kFontFamP5);
+  static const IconData picture_in_picture = _FUIIconData(0xe841, _kFontFamP5);
   static const IconData pin_filled = _FUIIconData(0xe842, _kFontFamP5);
   static const IconData pin_off_filled = _FUIIconData(0xe843, _kFontFamP5);
-  static const IconData pin_off_regular = _FUIIconData(0xe844, _kFontFamP5);
-  static const IconData pin_regular = _FUIIconData(0xe845, _kFontFamP5);
+  static const IconData pin_off = _FUIIconData(0xe844, _kFontFamP5);
+  static const IconData pin = _FUIIconData(0xe845, _kFontFamP5);
   static const IconData play_circle_filled = _FUIIconData(0xe846, _kFontFamP5);
-  static const IconData play_circle_regular = _FUIIconData(0xe847, _kFontFamP5);
+  static const IconData play_circle = _FUIIconData(0xe847, _kFontFamP5);
   static const IconData play_filled = _FUIIconData(0xe848, _kFontFamP5);
-  static const IconData play_regular = _FUIIconData(0xe849, _kFontFamP5);
+  static const IconData play = _FUIIconData(0xe849, _kFontFamP5);
   static const IconData plug_disconnected_filled =
       _FUIIconData(0xe84a, _kFontFamP5);
-  static const IconData plug_disconnected_regular =
-      _FUIIconData(0xe84b, _kFontFamP5);
+  static const IconData plug_disconnected = _FUIIconData(0xe84b, _kFontFamP5);
   static const IconData point_scan_filled = _FUIIconData(0xe84c, _kFontFamP5);
-  static const IconData point_scan_regular = _FUIIconData(0xe84d, _kFontFamP5);
+  static const IconData point_scan = _FUIIconData(0xe84d, _kFontFamP5);
   static const IconData poll_filled = _FUIIconData(0xe84e, _kFontFamP5);
-  static const IconData poll_regular = _FUIIconData(0xe84f, _kFontFamP5);
+  static const IconData poll = _FUIIconData(0xe84f, _kFontFamP5);
   static const IconData power_filled = _FUIIconData(0xe850, _kFontFamP5);
-  static const IconData power_regular = _FUIIconData(0xe851, _kFontFamP5);
+  static const IconData power = _FUIIconData(0xe851, _kFontFamP5);
   static const IconData predictions_filled = _FUIIconData(0xe852, _kFontFamP5);
-  static const IconData predictions_regular = _FUIIconData(0xe853, _kFontFamP5);
+  static const IconData predictions = _FUIIconData(0xe853, _kFontFamP5);
   static const IconData premium_filled = _FUIIconData(0xe854, _kFontFamP5);
-  static const IconData premium_regular = _FUIIconData(0xe855, _kFontFamP5);
+  static const IconData premium = _FUIIconData(0xe855, _kFontFamP5);
   static const IconData presenter_filled = _FUIIconData(0xe856, _kFontFamP5);
-  static const IconData presenter_regular = _FUIIconData(0xe857, _kFontFamP5);
+  static const IconData presenter = _FUIIconData(0xe857, _kFontFamP5);
   static const IconData preview_link_filled = _FUIIconData(0xe858, _kFontFamP5);
-  static const IconData preview_link_regular =
-      _FUIIconData(0xe859, _kFontFamP5);
+  static const IconData preview_link = _FUIIconData(0xe859, _kFontFamP5);
   static const IconData previous_filled = _FUIIconData(0xe85a, _kFontFamP5);
-  static const IconData previous_regular = _FUIIconData(0xe85b, _kFontFamP5);
+  static const IconData previous = _FUIIconData(0xe85b, _kFontFamP5);
   static const IconData print_filled = _FUIIconData(0xe85c, _kFontFamP5);
-  static const IconData print_regular = _FUIIconData(0xe85d, _kFontFamP5);
+  static const IconData print = _FUIIconData(0xe85d, _kFontFamP5);
   static const IconData proofread_language_filled =
       _FUIIconData(0xe85e, _kFontFamP5);
-  static const IconData proofread_language_regular =
-      _FUIIconData(0xe85f, _kFontFamP5);
+  static const IconData proofread_language = _FUIIconData(0xe85f, _kFontFamP5);
   static const IconData protocol_handler_filled =
       _FUIIconData(0xe860, _kFontFamP5);
-  static const IconData protocol_handler_regular =
-      _FUIIconData(0xe861, _kFontFamP5);
+  static const IconData protocol_handler = _FUIIconData(0xe861, _kFontFamP5);
   static const IconData pstn_call_filled = _FUIIconData(0xe862, _kFontFamP5);
-  static const IconData pstn_call_regular = _FUIIconData(0xe863, _kFontFamP5);
+  static const IconData pstn_call = _FUIIconData(0xe863, _kFontFamP5);
   static const IconData qr_code_filled = _FUIIconData(0xe864, _kFontFamP5);
-  static const IconData qr_code_regular = _FUIIconData(0xe865, _kFontFamP5);
+  static const IconData qr_code = _FUIIconData(0xe865, _kFontFamP5);
   static const IconData quiz_new_filled = _FUIIconData(0xe866, _kFontFamP5);
-  static const IconData quiz_new_regular = _FUIIconData(0xe867, _kFontFamP5);
+  static const IconData quiz_new = _FUIIconData(0xe867, _kFontFamP5);
   static const IconData radio_button_filled = _FUIIconData(0xe868, _kFontFamP5);
-  static const IconData radio_button_regular =
-      _FUIIconData(0xe869, _kFontFamP5);
+  static const IconData radio_button = _FUIIconData(0xe869, _kFontFamP5);
   static const IconData read_aloud_filled = _FUIIconData(0xe86a, _kFontFamP5);
-  static const IconData read_aloud_regular = _FUIIconData(0xe86b, _kFontFamP5);
+  static const IconData read_aloud = _FUIIconData(0xe86b, _kFontFamP5);
   static const IconData reading_list_add_filled =
       _FUIIconData(0xe86c, _kFontFamP5);
-  static const IconData reading_list_add_regular =
-      _FUIIconData(0xe86d, _kFontFamP5);
+  static const IconData reading_list_add = _FUIIconData(0xe86d, _kFontFamP5);
   static const IconData reading_list_filled = _FUIIconData(0xe86e, _kFontFamP5);
-  static const IconData reading_list_regular =
-      _FUIIconData(0xe86f, _kFontFamP5);
+  static const IconData reading_list = _FUIIconData(0xe86f, _kFontFamP5);
   static const IconData reading_mode_filled = _FUIIconData(0xe870, _kFontFamP5);
   static const IconData reading_mode_mobile_filled =
       _FUIIconData(0xe871, _kFontFamP5);
-  static const IconData reading_mode_mobile_regular =
-      _FUIIconData(0xe872, _kFontFamP5);
-  static const IconData reading_mode_regular =
-      _FUIIconData(0xe873, _kFontFamP5);
+  static const IconData reading_mode_mobile = _FUIIconData(0xe872, _kFontFamP5);
+  static const IconData reading_mode = _FUIIconData(0xe873, _kFontFamP5);
   static const IconData read_only_filled = _FUIIconData(0xe874, _kFontFamP5);
-  static const IconData read_only_regular = _FUIIconData(0xe875, _kFontFamP5);
+  static const IconData read_only = _FUIIconData(0xe875, _kFontFamP5);
   static const IconData recommended_filled = _FUIIconData(0xe876, _kFontFamP5);
-  static const IconData recommended_regular = _FUIIconData(0xe877, _kFontFamP5);
+  static const IconData recommended = _FUIIconData(0xe877, _kFontFamP5);
   static const IconData record_filled = _FUIIconData(0xe878, _kFontFamP5);
-  static const IconData record_regular = _FUIIconData(0xe879, _kFontFamP5);
+  static const IconData record = _FUIIconData(0xe879, _kFontFamP5);
   static const IconData remove_filled = _FUIIconData(0xe87a, _kFontFamP5);
   static const IconData remove_recent_filled =
       _FUIIconData(0xe87b, _kFontFamP5);
-  static const IconData remove_recent_regular =
-      _FUIIconData(0xe87c, _kFontFamP5);
-  static const IconData remove_regular = _FUIIconData(0xe87d, _kFontFamP5);
+  static const IconData remove_recent = _FUIIconData(0xe87c, _kFontFamP5);
+  static const IconData remove = _FUIIconData(0xe87d, _kFontFamP5);
   static const IconData rename_filled = _FUIIconData(0xe87e, _kFontFamP5);
-  static const IconData rename_regular = _FUIIconData(0xe87f, _kFontFamP5);
+  static const IconData rename = _FUIIconData(0xe87f, _kFontFamP5);
   static const IconData re_order_dots_filled =
       _FUIIconData(0xe880, _kFontFamP5);
-  static const IconData re_order_dots_regular =
-      _FUIIconData(0xe881, _kFontFamP5);
+  static const IconData re_order_dots = _FUIIconData(0xe881, _kFontFamP5);
   static const IconData re_order_filled = _FUIIconData(0xe882, _kFontFamP5);
-  static const IconData re_order_regular = _FUIIconData(0xe883, _kFontFamP5);
+  static const IconData re_order = _FUIIconData(0xe883, _kFontFamP5);
   static const IconData report_warning_filled =
       _FUIIconData(0xe884, _kFontFamP5);
-  static const IconData report_warning_regular =
-      _FUIIconData(0xe885, _kFontFamP5);
+  static const IconData report_warning = _FUIIconData(0xe885, _kFontFamP5);
   static const IconData resize_image_filled = _FUIIconData(0xe886, _kFontFamP5);
-  static const IconData resize_image_regular =
-      _FUIIconData(0xe887, _kFontFamP5);
+  static const IconData resize_image = _FUIIconData(0xe887, _kFontFamP5);
   static const IconData resize_video_filled = _FUIIconData(0xe888, _kFontFamP5);
-  static const IconData resize_video_regular =
-      _FUIIconData(0xe889, _kFontFamP5);
+  static const IconData resize_video = _FUIIconData(0xe889, _kFontFamP5);
   static const IconData reward_filled = _FUIIconData(0xe88a, _kFontFamP5);
-  static const IconData reward_regular = _FUIIconData(0xe88b, _kFontFamP5);
+  static const IconData reward = _FUIIconData(0xe88b, _kFontFamP5);
   static const IconData rewind_filled = _FUIIconData(0xe88c, _kFontFamP5);
-  static const IconData rewind_regular = _FUIIconData(0xe88d, _kFontFamP5);
+  static const IconData rewind = _FUIIconData(0xe88d, _kFontFamP5);
   static const IconData rocket_filled = _FUIIconData(0xe88e, _kFontFamP5);
-  static const IconData rocket_regular = _FUIIconData(0xe88f, _kFontFamP5);
+  static const IconData rocket = _FUIIconData(0xe88f, _kFontFamP5);
   static const IconData router_filled = _FUIIconData(0xe890, _kFontFamP5);
-  static const IconData router_regular = _FUIIconData(0xe891, _kFontFamP5);
+  static const IconData router = _FUIIconData(0xe891, _kFontFamP5);
   static const IconData row_triple_filled = _FUIIconData(0xe892, _kFontFamP5);
-  static const IconData row_triple_regular = _FUIIconData(0xe893, _kFontFamP5);
+  static const IconData row_triple = _FUIIconData(0xe893, _kFontFamP5);
   static const IconData ruler_filled = _FUIIconData(0xe894, _kFontFamP5);
-  static const IconData ruler_regular = _FUIIconData(0xe895, _kFontFamP5);
+  static const IconData ruler = _FUIIconData(0xe895, _kFontFamP5);
   static const IconData safe_filled = _FUIIconData(0xe896, _kFontFamP5);
-  static const IconData safe_regular = _FUIIconData(0xe897, _kFontFamP5);
+  static const IconData safe = _FUIIconData(0xe897, _kFontFamP5);
   static const IconData save_as_filled = _FUIIconData(0xe898, _kFontFamP5);
-  static const IconData save_as_regular = _FUIIconData(0xe899, _kFontFamP5);
+  static const IconData save_as = _FUIIconData(0xe899, _kFontFamP5);
   static const IconData save_copy_filled = _FUIIconData(0xe89a, _kFontFamP5);
-  static const IconData save_copy_regular = _FUIIconData(0xe89b, _kFontFamP5);
+  static const IconData save_copy = _FUIIconData(0xe89b, _kFontFamP5);
   static const IconData save_filled = _FUIIconData(0xe89c, _kFontFamP5);
-  static const IconData save_regular = _FUIIconData(0xe89d, _kFontFamP5);
+  static const IconData save = _FUIIconData(0xe89d, _kFontFamP5);
   static const IconData savings_filled = _FUIIconData(0xe89e, _kFontFamP5);
-  static const IconData savings_regular = _FUIIconData(0xe89f, _kFontFamP5);
+  static const IconData savings = _FUIIconData(0xe89f, _kFontFamP5);
   static const IconData scan_filled = _FUIIconData(0xe8a0, _kFontFamP5);
-  static const IconData scan_regular = _FUIIconData(0xe8a1, _kFontFamP5);
+  static const IconData scan = _FUIIconData(0xe8a1, _kFontFamP5);
   static const IconData scratchpad_filled = _FUIIconData(0xe8a2, _kFontFamP5);
-  static const IconData scratchpad_regular = _FUIIconData(0xe8a3, _kFontFamP5);
+  static const IconData scratchpad = _FUIIconData(0xe8a3, _kFontFamP5);
   static const IconData screenshot_filled = _FUIIconData(0xe8a4, _kFontFamP5);
-  static const IconData screenshot_regular = _FUIIconData(0xe8a5, _kFontFamP5);
+  static const IconData screenshot = _FUIIconData(0xe8a5, _kFontFamP5);
   static const IconData search_filled = _FUIIconData(0xe8a6, _kFontFamP5);
   static const IconData search_info_filled = _FUIIconData(0xe8a7, _kFontFamP5);
-  static const IconData search_info_regular = _FUIIconData(0xe8a8, _kFontFamP5);
-  static const IconData search_regular = _FUIIconData(0xe8a9, _kFontFamP5);
+  static const IconData search_info = _FUIIconData(0xe8a8, _kFontFamP5);
+  static const IconData search = _FUIIconData(0xe8a9, _kFontFamP5);
   static const IconData search_square_filled =
       _FUIIconData(0xe8aa, _kFontFamP5);
-  static const IconData search_square_regular =
-      _FUIIconData(0xe8ab, _kFontFamP5);
+  static const IconData search_square = _FUIIconData(0xe8ab, _kFontFamP5);
   static const IconData select_all_filled = _FUIIconData(0xe8ac, _kFontFamP5);
   static const IconData select_all_off_filled =
       _FUIIconData(0xe8ad, _kFontFamP5);
-  static const IconData select_all_off_regular =
-      _FUIIconData(0xe8ae, _kFontFamP5);
-  static const IconData select_all_regular = _FUIIconData(0xe8af, _kFontFamP5);
+  static const IconData select_all_off = _FUIIconData(0xe8ae, _kFontFamP5);
+  static const IconData select_all = _FUIIconData(0xe8af, _kFontFamP5);
   static const IconData select_object_filled =
       _FUIIconData(0xe8b0, _kFontFamP5);
-  static const IconData select_object_regular =
-      _FUIIconData(0xe8b1, _kFontFamP5);
+  static const IconData select_object = _FUIIconData(0xe8b1, _kFontFamP5);
   static const IconData send_copy_filled = _FUIIconData(0xe8b2, _kFontFamP5);
-  static const IconData send_copy_regular = _FUIIconData(0xe8b3, _kFontFamP5);
+  static const IconData send_copy = _FUIIconData(0xe8b3, _kFontFamP5);
   static const IconData send_filled = _FUIIconData(0xe8b4, _kFontFamP5);
   static const IconData send_logging_filled = _FUIIconData(0xe8b5, _kFontFamP5);
-  static const IconData send_logging_regular =
-      _FUIIconData(0xe8b6, _kFontFamP5);
-  static const IconData send_regular = _FUIIconData(0xe8b7, _kFontFamP5);
+  static const IconData send_logging = _FUIIconData(0xe8b6, _kFontFamP5);
+  static const IconData send = _FUIIconData(0xe8b7, _kFontFamP5);
   static const IconData send_to_back_filled = _FUIIconData(0xe8b8, _kFontFamP5);
-  static const IconData send_to_back_regular =
-      _FUIIconData(0xe8b9, _kFontFamP5);
+  static const IconData send_to_back = _FUIIconData(0xe8b9, _kFontFamP5);
   static const IconData serial_port_filled = _FUIIconData(0xe8ba, _kFontFamP5);
-  static const IconData serial_port_regular = _FUIIconData(0xe8bb, _kFontFamP5);
+  static const IconData serial_port = _FUIIconData(0xe8bb, _kFontFamP5);
   static const IconData settings_dev_filled = _FUIIconData(0xe8bc, _kFontFamP5);
-  static const IconData settings_dev_regular =
-      _FUIIconData(0xe8bd, _kFontFamP5);
+  static const IconData settings_dev = _FUIIconData(0xe8bd, _kFontFamP5);
   static const IconData settings_filled = _FUIIconData(0xe8be, _kFontFamP5);
-  static const IconData settings_regular = _FUIIconData(0xe8bf, _kFontFamP5);
+  static const IconData settings = _FUIIconData(0xe8bf, _kFontFamP5);
   static const IconData set_top_stack_filled =
       _FUIIconData(0xe8c0, _kFontFamP5);
-  static const IconData set_top_stack_regular =
-      _FUIIconData(0xe8c1, _kFontFamP5);
+  static const IconData set_top_stack = _FUIIconData(0xe8c1, _kFontFamP5);
   static const IconData shapes_filled = _FUIIconData(0xe8c2, _kFontFamP5);
-  static const IconData shapes_regular = _FUIIconData(0xe8c3, _kFontFamP5);
+  static const IconData shapes = _FUIIconData(0xe8c3, _kFontFamP5);
   static const IconData share_android_filled =
       _FUIIconData(0xe8c4, _kFontFamP5);
-  static const IconData share_android_regular =
-      _FUIIconData(0xe8c5, _kFontFamP5);
+  static const IconData share_android = _FUIIconData(0xe8c5, _kFontFamP5);
   static const IconData share_close_tray_filled =
       _FUIIconData(0xe8c6, _kFontFamP5);
-  static const IconData share_close_tray_regular =
-      _FUIIconData(0xe8c7, _kFontFamP5);
+  static const IconData share_close_tray = _FUIIconData(0xe8c7, _kFontFamP5);
   static const IconData share_desktop_filled =
       _FUIIconData(0xe8c8, _kFontFamP5);
-  static const IconData share_desktop_regular =
-      _FUIIconData(0xe8c9, _kFontFamP5);
+  static const IconData share_desktop = _FUIIconData(0xe8c9, _kFontFamP5);
   static const IconData share_filled = _FUIIconData(0xe8ca, _kFontFamP5);
   static const IconData share_ios_filled = _FUIIconData(0xe8cb, _kFontFamP5);
-  static const IconData share_ios_regular = _FUIIconData(0xe8cc, _kFontFamP5);
-  static const IconData share_regular = _FUIIconData(0xe8cd, _kFontFamP5);
+  static const IconData share_ios = _FUIIconData(0xe8cc, _kFontFamP5);
+  static const IconData share = _FUIIconData(0xe8cd, _kFontFamP5);
   static const IconData share_screen_filled = _FUIIconData(0xe8ce, _kFontFamP5);
-  static const IconData share_screen_regular =
-      _FUIIconData(0xe8cf, _kFontFamP5);
+  static const IconData share_screen = _FUIIconData(0xe8cf, _kFontFamP5);
   static const IconData share_stop_filled = _FUIIconData(0xe8d0, _kFontFamP5);
-  static const IconData share_stop_regular = _FUIIconData(0xe8d1, _kFontFamP5);
+  static const IconData share_stop = _FUIIconData(0xe8d1, _kFontFamP5);
   static const IconData shield_filled = _FUIIconData(0xe8d2, _kFontFamP5);
-  static const IconData shield_regular = _FUIIconData(0xe8d3, _kFontFamP5);
+  static const IconData shield = _FUIIconData(0xe8d3, _kFontFamP5);
   static const IconData shifts_filled = _FUIIconData(0xe8d4, _kFontFamP5);
   static const IconData shifts_pending_filled =
       _FUIIconData(0xe8d5, _kFontFamP5);
-  static const IconData shifts_pending_regular =
-      _FUIIconData(0xe8d6, _kFontFamP5);
-  static const IconData shifts_regular = _FUIIconData(0xe8d7, _kFontFamP5);
+  static const IconData shifts_pending = _FUIIconData(0xe8d6, _kFontFamP5);
+  static const IconData shifts = _FUIIconData(0xe8d7, _kFontFamP5);
   static const IconData shifts_team_filled = _FUIIconData(0xe8d8, _kFontFamP5);
-  static const IconData shifts_team_regular = _FUIIconData(0xe8d9, _kFontFamP5);
+  static const IconData shifts_team = _FUIIconData(0xe8d9, _kFontFamP5);
   static const IconData signature_filled = _FUIIconData(0xe8da, _kFontFamP5);
-  static const IconData signature_regular = _FUIIconData(0xe8db, _kFontFamP5);
+  static const IconData signature = _FUIIconData(0xe8db, _kFontFamP5);
   static const IconData signed_filled = _FUIIconData(0xe8dc, _kFontFamP5);
-  static const IconData signed_regular = _FUIIconData(0xe8dd, _kFontFamP5);
+  static const IconData signed = _FUIIconData(0xe8dd, _kFontFamP5);
   static const IconData sign_out_filled = _FUIIconData(0xe8de, _kFontFamP5);
-  static const IconData sign_out_regular = _FUIIconData(0xe8df, _kFontFamP5);
+  static const IconData sign_out = _FUIIconData(0xe8df, _kFontFamP5);
   static const IconData site_blocked_filled = _FUIIconData(0xe8e0, _kFontFamP5);
-  static const IconData site_blocked_regular =
-      _FUIIconData(0xe8e1, _kFontFamP5);
+  static const IconData site_blocked = _FUIIconData(0xe8e1, _kFontFamP5);
   static const IconData site_warning_filled = _FUIIconData(0xe8e2, _kFontFamP5);
-  static const IconData site_warning_regular =
-      _FUIIconData(0xe8e3, _kFontFamP5);
+  static const IconData site_warning = _FUIIconData(0xe8e3, _kFontFamP5);
   static const IconData sleep_filled = _FUIIconData(0xe8e4, _kFontFamP5);
-  static const IconData sleep_regular = _FUIIconData(0xe8e5, _kFontFamP5);
+  static const IconData sleep = _FUIIconData(0xe8e5, _kFontFamP5);
   static const IconData slide_add_filled = _FUIIconData(0xe8e6, _kFontFamP5);
-  static const IconData slide_add_regular = _FUIIconData(0xe8e7, _kFontFamP5);
+  static const IconData slide_add = _FUIIconData(0xe8e7, _kFontFamP5);
   static const IconData slide_design_filled = _FUIIconData(0xe8e8, _kFontFamP5);
-  static const IconData slide_design_regular =
-      _FUIIconData(0xe8e9, _kFontFamP5);
+  static const IconData slide_design = _FUIIconData(0xe8e9, _kFontFamP5);
   static const IconData slide_hide_filled = _FUIIconData(0xe8ea, _kFontFamP5);
-  static const IconData slide_hide_regular = _FUIIconData(0xe8eb, _kFontFamP5);
+  static const IconData slide_hide = _FUIIconData(0xe8eb, _kFontFamP5);
   static const IconData slide_layout_filled = _FUIIconData(0xe8ec, _kFontFamP5);
-  static const IconData slide_layout_regular =
-      _FUIIconData(0xe8ed, _kFontFamP5);
+  static const IconData slide_layout = _FUIIconData(0xe8ed, _kFontFamP5);
   static const IconData slide_text_filled = _FUIIconData(0xe8ee, _kFontFamP5);
-  static const IconData slide_text_regular = _FUIIconData(0xe8ef, _kFontFamP5);
+  static const IconData slide_text = _FUIIconData(0xe8ef, _kFontFamP5);
   static const IconData slow_mode_filled = _FUIIconData(0xe8f0, _kFontFamP5);
-  static const IconData slow_mode_regular = _FUIIconData(0xe8f1, _kFontFamP5);
+  static const IconData slow_mode = _FUIIconData(0xe8f1, _kFontFamP5);
   static const IconData small_filled = _FUIIconData(0xe8f2, _kFontFamP5);
-  static const IconData small_regular = _FUIIconData(0xe8f3, _kFontFamP5);
+  static const IconData small = _FUIIconData(0xe8f3, _kFontFamP5);
   static const IconData snooze_filled = _FUIIconData(0xe8f4, _kFontFamP5);
-  static const IconData snooze_regular = _FUIIconData(0xe8f5, _kFontFamP5);
+  static const IconData snooze = _FUIIconData(0xe8f5, _kFontFamP5);
   static const IconData sound_source_filled = _FUIIconData(0xe8f6, _kFontFamP5);
-  static const IconData sound_source_regular =
-      _FUIIconData(0xe8f7, _kFontFamP5);
+  static const IconData sound_source = _FUIIconData(0xe8f7, _kFontFamP5);
   static const IconData spacebar_filled = _FUIIconData(0xe8f8, _kFontFamP5);
-  static const IconData spacebar_regular = _FUIIconData(0xe8f9, _kFontFamP5);
+  static const IconData spacebar = _FUIIconData(0xe8f9, _kFontFamP5);
   static const IconData speaker_0_filled = _FUIIconData(0xe8fa, _kFontFamP5);
-  static const IconData speaker_0_regular = _FUIIconData(0xe8fb, _kFontFamP5);
+  static const IconData speaker_0 = _FUIIconData(0xe8fb, _kFontFamP5);
   static const IconData speaker_1_filled = _FUIIconData(0xe8fc, _kFontFamP5);
-  static const IconData speaker_1_regular = _FUIIconData(0xe8fd, _kFontFamP5);
+  static const IconData speaker_1 = _FUIIconData(0xe8fd, _kFontFamP5);
   static const IconData speaker_bluetooth_filled =
       _FUIIconData(0xe8fe, _kFontFamP5);
-  static const IconData speaker_bluetooth_regular =
-      _FUIIconData(0xe8ff, _kFontFamP5);
+  static const IconData speaker_bluetooth = _FUIIconData(0xe8ff, _kFontFamP5);
   static const IconData speaker_edit_filled = _FUIIconData(0xe900, _kFontFamP5);
-  static const IconData speaker_edit_regular =
-      _FUIIconData(0xe901, _kFontFamP5);
+  static const IconData speaker_edit = _FUIIconData(0xe901, _kFontFamP5);
   static const IconData speaker_filled = _FUIIconData(0xe902, _kFontFamP5);
   static const IconData speaker_none_filled = _FUIIconData(0xe903, _kFontFamP5);
-  static const IconData speaker_none_regular =
-      _FUIIconData(0xe904, _kFontFamP5);
+  static const IconData speaker_none = _FUIIconData(0xe904, _kFontFamP5);
   static const IconData speaker_off_filled = _FUIIconData(0xe905, _kFontFamP5);
-  static const IconData speaker_off_regular = _FUIIconData(0xe906, _kFontFamP5);
-  static const IconData speaker_regular = _FUIIconData(0xe907, _kFontFamP5);
+  static const IconData speaker_off = _FUIIconData(0xe906, _kFontFamP5);
+  static const IconData speaker = _FUIIconData(0xe907, _kFontFamP5);
   static const IconData speaker_settings_filled =
       _FUIIconData(0xe908, _kFontFamP5);
-  static const IconData speaker_settings_regular =
-      _FUIIconData(0xe909, _kFontFamP5);
+  static const IconData speaker_settings = _FUIIconData(0xe909, _kFontFamP5);
   /*Part 5*/
 
   /*Part 6*/
   static const _kFontFamP6 = 'FluentSystemIconsP6';
   static const IconData star_add_filled = _FUIIconData(0xe800, _kFontFamP6);
-  static const IconData star_add_regular = _FUIIconData(0xe801, _kFontFamP6);
+  static const IconData star_add = _FUIIconData(0xe801, _kFontFamP6);
   static const IconData star_filled = _FUIIconData(0xe802, _kFontFamP6);
   static const IconData star_half_filled = _FUIIconData(0xe803, _kFontFamP6);
   static const IconData star_none_filled = _FUIIconData(0xe804, _kFontFamP6);
-  static const IconData star_none_regular = _FUIIconData(0xe805, _kFontFamP6);
+  static const IconData star_none = _FUIIconData(0xe805, _kFontFamP6);
   static const IconData star_off_filled = _FUIIconData(0xe806, _kFontFamP6);
-  static const IconData star_off_regular = _FUIIconData(0xe807, _kFontFamP6);
+  static const IconData star_off = _FUIIconData(0xe807, _kFontFamP6);
   static const IconData star_one_quarter_filled =
       _FUIIconData(0xe808, _kFontFamP6);
-  static const IconData star_regular = _FUIIconData(0xe809, _kFontFamP6);
+  static const IconData star = _FUIIconData(0xe809, _kFontFamP6);
   static const IconData star_three_quarter_filled =
       _FUIIconData(0xe80a, _kFontFamP6);
   static const IconData status_filled = _FUIIconData(0xe80b, _kFontFamP6);
-  static const IconData status_regular = _FUIIconData(0xe80c, _kFontFamP6);
+  static const IconData status = _FUIIconData(0xe80c, _kFontFamP6);
   static const IconData sticker_add_filled = _FUIIconData(0xe80d, _kFontFamP6);
-  static const IconData sticker_add_regular = _FUIIconData(0xe80e, _kFontFamP6);
+  static const IconData sticker_add = _FUIIconData(0xe80e, _kFontFamP6);
   static const IconData sticker_filled = _FUIIconData(0xe80f, _kFontFamP6);
-  static const IconData sticker_regular = _FUIIconData(0xe810, _kFontFamP6);
+  static const IconData sticker = _FUIIconData(0xe810, _kFontFamP6);
   static const IconData stop_filled = _FUIIconData(0xe811, _kFontFamP6);
-  static const IconData stop_regular = _FUIIconData(0xe812, _kFontFamP6);
+  static const IconData stop = _FUIIconData(0xe812, _kFontFamP6);
   static const IconData storage_filled = _FUIIconData(0xe813, _kFontFamP6);
-  static const IconData storage_regular = _FUIIconData(0xe814, _kFontFamP6);
+  static const IconData storage = _FUIIconData(0xe814, _kFontFamP6);
   static const IconData store_filled = _FUIIconData(0xe815, _kFontFamP6);
   static const IconData store_microsoft_filled =
       _FUIIconData(0xe816, _kFontFamP6);
-  static const IconData store_microsoft_regular =
-      _FUIIconData(0xe817, _kFontFamP6);
-  static const IconData store_regular = _FUIIconData(0xe818, _kFontFamP6);
+  static const IconData store_microsoft = _FUIIconData(0xe817, _kFontFamP6);
+  static const IconData store = _FUIIconData(0xe818, _kFontFamP6);
   static const IconData style_guide_filled = _FUIIconData(0xe819, _kFontFamP6);
-  static const IconData style_guide_regular = _FUIIconData(0xe81a, _kFontFamP6);
+  static const IconData style_guide = _FUIIconData(0xe81a, _kFontFamP6);
   static const IconData sub_grid_filled = _FUIIconData(0xe81b, _kFontFamP6);
-  static const IconData sub_grid_regular = _FUIIconData(0xe81c, _kFontFamP6);
+  static const IconData sub_grid = _FUIIconData(0xe81c, _kFontFamP6);
   static const IconData subway_filled = _FUIIconData(0xe81d, _kFontFamP6);
-  static const IconData subway_regular = _FUIIconData(0xe81e, _kFontFamP6);
+  static const IconData subway = _FUIIconData(0xe81e, _kFontFamP6);
   static const IconData suggestion_filled = _FUIIconData(0xe81f, _kFontFamP6);
-  static const IconData suggestion_regular = _FUIIconData(0xe820, _kFontFamP6);
+  static const IconData suggestion = _FUIIconData(0xe820, _kFontFamP6);
   static const IconData surface_earbuds_filled =
       _FUIIconData(0xe821, _kFontFamP6);
-  static const IconData surface_earbuds_regular =
-      _FUIIconData(0xe822, _kFontFamP6);
+  static const IconData surface_earbuds = _FUIIconData(0xe822, _kFontFamP6);
   static const IconData surface_hub_filled = _FUIIconData(0xe823, _kFontFamP6);
-  static const IconData surface_hub_regular = _FUIIconData(0xe824, _kFontFamP6);
+  static const IconData surface_hub = _FUIIconData(0xe824, _kFontFamP6);
   static const IconData swipe_down_filled = _FUIIconData(0xe825, _kFontFamP6);
-  static const IconData swipe_down_regular = _FUIIconData(0xe826, _kFontFamP6);
+  static const IconData swipe_down = _FUIIconData(0xe826, _kFontFamP6);
   static const IconData swipe_right_filled = _FUIIconData(0xe827, _kFontFamP6);
-  static const IconData swipe_right_regular = _FUIIconData(0xe828, _kFontFamP6);
+  static const IconData swipe_right = _FUIIconData(0xe828, _kFontFamP6);
   static const IconData swipe_up_filled = _FUIIconData(0xe829, _kFontFamP6);
-  static const IconData swipe_up_regular = _FUIIconData(0xe82a, _kFontFamP6);
+  static const IconData swipe_up = _FUIIconData(0xe82a, _kFontFamP6);
   static const IconData switch_video_filled = _FUIIconData(0xe82b, _kFontFamP6);
-  static const IconData switch_video_regular =
-      _FUIIconData(0xe82c, _kFontFamP6);
+  static const IconData switch_video = _FUIIconData(0xe82c, _kFontFamP6);
   static const IconData symbols_filled = _FUIIconData(0xe82d, _kFontFamP6);
-  static const IconData symbols_regular = _FUIIconData(0xe82e, _kFontFamP6);
+  static const IconData symbols = _FUIIconData(0xe82e, _kFontFamP6);
   static const IconData system_filled = _FUIIconData(0xe82f, _kFontFamP6);
-  static const IconData system_regular = _FUIIconData(0xe830, _kFontFamP6);
+  static const IconData system = _FUIIconData(0xe830, _kFontFamP6);
   static const IconData tab_desktop_arrow_clockwise_filled =
       _FUIIconData(0xe831, _kFontFamP6);
-  static const IconData tab_desktop_arrow_clockwise_regular =
+  static const IconData tab_desktop_arrow_clockwise =
       _FUIIconData(0xe832, _kFontFamP6);
   static const IconData tab_desktop_image_filled =
       _FUIIconData(0xe833, _kFontFamP6);
-  static const IconData tab_desktop_image_regular =
-      _FUIIconData(0xe834, _kFontFamP6);
+  static const IconData tab_desktop_image = _FUIIconData(0xe834, _kFontFamP6);
   static const IconData tab_filled = _FUIIconData(0xe835, _kFontFamP6);
   static const IconData tab_in_private_filled =
       _FUIIconData(0xe836, _kFontFamP6);
-  static const IconData tab_in_private_regular =
-      _FUIIconData(0xe837, _kFontFamP6);
+  static const IconData tab_in_private = _FUIIconData(0xe837, _kFontFamP6);
   static const IconData table_add_filled = _FUIIconData(0xe838, _kFontFamP6);
-  static const IconData table_add_regular = _FUIIconData(0xe839, _kFontFamP6);
+  static const IconData table_add = _FUIIconData(0xe839, _kFontFamP6);
   static const IconData table_cells_merge_filled =
       _FUIIconData(0xe83a, _kFontFamP6);
-  static const IconData table_cells_merge_regular =
-      _FUIIconData(0xe83b, _kFontFamP6);
+  static const IconData table_cells_merge = _FUIIconData(0xe83b, _kFontFamP6);
   static const IconData table_cells_split_filled =
       _FUIIconData(0xe83c, _kFontFamP6);
-  static const IconData table_cells_split_regular =
-      _FUIIconData(0xe83d, _kFontFamP6);
+  static const IconData table_cells_split = _FUIIconData(0xe83d, _kFontFamP6);
   static const IconData table_delete_filled = _FUIIconData(0xe83e, _kFontFamP6);
-  static const IconData table_delete_regular =
-      _FUIIconData(0xe83f, _kFontFamP6);
+  static const IconData table_delete = _FUIIconData(0xe83f, _kFontFamP6);
   static const IconData table_edit_filled = _FUIIconData(0xe840, _kFontFamP6);
-  static const IconData table_edit_regular = _FUIIconData(0xe841, _kFontFamP6);
+  static const IconData table_edit = _FUIIconData(0xe841, _kFontFamP6);
   static const IconData table_filled = _FUIIconData(0xe842, _kFontFamP6);
-  static const IconData table_regular = _FUIIconData(0xe843, _kFontFamP6);
+  static const IconData table = _FUIIconData(0xe843, _kFontFamP6);
   static const IconData table_settings_filled =
       _FUIIconData(0xe844, _kFontFamP6);
-  static const IconData table_settings_regular =
-      _FUIIconData(0xe845, _kFontFamP6);
+  static const IconData table_settings = _FUIIconData(0xe845, _kFontFamP6);
   static const IconData tablet_filled = _FUIIconData(0xe846, _kFontFamP6);
-  static const IconData tablet_regular = _FUIIconData(0xe847, _kFontFamP6);
+  static const IconData tablet = _FUIIconData(0xe847, _kFontFamP6);
   static const IconData tab_new_filled = _FUIIconData(0xe848, _kFontFamP6);
-  static const IconData tab_new_regular = _FUIIconData(0xe849, _kFontFamP6);
-  static const IconData tab_regular = _FUIIconData(0xe84a, _kFontFamP6);
+  static const IconData tab_new = _FUIIconData(0xe849, _kFontFamP6);
+  static const IconData tab = _FUIIconData(0xe84a, _kFontFamP6);
   static const IconData tabs_filled = _FUIIconData(0xe84b, _kFontFamP6);
-  static const IconData tabs_regular = _FUIIconData(0xe84c, _kFontFamP6);
+  static const IconData tabs = _FUIIconData(0xe84c, _kFontFamP6);
   static const IconData tab_sweep_filled = _FUIIconData(0xe84d, _kFontFamP6);
-  static const IconData tab_sweep_regular = _FUIIconData(0xe84e, _kFontFamP6);
+  static const IconData tab_sweep = _FUIIconData(0xe84e, _kFontFamP6);
   static const IconData tab_tracking_prevention_filled =
       _FUIIconData(0xe84f, _kFontFamP6);
-  static const IconData tab_tracking_prevention_regular =
+  static const IconData tab_tracking_prevention =
       _FUIIconData(0xe850, _kFontFamP6);
   static const IconData tag_filled = _FUIIconData(0xe851, _kFontFamP6);
-  static const IconData tag_regular = _FUIIconData(0xe852, _kFontFamP6);
+  static const IconData tag = _FUIIconData(0xe852, _kFontFamP6);
   static const IconData tap_double_filled = _FUIIconData(0xe853, _kFontFamP6);
-  static const IconData tap_double_regular = _FUIIconData(0xe854, _kFontFamP6);
+  static const IconData tap_double = _FUIIconData(0xe854, _kFontFamP6);
   static const IconData tap_single_filled = _FUIIconData(0xe855, _kFontFamP6);
-  static const IconData tap_single_regular = _FUIIconData(0xe856, _kFontFamP6);
+  static const IconData tap_single = _FUIIconData(0xe856, _kFontFamP6);
   static const IconData target_edit_filled = _FUIIconData(0xe857, _kFontFamP6);
-  static const IconData target_edit_regular = _FUIIconData(0xe858, _kFontFamP6);
+  static const IconData target_edit = _FUIIconData(0xe858, _kFontFamP6);
   static const IconData target_filled = _FUIIconData(0xe859, _kFontFamP6);
-  static const IconData target_regular = _FUIIconData(0xe85a, _kFontFamP6);
+  static const IconData target = _FUIIconData(0xe85a, _kFontFamP6);
   static const IconData team_add_filled = _FUIIconData(0xe85b, _kFontFamP6);
-  static const IconData team_add_regular = _FUIIconData(0xe85c, _kFontFamP6);
+  static const IconData team_add = _FUIIconData(0xe85c, _kFontFamP6);
   static const IconData team_delete_filled = _FUIIconData(0xe85d, _kFontFamP6);
-  static const IconData team_delete_regular = _FUIIconData(0xe85e, _kFontFamP6);
+  static const IconData team_delete = _FUIIconData(0xe85e, _kFontFamP6);
   static const IconData teddy_filled = _FUIIconData(0xe85f, _kFontFamP6);
-  static const IconData teddy_regular = _FUIIconData(0xe860, _kFontFamP6);
+  static const IconData teddy = _FUIIconData(0xe860, _kFontFamP6);
   static const IconData temperature_filled = _FUIIconData(0xe861, _kFontFamP6);
-  static const IconData temperature_regular = _FUIIconData(0xe862, _kFontFamP6);
+  static const IconData temperature = _FUIIconData(0xe862, _kFontFamP6);
   static const IconData test_call_filled = _FUIIconData(0xe863, _kFontFamP6);
-  static const IconData test_call_regular = _FUIIconData(0xe864, _kFontFamP6);
+  static const IconData test_call = _FUIIconData(0xe864, _kFontFamP6);
   static const IconData text_add_filled = _FUIIconData(0xe865, _kFontFamP6);
-  static const IconData text_add_regular = _FUIIconData(0xe866, _kFontFamP6);
+  static const IconData text_add = _FUIIconData(0xe866, _kFontFamP6);
   static const IconData text_add_space_after_filled =
       _FUIIconData(0xe867, _kFontFamP6);
-  static const IconData text_add_space_after_regular =
+  static const IconData text_add_space_after =
       _FUIIconData(0xe868, _kFontFamP6);
   static const IconData text_add_space_before_filled =
       _FUIIconData(0xe869, _kFontFamP6);
-  static const IconData text_add_space_before_regular =
+  static const IconData text_add_space_before =
       _FUIIconData(0xe86a, _kFontFamP6);
   static const IconData text_align_center_filled =
       _FUIIconData(0xe86b, _kFontFamP6);
-  static const IconData text_align_center_regular =
-      _FUIIconData(0xe86c, _kFontFamP6);
+  static const IconData text_align_center = _FUIIconData(0xe86c, _kFontFamP6);
   static const IconData text_align_distributed_filled =
       _FUIIconData(0xe86d, _kFontFamP6);
-  static const IconData text_align_distributed_regular =
+  static const IconData text_align_distributed =
       _FUIIconData(0xe86e, _kFontFamP6);
   static const IconData text_align_justify_filled =
       _FUIIconData(0xe86f, _kFontFamP6);
-  static const IconData text_align_justify_regular =
-      _FUIIconData(0xe870, _kFontFamP6);
+  static const IconData text_align_justify = _FUIIconData(0xe870, _kFontFamP6);
   static const IconData text_align_left_filled =
       _FUIIconData(0xe871, _kFontFamP6);
-  static const IconData text_align_left_regular =
-      _FUIIconData(0xe872, _kFontFamP6);
+  static const IconData text_align_left = _FUIIconData(0xe872, _kFontFamP6);
   static const IconData text_align_right_filled =
       _FUIIconData(0xe873, _kFontFamP6);
-  static const IconData text_align_right_regular =
-      _FUIIconData(0xe874, _kFontFamP6);
+  static const IconData text_align_right = _FUIIconData(0xe874, _kFontFamP6);
   static const IconData text_bold_filled = _FUIIconData(0xe875, _kFontFamP6);
-  static const IconData text_bold_regular = _FUIIconData(0xe876, _kFontFamP6);
+  static const IconData text_bold = _FUIIconData(0xe876, _kFontFamP6);
   static const IconData textbox_align_bottom_filled =
       _FUIIconData(0xe877, _kFontFamP6);
-  static const IconData textbox_align_bottom_regular =
+  static const IconData textbox_align_bottom =
       _FUIIconData(0xe878, _kFontFamP6);
   static const IconData textbox_align_filled =
       _FUIIconData(0xe879, _kFontFamP6);
   static const IconData textbox_align_middle_filled =
       _FUIIconData(0xe87a, _kFontFamP6);
-  static const IconData textbox_align_middle_regular =
+  static const IconData textbox_align_middle =
       _FUIIconData(0xe87b, _kFontFamP6);
-  static const IconData textbox_align_regular =
-      _FUIIconData(0xe87c, _kFontFamP6);
+  static const IconData textbox_align = _FUIIconData(0xe87c, _kFontFamP6);
   static const IconData textbox_align_top_filled =
       _FUIIconData(0xe87d, _kFontFamP6);
-  static const IconData textbox_align_top_regular =
-      _FUIIconData(0xe87e, _kFontFamP6);
+  static const IconData textbox_align_top = _FUIIconData(0xe87e, _kFontFamP6);
   static const IconData textbox_filled = _FUIIconData(0xe87f, _kFontFamP6);
-  static const IconData textbox_regular = _FUIIconData(0xe880, _kFontFamP6);
+  static const IconData textbox = _FUIIconData(0xe880, _kFontFamP6);
   static const IconData textbox_vertical_filled =
       _FUIIconData(0xe881, _kFontFamP6);
-  static const IconData textbox_vertical_regular =
-      _FUIIconData(0xe882, _kFontFamP6);
+  static const IconData textbox_vertical = _FUIIconData(0xe882, _kFontFamP6);
   static const IconData text_bullet_list_filled =
       _FUIIconData(0xe883, _kFontFamP6);
-  static const IconData text_bullet_list_regular =
-      _FUIIconData(0xe884, _kFontFamP6);
+  static const IconData text_bullet_list = _FUIIconData(0xe884, _kFontFamP6);
   static const IconData text_bullet_list_square_filled =
       _FUIIconData(0xe885, _kFontFamP6);
-  static const IconData text_bullet_list_square_regular =
+  static const IconData text_bullet_list_square =
       _FUIIconData(0xe886, _kFontFamP6);
   static const IconData text_bullet_list_tree_filled =
       _FUIIconData(0xe887, _kFontFamP6);
-  static const IconData text_bullet_list_tree_regular =
+  static const IconData text_bullet_list_tree =
       _FUIIconData(0xe888, _kFontFamP6);
   static const IconData text_change_accept_filled =
       _FUIIconData(0xe889, _kFontFamP6);
-  static const IconData text_change_accept_regular =
-      _FUIIconData(0xe88a, _kFontFamP6);
+  static const IconData text_change_accept = _FUIIconData(0xe88a, _kFontFamP6);
   static const IconData text_change_case_filled =
       _FUIIconData(0xe88b, _kFontFamP6);
-  static const IconData text_change_case_regular =
-      _FUIIconData(0xe88c, _kFontFamP6);
+  static const IconData text_change_case = _FUIIconData(0xe88c, _kFontFamP6);
   static const IconData text_change_next_filled =
       _FUIIconData(0xe88d, _kFontFamP6);
-  static const IconData text_change_next_regular =
-      _FUIIconData(0xe88e, _kFontFamP6);
+  static const IconData text_change_next = _FUIIconData(0xe88e, _kFontFamP6);
   static const IconData text_change_previous_filled =
       _FUIIconData(0xe88f, _kFontFamP6);
-  static const IconData text_change_previous_regular =
+  static const IconData text_change_previous =
       _FUIIconData(0xe890, _kFontFamP6);
   static const IconData text_change_reject_filled =
       _FUIIconData(0xe891, _kFontFamP6);
-  static const IconData text_change_reject_regular =
-      _FUIIconData(0xe892, _kFontFamP6);
+  static const IconData text_change_reject = _FUIIconData(0xe892, _kFontFamP6);
   static const IconData text_change_settings_filled =
       _FUIIconData(0xe893, _kFontFamP6);
-  static const IconData text_change_settings_regular =
+  static const IconData text_change_settings =
       _FUIIconData(0xe894, _kFontFamP6);
   static const IconData text_clear_formatting_filled =
       _FUIIconData(0xe895, _kFontFamP6);
-  static const IconData text_clear_formatting_regular =
+  static const IconData text_clear_formatting =
       _FUIIconData(0xe896, _kFontFamP6);
   static const IconData text_collapse_filled =
       _FUIIconData(0xe897, _kFontFamP6);
-  static const IconData text_collapse_regular =
-      _FUIIconData(0xe898, _kFontFamP6);
+  static const IconData text_collapse = _FUIIconData(0xe898, _kFontFamP6);
   static const IconData text_color_filled = _FUIIconData(0xe899, _kFontFamP6);
-  static const IconData text_color_regular = _FUIIconData(0xe89a, _kFontFamP6);
+  static const IconData text_color = _FUIIconData(0xe89a, _kFontFamP6);
   static const IconData text_column_one_filled =
       _FUIIconData(0xe89b, _kFontFamP6);
-  static const IconData text_column_one_regular =
-      _FUIIconData(0xe89c, _kFontFamP6);
+  static const IconData text_column_one = _FUIIconData(0xe89c, _kFontFamP6);
   static const IconData text_column_three_filled =
       _FUIIconData(0xe89d, _kFontFamP6);
-  static const IconData text_column_three_regular =
-      _FUIIconData(0xe89e, _kFontFamP6);
+  static const IconData text_column_three = _FUIIconData(0xe89e, _kFontFamP6);
   static const IconData text_column_two_filled =
       _FUIIconData(0xe89f, _kFontFamP6);
   static const IconData text_column_two_left_filled =
       _FUIIconData(0xe8a0, _kFontFamP6);
-  static const IconData text_column_two_left_regular =
+  static const IconData text_column_two_left =
       _FUIIconData(0xe8a1, _kFontFamP6);
-  static const IconData text_column_two_regular =
-      _FUIIconData(0xe8a2, _kFontFamP6);
+  static const IconData text_column_two = _FUIIconData(0xe8a2, _kFontFamP6);
   static const IconData text_column_two_right_filled =
       _FUIIconData(0xe8a3, _kFontFamP6);
-  static const IconData text_column_two_right_regular =
+  static const IconData text_column_two_right =
       _FUIIconData(0xe8a4, _kFontFamP6);
   static const IconData text_description_filled =
       _FUIIconData(0xe8a5, _kFontFamP6);
-  static const IconData text_description_regular =
-      _FUIIconData(0xe8a6, _kFontFamP6);
+  static const IconData text_description = _FUIIconData(0xe8a6, _kFontFamP6);
   static const IconData text_direction_filled =
       _FUIIconData(0xe8a7, _kFontFamP6);
   static const IconData text_direction_horizontal_ltr_filled =
       _FUIIconData(0xe8a8, _kFontFamP6);
-  static const IconData text_direction_horizontal_ltr_regular =
+  static const IconData text_direction_horizontal_ltr =
       _FUIIconData(0xe8a9, _kFontFamP6);
-  static const IconData text_direction_regular =
-      _FUIIconData(0xe8aa, _kFontFamP6);
+  static const IconData text_direction = _FUIIconData(0xe8aa, _kFontFamP6);
   static const IconData text_direction_rotate_90_filled =
       _FUIIconData(0xe8ab, _kFontFamP6);
-  static const IconData text_direction_rotate_90_regular =
+  static const IconData text_direction_rotate_90 =
       _FUIIconData(0xe8ac, _kFontFamP6);
   static const IconData text_direction_rotate_270_ac_filled =
       _FUIIconData(0xe8ad, _kFontFamP6);
-  static const IconData text_direction_rotate_270_ac_regular =
+  static const IconData text_direction_rotate_270_ac =
       _FUIIconData(0xe8ae, _kFontFamP6);
   static const IconData text_direction_rotate_270_filled =
       _FUIIconData(0xe8af, _kFontFamP6);
-  static const IconData text_direction_rotate_270_regular =
+  static const IconData text_direction_rotate_270 =
       _FUIIconData(0xe8b0, _kFontFamP6);
   static const IconData text_direction_vertical_filled =
       _FUIIconData(0xe8b1, _kFontFamP6);
-  static const IconData text_direction_vertical_regular =
+  static const IconData text_direction_vertical =
       _FUIIconData(0xe8b2, _kFontFamP6);
   static const IconData text_edit_style_filled =
       _FUIIconData(0xe8b3, _kFontFamP6);
-  static const IconData text_edit_style_regular =
-      _FUIIconData(0xe8b4, _kFontFamP6);
+  static const IconData text_edit_style = _FUIIconData(0xe8b4, _kFontFamP6);
   static const IconData text_effects_filled = _FUIIconData(0xe8b5, _kFontFamP6);
-  static const IconData text_effects_regular =
-      _FUIIconData(0xe8b6, _kFontFamP6);
+  static const IconData text_effects = _FUIIconData(0xe8b6, _kFontFamP6);
   static const IconData text_expand_filled = _FUIIconData(0xe8b7, _kFontFamP6);
-  static const IconData text_expand_regular = _FUIIconData(0xe8b8, _kFontFamP6);
+  static const IconData text_expand = _FUIIconData(0xe8b8, _kFontFamP6);
   static const IconData text_field_filled = _FUIIconData(0xe8b9, _kFontFamP6);
-  static const IconData text_field_regular = _FUIIconData(0xe8ba, _kFontFamP6);
+  static const IconData text_field = _FUIIconData(0xe8ba, _kFontFamP6);
   static const IconData text_filled = _FUIIconData(0xe8bb, _kFontFamP6);
   static const IconData text_first_line_filled =
       _FUIIconData(0xe8bc, _kFontFamP6);
-  static const IconData text_first_line_regular =
-      _FUIIconData(0xe8bd, _kFontFamP6);
+  static const IconData text_first_line = _FUIIconData(0xe8bd, _kFontFamP6);
   static const IconData text_font_filled = _FUIIconData(0xe8be, _kFontFamP6);
-  static const IconData text_font_regular = _FUIIconData(0xe8bf, _kFontFamP6);
+  static const IconData text_font = _FUIIconData(0xe8bf, _kFontFamP6);
   static const IconData text_font_size_filled =
       _FUIIconData(0xe8c0, _kFontFamP6);
-  static const IconData text_font_size_regular =
-      _FUIIconData(0xe8c1, _kFontFamP6);
+  static const IconData text_font_size = _FUIIconData(0xe8c1, _kFontFamP6);
   static const IconData text_footnote_filled =
       _FUIIconData(0xe8c2, _kFontFamP6);
-  static const IconData text_footnote_regular =
-      _FUIIconData(0xe8c3, _kFontFamP6);
+  static const IconData text_footnote = _FUIIconData(0xe8c3, _kFontFamP6);
   static const IconData text_grammar_options_filled =
       _FUIIconData(0xe8c4, _kFontFamP6);
-  static const IconData text_grammar_options_regular =
+  static const IconData text_grammar_options =
       _FUIIconData(0xe8c5, _kFontFamP6);
   static const IconData text_hanging_filled = _FUIIconData(0xe8c6, _kFontFamP6);
-  static const IconData text_hanging_regular =
-      _FUIIconData(0xe8c7, _kFontFamP6);
+  static const IconData text_hanging = _FUIIconData(0xe8c7, _kFontFamP6);
   static const IconData text_indent_decrease_filled =
       _FUIIconData(0xe8c8, _kFontFamP6);
-  static const IconData text_indent_decrease_regular =
+  static const IconData text_indent_decrease =
       _FUIIconData(0xe8c9, _kFontFamP6);
   static const IconData text_indent_increase_filled =
       _FUIIconData(0xe8ca, _kFontFamP6);
-  static const IconData text_indent_increase_regular =
+  static const IconData text_indent_increase =
       _FUIIconData(0xe8cb, _kFontFamP6);
   static const IconData text_italic_filled = _FUIIconData(0xe8cc, _kFontFamP6);
-  static const IconData text_italic_regular = _FUIIconData(0xe8cd, _kFontFamP6);
+  static const IconData text_italic = _FUIIconData(0xe8cd, _kFontFamP6);
   static const IconData text_line_spacing_filled =
       _FUIIconData(0xe8ce, _kFontFamP6);
-  static const IconData text_line_spacing_regular =
-      _FUIIconData(0xe8cf, _kFontFamP6);
+  static const IconData text_line_spacing = _FUIIconData(0xe8cf, _kFontFamP6);
   static const IconData text_number_format_filled =
       _FUIIconData(0xe8d0, _kFontFamP6);
-  static const IconData text_number_format_regular =
-      _FUIIconData(0xe8d1, _kFontFamP6);
+  static const IconData text_number_format = _FUIIconData(0xe8d1, _kFontFamP6);
   static const IconData text_number_list_ltr_filled =
       _FUIIconData(0xe8d2, _kFontFamP6);
-  static const IconData text_number_list_ltr_regular =
+  static const IconData text_number_list_ltr =
       _FUIIconData(0xe8d3, _kFontFamP6);
   static const IconData text_number_list_rtl_filled =
       _FUIIconData(0xe8d4, _kFontFamP6);
-  static const IconData text_number_list_rtl_regular =
+  static const IconData text_number_list_rtl =
       _FUIIconData(0xe8d5, _kFontFamP6);
   static const IconData text_paragraph_settings_filled =
       _FUIIconData(0xe8d6, _kFontFamP6);
-  static const IconData text_paragraph_settings_regular =
+  static const IconData text_paragraph_settings =
       _FUIIconData(0xe8d7, _kFontFamP6);
   static const IconData text_proofing_tools_filled =
       _FUIIconData(0xe8d8, _kFontFamP6);
-  static const IconData text_proofing_tools_regular =
-      _FUIIconData(0xe8d9, _kFontFamP6);
+  static const IconData text_proofing_tools = _FUIIconData(0xe8d9, _kFontFamP6);
   static const IconData text_quote_filled = _FUIIconData(0xe8da, _kFontFamP6);
-  static const IconData text_quote_regular = _FUIIconData(0xe8db, _kFontFamP6);
-  static const IconData text_regular = _FUIIconData(0xe8dc, _kFontFamP6);
+  static const IconData text_quote = _FUIIconData(0xe8db, _kFontFamP6);
+  static const IconData text = _FUIIconData(0xe8dc, _kFontFamP6);
   static const IconData text_strikethrough_filled =
       _FUIIconData(0xe8dd, _kFontFamP6);
-  static const IconData text_strikethrough_regular =
-      _FUIIconData(0xe8de, _kFontFamP6);
+  static const IconData text_strikethrough = _FUIIconData(0xe8de, _kFontFamP6);
   static const IconData text_subscript_filled =
       _FUIIconData(0xe8df, _kFontFamP6);
-  static const IconData text_subscript_regular =
-      _FUIIconData(0xe8e0, _kFontFamP6);
+  static const IconData text_subscript = _FUIIconData(0xe8e0, _kFontFamP6);
   static const IconData text_superscript_filled =
       _FUIIconData(0xe8e1, _kFontFamP6);
-  static const IconData text_superscript_regular =
-      _FUIIconData(0xe8e2, _kFontFamP6);
+  static const IconData text_superscript = _FUIIconData(0xe8e2, _kFontFamP6);
   static const IconData text_underline_filled =
       _FUIIconData(0xe8e3, _kFontFamP6);
-  static const IconData text_underline_regular =
-      _FUIIconData(0xe8e4, _kFontFamP6);
+  static const IconData text_underline = _FUIIconData(0xe8e4, _kFontFamP6);
   static const IconData text_word_count_filled =
       _FUIIconData(0xe8e5, _kFontFamP6);
-  static const IconData text_word_count_regular =
-      _FUIIconData(0xe8e6, _kFontFamP6);
+  static const IconData text_word_count = _FUIIconData(0xe8e6, _kFontFamP6);
   static const IconData thinking_filled = _FUIIconData(0xe8e7, _kFontFamP6);
-  static const IconData thinking_regular = _FUIIconData(0xe8e8, _kFontFamP6);
+  static const IconData thinking = _FUIIconData(0xe8e8, _kFontFamP6);
   static const IconData thumb_dislike_filled =
       _FUIIconData(0xe8e9, _kFontFamP6);
-  static const IconData thumb_dislike_regular =
-      _FUIIconData(0xe8ea, _kFontFamP6);
+  static const IconData thumb_dislike = _FUIIconData(0xe8ea, _kFontFamP6);
   static const IconData thumb_like_filled = _FUIIconData(0xe8eb, _kFontFamP6);
-  static const IconData thumb_like_regular = _FUIIconData(0xe8ec, _kFontFamP6);
+  static const IconData thumb_like = _FUIIconData(0xe8ec, _kFontFamP6);
   static const IconData ticket_filled = _FUIIconData(0xe8ed, _kFontFamP6);
-  static const IconData ticket_regular = _FUIIconData(0xe8ee, _kFontFamP6);
+  static const IconData ticket = _FUIIconData(0xe8ee, _kFontFamP6);
   static const IconData time_and_weather_filled =
       _FUIIconData(0xe8ef, _kFontFamP6);
-  static const IconData time_and_weather_regular =
-      _FUIIconData(0xe8f0, _kFontFamP6);
+  static const IconData time_and_weather = _FUIIconData(0xe8f0, _kFontFamP6);
   static const IconData timeline_filled = _FUIIconData(0xe8f1, _kFontFamP6);
-  static const IconData timeline_regular = _FUIIconData(0xe8f2, _kFontFamP6);
+  static const IconData timeline = _FUIIconData(0xe8f2, _kFontFamP6);
   static const IconData time_picker_filled = _FUIIconData(0xe8f3, _kFontFamP6);
-  static const IconData time_picker_regular = _FUIIconData(0xe8f4, _kFontFamP6);
+  static const IconData time_picker = _FUIIconData(0xe8f4, _kFontFamP6);
   static const IconData timer_2_filled = _FUIIconData(0xe8f5, _kFontFamP6);
-  static const IconData timer_2_regular = _FUIIconData(0xe8f6, _kFontFamP6);
+  static const IconData timer_2 = _FUIIconData(0xe8f6, _kFontFamP6);
   static const IconData timer_10_filled = _FUIIconData(0xe8f7, _kFontFamP6);
-  static const IconData timer_10_regular = _FUIIconData(0xe8f8, _kFontFamP6);
+  static const IconData timer_10 = _FUIIconData(0xe8f8, _kFontFamP6);
   static const IconData timer_filled = _FUIIconData(0xe8f9, _kFontFamP6);
   static const IconData timer_off_filled = _FUIIconData(0xe8fa, _kFontFamP6);
-  static const IconData timer_off_regular = _FUIIconData(0xe8fb, _kFontFamP6);
-  static const IconData timer_regular = _FUIIconData(0xe8fc, _kFontFamP6);
+  static const IconData timer_off = _FUIIconData(0xe8fb, _kFontFamP6);
+  static const IconData timer = _FUIIconData(0xe8fc, _kFontFamP6);
   static const IconData toggle_right_filled = _FUIIconData(0xe8fd, _kFontFamP6);
-  static const IconData toggle_right_regular =
-      _FUIIconData(0xe8fe, _kFontFamP6);
+  static const IconData toggle_right = _FUIIconData(0xe8fe, _kFontFamP6);
   static const IconData toolbox_filled = _FUIIconData(0xe8ff, _kFontFamP6);
-  static const IconData toolbox_regular = _FUIIconData(0xe900, _kFontFamP6);
+  static const IconData toolbox = _FUIIconData(0xe900, _kFontFamP6);
   static const IconData top_speed_filled = _FUIIconData(0xe901, _kFontFamP6);
-  static const IconData top_speed_regular = _FUIIconData(0xe902, _kFontFamP6);
+  static const IconData top_speed = _FUIIconData(0xe902, _kFontFamP6);
   /*Part 6*/
 
   /*Part 7*/
   static const _kFontFamP7 = 'FluentSystemIconsP7';
   static const IconData arrow_export_filled = _FUIIconData(0xe800, _kFontFamP7);
-  static const IconData arrow_export_regular =
-      _FUIIconData(0xe801, _kFontFamP7);
+  static const IconData arrow_export = _FUIIconData(0xe801, _kFontFamP7);
   static const IconData calculator_filled = _FUIIconData(0xe802, _kFontFamP7);
-  static const IconData calculator_regular = _FUIIconData(0xe803, _kFontFamP7);
+  static const IconData calculator = _FUIIconData(0xe803, _kFontFamP7);
   static const IconData cut_filled = _FUIIconData(0xe804, _kFontFamP7);
-  static const IconData cut_regular = _FUIIconData(0xe805, _kFontFamP7);
+  static const IconData cut = _FUIIconData(0xe805, _kFontFamP7);
   static const IconData document_top_center_filled =
       _FUIIconData(0xe806, _kFontFamP7);
-  static const IconData document_top_center_regular =
-      _FUIIconData(0xe807, _kFontFamP7);
+  static const IconData document_top_center = _FUIIconData(0xe807, _kFontFamP7);
   static const IconData document_top_left_filled =
       _FUIIconData(0xe808, _kFontFamP7);
-  static const IconData document_top_left_regular =
-      _FUIIconData(0xe809, _kFontFamP7);
+  static const IconData document_top_left = _FUIIconData(0xe809, _kFontFamP7);
   static const IconData document_top_right_filled =
       _FUIIconData(0xe80a, _kFontFamP7);
-  static const IconData document_top_right_regular =
-      _FUIIconData(0xe80b, _kFontFamP7);
+  static const IconData document_top_right = _FUIIconData(0xe80b, _kFontFamP7);
   static const IconData folder_briefcase_filled =
       _FUIIconData(0xe80c, _kFontFamP7);
-  static const IconData folder_briefcase_regular =
-      _FUIIconData(0xe80d, _kFontFamP7);
+  static const IconData folder_briefcase = _FUIIconData(0xe80d, _kFontFamP7);
   static const IconData folder_open_vertical_filled =
       _FUIIconData(0xe80e, _kFontFamP7);
-  static const IconData folder_open_vertical_regular =
+  static const IconData folder_open_vertical =
       _FUIIconData(0xe80f, _kFontFamP7);
   static const IconData ios_chevron_right_filled =
       _FUIIconData(0xe810, _kFontFamP7);
-  static const IconData ios_chevron_right_regular =
-      _FUIIconData(0xe811, _kFontFamP7);
+  static const IconData ios_chevron_right = _FUIIconData(0xe811, _kFontFamP7);
   static const IconData link_remove_filled = _FUIIconData(0xe812, _kFontFamP7);
-  static const IconData link_remove_regular = _FUIIconData(0xe813, _kFontFamP7);
+  static const IconData link_remove = _FUIIconData(0xe813, _kFontFamP7);
   static const IconData organization_filled = _FUIIconData(0xe814, _kFontFamP7);
-  static const IconData organization_regular =
-      _FUIIconData(0xe815, _kFontFamP7);
+  static const IconData organization = _FUIIconData(0xe815, _kFontFamP7);
   static const IconData page_filled = _FUIIconData(0xe816, _kFontFamP7);
-  static const IconData page_regular = _FUIIconData(0xe817, _kFontFamP7);
+  static const IconData page = _FUIIconData(0xe817, _kFontFamP7);
   static const IconData resize_filled = _FUIIconData(0xe818, _kFontFamP7);
-  static const IconData resize_regular = _FUIIconData(0xe819, _kFontFamP7);
+  static const IconData resize = _FUIIconData(0xe819, _kFontFamP7);
   static const IconData tab_desktop_clock_filled =
       _FUIIconData(0xe81a, _kFontFamP7);
-  static const IconData tab_desktop_clock_regular =
-      _FUIIconData(0xe81b, _kFontFamP7);
+  static const IconData tab_desktop_clock = _FUIIconData(0xe81b, _kFontFamP7);
   static const IconData tab_desktop_filled = _FUIIconData(0xe81c, _kFontFamP7);
   static const IconData tab_desktop_new_page_filled =
       _FUIIconData(0xe81d, _kFontFamP7);
-  static const IconData tab_desktop_new_page_regular =
+  static const IconData tab_desktop_new_page =
       _FUIIconData(0xe81e, _kFontFamP7);
-  static const IconData tab_desktop_regular = _FUIIconData(0xe81f, _kFontFamP7);
+  static const IconData tab_desktop = _FUIIconData(0xe81f, _kFontFamP7);
   static const IconData text_header_1_filled =
       _FUIIconData(0xe820, _kFontFamP7);
-  static const IconData text_header_1_regular =
-      _FUIIconData(0xe821, _kFontFamP7);
+  static const IconData text_header_1 = _FUIIconData(0xe821, _kFontFamP7);
   static const IconData text_header_2_filled =
       _FUIIconData(0xe822, _kFontFamP7);
-  static const IconData text_header_2_regular =
-      _FUIIconData(0xe823, _kFontFamP7);
+  static const IconData text_header_2 = _FUIIconData(0xe823, _kFontFamP7);
   static const IconData text_header_3_filled =
       _FUIIconData(0xe824, _kFontFamP7);
-  static const IconData text_header_3_regular =
-      _FUIIconData(0xe825, _kFontFamP7);
+  static const IconData text_header_3 = _FUIIconData(0xe825, _kFontFamP7);
   static const IconData translate_filled = _FUIIconData(0xe826, _kFontFamP7);
-  static const IconData translate_regular = _FUIIconData(0xe827, _kFontFamP7);
+  static const IconData translate = _FUIIconData(0xe827, _kFontFamP7);
   static const IconData trophy_filled = _FUIIconData(0xe828, _kFontFamP7);
-  static const IconData trophy_regular = _FUIIconData(0xe829, _kFontFamP7);
+  static const IconData trophy = _FUIIconData(0xe829, _kFontFamP7);
   static const IconData uninstall_app_filled =
       _FUIIconData(0xe82a, _kFontFamP7);
-  static const IconData uninstall_app_regular =
-      _FUIIconData(0xe82b, _kFontFamP7);
+  static const IconData uninstall_app = _FUIIconData(0xe82b, _kFontFamP7);
   static const IconData unlock_filled = _FUIIconData(0xe82c, _kFontFamP7);
-  static const IconData unlock_regular = _FUIIconData(0xe82d, _kFontFamP7);
+  static const IconData unlock = _FUIIconData(0xe82d, _kFontFamP7);
   static const IconData upgrade_filled = _FUIIconData(0xe82e, _kFontFamP7);
-  static const IconData upgrade_regular = _FUIIconData(0xe82f, _kFontFamP7);
+  static const IconData upgrade = _FUIIconData(0xe82f, _kFontFamP7);
   static const IconData upload_filled = _FUIIconData(0xe830, _kFontFamP7);
-  static const IconData upload_regular = _FUIIconData(0xe831, _kFontFamP7);
+  static const IconData upload = _FUIIconData(0xe831, _kFontFamP7);
   static const IconData usb_port_filled = _FUIIconData(0xe832, _kFontFamP7);
-  static const IconData usb_port_regular = _FUIIconData(0xe833, _kFontFamP7);
+  static const IconData usb_port = _FUIIconData(0xe833, _kFontFamP7);
   static const IconData usb_stick_filled = _FUIIconData(0xe834, _kFontFamP7);
-  static const IconData usb_stick_regular = _FUIIconData(0xe835, _kFontFamP7);
+  static const IconData usb_stick = _FUIIconData(0xe835, _kFontFamP7);
   static const IconData video_background_effect_filled =
       _FUIIconData(0xe836, _kFontFamP7);
-  static const IconData video_background_effect_regular =
+  static const IconData video_background_effect =
       _FUIIconData(0xe837, _kFontFamP7);
   static const IconData video_clip_filled = _FUIIconData(0xe838, _kFontFamP7);
-  static const IconData video_clip_regular = _FUIIconData(0xe839, _kFontFamP7);
+  static const IconData video_clip = _FUIIconData(0xe839, _kFontFamP7);
   static const IconData video_filled = _FUIIconData(0xe83a, _kFontFamP7);
   static const IconData video_incoming_filled =
       _FUIIconData(0xe83b, _kFontFamP7);
   static const IconData video_incoming_off_filled =
       _FUIIconData(0xe83c, _kFontFamP7);
-  static const IconData video_incoming_off_regular =
-      _FUIIconData(0xe83d, _kFontFamP7);
-  static const IconData video_incoming_regular =
-      _FUIIconData(0xe83e, _kFontFamP7);
+  static const IconData video_incoming_off = _FUIIconData(0xe83d, _kFontFamP7);
+  static const IconData video_incoming = _FUIIconData(0xe83e, _kFontFamP7);
   static const IconData video_off_filled = _FUIIconData(0xe83f, _kFontFamP7);
-  static const IconData video_off_regular = _FUIIconData(0xe840, _kFontFamP7);
+  static const IconData video_off = _FUIIconData(0xe840, _kFontFamP7);
   static const IconData video_play_pause_filled =
       _FUIIconData(0xe841, _kFontFamP7);
-  static const IconData video_play_pause_regular =
-      _FUIIconData(0xe842, _kFontFamP7);
-  static const IconData video_regular = _FUIIconData(0xe843, _kFontFamP7);
+  static const IconData video_play_pause = _FUIIconData(0xe842, _kFontFamP7);
+  static const IconData video = _FUIIconData(0xe843, _kFontFamP7);
   static const IconData video_security_filled =
       _FUIIconData(0xe844, _kFontFamP7);
-  static const IconData video_security_regular =
-      _FUIIconData(0xe845, _kFontFamP7);
+  static const IconData video_security = _FUIIconData(0xe845, _kFontFamP7);
   static const IconData view_desktop_filled = _FUIIconData(0xe846, _kFontFamP7);
   static const IconData view_desktop_mobile_filled =
       _FUIIconData(0xe847, _kFontFamP7);
-  static const IconData view_desktop_mobile_regular =
-      _FUIIconData(0xe848, _kFontFamP7);
-  static const IconData view_desktop_regular =
-      _FUIIconData(0xe849, _kFontFamP7);
+  static const IconData view_desktop_mobile = _FUIIconData(0xe848, _kFontFamP7);
+  static const IconData view_desktop = _FUIIconData(0xe849, _kFontFamP7);
   static const IconData voicemail_filled = _FUIIconData(0xe84a, _kFontFamP7);
-  static const IconData voicemail_regular = _FUIIconData(0xe84b, _kFontFamP7);
+  static const IconData voicemail = _FUIIconData(0xe84b, _kFontFamP7);
   static const IconData wallpaper_filled = _FUIIconData(0xe84c, _kFontFamP7);
-  static const IconData wallpaper_regular = _FUIIconData(0xe84d, _kFontFamP7);
+  static const IconData wallpaper = _FUIIconData(0xe84d, _kFontFamP7);
   static const IconData warning_filled = _FUIIconData(0xe84e, _kFontFamP7);
-  static const IconData warning_regular = _FUIIconData(0xe84f, _kFontFamP7);
+  static const IconData warning = _FUIIconData(0xe84f, _kFontFamP7);
   static const IconData weather_blowing_snow_filled =
       _FUIIconData(0xe850, _kFontFamP7);
-  static const IconData weather_blowing_snow_regular =
+  static const IconData weather_blowing_snow =
       _FUIIconData(0xe851, _kFontFamP7);
   static const IconData weather_cloudy_filled =
       _FUIIconData(0xe852, _kFontFamP7);
-  static const IconData weather_cloudy_regular =
-      _FUIIconData(0xe853, _kFontFamP7);
+  static const IconData weather_cloudy = _FUIIconData(0xe853, _kFontFamP7);
   static const IconData weather_duststorm_filled =
       _FUIIconData(0xe854, _kFontFamP7);
-  static const IconData weather_duststorm_regular =
-      _FUIIconData(0xe855, _kFontFamP7);
+  static const IconData weather_duststorm = _FUIIconData(0xe855, _kFontFamP7);
   static const IconData weather_fog_filled = _FUIIconData(0xe856, _kFontFamP7);
-  static const IconData weather_fog_regular = _FUIIconData(0xe857, _kFontFamP7);
+  static const IconData weather_fog = _FUIIconData(0xe857, _kFontFamP7);
   static const IconData weather_hail_day_filled =
       _FUIIconData(0xe858, _kFontFamP7);
-  static const IconData weather_hail_day_regular =
-      _FUIIconData(0xe859, _kFontFamP7);
+  static const IconData weather_hail_day = _FUIIconData(0xe859, _kFontFamP7);
   static const IconData weather_hail_night_filled =
       _FUIIconData(0xe85a, _kFontFamP7);
-  static const IconData weather_hail_night_regular =
-      _FUIIconData(0xe85b, _kFontFamP7);
+  static const IconData weather_hail_night = _FUIIconData(0xe85b, _kFontFamP7);
   static const IconData weather_moon_filled = _FUIIconData(0xe85c, _kFontFamP7);
-  static const IconData weather_moon_regular =
-      _FUIIconData(0xe85d, _kFontFamP7);
+  static const IconData weather_moon = _FUIIconData(0xe85d, _kFontFamP7);
   static const IconData weather_partly_cloudy_day_filled =
       _FUIIconData(0xe85e, _kFontFamP7);
-  static const IconData weather_partly_cloudy_day_regular =
+  static const IconData weather_partly_cloudy_day =
       _FUIIconData(0xe85f, _kFontFamP7);
   static const IconData weather_partly_cloudy_night_filled =
       _FUIIconData(0xe860, _kFontFamP7);
-  static const IconData weather_partly_cloudy_night_regular =
+  static const IconData weather_partly_cloudy_night =
       _FUIIconData(0xe861, _kFontFamP7);
   static const IconData weather_rain_filled = _FUIIconData(0xe862, _kFontFamP7);
-  static const IconData weather_rain_regular =
-      _FUIIconData(0xe863, _kFontFamP7);
+  static const IconData weather_rain = _FUIIconData(0xe863, _kFontFamP7);
   static const IconData weather_rain_showers_day_filled =
       _FUIIconData(0xe864, _kFontFamP7);
-  static const IconData weather_rain_showers_day_regular =
+  static const IconData weather_rain_showers_day =
       _FUIIconData(0xe865, _kFontFamP7);
   static const IconData weather_rain_showers_night_filled =
       _FUIIconData(0xe866, _kFontFamP7);
-  static const IconData weather_rain_showers_night_regular =
+  static const IconData weather_rain_showers_night =
       _FUIIconData(0xe867, _kFontFamP7);
   static const IconData weather_rain_snow_filled =
       _FUIIconData(0xe868, _kFontFamP7);
-  static const IconData weather_rain_snow_regular =
-      _FUIIconData(0xe869, _kFontFamP7);
+  static const IconData weather_rain_snow = _FUIIconData(0xe869, _kFontFamP7);
   static const IconData weather_snow_filled = _FUIIconData(0xe86a, _kFontFamP7);
   static const IconData weather_snowflake_filled =
       _FUIIconData(0xe86b, _kFontFamP7);
-  static const IconData weather_snowflake_regular =
-      _FUIIconData(0xe86c, _kFontFamP7);
-  static const IconData weather_snow_regular =
-      _FUIIconData(0xe86d, _kFontFamP7);
+  static const IconData weather_snowflake = _FUIIconData(0xe86c, _kFontFamP7);
+  static const IconData weather_snow = _FUIIconData(0xe86d, _kFontFamP7);
   static const IconData weather_snow_shower_day_filled =
       _FUIIconData(0xe86e, _kFontFamP7);
-  static const IconData weather_snow_shower_day_regular =
+  static const IconData weather_snow_shower_day =
       _FUIIconData(0xe86f, _kFontFamP7);
   static const IconData weather_snow_shower_night_filled =
       _FUIIconData(0xe870, _kFontFamP7);
-  static const IconData weather_snow_shower_night_regular =
+  static const IconData weather_snow_shower_night =
       _FUIIconData(0xe871, _kFontFamP7);
   static const IconData weather_squalls_filled =
       _FUIIconData(0xe872, _kFontFamP7);
-  static const IconData weather_squalls_regular =
-      _FUIIconData(0xe873, _kFontFamP7);
+  static const IconData weather_squalls = _FUIIconData(0xe873, _kFontFamP7);
   static const IconData weather_sunny_filled =
       _FUIIconData(0xe874, _kFontFamP7);
-  static const IconData weather_sunny_regular =
-      _FUIIconData(0xe875, _kFontFamP7);
+  static const IconData weather_sunny = _FUIIconData(0xe875, _kFontFamP7);
   static const IconData weather_thunderstorm_filled =
       _FUIIconData(0xe876, _kFontFamP7);
-  static const IconData weather_thunderstorm_regular =
+  static const IconData weather_thunderstorm =
       _FUIIconData(0xe877, _kFontFamP7);
   static const IconData web_asset_filled = _FUIIconData(0xe878, _kFontFamP7);
-  static const IconData web_asset_regular = _FUIIconData(0xe879, _kFontFamP7);
+  static const IconData web_asset = _FUIIconData(0xe879, _kFontFamP7);
   static const IconData weekend_filled = _FUIIconData(0xe87a, _kFontFamP7);
-  static const IconData weekend_regular = _FUIIconData(0xe87b, _kFontFamP7);
+  static const IconData weekend = _FUIIconData(0xe87b, _kFontFamP7);
   static const IconData whiteboard_filled = _FUIIconData(0xe87c, _kFontFamP7);
-  static const IconData whiteboard_regular = _FUIIconData(0xe87d, _kFontFamP7);
+  static const IconData whiteboard = _FUIIconData(0xe87d, _kFontFamP7);
   static const IconData wifi_1_filled = _FUIIconData(0xe87e, _kFontFamP7);
-  static const IconData wifi_1_regular = _FUIIconData(0xe87f, _kFontFamP7);
+  static const IconData wifi_1 = _FUIIconData(0xe87f, _kFontFamP7);
   static const IconData wifi_2_filled = _FUIIconData(0xe880, _kFontFamP7);
-  static const IconData wifi_2_regular = _FUIIconData(0xe881, _kFontFamP7);
+  static const IconData wifi_2 = _FUIIconData(0xe881, _kFontFamP7);
   static const IconData wifi_3_filled = _FUIIconData(0xe882, _kFontFamP7);
-  static const IconData wifi_3_regular = _FUIIconData(0xe883, _kFontFamP7);
+  static const IconData wifi_3 = _FUIIconData(0xe883, _kFontFamP7);
   static const IconData wifi_4_filled = _FUIIconData(0xe884, _kFontFamP7);
-  static const IconData wifi_4_regular = _FUIIconData(0xe885, _kFontFamP7);
+  static const IconData wifi_4 = _FUIIconData(0xe885, _kFontFamP7);
   static const IconData wifi_protected_filled =
       _FUIIconData(0xe886, _kFontFamP7);
-  static const IconData wifi_protected_regular =
-      _FUIIconData(0xe887, _kFontFamP7);
+  static const IconData wifi_protected = _FUIIconData(0xe887, _kFontFamP7);
   static const IconData window_dev_tools_filled =
       _FUIIconData(0xe888, _kFontFamP7);
-  static const IconData window_dev_tools_regular =
-      _FUIIconData(0xe889, _kFontFamP7);
+  static const IconData window_dev_tools = _FUIIconData(0xe889, _kFontFamP7);
   static const IconData window_filled = _FUIIconData(0xe88a, _kFontFamP7);
   static const IconData window_new_filled = _FUIIconData(0xe88b, _kFontFamP7);
-  static const IconData window_new_regular = _FUIIconData(0xe88c, _kFontFamP7);
-  static const IconData window_regular = _FUIIconData(0xe88d, _kFontFamP7);
+  static const IconData window_new = _FUIIconData(0xe88c, _kFontFamP7);
+  static const IconData window = _FUIIconData(0xe88d, _kFontFamP7);
   static const IconData window_shield_filled =
       _FUIIconData(0xe88e, _kFontFamP7);
-  static const IconData window_shield_regular =
-      _FUIIconData(0xe88f, _kFontFamP7);
+  static const IconData window_shield = _FUIIconData(0xe88f, _kFontFamP7);
   static const IconData xbox_console_filled = _FUIIconData(0xe890, _kFontFamP7);
-  static const IconData xbox_console_regular =
-      _FUIIconData(0xe891, _kFontFamP7);
+  static const IconData xbox_console = _FUIIconData(0xe891, _kFontFamP7);
   static const IconData zoom_in_filled = _FUIIconData(0xe892, _kFontFamP7);
-  static const IconData zoom_in_regular = _FUIIconData(0xe893, _kFontFamP7);
+  static const IconData zoom_in = _FUIIconData(0xe893, _kFontFamP7);
   static const IconData zoom_out_filled = _FUIIconData(0xe894, _kFontFamP7);
-  static const IconData zoom_out_regular = _FUIIconData(0xe895, _kFontFamP7);
+  static const IconData zoom_out = _FUIIconData(0xe895, _kFontFamP7);
   /*Part 7*/
 
 }

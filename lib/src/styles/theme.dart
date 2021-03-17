@@ -49,6 +49,7 @@ class Style {
   final ContentDialogStyle? dialogStyle;
   final DividerStyle? dividerStyle;
   final IconStyle? iconStyle;
+  final InfoBarStyle? infoBarStyle;
   final ListCellStyle? listCellStyle;
   final PivotItemStyle? pivotItemStyle;
   final RadioButtonStyle? radioButtonStyle;
@@ -89,6 +90,7 @@ class Style {
     this.radioButtonStyle,
     this.toggleButtonStyle,
     this.sliderStyle,
+    this.infoBarStyle,
   });
 
   Style build() {
@@ -154,6 +156,8 @@ class Style {
       radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
           .copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
+      infoBarStyle:
+          InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
     ));
   }
 
@@ -196,6 +200,7 @@ class Style {
           other.mediumAnimationDuration ?? mediumAnimationDuration,
       slowAnimationDuration:
           other.slowAnimationDuration ?? slowAnimationDuration,
+      infoBarStyle: other.infoBarStyle ?? infoBarStyle,
     );
   }
 }

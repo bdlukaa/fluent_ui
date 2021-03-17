@@ -6,6 +6,17 @@ part 'style.dart';
 part 'tiles.dart';
 part 'body.dart';
 
+// TODO: NAVIGATION PANEL rework
+// This need a rework to support the following topics:
+// - top and left navigation. Currently it supports only left.
+// - minimal display mode. Currently it only supports open and compact. This also require a rework on the Scaffold widget
+// - open an overlay when hovering the panel when it's in compact or mininal mode
+// - automatic mode. The current automatic mode is pretty simple and any deep usage can break it.
+// - selected indicator. Currently only one indicator is supported (sliding horizontally)
+// - pane footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
+// - back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one
+// For more info, head over to the official documentation: https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview
+
 enum NavigationPanelDisplayMode { open, compact, minimal }
 
 class NavigationPanel extends StatefulWidget {

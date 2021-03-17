@@ -31,14 +31,16 @@ class Acrylic extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final color = (this.color ?? context.theme!.navigationPanelBackgroundColor);
-    return Padding(
+    return AnimatedContainer(
+      duration: context.theme!.fastAnimationDuration ?? Duration.zero,
+      curve: context.theme!.animationCurve ?? standartCurve,
       padding: margin ?? EdgeInsets.zero,
+      width: width,
+      height: height,
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
           child: AnimatedContainer(
-            width: width,
-            height: height,
             padding: padding,
             duration: context.theme!.fastAnimationDuration ?? Duration.zero,
             curve: context.theme!.animationCurve ?? standartCurve,
