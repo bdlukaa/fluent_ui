@@ -58,6 +58,7 @@ class ContentDialog extends StatelessWidget {
                     buttonStyle: style?.actionStyle,
                   )),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: () {
                       if (actions!.length >= 2)
                         return actions!.map((e) {
@@ -88,20 +89,27 @@ class ContentDialog extends StatelessWidget {
   }
 }
 
-Future<void> showDialog({
+Future<T?> showDialog<T>({
   required BuildContext context,
   required Widget Function(BuildContext) builder,
+  RouteTransitionsBuilder? transitionBuilder,
   Duration? transitionDuration,
   Color? barrierColor,
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
 }) {
-  debugCheckHasFluentTheme(context);
-  return showGeneralDialog(
+  return showGeneralDialog<T>(
     context: context,
     barrierColor: barrierColor ?? Colors.transparent,
     barrierDismissible: false,
-    pageBuilder: (context, _, a) => builder(context),
+    pageBuilder: (context, primary, secondary) {
+      return builder(context);
+    },
+    useRootNavigator: useRootNavigator,
+    transitionBuilder: transitionBuilder,
+    routeSettings: routeSettings,
     transitionDuration: transitionDuration ??
-        context.theme!.mediumAnimationDuration ??
+        context.theme?.mediumAnimationDuration ??
         Duration(milliseconds: 300),
   );
 }
@@ -121,22 +129,19 @@ class Dialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Positioned.fill(
-          child: GestureDetector(
-            onTap: () {
-              if (backgroundDismiss) Navigator.pop(context);
-            },
-            child: Container(
-              color: barrierColor ?? Colors.black.withOpacity(0.8),
-            ),
+    return Stack(alignment: Alignment.center, children: [
+      Positioned.fill(
+        child: GestureDetector(
+          onTap: () {
+            if (backgroundDismiss) Navigator.pop(context);
+          },
+          child: Container(
+            color: barrierColor ?? Colors.black.withOpacity(0.8),
           ),
         ),
-        child!,
-      ],
-    );
+      ),
+      child!,
+    ]);
   }
 }
 
@@ -171,7 +176,7 @@ class ContentDialogStyle {
   });
 
   static ContentDialogStyle defaultTheme(Style style) {
-    final def = ContentDialogStyle(
+    return ContentDialogStyle(
       decoration: BoxDecoration(
         color: style.scaffoldBackgroundColor,
         border: Border.all(
@@ -195,20 +200,20 @@ class ContentDialogStyle {
       elevation: 8,
       elevationColor: Colors.black,
     );
-    return def;
   }
 
   ContentDialogStyle copyWith(ContentDialogStyle? style) {
+    if (style == null) return this;
     return ContentDialogStyle(
-      decoration: style?.decoration ?? decoration,
-      padding: style?.padding ?? padding,
-      bodyPadding: style?.bodyPadding ?? bodyPadding,
-      barrierColor: style?.barrierColor ?? barrierColor,
-      titleStyle: style?.titleStyle ?? titleStyle,
-      bodyStyle: style?.bodyStyle ?? bodyStyle,
-      titlePadding: style?.titlePadding ?? titlePadding,
-      actionsSpacing: style?.actionsSpacing ?? actionsSpacing,
-      actionStyle: style?.actionStyle ?? actionStyle,
+      decoration: style.decoration ?? decoration,
+      padding: style.padding ?? padding,
+      bodyPadding: style.bodyPadding ?? bodyPadding,
+      barrierColor: style.barrierColor ?? barrierColor,
+      titleStyle: style.titleStyle ?? titleStyle,
+      bodyStyle: style.bodyStyle ?? bodyStyle,
+      titlePadding: style.titlePadding ?? titlePadding,
+      actionsSpacing: style.actionsSpacing ?? actionsSpacing,
+      actionStyle: style.actionStyle ?? actionStyle,
     );
   }
 }

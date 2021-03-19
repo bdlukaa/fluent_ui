@@ -1,5 +1,17 @@
 Date format: DD/MM/YYYY
 
+## [1.2.3] - [18/03/2021]
+
+- **NEW** **EXAMPLE APP** `Settings` screen
+- Improved theme changing
+- **FIX** `FluentApp` doesn't lose its state anymore, possibiliting hot relaod.
+- **NEW** `showDialog` rework:
+  - `showDialog` now can return data. (Fixes [#2](https://github.com/bdlukaa/fluent_ui/issues/2))
+  - `showDialog.transitionBuilder`
+  - `showDialog.useRootNavigator`
+  - `showDialog.routeSettings`
+  - It's no longer necessary to have the fluent theme to display dialogs using this function.
+
 ## [1.2.2] - [17/03/2021]
 
 - **BREAKING** Removed `_regular` from the name of the icons.

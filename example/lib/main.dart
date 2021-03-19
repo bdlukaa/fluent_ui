@@ -1,8 +1,11 @@
 import 'package:example/screens/others.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
+import 'screens/settings.dart';
+import 'theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,17 +16,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
-      title: 'Fluent ui app showcase',
-      themeMode: ThemeMode.light,
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (_) => MyHomePage(),
+    return ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      builder: (context, _) {
+        final appTheme = context.watch<AppTheme>();
+        return FluentApp(
+          title: 'Fluent ui app showcase',
+          themeMode: appTheme.mode,
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          routes: {
+            '/': (_) => MyHomePage(),
+          },
+          style: Style(),
+        );
       },
-      style: Style(
-        brightness: Brightness.dark,
-      ),
     );
   }
 }
@@ -86,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _Panel(title: 'Forms showcase', child: Forms()),
         _Panel(title: 'Pickers', child: SizedBox()),
         _Panel(title: 'Others', child: Others()),
-        _Panel(title: 'Settings', child: SizedBox()),
+        _Panel(title: 'Settings', child: Settings()),
       ]),
     );
   }

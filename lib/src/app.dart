@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 
-class FluentApp extends StatelessWidget {
+class FluentApp extends StatefulWidget {
   const FluentApp({
     Key? key,
     this.navigatorKey,
@@ -155,7 +155,12 @@ class FluentApp extends StatelessWidget {
 
   static bool debugAllowBannerOverride = true;
 
-  bool get _usesRouter => routerDelegate != null;
+  @override
+  _FluentAppState createState() => _FluentAppState();
+}
+
+class _FluentAppState extends State<FluentApp> {
+  bool get _usesRouter => widget.routerDelegate != null;
 
   @override
   Widget build(BuildContext context) {
@@ -163,72 +168,89 @@ class FluentApp extends StatelessWidget {
   }
 
   Style theme(BuildContext context) {
-    final mode = themeMode ?? ThemeMode.system;
+    final mode = widget.themeMode ?? ThemeMode.system;
     final platformBrightness = MediaQuery.platformBrightnessOf(context);
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    final data = (usedarkStyle ? (darkStyle ?? style) : style) ??
-        Style.fallback(usedarkStyle ? Brightness.dark : Brightness.light);
+    Style data =
+        (usedarkStyle ? (widget.darkStyle ?? widget.style) : widget.style) ??
+            Style.fallback(usedarkStyle ? Brightness.dark : Brightness.light);
+    if (data.brightness == null) {
+      data = data.copyWith(Style(
+        brightness: usedarkStyle ? Brightness.dark : Brightness.light,
+      ));
+    }
     return data.build();
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    return m.Material(child: Theme(data: theme(context), child: child!));
+    final theme = this.theme(context);
+    return m.Material(
+      child: Theme(
+        data: theme,
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: theme.typography?.body?.color,
+          ),
+          child: child!,
+        ),
+      ),
+    );
   }
 
   Widget _buildApp(BuildContext context) {
-    final fluentColor = color ?? Colors.blue;
+    final fluentColor = widget.color ?? Colors.blue;
     if (_usesRouter) {
       return m.MaterialApp.router(
         key: GlobalObjectKey(this),
-        routeInformationProvider: routeInformationProvider,
-        routeInformationParser: routeInformationParser!,
-        routerDelegate: routerDelegate!,
-        backButtonDispatcher: backButtonDispatcher,
+        routeInformationProvider: widget.routeInformationProvider,
+        routeInformationParser: widget.routeInformationParser!,
+        routerDelegate: widget.routerDelegate!,
+        backButtonDispatcher: widget.backButtonDispatcher,
         builder: _builder,
-        title: title,
-        onGenerateTitle: onGenerateTitle,
+        title: widget.title,
+        onGenerateTitle: widget.onGenerateTitle,
         color: fluentColor,
-        locale: locale,
-        localeResolutionCallback: localeResolutionCallback,
-        localeListResolutionCallback: localeListResolutionCallback,
-        supportedLocales: supportedLocales,
-        showPerformanceOverlay: showPerformanceOverlay,
-        checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-        checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-        showSemanticsDebugger: showSemanticsDebugger,
-        debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-        shortcuts: shortcuts,
-        actions: actions,
+        locale: widget.locale,
+        localeResolutionCallback: widget.localeResolutionCallback,
+        localeListResolutionCallback: widget.localeListResolutionCallback,
+        supportedLocales: widget.supportedLocales,
+        showPerformanceOverlay: widget.showPerformanceOverlay,
+        checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
+        checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
+        showSemanticsDebugger: widget.showSemanticsDebugger,
+        debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
+        shortcuts: widget.shortcuts,
+        actions: widget.actions,
       );
     }
 
     return m.MaterialApp(
       key: GlobalObjectKey(this),
-      navigatorKey: navigatorKey,
-      navigatorObservers: navigatorObservers!,
-      home: home,
-      routes: routes!,
-      initialRoute: initialRoute,
-      onGenerateRoute: onGenerateRoute,
-      onGenerateInitialRoutes: onGenerateInitialRoutes,
-      onUnknownRoute: onUnknownRoute,
+      navigatorKey: widget.navigatorKey,
+      navigatorObservers: widget.navigatorObservers!,
+      home: widget.home,
+      routes: widget.routes!,
+      initialRoute: widget.initialRoute,
+      onGenerateRoute: widget.onGenerateRoute,
+      onGenerateInitialRoutes: widget.onGenerateInitialRoutes,
+      onUnknownRoute: widget.onUnknownRoute,
       builder: _builder,
-      title: title,
-      onGenerateTitle: onGenerateTitle,
+      title: widget.title,
+      onGenerateTitle: widget.onGenerateTitle,
       color: fluentColor,
-      locale: locale,
-      localeResolutionCallback: localeResolutionCallback,
-      localeListResolutionCallback: localeListResolutionCallback,
-      supportedLocales: supportedLocales,
-      showPerformanceOverlay: showPerformanceOverlay,
-      checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-      checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-      showSemanticsDebugger: showSemanticsDebugger,
-      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      shortcuts: shortcuts,
-      actions: actions,
+      locale: widget.locale,
+      localeResolutionCallback: widget.localeResolutionCallback,
+      localeListResolutionCallback: widget.localeListResolutionCallback,
+      supportedLocales: widget.supportedLocales,
+      showPerformanceOverlay: widget.showPerformanceOverlay,
+      checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
+      checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
+      showSemanticsDebugger: widget.showSemanticsDebugger,
+      debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
+      shortcuts: widget.shortcuts,
+      actions: widget.actions,
     );
   }
 }

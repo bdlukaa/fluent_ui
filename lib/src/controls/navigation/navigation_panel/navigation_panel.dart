@@ -8,7 +8,7 @@ part 'body.dart';
 
 // TODO: NAVIGATION PANEL rework
 // This need a rework to support the following topics:
-// - top and left navigation. Currently it supports only left.
+// - top and left navigation. Currently it supports only left. On top navigation, the page transitions should default to Horizontal page transition
 // - minimal display mode. Currently it only supports open and compact. This also require a rework on the Scaffold widget
 // - open an overlay when hovering the panel when it's in compact or mininal mode
 // - automatic mode. The current automatic mode is pretty simple and any deep usage can break it.

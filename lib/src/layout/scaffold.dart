@@ -23,26 +23,26 @@ class Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final color = backgroundColor ??
         context.theme?.scaffoldBackgroundColor ??
         Colors.white;
-    return Container(
+    return AnimatedContainer(
+      duration: context.theme!.mediumAnimationDuration ?? Duration.zero,
+      curve: context.theme!.animationCurve ?? Curves.linear,
       color: color,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (this.left != null) left!,
-          Expanded(
-            child: Column(
-              children: [
-                if (header != null) header!,
-                if (body != null) Expanded(child: body!),
-                if (footer != null) footer!,
-              ],
-            ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (this.left != null) left!,
+        Expanded(
+          child: Column(
+            children: [
+              if (header != null) header!,
+              if (body != null) Expanded(child: body!),
+              if (footer != null) footer!,
+            ],
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }
