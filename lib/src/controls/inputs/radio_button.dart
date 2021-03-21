@@ -4,12 +4,12 @@ import 'package:flutter/rendering.dart';
 class RadioButton extends StatelessWidget {
   const RadioButton({
     Key? key,
-    required this.selected,
+    required this.checked,
     required this.onChanged,
     this.style,
   }) : super(key: key);
 
-  final bool selected;
+  final bool checked;
   final ValueChanged<bool>? onChanged;
 
   final RadioButtonStyle? style;
@@ -19,13 +19,13 @@ class RadioButton extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme?.radioButtonStyle?.copyWith(this.style);
     return HoverButton(
-      onPressed: onChanged == null ? null : () => onChanged!(!selected),
+      onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         return AnimatedContainer(
           duration: style?.animationDuration ?? Duration(milliseconds: 300),
           height: 20,
           width: 20,
-          decoration: selected
+          decoration: checked
               ? style?.checkedDecoration!(state)
               : style?.uncheckedDecoration!(state),
         );

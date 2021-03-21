@@ -33,6 +33,8 @@ export 'src/controls/items/list_cell.dart';
 export 'src/controls/navigation/pivot.dart';
 export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
 
+export 'src/controls/pickers/calendar_view.dart';
+
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/tooltip.dart';
 export 'src/controls/surfaces/info_bar.dart';
@@ -41,6 +43,7 @@ export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';
 
 export 'src/controls/form/text_box.dart';
+export 'src/controls/form/combo_box.dart';
 
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';

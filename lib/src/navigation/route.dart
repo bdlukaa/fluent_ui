@@ -14,7 +14,7 @@ class FluentPageRoute<T> extends PageRoute<T> {
         _builder = builder;
 
   @override
-  Color? get barrierColor => Colors.transparent;
+  Color? get barrierColor => null;
 
   @override
   String? get barrierLabel => _barrierLabel;

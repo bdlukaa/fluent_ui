@@ -49,6 +49,7 @@ class InfoBar extends StatelessWidget {
       return DefaultTextStyle(
         style: context.theme!.typography?.body ?? TextStyle(),
         child: this.content!,
+        softWrap: true,
       );
     }();
     final action = () {
@@ -60,6 +61,7 @@ class InfoBar extends StatelessWidget {
         )),
       );
     }();
+    // TODO: when this hasn't enough space, make it compact
     return Acrylic(
       color: style?.color?.call(severity),
       padding: style?.padding ?? EdgeInsets.all(10),

@@ -20,7 +20,7 @@ class Settings extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 4.0),
           child: Row(children: [
             RadioButton(
-              selected: appTheme.mode == mode,
+              checked: appTheme.mode == mode,
               onChanged: (value) {
                 if (value) {
                   appTheme.mode = mode;

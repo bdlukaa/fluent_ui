@@ -148,10 +148,10 @@ class _InputsPageState extends State<InputsPage> {
         ...buildStateColumn(
           context,
           [
-            RadioButton(selected: false, onChanged: (v) {}),
-            RadioButton(selected: true, onChanged: (v) {}),
-            RadioButton(selected: false, onChanged: null),
-            RadioButton(selected: true, onChanged: null),
+            RadioButton(checked: false, onChanged: (v) {}),
+            RadioButton(checked: true, onChanged: (v) {}),
+            RadioButton(checked: false, onChanged: null),
+            RadioButton(checked: true, onChanged: null),
           ]
               .map((e) => Padding(
                     padding: EdgeInsets.all(5),

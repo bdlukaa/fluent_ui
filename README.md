@@ -38,13 +38,36 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
+- **TODO** [Accessibility]()
 - [Navigation](#navigation)
 - [Widgets](#widgets)
+  - [Button](#button)
+  - [Split Button](#split-button)
+  - [Toggle Button](#toggle-button)
+  - **TODO** [Dropdown Button]()
+  - [Checkbox](#checkbox)
+  - [Toggle Switches](#toggle-switches)
+  - [Radio Buttons](#radio-buttons)
+  - [Slider](#slider)
   - [TextBox](#textbox)
+  - **TODO** [Auto Suggest Box]()
+  - **TODO** [Combo Box]()
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
+  - **TODO** Flyout
+  - **TODO** Teaching tip
   - [Acrylic](#acrylic)
   - [InfoBar](#infobar)
+  - **TODO** [Pivot]()
+  - **TODO** [Tab View]()
+  - **TODO** [Calendar View]()
+  - **TODO** [Calendar Date Picker]()
+  - **TODO** [Date Picker]()
+  - **TODO** [Time Picker]()
+  - **TODO** [Progress Ring]()
+  - **TODO** [Progress Bar]()
+  - **TODO** [Pull-to-Refresh]()
+  - **TODO** [Tree View]()
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -82,6 +105,7 @@ Also, futurely there will be a way to get the current device accent color. For m
 
 ![Inputs Preview](screenshots/inputs.png)
 ![Forms Preview](screenshots/forms.png)
+![Others Preview](screenshots/others.png)
 
 # Style
 
@@ -205,22 +229,20 @@ The Windows type ramp establishes crucial relationships between the type styles 
 
 # Navigation
 
-The default flutter navigation is available when using the `FluentApp` widget, that means you can simply call `Navigator.push` and `Navigator.pop` to navigate between routes.
-
-See [navigate to a new screen and back](https://flutter.dev/docs/cookbook/navigation/navigation-basics)
+The default flutter navigation is available when using the `FluentApp` widget, that means you can simply call `Navigator.push` and `Navigator.pop` to navigate between routes. See [navigate to a new screen and back](https://flutter.dev/docs/cookbook/navigation/navigation-basics)
 
 ## Navigation panel
 
 > Navigation Panel will be rewritten in a near future, because it lacks so much implementations and fidelity. Here's what's done and what's left to do:
 
-- [ ] Top navigation. On top navigation, the page transitions should default to Horizontal page transition
+- [ ] Top navigation. On top navigation, the page transitions should default to `HorizontalPageTransition`
 - [x] Left navigation.
 - [x] Open display mode
 - [x] Compact display mode
 - [ ] Minimal display mode. This also require a rework on the Scaffold widget
-- [ ] Automatic display mode. The current display mod is very hacky and can be broken easily
+- [ ] Automatic display mode. The current implementation is very hacky and can be broken easily
 - [ ] Selected indicators. Currently only one indicator is supported (sliding horizontally)
-- [ ] Paen footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
+- [ ] Pane footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
 - [ ] Back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one. We can use Material's `AppBar` as reference
 
 Usually, `NavigationPanel` is used in Scaffold's `left` property:
@@ -315,31 +337,6 @@ It's recommended to widely use these transitions when using the navigation panel
 
 # Widgets:
 
-(1) = High priority\
-(2) = Medium priority\
-(3) = Low priority
-
-**NOTE**: The code for all the images below can be found on the [example folder](example/)
-
-| Widget                                                                                                                             | Preview                                                                                                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Checkbox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/checkbox)                                     | ![Checkbox Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/templates-checkbox-states-default.png) |
-| [RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button)                              | ![Radion Button Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)        |
-| [Slider](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider)                                         | ![Slider Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)                     |
-| [ToggleButton](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.primitives.togglebutton?view=winrt-19041)         |                                                                                                                                             |
-| [ToggleSwitch](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/toggles)                                  | ![Toggle Switch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)             |
-| (3) [DropDownButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#example---drop-down-button) |                                                                                                                                             |
-| [SplitButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#example---split-button)            | ![Split Button Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/split-button-rtb.png)              |
-| [RatingControl](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/rating)                                  | ![Rating Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)        |
-
-[Forms](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/forms):
-
-| Widget                                                                                                             | Preview                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| [TextBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/forms)                         | ![TextBox Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box.png) |
-| (3) [Auto suggest box](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box) |                                                                                                                   |
-| (2) [ComboBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)                |                                                                                                                   |
-
 ## Button
 
 A button gives the user a way to trigger an immediate action. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons)
@@ -362,6 +359,64 @@ To disable the button, set `onPressed` to `null`
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext1.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext2.png)
+
+## Split Button
+
+A Split Button has two parts that can be invoked separately. One part behaves like a standard button and invokes an immediate action. The other part invokes a flyout that contains additional options that the user can choose from. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#create-a-split-button)
+
+You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its style.
+
+### Example
+
+```dart
+const double splitButtonHeight = 50.0;
+
+SplitButtonBar(
+  style: SplitButtonStyle(
+    interval: 1, // the default value is one
+  ),
+  // There need to be at least 2 items in the buttons, and they must be non-null
+  buttons: [
+    SizedBox(
+      height: splitButtonHeight,
+      child: Button(
+        text: Container(
+          height: 24,
+          width: 24,
+          color: context.theme!.accentColor,
+        ),
+        onPressed: () {},
+      ),
+    ),
+    SizedBox(
+      height: splitButtonHeight,
+      child: Button(
+        text: Icon(Icons.chevron_down),
+        onPressed: () {
+          // TODO: open the color list here
+        },
+        style: ButtonStyle(padding: EdgeInsets.all(6)),
+      )
+    )
+  ],
+)
+```
+
+The code above produces the following button:
+
+![SplitButtonBar preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/split-button-rtb.png)
+
+## Toggle Button
+
+A button that can be on or off.
+
+### Example
+
+```dart
+ToggleButton(
+  
+)
+```
 
 ## Checkbox
 
@@ -396,6 +451,133 @@ Checkbox(
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox1.png)
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox3.png)
 
+## Toggle Switches
+
+The toggle switch represents a physical switch that allows users to turn things on or off, like a light switch. Use toggle switch controls to present users with two mutually exclusive options (such as on/off), where choosing an option provides immediate results.
+
+### Example
+
+```dart
+bool _checked = false;
+
+ToggleSwitch(
+  checked: _checked,
+  onChanged: (v) => setState(() => _checked = v),
+)
+```
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
+
+| Toggle Switch | Checkbox |
+| ------------- | -------- |
+| Use a toggle switch for binary settings when changes become effective immediately after the user changes them. | Use check boxes for optional ("nice to have") items. |
+| | Use a checkbox when the user has to perform extra steps for changes to be effective. For example, if the user must click a "submit" or "next" button to apply changes, use a check box. |
+| | Use check boxes when the user can select multiple items that are related to a single setting or feature. |
+
+## Radio Buttons
+
+Radio buttons, also called option buttons, let users select one option from a collection of two or more mutually exclusive, but related, options. Radio buttons are always used in groups, and each option is represented by one radio button in the group.
+
+In the default state, no radio button in a RadioButtons group is selected. That is, all radio buttons are cleared. However, once a user has selected a radio button, the user can't deselect the button to restore the group to its initial cleared state.
+
+The singular behavior of a RadioButtons group distinguishes it from check boxes, which support multi-selection and deselection, or clearing.
+
+[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button)
+
+### Example
+
+```dart
+int _currentIndex = -1;
+
+final radioButtons = [
+  'RadioButton 1',
+  'RadioButton 2',
+  'RadioButton 3',
+];
+
+Column(
+  children: List.generate(radioButtons.length, (index) {
+    return Row(children: [
+      RadioButton(
+        selected: _currentIndex == index,
+        // set onChanged to null to disable the button
+        onChanged: () => setState(() => _currentIndex = index),
+      ),
+      SizedBox(width: 4),
+      Text(radioButtons[index])
+    ]);
+  }),
+),
+```
+
+The code above produces the following:
+
+![Radio Buttons](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
+
+- [Is this the right control for you?](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button#is-this-the-right-control)
+
+### Screenshots
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-default-group.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-symbolicon.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-multi-column.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radio-button-groups.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobutton-layout.png)
+
+## Slider
+
+A slider is a control that lets the user select from a range of values by moving a thumb control along a track. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider)
+
+- [Is this the right control for you?](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider#is-this-the-right-control)
+- [Recommendations](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider#recommendations)
+
+> Vertical slider is not available yet
+
+### Example
+
+```dart
+double _value = 0;
+
+Container(
+  // The default width is 200. 
+  // The slider does not have its own widget, so you have to add it yourself. 
+  // The slider always try to be as big as possible
+  width: 200,
+  child: Slider(
+    max: 100,
+    value: _value,
+    onChanged: (v) => setState(() => value = v),
+    // Label is the text displayed above the slider when the user is interacting with it.
+    label: '${sliderValue.toInt()}',
+  ),
+)
+```
+
+The code above produces the following:
+
+![Slider preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)
+
+## Rating Bar
+
+> The property `starSpacing` is missing
+
+The rating control allows users to view and set ratings that reflect degrees of satisfaction with content and services. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/rating)
+
+### Example
+
+```dart
+double rating = 0.0;
+
+RatingBar(
+  rating: rating,
+  onChanged: (v) => setState(() => rating = v),
+)
+```
+
+You can set `amount` to change the amount of stars. The `rating` must be less than the stars and more than 0. You can also change the `icon`, its size and color. You can make the bar read only by setting `onChanged` to `null`.
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+
 ## TextBox
 
 The TextBox control lets a user type text into an app. It's typically used to capture a single line of text, but can be configured to capture multiple lines of text. The text displays on the screen in a simple, uniform, plaintext format. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/text-box)
@@ -420,13 +602,6 @@ TextBox(
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-clear-all.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-multi-line.png)
-
-[Overlays](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/):
-
-| Widget                                                                                                                         | Preview |
-| ------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| (3) [Flyouts](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/flyouts)           |         |
-| (3) [Teaching tip](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/teaching-tip) |         |
 
 ## Tooltip
 
@@ -500,32 +675,6 @@ showDialog(
 
 [Navigation](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/master-details):
 
-| Widget                                                                                            | Preview |
-| ------------------------------------------------------------------------------------------------- | ------- |
-| (3) [Pivot](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/pivot)      |         |
-| (3) [TabView](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view) |         |
-
-Pickers:
-
-- (3) [Date and time](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/date-and-time)
-- (3) [Calendar date picker](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/calendar-date-picker) (Depends on ComboBox)
-- (3) [Calendar view](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/calendar-view)
-- (2) [Date picker](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/date-picker) (Depends on ComboBox)
-- (2) [Time picker](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/time-picker) (Depends on ComboBox)
-
-Others:
-
-| Widget                                                                                                                 | Preview |
-| ---------------------------------------------------------------------------------------------------------------------- | ------- |
-| (1) [Progress indicators](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/progress-controls) |         |
-| (3) [Reveal Highlight](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal)                               |         |
-| (3) [Reveal Focus](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal-focus)                             |         |
-| (3) [Badges](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/badges)                 |         |
-| (3) [Sound](https://docs.microsoft.com/en-us/windows/uwp/design/style/sound)                                           |         |
-| (3) [Contact card](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/contact-card)             |         |
-| (3) [Flip View](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/flipview)                    |         |
-| (3) [Tree View](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tree-view)                   |         |
-| (3) [Pull to refresh](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/pull-to-refresh)       |         |
 
 ## Acrylic
 
@@ -562,11 +711,9 @@ Acrylic(
 Currently, the following widgets use acrylic in its implementation:
 
 - [InfoBar](#infobar)
-- Navigation Panel
+- [Navigation Panel](#navigation-panel)
 
-### Note
-
-This widget MAY BE unperformatic on old devices because it uses expensive widgets in its composition: `ClipRect` and `BackdropFilter`. It should not affect the most part of the devices
+> This widget MAY BE unperformatic on VERY OLD devices because it uses expensive widgets in its composition: `ClipRect` and `BackdropFilter`. It should not affect the most part of the devices
 
 ### Screenshots
 
@@ -599,7 +746,7 @@ InfoBar(
 
 ---
 
-## Equivalents with the material library
+### Equivalents with the material library
 
 The list of equivalents between this library and `flutter/material.dart`
 
@@ -609,13 +756,13 @@ The list of equivalents between this library and `flutter/material.dart`
 | IconButton      | IconButton      |
 | Checkbox        | Checkbox        |
 | RadioButton     | RadioButton     |
-| -               | Rating Bar      |
+| -               | RatingBar       |
 | -               | SplitButton     |
 | -               | ToggleButton    |
 | Switch          | ToggleSwitch    |
 | TextField       | TextBox         |
 | AlertDialog     | ContentDialog   |
-| -               | InfoBar         |
+| MaterialBanner  | InfoBar         |
 | Tooltip         | Tooltip         |
 | Drawer          | NavigationPanel |
 | Divider         | Divider         |

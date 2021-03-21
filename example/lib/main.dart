@@ -1,10 +1,12 @@
-import 'package:example/screens/others.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
+import 'screens/others.dart';
+import 'screens/pickers.dart';
 import 'screens/settings.dart';
+
 import 'theme.dart';
 
 void main() {
@@ -91,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: NavigationPanelBody(index: index, children: [
         _Panel(title: 'Inputs showcase', child: InputsPage()),
         _Panel(title: 'Forms showcase', child: Forms()),
-        _Panel(title: 'Pickers', child: SizedBox()),
+        _Panel(title: 'Pickers', child: Pickers()),
         _Panel(title: 'Others', child: Others()),
         _Panel(title: 'Settings', child: Settings()),
       ]),

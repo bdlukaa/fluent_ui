@@ -1,8 +1,12 @@
 Date format: DD/MM/YYYY
 
-## [1.2.3] - [18/03/2021]
+## [1.2.4] - [21/03/2021]
 
-- **NEW** **EXAMPLE APP** `Settings` screen
+- **BREAKING** `RadioButton`'s `selected` property was renamed to `checked` to match a single pattern between all the other widgets. 
+
+## [1.2.3] - [19/03/2021]
+
+- **NEW**  **EXAMPLE APP** `Settings` screen
 - Improved theme changing
 - **FIX** `FluentApp` doesn't lose its state anymore, possibiliting hot relaod.
 - **NEW** `showDialog` rework:
