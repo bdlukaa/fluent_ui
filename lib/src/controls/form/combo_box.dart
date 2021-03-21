@@ -1,64 +1,137 @@
-// import 'dart:math' as math;
-// import 'dart:ui';
+import 'dart:ui';
 
-// import 'package:fluent_ui/fluent_ui.dart' hide Theme, Colors, Icons, Icon;
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:flutter/services.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
-// class ComboBox extends StatelessWidget {
-//   const ComboBox({Key? key}) : super(key: key);
+const double kDefaultComboBoxWidth = 120.0;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     debugCheckHasFluentTheme(context);
-//     final style = context.theme!;
-//     return HoverButton(
-//       onPressed: () {
-//         final navigator = Navigator.of(context);
-//         navigator.push(_ComboBoxRoute());
-//       },
-//       builder: (context, state) {
-//         return AnimatedContainer(
-//           duration: style.fastAnimationDuration ?? Duration.zero,
-//           curve: style.animationCurve ?? Curves.linear,
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(4),
-//             border: Border.all(
-//               color: buttonColor(style, state),
-//             ),
-//           ),
-//           padding: EdgeInsets.all(8),
-//           child: Text('My combo box'),
-//         );
-//       },
-//     );
-//   }
-// }
+class ComboBox<T> extends StatefulWidget {
+  const ComboBox({
+    Key? key,
+    required this.values,
+    required this.currentValue,
+    this.onChanged,
+    this.closeOnSelect = true,
+  })  : assert(values.length >= 2),
+        super(key: key);
 
-// class _ComboBoxRoute extends PopupRoute {
-//   @override
-//   Color? get barrierColor => null;
+  final List<T> values;
+  final T? currentValue;
+  final ValueChanged<T>? onChanged;
+  final bool closeOnSelect;
 
-//   @override
-//   bool get barrierDismissible => true;
+  @override
+  _ComboBoxState<T> createState() => _ComboBoxState<T>();
+}
 
-//   @override
-//   String? get barrierLabel => null;
+class _ComboBoxState<T> extends State<ComboBox<T>> {
+  final _layerLink = LayerLink();
 
-//   @override
-//   Widget buildPage(
-//     BuildContext context,
-//     Animation<double> animation,
-//     Animation<double> secondaryAnimation,
-//   ) {
-//     return Text('mom im on twitch');
-//   }
+  Widget buildOverlay(BuildContext context, OverlayEntry entry) {
+    debugCheckHasFluentTheme(context);
+    final popupTileHeight = 40.0;
+    final popup = Acrylic(
+      width: kDefaultComboBoxWidth,
+      decoration: BoxDecoration(
+        color: context.theme!.navigationPanelBackgroundColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        children: List.generate(widget.values.length, (index) {
+          final value = widget.values[index];
+          return SizedBox(
+            height: popupTileHeight,
+            width: kDefaultComboBoxWidth,
+            child: HoverButton(
+              onPressed: () {
+                widget.onChanged?.call(value);
+                if (widget.closeOnSelect) entry.remove();
+              },
+              builder: (context, state) => Container(
+                color: widget.currentValue == value ? Colors.teal : null,
+                child: Text('$value'),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+    final dismissBox = GestureDetector(
+      onTap: entry.remove,
+      child: Container(
+        width: kDefaultComboBoxWidth,
+        color: Colors.transparent,
+        child: CompositedTransformFollower(
+          showWhenUnlinked: false,
+          link: _layerLink,
+          offset: Offset(
+            0,
+            -(widget.values.indexOf(widget.currentValue!) * popupTileHeight),
+          ),
+          child: popup,
+        ),
+      ),
+    );
+    return dismissBox;
+  }
 
-//   @override
-//   Duration get transitionDuration => Duration(milliseconds: 300);
-// }
+  @override
+  Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
+    final style = context.theme!;
+    return HoverButton(
+      onPressed: () {
+        late OverlayEntry entry;
+        entry = OverlayEntry(builder: (context) {
+          return buildOverlay(context, entry);
+        });
+        Overlay.of(context)?.insert(entry);
+      },
+      builder: (context, state) {
+        Widget box = AnimatedContainer(
+          width: kDefaultComboBoxWidth,
+          duration: style.fastAnimationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? Curves.linear,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: buttonColor(style, state),
+            ),
+          ),
+          padding: EdgeInsets.all(8),
+          child: Text('My combo box'),
+        );
+        return CompositedTransformTarget(
+          link: _layerLink,
+          child: box,
+        );
+      },
+    );
+  }
+}
+
+class _ComboBoxRoute extends PopupRoute {
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  bool get barrierDismissible => true;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return Text('mom im on twitch');
+  }
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 300);
+}
 
 // //
 

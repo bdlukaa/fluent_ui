@@ -6,6 +6,7 @@ class Acrylic extends StatelessWidget {
   const Acrylic({
     Key? key,
     this.color,
+    this.decoration,
     this.filter,
     this.child,
     this.opacity = 0.8,
@@ -16,6 +17,8 @@ class Acrylic extends StatelessWidget {
   }) : super(key: key);
 
   final Color? color;
+  final Decoration? decoration;
+
   final double opacity;
   final ImageFilter? filter;
 
@@ -44,7 +47,10 @@ class Acrylic extends StatelessWidget {
             padding: padding,
             duration: context.theme!.fastAnimationDuration ?? Duration.zero,
             curve: context.theme!.animationCurve ?? standartCurve,
-            color: color?.withOpacity(opacity),
+            decoration: decoration ??
+                BoxDecoration(
+                  color: color?.withOpacity(opacity),
+                ),
             child: child,
           ),
         ),

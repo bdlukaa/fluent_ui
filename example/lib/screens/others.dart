@@ -19,12 +19,21 @@ class Others extends StatelessWidget {
           ),
         ]),
       ),
-      for (final severity in InfoBarSeverity.values)
-        Padding(
+      ...List.generate(InfoBarSeverity.values.length, (index) {
+        final severity = InfoBarSeverity.values[index];
+        final titles = [
+          'Long title',
+          'Short title',
+        ];
+        final descs = [
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+          'Short desc',
+        ];
+        return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: InfoBar(
-            title: Text('This is a title'),
-            content: Text('This is a long content lol content let'),
+            title: Text(titles[index.isEven ? 0 : 1]),
+            content: Text(descs[index.isEven ? 0 : 1]),
             isLong: InfoBarSeverity.values.indexOf(severity).isEven,
             severity: severity,
             action: Button(
@@ -35,7 +44,8 @@ class Others extends StatelessWidget {
               print('closed');
             },
           ),
-        ),
+        );
+      }),
     ]);
   }
 }

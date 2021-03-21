@@ -1,11 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 
-// import 'package:flutter/material.dart' as m;
-
 enum CalendarViewDisplayMode { month, year, decade }
 
-// TODO: finish this
 class CalendarView extends StatelessWidget {
   const CalendarView({
     Key? key,

@@ -61,12 +61,12 @@ class InfoBar extends StatelessWidget {
         )),
       );
     }();
-    // TODO: when this hasn't enough space, make it compact
     return Acrylic(
       color: style?.color?.call(severity),
       padding: style?.padding ?? EdgeInsets.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         crossAxisAlignment:
             isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
@@ -76,36 +76,39 @@ class InfoBar extends StatelessWidget {
               child: Icon(icon),
             ),
           if (isLong)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                title,
-                if (content != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
-                    child: content,
-                  ),
-                if (action != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
-                    child: action,
-                  ),
-              ],
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title,
+                  if (content != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: content,
+                    ),
+                  if (action != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: action,
+                    ),
+                ],
+              ),
             )
-          else ...[
-            title,
-            if (content != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: content,
+          else
+            Flexible(
+              fit: FlexFit.loose,
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6,
+                children: [
+                  title,
+                  if (content != null) content,
+                  if (action != null) action,
+                ],
               ),
-            if (action != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: action,
-              ),
-          ],
+            ),
           if (closeIcon != null)
             IconButton(
               icon: Icon(closeIcon),

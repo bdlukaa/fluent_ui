@@ -11,6 +11,9 @@ class _FormsState extends State<Forms> {
   final _clearController = TextEditingController();
   bool _showPassword = false;
 
+  final values = ['Blue', 'Green', 'Yellow', 'Red'];
+  String comboBoxValue = 'Red';
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -67,7 +70,14 @@ class _FormsState extends State<Forms> {
           ),
         ),
         SizedBox(height: 10),
-        // ComboBox(),
+        ComboBox<String>(
+          values: values,
+          currentValue: comboBoxValue,
+          onChanged: (value) {
+            print(value);
+            setState(() => comboBoxValue = value);
+          },
+        ),
       ],
     );
   }

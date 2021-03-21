@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.2.5] - [21/03/2021]
+
+- **FIX** Fixed `InfoBar`'s overflow
+
 ## [1.2.4] - [21/03/2021]
 
 - **BREAKING** `RadioButton`'s `selected` property was renamed to `checked` to match a single pattern between all the other widgets. 
