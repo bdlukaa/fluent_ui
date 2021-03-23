@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.3.0] - [22/03/2021]
+
+- **NEW** Determinate `ProgressBar` and `ProgressRing`
+- **NEW** `TabView`
+
 ## [1.2.5] - [21/03/2021]
 
 - **FIX** Fixed `InfoBar`'s overflow

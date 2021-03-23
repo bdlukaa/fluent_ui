@@ -7,7 +7,8 @@ export 'package:flutter/material.dart'
         ThemeMode,
         Feedback,
         DefaultMaterialLocalizations,
-        PageTransitionsBuilder;
+        PageTransitionsBuilder,
+        FlutterLogo;
 
 export 'src/app.dart';
 export 'src/utils.dart';
@@ -32,12 +33,14 @@ export 'src/controls/items/list_cell.dart';
 
 export 'src/controls/navigation/pivot.dart';
 export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
+export 'src/controls/navigation/tab_view.dart';
 
 export 'src/controls/pickers/calendar_view.dart';
 
 export 'src/controls/surfaces/dialog.dart';
-export 'src/controls/surfaces/tooltip.dart';
 export 'src/controls/surfaces/info_bar.dart';
+export 'src/controls/surfaces/progress_indicators.dart';
+export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';

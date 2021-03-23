@@ -110,28 +110,28 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
   }
 }
 
-class _ComboBoxRoute extends PopupRoute {
-  @override
-  Color? get barrierColor => null;
+// class _ComboBoxRoute extends PopupRoute {
+//   @override
+//   Color? get barrierColor => null;
 
-  @override
-  bool get barrierDismissible => true;
+//   @override
+//   bool get barrierDismissible => true;
 
-  @override
-  String? get barrierLabel => null;
+//   @override
+//   String? get barrierLabel => null;
 
-  @override
-  Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    return Text('mom im on twitch');
-  }
+//   @override
+//   Widget buildPage(
+//     BuildContext context,
+//     Animation<double> animation,
+//     Animation<double> secondaryAnimation,
+//   ) {
+//     return Text('mom im on twitch');
+//   }
 
-  @override
-  Duration get transitionDuration => Duration(milliseconds: 300);
-}
+//   @override
+//   Duration get transitionDuration => Duration(milliseconds: 300);
+// }
 
 // //
 

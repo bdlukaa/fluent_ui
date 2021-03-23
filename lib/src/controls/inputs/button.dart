@@ -208,27 +208,27 @@ class _ButtonState extends State<Button> {
 
 Color buttonColor(Style style, ButtonStates state) {
   if (style.brightness == Brightness.light) {
-    late Color? color;
+    late Color color;
     if (state.isDisabled)
-      color = style.disabledColor;
+      color = style.disabledColor!;
     else if (state.isPressing)
-      color = Colors.grey[70];
+      color = Colors.grey[70]!;
     else if (state.isHovering)
-      color = Colors.grey[40];
+      color = Colors.grey[40]!;
     else
-      color = Colors.grey[50];
-    return color ?? Colors.transparent;
+      color = Colors.grey[50]!;
+    return color;
   } else {
-    late Color? color;
+    late Color color;
     if (state.isDisabled)
-      color = style.disabledColor;
+      color = style.disabledColor!;
     else if (state.isPressing)
       color = Color.fromARGB(255, 102, 102, 102);
     else if (state.isHovering)
       color = Color.fromARGB(255, 31, 31, 31);
     else
       color = Color.fromARGB(255, 51, 51, 51);
-    return color ?? Colors.transparent;
+    return color;
   }
 }
 

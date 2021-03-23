@@ -16,6 +16,7 @@ part 'body.dart';
 // - pane footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
 // - back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one
 // For more info, head over to the official documentation: https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview
+// Track this on github: https://github.com/bdlukaa/fluent_ui/issues/3
 
 enum NavigationPanelDisplayMode { open, compact, minimal }
 

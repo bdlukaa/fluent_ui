@@ -1,7 +1,16 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class Others extends StatelessWidget {
+class Others extends StatefulWidget {
   const Others({Key? key}) : super(key: key);
+
+  @override
+  _OthersState createState() => _OthersState();
+}
+
+class _OthersState extends State<Others> {
+  int currentIndex = 0;
+
+  int tabs = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +55,46 @@ class Others extends StatelessWidget {
           ),
         );
       }),
+      Container(
+        margin: EdgeInsets.all(6),
+        width: 130,
+        child: ProgressBar(),
+      ),
+      Container(
+        margin: EdgeInsets.all(10),
+        child: ProgressRing(value: 30),
+      ),
+      SizedBox(
+        height: 600,
+        child: TabView(
+          currentIndex: currentIndex,
+          onChanged: (index) => setState(() => currentIndex = index),
+          onNewPressed: () {
+            setState(() => tabs++);
+          },
+          tabs: List.generate(tabs, (index) {
+            return Tab(
+              text: Text('Tab $index'),
+              closeIcon: Tooltip(
+                message: 'Close tab',
+                child: IconButton(
+                  icon: Icon(Icons.pane_close),
+                  onPressed: () {
+                    setState(() => tabs--);
+                    if (currentIndex > tabs - 1) currentIndex--;
+                  },
+                ),
+              ),
+            );
+          }),
+          bodies: List.generate(
+            tabs,
+            (index) => Container(
+              color: index.isEven ? Colors.white : Colors.black,
+            ),
+          ),
+        ),
+      ),
     ]);
   }
 }

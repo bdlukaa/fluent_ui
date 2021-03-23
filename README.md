@@ -40,6 +40,9 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
     - [Type ramp](#type-ramp)
 - **TODO** [Accessibility]()
 - [Navigation](#navigation)
+  - [Navigation panel](#navigation-panel)
+  - **TODO** [Pivot]()
+  - [Tab View](#tab-view)
 - [Widgets](#widgets)
   - [Button](#button)
   - [Split Button](#split-button)
@@ -58,8 +61,6 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - **TODO** Teaching tip
   - [Acrylic](#acrylic)
   - [InfoBar](#infobar)
-  - **TODO** [Pivot]()
-  - **TODO** [Tab View]()
   - **TODO** [Calendar View]()
   - **TODO** [Calendar Date Picker]()
   - **TODO** [Date Picker]()
@@ -233,19 +234,7 @@ The default flutter navigation is available when using the `FluentApp` widget, t
 
 ## Navigation panel
 
-> Navigation Panel will be rewritten in a near future, because it lacks so much implementations and fidelity. Here's what's done and what's left to do:
-
-- [ ] Top navigation. On top navigation, the page transitions should default to `HorizontalPageTransition`
-- [x] Left navigation.
-- [x] Open display mode
-- [x] Compact display mode
-- [ ] Minimal display mode. This also require a rework on the Scaffold widget
-- [ ] Automatic display mode. The current implementation is very hacky and can be broken easily
-- [ ] Selected indicators. Currently only one indicator is supported (sliding horizontally)
-- [ ] Pane footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
-- [ ] Back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one. We can use Material's `AppBar` as reference
-
-Usually, `NavigationPanel` is used in Scaffold's `left` property:
+> Navigation Panel will be rewritten in a near future. See [#3](https://github.com/bdlukaa/fluent_ui/issues/3) for more info
 
 ```dart
 int _currentIndex = 0;
@@ -334,6 +323,50 @@ Avaiable with the widget `DrillInPageTransition`, it produces the following effe
 It's avaiable with the widget `HorizontalSlidePageTransition`.
 
 It's recommended to widely use these transitions when using the navigation panel.
+
+## Tab View
+
+The TabView control is a way to display a set of tabs and their respective content. TabViews are useful for displaying several pages (or documents) of content while giving a user the capability to rearrange, open, or close new tabs. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view)
+
+### Example
+
+```dart
+SizedBox(
+  height: 600,
+  child: TabView(
+    currentIndex: currentIndex,
+    onChanged: (index) => setState(() => currentIndex = index),
+    onNewPressed: () {
+      setState(() => tabs++);
+    },
+    tabs: List.generate(tabs, (index) {
+      return Tab(
+        text: Text('Tab $index'),
+        closeIcon: Tooltip(
+          message: 'Close tab',
+          child: IconButton(
+            icon: Icon(Icons.pane_close),
+            onPressed: () {
+              setState(() => tabs--);
+              if (currentIndex > tabs - 1) currentIndex--;
+            },
+          ),
+        ),
+      );
+    }),
+    bodies: List.generate(
+      tabs,
+      (index) => Container(
+        color: index.isEven ? Colors.red : Colors.yellow,
+      ),
+    ),
+  ),
+),
+```
+
+The code above produces the following:
+
+![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
 
 # Widgets:
 
