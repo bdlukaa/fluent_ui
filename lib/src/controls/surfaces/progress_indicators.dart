@@ -5,27 +5,19 @@ import 'package:fluent_ui/fluent_ui.dart';
 const double _kMinProgressRingIndicatorSize = 36.0;
 const double _kMinProgressBarWidth = 130.0;
 
-enum ProgressState {
-  running,
-  paused,
-  error,
-}
-
-// TODO: indeterminate progress bar and ring
+// TODO: indeterminate progress ring
 
 class ProgressBar extends StatefulWidget {
   ProgressBar({
     Key? key,
-    this.state = ProgressState.running,
     this.value,
-    this.strokeWidth = 4.0,
+    this.strokeWidth = 4.5,
   })  : assert(() {
           if (value == null) return true;
           return value >= 0 && value <= 100;
         }()),
         super(key: key);
 
-  final ProgressState state;
   final double? value;
   final double strokeWidth;
 
@@ -62,68 +54,159 @@ class _ProgressBarState extends State<ProgressBar>
     super.dispose();
   }
 
+  double p1 = 0, p2 = 0;
+  double idleFrames = 15, cycle = 1, idle = 1;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme!;
-    final radius = BorderRadius.circular(55);
     return Container(
       height: widget.strokeWidth,
-      constraints: BoxConstraints(
-        minWidth: _kMinProgressBarWidth,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: radius,
-      ),
-      child: LayoutBuilder(
-        builder: (context, consts) {
-          final size = consts.biggest;
-          switch (widget.state) {
-            case ProgressState.error:
-            case ProgressState.paused:
-              final color = widget.state == ProgressState.error
-                  ? style.brightness!.isDark
-                      ? Colors.yellow
-                      : Colors.red
-                  : style.disabledColor;
-              return Container(
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: radius,
-                ),
-                margin: EdgeInsets.symmetric(horizontal: size.width / 10),
-              );
-            default:
-              break;
-          }
-          double right = 0;
-          double left = 0;
-          if (widget.value != null) {
-            right = size.width -
-                (size.width.clamp(0, 1) * widget.value!.clamp(0, 100) * 3);
-          } else {
-            right = size.width;
-          }
-          final inside = Container(
-            decoration: BoxDecoration(
-              color: style.accentColor,
-              borderRadius: radius,
-            ),
-            margin: EdgeInsets.only(right: right, left: left),
-          );
-          return inside;
-        },
+      constraints: BoxConstraints(minWidth: _kMinProgressBarWidth),
+      child: ValueListenableBuilder(
+        valueListenable: _controller,
+        builder: (context, value, child) => CustomPaint(
+          painter: _ProgressBarPainter(
+            value: widget.value == null ? null : widget.value! / 100,
+            strokeWidth: widget.strokeWidth,
+            activeColor: style.accentColor!,
+            backgroundColor: Colors.grey,
+            p1: p1,
+            p2: p2,
+            idleFrames: idleFrames,
+            cycle: cycle,
+            idle: idle,
+            onUpdate: (values) {
+              p1 = values[0];
+              p2 = values[1];
+              idleFrames = values[2];
+              cycle = values[3];
+              idle = values[4];
+            },
+          ),
+          child: () {}(),
+        ),
       ),
     );
   }
+}
+
+class _ProgressBarPainter extends CustomPainter {
+  static const _step1 = 0.015, _step2 = 0.025, _velocityScale = 0.8;
+  static const _short = 0.4; // percentage of short line (0..1)
+  static const _long = 80 / 130; // percentage of long line (0..1)
+
+  double p1, p2, idleFrames, cycle, idle;
+
+  ValueChanged<List<double>> onUpdate;
+
+  final double strokeWidth;
+  final Color backgroundColor;
+  final Color activeColor;
+
+  final double? value;
+
+  _ProgressBarPainter({
+    required this.p1,
+    required this.p2,
+    required this.idle,
+    required this.cycle,
+    required this.idleFrames,
+    required this.onUpdate,
+    required this.strokeWidth,
+    required this.backgroundColor,
+    required this.activeColor,
+    required this.value,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    void drawLine(Offset xy1, Offset xy2, Color color) {
+      canvas.drawLine(
+        xy1,
+        xy2,
+        Paint()
+          ..color = color
+          ..strokeWidth = strokeWidth
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
+
+    // background line
+    drawLine(
+      Offset(0, size.height),
+      Offset(size.width, size.height),
+      backgroundColor,
+    );
+
+    if (value != null) {
+      drawLine(
+        Offset(0, size.height),
+        Offset(value!.clamp(0.0, 1.0) * size.width, size.height),
+        activeColor,
+      );
+      return;
+    }
+
+    // The math below is cortesy of raitonuberu:
+    // https://gist.github.com/raitonoberu/21dacaee725806b60ddb45ec68147d30
+    // https://github.com/raitonoberu
+
+    void update() {
+      onUpdate([p1, p2, idleFrames, cycle, idle]);
+    }
+
+    Offset coords(double percentage) {
+      return Offset(
+        size.width * percentage,
+        size.height,
+      );
+    }
+
+    double calcVelocity(double p) {
+      return 1 + math.cos(math.pi * p - (math.pi / 2)) * _velocityScale;
+    }
+
+    final v1 = calcVelocity(p1);
+    final v2 = calcVelocity(p2);
+
+    if (cycle == 1) {
+      // short line
+      p2 = math.min(p2 + _step1 * v2, 1);
+      if (p2 - p1 >= _short || p2 == 1) p1 = math.min(p1 + _step1 * v1, 1);
+    }
+    if (cycle == -1) {
+      // long line
+      p2 = math.min(p2 + _step2 * v2, 1);
+      if (p2 - p1 >= _long || p2 == 1) p1 = math.min(p1 + _step2 * v1, 1);
+    }
+    if (p1 == 1) {
+      // the end reached
+      idle = idleFrames;
+      cycle *= -1;
+      p1 = 0;
+      p2 = 0;
+    }
+    update();
+
+    if (idle != 0) drawLine(coords(p1), coords(p2), activeColor);
+  }
+
+  @override
+  bool shouldRepaint(_ProgressBarPainter oldDelegate) => true;
+
+  @override
+  bool shouldRebuildSemantics(_ProgressBarPainter oldDelegate) => false;
 }
 
 class ProgressRing extends StatefulWidget {
   ProgressRing({
     Key? key,
     this.value,
-    this.strokeWidth = 4.0,
+    this.strokeWidth = 4.5,
   })  : assert(() {
           if (value == null) return true;
           return value >= 0 && value <= 100;
@@ -145,7 +228,7 @@ class _ProgressRingState extends State<ProgressRing>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
     if (widget.value == null) _controller.repeat();
@@ -175,14 +258,22 @@ class _ProgressRingState extends State<ProgressRing>
         minWidth: _kMinProgressRingIndicatorSize,
         minHeight: _kMinProgressRingIndicatorSize,
       ),
-      child: CustomPaint(
-        painter: _RingPainter(
-          backgroundColor: Colors.grey,
-          value: widget.value,
-          color: style.accentColor!,
-          strokeWidth: widget.strokeWidth,
-        ),
-      ),
+      child: () {
+        final painter = CustomPaint(
+          painter: _RingPainter(
+            backgroundColor: Colors.grey,
+            value: widget.value,
+            color: style.accentColor!,
+            strokeWidth: widget.strokeWidth,
+          ),
+        );
+        if (widget.value == null)
+          return ValueListenableBuilder(
+            valueListenable: _controller,
+            builder: (context, value, child) => painter,
+          );
+        return painter;
+      }(),
     );
   }
 }
@@ -218,6 +309,27 @@ class _RingPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth,
     );
+    if (value == null) {
+      final Paint paint = Paint()
+        ..color = color
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke;
+
+      final tailValue = 0, rotationValue = 0, offsetValue = 0, headValue = 0;
+      canvas.drawArc(
+        Offset.zero & size,
+        (_startAngle +
+            tailValue * 3 / 2 * math.pi +
+            rotationValue * math.pi * 2.0 +
+            offsetValue * 0.5 * math.pi),
+        math.max(headValue * 3 / 2 * math.pi - tailValue * 3 / 2 * math.pi,
+            _epsilon),
+        false,
+        paint,
+      );
+      return;
+    }
     final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth

@@ -10,6 +10,7 @@ class TabView extends StatelessWidget {
     required this.bodies,
     this.showNewButton = true,
     this.onNewPressed,
+    this.addIconData = Icons.add,
   })  : assert(tabs.length == bodies.length),
         super(key: key);
 
@@ -21,6 +22,8 @@ class TabView extends StatelessWidget {
 
   final bool showNewButton;
   final void Function()? onNewPressed;
+  
+  final IconData addIconData;
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +75,19 @@ class TabView extends StatelessWidget {
             }).toList(),
             if (showNewButton)
               IconButton(
-                icon: Icon(Icons.add),
+                icon: Icon(addIconData),
                 onPressed: onNewPressed,
                 style: IconButtonStyle(
-                  margin: EdgeInsets.zero,
+                  margin: EdgeInsets.only(left: 2),
+                  iconStyle: (state) => IconStyle(
+                    size: 16,
+                    color: () {
+                      if (state.isDisabled || state.isNone)
+                        return context.theme!.disabledColor;
+                      else
+                        return context.theme!.inactiveColor;
+                    }(),
+                  ),
                 ),
               ),
           ]),
@@ -154,6 +166,15 @@ class _Tab extends StatelessWidget {
                     },
                     margin: EdgeInsets.zero,
                     padding: EdgeInsets.zero,
+                    iconStyle: (state) => IconStyle(
+                      size: 20,
+                      color: () {
+                        if (state.isDisabled || state.isNone)
+                          return context.theme!.disabledColor;
+                        else
+                          return context.theme!.inactiveColor;
+                      }(),
+                    ),
                   ),
                 ),
               )),

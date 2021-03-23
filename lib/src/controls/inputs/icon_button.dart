@@ -26,24 +26,29 @@ class IconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme!.iconButtonStyle!.copyWith(this.style);
-    return Button(
-      focusNode: focusNode,
-      text: Theme(
-        data: context.theme!.copyWith(Style(iconStyle: style.iconStyle)),
-        child: icon,
-      ),
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      semanticsLabel: semanticsLabel,
-      style: ButtonStyle(
-        decoration: (state) => BoxDecoration(
-          border: style.border!(state),
-          borderRadius: style.borderRadius,
-          color: style.color!(state),
+    return HoverButton(
+      onPressed: onPressed == null ? null : () {},
+      builder: (context, state) => Button(
+        focusNode: focusNode,
+        text: Theme(
+          data: context.theme!.copyWith(Style(
+            iconStyle: style.iconStyle?.call(state),
+          )),
+          child: icon,
         ),
-        cursor: style.cursor,
-        margin: style.margin,
-        padding: style.padding,
+        onPressed: onPressed,
+        onLongPress: onLongPress,
+        semanticsLabel: semanticsLabel,
+        style: ButtonStyle(
+          decoration: (state) => BoxDecoration(
+            border: style.border!(state),
+            borderRadius: style.borderRadius,
+            color: style.color!(state),
+          ),
+          cursor: style.cursor,
+          margin: style.margin,
+          padding: style.padding,
+        ),
       ),
     );
   }
@@ -60,7 +65,7 @@ class IconButtonStyle {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
-  final IconStyle? iconStyle;
+  final ButtonState<IconStyle?>? iconStyle;
 
   const IconButtonStyle({
     this.color,
@@ -79,20 +84,21 @@ class IconButtonStyle {
       border: (_) => Border.all(style: BorderStyle.none),
       padding: EdgeInsets.all(4),
       color: (state) => uncheckedInputColor(style, state),
-      iconStyle: style.iconStyle,
+      iconStyle: (_) => style.iconStyle,
     );
     return def;
   }
 
   IconButtonStyle copyWith(IconButtonStyle? style) {
+    if (style == null) return this;
     return IconButtonStyle(
-      border: style?.border ?? border,
-      borderRadius: style?.borderRadius ?? borderRadius,
-      color: style?.color ?? color,
-      margin: style?.margin ?? margin,
-      padding: style?.padding ?? padding,
-      cursor: style?.cursor ?? cursor,
-      iconStyle: style?.iconStyle,
+      border: style.border ?? border,
+      borderRadius: style.borderRadius ?? borderRadius,
+      color: style.color ?? color,
+      margin: style.margin ?? margin,
+      padding: style.padding ?? padding,
+      cursor: style.cursor ?? cursor,
+      iconStyle: style.iconStyle ?? iconStyle,
     );
   }
 }

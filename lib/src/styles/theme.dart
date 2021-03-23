@@ -22,6 +22,9 @@ extension themeContext on BuildContext {
 extension brightnessExtension on Brightness {
   bool get isLight => this == Brightness.light;
   bool get isDark => this == Brightness.dark;
+
+  Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
+
 }
 
 const standartCurve = Curves.easeInOut;

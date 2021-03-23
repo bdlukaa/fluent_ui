@@ -65,8 +65,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - **TODO** [Calendar Date Picker]()
   - **TODO** [Date Picker]()
   - **TODO** [Time Picker]()
-  - **TODO** [Progress Ring]()
-  - **TODO** [Progress Bar]()
+  - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - **TODO** [Pull-to-Refresh]()
   - **TODO** [Tree View]()
 - [Equivalents with the material library](#equivalents-with-the-material-library)
@@ -107,6 +106,7 @@ Also, futurely there will be a way to get the current device accent color. For m
 ![Inputs Preview](screenshots/inputs.png)
 ![Forms Preview](screenshots/forms.png)
 ![Others Preview](screenshots/others.png)
+![Others Preview 2](screenshots/others_2.png)
 
 # Style
 
@@ -776,6 +776,42 @@ InfoBar(
 ![Long Success InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)\
 ![Error InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-action-button.png)\
 ![Custom InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-custom-icon-color.png)
+
+## Progress Bar and Progress Ring
+
+A progress control provides feedback to the user that a long-running operation is underway. It can mean that the user cannot interact with the app when the progress indicator is visible, and can also indicate how long the wait time might be, depending on the indicator used.
+
+### Example
+
+Creating a ProgressBar:
+
+```dart
+ProgressBar(value: 35)
+```
+
+![Determinate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-determinate.png)
+
+You can omit the `value` property to create an indeterminate progress bar:
+
+![Indeterminate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-indeterminate.gif)
+
+Indeterminate Progress Bar is a courtesy of [@raitonubero](https://github.com/raitonoberu). Show him some love
+
+Creating a ProgressRing:
+
+```dart
+ProgressRing(value: 35)
+```
+
+![Determinate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring.jpg)
+
+Indeterminate progress ring is not available on the moment, but fell free to create a pr.
+
+### Screenshots
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-determinate-example.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-indeterminate-example.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring_determinate_example.png)
 
 ---
 

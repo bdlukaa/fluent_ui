@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (_) => MyHomePage(),
           },
-          style: Style(),
         );
       },
     );

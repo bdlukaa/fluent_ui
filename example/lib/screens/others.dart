@@ -55,15 +55,15 @@ class _OthersState extends State<Others> {
           ),
         );
       }),
-      Container(
-        margin: EdgeInsets.all(6),
-        width: 130,
-        child: ProgressBar(),
-      ),
-      Container(
-        margin: EdgeInsets.all(10),
-        child: ProgressRing(value: 30),
-      ),
+      Row(children: [
+        Container(padding: EdgeInsets.all(6), child: ProgressBar(value: 50)),
+        Container(
+          margin: EdgeInsets.all(10),
+          child: ProgressRing(
+            value: 35,
+          ),
+        ),
+      ]),
       SizedBox(
         height: 600,
         child: TabView(

@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [1.3.1] - [23/03/2021]
+
+- **FIX** `IconButtonStyle`'s `iconStyle` now works properly 
+- Improved `TabView` icon styling
+- **NEW** Indeterminate `ProgressBar`
+
 ## [1.3.0] - [22/03/2021]
 
 - **NEW** Determinate `ProgressBar` and `ProgressRing`
