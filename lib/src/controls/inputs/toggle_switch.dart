@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 class ToggleSwitch extends StatelessWidget {
@@ -23,9 +24,19 @@ class ToggleSwitch extends StatelessWidget {
   final FocusNode? focusNode;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty('checked', value: checked));
+    properties.add(ObjectFlagProperty('onChanged', onChanged));
+    properties.add(DiagnosticsProperty<ToggleSwitchStyle>('style', style));
+    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.toggleSwitchStyle!.copyWith(this.style);
+    final style = context.theme.toggleSwitchStyle!.copyWith(this.style);
     return HoverButton(
       semanticsLabel: semanticsLabel,
       margin: style.margin,
@@ -33,7 +44,7 @@ class ToggleSwitch extends StatelessWidget {
       cursor: style.cursor,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        return AnimatedContainer(
+        final Widget child = AnimatedContainer(
           alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
           height: 20,
           width: 45,
@@ -49,6 +60,10 @@ class ToggleSwitch extends StatelessWidget {
                 style: style,
                 state: state,
               ),
+        );
+        return Semantics(
+          child: child,
+          checked: checked,
         );
       },
     );
@@ -85,7 +100,8 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
   }
 }
 
-class ToggleSwitchStyle {
+@immutable
+class ToggleSwitchStyle with Diagnosticable {
   final ButtonState<Decoration>? checkedThumbDecoration;
   final ButtonState<Decoration>? uncheckedThumbDecoration;
 
@@ -119,7 +135,7 @@ class ToggleSwitchStyle {
       borderRadius: BorderRadius.circular(30),
     );
 
-    final def = ToggleSwitchStyle(
+    return ToggleSwitchStyle(
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
@@ -149,8 +165,6 @@ class ToggleSwitchStyle {
       uncheckedThumbDecoration: (_) =>
           defaultThumbDecoration.copyWith(color: style.inactiveColor),
     );
-
-    return def;
   }
 
   ToggleSwitchStyle copyWith(ToggleSwitchStyle? style) {
@@ -167,5 +181,19 @@ class ToggleSwitchStyle {
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedDecoration', checkedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedDecoration', uncheckedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedThumbDecoration', checkedThumbDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedThumbDecoration', uncheckedThumbDecoration));
   }
 }

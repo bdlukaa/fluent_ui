@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
-class Typography {
+class Typography with Diagnosticable {
   final TextStyle? header;
   final TextStyle? subheader;
   final TextStyle? title;
@@ -70,5 +71,17 @@ class Typography {
       body: typography.body ?? body,
       caption: typography.caption ?? caption,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TextStyle>('header', header));
+    properties.add(DiagnosticsProperty<TextStyle>('subheader', subheader));
+    properties.add(DiagnosticsProperty<TextStyle>('title', title));
+    properties.add(DiagnosticsProperty<TextStyle>('subtitle', subtitle));
+    properties.add(DiagnosticsProperty<TextStyle>('base', base));
+    properties.add(DiagnosticsProperty<TextStyle>('body', body));
+    properties.add(DiagnosticsProperty<TextStyle>('caption', caption));
   }
 }

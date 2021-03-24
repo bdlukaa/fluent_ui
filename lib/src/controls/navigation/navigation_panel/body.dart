@@ -16,7 +16,7 @@ class NavigationPanelBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration:
-          context.theme!.mediumAnimationDuration ?? Duration(milliseconds: 300),
+          context.theme.mediumAnimationDuration ?? Duration(milliseconds: 300),
       layoutBuilder: (child, children) {
         return SizedBox(child: child);
       },

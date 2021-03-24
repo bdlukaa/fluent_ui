@@ -21,7 +21,7 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.dialogStyle?.copyWith(this.style);
+    final style = context.theme.dialogStyle?.copyWith(this.style);
     return Dialog(
       backgroundDismiss: backgroundDismiss ?? true,
       barrierColor: style?.barrierColor,
@@ -54,7 +54,7 @@ class ContentDialog extends StatelessWidget {
                 ),
               if (actions != null)
                 Theme(
-                  data: context.theme!.copyWith(Style(
+                  data: context.theme.copyWith(Style(
                     buttonStyle: style?.actionStyle,
                   )),
                   child: Row(
@@ -94,13 +94,12 @@ Future<T?> showDialog<T>({
   required Widget Function(BuildContext) builder,
   RouteTransitionsBuilder? transitionBuilder,
   Duration? transitionDuration,
-  Color? barrierColor,
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
 }) {
   return showGeneralDialog<T>(
     context: context,
-    barrierColor: barrierColor ?? Colors.transparent,
+    barrierColor: Colors.transparent,
     barrierDismissible: false,
     pageBuilder: (context, primary, secondary) {
       return builder(context);
@@ -109,7 +108,7 @@ Future<T?> showDialog<T>({
     transitionBuilder: transitionBuilder,
     routeSettings: routeSettings,
     transitionDuration: transitionDuration ??
-        context.theme?.mediumAnimationDuration ??
+        context.maybeTheme?.mediumAnimationDuration ??
         Duration(milliseconds: 300),
   );
 }
@@ -117,30 +116,36 @@ Future<T?> showDialog<T>({
 class Dialog extends StatelessWidget {
   const Dialog({
     Key? key,
-    this.child,
+    required this.child,
     this.backgroundDismiss = false,
     this.barrierColor,
+    this.barrierLabel,
   }) : super(key: key);
 
   final bool backgroundDismiss;
   final Color? barrierColor;
 
-  final Widget? child;
+  final Widget child;
+  final String? barrierLabel;
 
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
       Positioned.fill(
-        child: GestureDetector(
-          onTap: () {
-            if (backgroundDismiss) Navigator.pop(context);
-          },
-          child: Container(
-            color: barrierColor ?? Colors.black.withOpacity(0.8),
+        child: Semantics(
+          label: barrierLabel,
+          focusable: false,
+          child: GestureDetector(
+            onTap: () {
+              if (backgroundDismiss) Navigator.pop(context);
+            },
+            child: Container(
+              color: barrierColor ?? Colors.black.withOpacity(0.8),
+            ),
           ),
         ),
       ),
-      child!,
+      child,
     ]);
   }
 }

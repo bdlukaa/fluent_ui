@@ -7,17 +7,19 @@ class Tooltip extends StatelessWidget {
     required this.message,
     this.child,
     this.style,
+    this.excludeFromSemantics,
   }) : super(key: key);
 
   final String message;
   final Widget? child;
 
   final TooltipStyle? style;
+  final bool? excludeFromSemantics;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.tooltipStyle?.copyWith(this.style);
+    final style = context.theme.tooltipStyle?.copyWith(this.style);
     return m.Tooltip(
       message: message,
       child: child,
@@ -30,6 +32,7 @@ class Tooltip extends StatelessWidget {
       verticalOffset: style?.verticalOffset,
       textStyle: style?.textStyle,
       waitDuration: style?.waitDuration,
+      excludeFromSemantics: excludeFromSemantics,
     );
   }
 }

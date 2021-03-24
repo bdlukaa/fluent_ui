@@ -12,7 +12,7 @@ class Settings extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         'Theme mode',
-        style: context.theme!.typography?.subheader,
+        style: context.theme.typography?.subheader,
       ),
       ...List.generate(ThemeMode.values.length, (index) {
         final mode = ThemeMode.values[index];
@@ -34,7 +34,7 @@ class Settings extends StatelessWidget {
       }),
       Text(
         'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on desktop yet.\nWe must wait until its beta release',
-        style: context.theme!.typography?.caption,
+        style: context.theme.typography?.caption,
       ),
     ]);
   }

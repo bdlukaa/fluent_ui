@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -17,13 +18,22 @@ class Checkbox extends StatelessWidget {
   final CheckboxStyle? style;
 
   final String? semanticsLabel;
-
   final FocusNode? focusNode;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty('checked', value: checked));
+    properties.add(ObjectFlagProperty('onChanged', onChanged));
+    properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
+    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
+  }
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.checkboxStyle!.copyWith(this.style);
+    final style = context.theme.checkboxStyle!.copyWith(this.style);
     final double size = 22;
     return HoverButton(
       semanticsLabel: semanticsLabel,
@@ -34,7 +44,7 @@ class Checkbox extends StatelessWidget {
           ? null
           : () => onChanged!(checked == null ? null : !(checked!)),
       builder: (context, state) {
-        return AnimatedContainer(
+        Widget child = AnimatedContainer(
           alignment: Alignment.center,
           duration: style.animationDuration!,
           curve: style.animationCurve!,
@@ -62,12 +72,17 @@ class Checkbox extends StatelessWidget {
             }(),
           ),
         );
+        return Semantics(
+          checked: checked,
+          child: child,
+        );
       },
     );
   }
 }
 
-class CheckboxStyle {
+@immutable
+class CheckboxStyle with Diagnosticable {
   final ButtonState<Decoration>? checkedDecoration;
   final ButtonState<Decoration>? uncheckedDecoration;
   final ButtonState<Decoration>? thirdstateDecoration;
@@ -143,12 +158,33 @@ class CheckboxStyle {
       icon: style?.icon ?? icon,
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
       uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
+      thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
       thirdstateDecoration: style?.thirdstateDecoration ?? thirdstateDecoration,
-      thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('thirdstateDecoration', thirdstateDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('uncheckedDecoration', uncheckedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('checkedDecoration', checkedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('thirdstateIconColor', thirdstateIconColor));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('uncheckedIconColor', uncheckedIconColor));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('checkedIconColor', checkedIconColor));
+    properties.add(IconDataProperty('icon', icon));
+    properties.add(IconDataProperty('icon', icon));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('checkedDecoration', checkedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('uncheckedDecoration', uncheckedDecoration));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+  }
+
 }

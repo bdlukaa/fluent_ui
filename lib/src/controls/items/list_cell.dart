@@ -80,7 +80,7 @@ class ListCell extends StatelessWidget {
   Widget build(BuildContext context) {
     if (_otherCell != null) return _otherCell!;
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.listCellStyle!.copyWith(this.style);
+    final style = context.theme.listCellStyle!.copyWith(this.style);
     return HoverButton(
       cursor: style.cursor,
       onPressed: onPressed,
@@ -154,7 +154,7 @@ class CheckboxListCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.listCellStyle!.copyWith(cellStyle);
+    final style = context.theme.listCellStyle!.copyWith(cellStyle);
     return ListCell(
       title: title,
       subtitle: subtitle,
@@ -204,7 +204,7 @@ class ToggleListCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.theme!.listCellStyle!.copyWith(cellStyle);
+    final style = context.theme.listCellStyle!.copyWith(cellStyle);
     return ListCell(
       title: title,
       subtitle: subtitle,

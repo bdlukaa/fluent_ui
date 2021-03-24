@@ -55,7 +55,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                         vertical: 8,
                       ),
                       child: DefaultTextStyle(
-                        style: context.theme!.typography?.base ??
+                        style: context.theme.typography?.base ??
                             const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -115,14 +115,14 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                         vertical: 8,
                       ),
                       child: AnimatedDefaultTextStyle(
-                        style: context.theme!.typography?.base ??
+                        style: context.theme.typography?.base ??
                             const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                        duration: context.theme!.mediumAnimationDuration ??
+                        duration: context.theme.mediumAnimationDuration ??
                             Duration.zero,
-                        curve: context.theme!.animationCurve ?? standartCurve,
+                        curve: context.theme.animationCurve ?? standartCurve,
                         child: item.label!,
                         softWrap: false,
                         maxLines: 1,

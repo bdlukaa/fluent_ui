@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Divider extends StatelessWidget {
   const Divider({
@@ -16,10 +17,10 @@ class Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.dividerStyle?.copyWith(this.style);
+    final style = context.theme.dividerStyle?.copyWith(this.style);
     return AnimatedContainer(
-      duration: context.theme!.fastAnimationDuration ?? Duration.zero,
-      curve: context.theme!.animationCurve ?? Curves.linear,
+      duration: context.theme.fastAnimationDuration ?? Duration.zero,
+      curve: context.theme.animationCurve ?? Curves.linear,
       height: direction == Axis.horizontal ? style?.thickness : size,
       width: direction == Axis.vertical ? style?.thickness : size,
       margin: style?.margin?.call(direction),
@@ -28,7 +29,8 @@ class Divider extends StatelessWidget {
   }
 }
 
-class DividerStyle {
+@immutable
+class DividerStyle with Diagnosticable {
   final double? thickness;
   final Decoration? decoration;
   final EdgeInsetsGeometry Function(Axis direction)? margin;
@@ -61,5 +63,13 @@ class DividerStyle {
       margin: style.margin ?? margin,
       thickness: style.thickness ?? thickness,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
+    properties.add(ObjectFlagProperty('margin', margin));
+    properties.add(DoubleProperty('thickness', thickness));
   }
 }

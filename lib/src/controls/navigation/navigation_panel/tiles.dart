@@ -86,16 +86,16 @@ class NavigationPanelItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.navigationPanelStyle!.copyWith(item.style);
+    final style = context.theme.navigationPanelStyle!.copyWith(item.style);
     return SizedBox(
       height: 41.0,
       child: HoverButton(
         onPressed: onTap,
         builder: (context, state) {
-          return AnimatedContainer(
+          final child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: uncheckedInputColor(context.theme!, state),
+            color: uncheckedInputColor(context.theme, state),
             child: Row(children: [
               AnimatedSwitcher(
                 duration: style.animationDuration ?? Duration.zero,
@@ -123,8 +123,8 @@ class NavigationPanelItemTile extends StatelessWidget {
                 Padding(
                   padding: style.iconPadding ?? EdgeInsets.zero,
                   child: Theme(
-                    data: context.theme!.copyWith(Style(
-                      iconStyle: context.theme!.iconStyle!.copyWith(IconStyle(
+                    data: context.theme.copyWith(Style(
+                      iconStyle: context.theme.iconStyle!.copyWith(IconStyle(
                         color: selected
                             ? style.selectedIconColor!(state)
                             : style.unselectedIconColor!(state),
@@ -143,7 +143,7 @@ class NavigationPanelItemTile extends StatelessWidget {
                       padding: style.labelPadding ?? EdgeInsets.zero,
                       child: AnimatedDefaultTextStyle(
                         duration: style.animationDuration ??
-                            context.theme!.mediumAnimationDuration ??
+                            context.theme.mediumAnimationDuration ??
                             Duration.zero,
                         curve: style.animationCurve ?? standartCurve,
                         style: textStyle,
@@ -156,6 +156,10 @@ class NavigationPanelItemTile extends StatelessWidget {
                   );
                 }(),
             ]),
+          );
+          return Semantics(
+            selected: selected,
+            child: child,
           );
         },
       ),

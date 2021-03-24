@@ -32,7 +32,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
     final popup = Acrylic(
       width: kDefaultComboBoxWidth,
       decoration: BoxDecoration(
-        color: context.theme!.navigationPanelBackgroundColor,
+        color: context.theme.navigationPanelBackgroundColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: ListView(
@@ -78,7 +78,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!;
+    final style = context.theme;
     return HoverButton(
       onPressed: () {
         late OverlayEntry entry;

@@ -7,8 +7,12 @@ class Theme extends InheritedWidget {
   final Style data;
   final Widget child;
 
-  static Style? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Theme>()?.data.build();
+  static Style of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Theme>()!.data.build();
+  }
+
+  static Style maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Theme>()!.data.build();
   }
 
   @override
@@ -16,7 +20,8 @@ class Theme extends InheritedWidget {
 }
 
 extension themeContext on BuildContext {
-  Style? get theme => Theme.of(this);
+  Style get theme => Theme.of(this);
+  Style? get maybeTheme => Theme.maybeOf(this);
 }
 
 extension brightnessExtension on Brightness {
@@ -24,7 +29,6 @@ extension brightnessExtension on Brightness {
   bool get isDark => this == Brightness.dark;
 
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
-
 }
 
 const standartCurve = Curves.easeInOut;
@@ -35,6 +39,7 @@ class Style {
   final Color? accentColor;
   final Color? activeColor;
   final Color? inactiveColor;
+  final Color? inactiveBackgroundColor;
   final Color? disabledColor;
 
   final Duration? fastAnimationDuration;
@@ -70,6 +75,7 @@ class Style {
     this.accentColor,
     this.activeColor,
     this.inactiveColor,
+    this.inactiveBackgroundColor,
     this.disabledColor,
     this.fastAnimationDuration,
     this.mediumAnimationDuration,
@@ -113,6 +119,13 @@ class Style {
             else
               return Colors.white;
           }(),
+      inactiveBackgroundColor: inactiveBackgroundColor ??
+          () {
+            if (brightness.isLight)
+              return Color(0xFFd6d6d6);
+            else
+              return Color(0xFF292929);
+          }(),
       disabledColor: Colors.grey[100]!.withOpacity(0.6),
       scaffoldBackgroundColor: scaffoldBackgroundColor ??
           () {
@@ -128,39 +141,25 @@ class Style {
             else
               return Color.fromARGB(255, 25, 25, 25);
           }(),
-      typography: Typography.defaultTypography(brightness: brightness)
-          .copyWith(typography),
+      typography: Typography.defaultTypography(brightness: brightness).copyWith(typography),
     );
     return defaultStyle.copyWith(Style(
       buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
-      iconButtonStyle:
-          IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
-      checkboxStyle:
-          CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
-      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle)
-          .copyWith(toggleButtonStyle),
-      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
-          .copyWith(toggleSwitchStyle),
-      pivotItemStyle:
-          PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
+      iconButtonStyle: IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
+      checkboxStyle: CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
+      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle).copyWith(toggleButtonStyle),
+      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle).copyWith(toggleSwitchStyle),
+      pivotItemStyle: PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
       iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
-      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle, brightness)
-          .copyWith(splitButtonStyle),
-      listCellStyle:
-          ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
-      dialogStyle:
-          ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
-      tooltipStyle:
-          TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
-      dividerStyle:
-          DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
-      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle)
-          .copyWith(navigationPanelStyle),
-      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
-          .copyWith(radioButtonStyle),
+      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle).copyWith(splitButtonStyle),
+      listCellStyle: ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
+      dialogStyle: ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
+      tooltipStyle: TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
+      dividerStyle: DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
+      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle).copyWith(navigationPanelStyle),
+      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle).copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
-      infoBarStyle:
-          InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
+      infoBarStyle: InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
     ));
   }
 
@@ -173,8 +172,7 @@ class Style {
     return Style(
       accentColor: other.accentColor ?? accentColor,
       activeColor: other.activeColor ?? activeColor,
-      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ??
-          navigationPanelBackgroundColor,
+      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ?? navigationPanelBackgroundColor,
       navigationPanelStyle: other.navigationPanelStyle ?? navigationPanelStyle,
       brightness: other.brightness ?? brightness,
       buttonStyle: other.buttonStyle ?? buttonStyle,
@@ -187,8 +185,7 @@ class Style {
       listCellStyle: other.listCellStyle ?? listCellStyle,
       pivotItemStyle: other.pivotItemStyle ?? pivotItemStyle,
       radioButtonStyle: other.radioButtonStyle ?? radioButtonStyle,
-      scaffoldBackgroundColor:
-          other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
+      scaffoldBackgroundColor: other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
       splitButtonStyle: other.splitButtonStyle ?? splitButtonStyle,
       toggleButtonStyle: other.toggleButtonStyle ?? toggleButtonStyle,
       toggleSwitchStyle: other.toggleSwitchStyle ?? toggleSwitchStyle,
@@ -197,13 +194,11 @@ class Style {
       animationCurve: other.animationCurve ?? animationCurve,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
-      fastAnimationDuration:
-          other.fastAnimationDuration ?? fastAnimationDuration,
-      mediumAnimationDuration:
-          other.mediumAnimationDuration ?? mediumAnimationDuration,
-      slowAnimationDuration:
-          other.slowAnimationDuration ?? slowAnimationDuration,
+      fastAnimationDuration: other.fastAnimationDuration ?? fastAnimationDuration,
+      mediumAnimationDuration: other.mediumAnimationDuration ?? mediumAnimationDuration,
+      slowAnimationDuration: other.slowAnimationDuration ?? slowAnimationDuration,
       infoBarStyle: other.infoBarStyle ?? infoBarStyle,
+      inactiveBackgroundColor: other.inactiveBackgroundColor ?? inactiveBackgroundColor,
     );
   }
 }

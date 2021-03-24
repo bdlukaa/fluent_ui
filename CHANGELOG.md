@@ -1,5 +1,40 @@
 Date format: DD/MM/YYYY
 
+## [1.3.2] - Accessibility update - [24/03/2021]
+
+This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issues/5)
+
+- `Theme.of` can't be null anymore. Use `Theme.maybeOf` for such
+- **NEW** `Style.inactiveBackgroundColor`
+- **BREAKING** Replaced `color`, `border`, `borderRadius` from `IconButtonStyle` to `decoration`
+- Provide `Diagnostics` support to the following classes:
+  - ButtonStyle
+  - Checkbox
+  - CheckboxStyle
+  - IconButtonStyle
+  - RadioButtonStyle
+  - RatingBar
+  - SplitButtonStyle
+  - ToggleButton
+  - ToggleButtonStyle
+  - ToggleSwitch
+  - ToggleSwitchStyle
+  - Slider
+  - SliderStyle
+  - Typography
+  - Divider
+  - DividerStyle
+- Provide accessibility support to the following widgets:
+  - Button
+  - Checkbox
+  - IconButton
+  - RadioButton
+  - RatingBar
+  - Slider
+  - ToggleButton
+  - ToggleSwitch
+  - TabView
+
 ## [1.3.1] - [23/03/2021]
 
 - **FIX** `IconButtonStyle`'s `iconStyle` now works properly 

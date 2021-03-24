@@ -275,75 +275,50 @@ class TextBox extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>(
-        'controller', controller,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
-    properties
-        .add(DiagnosticsProperty<BoxDecoration>('decoration', decoration));
+    properties.add(DiagnosticsProperty<TextEditingController>('controller', controller, defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
+    properties.add(DiagnosticsProperty<BoxDecoration>('decoration', decoration));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
     properties.add(StringProperty('placeholder', placeholder));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle));
-    properties.add(DiagnosticsProperty<OverlayVisibilityMode>(
-        'prefix', prefix == null ? null : prefixMode));
-    properties.add(DiagnosticsProperty<OverlayVisibilityMode>(
-        'suffix', suffix == null ? null : suffixMode));
-    properties.add(DiagnosticsProperty<TextInputType>(
-        'keyboardType', keyboardType,
-        defaultValue: TextInputType.text));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
-    properties.add(DiagnosticsProperty<String>(
-        'obscuringCharacter', obscuringCharacter,
-        defaultValue: '•'));
-    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText,
-        defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
-        defaultValue: true));
-    properties.add(EnumProperty<SmartDashesType>(
-        'smartDashesType', smartDashesType,
-        defaultValue:
-            obscureText ? SmartDashesType.disabled : SmartDashesType.enabled));
-    properties.add(EnumProperty<SmartQuotesType>(
-        'smartQuotesType', smartQuotesType,
-        defaultValue:
-            obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled));
-    properties.add(DiagnosticsProperty<bool>(
-        'enableSuggestions', enableSuggestions,
-        defaultValue: true));
+    properties.add(DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle));
+    properties.add(DiagnosticsProperty<OverlayVisibilityMode>('prefix', prefix == null ? null : prefixMode));
+    properties.add(DiagnosticsProperty<OverlayVisibilityMode>('suffix', suffix == null ? null : suffixMode));
+    properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType, defaultValue: TextInputType.text));
+    properties.add(DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
+    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
+    properties.add(DiagnosticsProperty<String>('obscuringCharacter', obscuringCharacter, defaultValue: '•'));
+    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect, defaultValue: true));
+    properties.add(EnumProperty<SmartDashesType>('smartDashesType', smartDashesType, defaultValue: obscureText ? SmartDashesType.disabled : SmartDashesType.enabled));
+    properties.add(EnumProperty<SmartQuotesType>('smartQuotesType', smartQuotesType, defaultValue: obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled));
+    properties.add(DiagnosticsProperty<bool>('enableSuggestions', enableSuggestions, defaultValue: true));
     properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));
     properties.add(IntProperty('minLines', minLines, defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<bool>('expands', expands, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('expands', expands, defaultValue: false));
     properties.add(IntProperty('maxLength', maxLength, defaultValue: null));
-    properties.add(FlagProperty('maxLengthEnforced',
-        value: maxLengthEnforced, ifTrue: 'max length enforced'));
-    properties
-        .add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
-    properties
-        .add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
-    properties.add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
-        defaultValue: null));
+    properties.add(FlagProperty('maxLengthEnforced', value: maxLengthEnforced, ifTrue: 'max length enforced'));
+    properties.add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
+    properties.add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
+    properties.add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius, defaultValue: null));
 
     properties.add(FlagProperty('selectionEnabled',
-        value: selectionEnabled,
-        defaultValue: true,
-        ifFalse: 'selection disabled'));
+      value: selectionEnabled,
+      defaultValue: true,
+      ifFalse: 'selection disabled',
+    ));
     properties.add(DiagnosticsProperty<ScrollController>(
-        'scrollController', scrollController,
-        defaultValue: null));
+      'scrollController', scrollController,
+      defaultValue: null,
+    ));
     properties.add(DiagnosticsProperty<ScrollPhysics>(
-        'scrollPhysics', scrollPhysics,
-        defaultValue: null));
-    properties.add(EnumProperty<TextAlign>('textAlign', textAlign,
-        defaultValue: TextAlign.start));
+      'scrollPhysics', scrollPhysics,
+      defaultValue: null,
+    ));
+    properties.add(EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: TextAlign.start));
     properties.add(DiagnosticsProperty<TextAlignVertical>(
-        'textAlignVertical', textAlignVertical,
-        defaultValue: null));
+      'textAlignVertical', textAlignVertical,
+      defaultValue: null,
+    ));
   }
 }
 
@@ -588,19 +563,19 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: context.theme!.inactiveColor,
+      color: context.theme.inactiveColor,
     );
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: context.theme!.disabledColor,
+          color: context.theme.disabledColor,
           fontWeight: FontWeight.w400,
         );
 
     final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? Theme.of(context)!.brightness!;
-    final Color cursorColor = context.theme!.inactiveColor!;
-    final Color? disabledColor = context.theme!.disabledColor;
+        widget.keyboardAppearance ?? context.theme.brightness!;
+    final Color cursorColor = context.theme.inactiveColor!;
+    final Color? disabledColor = context.theme.disabledColor;
 
     final Color? decorationColor = widget.decoration.color;
 
@@ -614,8 +589,8 @@ class _TextBoxState extends State<TextBox>
                 style: enabled ? BorderStyle.solid : BorderStyle.none,
                 width: (showActiveBorder ? 1 : null),
                 color: (showActiveBorder
-                    ? context.theme!.accentColor
-                    : context.theme!.inactiveColor),
+                    ? context.theme.accentColor
+                    : context.theme.inactiveColor),
               );
       }
 
@@ -634,7 +609,7 @@ class _TextBoxState extends State<TextBox>
       color: enabled ? decorationColor : (decorationColor ?? disabledColor),
     );
 
-    final Color selectionColor = context.theme!.accentColor!.withOpacity(0.2);
+    final Color selectionColor = context.theme.accentColor!.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -681,7 +656,7 @@ class _TextBoxState extends State<TextBox>
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
             backgroundCursorColor:
-                context.theme!.disabledColor ?? Colors.grey[120]!,
+                context.theme.disabledColor ?? Colors.grey[120]!,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -711,8 +686,8 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme!.mediumAnimationDuration ?? Duration.zero,
-          curve: context.theme!.animationCurve ?? standartCurve,
+          duration: context.theme.mediumAnimationDuration ?? Duration.zero,
+          curve: context.theme.animationCurve ?? standartCurve,
           decoration: effectiveDecoration,
           constraints: BoxConstraints(
             minHeight: widget.minHeight ?? 0,
@@ -745,7 +720,7 @@ class _TextBoxState extends State<TextBox>
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Text(
                 widget.header!,
-                style: widget.headerStyle ?? context.theme!.typography?.body,
+                style: widget.headerStyle ?? context.theme.typography?.body,
               ),
             ),
           Row(children: [
@@ -758,12 +733,12 @@ class _TextBoxState extends State<TextBox>
     );
 
     return Theme(
-      data: context.theme!.copyWith(
+      data: context.theme.copyWith(
         Style(
-          iconButtonStyle: IconButtonStyle.defaultTheme(context.theme!)
+          iconButtonStyle: IconButtonStyle.defaultTheme(context.theme)
               .copyWith(
                 IconButtonStyle(
-                  iconStyle: (_) => context.theme!.iconStyle?.copyWith(
+                  iconStyle: (_) => context.theme.iconStyle?.copyWith(
                     IconStyle(size: 18),
                   ),
                 ),

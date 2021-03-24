@@ -18,7 +18,7 @@ class _OthersState extends State<Others> {
       Acrylic(
         margin: EdgeInsets.only(bottom: 10),
         child: Column(children: [
-          Text('Surfaces', style: context.theme!.typography?.subtitle),
+          Text('Surfaces', style: context.theme.typography?.subtitle),
           Tooltip(
             message: 'This is a tooltip',
             child: Button(

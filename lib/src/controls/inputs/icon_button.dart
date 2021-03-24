@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 class IconButton extends StatelessWidget {
@@ -23,15 +24,25 @@ class IconButton extends StatelessWidget {
   final FocusNode? focusNode;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed));
+    properties.add(ObjectFlagProperty<VoidCallback>('onLongPress', onLongPress));
+    properties.add(DiagnosticsProperty<IconButtonStyle>('style', style));
+    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.iconButtonStyle!.copyWith(this.style);
+    final style = context.theme.iconButtonStyle!.copyWith(this.style);
     return HoverButton(
       onPressed: onPressed == null ? null : () {},
       builder: (context, state) => Button(
         focusNode: focusNode,
         text: Theme(
-          data: context.theme!.copyWith(Style(
+          data: context.theme.copyWith(Style(
             iconStyle: style.iconStyle?.call(state),
           )),
           child: icon,
@@ -40,11 +51,7 @@ class IconButton extends StatelessWidget {
         onLongPress: onLongPress,
         semanticsLabel: semanticsLabel,
         style: ButtonStyle(
-          decoration: (state) => BoxDecoration(
-            border: style.border!(state),
-            borderRadius: style.borderRadius,
-            color: style.color!(state),
-          ),
+          decoration: style.decoration,
           cursor: style.cursor,
           margin: style.margin,
           padding: style.padding,
@@ -54,13 +61,11 @@ class IconButton extends StatelessWidget {
   }
 }
 
-class IconButtonStyle {
-  final ButtonState<Color?>? color;
+@immutable
+class IconButtonStyle with Diagnosticable {
+  final ButtonState<Decoration?>? decoration;
 
   final ButtonState<MouseCursor>? cursor;
-
-  final ButtonState<Border?>? border;
-  final BorderRadiusGeometry? borderRadius;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -68,10 +73,8 @@ class IconButtonStyle {
   final ButtonState<IconStyle?>? iconStyle;
 
   const IconButtonStyle({
-    this.color,
+    this.decoration,
     this.cursor,
-    this.border,
-    this.borderRadius,
     this.padding,
     this.margin,
     this.iconStyle,
@@ -80,10 +83,14 @@ class IconButtonStyle {
   static IconButtonStyle defaultTheme(Style style) {
     final def = IconButtonStyle(
       cursor: buttonCursor,
-      borderRadius: BorderRadius.circular(2),
-      border: (_) => Border.all(style: BorderStyle.none),
+      decoration: (state) {
+        return BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(style: BorderStyle.none),
+          color: uncheckedInputColor(style, state),
+        );
+      },
       padding: EdgeInsets.all(4),
-      color: (state) => uncheckedInputColor(style, state),
       iconStyle: (_) => style.iconStyle,
     );
     return def;
@@ -92,13 +99,21 @@ class IconButtonStyle {
   IconButtonStyle copyWith(IconButtonStyle? style) {
     if (style == null) return this;
     return IconButtonStyle(
-      border: style.border ?? border,
-      borderRadius: style.borderRadius ?? borderRadius,
-      color: style.color ?? color,
+      decoration: style.decoration ?? decoration,
       margin: style.margin ?? margin,
       padding: style.padding ?? padding,
       cursor: style.cursor ?? cursor,
       iconStyle: style.iconStyle ?? iconStyle,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>>('decoration', decoration));
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>>('cursor', cursor));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+    properties.add(ObjectFlagProperty<ButtonState<IconStyle?>>('iconStyle', iconStyle));
   }
 }

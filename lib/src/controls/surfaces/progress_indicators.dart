@@ -12,6 +12,7 @@ class ProgressBar extends StatefulWidget {
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
+    this.semanticsLabel,
   })  : assert(() {
           if (value == null) return true;
           return value >= 0 && value <= 100;
@@ -20,6 +21,7 @@ class ProgressBar extends StatefulWidget {
 
   final double? value;
   final double strokeWidth;
+  final String? semanticsLabel;
 
   @override
   _ProgressBarState createState() => _ProgressBarState();
@@ -60,32 +62,35 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!;
+    final style = context.theme;
     return Container(
       height: widget.strokeWidth,
       constraints: BoxConstraints(minWidth: _kMinProgressBarWidth),
-      child: ValueListenableBuilder(
-        valueListenable: _controller,
-        builder: (context, value, child) => CustomPaint(
-          painter: _ProgressBarPainter(
-            value: widget.value == null ? null : widget.value! / 100,
-            strokeWidth: widget.strokeWidth,
-            activeColor: style.accentColor!,
-            backgroundColor: Colors.grey,
-            p1: p1,
-            p2: p2,
-            idleFrames: idleFrames,
-            cycle: cycle,
-            idle: idle,
-            onUpdate: (values) {
-              p1 = values[0];
-              p2 = values[1];
-              idleFrames = values[2];
-              cycle = values[3];
-              idle = values[4];
-            },
+      child: Semantics(
+        label: widget.semanticsLabel,
+        value: widget.value?.toStringAsFixed(2),
+        child: ValueListenableBuilder(
+          valueListenable: _controller,
+          builder: (context, value, child) => CustomPaint(
+            painter: _ProgressBarPainter(
+              value: widget.value == null ? null : widget.value! / 100,
+              strokeWidth: widget.strokeWidth,
+              activeColor: style.accentColor!,
+              backgroundColor: style.inactiveBackgroundColor!,
+              p1: p1,
+              p2: p2,
+              idleFrames: idleFrames,
+              cycle: cycle,
+              idle: idle,
+              onUpdate: (values) {
+                p1 = values[0];
+                p2 = values[1];
+                idleFrames = values[2];
+                cycle = values[3];
+                idle = values[4];
+              },
+            ),
           ),
-          child: () {}(),
         ),
       ),
     );
@@ -207,6 +212,7 @@ class ProgressRing extends StatefulWidget {
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
+    this.semanticsLabel,
   })  : assert(() {
           if (value == null) return true;
           return value >= 0 && value <= 100;
@@ -215,6 +221,7 @@ class ProgressRing extends StatefulWidget {
 
   final double? value;
   final double strokeWidth;
+  final String? semanticsLabel;
 
   @override
   _ProgressRingState createState() => _ProgressRingState();
@@ -252,28 +259,32 @@ class _ProgressRingState extends State<ProgressRing>
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!;
+    final style = context.theme;
     return Container(
       constraints: BoxConstraints(
         minWidth: _kMinProgressRingIndicatorSize,
         minHeight: _kMinProgressRingIndicatorSize,
       ),
-      child: () {
-        final painter = CustomPaint(
-          painter: _RingPainter(
-            backgroundColor: Colors.grey,
-            value: widget.value,
-            color: style.accentColor!,
-            strokeWidth: widget.strokeWidth,
-          ),
-        );
-        if (widget.value == null)
-          return ValueListenableBuilder(
-            valueListenable: _controller,
-            builder: (context, value, child) => painter,
+      child: Semantics(
+        label: widget.semanticsLabel,
+        value: widget.value?.toStringAsFixed(2),
+        child: () {
+          final painter = CustomPaint(
+            painter: _RingPainter(
+              backgroundColor: style.inactiveBackgroundColor!,
+              value: widget.value,
+              color: style.accentColor!,
+              strokeWidth: widget.strokeWidth,
+            ),
           );
-        return painter;
-      }(),
+          if (widget.value == null)
+            return ValueListenableBuilder(
+              valueListenable: _controller,
+              builder: (context, value, child) => painter,
+            );
+          return painter;
+        }(),
+      ),
     );
   }
 }

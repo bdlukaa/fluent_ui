@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Acrylic extends StatelessWidget {
   const Acrylic({
@@ -31,26 +32,38 @@ class Acrylic extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('color', color));
+    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
+    properties.add(DoubleProperty('opacity', opacity));
+    properties.add(DiagnosticsProperty<ImageFilter>('filter', filter));
+    properties.add(DoubleProperty('width', width));
+    properties.add(DoubleProperty('height', height));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final color = (this.color ?? context.theme!.navigationPanelBackgroundColor);
+    final style = context.theme;
+    final color = this.color ?? style.navigationPanelBackgroundColor;
     return AnimatedContainer(
-      duration: context.theme!.fastAnimationDuration ?? Duration.zero,
-      curve: context.theme!.animationCurve ?? standartCurve,
+      duration: style.fastAnimationDuration ?? Duration.zero,
+      curve: style.animationCurve ?? standartCurve,
       padding: margin ?? EdgeInsets.zero,
       width: width,
       height: height,
       child: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+          filter: filter ?? ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
           child: AnimatedContainer(
             padding: padding,
-            duration: context.theme!.fastAnimationDuration ?? Duration.zero,
-            curve: context.theme!.animationCurve ?? standartCurve,
-            decoration: decoration ??
-                BoxDecoration(
-                  color: color?.withOpacity(opacity),
-                ),
+            duration: style.fastAnimationDuration ?? Duration.zero,
+            curve: style.animationCurve ?? standartCurve,
+            decoration:
+                decoration ?? BoxDecoration(color: color?.withOpacity(opacity)),
             child: child,
           ),
         ),

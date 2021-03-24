@@ -30,7 +30,7 @@ class Pivot extends StatelessWidget {
       child: Row(
         children: List.generate(pivots.length, (index) {
           final pivot = pivots[index];
-          final style = context.theme!.pivotItemStyle!.copyWith(pivot.style);
+          final style = context.theme.pivotItemStyle!.copyWith(pivot.style);
           final bool selected = currentIndex == index;
           style.padding!.flipped;
           return HoverButton(
@@ -231,7 +231,7 @@ class PivotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.pivotItemStyle;
+    final style = context.theme.pivotItemStyle;
     return AnimatedSwitcher(
       duration: (transitionDuration ?? style?.animationDuration!)!,
       switchInCurve: (transitionCurve ?? style?.animationCurve!)!,

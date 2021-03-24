@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 class RadioButton extends StatelessWidget {
@@ -7,6 +8,7 @@ class RadioButton extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.semanticsLabel,
   }) : super(key: key);
 
   final bool checked;
@@ -14,14 +16,17 @@ class RadioButton extends StatelessWidget {
 
   final RadioButtonStyle? style;
 
+  final String? semanticsLabel;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme?.radioButtonStyle?.copyWith(this.style);
+    final style = context.theme.radioButtonStyle?.copyWith(this.style);
     return HoverButton(
+      semanticsLabel: semanticsLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        return AnimatedContainer(
+        final Widget child = AnimatedContainer(
           duration: style?.animationDuration ?? Duration(milliseconds: 300),
           height: 20,
           width: 20,
@@ -29,12 +34,17 @@ class RadioButton extends StatelessWidget {
               ? style?.checkedDecoration!(state)
               : style?.uncheckedDecoration!(state),
         );
+        return Semantics(
+          child: child,
+          selected: checked,
+        );
       },
     );
   }
 }
 
-class RadioButtonStyle {
+@immutable
+class RadioButtonStyle with Diagnosticable {
   final ButtonState<Decoration>? checkedDecoration;
   final ButtonState<Decoration>? uncheckedDecoration;
 
@@ -86,5 +96,15 @@ class RadioButtonStyle {
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedDecoration', checkedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedDecoration', uncheckedDecoration));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
   }
 }

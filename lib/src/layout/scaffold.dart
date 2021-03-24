@@ -24,12 +24,11 @@ class Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final color = backgroundColor ??
-        context.theme?.scaffoldBackgroundColor ??
-        Colors.white;
+    final style = context.theme;
+    final color = backgroundColor ?? style.scaffoldBackgroundColor ?? Colors.white;
     return AnimatedContainer(
-      duration: context.theme!.mediumAnimationDuration ?? Duration.zero,
-      curve: context.theme!.animationCurve ?? Curves.linear,
+      duration: style.mediumAnimationDuration ?? Duration.zero,
+      curve: style.animationCurve ?? Curves.linear,
       color: color,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (this.left != null) left!,

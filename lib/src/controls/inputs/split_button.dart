@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class SplitButtonBar extends StatelessWidget {
   const SplitButtonBar({
@@ -12,15 +13,21 @@ class SplitButtonBar extends StatelessWidget {
   final SplitButtonStyle? style;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<SplitButtonStyle?>('style', style));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.splitButtonStyle?.copyWith(this.style);
+    final style = context.theme.splitButtonStyle?.copyWith(this.style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
         final button = buttons[index];
         Widget b = Theme(
-          data: context.theme!.copyWith(Style(
+          data: context.theme.copyWith(Style(
               buttonStyle: ButtonStyle(
             decoration: (state) => BoxDecoration(
               borderRadius: (index == 0 || index == buttons.length - 1)
@@ -31,7 +38,7 @@ class SplitButtonBar extends StatelessWidget {
                           : Radius.zero,
                     )
                   : null,
-              color: buttonColor(context.theme!, state),
+              color: buttonColor(context.theme, state),
             ),
             margin: EdgeInsets.zero,
           ))),
@@ -47,7 +54,8 @@ class SplitButtonBar extends StatelessWidget {
   }
 }
 
-class SplitButtonStyle {
+@immutable
+class SplitButtonStyle with Diagnosticable {
   final BorderRadius? borderRadius;
   final double? interval;
 
@@ -59,15 +67,19 @@ class SplitButtonStyle {
     this.defaultButtonStyle,
   });
 
-  static SplitButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
+  static SplitButtonStyle defaultTheme(Style style) {
     return SplitButtonStyle(
-      borderRadius: BorderRadius.circular(4),
-      interval: 1,
-      defaultButtonStyle: defaultButtonTheme(style, brightness),
-    );
+        borderRadius: BorderRadius.circular(4),
+        interval: 1,
+        defaultButtonStyle: style.buttonStyle?.copyWith(ButtonStyle(
+          margin: EdgeInsets.zero,
+        ))
+        // defaultButtonStyle: defaultButtonTheme(style),
+        );
   }
 
-  static ButtonStyle defaultButtonTheme(Style style, [Brightness? brightness]) {
+  static ButtonStyle defaultButtonTheme(Style style) {
+    final brightness = style.brightness;
     final defButton = ButtonStyle(
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
@@ -102,5 +114,12 @@ class SplitButtonStyle {
       borderRadius: style?.borderRadius ?? borderRadius,
       interval: style?.interval ?? interval,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<BorderRadiusGeometry>('borderRadius', borderRadius));
+    properties.add(DoubleProperty('interval', interval));
   }
 }

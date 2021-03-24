@@ -9,7 +9,7 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  TextStyle? get titleTextStyle => context.theme!.typography?.base;
+  TextStyle? get titleTextStyle => context.theme.typography?.base;
   bool value = false;
 
   double sliderValue = 5;
@@ -78,7 +78,7 @@ class _InputsPageState extends State<InputsPage> {
                 height: splitButtonHeight,
                 child: Button(
                   text: Container(
-                    color: context.theme!.accentColor,
+                    color: context.theme.accentColor,
                     height: 24,
                     width: 24,
                   ),
@@ -219,7 +219,7 @@ List<Widget> buildStateColumn(
       mainAxisSize: MainAxisSize.min,
       children: [
         boxes[index],
-        Text(texts[index], style: context.theme!.typography?.body),
+        Text(texts[index], style: context.theme.typography?.body),
       ],
     );
   });

@@ -37,17 +37,17 @@ class InfoBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.infoBarStyle?.copyWith(this.style);
+    final style = context.theme.infoBarStyle?.copyWith(this.style);
     final icon = style?.icon?.call(severity);
     final closeIcon = style?.closeIcon;
     final title = DefaultTextStyle(
-      style: context.theme!.typography?.base ?? TextStyle(),
+      style: context.theme.typography?.base ?? TextStyle(),
       child: this.title,
     );
     final content = () {
       if (this.content == null) return null;
       return DefaultTextStyle(
-        style: context.theme!.typography?.body ?? TextStyle(),
+        style: context.theme.typography?.body ?? TextStyle(),
         child: this.content!,
         softWrap: true,
       );
@@ -56,7 +56,7 @@ class InfoBar extends StatelessWidget {
       if (this.action == null) return null;
       return Theme(
         child: this.action!,
-        data: context.theme!.copyWith(Style(
+        data: context.theme.copyWith(Style(
           buttonStyle: style?.actionStyle,
         )),
       );

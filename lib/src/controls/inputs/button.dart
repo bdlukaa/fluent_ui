@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
@@ -98,36 +99,26 @@ class Button extends StatefulWidget {
   final FocusNode? focusNode;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<VoidCallback>(
+      'onPressed',
+      onPressed,
+      ifNull: 'disabled',
+    ));
+    properties.add(ObjectFlagProperty<VoidCallback>('onLongPress', onPressed));
+    properties.add(DiagnosticsProperty<ButtonStyle>('style', style));
+    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+  }
+
+  @override
   _ButtonState createState() => _ButtonState();
 }
 
 class _ButtonState extends State<Button> {
   bool get enabled => widget.onPressed != null || widget.onLongPress != null;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'enabled',
-      value: enabled,
-      ifFalse: 'disabled',
-    ));
-    // TODO: make style a `Diagnosticable`
-    // properties.add(DiagnosticsProperty<ButtonStyle>(
-    //   'style',
-    //   style,
-    //   defaultValue: null,
-    // ));
-    properties.add(DiagnosticsProperty<FocusNode>(
-      'focusNode',
-      widget.focusNode,
-      defaultValue: null,
-    ));
-  }
-
   double buttonScale = 1;
-
-  bool get isDisabled => widget.onPressed == null;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +130,7 @@ class _ButtonState extends State<Button> {
         return widget.text!;
       case _ButtonType.def:
       default:
-        style = context.theme!.buttonStyle;
+        style = context.theme.buttonStyle;
         break;
     }
     style = style?.copyWith(this.widget.style);
@@ -148,24 +139,24 @@ class _ButtonState extends State<Button> {
       margin: style?.margin,
       focusNode: widget.focusNode,
       cursor: style?.cursor,
-      onTapDown: isDisabled
+      onTapDown: !enabled
           ? null
           : () {
               if (mounted)
                 setState(() => buttonScale = style?.scaleFactor ?? 0.95);
             },
-      onLongPressStart: isDisabled
+      onLongPressStart: !enabled
           ? null
           : () {
               if (mounted)
                 setState(() => buttonScale = style?.scaleFactor ?? 0.95);
             },
-      onLongPressEnd: isDisabled
+      onLongPressEnd: !enabled
           ? null
           : () {
               if (mounted) setState(() => buttonScale = 1);
             },
-      onPressed: isDisabled
+      onPressed: !enabled
           ? null
           : () async {
               widget.onPressed!();
@@ -180,10 +171,10 @@ class _ButtonState extends State<Button> {
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style?.animationDuration ??
-              context.theme!.fastAnimationDuration ??
+              context.theme.fastAnimationDuration ??
               Duration.zero,
           curve: style?.animationCurve ??
-              context.theme?.animationCurve ??
+              context.theme.animationCurve ??
               standartCurve,
           padding: style!.padding,
           decoration: style.decoration!(state),
@@ -232,7 +223,8 @@ Color buttonColor(Style style, ButtonStates state) {
   }
 }
 
-class ButtonStyle {
+@immutable
+class ButtonStyle with Diagnosticable {
   final ButtonState<Decoration?>? decoration;
 
   final EdgeInsetsGeometry? padding;
@@ -279,15 +271,35 @@ class ButtonStyle {
   }
 
   ButtonStyle copyWith(ButtonStyle? style) {
+    if (style == null) return this;
     return ButtonStyle(
-      decoration: style?.decoration ?? decoration,
-      cursor: style?.cursor ?? cursor,
-      textStyle: style?.textStyle ?? textStyle,
-      margin: style?.margin ?? margin,
-      padding: style?.padding ?? padding,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
-      scaleFactor: style?.scaleFactor ?? scaleFactor,
+      decoration: style.decoration ?? decoration,
+      cursor: style.cursor ?? cursor,
+      textStyle: style.textStyle ?? textStyle,
+      margin: style.margin ?? margin,
+      padding: style.padding ?? padding,
+      animationCurve: style.animationCurve ?? animationCurve,
+      animationDuration: style.animationDuration ?? animationDuration,
+      scaleFactor: style.scaleFactor ?? scaleFactor,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>(
+        'decoration', decoration));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(DoubleProperty('scaleFactor', scaleFactor));
+    properties
+        .add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(
+        ObjectFlagProperty<ButtonState<TextStyle>?>('textStyle', textStyle));
+    properties.add(
+        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties
+        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
   }
 }

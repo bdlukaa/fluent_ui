@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 class ToggleButton extends StatelessWidget {
@@ -23,11 +24,24 @@ class ToggleButton extends StatelessWidget {
   final FocusNode? focusNode;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty('checked', value: checked));
+    properties.add(ObjectFlagProperty('onChanged', onChanged));
+    properties.add(DiagnosticsProperty<ToggleButtonStyle>('style', style));
+    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.toggleButtonStyle?.copyWith(this.style);
+    final style = context.theme.toggleButtonStyle?.copyWith(this.style);
     return Button(
-      text: child,
+      text: Semantics(
+        child: child,
+        selected: checked,
+      ),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       style: ButtonStyle(
         decoration: (state) => checked
@@ -44,7 +58,8 @@ class ToggleButton extends StatelessWidget {
   }
 }
 
-class ToggleButtonStyle {
+@immutable
+class ToggleButtonStyle with Diagnosticable {
   final ButtonState<MouseCursor>? cursor;
 
   final ButtonState<Decoration>? checkedDecoration;
@@ -73,7 +88,7 @@ class ToggleButtonStyle {
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
-    final def = ToggleButtonStyle(
+    return ToggleButtonStyle(
       scaleFactor: 0.95,
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
@@ -99,8 +114,6 @@ class ToggleButtonStyle {
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
     );
-
-    return def;
   }
 
   ToggleButtonStyle copyWith(ToggleButtonStyle? style) {
@@ -115,5 +128,18 @@ class ToggleButtonStyle {
       uncheckedDecoration: style.uncheckedDecoration ?? uncheckedDecoration,
       scaleFactor: style.scaleFactor ?? scaleFactor,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedDecoration', checkedDecoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedDecoration', uncheckedDecoration));
+    properties.add(DoubleProperty('scaleFactor', scaleFactor));
   }
 }

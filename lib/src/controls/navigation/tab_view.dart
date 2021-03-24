@@ -22,7 +22,7 @@ class TabView extends StatelessWidget {
 
   final bool showNewButton;
   final void Function()? onNewPressed;
-  
+
   final IconData addIconData;
 
   @override
@@ -83,9 +83,9 @@ class TabView extends StatelessWidget {
                     size: 16,
                     color: () {
                       if (state.isDisabled || state.isNone)
-                        return context.theme!.disabledColor;
+                        return context.theme.disabledColor;
                       else
-                        return context.theme!.inactiveColor;
+                        return context.theme.inactiveColor;
                     }(),
                   ),
                 ),
@@ -107,15 +107,18 @@ class Tab {
     this.icon = const FlutterLogo(),
     required this.text,
     this.closeIcon,
+    this.semanticsLabel,
   });
 
   final Widget? icon;
   final Widget text;
   final Widget? closeIcon;
+
+  final String? semanticsLabel;
 }
 
 class _Tab extends StatelessWidget {
-  const _Tab(
+  _Tab(
     this.tab, {
     Key? key,
     this.onPressed,
@@ -125,63 +128,78 @@ class _Tab extends StatelessWidget {
   final Tab tab;
   final bool selected;
   final void Function()? onPressed;
+  final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!;
+    final style = context.theme;
     return HoverButton(
+      semanticsLabel: tab.semanticsLabel,
+      focusNode: focusNode,
       cursor: selected ? (_) => SystemMouseCursors.basic : null,
       onPressed: onPressed,
-      builder: (context, state) => Container(
-        height: kTileHeight,
-        constraints: BoxConstraints(
-          maxWidth: kTileWidth,
-          minWidth: kTileWidth / 4,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-          color: selected
-              ? style.scaffoldBackgroundColor
-              : uncheckedInputColor(style, state),
-        ),
-        child: Row(children: [
-          if (tab.icon != null)
-            Padding(
-              padding: EdgeInsets.only(right: 5),
-              child: tab.icon!,
-            ),
-          Expanded(child: tab.text),
-          if (tab.closeIcon != null)
-            Theme(
-              data: style.copyWith(Style(
-                iconButtonStyle: style.iconButtonStyle?.copyWith(
-                  IconButtonStyle(
-                    color: (state) {
-                      if (state.isNone)
-                        return null;
-                      else
-                        return buttonColor(style, state);
-                    },
-                    margin: EdgeInsets.zero,
-                    padding: EdgeInsets.zero,
-                    iconStyle: (state) => IconStyle(
-                      size: 20,
-                      color: () {
-                        if (state.isDisabled || state.isNone)
-                          return context.theme!.disabledColor;
+      builder: (context, state) {
+        final child = Container(
+          height: kTileHeight,
+          constraints: BoxConstraints(
+            maxWidth: kTileWidth,
+            minWidth: kTileWidth / 4,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+            color: selected
+                ? style.scaffoldBackgroundColor
+                : uncheckedInputColor(style, state),
+          ),
+          child: Row(children: [
+            if (tab.icon != null)
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: tab.icon!,
+              ),
+            Expanded(child: tab.text),
+            if (tab.closeIcon != null)
+              Theme(
+                data: style.copyWith(Style(
+                  iconButtonStyle: style.iconButtonStyle?.copyWith(
+                    IconButtonStyle(
+                      decoration: (state) {
+                        late Color? color;
+                        if (state.isNone)
+                          color = null;
                         else
-                          return context.theme!.inactiveColor;
-                      }(),
+                          color = buttonColor(style, state);
+                        return BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          border: Border.all(style: BorderStyle.none),
+                          color: color,
+                        );
+                      },
+                      margin: EdgeInsets.zero,
+                      padding: EdgeInsets.zero,
+                      iconStyle: (state) => IconStyle(
+                        size: 20,
+                        color: () {
+                          if (state.isDisabled || state.isNone)
+                            return context.theme.disabledColor;
+                          else
+                            return context.theme.inactiveColor;
+                        }(),
+                      ),
                     ),
                   ),
-                ),
-              )),
-              child: tab.closeIcon!,
-            ),
-        ]),
-      ),
+                )),
+                child: tab.closeIcon!,
+              ),
+          ]),
+        );
+        return Semantics(
+          selected: selected,
+          child: child,
+        );
+      },
     );
   }
 }

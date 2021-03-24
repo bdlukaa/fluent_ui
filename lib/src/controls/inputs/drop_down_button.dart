@@ -80,7 +80,7 @@ class _DropDownButtonState extends State<DropDownButton> {
   }
 
   ButtonStyle style(BuildContext context) =>
-      context.theme!.buttonStyle!.copyWith(widget.style!);
+      context.theme.buttonStyle!.copyWith(widget.style!);
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class _DropDownButtonState extends State<DropDownButton> {
             key: _key,
             focusNode: widget.focusNode,
             text: widget.content,
-            style: (widget.style ?? Theme.of(context)!.buttonStyle)!
+            style: (widget.style ?? Theme.of(context).buttonStyle)!
                 .copyWith(ButtonStyle(margin: EdgeInsets.zero)),
             semanticsLabel: widget.semanticsLabel,
             onPressed: widget.disabled ? null : () {},

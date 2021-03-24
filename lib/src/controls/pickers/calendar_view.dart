@@ -33,7 +33,7 @@ class CalendarView extends StatelessWidget {
     // );
     debugCheckHasFluentTheme(context);
     final currentDate = this.currentDate ?? DateTime.now();
-    final style = context.theme!;
+    final style = context.theme;
     return Container(
       width: 300,
       decoration: BoxDecoration(
@@ -48,7 +48,7 @@ class CalendarView extends StatelessWidget {
             data: style.copyWith(Style(
               iconButtonStyle: style.iconButtonStyle?.copyWith(IconButtonStyle(
                 margin: EdgeInsets.zero,
-                borderRadius: BorderRadius.zero,
+                decoration: (_) => BoxDecoration(borderRadius: BorderRadius.zero),
               )),
             )),
             child: Row(children: [

@@ -115,7 +115,7 @@ class _Panel extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(8.0),
       children: [
-        Text(title!, style: context.theme!.typography?.subtitle),
+        Text(title!, style: context.theme.typography?.subtitle),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6),
           child: child,

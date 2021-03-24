@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:fluent_ui/fluent_ui.dart';
@@ -40,20 +41,22 @@ class Slider extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'enabled',
-      value: onChanged != null,
-      ifFalse: 'disabled',
-    ));
     properties.add(DoubleProperty('value', value));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>('onChanged', onChanged, ifNull: 'disabled'));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>.has('onChangeStart', onChangeStart));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>.has('onChangeEnd', onChangeEnd));
     properties.add(DoubleProperty('min', min));
     properties.add(DoubleProperty('max', max));
+    properties.add(IntProperty('divisions', divisions));
+    properties.add(StringProperty('label', label));
+    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties.add(ObjectFlagProperty<SliderStyle>('style', style));
   }
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme!.sliderStyle?.copyWith(this.style);
+    final style = context.theme.sliderStyle?.copyWith(this.style);
     return Padding(
       padding: style?.margin ?? EdgeInsets.zero,
       child: m.Material(
@@ -113,7 +116,8 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
   }
 }
 
-class SliderStyle {
+@immutable
+class SliderStyle with Diagnosticable {
   final Color? thumbColor;
   final Color? disabledThumbColor;
   final Color? labelBackgroundColor;
@@ -176,6 +180,22 @@ class SliderStyle {
       disabledThumbColor: style?.disabledThumbColor ?? disabledThumbColor,
       labelBackgroundColor: style?.labelBackgroundColor ?? labelBackgroundColor,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(DiagnosticsProperty<MouseCursor>('cursor', cursor));
+    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(ColorProperty('thumbColor', thumbColor));
+    properties.add(ColorProperty('activeColor', activeColor));
+    properties.add(ColorProperty('inactiveColor', inactiveColor));
+    properties.add(ColorProperty('disabledActiveColor', disabledActiveColor));
+    properties.add(ColorProperty('disabledInactiveColor', disabledInactiveColor));
+    properties.add(ColorProperty('disabledThumbColor', disabledThumbColor));
+    properties.add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
   }
 }
 

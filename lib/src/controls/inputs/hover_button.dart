@@ -40,7 +40,7 @@ class HoverButton extends StatefulWidget {
 }
 
 class _HoverButtonState extends State<HoverButton> {
-  FocusNode? node;
+  late FocusNode node;
 
   @override
   void initState() {
@@ -48,12 +48,25 @@ class _HoverButtonState extends State<HoverButton> {
     super.initState();
   }
 
+  @override
+  void dispose() { 
+    node.dispose();
+    super.dispose();
+  }
+
   bool _hovering = false;
   bool _pressing = false;
 
-  bool get isDisabled => widget.onPressed == null;
+  bool get enabled =>
+      widget.onPressed != null ||
+      widget.onTapUp != null ||
+      widget.onTapDown != null ||
+      widget.onTapDown != null ||
+      widget.onLongPress != null ||
+      widget.onLongPressStart != null ||
+      widget.onLongPressEnd != null;
 
-  ButtonStates get state => isDisabled
+  ButtonStates get state => !enabled
       ? ButtonStates.disabled
       : _pressing
           ? ButtonStates.pressing
@@ -62,12 +75,12 @@ class _HoverButtonState extends State<HoverButton> {
               : ButtonStates.none;
 
   void update(Function f) {
-    if (isDisabled) return;
+    if (!enabled) return;
     if (!mounted) return f();
     if (_pressing)
-      node!.requestFocus();
+      node.requestFocus();
     else
-      node!.unfocus();
+      node.unfocus();
     setState(f as void Function());
   }
 
@@ -88,7 +101,7 @@ class _HoverButtonState extends State<HoverButton> {
           },
           onTapUp: (_) async {
             widget.onTapUp?.call();
-            if (isDisabled) return;
+            if (!enabled) return;
             await Future.delayed(Duration(milliseconds: 100));
             update(() => _pressing = false);
           },
@@ -111,11 +124,18 @@ class _HoverButtonState extends State<HoverButton> {
       ),
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
-    if (widget.semanticsLabel != null)
-      w = Semantics(
-        label: widget.semanticsLabel,
-        child: w,
+    if (widget.semanticsLabel != null) {
+      w = MergeSemantics(
+        child: Semantics(
+          label: widget.semanticsLabel,
+          button: true,
+          enabled: enabled,
+          focusable: true,
+          focused: node.hasFocus,
+          child: w,
+        ),
       );
+    }
     return w;
   }
 }
