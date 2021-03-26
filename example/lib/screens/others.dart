@@ -55,13 +55,16 @@ class _OthersState extends State<Others> {
           ),
         );
       }),
+      ListTile(
+        leading: CircleAvatar(),
+        title: Text('ListTile Title'),
+        subtitle: Text('ListTile Subtitle'),
+      ),
       Row(children: [
         Container(padding: EdgeInsets.all(6), child: ProgressBar(value: 50)),
         Container(
           margin: EdgeInsets.all(10),
-          child: ProgressRing(
-            value: 35,
-          ),
+          child: ProgressRing(value: 85),
         ),
       ]),
       SizedBox(
@@ -82,6 +85,7 @@ class _OthersState extends State<Others> {
                   onPressed: () {
                     setState(() => tabs--);
                     if (currentIndex > tabs - 1) currentIndex--;
+                    if (tabs == 0) currentIndex = 0;
                   },
                 ),
               ),

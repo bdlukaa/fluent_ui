@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Theme extends InheritedWidget {
   const Theme({Key? key, required this.data, required this.child})
@@ -33,7 +34,7 @@ extension brightnessExtension on Brightness {
 
 const standartCurve = Curves.easeInOut;
 
-class Style {
+class Style with Diagnosticable {
   final Typography? typography;
 
   final Color? accentColor;
@@ -58,7 +59,6 @@ class Style {
   final DividerStyle? dividerStyle;
   final IconStyle? iconStyle;
   final InfoBarStyle? infoBarStyle;
-  final ListCellStyle? listCellStyle;
   final PivotItemStyle? pivotItemStyle;
   final RadioButtonStyle? radioButtonStyle;
   final SliderStyle? sliderStyle;
@@ -91,7 +91,6 @@ class Style {
     this.pivotItemStyle,
     this.iconStyle,
     this.splitButtonStyle,
-    this.listCellStyle,
     this.dialogStyle,
     this.tooltipStyle,
     this.dividerStyle,
@@ -141,25 +140,37 @@ class Style {
             else
               return Color.fromARGB(255, 25, 25, 25);
           }(),
-      typography: Typography.defaultTypography(brightness: brightness).copyWith(typography),
+      typography: Typography.defaultTypography(brightness: brightness)
+          .copyWith(typography),
     );
     return defaultStyle.copyWith(Style(
       buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
-      iconButtonStyle: IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
-      checkboxStyle: CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
-      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle).copyWith(toggleButtonStyle),
-      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle).copyWith(toggleSwitchStyle),
-      pivotItemStyle: PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
+      iconButtonStyle:
+          IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
+      checkboxStyle:
+          CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
+      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle)
+          .copyWith(toggleButtonStyle),
+      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
+          .copyWith(toggleSwitchStyle),
+      pivotItemStyle:
+          PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
       iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
-      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle).copyWith(splitButtonStyle),
-      listCellStyle: ListCellStyle.defaultTheme(brightness).copyWith(listCellStyle),
-      dialogStyle: ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
-      tooltipStyle: TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
-      dividerStyle: DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
-      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle).copyWith(navigationPanelStyle),
-      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle).copyWith(radioButtonStyle),
+      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
+          .copyWith(splitButtonStyle),
+      dialogStyle:
+          ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
+      tooltipStyle:
+          TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
+      dividerStyle:
+          DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
+      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle)
+          .copyWith(navigationPanelStyle),
+      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
+          .copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
-      infoBarStyle: InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
+      infoBarStyle:
+          InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
     ));
   }
 
@@ -172,7 +183,8 @@ class Style {
     return Style(
       accentColor: other.accentColor ?? accentColor,
       activeColor: other.activeColor ?? activeColor,
-      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ?? navigationPanelBackgroundColor,
+      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ??
+          navigationPanelBackgroundColor,
       navigationPanelStyle: other.navigationPanelStyle ?? navigationPanelStyle,
       brightness: other.brightness ?? brightness,
       buttonStyle: other.buttonStyle ?? buttonStyle,
@@ -182,10 +194,10 @@ class Style {
       iconButtonStyle: other.iconButtonStyle ?? iconButtonStyle,
       iconStyle: other.iconStyle ?? iconStyle,
       inactiveColor: other.inactiveColor ?? inactiveColor,
-      listCellStyle: other.listCellStyle ?? listCellStyle,
       pivotItemStyle: other.pivotItemStyle ?? pivotItemStyle,
       radioButtonStyle: other.radioButtonStyle ?? radioButtonStyle,
-      scaffoldBackgroundColor: other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
+      scaffoldBackgroundColor:
+          other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
       splitButtonStyle: other.splitButtonStyle ?? splitButtonStyle,
       toggleButtonStyle: other.toggleButtonStyle ?? toggleButtonStyle,
       toggleSwitchStyle: other.toggleSwitchStyle ?? toggleSwitchStyle,
@@ -194,11 +206,50 @@ class Style {
       animationCurve: other.animationCurve ?? animationCurve,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
-      fastAnimationDuration: other.fastAnimationDuration ?? fastAnimationDuration,
-      mediumAnimationDuration: other.mediumAnimationDuration ?? mediumAnimationDuration,
-      slowAnimationDuration: other.slowAnimationDuration ?? slowAnimationDuration,
+      fastAnimationDuration:
+          other.fastAnimationDuration ?? fastAnimationDuration,
+      mediumAnimationDuration:
+          other.mediumAnimationDuration ?? mediumAnimationDuration,
+      slowAnimationDuration:
+          other.slowAnimationDuration ?? slowAnimationDuration,
       infoBarStyle: other.infoBarStyle ?? infoBarStyle,
-      inactiveBackgroundColor: other.inactiveBackgroundColor ?? inactiveBackgroundColor,
+      inactiveBackgroundColor:
+          other.inactiveBackgroundColor ?? inactiveBackgroundColor,
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('accentColor', accentColor));
+    properties.add(ColorProperty('activeColor', activeColor));
+    properties.add(ColorProperty('inactiveColor', inactiveColor));
+    properties.add(
+      ColorProperty('inactiveBackgroundColor', inactiveBackgroundColor),
+    );
+    properties.add(ColorProperty('disabledColor', disabledColor));
+    properties.add(
+      ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor),
+    );
+    properties.add(ColorProperty(
+      'navigationPanelBackgroundColor',
+      navigationPanelBackgroundColor,
+    ));
+    properties.add(EnumProperty('brightness', brightness));
+    properties.add(DiagnosticsProperty<Duration>(
+      'slowAnimationDuration',
+      slowAnimationDuration,
+    ));
+    properties.add(DiagnosticsProperty<Duration>(
+      'mediumAnimationDuration',
+      mediumAnimationDuration,
+    ));
+    properties.add(DiagnosticsProperty<Duration>(
+      'fastAnimationDuration',
+      fastAnimationDuration,
+    ));
+    properties.add(
+      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
     );
   }
 }

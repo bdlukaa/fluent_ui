@@ -5,8 +5,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 const double _kMinProgressRingIndicatorSize = 36.0;
 const double _kMinProgressBarWidth = 130.0;
 
-// TODO: indeterminate progress ring
-
 class ProgressBar extends StatefulWidget {
   ProgressBar({
     Key? key,
@@ -235,7 +233,7 @@ class _ProgressRingState extends State<ProgressRing>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(seconds: 3),
       vsync: this,
     );
     if (widget.value == null) _controller.repeat();
@@ -256,6 +254,8 @@ class _ProgressRingState extends State<ProgressRing>
     super.dispose();
   }
 
+  double d1 = 0, d2 = 0, lowSpeed = 8, highSpeed = 12;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
@@ -269,20 +269,43 @@ class _ProgressRingState extends State<ProgressRing>
         label: widget.semanticsLabel,
         value: widget.value?.toStringAsFixed(2),
         child: () {
-          final painter = CustomPaint(
+          if (widget.value == null)
+            return AnimatedBuilder(
+              animation: _controller,
+              builder: (context, value) {
+                return CustomPaint(
+                  painter: _RingPainter(
+                    backgroundColor: style.inactiveBackgroundColor!,
+                    value: widget.value,
+                    color: style.accentColor!,
+                    strokeWidth: widget.strokeWidth,
+                    d1: d1,
+                    d2: d2,
+                    lowSpeed: lowSpeed,
+                    highSpeed: highSpeed,
+                    onUpdate: (v) {
+                      d1 = v[0];
+                      d2 = v[1];
+                      lowSpeed = v[2];
+                      highSpeed = v[3];
+                    },
+                  ),
+                );
+              },
+            );
+          return CustomPaint(
             painter: _RingPainter(
               backgroundColor: style.inactiveBackgroundColor!,
               value: widget.value,
               color: style.accentColor!,
               strokeWidth: widget.strokeWidth,
+              d1: d1,
+              d2: d2,
+              lowSpeed: lowSpeed,
+              highSpeed: highSpeed,
+              onUpdate: (v) {},
             ),
           );
-          if (widget.value == null)
-            return ValueListenableBuilder(
-              valueListenable: _controller,
-              builder: (context, value, child) => painter,
-            );
-          return painter;
         }(),
       ),
     );
@@ -294,12 +317,19 @@ class _RingPainter extends CustomPainter {
   final Color backgroundColor;
   final double strokeWidth;
   final double? value;
+  final double d1, d2, lowSpeed, highSpeed;
+  final ValueChanged onUpdate;
 
   const _RingPainter({
     required this.color,
     required this.backgroundColor,
     required this.strokeWidth,
-    this.value,
+    required this.value,
+    required this.d1,
+    required this.d2,
+    required this.lowSpeed,
+    required this.highSpeed,
+    required this.onUpdate,
   });
 
   static const double _twoPi = math.pi * 2.0;
@@ -307,9 +337,11 @@ class _RingPainter extends CustomPainter {
   // Canvas.drawArc(r, 0, 2*PI) doesn't draw anything, so just get close.
   static const double _sweep = _twoPi - _epsilon;
   static const double _startAngle = -math.pi / 2.0;
+  static const double _deg2Rad = (2 * math.pi) / 360;
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Background line
     canvas.drawArc(
       Offset.zero & size,
       _startAngle,
@@ -320,40 +352,54 @@ class _RingPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth,
     );
-    if (value == null) {
-      final Paint paint = Paint()
-        ..color = color
-        ..strokeWidth = strokeWidth
-        ..strokeCap = StrokeCap.round
-        ..style = PaintingStyle.stroke;
-
-      final tailValue = 0, rotationValue = 0, offsetValue = 0, headValue = 0;
-      canvas.drawArc(
-        Offset.zero & size,
-        (_startAngle +
-            tailValue * 3 / 2 * math.pi +
-            rotationValue * math.pi * 2.0 +
-            offsetValue * 0.5 * math.pi),
-        math.max(headValue * 3 / 2 * math.pi - tailValue * 3 / 2 * math.pi,
-            _epsilon),
-        false,
-        paint,
-      );
-      return;
-    }
-    final paint = Paint()
+    final Paint paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke;
-    canvas.drawArc(
-      Offset.zero & size,
-      _startAngle,
-      (value! / 100).clamp(0, 1) * _sweep,
-      false,
-      paint,
-    );
+    if (value == null) {
+      double d1 = this.d1,
+          d2 = this.d2,
+          speed1 = this.lowSpeed,
+          speed2 = this.highSpeed;
+
+      void drawArc() {
+        canvas.drawArc(
+          Offset.zero & size,
+          (90 - d2) * _deg2Rad,
+          ((d2 - d1) * _deg2Rad),
+          false,
+          paint,
+        );
+      }
+
+      void update() {
+        d1 += speed1;
+        d2 += speed2;
+        if (d1 > 360 && d2 > 360) {
+          d1 -= 360;
+          d2 -= 360;
+        }
+        if ((d1 - d2).abs() >= 180) {
+          final _speed1 = speed1;
+          speed1 = speed2;
+          speed2 = _speed1;
+        }
+        // update the values changed above
+        onUpdate([d1, d2, speed1, speed2]);
+      }
+
+      update();
+      if (d1 == d2 && d1 % 360 == 0) return;
+      drawArc();
+    } else
+      canvas.drawArc(
+        Offset.zero & size,
+        _startAngle,
+        (value! / 100).clamp(0, 1) * _sweep,
+        false,
+        paint,
+      );
   }
 
   @override

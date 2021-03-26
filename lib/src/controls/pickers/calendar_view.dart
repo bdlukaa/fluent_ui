@@ -48,7 +48,8 @@ class CalendarView extends StatelessWidget {
             data: style.copyWith(Style(
               iconButtonStyle: style.iconButtonStyle?.copyWith(IconButtonStyle(
                 margin: EdgeInsets.zero,
-                decoration: (_) => BoxDecoration(borderRadius: BorderRadius.zero),
+                decoration: (_) =>
+                    BoxDecoration(borderRadius: BorderRadius.zero),
               )),
             )),
             child: Row(children: [

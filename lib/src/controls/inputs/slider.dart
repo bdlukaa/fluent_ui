@@ -42,9 +42,19 @@ class Slider extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('value', value));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>('onChanged', onChanged, ifNull: 'disabled'));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>.has('onChangeStart', onChangeStart));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>.has('onChangeEnd', onChangeEnd));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>(
+      'onChanged',
+      onChanged,
+      ifNull: 'disabled',
+    ));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>.has(
+      'onChangeStart',
+      onChangeStart,
+    ));
+    properties.add(ObjectFlagProperty<ValueChanged<double>>.has(
+      'onChangeEnd',
+      onChangeEnd,
+    ));
     properties.add(DoubleProperty('min', min));
     properties.add(DoubleProperty('max', max));
     properties.add(IntProperty('divisions', divisions));
@@ -187,13 +197,16 @@ class SliderStyle with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(DiagnosticsProperty<MouseCursor>('cursor', cursor));
-    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
-    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties
+        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(
+        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
     properties.add(ColorProperty('thumbColor', thumbColor));
     properties.add(ColorProperty('activeColor', activeColor));
     properties.add(ColorProperty('inactiveColor', inactiveColor));
     properties.add(ColorProperty('disabledActiveColor', disabledActiveColor));
-    properties.add(ColorProperty('disabledInactiveColor', disabledInactiveColor));
+    properties
+        .add(ColorProperty('disabledInactiveColor', disabledInactiveColor));
     properties.add(ColorProperty('disabledThumbColor', disabledThumbColor));
     properties.add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
   }

@@ -1,5 +1,14 @@
 Date format: DD/MM/YYYY
 
+## [1.3.3] - [25/03/2021]
+
+- **NEW** Indeterminate ProgressRing ([@raitonoberu](https://github.com/raitonoberu))
+- **NEW** ListTile
+- **DIAGNOSTICS** Provide `Diagnostics` support to:
+  - Style
+  - NavigationPanelStyle
+  - TooltipStyle
+
 ## [1.3.2] - Accessibility update - [24/03/2021]
 
 This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issues/5)
@@ -7,7 +16,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 - `Theme.of` can't be null anymore. Use `Theme.maybeOf` for such
 - **NEW** `Style.inactiveBackgroundColor`
 - **BREAKING** Replaced `color`, `border`, `borderRadius` from `IconButtonStyle` to `decoration`
-- Provide `Diagnostics` support to the following classes:
+- **DIAGNOSTICS** Provide `Diagnostics` support to the following classes:
   - ButtonStyle
   - Checkbox
   - CheckboxStyle
@@ -39,7 +48,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 
 - **FIX** `IconButtonStyle`'s `iconStyle` now works properly 
 - Improved `TabView` icon styling
-- **NEW** Indeterminate `ProgressBar`
+- **NEW** Indeterminate `ProgressBar` ([@raitonoberu](https://github.com/raitonoberu))
 
 ## [1.3.0] - [22/03/2021]
 

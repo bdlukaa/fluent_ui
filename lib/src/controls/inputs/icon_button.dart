@@ -26,8 +26,14 @@ class IconButton extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed));
-    properties.add(ObjectFlagProperty<VoidCallback>('onLongPress', onLongPress));
+    properties.add(ObjectFlagProperty<VoidCallback>(
+      'onPressed',
+      onPressed,
+      ifNull: 'disabled',
+    ));
+    properties.add(
+      ObjectFlagProperty<VoidCallback>.has('onLongPress', onLongPress),
+    );
     properties.add(DiagnosticsProperty<IconButtonStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
@@ -110,10 +116,18 @@ class IconButtonStyle with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>>('decoration', decoration));
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>>('cursor', cursor));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>>.has(
+      'decoration',
+      decoration,
+    ));
+    properties.add(
+      ObjectFlagProperty<ButtonState<MouseCursor>>.has('cursor', cursor),
+    );
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
-    properties.add(ObjectFlagProperty<ButtonState<IconStyle?>>('iconStyle', iconStyle));
+    properties.add(ObjectFlagProperty<ButtonState<IconStyle?>>.has(
+      'iconStyle',
+      iconStyle,
+    ));
   }
 }

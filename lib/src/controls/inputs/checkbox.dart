@@ -24,7 +24,8 @@ class Checkbox extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(FlagProperty('checked', value: checked));
-    properties.add(ObjectFlagProperty('onChanged', onChanged));
+    properties
+        .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
     properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
@@ -170,21 +171,52 @@ class CheckboxStyle with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('thirdstateDecoration', thirdstateDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('uncheckedDecoration', uncheckedDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('checkedDecoration', checkedDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('thirdstateIconColor', thirdstateIconColor));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('uncheckedIconColor', uncheckedIconColor));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>('checkedIconColor', checkedIconColor));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'thirdstateDecoration',
+      thirdstateDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'uncheckedDecoration',
+      uncheckedDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'checkedDecoration',
+      checkedDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      'thirdstateIconColor',
+      thirdstateIconColor,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      'uncheckedIconColor',
+      uncheckedIconColor,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      'checkedIconColor',
+      checkedIconColor,
+    ));
     properties.add(IconDataProperty('icon', icon));
     properties.add(IconDataProperty('icon', icon));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('checkedDecoration', checkedDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>('uncheckedDecoration', uncheckedDecoration));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'checkedDecoration',
+      checkedDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'uncheckedDecoration',
+      uncheckedDecoration,
+    ));
+    properties.add(
+      DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
+    );
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
-    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
-    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(
+      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
+    );
+    properties.add(
+      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
+    );
+    properties.add(
+      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
+    );
   }
-
 }

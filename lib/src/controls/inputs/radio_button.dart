@@ -101,10 +101,22 @@ class RadioButtonStyle with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedDecoration', checkedDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedDecoration', uncheckedDecoration));
-    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
-    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(
+      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
+    );
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+      'checkedDecoration',
+      checkedDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+      'uncheckedDecoration',
+      uncheckedDecoration,
+    ));
+    properties.add(
+      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
+    );
+    properties.add(
+      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
+    );
   }
 }

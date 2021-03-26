@@ -27,7 +27,8 @@ class ToggleButton extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(FlagProperty('checked', value: checked));
-    properties.add(ObjectFlagProperty('onChanged', onChanged));
+    properties
+        .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
     properties.add(DiagnosticsProperty<ToggleButtonStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
@@ -134,12 +135,23 @@ class ToggleButtonStyle with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
-    properties.add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
-    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('checkedDecoration', checkedDecoration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>('uncheckedDecoration', uncheckedDecoration));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(
+      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
+    );
+    properties
+        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(
+        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+      'checkedDecoration',
+      checkedDecoration,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+      'uncheckedDecoration',
+      uncheckedDecoration,
+    ));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
   }
 }

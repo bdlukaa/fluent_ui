@@ -1,6 +1,6 @@
 part of 'navigation_panel.dart';
 
-class NavigationPanelStyle {
+class NavigationPanelStyle with Diagnosticable {
   final ButtonState<Color?>? color;
   final Color? highlightColor;
 
@@ -68,5 +68,45 @@ class NavigationPanelStyle {
       selectedIconColor: style?.selectedIconColor ?? selectedIconColor,
       unselectedIconColor: style?.unselectedIconColor ?? unselectedIconColor,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty.has('color', color));
+    properties.add(ColorProperty('highlightColor', highlightColor));
+    properties.add(ObjectFlagProperty.has('cursor', cursor));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
+      'labelPadding',
+      labelPadding,
+    ));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
+      'iconPadding',
+      iconPadding,
+    ));
+    properties.add(DiagnosticsProperty<Duration>(
+      'animationDuration',
+      animationDuration,
+    ));
+    properties.add(DiagnosticsProperty<Curve>(
+      'animationCurve',
+      animationCurve,
+    ));
+    properties.add(ObjectFlagProperty.has(
+      'selectedTextStyle',
+      selectedTextStyle,
+    ));
+    properties.add(ObjectFlagProperty.has(
+      'unselectedTextStyle',
+      unselectedTextStyle,
+    ));
+    properties.add(ObjectFlagProperty.has(
+      'selectedIconColor',
+      selectedIconColor,
+    ));
+    properties.add(ObjectFlagProperty.has(
+      'unselectedIconColor',
+      unselectedIconColor,
+    ));
   }
 }

@@ -98,15 +98,19 @@ class Button extends StatefulWidget {
 
   final FocusNode? focusNode;
 
+  bool get enabled => onPressed != null || onLongPress != null;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<VoidCallback>(
       'onPressed',
       onPressed,
-      ifNull: 'disabled',
+      ifNull: enabled ? 'no on pressed' : 'disabled',
     ));
-    properties.add(ObjectFlagProperty<VoidCallback>('onLongPress', onPressed));
+    properties.add(
+      ObjectFlagProperty<VoidCallback>.has('onLongPress', onPressed),
+    );
     properties.add(DiagnosticsProperty<ButtonStyle>('style', style));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
@@ -116,7 +120,7 @@ class Button extends StatefulWidget {
 }
 
 class _ButtonState extends State<Button> {
-  bool get enabled => widget.onPressed != null || widget.onLongPress != null;
+  bool get enabled => widget.enabled;
 
   double buttonScale = 1;
 
@@ -287,19 +291,29 @@ class ButtonStyle with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>(
-        'decoration', decoration));
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      'decoration',
+      decoration,
+    ));
     properties
         .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
-    properties
-        .add(ObjectFlagProperty<ButtonState<MouseCursor>?>('cursor', cursor));
-    properties.add(
-        ObjectFlagProperty<ButtonState<TextStyle>?>('textStyle', textStyle));
-    properties.add(
-        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
-    properties
-        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
+    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>.has(
+      'cursor',
+      cursor,
+    ));
+    properties.add(ObjectFlagProperty<ButtonState<TextStyle>?>.has(
+      'textStyle',
+      textStyle,
+    ));
+    properties.add(DiagnosticsProperty<Duration?>(
+      'animationDuration',
+      animationDuration,
+    ));
+    properties.add(DiagnosticsProperty<Curve?>(
+      'animationCurve',
+      animationCurve,
+    ));
   }
 }

@@ -43,29 +43,31 @@ class RatingBar extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(IntProperty('amount', amount));
     properties.add(DoubleProperty('rating', rating));
-    properties.add(DiagnosticsProperty<Duration>('animationDuration', animationDuration));
-    properties.add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
+    properties.add(
+      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+    );
+    properties.add(
+      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+    );
     properties.add(DoubleProperty('iconSize', iconSize));
     properties.add(IconDataProperty('icon', icon));
     properties.add(ColorProperty('ratedIconColor', ratedIconColor));
     properties.add(ColorProperty('unratedIconColor', unratedIconColor));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
-
 }
 
 class _RatingBarState extends State<RatingBar> {
-
   late FocusNode _focusNode;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     _focusNode.dispose();
     super.dispose();
   }
@@ -73,7 +75,8 @@ class _RatingBarState extends State<RatingBar> {
   void _handleUpdate(double x, double? size) {
     final iSize = (widget.iconSize ?? size ?? 24);
     final value = x / iSize;
-    if (value <= widget.amount && !value.isNegative) widget.onChanged?.call(value);
+    if (value <= widget.amount && !value.isNegative)
+      widget.onChanged?.call(value);
   }
 
   @override
@@ -148,8 +151,7 @@ class RatingIcon extends StatelessWidget {
     if (rating == 1.0)
       return Icon(icon, color: ratedColor ?? style.accentColor, size: size);
     else if (rating == 0.0)
-      return Icon(icon,
-          color: unratedColor ?? style.disabledColor, size: size);
+      return Icon(icon, color: unratedColor ?? style.disabledColor, size: size);
     return Stack(
       children: [
         Icon(icon, color: unratedColor ?? style.disabledColor, size: size),

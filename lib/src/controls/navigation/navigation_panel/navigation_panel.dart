@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:fluent_ui/src/controls/navigation/navigation_panel/display_modes/compact.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 part 'style.dart';

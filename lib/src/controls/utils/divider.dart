@@ -69,7 +69,7 @@ class DividerStyle with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(ObjectFlagProperty('margin', margin));
+    properties.add(ObjectFlagProperty.has('margin', margin));
     properties.add(DoubleProperty('thickness', thickness));
   }
 }

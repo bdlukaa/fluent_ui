@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -37,7 +38,7 @@ class Tooltip extends StatelessWidget {
   }
 }
 
-class TooltipStyle {
+class TooltipStyle with Diagnosticable {
   final double? height;
   final double? verticalOffset;
 
@@ -107,5 +108,23 @@ class TooltipStyle {
   TooltipStyle copyWith(TooltipStyle? style) {
     if (style == null) return this;
     return style;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('height', height));
+    properties.add(DoubleProperty('verticalOffset', verticalOffset));
+    properties.add(
+      DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding),
+    );
+    properties.add(
+      DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin),
+    );
+    properties.add(FlagProperty('preferBelow', value: preferBelow));
+    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
+    properties.add(DiagnosticsProperty<Duration>('waitDuration', waitDuration));
+    properties.add(DiagnosticsProperty<Duration>('showDuration', showDuration));
+    properties.add(DiagnosticsProperty<TextStyle>('textStyle', textStyle));
   }
 }

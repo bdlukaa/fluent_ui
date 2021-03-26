@@ -25,7 +25,8 @@ class Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
-    final color = backgroundColor ?? style.scaffoldBackgroundColor ?? Colors.white;
+    final color =
+        backgroundColor ?? style.scaffoldBackgroundColor ?? Colors.white;
     return AnimatedContainer(
       duration: style.mediumAnimationDuration ?? Duration.zero,
       curve: style.animationCurve ?? Curves.linear,

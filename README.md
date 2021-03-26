@@ -68,7 +68,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - **TODO** [Pull-to-Refresh]()
   - **TODO** [Tree View]()
-  - **TODO** [ListTile](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/item-templates-listview)
+  - [ListTile](#list-tile)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -447,8 +447,12 @@ A button that can be on or off.
 ### Example
 
 ```dart
+bool _value = false;
+
 ToggleButton(
-  
+  child: Text('Toggle Button'),
+  checked: _value,
+  onChanged: (value) => setState(() => _value = value),
 )
 ```
 
@@ -502,11 +506,11 @@ ToggleSwitch(
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 
-| Toggle Switch | Checkbox |
-| ------------- | -------- |
-| Use a toggle switch for binary settings when changes become effective immediately after the user changes them. | Use check boxes for optional ("nice to have") items. |
-| | Use a checkbox when the user has to perform extra steps for changes to be effective. For example, if the user must click a "submit" or "next" button to apply changes, use a check box. |
-| | Use check boxes when the user can select multiple items that are related to a single setting or feature. |
+| Toggle Switch                                                                                                  | Checkbox                                                                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Use a toggle switch for binary settings when changes become effective immediately after the user changes them. | Use check boxes for optional ("nice to have") items.                                                                                                                                    |
+|                                                                                                                | Use a checkbox when the user has to perform extra steps for changes to be effective. For example, if the user must click a "submit" or "next" button to apply changes, use a check box. |
+|                                                                                                                | Use check boxes when the user can select multiple items that are related to a single setting or feature.                                                                                |
 
 ## Radio Buttons
 
@@ -573,8 +577,8 @@ A slider is a control that lets the user select from a range of values by moving
 double _value = 0;
 
 Container(
-  // The default width is 200. 
-  // The slider does not have its own widget, so you have to add it yourself. 
+  // The default width is 200.
+  // The slider does not have its own widget, so you have to add it yourself.
   // The slider always try to be as big as possible
   width: 200,
   child: Slider(
@@ -709,7 +713,6 @@ showDialog(
 
 [Navigation](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/master-details):
 
-
 ## Acrylic
 
 Acrylic is a type of Brush that creates a translucent texture. You can apply acrylic to app surfaces to add depth and help establish a visual hierarchy.
@@ -806,7 +809,11 @@ ProgressRing(value: 35)
 
 ![Determinate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring.jpg)
 
-Indeterminate progress ring is not available on the moment, but fell free to create a pr.
+You can omit the `value` property to create an indeterminate progress ring:
+
+![Indeterminate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressring-indeterminate.gif)
+
+Both Indeterminate ProgressBar and Indeterminate ProgressRing is a courtesy of [@raitonubero](https://github.com/raitonoberu). Show him some love ❤
 
 ### Screenshots
 
@@ -814,30 +821,70 @@ Indeterminate progress ring is not available on the moment, but fell free to cre
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-indeterminate-example.png)
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring_determinate_example.png)
 
+## ListTile
+
+You can use a `ListTile` in a `ListView`.
+
+### Example
+
+```dart
+final people = {
+  'Mass in B minor': 'Johann Sebastian Bach',
+  'Third Symphony': 'Ludwig van Beethoven',
+  'Serse': 'George Frideric Hendel',
+};
+
+ListView.builder(
+  itemCount: people.length,
+  itemBuilder: (context, index) {
+    final title = people.keys[index];
+    final subtitle = people[title];
+    return ListTile(
+      leading: CircleAvatar(),
+      title: Text(title),
+      subtitle: Text(subtitle),
+    );
+  }
+),
+```
+
+The code above produces the following:
+
+![Double Line Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineexample.png)
+
+### Screenshots
+
+![Single line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/singlelineicon.png)\
+![Double line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineicon.png)\
+![Three line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/tripleline.png)
+
 ---
 
 ### Equivalents with the material library
 
 The list of equivalents between this library and `flutter/material.dart`
 
-| Material        | Fluent          |
-| --------------- | --------------- |
-| TextButton      | Button          |
-| IconButton      | IconButton      |
-| Checkbox        | Checkbox        |
-| RadioButton     | RadioButton     |
-| -               | RatingBar       |
-| -               | SplitButton     |
-| -               | ToggleButton    |
-| Switch          | ToggleSwitch    |
-| TextField       | TextBox         |
-| AlertDialog     | ContentDialog   |
-| MaterialBanner  | InfoBar         |
-| Tooltip         | Tooltip         |
-| Drawer          | NavigationPanel |
-| Divider         | Divider         |
-| VerticalDivider | Divider         |
-| Card            | Acrylic         |
+| Material                  | Fluent          |
+| ------------------------- | --------------- |
+| TextButton                | Button          |
+| IconButton                | IconButton      |
+| Checkbox                  | Checkbox        |
+| RadioButton               | RadioButton     |
+| -                         | RatingBar       |
+| -                         | SplitButton     |
+| -                         | ToggleButton    |
+| Switch                    | ToggleSwitch    |
+| TextField                 | TextBox         |
+| AlertDialog               | ContentDialog   |
+| MaterialBanner            | InfoBar         |
+| Tooltip                   | Tooltip         |
+| Drawer                    | NavigationPanel |
+| Divider                   | Divider         |
+| VerticalDivider           | Divider         |
+| Card                      | Acrylic         |
+| ListTile                  | ListTile        |
+| LinearProgressIndicator   | ProgressBar     |
+| CircularProgressIndicator | ProgressRing    |
 
 ## Contribution
 

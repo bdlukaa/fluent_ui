@@ -119,7 +119,8 @@ class SplitButtonStyle with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BorderRadiusGeometry>('borderRadius', borderRadius));
+    properties.add(DiagnosticsProperty<BorderRadiusGeometry>(
+        'borderRadius', borderRadius));
     properties.add(DoubleProperty('interval', interval));
   }
 }

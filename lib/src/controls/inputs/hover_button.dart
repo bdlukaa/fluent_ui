@@ -49,7 +49,7 @@ class _HoverButtonState extends State<HoverButton> {
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     node.dispose();
     super.dispose();
   }
