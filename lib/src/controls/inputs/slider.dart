@@ -18,6 +18,7 @@ class Slider extends StatelessWidget {
     this.style,
     this.label,
     this.focusNode,
+    this.vertical = false,
   })  : assert(value >= min && value <= max),
         assert(divisions == null || divisions > 0),
         super(key: key);
@@ -37,6 +38,8 @@ class Slider extends StatelessWidget {
   final String? label;
 
   final FocusNode? focusNode;
+
+  final bool vertical;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -61,13 +64,16 @@ class Slider extends StatelessWidget {
     properties.add(StringProperty('label', label));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
     properties.add(ObjectFlagProperty<SliderStyle>('style', style));
+    properties.add(
+      FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.sliderStyle?.copyWith(this.style);
-    return Padding(
+    final child = Padding(
       padding: style?.margin ?? EdgeInsets.zero,
       child: m.Material(
         type: m.MaterialType.transparency,
@@ -81,7 +87,8 @@ class Slider extends StatelessWidget {
               pressedElevation: 0,
             ),
             valueIndicatorShape: _RectangularSliderValueIndicatorShape(
-              style?.labelBackgroundColor,
+              backgroundColor: style?.labelBackgroundColor,
+              vertical: vertical,
             ),
             trackHeight: 0.25,
             trackShape: _CustomTrackShape(),
@@ -106,6 +113,13 @@ class Slider extends StatelessWidget {
         ),
       ),
     );
+    if (vertical) {
+      return RotatedBox(
+        quarterTurns: 3,
+        child: child,
+      );
+    }
+    return child;
   }
 }
 
@@ -214,12 +228,15 @@ class SliderStyle with Diagnosticable {
 
 class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
   final Color? backgroundColor;
+  final bool vertical;
 
   /// Create a slider value indicator that resembles a rectangular tooltip.
-  const _RectangularSliderValueIndicatorShape([this.backgroundColor]);
+  const _RectangularSliderValueIndicatorShape({
+    this.backgroundColor,
+    this.vertical = false,
+  });
 
-  static const _RectangularSliderValueIndicatorPathPainter _pathPainter =
-      _RectangularSliderValueIndicatorPathPainter();
+  get _pathPainter => _RectangularSliderValueIndicatorPathPainter(vertical);
 
   @override
   Size getPreferredSize(
@@ -264,7 +281,9 @@ class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
 }
 
 class _RectangularSliderValueIndicatorPathPainter {
-  const _RectangularSliderValueIndicatorPathPainter();
+  final bool vertical;
+
+  const _RectangularSliderValueIndicatorPathPainter([this.vertical = false]);
 
   static const double _triangleHeight = 8.0;
   static const double _labelPadding = 8.0;
@@ -380,8 +399,14 @@ class _RectangularSliderValueIndicatorPathPainter {
     canvas.save();
     // Prepare the canvas for the base of the tooltip, which is relative to the
     // center of the thumb.
-    canvas.translate(center.dx, center.dy - _bottomTipYOffset);
+    final verticalFactor = 20;
+    canvas.translate(
+      center.dx + (vertical ? -verticalFactor : 0),
+      center.dy - _bottomTipYOffset + (vertical ? -verticalFactor : 0),
+    );
     canvas.scale(scale, scale);
+    // Rotate the label if it's vertical
+    if (vertical) canvas.rotate(math.pi / 2);
     if (strokePaintColor != null) {
       final Paint strokePaint = Paint()
         ..color = strokePaintColor

@@ -33,7 +33,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 - [Style](#style)
   - [Icons](#icons)
   - [Colors](#colors)
-  - [Accent color](#accent-color)
+    - [Accent color](#accent-color)
   - [Brightness](#brightness)
   - [Typograpy](#typography)
     - [Font](#font)
@@ -566,12 +566,11 @@ The code above produces the following:
 
 A slider is a control that lets the user select from a range of values by moving a thumb control along a track. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider)
 
-- [Is this the right control for you?](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider#is-this-the-right-control)
-- [Recommendations](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider#recommendations)
+A slider is a good choice when you know that users think of the value as a relative quantity, not a numeric value. For example, users think about setting their audio volume to low or medium—not about setting the value to 2 or 5.
 
-> Vertical slider is not available yet
+Don't use a slider for binary settings. Use a [toggle switch](#toggle-switches) instead.
 
-### Example
+### Creating
 
 ```dart
 double _value = 0;
@@ -595,9 +594,17 @@ The code above produces the following:
 
 ![Slider preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)
 
+You can set `vertical` to `true` to create a vertical slider
+
+### Choosing between vertical and horizontal sliders
+
+| Horizontal | Vertical |
+| ---------- | -------- |
+| If the control is used to seek within media, like in a video app. | if the slider represents a real-world value that is normally shown vertically (such as temperature). |
+
 ## Rating Bar
 
-> The property `starSpacing` is missing
+> The property `starSpacing` was not implemented yet
 
 The rating control allows users to view and set ratings that reflect degrees of satisfaction with content and services. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/rating)
 
@@ -749,6 +756,7 @@ Currently, the following widgets use acrylic in its implementation:
 
 - [InfoBar](#infobar)
 - [Navigation Panel](#navigation-panel)
+- [TabView](#tab-view)
 
 > This widget MAY BE unperformatic on VERY OLD devices because it uses expensive widgets in its composition: `ClipRect` and `BackdropFilter`. It should not affect the most part of the devices
 
@@ -821,7 +829,7 @@ Both Indeterminate ProgressBar and Indeterminate ProgressRing is a courtesy of [
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-indeterminate-example.png)
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring_determinate_example.png)
 
-## ListTile
+## List Tile
 
 You can use a `ListTile` in a `ListView`.
 

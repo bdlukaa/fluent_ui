@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.3.4] - [26/03/2021]
+
+- **NEW** Vertical Slider
+
 ## [1.3.3] - [25/03/2021]
 
 - **NEW** Indeterminate ProgressRing ([@raitonoberu](https://github.com/raitonoberu))
