@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
-enum _ButtonType { def, icon, dropdown }
+enum _ButtonType { def, icon }
 
 class Button extends StatefulWidget {
   const Button({
@@ -16,6 +16,7 @@ class Button extends StatefulWidget {
     this.onLongPress,
     this.semanticsLabel,
     this.focusNode,
+    this.autofocus = false,
   })  : type = _ButtonType.def,
         super(key: key);
 
@@ -28,6 +29,7 @@ class Button extends StatefulWidget {
     this.onLongPress,
     this.semanticsLabel,
     this.focusNode,
+    this.autofocus = false,
   })  : assert(icon != null),
         text = IconButton(
           icon: icon!,
@@ -39,36 +41,6 @@ class Button extends StatefulWidget {
         style = null,
         trailingIcon = null,
         type = _ButtonType.icon,
-        super(key: key);
-
-  Button.dropdown({
-    Key? key,
-    required Widget content,
-    required Widget dropdown,
-    this.style,
-    bool disabled = false,
-    bool startOpen = false,
-    bool adoptDropdownWidth = true,
-    bool horizontal = false,
-    this.semanticsLabel,
-    this.focusNode,
-  })  : text = DropDownButton(
-          key: key,
-          content: content,
-          dropdown: dropdown,
-          adoptDropdownWidth: adoptDropdownWidth,
-          disabled: disabled,
-          horizontal: horizontal,
-          semanticsLabel: semanticsLabel,
-          startOpen: startOpen,
-          style: style,
-          focusNode: focusNode,
-        ),
-        icon = null,
-        onLongPress = null,
-        onPressed = null,
-        trailingIcon = null,
-        type = _ButtonType.dropdown,
         super(key: key);
 
   final _ButtonType type;
@@ -97,6 +69,7 @@ class Button extends StatefulWidget {
   final String? semanticsLabel;
 
   final FocusNode? focusNode;
+  final bool autofocus;
 
   bool get enabled => onPressed != null || onLongPress != null;
 
@@ -127,22 +100,20 @@ class _ButtonState extends State<Button> {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    ButtonStyle? style;
     switch (widget.type) {
       case _ButtonType.icon:
-      case _ButtonType.dropdown:
         return widget.text!;
       case _ButtonType.def:
       default:
-        style = context.theme.buttonStyle;
         break;
     }
-    style = style?.copyWith(this.widget.style);
+    ButtonStyle? style = context.theme.buttonStyle?.copyWith(this.widget.style);
     return HoverButton(
       semanticsLabel: widget.semanticsLabel,
       margin: style?.margin,
       focusNode: widget.focusNode,
       cursor: style?.cursor,
+      autofocus: widget.autofocus,
       onTapDown: !enabled
           ? null
           : () {

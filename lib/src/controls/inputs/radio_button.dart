@@ -19,6 +19,18 @@ class RadioButton extends StatelessWidget {
   final String? semanticsLabel;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      FlagProperty('checked', value: checked, ifFalse: 'unchecked'),
+    );
+    properties.add(
+      ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
+    );
+    properties.add(ObjectFlagProperty.has('style', style));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.radioButtonStyle?.copyWith(this.style);

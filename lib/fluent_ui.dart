@@ -9,7 +9,9 @@ export 'package:flutter/material.dart'
         DefaultMaterialLocalizations,
         PageTransitionsBuilder,
         FlutterLogo,
-        CircleAvatar;
+        CircleAvatar,
+        kElevationToShadow,
+        Scrollbar;
 
 export 'src/app.dart';
 export 'src/utils.dart';
@@ -21,7 +23,6 @@ export 'src/layout/scaffold.dart';
 export 'src/controls/inputs/hover_button.dart';
 export 'src/controls/inputs/button.dart';
 export 'src/controls/inputs/checkbox.dart';
-export 'src/controls/inputs/drop_down_button.dart';
 export 'src/controls/inputs/icon_button.dart';
 export 'src/controls/inputs/radio_button.dart';
 export 'src/controls/inputs/rating.dart';
@@ -54,3 +55,5 @@ export 'src/styles/color.dart';
 export 'src/styles/icons.dart';
 export 'src/styles/theme.dart';
 export 'src/styles/typography.dart';
+
+export 'src/utils/header.dart';

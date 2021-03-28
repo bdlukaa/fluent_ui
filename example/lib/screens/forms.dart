@@ -12,7 +12,7 @@ class _FormsState extends State<Forms> {
   bool _showPassword = false;
 
   final values = ['Blue', 'Green', 'Yellow', 'Red'];
-  String comboBoxValue = 'Red';
+  String? comboBoxValue;
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +70,24 @@ class _FormsState extends State<Forms> {
           ),
         ),
         SizedBox(height: 10),
-        ComboBox<String>(
-          values: values,
-          currentValue: comboBoxValue,
-          onChanged: (value) {
-            print(value);
-            setState(() => comboBoxValue = value);
-          },
+        SizedBox(
+          width: 200,
+          child: ComboBox<String>(
+            header: 'Colors',
+            placeholder: 'Selected list item',
+            isExpanded: true,
+            items: values
+                .map((e) => ComboboxMenuItem<String>(
+                      value: e,
+                      child: Text(e),
+                    ))
+                .toList(),
+            value: comboBoxValue,
+            onChanged: (value) {
+              print(value);
+              if (value != null) setState(() => comboBoxValue = value);
+            },
+          ),
         ),
       ],
     );

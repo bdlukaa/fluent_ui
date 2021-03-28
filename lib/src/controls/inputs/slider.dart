@@ -63,7 +63,7 @@ class Slider extends StatelessWidget {
     properties.add(IntProperty('divisions', divisions));
     properties.add(StringProperty('label', label));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(ObjectFlagProperty<SliderStyle>('style', style));
+    properties.add(DiagnosticsProperty<SliderStyle>('style', style));
     properties.add(
       FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'),
     );

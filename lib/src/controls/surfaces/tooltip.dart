@@ -121,7 +121,11 @@ class TooltipStyle with Diagnosticable {
     properties.add(
       DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin),
     );
-    properties.add(FlagProperty('preferBelow', value: preferBelow));
+    properties.add(FlagProperty(
+      'preferBelow',
+      value: preferBelow,
+      ifFalse: 'prefer above',
+    ));
     properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
     properties.add(DiagnosticsProperty<Duration>('waitDuration', waitDuration));
     properties.add(DiagnosticsProperty<Duration>('showDuration', showDuration));

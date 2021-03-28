@@ -26,7 +26,11 @@ class ToggleSwitch extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty('checked', value: checked));
+    properties.add(FlagProperty(
+      'checked',
+      value: checked,
+      ifFalse: 'unchecked',
+    ));
     properties.add(ObjectFlagProperty(
       'onChanged',
       onChanged,
@@ -34,7 +38,7 @@ class ToggleSwitch extends StatelessWidget {
     ));
     properties.add(DiagnosticsProperty<ToggleSwitchStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
+    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
   @override

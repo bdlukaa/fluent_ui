@@ -22,6 +22,8 @@ const BoxDecoration _kDefaultRoundedBorderDecoration = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(3.0)),
 );
 
+const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 6);
+
 enum OverlayVisibilityMode {
   never,
   editing,
@@ -66,7 +68,7 @@ class TextBox extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.decoration = _kDefaultRoundedBorderDecoration,
-    this.padding = const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+    this.padding = kTextBoxPadding,
     this.placeholder,
     this.placeholderStyle,
     this.prefix,
@@ -320,8 +322,11 @@ class TextBox extends StatefulWidget {
     properties.add(
         DiagnosticsProperty<bool>('expands', expands, defaultValue: false));
     properties.add(IntProperty('maxLength', maxLength, defaultValue: null));
-    properties.add(FlagProperty('maxLengthEnforced',
-        value: maxLengthEnforced, ifTrue: 'max length enforced'));
+    properties.add(FlagProperty(
+      'maxLengthEnforced',
+      value: maxLengthEnforced,
+      ifTrue: 'max length enforced',
+    ));
     properties
         .add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
     properties
@@ -744,25 +749,11 @@ class _TextBoxState extends State<TextBox>
 
     Widget listener = ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
-      builder: (context, text, _) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.header != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4.0),
-              child: Text(
-                widget.header!,
-                style: widget.headerStyle ?? context.theme.typography?.body,
-              ),
-            ),
-          Row(children: [
-            if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-            Expanded(child: child),
-            if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
-          ]),
-        ],
-      ),
+      builder: (context, text, _) => Row(children: [
+        if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
+        Expanded(child: child),
+        if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
+      ]),
     );
 
     return Theme(
@@ -779,7 +770,15 @@ class _TextBoxState extends State<TextBox>
               .copyWith(widget.iconButtonStyle),
         ),
       ),
-      child: listener,
+      child: () {
+        if (widget.header != null)
+          return InfoHeader(
+            child: listener,
+            header: widget.header!,
+            headerStyle: widget.headerStyle,
+          );
+        return listener;
+      }(),
     );
   }
 }

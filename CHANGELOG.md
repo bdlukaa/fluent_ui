@@ -1,17 +1,24 @@
 Date format: DD/MM/YYYY
 
-## [1.3.4] - [26/03/2021]
+## [1.4.0] - [28/03/2021]
+
+- **NEW** `InfoHeader`
+- **NEW** `ComboBox`
+- **NEW** `TappableListTile`
+- **BREAKING** Removed `DropdownButton` and `Button.dropdown` 
+
+## [1.3.4] - [28/03/2021]
 
 - **NEW** Vertical Slider
 
 ## [1.3.3] - [25/03/2021]
 
-- **NEW** Indeterminate ProgressRing ([@raitonoberu](https://github.com/raitonoberu))
-- **NEW** ListTile
+- **NEW** Indeterminate `ProgressRing` ([@raitonoberu](https://github.com/raitonoberu))
+- **NEW** `ListTile`
 - **DIAGNOSTICS** Provide `Diagnostics` support to:
-  - Style
-  - NavigationPanelStyle
-  - TooltipStyle
+  - `Style`
+  - `NavigationPanelStyle`
+  - `TooltipStyle`
 
 ## [1.3.2] - Accessibility update - [24/03/2021]
 

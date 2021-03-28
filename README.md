@@ -54,7 +54,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Slider](#slider)
   - [TextBox](#textbox)
   - **TODO** [Auto Suggest Box]()
-  - **TODO** [Combo Box]()
+  - [Combo Box](#combo-box)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
   - **TODO** Flyout
@@ -68,7 +68,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - **TODO** [Pull-to-Refresh]()
   - **TODO** [Tree View]()
-  - [ListTile](#list-tile)
+  - [List Tile](#list-tile)
+  - [Info Header](info-header)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -598,8 +599,8 @@ You can set `vertical` to `true` to create a vertical slider
 
 ### Choosing between vertical and horizontal sliders
 
-| Horizontal | Vertical |
-| ---------- | -------- |
+| Horizontal                                                        | Vertical                                                                                             |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | If the control is used to seek within media, like in a video app. | if the slider represents a real-world value that is normally shown vertically (such as temperature). |
 
 ## Rating Bar
@@ -647,6 +648,48 @@ TextBox(
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-clear-all.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-multi-line.png)
+
+## Combo Box
+
+Use a combo box to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. When the combo box is closed, it either displays the current selection or is empty if there is no selected item. When the user expands the combo box, it displays the list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)
+
+### Example
+
+```dart
+
+final values = ['Blue', 'Green', 'Yellow', 'Red'];
+String? comboBoxValue;
+
+SizedBox(
+  width: 200,
+  child: ComboBox<String>(
+    header: 'Colors',
+    placeholder: 'Selected list item',
+    isExpanded: true,
+    items: values
+        .map((e) => ComboboxMenuItem<String>(
+              value: e,
+              child: Text(e),
+            ))
+        .toList(),
+    value: comboBoxValue,
+    onChanged: (value) {
+      print(value);
+      if (value != null) setState(() => comboBoxValue = value);
+    },
+  ),
+),
+```
+
+The code above produces the following:
+
+![Combo box example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo-box-expand.gif)
+
+### Screenshots
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_collapsed.png)\
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_listitemstate.png)\
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_scroll.png)
 
 ## Tooltip
 
@@ -860,11 +903,41 @@ The code above produces the following:
 
 ![Double Line Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineexample.png)
 
+If you want to create a tappable tile, use `TappableListTile` instead.
+
 ### Screenshots
 
 ![Single line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/singlelineicon.png)\
 ![Double line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineicon.png)\
 ![Three line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/tripleline.png)
+
+## Info Header
+
+You can use an `InfoHeader` to tell the user the purpose of something
+
+### Example
+
+```dart
+InfoHeader(
+  header: 'Control header',
+  child: ComboBox(...),
+),
+```
+
+The code above produces the following:
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_collapsed.png)
+
+Some widgets, such as `ComboBox` and `TextBox`, already come with a `header` property, so you can use them easily with them:
+
+```dart
+ComboBox(
+  header: 'Control header',
+  ...
+)
+```
+
+This will produce the same as the image above.
 
 ---
 
@@ -883,6 +956,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | -                         | ToggleButton    |
 | Switch                    | ToggleSwitch    |
 | TextField                 | TextBox         |
+| DropdownButton            | ComboBox        |
 | AlertDialog               | ContentDialog   |
 | MaterialBanner            | InfoBar         |
 | Tooltip                   | Tooltip         |

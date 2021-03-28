@@ -23,9 +23,16 @@ class Checkbox extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty('checked', value: checked));
-    properties
-        .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
+    properties.add(FlagProperty(
+      'checked',
+      value: checked,
+      ifFalse: 'unchecked',
+    ));
+    properties.add(ObjectFlagProperty(
+      'onChanged',
+      onChanged,
+      ifNull: 'disabled',
+    ));
     properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));

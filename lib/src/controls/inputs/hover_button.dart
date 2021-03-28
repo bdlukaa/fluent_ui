@@ -16,6 +16,7 @@ class HoverButton extends StatefulWidget {
     this.onTapCancel,
     this.onLongPressEnd,
     this.onLongPressStart,
+    this.autofocus = false,
   }) : super(key: key);
 
   final MouseCursor Function(ButtonStates)? cursor;
@@ -34,6 +35,8 @@ class HoverButton extends StatefulWidget {
 
   final EdgeInsetsGeometry? margin;
   final String? semanticsLabel;
+
+  final bool autofocus;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
@@ -88,6 +91,7 @@ class _HoverButtonState extends State<HoverButton> {
   Widget build(BuildContext context) {
     Widget w = Focus(
       focusNode: node,
+      autofocus: widget.autofocus,
       child: MouseRegion(
         cursor: widget.cursor?.call(state) ?? buttonCursor(state),
         onEnter: (_) => update(() => _hovering = true),
