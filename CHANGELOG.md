@@ -1,5 +1,12 @@
 Date format: DD/MM/YYYY
 
+## [1.4.1] - Pickers Update - [30/03/2021]
+
+- **NEW** `Style.fasterAnimationDuration`
+- **FIX** `ComboBox` press effect
+- **NEW** `TimePicker` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/time-picker))
+- **NEW** `DatePicker` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/date-picker))
+
 ## [1.4.0] - [28/03/2021]
 
 - **NEW** `InfoHeader`

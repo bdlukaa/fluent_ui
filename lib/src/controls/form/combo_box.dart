@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
+import 'pickers/pickers.dart';
+
 const double _kMenuItemHeight = kOneLineTileHeight;
 const EdgeInsets _kListPadding = EdgeInsets.symmetric(vertical: 4.0);
 
@@ -402,8 +404,7 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return _ComboboxRoutePage<T>(
         route: this,
         constraints: constraints,
@@ -624,13 +625,13 @@ class ComboBox<T> extends StatefulWidget {
     this.iconEnabledColor,
     this.iconSize = 20.0,
     this.isExpanded = false,
-    this.focusColor,
     this.focusNode,
     this.autofocus = false,
     this.dropdownColor,
     this.placeholder,
     this.header,
     this.headerStyle,
+    this.cursor = SystemMouseCursors.click,
   })  : assert(
           items == null ||
               items.isEmpty ||
@@ -674,8 +675,6 @@ class ComboBox<T> extends StatefulWidget {
 
   final bool isExpanded;
 
-  final Color? focusColor;
-
   final FocusNode? focusNode;
 
   final bool autofocus;
@@ -686,6 +685,8 @@ class ComboBox<T> extends StatefulWidget {
   final String? header;
   final TextStyle? headerStyle;
 
+  final MouseCursor cursor;
+
   @override
   _ComboBoxState<T> createState() => _ComboBoxState<T>();
 }
@@ -694,23 +695,12 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
   int? _selectedIndex;
   _ComboboxRoute<T>? _dropdownRoute;
   Orientation? _lastOrientation;
-  FocusNode? _internalNode;
-  FocusNode? get focusNode => widget.focusNode ?? _internalNode;
-  bool _hasPrimaryFocus = false;
   late Map<Type, Action<Intent>> _actionMap;
-  late FocusHighlightMode _focusHighlightMode;
-
-  FocusNode _createFocusNode() {
-    return FocusNode(debugLabel: '${widget.runtimeType}');
-  }
 
   @override
   void initState() {
     super.initState();
     _updateSelectedIndex();
-    if (widget.focusNode == null) {
-      _internalNode ??= _createFocusNode();
-    }
     _actionMap = <Type, Action<Intent>>{
       ActivateIntent: CallbackAction<ActivateIntent>(
         onInvoke: (ActivateIntent intent) => _handleTap(),
@@ -719,20 +709,12 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
         onInvoke: (ButtonActivateIntent intent) => _handleTap(),
       ),
     };
-    focusNode!.addListener(_handleFocusChanged);
-    final FocusManager focusManager = WidgetsBinding.instance!.focusManager;
-    _focusHighlightMode = focusManager.highlightMode;
-    focusManager.addHighlightModeListener(_handleFocusHighlightModeChange);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
     _removeComboboxRoute();
-    WidgetsBinding.instance!.focusManager
-        .removeHighlightModeListener(_handleFocusHighlightModeChange);
-    focusNode!.removeListener(_handleFocusChanged);
-    _internalNode?.dispose();
     super.dispose();
   }
 
@@ -742,34 +724,9 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     _lastOrientation = null;
   }
 
-  void _handleFocusChanged() {
-    if (_hasPrimaryFocus != focusNode!.hasPrimaryFocus) {
-      setState(() {
-        _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
-      });
-    }
-  }
-
-  void _handleFocusHighlightModeChange(FocusHighlightMode mode) {
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _focusHighlightMode = mode;
-    });
-  }
-
   @override
   void didUpdateWidget(ComboBox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.focusNode != oldWidget.focusNode) {
-      oldWidget.focusNode?.removeListener(_handleFocusChanged);
-      if (widget.focusNode == null) {
-        _internalNode ??= _createFocusNode();
-      }
-      _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
-      focusNode!.addListener(_handleFocusChanged);
-    }
     _updateSelectedIndex();
   }
 
@@ -878,15 +835,6 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     return result;
   }
 
-  bool get _showHighlight {
-    switch (_focusHighlightMode) {
-      case FocusHighlightMode.touch:
-        return false;
-      case FocusHighlightMode.traditional:
-        return _hasPrimaryFocus;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
@@ -942,32 +890,24 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
       style: _enabled
           ? _textStyle!
           : _textStyle!.copyWith(color: context.theme.disabledColor),
-      child: Container(
-        decoration: _showHighlight
-            ? BoxDecoration(
-                color: widget.focusColor ?? context.theme.accentColor,
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-              )
-            : null,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.isExpanded)
-              Expanded(child: innerItemsWidget)
-            else
-              innerItemsWidget,
-            Theme(
-              data: context.theme.copyWith(Style(
-                iconStyle: context.theme.iconStyle?.copyWith(IconStyle(
-                  color: _iconColor,
-                  size: widget.iconSize,
-                )),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (widget.isExpanded)
+            Expanded(child: innerItemsWidget)
+          else
+            innerItemsWidget,
+          Theme(
+            data: context.theme.copyWith(Style(
+              iconStyle: context.theme.iconStyle?.copyWith(IconStyle(
+                color: _iconColor,
+                size: widget.iconSize,
               )),
-              child: widget.icon ?? defaultIcon,
-            ),
-          ],
-        ),
+            )),
+            child: widget.icon ?? defaultIcon,
+          ),
+        ],
       ),
     );
 
@@ -975,24 +915,15 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
       button: true,
       child: Actions(
         actions: _actionMap,
-        child: Focus(
-          canRequestFocus: _enabled,
-          focusNode: focusNode,
+        child: HoverButton(
+          focusNode: widget.focusNode,
           autofocus: widget.autofocus,
-          child: GestureDetector(
-            onTap: _enabled ? _handleTap : null,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              padding: kTextBoxPadding,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                border: Border.all(
-                  color: context.theme.inactiveColor ?? Colors.transparent,
-                  width: 1,
-                ),
-              ),
-              child: result,
-            ),
+          cursor: (_) => widget.cursor,
+          onPressed: _enabled ? _handleTap : null,
+          builder: (context, state) => Container(
+            padding: kTextBoxPadding,
+            decoration: kPickerDecorationBuilder(context, state),
+            child: result,
           ),
         ),
       ),

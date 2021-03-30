@@ -47,7 +47,6 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Button](#button)
   - [Split Button](#split-button)
   - [Toggle Button](#toggle-button)
-  - **TODO** [Dropdown Button]()
   - [Checkbox](#checkbox)
   - [Toggle Switches](#toggle-switches)
   - [Radio Buttons](#radio-buttons)
@@ -63,8 +62,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [InfoBar](#infobar)
   - **TODO** [Calendar View]()
   - **TODO** [Calendar Date Picker]()
-  - **TODO** [Date Picker]()
-  - **TODO** [Time Picker]()
+  - [Date Picker](#date-picker)
+  - [Time Picker](#time-picker)
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - **TODO** [Pull-to-Refresh]()
   - **TODO** [Tree View]()
@@ -831,6 +830,62 @@ InfoBar(
 ![Long Success InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)\
 ![Error InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-action-button.png)\
 ![Custom InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-custom-icon-color.png)
+
+## Date Picker
+
+The date picker gives you a standardized way to let users pick a localized date value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/date-picker)
+
+The entry point displays the chosen date, and when the user selects the entry point, a picker surface expands vertically from the middle for the user to make a selection. The date picker overlays other UI; it doesn't push other UI out of the way.
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_datepicker_expand.png)
+
+We use [intl](https://pub.dev/packages/intl) to format the dates. You can [change the current locale](https://pub.dev/packages/intl#current-locale) to change formatting
+
+### Example
+
+```dart
+DateTime date = DateTime.now();
+
+SizedBox(
+  width: 295,
+  child: DatePicker(
+    header: 'Date of birth',
+    selected: date,
+    onChanged: (v) => setState(() => date = v),
+  ),
+);
+```
+
+The code above produces the following:
+
+![DatePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/date-picker-closed.png)
+
+## Time Picker
+
+The time picker gives you a standardized way to let users pick a time value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/time-picker)
+
+Use a time picker to let a user pick a single time value.
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_timepicker_expand.png)
+
+### Example
+
+```dart
+DateTime date = DateTime.now();
+
+SizedBox(
+  width: 240,
+  child: TimePicker(
+    header: 'Arrival time',
+    selected: date,
+    onChanged: (v) => setState(() => date = v),
+  ),
+),
+```
+
+The code above produces the following:
+
+![Time Picker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/time-picker-closed.png)
 
 ## Progress Bar and Progress Ring
 

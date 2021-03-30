@@ -14,6 +14,8 @@ class _FormsState extends State<Forms> {
   final values = ['Blue', 'Green', 'Yellow', 'Red'];
   String? comboBoxValue;
 
+  DateTime date = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,25 +72,47 @@ class _FormsState extends State<Forms> {
           ),
         ),
         SizedBox(height: 10),
-        SizedBox(
-          width: 200,
-          child: ComboBox<String>(
-            header: 'Colors',
-            placeholder: 'Selected list item',
-            isExpanded: true,
-            items: values
-                .map((e) => ComboboxMenuItem<String>(
-                      value: e,
-                      child: Text(e),
-                    ))
-                .toList(),
-            value: comboBoxValue,
-            onChanged: (value) {
-              print(value);
-              if (value != null) setState(() => comboBoxValue = value);
-            },
+        Wrap(children: [
+          SizedBox(
+            width: 200,
+            child: ComboBox<String>(
+              header: 'Colors',
+              placeholder: 'Selected list item',
+              isExpanded: true,
+              items: values
+                  .map((e) => ComboboxMenuItem<String>(
+                        value: e,
+                        child: Text(e),
+                      ))
+                  .toList(),
+              value: comboBoxValue,
+              onChanged: (value) {
+                print(value);
+                if (value != null) setState(() => comboBoxValue = value);
+              },
+            ),
           ),
-        ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 295,
+            child: DatePicker(
+              popupHeight: kOneLineTileHeight * 6,
+              header: 'Date of birth',
+              selected: date,
+              onChanged: (v) => setState(() => date = v),
+            ),
+          ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 240,
+            child: TimePicker(
+              popupHeight: kOneLineTileHeight * 6,
+              header: 'Arrival time',
+              selected: date,
+              onChanged: (v) => setState(() => date = v),
+            ),
+          ),
+        ]),
       ],
     );
   }

@@ -49,31 +49,36 @@ class ListTile extends StatelessWidget {
               ? kTwoLineTileHeight
               : kOneLineTileHeight,
       padding: contentPadding ??
-          EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: 6.0,
+          ),
       child: Row(children: [
         if (leading != null)
           Padding(
             padding: EdgeInsets.only(right: 14),
             child: leading,
           ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (title != null)
-              DefaultTextStyle(
-                child: title!,
-                style: (style.typography?.base ?? TextStyle()).copyWith(
-                  fontSize: 16,
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (title != null)
+                DefaultTextStyle(
+                  child: title!,
+                  style: (style.typography?.base ?? TextStyle()).copyWith(
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-            if (subtitle != null)
-              DefaultTextStyle(
-                child: subtitle!,
-                style: style.typography?.body ?? TextStyle(),
-              ),
-          ],
+              if (subtitle != null)
+                DefaultTextStyle(
+                  child: subtitle!,
+                  style: style.typography?.body ?? TextStyle(),
+                ),
+            ],
+          ),
         )
       ]),
     );
@@ -116,6 +121,7 @@ class TappableListTile extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
     return HoverButton(
+      cursor: buttonCursor,
       onPressed: onTap,
       focusNode: focusNode,
       autofocus: autofocus,

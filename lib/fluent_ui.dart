@@ -11,7 +11,9 @@ export 'package:flutter/material.dart'
         FlutterLogo,
         CircleAvatar,
         kElevationToShadow,
-        Scrollbar;
+        Scrollbar,
+        DateTimeRange,
+        HourFormat;
 
 export 'src/app.dart';
 export 'src/utils.dart';
@@ -35,8 +37,7 @@ export 'src/controls/navigation/pivot.dart';
 export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
 export 'src/controls/navigation/tab_view.dart';
 
-export 'src/controls/pickers/calendar_view.dart';
-
+export 'src/controls/surfaces/calendar_view.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/info_bar.dart';
 export 'src/controls/surfaces/list_tile.dart';
@@ -48,6 +49,8 @@ export 'src/controls/utils/divider.dart';
 
 export 'src/controls/form/text_box.dart';
 export 'src/controls/form/combo_box.dart';
+export 'src/controls/form/pickers/date_picker.dart';
+export 'src/controls/form/pickers/time_picker.dart';
 
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';

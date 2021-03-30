@@ -47,8 +47,20 @@ class _HoverButtonState extends State<HoverButton> {
 
   @override
   void initState() {
-    node = widget.focusNode ?? FocusNode();
+    node = widget.focusNode ?? _createFocusNode();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(HoverButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.focusNode != oldWidget.focusNode) {
+      node = widget.focusNode ?? _createFocusNode();
+    }
+  }
+
+  FocusNode _createFocusNode() {
+    return FocusNode(debugLabel: '${widget.runtimeType}');
   }
 
   @override
@@ -93,6 +105,7 @@ class _HoverButtonState extends State<HoverButton> {
       focusNode: node,
       autofocus: widget.autofocus,
       child: MouseRegion(
+        opaque: false,
         cursor: widget.cursor?.call(state) ?? buttonCursor(state),
         onEnter: (_) => update(() => _hovering = true),
         onHover: (_) => update(() => _hovering = true),

@@ -43,6 +43,7 @@ class Style with Diagnosticable {
   final Color? inactiveBackgroundColor;
   final Color? disabledColor;
 
+  final Duration? fasterAnimationDuration;
   final Duration? fastAnimationDuration;
   final Duration? mediumAnimationDuration;
   final Duration? slowAnimationDuration;
@@ -77,6 +78,7 @@ class Style with Diagnosticable {
     this.inactiveColor,
     this.inactiveBackgroundColor,
     this.disabledColor,
+    this.fasterAnimationDuration,
     this.fastAnimationDuration,
     this.mediumAnimationDuration,
     this.slowAnimationDuration,
@@ -104,6 +106,7 @@ class Style with Diagnosticable {
   Style build() {
     final brightness = this.brightness ?? Brightness.light;
     final defaultStyle = Style(
+      fasterAnimationDuration: Duration(milliseconds: 90),
       fastAnimationDuration: Duration(milliseconds: 150),
       mediumAnimationDuration: Duration(milliseconds: 300),
       slowAnimationDuration: Duration(milliseconds: 500),
@@ -206,6 +209,7 @@ class Style with Diagnosticable {
       animationCurve: other.animationCurve ?? animationCurve,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
+      fasterAnimationDuration: other.fastAnimationDuration ?? fasterAnimationDuration,
       fastAnimationDuration:
           other.fastAnimationDuration ?? fastAnimationDuration,
       mediumAnimationDuration:
@@ -247,6 +251,10 @@ class Style with Diagnosticable {
     properties.add(DiagnosticsProperty<Duration>(
       'fastAnimationDuration',
       fastAnimationDuration,
+    ));
+    properties.add(DiagnosticsProperty<Duration>(
+      'fasterAnimationDuration',
+      fasterAnimationDuration,
     ));
     properties.add(
       DiagnosticsProperty<Curve>('animationCurve', animationCurve),
