@@ -74,7 +74,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 
 ## Motivation
 
-Since flutter has Windows support (currently in stable under an early release flag as of 11/03/2021), it's necessary to have support to its UI guidelines to build apps with fidelity, since it has support for Material and Cupertino.
+Since flutter has Windows support (currently in stable under an early release flag as of 30/03/2021), it's necessary to have support to its UI guidelines to build apps with fidelity, since it has support for Material and Cupertino.
 See [this](https://github.com/flutter/flutter/issues/46481) for more info on the offical fluent ui support
 
 See also:
