@@ -209,7 +209,8 @@ class Style with Diagnosticable {
       animationCurve: other.animationCurve ?? animationCurve,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
-      fasterAnimationDuration: other.fastAnimationDuration ?? fasterAnimationDuration,
+      fasterAnimationDuration:
+          other.fastAnimationDuration ?? fasterAnimationDuration,
       fastAnimationDuration:
           other.fastAnimationDuration ?? fastAnimationDuration,
       mediumAnimationDuration:
