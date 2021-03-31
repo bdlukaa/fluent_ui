@@ -39,3 +39,8 @@ flutter:
     - family: FluentSystemIconsP7
       fonts:
         - asset: fonts/FluentSystemIconsP7.ttf
+  
+  plugin:
+    platforms:
+      windows:
+        pluginClass: FluentUiPlugin
