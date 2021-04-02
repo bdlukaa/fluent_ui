@@ -1,5 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:provider/provider.dart';
+import 'package:system_theme/system_theme.dart';
 
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
@@ -9,7 +12,22 @@ import 'screens/settings.dart';
 
 import 'theme.dart';
 
-void main() {
+late bool darkMode;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // The platforms the plugin support (01/04/2021 - DD/MM/YYYY):
+  //   - Windows
+  //   - Web
+  //   - Android
+  if (defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.android ||
+      kIsWeb) {
+    darkMode = await SystemTheme.darkMode;
+    await SystemTheme.accentInstance.load();
+  } else {
+    darkMode = true;
+  }
   runApp(MyApp());
 }
 
@@ -30,6 +48,14 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (_) => MyHomePage(),
           },
+          style: Style(
+            accentColor: SystemTheme.accentInstance.accent,
+            brightness: appTheme.mode == ThemeMode.system
+                ? darkMode
+                    ? Brightness.dark
+                    : Brightness.light
+                : null,
+          ),
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kMinProgressRingIndicatorSize = 36.0;
 const double _kMinProgressBarWidth = 130.0;
@@ -23,6 +24,13 @@ class ProgressBar extends StatefulWidget {
 
   @override
   _ProgressBarState createState() => _ProgressBarState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('value', value, ifNull: 'indeterminate'));
+    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+  }
 }
 
 class _ProgressBarState extends State<ProgressBar>
@@ -223,6 +231,13 @@ class ProgressRing extends StatefulWidget {
 
   @override
   _ProgressRingState createState() => _ProgressRingState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('value', value, ifNull: 'indeterminate'));
+    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+  }
 }
 
 class _ProgressRingState extends State<ProgressRing>

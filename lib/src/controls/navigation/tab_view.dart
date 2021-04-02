@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 class TabView extends StatelessWidget {
@@ -24,6 +25,25 @@ class TabView extends StatelessWidget {
   final void Function()? onNewPressed;
 
   final IconData addIconData;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('currentIndex', currentIndex));
+    properties.add(FlagProperty('showNewButton', value: showNewButton));
+    properties.add(IconDataProperty('addIconData', addIconData));
+    properties.add(ObjectFlagProperty(
+      'onChanged',
+      onChanged,
+      ifNull: 'disabled',
+    ));
+    properties.add(ObjectFlagProperty(
+      'onNewPressed',
+      onNewPressed,
+      ifNull: 'no new button',
+    ));
+    properties.add(IntProperty('tabs', tabs.length));
+  }
 
   @override
   Widget build(BuildContext context) {

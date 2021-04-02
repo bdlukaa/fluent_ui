@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 // This file implements info bar into this library.
 // It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
@@ -33,6 +34,15 @@ class InfoBar extends StatelessWidget {
   final void Function()? onClose;
 
   final bool isLong;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty('isLong', value: isLong, ifFalse: 'short'));
+    properties.add(EnumProperty('severity', severity));
+    properties.add(ObjectFlagProperty.has('onClose', onClose));
+    properties.add(DiagnosticsProperty('style', style, ifNull: 'no style'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +132,7 @@ class InfoBar extends StatelessWidget {
 
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
-class InfoBarStyle {
+class InfoBarStyle with Diagnosticable {
   final InfoBarSeverityCheck<Color?>? color;
   final InfoBarSeverityCheck<IconData>? icon;
   final IconData? closeIcon;
@@ -190,5 +200,18 @@ class InfoBarStyle {
       color: style.color ?? color,
       actionStyle: style.actionStyle ?? actionStyle,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty.has('icon', icon));
+    properties.add(ObjectFlagProperty.has('closeIcon', closeIcon));
+    properties.add(ObjectFlagProperty.has('color', color));
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'actionStyle',
+      actionStyle,
+      ifNull: 'no style',
+    ));
   }
 }

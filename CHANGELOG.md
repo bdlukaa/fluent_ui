@@ -1,5 +1,19 @@
 Date format: DD/MM/YYYY
 
+## [1.5.0] - [31/03/2021]
+
+- Added `Diagnostics` to many widgets
+- **NEW** `AutoSuggestBox`
+- **NEW** `Flyout` and `FlyoutContent`
+- **FIXED** Popup was being shown off-screen.
+
+  **DEVELOPER NOTE** The solution for this was to make it act like a tooltip: only show the popup above or under the `child`. This was a hard choice, but the only viable option that would work on small screens/devices. This also made `Flyout` easier to implement. This should be changed when multi-window support is available.
+
+- **FIXED** `DatePicker` incorrectly changing hour
+- **NEW** `Colors.accentColors`
+- Documentation about [system_theme](https://pub.dev/packages/system_theme)
+- **BREAKING** Removed `Pivot` because it's deprecated
+
 ## [1.4.1] - Pickers Update - [30/03/2021]
 
 - **NEW** `Style.fasterAnimationDuration`

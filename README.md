@@ -38,10 +38,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
-- **TODO** [Accessibility]()
 - [Navigation](#navigation)
   - [Navigation panel](#navigation-panel)
-  - **TODO** [Pivot]()
   - [Tab View](#tab-view)
 - [Widgets](#widgets)
   - [Button](#button)
@@ -52,11 +50,11 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Radio Buttons](#radio-buttons)
   - [Slider](#slider)
   - [TextBox](#textbox)
-  - **TODO** [Auto Suggest Box]()
+  - [Auto Suggest Box](#auto-suggest-box)
   - [Combo Box](#combo-box)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
-  - **TODO** Flyout
+  - [Flyout](#flyout)
   - **TODO** Teaching tip
   - [Acrylic](#acrylic)
   - [InfoBar](#infobar)
@@ -81,26 +79,6 @@ See also:
 
 - [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
-
-### Roadmap
-
-Currently, we've only done the desktop part of the library, so you can import the library as one itself:
-
-```dart
-import 'package:fluent_ui/fluent_ui';
-```
-
-Note: this does not mean you can't use this library anywhere else. You can use it wherever you want
-
-Futurely, once the desktop part of this library gets mature, web and mobile will also be supported. See also:
-
-- [Fluent UI Windows](https://docs.microsoft.com/en-us/windows/uwp/design/)
-- [Fluent UI Web](https://developer.microsoft.com/pt-br/fluentui#/controls/web)
-- [Fluent UI iOS](https://developer.microsoft.com/pt-br/fluentui#/controls/ios)
-- [Fluent UI Android](https://developer.microsoft.com/pt-br/fluentui#/controls/android)
-- [Fluent UI macOS](https://developer.microsoft.com/pt-br/fluentui#/controls/mac)
-
-Also, futurely there will be a way to get the current device accent color. For more info, see [accent color](#accent-color)
 
 ---
 
@@ -176,7 +154,9 @@ Avaiable colors:
 
 ### Accent color
 
-Common controls use an accent color to convey state information. By default, the accent color is `Colors.blue`. However, you can also customize your app's accent color to reflect your brand:
+Common controls use an accent color to convey state information. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/color#accent-color).
+
+By default, the accent color is `Colors.blue`. However, you can also customize your app's accent color to reflect your brand:
 
 ```dart
 Style(
@@ -184,7 +164,15 @@ Style(
 )
 ```
 
-[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/color#accent-color)
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (04/01/2021) Android, Web and Windows.
+
+```dart
+import 'package:system_theme/system_theme.dart';
+
+Style(
+  accentColor: SystemTheme.accentInstance.accent,
+)
+```
 
 ## Brightness
 
@@ -648,6 +636,70 @@ TextBox(
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-clear-all.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-multi-line.png)
 
+## Auto Suggest Box
+
+Use an AutoSuggestBox to provide a list of suggestions for a user to select from as they type. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box)
+
+### Example
+
+```dart
+final autoSuggestBox = TextEditingController();
+
+AutoSuggestBox<String>(
+  controller: autoSuggestBox,
+  items: [
+    'Blue',
+    'Green',
+    'Red',
+    'Yellow',
+    'Grey',
+  ],
+  onSelected: (text) {
+    print(text);
+  },
+  textBoxBuilder: (context, controller, focusNode, key) {
+    const BorderSide _kDefaultRoundedBorderSide = BorderSide(
+      style: BorderStyle.solid,
+      width: 0.8,
+    );
+    return TextBox(
+      key: key,
+      controller: controller,
+      focusNode: focusNode,
+      suffixMode: OverlayVisibilityMode.editing,
+      suffix: IconButton(
+        icon: Icon(Icons.pane_close),
+        onPressed: () {
+          controller.clear();
+          focusNode.unfocus();
+        },
+      ),
+      placeholder: 'Type a color',
+      decoration: BoxDecoration(
+        border: Border(
+          top: _kDefaultRoundedBorderSide,
+          bottom: _kDefaultRoundedBorderSide,
+          left: _kDefaultRoundedBorderSide,
+          right: _kDefaultRoundedBorderSide,
+        ),
+        borderRadius: focusNode.hasFocus
+            ? BorderRadius.vertical(top: Radius.circular(3.0))
+            : BorderRadius.all(Radius.circular(3.0)),
+      ),
+    );
+  },
+)
+```
+
+The code above produces the following:
+
+![Auto suggest box example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_expanded01.png)
+
+### Screenshots
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/control-examples/auto-suggest-box-groove.png)
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_noresults.png)
+
 ## Combo Box
 
 Use a combo box to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. When the combo box is closed, it either displays the current selection or is empty if there is no selected item. When the user expands the combo box, it displays the list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)
@@ -760,7 +812,45 @@ showDialog(
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button_default.png)
 
-[Navigation](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/master-details):
+## Flyout
+
+A flyout is a light dismiss container that can show arbitrary UI as its content. Flyouts can contain other flyouts or context menus to create a nested experience.
+
+### Example
+
+```dart
+final flyoutController = FlyoutController();
+
+Flyout(
+  controller: flyoutController,
+  contentWidth: 450,
+  content: FlyoutContent(
+    child: Text(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+  ),
+  child: Button(
+    text: Text('Open flyout'),
+    onPressed: () {
+      flyoutController.open = true;
+    },
+  ),
+);
+
+@override
+void dispose() {
+  flyoutController.dispose();
+  super.dispose();
+}
+```
+
+The code above produces the following:
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-wrapping-text.png)
+
+### Screenshots
+
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-nested.png)\
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-smoke.png)
 
 ## Acrylic
 
@@ -1012,9 +1102,11 @@ The list of equivalents between this library and `flutter/material.dart`
 | Switch                    | ToggleSwitch    |
 | TextField                 | TextBox         |
 | DropdownButton            | ComboBox        |
+| -                         | AutoSuggestBox  |
 | AlertDialog               | ContentDialog   |
 | MaterialBanner            | InfoBar         |
 | Tooltip                   | Tooltip         |
+| -                         | Flyout          |
 | Drawer                    | NavigationPanel |
 | Divider                   | Divider         |
 | VerticalDivider           | Divider         |
@@ -1022,6 +1114,8 @@ The list of equivalents between this library and `flutter/material.dart`
 | ListTile                  | ListTile        |
 | LinearProgressIndicator   | ProgressBar     |
 | CircularProgressIndicator | ProgressRing    |
+| \_DatePickerDialog        | DatePicker      |
+| \_TimePickerDialog        | TimePicker      |
 
 ## Contribution
 

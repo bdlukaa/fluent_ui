@@ -13,6 +13,10 @@ const kPopupHeight = kOneLineTileHeight * 10;
 Decoration kPickerBackgroundDecoration(BuildContext context) => BoxDecoration(
       color: context.theme.navigationPanelBackgroundColor,
       borderRadius: BorderRadius.circular(4.0),
+      border: Border.all(
+        color: context.theme.scaffoldBackgroundColor ?? Colors.transparent,
+        width: 0.6,
+      ),
     );
 
 TextStyle? kPickerPopupTextStyle(BuildContext context) {
@@ -74,6 +78,14 @@ class YesNoPickerControl extends StatelessWidget {
             child: Button(
               text: Icon(Icons.checkmark),
               onPressed: onChanged,
+              style: ButtonStyle(
+                decoration: (state) => BoxDecoration(
+                  color: uncheckedInputColor(context.theme, state),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(4.0),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -89,6 +101,14 @@ class YesNoPickerControl extends StatelessWidget {
                 ),
               ),
               onPressed: onCancel,
+              style: ButtonStyle(
+                decoration: (state) => BoxDecoration(
+                  color: uncheckedInputColor(context.theme, state),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(4.0),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

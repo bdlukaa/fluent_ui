@@ -60,7 +60,6 @@ class Style with Diagnosticable {
   final DividerStyle? dividerStyle;
   final IconStyle? iconStyle;
   final InfoBarStyle? infoBarStyle;
-  final PivotItemStyle? pivotItemStyle;
   final RadioButtonStyle? radioButtonStyle;
   final SliderStyle? sliderStyle;
   final SplitButtonStyle? splitButtonStyle;
@@ -90,7 +89,6 @@ class Style with Diagnosticable {
     this.iconButtonStyle,
     this.checkboxStyle,
     this.toggleSwitchStyle,
-    this.pivotItemStyle,
     this.iconStyle,
     this.splitButtonStyle,
     this.dialogStyle,
@@ -156,8 +154,6 @@ class Style with Diagnosticable {
           .copyWith(toggleButtonStyle),
       toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
           .copyWith(toggleSwitchStyle),
-      pivotItemStyle:
-          PivotItemStyle.defaultTheme(brightness).copyWith(pivotItemStyle),
       iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
       splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
           .copyWith(splitButtonStyle),
@@ -197,7 +193,6 @@ class Style with Diagnosticable {
       iconButtonStyle: other.iconButtonStyle ?? iconButtonStyle,
       iconStyle: other.iconStyle ?? iconStyle,
       inactiveColor: other.inactiveColor ?? inactiveColor,
-      pivotItemStyle: other.pivotItemStyle ?? pivotItemStyle,
       radioButtonStyle: other.radioButtonStyle ?? radioButtonStyle,
       scaffoldBackgroundColor:
           other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
@@ -209,7 +204,8 @@ class Style with Diagnosticable {
       animationCurve: other.animationCurve ?? animationCurve,
       disabledColor: other.disabledColor ?? disabledColor,
       typography: other.typography ?? typography,
-      fasterAnimationDuration: other.fastAnimationDuration ?? fasterAnimationDuration,
+      fasterAnimationDuration:
+          other.fastAnimationDuration ?? fasterAnimationDuration,
       fastAnimationDuration:
           other.fastAnimationDuration ?? fastAnimationDuration,
       mediumAnimationDuration:

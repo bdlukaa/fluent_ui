@@ -15,6 +15,8 @@ class Acrylic extends StatelessWidget {
     this.height,
     this.padding,
     this.margin,
+    this.shadowColor,
+    this.elevation,
   }) : super(key: key);
 
   final Color? color;
@@ -31,6 +33,9 @@ class Acrylic extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
+  final Color? shadowColor;
+  final double? elevation;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -42,6 +47,8 @@ class Acrylic extends StatelessWidget {
     properties.add(DoubleProperty('height', height));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+    properties.add(ColorProperty('shadowColor', shadowColor));
+    properties.add(DoubleProperty('elevation', elevation));
   }
 
   @override
@@ -49,7 +56,7 @@ class Acrylic extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
     final color = this.color ?? style.navigationPanelBackgroundColor;
-    return AnimatedContainer(
+    Widget result = AnimatedContainer(
       duration: style.fastAnimationDuration ?? Duration.zero,
       curve: style.animationCurve ?? standartCurve,
       padding: margin ?? EdgeInsets.zero,
@@ -69,5 +76,13 @@ class Acrylic extends StatelessWidget {
         ),
       ),
     );
+    if (elevation != null && elevation != 0) {
+      result = PhysicalModel(
+        color: shadowColor ?? Colors.black,
+        elevation: elevation!,
+        child: result,
+      );
+    }
+    return result;
   }
 }

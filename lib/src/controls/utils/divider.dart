@@ -15,6 +15,14 @@ class Divider extends StatelessWidget {
   final double? size;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('size', size, ifNull: 'indeterminate'));
+    properties.add(DiagnosticsProperty('style', style));
+    properties.add(EnumProperty('direction', direction));
+  }
+
+  @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.dividerStyle?.copyWith(this.style);

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
 class HoverButton extends StatefulWidget {
-  HoverButton({
+  const HoverButton({
     Key? key,
     this.cursor,
     this.onPressed,

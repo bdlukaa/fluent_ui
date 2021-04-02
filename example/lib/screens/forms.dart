@@ -8,6 +8,8 @@ class Forms extends StatefulWidget {
 }
 
 class _FormsState extends State<Forms> {
+  final autoSuggestBox = TextEditingController();
+
   final _clearController = TextEditingController();
   bool _showPassword = false;
 
@@ -26,15 +28,68 @@ class _FormsState extends State<Forms> {
           placeholder: 'Type your email here :)',
         ),
         SizedBox(height: 20),
-        TextBox(
-          readOnly: true,
-          placeholder: 'Read only text box',
-        ),
-        SizedBox(height: 20),
-        TextBox(
-          enabled: false,
-          placeholder: 'Disabled text box',
-        ),
+        Row(children: [
+          Expanded(
+            child: TextBox(
+              readOnly: true,
+              placeholder: 'Read only text box',
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: TextBox(
+              enabled: false,
+              placeholder: 'Disabled text box',
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: AutoSuggestBox<String>(
+              controller: autoSuggestBox,
+              items: [
+                'Blue',
+                'Green',
+                'Red',
+                'Yellow',
+                'Grey',
+              ],
+              onSelected: (text) {
+                print(text);
+              },
+              textBoxBuilder: (context, controller, focusNode, key) {
+                const BorderSide _kDefaultRoundedBorderSide = BorderSide(
+                  style: BorderStyle.solid,
+                  width: 0.8,
+                );
+                return TextBox(
+                  key: key,
+                  controller: controller,
+                  focusNode: focusNode,
+                  suffixMode: OverlayVisibilityMode.editing,
+                  suffix: IconButton(
+                    icon: Icon(Icons.pane_close),
+                    onPressed: () {
+                      controller.clear();
+                      focusNode.unfocus();
+                    },
+                  ),
+                  placeholder: 'Type a color',
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: _kDefaultRoundedBorderSide,
+                      bottom: _kDefaultRoundedBorderSide,
+                      left: _kDefaultRoundedBorderSide,
+                      right: _kDefaultRoundedBorderSide,
+                    ),
+                    borderRadius: focusNode.hasFocus
+                        ? BorderRadius.vertical(top: Radius.circular(3.0))
+                        : BorderRadius.all(Radius.circular(3.0)),
+                  ),
+                );
+              },
+            ),
+          ),
+        ]),
         SizedBox(height: 20),
         TextBox(
           maxLines: null,
@@ -53,11 +108,11 @@ class _FormsState extends State<Forms> {
           ),
           placeholder: 'Text box with clear button',
         ),
+        SizedBox(height: 20),
         TextBox(
           header: 'Password',
           placeholder: 'Type your placeholder here',
           obscureText: !_showPassword,
-          obscuringCharacter: '#',
           maxLines: 1,
           suffixMode: OverlayVisibilityMode.editing,
           suffix: IconButton(
@@ -71,7 +126,7 @@ class _FormsState extends State<Forms> {
             onPressed: () {},
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
         Wrap(children: [
           SizedBox(
             width: 200,
@@ -96,7 +151,7 @@ class _FormsState extends State<Forms> {
           SizedBox(
             width: 295,
             child: DatePicker(
-              popupHeight: kOneLineTileHeight * 6,
+              // popupHeight: kOneLineTileHeight * 6,
               header: 'Date of birth',
               selected: date,
               onChanged: (v) => setState(() => date = v),
@@ -106,13 +161,14 @@ class _FormsState extends State<Forms> {
           SizedBox(
             width: 240,
             child: TimePicker(
-              popupHeight: kOneLineTileHeight * 6,
+              // popupHeight: kOneLineTileHeight * 5,
               header: 'Arrival time',
               selected: date,
               onChanged: (v) => setState(() => date = v),
             ),
           ),
         ]),
+        SizedBox(height: 20),
       ],
     );
   }

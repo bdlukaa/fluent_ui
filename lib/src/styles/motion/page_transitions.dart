@@ -5,10 +5,14 @@ class EntrancePageTransition extends StatelessWidget {
     Key? key,
     required this.child,
     required this.animation,
+    this.vertical = true,
+    this.reverse = false,
   }) : super(key: key);
 
   final Widget child;
   final Animation<double> animation;
+  final bool vertical;
+  final bool reverse;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,9 @@ class EntrancePageTransition extends StatelessWidget {
         opacity: animation,
       ),
       position: Tween<Offset>(
-        begin: Offset(0, animation.value - 1),
+        begin: vertical
+            ? Offset(0, animation.value + (reverse ? -1 : 1))
+            : Offset(animation.value + (reverse ? -1 : 1), 0),
         end: Offset.zero,
       ).animate(animation),
     );

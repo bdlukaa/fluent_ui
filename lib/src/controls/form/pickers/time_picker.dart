@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/src/utils/popup.dart';
 
@@ -46,8 +47,25 @@ class TimePicker extends StatefulWidget {
   final double popupHeight;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
+
   @override
   _TimePickerState createState() => _TimePickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('selected', selected));
+    properties.add(EnumProperty<HourFormat>('hourFormat', hourFormat));
+    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
+    properties.add(DiagnosticsProperty('cursor', cursor));
+    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
+    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(StringProperty('hourPlaceholder', hourPlaceholder));
+    properties.add(StringProperty('minutePlaceholder', minutePlaceholder));
+    properties.add(StringProperty('amText', amText));
+    properties.add(StringProperty('pmText', pmText));
+    properties.add(DoubleProperty('popupHeight', popupHeight));
+  }
 }
 
 class _TimePickerState extends State<TimePicker> {
@@ -255,6 +273,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final divider = Divider(
       direction: Axis.vertical,
       style: DividerStyle(margin: (_) => EdgeInsets.zero),
@@ -262,8 +281,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     final duration = context.theme.fasterAnimationDuration ?? Duration.zero;
     final curve = context.theme.animationCurve ?? Curves.linear;
     final hoursAmount = widget.use24Format ? 24 : 12;
-    return Container(
-      constraints: BoxConstraints(maxHeight: widget.height),
+    return Acrylic(
+      height: widget.height,
+      decoration: kPickerBackgroundDecoration(context),
       child: Column(children: [
         Expanded(
           child: Stack(children: [

@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  system_theme
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

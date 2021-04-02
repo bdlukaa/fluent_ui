@@ -12,6 +12,14 @@ class _OthersState extends State<Others> {
 
   int tabs = 3;
 
+  final flyoutController = FlyoutController();
+
+  @override
+  void dispose() { 
+    flyoutController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -19,13 +27,31 @@ class _OthersState extends State<Others> {
         margin: EdgeInsets.only(bottom: 10),
         child: Column(children: [
           Text('Surfaces', style: context.theme.typography?.subtitle),
-          Tooltip(
-            message: 'This is a tooltip',
-            child: Button(
-              text: Text('Button with tooltip'),
-              onPressed: () {},
+          Wrap(spacing: 10, runSpacing: 10, children: [
+            Tooltip(
+              message: 'This is a tooltip',
+              child: Button(
+                text: Text('Button with tooltip'),
+                onPressed: () {
+                  print('pressed button with tooltip');
+                },
+              ),
             ),
-          ),
+            Flyout(
+              controller: flyoutController,
+              contentWidth: 450,
+              content: FlyoutContent(
+                child: Text(
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+              ),
+              child: Button(
+                text: Text('Open flyout'),
+                onPressed: () {
+                  flyoutController.open = true;
+                },
+              ),
+            ),
+          ]),
         ]),
       ),
       ...List.generate(InfoBarSeverity.values.length, (index) {
@@ -67,11 +93,14 @@ class _OthersState extends State<Others> {
           child: ProgressRing(value: 85),
         ),
       ]),
-      SizedBox(
-        height: 600,
+      Container(
+        height: 250,
+        decoration: BoxDecoration(
+          border: Border.all(color: context.theme.accentColor!, width: 1.0),
+        ),
         child: TabView(
           currentIndex: currentIndex,
-          onChanged: (index) => setState(() => currentIndex = index),
+          onChanged: _handleTabChanged,
           onNewPressed: () {
             setState(() => tabs++);
           },
@@ -93,12 +122,14 @@ class _OthersState extends State<Others> {
           }),
           bodies: List.generate(
             tabs,
-            (index) => Container(
-              color: index.isEven ? Colors.white : Colors.black,
-            ),
+            (index) => Container(color: Colors.accentColors[index]),
           ),
         ),
       ),
     ]);
+  }
+
+  void _handleTabChanged(int index) {
+    setState(() => currentIndex = index);
   }
 }

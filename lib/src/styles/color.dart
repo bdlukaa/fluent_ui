@@ -89,6 +89,18 @@ class Colors {
     'normal': Color(0XFF107c10),
     'light': Color(0XFFbad80a),
   });
+
+  static final List<ShadedColor> accentColors = [
+    yellow,
+    orange,
+    red,
+    magenta,
+    purple,
+    blue,
+    teal,
+    green,
+  ];
+
 }
 
 class ShadedColor extends ColorSwatch<int> {

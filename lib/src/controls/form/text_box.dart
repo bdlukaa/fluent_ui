@@ -557,7 +557,7 @@ class _TextBoxState extends State<TextBox>
       child: editableText,
       builder: (BuildContext context, TextEditingValue text, Widget? child) {
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             if (_showPrefixWidget(text)) widget.prefix!,
             Expanded(
@@ -765,6 +765,7 @@ class _TextBoxState extends State<TextBox>
                   iconStyle: (_) => context.theme.iconStyle?.copyWith(
                     IconStyle(size: 18),
                   ),
+                  margin: EdgeInsets.zero,
                 ),
               )
               .copyWith(widget.iconButtonStyle),

@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:fluent_ui/src/utils/popup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
@@ -54,6 +55,22 @@ class DatePicker extends StatefulWidget {
 
   @override
   _DatePickerState createState() => _DatePickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('selected', selected));
+    properties.add(FlagProperty('showMonth', value: showMonth));
+    properties.add(FlagProperty('showDay', value: showDay));
+    properties.add(FlagProperty('showYear', value: showYear));
+    properties.add(IntProperty('startYear', startYear ?? selected.year - 100));
+    properties.add(IntProperty('endYear', endYear ?? selected.year + 25));
+    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
+    properties.add(DiagnosticsProperty('cursor', cursor));
+    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
+    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(DoubleProperty('popupHeight', popupHeight));
+  }
 }
 
 class _DatePickerState extends State<DatePicker> {
@@ -275,12 +292,14 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final divider = Divider(
       direction: Axis.vertical,
       style: DividerStyle(margin: (_) => EdgeInsets.zero),
     );
-    return Container(
-      constraints: BoxConstraints(maxHeight: widget.height),
+    return Acrylic(
+      height: widget.height,
+      decoration: kPickerBackgroundDecoration(context),
       child: Column(children: [
         Expanded(
           child: Stack(children: [
@@ -352,6 +371,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                             widget.date.year,
                             month,
                             day,
+                            widget.date.hour,
+                            widget.date.minute,
                             widget.date.second,
                             widget.date.millisecond,
                             widget.date.microsecond,
@@ -409,6 +430,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                             widget.date.year,
                             widget.date.month,
                             index + 1,
+                            widget.date.hour,
+                            widget.date.minute,
                             widget.date.second,
                             widget.date.millisecond,
                             widget.date.microsecond,
@@ -462,6 +485,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                             widget.startYear + index + 1,
                             widget.date.month,
                             widget.date.day,
+                            widget.date.hour,
+                            widget.date.minute,
                             widget.date.second,
                             widget.date.millisecond,
                             widget.date.microsecond,
