@@ -12,7 +12,6 @@ class PopUp<T> extends StatefulWidget {
     required this.child,
     required this.content,
     required this.contentHeight,
-    this.backgroundColor,
     this.contentWidth,
   }) : super(key: key);
 
@@ -20,8 +19,6 @@ class PopUp<T> extends StatefulWidget {
   final WidgetBuilder content;
   final double contentHeight;
   final double? contentWidth;
-
-  final Color? backgroundColor;
 
   @override
   PopUpState<T> createState() => PopUpState<T>();

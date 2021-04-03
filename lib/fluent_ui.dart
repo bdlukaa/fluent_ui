@@ -13,7 +13,8 @@ export 'package:flutter/material.dart'
         kElevationToShadow,
         Scrollbar,
         DateTimeRange,
-        HourFormat;
+        HourFormat,
+        Icons;
 
 export 'src/app.dart';
 export 'src/utils.dart';
@@ -56,7 +57,7 @@ export 'src/controls/form/pickers/time_picker.dart';
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';
 export 'src/styles/color.dart';
-export 'src/styles/icons.dart';
+// export 'src/styles/icons.dart';
 export 'src/styles/theme.dart';
 export 'src/styles/typography.dart';
 

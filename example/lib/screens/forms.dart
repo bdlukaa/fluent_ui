@@ -67,7 +67,7 @@ class _FormsState extends State<Forms> {
                   focusNode: focusNode,
                   suffixMode: OverlayVisibilityMode.editing,
                   suffix: IconButton(
-                    icon: Icon(Icons.pane_close),
+                    icon: Icon(Icons.close),
                     onPressed: () {
                       controller.clear();
                       focusNode.unfocus();
@@ -97,7 +97,7 @@ class _FormsState extends State<Forms> {
           suffixMode: OverlayVisibilityMode.always,
           minHeight: 100,
           suffix: IconButton(
-            icon: Icon(Icons.share_close_tray_filled),
+            icon: Icon(Icons.close),
             style: IconButtonStyle(
               // padding: EdgeInsets.zero,
               margin: EdgeInsets.zero,
@@ -116,7 +116,9 @@ class _FormsState extends State<Forms> {
           maxLines: 1,
           suffixMode: OverlayVisibilityMode.editing,
           suffix: IconButton(
-            icon: Icon(!_showPassword ? Icons.eye_show : Icons.eye_hide),
+            icon: Icon(
+              !_showPassword ? Icons.visibility : Icons.visibility_off,
+            ),
             onPressed: () => setState(() => _showPassword = !_showPassword),
             style: IconButtonStyle(margin: EdgeInsets.zero),
           ),

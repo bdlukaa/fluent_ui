@@ -883,7 +883,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
       );
     }
 
-    const Icon defaultIcon = Icon(Icons.chevron_down);
+    const Icon defaultIcon = Icon(Icons.keyboard_arrow_down);
 
     Widget result = DefaultTextStyle(
       maxLines: 1,

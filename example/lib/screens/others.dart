@@ -15,7 +15,7 @@ class _OthersState extends State<Others> {
   final flyoutController = FlyoutController();
 
   @override
-  void dispose() { 
+  void dispose() {
     flyoutController.dispose();
     super.dispose();
   }
@@ -110,7 +110,7 @@ class _OthersState extends State<Others> {
               closeIcon: Tooltip(
                 message: 'Close tab',
                 child: IconButton(
-                  icon: Icon(Icons.pane_close),
+                  icon: Icon(Icons.close),
                   onPressed: () {
                     setState(() => tabs--);
                     if (currentIndex > tabs - 1) currentIndex--;

@@ -76,7 +76,7 @@ class YesNoPickerControl extends StatelessWidget {
           child: SizedBox(
             height: kOneLineTileHeight,
             child: Button(
-              text: Icon(Icons.checkmark),
+              text: Icon(Icons.check),
               onPressed: onChanged,
               style: ButtonStyle(
                 decoration: (state) => BoxDecoration(
@@ -93,13 +93,7 @@ class YesNoPickerControl extends StatelessWidget {
           child: SizedBox(
             height: kOneLineTileHeight,
             child: Button(
-              text: Text(
-                'x',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              text: Icon(Icons.close),
               onPressed: onCancel,
               style: ButtonStyle(
                 decoration: (state) => BoxDecoration(
@@ -154,7 +148,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               left: 0,
               right: 0,
               child: Button(
-                text: Icon(Icons.chevron_up, size: 14),
+                text: Icon(Icons.keyboard_arrow_down, size: 14),
                 onPressed: onBackward,
                 style: style,
               ),
@@ -165,7 +159,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               left: 0,
               right: 0,
               child: Button(
-                text: Icon(Icons.chevron_down, size: 14),
+                text: Icon(Icons.keyboard_arrow_down, size: 14),
                 onPressed: onForward,
                 style: style,
               ),

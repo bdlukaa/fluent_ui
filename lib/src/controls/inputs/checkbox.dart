@@ -152,7 +152,7 @@ class CheckboxStyle with Diagnosticable {
       },
       thirdstateIconColor: (_) => Colors.transparent,
       margin: EdgeInsets.all(4),
-      icon: Icons.checkmark,
+      icon: Icons.check,
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
     );

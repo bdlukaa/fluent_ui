@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Scaffold extends StatelessWidget {
   const Scaffold({
@@ -20,6 +21,17 @@ class Scaffold extends StatelessWidget {
 
   /// Wheter the body expands. Set to false
   final bool expandBody;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(FlagProperty(
+      'expandBody',
+      value: expandBody,
+      ifFalse: 'shrinkBody',
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {

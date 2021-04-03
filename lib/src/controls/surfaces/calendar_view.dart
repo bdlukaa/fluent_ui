@@ -60,13 +60,13 @@ class CalendarView extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.chevron_up),
+                icon: Icon(Icons.keyboard_arrow_up),
                 onPressed: () {
                   onChanged?.call(currentDate.add(Duration(days: 30)));
                 },
               ),
               IconButton(
-                icon: Icon(Icons.chevron_down),
+                icon: Icon(Icons.keyboard_arrow_down),
                 onPressed: () {
                   onChanged?.call(currentDate.subtract(Duration(days: 30)));
                 },

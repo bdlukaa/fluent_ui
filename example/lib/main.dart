@@ -7,7 +7,6 @@ import 'package:system_theme/system_theme.dart';
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
 import 'screens/others.dart';
-import 'screens/pickers.dart';
 import 'screens/settings.dart';
 
 import 'theme.dart';
@@ -79,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
-          icon: Icon(Icons.navigation),
+          icon: Icon(Icons.dehaze),
           label: Text('Showcase'),
         ),
         currentIndex: index,
@@ -88,37 +87,32 @@ class _MyHomePageState extends State<MyHomePage> {
             header: Text('Cool Navigation Panel Header'),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.checkbox_checked),
+            icon: Icon(Icons.input),
             label: Text('Inputs'),
             onTapped: () => setState(() => index = 0),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.text_align_center_filled),
+            icon: Icon(Icons.format_align_center),
             label: Text('Forms'),
             onTapped: () => setState(() => index = 1),
           ),
           NavigationPanelTileSeparator(),
           NavigationPanelItem(
-            icon: Icon(Icons.time_picker),
-            label: Text('Pickers'),
-            onTapped: () => setState(() => index = 2),
-          ),
-          NavigationPanelItem(
-            icon: Icon(Icons.none),
+            icon: Icon(Icons.miscellaneous_services),
             label: Text('Others'),
-            onTapped: () => setState(() => index = 3),
+            onTapped: () => setState(() => index = 2),
           ),
         ],
         bottom: NavigationPanelItem(
+          // selected: index == 3,
           icon: Icon(Icons.settings),
           label: Text('Settings'),
-          onTapped: () => setState(() => index = 4),
+          onTapped: () => setState(() => index = 3),
         ),
       ),
       body: NavigationPanelBody(index: index, children: [
         _Panel(title: 'Inputs showcase', child: InputsPage()),
         _Panel(title: 'Forms showcase', child: Forms()),
-        _Panel(title: 'Pickers', child: Pickers()),
         _Panel(title: 'Others', child: Others()),
         _Panel(title: 'Settings', child: Settings()),
       ]),

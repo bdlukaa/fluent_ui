@@ -1,6 +1,14 @@
 Date format: DD/MM/YYYY
 
-## [1.5.0] - [31/03/2021]
+## [1.6.0] - BREAKING CHANGES - [03/04/2021]
+
+- Added the missing `Diagnostics`
+- Updated all the screenshots
+- **BREAKING CHANGE** Uses the material icon library now
+  
+  **DEVELOPER NOTE** This was a hard choice, but the material icon library is a robust, bigger library. It contains all the icons the previous library has, and a few many more.
+
+## [1.5.0] - [02/04/2021]
 
 - Added `Diagnostics` to many widgets
 - **NEW** `AutoSuggestBox`

@@ -88,7 +88,7 @@ class _InputsPageState extends State<InputsPage> {
               SizedBox(
                 height: splitButtonHeight,
                 child: Button(
-                  text: Icon(Icons.chevron_down),
+                  text: Icon(Icons.keyboard_arrow_down),
                   onPressed: () {},
                   style: ButtonStyle(padding: EdgeInsets.all(6)),
                 ),

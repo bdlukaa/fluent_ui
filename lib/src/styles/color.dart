@@ -100,7 +100,6 @@ class Colors {
     teal,
     green,
   ];
-
 }
 
 class ShadedColor extends ColorSwatch<int> {

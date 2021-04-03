@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Icon extends StatelessWidget {
   const Icon(
@@ -85,19 +86,19 @@ class Icon extends StatelessWidget {
   }
 }
 
-class IconStyle {
+class IconStyle with Diagnosticable {
   final Color? color;
   final double? size;
   final double? opacity;
 
   IconStyle({this.color, this.size, this.opacity});
 
-  static IconStyle defaultTheme([Brightness? brightness]) {
-    final def = IconStyle(size: 22, opacity: 1);
-    if (brightness == null || brightness == Brightness.light)
-      return def.copyWith(IconStyle(color: Colors.black));
-    else
-      return def.copyWith(IconStyle(color: Colors.white));
+  static IconStyle defaultTheme(Style style) {
+    return IconStyle(
+      size: 22,
+      opacity: 1,
+      color: style.inactiveColor,
+    );
   }
 
   IconStyle copyWith(IconStyle? style) {
@@ -106,5 +107,13 @@ class IconStyle {
       size: style?.size ?? size,
       opacity: style?.opacity ?? opacity,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('color', color));
+    properties.add(DoubleProperty('size', size, defaultValue: 22.0));
+    properties.add(DoubleProperty('opacity', opacity, defaultValue: 1.0));
   }
 }

@@ -171,18 +171,17 @@ class InfoBarStyle with Diagnosticable {
               return Color(0xFFfde7e9);
         }
       },
-      // TODO: implement close icon (X)
-      // closeIcon: Icons.channel_notifications_filled,
+      closeIcon: Icons.close,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return Icons.info;
+            return Icons.info_outline;
           case InfoBarSeverity.warning:
-            return Icons.warning;
+            return Icons.warning_sharp;
           case InfoBarSeverity.success:
-            return Icons.checkmark_circle;
+            return Icons.check_circle_outlined;
           case InfoBarSeverity.error:
-            return Icons.error_circle;
+            return Icons.error_outline;
         }
       },
       actionStyle: ButtonStyle.defaultTheme(style).copyWith(ButtonStyle(

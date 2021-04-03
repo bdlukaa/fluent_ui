@@ -146,7 +146,7 @@ class RatingIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
-    final icon = this.icon ?? Icons.star_filled;
+    final icon = this.icon ?? Icons.star;
     final size = this.size;
     if (rating == 1.0)
       return Icon(icon, color: ratedColor ?? style.accentColor, size: size);

@@ -63,8 +63,6 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Date Picker](#date-picker)
   - [Time Picker](#time-picker)
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
-  - **TODO** [Pull-to-Refresh]()
-  - **TODO** [Tree View]()
   - [List Tile](#list-tile)
   - [Info Header](info-header)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
@@ -179,8 +177,10 @@ Style(
 You can change the style brightness to change the color of your app.
 
 1. `Brightness.light`
+
    ![Light theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/light-theme.svg)
 2. `Brightness.dark`
+
    ![Dark theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/dark-theme.svg)
 
 It defaults to the brightness of the device. (`MediaQuery.of(context).brightness`)
@@ -211,11 +211,9 @@ You should use one font throughout your app's UI, and we recommend sticking with
 
 ### Type ramp
 
-The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily.
+The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 
 ![Type ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-ramp.png)
-
-[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 
 # Navigation
 
@@ -237,13 +235,13 @@ Scaffold(
         header: Text('Cool Navigation Panel Header'),
       ),
       NavigationPanelItem(
-        icon: Icon(Icons.checkbox_checked),
+        icon: Icon(Icons.input),
         label: Text('Page 1'),
         onTapped: () => setState(() => _currentIndex = 0),
       ),
       NavigationPanelTileSeparator(),
       NavigationPanelItem(
-        icon: Icon(Icons.text_align_center_filled),
+        icon: Icon(Icons.format_align_center),
         label: Text('Page 2'),
         onTapped: () => setState(() => _currentIndex = 1),
       ),
@@ -334,7 +332,7 @@ SizedBox(
         closeIcon: Tooltip(
           message: 'Close tab',
           child: IconButton(
-            icon: Icon(Icons.pane_close),
+            icon: Icon(Icons.close),
             onPressed: () {
               setState(() => tabs--);
               if (currentIndex > tabs - 1) currentIndex--;
@@ -413,7 +411,7 @@ SplitButtonBar(
     SizedBox(
       height: splitButtonHeight,
       child: Button(
-        text: Icon(Icons.chevron_down),
+        text: Icon(Icons.keyboard_arrow_down),
         onPressed: () {
           // TODO: open the color list here
         },
@@ -668,7 +666,7 @@ AutoSuggestBox<String>(
       focusNode: focusNode,
       suffixMode: OverlayVisibilityMode.editing,
       suffix: IconButton(
-        icon: Icon(Icons.pane_close),
+        icon: Icon(Icons.close),
         onPressed: () {
           controller.clear();
           focusNode.unfocus();

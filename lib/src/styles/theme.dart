@@ -154,7 +154,7 @@ class Style with Diagnosticable {
           .copyWith(toggleButtonStyle),
       toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
           .copyWith(toggleSwitchStyle),
-      iconStyle: IconStyle.defaultTheme(brightness).copyWith(iconStyle),
+      iconStyle: IconStyle.defaultTheme(defaultStyle).copyWith(iconStyle),
       splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
           .copyWith(splitButtonStyle),
       dialogStyle:

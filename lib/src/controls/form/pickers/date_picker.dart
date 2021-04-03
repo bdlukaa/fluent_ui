@@ -216,7 +216,6 @@ class _DatePickerState extends State<DatePicker> {
       contentHeight: widget.popupHeight,
       key: popupKey,
       child: picker,
-      backgroundColor: context.theme.navigationPanelBackgroundColor,
       content: (context) => _DatePickerContentPopUp(
         height: widget.popupHeight,
         date: date,
