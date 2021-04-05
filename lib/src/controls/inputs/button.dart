@@ -198,6 +198,16 @@ Color buttonColor(Style style, ButtonStates state) {
   }
 }
 
+BorderSide focusedButtonBorderSide(Color color) {
+  return BorderSide(width: 1.2, color: color);
+}
+
+Border focusedButtonBorder(Style style, [bool useAccent = true]) {
+  return Border.fromBorderSide(focusedButtonBorderSide(
+    useAccent ? style.accentColor! : style.inactiveColor!,
+  ));
+}
+
 @immutable
 class ButtonStyle with Diagnosticable {
   final ButtonState<Decoration?>? decoration;
@@ -235,6 +245,7 @@ class ButtonStyle with Diagnosticable {
       decoration: (state) => BoxDecoration(
         borderRadius: BorderRadius.circular(2),
         color: buttonColor(style, state),
+        border: state.isFocused ? focusedButtonBorder(style) : null,
       ),
       scaleFactor: 0.95,
       textStyle: (state) =>

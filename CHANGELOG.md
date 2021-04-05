@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [1.7.0] - Focus Update - [05/04/2021]
+
+- **FIXED** Fixed the possibility to give a elevation lower than 0 in `Acrylic`
+- **NEW** It's now possible to change the rating of `RatingBar` using the keyboard arrows
+- **NEW** Now it's possible to navigate using the keyboard with all focusable widgets
+
 ## [1.6.0] - BREAKING CHANGES - [03/04/2021]
 
 - Added the missing `Diagnostics`

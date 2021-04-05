@@ -150,7 +150,7 @@ class TappableListTile extends StatelessWidget {
       builder: (context, state) {
         final Color tileColor =
             this.tileColor?.call(state) ?? uncheckedInputColor(style, state);
-        return ListTile(
+        Widget child = ListTile(
           contentPadding: contentPadding,
           leading: leading,
           title: title,
@@ -159,6 +159,13 @@ class TappableListTile extends StatelessWidget {
           tileColor: tileColor,
           shape: shape?.call(state),
         );
+        if (state.isFocused) {
+          child = DecoratedBox(
+            decoration: BoxDecoration(border: focusedButtonBorder(style)),
+            child: child,
+          );
+        }
+        return child;
       },
     );
   }

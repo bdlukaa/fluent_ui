@@ -42,6 +42,9 @@ Decoration kPickerDecorationBuilder(BuildContext context, ButtonStates state) {
     color: () {
       if (state == ButtonStates.pressing)
         return context.theme.disabledColor?.withOpacity(0.2);
+      else if (state == ButtonStates.focused) {
+        return context.theme.disabledColor?.withOpacity(0.2);
+      }
     }(),
   );
 }

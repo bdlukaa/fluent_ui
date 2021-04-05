@@ -38,7 +38,7 @@ class RadioButton extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final Widget child = AnimatedContainer(
+        Widget child = AnimatedContainer(
           duration: style?.animationDuration ?? Duration(milliseconds: 300),
           height: 20,
           width: 20,
@@ -46,6 +46,14 @@ class RadioButton extends StatelessWidget {
               ? style?.checkedDecoration!(state)
               : style?.uncheckedDecoration!(state),
         );
+        if (state.isFocused) {
+          child = Container(
+            decoration: BoxDecoration(
+              border: focusedButtonBorder(context.theme),
+            ),
+            child: child,
+          );
+        }
         return Semantics(
           child: child,
           selected: checked,

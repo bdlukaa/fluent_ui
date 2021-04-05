@@ -80,6 +80,14 @@ class Checkbox extends StatelessWidget {
             }(),
           ),
         );
+        if (state.isFocused) {
+          child = Container(
+            decoration: BoxDecoration(
+              border: focusedButtonBorder(context.theme),
+            ),
+            child: child,
+          );
+        }
         return Semantics(
           checked: checked,
           child: child,

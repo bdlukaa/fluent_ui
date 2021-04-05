@@ -1,11 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
-import 'package:fluent_ui/fluent_ui.dart';
 
-class Slider extends StatelessWidget {
+class Slider extends StatefulWidget {
   const Slider({
     Key? key,
     required this.value,
@@ -42,6 +43,9 @@ class Slider extends StatelessWidget {
   final bool vertical;
 
   @override
+  _SliderState createState() => _SliderState();
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('value', value));
@@ -68,12 +72,16 @@ class Slider extends StatelessWidget {
       FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'),
     );
   }
+}
+
+class _SliderState extends m.State<Slider> {
+  bool _showFocusHighlight = false;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.sliderStyle?.copyWith(this.style);
-    final child = Padding(
+    final style = context.theme.sliderStyle?.copyWith(this.widget.style);
+    Widget child = Padding(
       padding: style?.margin ?? EdgeInsets.zero,
       child: m.Material(
         type: m.MaterialType.transparency,
@@ -88,7 +96,7 @@ class Slider extends StatelessWidget {
             ),
             valueIndicatorShape: _RectangularSliderValueIndicatorShape(
               backgroundColor: style?.labelBackgroundColor,
-              vertical: vertical,
+              vertical: widget.vertical,
             ),
             trackHeight: 0.25,
             trackShape: _CustomTrackShape(),
@@ -97,23 +105,34 @@ class Slider extends StatelessWidget {
             disabledActiveTrackColor: style?.disabledActiveColor,
           ),
           child: m.Slider(
-            value: value,
-            max: max,
-            min: min,
-            onChanged: onChanged,
-            onChangeEnd: onChangeEnd,
-            onChangeStart: onChangeStart,
+            value: widget.value,
+            max: widget.max,
+            min: widget.min,
+            onChanged: widget.onChanged,
+            onChangeEnd: widget.onChangeEnd,
+            onChangeStart: widget.onChangeStart,
             activeColor: style?.activeColor,
             inactiveColor: style?.inactiveColor,
-            divisions: divisions,
+            divisions: widget.divisions,
             mouseCursor: style?.cursor,
-            label: label,
-            focusNode: focusNode,
+            label: widget.label,
+            focusNode: widget.focusNode,
           ),
         ),
       ),
     );
-    if (vertical) {
+    child = FocusableActionDetector(
+      onShowFocusHighlight: (v) => setState(() => _showFocusHighlight = v),
+      child: DecoratedBox(
+        decoration: BoxDecoration(border: () {
+          if (_showFocusHighlight) {
+            return focusedButtonBorder(context.theme, false);
+          }
+        }()),
+        child: child,
+      ),
+    );
+    if (widget.vertical) {
       return RotatedBox(
         quarterTurns: 3,
         child: child,

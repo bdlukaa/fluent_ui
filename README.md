@@ -77,6 +77,7 @@ See also:
 
 - [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
+- [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
 ---
 

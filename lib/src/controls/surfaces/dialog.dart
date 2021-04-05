@@ -200,6 +200,7 @@ class ContentDialogStyle {
         margin: EdgeInsets.zero,
         decoration: (state) => BoxDecoration(
           color: buttonColor(style, state),
+          border: state.isFocused ? focusedButtonBorder(style) : null,
         ),
       ),
       elevation: 8,

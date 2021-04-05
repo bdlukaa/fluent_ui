@@ -81,11 +81,24 @@ class _OthersState extends State<Others> {
           ),
         );
       }),
-      ListTile(
-        leading: CircleAvatar(),
-        title: Text('ListTile Title'),
-        subtitle: Text('ListTile Subtitle'),
-      ),
+      Row(children: [
+        Expanded(
+          child: ListTile(
+            leading: CircleAvatar(),
+            title: Text('ListTile Title'),
+            subtitle: Text('ListTile Subtitle'),
+          ),
+        ),
+        Expanded(
+            child: TappableListTile(
+          leading: CircleAvatar(),
+          title: Text('TappableListTile Title'),
+          subtitle: Text('TappableListTile Subtitle'),
+          onTap: () {
+            print('hehehe');
+          },
+        )),
+      ]),
       Row(children: [
         Container(padding: EdgeInsets.all(6), child: ProgressBar(value: 50)),
         Container(

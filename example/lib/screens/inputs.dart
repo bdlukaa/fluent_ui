@@ -18,13 +18,42 @@ class _InputsPageState extends State<InputsPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Wrap(children: [
-        _buildButtons(),
-        _buildCheckboxes(),
-        _buildToggleSwitches(),
-        _buildRadioButtons(),
-        _buildSliders(),
-      ], runSpacing: 10, spacing: 10),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Acrylic(
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(bottom: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Working inputs', style: titleTextStyle),
+              Checkbox(
+                checked: value,
+                onChanged: (v) => setState(() => value = v ?? false),
+              ),
+              ToggleSwitch(
+                checked: value,
+                onChanged: (v) => setState(() => value = v),
+              ),
+              RadioButton(
+                checked: value,
+                onChanged: (v) => setState(() => value = v),
+              ),
+              ToggleButton(
+                child: Text('Toggle Button'),
+                checked: value,
+                onChanged: (value) => setState(() => this.value = value),
+              ),
+            ],
+          ),
+        ),
+        Wrap(children: [
+          _buildButtons(),
+          _buildCheckboxes(),
+          _buildToggleSwitches(),
+          _buildRadioButtons(),
+          _buildSliders(),
+        ], runSpacing: 10, spacing: 10),
+      ]),
     );
   }
 
@@ -50,6 +79,7 @@ class _InputsPageState extends State<InputsPage> {
                     actions: [
                       Button(
                         text: Text('Delete'),
+                        autofocus: true,
                         onPressed: () {
                           // Delete file here
                         },
@@ -64,11 +94,6 @@ class _InputsPageState extends State<InputsPage> {
               },
             ),
             Button(text: Text('Disabled button'), onPressed: null),
-            ToggleButton(
-              child: Text('Toggle Button'),
-              checked: value,
-              onChanged: (value) => setState(() => this.value = value),
-            ),
             Button.icon(
               icon: Icon(Icons.add),
               onPressed: () => print('pressed icon button'),

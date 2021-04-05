@@ -44,6 +44,7 @@ class IconButton extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme.iconButtonStyle!.copyWith(this.style);
     return HoverButton(
+      ignoreFocusManager: true,
       onPressed: onPressed == null ? null : () {},
       builder: (context, state) => Button(
         focusNode: focusNode,
@@ -92,8 +93,10 @@ class IconButtonStyle with Diagnosticable {
       decoration: (state) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          border: Border.all(style: BorderStyle.none),
           color: uncheckedInputColor(style, state),
+          border: state.isFocused
+              ? focusedButtonBorder(style)
+              : Border.all(style: BorderStyle.none),
         );
       },
       padding: EdgeInsets.all(4),

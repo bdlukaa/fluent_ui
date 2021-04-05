@@ -17,6 +17,7 @@ class HoverButton extends StatefulWidget {
     this.onLongPressEnd,
     this.onLongPressStart,
     this.autofocus = false,
+    this.ignoreFocusManager = false,
   }) : super(key: key);
 
   final MouseCursor Function(ButtonStates)? cursor;
@@ -36,19 +37,46 @@ class HoverButton extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final String? semanticsLabel;
 
+  final bool ignoreFocusManager;
   final bool autofocus;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
 }
 
-class _HoverButtonState extends State<HoverButton> {
+class _HoverButtonState extends State<HoverButton> with WidgetsBindingObserver {
   late FocusNode node;
+
+  bool _hasPrimaryFocus = false;
+  FocusHighlightMode? _focusHighlightMode;
+  late Map<Type, Action<Intent>> _actionMap;
 
   @override
   void initState() {
-    node = widget.focusNode ?? _createFocusNode();
     super.initState();
+    node = widget.focusNode ?? _createFocusNode();
+    node.addListener(_handleFocusChanged);
+    if (!widget.ignoreFocusManager) {
+      final FocusManager focusManager = WidgetsBinding.instance!.focusManager;
+      _focusHighlightMode = focusManager.highlightMode;
+      focusManager.addHighlightModeListener(_handleFocusHighlightModeChange);
+    }
+    void _handleActionTap() async {
+      if (!enabled) return;
+      update(() => _pressing = true);
+      widget.onPressed?.call();
+      await Future.delayed(Duration(milliseconds: 100));
+      update(() => _pressing = false);
+    }
+
+    _actionMap = <Type, Action<Intent>>{
+      ActivateIntent: CallbackAction<ActivateIntent>(
+        onInvoke: (ActivateIntent intent) => _handleActionTap(),
+      ),
+      ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+        onInvoke: (ButtonActivateIntent intent) => _handleActionTap(),
+      ),
+    };
   }
 
   @override
@@ -65,6 +93,12 @@ class _HoverButtonState extends State<HoverButton> {
 
   @override
   void dispose() {
+    if (!widget.ignoreFocusManager) {
+      WidgetsBinding.instance!.removeObserver(this);
+      WidgetsBinding.instance!.focusManager
+          .removeHighlightModeListener(_handleFocusHighlightModeChange);
+      node.removeListener(_handleFocusChanged);
+    }
     node.dispose();
     super.dispose();
   }
@@ -83,11 +117,13 @@ class _HoverButtonState extends State<HoverButton> {
 
   ButtonStates get state => !enabled
       ? ButtonStates.disabled
-      : _pressing
-          ? ButtonStates.pressing
-          : _hovering
-              ? ButtonStates.hovering
-              : ButtonStates.none;
+      : _showHighlight
+          ? ButtonStates.focused
+          : _pressing
+              ? ButtonStates.pressing
+              : _hovering
+                  ? ButtonStates.hovering
+                  : ButtonStates.none;
 
   void update(Function f) {
     if (!enabled) return;
@@ -99,44 +135,76 @@ class _HoverButtonState extends State<HoverButton> {
     setState(f as void Function());
   }
 
+  void _handleFocusChanged() {
+    if (_hasPrimaryFocus != node.hasPrimaryFocus) {
+      setState(() {
+        _hasPrimaryFocus = node.hasPrimaryFocus;
+      });
+    }
+  }
+
+  void _handleFocusHighlightModeChange(FocusHighlightMode mode) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _focusHighlightMode = mode;
+    });
+  }
+
+  bool get _showHighlight {
+    if (_focusHighlightMode == null) return false;
+    switch (_focusHighlightMode!) {
+      case FocusHighlightMode.touch:
+        return false;
+      case FocusHighlightMode.traditional:
+        return _hasPrimaryFocus;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget w = Focus(
-      focusNode: node,
-      autofocus: widget.autofocus,
-      child: MouseRegion(
-        opaque: false,
-        cursor: widget.cursor?.call(state) ?? buttonCursor(state),
-        onEnter: (_) => update(() => _hovering = true),
-        onHover: (_) => update(() => _hovering = true),
-        onExit: (_) => update(() => _hovering = false),
-        child: GestureDetector(
-          onTap: widget.onPressed,
-          onTapDown: (_) {
-            update(() => _pressing = true);
-            widget.onTapDown?.call();
-          },
-          onTapUp: (_) async {
-            widget.onTapUp?.call();
-            if (!enabled) return;
-            await Future.delayed(Duration(milliseconds: 100));
-            update(() => _pressing = false);
-          },
-          onTapCancel: () {
-            widget.onTapCancel?.call();
-            update(() => _pressing = false);
-          },
-          onLongPress: widget.onLongPress,
-          onLongPressStart: (_) {
-            widget.onLongPressStart?.call();
-            update(() => _pressing = true);
-          },
-          onLongPressEnd: (_) {
-            widget.onLongPressEnd?.call();
-            update(() => _pressing = false);
-          },
-          // onTapCancel: () => update(() => _pressing = false),
-          child: widget.builder?.call(context, state) ?? SizedBox(),
+    Widget w = Actions(
+      actions: _actionMap,
+      child: Focus(
+        canRequestFocus: enabled,
+        focusNode: node,
+        autofocus: widget.autofocus,
+        child: MouseRegion(
+          opaque: false,
+          cursor: widget.cursor?.call(state) ?? buttonCursor(state),
+          onEnter: (_) => update(() => _hovering = true),
+          onHover: (_) => update(() => _hovering = true),
+          onExit: (_) => update(() => _hovering = false),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onPressed,
+            onTapDown: (_) {
+              update(() => _pressing = true);
+              widget.onTapDown?.call();
+            },
+            onTapUp: (_) async {
+              widget.onTapUp?.call();
+              if (!enabled) return;
+              await Future.delayed(Duration(milliseconds: 100));
+              update(() => _pressing = false);
+            },
+            onTapCancel: () {
+              widget.onTapCancel?.call();
+              update(() => _pressing = false);
+            },
+            onLongPress: widget.onLongPress,
+            onLongPressStart: (_) {
+              widget.onLongPressStart?.call();
+              update(() => _pressing = true);
+            },
+            onLongPressEnd: (_) {
+              widget.onLongPressEnd?.call();
+              update(() => _pressing = false);
+            },
+            // onTapCancel: () => update(() => _pressing = false),
+            child: widget.builder?.call(context, state) ?? SizedBox(),
+          ),
         ),
       ),
     );
@@ -165,11 +233,13 @@ class ButtonStates {
   static const ButtonStates disabled = ButtonStates._('disabled');
   static const ButtonStates hovering = ButtonStates._('hovering');
   static const ButtonStates pressing = ButtonStates._('pressing');
+  static const ButtonStates focused = ButtonStates._('focused');
   static const ButtonStates none = ButtonStates._('none');
 
   bool get isDisabled => this == disabled;
   bool get isHovering => this == hovering;
   bool get isPressing => this == pressing;
+  bool get isFocused => this == focused;
   bool get isNone => this == none;
 }
 

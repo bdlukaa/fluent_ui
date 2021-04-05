@@ -17,7 +17,12 @@ class Acrylic extends StatelessWidget {
     this.margin,
     this.shadowColor,
     this.elevation,
-  }) : super(key: key);
+  })  : assert(
+          elevation == null || elevation >= 0,
+          'The elevation can NOT be negative',
+        ),
+        assert(opacity >= 0, 'The opacity can NOT be negative'),
+        super(key: key);
 
   final Color? color;
   final Decoration? decoration;
@@ -76,7 +81,7 @@ class Acrylic extends StatelessWidget {
         ),
       ),
     );
-    if (elevation != null && elevation != 0) {
+    if (elevation != null && elevation! > 0) {
       result = PhysicalModel(
         color: shadowColor ?? Colors.black,
         elevation: elevation!,

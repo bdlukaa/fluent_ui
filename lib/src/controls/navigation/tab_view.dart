@@ -172,6 +172,11 @@ class _Tab extends StatelessWidget {
             color: selected
                 ? style.scaffoldBackgroundColor
                 : uncheckedInputColor(style, state),
+            border: () {
+              if (state.isFocused) {
+                return focusedButtonBorder(style);
+              }
+            }(),
           ),
           child: Row(children: [
             if (tab.icon != null)

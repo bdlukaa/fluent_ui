@@ -52,7 +52,7 @@ class ToggleSwitch extends StatelessWidget {
       cursor: style.cursor,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final Widget child = AnimatedContainer(
+        Widget child = AnimatedContainer(
           alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
           height: 20,
           width: 45,
@@ -69,6 +69,14 @@ class ToggleSwitch extends StatelessWidget {
                 state: state,
               ),
         );
+        if (state.isFocused) {
+          child = Container(
+            decoration: BoxDecoration(
+              border: focusedButtonBorder(context.theme),
+            ),
+            child: child,
+          );
+        }
         return Semantics(
           child: child,
           checked: checked,
@@ -154,7 +162,7 @@ class ToggleSwitchStyle with Diagnosticable {
           color: uncheckedInputColor(style, state),
           border: Border.all(
             width: 0.8,
-            color: state.isNone
+            color: state.isNone || state.isFocused
                 ? style.inactiveColor!
                 : uncheckedInputColor(style, state),
           ),
