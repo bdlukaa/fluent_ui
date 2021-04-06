@@ -6,6 +6,16 @@ import 'package:fluent_ui/src/utils/popup.dart';
 
 import 'pickers.dart';
 
+/// The time picker gives you a standardized way to let users pick a time
+/// value using touch, mouse, or keyboard input. Use a time picker to let
+/// a user pick a single time value.
+///
+/// ![TimePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_timepicker_expand.png)7
+///
+/// See also:
+///
+/// - [TimePicker Documentation](https://pub.dev/packages/fluent_ui#time-picker)
+/// - [DatePicker](https://pub.dev/packages/fluent_ui#date-picker)
 class TimePicker extends StatefulWidget {
   const TimePicker({
     Key? key,
@@ -24,6 +34,7 @@ class TimePicker extends StatefulWidget {
     this.minutePlaceholder = 'minute',
     this.amText = 'AM',
     this.pmText = 'PM',
+    this.minuteIncrement = 1,
   }) : super(key: key);
 
   final DateTime? selected;
@@ -45,6 +56,7 @@ class TimePicker extends StatefulWidget {
   final String pmText;
 
   final double popupHeight;
+  final double minuteIncrement;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
@@ -106,7 +118,7 @@ class _TimePickerState extends State<TimePicker> {
         }
         return hour;
       }());
-      _minuteController?.jumpToItem(time.minute - 1);
+      _minuteController?.jumpToItem(time.minute);
       _amPmController?.jumpToItem(_isPm ? 1 : 0);
     }
   }
@@ -125,9 +137,7 @@ class _TimePickerState extends State<TimePicker> {
         return hour;
       }(),
     );
-    _minuteController = FixedExtentScrollController(
-      initialItem: time.minute - 1,
-    );
+    _minuteController = FixedExtentScrollController(initialItem: time.minute);
 
     _amPmController = FixedExtentScrollController(initialItem: _isPm ? 1 : 0);
   }
@@ -219,6 +229,7 @@ class _TimePickerState extends State<TimePicker> {
         hourController: _hourController!,
         minuteController: _minuteController!,
         use24Format: widget.use24Format,
+        minuteIncrement: widget.minuteIncrement,
       ),
     );
     if (widget.header != null) {
@@ -246,6 +257,7 @@ class _TimePickerContentPopup extends StatefulWidget {
     required this.amPmController,
     required this.use24Format,
     required this.height,
+    required this.minuteIncrement,
   }) : super(key: key);
 
   final FixedExtentScrollController hourController;
@@ -261,6 +273,7 @@ class _TimePickerContentPopup extends StatefulWidget {
 
   final bool use24Format;
   final double height;
+  final double minuteIncrement;
 
   @override
   __TimePickerContentPopupState createState() =>
@@ -377,11 +390,12 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   child: ListWheelScrollView.useDelegate(
                     controller: widget.minuteController,
                     childDelegate: ListWheelChildLoopingListDelegate(
-                      children: List.generate(60, (index) {
+                      children:
+                          List.generate(60 ~/ widget.minuteIncrement, (index) {
                         return ListTile(
                           title: Center(
                             child: Text(
-                              '${index + 1}',
+                              '${(index * widget.minuteIncrement).toInt()}',
                               style: kPickerPopupTextStyle(context),
                             ),
                           ),
@@ -397,7 +411,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                         widget.date.month,
                         widget.date.day,
                         widget.date.hour,
-                        index + 1,
+                        index,
                         widget.date.second,
                         widget.date.millisecond,
                         widget.date.microsecond,

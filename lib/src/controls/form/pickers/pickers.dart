@@ -61,6 +61,7 @@ class YesNoPickerControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     return Theme(
       data: context.theme.copyWith(Style(
         buttonStyle: context.theme.buttonStyle?.copyWith(ButtonStyle(

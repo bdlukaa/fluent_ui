@@ -28,11 +28,12 @@ class NavigationPanelBody extends StatelessWidget {
           animation: animation,
         );
       },
-      child: IndexedStack(
-        key: ValueKey<int>(index),
-        index: index,
-        children: children,
-      ),
+      child: children[index],
+      // child: IndexedStack(
+      //   key: ValueKey<int>(index),
+      //   index: index,
+      //   children: children,
+      // ),
     );
   }
 }

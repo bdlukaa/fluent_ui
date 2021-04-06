@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../utils/focus.dart';
+
 const kThreeLineTileHeight = 80.0;
 const kTwoLineTileHeight = 52.0;
 const kOneLineTileHeight = 48.0;
@@ -159,12 +161,10 @@ class TappableListTile extends StatelessWidget {
           tileColor: tileColor,
           shape: shape?.call(state),
         );
-        if (state.isFocused) {
-          child = DecoratedBox(
-            decoration: BoxDecoration(border: focusedButtonBorder(style)),
-            child: child,
-          );
-        }
+        child = FocusBorder(
+          child: child,
+          focused: state.isFocused,
+        );
         return child;
       },
     );

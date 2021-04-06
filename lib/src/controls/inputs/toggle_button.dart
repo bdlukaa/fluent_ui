@@ -2,6 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+/// A button that can be on or off.
+///
+/// See also:
+/// - [Checkbox](https://github.com/bdlukaa/fluent_ui#checkbox)
+/// - [ToggleSwitch](https://github.com/bdlukaa/fluent_ui#toggle-switches)
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
     Key? key,
@@ -13,14 +18,23 @@ class ToggleButton extends StatelessWidget {
     this.focusNode,
   }) : super(key: key);
 
+  /// The content of the button
   final Widget? child;
 
+  /// Whether this [ToggleButton] is checked
   final bool checked;
+
+  /// Whenever the value of this [ToggleButton] should change
   final ValueChanged<bool>? onChanged;
 
+  /// The style of the button.
+  /// This style is merged with [Style.toggleButtonStyle]
   final ToggleButtonStyle? style;
 
+  /// The semantics label of the button
   final String? semanticsLabel;
+
+  /// The [FocusNode] of the button
   final FocusNode? focusNode;
 
   @override
@@ -99,10 +113,9 @@ class ToggleButtonStyle with Diagnosticable {
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
-        border: () {
-          if (state.isFocused) return focusedButtonBorder(style, false);
-          return Border.all(width: 0.6, color: checkedInputColor(style, state));
-        }(),
+        border: state.isFocused
+            ? focusedButtonBorder(style)
+            : Border.all(width: 0.6, color: checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)

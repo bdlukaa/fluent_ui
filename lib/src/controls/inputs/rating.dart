@@ -1,14 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/utils/focus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+/// The rating bar allows users to view and set ratings that
+/// reflect degrees of satisfaction with content and services.
+/// Users can interact with the rating control with touch, pen,
+/// mouse, gamepad or keyboard. The follow guidance shows how to
+/// use the rating control's features to provide flexibility and
+/// customization.
+///
+/// ![RatingBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
 class RatingBar extends StatefulWidget {
   const RatingBar({
     Key? key,
     required this.rating,
     this.onChanged,
     this.amount = 5,
-    this.animationDuration,
+    this.animationDuration = Duration.zero,
     this.animationCurve,
     this.icon,
     this.iconSize,
@@ -16,25 +25,48 @@ class RatingBar extends StatefulWidget {
     this.unratedIconColor,
     this.semanticsLabel,
     this.focusNode,
+    this.autofocus = false,
     // TODO: starSpacing
-  })  : assert(rating <= amount && rating <= amount),
+  })  : assert(rating >= 0 && rating <= amount),
         super(key: key);
 
+  /// The amount of stars in the bar. The default is 5
   final int amount;
+
+  /// The current rating of the bar.
+  /// It must be more or equal to 0 and less than [amount]
   final double rating;
 
+  /// Called when the [rating] is changed.
+  /// If this is `null`, the RatingBar will not detect touch inputs
   final ValueChanged<double>? onChanged;
 
-  final Duration? animationDuration;
+  /// The duration of the animation
+  final Duration animationDuration;
+
+  /// The curve of the animation. If `null`, uses [Style.animationCurve]
   final Curve? animationCurve;
 
+  /// The icon used in the bar. If `null`, uses [Icons.star_rate_sharp]
   final IconData? icon;
+
+  /// The size of the icon. If `null`, uses [IconStyle.size]
   final double? iconSize;
+
+  /// The color of the icons that are rated. If `null`, uses [Style.accentColor]
   final Color? ratedIconColor;
+
+  /// The color of the icons that are not rated. If `null`, uses [Style.disabled]
   final Color? unratedIconColor;
 
+  /// The semantics label of the bar
   final String? semanticsLabel;
+
+  /// The [FocusNode] of the bar
   final FocusNode? focusNode;
+
+  /// Whether the bar should be autofocused or not
+  final bool autofocus;
 
   @override
   _RatingBarState createState() => _RatingBarState();
@@ -55,6 +87,11 @@ class RatingBar extends StatefulWidget {
     properties.add(ColorProperty('ratedIconColor', ratedIconColor));
     properties.add(ColorProperty('unratedIconColor', unratedIconColor));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties.add(FlagProperty(
+      'autofocus',
+      value: autofocus,
+      ifFalse: 'manual focus',
+    ));
   }
 }
 
@@ -151,7 +188,7 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final size = context.theme.iconStyle!.size;
+    final size = context.theme.iconStyle?.size;
     return Semantics(
       label: widget.semanticsLabel,
       // It's only a slider if its value can be changed
@@ -162,16 +199,14 @@ class _RatingBarState extends State<RatingBar> {
       focused: _focusNode.hasFocus,
       child: FocusableActionDetector(
         focusNode: _focusNode,
+        autofocus: widget.autofocus,
         actions: _actionMap,
         shortcuts: _shortcutMap,
         onShowFocusHighlight: (v) {
           setState(() => _showFocusHighlight = v);
         },
-        child: Container(
-          decoration: BoxDecoration(border: () {
-            if (_showFocusHighlight) return focusedButtonBorder(context.theme);
-            return null;
-          }()),
+        child: FocusBorder(
+          focused: _showFocusHighlight,
           child: GestureDetector(
             onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
             onHorizontalDragStart: (d) =>
@@ -192,7 +227,7 @@ class _RatingBarState extends State<RatingBar> {
                       else if (r < 0) r = 0;
                       return RatingIcon(
                         rating: r,
-                        icon: widget.icon,
+                        icon: widget.icon ?? Icons.star_rate_sharp,
                         ratedColor: widget.ratedIconColor,
                         unratedColor: widget.unratedIconColor,
                         size: widget.iconSize,
@@ -205,8 +240,10 @@ class _RatingBarState extends State<RatingBar> {
                   }(),
                 );
               },
-              duration: widget.animationDuration ?? Duration.zero,
-              curve: widget.animationCurve ?? standartCurve,
+              duration: widget.animationDuration,
+              curve: widget.animationCurve ??
+                  context.theme.animationCurve ??
+                  Curves.linear,
               tween: Tween<double>(begin: 0, end: widget.rating),
             ),
           ),
@@ -243,22 +280,31 @@ class RatingIcon extends StatelessWidget {
     required this.rating,
     this.ratedColor,
     this.unratedColor,
-    this.icon,
+    this.icon = Icons.star_rate_sharp,
     this.size,
   })  : assert(rating >= 0.0 && rating <= 1.0),
         super(key: key);
 
+  /// The rating of the icon. Must be more or equal to 0 and less or equal than 1.0
   final double rating;
-  final IconData? icon;
+
+  /// The icon.
+  final IconData icon;
+
+  /// The color used by the rated part. If `null`, uses [Style.accentColor]
   final Color? ratedColor;
+
+  /// The color used by the unrated part. If `null`, uses [Style.disabledColor]
   final Color? unratedColor;
+
+  /// The size of the icon
   final double? size;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme;
-    final icon = this.icon ?? Icons.star;
+    final icon = this.icon;
     final size = this.size;
     if (rating == 1.0)
       return Icon(icon, color: ratedColor ?? style.accentColor, size: size);

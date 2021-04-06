@@ -97,11 +97,8 @@ class NavigationPanelItemTile extends StatelessWidget {
             curve: style.animationCurve ?? standartCurve,
             decoration: BoxDecoration(
               color: uncheckedInputColor(context.theme, state),
-              border: () {
-                if (state.isFocused) {
-                  return focusedButtonBorder(context.theme);
-                }
-              }(),
+              border:
+                  state.isFocused ? focusedButtonBorder(context.theme) : null,
             ),
             child: Row(children: [
               AnimatedSwitcher(

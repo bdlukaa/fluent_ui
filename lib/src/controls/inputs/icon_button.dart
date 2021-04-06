@@ -13,15 +13,27 @@ class IconButton extends StatelessWidget {
     this.focusNode,
   }) : super(key: key);
 
+  /// The icon of the button
   final Widget icon;
 
+  /// Callback called when the button is pressed.
+  /// The button is considered disabled if this is `null`
   final VoidCallback? onPressed;
+
+  /// Callback called when the button is long pressed
   final VoidCallback? onLongPress;
 
+  /// The style of the button. This style is merged with [Style.iconButtonStyle]
   final IconButtonStyle? style;
 
+  /// The semantics label of the button
   final String? semanticsLabel;
+
+  /// The [FocusNode] of the button
   final FocusNode? focusNode;
+
+  /// Whether the button is enabled or not
+  bool get enabled => onPressed != null || onLongPress != null;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -29,7 +41,7 @@ class IconButton extends StatelessWidget {
     properties.add(ObjectFlagProperty<VoidCallback>(
       'onPressed',
       onPressed,
-      ifNull: 'disabled',
+      ifNull: enabled ? 'no on pressed' : 'disabled',
     ));
     properties.add(
       ObjectFlagProperty<VoidCallback>.has('onLongPress', onLongPress),
@@ -42,15 +54,16 @@ class IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.iconButtonStyle!.copyWith(this.style);
+    final style = context.theme.iconButtonStyle?.copyWith(this.style);
     return HoverButton(
       ignoreFocusManager: true,
       onPressed: onPressed == null ? null : () {},
+      onLongPress: onLongPress == null ? null : () {},
       builder: (context, state) => Button(
         focusNode: focusNode,
         text: Theme(
           data: context.theme.copyWith(Style(
-            iconStyle: style.iconStyle?.call(state),
+            iconStyle: style?.iconStyle?.call(state),
           )),
           child: icon,
         ),
@@ -58,10 +71,10 @@ class IconButton extends StatelessWidget {
         onLongPress: onLongPress,
         semanticsLabel: semanticsLabel,
         style: ButtonStyle(
-          decoration: style.decoration,
-          cursor: style.cursor,
-          margin: style.margin,
-          padding: style.padding,
+          decoration: style?.decoration,
+          cursor: style?.cursor,
+          margin: style?.margin,
+          padding: style?.padding,
         ),
       ),
     );

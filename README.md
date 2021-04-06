@@ -55,7 +55,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
   - [Flyout](#flyout)
-  - **TODO** Teaching tip
+  - **TODO** [Teaching tip]()
   - [Acrylic](#acrylic)
   - [InfoBar](#infobar)
   - **TODO** [Calendar View]()
@@ -478,7 +478,7 @@ Checkbox(
 
 ## Toggle Switches
 
-The toggle switch represents a physical switch that allows users to turn things on or off, like a light switch. Use toggle switch controls to present users with two mutually exclusive options (such as on/off), where choosing an option provides immediate results.
+The toggle switch represents a physical switch that allows users to turn things on or off, like a light switch. Use toggle switch controls to present users with two mutually exclusive options (such as on/off), where choosing an option provides immediate results. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/toggles)
 
 ### Example
 

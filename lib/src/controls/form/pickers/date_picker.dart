@@ -12,6 +12,17 @@ import 'pickers.dart';
 // current implementation. TODO: Fix clicking on ListWheelScrollView
 // https://github.com/flutter/flutter/issues/38803
 
+/// The date picker gives you a standardized way to let users pick a localized
+/// date value using touch, mouse, or keyboard input. Use a date picker to let
+/// a user pick a known date, such as a date of birth, where the context of the
+/// calendar is not important.
+///
+/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_datepicker_expand.png)
+///
+/// See also:
+///
+/// - [DatePicker Documentation](https://pub.dev/packages/fluent_ui#date-picker)
+/// - [TimePicker](https://pub.dev/packages/fluent_ui#time-picker)
 class DatePicker extends StatefulWidget {
   const DatePicker({
     Key? key,
@@ -32,25 +43,49 @@ class DatePicker extends StatefulWidget {
     this.autofocus = false,
   }) : super(key: key);
 
+  /// The current date.
   final DateTime selected;
+
+  /// Whenever the current date is changed. If this is null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
+
+  /// Whenever the user cancels when changing the date.
   final VoidCallback? onCancel;
 
+  /// The header of the picker
   final String? header;
+
+  /// The style of the [header]
   final TextStyle? headerStyle;
 
+  /// Whenever to show the month property
   final bool showMonth;
+
+  /// Whenever to show the day property
   final bool showDay;
+
+  /// Whenever to show the year property
   final bool showYear;
 
+  /// The year to start counting from. If `null`, defaults to [date]'s year `- 100`
   final int? startYear;
+
+  /// The year to end the counting. If `null`, defaults to [date]'s year `+ 25`
   final int? endYear;
 
+  /// The padding of the picker. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
+
+  /// The cursor of the picker. Defaults to [SystemMouseCursors.click]
   final MouseCursor cursor;
+
+  /// The focus node of the picker.
   final FocusNode? focusNode;
+
+  /// Whenever `autofocus` is enabled or not
   final bool autofocus;
 
+  /// The height of the popup. Defaults to [kPopupHeight]
   final double popupHeight;
 
   @override

@@ -1,5 +1,16 @@
 Date format: DD/MM/YYYY
 
+## [1.7.1] - [06/04/2021]
+
+- **FIX** The mouse cursor in a disabled input is now `basic` instead of `forbidden`
+- **FIX** `NavigationPanelBody` now doesn't use a `IndexedStack` under the hood because it was interfering in the focus scope
+- **FIX** The color of the focus now is the `Style.inactiveColor`
+- **FIX** `RadioButton`'s cursor was not being applied correctly
+- **NEW** `Button.toggle`
+- **FIX** The state provided by `HoverButton` was being `focused` when it shouldn't be
+- **FIX** TimePicker showing wrong minute count. It should start from 00 and end in 59
+- **NEW** `TimePicker.minuteIncrement`
+
 ## [1.7.0] - Focus Update - [05/04/2021]
 
 - **FIXED** Fixed the possibility to give a elevation lower than 0 in `Acrylic`

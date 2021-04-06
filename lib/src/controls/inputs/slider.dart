@@ -6,6 +6,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
 
+import '../../utils/focus.dart';
+
+/// A slider is a control that lets the user select from a
+/// range of values by moving a thumb control along a track.
+///
+/// A slider is a good choice when you know that users think
+/// of the value as a relative quantity, not a numeric value.
+/// For example, users think about setting their audio volume
+/// to low or medium—not about setting the value to 2 or 5.
+///
+/// ![](https://camo.githubusercontent.com/7954319a99545af34e6357516249ae2c9bd771581234c63c19b3533e7f127e11/68747470733a2f2f646f63732e6d6963726f736f66742e636f6d2f656e2d75732f77696e646f77732f7577702f64657369676e2f636f6e74726f6c732d616e642d7061747465726e732f696d616765732f636f6e74726f6c732f736c696465722e706e67)
 class Slider extends StatefulWidget {
   const Slider({
     Key? key,
@@ -20,26 +31,59 @@ class Slider extends StatefulWidget {
     this.label,
     this.focusNode,
     this.vertical = false,
+    this.autofocus = false,
   })  : assert(value >= min && value <= max),
         assert(divisions == null || divisions > 0),
         super(key: key);
 
+  /// The currently selected value for this slider.
+  ///
+  /// The slider's thumb is drawn at a position that corresponds to this value.
   final double value;
 
   final ValueChanged<double>? onChanged;
   final ValueChanged<double>? onChangeStart;
   final ValueChanged<double>? onChangeEnd;
 
+  /// The maximum value the user can select.
+  ///
+  /// Defaults to 1.0. Must be greater than or equal to [min].
+  ///
+  /// If the [max] is equal to the [min], then the slider is disabled.
   final double min;
+
+  /// The minimum value the user can select.
+  ///
+  /// Defaults to 0.0. Must be less than or equal to [max].
+  ///
+  /// If the [max] is equal to the [min], then the slider is disabled.
   final double max;
 
+  /// The number of discrete divisions.
+  ///
+  /// Typically used with [label] to show the current discrete value.
+  ///
+  /// If null, the slider is continuous.
   final int? divisions;
+
+  /// The style used in this slider. It's mescled with [Style.sliderStyle]
   final SliderStyle? style;
 
+  /// A label to show above the slider, or at the left
+  /// of the slider if [vertical] is `true` when the slider is active.
   final String? label;
 
+  /// The [FocusNode] applied to the slider
   final FocusNode? focusNode;
 
+  /// Whether the slider should be autofocused
+  final bool autofocus;
+
+  /// Whether the slider is vertical or not
+  ///
+  /// Use a vertical slider if the slider represents a
+  /// real-world value that is normally shown vertically
+  /// (such as temperature).
   final bool vertical;
 
   @override
@@ -76,6 +120,27 @@ class Slider extends StatefulWidget {
 
 class _SliderState extends m.State<Slider> {
   bool _showFocusHighlight = false;
+
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(_handleFocusChanged);
+  }
+
+  void _handleFocusChanged() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_handleFocusChanged);
+    // Only dispose the focus node manually created
+    if (widget.focusNode == null) _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,19 +181,16 @@ class _SliderState extends m.State<Slider> {
             divisions: widget.divisions,
             mouseCursor: style?.cursor,
             label: widget.label,
-            focusNode: widget.focusNode,
+            focusNode: _focusNode,
+            autofocus: widget.autofocus,
           ),
         ),
       ),
     );
     child = FocusableActionDetector(
       onShowFocusHighlight: (v) => setState(() => _showFocusHighlight = v),
-      child: DecoratedBox(
-        decoration: BoxDecoration(border: () {
-          if (_showFocusHighlight) {
-            return focusedButtonBorder(context.theme, false);
-          }
-        }()),
+      child: FocusBorder(
+        focused: _showFocusHighlight && (_focusNode.hasPrimaryFocus),
         child: child,
       ),
     );

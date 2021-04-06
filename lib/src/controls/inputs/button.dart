@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'hover_button.dart';
 
-enum _ButtonType { def, icon }
+enum _ButtonType { def, icon, toggle }
 
+/// A button gives the user a way to trigger an immediate action.
 class Button extends StatefulWidget {
   const Button({
     Key? key,
@@ -37,10 +38,38 @@ class Button extends StatefulWidget {
           onLongPress: onLongPress,
           semanticsLabel: semanticsLabel,
           style: style,
+          focusNode: focusNode,
         ),
         style = null,
         trailingIcon = null,
         type = _ButtonType.icon,
+        super(key: key);
+
+  /// Creates a button that can be on or of.
+  /// Uses a [ToggleButton] under the hood
+  Button.toggle({
+    Key? key,
+    required bool checked,
+    required ValueChanged<bool> onChanged,
+    Widget? child,
+    ToggleButtonStyle? style,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticsLabel,
+  })  : text = ToggleButton(
+          checked: checked,
+          onChanged: onChanged,
+          child: child,
+          focusNode: focusNode,
+          semanticsLabel: semanticsLabel,
+          style: style,
+        ),
+        style = null,
+        trailingIcon = null,
+        onPressed = null,
+        icon = null,
+        onLongPress = null,
+        type = _ButtonType.toggle,
         super(key: key);
 
   final _ButtonType type;
@@ -57,18 +86,20 @@ class Button extends StatefulWidget {
   /// The style of the button
   final ButtonStyle? style;
 
-  /// Callback to when the button get pressed. If this and onLongPress == null,
-  /// the button will be considered disabled
+  /// Callback to when the button get pressed.
+  /// If this is `null`, the button will be considered disabled
   final VoidCallback? onPressed;
 
-  /// Callback to when the button gets pressed for a long time. If this and onPressed
-  /// == null, the button will be considered disabled
+  /// Callback to when the button gets pressed for a long time.
   final VoidCallback? onLongPress;
 
   /// The semantics label to allow screen readers to read the screen
   final String? semanticsLabel;
 
+  /// The [FocusNode] of the button
   final FocusNode? focusNode;
+
+  /// Whether the button should autofocused
   final bool autofocus;
 
   bool get enabled => onPressed != null || onLongPress != null;
@@ -102,6 +133,7 @@ class _ButtonState extends State<Button> {
     debugCheckHasFluentTheme(context);
     switch (widget.type) {
       case _ButtonType.icon:
+      case _ButtonType.toggle:
         return widget.text!;
       case _ButtonType.def:
       default:
@@ -199,13 +231,11 @@ Color buttonColor(Style style, ButtonStates state) {
 }
 
 BorderSide focusedButtonBorderSide(Color color) {
-  return BorderSide(width: 1.2, color: color);
+  return BorderSide(width: 2, color: color);
 }
 
-Border focusedButtonBorder(Style style, [bool useAccent = true]) {
-  return Border.fromBorderSide(focusedButtonBorderSide(
-    useAccent ? style.accentColor! : style.inactiveColor!,
-  ));
+Border focusedButtonBorder(Style style) {
+  return Border.fromBorderSide(focusedButtonBorderSide(style.inactiveColor!));
 }
 
 @immutable

@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../utils/focus.dart';
+
 class TabView extends StatelessWidget {
   const TabView({
     Key? key,
@@ -160,7 +162,7 @@ class _Tab extends StatelessWidget {
       cursor: selected ? (_) => SystemMouseCursors.basic : null,
       onPressed: onPressed,
       builder: (context, state) {
-        final child = Container(
+        Widget child = Container(
           height: kTileHeight,
           constraints: BoxConstraints(
             maxWidth: kTileWidth,
@@ -172,11 +174,6 @@ class _Tab extends StatelessWidget {
             color: selected
                 ? style.scaffoldBackgroundColor
                 : uncheckedInputColor(style, state),
-            border: () {
-              if (state.isFocused) {
-                return focusedButtonBorder(style);
-              }
-            }(),
           ),
           child: Row(children: [
             if (tab.icon != null)
@@ -219,6 +216,10 @@ class _Tab extends StatelessWidget {
                 child: tab.closeIcon!,
               ),
           ]),
+        );
+        child = FocusBorder(
+          child: child,
+          focused: state.isFocused,
         );
         return Semantics(
           selected: selected,
