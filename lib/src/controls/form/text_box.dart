@@ -387,6 +387,8 @@ class _TextBoxState extends State<TextBox>
   @override
   bool get selectionEnabled => widget.selectionEnabled;
 
+  bool get enabled => widget.enabled ?? true;
+
   @override
   void initState() {
     super.initState();
@@ -395,7 +397,13 @@ class _TextBoxState extends State<TextBox>
     if (widget.controller == null) {
       _createLocalController();
     }
-    _effectiveFocusNode.addListener(() => setState(() {}));
+    _effectiveFocusNode.addListener(_handleFocusChanged);
+  }
+
+  void _handleFocusChanged() {
+    if (!enabled && _effectiveFocusNode.hasPrimaryFocus)
+      _effectiveFocusNode.nextFocus();
+    setState(() {});
   }
 
   @override
@@ -445,6 +453,7 @@ class _TextBoxState extends State<TextBox>
 
   @override
   void dispose() {
+    _effectiveFocusNode.removeListener(_handleFocusChanged);
     _focusNode?.dispose();
     _controller?.dispose();
     super.dispose();
@@ -594,7 +603,6 @@ class _TextBoxState extends State<TextBox>
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
-    final bool enabled = widget.enabled ?? true;
     final Offset cursorOffset = Offset(0, -1);
     if (widget.maxLength != null && widget.maxLengthEnforced) {
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));

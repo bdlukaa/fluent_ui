@@ -29,7 +29,10 @@ class ListTile extends StatelessWidget {
         ),
         super(key: key);
 
+  /// The color of the tile
   final Color? tileColor;
+
+  /// The shape of the tile
   final ShapeBorder? shape;
 
   final Widget? leading;
@@ -136,7 +139,11 @@ class TappableListTile extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty('onTap', onTap, ifNull: 'disabled'));
-    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(FlagProperty(
+      'autofocus',
+      value: autofocus,
+      defaultValue: false,
+    ));
     properties.add(ObjectFlagProperty.has('focusNode', focusNode));
   }
 
@@ -167,6 +174,164 @@ class TappableListTile extends StatelessWidget {
         );
         return child;
       },
+    );
+  }
+}
+
+class CheckboxListTile extends StatelessWidget {
+  const CheckboxListTile({
+    Key? key,
+    required this.checked,
+    this.onChanged,
+    this.title,
+    this.subtitle,
+    this.isThreeLine = false,
+    this.style,
+    this.autofocus = false,
+    this.focusNode,
+    this.tileColor,
+    this.shape,
+  }) : super(key: key);
+
+  final bool? checked;
+  final ValueChanged<bool?>? onChanged;
+
+  final Widget? title;
+  final Widget? subtitle;
+  final bool isThreeLine;
+
+  final CheckboxStyle? style;
+
+  final bool autofocus;
+  final FocusNode? focusNode;
+
+  final ButtonState<Color>? tileColor;
+  final ButtonState<ShapeBorder>? shape;
+
+  @override
+  Widget build(BuildContext context) {
+    final checkbox = Checkbox(
+      checked: checked,
+      onChanged: onChanged,
+      style: style,
+    );
+    return TappableListTile(
+      leading: checkbox,
+      title: title,
+      subtitle: subtitle,
+      onTap: onChanged == null
+          ? null
+          : () => onChanged!(checked == null ? null : !(checked!)),
+      autofocus: autofocus,
+      focusNode: focusNode,
+      isThreeLine: isThreeLine,
+      tileColor: tileColor,
+      shape: shape,
+    );
+  }
+}
+
+class SwitchListTile extends StatelessWidget {
+  const SwitchListTile({
+    Key? key,
+    required this.checked,
+    this.onChanged,
+    this.title,
+    this.subtitle,
+    this.autofocus = false,
+    this.focusNode,
+    this.isThreeLine = false,
+    this.tileColor,
+    this.shape,
+    this.style,
+    this.thumb,
+  }) : super(key: key);
+
+  final bool checked;
+  final ValueChanged<bool>? onChanged;
+
+  final Widget? title;
+  final Widget? subtitle;
+  final bool isThreeLine;
+
+  final ToggleSwitchStyle? style;
+  final Widget? thumb;
+
+  final bool autofocus;
+  final FocusNode? focusNode;
+
+  final ButtonState<Color>? tileColor;
+  final ButtonState<ShapeBorder>? shape;
+
+  @override
+  Widget build(BuildContext context) {
+    final toggleSwitch = ToggleSwitch(
+      checked: checked,
+      onChanged: onChanged,
+      style: style,
+      thumb: thumb,
+    );
+    return TappableListTile(
+      leading: toggleSwitch,
+      title: title,
+      subtitle: subtitle,
+      onTap: onChanged == null ? null : () => onChanged!(!checked),
+      autofocus: autofocus,
+      focusNode: focusNode,
+      isThreeLine: isThreeLine,
+      tileColor: tileColor,
+      shape: shape,
+    );
+  }
+}
+
+class RadioListTile extends StatelessWidget {
+  const RadioListTile({
+    Key? key,
+    required this.checked,
+    this.onChanged,
+    this.title,
+    this.subtitle,
+    this.isThreeLine = false,
+    this.style,
+    this.autofocus = false,
+    this.focusNode,
+    this.tileColor,
+    this.shape,
+  }) : super(key: key);
+
+  final bool checked;
+  final ValueChanged<bool>? onChanged;
+
+  final Widget? title;
+  final Widget? subtitle;
+  final bool isThreeLine;
+
+  final RadioButtonStyle? style;
+
+  final bool autofocus;
+  final FocusNode? focusNode;
+
+  final ButtonState<Color>? tileColor;
+  final ButtonState<ShapeBorder>? shape;
+
+  @override
+  Widget build(BuildContext context) {
+    final radio = RadioButton(
+      checked: checked,
+      onChanged: onChanged,
+      style: style,
+    );
+    return TappableListTile(
+      leading: radio,
+      title: title,
+      subtitle: subtitle,
+      onTap: onChanged == null ? null : () => onChanged!(!checked),
+      autofocus: autofocus,
+      focusNode: focusNode,
+      isThreeLine: isThreeLine,
+      tileColor: tileColor,
+      shape: shape,
     );
   }
 }

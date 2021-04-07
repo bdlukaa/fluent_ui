@@ -10,26 +10,17 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
-        'Theme mode',
-        style: context.theme.typography?.subheader,
-      ),
+      Text('Theme mode', style: context.theme.typography?.subheader),
       ...List.generate(ThemeMode.values.length, (index) {
         final mode = ThemeMode.values[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 4.0),
-          child: Row(children: [
-            RadioButton(
-              checked: appTheme.mode == mode,
-              onChanged: (value) {
-                if (value) {
-                  appTheme.mode = mode;
-                }
-              },
-            ),
-            SizedBox(width: 4),
-            Text('$mode'),
-          ]),
+        return RadioListTile(
+          checked: appTheme.mode == mode,
+          onChanged: (value) {
+            if (value) {
+              appTheme.mode = mode;
+            }
+          },
+          title: Text('$mode', style: TextStyle(fontWeight: FontWeight.normal)),
         );
       }),
       Text(

@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [1.7.2] - [06/04/2021]
+
+- **FIX** Animation when using `NavigationPanelBody` now works as expected
+- **NEW** `CheckboxListTile`, `SwitchListTile` and `RadioListTile`
+- **FIX** It's now not possible to focus a disabled `TextBox`
+
 ## [1.7.1] - [06/04/2021]
 
 - **FIX** The mouse cursor in a disabled input is now `basic` instead of `forbidden`
@@ -28,8 +34,8 @@ Date format: DD/MM/YYYY
 ## [1.5.0] - [02/04/2021]
 
 - Added `Diagnostics` to many widgets
-- **NEW** `AutoSuggestBox`
-- **NEW** `Flyout` and `FlyoutContent`
+- **NEW** `AutoSuggestBox` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box))
+- **NEW** `Flyout` and `FlyoutContent` (Folllows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/flyouts))
 - **FIXED** Popup was being shown off-screen.
 
   **DEVELOPER NOTE** The solution for this was to make it act like a tooltip: only show the popup above or under the `child`. This was a hard choice, but the only viable option that would work on small screens/devices. This also made `Flyout` easier to implement. This should be changed when multi-window support is available.
@@ -49,7 +55,7 @@ Date format: DD/MM/YYYY
 ## [1.4.0] - [28/03/2021]
 
 - **NEW** `InfoHeader`
-- **NEW** `ComboBox`
+- **NEW** `ComboBox` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/checkbox))
 - **NEW** `TappableListTile`
 - **BREAKING** Removed `DropdownButton` and `Button.dropdown` 
 
@@ -110,7 +116,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 ## [1.3.0] - [22/03/2021]
 
 - **NEW** Determinate `ProgressBar` and `ProgressRing`
-- **NEW** `TabView`
+- **NEW** `TabView` ([#TabView](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view))
 
 ## [1.2.5] - [21/03/2021]
 
@@ -146,10 +152,10 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 - **FIDELITY** Improved `ToggleButton` fidelity
 - **NEW** `NavigationPanelBody`
 - **NEW** Page transitions
-  - `EntrancePageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#page-refresh))
-  - `DrillInPageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#drill))
-  - `HorizontalSlidePageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#horizontal-slide))
-  - `SuppressPageTransition` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#suppress))
+  - `EntrancePageTransition` ([#PageRefresh](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#page-refresh))
+  - `DrillInPageTransition` ([#Drill](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#drill))
+  - `HorizontalSlidePageTransition` ([#HorizontalSlide](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#horizontal-slide))
+  - `SuppressPageTransition` ([#Supress](https://docs.microsoft.com/en-us/windows/uwp/design/motion/page-transitions#suppress))
 - Add timing and easing to style. (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/motion/timing-and-easing))
   - **NEW** `Style.fastAnimationDuration` (Defaults to 150ms)
   - **NEW** `Style.mediumAnimationDuration` (Defaults to 300ms)
@@ -161,7 +167,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 ## [1.1.0] - Fidelity update - [14/03/2021]
 
 - **BREAKING** Removed `Card` widget. Use `Acrylic` instead
-- **NEW** `Acrylic` widget
+- **NEW** `Acrylic` widget ([#Acrylic](https://docs.microsoft.com/en-us/windows/uwp/design/style/acrylic))
 - **NEW** **NAVIGATION PANEL** `bottom` property
 - **FIDELITY** Improved the corder radius of some widgets (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/style/rounded-corner#page-or-app-wide-cornerradius-changes))
 - **FIX** **FIDELITY** Dark theme hovering color

@@ -71,6 +71,7 @@ class YesNoPickerControl extends StatelessWidget {
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(4.0),
             ),
+            border: state.isFocused ? focusedButtonBorder(context.theme) : null,
           ),
           scaleFactor: 1.0,
         )),
@@ -82,14 +83,6 @@ class YesNoPickerControl extends StatelessWidget {
             child: Button(
               text: Icon(Icons.check),
               onPressed: onChanged,
-              style: ButtonStyle(
-                decoration: (state) => BoxDecoration(
-                  color: uncheckedInputColor(context.theme, state),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(4.0),
-                  ),
-                ),
-              ),
             ),
           ),
         ),
@@ -99,14 +92,6 @@ class YesNoPickerControl extends StatelessWidget {
             child: Button(
               text: Icon(Icons.close),
               onPressed: onCancel,
-              style: ButtonStyle(
-                decoration: (state) => BoxDecoration(
-                  color: uncheckedInputColor(context.theme, state),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(4.0),
-                  ),
-                ),
-              ),
             ),
           ),
         ),
@@ -129,6 +114,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final style = ButtonStyle(
       padding: EdgeInsets.all(2.0),
       margin: EdgeInsets.zero,
@@ -137,6 +123,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
           color: buttonColor(context.theme, state),
+          border: state.isFocused ? focusedButtonBorder(context.theme) : null,
         );
       },
     );
@@ -152,7 +139,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               left: 0,
               right: 0,
               child: Button(
-                text: Icon(Icons.keyboard_arrow_down, size: 14),
+                text: Icon(Icons.keyboard_arrow_up, size: 14),
                 onPressed: onBackward,
                 style: style,
               ),

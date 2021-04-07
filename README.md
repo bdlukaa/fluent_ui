@@ -38,6 +38,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
+  - **TODO** [Reveal Highlight](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal)
 - [Navigation](#navigation)
   - [Navigation panel](#navigation-panel)
   - [Tab View](#tab-view)
@@ -180,6 +181,7 @@ You can change the style brightness to change the color of your app.
 1. `Brightness.light`
 
    ![Light theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/light-theme.svg)
+
 2. `Brightness.dark`
 
    ![Dark theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/dark-theme.svg)
@@ -855,6 +857,8 @@ The code above produces the following:
 
 Acrylic is a type of Brush that creates a translucent texture. You can apply acrylic to app surfaces to add depth and help establish a visual hierarchy.
 
+![Acrylic](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/header-acrylic.svg)
+
 #### Usage
 
 You can easily use the `Acrylic` widget as a substitute for the `Container`, because it has all the necessary properties it has, but don't use it everywhere everytime:
@@ -1049,6 +1053,27 @@ The code above produces the following:
 
 If you want to create a tappable tile, use `TappableListTile` instead.
 
+You can create the following variations of a `ListTile`:
+
+- CheckboxListTile: a `TappableListTile` with a `Checkbox` in the leading.
+- SwitchListTile: a `TappableListTile` with a `ToggleSwitch` in the leading.
+- RadioListTile: a `TappableListTile` with a `RadioButton` in the leading.
+
+They share a single pattern. Here's how to implement the following image:
+
+![CheckboxListTile Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox1.png)
+
+```dart
+CheckboxListTile(
+  value: true,
+  onChanged: (v) => print(v),
+  title: Text(
+    'I agree to the terms of service for this site',
+    style: TextStyle(fontWeight: FontWeight.normal),
+  ),
+)
+```
+
 ### Screenshots
 
 ![Single line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/singlelineicon.png)\
@@ -1089,32 +1114,35 @@ This will produce the same as the image above.
 
 The list of equivalents between this library and `flutter/material.dart`
 
-| Material                  | Fluent          |
-| ------------------------- | --------------- |
-| TextButton                | Button          |
-| IconButton                | IconButton      |
-| Checkbox                  | Checkbox        |
-| RadioButton               | RadioButton     |
-| -                         | RatingBar       |
-| -                         | SplitButton     |
-| -                         | ToggleButton    |
-| Switch                    | ToggleSwitch    |
-| TextField                 | TextBox         |
-| DropdownButton            | ComboBox        |
-| -                         | AutoSuggestBox  |
-| AlertDialog               | ContentDialog   |
-| MaterialBanner            | InfoBar         |
-| Tooltip                   | Tooltip         |
-| -                         | Flyout          |
-| Drawer                    | NavigationPanel |
-| Divider                   | Divider         |
-| VerticalDivider           | Divider         |
-| Card                      | Acrylic         |
-| ListTile                  | ListTile        |
-| LinearProgressIndicator   | ProgressBar     |
-| CircularProgressIndicator | ProgressRing    |
-| \_DatePickerDialog        | DatePicker      |
-| \_TimePickerDialog        | TimePicker      |
+| Material                  | Fluent           |
+| ------------------------- | ---------------- |
+| TextButton                | Button           |
+| IconButton                | IconButton       |
+| Checkbox                  | Checkbox         |
+| RadioButton               | RadioButton      |
+| -                         | RatingBar        |
+| -                         | SplitButton      |
+| -                         | ToggleButton     |
+| Switch                    | ToggleSwitch     |
+| TextField                 | TextBox          |
+| DropdownButton            | ComboBox         |
+| -                         | AutoSuggestBox   |
+| AlertDialog               | ContentDialog    |
+| MaterialBanner            | InfoBar          |
+| Tooltip                   | Tooltip          |
+| -                         | Flyout           |
+| Drawer                    | NavigationPanel  |
+| Divider                   | Divider          |
+| VerticalDivider           | Divider          |
+| Card                      | Acrylic          |
+| ListTile                  | ListTile         |
+| RadioListTile             | RadioListTile    |
+| CheckboxListTile          | CheckboxListTile |
+| SwitchListTile            | SwitchListTile   |
+| LinearProgressIndicator   | ProgressBar      |
+| CircularProgressIndicator | ProgressRing     |
+| \_DatePickerDialog        | DatePicker       |
+| \_TimePickerDialog        | TimePicker       |
 
 ## Contribution
 
