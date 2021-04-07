@@ -38,6 +38,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
+  - [Reveal Focus](#reveal-focus)
   - **TODO** [Reveal Highlight](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal)
 - [Navigation](#navigation)
   - [Navigation panel](#navigation-panel)
@@ -217,6 +218,76 @@ You should use one font throughout your app's UI, and we recommend sticking with
 The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 
 ![Type ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-ramp.png)
+
+## Reveal Focus
+
+Reveal Focus is a lighting effect for [10-foot experiences](https://docs.microsoft.com/en-us/windows/uwp/design/devices/designing-for-tv), such as Xbox One and television screens. It animates the border of focusable elements, such as buttons, when the user moves gamepad or keyboard focus to them. It's turned off by default, but it's simple to enable. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal-focus)
+
+Reveal Focus calls attention to focused elements by adding an animated glow around the element's border:
+
+![Reveal Focus Preview](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/traveling-focus-fullscreen-light-rf.gif)
+
+This is especially helpful in 10-foot scenarios where the user might not be paying full attention to the entire TV screen.
+
+### Enabling it
+
+Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `Style`:
+
+```dart
+style: Style(
+  focusStyle: FocusStyle(
+    glowFactor: 4.0,
+  ),
+),
+```
+
+To enable it in a 10 foot screen, use the method `is10footScreen`:
+
+```dart
+import 'dart:ui' as ui;
+
+style: Style(
+  focusStyle: FocusStyle(
+    glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
+  ),
+),
+```
+
+Go to the [example](/example) project to a full example
+
+### Why isn't Reveal Focus on by default?
+
+As you can see, it's fairly easy to turn on Reveal Focus when the app detects it's running on 10 foot screen. So, why doesn't the system just turn it on for you? Because Reveal Focus increases the size of the focus visual, which might cause issues with your UI layout. In some cases, you'll want to customize the Reveal Focus effect to optimize it for your app.
+
+### Customizing Reveal Focus
+
+You can customize the focus border, border radius and glow color:
+
+```dart
+focusStyle: FocusStyle(
+  borderRadius: BorderRadius.zero,
+  glowColor: style.accentColor?.withOpacity(0.2),
+  glowFactor: 0.0,
+  border: BorderSide(
+    width: 2.0,
+    color: style.inactiveColor ?? Colors.transparent,
+  ),
+),
+```
+
+To customize it to a single widget, wrap the widget in a `Theme` widget, and change the options you want:
+
+```dart
+Theme(
+  style: context.theme?.copyWith(Style(
+    focusStyle: ..., // set your FocusStyle here
+  )),
+  child: Button(
+    text: Text('Custom Focus Button'),
+    onPressed: () {},
+  )
+),
+```
 
 # Navigation
 

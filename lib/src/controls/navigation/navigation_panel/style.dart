@@ -31,7 +31,7 @@ class NavigationPanelStyle with Diagnosticable {
     this.unselectedIconColor,
   });
 
-  static NavigationPanelStyle defaultTheme(Style style) {
+  factory NavigationPanelStyle.standard(Style style) {
     final disabledTextStyle = TextStyle(
       color: style.disabledColor,
       fontWeight: FontWeight.bold,

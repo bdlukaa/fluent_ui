@@ -5,7 +5,7 @@ const kPickerContentPadding = EdgeInsets.symmetric(
   vertical: 4.0,
 );
 
-const kPickerHeight = 36.0;
+const kPickerHeight = 32.0;
 const kPickerDiameterRatio = 100.0;
 
 const kPopupHeight = kOneLineTileHeight * 10;
@@ -71,7 +71,6 @@ class YesNoPickerControl extends StatelessWidget {
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(4.0),
             ),
-            border: state.isFocused ? focusedButtonBorder(context.theme) : null,
           ),
           scaleFactor: 1.0,
         )),
@@ -122,15 +121,15 @@ class PickerNavigatorIndicator extends StatelessWidget {
       decoration: (state) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: buttonColor(context.theme, state),
-          border: state.isFocused ? focusedButtonBorder(context.theme) : null,
+          color: ButtonStyle.buttonColor(context.theme, state),
         );
       },
     );
     return HoverButton(
       onPressed: () {},
       builder: (context, state) {
-        final isHovering = state.isHovering || state.isPressing;
+        final isHovering =
+            state.isHovering || state.isPressing || state.isFocused;
         return Stack(children: [
           child,
           if (isHovering)

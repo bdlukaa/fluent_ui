@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -54,6 +56,10 @@ class MyApp extends StatelessWidget {
                     ? Brightness.dark
                     : Brightness.light
                 : null,
+            focusStyle: FocusStyle(
+              glowFactor:
+                  is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
+            ),
           ),
         );
       },

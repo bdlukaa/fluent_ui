@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/utils/focus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -26,8 +25,10 @@ class RatingBar extends StatefulWidget {
     this.semanticsLabel,
     this.focusNode,
     this.autofocus = false,
-    // TODO: starSpacing
+    this.starSpacing = 0,
   })  : assert(rating >= 0 && rating <= amount),
+        assert(starSpacing >= 0),
+        assert(amount > 0),
         super(key: key);
 
   /// The amount of stars in the bar. The default is 5
@@ -52,6 +53,9 @@ class RatingBar extends StatefulWidget {
 
   /// The size of the icon. If `null`, uses [IconStyle.size]
   final double? iconSize;
+
+  /// The space between each icon
+  final double starSpacing;
 
   /// The color of the icons that are rated. If `null`, uses [Style.accentColor]
   final Color? ratedIconColor;
@@ -92,6 +96,7 @@ class RatingBar extends StatefulWidget {
       value: autofocus,
       ifFalse: 'manual focus',
     ));
+    properties.add(DoubleProperty('starSpacing', starSpacing));
   }
 }
 
@@ -124,7 +129,7 @@ class _RatingBarState extends State<RatingBar> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
     super.dispose();
   }
 
@@ -180,7 +185,7 @@ class _RatingBarState extends State<RatingBar> {
 
   void _handleUpdate(double x, double? size) {
     final iSize = (widget.iconSize ?? size ?? 24);
-    final value = x / iSize;
+    final value = (x / iSize) - (widget.starSpacing / widget.amount);
     if (value <= widget.amount && !value.isNegative)
       widget.onChanged?.call(value);
   }
@@ -225,13 +230,20 @@ class _RatingBarState extends State<RatingBar> {
                       if (r > 1)
                         r = 1;
                       else if (r < 0) r = 0;
-                      return RatingIcon(
+                      Widget icon = RatingIcon(
                         rating: r,
                         icon: widget.icon ?? Icons.star_rate_sharp,
                         ratedColor: widget.ratedIconColor,
                         unratedColor: widget.unratedIconColor,
                         size: widget.iconSize,
                       );
+                      if (index != widget.amount - 1) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: widget.starSpacing),
+                          child: icon,
+                        );
+                      }
+                      return icon;
                     });
                     if (Directionality.of(context) == TextDirection.rtl) {
                       return items.reversed.toList();

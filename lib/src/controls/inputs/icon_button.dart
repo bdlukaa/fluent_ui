@@ -100,16 +100,13 @@ class IconButtonStyle with Diagnosticable {
     this.iconStyle,
   });
 
-  static IconButtonStyle defaultTheme(Style style) {
+  factory IconButtonStyle.standard(Style style) {
     final def = IconButtonStyle(
       cursor: buttonCursor,
       decoration: (state) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(2),
           color: uncheckedInputColor(style, state),
-          border: state.isFocused
-              ? focusedButtonBorder(style)
-              : Border.all(style: BorderStyle.none),
         );
       },
       padding: EdgeInsets.all(4),

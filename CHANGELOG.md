@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [1.7.3] - [07/04/2021]
+
+- **FIX** Improved `ListTile` sizing ([#Spacing](https://docs.microsoft.com/en-us/windows/uwp/design/style/spacing))
+- **NEW** `FocusStyle` and support for glow focus
+- **NEW** `RatingBar.starSpacing`
+
 ## [1.7.2] - [06/04/2021]
 
 - **FIX** Animation when using `NavigationPanelBody` now works as expected

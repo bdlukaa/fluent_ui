@@ -93,7 +93,7 @@ class IconStyle with Diagnosticable {
 
   IconStyle({this.color, this.size, this.opacity});
 
-  static IconStyle defaultTheme(Style style) {
+  factory IconStyle.standard(Style style) {
     return IconStyle(
       size: 22,
       opacity: 1,

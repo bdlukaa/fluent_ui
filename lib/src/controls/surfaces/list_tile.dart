@@ -2,11 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../utils/focus.dart';
-
-const kThreeLineTileHeight = 80.0;
+const kThreeLineTileHeight = 60.0;
 const kTwoLineTileHeight = 52.0;
-const kOneLineTileHeight = 48.0;
+const kOneLineTileHeight = 40.0;
 
 const kDefaultContentPadding = EdgeInsets.symmetric(
   horizontal: 12.0,
@@ -90,11 +88,13 @@ class ListTile extends StatelessWidget {
                   style: (style.typography?.base ?? TextStyle()).copyWith(
                     fontSize: 16,
                   ),
+                  overflow: TextOverflow.clip,
                 ),
               if (subtitle != null)
                 DefaultTextStyle(
                   child: subtitle!,
                   style: style.typography?.body ?? TextStyle(),
+                  overflow: TextOverflow.clip,
                 ),
             ],
           ),
@@ -168,11 +168,10 @@ class TappableListTile extends StatelessWidget {
           tileColor: tileColor,
           shape: shape?.call(state),
         );
-        child = FocusBorder(
+        return FocusBorder(
           child: child,
           focused: state.isFocused,
         );
-        return child;
       },
     );
   }

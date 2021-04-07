@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/utils/focus.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -65,12 +65,11 @@ class RadioButton extends StatelessWidget {
               ? style?.checkedDecoration!(state)
               : style?.uncheckedDecoration!(state),
         );
-        child = FocusBorder(
-          focused: state.isFocused,
-          child: child,
-        );
         return Semantics(
-          child: child,
+          child: FocusBorder(
+            focused: state.isFocused,
+            child: child,
+          ),
           selected: checked,
         );
       },
@@ -96,7 +95,7 @@ class RadioButtonStyle with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  static RadioButtonStyle defaultTheme(Style style) {
+  factory RadioButtonStyle.standard(Style style) {
     return RadioButtonStyle(
       cursor: buttonCursor,
       animationDuration: style.mediumAnimationDuration,

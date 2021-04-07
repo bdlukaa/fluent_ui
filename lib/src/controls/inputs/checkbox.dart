@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import '../../utils/focus.dart';
 
 /// A check box is used to select or deselect action items. It can
 /// be used for a single item or for a list of multiple items that
@@ -104,13 +103,12 @@ class Checkbox extends StatelessWidget {
             }(),
           ),
         );
-        child = FocusBorder(
-          focused: state.isFocused,
-          child: child,
-        );
         return Semantics(
           checked: checked,
-          child: child,
+          child: FocusBorder(
+            focused: state.isFocused,
+            child: child,
+          ),
         );
       },
     );
@@ -151,7 +149,7 @@ class CheckboxStyle with Diagnosticable {
     this.animationCurve,
   });
 
-  static CheckboxStyle defaultTheme(Style style, [Brightness? brightness]) {
+  factory CheckboxStyle.standard(Style style) {
     final radius = BorderRadius.circular(3);
     return CheckboxStyle(
       cursor: buttonCursor,

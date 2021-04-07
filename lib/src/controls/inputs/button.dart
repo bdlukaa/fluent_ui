@@ -174,7 +174,7 @@ class _ButtonState extends State<Button> {
             },
       onLongPress: widget.onLongPress,
       builder: (context, state) {
-        return AnimatedContainer(
+        Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style?.animationDuration ??
@@ -199,43 +199,10 @@ class _ButtonState extends State<Button> {
             ],
           ),
         );
+        return FocusBorder(child: child, focused: state.isFocused);
       },
     );
   }
-}
-
-Color buttonColor(Style style, ButtonStates state) {
-  if (style.brightness == Brightness.light) {
-    late Color color;
-    if (state.isDisabled)
-      color = style.disabledColor!;
-    else if (state.isPressing)
-      color = Colors.grey[70]!;
-    else if (state.isHovering)
-      color = Colors.grey[40]!;
-    else
-      color = Colors.grey[50]!;
-    return color;
-  } else {
-    late Color color;
-    if (state.isDisabled)
-      color = style.disabledColor!;
-    else if (state.isPressing)
-      color = Color.fromARGB(255, 102, 102, 102);
-    else if (state.isHovering)
-      color = Color.fromARGB(255, 31, 31, 31);
-    else
-      color = Color.fromARGB(255, 51, 51, 51);
-    return color;
-  }
-}
-
-BorderSide focusedButtonBorderSide(Color color) {
-  return BorderSide(width: 2, color: color);
-}
-
-Border focusedButtonBorder(Style style) {
-  return Border.fromBorderSide(focusedButtonBorderSide(style.inactiveColor!));
 }
 
 @immutable
@@ -265,7 +232,7 @@ class ButtonStyle with Diagnosticable {
     this.animationCurve,
   });
 
-  static ButtonStyle defaultTheme(Style style) {
+  factory ButtonStyle.standard(Style style) {
     return ButtonStyle(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
@@ -275,7 +242,6 @@ class ButtonStyle with Diagnosticable {
       decoration: (state) => BoxDecoration(
         borderRadius: BorderRadius.circular(2),
         color: buttonColor(style, state),
-        border: state.isFocused ? focusedButtonBorder(style) : null,
       ),
       scaleFactor: 0.95,
       textStyle: (state) =>
@@ -327,5 +293,31 @@ class ButtonStyle with Diagnosticable {
       'animationCurve',
       animationCurve,
     ));
+  }
+
+  static Color buttonColor(Style style, ButtonStates state) {
+    if (style.brightness == Brightness.light) {
+      late Color color;
+      if (state.isDisabled)
+        color = style.disabledColor!;
+      else if (state.isPressing)
+        color = Colors.grey[70]!;
+      else if (state.isHovering)
+        color = Colors.grey[40]!;
+      else
+        color = Colors.grey[50]!;
+      return color;
+    } else {
+      late Color color;
+      if (state.isDisabled)
+        color = style.disabledColor!;
+      else if (state.isPressing)
+        color = Color.fromARGB(255, 102, 102, 102);
+      else if (state.isHovering)
+        color = Color.fromARGB(255, 31, 31, 31);
+      else
+        color = Color.fromARGB(255, 51, 51, 51);
+      return color;
+    }
   }
 }

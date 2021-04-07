@@ -6,8 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
 
-import '../../utils/focus.dart';
-
 /// A slider is a control that lets the user select from a
 /// range of values by moving a thumb control along a track.
 ///
@@ -254,7 +252,7 @@ class SliderStyle with Diagnosticable {
     this.labelBackgroundColor,
   });
 
-  static SliderStyle defaultTheme(Style? style) {
+  factory SliderStyle.standard(Style? style) {
     final def = SliderStyle(
       thumbColor: style?.accentColor,
       activeColor: style?.accentColor,

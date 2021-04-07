@@ -12,8 +12,8 @@ class Theme extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<Theme>()!.data.build();
   }
 
-  static Style maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Theme>()!.data.build();
+  static Style? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Theme>()?.data.build();
   }
 
   @override
@@ -58,6 +58,7 @@ class Style with Diagnosticable {
   final CheckboxStyle? checkboxStyle;
   final ContentDialogStyle? dialogStyle;
   final DividerStyle? dividerStyle;
+  final FocusStyle? focusStyle;
   final IconStyle? iconStyle;
   final InfoBarStyle? infoBarStyle;
   final RadioButtonStyle? radioButtonStyle;
@@ -99,11 +100,12 @@ class Style with Diagnosticable {
     this.toggleButtonStyle,
     this.sliderStyle,
     this.infoBarStyle,
+    this.focusStyle,
   });
 
   Style build() {
     final brightness = this.brightness ?? Brightness.light;
-    final defaultStyle = Style(
+    Style style = Style(
       fasterAnimationDuration: Duration(milliseconds: 90),
       fastAnimationDuration: Duration(milliseconds: 150),
       mediumAnimationDuration: Duration(milliseconds: 300),
@@ -144,36 +146,34 @@ class Style with Diagnosticable {
       typography: Typography.defaultTypography(brightness: brightness)
           .copyWith(typography),
     );
-    return defaultStyle.copyWith(Style(
-      buttonStyle: ButtonStyle.defaultTheme(defaultStyle).copyWith(buttonStyle),
+    style = style.copyWith(Style(
+      focusStyle: FocusStyle.standard(style).copyWith(focusStyle),
+    ));
+    return style.copyWith(Style(
+      buttonStyle: ButtonStyle.standard(style).copyWith(buttonStyle),
       iconButtonStyle:
-          IconButtonStyle.defaultTheme(defaultStyle).copyWith(iconButtonStyle),
-      checkboxStyle:
-          CheckboxStyle.defaultTheme(defaultStyle).copyWith(checkboxStyle),
-      toggleButtonStyle: ToggleButtonStyle.defaultTheme(defaultStyle)
-          .copyWith(toggleButtonStyle),
-      toggleSwitchStyle: ToggleSwitchStyle.defaultTheme(defaultStyle)
-          .copyWith(toggleSwitchStyle),
-      iconStyle: IconStyle.defaultTheme(defaultStyle).copyWith(iconStyle),
-      splitButtonStyle: SplitButtonStyle.defaultTheme(defaultStyle)
-          .copyWith(splitButtonStyle),
-      dialogStyle:
-          ContentDialogStyle.defaultTheme(defaultStyle).copyWith(dialogStyle),
-      tooltipStyle:
-          TooltipStyle.defaultTheme(defaultStyle).copyWith(tooltipStyle),
-      dividerStyle:
-          DividerStyle.defaultTheme(defaultStyle).copyWith(dividerStyle),
-      navigationPanelStyle: NavigationPanelStyle.defaultTheme(defaultStyle)
-          .copyWith(navigationPanelStyle),
-      radioButtonStyle: RadioButtonStyle.defaultTheme(defaultStyle)
-          .copyWith(radioButtonStyle),
-      sliderStyle: SliderStyle.defaultTheme(defaultStyle).copyWith(sliderStyle),
-      infoBarStyle:
-          InfoBarStyle.defaultTheme(defaultStyle).copyWith(infoBarStyle),
+          IconButtonStyle.standard(style).copyWith(iconButtonStyle),
+      checkboxStyle: CheckboxStyle.standard(style).copyWith(checkboxStyle),
+      toggleButtonStyle:
+          ToggleButtonStyle.standard(style).copyWith(toggleButtonStyle),
+      toggleSwitchStyle:
+          ToggleSwitchStyle.standard(style).copyWith(toggleSwitchStyle),
+      iconStyle: IconStyle.standard(style).copyWith(iconStyle),
+      splitButtonStyle:
+          SplitButtonStyle.standard(style).copyWith(splitButtonStyle),
+      dialogStyle: ContentDialogStyle.standard(style).copyWith(dialogStyle),
+      tooltipStyle: TooltipStyle.standard(style).copyWith(tooltipStyle),
+      dividerStyle: DividerStyle.standard(style).copyWith(dividerStyle),
+      navigationPanelStyle:
+          NavigationPanelStyle.standard(style).copyWith(navigationPanelStyle),
+      radioButtonStyle:
+          RadioButtonStyle.standard(style).copyWith(radioButtonStyle),
+      sliderStyle: SliderStyle.standard(style).copyWith(sliderStyle),
+      infoBarStyle: InfoBarStyle.standard(style).copyWith(infoBarStyle),
     ));
   }
 
-  static Style fallback([Brightness? brightness]) {
+  factory Style.fallback([Brightness? brightness]) {
     return Style(brightness: brightness).build();
   }
 
@@ -215,6 +215,7 @@ class Style with Diagnosticable {
       infoBarStyle: other.infoBarStyle ?? infoBarStyle,
       inactiveBackgroundColor:
           other.inactiveBackgroundColor ?? inactiveBackgroundColor,
+      focusStyle: other.focusStyle ?? focusStyle,
     );
   }
 

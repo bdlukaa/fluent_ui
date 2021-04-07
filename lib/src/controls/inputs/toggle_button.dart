@@ -104,7 +104,7 @@ class ToggleButtonStyle with Diagnosticable {
     this.scaleFactor,
   });
 
-  static ToggleButtonStyle defaultTheme(Style style, [Brightness? brightness]) {
+  factory ToggleButtonStyle.standard(Style style) {
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
@@ -113,28 +113,20 @@ class ToggleButtonStyle with Diagnosticable {
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
-        border: state.isFocused
-            ? focusedButtonBorder(style)
-            : Border.all(width: 0.6, color: checkedInputColor(style, state)),
+        border: Border.all(width: 0.6, color: checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)
           return defaultDecoration.copyWith(
             color: uncheckedInputColor(style, state),
-            border: () {
-              if (state.isFocused) return focusedButtonBorder(style);
-              return Border.all(
-                width: 0.6,
-                color: uncheckedInputColor(style, state),
-              );
-            }(),
+            border: Border.all(
+              width: 0.6,
+              color: uncheckedInputColor(style, state),
+            ),
           );
         return defaultDecoration.copyWith(
-          color: buttonColor(style, state),
-          border: () {
-            if (state.isFocused) return focusedButtonBorder(style);
-            return Border.all(width: 0.6, color: Colors.transparent);
-          }(),
+          color: ButtonStyle.buttonColor(style, state),
+          border: Border.all(width: 0.6, color: Colors.transparent),
         );
       },
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

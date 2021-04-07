@@ -66,7 +66,7 @@ class TooltipStyle with Diagnosticable {
     this.textStyle,
   });
 
-  static TooltipStyle defaultTheme(Style style) {
+  factory TooltipStyle.standard(Style style) {
     return TooltipStyle(
       height: 32.0,
       verticalOffset: 24.0,

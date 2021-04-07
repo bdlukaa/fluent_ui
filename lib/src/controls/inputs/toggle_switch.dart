@@ -2,8 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../utils/focus.dart';
-
 /// The toggle switch represents a physical switch that allows users to
 /// turn things on or off, like a light switch. Use toggle switch controls
 /// to present users with two mutually exclusive options (such as on/off),
@@ -115,12 +113,11 @@ class ToggleSwitch extends StatelessWidget {
                 state: state,
               ),
         );
-        child = FocusBorder(
-          child: child,
-          focused: state.isFocused,
-        );
         return Semantics(
-          child: child,
+          child: FocusBorder(
+            child: child,
+            focused: state.isFocused,
+          ),
           checked: checked,
         );
       },
@@ -186,7 +183,7 @@ class ToggleSwitchStyle with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  static ToggleSwitchStyle defaultTheme(Style style) {
+  factory ToggleSwitchStyle.standard(Style style) {
     final defaultThumbDecoration = BoxDecoration(shape: BoxShape.circle);
 
     final defaultDecoration = BoxDecoration(

@@ -147,7 +147,7 @@ class InfoBarStyle with Diagnosticable {
     this.padding,
   });
 
-  static InfoBarStyle defaultTheme(Style style) {
+  factory InfoBarStyle.standard(Style style) {
     return InfoBarStyle(
       padding: EdgeInsets.all(10),
       color: (severity) {
@@ -184,7 +184,7 @@ class InfoBarStyle with Diagnosticable {
             return Icons.error_outline;
         }
       },
-      actionStyle: ButtonStyle.defaultTheme(style).copyWith(ButtonStyle(
+      actionStyle: ButtonStyle.standard(style).copyWith(ButtonStyle(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.all(6),
       )),

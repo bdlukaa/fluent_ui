@@ -767,8 +767,8 @@ class _TextBoxState extends State<TextBox>
     return Theme(
       data: context.theme.copyWith(
         Style(
-          iconButtonStyle: IconButtonStyle.defaultTheme(context.theme)
-              .copyWith(
+          iconButtonStyle: context.theme.iconButtonStyle
+              ?.copyWith(
                 IconButtonStyle(
                   iconStyle: (_) => context.theme.iconStyle?.copyWith(
                     IconStyle(size: 18),

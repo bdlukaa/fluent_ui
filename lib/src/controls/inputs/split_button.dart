@@ -50,9 +50,7 @@ class SplitButtonBar extends StatelessWidget {
                             : Radius.zero,
                       )
                     : null,
-                color: buttonColor(context.theme, state),
-                border:
-                    state.isFocused ? focusedButtonBorder(context.theme) : null,
+                color: ButtonStyle.buttonColor(context.theme, state),
               ),
               margin: EdgeInsets.zero,
             ),
@@ -82,7 +80,7 @@ class SplitButtonStyle with Diagnosticable {
     this.defaultButtonStyle,
   });
 
-  static SplitButtonStyle defaultTheme(Style style) {
+  factory SplitButtonStyle.standard(Style style) {
     return SplitButtonStyle(
       borderRadius: BorderRadius.circular(4),
       interval: 1,

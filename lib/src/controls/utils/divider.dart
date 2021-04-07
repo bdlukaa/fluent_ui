@@ -45,7 +45,7 @@ class DividerStyle with Diagnosticable {
 
   const DividerStyle({this.thickness, this.decoration, this.margin});
 
-  static DividerStyle defaultTheme(Style style) {
+  factory DividerStyle.standard(Style style) {
     return DividerStyle(
       thickness: 1,
       margin: (direction) {

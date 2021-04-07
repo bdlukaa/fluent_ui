@@ -180,7 +180,7 @@ class ContentDialogStyle {
     this.elevationColor,
   });
 
-  static ContentDialogStyle defaultTheme(Style style) {
+  factory ContentDialogStyle.standard(Style style) {
     return ContentDialogStyle(
       decoration: BoxDecoration(
         color: style.scaffoldBackgroundColor,
@@ -199,8 +199,7 @@ class ContentDialogStyle {
       actionStyle: ButtonStyle(
         margin: EdgeInsets.zero,
         decoration: (state) => BoxDecoration(
-          color: buttonColor(style, state),
-          border: state.isFocused ? focusedButtonBorder(style) : null,
+          color: ButtonStyle.buttonColor(style, state),
         ),
       ),
       elevation: 8,
