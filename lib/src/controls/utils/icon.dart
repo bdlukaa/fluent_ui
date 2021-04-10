@@ -6,13 +6,13 @@ import 'package:flutter/widgets.dart' as w;
 /// A graphical icon widget drawn with a glyph from a font described in
 /// an [IconData] such as material's predefined [IconData]s in [Icons].
 ///
-/// Icons are not interactive. For an interactive icon, consider using 
+/// Icons are not interactive. For an interactive icon, consider using
 /// [IconButton]
-/// 
+///
 /// There must be an ambient [Directionality] widget when using [Icon].
 /// Typically this is introduced automatically by the [WidgetsApp] or
 /// [FluentApp].
-/// 
+///
 /// This widget assumes that the rendered icon is squared. Non-squared icons may
 /// render incorrectly.
 class Icon extends StatelessWidget {

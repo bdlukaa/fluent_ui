@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class Tooltip extends StatelessWidget {
   /// Creates a tooltip.
-  /// 
+  ///
   /// Wrap any widget in a [Tooltip] to show a message on mouse hover
   const Tooltip({
     Key? key,
@@ -76,10 +76,10 @@ class TooltipStyle with Diagnosticable {
 
   /// The empty space that surrounds the tooltip.
   ///
-  /// Defines the tooltip's outer [Container.margin]. By default, a long 
-  /// tooltip will span the width of its window. If long enough, a tooltip 
-  /// might also span the window's height. This property allows one to define 
-  /// how much space the tooltip must be inset from the edges of their display 
+  /// Defines the tooltip's outer [Container.margin]. By default, a long
+  /// tooltip will span the width of its window. If long enough, a tooltip
+  /// might also span the window's height. This property allows one to define
+  /// how much space the tooltip must be inset from the edges of their display
   /// window.
   final EdgeInsetsGeometry? margin;
 
@@ -112,7 +112,7 @@ class TooltipStyle with Diagnosticable {
   final Duration? showDuration;
 
   /// The style to use for the message of the tooltip.
-  /// 
+  ///
   /// If null, [Typography.caption] is used
   final TextStyle? textStyle;
 
