@@ -1,15 +1,48 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// The typography applied to a [Style]. It implements Window's [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+///
+/// | Do                                                  | Don't                                                                             |
+/// | :-------------------------------------------------- | :-------------------------------------------------------------------------------- |
+/// | Pick one font for your UI.                          | Don't mix multiple fonts.                                                         |
+/// | Use [body] for most text                            | Use "Caption" for primary action or any long strings.                             |
+/// | Use "Base" for titles when space is constrained.    | Use "Header" or "Subheader" if text needs to wrap.                                |
+/// | Keep to 50–60 letters per line for ease of reading. | Less than 20 characters or more than 60 characters per line is difficult to read. |
+/// | Clip text, and wrap if multiple lines are enabled.  | Use ellipses to avoid visual clutter.                                             |
+///
+/// ![Hierarchy](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-hierarchy.svg)
+///
+/// For more info, read [Typography](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography)
 class Typography with Diagnosticable {
+  /// The header style. Use this as the top of the hierarchy
+  ///
+  /// Don't use [header] if the text needs to wrap.
   final TextStyle? header;
+
+  /// The subheader style.
+  ///
+  /// Don't use [subheader] if the text needs to wrap.
   final TextStyle? subheader;
+
+  /// The title style.
   final TextStyle? title;
+
+  /// The subtitle style.
   final TextStyle? subtitle;
+
+  /// The base style. Use [base] for titles when space is constrained.
   final TextStyle? base;
+
+  /// The body style. Use [body] for most of the text.
   final TextStyle? body;
+
+  /// The caption style.
+  ///
+  /// Don't use [caption] for primary action or any long strings.
   final TextStyle? caption;
 
+  /// Creates a new [Typography]. To create the default typography, use [Typography.defaultTypography]
   const Typography({
     this.header,
     this.subheader,
@@ -20,7 +53,10 @@ class Typography with Diagnosticable {
     this.caption,
   });
 
-  static Typography defaultTypography({
+  /// The default typography.
+  ///
+  /// If [color] is null, uses [Colors.black] if [brightness] is [Brightness.dark], otherwise uses [Colors.white]
+  factory Typography.defaultTypography({
     required Brightness brightness,
     Color? color,
   }) {
@@ -60,6 +96,7 @@ class Typography with Diagnosticable {
     );
   }
 
+  /// Copy this with a new [typography]
   Typography copyWith(Typography? typography) {
     if (typography == null) return this;
     return Typography(

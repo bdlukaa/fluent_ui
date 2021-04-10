@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 class Divider extends StatelessWidget {
+  /// Creates a divider.
   const Divider({
     Key? key,
     this.direction = Axis.horizontal,
@@ -9,17 +10,30 @@ class Divider extends StatelessWidget {
     this.size,
   }) : super(key: key);
 
+  /// The current direction of the slider. Uses [Axis.horizontal] by default
   final Axis direction;
+
+  /// The `style` of the divider. It's mescled with [Style.dividerStyle]
   final DividerStyle? style;
 
+  /// The size of the divider. The opposite of the [DividerStyle.thickness]
   final double? size;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('size', size, ifNull: 'indeterminate'));
+    properties.add(DoubleProperty(
+      'size',
+      size,
+      ifNull: 'indeterminate',
+      defaultValue: 1.0,
+    ));
     properties.add(DiagnosticsProperty('style', style));
-    properties.add(EnumProperty('direction', direction));
+    properties.add(EnumProperty(
+      'direction',
+      direction,
+      defaultValue: Axis.horizontal,
+    ));
   }
 
   @override
@@ -39,8 +53,18 @@ class Divider extends StatelessWidget {
 
 @immutable
 class DividerStyle with Diagnosticable {
+  /// The thickness of the style.
+  ///
+  /// If it's horizontal, it corresponds to the divider
+  /// `height`, otherwise it corresponds to its `width`
   final double? thickness;
+
+  /// The decoration of the style. If null, defaults to a
+  /// [BoxDecoration] with a `Color(0xFFB7B7B7)` for light
+  /// mode and `Color(0xFF484848)` for dark mode
   final Decoration? decoration;
+
+  /// The margin callback of the style.
   final EdgeInsetsGeometry Function(Axis direction)? margin;
 
   const DividerStyle({this.thickness, this.decoration, this.margin});
@@ -56,7 +80,7 @@ class DividerStyle with Diagnosticable {
       },
       decoration: () {
         if (style.brightness == Brightness.light) {
-          return BoxDecoration(color: Color(0XFFB7B7B7));
+          return BoxDecoration(color: Color(0xFFB7B7B7));
         } else {
           return BoxDecoration(color: Color(0xFF484848));
         }
@@ -78,6 +102,6 @@ class DividerStyle with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
     properties.add(ObjectFlagProperty.has('margin', margin));
-    properties.add(DoubleProperty('thickness', thickness));
+    properties.add(DoubleProperty('thickness', thickness, defaultValue: 1.0));
   }
 }

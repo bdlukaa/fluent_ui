@@ -17,9 +17,11 @@ class Scaffold extends StatelessWidget {
   final Widget? footer;
   final Widget? left;
 
+  /// The background color of the scaffold.
+  /// If `null`, [Style.scaffoldBackgroundColor] is used
   final Color? backgroundColor;
 
-  /// Wheter the body expands. Set to false
+  /// Wheter the body expands or not
   final bool expandBody;
 
   @override

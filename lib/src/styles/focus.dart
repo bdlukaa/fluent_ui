@@ -5,7 +5,7 @@ class FocusBorder extends StatelessWidget {
   const FocusBorder({
     Key? key,
     required this.child,
-    required this.focused,
+    this.focused = true,
     this.style,
   }) : super(key: key);
 

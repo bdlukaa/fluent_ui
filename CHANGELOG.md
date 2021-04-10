@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.7.4] - [10/04/2021]
+
+- **FIX** Updated `Icon` widget to use Flutter's default icon widget
+- **NEW** Documentation
 ## [1.7.3] - [07/04/2021]
 
 - **FIX** Improved `ListTile` sizing ([#Spacing](https://docs.microsoft.com/en-us/windows/uwp/design/style/spacing))

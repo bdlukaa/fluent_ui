@@ -11,7 +11,15 @@ enum InfoBarSeverity {
   success,
 }
 
+/// The InfoBar control is for displaying app-wide status messages to 
+/// users that are highly visible yet non-intrusive. There are built-in 
+/// Severity levels to easily indicate the type of message shown as well 
+/// as the option to include your own call to action or hyperlink button. 
+/// Since the InfoBar is inline with other UI content the option is there 
+/// for the control to always be visible or dismissed by the user.
 class InfoBar extends StatelessWidget {
+
+  /// Creates an info bar.
   const InfoBar({
     Key? key,
     required this.title,
@@ -25,14 +33,21 @@ class InfoBar extends StatelessWidget {
 
   final InfoBarSeverity severity;
 
+  /// The style applied to this info bar. If non-null, it's 
+  /// mescled with [Style.infoBarStyle]
   final InfoBarStyle? style;
 
   final Widget title;
   final Widget? content;
   final Widget? action;
 
+  /// Called when the close button is pressed. If this is null, 
+  /// there will be no close button
   final void Function()? onClose;
 
+  /// If `true`, the info bar will be treated as long.
+  /// 
+  /// ![Long InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
   final bool isLong;
 
   @override
@@ -119,7 +134,7 @@ class InfoBar extends StatelessWidget {
                 ],
               ),
             ),
-          if (closeIcon != null)
+          if (closeIcon != null && onClose != null)
             IconButton(
               icon: Icon(closeIcon),
               onPressed: onClose,

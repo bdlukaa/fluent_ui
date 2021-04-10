@@ -6,21 +6,46 @@ import 'package:flutter/foundation.dart';
 const double _kMinProgressRingIndicatorSize = 36.0;
 const double _kMinProgressBarWidth = 130.0;
 
+/// A progress control provides feedback to the user that a
+/// long-running operation is underway. It can mean that the
+/// user cannot interact with the app when the progress indicator
+/// is visible, and can also indicate how long the wait time might be.
+///
+/// ![Determinate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-determinate.png)
+/// ![Indeterminate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-indeterminate.gif)
 class ProgressBar extends StatefulWidget {
-  ProgressBar({
+  /// Creates a new progress bar.
+  const ProgressBar({
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
     this.semanticsLabel,
-  })  : assert(() {
-          if (value == null) return true;
-          return value >= 0 && value <= 100;
-        }()),
+    this.backgroundColor,
+    this.activeColor,
+  })  : assert(value == null || value >= 0 && value <= 100),
         super(key: key);
 
+  /// The current value of the indicator. If non-null, produces
+  /// the following:
+  ///
+  /// ![Determinate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-determinate.png)
+  ///
+  /// If null, an indeterminate progress bar is created:
+  ///
+  /// ![Indeterminate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-indeterminate.gif)
   final double? value;
+
+  /// The height of the progess bar. Defaults to 4.5 logical pixels
   final double strokeWidth;
   final String? semanticsLabel;
+
+  /// The background color of the progress bar. If null,
+  /// [Style.inactiveColor] is used
+  final Color? backgroundColor;
+
+  /// The active color of the progress bar. If null,
+  /// [Style.accentColor] is used
+  final Color? activeColor;
 
   @override
   _ProgressBarState createState() => _ProgressBarState();
@@ -75,14 +100,16 @@ class _ProgressBarState extends State<ProgressBar>
       child: Semantics(
         label: widget.semanticsLabel,
         value: widget.value?.toStringAsFixed(2),
+        maxValueLength: 100,
         child: ValueListenableBuilder(
           valueListenable: _controller,
           builder: (context, value, child) => CustomPaint(
             painter: _ProgressBarPainter(
               value: widget.value == null ? null : widget.value! / 100,
               strokeWidth: widget.strokeWidth,
-              activeColor: style.accentColor!,
-              backgroundColor: style.inactiveBackgroundColor!,
+              activeColor: widget.activeColor ?? style.accentColor!,
+              backgroundColor:
+                  widget.backgroundColor ?? style.inactiveBackgroundColor!,
               p1: p1,
               p2: p2,
               idleFrames: idleFrames,
@@ -213,21 +240,46 @@ class _ProgressBarPainter extends CustomPainter {
   bool shouldRebuildSemantics(_ProgressBarPainter oldDelegate) => false;
 }
 
+/// A progress control provides feedback to the user that a
+/// long-running operation is underway. It can mean that the
+/// user cannot interact with the app when the progress indicator
+/// is visible, and can also indicate how long the wait time might be.
+///
+/// ![Determinate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring.jpg)
+/// ![Indeterminate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressring-indeterminate.gif)
 class ProgressRing extends StatefulWidget {
-  ProgressRing({
+  /// Creates progress ring.
+  const ProgressRing({
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
     this.semanticsLabel,
-  })  : assert(() {
-          if (value == null) return true;
-          return value >= 0 && value <= 100;
-        }()),
+    this.backgroundColor,
+    this.activeColor,
+  })  : assert(value == null || value >= 0 && value <= 100),
         super(key: key);
 
+  /// The current value of the indicator. If non-null, produces
+  /// the following:
+  ///
+  /// ![Determinate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring.jpg)
+  ///
+  /// If null, an indeterminate progress ring is created:
+  ///
+  /// ![Indeterminate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressring-indeterminate.gif)
   final double? value;
+
+  /// The stroke width of the progress ring. If null, defaults to 4.5 logical pixels
   final double strokeWidth;
   final String? semanticsLabel;
+
+  /// The background color of the progress ring. If null,
+  /// [Style.inactiveColor] is used
+  final Color? backgroundColor;
+
+  /// The active color of the progress ring. If null,
+  /// [Style.accentColor] is used
+  final Color? activeColor;
 
   @override
   _ProgressRingState createState() => _ProgressRingState();
@@ -290,9 +342,10 @@ class _ProgressRingState extends State<ProgressRing>
               builder: (context, value) {
                 return CustomPaint(
                   painter: _RingPainter(
-                    backgroundColor: style.inactiveBackgroundColor!,
+                    backgroundColor: widget.backgroundColor ??
+                        style.inactiveBackgroundColor!,
                     value: widget.value,
-                    color: style.accentColor!,
+                    color: widget.activeColor ?? style.accentColor!,
                     strokeWidth: widget.strokeWidth,
                     d1: d1,
                     d2: d2,
@@ -418,7 +471,8 @@ class _RingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_RingPainter oldDelegate) => true;
+  bool shouldRepaint(_RingPainter oldDelegate) =>
+      value == null || value != oldDelegate.value;
 
   @override
   bool shouldRebuildSemantics(_RingPainter oldDelegate) => false;
