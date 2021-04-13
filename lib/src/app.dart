@@ -1,7 +1,44 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
 
+/// An application that uses fluent design.
+///
+/// A convenience widget that wraps a number of widgets that are commonly
+/// required for fluent design applications.
+///
+/// The [FluentApp] configures the top-level [Navigator] to search for routes
+/// in the following order:
+///
+///  1. For the `/` route, the [home] property, if non-null, is used.
+///
+///  2. Otherwise, the [routes] table is used, if it has an entry for the route.
+///
+///  3. Otherwise, [onGenerateRoute] is called, if provided. It should return a
+///     non-null value for any _valid_ route not handled by [home] and [routes].
+///
+///  4. Finally if all else fails [onUnknownRoute] is called.
+///
+/// If a [Navigator] is created, at least one of these options must handle the
+/// `/` route, since it is used when an invalid [initialRoute] is specified on
+/// startup (e.g. by another application launching this one with an intent on
+/// Android; see [dart:ui.PlatformDispatcher.defaultRouteName]).
+///
+/// This widget also configures the observer of the top-level [Navigator] (if
+/// any) to perform [Hero] animations.
+///
+/// If [home], [routes], [onGenerateRoute], and [onUnknownRoute] are all null,
+/// and [builder] is not null, then no [Navigator] is created.
 class FluentApp extends StatefulWidget {
+  /// Creates a FluentApp.
+  ///
+  /// At least one of [home], [routes], [onGenerateRoute], or [builder] must be
+  /// non-null. If only [routes] is given, it must include an entry for the
+  /// [Navigator.defaultRouteName] (`/`), since that is the route used when the
+  /// application is launched with an intent that specifies an otherwise
+  /// unsupported route.
+  ///
+  /// This class creates an instance of [WidgetsApp].
+  ///
+  /// The boolean arguments, [routes], and [navigatorObservers], must not be null.
   const FluentApp({
     Key? key,
     this.navigatorKey,
@@ -10,7 +47,6 @@ class FluentApp extends StatefulWidget {
     this.onUnknownRoute,
     this.navigatorObservers = const <NavigatorObserver>[],
     this.initialRoute,
-    this.pageRouteBuilder,
     this.home,
     this.routes = const <String, WidgetBuilder>{},
     this.builder,
@@ -26,20 +62,20 @@ class FluentApp extends StatefulWidget {
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
-    this.debugShowWidgetInspector = false,
     this.debugShowCheckedModeBanner = true,
-    this.inspectorSelectButtonBuilder,
     this.shortcuts,
     this.actions,
     this.style,
     this.darkStyle,
     this.themeMode,
+    this.restorationScopeId,
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
         super(key: key);
 
+  /// Creates a [FluentApp] that uses the [Router] instead of a [Navigator].
   FluentApp.router({
     Key? key,
     this.style,
@@ -62,11 +98,10 @@ class FluentApp extends StatefulWidget {
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
-    this.debugShowWidgetInspector = false,
     this.debugShowCheckedModeBanner = true,
-    this.inspectorSelectButtonBuilder,
     this.shortcuts,
     this.actions,
+    this.restorationScopeId,
   })  : assert(routeInformationParser != null && routerDelegate != null,
             'The routeInformationParser and routerDelegate cannot be null.'),
         assert(supportedLocales.isNotEmpty),
@@ -75,7 +110,6 @@ class FluentApp extends StatefulWidget {
             backButtonDispatcher ?? RootBackButtonDispatcher(),
         navigatorKey = null,
         onGenerateRoute = null,
-        pageRouteBuilder = null,
         home = null,
         onGenerateInitialRoutes = null,
         onUnknownRoute = null,
@@ -83,71 +117,215 @@ class FluentApp extends StatefulWidget {
         initialRoute = null,
         super(key: key);
 
+  /// Default visual properties, like colors fonts and shapes, for this app's
+  /// fluent widgets.
+  ///
+  /// A second [darkStyle] [Style] value, which is used to provide a dark
+  /// version of the user interface can also be specified. [themeMode] will
+  /// control which style will be used if a [darkStyle] is provided.
+  ///
+  /// The default value of this property is the value of `Style(brightness: Brightness.light)`.
   final Style? style;
+
+  /// The [Style] to use when a 'dark mode' is requested by the system.
+  ///
+  /// Some host platforms allow the users to select a system-wide 'dark mode',
+  /// or the application may want to offer the user the ability to choose a
+  /// dark theme just for this application. This is theme that will be used for
+  /// such cases. [themeMode] will control which theme will be used.
+  ///
+  /// This theme should have a [Style.brightness] set to [Brightness.dark].
+  ///
+  /// Uses [theme] instead when null. Defaults to the value of
+  /// [Style(brightness: Brightness.light)] when both [darkStyle] and [theme] are null.
   final Style? darkStyle;
+
+  /// Determines which theme will be used by the application if both [theme]
+  /// and [darkTheme] are provided.
+  ///
+  /// If set to [ThemeMode.system], the choice of which theme to use will
+  /// be based on the user's system preferences. If the [MediaQuery.platformBrightnessOf]
+  /// is [Brightness.light], [theme] will be used. If it is [Brightness.dark],
+  /// [darkTheme] will be used (unless it is null, in which case [theme]
+  /// will be used.
+  ///
+  /// If set to [ThemeMode.light] the [theme] will always be used,
+  /// regardless of the user's system preference.
+  ///
+  /// If set to [ThemeMode.dark] the [darkTheme] will be used
+  /// regardless of the user's system preference. If [darkTheme] is null
+  /// then it will fallback to using [theme].
+  ///
+  /// The default value is [ThemeMode.system].
   final ThemeMode? themeMode;
 
+  /// {@macro flutter.widgets.widgetsApp.navigatorKey}
   final GlobalKey<NavigatorState>? navigatorKey;
 
-  final RouteFactory? onGenerateRoute;
-
-  final InitialRouteListFactory? onGenerateInitialRoutes;
-
-  final PageRouteFactory? pageRouteBuilder;
-
-  final RouteInformationParser<Object>? routeInformationParser;
-
-  final RouterDelegate<Object>? routerDelegate;
-
-  final BackButtonDispatcher? backButtonDispatcher;
-
-  final RouteInformationProvider? routeInformationProvider;
-
+  /// {@macro flutter.widgets.widgetsApp.home}
   final Widget? home;
 
+  /// The application's top-level routing table.
+  ///
+  /// When a named route is pushed with [Navigator.pushNamed], the route name is
+  /// looked up in this map. If the name is present, the associated
+  /// [WidgetBuilder] is used to construct a [FluentPageRoute] that performs
+  /// an appropriate transition, including [Hero] animations, to the new route.
+  ///
+  /// {@macro flutter.widgets.widgetsApp.routes}
   final Map<String, WidgetBuilder>? routes;
 
-  final RouteFactory? onUnknownRoute;
-
+  /// {@macro flutter.widgets.widgetsApp.initialRoute}
   final String? initialRoute;
 
+  /// {@macro flutter.widgets.widgetsApp.onGenerateRoute}
+  final RouteFactory? onGenerateRoute;
+
+  /// {@macro flutter.widgets.widgetsApp.onGenerateInitialRoutes}
+  final InitialRouteListFactory? onGenerateInitialRoutes;
+
+  /// {@macro flutter.widgets.widgetsApp.onUnknownRoute}
+  final RouteFactory? onUnknownRoute;
+
+  /// {@macro flutter.widgets.widgetsApp.navigatorObservers}
   final List<NavigatorObserver>? navigatorObservers;
 
+  /// {@macro flutter.widgets.widgetsApp.routeInformationProvider}
+  final RouteInformationProvider? routeInformationProvider;
+
+  /// {@macro flutter.widgets.widgetsApp.routeInformationParser}
+  final RouteInformationParser<Object>? routeInformationParser;
+
+  /// {@macro flutter.widgets.widgetsApp.routerDelegate}
+  final RouterDelegate<Object>? routerDelegate;
+
+  /// {@macro flutter.widgets.widgetsApp.backButtonDispatcher}
+  final BackButtonDispatcher? backButtonDispatcher;
+
+  /// {@macro flutter.widgets.widgetsApp.builder}
+  ///
+  /// Fluent specific features such as [showDialog] and [showMenu], and widgets
+  /// such as [Tooltip], [PopupMenuButton], also require a [Navigator] to properly
+  /// function.
   final TransitionBuilder? builder;
 
+  /// {@macro flutter.widgets.widgetsApp.title}
+  ///
+  /// This value is passed unmodified to [WidgetsApp.title].
   final String title;
 
+  /// {@macro flutter.widgets.widgetsApp.onGenerateTitle}
+  ///
+  /// This value is passed unmodified to [WidgetsApp.onGenerateTitle].
   final GenerateAppTitle? onGenerateTitle;
 
+  /// {@macro flutter.widgets.widgetsApp.color}
   final Color? color;
 
+  /// {@macro flutter.widgets.widgetsApp.locale}
   final Locale? locale;
 
+  /// {@macro flutter.widgets.widgetsApp.localizationsDelegates}
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
+  /// {@macro flutter.widgets.widgetsApp.localeListResolutionCallback}
+  ///
+  /// This callback is passed along to the [WidgetsApp] built by this widget.
   final LocaleListResolutionCallback? localeListResolutionCallback;
 
+  /// {@macro flutter.widgets.LocaleResolutionCallback}
+  ///
+  /// This callback is passed along to the [WidgetsApp] built by this widget.
   final LocaleResolutionCallback? localeResolutionCallback;
 
+  /// {@macro flutter.widgets.widgetsApp.supportedLocales}
+  ///
+  /// It is passed along unmodified to the [WidgetsApp] built by this widget.
   final Iterable<Locale> supportedLocales;
 
+  /// Turns on a performance overlay.
+  ///
+  /// See also:
+  ///
+  ///  * <https://flutter.dev/debugging/#performanceoverlay>
   final bool showPerformanceOverlay;
 
+  /// Turns on checkerboarding of raster cache images.
   final bool checkerboardRasterCacheImages;
 
+  /// Turns on checkerboarding of layers rendered to offscreen bitmaps.
   final bool checkerboardOffscreenLayers;
 
+  /// Turns on an overlay that shows the accessibility information
+  /// reported by the framework.
   final bool showSemanticsDebugger;
 
-  final bool debugShowWidgetInspector;
-
-  final InspectorSelectButtonBuilder? inspectorSelectButtonBuilder;
-
+  /// {@macro flutter.widgets.widgetsApp.debugShowCheckedModeBanner}
   final bool debugShowCheckedModeBanner;
 
+  /// {@macro flutter.widgets.widgetsApp.shortcuts}
+  /// {@tool snippet}
+  /// This example shows how to add a single shortcut for
+  /// [LogicalKeyboardKey.select] to the default shortcuts without needing to
+  /// add your own [Shortcuts] widget.
+  ///
+  /// Alternatively, you could insert a [Shortcuts] widget with just the mapping
+  /// you want to add between the [WidgetsApp] and its child and get the same
+  /// effect.
+  ///
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  ///   return WidgetsApp(
+  ///     shortcuts: <LogicalKeySet, Intent>{
+  ///       ... WidgetsApp.defaultShortcuts,
+  ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+  ///     },
+  ///     color: const Color(0xFFFF0000),
+  ///     builder: (BuildContext context, Widget? child) {
+  ///       return const Placeholder();
+  ///     },
+  ///   );
+  /// }
+  /// ```
+  /// {@end-tool}
+  /// {@macro flutter.widgets.widgetsApp.shortcuts.seeAlso}
   final Map<LogicalKeySet, Intent>? shortcuts;
 
+  /// {@macro flutter.widgets.widgetsApp.actions}
+  /// {@tool snippet}
+  /// This example shows how to add a single action handling an
+  /// [ActivateAction] to the default actions without needing to
+  /// add your own [Actions] widget.
+  ///
+  /// Alternatively, you could insert a [Actions] widget with just the mapping
+  /// you want to add between the [WidgetsApp] and its child and get the same
+  /// effect.
+  ///
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  ///   return WidgetsApp(
+  ///     actions: <Type, Action<Intent>>{
+  ///       ... WidgetsApp.defaultActions,
+  ///       ActivateAction: CallbackAction(
+  ///         onInvoke: (Intent intent) {
+  ///           // Do something here...
+  ///           return null;
+  ///         },
+  ///       ),
+  ///     },
+  ///     color: const Color(0xFFFF0000),
+  ///     builder: (BuildContext context, Widget? child) {
+  ///       return const Placeholder();
+  ///     },
+  ///   );
+  /// }
+  /// ```
+  /// {@end-tool}
+  /// {@macro flutter.widgets.widgetsApp.actions.seeAlso}
   final Map<Type, Action<Intent>>? actions;
+
+  /// {@macro flutter.widgets.widgetsApp.restorationScopeId}
+  final String? restorationScopeId;
 
   static bool showPerformanceOverlayOverride = false;
 
@@ -160,11 +338,23 @@ class FluentApp extends StatefulWidget {
 }
 
 class _FluentAppState extends State<FluentApp> {
+  late HeroController _heroController;
+
+  @override
+  void initState() {
+    super.initState();
+    _heroController = HeroController();
+  }
+
   bool get _usesRouter => widget.routerDelegate != null;
 
   @override
   Widget build(BuildContext context) {
-    return _buildApp(context);
+    final result = _buildApp(context);
+    return HeroControllerScope(
+      controller: _heroController,
+      child: result,
+    );
   }
 
   Style theme(BuildContext context) {
@@ -173,36 +363,39 @@ class _FluentAppState extends State<FluentApp> {
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    Style data =
-        (usedarkStyle ? (widget.darkStyle ?? widget.style) : widget.style) ??
-            Style.fallback(usedarkStyle ? Brightness.dark : Brightness.light);
-    if (data.brightness == null) {
-      data = data.copyWith(Style(
-        brightness: usedarkStyle ? Brightness.dark : Brightness.light,
-      ));
-    }
+    Style data = () {
+      Style? result;
+      if (usedarkStyle) {
+        result = widget.darkStyle ?? widget.style;
+      } else if (widget.style != null) {
+        result = widget.style;
+      } else {
+        result = Style();
+      }
+      if (result!.brightness == null) {
+        result = result.copyWith(Style(
+          brightness: usedarkStyle ? Brightness.dark : Brightness.light,
+        ));
+      }
+      return result;
+    }();
     return data.build();
   }
 
   Widget _builder(BuildContext context, Widget? child) {
+    if (child == null) return SizedBox();
     final theme = this.theme(context);
-    return m.Material(
-      child: Theme(
-        data: theme,
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: theme.typography?.body?.color,
-          ),
-          child: child!,
-        ),
-      ),
+    return Theme(
+      data: theme,
+      child: child,
     );
   }
 
   Widget _buildApp(BuildContext context) {
+    final theme = this.theme(context);
     final fluentColor = widget.color ?? Colors.blue;
     if (_usesRouter) {
-      return m.MaterialApp.router(
+      return WidgetsApp.router(
         key: GlobalObjectKey(this),
         routeInformationProvider: widget.routeInformationProvider,
         routeInformationParser: widget.routeInformationParser!,
@@ -223,10 +416,13 @@ class _FluentAppState extends State<FluentApp> {
         debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
         shortcuts: widget.shortcuts,
         actions: widget.actions,
+        restorationScopeId: widget.restorationScopeId,
+        localizationsDelegates: widget.localizationsDelegates,
+        textStyle: theme.typography?.body,
       );
     }
 
-    return m.MaterialApp(
+    return WidgetsApp(
       key: GlobalObjectKey(this),
       navigatorKey: widget.navigatorKey,
       navigatorObservers: widget.navigatorObservers!,
@@ -251,6 +447,12 @@ class _FluentAppState extends State<FluentApp> {
       debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
       shortcuts: widget.shortcuts,
       actions: widget.actions,
+      restorationScopeId: widget.restorationScopeId,
+      localizationsDelegates: widget.localizationsDelegates,
+      pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
+        return FluentPageRoute<T>(settings: settings, builder: builder);
+      },
+      textStyle: theme.typography?.body,
     );
   }
 }

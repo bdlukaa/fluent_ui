@@ -6,12 +6,9 @@ export 'package:flutter/material.dart'
         Brightness,
         ThemeMode,
         Feedback,
-        DefaultMaterialLocalizations,
-        PageTransitionsBuilder,
         FlutterLogo,
         CircleAvatar,
         kElevationToShadow,
-        Scrollbar,
         DateTimeRange,
         HourFormat,
         Icons;
@@ -47,6 +44,7 @@ export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';
+export 'src/controls/utils/scrollbar.dart';
 
 export 'src/controls/form/auto_suggest_box.dart';
 export 'src/controls/form/text_box.dart';

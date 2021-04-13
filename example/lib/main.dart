@@ -79,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int index = 0;
 
+  final otherController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +121,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: NavigationPanelBody(index: index, children: [
         _Panel(title: 'Inputs showcase', child: InputsPage()),
         _Panel(title: 'Forms showcase', child: Forms()),
-        _Panel(title: 'Others', child: Others()),
+        Scrollbar(
+          controller: otherController,
+          child: _Panel(
+            title: 'Others',
+            controller: otherController,
+            child: Others(),
+          ),
+        ),
         _Panel(title: 'Settings', child: Settings()),
       ]),
     );
@@ -131,14 +140,18 @@ class _Panel extends StatelessWidget {
     Key? key,
     this.title,
     this.child,
+    this.controller,
   }) : super(key: key);
 
   final String? title;
   final Widget? child;
 
+  final ScrollController? controller;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
+      controller: controller,
       padding: const EdgeInsets.all(8.0),
       children: [
         Text(title!, style: context.theme.typography?.subtitle),

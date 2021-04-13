@@ -62,6 +62,7 @@ class Style with Diagnosticable {
   final IconStyle? iconStyle;
   final InfoBarStyle? infoBarStyle;
   final RadioButtonStyle? radioButtonStyle;
+  final ScrollbarStyle? scrollbarStyle;
   final SliderStyle? sliderStyle;
   final SplitButtonStyle? splitButtonStyle;
   final ToggleButtonStyle? toggleButtonStyle;
@@ -101,6 +102,7 @@ class Style with Diagnosticable {
     this.sliderStyle,
     this.infoBarStyle,
     this.focusStyle,
+    this.scrollbarStyle,
   });
 
   Style build() {
@@ -170,11 +172,8 @@ class Style with Diagnosticable {
           RadioButtonStyle.standard(style).copyWith(radioButtonStyle),
       sliderStyle: SliderStyle.standard(style).copyWith(sliderStyle),
       infoBarStyle: InfoBarStyle.standard(style).copyWith(infoBarStyle),
+      scrollbarStyle: ScrollbarStyle.standart(style).copyWith(scrollbarStyle),
     ));
-  }
-
-  factory Style.fallback([Brightness? brightness]) {
-    return Style(brightness: brightness).build();
   }
 
   Style copyWith(Style? other) {
@@ -216,6 +215,7 @@ class Style with Diagnosticable {
       inactiveBackgroundColor:
           other.inactiveBackgroundColor ?? inactiveBackgroundColor,
       focusStyle: other.focusStyle ?? focusStyle,
+      scrollbarStyle: other.scrollbarStyle ?? scrollbarStyle,
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' as w;
 
 /// A graphical icon widget drawn with a glyph from a font described in
-/// an [IconData] such as material's predefined [IconData]s in [Icons].
+/// an [IconData] such as the predefined [IconData]s in [Icons].
 ///
 /// Icons are not interactive. For an interactive icon, consider using
 /// [IconButton]

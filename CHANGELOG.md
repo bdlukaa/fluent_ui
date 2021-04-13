@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.7.5] - [13/04/2021]
+
+- **NEW** `Scrollbar` and `ScrollbarStyle`
+- Reworked `FluentApp` to not depend of material anymore.
+
 ## [1.7.4] - [10/04/2021]
 
 - **FIX** Updated `Icon` widget to use Flutter's default icon widget
