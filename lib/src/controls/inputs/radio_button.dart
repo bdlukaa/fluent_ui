@@ -3,6 +3,26 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+/// Radio buttons, also called option buttons, let users select
+/// one option from a collection of two or more mutually exclusive,
+/// but related, options. Radio buttons are always used in groups,
+/// and each option is represented by one radio button in the group.
+///
+/// In the default state, no radio button in a RadioButtons group is
+/// selected. That is, all radio buttons are cleared. However, once a
+/// user has selected a radio button, the user can't deselect the
+/// button to restore the group to its initial cleared state.
+///
+/// The singular behavior of a RadioButtons group distinguishes it
+/// from check boxes, which support multi-selection and deselection,
+/// or clearing.
+///
+/// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
+///
+/// See also:
+///   - [ToggleSwitch]
+///   - [Checkbox]
+///   - [ToggleButton]
 class RadioButton extends StatelessWidget {
   const RadioButton({
     Key? key,

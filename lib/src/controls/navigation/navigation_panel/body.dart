@@ -6,17 +6,25 @@ class NavigationPanelBody extends StatelessWidget {
     required this.index,
     required this.children,
     this.transitionBuilder,
+    this.animationCurve,
+    this.animationDuration,
   }) : super(key: key);
 
   final List<Widget> children;
   final int index;
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
+  final Curve? animationCurve;
+  final Duration? animationDuration;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration:
-          context.theme.mediumAnimationDuration ?? Duration(milliseconds: 300),
+      switchInCurve:
+          animationCurve ?? context.maybeTheme?.animationCurve ?? Curves.linear,
+      duration: animationDuration ??
+          context.maybeTheme?.fastAnimationDuration ??
+          Duration(milliseconds: 300),
       layoutBuilder: (child, children) {
         return SizedBox(child: child);
       },

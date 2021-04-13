@@ -1,5 +1,14 @@
 Date format: DD/MM/YYYY
 
+## [1.7.6] - [13/04/2021]
+
+- **NEW** `Checkbox.autofocus`
+- **BREAKING** `Button` refactor:
+  - Removed `Button.icon` and `Button.trailingIcon`
+  - Renamed `Button.text` to `Button.child`
+- You can now disable the acrylic backdrop effect by setting `enabled` to false
+- **NEW** `NavigationPanelBody.animationCurve` and `NavigationPanelBody.animationDuration`
+
 ## [1.7.5] - [13/04/2021]
 
 - **NEW** `Scrollbar` and `ScrollbarStyle`

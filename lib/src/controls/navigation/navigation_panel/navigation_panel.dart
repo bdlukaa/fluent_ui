@@ -29,6 +29,7 @@ class NavigationPanel extends StatefulWidget {
     this.menu,
     this.bottom,
     this.displayMode,
+    this.useAcrylic = true,
   }) : super(key: key);
 
   final int currentIndex;
@@ -38,6 +39,8 @@ class NavigationPanel extends StatefulWidget {
   final NavigationPanelItem? bottom;
 
   final NavigationPanelDisplayMode? displayMode;
+
+  final bool useAcrylic;
 
   @override
   _NavigationPanelState createState() => _NavigationPanelState();
@@ -71,6 +74,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
         case NavigationPanelDisplayMode.compact:
         case NavigationPanelDisplayMode.open:
           return CompactOpenNavigationPanel(
+            useAcrylic: widget.useAcrylic,
             compact: displayMode == NavigationPanelDisplayMode.compact,
             currentIndex: widget.currentIndex,
             items: widget.items,

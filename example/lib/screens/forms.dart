@@ -124,7 +124,7 @@ class _FormsState extends State<Forms> {
           ),
           outsideSuffix: Button(
             style: ButtonStyle(margin: EdgeInsets.symmetric(horizontal: 4)),
-            text: Text('Done'),
+            child: Text('Done'),
             onPressed: () {},
           ),
         ),

@@ -61,7 +61,7 @@ class IconButton extends StatelessWidget {
       onLongPress: onLongPress == null ? null : () {},
       builder: (context, state) => Button(
         focusNode: focusNode,
-        text: Theme(
+        child: Theme(
           data: context.theme.copyWith(Style(
             iconStyle: style?.iconStyle?.call(state),
           )),

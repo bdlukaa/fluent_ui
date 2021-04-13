@@ -5,13 +5,17 @@ import 'hover_button.dart';
 
 enum _ButtonType { def, icon, toggle }
 
-/// A button gives the user a way to trigger an immediate action.
+/// A button gives the user a way to trigger an immediate action
+///
+/// ![Button Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)
+///
+/// See also:
+///   - [IconButton]. A button but with an icon
+///   - [ToggleButton]. A button that can be on or off
 class Button extends StatefulWidget {
   const Button({
     Key? key,
-    required this.text,
-    this.icon,
-    this.trailingIcon,
+    required this.child,
     this.style,
     this.onPressed,
     this.onLongPress,
@@ -21,19 +25,18 @@ class Button extends StatefulWidget {
   })  : type = _ButtonType.def,
         super(key: key);
 
-  /// Creates an Icon Button. Uses [IconButton] under the hood
+  /// Creates a button with an icon. Uses [IconButton] under the hood
   Button.icon({
     Key? key,
-    required this.icon,
+    required Widget icon,
     IconButtonStyle? style,
     this.onPressed,
     this.onLongPress,
     this.semanticsLabel,
     this.focusNode,
     this.autofocus = false,
-  })  : assert(icon != null),
-        text = IconButton(
-          icon: icon!,
+  })  : child = IconButton(
+          icon: icon,
           onPressed: onPressed,
           onLongPress: onLongPress,
           semanticsLabel: semanticsLabel,
@@ -41,7 +44,6 @@ class Button extends StatefulWidget {
           focusNode: focusNode,
         ),
         style = null,
-        trailingIcon = null,
         type = _ButtonType.icon,
         super(key: key);
 
@@ -56,7 +58,7 @@ class Button extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticsLabel,
-  })  : text = ToggleButton(
+  })  : child = ToggleButton(
           checked: checked,
           onChanged: onChanged,
           child: child,
@@ -65,29 +67,23 @@ class Button extends StatefulWidget {
           style: style,
         ),
         style = null,
-        trailingIcon = null,
         onPressed = null,
-        icon = null,
         onLongPress = null,
         type = _ButtonType.toggle,
         super(key: key);
 
   final _ButtonType type;
 
-  /// The icon used for ActionButton and ContextualIcon
-  final Widget? icon;
+  /// The content of the button. Usually a [Text] widget.
+  ///
+  /// If you want to use an [Icon], use an [IconButtno] instead
+  final Widget child;
 
-  /// The icon used for ContextualIcon
-  final Widget? trailingIcon;
-
-  /// The main text of the button
-  final Widget? text;
-
-  /// The style of the button
+  /// The style of the button. If non-null, it's mescled with [Style.buttonStyle]
   final ButtonStyle? style;
 
   /// Callback to when the button get pressed.
-  /// If this is `null`, the button will be considered disabled
+  /// If `null`, the button will be considered disabled
   final VoidCallback? onPressed;
 
   /// Callback to when the button gets pressed for a long time.
@@ -102,6 +98,7 @@ class Button extends StatefulWidget {
   /// Whether the button should autofocused
   final bool autofocus;
 
+  /// Whether the button is enabled or not.
   bool get enabled => onPressed != null || onLongPress != null;
 
   @override
@@ -134,12 +131,12 @@ class _ButtonState extends State<Button> {
     switch (widget.type) {
       case _ButtonType.icon:
       case _ButtonType.toggle:
-        return widget.text!;
+        return widget.child;
       case _ButtonType.def:
       default:
         break;
     }
-    ButtonStyle? style = context.theme.buttonStyle?.copyWith(this.widget.style);
+    final style = context.theme.buttonStyle?.copyWith(this.widget.style);
     return HoverButton(
       semanticsLabel: widget.semanticsLabel,
       margin: style?.margin,
@@ -185,18 +182,10 @@ class _ButtonState extends State<Button> {
               standartCurve,
           padding: style!.padding,
           decoration: style.decoration!(state),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.icon != null) widget.icon!,
-              DefaultTextStyle(
-                style: (style.textStyle?.call(state)) ?? TextStyle(),
-                textAlign: TextAlign.center,
-                child: widget.text!,
-              ),
-              if (widget.trailingIcon != null) widget.trailingIcon!,
-            ],
+          child: DefaultTextStyle(
+            style: (style.textStyle?.call(state)) ?? TextStyle(),
+            textAlign: TextAlign.center,
+            child: widget.child,
           ),
         );
         return FocusBorder(child: child, focused: state.isFocused);

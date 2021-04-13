@@ -1,10 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// A modal route that replaces the entire screen.
 class FluentPageRoute<T> extends PageRoute<T> {
   late WidgetBuilder _builder;
   bool _maintainState = true;
   String? _barrierLabel;
 
+  /// Creates a modal route that replaces the entire screen.
   FluentPageRoute({
     bool maintainState = true,
     String? barrierLabel,

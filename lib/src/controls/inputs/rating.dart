@@ -10,7 +10,15 @@ import 'package:flutter/services.dart';
 /// customization.
 ///
 /// ![RatingBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+///
+/// See also:
+///   - [Slider]
 class RatingBar extends StatefulWidget {
+  /// Creates a new rating bar.
+  ///
+  /// [rating] must be greater than 0 and less than [amount]
+  ///
+  /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
     Key? key,
     required this.rating,
@@ -31,7 +39,7 @@ class RatingBar extends StatefulWidget {
         assert(amount > 0),
         super(key: key);
 
-  /// The amount of stars in the bar. The default is 5
+  /// The amount of stars in the bar. The default amount is 5
   final int amount;
 
   /// The current rating of the bar.

@@ -7,7 +7,15 @@ import 'package:flutter/foundation.dart';
 /// user can choose from.
 ///
 /// ![SplitButton Preview](https://github.com/bdlukaa/fluent_ui#split-button)
+///
+/// See also:
+///   - [Button]
+///   - [IconButton]
 class SplitButtonBar extends StatelessWidget {
+  /// Creates a button bar with space in between the buttons.
+  ///
+  /// It provides a [ButtonStyle] above each button to make them
+  /// fell natural within the bar.
   const SplitButtonBar({
     Key? key,
     required this.buttons,
@@ -20,7 +28,8 @@ class SplitButtonBar extends StatelessWidget {
   /// Usually a List of [Button]s
   final List<Widget> buttons;
 
-  /// The style applied to this button bar. It's mescled with [Style.splitButtonStyle]
+  /// The style applied to this button bar. If non-null, it's
+  /// mescled with [Style.splitButtonStyle]
   final SplitButtonStyle? style;
 
   @override

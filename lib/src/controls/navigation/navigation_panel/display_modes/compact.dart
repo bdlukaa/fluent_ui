@@ -12,6 +12,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
     this.onMenuTapped,
     this.menu,
     this.bottom,
+    this.useAcrylic = true,
   }) : super(key: key);
 
   final void Function()? onMenuTapped;
@@ -23,6 +24,8 @@ class CompactOpenNavigationPanel extends StatelessWidget {
   final List<NavigationPanelItem> items;
   final NavigationPanelItem? bottom;
 
+  final bool useAcrylic;
+
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
@@ -30,6 +33,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
       ..removeWhere((e) => e.runtimeType != NavigationPanelItem));
     if (compact)
       return Acrylic(
+        enabled: useAcrylic,
         width: kCompactNavigationPanelWidth,
         child: Column(children: [
           if (menu != null)
@@ -91,6 +95,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
       );
     else
       return Acrylic(
+        enabled: useAcrylic,
         width: kOpenNavigationPanelWidth,
         child: Column(children: [
           if (menu != null)

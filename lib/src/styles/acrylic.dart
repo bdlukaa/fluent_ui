@@ -20,6 +20,7 @@ class Acrylic extends StatelessWidget {
     this.margin,
     this.shadowColor,
     this.elevation,
+    this.enabled = true,
   })  : assert(
           elevation == null || elevation >= 0,
           'The elevation can NOT be negative',
@@ -38,7 +39,8 @@ class Acrylic extends StatelessWidget {
   /// of a particular [ShapeDecoration], consider using a [ClipPath] widget.
   final Decoration? decoration;
 
-  /// The opacity applied to the [color] from 0.0 to 1.0.
+  /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,
+  /// this has no effect
   final double opacity;
 
   /// The image filter to apply to the existing painted content before painting the child.
@@ -70,6 +72,12 @@ class Acrylic extends StatelessWidget {
   /// The value is non-negative.
   final double? elevation;
 
+  /// Whether the acrylic effect is enabled. This is usually disabled
+  /// when the system is in battery-save mode.
+  ///
+  /// If disabled, there will be no backdrop effect nor elevation.
+  final bool enabled;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -92,26 +100,33 @@ class Acrylic extends StatelessWidget {
     final color = this.color ?? style.navigationPanelBackgroundColor;
     Widget result = AnimatedContainer(
       duration: style.fastAnimationDuration ?? Duration.zero,
-      curve: style.animationCurve ?? standartCurve,
+      curve: style.animationCurve ?? Curves.linear,
       padding: margin ?? EdgeInsets.zero,
       margin: EdgeInsets.zero,
       width: width,
       height: height,
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: filter ?? ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-          child: AnimatedContainer(
-            padding: padding,
-            duration: style.fastAnimationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? standartCurve,
-            decoration:
-                decoration ?? BoxDecoration(color: color?.withOpacity(opacity)),
-            child: child,
-          ),
-        ),
-      ),
+      child: () {
+        Widget container = AnimatedContainer(
+          padding: padding,
+          duration: style.fastAnimationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? standartCurve,
+          decoration: decoration ??
+              BoxDecoration(
+                color: color?.withOpacity(enabled ? opacity : 1.0),
+              ),
+          child: child,
+        );
+        if (enabled)
+          return ClipRect(
+            child: BackdropFilter(
+              filter: filter ?? ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              child: container,
+            ),
+          );
+        return container;
+      }(),
     );
-    if (elevation != null && elevation! > 0) {
+    if (enabled && elevation != null && elevation! > 0) {
       result = PhysicalModel(
         color: shadowColor ?? Colors.black,
         elevation: elevation!,

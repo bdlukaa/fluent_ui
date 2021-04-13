@@ -66,7 +66,7 @@ class _InputsPageState extends State<InputsPage> {
           Text('Buttons', style: titleTextStyle),
           ...[
             Button(
-              text: Text('Enabled button'),
+              child: Text('Enabled button'),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -77,14 +77,14 @@ class _InputsPageState extends State<InputsPage> {
                     ),
                     actions: [
                       Button(
-                        text: Text('Delete'),
+                        child: Text('Delete'),
                         autofocus: true,
                         onPressed: () {
                           // Delete file here
                         },
                       ),
                       Button(
-                        text: Text('Cancel'),
+                        child: Text('Cancel'),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -92,7 +92,7 @@ class _InputsPageState extends State<InputsPage> {
                 );
               },
             ),
-            Button(text: Text('Disabled button'), onPressed: null),
+            Button(child: Text('Disabled button'), onPressed: null),
             Button.icon(
               icon: Icon(Icons.add),
               onPressed: () => print('pressed icon button'),
@@ -101,7 +101,7 @@ class _InputsPageState extends State<InputsPage> {
               SizedBox(
                 height: splitButtonHeight,
                 child: Button(
-                  text: Container(
+                  child: Container(
                     color: context.theme.accentColor,
                     height: 24,
                     width: 24,
@@ -112,7 +112,7 @@ class _InputsPageState extends State<InputsPage> {
               SizedBox(
                 height: splitButtonHeight,
                 child: Button(
-                  text: Icon(Icons.keyboard_arrow_down),
+                  child: Icon(Icons.keyboard_arrow_down),
                   onPressed: () {},
                   style: ButtonStyle(padding: EdgeInsets.all(6)),
                 ),

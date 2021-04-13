@@ -23,6 +23,7 @@ class Checkbox extends StatelessWidget {
     this.style,
     this.semanticsLabel,
     this.focusNode,
+    this.autofocus = false,
   }) : super(key: key);
 
   /// Whether this [Checkbox] is checked or not.
@@ -38,10 +39,17 @@ class Checkbox extends StatelessWidget {
   /// If this callback is null, the Checkbox is disabled.
   final ValueChanged<bool?>? onChanged;
 
+  /// The style applied to the checkbox. If non-null, it's mescled
+  /// with [Style.checkboxStyle]
   final CheckboxStyle? style;
 
   final String? semanticsLabel;
+
+  /// The [FocusNode] of the checkbox
   final FocusNode? focusNode;
+
+  /// Whether the checkbox should be autofocused
+  final bool autofocus;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -59,6 +67,11 @@ class Checkbox extends StatelessWidget {
     properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
     properties.add(StringProperty('semanticsLabel', semanticsLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
+    properties.add(FlagProperty(
+      'autofocus',
+      value: autofocus,
+      defaultValue: false,
+    ));
   }
 
   @override
@@ -67,6 +80,7 @@ class Checkbox extends StatelessWidget {
     final style = context.theme.checkboxStyle!.copyWith(this.style);
     final double size = 22;
     return HoverButton(
+      autofocus: autofocus,
       semanticsLabel: semanticsLabel,
       margin: style.margin,
       focusNode: focusNode,

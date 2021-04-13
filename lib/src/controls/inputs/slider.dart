@@ -14,7 +14,10 @@ import 'package:flutter/material.dart' as m;
 /// For example, users think about setting their audio volume
 /// to low or medium—not about setting the value to 2 or 5.
 ///
-/// ![](https://camo.githubusercontent.com/7954319a99545af34e6357516249ae2c9bd771581234c63c19b3533e7f127e11/68747470733a2f2f646f63732e6d6963726f736f66742e636f6d2f656e2d75732f77696e646f77732f7577702f64657369676e2f636f6e74726f6c732d616e642d7061747465726e732f696d616765732f636f6e74726f6c732f736c696465722e706e67)
+/// ![Slider Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)
+///
+/// See also:
+///   - [RatingBar]
 class Slider extends StatefulWidget {
   const Slider({
     Key? key,

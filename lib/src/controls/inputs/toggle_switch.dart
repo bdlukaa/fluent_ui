@@ -22,6 +22,7 @@ import 'package:flutter/rendering.dart';
 /// - [ToggleButton](https://pub.dev/packages/fluent_ui#toggle-button)
 /// - [RadioButton](https://github.com/bdlukaa/fluent_ui#radio-buttons)
 class ToggleSwitch extends StatelessWidget {
+  /// Creates a toggle switch.
   const ToggleSwitch({
     Key? key,
     required this.checked,

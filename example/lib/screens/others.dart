@@ -33,7 +33,7 @@ class _OthersState extends State<Others> {
             Tooltip(
               message: 'This is a tooltip',
               child: Button(
-                text: Text('Button with tooltip'),
+                child: Text('Button with tooltip'),
                 onPressed: () {
                   print('pressed button with tooltip');
                 },
@@ -47,7 +47,7 @@ class _OthersState extends State<Others> {
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
               ),
               child: Button(
-                text: Text('Open flyout'),
+                child: Text('Open flyout'),
                 onPressed: () {
                   flyoutController.open = true;
                 },
@@ -74,7 +74,7 @@ class _OthersState extends State<Others> {
             isLong: InfoBarSeverity.values.indexOf(severity).isEven,
             severity: severity,
             action: Button(
-              text: Text('This is an action'),
+              child: Text('This is an action'),
               onPressed: () => print('action pressed'),
             ),
             onClose: () {

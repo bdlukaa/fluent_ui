@@ -303,7 +303,7 @@ class FluentApp extends StatefulWidget {
   ///
   /// ```dart
   /// Widget build(BuildContext context) {
-  ///   return WidgetsApp(
+  ///   return FluentApp(
   ///     actions: <Type, Action<Intent>>{
   ///       ... WidgetsApp.defaultActions,
   ///       ActivateAction: CallbackAction(

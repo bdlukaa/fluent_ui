@@ -58,7 +58,7 @@ class ToggleButton extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme.toggleButtonStyle?.copyWith(this.style);
     return Button(
-      text: Semantics(
+      child: Semantics(
         child: child,
         selected: checked,
       ),
