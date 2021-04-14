@@ -1,96 +1,145 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// All the fluent colors
 class Colors {
+  /// The transparent color. This should not be used in animations
+  /// because it'll cause a weird effect.
   static const Color transparent = Color(0x00000000);
+
+  /// A black opaque color.
   static const Color black = Color(0xFF000000);
+
+  /// The grey color.
+  ///
+  /// It's a shaded color with the following available shades:
+  ///   - 220
+  ///   - 210
+  ///   - 200
+  ///   - 190
+  ///   - 180
+  ///   - 170
+  ///   - 160
+  ///   - 150
+  ///   - 140
+  ///   - 130
+  ///   - 120
+  ///   - 110
+  ///   - 100
+  ///   - 90
+  ///   - 80
+  ///   - 70
+  ///   - 60
+  ///   - 50
+  ///   - 40
+  ///   - 30
+  ///   - 20
+  ///   - 10
+  ///
+  /// To use any of these shades, call `Colors.grey[SHADE]`,
+  /// where `SHADE` is the number of the sade you want
   static const ShadedColor grey = ShadedColor(
     0xFF323130, // grey160
     <int, Color>{
       220: Color(0xFF11100F),
       210: Color(0xFF161514),
-      200: Color(0XFF1B1A19),
-      190: Color(0XFF201F1E),
-      180: Color(0XFF252423),
-      170: Color(0XFF292827),
-      160: Color(0XFF323130),
-      150: Color(0XFF3B3A39),
-      140: Color(0XFF484644),
-      130: Color(0XFF605E5C),
-      120: Color(0XFF797775),
-      110: Color(0XFF8A8886),
-      100: Color(0XFF979593),
-      90: Color(0XFFA19F9D),
-      80: Color(0XFFB3B0AD),
-      70: Color(0XFFBEBBB8),
-      60: Color(0XFFC8C6C4),
-      50: Color(0XFFD2D0CE),
-      40: Color(0XFFE1DFDD),
-      30: Color(0XFFEDEBE9),
-      20: Color(0XFFF3F2F1),
-      10: Color(0XFFFAF9F8),
+      200: Color(0xFF1B1A19),
+      190: Color(0xFF201F1E),
+      180: Color(0xFF252423),
+      170: Color(0xFF292827),
+      160: Color(0xFF323130),
+      150: Color(0xFF3B3A39),
+      140: Color(0xFF484644),
+      130: Color(0xFF605E5C),
+      120: Color(0xFF797775),
+      110: Color(0xFF8A8886),
+      100: Color(0xFF979593),
+      90: Color(0xFFA19F9D),
+      80: Color(0xFFB3B0AD),
+      70: Color(0xFFBEBBB8),
+      60: Color(0xFFC8C6C4),
+      50: Color(0xFFD2D0CE),
+      40: Color(0xFFE1DFDD),
+      30: Color(0xFFEDEBE9),
+      20: Color(0xFFF3F2F1),
+      10: Color(0xFFFAF9F8),
     },
   );
-  static const Color white = Color(0XFFFFFFFF);
+
+  /// A opaque white color.
+  static const Color white = Color(0xFFFFFFFF);
 
   static final AccentColor yellow = AccentColor('normal', <String, Color>{
-    'dark': Color(0XFFd29200),
-    'normal': Color(0XFFffb900),
-    'light': Color(0XFFfff100),
+    'darkest': Color(0xFFfbaa00),
+    'dark': Color(0xFFfabb00),
+    'normal': Color(0xFFfff100),
+    'light': Color(0xFFffe100),
+    'lighter': Color(0xFFffff00),
   });
 
   static final AccentColor orange = AccentColor('normal', <String, Color>{
-    'normal': Color(0XFFd83b01),
-    'light': Color(0XFFea4300),
-    'lighter': Color(0XFFff8c00),
+    'darkest': Color(0xFFda3b01),
+    'dark': Color(0xFFca5010),
+    'normal': Color(0xFFf7630c),
+    'light': Color(0xFFff8c00),
+    'lighter': Color(0xFFffb900)
   });
 
   static final AccentColor red = AccentColor('normal', <String, Color>{
-    'darkest': Color(0XFF750b1c),
-    'dark': Color(0XFFa4262c),
-    'normal': Color(0XFFd13438),
+    'darkest': Color(0xFFa4262c),
+    'dark': Color(0xFFd13438),
+    'normal': Color(0xFFe81123),
+    'light': Color(0xFFff3434),
+    'lighter': Color(0xFFef6950),
   });
 
   static final AccentColor magenta = AccentColor('normal', <String, Color>{
-    'dark': Color(0XFF5c995c), // magenta dark
-    'normal': Color(0XFFb4009e), // magenta
-    'light': Color(0XFFe3008c), // magenta light
+    'darkest': Color(0xFF5c005c),
+    'dark': Color(0xFF9a0089),
+    'normal': Color(0xFFb4009e),
+    'light': Color(0xFFc239b3),
+    'lighter': Color(0xFFe3008c),
   });
 
-  // Magenta is purple :)
   static final AccentColor purple = AccentColor('normal', <String, Color>{
-    'dark': Color(0XFF32145a), // purple dark
-    'normal': Color(0XFF5c2d91), // purple
-    'light': Color(0XFFb4a0ff), // purple light
+    'darker': Color(0xFF9a0089),
+    'dark': Color(0xFF881798),
+    'normal': Color(0xFF744da9),
+    'light': Color(0xFF8764b8),
+    'lighter': Color(0xFF6b69d6),
   });
 
-  static final ShadedColor blue = ShadedColor(
-    0xFF0078d4, // primary
-    <int, Color>{
-      90: Color(0xFF004578), // darker
-      80: Color(0xFF005a9e), // dark
-      70: Color(0xFF106ebe), // dark alt
-      60: Color(0xFF0078d4), // primary
-      50: Color(0xFF2b88d8), // secondary
-      40: Color(0xFF71afe5), // tertiary
-      30: Color(0xFFc7e0f4), // light
-      20: Color(0xFFdeecf9), // lighter
-      10: Color(0xFFeff6fc), // lighter alt
-    },
-  );
+  static final AccentColor blue = AccentColor('normal', <String, Color>{
+    'darkest': Color(0xFF002050),
+    'dark': Color(0xFF00188f),
+    'normal': Color(0xFF004e8c),
+    'light': Color(0xFF0078d4),
+    'lighter': Color(0xFF00bcf2),
+  });
 
   static final AccentColor teal = AccentColor('normal', <String, Color>{
-    'dark': Color(0XFF004b50),
-    'normal': Color(0XFF008272),
-    'light': Color(0XFF00b294),
+    'darkest': Color(0xFF004b50),
+    'dark': Color(0xFF008272),
+    'normal': Color(0xFF00b294),
+    'light': Color(0xFF00b763),
+    'lighter': Color(0xFF00cc6a),
   });
 
   static final AccentColor green = AccentColor('normal', <String, Color>{
-    'dark': Color(0XFF004b1c),
-    'normal': Color(0XFF107c10),
-    'light': Color(0XFFbad80a),
+    'darker': Color(0xFF004b1c),
+    'dark': Color(0xFF0b6a0b),
+    'normal': Color(0xFF107c10),
+    'light': Color(0xFF8cbd18),
+    'lighter': Color(0xFFbad80a),
   });
 
-  static final List<ShadedColor> accentColors = [
+  static const Color warningPrimaryColor = Color(0xFFd83b01);
+  static const Color warningSecondaryColor = Color(0xFFfff4ce);
+  static const Color errorPrimaryColor = Color(0xFFa80000);
+  static const Color errorSecondaryColor = Color(0xFFfde7e9);
+  static const Color successPrimaryColor = Color(0xFF107c10);
+  static const Color successSecondaryColor = Color(0xFFdff6dd);
+
+  static final List<AccentColor> accentColors = [
     yellow,
     orange,
     red,
@@ -107,41 +156,37 @@ class ShadedColor extends ColorSwatch<int> {
       : super(primary, swatch);
 }
 
-class AccentColor extends ShadedColor {
+class AccentColor extends ColorSwatch<String> {
   /// The default shade for this color. This can't be null
   final String primary;
 
   /// The avaiable shades for this color. This can't be null nor empty
   final Map<String, Color> swatch;
 
+  /// Create a new accent color.
   AccentColor(this.primary, this.swatch)
-      : super(swatch[primary]!.value, swatch.convertStringtoInt());
+      : super(swatch[primary]!.value, swatch);
 
-  /// The darkest shade of the color. This can be not avaiable in some colors
+  /// The darkest shade of the color.
+  /// 
+  /// Usually used for shadows
   Color get darkest => swatch['darkest'] ?? dark;
 
-  /// The dark shade of the color. This can be not avaiable in some colors
+  /// The dark shade of the color.
+  /// 
+  /// Usually used for the mouse press effect;
   Color get dark => swatch['dark'] ?? normal;
 
-  /// The default shade of the color. This is avaiable for all supported colors
+  /// The default shade of the color.
   Color get normal => swatch['normal']!;
 
-  /// The light shade of the color. This can be not avaiable in some colors
+  /// The light shade of the color.
+  /// 
+  /// Usually used for the mouse hover effect
   Color get light => swatch['light'] ?? normal;
 
-  /// The lighter shade of the color. This can be not avaiable in some colors
+  /// The lighter shade of the color.
+  /// 
+  /// Usually used for shadows
   Color get lighter => swatch['lighter'] ?? light;
-}
-
-extension _sToInt on Map<String, Color> {
-  /// Convert a Map<String, Color> to a Map<int, Color>
-  Map<int, Color> convertStringtoInt() {
-    Map<int, Color> map = {};
-    int currentValue = 10;
-    this.forEach((key, value) {
-      map.addAll({currentValue: value});
-      currentValue += 10;
-    });
-    return map;
-  }
 }

@@ -1,5 +1,19 @@
 Date format: DD/MM/YYYY
 
+## [1.8.0] - Color Update - [14/04/2021]
+
+- **NEW** Web version hosted at https://bdlukaa.github.io/fluent_ui
+- **NEW** Colors showcase page in example app
+- **NEW** Info Colors:
+  - `Colors.warningPrimaryColor`
+  - `Colors.warningSecondaryColor`
+  - `Colors.errorPrimaryColor`
+  - `Colors.errorSecondaryColor`
+  - `Colors.successPrimaryColor`
+  - `Colors.successSecondaryColor`
+- **FIX** Reworked all the accent colors (`Colors.accentColors`) with `darkest`, `dark`, `normal`, `light` and `lighter`
+- **BREAKING** `Colors.blue` is now an `AccentColor`
+
 ## [1.7.6] - [13/04/2021]
 
 - **NEW** `Checkbox.autofocus`
@@ -18,6 +32,7 @@ Date format: DD/MM/YYYY
 
 - **FIX** Updated `Icon` widget to use Flutter's default icon widget
 - **NEW** Documentation
+
 ## [1.7.3] - [07/04/2021]
 
 - **FIX** Improved `ListTile` sizing ([#Spacing](https://docs.microsoft.com/en-us/windows/uwp/design/style/spacing))
@@ -52,7 +67,7 @@ Date format: DD/MM/YYYY
 - Added the missing `Diagnostics`
 - Updated all the screenshots
 - **BREAKING CHANGE** Uses the material icon library now
-  
+
   **DEVELOPER NOTE** This was a hard choice, but the material icon library is a robust, bigger library. It contains all the icons the previous library has, and a few many more.
 
 ## [1.5.0] - [02/04/2021]
@@ -81,7 +96,7 @@ Date format: DD/MM/YYYY
 - **NEW** `InfoHeader`
 - **NEW** `ComboBox` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/checkbox))
 - **NEW** `TappableListTile`
-- **BREAKING** Removed `DropdownButton` and `Button.dropdown` 
+- **BREAKING** Removed `DropdownButton` and `Button.dropdown`
 
 ## [1.3.4] - [28/03/2021]
 
@@ -133,7 +148,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 
 ## [1.3.1] - [23/03/2021]
 
-- **FIX** `IconButtonStyle`'s `iconStyle` now works properly 
+- **FIX** `IconButtonStyle`'s `iconStyle` now works properly
 - Improved `TabView` icon styling
 - **NEW** Indeterminate `ProgressBar` ([@raitonoberu](https://github.com/raitonoberu))
 
@@ -148,11 +163,11 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 
 ## [1.2.4] - [21/03/2021]
 
-- **BREAKING** `RadioButton`'s `selected` property was renamed to `checked` to match a single pattern between all the other widgets. 
+- **BREAKING** `RadioButton`'s `selected` property was renamed to `checked` to match a single pattern between all the other widgets.
 
 ## [1.2.3] - [19/03/2021]
 
-- **NEW**  **EXAMPLE APP** `Settings` screen
+- **NEW** **EXAMPLE APP** `Settings` screen
 - Improved theme changing
 - **FIX** `FluentApp` doesn't lose its state anymore, possibiliting hot relaod.
 - **NEW** `showDialog` rework:

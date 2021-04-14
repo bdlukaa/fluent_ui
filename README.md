@@ -26,6 +26,8 @@
 
 Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
 
+### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
+
 ### Content
 
 - [Motivation](#motivation)
@@ -82,11 +84,6 @@ See also:
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
 ---
-
-![Inputs Preview](screenshots/inputs.png)
-![Forms Preview](screenshots/forms.png)
-![Others Preview](screenshots/others.png)
-![Others Preview 2](screenshots/others_2.png)
 
 # Style
 

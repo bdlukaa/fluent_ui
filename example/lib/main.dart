@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 
+import 'screens/colors.dart';
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
 import 'screens/others.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         final appTheme = context.watch<AppTheme>();
         return FluentApp(
-          title: 'Fluent ui app showcase',
+          title: 'Fluent UI showcase',
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
@@ -80,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
 
   final otherController = ScrollController();
+  final colorsController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,12 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
             label: Text('Others'),
             onTapped: () => setState(() => index = 2),
           ),
+          NavigationPanelItem(
+            icon: Icon(Icons.color_lens),
+            label: Text('Colors'),
+            onTapped: () => setState(() => index = 3),
+          ),
         ],
         bottom: NavigationPanelItem(
           // selected: index == 3,
           icon: Icon(Icons.settings),
           label: Text('Settings'),
-          onTapped: () => setState(() => index = 3),
+          onTapped: () => setState(() => index = 4),
         ),
       ),
       body: NavigationPanelBody(index: index, children: [
@@ -127,6 +134,14 @@ class _MyHomePageState extends State<MyHomePage> {
             title: 'Others',
             controller: otherController,
             child: Others(),
+          ),
+        ),
+        Scrollbar(
+          controller: colorsController,
+          child: _Panel(
+            title: 'Colors showcase',
+            controller: colorsController,
+            child: ColorsPage(),
           ),
         ),
         _Panel(title: 'Settings', child: Settings()),

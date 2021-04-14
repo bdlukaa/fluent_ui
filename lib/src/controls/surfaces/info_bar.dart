@@ -4,10 +4,19 @@ import 'package:flutter/foundation.dart';
 // This file implements info bar into this library.
 // It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
 
+/// The severities that can be applied to an [InfoBar]
 enum InfoBarSeverity {
+
+  /// ![Info InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-hyperlink.png)
   info,
+
+  /// ![Warning InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-warning-title-message.png)
   warning,
+
+  /// ![Error InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-no-close.png)
   error,
+
+  /// ![Success InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
   success,
 }
 
@@ -17,6 +26,8 @@ enum InfoBarSeverity {
 /// as the option to include your own call to action or hyperlink button.
 /// Since the InfoBar is inline with other UI content the option is there
 /// for the control to always be visible or dismissed by the user.
+/// 
+/// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
@@ -30,6 +41,7 @@ class InfoBar extends StatelessWidget {
     this.onClose,
   }) : super(key: key);
 
+  /// The severity of this InfoBar. Defaults to [InfoBarSeverity.info]
   final InfoBarSeverity severity;
 
   /// The style applied to this info bar. If non-null, it's
@@ -90,14 +102,13 @@ class InfoBar extends StatelessWidget {
       padding: style?.padding ?? EdgeInsets.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         crossAxisAlignment:
             isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           if (icon != null)
             Padding(
               padding: const EdgeInsets.only(right: 6.0),
-              child: Icon(icon),
+              child: Icon(icon, color: style?.iconColor?.call(severity)),
             ),
           if (isLong)
             Flexible(
@@ -148,6 +159,7 @@ typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
 class InfoBarStyle with Diagnosticable {
   final InfoBarSeverityCheck<Color?>? color;
+  final InfoBarSeverityCheck<Color?>? iconColor;
   final InfoBarSeverityCheck<IconData>? icon;
   final IconData? closeIcon;
   final ButtonStyle? actionStyle;
@@ -156,12 +168,14 @@ class InfoBarStyle with Diagnosticable {
   const InfoBarStyle({
     this.color,
     this.icon,
+    this.iconColor,
     this.closeIcon,
     this.actionStyle,
     this.padding,
   });
 
   factory InfoBarStyle.standard(Style style) {
+    final isDark = style.brightness == Brightness.dark;
     return InfoBarStyle(
       padding: EdgeInsets.all(10),
       color: (severity) {
@@ -169,33 +183,36 @@ class InfoBarStyle with Diagnosticable {
           case InfoBarSeverity.info:
             return style.navigationPanelBackgroundColor;
           case InfoBarSeverity.warning:
-            if (style.brightness!.isDark)
-              return Color(0xFF433519);
-            else
-              return Color(0xFFfff4ce);
+            return isDark ? Color(0xFF433519) : Colors.warningSecondaryColor;
           case InfoBarSeverity.success:
-            if (style.brightness!.isDark)
-              return Color(0xFF393d1b);
-            else
-              return Color.fromARGB(255, 223, 246, 221);
+            return isDark ? Color(0xFF393d1b) : Colors.successSecondaryColor;
           case InfoBarSeverity.error:
-            if (style.brightness!.isDark)
-              return Color(0xFF442726);
-            else
-              return Color(0xFFfde7e9);
+            return isDark ? Color(0xFF442726) : Colors.errorSecondaryColor;
         }
       },
       closeIcon: Icons.close,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return Icons.info_outline;
+            return Icons.info_outlined;
           case InfoBarSeverity.warning:
-            return Icons.warning_sharp;
+            return Icons.error_outline;
           case InfoBarSeverity.success:
             return Icons.check_circle_outlined;
           case InfoBarSeverity.error:
-            return Icons.error_outline;
+            return Icons.close;
+        }
+      },
+      iconColor: (severity) {
+        switch (severity) {
+          case InfoBarSeverity.info:
+            return isDark ? Colors.grey[120] : Colors.grey[160];
+          case InfoBarSeverity.warning:
+            return isDark ? Colors.yellow :Colors.warningPrimaryColor;
+          case InfoBarSeverity.success:
+            return Colors.successPrimaryColor;
+          case InfoBarSeverity.error:
+            return isDark ? Colors.red :Colors.errorPrimaryColor;
         }
       },
       actionStyle: ButtonStyle.standard(style).copyWith(ButtonStyle(
@@ -212,6 +229,7 @@ class InfoBarStyle with Diagnosticable {
       icon: style.icon ?? icon,
       color: style.color ?? color,
       actionStyle: style.actionStyle ?? actionStyle,
+      iconColor: style.iconColor ?? iconColor,
     );
   }
 
@@ -221,6 +239,7 @@ class InfoBarStyle with Diagnosticable {
     properties.add(ObjectFlagProperty.has('icon', icon));
     properties.add(ObjectFlagProperty.has('closeIcon', closeIcon));
     properties.add(ObjectFlagProperty.has('color', color));
+    properties.add(ObjectFlagProperty.has('iconColor', iconColor));
     properties.add(DiagnosticsProperty<ButtonStyle>(
       'actionStyle',
       actionStyle,

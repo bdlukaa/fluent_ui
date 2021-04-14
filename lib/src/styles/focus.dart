@@ -97,7 +97,7 @@ class FocusStyle with Diagnosticable {
         width: 1,
         color: style.scaffoldBackgroundColor ?? Colors.transparent,
       ),
-      glowColor: style.accentColor?.withOpacity(0.25) ?? Colors.transparent,
+      glowColor: style.accentColor?.withOpacity(0.15) ?? Colors.transparent,
       glowFactor: 0.0,
     );
   }
