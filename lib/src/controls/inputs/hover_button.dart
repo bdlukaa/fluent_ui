@@ -10,7 +10,7 @@ class HoverButton extends StatefulWidget {
     this.builder,
     this.focusNode,
     this.margin,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.onTapDown,
     this.onTapUp,
     this.onTapCancel,
@@ -32,12 +32,25 @@ class HoverButton extends StatefulWidget {
 
   final Widget Function(BuildContext, ButtonStates state)? builder;
 
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
   final EdgeInsetsGeometry? margin;
-  final String? semanticsLabel;
+
+  /// {@template fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  /// Semantic label for the input.
+  ///
+  /// Announced in accessibility modes (e.g TalkBack/VoiceOver).
+  /// This label does not show in the UI.
+  ///
+  ///  * [SemanticsProperties.label], which is set to [semanticLabel] in the
+  ///    underlying	 [Semantics] widget.
+  /// {@endtemplate}
+  final String? semanticLabel;
 
   final bool ignoreFocusManager;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   @override
@@ -169,10 +182,10 @@ class _HoverButtonState extends State<HoverButton> {
       ),
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
-    if (widget.semanticsLabel != null) {
+    if (widget.semanticLabel != null) {
       w = MergeSemantics(
         child: Semantics(
-          label: widget.semanticsLabel,
+          label: widget.semanticLabel,
           button: true,
           enabled: enabled,
           focusable: true,

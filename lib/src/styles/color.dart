@@ -168,12 +168,12 @@ class AccentColor extends ColorSwatch<String> {
       : super(swatch[primary]!.value, swatch);
 
   /// The darkest shade of the color.
-  /// 
+  ///
   /// Usually used for shadows
   Color get darkest => swatch['darkest'] ?? dark;
 
   /// The dark shade of the color.
-  /// 
+  ///
   /// Usually used for the mouse press effect;
   Color get dark => swatch['dark'] ?? normal;
 
@@ -181,12 +181,12 @@ class AccentColor extends ColorSwatch<String> {
   Color get normal => swatch['normal']!;
 
   /// The light shade of the color.
-  /// 
+  ///
   /// Usually used for the mouse hover effect
   Color get light => swatch['light'] ?? normal;
 
   /// The lighter shade of the color.
-  /// 
+  ///
   /// Usually used for shadows
   Color get lighter => swatch['lighter'] ?? light;
 }

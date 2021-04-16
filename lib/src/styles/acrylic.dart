@@ -4,7 +4,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// Acrylic is a type of Brush that creates a translucent texture.
-/// You can apply acrylic to app surfaces to add depth and help establish a visual hierarchy.
+/// You can apply acrylic to app surfaces to add depth and help
+/// establish a visual hierarchy.
+///
+/// ![Acrylic Example](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/acrylic_lighttheme_base.png)
 class Acrylic extends StatelessWidget {
   /// The [color] and [decoration] arguments can not be both supplied.
   const Acrylic({

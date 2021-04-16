@@ -74,10 +74,10 @@ class Slider extends StatefulWidget {
   /// of the slider if [vertical] is `true` when the slider is active.
   final String? label;
 
-  /// The [FocusNode] applied to the slider
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whether the slider should be autofocused
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   /// Whether the slider is vertical or not

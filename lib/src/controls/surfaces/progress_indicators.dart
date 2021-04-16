@@ -15,14 +15,19 @@ const double _kMinProgressBarWidth = 130.0;
 /// ![Indeterminate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-indeterminate.gif)
 class ProgressBar extends StatefulWidget {
   /// Creates a new progress bar.
+  ///
+  /// [value], if non-null, must be in the range of 0 to 100.
+  ///
+  /// [strokeWidth] must be equal or greater than 0
   const ProgressBar({
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
   })  : assert(value == null || value >= 0 && value <= 100),
+        assert(strokeWidth >= 0),
         super(key: key);
 
   /// The current value of the indicator. If non-null, produces
@@ -37,7 +42,7 @@ class ProgressBar extends StatefulWidget {
 
   /// The height of the progess bar. Defaults to 4.5 logical pixels
   final double strokeWidth;
-  final String? semanticsLabel;
+  final String? semanticLabel;
 
   /// The background color of the progress bar. If null,
   /// [Style.inactiveColor] is used
@@ -98,7 +103,7 @@ class _ProgressBarState extends State<ProgressBar>
       height: widget.strokeWidth,
       constraints: BoxConstraints(minWidth: _kMinProgressBarWidth),
       child: Semantics(
-        label: widget.semanticsLabel,
+        label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
         maxValueLength: 100,
         child: ValueListenableBuilder(
@@ -249,11 +254,15 @@ class _ProgressBarPainter extends CustomPainter {
 /// ![Indeterminate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressring-indeterminate.gif)
 class ProgressRing extends StatefulWidget {
   /// Creates progress ring.
+  ///
+  /// [value], if non-null, must be in the range of 0 to 100
+  ///
+  /// [strokeWidth] must be equal or greater than 0
   const ProgressRing({
     Key? key,
     this.value,
     this.strokeWidth = 4.5,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
   })  : assert(value == null || value >= 0 && value <= 100),
@@ -271,7 +280,7 @@ class ProgressRing extends StatefulWidget {
 
   /// The stroke width of the progress ring. If null, defaults to 4.5 logical pixels
   final double strokeWidth;
-  final String? semanticsLabel;
+  final String? semanticLabel;
 
   /// The background color of the progress ring. If null,
   /// [Style.inactiveColor] is used
@@ -333,7 +342,7 @@ class _ProgressRingState extends State<ProgressRing>
         minHeight: _kMinProgressRingIndicatorSize,
       ),
       child: Semantics(
-        label: widget.semanticsLabel,
+        label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
         child: () {
           if (widget.value == null)

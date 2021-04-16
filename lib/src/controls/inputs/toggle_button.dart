@@ -14,8 +14,9 @@ class ToggleButton extends StatelessWidget {
     required this.onChanged,
     this.child,
     this.style,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
+    this.autofocus = false,
   }) : super(key: key);
 
   /// The content of the button
@@ -32,10 +33,13 @@ class ToggleButton extends StatelessWidget {
   final ToggleButtonStyle? style;
 
   /// The semantics label of the button
-  final String? semanticsLabel;
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the button
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -49,8 +53,9 @@ class ToggleButton extends StatelessWidget {
       ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
     );
     properties.add(DiagnosticsProperty<ToggleButtonStyle>('style', style));
-    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties.add(FlagProperty('autofocus', value: autofocus));
   }
 
   @override
@@ -58,10 +63,9 @@ class ToggleButton extends StatelessWidget {
     debugCheckHasFluentTheme(context);
     final style = context.theme.toggleButtonStyle?.copyWith(this.style);
     return Button(
-      child: Semantics(
-        child: child,
-        selected: checked,
-      ),
+      autofocus: autofocus,
+      focusNode: focusNode,
+      child: Semantics(child: child, selected: checked),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       style: ButtonStyle(
         decoration: (state) => checked

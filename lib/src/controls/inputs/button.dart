@@ -19,7 +19,7 @@ class Button extends StatefulWidget {
     this.style,
     this.onPressed,
     this.onLongPress,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
   })  : type = _ButtonType.def,
@@ -32,14 +32,14 @@ class Button extends StatefulWidget {
     IconButtonStyle? style,
     this.onPressed,
     this.onLongPress,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
   })  : child = IconButton(
           icon: icon,
           onPressed: onPressed,
           onLongPress: onLongPress,
-          semanticsLabel: semanticsLabel,
+          semanticLabel: semanticLabel,
           style: style,
           focusNode: focusNode,
         ),
@@ -57,13 +57,13 @@ class Button extends StatefulWidget {
     ToggleButtonStyle? style,
     this.focusNode,
     this.autofocus = false,
-    this.semanticsLabel,
+    this.semanticLabel,
   })  : child = ToggleButton(
           checked: checked,
           onChanged: onChanged,
           child: child,
           focusNode: focusNode,
-          semanticsLabel: semanticsLabel,
+          semanticLabel: semanticLabel,
           style: style,
         ),
         style = null,
@@ -89,13 +89,13 @@ class Button extends StatefulWidget {
   /// Callback to when the button gets pressed for a long time.
   final VoidCallback? onLongPress;
 
-  /// The semantics label to allow screen readers to read the screen
-  final String? semanticsLabel;
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the button
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whether the button should autofocused
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   /// Whether the button is enabled or not.
@@ -138,7 +138,7 @@ class _ButtonState extends State<Button> {
     }
     final style = context.theme.buttonStyle?.copyWith(this.widget.style);
     return HoverButton(
-      semanticsLabel: widget.semanticsLabel,
+      semanticLabel: widget.semanticLabel,
       margin: style?.margin,
       focusNode: widget.focusNode,
       cursor: style?.cursor,

@@ -122,6 +122,7 @@ class _ComboboxMenuItemButtonState<T>
 
   @override
   Widget build(BuildContext context) {
+    debugCheckHasFluentTheme(context);
     final CurvedAnimation opacity;
     final double unit = 0.5 / (widget.route.items.length + 1.5);
     if (widget.itemIndex == widget.route.selectedIndex) {
@@ -154,7 +155,7 @@ class _ComboboxMenuItemButtonState<T>
         ),
         tileColor: (state) {
           if (selected) {
-            return HSVColor.fromColor(context.theme.accentColor!)
+            return HSVColor.fromColor(context.theme.accentColor ?? Colors.blue)
                 .withSaturation(0.6)
                 .withValue(0.8)
                 .toColor();
@@ -801,7 +802,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     if (_enabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
 
-      switch (context.theme.brightness!) {
+      switch (context.theme.brightness ?? Brightness.light) {
         case Brightness.light:
           return Colors.grey[180]!;
         case Brightness.dark:
@@ -810,7 +811,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     } else {
       if (widget.iconDisabledColor != null) return widget.iconDisabledColor!;
 
-      switch (context.theme.brightness!) {
+      switch (context.theme.brightness ?? Brightness.light) {
         case Brightness.light:
           return Colors.grey[120]!;
         case Brightness.dark:

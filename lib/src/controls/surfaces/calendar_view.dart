@@ -23,14 +23,6 @@ class CalendarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return m.CalendarDatePicker(
-    //   firstDate: DateTime(2000),
-    //   initialDate: DateTime.now(),
-    //   lastDate: DateTime.now().add(Duration(days: 1000)),
-    //   onDateChanged: (v) {
-    //     print(v);
-    //   },
-    // );
     debugCheckHasFluentTheme(context);
     final currentDate = this.currentDate ?? DateTime.now();
     final style = context.theme;

@@ -9,8 +9,9 @@ class IconButton extends StatelessWidget {
     this.onPressed,
     this.onLongPress,
     this.style,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
+    this.autofocus = false,
   }) : super(key: key);
 
   /// The icon of the button
@@ -27,10 +28,13 @@ class IconButton extends StatelessWidget {
   final IconButtonStyle? style;
 
   /// The semantics label of the button
-  final String? semanticsLabel;
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the button
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
 
   /// Whether the button is enabled or not
   bool get enabled => onPressed != null || onLongPress != null;
@@ -47,8 +51,9 @@ class IconButton extends StatelessWidget {
       ObjectFlagProperty<VoidCallback>.has('onLongPress', onLongPress),
     );
     properties.add(DiagnosticsProperty<IconButtonStyle>('style', style));
-    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties.add(FlagProperty('autofocus', value: autofocus));
   }
 
   @override
@@ -60,6 +65,7 @@ class IconButton extends StatelessWidget {
       onPressed: onPressed == null ? null : () {},
       onLongPress: onLongPress == null ? null : () {},
       builder: (context, state) => Button(
+        autofocus: autofocus,
         focusNode: focusNode,
         child: Theme(
           data: context.theme.copyWith(Style(
@@ -69,7 +75,7 @@ class IconButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         onLongPress: onLongPress,
-        semanticsLabel: semanticsLabel,
+        semanticLabel: semanticLabel,
         style: ButtonStyle(
           decoration: style?.decoration,
           cursor: style?.cursor,

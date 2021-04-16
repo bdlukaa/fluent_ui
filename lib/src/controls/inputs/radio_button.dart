@@ -29,7 +29,7 @@ class RadioButton extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
@@ -45,13 +45,13 @@ class RadioButton extends StatelessWidget {
   /// This is merged with [Style.radioButtonStyle]
   final RadioButtonStyle? style;
 
-  /// The semantics label of the button
-  final String? semanticsLabel;
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the button
+  /// {@macro flutter.widgets.Focus.autofocus}
   final FocusNode? focusNode;
 
-  /// Whether the button should be autofocused
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   @override
@@ -74,7 +74,7 @@ class RadioButton extends StatelessWidget {
       cursor: style?.cursor,
       autofocus: autofocus,
       focusNode: focusNode,
-      semanticsLabel: semanticsLabel,
+      semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         Widget child = AnimatedContainer(

@@ -152,15 +152,16 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             elevation: 6,
             width: box.size.width,
             decoration: BoxDecoration(
-                color: context.theme.navigationPanelBackgroundColor,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(4.0),
-                ),
-                border: Border.all(
-                  color: context.theme.scaffoldBackgroundColor ??
-                      Colors.transparent,
-                  width: 0.8,
-                )),
+              color: context.theme.navigationPanelBackgroundColor,
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(4.0),
+              ),
+              border: Border.all(
+                color:
+                    context.theme.scaffoldBackgroundColor ?? Colors.transparent,
+                width: 0.8,
+              ),
+            ),
             child: ValueListenableBuilder<TextEditingValue>(
               valueListenable: widget.controller,
               builder: (context, value, _) {

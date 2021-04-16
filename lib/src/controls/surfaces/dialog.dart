@@ -1,29 +1,73 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// Dialog controls are modal UI overlays that provide contextual
+/// app information. They block interactions with the app window
+/// until being explicitly dismissed. They often request some kind
+/// of action from the user.
+///
+/// To display a dialog, use the function `showDialog`:
+///
+/// ```dart
+/// showDialog(
+///   context: context,
+///   builder: (context) {
+///     return ContentDialog(
+///       title: Text('Delete file permanently?'),
+///       content: Text(
+///         'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+///       ),
+///       actions: [
+///         Button(
+///           child: Text('Delete'),
+///           autofocus: true,
+///           onPressed: () {
+///             // Delete file here
+///           },
+///         ),
+///         Button(
+///           child: Text('Cancel'),
+///           onPressed: () => Navigator.pop(context),
+///         ),
+///       ],
+///     );
+///   }
+/// )
+/// ```
+///
+/// ![ContentDialog example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)
 class ContentDialog extends StatelessWidget {
+  /// Creates a content dialog.
   const ContentDialog({
     Key? key,
     this.title,
     this.content,
     this.actions,
     this.style,
-    this.backgroundDismiss,
+    this.backgroundDismiss = true,
   }) : super(key: key);
 
+  /// The title of the dialog. Usually, a [Text] widget
   final Widget? title;
+
+  /// The content of the dialog. Usually, a [Text] widget
   final Widget? content;
+
+  /// The actions of the dialog. Usually, a List of [Button]s
   final List<Widget>? actions;
 
+  /// The style used by this dialog. If non-null, it's mescled with
+  /// [Style.dialogStyle]
   final ContentDialogStyle? style;
 
-  final bool? backgroundDismiss;
+  /// Whether the background is dismissible or not.
+  final bool backgroundDismiss;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
     final style = context.theme.dialogStyle?.copyWith(this.style);
     return Dialog(
-      backgroundDismiss: backgroundDismiss ?? true,
+      backgroundDismiss: backgroundDismiss,
       barrierColor: style?.barrierColor,
       child: PhysicalModel(
         color: style?.elevationColor ?? Colors.black,

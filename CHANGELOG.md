@@ -1,5 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [1.8.1] - [16/04/2021]
+
+- **NEW** In `TabView`, it's now possible use the following shortcuts if `TabView.shortcutsEnabled` is `true` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view#closing-a-tab)):
+  1. `Ctrl + F4` or `Ctrl + W` to close the current tab
+  2. `Ctrl + T` to create a new tab
+  3. `1-8` to navigate to a tab with the pressed number
+  4. `9` to navigate to the last tab and navigate to  the last tab
+- **NEW** `IconButton.autofocus`, `ToggleButton.autofocus`
+- **BREAKING** Renamed all the `semanticsLabel` to `semanticLabel`
+
 ## [1.8.0] - Color Update - [14/04/2021]
 
 - **NEW** Web version hosted at https://bdlukaa.github.io/fluent_ui

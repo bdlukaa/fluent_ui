@@ -148,17 +148,11 @@ class _OthersState extends State<Others> {
           tabs: List.generate(tabs, (index) {
             return Tab(
               text: Text('Tab $index'),
-              closeIcon: Tooltip(
-                message: 'Close tab',
-                child: IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    setState(() => tabs--);
-                    if (currentIndex > tabs - 1) currentIndex--;
-                    if (tabs == 0) currentIndex = 0;
-                  },
-                ),
-              ),
+              onClosed: () {
+                setState(() => tabs--);
+                if (currentIndex > tabs - 1) currentIndex--;
+                if (tabs == 0) currentIndex = 0;
+              },
             );
           }),
           bodies: List.generate(

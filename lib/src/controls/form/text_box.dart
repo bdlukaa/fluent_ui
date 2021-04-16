@@ -618,8 +618,9 @@ class _TextBoxState extends State<TextBox>
           fontWeight: FontWeight.w400,
         );
 
-    final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? context.theme.brightness!;
+    final Brightness keyboardAppearance = widget.keyboardAppearance ??
+        context.theme.brightness ??
+        Brightness.light;
     final Color cursorColor = context.theme.inactiveColor!;
     final Color? disabledColor = context.theme.disabledColor;
 

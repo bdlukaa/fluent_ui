@@ -16,19 +16,20 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// - [RadioButton](https://pub.dev/packages/fluent_ui#radio-buttons)
 /// - [ToggleButton]
 class Checkbox extends StatelessWidget {
+  /// Creates a checkbox.
   const Checkbox({
     Key? key,
     required this.checked,
     required this.onChanged,
     this.style,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
 
   /// Whether this [Checkbox] is checked or not.
   ///
-  /// If this is `null`, the checkbox is in its third state.
+  /// If `null`, the checkbox is in its third state.
   final bool? checked;
 
   /// Called when the value of the [Checkbox] should change.
@@ -36,19 +37,20 @@ class Checkbox extends StatelessWidget {
   /// This callback passes a new value, but doesn't update its
   /// state internally.
   ///
-  /// If this callback is null, the Checkbox is disabled.
+  /// If null, the checkbox is considered disabled.
   final ValueChanged<bool?>? onChanged;
 
   /// The style applied to the checkbox. If non-null, it's mescled
   /// with [Style.checkboxStyle]
   final CheckboxStyle? style;
 
-  final String? semanticsLabel;
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the checkbox
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whether the checkbox should be autofocused
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   @override
@@ -65,7 +67,7 @@ class Checkbox extends StatelessWidget {
       ifNull: 'disabled',
     ));
     properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
-    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
     properties.add(FlagProperty(
       'autofocus',
@@ -81,7 +83,7 @@ class Checkbox extends StatelessWidget {
     final double size = 22;
     return HoverButton(
       autofocus: autofocus,
-      semanticsLabel: semanticsLabel,
+      semanticLabel: semanticLabel,
       margin: style.margin,
       focusNode: focusNode,
       cursor: style.cursor,

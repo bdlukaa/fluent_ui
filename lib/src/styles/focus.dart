@@ -1,7 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// A focus border creates an animated border around a widget
+/// whenever it has the application primary focus.
 class FocusBorder extends StatelessWidget {
+  /// Creates a focus border.
   const FocusBorder({
     Key? key,
     required this.child,
@@ -14,22 +17,26 @@ class FocusBorder extends StatelessWidget {
   /// Whether the border is focused
   final bool focused;
 
-  /// The style of this focus border. This is mescled with [Style.focusStyle]
+  /// The style of this focus border. If non-null, this
+  /// is mescled with [Style.focusStyle]
   final FocusStyle? style;
 
   @override
   Widget build(BuildContext context) {
     debugCheckHasFluentTheme(context);
-    final style = context.theme.focusStyle!.copyWith(this.style);
+    final style = context.theme.focusStyle?.copyWith(this.style);
     return AnimatedContainer(
       duration: context.theme.fastAnimationDuration ?? Duration.zero,
       curve: context.theme.animationCurve ?? Curves.linear,
       decoration: BoxDecoration(
-        borderRadius: style.borderRadius,
+        borderRadius: style?.borderRadius,
         border: focused
-            ? Border.fromBorderSide(style.primaryBorder ?? BorderSide.none)
+            ? Border.fromBorderSide(style?.primaryBorder ?? BorderSide.none)
             : null,
-        boxShadow: focused && style.glowFactor != 0 && style.glowColor != null
+        boxShadow: style != null &&
+                focused &&
+                style.glowFactor != 0 &&
+                style.glowColor != null
             ? [
                 BoxShadow(
                   offset: Offset(1, 1),
@@ -60,9 +67,9 @@ class FocusBorder extends StatelessWidget {
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: style.borderRadius,
+          borderRadius: style?.borderRadius,
           border: focused
-              ? Border.fromBorderSide(style.secondaryBorder ?? BorderSide.none)
+              ? Border.fromBorderSide(style?.secondaryBorder ?? BorderSide.none)
               : null,
         ),
         child: child,

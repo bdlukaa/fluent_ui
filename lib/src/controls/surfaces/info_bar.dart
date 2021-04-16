@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 
 /// The severities that can be applied to an [InfoBar]
 enum InfoBarSeverity {
-
   /// ![Info InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-hyperlink.png)
   info,
 
@@ -26,7 +25,7 @@ enum InfoBarSeverity {
 /// as the option to include your own call to action or hyperlink button.
 /// Since the InfoBar is inline with other UI content the option is there
 /// for the control to always be visible or dismissed by the user.
-/// 
+///
 /// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
@@ -208,11 +207,11 @@ class InfoBarStyle with Diagnosticable {
           case InfoBarSeverity.info:
             return isDark ? Colors.grey[120] : Colors.grey[160];
           case InfoBarSeverity.warning:
-            return isDark ? Colors.yellow :Colors.warningPrimaryColor;
+            return isDark ? Colors.yellow : Colors.warningPrimaryColor;
           case InfoBarSeverity.success:
             return Colors.successPrimaryColor;
           case InfoBarSeverity.error:
-            return isDark ? Colors.red :Colors.errorPrimaryColor;
+            return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
       actionStyle: ButtonStyle.standard(style).copyWith(ButtonStyle(

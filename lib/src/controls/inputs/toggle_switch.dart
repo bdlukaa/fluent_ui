@@ -28,7 +28,7 @@ class ToggleSwitch extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.thumb,
     this.focusNode,
     this.autofocus = false,
@@ -53,13 +53,13 @@ class ToggleSwitch extends StatelessWidget {
   /// This style is mescled with [Style.toggleSwitchStyle]
   final ToggleSwitchStyle? style;
 
-  /// The `semanticsLabel` of this [ToggleSwitch]
-  final String? semanticsLabel;
+  /// The `semanticLabel` of this [ToggleSwitch]
+  final String? semanticLabel;
 
-  /// The focus node of this [ToggleSwitch]
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whether this [ToggleSwitch] is auto focused
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   @override
@@ -81,7 +81,7 @@ class ToggleSwitch extends StatelessWidget {
       ifFalse: 'manual focus',
     ));
     properties.add(DiagnosticsProperty<ToggleSwitchStyle>('style', style));
-    properties.add(StringProperty('semanticsLabel', semanticsLabel));
+    properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
@@ -91,7 +91,7 @@ class ToggleSwitch extends StatelessWidget {
     final style = context.theme.toggleSwitchStyle?.copyWith(this.style);
     return HoverButton(
       autofocus: autofocus,
-      semanticsLabel: semanticsLabel,
+      semanticLabel: semanticLabel,
       margin: style?.margin,
       focusNode: focusNode,
       cursor: style?.cursor,

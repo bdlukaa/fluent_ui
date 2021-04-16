@@ -474,7 +474,7 @@ SplitButtonBar(
         text: Container(
           height: 24,
           width: 24,
-          color: context.theme!.accentColor,
+          color: context.theme.accentColor,
         ),
         onPressed: () {},
       ),

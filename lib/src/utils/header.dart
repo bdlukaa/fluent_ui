@@ -1,7 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// An info header lets the user know what an element of the ui
+/// do as a short description of its functionality.
+///
+/// ![InfoHeader in a TextBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)
 class InfoHeader extends StatelessWidget {
+  /// Creates an info header.
   const InfoHeader({
     Key? key,
     this.child,
@@ -9,8 +14,13 @@ class InfoHeader extends StatelessWidget {
     this.headerStyle,
   }) : super(key: key);
 
+  /// The text of the header.
   final String header;
+
+  /// The style of the text. If null, [Typography.body] is used
   final TextStyle? headerStyle;
+
+  /// The widget to apply the header above of.
   final Widget? child;
 
   @override

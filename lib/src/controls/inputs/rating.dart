@@ -30,7 +30,7 @@ class RatingBar extends StatefulWidget {
     this.iconSize,
     this.ratedIconColor,
     this.unratedIconColor,
-    this.semanticsLabel,
+    this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
     this.starSpacing = 0,
@@ -71,13 +71,19 @@ class RatingBar extends StatefulWidget {
   /// The color of the icons that are not rated. If `null`, uses [Style.disabled]
   final Color? unratedIconColor;
 
-  /// The semantics label of the bar
-  final String? semanticsLabel;
+  /// Semantic label for the bar
+  ///
+  /// Announced in accessibility modes (e.g TalkBack/VoiceOver). This
+  /// label does not show in the UI.
+  ///
+  ///   * [SemanticsProperties.label], which is set to [semanticLabel]
+  ///     in the underlying [Semantics] widget.
+  final String? semanticLabel;
 
-  /// The [FocusNode] of the bar
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whether the bar should be autofocused or not
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
   @override
@@ -203,7 +209,7 @@ class _RatingBarState extends State<RatingBar> {
     debugCheckHasFluentTheme(context);
     final size = context.theme.iconStyle?.size;
     return Semantics(
-      label: widget.semanticsLabel,
+      label: widget.semanticLabel,
       // It's only a slider if its value can be changed
       slider: widget.onChanged != null,
       maxValueLength: widget.amount,
