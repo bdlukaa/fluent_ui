@@ -62,7 +62,7 @@ class _FlyoutState extends State<Flyout> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return PopUp(
       key: popupKey,
       child: widget.child,
@@ -93,7 +93,7 @@ class FlyoutContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return PhysicalModel(
       color: shadowColor ?? Colors.black,
       elevation: elevation,
@@ -104,13 +104,13 @@ class FlyoutContent extends StatelessWidget {
               color: context.theme.navigationPanelBackgroundColor,
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(
-                color: context.theme.scaffoldBackgroundColor!,
+                color: context.theme.scaffoldBackgroundColor,
                 width: 0.6,
               ),
             ),
         padding: padding ?? const EdgeInsets.all(12.0),
         child: DefaultTextStyle(
-          style: context.theme.typography?.body ?? TextStyle(),
+          style: context.theme.typography.body ?? TextStyle(),
           child: child,
         ),
       ),

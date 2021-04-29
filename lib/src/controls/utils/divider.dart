@@ -13,10 +13,10 @@ class Divider extends StatelessWidget {
   /// The current direction of the slider. Uses [Axis.horizontal] by default
   final Axis direction;
 
-  /// The `style` of the divider. It's mescled with [Style.dividerStyle]
-  final DividerStyle? style;
+  /// The `style` of the divider. It's mescled with [ThemeData.dividerThemeData]
+  final DividerThemeData? style;
 
-  /// The size of the divider. The opposite of the [DividerStyle.thickness]
+  /// The size of the divider. The opposite of the [DividerThemeData.thickness]
   final double? size;
 
   @override
@@ -38,21 +38,23 @@ class Divider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.dividerStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = DividerThemeData.standard(context.theme).copyWith(
+      context.theme.dividerTheme.copyWith(this.style),
+    );
     return AnimatedContainer(
-      duration: context.theme.fastAnimationDuration ?? Duration.zero,
-      curve: context.theme.animationCurve ?? Curves.linear,
-      height: direction == Axis.horizontal ? style?.thickness : size,
-      width: direction == Axis.vertical ? style?.thickness : size,
-      margin: style?.margin?.call(direction),
-      decoration: style?.decoration,
+      duration: context.theme.fastAnimationDuration,
+      curve: context.theme.animationCurve,
+      height: direction == Axis.horizontal ? style.thickness : size,
+      width: direction == Axis.vertical ? style.thickness : size,
+      margin: style.margin?.call(direction),
+      decoration: style.decoration,
     );
   }
 }
 
 @immutable
-class DividerStyle with Diagnosticable {
+class DividerThemeData with Diagnosticable {
   /// The thickness of the style.
   ///
   /// If it's horizontal, it corresponds to the divider
@@ -67,10 +69,10 @@ class DividerStyle with Diagnosticable {
   /// The margin callback of the style.
   final EdgeInsetsGeometry Function(Axis direction)? margin;
 
-  const DividerStyle({this.thickness, this.decoration, this.margin});
+  const DividerThemeData({this.thickness, this.decoration, this.margin});
 
-  factory DividerStyle.standard(Style style) {
-    return DividerStyle(
+  factory DividerThemeData.standard(ThemeData style) {
+    return DividerThemeData(
       thickness: 1,
       margin: (direction) {
         if (direction == Axis.horizontal)
@@ -88,9 +90,9 @@ class DividerStyle with Diagnosticable {
     );
   }
 
-  DividerStyle copyWith(DividerStyle? style) {
+  DividerThemeData copyWith(DividerThemeData? style) {
     if (style == null) return this;
-    return DividerStyle(
+    return DividerThemeData(
       decoration: style.decoration ?? decoration,
       margin: style.margin ?? margin,
       thickness: style.thickness ?? thickness,

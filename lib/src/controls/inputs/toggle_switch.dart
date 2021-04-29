@@ -50,8 +50,8 @@ class ToggleSwitch extends StatelessWidget {
 
   /// The style of this [ToggleSwitch].
   ///
-  /// This style is mescled with [Style.toggleSwitchStyle]
-  final ToggleSwitchStyle? style;
+  /// This style is mescled with [ThemeData.toggleSwitchThemeData]
+  final ToggleSwitchThemeData? style;
 
   /// The `semanticLabel` of this [ToggleSwitch]
   final String? semanticLabel;
@@ -80,33 +80,35 @@ class ToggleSwitch extends StatelessWidget {
       value: autofocus,
       ifFalse: 'manual focus',
     ));
-    properties.add(DiagnosticsProperty<ToggleSwitchStyle>('style', style));
+    properties.add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.toggleSwitchStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = ToggleSwitchThemeData.standard(context.theme).copyWith(
+      context.theme.toggleSwitchTheme.copyWith(this.style),
+    );
     return HoverButton(
       autofocus: autofocus,
       semanticLabel: semanticLabel,
-      margin: style?.margin,
+      margin: style.margin,
       focusNode: focusNode,
-      cursor: style?.cursor,
+      cursor: style.cursor,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         Widget child = AnimatedContainer(
           alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
           height: 20,
           width: 45,
-          duration: style?.animationDuration ?? Duration.zero,
-          curve: style?.animationCurve ?? Curves.linear,
-          padding: style?.padding,
+          duration: style.animationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? Curves.linear,
+          padding: style.padding,
           decoration: checked
-              ? style?.checkedDecoration?.call(state)
-              : style?.uncheckedDecoration?.call(state),
+              ? style.checkedDecoration?.call(state)
+              : style.uncheckedDecoration?.call(state),
           child: thumb ??
               DefaultToggleSwitchThumb(
                 checked: checked,
@@ -135,7 +137,7 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
   }) : super(key: key);
 
   final bool checked;
-  final ToggleSwitchStyle? style;
+  final ToggleSwitchThemeData? style;
   final ButtonStates state;
 
   @override
@@ -157,7 +159,7 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 }
 
 @immutable
-class ToggleSwitchStyle with Diagnosticable {
+class ToggleSwitchThemeData with Diagnosticable {
   final ButtonState<Decoration>? checkedThumbDecoration;
   final ButtonState<Decoration>? uncheckedThumbDecoration;
 
@@ -172,7 +174,7 @@ class ToggleSwitchStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const ToggleSwitchStyle({
+  const ToggleSwitchThemeData({
     this.cursor,
     this.padding,
     this.margin,
@@ -184,14 +186,14 @@ class ToggleSwitchStyle with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  factory ToggleSwitchStyle.standard(Style style) {
+  factory ToggleSwitchThemeData.standard(ThemeData style) {
     final defaultThumbDecoration = BoxDecoration(shape: BoxShape.circle);
 
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(30),
     );
 
-    return ToggleSwitchStyle(
+    return ToggleSwitchThemeData(
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: checkedInputColor(style, state),
@@ -203,7 +205,7 @@ class ToggleSwitchStyle with Diagnosticable {
           border: Border.all(
             width: 0.8,
             color: state.isNone || state.isFocused
-                ? style.inactiveColor!
+                ? style.inactiveColor
                 : uncheckedInputColor(style, state),
           ),
         );
@@ -218,13 +220,14 @@ class ToggleSwitchStyle with Diagnosticable {
         else
           return style.inactiveColor;
       }()),
-      uncheckedThumbDecoration: (_) =>
-          defaultThumbDecoration.copyWith(color: style.inactiveColor),
+      uncheckedThumbDecoration: (_) => defaultThumbDecoration.copyWith(
+        color: style.inactiveColor,
+      ),
     );
   }
 
-  ToggleSwitchStyle copyWith(ToggleSwitchStyle? style) {
-    return ToggleSwitchStyle(
+  ToggleSwitchThemeData copyWith(ToggleSwitchThemeData? style) {
+    return ToggleSwitchThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,

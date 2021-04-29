@@ -122,7 +122,7 @@ class _ComboboxMenuItemButtonState<T>
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final CurvedAnimation opacity;
     final double unit = 0.5 / (widget.route.items.length + 1.5);
     if (widget.itemIndex == widget.route.selectedIndex) {
@@ -148,14 +148,14 @@ class _ComboboxMenuItemButtonState<T>
         title: DefaultTextStyle(
           maxLines: 1,
           style: (selected
-                  ? context.theme.typography?.base
-                  : context.theme.typography?.body) ??
+                  ? context.theme.typography.base
+                  : context.theme.typography.body) ??
               TextStyle(),
           child: widget.route.items[widget.itemIndex],
         ),
         tileColor: (state) {
           if (selected) {
-            return HSVColor.fromColor(context.theme.accentColor ?? Colors.blue)
+            return HSVColor.fromColor(context.theme.accentColor)
                 .withSaturation(0.6)
                 .withValue(0.8)
                 .toColor();
@@ -749,7 +749,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     }
   }
 
-  TextStyle? get _textStyle => widget.style ?? context.theme.typography?.body;
+  TextStyle? get _textStyle => widget.style ?? context.theme.typography.body;
 
   void _handleTap() {
     final TextDirection? textDirection = Directionality.maybeOf(context);
@@ -781,8 +781,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
           InheritedTheme.capture(from: context, to: navigator.context),
       style: _textStyle!,
       dropdownColor: widget.dropdownColor,
-      transitionAnimationDuration:
-          context.theme.mediumAnimationDuration ?? Duration.zero,
+      transitionAnimationDuration: context.theme.mediumAnimationDuration,
     );
 
     navigator
@@ -802,7 +801,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     if (_enabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
 
-      switch (context.theme.brightness ?? Brightness.light) {
+      switch (context.theme.brightness) {
         case Brightness.light:
           return Colors.grey[180]!;
         case Brightness.dark:
@@ -811,7 +810,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
     } else {
       if (widget.iconDisabledColor != null) return widget.iconDisabledColor!;
 
-      switch (context.theme.brightness ?? Brightness.light) {
+      switch (context.theme.brightness) {
         case Brightness.light:
           return Colors.grey[120]!;
         case Brightness.dark:
@@ -838,7 +837,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final Orientation newOrientation = _getOrientation(context);
     _lastOrientation ??= newOrientation;
     if (newOrientation != _lastOrientation) {
@@ -899,13 +898,15 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
             Expanded(child: innerItemsWidget)
           else
             innerItemsWidget,
-          Theme(
-            data: context.theme.copyWith(Style(
-              iconStyle: context.theme.iconStyle?.copyWith(IconStyle(
-                color: _iconColor,
-                size: widget.iconSize,
-              )),
-            )),
+          FluentTheme(
+            data: context.theme.copyWith(
+              iconTheme: context.theme.iconTheme.copyWith(
+                IconThemeData(
+                  color: _iconColor,
+                  size: widget.iconSize,
+                ),
+              ),
+            ),
             child: widget.icon ?? defaultIcon,
           ),
         ],

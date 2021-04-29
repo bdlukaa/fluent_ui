@@ -7,7 +7,7 @@ class NavigationPanelItem {
   /// The label of the item. Usually a [Text] widget
   final Widget? label;
 
-  final NavigationPanelStyle? style;
+  final NavigationPanelThemeData? style;
 
   final bool header;
 
@@ -54,7 +54,7 @@ class NavigationPanelMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return NavigationPanelItemTile(
       onTap: onTap,
       compact: compact,
@@ -85,8 +85,10 @@ class NavigationPanelItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.navigationPanelStyle!.copyWith(item.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = NavigationPanelThemeData.standard(context.theme).copyWith(
+      context.theme.navigationPanelTheme.copyWith(item.style),
+    );
     return SizedBox(
       height: 41.0,
       child: HoverButton(
@@ -122,14 +124,14 @@ class NavigationPanelItemTile extends StatelessWidget {
               if (item.icon != null)
                 Padding(
                   padding: style.iconPadding ?? EdgeInsets.zero,
-                  child: Theme(
-                    data: context.theme.copyWith(Style(
-                      iconStyle: context.theme.iconStyle!.copyWith(IconStyle(
+                  child: FluentTheme(
+                    data: context.theme.copyWith(
+                      iconTheme: IconThemeData(
                         color: selected
                             ? style.selectedIconColor!(state)
                             : style.unselectedIconColor!(state),
-                      )),
-                    )),
+                      ),
+                    ),
                     child: item.icon!,
                   ),
                 ),
@@ -143,8 +145,7 @@ class NavigationPanelItemTile extends StatelessWidget {
                       padding: style.labelPadding ?? EdgeInsets.zero,
                       child: AnimatedDefaultTextStyle(
                         duration: style.animationDuration ??
-                            context.theme.mediumAnimationDuration ??
-                            Duration.zero,
+                            context.theme.mediumAnimationDuration,
                         curve: style.animationCurve ?? standartCurve,
                         style: textStyle,
                         child: item.label!,

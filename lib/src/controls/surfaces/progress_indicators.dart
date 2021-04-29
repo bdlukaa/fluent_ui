@@ -45,11 +45,11 @@ class ProgressBar extends StatefulWidget {
   final String? semanticLabel;
 
   /// The background color of the progress bar. If null,
-  /// [Style.inactiveColor] is used
+  /// [ThemeData.inactiveColor] is used
   final Color? backgroundColor;
 
   /// The active color of the progress bar. If null,
-  /// [Style.accentColor] is used
+  /// [ThemeData.accentColor] is used
   final Color? activeColor;
 
   @override
@@ -97,7 +97,7 @@ class _ProgressBarState extends State<ProgressBar>
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return Container(
       height: widget.strokeWidth,
@@ -112,9 +112,9 @@ class _ProgressBarState extends State<ProgressBar>
             painter: _ProgressBarPainter(
               value: widget.value == null ? null : widget.value! / 100,
               strokeWidth: widget.strokeWidth,
-              activeColor: widget.activeColor ?? style.accentColor!,
+              activeColor: widget.activeColor ?? style.accentColor,
               backgroundColor:
-                  widget.backgroundColor ?? style.inactiveBackgroundColor!,
+                  widget.backgroundColor ?? style.inactiveBackgroundColor,
               p1: p1,
               p2: p2,
               idleFrames: idleFrames,
@@ -283,11 +283,11 @@ class ProgressRing extends StatefulWidget {
   final String? semanticLabel;
 
   /// The background color of the progress ring. If null,
-  /// [Style.inactiveColor] is used
+  /// [ThemeData.inactiveColor] is used
   final Color? backgroundColor;
 
   /// The active color of the progress ring. If null,
-  /// [Style.accentColor] is used
+  /// [ThemeData.accentColor] is used
   final Color? activeColor;
 
   @override
@@ -334,7 +334,7 @@ class _ProgressRingState extends State<ProgressRing>
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return Container(
       constraints: BoxConstraints(
@@ -351,10 +351,10 @@ class _ProgressRingState extends State<ProgressRing>
               builder: (context, value) {
                 return CustomPaint(
                   painter: _RingPainter(
-                    backgroundColor: widget.backgroundColor ??
-                        style.inactiveBackgroundColor!,
+                    backgroundColor:
+                        widget.backgroundColor ?? style.inactiveBackgroundColor,
                     value: widget.value,
-                    color: widget.activeColor ?? style.accentColor!,
+                    color: widget.activeColor ?? style.accentColor,
                     strokeWidth: widget.strokeWidth,
                     d1: d1,
                     d2: d2,
@@ -372,9 +372,9 @@ class _ProgressRingState extends State<ProgressRing>
             );
           return CustomPaint(
             painter: _RingPainter(
-              backgroundColor: style.inactiveBackgroundColor!,
+              backgroundColor: style.inactiveBackgroundColor,
               value: widget.value,
-              color: style.accentColor!,
+              color: style.accentColor,
               strokeWidth: widget.strokeWidth,
               d1: d1,
               d2: d2,

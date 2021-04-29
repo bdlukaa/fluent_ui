@@ -1,14 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 
 // TODO: Improve scrollbar (Currently blocked by https://github.com/flutter/flutter/issues/80370)
-// - Background color
-// - Press color
 // - Navigation arrows
 
 /// {@macro flutter.widgets.Scrollbar}
-class Scrollbar extends StatefulWidget {
-  /// Creates a basic raw scrollbar that wraps the given [child].
+class Scrollbar extends RawScrollbar {
+  /// Creates a fluent-styled scrollbar that wraps the given [child].
   ///
   /// The [child], or a descendant of the [child], should be a
   /// source of [ScrollNotification] notifications, typically a
@@ -18,14 +18,11 @@ class Scrollbar extends StatefulWidget {
   /// [fadeDuration], and [timeToFade] arguments must not be null.
   const Scrollbar({
     Key? key,
-    required this.child,
+    required Widget child,
     this.controller,
     this.isAlwaysShown = true,
     this.style,
-  }) : super(key: key);
-
-  /// {@macro flutter.widgets.Scrollbar.child}
-  final Widget child;
+  }) : super(key: key, child: child);
 
   /// {@macro flutter.widgets.Scrollbar.controller}
   final ScrollController? controller;
@@ -33,112 +30,299 @@ class Scrollbar extends StatefulWidget {
   /// {@macro flutter.widgets.Scrollbar.isAlwaysShown}
   final bool isAlwaysShown;
 
-  /// The style applied to the scroll bar. If non-null, it's mescled with [Style.scrollbarStyle]
-  final ScrollbarStyle? style;
+  /// The style applied to the scroll bar. If non-null, it's mescled
+  /// with [ThemeData.scrollbarThemeData]
+  final ScrollbarThemeData? style;
 
   @override
   _ScrollbarState createState() => _ScrollbarState();
 }
 
-class _ScrollbarState extends State<Scrollbar> {
-  final _rawKey = GlobalKey<RawScrollbarState>();
+class _ScrollbarState extends RawScrollbarState<Scrollbar> {
+  late AnimationController _hoverController;
+  late ScrollbarThemeData _scrollbarTheme;
+  bool _dragIsActive = false;
+  bool _hoverIsActive = false;
 
-  bool _isHovering = false;
-
-  void _handleHoverUpdate(Offset position) {
-    setState(
-      () => _isHovering =
-          // ignore: invalid_use_of_protected_member
-          _rawKey.currentState?.isPointerOverScrollbar(position) ?? false,
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 90),
     );
+    _hoverController.addListener(() {
+      updateScrollbarPainter();
+    });
   }
 
   @override
-  Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.scrollbarStyle?.copyWith(widget.style);
-    return MouseRegion(
-      onExit: (event) => _handleHoverUpdate(event.position),
-      onHover: (event) => _handleHoverUpdate(event.position),
-      onEnter: (event) => _handleHoverUpdate(event.position),
-      child: Container(
-        padding: _isHovering ? EdgeInsets.zero : EdgeInsets.only(right: 2),
-        child: TweenAnimationBuilder<double>(
-          duration: context.theme.fasterAnimationDuration ?? Duration.zero,
-          tween: _isHovering
-              ? Tween<double>(
-                  begin: style?.thickness ?? 2.0,
-                  end: style?.hoveringThickness ?? 16.0,
-                )
-              : Tween<double>(
-                  begin: style?.hoveringThickness ?? 16.0,
-                  end: style?.thickness ?? 2.0,
-                ),
-          builder: (context, thickness, child) => TweenAnimationBuilder<double>(
-            duration: context.theme.fasterAnimationDuration ?? Duration.zero,
-            tween: _isHovering
-                ? Tween<double>(begin: 100, end: 0)
-                : Tween<double>(begin: 75, end: 100),
-            builder: (context, radius, _) => RawScrollbar(
-              key: _rawKey,
-              child: child!,
-              controller: widget.controller,
-              isAlwaysShown: widget.isAlwaysShown,
-              thickness: thickness,
-              radius: Radius.circular(radius),
-              thumbColor: style?.scrollbarColor,
-            ),
-          ),
-          child: widget.child,
-        ),
-      ),
+  void didChangeDependencies() {
+    assert(debugCheckHasFluentTheme(context));
+    final ThemeData theme = FluentTheme.of(context);
+    _scrollbarTheme = ScrollbarThemeData.standart(theme).copyWith(
+      theme.scrollbarTheme.copyWith(widget.style),
     );
+    _hoverController.duration =
+        _scrollbarTheme.animationDuration ?? theme.fasterAnimationDuration;
+    super.didChangeDependencies();
+  }
+
+  ButtonStates get _currentState {
+    if (_dragIsActive)
+      return ButtonStates.pressing;
+    else if (_hoverIsActive)
+      return ButtonStates.hovering;
+    else
+      return ButtonStates.none;
+  }
+
+  Color _trackColor(ButtonStates state) {
+    if (state.isNone) return Colors.transparent;
+    return _scrollbarTheme.backgroundColor ??
+        context.theme.navigationPanelBackgroundColor;
+  }
+
+  Color _thumbColor(ButtonStates state) {
+    Color? color;
+    if (state.isPressing) color = _scrollbarTheme.scrollbarPressingColor;
+    color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
+    return color;
+  }
+
+  @override
+  void updateScrollbarPainter() {
+    assert(debugCheckHasDirectionality(context));
+    final animation = CurvedAnimation(
+      parent: _hoverController,
+      curve: _scrollbarTheme.animationCurve ?? Curves.linear,
+    );
+    scrollbarPainter
+      ..color = _thumbColor(_currentState)
+      ..trackColor = _trackColor(_currentState)
+      ..trackBorderColor = Color.lerp(
+            _scrollbarTheme.trackBorderColor,
+            _scrollbarTheme.hoveringTrackBorderColor,
+            animation.value,
+          ) ??
+          Colors.transparent
+      ..textDirection = Directionality.of(context)
+      ..thickness = Tween<double>(
+        begin: _scrollbarTheme.thickness ?? 2.0,
+        end: _scrollbarTheme.hoveringThickness ?? 16.0,
+      ).evaluate(animation)
+      ..radius = !_hoverIsActive
+          ? _scrollbarTheme.radius
+          : _scrollbarTheme.hoveringRadius
+      // uncomment the next line to make radius animated
+      // ..radius = Tween<Radius>(
+      //   begin: _scrollbarTheme.radius ?? const Radius.circular(100.0),
+      //   end: _scrollbarTheme.hoveringRadius ?? const Radius.circular(0.0),
+      // ).evaluate(animation)
+      ..crossAxisMargin = Tween<double>(
+        begin: _scrollbarTheme.crossAxisMargin ?? 2.0,
+        end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
+      ).evaluate(animation)
+      ..mainAxisMargin = Tween<double>(
+        begin: _scrollbarTheme.mainAxisMargin ?? 6.0,
+        end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
+      ).evaluate(animation)
+      ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
+      ..padding = MediaQuery.of(context).padding;
+  }
+
+  @override
+  void handleThumbPressStart(Offset localPosition) {
+    super.handleThumbPressStart(localPosition);
+    setState(() {
+      _dragIsActive = true;
+    });
+  }
+
+  @override
+  void handleThumbPressEnd(Offset localPosition, Velocity velocity) {
+    super.handleThumbPressEnd(localPosition, velocity);
+    setState(() {
+      _dragIsActive = false;
+    });
+  }
+
+  @override
+  void handleHover(PointerHoverEvent event) async {
+    super.handleHover(event);
+    // Check if the position of the pointer falls over the painted scrollbar
+    if (isPointerOverScrollbar(event.position)) {
+      // Pointer is hovering over the scrollbar
+      setState(() {
+        _hoverIsActive = true;
+      });
+      _hoverController.forward();
+    } else if (_hoverIsActive) {
+      await _hoverController.reverse();
+      // Pointer was, but is no longer over painted scrollbar.
+      setState(() {
+        _hoverIsActive = false;
+      });
+    }
+  }
+
+  @override
+  void handleHoverExit(PointerExitEvent event) {
+    super.handleHoverExit(event);
+    setState(() {
+      _hoverIsActive = false;
+    });
+    _hoverController.reverse();
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    super.dispose();
   }
 }
 
 @immutable
-class ScrollbarStyle with Diagnosticable {
+class ScrollbarThemeData with Diagnosticable {
+  /// Thickness of the scrollbar in its cross-axis in logical
+  /// pixels. If null, `2.0` is used
   final double? thickness;
+
+  /// Thickness of the scrollbar in its cross-axis in logical
+  /// pixels when the user is hovering or pressing it. If null,
+  /// `16.0` is used
   final double? hoveringThickness;
 
+  /// The background color of the scrollbar when the user is
+  /// hovering or pressing it. If null, `Color(0xFFe9e9e9)` is
+  /// used for light theme and `Color(0xFF1b1b1b)` is used for
+  /// dark theme.
   final Color? backgroundColor;
+
+  /// The color of the scrollbar thumb on its default state. If
+  /// null, `Color(0xFF8c8c8c)` is used for light theme and
+  /// `Color(0xFF767676)` is used for dark theme.
   final Color? scrollbarColor;
+
+  /// The color of the scrollbar thumb when the user is hovering
+  /// or pressing it. If null, `const Color(0xFF5d5d5d)` is used
+  /// for light theme and `Color(0xFFa4a4a4)` is used for dark
+  /// theme by default.
   final Color? scrollbarPressingColor;
 
-  const ScrollbarStyle({
+  /// The default radius of the scrollbar. Defaults to
+  /// `Radius.circular(100.0)`
+  final Radius? radius;
+
+  /// The radius of the scrollbar when the user is hovering or
+  /// pressing. Defaults to `Radius.circular(0.0)`
+  final Radius? hoveringRadius;
+
+  /// Distance from the scrollbar's start and end to the edge of
+  /// the viewport in logical pixels. It affects the amount of
+  /// available paint area. Defaults to `2.0`
+  final double? mainAxisMargin;
+
+  /// Distance from the scrollbar's start and end to the edge of
+  /// the viewport in logical pixels. It affects the amount of
+  /// available paint area. Defaults to `0.0`
+  final double? hoveringMainAxisMargin;
+
+  /// Distance from the scrollbar's side to the nearest edge in
+  /// logical pixels. Defaults to `0.0`
+  final double? crossAxisMargin;
+
+  /// Distance from the scrollbar's side to the nearest edge in
+  /// logical pixels when the user is hovering or pressing.
+  /// Defaults to `2.0`
+  final double? hoveringCrossAxisMargin;
+
+  /// Sets the preferred smallest size the scrollbar can shrink
+  /// to when the total scrollable extent is large, the current
+  /// visible viewport is small, and the viewport is not overscrolled.
+  /// Defaults to `48.0`
+  final double? minThumbLength;
+
+  /// [Color] of the track border. Defaults to [Colors.transparent]
+  final Color? trackBorderColor;
+
+  /// [Color] of the track border when the user is hovering or pressing.
+  /// Defaults to [Colors.transparent]
+  final Color? hoveringTrackBorderColor;
+
+  final Duration? animationDuration;
+  final Curve? animationCurve;
+
+  const ScrollbarThemeData({
     this.thickness,
     this.hoveringThickness,
     this.backgroundColor,
     this.scrollbarColor,
     this.scrollbarPressingColor,
+    this.radius,
+    this.hoveringRadius,
+    this.mainAxisMargin,
+    this.hoveringMainAxisMargin,
+    this.crossAxisMargin,
+    this.hoveringCrossAxisMargin,
+    this.minThumbLength,
+    this.trackBorderColor,
+    this.hoveringTrackBorderColor,
+    this.animationDuration,
+    this.animationCurve,
   });
 
-  factory ScrollbarStyle.standart(Style style) {
-    assert(
-      style.brightness != null,
-      'The brightness must be provided in order to make Scrollbar work',
-    );
-    return ScrollbarStyle(
-      scrollbarColor:
-          style.brightness!.isLight ? Color(0xFF8c8c8c) : Color(0xFF767676),
-      scrollbarPressingColor:
-          style.brightness!.isLight ? Color(0xFF5d5d5d) : Color(0xFFa4a4a4),
+  factory ScrollbarThemeData.standart(ThemeData style) {
+    final brightness = style.brightness;
+    return ScrollbarThemeData(
+      scrollbarColor: brightness.isLight
+          ? const Color(0xFF8c8c8c)
+          : const Color(0xFF767676),
+      scrollbarPressingColor: brightness.isLight
+          ? const Color(0xFF5d5d5d)
+          : const Color(0xFFa4a4a4),
       thickness: 2.0,
       hoveringThickness: 16.0,
-      backgroundColor:
-          style.brightness!.isLight ? Color(0xFFe9e9e9) : Color(0xFF1b1b1b),
+      backgroundColor: brightness.isLight
+          ? const Color(0xFFe9e9e9)
+          : const Color(0xFF1b1b1b),
+      radius: const Radius.circular(100.0),
+      hoveringRadius: const Radius.circular(0.0),
+      crossAxisMargin: 2.0,
+      hoveringCrossAxisMargin: 0.0,
+      mainAxisMargin: 2.0,
+      hoveringMainAxisMargin: 0.0,
+      minThumbLength: 48.0,
+      trackBorderColor: Colors.transparent,
+      hoveringTrackBorderColor: Colors.transparent,
+      animationDuration: style.fasterAnimationDuration,
+      animationCurve: Curves.linear,
     );
   }
 
-  ScrollbarStyle copyWith(ScrollbarStyle? style) {
+  ScrollbarThemeData copyWith(ScrollbarThemeData? style) {
     if (style == null) return this;
-    return ScrollbarStyle(
+    return ScrollbarThemeData(
       backgroundColor: style.backgroundColor ?? backgroundColor,
       scrollbarColor: style.scrollbarColor ?? scrollbarColor,
       scrollbarPressingColor:
           style.scrollbarPressingColor ?? scrollbarPressingColor,
       hoveringThickness: style.hoveringThickness ?? hoveringThickness,
       thickness: style.thickness ?? thickness,
+      radius: style.radius ?? radius,
+      hoveringRadius: style.hoveringRadius ?? hoveringRadius,
+      crossAxisMargin: style.crossAxisMargin ?? crossAxisMargin,
+      hoveringCrossAxisMargin:
+          style.hoveringCrossAxisMargin ?? hoveringCrossAxisMargin,
+      mainAxisMargin: style.mainAxisMargin ?? mainAxisMargin,
+      hoveringMainAxisMargin:
+          style.hoveringMainAxisMargin ?? hoveringMainAxisMargin,
+      minThumbLength: style.minThumbLength ?? minThumbLength,
+      hoveringTrackBorderColor:
+          style.hoveringTrackBorderColor ?? hoveringTrackBorderColor,
+      trackBorderColor: style.trackBorderColor ?? trackBorderColor,
+      animationCurve: style.animationCurve ?? animationCurve,
+      animationDuration: style.animationDuration ?? animationDuration,
     );
   }
 
@@ -146,16 +330,58 @@ class ScrollbarStyle with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ColorProperty('scrollbarColor', scrollbarColor));
-    properties.add(ColorProperty(
-      'scrollbarPressingColor',
-      scrollbarPressingColor,
-    ));
+    properties.add(
+      ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
+    );
     properties.add(ColorProperty('backgroundColor', backgroundColor));
     properties.add(DoubleProperty('thickness', thickness, defaultValue: 2.0));
     properties.add(DoubleProperty(
       'hoveringThickness',
       hoveringThickness,
       defaultValue: 16.0,
+    ));
+    properties.add(DiagnosticsProperty<Radius>(
+      'radius',
+      radius,
+      defaultValue: Radius.circular(100),
+    ));
+    properties.add(DiagnosticsProperty<Radius>(
+      'hoveringRadius',
+      hoveringRadius,
+      defaultValue: Radius.zero,
+    ));
+    properties.add(
+      DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
+    );
+    properties.add(DoubleProperty(
+      'hoveringMainAxisMargin',
+      hoveringMainAxisMargin,
+      defaultValue: 0.0,
+    ));
+    properties.add(
+      DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
+    );
+    properties.add(DoubleProperty(
+      'hoveringCrossAxisMargin',
+      hoveringMainAxisMargin,
+      defaultValue: 0.0,
+    ));
+    properties.add(
+      DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
+    );
+    properties.add(ColorProperty('trackBorderColor', trackBorderColor));
+    properties.add(
+      ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor),
+    );
+    properties.add(DiagnosticsProperty<Duration>(
+      'animationDuration',
+      animationDuration,
+      defaultValue: Duration(milliseconds: 90),
+    ));
+    properties.add(DiagnosticsProperty<Curve>(
+      'animationCurve',
+      animationCurve,
+      defaultValue: Curves.linear,
     ));
   }
 }

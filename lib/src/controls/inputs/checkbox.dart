@@ -41,8 +41,8 @@ class Checkbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
 
   /// The style applied to the checkbox. If non-null, it's mescled
-  /// with [Style.checkboxStyle]
-  final CheckboxStyle? style;
+  /// with [ThemeData.checkboxThemeData]
+  final CheckboxThemeData? style;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
@@ -66,7 +66,7 @@ class Checkbox extends StatelessWidget {
       onChanged,
       ifNull: 'disabled',
     ));
-    properties.add(DiagnosticsProperty<CheckboxStyle>('style', style));
+    properties.add(DiagnosticsProperty<CheckboxThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
     properties.add(FlagProperty(
@@ -78,8 +78,10 @@ class Checkbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.checkboxStyle!.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = CheckboxThemeData.standard(context.theme).copyWith(
+      context.theme.checkboxTheme.copyWith(this.style),
+    );
     final double size = 22;
     return HoverButton(
       autofocus: autofocus,
@@ -100,22 +102,22 @@ class Checkbox extends StatelessWidget {
           width: size,
           decoration: () {
             if (checked == null)
-              return style.thirdstateDecoration!(state);
+              return style.thirdstateDecoration?.call(state);
             else if (checked!)
-              return style.checkedDecoration!(state);
+              return style.checkedDecoration?.call(state);
             else
-              return style.uncheckedDecoration!(state);
+              return style.uncheckedDecoration?.call(state);
           }(),
           child: Icon(
             style.icon,
             size: 18,
             color: () {
               if (checked == null)
-                return style.thirdstateIconColor!(state);
+                return style.thirdstateIconColor?.call(state);
               else if (checked!)
-                return style.checkedIconColor!(state);
+                return style.checkedIconColor?.call(state);
               else
-                return style.uncheckedIconColor!(state);
+                return style.uncheckedIconColor?.call(state);
             }(),
           ),
         );
@@ -132,7 +134,7 @@ class Checkbox extends StatelessWidget {
 }
 
 @immutable
-class CheckboxStyle with Diagnosticable {
+class CheckboxThemeData with Diagnosticable {
   final ButtonState<Decoration>? checkedDecoration;
   final ButtonState<Decoration>? uncheckedDecoration;
   final ButtonState<Decoration>? thirdstateDecoration;
@@ -150,7 +152,7 @@ class CheckboxStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const CheckboxStyle({
+  const CheckboxThemeData({
     this.checkedDecoration,
     this.uncheckedDecoration,
     this.thirdstateDecoration,
@@ -165,9 +167,9 @@ class CheckboxStyle with Diagnosticable {
     this.animationCurve,
   });
 
-  factory CheckboxStyle.standard(Style style) {
-    final radius = BorderRadius.circular(3);
-    return CheckboxStyle(
+  factory CheckboxThemeData.standard(ThemeData style) {
+    final BorderRadiusGeometry radius = BorderRadius.circular(3);
+    return CheckboxThemeData(
       cursor: buttonCursor,
       checkedDecoration: (state) => BoxDecoration(
         borderRadius: radius,
@@ -176,7 +178,7 @@ class CheckboxStyle with Diagnosticable {
       uncheckedDecoration: (state) => BoxDecoration(
         border: Border.all(
           width: 0.6,
-          color: state.isDisabled ? style.disabledColor! : style.inactiveColor!,
+          color: state.isDisabled ? style.disabledColor : style.inactiveColor,
         ),
         color: checkedInputColor(style, state).withOpacity(0),
         borderRadius: radius,
@@ -189,19 +191,19 @@ class CheckboxStyle with Diagnosticable {
       checkedIconColor: (_) => style.activeColor,
       uncheckedIconColor: (state) {
         if (state.isHovering || state.isPressing)
-          return style.inactiveColor!.withOpacity(0.8);
+          return style.inactiveColor.withOpacity(0.8);
         return Colors.transparent;
       },
-      thirdstateIconColor: (_) => Colors.transparent,
-      margin: EdgeInsets.all(4),
       icon: Icons.check,
+      thirdstateIconColor: (_) => Colors.transparent,
+      margin: const EdgeInsets.all(4.0),
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
     );
   }
 
-  CheckboxStyle copyWith(CheckboxStyle? style) {
-    return CheckboxStyle(
+  CheckboxThemeData copyWith(CheckboxThemeData? style) {
+    return CheckboxThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,

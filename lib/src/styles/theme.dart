@@ -1,28 +1,31 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 
-class Theme extends InheritedWidget {
-  const Theme({Key? key, required this.data, required this.child})
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as m;
+
+class FluentTheme extends InheritedWidget {
+  const FluentTheme({Key? key, required this.data, required this.child})
       : super(key: key, child: child);
 
-  final Style data;
+  final ThemeData data;
   final Widget child;
 
-  static Style of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Theme>()!.data.build();
+  static ThemeData of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()!.data;
   }
 
-  static Style? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Theme>()?.data.build();
+  static ThemeData? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()?.data;
   }
 
   @override
-  bool updateShouldNotify(covariant Theme oldWidget) => oldWidget.data != data;
+  bool updateShouldNotify(covariant FluentTheme oldWidget) =>
+      oldWidget.data != data;
 }
 
 extension themeContext on BuildContext {
-  Style get theme => Theme.of(this);
-  Style? get maybeTheme => Theme.maybeOf(this);
+  ThemeData get theme => FluentTheme.of(this);
+  ThemeData? get maybeTheme => FluentTheme.maybeOf(this);
 }
 
 extension brightnessExtension on Brightness {
@@ -34,188 +37,264 @@ extension brightnessExtension on Brightness {
 
 const standartCurve = Curves.easeInOut;
 
-class Style with Diagnosticable {
-  final Typography? typography;
+@immutable
+class ThemeData with Diagnosticable {
+  final Typography typography;
 
-  final Color? accentColor;
-  final Color? activeColor;
-  final Color? inactiveColor;
-  final Color? inactiveBackgroundColor;
-  final Color? disabledColor;
+  final AccentColor accentColor;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color inactiveBackgroundColor;
+  final Color disabledColor;
 
-  final Duration? fasterAnimationDuration;
-  final Duration? fastAnimationDuration;
-  final Duration? mediumAnimationDuration;
-  final Duration? slowAnimationDuration;
-  final Curve? animationCurve;
+  final Duration fasterAnimationDuration;
+  final Duration fastAnimationDuration;
+  final Duration mediumAnimationDuration;
+  final Duration slowAnimationDuration;
+  final Curve animationCurve;
 
-  final Brightness? brightness;
+  final Brightness brightness;
 
-  final Color? scaffoldBackgroundColor;
-  final Color? navigationPanelBackgroundColor;
+  final Color scaffoldBackgroundColor;
+  final Color navigationPanelBackgroundColor;
 
-  final NavigationPanelStyle? navigationPanelStyle;
-  final CheckboxStyle? checkboxStyle;
-  final ContentDialogStyle? dialogStyle;
-  final DividerStyle? dividerStyle;
-  final FocusStyle? focusStyle;
-  final IconStyle? iconStyle;
-  final InfoBarStyle? infoBarStyle;
-  final RadioButtonStyle? radioButtonStyle;
-  final ScrollbarStyle? scrollbarStyle;
-  final SliderStyle? sliderStyle;
-  final SplitButtonStyle? splitButtonStyle;
-  final ToggleButtonStyle? toggleButtonStyle;
-  final ToggleSwitchStyle? toggleSwitchStyle;
-  final TooltipStyle? tooltipStyle;
+  final NavigationPanelThemeData navigationPanelTheme;
+  final CheckboxThemeData checkboxTheme;
+  final ContentDialogThemeData dialogTheme;
+  final DividerThemeData dividerTheme;
+  final FocusThemeData focusTheme;
+  final IconThemeData iconTheme;
+  final InfoBarThemeData infoBarTheme;
+  final RadioButtonThemeData radioButtonTheme;
+  final ScrollbarThemeData scrollbarTheme;
+  final SliderThemeData sliderTheme;
+  final SplitButtonThemeData splitButtonTheme;
+  final ToggleButtonThemeData toggleButtonTheme;
+  final ToggleSwitchThemeData toggleSwitchTheme;
+  final TooltipThemeData tooltipTheme;
 
-  final ButtonStyle? buttonStyle;
-  final IconButtonStyle? iconButtonStyle;
+  final ButtonThemeData buttonTheme;
 
-  const Style({
-    this.typography,
-    this.accentColor,
-    this.activeColor,
-    this.inactiveColor,
-    this.inactiveBackgroundColor,
-    this.disabledColor,
-    this.fasterAnimationDuration,
-    this.fastAnimationDuration,
-    this.mediumAnimationDuration,
-    this.slowAnimationDuration,
-    this.animationCurve,
-    this.brightness,
-    this.scaffoldBackgroundColor,
-    this.navigationPanelBackgroundColor,
-    this.buttonStyle,
-    this.iconButtonStyle,
-    this.checkboxStyle,
-    this.toggleSwitchStyle,
-    this.iconStyle,
-    this.splitButtonStyle,
-    this.dialogStyle,
-    this.tooltipStyle,
-    this.dividerStyle,
-    this.navigationPanelStyle,
-    this.radioButtonStyle,
-    this.toggleButtonStyle,
-    this.sliderStyle,
-    this.infoBarStyle,
-    this.focusStyle,
-    this.scrollbarStyle,
+  const ThemeData.raw({
+    required this.typography,
+    required this.accentColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.inactiveBackgroundColor,
+    required this.disabledColor,
+    required this.fasterAnimationDuration,
+    required this.fastAnimationDuration,
+    required this.mediumAnimationDuration,
+    required this.slowAnimationDuration,
+    required this.animationCurve,
+    required this.brightness,
+    required this.scaffoldBackgroundColor,
+    required this.navigationPanelBackgroundColor,
+    required this.buttonTheme,
+    required this.checkboxTheme,
+    required this.toggleSwitchTheme,
+    required this.iconTheme,
+    required this.splitButtonTheme,
+    required this.dialogTheme,
+    required this.tooltipTheme,
+    required this.dividerTheme,
+    required this.navigationPanelTheme,
+    required this.radioButtonTheme,
+    required this.toggleButtonTheme,
+    required this.sliderTheme,
+    required this.infoBarTheme,
+    required this.focusTheme,
+    required this.scrollbarTheme,
   });
 
-  Style build() {
-    final brightness = this.brightness ?? Brightness.light;
-    Style style = Style(
-      fasterAnimationDuration: Duration(milliseconds: 90),
-      fastAnimationDuration: Duration(milliseconds: 150),
-      mediumAnimationDuration: Duration(milliseconds: 300),
-      slowAnimationDuration: Duration(milliseconds: 500),
-      animationCurve: standartCurve,
-      brightness: brightness,
-      accentColor: accentColor ?? Colors.blue,
-      activeColor: activeColor ?? Colors.white,
-      inactiveColor: inactiveColor ??
-          () {
-            if (brightness.isLight)
-              return Colors.black;
-            else
-              return Colors.white;
-          }(),
-      inactiveBackgroundColor: inactiveBackgroundColor ??
-          () {
-            if (brightness.isLight)
-              return Color(0xFFd6d6d6);
-            else
-              return Color(0xFF292929);
-          }(),
-      disabledColor: Colors.grey[100]!.withOpacity(0.6),
-      scaffoldBackgroundColor: scaffoldBackgroundColor ??
-          () {
-            if (brightness.isLight)
-              return Colors.white;
-            else
-              return Colors.black;
-          }(),
-      navigationPanelBackgroundColor: navigationPanelBackgroundColor ??
-          () {
-            if (brightness.isLight)
-              return Color.fromARGB(255, 230, 230, 230);
-            else
-              return Color.fromARGB(255, 25, 25, 25);
-          }(),
-      typography: Typography.defaultTypography(brightness: brightness)
-          .copyWith(typography),
-    );
-    style = style.copyWith(Style(
-      focusStyle: FocusStyle.standard(style).copyWith(focusStyle),
-    ));
-    return style.copyWith(Style(
-      buttonStyle: ButtonStyle.standard(style).copyWith(buttonStyle),
-      iconButtonStyle:
-          IconButtonStyle.standard(style).copyWith(iconButtonStyle),
-      checkboxStyle: CheckboxStyle.standard(style).copyWith(checkboxStyle),
-      toggleButtonStyle:
-          ToggleButtonStyle.standard(style).copyWith(toggleButtonStyle),
-      toggleSwitchStyle:
-          ToggleSwitchStyle.standard(style).copyWith(toggleSwitchStyle),
-      iconStyle: IconStyle.standard(style).copyWith(iconStyle),
-      splitButtonStyle:
-          SplitButtonStyle.standard(style).copyWith(splitButtonStyle),
-      dialogStyle: ContentDialogStyle.standard(style).copyWith(dialogStyle),
-      tooltipStyle: TooltipStyle.standard(style).copyWith(tooltipStyle),
-      dividerStyle: DividerStyle.standard(style).copyWith(dividerStyle),
-      navigationPanelStyle:
-          NavigationPanelStyle.standard(style).copyWith(navigationPanelStyle),
-      radioButtonStyle:
-          RadioButtonStyle.standard(style).copyWith(radioButtonStyle),
-      sliderStyle: SliderStyle.standard(style).copyWith(sliderStyle),
-      infoBarStyle: InfoBarStyle.standard(style).copyWith(infoBarStyle),
-      scrollbarStyle: ScrollbarStyle.standart(style).copyWith(scrollbarStyle),
-    ));
+  static ThemeData light() {
+    return ThemeData(brightness: Brightness.light);
   }
 
-  Style copyWith(Style? other) {
-    if (other == null) return this;
-    return Style(
-      accentColor: other.accentColor ?? accentColor,
-      activeColor: other.activeColor ?? activeColor,
-      navigationPanelBackgroundColor: other.navigationPanelBackgroundColor ??
-          navigationPanelBackgroundColor,
-      navigationPanelStyle: other.navigationPanelStyle ?? navigationPanelStyle,
-      brightness: other.brightness ?? brightness,
-      buttonStyle: other.buttonStyle ?? buttonStyle,
-      checkboxStyle: other.checkboxStyle ?? checkboxStyle,
-      dialogStyle: other.dialogStyle ?? dialogStyle,
-      dividerStyle: other.dividerStyle ?? dividerStyle,
-      iconButtonStyle: other.iconButtonStyle ?? iconButtonStyle,
-      iconStyle: other.iconStyle ?? iconStyle,
-      inactiveColor: other.inactiveColor ?? inactiveColor,
-      radioButtonStyle: other.radioButtonStyle ?? radioButtonStyle,
-      scaffoldBackgroundColor:
-          other.scaffoldBackgroundColor ?? scaffoldBackgroundColor,
-      splitButtonStyle: other.splitButtonStyle ?? splitButtonStyle,
-      toggleButtonStyle: other.toggleButtonStyle ?? toggleButtonStyle,
-      toggleSwitchStyle: other.toggleSwitchStyle ?? toggleSwitchStyle,
-      tooltipStyle: other.tooltipStyle ?? tooltipStyle,
-      sliderStyle: other.sliderStyle ?? sliderStyle,
-      animationCurve: other.animationCurve ?? animationCurve,
-      disabledColor: other.disabledColor ?? disabledColor,
-      typography: other.typography ?? typography,
-      fasterAnimationDuration:
-          other.fastAnimationDuration ?? fasterAnimationDuration,
-      fastAnimationDuration:
-          other.fastAnimationDuration ?? fastAnimationDuration,
-      mediumAnimationDuration:
-          other.mediumAnimationDuration ?? mediumAnimationDuration,
-      slowAnimationDuration:
-          other.slowAnimationDuration ?? slowAnimationDuration,
-      infoBarStyle: other.infoBarStyle ?? infoBarStyle,
+  static ThemeData dark() {
+    return ThemeData(brightness: Brightness.dark);
+  }
+
+  factory ThemeData({
+    Brightness? brightness,
+    Typography? typography,
+    AccentColor? accentColor,
+    Color? activeColor,
+    Color? inactiveColor,
+    Color? inactiveBackgroundColor,
+    Color? disabledColor,
+    Color? scaffoldBackgroundColor,
+    Color? navigationPanelBackgroundColor,
+    Duration? fasterAnimationDuration,
+    Duration? fastAnimationDuration,
+    Duration? mediumAnimationDuration,
+    Duration? slowAnimationDuration,
+    Curve? animationCurve,
+    ButtonThemeData? buttonTheme,
+    CheckboxThemeData? checkboxTheme,
+    ToggleSwitchThemeData? toggleSwitchTheme,
+    IconThemeData? iconTheme,
+    SplitButtonThemeData? splitButtonTheme,
+    ContentDialogThemeData? dialogTheme,
+    TooltipThemeData? tooltipTheme,
+    DividerThemeData? dividerTheme,
+    NavigationPanelThemeData? navigationPanelTheme,
+    RadioButtonThemeData? radioButtonTheme,
+    ToggleButtonThemeData? toggleButtonTheme,
+    SliderThemeData? sliderTheme,
+    InfoBarThemeData? infoBarTheme,
+    FocusThemeData? focusTheme,
+    ScrollbarThemeData? scrollbarTheme,
+  }) {
+    brightness ??= Brightness.light;
+    fasterAnimationDuration ??= Duration(milliseconds: 90);
+    fastAnimationDuration ??= Duration(milliseconds: 150);
+    mediumAnimationDuration ??= Duration(milliseconds: 300);
+    slowAnimationDuration ??= Duration(milliseconds: 500);
+    animationCurve ??= standartCurve;
+    accentColor ??= Colors.blue;
+    activeColor ??= Colors.white;
+    inactiveColor ??= AccentColor('normal', {
+      'normal': Colors.black,
+      'dark': Colors.white,
+    }).resolveFromBrightness(brightness);
+    inactiveBackgroundColor ??= AccentColor('normal', {
+      'normal': Color(0xFFd6d6d6),
+      'dark': Color(0xFF292929),
+    }).resolveFromBrightness(brightness);
+    disabledColor ??= Colors.grey[100]!.withOpacity(0.6);
+    scaffoldBackgroundColor ??= AccentColor('normal', {
+      'normal': Colors.white,
+      'dark': Colors.black,
+    }).resolveFromBrightness(brightness);
+    navigationPanelBackgroundColor ??= navigationPanelBackgroundColor ??
+        AccentColor('normal', {
+          'normal': Color.fromARGB(255, 230, 230, 230),
+          'dark': Color.fromARGB(255, 25, 25, 25)
+        }).resolveFromBrightness(brightness);
+    typography =
+        Typography.standart(brightness: brightness).copyWith(typography);
+    focusTheme = FocusThemeData.standard(
+      glowColor: accentColor.withOpacity(0.15),
+      primaryBorderColor: inactiveColor,
+      secondaryBorderColor: scaffoldBackgroundColor,
+    ).copyWith(focusTheme);
+    buttonTheme ??= const ButtonThemeData();
+    checkboxTheme ??= const CheckboxThemeData();
+    toggleButtonTheme ??= const ToggleButtonThemeData();
+    toggleSwitchTheme ??= const ToggleSwitchThemeData();
+    iconTheme ??= const IconThemeData();
+    splitButtonTheme ??= const SplitButtonThemeData();
+    dialogTheme ??= const ContentDialogThemeData();
+    tooltipTheme ??= const TooltipThemeData();
+    dividerTheme ??= const DividerThemeData();
+    navigationPanelTheme ??= const NavigationPanelThemeData();
+    radioButtonTheme ??= const RadioButtonThemeData();
+    sliderTheme ??= const SliderThemeData();
+    infoBarTheme ??= const InfoBarThemeData();
+    scrollbarTheme ??= const ScrollbarThemeData();
+    return ThemeData.raw(
+      brightness: brightness,
+      fasterAnimationDuration: fasterAnimationDuration,
+      fastAnimationDuration: fastAnimationDuration,
+      mediumAnimationDuration: mediumAnimationDuration,
+      slowAnimationDuration: slowAnimationDuration,
+      animationCurve: animationCurve,
+      accentColor: accentColor,
+      activeColor: activeColor,
+      inactiveColor: inactiveColor,
+      inactiveBackgroundColor: inactiveBackgroundColor,
+      disabledColor: disabledColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor,
+      navigationPanelBackgroundColor: navigationPanelBackgroundColor,
+      buttonTheme: buttonTheme,
+      checkboxTheme: checkboxTheme,
+      dialogTheme: dialogTheme,
+      dividerTheme: dividerTheme,
+      focusTheme: focusTheme,
+      iconTheme: iconTheme,
+      infoBarTheme: infoBarTheme,
+      navigationPanelTheme: navigationPanelTheme,
+      radioButtonTheme: radioButtonTheme,
+      scrollbarTheme: scrollbarTheme,
+      sliderTheme: sliderTheme,
+      splitButtonTheme: splitButtonTheme,
+      toggleButtonTheme: toggleButtonTheme,
+      toggleSwitchTheme: toggleSwitchTheme,
+      tooltipTheme: tooltipTheme,
+      typography: typography,
+    );
+  }
+
+  ThemeData copyWith({
+    Brightness? brightness,
+    Typography? typography,
+    AccentColor? accentColor,
+    Color? activeColor,
+    Color? inactiveColor,
+    Color? inactiveBackgroundColor,
+    Color? disabledColor,
+    Color? scaffoldBackgroundColor,
+    Color? navigationPanelBackgroundColor,
+    Duration? fasterAnimationDuration,
+    Duration? fastAnimationDuration,
+    Duration? mediumAnimationDuration,
+    Duration? slowAnimationDuration,
+    Curve? animationCurve,
+    ButtonThemeData? buttonTheme,
+    CheckboxThemeData? checkboxTheme,
+    ToggleSwitchThemeData? toggleSwitchTheme,
+    IconThemeData? iconTheme,
+    SplitButtonThemeData? splitButtonTheme,
+    ContentDialogThemeData? dialogTheme,
+    TooltipThemeData? tooltipTheme,
+    DividerThemeData? dividerTheme,
+    NavigationPanelThemeData? navigationPanelTheme,
+    RadioButtonThemeData? radioButtonTheme,
+    ToggleButtonThemeData? toggleButtonTheme,
+    SliderThemeData? sliderTheme,
+    InfoBarThemeData? infoBarTheme,
+    FocusThemeData? focusTheme,
+    ScrollbarThemeData? scrollbarTheme,
+  }) {
+    return ThemeData.raw(
+      brightness: brightness ?? this.brightness,
+      typography: typography ?? this.typography,
+      accentColor: accentColor ?? this.accentColor,
+      activeColor: activeColor ?? this.activeColor,
+      inactiveColor: inactiveColor ?? this.inactiveColor,
       inactiveBackgroundColor:
-          other.inactiveBackgroundColor ?? inactiveBackgroundColor,
-      focusStyle: other.focusStyle ?? focusStyle,
-      scrollbarStyle: other.scrollbarStyle ?? scrollbarStyle,
+          inactiveBackgroundColor ?? this.inactiveBackgroundColor,
+      disabledColor: disabledColor ?? this.disabledColor,
+      scaffoldBackgroundColor:
+          scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
+      navigationPanelBackgroundColor:
+          navigationPanelBackgroundColor ?? this.navigationPanelBackgroundColor,
+      fasterAnimationDuration:
+          fasterAnimationDuration ?? this.fasterAnimationDuration,
+      fastAnimationDuration:
+          fastAnimationDuration ?? this.fastAnimationDuration,
+      mediumAnimationDuration:
+          mediumAnimationDuration ?? this.mediumAnimationDuration,
+      slowAnimationDuration:
+          slowAnimationDuration ?? this.slowAnimationDuration,
+      animationCurve: animationCurve ?? this.animationCurve,
+      buttonTheme: this.buttonTheme.copyWith(buttonTheme),
+      checkboxTheme: this.checkboxTheme.copyWith(checkboxTheme),
+      dialogTheme: this.dialogTheme.copyWith(dialogTheme),
+      dividerTheme: this.dividerTheme.copyWith(dividerTheme),
+      focusTheme: this.focusTheme.copyWith(focusTheme),
+      iconTheme: this.iconTheme.copyWith(iconTheme),
+      infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
+      navigationPanelTheme:
+          this.navigationPanelTheme.copyWith(navigationPanelTheme),
+      radioButtonTheme: this.radioButtonTheme.copyWith(radioButtonTheme),
+      scrollbarTheme: this.scrollbarTheme.copyWith(scrollbarTheme),
+      sliderTheme: this.sliderTheme.copyWith(sliderTheme),
+      splitButtonTheme: this.splitButtonTheme.copyWith(splitButtonTheme),
+      toggleButtonTheme: this.toggleButtonTheme.copyWith(toggleButtonTheme),
+      toggleSwitchTheme: this.toggleSwitchTheme.copyWith(toggleSwitchTheme),
+      tooltipTheme: this.tooltipTheme.copyWith(tooltipTheme),
     );
   }
 

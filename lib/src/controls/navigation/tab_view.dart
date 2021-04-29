@@ -84,12 +84,12 @@ class TabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final divider = SizedBox(
       height: _kTileHeight,
       child: Divider(
         direction: Axis.vertical,
-        style: DividerStyle(
+        style: DividerThemeData(
           margin: (_) => EdgeInsets.symmetric(vertical: 8),
         ),
       ),
@@ -134,18 +134,17 @@ class TabView extends StatelessWidget {
               IconButton(
                 icon: Icon(addIconData),
                 onPressed: onNewPressed,
-                style: IconButtonStyle(
-                  margin: EdgeInsets.only(left: 2),
-                  iconStyle: (state) => IconStyle(
-                    size: 16,
+                iconTheme: (state) {
+                  return IconThemeData(
                     color: () {
                       if (state.isDisabled || state.isNone)
                         return context.theme.disabledColor;
                       else
                         return context.theme.inactiveColor;
                     }(),
-                  ),
-                ),
+                  );
+                },
+                style: ButtonThemeData(margin: EdgeInsets.only(left: 2)),
               ),
           ]),
         ),
@@ -273,7 +272,7 @@ class _Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
       semanticLabel: tab.semanticLabel,
@@ -302,25 +301,36 @@ class _Tab extends StatelessWidget {
               ),
             Expanded(child: tab.text),
             if (tab.closeIcon != null)
-              Theme(
-                data: style.copyWith(Style(
-                  focusStyle: FocusStyle(
+              FluentTheme(
+                data: style.copyWith(
+                  focusTheme: FocusThemeData(
                     primaryBorder: BorderSide(
                       width: 1,
-                      color: style.inactiveColor ?? Colors.transparent,
+                      color: style.inactiveColor,
                     ),
                   ),
-                )),
+                ),
                 child: IconButton(
                   icon: Icon(tab.closeIcon),
                   onPressed: tab.onClosed,
-                  style: IconButtonStyle(
+                  iconTheme: (state) {
+                    return IconThemeData(
+                      size: 20,
+                      color: () {
+                        if (state.isDisabled || state.isNone)
+                          return context.theme.disabledColor;
+                        else
+                          return context.theme.inactiveColor;
+                      }(),
+                    );
+                  },
+                  style: ButtonThemeData(
                     decoration: (state) {
                       late Color? color;
                       if (state.isNone)
                         color = null;
                       else
-                        color = ButtonStyle.buttonColor(style, state);
+                        color = ButtonThemeData.buttonColor(style, state);
                       return BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
                         border: Border.all(style: BorderStyle.none),
@@ -329,15 +339,15 @@ class _Tab extends StatelessWidget {
                     },
                     margin: EdgeInsets.zero,
                     padding: EdgeInsets.zero,
-                    iconStyle: (state) => IconStyle(
-                      size: 20,
-                      color: () {
-                        if (state.isDisabled || state.isNone)
-                          return context.theme.disabledColor;
-                        else
-                          return context.theme.inactiveColor;
-                      }(),
-                    ),
+                    // iconTheme: (state) => IconThemeData(
+                    //   size: 20,
+                    //   color: () {
+                    //     if (state.isDisabled || state.isNone)
+                    //       return context.theme.disabledColor;
+                    //     else
+                    //       return context.theme.inactiveColor;
+                    //   }(),
+                    // ),
                   ),
                 ),
               ),

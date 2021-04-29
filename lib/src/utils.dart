@@ -1,21 +1,39 @@
+import 'dart:ui' as ui;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// Check if the current context has a fluent theme
+/// Asserts that the given context has a [FluentTheme] ancestor.
 ///
-/// If [check] is not null, an [AssertionError] is thrown if the checking fails
+/// To call this function, use the following pattern, typically in the
+/// relevant Widget's build method:
+///
+/// ```dart
+/// assert(debugCheckHasFluentTheme(context));
+/// ```
+///
+/// Does nothing if asserts are disabled. Always returns true.
 bool debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
-  final has = context.maybeTheme != null;
-  if (check)
-    assert(
-      has,
-      'A Theme widget is necessary to draw this layout. It is implemented by default in FluentApp. '
-      'To fix this, wrap a Theme widget upper in this layout or implement a FluentApp.',
-    );
-  return has;
+  assert(() {
+    if (context.maybeTheme == null)
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('A FluentTheme widget is necessary to draw this layout.'),
+        ErrorHint(
+          'To introduce a FluentTheme widget, you can either directly '
+          'include one, or use a widget that contains FluentTheme itself, '
+          'such as FluentApp',
+        ),
+        ...context.describeMissingAncestor(expectedAncestorType: FluentTheme),
+      ]);
+    return true;
+  }());
+  return true;
 }
 
 /// Check if the current screen is 10 foot long or bigger.
-bool is10footScreen(double width) {
-  final foot = width * 0.0264583333 / 30.48;
-  return foot >= 10;
+///
+/// [width] is the width of the current screen. If not provided,
+/// [SingletonFlutterWindow.physicalSize] is used
+bool is10footScreen([double? width]) {
+  width ??= ui.window.physicalSize.width;
+  return width >= 11520;
 }

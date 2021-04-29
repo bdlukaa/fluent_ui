@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart';
 class SplitButtonBar extends StatelessWidget {
   /// Creates a button bar with space in between the buttons.
   ///
-  /// It provides a [ButtonStyle] above each button to make them
+  /// It provides a [ButtonThemeData] above each button to make them
   /// fell natural within the bar.
   const SplitButtonBar({
     Key? key,
@@ -29,27 +29,29 @@ class SplitButtonBar extends StatelessWidget {
   final List<Widget> buttons;
 
   /// The style applied to this button bar. If non-null, it's
-  /// mescled with [Style.splitButtonStyle]
-  final SplitButtonStyle? style;
+  /// mescled with [ThemeData.splitButtonThemeData]
+  final SplitButtonThemeData? style;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('buttonsAmount', buttons.length));
-    properties.add(DiagnosticsProperty<SplitButtonStyle?>('style', style));
+    properties.add(DiagnosticsProperty<SplitButtonThemeData?>('style', style));
   }
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.splitButtonStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = SplitButtonThemeData.standard(context.theme).copyWith(
+      context.theme.splitButtonTheme.copyWith(this.style),
+    );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
         final button = buttons[index];
-        Widget b = Theme(
-          data: context.theme.copyWith(Style(
-            buttonStyle: ButtonStyle(
+        Widget b = FluentTheme(
+          data: context.theme.copyWith(
+            buttonTheme: ButtonThemeData(
               decoration: (state) => BoxDecoration(
                 borderRadius: (index == 0 || index == buttons.length - 1)
                     ? BorderRadius.horizontal(
@@ -59,16 +61,16 @@ class SplitButtonBar extends StatelessWidget {
                             : Radius.zero,
                       )
                     : null,
-                color: ButtonStyle.buttonColor(context.theme, state),
+                color: ButtonThemeData.buttonColor(context.theme, state),
               ),
               margin: EdgeInsets.zero,
             ),
-          )),
+          ),
           child: button,
         );
         if (index == 0) return b;
         return Padding(
-          padding: EdgeInsets.only(left: style?.interval ?? 0),
+          padding: EdgeInsets.only(left: style.interval ?? 0),
           child: b,
         );
       }),
@@ -77,30 +79,30 @@ class SplitButtonBar extends StatelessWidget {
 }
 
 @immutable
-class SplitButtonStyle with Diagnosticable {
+class SplitButtonThemeData with Diagnosticable {
   final BorderRadius? borderRadius;
   final double? interval;
 
-  final ButtonStyle? defaultButtonStyle;
+  final ButtonThemeData? defaultButtonThemeData;
 
-  const SplitButtonStyle({
+  const SplitButtonThemeData({
     this.borderRadius,
     this.interval,
-    this.defaultButtonStyle,
+    this.defaultButtonThemeData,
   });
 
-  factory SplitButtonStyle.standard(Style style) {
-    return SplitButtonStyle(
+  factory SplitButtonThemeData.standard(ThemeData style) {
+    return SplitButtonThemeData(
       borderRadius: BorderRadius.circular(4),
       interval: 1,
-      defaultButtonStyle: style.buttonStyle?.copyWith(ButtonStyle(
+      defaultButtonThemeData: style.buttonTheme.copyWith(ButtonThemeData(
         margin: EdgeInsets.zero,
       )),
     );
   }
 
-  SplitButtonStyle copyWith(SplitButtonStyle? style) {
-    return SplitButtonStyle(
+  SplitButtonThemeData copyWith(SplitButtonThemeData? style) {
+    return SplitButtonThemeData(
       borderRadius: style?.borderRadius ?? borderRadius,
       interval: style?.interval ?? interval,
     );

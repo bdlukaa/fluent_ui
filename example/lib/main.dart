@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -47,19 +45,24 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          routes: {
-            '/': (_) => MyHomePage(),
-          },
-          style: Style(
-            accentColor: SystemTheme.accentInstance.accent,
+          routes: {'/': (_) => MyHomePage()},
+          theme: ThemeData(
+            accentColor: AccentColor('normal', {
+              'darkest': SystemTheme.accentInstance.darkest,
+              'darker': SystemTheme.accentInstance.darker,
+              'dark': SystemTheme.accentInstance.dark,
+              'normal': SystemTheme.accentInstance.accent,
+              'light': SystemTheme.accentInstance.light,
+              'lighter': SystemTheme.accentInstance.lighter,
+              'lightest': SystemTheme.accentInstance.lightest,
+            }),
             brightness: appTheme.mode == ThemeMode.system
                 ? darkMode
                     ? Brightness.dark
                     : Brightness.light
                 : null,
-            focusStyle: FocusStyle(
-              glowFactor:
-                  is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
         );
@@ -169,7 +172,7 @@ class _Panel extends StatelessWidget {
       controller: controller,
       padding: const EdgeInsets.all(8.0),
       children: [
-        Text(title!, style: context.theme.typography?.subtitle),
+        Text(title!, style: context.theme.typography.subtitle),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6),
           child: child,

@@ -67,8 +67,8 @@ class Slider extends StatefulWidget {
   /// If null, the slider is continuous.
   final int? divisions;
 
-  /// The style used in this slider. It's mescled with [Style.sliderStyle]
-  final SliderStyle? style;
+  /// The style used in this slider. It's mescled with [ThemeData.sliderThemeData]
+  final SliderThemeData? style;
 
   /// A label to show above the slider, or at the left
   /// of the slider if [vertical] is `true` when the slider is active.
@@ -112,7 +112,7 @@ class Slider extends StatefulWidget {
     properties.add(IntProperty('divisions', divisions));
     properties.add(StringProperty('label', label));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(DiagnosticsProperty<SliderStyle>('style', style));
+    properties.add(DiagnosticsProperty<SliderThemeData>('style', style));
     properties.add(
       FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'),
     );
@@ -145,30 +145,32 @@ class _SliderState extends m.State<Slider> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.sliderStyle?.copyWith(this.widget.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = SliderThemeData.standard(context.theme).copyWith(
+      context.theme.sliderTheme.copyWith(widget.style),
+    );
     Widget child = Padding(
-      padding: style?.margin ?? EdgeInsets.zero,
+      padding: style.margin ?? EdgeInsets.zero,
       child: m.Material(
         type: m.MaterialType.transparency,
         child: m.SliderTheme(
           data: m.SliderThemeData(
             showValueIndicator: m.ShowValueIndicator.always,
-            thumbColor: style?.thumbColor ?? style?.activeColor,
+            thumbColor: style.thumbColor ?? style.activeColor,
             overlayShape: m.RoundSliderOverlayShape(overlayRadius: 0),
             thumbShape: m.RoundSliderThumbShape(
               elevation: 0,
               pressedElevation: 0,
             ),
             valueIndicatorShape: _RectangularSliderValueIndicatorShape(
-              backgroundColor: style?.labelBackgroundColor,
+              backgroundColor: style.labelBackgroundColor,
               vertical: widget.vertical,
             ),
             trackHeight: 0.25,
             trackShape: _CustomTrackShape(),
-            disabledThumbColor: style?.disabledThumbColor,
-            disabledInactiveTrackColor: style?.disabledInactiveColor,
-            disabledActiveTrackColor: style?.disabledActiveColor,
+            disabledThumbColor: style.disabledThumbColor,
+            disabledInactiveTrackColor: style.disabledInactiveColor,
+            disabledActiveTrackColor: style.disabledActiveColor,
           ),
           child: m.Slider(
             value: widget.value,
@@ -177,10 +179,10 @@ class _SliderState extends m.State<Slider> {
             onChanged: widget.onChanged,
             onChangeEnd: widget.onChangeEnd,
             onChangeStart: widget.onChangeStart,
-            activeColor: style?.activeColor,
-            inactiveColor: style?.inactiveColor,
+            activeColor: style.activeColor,
+            inactiveColor: style.inactiveColor,
             divisions: widget.divisions,
-            mouseCursor: style?.cursor,
+            mouseCursor: style.cursor,
             label: widget.label,
             focusNode: _focusNode,
             autofocus: widget.autofocus,
@@ -223,7 +225,7 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
 }
 
 @immutable
-class SliderStyle with Diagnosticable {
+class SliderThemeData with Diagnosticable {
   final Color? thumbColor;
   final Color? disabledThumbColor;
   final Color? labelBackgroundColor;
@@ -241,7 +243,7 @@ class SliderStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const SliderStyle({
+  const SliderThemeData({
     this.cursor,
     this.margin,
     this.animationDuration,
@@ -255,24 +257,24 @@ class SliderStyle with Diagnosticable {
     this.labelBackgroundColor,
   });
 
-  factory SliderStyle.standard(Style? style) {
-    final def = SliderStyle(
+  factory SliderThemeData.standard(ThemeData? style) {
+    final def = SliderThemeData(
       thumbColor: style?.accentColor,
       activeColor: style?.accentColor,
-      inactiveColor: style?.disabledColor?.withOpacity(1),
+      inactiveColor: style?.disabledColor.withOpacity(1),
       margin: EdgeInsets.zero,
       animationDuration: style?.mediumAnimationDuration,
       animationCurve: style?.animationCurve,
-      disabledActiveColor: style?.disabledColor?.withOpacity(1),
-      disabledThumbColor: style?.disabledColor?.withOpacity(1),
+      disabledActiveColor: style?.disabledColor.withOpacity(1),
+      disabledThumbColor: style?.disabledColor.withOpacity(1),
       disabledInactiveColor: style?.disabledColor,
     );
 
     return def;
   }
 
-  SliderStyle copyWith(SliderStyle? style) {
-    return SliderStyle(
+  SliderThemeData copyWith(SliderThemeData? style) {
+    return SliderThemeData(
       margin: style?.margin ?? margin,
       cursor: style?.cursor ?? cursor,
       animationCurve: style?.animationCurve ?? animationCurve,

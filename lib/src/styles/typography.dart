@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// The typography applied to a [Style]. It implements Window's [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+/// The typography applied to a [ThemeData]. It implements Window's [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 ///
 /// | Do                                                  | Don't                                                                             |
 /// | :-------------------------------------------------- | :-------------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ class Typography with Diagnosticable {
   /// The default typography.
   ///
   /// If [color] is null, uses [Colors.black] if [brightness] is [Brightness.dark], otherwise uses [Colors.white]
-  factory Typography.defaultTypography({
+  factory Typography.standart({
     required Brightness brightness,
     Color? color,
   }) {

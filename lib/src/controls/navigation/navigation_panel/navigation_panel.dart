@@ -57,7 +57,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return LayoutBuilder(builder: (context, consts) {
       NavigationPanelDisplayMode? displayMode = this.displayMode;
       if (displayMode == null) {

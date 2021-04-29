@@ -53,22 +53,22 @@ class RatingBar extends StatefulWidget {
   /// The duration of the animation
   final Duration animationDuration;
 
-  /// The curve of the animation. If `null`, uses [Style.animationCurve]
+  /// The curve of the animation. If `null`, uses [ThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The icon used in the bar. If `null`, uses [Icons.star_rate_sharp]
   final IconData? icon;
 
-  /// The size of the icon. If `null`, uses [IconStyle.size]
+  /// The size of the icon. If `null`, uses [IconThemeData.size]
   final double? iconSize;
 
   /// The space between each icon
   final double starSpacing;
 
-  /// The color of the icons that are rated. If `null`, uses [Style.accentColor]
+  /// The color of the icons that are rated. If `null`, uses [ThemeData.accentColor]
   final Color? ratedIconColor;
 
-  /// The color of the icons that are not rated. If `null`, uses [Style.disabled]
+  /// The color of the icons that are not rated. If `null`, uses [ThemeData.disabled]
   final Color? unratedIconColor;
 
   /// Semantic label for the bar
@@ -206,8 +206,8 @@ class _RatingBarState extends State<RatingBar> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final size = context.theme.iconStyle?.size;
+    assert(debugCheckHasFluentTheme(context));
+    final double size = widget.iconSize ?? context.theme.iconTheme.size ?? 22;
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed
@@ -249,7 +249,7 @@ class _RatingBarState extends State<RatingBar> {
                         icon: widget.icon ?? Icons.star_rate_sharp,
                         ratedColor: widget.ratedIconColor,
                         unratedColor: widget.unratedIconColor,
-                        size: widget.iconSize,
+                        size: widget.iconSize ?? size,
                       );
                       if (index != widget.amount - 1) {
                         return Padding(
@@ -267,9 +267,7 @@ class _RatingBarState extends State<RatingBar> {
                 );
               },
               duration: widget.animationDuration,
-              curve: widget.animationCurve ??
-                  context.theme.animationCurve ??
-                  Curves.linear,
+              curve: widget.animationCurve ?? context.theme.animationCurve,
               tween: Tween<double>(begin: 0, end: widget.rating),
             ),
           ),
@@ -317,10 +315,10 @@ class RatingIcon extends StatelessWidget {
   /// The icon.
   final IconData icon;
 
-  /// The color used by the rated part. If `null`, uses [Style.accentColor]
+  /// The color used by the rated part. If `null`, uses [ThemeData.accentColor]
   final Color? ratedColor;
 
-  /// The color used by the unrated part. If `null`, uses [Style.disabledColor]
+  /// The color used by the unrated part. If `null`, uses [ThemeData.disabledColor]
   final Color? unratedColor;
 
   /// The size of the icon
@@ -328,7 +326,7 @@ class RatingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     final icon = this.icon;
     final size = this.size;

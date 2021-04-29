@@ -11,18 +11,9 @@ class ColorsPage extends StatelessWidget {
       ),
       padding: EdgeInsets.all(2.0),
       color: color,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            name,
-            style: TextStyle(
-              color:
-                  color.computeLuminance() >= 0.5 ? Colors.black : Colors.white,
-            ),
-          ),
-        ],
-      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+        Text(name, style: TextStyle(color: color.basedOnLuminance())),
+      ]),
     );
   }
 
@@ -39,7 +30,7 @@ class ColorsPage extends StatelessWidget {
           }).toList(),
         ),
       ),
-      Divider(style: DividerStyle(margin: (axis) => EdgeInsets.all(10))),
+      Divider(style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
       InfoHeader(
         header: 'Info Colors',
         child: Wrap(
@@ -55,7 +46,7 @@ class ColorsPage extends StatelessWidget {
           ],
         ),
       ),
-      Divider(style: DividerStyle(margin: (axis) => EdgeInsets.all(10))),
+      Divider(style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
       InfoHeader(
         header: 'All Shades',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

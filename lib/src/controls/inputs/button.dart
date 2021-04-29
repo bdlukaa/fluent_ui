@@ -12,24 +12,31 @@ enum _ButtonType { def, icon, toggle }
 /// See also:
 ///   - [IconButton]. A button but with an icon
 ///   - [ToggleButton]. A button that can be on or off
+///   - [HoverButton]. A base widget to implement any input fluent-like input
 class Button extends StatefulWidget {
   const Button({
     Key? key,
-    required this.child,
+    this.child,
+    this.builder,
     this.style,
     this.onPressed,
     this.onLongPress,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-  })  : type = _ButtonType.def,
+  })  : assert(
+          child != null || builder != null,
+          'You can NOT provide both child and builder',
+        ),
+        type = _ButtonType.def,
         super(key: key);
 
   /// Creates a button with an icon. Uses [IconButton] under the hood
   Button.icon({
     Key? key,
     required Widget icon,
-    IconButtonStyle? style,
+    ButtonThemeData? style,
+    IconThemeButtonStateBuilder? iconTheme,
     this.onPressed,
     this.onLongPress,
     this.semanticLabel,
@@ -41,10 +48,12 @@ class Button extends StatefulWidget {
           onLongPress: onLongPress,
           semanticLabel: semanticLabel,
           style: style,
+          iconTheme: iconTheme,
           focusNode: focusNode,
         ),
         style = null,
         type = _ButtonType.icon,
+        builder = null,
         super(key: key);
 
   /// Creates a button that can be on or of.
@@ -54,7 +63,7 @@ class Button extends StatefulWidget {
     required bool checked,
     required ValueChanged<bool> onChanged,
     Widget? child,
-    ToggleButtonStyle? style,
+    ToggleButtonThemeData? style,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
@@ -70,6 +79,7 @@ class Button extends StatefulWidget {
         onPressed = null,
         onLongPress = null,
         type = _ButtonType.toggle,
+        builder = null,
         super(key: key);
 
   final _ButtonType type;
@@ -77,10 +87,10 @@ class Button extends StatefulWidget {
   /// The content of the button. Usually a [Text] widget.
   ///
   /// If you want to use an [Icon], use an [IconButtno] instead
-  final Widget child;
+  final Widget? child;
 
-  /// The style of the button. If non-null, it's mescled with [Style.buttonStyle]
-  final ButtonStyle? style;
+  /// The style of the button. If non-null, it's mescled with [ThemeData.buttonThemeData]
+  final ButtonThemeData? style;
 
   /// Callback to when the button get pressed.
   /// If `null`, the button will be considered disabled
@@ -98,6 +108,12 @@ class Button extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Build the button according to its current state.
+  ///
+  /// See also:
+  ///   - [ButtonStates], the state a button can have
+  final ButtonStateWidgetBuilder? builder;
+
   /// Whether the button is enabled or not.
   bool get enabled => onPressed != null || onLongPress != null;
 
@@ -112,7 +128,7 @@ class Button extends StatefulWidget {
     properties.add(
       ObjectFlagProperty<VoidCallback>.has('onLongPress', onPressed),
     );
-    properties.add(DiagnosticsProperty<ButtonStyle>('style', style));
+    properties.add(DiagnosticsProperty<ButtonThemeData>('style', style));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
@@ -127,33 +143,35 @@ class _ButtonState extends State<Button> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     switch (widget.type) {
       case _ButtonType.icon:
       case _ButtonType.toggle:
-        return widget.child;
+        return widget.child!;
       case _ButtonType.def:
       default:
         break;
     }
-    final style = context.theme.buttonStyle?.copyWith(this.widget.style);
+    final style = ButtonThemeData.standard(context.theme).copyWith(
+      context.theme.buttonTheme.copyWith(widget.style),
+    );
     return HoverButton(
       semanticLabel: widget.semanticLabel,
-      margin: style?.margin,
+      margin: style.margin,
       focusNode: widget.focusNode,
-      cursor: style?.cursor,
+      cursor: style.cursor,
       autofocus: widget.autofocus,
       onTapDown: !enabled
           ? null
           : () {
               if (mounted)
-                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+                setState(() => buttonScale = style.scaleFactor ?? 0.95);
             },
       onLongPressStart: !enabled
           ? null
           : () {
               if (mounted)
-                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+                setState(() => buttonScale = style.scaleFactor ?? 0.95);
             },
       onLongPressEnd: !enabled
           ? null
@@ -165,7 +183,7 @@ class _ButtonState extends State<Button> {
           : () async {
               widget.onPressed!();
               if (mounted)
-                setState(() => buttonScale = style?.scaleFactor ?? 0.95);
+                setState(() => buttonScale = style.scaleFactor ?? 0.95);
               await Future.delayed(Duration(milliseconds: 120));
               if (mounted) setState(() => buttonScale = 1);
             },
@@ -174,18 +192,15 @@ class _ButtonState extends State<Button> {
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
-          duration: style?.animationDuration ??
-              context.theme.fastAnimationDuration ??
-              Duration.zero,
-          curve: style?.animationCurve ??
-              context.theme.animationCurve ??
-              standartCurve,
-          padding: style!.padding,
+          duration:
+              style.animationDuration ?? context.theme.fastAnimationDuration,
+          curve: style.animationCurve ?? context.theme.animationCurve,
+          padding: style.padding,
           decoration: style.decoration!(state),
           child: DefaultTextStyle(
             style: (style.textStyle?.call(state)) ?? TextStyle(),
             textAlign: TextAlign.center,
-            child: widget.child,
+            child: widget.child ?? widget.builder!(context, state),
           ),
         );
         return FocusBorder(child: child, focused: state.isFocused);
@@ -195,7 +210,7 @@ class _ButtonState extends State<Button> {
 }
 
 @immutable
-class ButtonStyle with Diagnosticable {
+class ButtonThemeData with Diagnosticable {
   final ButtonState<Decoration?>? decoration;
 
   final EdgeInsetsGeometry? padding;
@@ -210,7 +225,7 @@ class ButtonStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const ButtonStyle({
+  const ButtonThemeData({
     this.decoration,
     this.padding,
     this.margin,
@@ -221,8 +236,8 @@ class ButtonStyle with Diagnosticable {
     this.animationCurve,
   });
 
-  factory ButtonStyle.standard(Style style) {
-    return ButtonStyle(
+  factory ButtonThemeData.standard(ThemeData style) {
+    return ButtonThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
       cursor: buttonCursor,
@@ -234,16 +249,16 @@ class ButtonStyle with Diagnosticable {
       ),
       scaleFactor: 0.95,
       textStyle: (state) =>
-          style.typography?.body?.copyWith(
+          style.typography.body?.copyWith(
             color: state.isDisabled ? Colors.grey[100] : null,
           ) ??
           TextStyle(),
     );
   }
 
-  ButtonStyle copyWith(ButtonStyle? style) {
+  ButtonThemeData copyWith(ButtonThemeData? style) {
     if (style == null) return this;
-    return ButtonStyle(
+    return ButtonThemeData(
       decoration: style.decoration ?? decoration,
       cursor: style.cursor ?? cursor,
       textStyle: style.textStyle ?? textStyle,
@@ -284,11 +299,11 @@ class ButtonStyle with Diagnosticable {
     ));
   }
 
-  static Color buttonColor(Style style, ButtonStates state) {
+  static Color buttonColor(ThemeData style, ButtonStates state) {
     if (style.brightness == Brightness.light) {
       late Color color;
       if (state.isDisabled)
-        color = style.disabledColor!;
+        color = style.disabledColor;
       else if (state.isPressing)
         color = Colors.grey[70]!;
       else if (state.isHovering)
@@ -299,7 +314,7 @@ class ButtonStyle with Diagnosticable {
     } else {
       late Color color;
       if (state.isDisabled)
-        color = style.disabledColor!;
+        color = style.disabledColor;
       else if (state.isPressing)
         color = Color.fromARGB(255, 102, 102, 102);
       else if (state.isHovering)

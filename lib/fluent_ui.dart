@@ -1,6 +1,7 @@
 library fluent_ui;
 
-export 'package:flutter/widgets.dart' hide Icon, IconTheme, TextBox;
+export 'package:flutter/widgets.dart'
+    hide Icon, IconTheme, TextBox, IconThemeData;
 export 'package:flutter/material.dart'
     show
         Brightness,
@@ -11,7 +12,10 @@ export 'package:flutter/material.dart'
         kElevationToShadow,
         DateTimeRange,
         HourFormat,
-        Icons;
+        Icons,
+        DateUtils,
+        SelectableDayPredicate,
+        DatePickerMode;
 
 export 'src/app.dart';
 export 'src/utils.dart';
@@ -34,7 +38,7 @@ export 'src/controls/inputs/slider.dart';
 export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
 export 'src/controls/navigation/tab_view.dart';
 
-export 'src/controls/surfaces/calendar_view.dart';
+export 'src/controls/surfaces/calendar/calendar_view.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/flyout/flyout.dart';
 export 'src/controls/surfaces/info_bar.dart';

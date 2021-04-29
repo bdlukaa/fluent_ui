@@ -29,8 +29,8 @@ class ToggleButton extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   /// The style of the button.
-  /// This style is merged with [Style.toggleButtonStyle]
-  final ToggleButtonStyle? style;
+  /// This style is merged with [ThemeData.toggleButtonThemeData]
+  final ToggleButtonThemeData? style;
 
   /// The semantics label of the button
   final String? semanticLabel;
@@ -52,7 +52,7 @@ class ToggleButton extends StatelessWidget {
     properties.add(
       ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
     );
-    properties.add(DiagnosticsProperty<ToggleButtonStyle>('style', style));
+    properties.add(DiagnosticsProperty<ToggleButtonThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
     properties.add(FlagProperty('autofocus', value: autofocus));
@@ -60,30 +60,32 @@ class ToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.toggleButtonStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = ToggleButtonThemeData.standard(context.theme).copyWith(
+      context.theme.toggleButtonTheme.copyWith(this.style),
+    );
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
       child: Semantics(child: child, selected: checked),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
-      style: ButtonStyle(
+      style: ButtonThemeData(
         decoration: (state) => checked
-            ? style?.checkedDecoration!(state)
-            : style?.uncheckedDecoration!(state),
-        padding: style?.padding,
-        animationCurve: style?.animationCurve,
-        animationDuration: style?.animationDuration,
-        cursor: style?.cursor,
-        margin: style?.margin,
-        scaleFactor: style?.scaleFactor,
+            ? style.checkedDecoration!(state)
+            : style.uncheckedDecoration!(state),
+        padding: style.padding,
+        animationCurve: style.animationCurve,
+        animationDuration: style.animationDuration,
+        cursor: style.cursor,
+        margin: style.margin,
+        scaleFactor: style.scaleFactor,
       ),
     );
   }
 }
 
 @immutable
-class ToggleButtonStyle with Diagnosticable {
+class ToggleButtonThemeData with Diagnosticable {
   final ButtonState<MouseCursor>? cursor;
 
   final ButtonState<Decoration>? checkedDecoration;
@@ -97,7 +99,7 @@ class ToggleButtonStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const ToggleButtonStyle({
+  const ToggleButtonThemeData({
     this.cursor,
     this.padding,
     this.margin,
@@ -108,11 +110,11 @@ class ToggleButtonStyle with Diagnosticable {
     this.scaleFactor,
   });
 
-  factory ToggleButtonStyle.standard(Style style) {
+  factory ToggleButtonThemeData.standard(ThemeData style) {
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
-    return ToggleButtonStyle(
+    return ToggleButtonThemeData(
       scaleFactor: 0.95,
       cursor: buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
@@ -129,7 +131,7 @@ class ToggleButtonStyle with Diagnosticable {
             ),
           );
         return defaultDecoration.copyWith(
-          color: ButtonStyle.buttonColor(style, state),
+          color: ButtonThemeData.buttonColor(style, state),
           border: Border.all(width: 0.6, color: Colors.transparent),
         );
       },
@@ -140,9 +142,9 @@ class ToggleButtonStyle with Diagnosticable {
     );
   }
 
-  ToggleButtonStyle copyWith(ToggleButtonStyle? style) {
+  ToggleButtonThemeData copyWith(ToggleButtonThemeData? style) {
     if (style == null) return this;
-    return ToggleButtonStyle(
+    return ToggleButtonThemeData(
       margin: style.margin ?? margin,
       padding: style.padding ?? padding,
       cursor: style.cursor ?? cursor,

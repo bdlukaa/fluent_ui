@@ -172,7 +172,7 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     Widget picker = HoverButton(
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
@@ -191,14 +191,14 @@ class _DatePickerState extends State<DatePicker> {
         if (state == ButtonStates.disabled) state = ButtonStates.none;
         final divider = Divider(
           direction: Axis.vertical,
-          style: DividerStyle(
+          style: DividerThemeData(
             margin: (_) => EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration ?? Duration.zero,
-          curve: context.theme.animationCurve ?? Curves.linear,
+          duration: context.theme.fastAnimationDuration,
+          curve: context.theme.animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -326,10 +326,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerStyle(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
     );
     return Acrylic(
       height: widget.height,
@@ -346,7 +346,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor?.withOpacity(0.4),
+                  tileColor: context.theme.accentColor.withOpacity(0.4),
                 ),
               ),
             ),
@@ -534,7 +534,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
             ]),
           ]),
         ),
-        Divider(style: DividerStyle(margin: (_) => EdgeInsets.zero)),
+        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);

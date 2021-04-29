@@ -98,12 +98,15 @@ class Acrylic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
-    final color = this.color ?? style.navigationPanelBackgroundColor;
+    final color = AccentColor.resolve(
+      this.color ?? style.navigationPanelBackgroundColor,
+      context,
+    );
     Widget result = AnimatedContainer(
-      duration: style.fastAnimationDuration ?? Duration.zero,
-      curve: style.animationCurve ?? Curves.linear,
+      duration: style.fastAnimationDuration,
+      curve: style.animationCurve,
       padding: margin ?? EdgeInsets.zero,
       margin: EdgeInsets.zero,
       width: width,
@@ -111,12 +114,10 @@ class Acrylic extends StatelessWidget {
       child: () {
         Widget container = AnimatedContainer(
           padding: padding,
-          duration: style.fastAnimationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? standartCurve,
+          duration: style.fastAnimationDuration,
+          curve: style.animationCurve,
           decoration: decoration ??
-              BoxDecoration(
-                color: color?.withOpacity(enabled ? opacity : 1.0),
-              ),
+              BoxDecoration(color: color.withOpacity(enabled ? opacity : 1.0)),
           child: child,
         );
         if (enabled)

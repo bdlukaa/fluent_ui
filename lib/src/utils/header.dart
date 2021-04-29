@@ -32,6 +32,7 @@ class InfoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +41,7 @@ class InfoHeader extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 4.0),
           child: Text(
             header,
-            style: headerStyle ?? context.theme.typography?.body,
+            style: headerStyle ?? context.maybeTheme?.typography.body,
           ),
         ),
         if (child != null) child!,

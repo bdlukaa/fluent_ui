@@ -62,7 +62,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - **TODO** [Teaching tip]()
   - [Acrylic](#acrylic)
   - [InfoBar](#infobar)
-  - **TODO** [Calendar View]()
+  - [Calendar View](#calendar-view)
   - **TODO** [Calendar Date Picker]()
   - [Date Picker](#date-picker)
   - [Time Picker](#time-picker)
@@ -89,24 +89,24 @@ See also:
 
 [Learn more about Fluent Style](https://docs.microsoft.com/en-us/windows/uwp/design/style/)
 
-You can use the `Theme` widget to, well... theme your widgets. You can style your widgets in two ways:
+You can use the `FluentTheme` widget to, well... theme your widgets. You can style your widgets in two ways:
 
 1. Using the `FluentApp` widget
 
 ```dart
 FluentApp(
   title: 'MyApp',
-  style: Style(
+  theme: ThemeData(
     ...
   ),
 )
 ```
 
-2. Using the `Theme` widget
+2. Using the `FluentTheme` widget
 
 ```dart
-Theme(
-  style: Style(
+FluentTheme(
+  theme: ThemeData(
     ...
   ),
   child: ...,
@@ -123,7 +123,7 @@ Inside your app, you use icons to represent an action, such as copying text or n
 Icon(Icons.add)
 ```
 
-To style icons, you can use `IconStyle` in the app `Style` or use the property `style` in the `Icon` widget. You can see the list of icons [here](https://github.com/microsoft/fluentui-system-icons/blob/master/icons.md)
+To style icons, you can use `IconTheme` in the app `ThemeData` or use the property `style` in the `Icon` widget. You can see the list of icons [here](https://github.com/microsoft/fluentui-system-icons/blob/master/icons.md)
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
 
@@ -157,7 +157,7 @@ Common controls use an accent color to convey state information. [Learn more](ht
 By default, the accent color is `Colors.blue`. However, you can also customize your app's accent color to reflect your brand:
 
 ```dart
-Style(
+ThemeData(
   accentColor: Colors.blue,
 )
 ```
@@ -167,14 +167,14 @@ To use the system's accent color, you can use the plugin [system_theme](https://
 ```dart
 import 'package:system_theme/system_theme.dart';
 
-Style(
+ThemeData(
   accentColor: SystemTheme.accentInstance.accent,
 )
 ```
 
 ## Brightness
 
-You can change the style brightness to change the color of your app.
+You can change the theme brightness to change the color of your app.
 
 1. `Brightness.light`
 
@@ -188,10 +188,10 @@ It defaults to the brightness of the device. (`MediaQuery.of(context).brightness
 
 ## Typography
 
-To set a typography, you can use the `Style` class combined with the `Typography` class:
+To set a typography, you can use the `ThemeData` class combined with the `Typography` class:
 
 ```dart
-Style(
+ThemeData(
   typography: Typography(
     caption: TextStyle(
       fontSize: 12,
@@ -228,11 +228,11 @@ This is especially helpful in 10-foot scenarios where the user might not be payi
 
 ### Enabling it
 
-Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `Style`:
+Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `ThemeData`:
 
 ```dart
-style: Style(
-  focusStyle: FocusStyle(
+theme: ThemeData(
+  focusTheme: FocusStyle(
     glowFactor: 4.0,
   ),
 ),
@@ -243,7 +243,7 @@ To enable it in a 10 foot screen, use the method `is10footScreen`:
 ```dart
 import 'dart:ui' as ui;
 
-style: Style(
+theme: ThemeData(
   focusStyle: FocusStyle(
     glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
   ),
@@ -261,22 +261,22 @@ As you can see, it's fairly easy to turn on Reveal Focus when the app detects it
 You can customize the focus border, border radius and glow color:
 
 ```dart
-focusStyle: FocusStyle(
+focusTheme: FocusStyle(
   borderRadius: BorderRadius.zero,
-  glowColor: style.accentColor?.withOpacity(0.2),
+  glowColor: theme.accentColor?.withOpacity(0.2),
   glowFactor: 0.0,
   border: BorderSide(
     width: 2.0,
-    color: style.inactiveColor ?? Colors.transparent,
+    color: theme.inactiveColor ?? Colors.transparent,
   ),
 ),
 ```
 
-To customize it to a single widget, wrap the widget in a `Theme` widget, and change the options you want:
+To customize it to a single widget, wrap the widget in a `FluentTheme` widget, and change the options you want:
 
 ```dart
-Theme(
-  style: context.theme?.copyWith(Style(
+FluentTheme(
+  theme: context.theme?.copyWith(ThemeData(
     focusStyle: ..., // set your FocusStyle here
   )),
   child: Button(
@@ -455,7 +455,7 @@ To disable the button, set `onPressed` to `null`
 
 A Split Button has two parts that can be invoked separately. One part behaves like a standard button and invokes an immediate action. The other part invokes a flyout that contains additional options that the user can choose from. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#create-a-split-button)
 
-You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its style.
+You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its theme.
 
 ### Example
 
@@ -463,7 +463,7 @@ You can use a `SplitButtonBar` to create a Split Button. It usually takes `Butto
 const double splitButtonHeight = 50.0;
 
 SplitButtonBar(
-  style: SplitButtonStyle(
+  theme: SplitButtonThemeData(
     interval: 1, // the default value is one
   ),
   // There need to be at least 2 items in the buttons, and they must be non-null
@@ -486,7 +486,7 @@ SplitButtonBar(
         onPressed: () {
           // TODO: open the color list here
         },
-        style: ButtonStyle(padding: EdgeInsets.all(6)),
+        theme: ButtonThemeData(padding: EdgeInsets.all(6)),
       )
     )
   ],
@@ -973,7 +973,7 @@ The `InfoBar` widget is for displaying app-wide status messages to users that ar
 
 #### Usage
 
-You can easility create it using the `InfoBar` widget and theme it using `InfoBarStyle`. It has built-in support for both light and dark theme:
+You can easility create it using the `InfoBar` widget and theme it using `InfoBarThemeData`. It has built-in support for both light and dark theme:
 
 ```dart
 InfoBar(
@@ -991,6 +991,28 @@ InfoBar(
 ![Long Success InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)\
 ![Error InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-action-button.png)\
 ![Custom InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-custom-icon-color.png)
+
+## Calendar View
+
+A calendar view lets a user view and interact with a calendar that they can navigate by month, year, or decade. A user can select a single date or a range of dates. It doesn't have a picker surface and the calendar is always visible. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/calendar-view)
+
+Use a calendar view to let a user pick a single date or a range of dates from an always visible calendar. If you need to let a user select multiple dates at one time, you must use a calendar view. If you need to let a user pick only a single date and don't need a calendar to be always visible, consider using [date picker](#date-picker) control.
+
+The calendar view is made up of 3 separate views: the month view, year view, and decade view. By default, it starts with the month view open. You can specify a startup view by setting the `displayMode` property.
+
+![Calendar View Showcase](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/calendar-view-3-views.png)
+
+Users click the header in the month view to open the year view, and click the header in the year view to open the decade view. Users pick a year in the decade view to return to the year view, and pick a month in the year view to return to the month view. The two arrows to the side of the header navigate forward or backward by month, by year, or by decade.
+
+### Example
+
+```dart
+CalendarView()
+```
+
+The code above produces the following:
+
+![Calendar Month View Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_calendar_monthview.png)
 
 ## Date Picker
 

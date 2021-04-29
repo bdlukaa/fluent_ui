@@ -56,51 +56,53 @@ class ContentDialog extends StatelessWidget {
   final List<Widget>? actions;
 
   /// The style used by this dialog. If non-null, it's mescled with
-  /// [Style.dialogStyle]
-  final ContentDialogStyle? style;
+  /// [ThemeData.dialogThemeData]
+  final ContentDialogThemeData? style;
 
   /// Whether the background is dismissible or not.
   final bool backgroundDismiss;
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.dialogStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = ContentDialogThemeData.standard(context.theme).copyWith(
+      context.theme.dialogTheme.copyWith(this.style),
+    );
     return Dialog(
       backgroundDismiss: backgroundDismiss,
-      barrierColor: style?.barrierColor,
+      barrierColor: style.barrierColor,
       child: PhysicalModel(
-        color: style?.elevationColor ?? Colors.black,
-        elevation: style?.elevation ?? 0,
+        color: style.elevationColor ?? Colors.black,
+        elevation: style.elevation ?? 0,
         child: Container(
           constraints: BoxConstraints(maxWidth: 408),
-          decoration: style?.decoration,
-          padding: style?.padding,
+          decoration: style.decoration,
+          padding: style.padding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (title != null)
                 Padding(
-                  padding: style?.titlePadding ?? EdgeInsets.zero,
+                  padding: style.titlePadding ?? EdgeInsets.zero,
                   child: DefaultTextStyle(
-                    style: style?.titleStyle ?? TextStyle(),
+                    style: style.titleStyle ?? TextStyle(),
                     child: title!,
                   ),
                 ),
               if (content != null)
                 Padding(
-                  padding: style?.bodyPadding ?? EdgeInsets.zero,
+                  padding: style.bodyPadding ?? EdgeInsets.zero,
                   child: DefaultTextStyle(
-                    style: style?.bodyStyle ?? TextStyle(),
+                    style: style.bodyStyle ?? TextStyle(),
                     child: content!,
                   ),
                 ),
               if (actions != null)
-                Theme(
-                  data: context.theme.copyWith(Style(
-                    buttonStyle: style?.actionStyle,
-                  )),
+                FluentTheme(
+                  data: context.theme.copyWith(
+                    buttonTheme: style.actionThemeData,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: () {
@@ -111,7 +113,7 @@ class ContentDialog extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 right: index != (actions!.length - 1)
-                                    ? style?.actionsSpacing ?? 3
+                                    ? style.actionsSpacing ?? 3
                                     : 0,
                               ),
                               child: e,
@@ -194,7 +196,7 @@ class Dialog extends StatelessWidget {
   }
 }
 
-class ContentDialogStyle {
+class ContentDialogThemeData {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? titlePadding;
   final EdgeInsetsGeometry? bodyPadding;
@@ -205,12 +207,12 @@ class ContentDialogStyle {
 
   final TextStyle? titleStyle;
   final TextStyle? bodyStyle;
-  final ButtonStyle? actionStyle;
+  final ButtonThemeData? actionThemeData;
 
   final double? elevation;
   final Color? elevationColor;
 
-  const ContentDialogStyle({
+  const ContentDialogThemeData({
     this.decoration,
     this.barrierColor,
     this.titlePadding,
@@ -219,31 +221,28 @@ class ContentDialogStyle {
     this.actionsSpacing,
     this.titleStyle,
     this.bodyStyle,
-    this.actionStyle,
+    this.actionThemeData,
     this.elevation,
     this.elevationColor,
   });
 
-  factory ContentDialogStyle.standard(Style style) {
-    return ContentDialogStyle(
+  factory ContentDialogThemeData.standard(ThemeData style) {
+    return ContentDialogThemeData(
       decoration: BoxDecoration(
         color: style.scaffoldBackgroundColor,
-        border: Border.all(
-          color: style.disabledColor!,
-          width: 1.2,
-        ),
+        border: Border.all(color: style.disabledColor, width: 1.2),
       ),
       padding: EdgeInsets.all(20),
       titlePadding: EdgeInsets.only(bottom: 12),
       bodyPadding: EdgeInsets.only(bottom: 30),
       actionsSpacing: 3,
       barrierColor: Colors.grey[200]!.withOpacity(0.8),
-      titleStyle: style.typography?.title,
-      bodyStyle: style.typography?.body,
-      actionStyle: ButtonStyle(
+      titleStyle: style.typography.title,
+      bodyStyle: style.typography.body,
+      actionThemeData: ButtonThemeData(
         margin: EdgeInsets.zero,
         decoration: (state) => BoxDecoration(
-          color: ButtonStyle.buttonColor(style, state),
+          color: ButtonThemeData.buttonColor(style, state),
         ),
       ),
       elevation: 8,
@@ -251,9 +250,9 @@ class ContentDialogStyle {
     );
   }
 
-  ContentDialogStyle copyWith(ContentDialogStyle? style) {
+  ContentDialogThemeData copyWith(ContentDialogThemeData? style) {
     if (style == null) return this;
-    return ContentDialogStyle(
+    return ContentDialogThemeData(
       decoration: style.decoration ?? decoration,
       padding: style.padding ?? padding,
       bodyPadding: style.bodyPadding ?? bodyPadding,
@@ -262,7 +261,7 @@ class ContentDialogStyle {
       bodyStyle: style.bodyStyle ?? bodyStyle,
       titlePadding: style.titlePadding ?? titlePadding,
       actionsSpacing: style.actionsSpacing ?? actionsSpacing,
-      actionStyle: style.actionStyle ?? actionStyle,
+      actionThemeData: style.actionThemeData ?? actionThemeData,
     );
   }
 }

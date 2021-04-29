@@ -42,8 +42,8 @@ class RadioButton extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   /// The style of the button.
-  /// This is merged with [Style.radioButtonStyle]
-  final RadioButtonStyle? style;
+  /// This is merged with [ThemeData.radioButtonThemeData]
+  final RadioButtonThemeData? style;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
@@ -68,22 +68,24 @@ class RadioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.radioButtonStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = RadioButtonThemeData.standard(context.theme).copyWith(
+      context.theme.radioButtonTheme.copyWith(this.style),
+    );
     return HoverButton(
-      cursor: style?.cursor,
+      cursor: style.cursor,
       autofocus: autofocus,
       focusNode: focusNode,
       semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         Widget child = AnimatedContainer(
-          duration: style?.animationDuration ?? Duration(milliseconds: 300),
+          duration: style.animationDuration ?? Duration(milliseconds: 300),
           height: 20,
           width: 20,
           decoration: checked
-              ? style?.checkedDecoration!(state)
-              : style?.uncheckedDecoration!(state),
+              ? style.checkedDecoration!(state)
+              : style.uncheckedDecoration!(state),
         );
         return Semantics(
           child: FocusBorder(
@@ -98,7 +100,7 @@ class RadioButton extends StatelessWidget {
 }
 
 @immutable
-class RadioButtonStyle with Diagnosticable {
+class RadioButtonThemeData with Diagnosticable {
   final ButtonState<Decoration>? checkedDecoration;
   final ButtonState<Decoration>? uncheckedDecoration;
 
@@ -107,7 +109,7 @@ class RadioButtonStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const RadioButtonStyle({
+  const RadioButtonThemeData({
     this.cursor,
     this.animationDuration,
     this.animationCurve,
@@ -115,8 +117,8 @@ class RadioButtonStyle with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  factory RadioButtonStyle.standard(Style style) {
-    return RadioButtonStyle(
+  factory RadioButtonThemeData.standard(ThemeData style) {
+    return RadioButtonThemeData(
       cursor: buttonCursor,
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
@@ -134,7 +136,7 @@ class RadioButtonStyle with Diagnosticable {
           style: state.isNone ? BorderStyle.solid : BorderStyle.none,
           width: 1,
           color: state.isNone
-              ? style.disabledColor!
+              ? style.disabledColor
               : uncheckedInputColor(style, state),
         ),
         shape: BoxShape.circle,
@@ -142,8 +144,8 @@ class RadioButtonStyle with Diagnosticable {
     );
   }
 
-  RadioButtonStyle copyWith(RadioButtonStyle? style) {
-    return RadioButtonStyle(
+  RadioButtonThemeData copyWith(RadioButtonThemeData? style) {
+    return RadioButtonThemeData(
       cursor: style?.cursor ?? cursor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,

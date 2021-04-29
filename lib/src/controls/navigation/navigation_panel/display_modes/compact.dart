@@ -28,7 +28,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final itens = ([...this.items]
       ..removeWhere((e) => e.runtimeType != NavigationPanelItem));
     if (compact)
@@ -59,7 +59,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                         vertical: 8,
                       ),
                       child: DefaultTextStyle(
-                        style: context.theme.typography?.base ??
+                        style: context.theme.typography.base ??
                             const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -120,14 +120,13 @@ class CompactOpenNavigationPanel extends StatelessWidget {
                         vertical: 8,
                       ),
                       child: AnimatedDefaultTextStyle(
-                        style: context.theme.typography?.base ??
+                        style: context.theme.typography.base ??
                             const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                        duration: context.theme.mediumAnimationDuration ??
-                            Duration.zero,
-                        curve: context.theme.animationCurve ?? standartCurve,
+                        duration: context.theme.mediumAnimationDuration,
+                        curve: context.theme.animationCurve,
                         child: item.label!,
                         softWrap: false,
                         maxLines: 1,

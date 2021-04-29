@@ -44,8 +44,8 @@ class InfoBar extends StatelessWidget {
   final InfoBarSeverity severity;
 
   /// The style applied to this info bar. If non-null, it's
-  /// mescled with [Style.infoBarStyle]
-  final InfoBarStyle? style;
+  /// mescled with [ThemeData.infoBarThemeData]
+  final InfoBarThemeData? style;
 
   final Widget title;
   final Widget? content;
@@ -71,34 +71,34 @@ class InfoBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.infoBarStyle?.copyWith(this.style);
-    final icon = style?.icon?.call(severity);
-    final closeIcon = style?.closeIcon;
+    assert(debugCheckHasFluentTheme(context));
+    final style = InfoBarThemeData.standard(context.theme).copyWith(
+      context.theme.infoBarTheme.copyWith(this.style),
+    );
+    final icon = style.icon?.call(severity);
+    final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
-      style: context.theme.typography?.base ?? TextStyle(),
+      style: context.theme.typography.base ?? TextStyle(),
       child: this.title,
     );
     final content = () {
       if (this.content == null) return null;
       return DefaultTextStyle(
-        style: context.theme.typography?.body ?? TextStyle(),
+        style: context.theme.typography.body ?? TextStyle(),
         child: this.content!,
         softWrap: true,
       );
     }();
     final action = () {
       if (this.action == null) return null;
-      return Theme(
+      return FluentTheme(
         child: this.action!,
-        data: context.theme.copyWith(Style(
-          buttonStyle: style?.actionStyle,
-        )),
+        data: context.theme.copyWith(buttonTheme: style.actionStyle),
       );
     }();
     return Acrylic(
-      color: style?.color?.call(severity),
-      padding: style?.padding ?? EdgeInsets.all(10),
+      color: style.color?.call(severity),
+      padding: style.padding ?? EdgeInsets.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment:
@@ -107,7 +107,7 @@ class InfoBar extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: const EdgeInsets.only(right: 6.0),
-              child: Icon(icon, color: style?.iconColor?.call(severity)),
+              child: Icon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
             Flexible(
@@ -156,15 +156,15 @@ class InfoBar extends StatelessWidget {
 
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
-class InfoBarStyle with Diagnosticable {
+class InfoBarThemeData with Diagnosticable {
   final InfoBarSeverityCheck<Color?>? color;
   final InfoBarSeverityCheck<Color?>? iconColor;
   final InfoBarSeverityCheck<IconData>? icon;
   final IconData? closeIcon;
-  final ButtonStyle? actionStyle;
+  final ButtonThemeData? actionStyle;
   final EdgeInsetsGeometry? padding;
 
-  const InfoBarStyle({
+  const InfoBarThemeData({
     this.color,
     this.icon,
     this.iconColor,
@@ -173,9 +173,9 @@ class InfoBarStyle with Diagnosticable {
     this.padding,
   });
 
-  factory InfoBarStyle.standard(Style style) {
+  factory InfoBarThemeData.standard(ThemeData style) {
     final isDark = style.brightness == Brightness.dark;
-    return InfoBarStyle(
+    return InfoBarThemeData(
       padding: EdgeInsets.all(10),
       color: (severity) {
         switch (severity) {
@@ -214,16 +214,16 @@ class InfoBarStyle with Diagnosticable {
             return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
-      actionStyle: ButtonStyle.standard(style).copyWith(ButtonStyle(
+      actionStyle: ButtonThemeData.standard(style).copyWith(ButtonThemeData(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.all(6),
       )),
     );
   }
 
-  InfoBarStyle copyWith(InfoBarStyle? style) {
+  InfoBarThemeData copyWith(InfoBarThemeData? style) {
     if (style == null) return this;
-    return InfoBarStyle(
+    return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
       icon: style.icon ?? icon,
       color: style.color ?? color,
@@ -239,7 +239,7 @@ class InfoBarStyle with Diagnosticable {
     properties.add(ObjectFlagProperty.has('closeIcon', closeIcon));
     properties.add(ObjectFlagProperty.has('color', color));
     properties.add(ObjectFlagProperty.has('iconColor', iconColor));
-    properties.add(DiagnosticsProperty<ButtonStyle>(
+    properties.add(DiagnosticsProperty<ButtonThemeData>(
       'actionStyle',
       actionStyle,
       ifNull: 'no style',

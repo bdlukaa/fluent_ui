@@ -18,25 +18,22 @@ class FocusBorder extends StatelessWidget {
   final bool focused;
 
   /// The style of this focus border. If non-null, this
-  /// is mescled with [Style.focusStyle]
-  final FocusStyle? style;
+  /// is mescled with [ThemeData.focusThemeData]
+  final FocusThemeData? style;
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.focusStyle?.copyWith(this.style);
+    assert(debugCheckHasFluentTheme(context));
+    final style = context.theme.focusTheme.copyWith(this.style);
     return AnimatedContainer(
-      duration: context.theme.fastAnimationDuration ?? Duration.zero,
-      curve: context.theme.animationCurve ?? Curves.linear,
+      duration: context.theme.fastAnimationDuration,
+      curve: context.theme.animationCurve,
       decoration: BoxDecoration(
-        borderRadius: style?.borderRadius,
+        borderRadius: style.borderRadius,
         border: focused
-            ? Border.fromBorderSide(style?.primaryBorder ?? BorderSide.none)
+            ? Border.fromBorderSide(style.primaryBorder ?? BorderSide.none)
             : null,
-        boxShadow: style != null &&
-                focused &&
-                style.glowFactor != 0 &&
-                style.glowColor != null
+        boxShadow: focused && style.glowFactor != 0 && style.glowColor != null
             ? [
                 BoxShadow(
                   offset: Offset(1, 1),
@@ -67,9 +64,9 @@ class FocusBorder extends StatelessWidget {
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: style?.borderRadius,
+          borderRadius: style.borderRadius,
           border: focused
-              ? Border.fromBorderSide(style?.secondaryBorder ?? BorderSide.none)
+              ? Border.fromBorderSide(style.secondaryBorder ?? BorderSide.none)
               : null,
         ),
         child: child,
@@ -78,14 +75,14 @@ class FocusBorder extends StatelessWidget {
   }
 }
 
-class FocusStyle with Diagnosticable {
+class FocusThemeData with Diagnosticable {
   final BorderRadius? borderRadius;
   final BorderSide? primaryBorder;
   final BorderSide? secondaryBorder;
   final Color? glowColor;
   final double? glowFactor;
 
-  const FocusStyle({
+  const FocusThemeData({
     this.borderRadius,
     this.primaryBorder,
     this.secondaryBorder,
@@ -93,25 +90,23 @@ class FocusStyle with Diagnosticable {
     this.glowFactor,
   }) : assert(glowFactor == null || glowFactor >= 0);
 
-  factory FocusStyle.standard(Style style) {
-    return FocusStyle(
+  factory FocusThemeData.standard({
+    required Color primaryBorderColor,
+    required Color secondaryBorderColor,
+    required Color glowColor,
+  }) {
+    return FocusThemeData(
       borderRadius: BorderRadius.zero,
-      primaryBorder: BorderSide(
-        width: 2,
-        color: style.inactiveColor ?? Colors.transparent,
-      ),
-      secondaryBorder: BorderSide(
-        width: 1,
-        color: style.scaffoldBackgroundColor ?? Colors.transparent,
-      ),
-      glowColor: style.accentColor?.withOpacity(0.15) ?? Colors.transparent,
+      primaryBorder: BorderSide(width: 2, color: primaryBorderColor),
+      secondaryBorder: BorderSide(width: 1, color: secondaryBorderColor),
+      glowColor: glowColor,
       glowFactor: 0.0,
     );
   }
 
-  FocusStyle copyWith(FocusStyle? other) {
+  FocusThemeData copyWith(FocusThemeData? other) {
     if (other == null) return this;
-    return FocusStyle(
+    return FocusThemeData(
       primaryBorder: other.primaryBorder ?? primaryBorder,
       secondaryBorder: other.secondaryBorder ?? secondaryBorder,
       borderRadius: other.borderRadius ?? borderRadius,

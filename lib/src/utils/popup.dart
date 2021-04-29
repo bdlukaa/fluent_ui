@@ -45,8 +45,7 @@ class PopUpState<T> extends State<PopUp> {
       elevation: 4,
       capturedThemes:
           InheritedTheme.capture(from: context, to: navigator.context),
-      transitionAnimationDuration:
-          context.theme.mediumAnimationDuration ?? Duration.zero,
+      transitionAnimationDuration: context.theme.mediumAnimationDuration,
     );
 
     return navigator.push(_dropdownRoute!).then((T? newValue) {

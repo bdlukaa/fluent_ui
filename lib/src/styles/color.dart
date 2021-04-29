@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart' as c;
 
 /// All the fluent colors
 class Colors {
@@ -36,7 +37,7 @@ class Colors {
   ///   - 10
   ///
   /// To use any of these shades, call `Colors.grey[SHADE]`,
-  /// where `SHADE` is the number of the sade you want
+  /// where `SHADE` is the number of the shade you want
   static const ShadedColor grey = ShadedColor(
     0xFF323130, // grey160
     <int, Color>{
@@ -139,6 +140,7 @@ class Colors {
   static const Color successPrimaryColor = Color(0xFF107c10);
   static const Color successSecondaryColor = Color(0xFFdff6dd);
 
+  /// A list of all the accent colors provided by this library.
   static final List<AccentColor> accentColors = [
     yellow,
     orange,
@@ -156,6 +158,24 @@ class ShadedColor extends ColorSwatch<int> {
       : super(primary, swatch);
 }
 
+/// An accent color is a color that can have multiple shades. It's
+/// similar to [ShadedColor] and [ColorSwatch], but it has helper
+/// methods to help you access the shade you want easily. These
+/// shades may not be accessible on every accent color.
+///
+/// This library already provides some accent colors by default:
+///
+/// - [Colors.yellow]
+/// - [Colors.orange]
+/// - [Colors.red]
+/// - [Colors.magenta]
+/// - [Colors.purple]
+/// - [Colors.blue]
+/// - [Colors.teal]
+/// - [Colors.green]
+///
+/// Use [Colors.accentColors] to get all the accent colors provided
+/// by default.
 class AccentColor extends ColorSwatch<String> {
   /// The default shade for this color. This can't be null
   final String primary;
@@ -189,4 +209,86 @@ class AccentColor extends ColorSwatch<String> {
   ///
   /// Usually used for shadows
   Color get lighter => swatch['lighter'] ?? light;
+
+  static Color resolve(Color resolvable, BuildContext context) {
+    return (resolvable is AccentColor)
+        ? resolvable.resolveFrom(context)
+        : resolvable;
+  }
+
+  Color resolveFrom(BuildContext context, [Brightness? bright]) {
+    final ThemeData? theme = FluentTheme.maybeOf(context);
+    final brightness = bright ?? theme?.brightness ?? Brightness.light;
+    return resolveFromBrightness(brightness);
+  }
+
+  Color resolveFromBrightness(Brightness brightness) {
+    switch (brightness) {
+      case Brightness.light:
+        return light;
+      case Brightness.dark:
+        return dark;
+    }
+  }
+}
+
+/// Extension methods to help dealing with colors.
+extension colorExtension on Color {
+  /// Creates a new accent color based on this color. This provides
+  /// the shades by lerping this color with [Colors.black] if dark
+  /// or darker, and with [Colors.white] if light or lighter.
+  ///
+  /// See also:
+  ///   - [Color.lerp]
+  ///   - [lerpWith]
+  ///   - [Colors.black]
+  ///   - [Color.white]
+  AccentColor toAccentColor() {
+    if (this is AccentColor) {
+      return this as AccentColor;
+    }
+    return AccentColor('normal', {
+      'darker': lerpWith(Colors.black, 0.85),
+      'dark': lerpWith(Colors.black, 0.45),
+      'normal': this,
+      'light': lerpWith(Colors.white, 0.45),
+      'lighter': lerpWith(Colors.white, 0.85),
+    });
+  }
+
+  /// Get a constrast color based on the luminance of this color. If
+  /// the luminance is bigger than 0.5, [darkColor] is used, otherwise
+  /// [lightColor] is used.
+  ///
+  /// This is usually used to constrast text colors with the background.
+  Color basedOnLuminance({
+    Color darkColor = Colors.black,
+    Color lightColor = Colors.white,
+  }) {
+    return computeLuminance() >= 0.5 ? darkColor : lightColor;
+  }
+
+  /// Lerp this color with another color.
+  ///
+  /// [t] must be in range of 0.0 to 1.0
+  ///
+  /// See also:
+  ///   - [Color.lerp]
+  Color lerpWith(Color color, double t) {
+    return Color.lerp(this, color, t)!;
+  }
+
+  Color resolve(BuildContext context) {
+    if (this is AccentColor) {
+      return this.resolve(context);
+    }
+    return this;
+  }
+
+  Color resolveFromBrightness(Brightness brightness) {
+    if (this is AccentColor) {
+      return this.resolveFromBrightness(brightness);
+    }
+    return this;
+  }
 }

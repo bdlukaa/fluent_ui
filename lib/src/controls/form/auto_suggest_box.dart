@@ -38,7 +38,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty('items', items));
-    properties.add(ObjectFlagProperty(
+    properties.add(ObjectFlagProperty<ValueChanged<T>?>(
       'onSelected',
       onSelected,
       ifNull: 'disabled',
@@ -52,7 +52,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   }
 
   static Widget defaultNoResultsFound(context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return ListTile(
       title: DefaultTextStyle(
         style: TextStyle(fontWeight: FontWeight.normal),
@@ -67,7 +67,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     FocusNode focusNode,
     GlobalKey key,
   ) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     const BorderSide _kDefaultRoundedBorderSide = BorderSide(
       style: BorderStyle.solid,
       width: 0.8,
@@ -125,17 +125,14 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       widget.itemBuilder ?? _defaultItemBuilder;
 
   Widget _defaultItemBuilder(BuildContext context, T value) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return TappableListTile(
       onTap: () {
         widget.controller.text = '$value';
         widget.onSelected?.call(value);
         focusNode.unfocus();
       },
-      title: Text(
-        '$value',
-        style: context.theme.typography?.body,
-      ),
+      title: Text('$value', style: context.theme.typography.body),
     );
   }
 
@@ -157,8 +154,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 bottom: Radius.circular(4.0),
               ),
               border: Border.all(
-                color:
-                    context.theme.scaffoldBackgroundColor ?? Colors.transparent,
+                color: context.theme.scaffoldBackgroundColor,
                 width: 0.8,
               ),
             ),
@@ -179,9 +175,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                   );
                 }
                 return AnimatedSwitcher(
-                  duration:
-                      context.theme.fastAnimationDuration ?? Duration.zero,
-                  switchInCurve: context.theme.animationCurve ?? Curves.linear,
+                  duration: context.theme.fastAnimationDuration,
+                  switchInCurve: context.theme.animationCurve,
                   transitionBuilder: (child, animation) {
                     if (child is ListView) {
                       return child;
@@ -213,7 +208,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     return CompositedTransformTarget(
       link: _layerLink,
       child: widget.textBoxBuilder(

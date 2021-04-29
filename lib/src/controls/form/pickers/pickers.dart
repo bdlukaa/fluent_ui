@@ -14,36 +14,35 @@ Decoration kPickerBackgroundDecoration(BuildContext context) => BoxDecoration(
       color: context.theme.navigationPanelBackgroundColor,
       borderRadius: BorderRadius.circular(4.0),
       border: Border.all(
-        color: context.theme.scaffoldBackgroundColor ?? Colors.transparent,
+        color: context.theme.scaffoldBackgroundColor,
         width: 0.6,
       ),
     );
 
 TextStyle? kPickerPopupTextStyle(BuildContext context) {
-  return context.theme.typography?.body?.copyWith(fontSize: 16);
+  return context.theme.typography.body?.copyWith(fontSize: 16);
 }
 
 Decoration kPickerDecorationBuilder(BuildContext context, ButtonStates state) {
-  debugCheckHasFluentTheme(context);
+  assert(debugCheckHasFluentTheme(context));
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
     border: Border.all(
       color: () {
         Color? color;
         if (state == ButtonStates.hovering) {
-          color ??= context.theme.inactiveColor;
+          color = context.theme.inactiveColor;
         }
-        color ??= context.theme.inactiveColor?.withOpacity(0.75);
-        color ??= Colors.transparent;
+        color ??= context.theme.inactiveColor.withOpacity(0.75);
         return color;
       }(),
       width: 1.0,
     ),
     color: () {
       if (state == ButtonStates.pressing)
-        return context.theme.disabledColor?.withOpacity(0.2);
+        return context.theme.disabledColor.withOpacity(0.2);
       else if (state == ButtonStates.focused) {
-        return context.theme.disabledColor?.withOpacity(0.2);
+        return context.theme.disabledColor.withOpacity(0.2);
       }
     }(),
   );
@@ -61,10 +60,10 @@ class YesNoPickerControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    return Theme(
-      data: context.theme.copyWith(Style(
-        buttonStyle: context.theme.buttonStyle?.copyWith(ButtonStyle(
+    assert(debugCheckHasFluentTheme(context));
+    return FluentTheme(
+      data: context.theme.copyWith(
+        buttonTheme: ButtonThemeData(
           margin: EdgeInsets.zero,
           decoration: (state) => BoxDecoration(
             color: uncheckedInputColor(context.theme, state),
@@ -73,8 +72,8 @@ class YesNoPickerControl extends StatelessWidget {
             ),
           ),
           scaleFactor: 1.0,
-        )),
-      )),
+        ),
+      ),
       child: Row(children: [
         Expanded(
           child: SizedBox(
@@ -113,20 +112,21 @@ class PickerNavigatorIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = ButtonStyle(
+    assert(debugCheckHasFluentTheme(context));
+    final style = ButtonThemeData(
       padding: EdgeInsets.all(2.0),
       margin: EdgeInsets.zero,
       scaleFactor: 1.0,
       decoration: (state) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: ButtonStyle.buttonColor(context.theme, state),
+          color: ButtonThemeData.buttonColor(context.theme, state),
         );
       },
     );
     return HoverButton(
       onPressed: () {},
+      ignoreFocusManager: true,
       builder: (context, state) {
         final isHovering =
             state.isHovering || state.isPressing || state.isFocused;
@@ -166,9 +166,9 @@ void navigateSides(
   bool forward,
   int amount,
 ) {
-  debugCheckHasFluentTheme(context);
-  final duration = context.theme.fasterAnimationDuration ?? Duration.zero;
-  final curve = context.theme.animationCurve ?? Curves.linear;
+  assert(debugCheckHasFluentTheme(context));
+  final duration = context.theme.fasterAnimationDuration;
+  final curve = context.theme.animationCurve;
   if (forward) {
     final currentItem = controller.selectedItem;
     int to = currentItem + 1;

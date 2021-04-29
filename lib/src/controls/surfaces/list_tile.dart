@@ -57,7 +57,7 @@ class ListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return Container(
       decoration: ShapeDecoration(
@@ -85,7 +85,7 @@ class ListTile extends StatelessWidget {
               if (title != null)
                 DefaultTextStyle(
                   child: title!,
-                  style: (style.typography?.base ?? TextStyle()).copyWith(
+                  style: (style.typography.base ?? TextStyle()).copyWith(
                     fontSize: 16,
                   ),
                   overflow: TextOverflow.clip,
@@ -93,7 +93,7 @@ class ListTile extends StatelessWidget {
               if (subtitle != null)
                 DefaultTextStyle(
                   child: subtitle!,
-                  style: style.typography?.body ?? TextStyle(),
+                  style: style.typography.body ?? TextStyle(),
                   overflow: TextOverflow.clip,
                 ),
             ],
@@ -149,7 +149,7 @@ class TappableListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
       cursor: buttonCursor,
@@ -199,7 +199,7 @@ class CheckboxListTile extends StatelessWidget {
   final Widget? subtitle;
   final bool isThreeLine;
 
-  final CheckboxStyle? style;
+  final CheckboxThemeData? style;
 
   final bool autofocus;
   final FocusNode? focusNode;
@@ -253,7 +253,7 @@ class SwitchListTile extends StatelessWidget {
   final Widget? subtitle;
   final bool isThreeLine;
 
-  final ToggleSwitchStyle? style;
+  final ToggleSwitchThemeData? style;
   final Widget? thumb;
 
   final bool autofocus;
@@ -306,7 +306,7 @@ class RadioListTile extends StatelessWidget {
   final Widget? subtitle;
   final bool isThreeLine;
 
-  final RadioButtonStyle? style;
+  final RadioButtonThemeData? style;
 
   final bool autofocus;
   final FocusNode? focusNode;

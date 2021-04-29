@@ -2,6 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// A tooltip is a short description that is linked to another
+/// control or object. Tooltips help users understand unfamiliar
+/// objects that aren't described directly in the UI. They display
+/// automatically when the user moves focus to, presses and holds,
+/// or hovers the mouse pointer over a control. The tooltip disappears
+/// after a few seconds, or when the user moves the finger, pointer
+/// or keyboard/gamepad focus.
+///
+/// ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
 class Tooltip extends StatelessWidget {
   /// Creates a tooltip.
   ///
@@ -21,8 +30,8 @@ class Tooltip extends StatelessWidget {
   /// when the mouse is hovering or whenever it gets long pressed.
   final Widget? child;
 
-  /// The style of the tooltip. If non-null, it's mescled with [Style.tooltipStyle]
-  final TooltipStyle? style;
+  /// The style of the tooltip. If non-null, it's mescled with [ThemeData.tooltipThemeData]
+  final TooltipThemeData? style;
 
   /// Whether the tooltip's [message] should be excluded from the
   /// semantics tree.
@@ -34,27 +43,28 @@ class Tooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style =
-        context.theme.tooltipStyle?.copyWith(this.style) ?? this.style;
+    assert(debugCheckHasFluentTheme(context));
+    final style = TooltipThemeData.standard(context.theme).copyWith(
+      context.theme.tooltipTheme.copyWith(this.style),
+    );
     return m.Tooltip(
       message: message,
       child: child,
-      preferBelow: style?.preferBelow,
-      showDuration: style?.showDuration,
-      padding: style?.padding,
-      margin: style?.margin,
-      decoration: style?.decoration,
-      height: style?.height,
-      verticalOffset: style?.verticalOffset,
-      textStyle: style?.textStyle,
-      waitDuration: style?.waitDuration,
+      preferBelow: style.preferBelow,
+      showDuration: style.showDuration,
+      padding: style.padding,
+      margin: style.margin,
+      decoration: style.decoration,
+      height: style.height,
+      verticalOffset: style.verticalOffset,
+      textStyle: style.textStyle,
+      waitDuration: style.waitDuration,
       excludeFromSemantics: excludeFromSemantics,
     );
   }
 }
 
-class TooltipStyle with Diagnosticable {
+class TooltipThemeData with Diagnosticable {
   /// The height of the tooltip's [child].
   ///
   /// If the [child] is null, then this is the tooltip's intrinsic height.
@@ -94,7 +104,7 @@ class TooltipStyle with Diagnosticable {
   ///
   /// The tooltip shape defaults to a rounded rectangle with a border radius of 4.0.
   /// Tooltips will also default to an opacity of 90% and with the color [Colors.grey]
-  /// if [Style.brightness] is [Brightness.dark], and [Colors.white] if it is
+  /// if [ThemeData.brightness] is [Brightness.dark], and [Colors.white] if it is
   /// [Brightness.light].
   final Decoration? decoration;
 
@@ -116,7 +126,7 @@ class TooltipStyle with Diagnosticable {
   /// If null, [Typography.caption] is used
   final TextStyle? textStyle;
 
-  const TooltipStyle({
+  const TooltipThemeData({
     this.height,
     this.verticalOffset,
     this.padding,
@@ -128,8 +138,8 @@ class TooltipStyle with Diagnosticable {
     this.textStyle,
   });
 
-  factory TooltipStyle.standard(Style style) {
-    return TooltipStyle(
+  factory TooltipThemeData.standard(ThemeData style) {
+    return TooltipThemeData(
       height: 32.0,
       verticalOffset: 24.0,
       preferBelow: true,
@@ -137,7 +147,7 @@ class TooltipStyle with Diagnosticable {
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       showDuration: const Duration(milliseconds: 1500),
       waitDuration: const Duration(seconds: 1),
-      textStyle: style.typography?.caption,
+      textStyle: style.typography.caption,
       decoration: () {
         final radius = BorderRadius.circular(4.0);
         final shadow = [
@@ -167,9 +177,19 @@ class TooltipStyle with Diagnosticable {
     );
   }
 
-  TooltipStyle copyWith(TooltipStyle? style) {
+  TooltipThemeData copyWith(TooltipThemeData? style) {
     if (style == null) return this;
-    return style;
+    return TooltipThemeData(
+      decoration: style.decoration ?? decoration,
+      height: style.height ?? height,
+      margin: style.margin ?? margin,
+      padding: style.padding ?? padding,
+      preferBelow: style.preferBelow ?? preferBelow,
+      showDuration: style.showDuration ?? showDuration,
+      textStyle: style.textStyle ?? textStyle,
+      verticalOffset: style.verticalOffset ?? verticalOffset,
+      waitDuration: style.waitDuration ?? waitDuration,
+    );
   }
 
   @override

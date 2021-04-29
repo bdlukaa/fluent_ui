@@ -22,13 +22,15 @@ class _OthersState extends State<Others> {
     super.dispose();
   }
 
+  DateTime date = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Acrylic(
         margin: EdgeInsets.only(bottom: 10),
         child: Column(children: [
-          Text('Surfaces', style: context.theme.typography?.subtitle),
+          Text('Surfaces', style: context.theme.typography.subtitle),
           Wrap(spacing: 10, runSpacing: 10, children: [
             Tooltip(
               message: 'This is a tooltip',
@@ -134,10 +136,34 @@ class _OthersState extends State<Others> {
           child: ProgressRing(value: 85),
         ),
       ]),
+      // Row(children: [
+      //   CalendarView(
+      //     onDateChanged: _handleDateChanged,
+      //     firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
+      //     lastDate: DateTime.now().add(Duration(days: 365 * 100)),
+      //     initialDate: date,
+      //     currentDate: date,
+      //     onDisplayedMonthChanged: (date) {
+      //       setState(() => this.date = date);
+      //     },
+      //   ),
+      //   CalendarView(
+      //     onDateChanged: _handleDateChanged,
+      //     firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
+      //     lastDate: DateTime.now().add(Duration(days: 365 * 100)),
+      //     initialDate: date,
+      //     currentDate: date,
+      //     onDisplayedMonthChanged: (date) {
+      //       setState(() => this.date = date);
+      //     },
+      //     initialCalendarMode: DatePickerMode.year,
+      //   ),
+      // ]),
+      SizedBox(height: 10),
       Container(
         height: 250,
         decoration: BoxDecoration(
-          border: Border.all(color: context.theme.accentColor!, width: 1.0),
+          border: Border.all(color: context.theme.accentColor, width: 1.0),
         ),
         child: TabView(
           currentIndex: currentIndex,
@@ -167,4 +193,9 @@ class _OthersState extends State<Others> {
   void _handleTabChanged(int index) {
     setState(() => currentIndex = index);
   }
+
+  // void _handleDateChanged(DateTime date) {
+
+  // }
+
 }

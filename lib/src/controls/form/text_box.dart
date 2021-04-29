@@ -124,7 +124,7 @@ class TextBox extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.header,
     this.headerStyle,
-    this.iconButtonStyle,
+    this.iconButtonThemeData,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -269,7 +269,7 @@ class TextBox extends StatefulWidget {
 
   final String? restorationId;
 
-  final IconButtonStyle? iconButtonStyle;
+  final ButtonThemeData? iconButtonThemeData;
 
   @override
   _TextBoxState createState() => _TextBoxState();
@@ -599,7 +599,7 @@ class _TextBoxState extends State<TextBox>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasDirectionality(context));
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -618,10 +618,9 @@ class _TextBoxState extends State<TextBox>
           fontWeight: FontWeight.w400,
         );
 
-    final Brightness keyboardAppearance = widget.keyboardAppearance ??
-        context.theme.brightness ??
-        Brightness.light;
-    final Color cursorColor = context.theme.inactiveColor!;
+    final Brightness keyboardAppearance =
+        widget.keyboardAppearance ?? context.theme.brightness;
+    final Color cursorColor = context.theme.inactiveColor;
     final Color? disabledColor = context.theme.disabledColor;
 
     final Color? decorationColor = widget.decoration.color;
@@ -656,7 +655,7 @@ class _TextBoxState extends State<TextBox>
       color: enabled ? decorationColor : (decorationColor ?? disabledColor),
     );
 
-    final Color selectionColor = context.theme.accentColor!.withOpacity(0.2);
+    final Color selectionColor = context.theme.accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -702,8 +701,7 @@ class _TextBoxState extends State<TextBox>
             cursorOffset: cursorOffset,
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
-            backgroundCursorColor:
-                context.theme.disabledColor ?? Colors.grey[120]!,
+            backgroundCursorColor: context.theme.disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -733,8 +731,8 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme.mediumAnimationDuration ?? Duration.zero,
-          curve: context.theme.animationCurve ?? standartCurve,
+          duration: context.theme.mediumAnimationDuration,
+          curve: context.theme.animationCurve,
           decoration: effectiveDecoration,
           constraints: BoxConstraints(
             minHeight: widget.minHeight ?? 0,
@@ -765,20 +763,12 @@ class _TextBoxState extends State<TextBox>
       ]),
     );
 
-    return Theme(
+    return FluentTheme(
       data: context.theme.copyWith(
-        Style(
-          iconButtonStyle: context.theme.iconButtonStyle
-              ?.copyWith(
-                IconButtonStyle(
-                  iconStyle: (_) => context.theme.iconStyle?.copyWith(
-                    IconStyle(size: 18),
-                  ),
-                  margin: EdgeInsets.zero,
-                ),
-              )
-              .copyWith(widget.iconButtonStyle),
-        ),
+        buttonTheme: ButtonThemeData(
+          margin: EdgeInsets.zero,
+        ).copyWith(widget.iconButtonThemeData),
+        iconTheme: IconThemeData(size: 18),
       ),
       child: () {
         if (widget.header != null)

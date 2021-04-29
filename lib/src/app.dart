@@ -65,8 +65,8 @@ class FluentApp extends StatefulWidget {
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
     this.actions,
-    this.style,
-    this.darkStyle,
+    this.theme,
+    this.darkTheme,
     this.themeMode,
     this.restorationScopeId,
   })  : routeInformationProvider = null,
@@ -78,8 +78,8 @@ class FluentApp extends StatefulWidget {
   /// Creates a [FluentApp] that uses the [Router] instead of a [Navigator].
   FluentApp.router({
     Key? key,
-    this.style,
-    this.darkStyle,
+    this.theme,
+    this.darkTheme,
     this.themeMode,
     this.routeInformationProvider,
     required this.routeInformationParser,
@@ -120,25 +120,25 @@ class FluentApp extends StatefulWidget {
   /// Default visual properties, like colors fonts and shapes, for this app's
   /// fluent widgets.
   ///
-  /// A second [darkStyle] [Style] value, which is used to provide a dark
+  /// A second [darkTheme] [ThemeData] value, which is used to provide a dark
   /// version of the user interface can also be specified. [themeMode] will
-  /// control which style will be used if a [darkStyle] is provided.
+  /// control which theme will be used if a [darkTheme] is provided.
   ///
-  /// The default value of this property is the value of `Style(brightness: Brightness.light)`.
-  final Style? style;
+  /// The default value of this property is the value of `ThemeData(brightness: Brightness.light)`.
+  final ThemeData? theme;
 
-  /// The [Style] to use when a 'dark mode' is requested by the system.
+  /// The [ThemeData] to use when a 'dark mode' is requested by the system.
   ///
   /// Some host platforms allow the users to select a system-wide 'dark mode',
   /// or the application may want to offer the user the ability to choose a
   /// dark theme just for this application. This is theme that will be used for
   /// such cases. [themeMode] will control which theme will be used.
   ///
-  /// This theme should have a [Style.brightness] set to [Brightness.dark].
+  /// This theme should have a [ThemeData.brightness] set to [Brightness.dark].
   ///
   /// Uses [theme] instead when null. Defaults to the value of
-  /// [Style(brightness: Brightness.light)] when both [darkStyle] and [theme] are null.
-  final Style? darkStyle;
+  /// [ThemeData(brightness: Brightness.light)] when both [darkTheme] and [theme] are null.
+  final ThemeData? darkTheme;
 
   /// Determines which theme will be used by the application if both [theme]
   /// and [darkTheme] are provided.
@@ -270,12 +270,12 @@ class FluentApp extends StatefulWidget {
   /// add your own [Shortcuts] widget.
   ///
   /// Alternatively, you could insert a [Shortcuts] widget with just the mapping
-  /// you want to add between the [WidgetsApp] and its child and get the same
+  /// you want to add between the [FluentApp] and its child and get the same
   /// effect.
   ///
   /// ```dart
   /// Widget build(BuildContext context) {
-  ///   return WidgetsApp(
+  ///   return FluentApp(
   ///     shortcuts: <LogicalKeySet, Intent>{
   ///       ... WidgetsApp.defaultShortcuts,
   ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
@@ -298,7 +298,7 @@ class FluentApp extends StatefulWidget {
   /// add your own [Actions] widget.
   ///
   /// Alternatively, you could insert a [Actions] widget with just the mapping
-  /// you want to add between the [WidgetsApp] and its child and get the same
+  /// you want to add between the [FluentApp] and its child and get the same
   /// effect.
   ///
   /// ```dart
@@ -357,35 +357,28 @@ class _FluentAppState extends State<FluentApp> {
     );
   }
 
-  Style theme(BuildContext context) {
+  ThemeData theme(BuildContext context) {
     final mode = widget.themeMode ?? ThemeMode.system;
     final platformBrightness = MediaQuery.platformBrightnessOf(context);
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    Style data = () {
-      Style? result;
+    ThemeData data = () {
+      late ThemeData result;
       if (usedarkStyle) {
-        result = widget.darkStyle ?? widget.style;
-      } else if (widget.style != null) {
-        result = widget.style;
+        result = widget.darkTheme ?? widget.theme ?? ThemeData();
       } else {
-        result = Style();
-      }
-      if (result!.brightness == null) {
-        result = result.copyWith(Style(
-          brightness: usedarkStyle ? Brightness.dark : Brightness.light,
-        ));
+        result = widget.theme ?? ThemeData();
       }
       return result;
     }();
-    return data.build();
+    return data;
   }
 
   Widget _builder(BuildContext context, Widget? child) {
     if (child == null) return SizedBox();
     final theme = this.theme(context);
-    return Theme(
+    return FluentTheme(
       data: theme,
       child: child,
     );
@@ -418,7 +411,7 @@ class _FluentAppState extends State<FluentApp> {
         actions: widget.actions,
         restorationScopeId: widget.restorationScopeId,
         localizationsDelegates: widget.localizationsDelegates,
-        textStyle: theme.typography?.body,
+        textStyle: theme.typography.body,
       );
     }
 
@@ -452,7 +445,7 @@ class _FluentAppState extends State<FluentApp> {
       pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
         return FluentPageRoute<T>(settings: settings, builder: builder);
       },
-      textStyle: theme.typography?.body,
+      textStyle: theme.typography.body,
     );
   }
 }

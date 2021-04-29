@@ -8,7 +8,7 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  TextStyle? get titleTextStyle => context.theme.typography?.base;
+  TextStyle? get titleTextStyle => context.theme.typography.base;
   bool value = false;
 
   double sliderValue = 5;
@@ -114,7 +114,7 @@ class _InputsPageState extends State<InputsPage> {
                 child: Button(
                   child: Icon(Icons.keyboard_arrow_down),
                   onPressed: () {},
-                  style: ButtonStyle(padding: EdgeInsets.all(6)),
+                  style: ButtonThemeData(padding: EdgeInsets.all(6)),
                 ),
               ),
             ]),
@@ -237,13 +237,13 @@ List<Widget> buildStateColumn(
   List<Widget> boxes,
   List<String> texts,
 ) {
-  debugCheckHasFluentTheme(context);
+  assert(debugCheckHasFluentTheme(context));
   return List.generate(4, (index) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         boxes[index],
-        Text(texts[index], style: context.theme.typography?.body),
+        Text(texts[index], style: context.theme.typography.body),
       ],
     );
   });

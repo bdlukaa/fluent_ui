@@ -1,6 +1,6 @@
 part of 'navigation_panel.dart';
 
-class NavigationPanelStyle with Diagnosticable {
+class NavigationPanelThemeData with Diagnosticable {
   final ButtonState<Color?>? color;
   final Color? highlightColor;
 
@@ -17,7 +17,7 @@ class NavigationPanelStyle with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const NavigationPanelStyle({
+  const NavigationPanelThemeData({
     this.color,
     this.highlightColor,
     this.labelPadding,
@@ -31,31 +31,31 @@ class NavigationPanelStyle with Diagnosticable {
     this.unselectedIconColor,
   });
 
-  factory NavigationPanelStyle.standard(Style style) {
+  factory NavigationPanelThemeData.standard(ThemeData style) {
     final disabledTextStyle = TextStyle(
       color: style.disabledColor,
       fontWeight: FontWeight.bold,
     );
-    return NavigationPanelStyle(
+    return NavigationPanelThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
       color: (state) => uncheckedInputColor(style, state),
       highlightColor: style.accentColor,
       selectedTextStyle: (state) => state.isDisabled
           ? disabledTextStyle
-          : style.typography!.base!.copyWith(color: style.accentColor),
+          : style.typography.base!.copyWith(color: style.accentColor),
       unselectedTextStyle: (state) =>
-          state.isDisabled ? disabledTextStyle : style.typography!.base!,
+          state.isDisabled ? disabledTextStyle : style.typography.base!,
       cursor: buttonCursor,
       labelPadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.only(right: 10, left: 8),
-      selectedIconColor: (_) => style.accentColor!,
+      selectedIconColor: (_) => style.accentColor,
       unselectedIconColor: (_) => null,
     );
   }
 
-  NavigationPanelStyle copyWith(NavigationPanelStyle? style) {
-    return NavigationPanelStyle(
+  NavigationPanelThemeData copyWith(NavigationPanelThemeData? style) {
+    return NavigationPanelThemeData(
       cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,

@@ -1,12 +1,27 @@
 Date format: DD/MM/YYYY
 
+## [1.9.0] - **BREAKING CHANGES** - Theme Update - [30/04/2021]
+
+The whole theme implementation was reworked on this change.
+
+- **BREAKING** Renamed `Theme` to `FluentTheme`
+- **BREAKING** All the properties in `FluentTheme` now can't be null
+- **BREAKING** Renamed all the `Style` occurrences to `ThemeData`
+- **BREAKING** `ThemeData.accentColor` is now an `AccentColor`
+- **FIX** When providing a custom style to a tooltip, it's now correctly applied to `ThemeData.tooltipStyle`
+- **FIX** `debugCheckHasFluentTheme` has now a better error message
+- **FIX** `FluentApp` now doesn't throw an error if no `theme` is provided
+- **FIX** Reworked `Scrollbar` to improve fidelity.
+- **NEW** Color extension methods: `Color.toAccentColor` and `Color.basedOnLuminance`
+- **NEW** `Button.builder`
+
 ## [1.8.1] - [16/04/2021]
 
 - **NEW** In `TabView`, it's now possible use the following shortcuts if `TabView.shortcutsEnabled` is `true` (Follows [this](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view#closing-a-tab)):
   1. `Ctrl + F4` or `Ctrl + W` to close the current tab
   2. `Ctrl + T` to create a new tab
   3. `1-8` to navigate to a tab with the pressed number
-  4. `9` to navigate to the last tab and navigate to  the last tab
+  4. `9` to navigate to the last tab and navigate to the last tab
 - **NEW** `IconButton.autofocus`, `ToggleButton.autofocus`
 - **BREAKING** Renamed all the `semanticsLabel` to `semanticLabel`
 

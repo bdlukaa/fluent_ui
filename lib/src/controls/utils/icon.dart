@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart' as w;
 class Icon extends StatelessWidget {
   /// Creates an icon.
   ///
-  /// The [size] and [color] default to the given value by [Style.iconTheme]
+  /// The [size] and [color] default to the given value by [ThemeData.iconTheme]
   const Icon(
     this.icon, {
     Key? key,
@@ -38,14 +38,14 @@ class Icon extends StatelessWidget {
   ///
   /// Icons occupy a square with width and height equal to size.
   ///
-  /// Defaults to the current [Style.iconTheme] size, if any. If there is no
-  /// [Style.iconTheme], or it does not specify an explicit size, then it defaults to
+  /// Defaults to the current [ThemeData.iconTheme] size, if any. If there is no
+  /// [ThemeData.iconTheme], or it does not specify an explicit size, then it defaults to
   /// 22.0.
   final double? size;
 
   /// The color to use when drawing the icon.
   ///
-  /// Defaults to the current [Style.color] color, if any.
+  /// Defaults to the current [ThemeData.color] color, if any.
   final Color? color;
 
   /// Semantic label for the icon.
@@ -74,36 +74,35 @@ class Icon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
-    final style = context.theme.iconStyle;
+    assert(debugCheckHasFluentTheme(context));
+    final style = IconThemeData.standard(context.theme).copyWith(
+      context.theme.iconTheme,
+    );
     return w.Icon(
       icon,
-      size: size ?? style?.size ?? 22.0,
-      color: color ?? style?.color ?? context.theme.inactiveColor,
+      size: size ?? style.size ?? 22.0,
+      color: color ?? style.color ?? context.theme.inactiveColor,
       semanticLabel: semanticLabel,
       textDirection: textDirection,
     );
   }
 }
 
-class IconStyle with Diagnosticable {
-  /// The color of the icon. If `null`, [Style.inactiveColor] is used
+class IconThemeData with Diagnosticable {
+  /// The color of the icon. If `null`, [ThemeData.inactiveColor] is used
   final Color? color;
 
   /// The size of the icon. If `null`, 22 is used
   final double? size;
 
-  const IconStyle({this.color, this.size});
+  const IconThemeData({this.color, this.size});
 
-  factory IconStyle.standard(Style style) {
-    return IconStyle(
-      size: 22.0,
-      color: style.inactiveColor,
-    );
+  factory IconThemeData.standard(ThemeData style) {
+    return IconThemeData(size: 22.0, color: style.inactiveColor);
   }
 
-  IconStyle copyWith(IconStyle? style) {
-    return IconStyle(
+  IconThemeData copyWith(IconThemeData? style) {
+    return IconThemeData(
       color: style?.color ?? color,
       size: style?.size ?? size,
     );

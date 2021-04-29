@@ -146,7 +146,7 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     Widget picker = HoverButton(
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
@@ -164,14 +164,14 @@ class _TimePickerState extends State<TimePicker> {
       builder: (context, state) {
         final divider = Divider(
           direction: Axis.vertical,
-          style: DividerStyle(
+          style: DividerThemeData(
             margin: (_) => EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration ?? Duration.zero,
-          curve: context.theme.animationCurve ?? Curves.linear,
+          duration: context.theme.fastAnimationDuration,
+          curve: context.theme.animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -285,13 +285,13 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerStyle(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
     );
-    final duration = context.theme.fasterAnimationDuration ?? Duration.zero;
-    final curve = context.theme.animationCurve ?? Curves.linear;
+    final duration = context.theme.fasterAnimationDuration;
+    final curve = context.theme.animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
     return Acrylic(
       height: widget.height,
@@ -308,7 +308,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor?.withOpacity(0.4),
+                  tileColor: context.theme.accentColor.withOpacity(0.4),
                 ),
               ),
             ),
@@ -491,7 +491,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             ]),
           ]),
         ),
-        Divider(style: DividerStyle(margin: (_) => EdgeInsets.zero)),
+        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);

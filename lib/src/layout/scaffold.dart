@@ -18,7 +18,7 @@ class Scaffold extends StatelessWidget {
   final Widget? left;
 
   /// The background color of the scaffold.
-  /// If `null`, [Style.scaffoldBackgroundColor] is used
+  /// If `null`, [ThemeData.scaffoldBackgroundColor] is used
   final Color? backgroundColor;
 
   /// Wheter the body expands or not
@@ -37,13 +37,15 @@ class Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugCheckHasFluentTheme(context);
+    assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
-    final color =
-        backgroundColor ?? style.scaffoldBackgroundColor ?? Colors.white;
+    final color = AccentColor.resolve(
+      backgroundColor ?? style.scaffoldBackgroundColor,
+      context,
+    );
     return AnimatedContainer(
-      duration: style.mediumAnimationDuration ?? Duration.zero,
-      curve: style.animationCurve ?? Curves.linear,
+      duration: style.mediumAnimationDuration,
+      curve: style.animationCurve,
       color: color,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (this.left != null) left!,
