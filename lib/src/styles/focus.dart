@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 
 /// A focus border creates an animated border around a widget
 /// whenever it has the application primary focus.
+///
+/// ![FocusBorder Preview](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/header-reveal-focus.svg)
 class FocusBorder extends StatelessWidget {
   /// Creates a focus border.
   const FocusBorder({
@@ -12,9 +14,10 @@ class FocusBorder extends StatelessWidget {
     this.style,
   }) : super(key: key);
 
+  /// The child that will receive the border
   final Widget child;
 
-  /// Whether the border is focused
+  /// Whether to show the border. Defaults to true
   final bool focused;
 
   /// The style of this focus border. If non-null, this
@@ -22,12 +25,21 @@ class FocusBorder extends StatelessWidget {
   final FocusThemeData? style;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      FlagProperty('focused', value: focused, ifFalse: 'unfocused'),
+    );
+    properties.add(DiagnosticsProperty<FocusThemeData>('style', style));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme.focusTheme.copyWith(this.style);
     return AnimatedContainer(
-      duration: context.theme.fastAnimationDuration,
-      curve: context.theme.animationCurve,
+      duration: style.animationDuration ?? context.theme.fastAnimationDuration,
+      curve: style.animationCurve ?? context.theme.animationCurve,
       decoration: BoxDecoration(
         borderRadius: style.borderRadius,
         border: focused
@@ -82,13 +94,22 @@ class FocusThemeData with Diagnosticable {
   final Color? glowColor;
   final double? glowFactor;
 
+  final Duration? animationDuration;
+  final Curve? animationCurve;
+
   const FocusThemeData({
     this.borderRadius,
     this.primaryBorder,
     this.secondaryBorder,
     this.glowColor,
     this.glowFactor,
+    this.animationDuration,
+    this.animationCurve,
   }) : assert(glowFactor == null || glowFactor >= 0);
+
+  static FocusThemeData of(BuildContext context) {
+    return FluentTheme.of(context).focusTheme;
+  }
 
   factory FocusThemeData.standard({
     required Color primaryBorderColor,

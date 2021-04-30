@@ -1,6 +1,15 @@
 Date format: DD/MM/YYYY
 
-## [1.9.0] - **BREAKING CHANGES** - Theme Update - [30/04/2021]
+## [1.9.1] - [29/04/2021]
+
+- **FIX** Fixed diagnostic tree. (Fixes [#27](https://github.com/bdlukaa/fluent_ui/issues/17))
+- **FIX** | **FIDELITY** `TappableListTile` now changes its color when focused instead of having a border
+- **FIDELITY** Improved `Acrylic`'s blur effect fidelity
+- **FIX** `Acrylic`'s elevation was being applying margin
+- **NEW** `ThemeData.shadowColor`, which is now used by `Acrylic`
+- **NEW** You can now globally disable the acrylic blur effect by changing `Acrylic.acrylicEnabled`
+
+## [1.9.0] - **BREAKING CHANGES** - Theme Update - [29/04/2021]
 
 The whole theme implementation was reworked on this change.
 
@@ -192,7 +201,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
 
 ## [1.2.3] - [19/03/2021]
 
-- **NEW** **EXAMPLE APP** `Settings` screen
+- **NEW** | **EXAMPLE APP** `Settings` screen
 - Improved theme changing
 - **FIX** `FluentApp` doesn't lose its state anymore, possibiliting hot relaod.
 - **NEW** `showDialog` rework:

@@ -10,7 +10,8 @@ const kPickerDiameterRatio = 100.0;
 
 const kPopupHeight = kOneLineTileHeight * 10;
 
-Decoration kPickerBackgroundDecoration(BuildContext context) => BoxDecoration(
+BoxDecoration kPickerBackgroundDecoration(BuildContext context) =>
+    BoxDecoration(
       color: context.theme.navigationPanelBackgroundColor,
       borderRadius: BorderRadius.circular(4.0),
       border: Border.all(

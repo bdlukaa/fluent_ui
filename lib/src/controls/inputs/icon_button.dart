@@ -59,7 +59,8 @@ class IconButton extends StatelessWidget {
     properties.add(DiagnosticsProperty<ButtonThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
   }
 
   @override

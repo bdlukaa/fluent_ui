@@ -95,15 +95,19 @@ class DatePicker extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('selected', selected));
-    properties.add(FlagProperty('showMonth', value: showMonth));
-    properties.add(FlagProperty('showDay', value: showDay));
-    properties.add(FlagProperty('showYear', value: showYear));
+    properties.add(FlagProperty('showMonth',
+        value: showMonth, ifFalse: 'not displaying month'));
+    properties.add(
+        FlagProperty('showDay', value: showDay, ifFalse: 'not displaying day'));
+    properties.add(FlagProperty('showYear',
+        value: showYear, ifFalse: 'not displaying year'));
     properties.add(IntProperty('startYear', startYear ?? selected.year - 100));
     properties.add(IntProperty('endYear', endYear ?? selected.year + 25));
     properties.add(DiagnosticsProperty('contentPadding', contentPadding));
     properties.add(DiagnosticsProperty('cursor', cursor));
     properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
     properties.add(DoubleProperty('popupHeight', popupHeight));
   }
 }

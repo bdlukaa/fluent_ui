@@ -85,7 +85,7 @@ class FlyoutContent extends StatelessWidget {
 
   final Widget child;
 
-  final Decoration? decoration;
+  final BoxDecoration? decoration;
   final EdgeInsetsGeometry? padding;
 
   final Color? shadowColor;
@@ -94,25 +94,23 @@ class FlyoutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return PhysicalModel(
-      color: shadowColor ?? Colors.black,
-      elevation: elevation,
+    final defaultDecoration = BoxDecoration(
+      color: context.theme.navigationPanelBackgroundColor
+          .withOpacity(kDefaultAcrylicOpacity),
       borderRadius: BorderRadius.circular(4.0),
-      child: Acrylic(
-        decoration: decoration ??
-            BoxDecoration(
-              color: context.theme.navigationPanelBackgroundColor,
-              borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(
-                color: context.theme.scaffoldBackgroundColor,
-                width: 0.6,
-              ),
-            ),
-        padding: padding ?? const EdgeInsets.all(12.0),
-        child: DefaultTextStyle(
-          style: context.theme.typography.body ?? TextStyle(),
-          child: child,
-        ),
+      border: Border.all(
+        color: context.theme.inactiveBackgroundColor,
+        width: 0.9,
+      ),
+    );
+    return Acrylic(
+      elevation: elevation,
+      opacity: 1.0,
+      decoration: decoration ?? defaultDecoration,
+      padding: padding ?? const EdgeInsets.all(12.0),
+      child: DefaultTextStyle(
+        style: context.theme.typography.body ?? TextStyle(),
+        child: child,
       ),
     );
   }

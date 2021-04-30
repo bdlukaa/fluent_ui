@@ -172,7 +172,7 @@ class TabView extends StatelessWidget {
 
           /// Ctrl + (number from 1 to 8) navigate to that tab
           /// Ctrl + 9 navigates to the last tab
-          /// TODO(bdlukaa): Ctrl + number. Currently blocked by https://github.com/bdlukaa/fluent_ui/issues/15
+          /// TODO: Ctrl + number. Currently blocked by https://github.com/bdlukaa/fluent_ui/issues/15
           ...Map.fromIterable(
             List.generate(9, (index) => index),
             key: (number) {

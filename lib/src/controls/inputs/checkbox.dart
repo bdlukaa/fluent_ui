@@ -69,11 +69,8 @@ class Checkbox extends StatelessWidget {
     properties.add(DiagnosticsProperty<CheckboxThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      defaultValue: false,
-    ));
+    properties.add(FlagProperty('autofocus',
+        value: autofocus, defaultValue: false, ifFalse: 'manual focus'));
   }
 
   @override

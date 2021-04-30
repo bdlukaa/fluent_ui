@@ -71,7 +71,8 @@ class TimePicker extends StatefulWidget {
     properties.add(DiagnosticsProperty('contentPadding', contentPadding));
     properties.add(DiagnosticsProperty('cursor', cursor));
     properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-    properties.add(FlagProperty('autofocus', value: autofocus));
+    properties.add(
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
     properties.add(StringProperty('hourPlaceholder', hourPlaceholder));
     properties.add(StringProperty('minutePlaceholder', minutePlaceholder));
     properties.add(StringProperty('amText', amText));

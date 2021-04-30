@@ -29,6 +29,8 @@ class _OthersState extends State<Others> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Acrylic(
         margin: EdgeInsets.only(bottom: 10),
+        opacity: 1.0,
+        elevation: 4.0,
         child: Column(children: [
           Text('Surfaces', style: context.theme.typography.subtitle),
           Wrap(spacing: 10, runSpacing: 10, children: [
@@ -48,11 +50,16 @@ class _OthersState extends State<Others> {
                 child: Text(
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
               ),
-              child: Button(
-                child: Text('Open flyout'),
-                onPressed: () {
-                  flyoutController.open = true;
-                },
+              child: FluentTheme(
+                data: context.theme.copyWith(
+                  focusTheme: FocusThemeData(primaryBorder: BorderSide.none),
+                ),
+                child: Button(
+                  child: Text('Open flyout'),
+                  onPressed: () {
+                    flyoutController.open = true;
+                  },
+                ),
               ),
             ),
           ]),
@@ -98,7 +105,7 @@ class _OthersState extends State<Others> {
             title: Text('TappableListTile Title'),
             subtitle: Text('TappableListTile Subtitle'),
             onTap: () {
-              print('hehehe');
+              print('tapped tappable list tile');
             },
           ),
         ),
@@ -186,6 +193,26 @@ class _OthersState extends State<Others> {
             (index) => Container(color: Colors.accentColors[index]),
           ),
         ),
+      ),
+      SizedBox(
+        height: 500,
+        width: 500,
+        child: Stack(children: [
+          Positioned.fill(child: FlutterLogo()),
+          Align(
+            alignment: Alignment.center,
+            child: Acrylic(
+              width: 250.0,
+              height: 200.0,
+              child: Center(
+                child: Text(
+                  'A C R Y L I C',
+                  style: FluentTheme.of(context).typography.subheader,
+                ),
+              ),
+            ),
+          ),
+        ]),
       ),
     ]);
   }

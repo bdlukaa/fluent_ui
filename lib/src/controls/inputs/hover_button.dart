@@ -134,6 +134,7 @@ class _HoverButtonState extends State<HoverButton> {
 
   bool _hovering = false;
   bool _pressing = false;
+  bool _focused = false;
 
   bool get enabled =>
       widget.onPressed != null ||
@@ -150,7 +151,7 @@ class _HoverButtonState extends State<HoverButton> {
           ? ButtonStates.pressing
           : _hovering
               ? ButtonStates.hovering
-              : _showHighlight
+              : _focused
                   ? ButtonStates.focused
                   : ButtonStates.none;
 
@@ -163,8 +164,6 @@ class _HoverButtonState extends State<HoverButton> {
       node.unfocus();
     setState(f);
   }
-
-  bool _showHighlight = false;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +208,7 @@ class _HoverButtonState extends State<HoverButton> {
         autofocus: widget.autofocus,
         enabled: enabled,
         actions: _actionMap,
-        onShowFocusHighlight: (v) => setState(() => _showHighlight = v),
+        onShowFocusHighlight: (v) => setState(() => _focused = v),
         child: w,
       );
     if (widget.semanticLabel != null) {

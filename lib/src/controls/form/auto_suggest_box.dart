@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+// TODO: Navigate through items using keyboard (https://github.com/bdlukaa/fluent_ui/issues/19)
+
 typedef AutoSuggestBoxItemBuilder<T> = Widget Function(BuildContext, T);
 typedef AutoSuggestBoxItemSorter<T> = List<T> Function(String, List<T>);
 typedef AutoSuggestBoxTextBoxBuilder<T> = Widget Function(
@@ -10,7 +12,16 @@ typedef AutoSuggestBoxTextBoxBuilder<T> = Widget Function(
   GlobalKey key,
 );
 
+/// An AutoSuggestBox provides a list of suggestions for a user to select
+/// from as they type.
+///
+/// ![AutoSuggestBox Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_expanded01.png)
+///
+/// See also:
+///   - [TextBox]
+///   - [ComboBox]
 class AutoSuggestBox<T> extends StatefulWidget {
+  /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
     Key? key,
     required this.controller,
@@ -22,13 +33,31 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.onSelected,
   }) : super(key: key);
 
+  /// The controller used to have control over what to show on
+  /// the [TextBox].
   final TextEditingController controller;
+
+  /// The list of items to display to the user to pick. If empty,
+  /// [noResultsFound] is used.
   final List<T> items;
+
+  /// The item builder to build [items]. If null, uses a default
+  /// internal builder
   final AutoSuggestBoxItemBuilder<T>? itemBuilder;
+
+  /// Sort the items to show. [defaultItemSorter] is used by default
   final AutoSuggestBoxItemSorter sorter;
+
+  /// Build the text box. [defaultTextBoxBuilder] is used by default
   final AutoSuggestBoxTextBoxBuilder<T> textBoxBuilder;
+
+  /// The widget to show when the text the user typed doesn't match with
+  /// [items]s. [defaultNoResultsFound] is used by default.
+  ///
+  /// ![No results found Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_noresults.png)
   final WidgetBuilder noResultsFound;
 
+  /// Called when the user selected a value.
   final ValueChanged<T>? onSelected;
 
   @override
@@ -51,8 +80,10 @@ class AutoSuggestBox<T> extends StatefulWidget {
     }).toList();
   }
 
+  /// Creates a 'No results found' tile.
+  ///
+  /// ![No results found Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_noresults.png)
   static Widget defaultNoResultsFound(context) {
-    assert(debugCheckHasFluentTheme(context));
     return ListTile(
       title: DefaultTextStyle(
         style: TextStyle(fontWeight: FontWeight.normal),
@@ -125,19 +156,20 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       widget.itemBuilder ?? _defaultItemBuilder;
 
   Widget _defaultItemBuilder(BuildContext context, T value) {
-    assert(debugCheckHasFluentTheme(context));
     return TappableListTile(
       onTap: () {
         widget.controller.text = '$value';
         widget.onSelected?.call(value);
         focusNode.unfocus();
       },
-      title: Text('$value', style: context.theme.typography.body),
+      title: Text('$value', style: context.maybeTheme?.typography.body),
     );
   }
 
   void _insertOverlay() {
     _entry = OverlayEntry(builder: (context) {
+      final context = _textBoxKey.currentContext;
+      if (context == null) return SizedBox.shrink();
       final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
       return Positioned(
         width: box.size.width,

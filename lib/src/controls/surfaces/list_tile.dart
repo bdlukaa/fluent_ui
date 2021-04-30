@@ -47,7 +47,11 @@ class ListTile extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(ColorProperty('tileColor', tileColor));
-    properties.add(FlagProperty('isThreeLine', value: isThreeLine));
+    properties.add(FlagProperty(
+      'isThreeLine',
+      value: isThreeLine,
+      ifFalse: isTwoLine ? 'two lines' : 'one line',
+    ));
     properties.add(DiagnosticsProperty('shape', shape));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
       'contentPadding',
@@ -143,6 +147,7 @@ class TappableListTile extends StatelessWidget {
       'autofocus',
       value: autofocus,
       defaultValue: false,
+      ifFalse: 'manual focus',
     ));
     properties.add(ObjectFlagProperty.has('focusNode', focusNode));
   }
@@ -157,20 +162,20 @@ class TappableListTile extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, state) {
-        final Color tileColor =
-            this.tileColor?.call(state) ?? uncheckedInputColor(style, state);
-        Widget child = ListTile(
+        final Color _tileColor = () {
+          if (tileColor != null)
+            return tileColor!(state);
+          else if (state.isFocused) return style.accentColor.dark;
+          return uncheckedInputColor(style, state);
+        }();
+        return ListTile(
           contentPadding: contentPadding,
           leading: leading,
           title: title,
           subtitle: subtitle,
           isThreeLine: isThreeLine,
-          tileColor: tileColor,
+          tileColor: _tileColor,
           shape: shape?.call(state),
-        );
-        return FocusBorder(
-          child: child,
-          focused: state.isFocused,
         );
       },
     );

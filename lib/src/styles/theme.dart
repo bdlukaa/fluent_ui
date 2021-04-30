@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as m;
 
 class FluentTheme extends InheritedWidget {
   const FluentTheme({Key? key, required this.data, required this.child})
@@ -46,6 +45,9 @@ class ThemeData with Diagnosticable {
   final Color inactiveColor;
   final Color inactiveBackgroundColor;
   final Color disabledColor;
+  final Color shadowColor;
+  final Color scaffoldBackgroundColor;
+  final Color navigationPanelBackgroundColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -54,9 +56,6 @@ class ThemeData with Diagnosticable {
   final Curve animationCurve;
 
   final Brightness brightness;
-
-  final Color scaffoldBackgroundColor;
-  final Color navigationPanelBackgroundColor;
 
   final NavigationPanelThemeData navigationPanelTheme;
   final CheckboxThemeData checkboxTheme;
@@ -82,6 +81,7 @@ class ThemeData with Diagnosticable {
     required this.inactiveColor,
     required this.inactiveBackgroundColor,
     required this.disabledColor,
+    required this.shadowColor,
     required this.fasterAnimationDuration,
     required this.fastAnimationDuration,
     required this.mediumAnimationDuration,
@@ -125,6 +125,7 @@ class ThemeData with Diagnosticable {
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? navigationPanelBackgroundColor,
+    Color? shadowColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -163,6 +164,10 @@ class ThemeData with Diagnosticable {
       'dark': Color(0xFF292929),
     }).resolveFromBrightness(brightness);
     disabledColor ??= Colors.grey[100]!.withOpacity(0.6);
+    shadowColor ??= AccentColor('normal', {
+      'normal': Colors.black,
+      'dark': Colors.grey[130]!,
+    }).resolveFromBrightness(brightness);
     scaffoldBackgroundColor ??= AccentColor('normal', {
       'normal': Colors.white,
       'dark': Colors.black,
@@ -207,6 +212,7 @@ class ThemeData with Diagnosticable {
       disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       navigationPanelBackgroundColor: navigationPanelBackgroundColor,
+      shadowColor: shadowColor,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
       dialogTheme: dialogTheme,
@@ -236,6 +242,7 @@ class ThemeData with Diagnosticable {
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? navigationPanelBackgroundColor,
+    Color? shadowColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -263,6 +270,7 @@ class ThemeData with Diagnosticable {
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
+      shadowColor: shadowColor ?? this.shadowColor,
       inactiveBackgroundColor:
           inactiveBackgroundColor ?? this.inactiveBackgroundColor,
       disabledColor: disabledColor ?? this.disabledColor,

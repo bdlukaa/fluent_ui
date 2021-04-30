@@ -3,6 +3,10 @@ import 'dart:ui';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0);
+
+const double kDefaultAcrylicOpacity = 0.75;
+
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help
 /// establish a visual hierarchy.
@@ -16,19 +20,20 @@ class Acrylic extends StatelessWidget {
     this.decoration,
     this.filter,
     this.child,
-    this.opacity = 0.8,
+    this.opacity = kDefaultAcrylicOpacity,
     this.width,
     this.height,
     this.padding,
     this.margin,
     this.shadowColor,
-    this.elevation,
-    this.enabled = true,
-  })  : assert(
-          elevation == null || elevation >= 0,
-          'The elevation can NOT be negative',
-        ),
+    this.elevation = 0.0,
+    this.enabled,
+  })  : assert(elevation >= 0, 'The elevation can NOT be negative'),
         assert(opacity >= 0, 'The opacity can NOT be negative'),
+        assert(
+          elevation == 0.0 || opacity == 1.0,
+          'You can NOT provide both opacity and elevation',
+        ),
         super(key: key);
 
   /// The color to fill the background of the box
@@ -40,13 +45,15 @@ class Acrylic extends StatelessWidget {
   ///
   /// The [child] is not clipped to the decoration. To clip a child to the shape
   /// of a particular [ShapeDecoration], consider using a [ClipPath] widget.
-  final Decoration? decoration;
+  final BoxDecoration? decoration;
 
   /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,
   /// this has no effect
   final double opacity;
 
-  /// The image filter to apply to the existing painted content before painting the child.
+  /// The image filter to apply to the existing painted content before painting the
+  /// child. If null, [kDefaultAcrylicFilter] is used. If [enabled] if `false`, this
+  /// has no effect.
   ///
   /// For example, consider using [ImageFilter.blur] to create a backdrop blur effect.
   final ImageFilter? filter;
@@ -73,13 +80,19 @@ class Acrylic extends StatelessWidget {
   /// The z-coordinate relative to the parent at which to place this physical object.
   ///
   /// The value is non-negative.
-  final double? elevation;
+  final double elevation;
 
   /// Whether the acrylic effect is enabled. This is usually disabled
-  /// when the system is in battery-save mode.
+  /// when the system is in battery-save mode. If null, [acrylicEnabled]
+  /// is used.
   ///
   /// If disabled, there will be no backdrop effect nor elevation.
-  final bool enabled;
+  final bool? enabled;
+
+  /// Whether the acrylic blur effect is enabled. This value is used globally,
+  /// but can be overwritten using the [enabled] property. This is usually disabled
+  /// when the system is in battery-save mode.
+  static bool acrylicEnabled = false;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -96,6 +109,9 @@ class Acrylic extends StatelessWidget {
     properties.add(DoubleProperty('elevation', elevation));
   }
 
+  /// Whether this acrylic widget is enabled or not.
+  bool get isEnabled => enabled ?? Acrylic.acrylicEnabled;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -107,8 +123,6 @@ class Acrylic extends StatelessWidget {
     Widget result = AnimatedContainer(
       duration: style.fastAnimationDuration,
       curve: style.animationCurve,
-      padding: margin ?? EdgeInsets.zero,
-      margin: EdgeInsets.zero,
       width: width,
       height: height,
       child: () {
@@ -116,27 +130,41 @@ class Acrylic extends StatelessWidget {
           padding: padding,
           duration: style.fastAnimationDuration,
           curve: style.animationCurve,
-          decoration: decoration ??
-              BoxDecoration(color: color.withOpacity(enabled ? opacity : 1.0)),
+          decoration: () {
+            if (decoration != null) {
+              Color? color = decoration!.color ?? this.color;
+              if (color != null) color = color.withOpacity(opacity);
+              return decoration!.copyWith(color: color);
+            }
+            return BoxDecoration(color: color.withOpacity(opacity));
+          }(),
           child: child,
         );
-        if (enabled)
+        if (isEnabled)
           return ClipRect(
             child: BackdropFilter(
-              filter: filter ?? ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              filter: filter ?? kDefaultAcrylicFilter,
               child: container,
             ),
           );
         return container;
       }(),
     );
-    if (enabled && elevation != null && elevation! > 0) {
+    if (isEnabled && elevation > 0) {
       result = PhysicalModel(
-        color: shadowColor ?? Colors.black,
-        elevation: elevation!,
+        color: Colors.transparent,
+        shadowColor: shadowColor ?? context.theme.shadowColor,
+        borderRadius: () {
+          final radius = decoration?.borderRadius;
+          if (radius == null) return null;
+          if (radius is BorderRadius) return radius;
+          return null;
+        }(),
+        elevation: elevation,
         child: result,
       );
     }
+    if (margin != null) result = Padding(padding: margin!, child: result);
     return result;
   }
 }

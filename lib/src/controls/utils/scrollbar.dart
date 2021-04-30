@@ -3,8 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
-// TODO: Improve scrollbar (Currently blocked by https://github.com/flutter/flutter/issues/80370)
-// - Navigation arrows
+// TODO: Add navigation arrows to scrollbar (Currently blocked by https://github.com/flutter/flutter/issues/80370)
 
 /// {@macro flutter.widgets.Scrollbar}
 class Scrollbar extends RawScrollbar {
