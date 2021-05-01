@@ -163,6 +163,7 @@ class NavigationPanelItemTile extends StatelessWidget {
             child: FocusBorder(
               child: child,
               focused: state.isFocused,
+              renderOutside: false,
             ),
           );
         },

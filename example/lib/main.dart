@@ -47,15 +47,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {'/': (_) => MyHomePage()},
           theme: ThemeData(
-            accentColor: AccentColor('normal', {
-              'darkest': SystemTheme.accentInstance.darkest,
-              'darker': SystemTheme.accentInstance.darker,
-              'dark': SystemTheme.accentInstance.dark,
-              'normal': SystemTheme.accentInstance.accent,
-              'light': SystemTheme.accentInstance.light,
-              'lighter': SystemTheme.accentInstance.lighter,
-              'lightest': SystemTheme.accentInstance.lightest,
-            }),
+            accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
                 ? darkMode
                     ? Brightness.dark
@@ -87,6 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final otherController = ScrollController();
   final colorsController = ScrollController();
+  final settingsController = ScrollController();
+
+  @override
+  void dispose() {
+    otherController.dispose();
+    colorsController.dispose();
+    settingsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +150,14 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ColorsPage(),
           ),
         ),
-        _Panel(title: 'Settings', child: Settings()),
+        Scrollbar(
+          controller: settingsController,
+          child: _Panel(
+            title: 'Settings',
+            controller: settingsController,
+            child: Settings(),
+          ),
+        ),
       ]),
     );
   }

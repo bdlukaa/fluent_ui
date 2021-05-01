@@ -199,7 +199,7 @@ class InfoBarThemeData with Diagnosticable {
           case InfoBarSeverity.success:
             return Icons.check_circle_outlined;
           case InfoBarSeverity.error:
-            return Icons.close;
+            return Icons.cancel_outlined;
         }
       },
       iconColor: (severity) {

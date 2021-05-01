@@ -1,7 +1,20 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
+
+const List<String> accentColorNames = [
+  'System',
+  'Yellow',
+  'Orange',
+  'Red',
+  'Magenta',
+  'Purple',
+  'Blue',
+  'Teal',
+  'Green',
+];
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -9,6 +22,32 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
+    final tooltipThemeData = TooltipThemeData(decoration: () {
+      final radius = BorderRadius.zero;
+      final shadow = [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          offset: Offset(1, 1),
+          blurRadius: 10.0,
+        ),
+      ];
+      final border = Border.all(color: Colors.grey[100]!, width: 0.5);
+      if (context.theme.brightness == Brightness.light) {
+        return BoxDecoration(
+          color: Colors.white,
+          borderRadius: radius,
+          border: border,
+          boxShadow: shadow,
+        );
+      } else {
+        return BoxDecoration(
+          color: Colors.grey,
+          borderRadius: radius,
+          border: border,
+          boxShadow: shadow,
+        );
+      }
+    }());
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Theme mode', style: context.theme.typography.subheader),
       ...List.generate(ThemeMode.values.length, (index) {
@@ -23,10 +62,53 @@ class Settings extends StatelessWidget {
           title: Text('$mode', style: TextStyle(fontWeight: FontWeight.normal)),
         );
       }),
-      Text(
-        'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on desktop yet.\nWe must wait until its beta release',
-        style: context.theme.typography.caption,
-      ),
+
+      /// MediaQuery.of(context).brightness only doesn't work on windows
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
+        Text(
+          'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on windows yet.'
+          '\nWe must wait until Flutter Desktop stable release',
+          style: context.theme.typography.caption,
+        ),
+      Text('Accent Color', style: context.theme.typography.subheader),
+      Wrap(children: [
+        Tooltip(
+          style: tooltipThemeData,
+          child: _buildColorBlock(appTheme, systemAccentColor),
+          message: accentColorNames[0],
+        ),
+        ...List.generate(Colors.accentColors.length, (index) {
+          final color = Colors.accentColors[index];
+          return Tooltip(
+            style: tooltipThemeData,
+            message: accentColorNames[index + 1],
+            child: _buildColorBlock(appTheme, color),
+          );
+        }),
+      ]),
     ]);
+  }
+
+  Widget _buildColorBlock(AppTheme appTheme, AccentColor color) {
+    return Button(
+      onPressed: () {
+        appTheme.color = color;
+      },
+      style: ButtonThemeData(
+        padding: EdgeInsets.zero,
+        margin: EdgeInsets.all(2.0),
+      ),
+      builder: (context, state) {
+        return Container(
+          height: 40,
+          width: 40,
+          color: color,
+          alignment: Alignment.center,
+          child: appTheme.color == color
+              ? Icon(Icons.check, color: color.basedOnLuminance())
+              : null,
+        );
+      },
+    );
   }
 }

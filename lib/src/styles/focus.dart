@@ -12,6 +12,7 @@ class FocusBorder extends StatelessWidget {
     required this.child,
     this.focused = true,
     this.style,
+    this.renderOutside,
   }) : super(key: key);
 
   /// The child that will receive the border
@@ -23,6 +24,11 @@ class FocusBorder extends StatelessWidget {
   /// The style of this focus border. If non-null, this
   /// is mescled with [ThemeData.focusThemeData]
   final FocusThemeData? style;
+
+  /// Whether the border should be rendered outside of the
+  /// box or not. If null, [FocusThemeData.renderOutside]
+  /// is used.
+  final bool? renderOutside;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -37,13 +43,20 @@ class FocusBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme.focusTheme.copyWith(this.style);
-    return Stack(children: [
+    final renderOutside = this.renderOutside ?? style.renderOutside ?? true;
+    final double borderWidth =
+        (style.primaryBorder?.width ?? 0) + (style.secondaryBorder?.width ?? 0);
+    final clipBehavior = renderOutside ? Clip.none : Clip.hardEdge;
+    return Stack(clipBehavior: clipBehavior, children: [
       child,
       Positioned.fill(
+        left: renderOutside ? -borderWidth : 0,
+        right: renderOutside ? -borderWidth : 0,
+        top: renderOutside ? -borderWidth : 0,
+        bottom: renderOutside ? -borderWidth : 0,
         child: AnimatedContainer(
-          duration:
-              style.animationDuration ?? context.theme.fastAnimationDuration,
-          curve: style.animationCurve ?? context.theme.animationCurve,
+          duration: style.animationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? Curves.linear,
           decoration: BoxDecoration(
             borderRadius: style.borderRadius,
             border: focused
@@ -101,6 +114,7 @@ class FocusThemeData with Diagnosticable {
   final BorderSide? secondaryBorder;
   final Color? glowColor;
   final double? glowFactor;
+  final bool? renderOutside;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
@@ -111,6 +125,7 @@ class FocusThemeData with Diagnosticable {
     this.secondaryBorder,
     this.glowColor,
     this.glowFactor,
+    this.renderOutside,
     this.animationDuration,
     this.animationCurve,
   }) : assert(glowFactor == null || glowFactor >= 0);
@@ -130,6 +145,7 @@ class FocusThemeData with Diagnosticable {
       secondaryBorder: BorderSide(width: 1, color: secondaryBorderColor),
       glowColor: glowColor,
       glowFactor: 0.0,
+      renderOutside: true,
     );
   }
 
@@ -141,6 +157,7 @@ class FocusThemeData with Diagnosticable {
       borderRadius: other.borderRadius ?? borderRadius,
       glowFactor: other.glowFactor ?? glowFactor,
       glowColor: other.glowColor ?? glowColor,
+      renderOutside: other.renderOutside ?? renderOutside,
     );
   }
 
@@ -167,6 +184,12 @@ class FocusThemeData with Diagnosticable {
       'glowColor',
       glowColor,
       defaultValue: Colors.transparent,
+    ));
+    properties.add(FlagProperty(
+      'renderOutside',
+      value: renderOutside,
+      defaultValue: true,
+      ifFalse: 'renderInside',
     ));
   }
 }

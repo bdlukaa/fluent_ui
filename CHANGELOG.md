@@ -1,5 +1,16 @@
 Date format: DD/MM/YYYY
 
+## [1.9.3] - [01/05/2021]
+
+- **NEW** `FocusBorder.renderOutside`. With this property, you can control if the FocusBorder will be rendered over the widget or outside of it.
+- **FIX** Fixed `RadioButton`s border when focused
+- **FIX** `Color.resolve` now doesn't throw a stack overflow error.
+- **BREAKING** Removed `Color.resolveFromBrightness`. This is only available on `AccentColor`
+- **EXAMPLE APP** Hability to change the app accent color
+- **NEW** `darkest` and `lightest` colors variants in `AccentColor`
+- **FIX** Fixed `InfoBar`'s error icon. It now uses `Icons.cancel_outlined` instead of `Icons.close`
+- **NEW** `NavigationPanel` now has a `Scrollbar` and the `bottom` property is now properly styled if selected
+
 ## [1.9.2] - [30/04/2021]
 
 - **FIX** `TabView` tabs can now be reordered (Fixes [#10](https://github.com/bdlukaa/fluent_ui/issues/10))

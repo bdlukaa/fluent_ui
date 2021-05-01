@@ -13,6 +13,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
     this.menu,
     this.bottom,
     this.useAcrylic = true,
+    required this.scrollController,
   }) : super(key: key);
 
   final void Function()? onMenuTapped;
@@ -25,13 +26,14 @@ class CompactOpenNavigationPanel extends StatelessWidget {
   final NavigationPanelItem? bottom;
 
   final bool useAcrylic;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final itens = ([...this.items]
       ..removeWhere((e) => e.runtimeType != NavigationPanelItem));
-    if (compact)
+    if (compact) {
       return Acrylic(
         enabled: useAcrylic,
         width: kCompactNavigationPanelWidth,
@@ -93,7 +95,7 @@ class CompactOpenNavigationPanel extends StatelessWidget {
             ),
         ]),
       );
-    else
+    } else {
       return Acrylic(
         enabled: useAcrylic,
         width: kOpenNavigationPanelWidth,
@@ -108,56 +110,60 @@ class CompactOpenNavigationPanel extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: ListView(children: [
-              ...List.generate(items.length, (index) {
-                final item = items[index];
-                // Use this to avoid overflow when animation is happening
-                return () {
-                  if (item is NavigationPanelSectionHeader)
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8,
-                      ),
-                      child: AnimatedDefaultTextStyle(
-                        style: context.theme.typography.base ??
-                            const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                        duration: context.theme.mediumAnimationDuration,
-                        curve: context.theme.animationCurve,
-                        child: item.label!,
-                        softWrap: false,
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                      ),
+            child: Scrollbar(
+              controller: scrollController,
+              child: ListView(controller: scrollController, children: [
+                ...List.generate(items.length, (index) {
+                  final item = items[index];
+                  // Use this to avoid overflow when animation is happening
+                  return () {
+                    if (item is NavigationPanelSectionHeader)
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8,
+                        ),
+                        child: AnimatedDefaultTextStyle(
+                          style: context.theme.typography.base ??
+                              const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                          duration: context.theme.mediumAnimationDuration,
+                          curve: context.theme.animationCurve,
+                          child: item.label!,
+                          softWrap: false,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                        ),
+                      );
+                    else if (item is NavigationPanelTileSeparator) {
+                      return Divider();
+                    }
+                    final index = itens.indexOf(item);
+                    return NavigationPanelItemTile(
+                      item: item,
+                      selected: currentIndex == index,
+                      onTap: item.onTapped,
+                      compact: false,
                     );
-                  else if (item is NavigationPanelTileSeparator) {
-                    return Divider();
-                  }
-                  final index = itens.indexOf(item);
-                  return NavigationPanelItemTile(
-                    item: item,
-                    selected: currentIndex == index,
-                    onTap: item.onTapped,
-                    compact: false,
-                  );
-                }();
-              }),
-            ]),
+                  }();
+                }),
+              ]),
+            ),
           ),
           if (bottom != null)
             Padding(
               padding: EdgeInsets.only(bottom: 4),
               child: NavigationPanelItemTile(
                 item: bottom!,
-                selected: false,
+                selected: currentIndex == itens.length,
                 compact: false,
                 onTap: bottom!.onTapped,
               ),
             ),
         ]),
       );
+    }
   }
 }

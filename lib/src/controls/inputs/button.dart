@@ -192,9 +192,8 @@ class _ButtonState extends State<Button> {
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
-          duration:
-              style.animationDuration ?? context.theme.fastAnimationDuration,
-          curve: style.animationCurve ?? context.theme.animationCurve,
+          duration: style.animationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
           decoration: style.decoration!(state),
           child: DefaultTextStyle(

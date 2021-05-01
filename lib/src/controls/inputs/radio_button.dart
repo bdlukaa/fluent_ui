@@ -80,7 +80,8 @@ class RadioButton extends StatelessWidget {
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         Widget child = AnimatedContainer(
-          duration: style.animationDuration ?? Duration(milliseconds: 300),
+          duration: style.animationDuration ?? Duration.zero,
+          curve: style.animationCurve ?? Curves.linear,
           height: 20,
           width: 20,
           decoration: checked
@@ -133,9 +134,11 @@ class RadioButtonThemeData with Diagnosticable {
       uncheckedDecoration: (state) => BoxDecoration(
         color: ButtonThemeData.uncheckedInputColor(style, state),
         border: Border.all(
-          style: state.isNone ? BorderStyle.solid : BorderStyle.none,
+          style: state.isNone || state.isFocused
+              ? BorderStyle.solid
+              : BorderStyle.none,
           width: 1,
-          color: state.isNone
+          color: state.isNone || state.isFocused
               ? style.disabledColor
               : ButtonThemeData.uncheckedInputColor(style, state),
         ),

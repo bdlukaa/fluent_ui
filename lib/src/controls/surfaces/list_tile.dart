@@ -163,9 +163,11 @@ class TappableListTile extends StatelessWidget {
       autofocus: autofocus,
       builder: (context, state) {
         final Color _tileColor = () {
-          if (tileColor != null)
+          if (tileColor != null) {
             return tileColor!(state);
-          else if (state.isFocused) return style.accentColor.dark;
+          } else if (state.isFocused) {
+            return style.accentColor.resolve(context);
+          }
           return ButtonThemeData.uncheckedInputColor(style, state);
         }();
         return ListTile(

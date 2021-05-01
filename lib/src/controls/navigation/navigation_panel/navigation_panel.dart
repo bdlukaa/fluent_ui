@@ -47,12 +47,19 @@ class NavigationPanel extends StatefulWidget {
 }
 
 class _NavigationPanelState extends State<NavigationPanel> {
+  final scrollController = ScrollController();
   NavigationPanelDisplayMode? displayMode;
 
   @override
   void initState() {
     super.initState();
     if (widget.displayMode != null) displayMode = widget.displayMode!;
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,6 +81,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
         case NavigationPanelDisplayMode.compact:
         case NavigationPanelDisplayMode.open:
           return CompactOpenNavigationPanel(
+            scrollController: scrollController,
             useAcrylic: widget.useAcrylic,
             compact: displayMode == NavigationPanelDisplayMode.compact,
             currentIndex: widget.currentIndex,

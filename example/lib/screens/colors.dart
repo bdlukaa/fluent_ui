@@ -42,7 +42,8 @@ class ColorsPage extends StatelessWidget {
             buildColorBlock('Error 1', Colors.errorPrimaryColor),
             buildColorBlock('Error 2', Colors.errorSecondaryColor),
             buildColorBlock('Success 1', Colors.successPrimaryColor),
-            buildColorBlock('Success 2', Colors.successSecondaryColor),
+            buildColorBlock(
+                'Success 2', Colors.successSecondaryColor.toAccentColor()),
           ],
         ),
       ),

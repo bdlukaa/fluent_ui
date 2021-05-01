@@ -69,67 +69,83 @@ class Colors {
   static const Color white = Color(0xFFFFFFFF);
 
   static final AccentColor yellow = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFFfbaa00),
-    'dark': Color(0xFFfabb00),
-    'normal': Color(0xFFfff100),
-    'light': Color(0xFFffe100),
-    'lighter': Color(0xFFffff00),
+    'darkest': Color(0xfff9a825),
+    'darker': Color(0xfffbc02d),
+    'dark': Color(0xfffdd835),
+    'normal': Color(0xffffeb3b),
+    'light': Color(0xffffee58),
+    'lighter': Color(0xfffff176),
+    'lightest': Color(0xfffff59d),
   });
 
   static final AccentColor orange = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFFda3b01),
-    'dark': Color(0xFFca5010),
-    'normal': Color(0xFFf7630c),
-    'light': Color(0xFFff8c00),
-    'lighter': Color(0xFFffb900)
+    'darkest': Color(0xff993d07),
+    'darker': Color(0xffac4508),
+    'dark': Color(0xffd1540a),
+    'normal': Color(0xfff7630c),
+    'light': Color(0xfff87a30),
+    'lighter': Color(0xfff99154),
+    'lightest': Color(0xfffa9e68),
   });
 
   static final AccentColor red = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFFa4262c),
-    'dark': Color(0xFFd13438),
-    'normal': Color(0xFFe81123),
-    'light': Color(0xFFff3434),
-    'lighter': Color(0xFFef6950),
+    'darkest': Color(0xff8f0a15),
+    'darker': Color(0xffa20b18),
+    'dark': Color(0xffb90d1c),
+    'normal': Color(0xffe81123),
+    'light': Color(0xffec404f),
+    'lighter': Color(0xffee5865),
+    'lightest': Color(0xfff06b76),
   });
 
   static final AccentColor magenta = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFF5c005c),
-    'dark': Color(0xFF9a0089),
-    'normal': Color(0xFFb4009e),
-    'light': Color(0xFFc239b3),
-    'lighter': Color(0xFFe3008c),
+    'darkest': Color(0xff6f0061),
+    'darker': Color(0xff7e006e),
+    'dark': Color(0xff90007e),
+    'normal': Color(0xffb4009e),
+    'light': Color(0xffc333b1),
+    'lighter': Color(0xffca4cbb),
+    'lightest': Color(0xffd060c2),
   });
 
   static final AccentColor purple = AccentColor('normal', <String, Color>{
-    'darker': Color(0xFF9a0089),
-    'dark': Color(0xFF881798),
+    'darkest': Color(0xff472f68),
+    'darker': Color(0xff513576),
+    'dark': Color(0xff644293),
     'normal': Color(0xFF744da9),
-    'light': Color(0xFF8764b8),
-    'lighter': Color(0xFF6b69d6),
+    'light': Color(0xff8664b4),
+    'lighter': Color(0xff9d82c2),
+    'lightest': Color(0xffa890c9),
   });
 
   static final AccentColor blue = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFF002050),
-    'dark': Color(0xFF00188f),
-    'normal': Color(0xFF004e8c),
-    'light': Color(0xFF0078d4),
-    'lighter': Color(0xFF00bcf2),
+    'darkest': Color(0xff004a83),
+    'darker': Color(0xff005494),
+    'dark': Color(0xff0066b4),
+    'normal': Color(0xff0078d4),
+    'light': Color(0xff268cda),
+    'lighter': Color(0xff4ca0e0),
+    'lightest': Color(0xff60abe4),
   });
 
   static final AccentColor teal = AccentColor('normal', <String, Color>{
-    'darkest': Color(0xFF004b50),
-    'dark': Color(0xFF008272),
-    'normal': Color(0xFF00b294),
-    'light': Color(0xFF00b763),
-    'lighter': Color(0xFF00cc6a),
+    'darkest': Color(0xff006e5b),
+    'darker': Color(0xff007c67),
+    'dark': Color(0xff00977d),
+    'normal': Color(0xff00b294),
+    'light': Color(0xff26bda4),
+    'lighter': Color(0xff4cc9b4),
+    'lightest': Color(0xff60cfbc),
   });
 
   static final AccentColor green = AccentColor('normal', <String, Color>{
-    'darker': Color(0xFF004b1c),
-    'dark': Color(0xFF0b6a0b),
-    'normal': Color(0xFF107c10),
-    'light': Color(0xFF8cbd18),
-    'lighter': Color(0xFFbad80a),
+    'darkest': Color(0xff094c09),
+    'darker': Color(0xff0c5d0c),
+    'dark': Color(0xff0e6f0e),
+    'normal': Color(0xff107c10),
+    'light': Color(0xff278927),
+    'lighter': Color(0xff4b9c4b),
+    'lightest': Color(0xff6aad6a),
   });
 
   static const Color warningPrimaryColor = Color(0xFFd83b01);
@@ -187,9 +203,12 @@ class AccentColor extends ColorSwatch<String> {
       : super(swatch[primary]!.value, swatch);
 
   /// The darkest shade of the color.
+  Color get darkest => swatch['darkest'] ?? darker;
+
+  /// The darker shade of the color.
   ///
   /// Usually used for shadows
-  Color get darkest => swatch['darkest'] ?? dark;
+  Color get darker => swatch['darker'] ?? dark;
 
   /// The dark shade of the color.
   ///
@@ -208,6 +227,9 @@ class AccentColor extends ColorSwatch<String> {
   ///
   /// Usually used for shadows
   Color get lighter => swatch['lighter'] ?? light;
+
+  /// The lighest shade of the color
+  Color get lightest => swatch['lightest'] ?? lighter;
 
   static Color resolve(Color resolvable, BuildContext context) {
     return (resolvable is AccentColor)
@@ -242,16 +264,25 @@ extension colorExtension on Color {
   ///   - [lerpWith]
   ///   - [Colors.black]
   ///   - [Color.white]
-  AccentColor toAccentColor() {
-    if (this is AccentColor) {
-      return this as AccentColor;
-    }
+  AccentColor toAccentColor({
+    double darkestFactor = 0.38,
+    double darkerFactor = 0.30,
+    double darkFactor = 0.15,
+    double lightFactor = 0.15,
+    double lighterFactor = 0.30,
+    double lightestFactor = 0.38,
+  }) {
+    // if (this is AccentColor) {
+    //   return this as AccentColor;
+    // }
     return AccentColor('normal', {
-      'darker': lerpWith(Colors.black, 0.85),
-      'dark': lerpWith(Colors.black, 0.45),
+      'darkest': lerpWith(Colors.black, darkestFactor),
+      'darker': lerpWith(Colors.black, darkerFactor),
+      'dark': lerpWith(Colors.black, darkFactor),
       'normal': this,
-      'light': lerpWith(Colors.white, 0.45),
-      'lighter': lerpWith(Colors.white, 0.85),
+      'light': lerpWith(Colors.white, lightFactor),
+      'lighter': lerpWith(Colors.white, lighterFactor),
+      'lightest': lerpWith(Colors.white, lightestFactor),
     });
   }
 
@@ -279,14 +310,7 @@ extension colorExtension on Color {
 
   Color resolve(BuildContext context) {
     if (this is AccentColor) {
-      return this.resolve(context);
-    }
-    return this;
-  }
-
-  Color resolveFromBrightness(Brightness brightness) {
-    if (this is AccentColor) {
-      return this.resolveFromBrightness(brightness);
+      return AccentColor.resolve(this, context);
     }
     return this;
   }

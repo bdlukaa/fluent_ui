@@ -267,7 +267,7 @@ class _RatingBarState extends State<RatingBar> {
                 );
               },
               duration: widget.animationDuration,
-              curve: widget.animationCurve ?? context.theme.animationCurve,
+              curve: widget.animationCurve ?? Curves.linear,
               tween: Tween<double>(begin: 0, end: widget.rating),
             ),
           ),

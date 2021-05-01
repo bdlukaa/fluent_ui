@@ -51,6 +51,7 @@ class SplitButtonBar extends StatelessWidget {
         final button = buttons[index];
         Widget b = FluentTheme(
           data: context.theme.copyWith(
+            focusTheme: FocusThemeData(renderOutside: false),
             buttonTheme: ButtonThemeData(
               decoration: (state) => BoxDecoration(
                 borderRadius: (index == 0 || index == buttons.length - 1)

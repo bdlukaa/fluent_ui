@@ -433,10 +433,8 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
                   FluentTheme(
                     data: style.copyWith(
                       focusTheme: FocusThemeData(
-                        primaryBorder: BorderSide(
-                          width: 1,
-                          color: style.inactiveColor,
-                        ),
+                        primaryBorder: BorderSide.none,
+                        secondaryBorder: BorderSide.none,
                       ),
                     ),
                     child: IconButton(
@@ -444,7 +442,7 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
                       onPressed: widget.tab.onClosed,
                       iconTheme: (state) {
                         return IconThemeData(
-                          size: 20,
+                          size: 18,
                           color: () {
                             if (state.isDisabled || state.isNone)
                               return context.theme.disabledColor;
@@ -468,15 +466,6 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
                         },
                         margin: EdgeInsets.zero,
                         padding: EdgeInsets.zero,
-                        // iconTheme: (state) => IconThemeData(
-                        //   size: 20,
-                        //   color: () {
-                        //     if (state.isDisabled || state.isNone)
-                        //       return context.theme.disabledColor;
-                        //     else
-                        //       return context.theme.inactiveColor;
-                        //   }(),
-                        // ),
                       ),
                     ),
                   ),
