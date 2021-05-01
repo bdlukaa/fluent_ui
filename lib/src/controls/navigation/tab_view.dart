@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart' as m;
 
 /// The TabView control is a way to display a set of tabs
 /// and their respective content. TabViews are useful for
@@ -26,6 +28,7 @@ class TabView extends StatelessWidget {
     this.onNewPressed,
     this.addIconData = Icons.add,
     this.shortcutsEnabled = true,
+    this.onReorder,
   })  : assert(tabs.length == bodies.length),
         super(key: key);
 
@@ -63,11 +66,23 @@ class TabView extends StatelessWidget {
   /// - `9` to navigate to the last tab
   final bool shortcutsEnabled;
 
+  /// Called when the tabs are reordered. If null,
+  /// reordering is disabled. It's disabled by default.
+  final ReorderCallback? onReorder;
+
+  /// Whether reordering is enabled or not. To enable it,
+  /// make sure [onReorder] is not null.
+  bool get isReorderEnabled => onReorder != null;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('currentIndex', currentIndex));
-    properties.add(FlagProperty('showNewButton', value: showNewButton));
+    properties.add(FlagProperty(
+      'showNewButton',
+      value: showNewButton,
+      ifFalse: 'no new button',
+    ));
     properties.add(IconDataProperty('addIconData', addIconData));
     properties.add(ObjectFlagProperty(
       'onChanged',
@@ -80,6 +95,42 @@ class TabView extends StatelessWidget {
       ifNull: 'no new button',
     ));
     properties.add(IntProperty('tabs', tabs.length));
+    properties.add(FlagProperty(
+      'reorderEnabled',
+      value: isReorderEnabled,
+      ifFalse: 'reorder disabled',
+    ));
+  }
+
+  Widget _tabBuilder(
+    BuildContext context,
+    int index,
+    Widget divider,
+    double preferredTabWidth,
+  ) {
+    final tab = tabs[index];
+    final Widget child = Row(mainAxisSize: MainAxisSize.min, children: [
+      Flexible(
+        fit: FlexFit.loose,
+        child: _Tab(
+          tab,
+          key: ValueKey<int>(index),
+          reorderIndex: index,
+          selected: index == currentIndex,
+          onPressed: onChanged == null ? null : () => onChanged!(index),
+          animationDuration: context.theme.fastAnimationDuration,
+          animationCurve: context.theme.animationCurve,
+        ),
+      ),
+      if (![currentIndex - 1, currentIndex].contains(index)) divider,
+    ]);
+    return AnimatedContainer(
+      key: ValueKey<int>(index),
+      width: preferredTabWidth,
+      duration: context.theme.fastAnimationDuration,
+      curve: context.theme.animationCurve,
+      child: child,
+    );
   }
 
   @override
@@ -101,55 +152,82 @@ class TabView extends StatelessWidget {
           padding: EdgeInsets.only(left: 8),
           height: _kTileHeight,
           width: double.infinity,
-          child: Row(children: [
-            ...tabs.map((e) {
-              final index = tabs.indexOf(e);
-              final tab = _Tab(
-                e,
-                selected: index == currentIndex,
-                onPressed: onChanged == null ? null : () => onChanged!(index),
-              );
-              late Widget child;
-              if ([currentIndex - 1, currentIndex].contains(index)) {
-                child = Flexible(
-                  fit: FlexFit.loose,
-                  child: tab,
-                );
-              } else {
-                child = Flexible(
-                  fit: FlexFit.loose,
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: tab,
-                    ),
+          child: LayoutBuilder(builder: (context, consts) {
+            final width = consts.biggest.width;
+            assert(
+              width.isFinite,
+              'You can only create a tabview in a RenderBox with defined width',
+            );
+
+            /// The preferred size is the width / tabs.length, but it
+            /// must be in the range of [_kMinTileWidth] to `_kMaxTileWidth`
+            /// 8.0 is subtracted because of the dividers and the 'new' button
+            final preferredTabWidth = (width / tabs.length - 8.0).clamp(
+              _kMinTileWidth,
+              _kMaxTileWidth,
+            );
+            return Row(children: [
+              if (isReorderEnabled)
+                SizedBox(
+                  width: preferredTabWidth * tabs.length,
+                  child: ReorderableListView.builder(
+                    buildDefaultDragHandles: false,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    onReorder: onReorder!,
+                    itemCount: tabs.length,
+                    proxyDecorator: (child, index, animation) {
+                      return child;
+                    },
+                    itemBuilder: (context, index) {
+                      return _tabBuilder(
+                        context,
+                        index,
+                        divider,
+                        preferredTabWidth,
+                      );
+                    },
+                  ),
+                )
+              else
+                ...List.generate(tabs.length, (index) {
+                  return _tabBuilder(
+                    context,
+                    index,
                     divider,
-                  ]),
-                );
-              }
-              // TODO: reorder tab view by dragging.
-              return child;
-            }).toList(),
-            if (showNewButton)
-              IconButton(
-                icon: Icon(addIconData),
-                onPressed: onNewPressed,
-                iconTheme: (state) {
-                  return IconThemeData(
-                    color: () {
-                      if (state.isDisabled || state.isNone)
-                        return context.theme.disabledColor;
-                      else
-                        return context.theme.inactiveColor;
-                    }(),
+                    preferredTabWidth,
                   );
-                },
-                style: ButtonThemeData(margin: EdgeInsets.only(left: 2)),
-              ),
-          ]),
+                }),
+              if (showNewButton)
+                IconButton(
+                  key: ValueKey<int>(tabs.length),
+                  icon: Icon(addIconData),
+                  onPressed: onNewPressed,
+                  iconTheme: (state) {
+                    return IconThemeData(
+                      color: () {
+                        if (state.isDisabled || state.isNone)
+                          return context.theme.disabledColor;
+                        else
+                          return context.theme.inactiveColor;
+                      }(),
+                    );
+                  },
+                  style: ButtonThemeData(margin: EdgeInsets.only(left: 2)),
+                ),
+            ]);
+          }),
         ),
         if (bodies.isNotEmpty) Expanded(child: bodies[currentIndex]),
       ]),
+    );
+    tabBar = Localizations(
+      locale: Locale('en', 'US'),
+      delegates: [
+        m.DefaultWidgetsLocalizations.delegate,
+        m.DefaultMaterialLocalizations.delegate
+      ],
+      child: tabBar,
     );
     if (shortcutsEnabled)
       return Shortcuts(
@@ -172,7 +250,7 @@ class TabView extends StatelessWidget {
 
           /// Ctrl + (number from 1 to 8) navigate to that tab
           /// Ctrl + 9 navigates to the last tab
-          /// TODO: Ctrl + number. Currently blocked by https://github.com/bdlukaa/fluent_ui/issues/15
+          /// TODO: Ctrl + number. See https://github.com/bdlukaa/fluent_ui/issues/15
           ...Map.fromIterable(
             List.generate(9, (index) => index),
             key: (number) {
@@ -226,7 +304,8 @@ class _ChangeTabIntent extends Intent {
   _ChangeTabIntent(this.tab);
 }
 
-const double _kTileWidth = 240.0;
+const double _kMaxTileWidth = 240.0;
+const double _kMinTileWidth = 60.0;
 const double _kTileHeight = 35.0;
 
 class Tab {
@@ -256,108 +335,170 @@ class Tab {
   final String? semanticLabel;
 }
 
-class _Tab extends StatelessWidget {
-  _Tab(
+class _Tab extends StatefulWidget {
+  const _Tab(
     this.tab, {
     Key? key,
     this.onPressed,
     required this.selected,
     this.focusNode,
+    this.reorderIndex = -1,
+    this.animationDuration = Duration.zero,
+    this.animationCurve = Curves.linear,
   }) : super(key: key);
 
   final Tab tab;
   final bool selected;
   final void Function()? onPressed;
   final FocusNode? focusNode;
+  final int reorderIndex;
+  final Duration animationDuration;
+  final Curve animationCurve;
+
+  @override
+  __TabState createState() => __TabState();
+}
+
+class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.animationDuration,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(_Tab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.duration = oldWidget.animationDuration;
+  }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
-      semanticLabel: tab.semanticLabel,
-      focusNode: focusNode,
-      cursor: selected ? (_) => SystemMouseCursors.basic : null,
-      onPressed: onPressed,
+      semanticLabel: widget.tab.semanticLabel,
+      focusNode: widget.focusNode,
+      cursor: widget.selected ? (_) => SystemMouseCursors.basic : null,
+      onPressed: widget.onPressed,
       builder: (context, state) {
+        final primaryBorder = context.theme.focusTheme.primaryBorder;
         Widget child = Container(
           height: _kTileHeight,
           constraints: BoxConstraints(
-            maxWidth: _kTileWidth,
-            minWidth: _kTileWidth / 4,
+            maxWidth: _kMaxTileWidth,
+            minWidth: _kMinTileWidth,
           ),
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-            color: selected
+            /// Using a [FocusBorder] here would be more adequate, but it
+            /// seems it disabled the reordering effect. Using this boder
+            /// have the same effect, but make sure to update the code here
+            /// whenever [FocusBorder] code is altered
+            border: Border.all(
+              style: state.isFocused ? BorderStyle.solid : BorderStyle.none,
+              color: primaryBorder?.color ?? Colors.transparent,
+              width: primaryBorder?.width ?? 0.0,
+            ),
+            borderRadius: state.isFocused
+                ? BorderRadius.zero
+                : BorderRadius.vertical(top: Radius.circular(4)),
+            color: widget.selected
                 ? style.scaffoldBackgroundColor
-                : uncheckedInputColor(style, state),
+                : ButtonThemeData.uncheckedInputColor(style, state),
           ),
-          child: Row(children: [
-            if (tab.icon != null)
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: tab.icon!,
-              ),
-            Expanded(child: tab.text),
-            if (tab.closeIcon != null)
-              FluentTheme(
-                data: style.copyWith(
-                  focusTheme: FocusThemeData(
-                    primaryBorder: BorderSide(
-                      width: 1,
-                      color: style.inactiveColor,
+          child: ReorderableDragStartListener(
+            index: widget.reorderIndex,
+            child: ClipRect(
+              child: Row(children: [
+                if (widget.tab.icon != null)
+                  Padding(
+                    padding: EdgeInsets.only(right: 5),
+                    child: widget.tab.icon!,
+                  ),
+                Expanded(child: widget.tab.text),
+                if (widget.tab.closeIcon != null)
+                  FluentTheme(
+                    data: style.copyWith(
+                      focusTheme: FocusThemeData(
+                        primaryBorder: BorderSide(
+                          width: 1,
+                          color: style.inactiveColor,
+                        ),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Icon(widget.tab.closeIcon),
+                      onPressed: widget.tab.onClosed,
+                      iconTheme: (state) {
+                        return IconThemeData(
+                          size: 20,
+                          color: () {
+                            if (state.isDisabled || state.isNone)
+                              return context.theme.disabledColor;
+                            else
+                              return context.theme.inactiveColor;
+                          }(),
+                        );
+                      },
+                      style: ButtonThemeData(
+                        decoration: (state) {
+                          late Color? color;
+                          if (state.isNone)
+                            color = null;
+                          else
+                            color = ButtonThemeData.buttonColor(style, state);
+                          return BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            border: Border.all(style: BorderStyle.none),
+                            color: color,
+                          );
+                        },
+                        margin: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                        // iconTheme: (state) => IconThemeData(
+                        //   size: 20,
+                        //   color: () {
+                        //     if (state.isDisabled || state.isNone)
+                        //       return context.theme.disabledColor;
+                        //     else
+                        //       return context.theme.inactiveColor;
+                        //   }(),
+                        // ),
+                      ),
                     ),
                   ),
-                ),
-                child: IconButton(
-                  icon: Icon(tab.closeIcon),
-                  onPressed: tab.onClosed,
-                  iconTheme: (state) {
-                    return IconThemeData(
-                      size: 20,
-                      color: () {
-                        if (state.isDisabled || state.isNone)
-                          return context.theme.disabledColor;
-                        else
-                          return context.theme.inactiveColor;
-                      }(),
-                    );
-                  },
-                  style: ButtonThemeData(
-                    decoration: (state) {
-                      late Color? color;
-                      if (state.isNone)
-                        color = null;
-                      else
-                        color = ButtonThemeData.buttonColor(style, state);
-                      return BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        border: Border.all(style: BorderStyle.none),
-                        color: color,
-                      );
-                    },
-                    margin: EdgeInsets.zero,
-                    padding: EdgeInsets.zero,
-                    // iconTheme: (state) => IconThemeData(
-                    //   size: 20,
-                    //   color: () {
-                    //     if (state.isDisabled || state.isNone)
-                    //       return context.theme.disabledColor;
-                    //     else
-                    //       return context.theme.inactiveColor;
-                    //   }(),
-                    // ),
-                  ),
-                ),
-              ),
-          ]),
+              ]),
+            ),
+          ),
         );
         return Semantics(
-          selected: selected,
+          selected: widget.selected,
           focusable: true,
           focused: state.isFocused,
-          child: FocusBorder(child: child, focused: state.isFocused),
+          child: SizeTransition(
+            sizeFactor: Tween<double>(
+              begin: 0.8,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              curve: widget.animationCurve,
+              parent: _controller,
+            )),
+            axis: Axis.horizontal,
+            child: child,
+          ),
         );
       },
     );

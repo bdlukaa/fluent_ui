@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0);
 
-const double kDefaultAcrylicOpacity = 0.75;
+const double kDefaultAcrylicOpacity = 0.85;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help
@@ -42,9 +42,6 @@ class Acrylic extends StatelessWidget {
   /// The decoration to paint behind the [child].
   ///
   /// Use the [color] property to specify a simple solid color.
-  ///
-  /// The [child] is not clipped to the decoration. To clip a child to the shape
-  /// of a particular [ShapeDecoration], consider using a [ClipPath] widget.
   final BoxDecoration? decoration;
 
   /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,

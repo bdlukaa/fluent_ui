@@ -117,18 +117,19 @@ class ToggleButtonThemeData with Diagnosticable {
     );
     return ToggleButtonThemeData(
       scaleFactor: 0.95,
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: checkedInputColor(style, state),
-        border: Border.all(width: 0.6, color: checkedInputColor(style, state)),
+        color: ButtonThemeData.checkedInputColor(style, state),
+        border: Border.all(
+            width: 0.6, color: ButtonThemeData.checkedInputColor(style, state)),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)
           return defaultDecoration.copyWith(
-            color: uncheckedInputColor(style, state),
+            color: ButtonThemeData.uncheckedInputColor(style, state),
             border: Border.all(
               width: 0.6,
-              color: uncheckedInputColor(style, state),
+              color: ButtonThemeData.uncheckedInputColor(style, state),
             ),
           );
         return defaultDecoration.copyWith(

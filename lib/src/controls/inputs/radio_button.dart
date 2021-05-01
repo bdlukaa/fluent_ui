@@ -119,25 +119,25 @@ class RadioButtonThemeData with Diagnosticable {
 
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       checkedDecoration: (state) => BoxDecoration(
         border: Border.all(
-          color: checkedInputColor(style, state),
+          color: ButtonThemeData.checkedInputColor(style, state),
           width: 4.5,
         ),
         shape: BoxShape.circle,
         color: Colors.white,
       ),
       uncheckedDecoration: (state) => BoxDecoration(
-        color: uncheckedInputColor(style, state),
+        color: ButtonThemeData.uncheckedInputColor(style, state),
         border: Border.all(
           style: state.isNone ? BorderStyle.solid : BorderStyle.none,
           width: 1,
           color: state.isNone
               ? style.disabledColor
-              : uncheckedInputColor(style, state),
+              : ButtonThemeData.uncheckedInputColor(style, state),
         ),
         shape: BoxShape.circle,
       ),

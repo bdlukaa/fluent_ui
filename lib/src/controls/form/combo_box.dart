@@ -160,7 +160,7 @@ class _ComboboxMenuItemButtonState<T>
                 .withValue(0.8)
                 .toColor();
           }
-          return uncheckedInputColor(context.theme, state);
+          return ButtonThemeData.uncheckedInputColor(context.theme, state);
         },
       ),
     );

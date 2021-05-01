@@ -1,8 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [1.9.2] - [30/04/2021]
+
+- **FIX** `TabView` tabs can now be reordered (Fixes [#10](https://github.com/bdlukaa/fluent_ui/issues/10))
+- **FIDELITY** If a new `Tab` is added, its now animated
+- **FIX** `FocusBorder` now doesn't change the size of the widgets
+- **BREAKING** `buttonCursor`, `uncheckedInputColor` and `checkedInputColor` are now moved to `ButtonThemeData` as static functions.
+
 ## [1.9.1] - [29/04/2021]
 
-- **FIX** Fixed diagnostic tree. (Fixes [#27](https://github.com/bdlukaa/fluent_ui/issues/17))
+- **FIX** Fixed diagnostic tree. (Fixes [#17](https://github.com/bdlukaa/fluent_ui/issues/17))
 - **FIX** | **FIDELITY** `TappableListTile` now changes its color when focused instead of having a border
 - **FIDELITY** Improved `Acrylic`'s blur effect fidelity
 - **FIX** `Acrylic`'s elevation was being applying margin

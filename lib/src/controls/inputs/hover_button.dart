@@ -169,7 +169,7 @@ class _HoverButtonState extends State<HoverButton> {
   Widget build(BuildContext context) {
     Widget w = MouseRegion(
       opaque: false,
-      cursor: widget.cursor?.call(state) ?? buttonCursor(state),
+      cursor: widget.cursor?.call(state) ?? ButtonThemeData.buttonCursor(state),
       onEnter: (_) => update(() => _hovering = true),
       onHover: (_) => update(() => _hovering = true),
       onExit: (_) => update(() => _hovering = false),
@@ -254,36 +254,3 @@ class ButtonStates with Diagnosticable {
 }
 
 typedef ButtonState<T> = T Function(ButtonStates);
-
-// Button color
-
-Color checkedInputColor(ThemeData style, ButtonStates state) {
-  Color color = style.accentColor;
-  if (state.isDisabled)
-    return style.disabledColor;
-  else if (state.isHovering)
-    return color.withOpacity(0.70);
-  else if (state.isPressing) return color.withOpacity(0.90);
-  return color;
-}
-
-Color uncheckedInputColor(ThemeData style, ButtonStates state) {
-  if (style.brightness == Brightness.light) {
-    if (state.isDisabled) return style.disabledColor;
-    if (state.isPressing) return Colors.grey[70]!;
-    if (state.isHovering) return Colors.grey[40]!;
-    return Colors.grey[40]!.withOpacity(0);
-  } else {
-    if (state.isDisabled) return style.disabledColor;
-    if (state.isPressing) return Colors.grey[130]!;
-    if (state.isHovering) return Colors.grey[150]!;
-    return Colors.grey[150]!.withOpacity(0);
-  }
-}
-
-MouseCursor buttonCursor(ButtonStates state) {
-  if (state.isHovering || state.isPressing)
-    return SystemMouseCursors.click;
-  else
-    return MouseCursor.defer;
-}

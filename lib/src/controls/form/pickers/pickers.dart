@@ -67,7 +67,7 @@ class YesNoPickerControl extends StatelessWidget {
         buttonTheme: ButtonThemeData(
           margin: EdgeInsets.zero,
           decoration: (state) => BoxDecoration(
-            color: uncheckedInputColor(context.theme, state),
+            color: ButtonThemeData.uncheckedInputColor(context.theme, state),
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(4.0),
             ),

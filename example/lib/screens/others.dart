@@ -10,8 +10,6 @@ class Others extends StatefulWidget {
 class _OthersState extends State<Others> {
   int currentIndex = 0;
 
-  int tabs = 3;
-
   final flyoutController = FlyoutController();
 
   bool checked = false;
@@ -23,6 +21,23 @@ class _OthersState extends State<Others> {
   }
 
   DateTime date = DateTime.now();
+
+  late List<Tab> tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    tabs = List.generate(3, (index) {
+      late Tab tab;
+      tab = Tab(
+        text: Text('$index'),
+        onClosed: () {
+          tabs.remove(tab);
+        },
+      );
+      return tab;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,51 +183,68 @@ class _OthersState extends State<Others> {
       // ]),
       SizedBox(height: 10),
       Container(
-        height: 250,
+        height: 400,
         decoration: BoxDecoration(
           border: Border.all(color: context.theme.accentColor, width: 1.0),
         ),
         child: TabView(
           currentIndex: currentIndex,
           onChanged: _handleTabChanged,
-          onNewPressed: () {
-            setState(() => tabs++);
+          onReorder: (oldIndex, newIndex) {
+            setState(() {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final Tab item = tabs.removeAt(oldIndex);
+              tabs.insert(newIndex, item);
+              if (currentIndex == newIndex)
+                currentIndex = oldIndex;
+              else if (currentIndex == oldIndex) currentIndex = newIndex;
+            });
           },
-          tabs: List.generate(tabs, (index) {
-            return Tab(
-              text: Text('Tab $index'),
-              onClosed: () {
-                setState(() => tabs--);
-                if (currentIndex > tabs - 1) currentIndex--;
-                if (tabs == 0) currentIndex = 0;
-              },
-            );
-          }),
+          onNewPressed: () {
+            setState(() {
+              late Tab tab;
+              tab = Tab(
+                text: Text('${tabs.length}'),
+                onClosed: () {
+                  setState(() {
+                    tabs.remove(tab);
+                    if (currentIndex > tabs.length - 1) currentIndex--;
+                  });
+                },
+              );
+              tabs.add(tab);
+            });
+          },
+          tabs: tabs,
           bodies: List.generate(
-            tabs,
-            (index) => Container(color: Colors.accentColors[index]),
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 500,
-        width: 500,
-        child: Stack(children: [
-          Positioned.fill(child: FlutterLogo()),
-          Align(
-            alignment: Alignment.center,
-            child: Acrylic(
-              width: 250.0,
-              height: 200.0,
-              child: Center(
-                child: Text(
-                  'A C R Y L I C',
-                  style: FluentTheme.of(context).typography.subheader,
+            tabs.length,
+            (index) => Container(
+              color: Colors.accentColors[index.clamp(
+                0,
+                Colors.accentColors.length - 1,
+              )],
+              child: Stack(children: [
+                Positioned.fill(child: FlutterLogo()),
+                Align(
+                  alignment: Alignment.center,
+                  child: Acrylic(
+                    width: 250.0,
+                    height: 200.0,
+                    child: Center(
+                      child: Text(
+                        'A C R Y L I C',
+                        style: FluentTheme.of(context).typography.subheader,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ]),
             ),
           ),
-        ]),
+        ),
       ),
     ]);
   }

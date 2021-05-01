@@ -15,7 +15,9 @@ export 'package:flutter/material.dart'
         Icons,
         DateUtils,
         SelectableDayPredicate,
-        DatePickerMode;
+        DatePickerMode,
+        ReorderableListView,
+        ReorderableDragStartListener;
 
 export 'src/app.dart';
 export 'src/utils.dart';

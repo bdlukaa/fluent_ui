@@ -39,14 +39,14 @@ class NavigationPanelThemeData with Diagnosticable {
     return NavigationPanelThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      color: (state) => uncheckedInputColor(style, state),
+      color: (state) => ButtonThemeData.uncheckedInputColor(style, state),
       highlightColor: style.accentColor,
       selectedTextStyle: (state) => state.isDisabled
           ? disabledTextStyle
           : style.typography.base!.copyWith(color: style.accentColor),
       unselectedTextStyle: (state) =>
           state.isDisabled ? disabledTextStyle : style.typography.base!,
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       labelPadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.only(right: 10, left: 8),
       selectedIconColor: (_) => style.accentColor,

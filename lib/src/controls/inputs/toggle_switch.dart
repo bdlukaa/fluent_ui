@@ -194,19 +194,19 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: checkedInputColor(style, state),
+        color: ButtonThemeData.checkedInputColor(style, state),
         border: Border.all(style: BorderStyle.none),
       ),
       uncheckedDecoration: (state) {
         return defaultDecoration.copyWith(
-          color: uncheckedInputColor(style, state),
+          color: ButtonThemeData.uncheckedInputColor(style, state),
           border: Border.all(
             width: 0.8,
             color: state.isNone || state.isFocused
                 ? style.inactiveColor
-                : uncheckedInputColor(style, state),
+                : ButtonThemeData.uncheckedInputColor(style, state),
           ),
         );
       },

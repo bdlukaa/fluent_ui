@@ -97,7 +97,7 @@ class NavigationPanelItemTile extends StatelessWidget {
           final child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: uncheckedInputColor(context.theme, state),
+            color: ButtonThemeData.uncheckedInputColor(context.theme, state),
             child: Row(children: [
               AnimatedSwitcher(
                 duration: style.animationDuration ?? Duration.zero,

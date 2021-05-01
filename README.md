@@ -67,6 +67,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Date Picker](#date-picker)
   - [Time Picker](#time-picker)
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
+  - [Scrollbar](#scrollbar)
   - [List Tile](#list-tile)
   - [Info Header](info-header)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
@@ -1109,6 +1110,42 @@ Both Indeterminate ProgressBar and Indeterminate ProgressRing is a courtesy of [
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-determinate-example.png)
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-indeterminate-example.png)
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring_determinate_example.png)
+
+## Scrollbar
+
+A scrollbar thumb indicates which portion of a [ScrollView] is actually visible. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/scroll-controls)
+
+Depending on the situation, the scrollbar uses two different visualizations, shown in the following illustration: the panning indicator (left) and the traditional scrollbar (right).
+
+![Scrollbar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/scrollbar.png)
+
+> When the scrollbar is visible it is overlaid as 16px on top of the content inside your ScrollView. In order to ensure good UX design you will want to ensure that no interactive content is obscured by this overlay. Additionally if you would prefer not to have UX overlap, leave 16px of padding on the edge of the viewport to allow for the scrollbar.
+
+### Example
+
+```dart
+final _controller = ScrollController();
+
+Scrollbar(
+  controller: controller,
+  child: ListView.builder(
+    /// You can add a padding to the view to avoid having the scrollbar over the UI elements
+    padding: EdgeInsets.only(right: 16.0),
+    itemCount: 100,
+    builder: (context, index) {
+      return ListTile(title: Text('$index'));
+    }
+  ),
+)
+```
+
+Which produces the following:
+
+![Scrollbar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/conscious-scroll.gif)
+
+You can change the `isAlwaysVisible` property to either enable or disable the fade effect. It's disabled by default.
+
+> Note: Currently, the leading and trailing arrows are not implemented. See [this issue](https://github.com/bdlukaa/fluent_ui/issues/14) to learn more
 
 ## List Tile
 

@@ -97,27 +97,29 @@ class _InputsPageState extends State<InputsPage> {
               icon: Icon(Icons.add),
               onPressed: () => print('pressed icon button'),
             ),
-            SplitButtonBar(buttons: [
-              SizedBox(
-                height: splitButtonHeight,
-                child: Button(
-                  child: Container(
-                    color: context.theme.accentColor,
-                    height: 24,
-                    width: 24,
+            SizedBox(
+              height: splitButtonHeight,
+              child: SplitButtonBar(buttons: [
+                Button(
+                  child: SizedBox(
+                    height: splitButtonHeight,
+                    child: Container(
+                      color: context.theme.accentColor,
+                      height: 24,
+                      width: 24,
+                    ),
                   ),
                   onPressed: () {},
                 ),
-              ),
-              SizedBox(
-                height: splitButtonHeight,
-                child: Button(
-                  child: Icon(Icons.keyboard_arrow_down),
+                Button(
+                  child: SizedBox(
+                      height: splitButtonHeight,
+                      child: Icon(Icons.keyboard_arrow_down)),
                   onPressed: () {},
                   style: ButtonThemeData(padding: EdgeInsets.all(6)),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ],
         ],
       ),
@@ -200,32 +202,63 @@ class _InputsPageState extends State<InputsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Sliders', style: titleTextStyle),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 8),
-            width: 200,
-            child: Slider(
-              max: max,
-              label: '${sliderValue.toInt()}',
-              value: sliderValue,
-              onChanged: (v) => setState(() => sliderValue = v),
-              divisions: 10,
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  width: 200,
+                  child: Slider(
+                    max: max,
+                    label: '${sliderValue.toInt()}',
+                    value: sliderValue,
+                    onChanged: (v) => setState(() => sliderValue = v),
+                    divisions: 10,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  width: 200,
+                  child: Slider(
+                    max: max,
+                    value: sliderValue,
+                    onChanged: null,
+                  ),
+                ),
+                RatingBar(
+                  amount: max.toInt(),
+                  rating: sliderValue,
+                  onChanged: (v) => setState(() => sliderValue = v),
+                ),
+                RatingBar(
+                  amount: max.toInt(),
+                  rating: sliderValue,
+                ),
+              ]),
             ),
-          ),
-          SizedBox(height: 12),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 8),
-            width: 200,
-            child: Slider(
-              max: max,
-              value: sliderValue,
-              onChanged: null,
+            Container(
+              margin: EdgeInsets.all(8),
+              child: Slider(
+                vertical: true,
+                max: max,
+                label: '${sliderValue.toInt()}',
+                value: sliderValue,
+                onChanged: (v) => setState(() => sliderValue = v),
+                divisions: 10,
+              ),
             ),
-          ),
-          RatingBar(
-            amount: max.toInt(),
-            rating: sliderValue,
-            onChanged: (v) => setState(() => sliderValue = v),
-          ),
+            Container(
+              margin: EdgeInsets.all(8),
+              child: Slider(
+                vertical: true,
+                max: max,
+                value: sliderValue,
+                onChanged: null,
+              ),
+            ),
+          ]),
         ],
       ),
     );

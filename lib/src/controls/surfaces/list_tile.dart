@@ -157,7 +157,7 @@ class TappableListTile extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       onPressed: onTap,
       focusNode: focusNode,
       autofocus: autofocus,
@@ -166,7 +166,7 @@ class TappableListTile extends StatelessWidget {
           if (tileColor != null)
             return tileColor!(state);
           else if (state.isFocused) return style.accentColor.dark;
-          return uncheckedInputColor(style, state);
+          return ButtonThemeData.uncheckedInputColor(style, state);
         }();
         return ListTile(
           contentPadding: contentPadding,

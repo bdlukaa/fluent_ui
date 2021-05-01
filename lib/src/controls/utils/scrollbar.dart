@@ -249,7 +249,11 @@ class ScrollbarThemeData with Diagnosticable {
   /// Defaults to [Colors.transparent]
   final Color? hoveringTrackBorderColor;
 
+  /// The duration of the animation. Defaults to [ThemeData.fasterAnimationDuration].
+  /// To disable the animation, set this to [Duration.zero]
   final Duration? animationDuration;
+
+  /// The curve used during the animation. Defaults to [ThemeData.animationCurve]
   final Curve? animationCurve;
 
   const ScrollbarThemeData({

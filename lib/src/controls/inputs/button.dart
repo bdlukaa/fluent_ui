@@ -240,7 +240,7 @@ class ButtonThemeData with Diagnosticable {
     return ButtonThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      cursor: buttonCursor,
+      cursor: ButtonThemeData.buttonCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
       decoration: (state) => BoxDecoration(
@@ -323,5 +323,36 @@ class ButtonThemeData with Diagnosticable {
         color = Color.fromARGB(255, 51, 51, 51);
       return color;
     }
+  }
+
+  static Color checkedInputColor(ThemeData style, ButtonStates state) {
+    Color color = style.accentColor;
+    if (state.isDisabled)
+      return style.disabledColor;
+    else if (state.isHovering)
+      return color.withOpacity(0.70);
+    else if (state.isPressing) return color.withOpacity(0.90);
+    return color;
+  }
+
+  static Color uncheckedInputColor(ThemeData style, ButtonStates state) {
+    if (style.brightness == Brightness.light) {
+      if (state.isDisabled) return style.disabledColor;
+      if (state.isPressing) return Colors.grey[70]!;
+      if (state.isHovering) return Colors.grey[40]!;
+      return Colors.grey[40]!.withOpacity(0);
+    } else {
+      if (state.isDisabled) return style.disabledColor;
+      if (state.isPressing) return Colors.grey[130]!;
+      if (state.isHovering) return Colors.grey[150]!;
+      return Colors.grey[150]!.withOpacity(0);
+    }
+  }
+
+  static MouseCursor buttonCursor(ButtonStates state) {
+    if (state.isHovering || state.isPressing)
+      return SystemMouseCursors.click;
+    else
+      return MouseCursor.defer;
   }
 }

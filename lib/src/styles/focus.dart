@@ -37,53 +37,61 @@ class FocusBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme.focusTheme.copyWith(this.style);
-    return AnimatedContainer(
-      duration: style.animationDuration ?? context.theme.fastAnimationDuration,
-      curve: style.animationCurve ?? context.theme.animationCurve,
-      decoration: BoxDecoration(
-        borderRadius: style.borderRadius,
-        border: focused
-            ? Border.fromBorderSide(style.primaryBorder ?? BorderSide.none)
-            : null,
-        boxShadow: focused && style.glowFactor != 0 && style.glowColor != null
-            ? [
-                BoxShadow(
-                  offset: Offset(1, 1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(-1, -1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(-1, 1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(1, -1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-              ]
-            : null,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: style.borderRadius,
-          border: focused
-              ? Border.fromBorderSide(style.secondaryBorder ?? BorderSide.none)
-              : null,
+    return Stack(children: [
+      child,
+      Positioned.fill(
+        child: AnimatedContainer(
+          duration:
+              style.animationDuration ?? context.theme.fastAnimationDuration,
+          curve: style.animationCurve ?? context.theme.animationCurve,
+          decoration: BoxDecoration(
+            borderRadius: style.borderRadius,
+            border: focused
+                ? Border.fromBorderSide(style.primaryBorder ?? BorderSide.none)
+                : null,
+            boxShadow:
+                focused && style.glowFactor != 0 && style.glowColor != null
+                    ? [
+                        BoxShadow(
+                          offset: Offset(1, 1),
+                          color: style.glowColor!,
+                          spreadRadius: style.glowFactor!,
+                          blurRadius: style.glowFactor! * 2.5,
+                        ),
+                        BoxShadow(
+                          offset: Offset(-1, -1),
+                          color: style.glowColor!,
+                          spreadRadius: style.glowFactor!,
+                          blurRadius: style.glowFactor! * 2.5,
+                        ),
+                        BoxShadow(
+                          offset: Offset(-1, 1),
+                          color: style.glowColor!,
+                          spreadRadius: style.glowFactor!,
+                          blurRadius: style.glowFactor! * 2.5,
+                        ),
+                        BoxShadow(
+                          offset: Offset(1, -1),
+                          color: style.glowColor!,
+                          spreadRadius: style.glowFactor!,
+                          blurRadius: style.glowFactor! * 2.5,
+                        ),
+                      ]
+                    : null,
+          ),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: style.borderRadius,
+              border: focused
+                  ? Border.fromBorderSide(
+                      style.secondaryBorder ?? BorderSide.none,
+                    )
+                  : null,
+            ),
+          ),
         ),
-        child: child,
       ),
-    );
+    ]);
   }
 }
 
