@@ -8,7 +8,8 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  TextStyle? get titleTextStyle => context.theme.typography.base;
+  bool disabled = false;
+
   bool value = false;
 
   double sliderValue = 5;
@@ -16,192 +17,142 @@ class _InputsPageState extends State<InputsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Acrylic(
-          padding: EdgeInsets.all(8.0),
-          margin: EdgeInsets.only(bottom: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Working inputs', style: titleTextStyle),
-              Checkbox(
-                checked: value,
-                onChanged: (v) => setState(() => value = v ?? false),
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+        child: Wrap(spacing: 10, runSpacing: 10, children: [
+          Acrylic(
+            padding: EdgeInsets.all(8.0),
+            margin: EdgeInsets.only(bottom: 8.0),
+            child: InfoLabel(
+              label: 'Interactive Inputs',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    checked: value,
+                    onChanged: disabled
+                        ? null
+                        : (v) => setState(() => value = v ?? false),
+                  ),
+                  ToggleSwitch(
+                    checked: value,
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
+                  ),
+                  RadioButton(
+                    checked: value,
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
+                  ),
+                  ToggleButton(
+                    child: Text('Toggle Button'),
+                    checked: value,
+                    onChanged: disabled
+                        ? null
+                        : (value) => setState(() => this.value = value),
+                  ),
+                ],
               ),
-              ToggleSwitch(
-                checked: value,
-                onChanged: (v) => setState(() => value = v),
-              ),
-              RadioButton(
-                checked: value,
-                onChanged: (v) => setState(() => value = v),
-              ),
-              ToggleButton(
-                child: Text('Toggle Button'),
-                checked: value,
-                onChanged: (value) => setState(() => this.value = value),
-              ),
-            ],
+            ),
           ),
-        ),
-        Wrap(children: [
           _buildButtons(),
-          _buildCheckboxes(),
-          _buildToggleSwitches(),
-          _buildRadioButtons(),
           _buildSliders(),
-        ], runSpacing: 10, spacing: 10),
-      ]),
-    );
+        ]),
+      ),
+      Acrylic(
+        padding: EdgeInsets.all(10.0),
+        child: InfoLabel(
+          label: 'Input Properties',
+          child: Column(children: [
+            InfoLabel(
+              label: 'Disabled',
+              isHeader: false,
+              child: ToggleSwitch(
+                checked: disabled,
+                onChanged: (v) => setState(() => disabled = v),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    ]);
   }
 
   Widget _buildButtons() {
     final splitButtonHeight = 50.0;
     return Acrylic(
       padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Buttons', style: titleTextStyle),
-          ...[
-            Button(
-              child: Text('Enabled button'),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => ContentDialog(
-                    title: Text('Delete file permanently?'),
-                    content: Text(
-                      'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
-                    ),
-                    actions: [
-                      Button(
-                        child: Text('Delete'),
-                        autofocus: true,
-                        onPressed: () {
-                          // Delete file here
-                        },
+      child: InfoLabel(
+        label: 'Buttons',
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Button(
+            child: Text('Show Dialog'),
+            onPressed: disabled
+                ? null
+                : () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => ContentDialog(
+                        title: Text('Delete file permanently?'),
+                        content: Text(
+                          'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+                        ),
+                        actions: [
+                          Button(
+                            child: Text('Delete'),
+                            autofocus: true,
+                            onPressed: () {
+                              // Delete file here
+                            },
+                          ),
+                          Button(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
                       ),
-                      Button(
-                        child: Text('Cancel'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
+                    );
+                  },
+          ),
+          Button.icon(
+            icon: Icon(Icons.add),
+            onPressed: disabled ? null : () => print('pressed icon button'),
+          ),
+          SizedBox(
+            height: splitButtonHeight,
+            child: SplitButtonBar(buttons: [
+              Button(
+                child: SizedBox(
+                  height: splitButtonHeight,
+                  child: Container(
+                    color: context.theme.accentColor,
+                    height: 24,
+                    width: 24,
                   ),
-                );
-              },
-            ),
-            Button(child: Text('Disabled button'), onPressed: null),
-            Button.icon(
-              icon: Icon(Icons.add),
-              onPressed: () => print('pressed icon button'),
-            ),
-            SizedBox(
-              height: splitButtonHeight,
-              child: SplitButtonBar(buttons: [
-                Button(
-                  child: SizedBox(
-                    height: splitButtonHeight,
-                    child: Container(
-                      color: context.theme.accentColor,
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                  onPressed: () {},
                 ),
-                Button(
-                  child: SizedBox(
-                      height: splitButtonHeight,
-                      child: Icon(Icons.keyboard_arrow_down)),
-                  onPressed: () {},
-                  style: ButtonThemeData(padding: EdgeInsets.all(6)),
+                onPressed: disabled ? null : () {},
+              ),
+              Button(
+                child: SizedBox(
+                  height: splitButtonHeight,
+                  child: Icon(Icons.keyboard_arrow_down),
                 ),
-              ]),
-            ),
-          ],
-        ],
+                onPressed: disabled ? null : () {},
+                style: ButtonThemeData(padding: EdgeInsets.all(6)),
+              ),
+            ]),
+          ),
+        ]),
       ),
-    );
-  }
-
-  Widget _buildCheckboxes() {
-    return Acrylic(
-      padding: EdgeInsets.all(8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Checkboxes', style: titleTextStyle),
-        ...buildStateColumn(context, [
-          Checkbox(checked: false, onChanged: (v) {}),
-          Checkbox(checked: true, onChanged: (v) {}),
-          Checkbox(checked: null, onChanged: (v) {}),
-          Checkbox(checked: true, onChanged: null),
-        ], [
-          'Unchecked',
-          'Checked',
-          'Third state',
-          'Disabled',
-        ]),
-      ]),
-    );
-  }
-
-  Widget _buildToggleSwitches() {
-    return Acrylic(
-      padding: EdgeInsets.all(8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Toggles', style: titleTextStyle),
-        ...buildStateColumn(context, [
-          ToggleSwitch(checked: false, onChanged: (v) {}),
-          ToggleSwitch(checked: true, onChanged: (v) {}),
-          ToggleSwitch(checked: false, onChanged: null),
-          ToggleSwitch(checked: true, onChanged: null),
-        ], [
-          'Off',
-          'On',
-          'Disabled Off',
-          'Disabled On',
-        ]),
-      ]),
-    );
-  }
-
-  Widget _buildRadioButtons() {
-    return Acrylic(
-      padding: EdgeInsets.all(8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Radio Buttons', style: titleTextStyle),
-        ...buildStateColumn(
-          context,
-          [
-            RadioButton(checked: false, onChanged: (v) {}),
-            RadioButton(checked: true, onChanged: (v) {}),
-            RadioButton(checked: false, onChanged: null),
-            RadioButton(checked: true, onChanged: null),
-          ]
-              .map((e) => Padding(
-                    padding: EdgeInsets.all(5),
-                    child: e,
-                  ))
-              .toList(),
-          [
-            'Off',
-            'On',
-            'Disabled Off',
-            'Disabled On',
-          ],
-        ),
-      ]),
     );
   }
 
   Widget _buildSliders() {
     return Acrylic(
       padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Sliders', style: titleTextStyle),
+      child: InfoLabel(
+        label: 'Sliders',
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
             Flexible(
               fit: FlexFit.loose,
@@ -261,25 +212,8 @@ class _InputsPageState extends State<InputsPage> {
               ),
             ),
           ]),
-        ],
+        ]),
       ),
     );
   }
-}
-
-List<Widget> buildStateColumn(
-  BuildContext context,
-  List<Widget> boxes,
-  List<String> texts,
-) {
-  assert(debugCheckHasFluentTheme(context));
-  return List.generate(4, (index) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        boxes[index],
-        Text(texts[index], style: context.theme.typography.body),
-      ],
-    );
-  });
 }

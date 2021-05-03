@@ -772,10 +772,10 @@ class _TextBoxState extends State<TextBox>
       ),
       child: () {
         if (widget.header != null)
-          return InfoHeader(
+          return InfoLabel(
             child: listener,
-            header: widget.header!,
-            headerStyle: widget.headerStyle,
+            label: widget.header!,
+            labelStyle: widget.headerStyle,
           );
         return listener;
       }(),

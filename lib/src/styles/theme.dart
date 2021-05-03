@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 
 class FluentTheme extends InheritedWidget {
   const FluentTheme({Key? key, required this.data, required this.child})
@@ -36,6 +37,7 @@ extension brightnessExtension on Brightness {
 
 const standartCurve = Curves.easeInOut;
 
+/// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable
 class ThemeData with Diagnosticable {
   final Typography typography;
@@ -54,6 +56,12 @@ class ThemeData with Diagnosticable {
   final Duration mediumAnimationDuration;
   final Duration slowAnimationDuration;
   final Curve animationCurve;
+
+  /// The mouse cursor used by many inputs, such as [Button],
+  /// [RadioButton] and [ToggleSwitch]. By default, if the
+  /// state is pressing or hovering, [SystemMouseCursors.click]
+  /// is used, otherwise [MouseCursor.defer] is used.
+  final ButtonState<MouseCursor> inputMouseCursor;
 
   final Brightness brightness;
 
@@ -105,6 +113,7 @@ class ThemeData with Diagnosticable {
     required this.infoBarTheme,
     required this.focusTheme,
     required this.scrollbarTheme,
+    required this.inputMouseCursor,
   });
 
   static ThemeData light() {
@@ -126,6 +135,7 @@ class ThemeData with Diagnosticable {
     Color? scaffoldBackgroundColor,
     Color? navigationPanelBackgroundColor,
     Color? shadowColor,
+    ButtonState<MouseCursor>? inputMouseCursor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -179,6 +189,12 @@ class ThemeData with Diagnosticable {
         }).resolveFromBrightness(brightness);
     typography =
         Typography.standart(brightness: brightness).copyWith(typography);
+    inputMouseCursor ??= (state) {
+      if (state.isHovering || state.isPressing)
+        return SystemMouseCursors.click;
+      else
+        return MouseCursor.defer;
+    };
     focusTheme = FocusThemeData.standard(
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
@@ -231,6 +247,7 @@ class ThemeData with Diagnosticable {
       toggleSwitchTheme: toggleSwitchTheme,
       tooltipTheme: tooltipTheme,
       typography: typography,
+      inputMouseCursor: inputMouseCursor,
     );
   }
 
@@ -250,6 +267,7 @@ class ThemeData with Diagnosticable {
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    ButtonState<MouseCursor>? inputMouseCursor,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
@@ -288,6 +306,7 @@ class ThemeData with Diagnosticable {
           mediumAnimationDuration ?? this.mediumAnimationDuration,
       slowAnimationDuration:
           slowAnimationDuration ?? this.slowAnimationDuration,
+      inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
       buttonTheme: this.buttonTheme.copyWith(buttonTheme),
       checkboxTheme: this.checkboxTheme.copyWith(checkboxTheme),

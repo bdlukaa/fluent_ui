@@ -234,9 +234,9 @@ class _TimePickerState extends State<TimePicker> {
       ),
     );
     if (widget.header != null) {
-      return InfoHeader(
-        header: widget.header!,
-        headerStyle: widget.headerStyle,
+      return InfoLabel(
+        label: widget.header!,
+        labelStyle: widget.headerStyle,
         child: picker,
       );
     }

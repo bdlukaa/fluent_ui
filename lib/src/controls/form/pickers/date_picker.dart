@@ -272,9 +272,9 @@ class _DatePickerState extends State<DatePicker> {
       ),
     );
     if (widget.header != null)
-      return InfoHeader(
-        header: widget.header!,
-        headerStyle: widget.headerStyle,
+      return InfoLabel(
+        label: widget.header!,
+        labelStyle: widget.headerStyle,
         child: picker,
       );
     return picker;

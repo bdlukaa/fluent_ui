@@ -41,8 +41,8 @@ class RadioButton extends StatelessWidget {
   /// If this is `null`, the button is considered disabled
   final ValueChanged<bool>? onChanged;
 
-  /// The style of the button.
-  /// This is merged with [ThemeData.radioButtonThemeData]
+  /// The style of the button. If non-null, this is merged
+  /// with [ThemeData.radioButtonThemeData]
   final RadioButtonThemeData? style;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
@@ -61,9 +61,12 @@ class RadioButton extends StatelessWidget {
       FlagProperty('checked', value: checked, ifFalse: 'unchecked'),
     );
     properties.add(
-      ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
+      FlagProperty('disabled', value: onChanged == null, ifFalse: 'enabled'),
     );
     properties.add(ObjectFlagProperty.has('style', style));
+    properties.add(
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
+    properties.add(StringProperty('semanticLabel', semanticLabel));
   }
 
   @override
@@ -79,14 +82,28 @@ class RadioButton extends StatelessWidget {
       semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
+        final decoration = checked
+            ? style.checkedDecoration!(state)
+            : style.uncheckedDecoration!(state);
         Widget child = AnimatedContainer(
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
           height: 20,
           width: 20,
-          decoration: checked
-              ? style.checkedDecoration!(state)
-              : style.uncheckedDecoration!(state),
+          decoration: decoration.copyWith(color: Colors.transparent),
+
+          /// We need two boxes here because flutter draws the color
+          /// behind the border, and it results in an weird effect. This
+          /// way, the inner color will only be rendered within the
+          /// bounds of the border.
+          child: AnimatedContainer(
+            duration: style.animationDuration ?? Duration.zero,
+            curve: style.animationCurve ?? Curves.linear,
+            decoration: BoxDecoration(
+              color: decoration.color ?? Colors.transparent,
+              shape: decoration.shape,
+            ),
+          ),
         );
         return Semantics(
           child: FocusBorder(
@@ -102,8 +119,8 @@ class RadioButton extends StatelessWidget {
 
 @immutable
 class RadioButtonThemeData with Diagnosticable {
-  final ButtonState<Decoration>? checkedDecoration;
-  final ButtonState<Decoration>? uncheckedDecoration;
+  final ButtonState<BoxDecoration>? checkedDecoration;
+  final ButtonState<BoxDecoration>? uncheckedDecoration;
 
   final ButtonState<MouseCursor>? cursor;
 
@@ -120,7 +137,7 @@ class RadioButtonThemeData with Diagnosticable {
 
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
       checkedDecoration: (state) => BoxDecoration(

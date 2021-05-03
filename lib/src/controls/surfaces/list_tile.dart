@@ -157,7 +157,7 @@ class TappableListTile extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       onPressed: onTap,
       focusNode: focusNode,
       autofocus: autofocus,

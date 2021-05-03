@@ -167,7 +167,7 @@ class CheckboxThemeData with Diagnosticable {
   factory CheckboxThemeData.standard(ThemeData style) {
     final BorderRadiusGeometry radius = BorderRadius.circular(3);
     return CheckboxThemeData(
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       checkedDecoration: (state) => BoxDecoration(
         borderRadius: radius,
         color: ButtonThemeData.checkedInputColor(style, state),

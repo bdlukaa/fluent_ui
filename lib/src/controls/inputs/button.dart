@@ -248,7 +248,7 @@ class ButtonThemeData with Diagnosticable {
     return ButtonThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: EdgeInsets.all(4),
       decoration: (state) => BoxDecoration(
@@ -355,12 +355,5 @@ class ButtonThemeData with Diagnosticable {
       if (state.isHovering) return Colors.grey[150]!;
       return Colors.grey[150]!.withOpacity(0);
     }
-  }
-
-  static MouseCursor buttonCursor(ButtonStates state) {
-    if (state.isHovering || state.isPressing)
-      return SystemMouseCursors.click;
-    else
-      return MouseCursor.defer;
   }
 }

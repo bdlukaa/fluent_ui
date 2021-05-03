@@ -32,7 +32,7 @@ class _OthersState extends State<Others> {
       tab = Tab(
         text: Text('$index'),
         onClosed: () {
-          tabs.remove(tab);
+          _handleTabClosed(tab);
         },
       );
       return tab;
@@ -208,10 +208,7 @@ class _OthersState extends State<Others> {
               tab = Tab(
                 text: Text('${tabs.length}'),
                 onClosed: () {
-                  setState(() {
-                    tabs.remove(tab);
-                    if (currentIndex > tabs.length - 1) currentIndex--;
-                  });
+                  _handleTabClosed(tab);
                 },
               );
               tabs.add(tab);
@@ -251,6 +248,13 @@ class _OthersState extends State<Others> {
 
   void _handleTabChanged(int index) {
     setState(() => currentIndex = index);
+  }
+
+  void _handleTabClosed(Tab tab) {
+    setState(() {
+      tabs.remove(tab);
+      if (currentIndex > tabs.length - 1) currentIndex--;
+    });
   }
 
   // void _handleDateChanged(DateTime date) {

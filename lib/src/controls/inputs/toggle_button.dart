@@ -117,7 +117,7 @@ class ToggleButtonThemeData with Diagnosticable {
     );
     return ToggleButtonThemeData(
       scaleFactor: 0.95,
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: ButtonThemeData.checkedInputColor(style, state),
         border: Border.all(

@@ -7,21 +7,21 @@ import 'package:flutter/rendering.dart';
 /// to present users with two mutually exclusive options (such as on/off),
 /// where choosing an option provides immediate results.
 ///
-/// Use a toggle switch for binary operations that take effect right after the
-/// user flips the toggle switch
+/// Use a toggle switch for binary operations that take effect right after
+/// the user flips the toggle switch
 ///
 /// ![ToggleSwitch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 ///
-/// Think of the toggle switch as a physical power switch for a device: you flip
-/// it on or off when you want to enable or disable the action performed by the device.
+/// Think of the toggle switch as a physical power switch for a device: you
+/// flip it on or off when you want to enable or disable the action performed
+/// by the device.
 ///
 /// See also:
-///
-/// - [Checkbox](https://pub.dev/packages/fluent_ui#checkbox)
-/// - [RadioButton](https://pub.dev/packages/fluent_ui#radio-buttons)
-/// - [ToggleButton](https://pub.dev/packages/fluent_ui#toggle-button)
-/// - [RadioButton](https://github.com/bdlukaa/fluent_ui#radio-buttons)
-class ToggleSwitch extends StatelessWidget {
+///   - [Checkbox]
+///   - [RadioButton]
+///   - [ToggleButton]
+///   - [RadioButton]
+class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
     Key? key,
@@ -86,32 +86,72 @@ class ToggleSwitch extends StatelessWidget {
   }
 
   @override
+  _ToggleSwitchState createState() => _ToggleSwitchState();
+}
+
+class _ToggleSwitchState extends State<ToggleSwitch> {
+  bool get isDisabled => widget.onChanged == null;
+
+  Alignment? _alignment;
+
+  void _handleAlignmentChanged(
+      Offset localPosition, double sliderGestureWidth) {
+    setState(() {
+      _alignment = Alignment(
+        (localPosition.dx / sliderGestureWidth).clamp(-1, 1),
+        0,
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = ToggleSwitchThemeData.standard(context.theme).copyWith(
-      context.theme.toggleSwitchTheme.copyWith(this.style),
+      context.theme.toggleSwitchTheme.copyWith(this.widget.style),
     );
+    final sliderGestureWidth = 45.0 + (style.padding?.horizontal ?? 0.0);
     return HoverButton(
-      autofocus: autofocus,
-      semanticLabel: semanticLabel,
+      autofocus: widget.autofocus,
+      semanticLabel: widget.semanticLabel,
       margin: style.margin,
-      focusNode: focusNode,
+      focusNode: widget.focusNode,
       cursor: style.cursor,
-      onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      onPressed: isDisabled ? null : () => widget.onChanged!(!widget.checked),
+      onHorizontalDragStart: (e) {
+        if (isDisabled) return;
+        _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+      },
+      onHorizontalDragUpdate: (e) {
+        if (isDisabled) return;
+        _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+      },
+      onHorizontalDragEnd: (e) {
+        if (isDisabled) return;
+        if (_alignment != null) {
+          if (_alignment!.x >= 0.5) {
+            widget.onChanged!(true);
+          } else {
+            widget.onChanged!(false);
+          }
+          setState(() => _alignment = null);
+        }
+      },
       builder: (context, state) {
         Widget child = AnimatedContainer(
-          alignment: checked ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: _alignment ??
+              (widget.checked ? Alignment.centerRight : Alignment.centerLeft),
           height: 20,
           width: 45,
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
-          decoration: checked
+          decoration: widget.checked
               ? style.checkedDecoration?.call(state)
               : style.uncheckedDecoration?.call(state),
-          child: thumb ??
+          child: widget.thumb ??
               DefaultToggleSwitchThumb(
-                checked: checked,
+                checked: widget.checked,
                 style: style,
                 state: state,
               ),
@@ -121,7 +161,7 @@ class ToggleSwitch extends StatelessWidget {
             child: child,
             focused: state.isFocused,
           ),
-          checked: checked,
+          checked: widget.checked,
         );
       },
     );
@@ -194,7 +234,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      cursor: ButtonThemeData.buttonCursor,
+      cursor: style.inputMouseCursor,
       checkedDecoration: (state) => defaultDecoration.copyWith(
         color: ButtonThemeData.checkedInputColor(style, state),
         border: Border.all(style: BorderStyle.none),

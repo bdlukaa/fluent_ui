@@ -81,7 +81,7 @@ class Typography with Diagnosticable {
       base: TextStyle(
         fontSize: 14,
         color: color,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.bold,
       ),
       body: TextStyle(
         fontSize: 14,

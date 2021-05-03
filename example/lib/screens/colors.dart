@@ -20,8 +20,8 @@ class ColorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      InfoHeader(
-        header: 'Primary Colors',
+      InfoLabel(
+        label: 'Primary Colors',
         child: Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -31,8 +31,8 @@ class ColorsPage extends StatelessWidget {
         ),
       ),
       Divider(style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
-      InfoHeader(
-        header: 'Info Colors',
+      InfoLabel(
+        label: 'Info Colors',
         child: Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -48,8 +48,8 @@ class ColorsPage extends StatelessWidget {
         ),
       ),
       Divider(style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
-      InfoHeader(
-        header: 'All Shades',
+      InfoLabel(
+        label: 'All Shades',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             buildColorBlock('Black', Colors.black),

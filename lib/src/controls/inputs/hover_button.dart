@@ -37,6 +37,9 @@ class HoverButton extends StatefulWidget {
     this.onTapCancel,
     this.onLongPressEnd,
     this.onLongPressStart,
+    this.onHorizontalDragStart,
+    this.onHorizontalDragUpdate,
+    this.onHorizontalDragEnd,
     this.autofocus = false,
   }) : super(key: key);
 
@@ -50,6 +53,10 @@ class HoverButton extends StatefulWidget {
   final VoidCallback? onTapUp;
   final VoidCallback? onTapDown;
   final VoidCallback? onTapCancel;
+
+  final GestureDragStartCallback? onHorizontalDragStart;
+  final GestureDragUpdateCallback? onHorizontalDragUpdate;
+   final GestureDragEndCallback? onHorizontalDragEnd;
 
   final ButtonStateWidgetBuilder? builder;
 
@@ -162,7 +169,9 @@ class _HoverButtonState extends State<HoverButton> {
   Widget build(BuildContext context) {
     Widget w = MouseRegion(
       opaque: false,
-      cursor: widget.cursor?.call(state) ?? ButtonThemeData.buttonCursor(state),
+      cursor: widget.cursor?.call(state) ??
+          context.maybeTheme?.inputMouseCursor.call(state) ??
+          MouseCursor.defer,
       onEnter: (_) => update(() => _hovering = true),
       onHover: (_) => update(() => _hovering = true),
       onExit: (_) => update(() => _hovering = false),
@@ -192,6 +201,9 @@ class _HoverButtonState extends State<HoverButton> {
           widget.onLongPressEnd?.call();
           update(() => _pressing = false);
         },
+        onHorizontalDragStart: widget.onHorizontalDragStart,
+        onHorizontalDragUpdate: widget.onHorizontalDragUpdate,
+        onHorizontalDragEnd: widget.onHorizontalDragEnd,
         child: widget.builder?.call(context, state) ?? SizedBox(),
       ),
     );

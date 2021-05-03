@@ -85,7 +85,7 @@ class IconButton extends StatelessWidget {
                     state,
                   ),
                 ),
-        cursor: style?.cursor ?? ButtonThemeData.buttonCursor,
+        cursor: style?.cursor,
         margin: style?.margin,
         padding: style?.padding ?? EdgeInsets.all(4),
         scaleFactor: style?.scaleFactor,

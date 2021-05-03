@@ -931,10 +931,10 @@ class _ComboBoxState<T> extends State<ComboBox<T>> with WidgetsBindingObserver {
       ),
     );
     if (widget.header != null)
-      return InfoHeader(
+      return InfoLabel(
         child: child,
-        header: widget.header!,
-        headerStyle: widget.headerStyle,
+        label: widget.header!,
+        labelStyle: widget.headerStyle,
       );
     return child;
   }

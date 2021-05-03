@@ -108,7 +108,7 @@ class TabView extends StatelessWidget {
     Widget divider,
     double preferredTabWidth,
   ) {
-    final tab = tabs[index];
+    final Tab tab = tabs[index];
     final Widget child = Row(mainAxisSize: MainAxisSize.min, children: [
       Flexible(
         fit: FlexFit.loose,
@@ -125,7 +125,7 @@ class TabView extends StatelessWidget {
       if (![currentIndex - 1, currentIndex].contains(index)) divider,
     ]);
     return AnimatedContainer(
-      key: ValueKey<int>(index),
+      key: ValueKey<Tab>(tab),
       width: preferredTabWidth,
       duration: context.theme.fastAnimationDuration,
       curve: context.theme.animationCurve,
@@ -360,7 +360,7 @@ class _Tab extends StatefulWidget {
   __TabState createState() => __TabState();
 }
 
-class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
+class __TabState extends State<_Tab> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late AnimationController _controller;
 
   @override
@@ -387,6 +387,7 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     return HoverButton(
@@ -493,4 +494,7 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
