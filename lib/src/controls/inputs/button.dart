@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+
 import 'hover_button.dart';
 
 enum _ButtonType { def, icon, toggle }
@@ -14,6 +16,10 @@ enum _ButtonType { def, icon, toggle }
 ///   - [ToggleButton]. A button that can be on or off
 ///   - [HoverButton]. A base widget to implement any input fluent-like input
 class Button extends StatefulWidget {
+  /// Creates a fluent-styled button.
+  ///
+  /// You can't provide both [child] and [builder], but you must provide
+  /// at least one of them.
   const Button({
     Key? key,
     this.child,
@@ -143,7 +149,6 @@ class _ButtonState extends State<Button> {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
     switch (widget.type) {
       case _ButtonType.icon:
       case _ButtonType.toggle:
@@ -152,6 +157,7 @@ class _ButtonState extends State<Button> {
       default:
         break;
     }
+    assert(debugCheckHasFluentTheme(context));
     final style = ButtonThemeData.standard(context.theme).copyWith(
       context.theme.buttonTheme.copyWith(widget.style),
     );
@@ -202,7 +208,10 @@ class _ButtonState extends State<Button> {
             child: widget.child ?? widget.builder!(context, state),
           ),
         );
-        return FocusBorder(child: child, focused: state.isFocused);
+        return FocusBorder(
+          child: child,
+          focused: state.isFocused,
+        );
       },
     );
   }

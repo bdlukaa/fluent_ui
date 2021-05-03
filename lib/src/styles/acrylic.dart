@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0);
+final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
-const double kDefaultAcrylicOpacity = 0.85;
+const double kDefaultAcrylicOpacity = 0.45;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help
@@ -89,7 +89,7 @@ class Acrylic extends StatelessWidget {
   /// Whether the acrylic blur effect is enabled. This value is used globally,
   /// but can be overwritten using the [enabled] property. This is usually disabled
   /// when the system is in battery-save mode.
-  static bool acrylicEnabled = false;
+  static bool acrylicEnabled = true;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

@@ -216,13 +216,16 @@ class CheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final checkbox = Checkbox(
-      checked: checked,
-      onChanged: onChanged,
-      style: style,
-    );
     return TappableListTile(
-      leading: checkbox,
+      leading: IgnorePointer(
+        child: ExcludeFocus(
+          child: Checkbox(
+            checked: checked,
+            onChanged: onChanged,
+            style: style,
+          ),
+        ),
+      ),
       title: title,
       subtitle: subtitle,
       onTap: onChanged == null
@@ -271,14 +274,17 @@ class SwitchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final toggleSwitch = ToggleSwitch(
-      checked: checked,
-      onChanged: onChanged,
-      style: style,
-      thumb: thumb,
-    );
     return TappableListTile(
-      leading: toggleSwitch,
+      leading: IgnorePointer(
+        child: ExcludeFocus(
+          child: ToggleSwitch(
+            checked: checked,
+            onChanged: onChanged,
+            style: style,
+            thumb: thumb,
+          ),
+        ),
+      ),
       title: title,
       subtitle: subtitle,
       onTap: onChanged == null ? null : () => onChanged!(!checked),
@@ -323,13 +329,16 @@ class RadioListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radio = RadioButton(
-      checked: checked,
-      onChanged: onChanged,
-      style: style,
-    );
     return TappableListTile(
-      leading: radio,
+      leading: IgnorePointer(
+        child: ExcludeFocus(
+          child: RadioButton(
+            checked: checked,
+            onChanged: onChanged,
+            style: style,
+          ),
+        ),
+      ),
       title: title,
       subtitle: subtitle,
       onTap: onChanged == null ? null : () => onChanged!(!checked),

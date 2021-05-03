@@ -179,6 +179,7 @@ class TabView extends StatelessWidget {
                     proxyDecorator: (child, index, animation) {
                       return child;
                     },
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return _tabBuilder(
                         context,

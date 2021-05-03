@@ -1,5 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [1.9.4] - [02/05/2021]
+
+- **FIX** `CheckboxListTile`, `SwitchListTile` and `RadioListTile` now doesn't focus its leading widget.
+- **FIX** `TabView` is now not scrollable
+- **FIX** Fixed `Acrylic` blur effect being disabled by default.
+- **FIDELITY** Improved `ContentDialog` transition fidelity
+- **FIX** Fixed `FocusBorder` for some widgets. It was affecting layout when it shouldn't
+- **FIX** `RatingBar` and `Slider` weren't working due to `FocusBorder`
+- **NEW** | **FIDELITY** New `Slider` thumb
+
 ## [1.9.3] - [01/05/2021]
 
 - **NEW** `FocusBorder.renderOutside`. With this property, you can control if the FocusBorder will be rendered over the widget or outside of it.

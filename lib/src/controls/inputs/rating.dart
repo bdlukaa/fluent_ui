@@ -224,14 +224,15 @@ class _RatingBarState extends State<RatingBar> {
         onShowFocusHighlight: (v) {
           setState(() => _showFocusHighlight = v);
         },
-        child: FocusBorder(
-          focused: _showFocusHighlight,
-          child: GestureDetector(
-            onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
-            onHorizontalDragStart: (d) =>
-                _handleUpdate(d.localPosition.dx, size),
-            onHorizontalDragUpdate: (d) =>
-                _handleUpdate(d.localPosition.dx, size),
+        child: GestureDetector(
+          onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
+          onHorizontalDragStart: (d) =>
+              _handleUpdate(d.localPosition.dx, size),
+          onHorizontalDragUpdate: (d) =>
+              _handleUpdate(d.localPosition.dx, size),
+          child: FocusBorder(
+            focused: _showFocusHighlight,
+            useStackApproach: false,
             child: TweenAnimationBuilder<double>(
               builder: (context, value, child) {
                 double v = value + 1;

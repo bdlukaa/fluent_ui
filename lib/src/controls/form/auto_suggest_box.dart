@@ -178,7 +178,6 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           showWhenUnlinked: false,
           offset: Offset(0, box.size.height + 0.8),
           child: Acrylic(
-            elevation: 6,
             width: box.size.width,
             decoration: BoxDecoration(
               color: context.theme.navigationPanelBackgroundColor,

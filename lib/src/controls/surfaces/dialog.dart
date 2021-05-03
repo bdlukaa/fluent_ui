@@ -68,131 +68,148 @@ class ContentDialog extends StatelessWidget {
     final style = ContentDialogThemeData.standard(context.theme).copyWith(
       context.theme.dialogTheme.copyWith(this.style),
     );
-    return Dialog(
-      backgroundDismiss: backgroundDismiss,
-      barrierColor: style.barrierColor,
-      child: PhysicalModel(
-        color: style.elevationColor ?? Colors.black,
-        elevation: style.elevation ?? 0,
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 408),
-          decoration: style.decoration,
-          padding: style.padding,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (title != null)
-                Padding(
-                  padding: style.titlePadding ?? EdgeInsets.zero,
-                  child: DefaultTextStyle(
-                    style: style.titleStyle ?? TextStyle(),
-                    child: title!,
-                  ),
+    return PhysicalModel(
+      color: style.elevationColor ?? Colors.black,
+      elevation: style.elevation ?? 0,
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 368),
+        decoration: style.decoration,
+        padding: style.padding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title != null)
+              Padding(
+                padding: style.titlePadding ?? EdgeInsets.zero,
+                child: DefaultTextStyle(
+                  style: style.titleStyle ?? TextStyle(),
+                  child: title!,
                 ),
-              if (content != null)
-                Padding(
-                  padding: style.bodyPadding ?? EdgeInsets.zero,
-                  child: DefaultTextStyle(
-                    style: style.bodyStyle ?? TextStyle(),
-                    child: content!,
-                  ),
+              ),
+            if (content != null)
+              Padding(
+                padding: style.bodyPadding ?? EdgeInsets.zero,
+                child: DefaultTextStyle(
+                  style: style.bodyStyle ?? TextStyle(),
+                  child: content!,
                 ),
-              if (actions != null)
-                FluentTheme(
-                  data: context.theme.copyWith(
-                    buttonTheme: style.actionThemeData,
-                  ),
-                  child: Row(
+              ),
+            if (actions != null)
+              FluentTheme(
+                data: context.theme.copyWith(
+                  buttonTheme: style.actionThemeData,
+                ),
+                child: () {
+                  if (actions!.length == 1) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: actions!.first,
+                    );
+                  }
+                  return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: () {
-                      if (actions!.length >= 2)
-                        return actions!.map((e) {
-                          final index = actions!.indexOf(e);
-                          return Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                right: index != (actions!.length - 1)
-                                    ? style.actionsSpacing ?? 3
-                                    : 0,
-                              ),
-                              child: e,
+                      return actions!.map((e) {
+                        final index = actions!.indexOf(e);
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: index != (actions!.length - 1)
+                                  ? style.actionsSpacing ?? 3
+                                  : 0,
                             ),
-                          );
-                        }).toList();
-                      return [
-                        Spacer(),
-                        Expanded(child: actions!.first),
-                      ];
+                            child: e,
+                          ),
+                        );
+                      }).toList();
                     }(),
-                  ),
-                ),
-            ],
-          ),
+                  );
+                }(),
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-Future<T?> showDialog<T>({
+Future<T?> showDialog<T extends Object?>({
   required BuildContext context,
-  required Widget Function(BuildContext) builder,
-  RouteTransitionsBuilder? transitionBuilder,
+  required WidgetBuilder builder,
+  RouteTransitionsBuilder transitionBuilder =
+      FluentDialogRoute._defaultTransitionBuilder,
   Duration? transitionDuration,
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
+  String? barrierLabel,
+  Color? barrierColor,
+  bool barrierDismissible = false,
 }) {
-  return showGeneralDialog<T>(
+  barrierColor ??= Colors.black.withOpacity(0.54);
+  return Navigator.of(
+    context,
+    rootNavigator: useRootNavigator,
+  ).push<T>(FluentDialogRoute<T>(
     context: context,
-    barrierColor: Colors.transparent,
-    barrierDismissible: false,
-    pageBuilder: (context, primary, secondary) {
-      return builder(context);
-    },
-    useRootNavigator: useRootNavigator,
+    builder: builder,
+    barrierColor: barrierColor,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+    settings: routeSettings,
     transitionBuilder: transitionBuilder,
-    routeSettings: routeSettings,
     transitionDuration: transitionDuration ??
-        context.maybeTheme?.mediumAnimationDuration ??
+        context.maybeTheme?.fastAnimationDuration ??
         Duration(milliseconds: 300),
-  );
+  ));
 }
 
-class Dialog extends StatelessWidget {
-  const Dialog({
-    Key? key,
-    required this.child,
-    this.backgroundDismiss = false,
-    this.barrierColor,
-    this.barrierLabel,
-  }) : super(key: key);
+class FluentDialogRoute<T> extends RawDialogRoute<T> {
+  FluentDialogRoute({
+    required WidgetBuilder builder,
+    required BuildContext context,
+    bool barrierDismissible = false,
+    Color? barrierColor,
+    String? barrierLabel,
+    Duration transitionDuration = const Duration(milliseconds: 250),
+    RouteTransitionsBuilder? transitionBuilder = _defaultTransitionBuilder,
+    RouteSettings? settings,
+  }) : super(
+          pageBuilder: (BuildContext context, animation, secondaryAnimation) {
+            return SafeArea(
+              child: Center(child: builder(context)),
+            );
+          },
+          barrierDismissible: barrierDismissible,
+          barrierLabel: barrierLabel ?? 'Dismiss',
+          barrierColor: barrierColor ?? Colors.black.withOpacity(0.54),
+          transitionDuration: transitionDuration,
+          transitionBuilder: transitionBuilder,
+          settings: settings,
+        );
 
-  final bool backgroundDismiss;
-  final Color? barrierColor;
-
-  final Widget child;
-  final String? barrierLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.center, children: [
-      Positioned.fill(
-        child: Semantics(
-          label: barrierLabel,
-          focusable: false,
-          child: GestureDetector(
-            onTap: () {
-              if (backgroundDismiss) Navigator.pop(context);
-            },
-            child: Container(
-              color: barrierColor ?? Colors.black.withOpacity(0.8),
-            ),
-          ),
-        ),
+  static Widget _defaultTransitionBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOut,
       ),
-      child,
-    ]);
+      child: ScaleTransition(
+        scale: CurvedAnimation(
+          parent: Tween<double>(
+            begin: 1,
+            end: 0.85,
+          ).animate(animation),
+          curve: Curves.easeOut,
+        ),
+        child: child,
+      ),
+    );
   }
 }
 

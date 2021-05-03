@@ -13,6 +13,7 @@ class FocusBorder extends StatelessWidget {
     this.focused = true,
     this.style,
     this.renderOutside,
+    this.useStackApproach = true,
   }) : super(key: key);
 
   /// The child that will receive the border
@@ -30,6 +31,20 @@ class FocusBorder extends StatelessWidget {
   /// is used.
   final bool? renderOutside;
 
+  /// Whether wrapping the widget in a stack is the approach
+  /// that is goind to be used to render the box. If false,
+  /// a transparent border is created around the [child] as a
+  /// placeholder, and the real border is only displayed when
+  /// [focused] is true.
+  ///
+  /// Using the stack approach is recommended for widgets that
+  /// have a defined size (height and width). You should not use
+  /// it with widgets that require dragging.
+  ///
+  /// This property is disabled by default on the following widgets:
+  ///   - [Slider]
+  final bool useStackApproach;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -37,74 +52,97 @@ class FocusBorder extends StatelessWidget {
       FlagProperty('focused', value: focused, ifFalse: 'unfocused'),
     );
     properties.add(DiagnosticsProperty<FocusThemeData>('style', style));
+    properties.add(FlagProperty(
+      'renderOutside',
+      value: renderOutside,
+      ifFalse: 'render inside',
+    ));
+    properties.add(FlagProperty(
+      'useStackApproach',
+      value: useStackApproach,
+      defaultValue: true,
+      ifFalse: 'use border approach',
+    ));
+  }
+
+  Widget _buildBorder(FocusThemeData style, [Widget? child]) {
+    return AnimatedContainer(
+      duration: style.animationDuration ?? Duration.zero,
+      curve: style.animationCurve ?? Curves.linear,
+      decoration: BoxDecoration(
+        borderRadius: style.borderRadius,
+        border: Border.fromBorderSide(
+          !focused ? BorderSide.none : style.primaryBorder ?? BorderSide.none,
+        ),
+        boxShadow: focused && style.glowFactor != 0 && style.glowColor != null
+            ? [
+                BoxShadow(
+                  offset: Offset(1, 1),
+                  color: style.glowColor!,
+                  spreadRadius: style.glowFactor!,
+                  blurRadius: style.glowFactor! * 2.5,
+                ),
+                BoxShadow(
+                  offset: Offset(-1, -1),
+                  color: style.glowColor!,
+                  spreadRadius: style.glowFactor!,
+                  blurRadius: style.glowFactor! * 2.5,
+                ),
+                BoxShadow(
+                  offset: Offset(-1, 1),
+                  color: style.glowColor!,
+                  spreadRadius: style.glowFactor!,
+                  blurRadius: style.glowFactor! * 2.5,
+                ),
+                BoxShadow(
+                  offset: Offset(1, -1),
+                  color: style.glowColor!,
+                  spreadRadius: style.glowFactor!,
+                  blurRadius: style.glowFactor! * 2.5,
+                ),
+              ]
+            : null,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: style.borderRadius,
+          border: Border.fromBorderSide(
+            !focused
+                ? BorderSide.none
+                : style.secondaryBorder ?? BorderSide.none,
+          ),
+        ),
+        child: child,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme.focusTheme.copyWith(this.style);
-    final renderOutside = this.renderOutside ?? style.renderOutside ?? true;
     final double borderWidth =
         (style.primaryBorder?.width ?? 0) + (style.secondaryBorder?.width ?? 0);
-    final clipBehavior = renderOutside ? Clip.none : Clip.hardEdge;
-    return Stack(clipBehavior: clipBehavior, children: [
-      child,
-      Positioned.fill(
-        left: renderOutside ? -borderWidth : 0,
-        right: renderOutside ? -borderWidth : 0,
-        top: renderOutside ? -borderWidth : 0,
-        bottom: renderOutside ? -borderWidth : 0,
-        child: AnimatedContainer(
-          duration: style.animationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? Curves.linear,
-          decoration: BoxDecoration(
-            borderRadius: style.borderRadius,
-            border: focused
-                ? Border.fromBorderSide(style.primaryBorder ?? BorderSide.none)
-                : null,
-            boxShadow:
-                focused && style.glowFactor != 0 && style.glowColor != null
-                    ? [
-                        BoxShadow(
-                          offset: Offset(1, 1),
-                          color: style.glowColor!,
-                          spreadRadius: style.glowFactor!,
-                          blurRadius: style.glowFactor! * 2.5,
-                        ),
-                        BoxShadow(
-                          offset: Offset(-1, -1),
-                          color: style.glowColor!,
-                          spreadRadius: style.glowFactor!,
-                          blurRadius: style.glowFactor! * 2.5,
-                        ),
-                        BoxShadow(
-                          offset: Offset(-1, 1),
-                          color: style.glowColor!,
-                          spreadRadius: style.glowFactor!,
-                          blurRadius: style.glowFactor! * 2.5,
-                        ),
-                        BoxShadow(
-                          offset: Offset(1, -1),
-                          color: style.glowColor!,
-                          spreadRadius: style.glowFactor!,
-                          blurRadius: style.glowFactor! * 2.5,
-                        ),
-                      ]
-                    : null,
+    if (useStackApproach) {
+      final renderOutside = this.renderOutside ?? style.renderOutside ?? true;
+      final clipBehavior = renderOutside ? Clip.none : Clip.hardEdge;
+      return Stack(
+        fit: StackFit.passthrough,
+        clipBehavior: clipBehavior,
+        children: [
+          child,
+          Positioned.fill(
+            left: renderOutside ? -borderWidth : 0,
+            right: renderOutside ? -borderWidth : 0,
+            top: renderOutside ? -borderWidth : 0,
+            bottom: renderOutside ? -borderWidth : 0,
+            child: _buildBorder(style),
           ),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: style.borderRadius,
-              border: focused
-                  ? Border.fromBorderSide(
-                      style.secondaryBorder ?? BorderSide.none,
-                    )
-                  : null,
-            ),
-          ),
-        ),
-      ),
-    ]);
+        ],
+      );
+    } else {
+      return _buildBorder(style, child);
+    }
   }
 }
 
@@ -138,6 +176,8 @@ class FocusThemeData with Diagnosticable {
     required Color primaryBorderColor,
     required Color secondaryBorderColor,
     required Color glowColor,
+    required Duration animationDuration,
+    required Curve animationCurve,
   }) {
     return FocusThemeData(
       borderRadius: BorderRadius.zero,
@@ -146,6 +186,8 @@ class FocusThemeData with Diagnosticable {
       glowColor: glowColor,
       glowFactor: 0.0,
       renderOutside: true,
+      animationDuration: animationDuration,
+      animationCurve: animationCurve,
     );
   }
 
@@ -158,6 +200,8 @@ class FocusThemeData with Diagnosticable {
       glowFactor: other.glowFactor ?? glowFactor,
       glowColor: other.glowColor ?? glowColor,
       renderOutside: other.renderOutside ?? renderOutside,
+      animationCurve: other.animationCurve ?? animationCurve,
+      animationDuration: other.animationDuration ?? animationDuration,
     );
   }
 

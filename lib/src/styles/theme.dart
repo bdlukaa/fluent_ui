@@ -183,6 +183,8 @@ class ThemeData with Diagnosticable {
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
       secondaryBorderColor: scaffoldBackgroundColor,
+      animationCurve: animationCurve,
+      animationDuration: fasterAnimationDuration,
     ).copyWith(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();

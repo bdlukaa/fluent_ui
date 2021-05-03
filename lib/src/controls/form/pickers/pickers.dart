@@ -62,40 +62,44 @@ class YesNoPickerControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return FluentTheme(
-      data: context.theme.copyWith(
-        buttonTheme: ButtonThemeData(
-          margin: EdgeInsets.zero,
-          decoration: (state) => BoxDecoration(
-            color: ButtonThemeData.uncheckedInputColor(context.theme, state),
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(4.0),
-            ),
+
+    ButtonThemeData style(BorderRadiusGeometry radius) {
+      return ButtonThemeData(
+        margin: EdgeInsets.zero,
+        decoration: (state) => BoxDecoration(
+          color: ButtonThemeData.uncheckedInputColor(context.theme, state),
+          borderRadius: radius,
+        ),
+        scaleFactor: 1.0,
+      );
+    }
+
+    return Row(children: [
+      Expanded(
+        child: SizedBox(
+          height: kOneLineTileHeight,
+          child: Button(
+            child: Icon(Icons.check),
+            onPressed: onChanged,
+            style: style(BorderRadius.only(
+              bottomLeft: Radius.circular(4.0),
+            )),
           ),
-          scaleFactor: 1.0,
         ),
       ),
-      child: Row(children: [
-        Expanded(
-          child: SizedBox(
-            height: kOneLineTileHeight,
-            child: Button(
-              child: Icon(Icons.check),
-              onPressed: onChanged,
-            ),
+      Expanded(
+        child: SizedBox(
+          height: kOneLineTileHeight,
+          child: Button(
+            child: Icon(Icons.close),
+            onPressed: onCancel,
+            style: style(BorderRadius.only(
+              bottomRight: Radius.circular(4.0),
+            )),
           ),
         ),
-        Expanded(
-          child: SizedBox(
-            height: kOneLineTileHeight,
-            child: Button(
-              child: Icon(Icons.close),
-              onPressed: onCancel,
-            ),
-          ),
-        ),
-      ]),
-    );
+      ),
+    ]);
   }
 }
 
@@ -127,7 +131,6 @@ class PickerNavigatorIndicator extends StatelessWidget {
     );
     return HoverButton(
       onPressed: () {},
-      ignoreFocusManager: true,
       builder: (context, state) {
         final isHovering =
             state.isHovering || state.isPressing || state.isFocused;
@@ -139,7 +142,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               left: 0,
               right: 0,
               child: Button(
-                child: Icon(Icons.keyboard_arrow_up, size: 14),
+                child: Center(child: Icon(Icons.keyboard_arrow_up, size: 14)),
                 onPressed: onBackward,
                 style: style,
               ),
@@ -150,7 +153,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               left: 0,
               right: 0,
               child: Button(
-                child: Icon(Icons.keyboard_arrow_down, size: 14),
+                child: Center(child: Icon(Icons.keyboard_arrow_down, size: 14)),
                 onPressed: onForward,
                 style: style,
               ),

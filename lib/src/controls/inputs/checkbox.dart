@@ -27,7 +27,7 @@ class Checkbox extends StatelessWidget {
     this.autofocus = false,
   }) : super(key: key);
 
-  /// Whether this [Checkbox] is checked or not.
+  /// Whether the checkbox is checked or not.
   ///
   /// If `null`, the checkbox is in its third state.
   final bool? checked;

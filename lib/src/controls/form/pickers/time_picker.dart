@@ -309,7 +309,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.withOpacity(0.4),
+                  tileColor: context.theme.accentColor.resolveFrom(context),
                 ),
               ),
             ),

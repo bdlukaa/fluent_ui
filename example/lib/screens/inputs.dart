@@ -225,6 +225,7 @@ class _InputsPageState extends State<InputsPage> {
                     max: max,
                     value: sliderValue,
                     onChanged: null,
+                    style: SliderThemeData(useThumbBall: false),
                   ),
                 ),
                 RatingBar(
@@ -247,6 +248,7 @@ class _InputsPageState extends State<InputsPage> {
                 value: sliderValue,
                 onChanged: (v) => setState(() => sliderValue = v),
                 divisions: 10,
+                style: SliderThemeData(useThumbBall: false),
               ),
             ),
             Container(

@@ -80,8 +80,10 @@ class IconButton extends StatelessWidget {
         decoration: style?.decoration ??
             (state) => BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
-                  color:
-                      ButtonThemeData.uncheckedInputColor(context.theme, state),
+                  color: ButtonThemeData.uncheckedInputColor(
+                    context.theme,
+                    state,
+                  ),
                 ),
         cursor: style?.cursor ?? ButtonThemeData.buttonCursor,
         margin: style?.margin,

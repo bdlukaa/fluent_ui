@@ -38,7 +38,6 @@ class HoverButton extends StatefulWidget {
     this.onLongPressEnd,
     this.onLongPressStart,
     this.autofocus = false,
-    this.ignoreFocusManager = false,
   }) : super(key: key);
 
   /// The cursor of this hover button. If null, [MouseCursor.defer] is used
@@ -73,12 +72,6 @@ class HoverButton extends StatefulWidget {
   /// If null, no [Semantics] widget is added to the tree
   /// {@endtemplate}
   final String? semanticLabel;
-
-  /// If true, a [Focus] will not be added to the tree. `ButtonStates.focused`
-  /// will never be called. Keyboard shortcuts will also never be called.
-  ///
-  /// It's usually used when two [HoverButton]s are provided on the widget tree.
-  final bool ignoreFocusManager;
 
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
@@ -202,15 +195,14 @@ class _HoverButtonState extends State<HoverButton> {
         child: widget.builder?.call(context, state) ?? SizedBox(),
       ),
     );
-    if (!widget.ignoreFocusManager)
-      w = FocusableActionDetector(
-        focusNode: node,
-        autofocus: widget.autofocus,
-        enabled: enabled,
-        actions: _actionMap,
-        onShowFocusHighlight: (v) => setState(() => _focused = v),
-        child: w,
-      );
+    w = FocusableActionDetector(
+      focusNode: node,
+      autofocus: widget.autofocus,
+      enabled: enabled,
+      actions: _actionMap,
+      onShowFocusHighlight: (v) => setState(() => _focused = v),
+      child: w,
+    );
     if (widget.semanticLabel != null) {
       w = MergeSemantics(
         child: Semantics(
