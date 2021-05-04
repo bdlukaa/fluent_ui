@@ -4,8 +4,8 @@ Date format: DD/MM/YYYY
 
 - **BREAKING** `InfoHeader` was renamed to `InfoLabel`. You can now set if the label will be rendered above the child or on the side of it.
 - **FIX** Fixed `RadioButton` inner color overlaping the border.
-- **NEW** `ThemeData.buttonMouseCursor`
-- **FIDELITY** Switch thumb is now dragged. (Fixes [#22](https://github.com/bdlukaa/fluent_ui/issues/22))
+- **NEW** `ThemeData.inputMouseCursor`
+- **FIDELITY** Switch thumb is now draggable. (Fixes [#22](https://github.com/bdlukaa/fluent_ui/issues/22))
 - **EXAMPLE** Reworked the example app inputs page
 
 ## [1.9.4] - [02/05/2021]
