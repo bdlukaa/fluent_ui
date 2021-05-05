@@ -15,6 +15,14 @@ class _InputsPageState extends State<InputsPage> {
   double sliderValue = 5;
   double get max => 9;
 
+  final FlyoutController controller = FlyoutController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -57,6 +65,32 @@ class _InputsPageState extends State<InputsPage> {
           ),
           _buildButtons(),
           _buildSliders(),
+          Acrylic(
+            padding: EdgeInsets.all(10.0),
+            child: Flyout(
+              content: Padding(
+                padding: EdgeInsets.only(left: 27),
+                child: FlyoutContent(
+                  padding: EdgeInsets.zero,
+                  child: ListView(shrinkWrap: true, children: [
+                    TappableListTile(title: Text('New'), onTap: () {}),
+                    TappableListTile(title: Text('Open'), onTap: () {}),
+                    TappableListTile(title: Text('Save'), onTap: () {}),
+                    TappableListTile(title: Text('Exit'), onTap: () {}),
+                  ]),
+                ),
+              ),
+              verticalOffset: 20,
+              contentWidth: 100,
+              controller: controller,
+              child: Button(
+                child: Text('File'),
+                onPressed: () {
+                  controller.open = true;
+                },
+              ),
+            ),
+          ),
         ]),
       ),
       Acrylic(

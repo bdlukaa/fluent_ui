@@ -129,21 +129,23 @@ class _FormsState extends State<Forms> {
         Wrap(children: [
           SizedBox(
             width: 200,
-            child: ComboBox<String>(
-              header: 'Colors',
-              placeholder: 'Selected list item',
-              isExpanded: true,
-              items: values
-                  .map((e) => ComboboxMenuItem<String>(
-                        value: e,
-                        child: Text(e),
-                      ))
-                  .toList(),
-              value: comboBoxValue,
-              onChanged: (value) {
-                print(value);
-                if (value != null) setState(() => comboBoxValue = value);
-              },
+            child: InfoLabel(
+              label: 'Colors',
+              child: Combobox<String>(
+                placeholder: Text('Choose a color'),
+                isExpanded: true,
+                items: values
+                    .map((e) => ComboboxItem<String>(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                value: comboBoxValue,
+                onChanged: (value) {
+                  print(value);
+                  if (value != null) setState(() => comboBoxValue = value);
+                },
+              ),
             ),
           ),
           SizedBox(width: 12),

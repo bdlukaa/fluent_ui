@@ -13,6 +13,7 @@ class Flyout extends StatefulWidget {
     required this.content,
     required this.contentWidth,
     required this.controller,
+    this.verticalOffset = 24,
   }) : super(key: key);
 
   final Widget child;
@@ -20,6 +21,7 @@ class Flyout extends StatefulWidget {
   final Widget content;
   final double contentWidth;
   final FlyoutController controller;
+  final double verticalOffset;
 
   @override
   _FlyoutState createState() => _FlyoutState();
@@ -67,8 +69,8 @@ class _FlyoutState extends State<Flyout> {
       key: popupKey,
       child: widget.child,
       content: (context) => widget.content,
-      contentHeight: 0,
       contentWidth: widget.contentWidth,
+      verticalOffset: widget.verticalOffset,
     );
   }
 }
@@ -78,7 +80,7 @@ class FlyoutContent extends StatelessWidget {
     Key? key,
     required this.child,
     this.decoration,
-    this.padding,
+    this.padding = const EdgeInsets.all(12.0),
     this.shadowColor,
     this.elevation = 8,
   }) : super(key: key);
@@ -86,7 +88,7 @@ class FlyoutContent extends StatelessWidget {
   final Widget child;
 
   final BoxDecoration? decoration;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry padding;
 
   final Color? shadowColor;
   final double elevation;
@@ -107,7 +109,7 @@ class FlyoutContent extends StatelessWidget {
       elevation: elevation,
       opacity: 1.0,
       decoration: decoration ?? defaultDecoration,
-      padding: padding ?? const EdgeInsets.all(12.0),
+      padding: padding,
       child: DefaultTextStyle(
         style: context.theme.typography.body ?? TextStyle(),
         child: child,

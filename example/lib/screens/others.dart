@@ -65,16 +65,11 @@ class _OthersState extends State<Others> {
                 child: Text(
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
               ),
-              child: FluentTheme(
-                data: context.theme.copyWith(
-                  focusTheme: FocusThemeData(primaryBorder: BorderSide.none),
-                ),
-                child: Button(
-                  child: Text('Open flyout'),
-                  onPressed: () {
-                    flyoutController.open = true;
-                  },
-                ),
+              child: Button(
+                child: Text('Open flyout'),
+                onPressed: () {
+                  flyoutController.open = true;
+                },
               ),
             ),
           ]),
