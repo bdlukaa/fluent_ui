@@ -30,11 +30,14 @@ Decoration kPickerDecorationBuilder(BuildContext context, ButtonStates state) {
     borderRadius: BorderRadius.circular(4.0),
     border: Border.all(
       color: () {
-        Color? color;
+        late Color color;
         if (state == ButtonStates.hovering) {
           color = context.theme.inactiveColor;
+        } else if (state == ButtonStates.disabled) {
+          color = context.theme.disabledColor;
+        } else {
+          color = context.theme.inactiveColor.withOpacity(0.75);
         }
-        color ??= context.theme.inactiveColor.withOpacity(0.75);
         return color;
       }(),
       width: 1.0,
