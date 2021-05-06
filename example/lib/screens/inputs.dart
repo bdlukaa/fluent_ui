@@ -25,91 +25,82 @@ class _InputsPageState extends State<InputsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-        child: Wrap(spacing: 10, runSpacing: 10, children: [
-          Acrylic(
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.only(bottom: 8.0),
-            child: InfoLabel(
-              label: 'Interactive Inputs',
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    checked: value,
-                    onChanged: disabled
-                        ? null
-                        : (v) => setState(() => value = v ?? false),
-                  ),
-                  ToggleSwitch(
-                    checked: value,
-                    onChanged:
-                        disabled ? null : (v) => setState(() => value = v),
-                  ),
-                  RadioButton(
-                    checked: value,
-                    onChanged:
-                        disabled ? null : (v) => setState(() => value = v),
-                  ),
-                  ToggleButton(
-                    child: Text('Toggle Button'),
-                    checked: value,
-                    onChanged: disabled
-                        ? null
-                        : (value) => setState(() => this.value = value),
-                  ),
-                ],
-              ),
-            ),
+    return ScaffoldPage(
+      topBar: PageTopBar(
+        header: Text('Inputs showcase'),
+        commandBar: InfoLabel(
+          label: 'Disabled',
+          isHeader: false,
+          child: ToggleSwitch(
+            checked: disabled,
+            onChanged: (v) => setState(() => disabled = v),
           ),
-          _buildButtons(),
-          _buildSliders(),
-          Acrylic(
-            padding: EdgeInsets.all(10.0),
-            child: Flyout(
-              content: Padding(
-                padding: EdgeInsets.only(left: 27),
-                child: FlyoutContent(
-                  padding: EdgeInsets.zero,
-                  child: ListView(shrinkWrap: true, children: [
-                    TappableListTile(title: Text('New'), onTap: () {}),
-                    TappableListTile(title: Text('Open'), onTap: () {}),
-                    TappableListTile(title: Text('Save'), onTap: () {}),
-                    TappableListTile(title: Text('Exit'), onTap: () {}),
-                  ]),
-                ),
-              ),
-              verticalOffset: 20,
-              contentWidth: 100,
-              controller: controller,
-              child: Button(
-                child: Text('File'),
-                onPressed: () {
-                  controller.open = true;
-                },
-              ),
-            ),
-          ),
-        ]),
-      ),
-      Acrylic(
-        padding: EdgeInsets.all(10.0),
-        child: InfoLabel(
-          label: 'Input Properties',
-          child: Column(children: [
-            InfoLabel(
-              label: 'Disabled',
-              isHeader: false,
-              child: ToggleSwitch(
-                checked: disabled,
-                onChanged: (v) => setState(() => disabled = v),
-              ),
-            ),
-          ]),
         ),
       ),
-    ]);
+      content: Wrap(spacing: 10, runSpacing: 10, children: [
+        Acrylic(
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(bottom: 8.0),
+          child: InfoLabel(
+            label: 'Interactive Inputs',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Checkbox(
+                  checked: value,
+                  onChanged: disabled
+                      ? null
+                      : (v) => setState(() => value = v ?? false),
+                ),
+                ToggleSwitch(
+                  checked: value,
+                  onChanged: disabled ? null : (v) => setState(() => value = v),
+                ),
+                RadioButton(
+                  checked: value,
+                  onChanged: disabled ? null : (v) => setState(() => value = v),
+                ),
+                ToggleButton(
+                  child: Text('Toggle Button'),
+                  checked: value,
+                  onChanged: disabled
+                      ? null
+                      : (value) => setState(() => this.value = value),
+                ),
+              ],
+            ),
+          ),
+        ),
+        _buildButtons(),
+        _buildSliders(),
+        Acrylic(
+          padding: EdgeInsets.all(10.0),
+          child: Flyout(
+            content: Padding(
+              padding: EdgeInsets.only(left: 27),
+              child: FlyoutContent(
+                padding: EdgeInsets.zero,
+                child: ListView(shrinkWrap: true, children: [
+                  TappableListTile(title: Text('New'), onTap: () {}),
+                  TappableListTile(title: Text('Open'), onTap: () {}),
+                  TappableListTile(title: Text('Save'), onTap: () {}),
+                  TappableListTile(title: Text('Exit'), onTap: () {}),
+                ]),
+              ),
+            ),
+            verticalOffset: 20,
+            contentWidth: 100,
+            controller: controller,
+            child: Button(
+              child: Text('File'),
+              onPressed: () {
+                controller.open = true;
+              },
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 
   Widget _buildButtons() {
@@ -198,29 +189,17 @@ class _InputsPageState extends State<InputsPage> {
                     max: max,
                     label: '${sliderValue.toInt()}',
                     value: sliderValue,
-                    onChanged: (v) => setState(() => sliderValue = v),
+                    onChanged: disabled
+                        ? null
+                        : (v) => setState(() => sliderValue = v),
                     divisions: 10,
                   ),
                 ),
-                SizedBox(height: 12),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  width: 200,
-                  child: Slider(
-                    max: max,
-                    value: sliderValue,
-                    onChanged: null,
-                    style: SliderThemeData(useThumbBall: false),
-                  ),
-                ),
                 RatingBar(
                   amount: max.toInt(),
                   rating: sliderValue,
-                  onChanged: (v) => setState(() => sliderValue = v),
-                ),
-                RatingBar(
-                  amount: max.toInt(),
-                  rating: sliderValue,
+                  onChanged:
+                      disabled ? null : (v) => setState(() => sliderValue = v),
                 ),
               ]),
             ),
@@ -231,18 +210,9 @@ class _InputsPageState extends State<InputsPage> {
                 max: max,
                 label: '${sliderValue.toInt()}',
                 value: sliderValue,
-                onChanged: (v) => setState(() => sliderValue = v),
-                divisions: 10,
+                onChanged:
+                    disabled ? null : (v) => setState(() => sliderValue = v),
                 style: SliderThemeData(useThumbBall: false),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(8),
-              child: Slider(
-                vertical: true,
-                max: max,
-                value: sliderValue,
-                onChanged: null,
               ),
             ),
           ]),
