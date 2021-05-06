@@ -16,10 +16,12 @@ class _InputsPageState extends State<InputsPage> {
   double get max => 9;
 
   final FlyoutController controller = FlyoutController();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void dispose() {
     controller.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -37,69 +39,73 @@ class _InputsPageState extends State<InputsPage> {
           ),
         ),
       ),
-      content: Wrap(spacing: 10, runSpacing: 10, children: [
-        Acrylic(
-          padding: EdgeInsets.all(8.0),
-          margin: EdgeInsets.only(bottom: 8.0),
-          child: InfoLabel(
-            label: 'Interactive Inputs',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Checkbox(
-                  checked: value,
-                  onChanged: disabled
-                      ? null
-                      : (v) => setState(() => value = v ?? false),
-                ),
-                ToggleSwitch(
-                  checked: value,
-                  onChanged: disabled ? null : (v) => setState(() => value = v),
-                ),
-                RadioButton(
-                  checked: value,
-                  onChanged: disabled ? null : (v) => setState(() => value = v),
-                ),
-                ToggleButton(
-                  child: Text('Toggle Button'),
-                  checked: value,
-                  onChanged: disabled
-                      ? null
-                      : (value) => setState(() => this.value = value),
-                ),
-              ],
-            ),
-          ),
-        ),
-        _buildButtons(),
-        _buildSliders(),
-        Acrylic(
-          padding: EdgeInsets.all(10.0),
-          child: Flyout(
-            content: Padding(
-              padding: EdgeInsets.only(left: 27),
-              child: FlyoutContent(
-                padding: EdgeInsets.zero,
-                child: ListView(shrinkWrap: true, children: [
-                  TappableListTile(title: Text('New'), onTap: () {}),
-                  TappableListTile(title: Text('Open'), onTap: () {}),
-                  TappableListTile(title: Text('Save'), onTap: () {}),
-                  TappableListTile(title: Text('Exit'), onTap: () {}),
-                ]),
+      contentScrollController: scrollController,
+      content: SingleChildScrollView(
+        controller: scrollController,
+        child: Wrap(spacing: 10, runSpacing: 10, children: [
+          Acrylic(
+            padding: EdgeInsets.all(8.0),
+            margin: EdgeInsets.only(bottom: 8.0),
+            child: InfoLabel(
+              label: 'Interactive Inputs',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    checked: value,
+                    onChanged: disabled
+                        ? null
+                        : (v) => setState(() => value = v ?? false),
+                  ),
+                  ToggleSwitch(
+                    checked: value,
+                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                  ),
+                  RadioButton(
+                    checked: value,
+                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                  ),
+                  ToggleButton(
+                    child: Text('Toggle Button'),
+                    checked: value,
+                    onChanged: disabled
+                        ? null
+                        : (value) => setState(() => this.value = value),
+                  ),
+                ],
               ),
             ),
-            verticalOffset: 20,
-            contentWidth: 100,
-            controller: controller,
-            child: Button(
-              child: Text('File'),
-              onPressed: () {
-                controller.open = true;
-              },
+          ),
+          _buildButtons(),
+          _buildSliders(),
+          Acrylic(
+            padding: EdgeInsets.all(10.0),
+            child: Flyout(
+              content: Padding(
+                padding: EdgeInsets.only(left: 27),
+                child: FlyoutContent(
+                  padding: EdgeInsets.zero,
+                  child: ListView(shrinkWrap: true, children: [
+                    TappableListTile(title: Text('New'), onTap: () {}),
+                    TappableListTile(title: Text('Open'), onTap: () {}),
+                    TappableListTile(title: Text('Save'), onTap: () {}),
+                    TappableListTile(title: Text('Exit'), onTap: () {}),
+                  ]),
+                ),
+              ),
+              verticalOffset: 20,
+              contentWidth: 100,
+              controller: controller,
+              child: Button(
+                child: Text('File'),
+                onPressed: () {
+                  controller.open = true;
+                },
+              ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

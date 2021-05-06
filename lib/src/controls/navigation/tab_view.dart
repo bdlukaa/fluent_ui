@@ -13,12 +13,18 @@ import 'package:flutter/material.dart' as m;
 ///
 /// ![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
 ///
+/// There must be enough space to render the tabview.
+///
 /// See also:
 ///   - [NavigationPanel]
 class TabView extends StatelessWidget {
   /// Creates a tab view.
   ///
   /// [tabs] must have the same length as [bodies]
+  ///
+  /// [minTabWidth] and [maxTabWidth] must be non-negative
+  ///
+  /// [maxTabWidth] must be greater than [minTabWidth]
   const TabView({
     Key? key,
     required this.currentIndex,
@@ -29,7 +35,12 @@ class TabView extends StatelessWidget {
     this.addIconData = Icons.add,
     this.shortcutsEnabled = true,
     this.onReorder,
+    this.showScrollButtons = true,
+    this.minTabWidth = _kMinTileWidth,
+    this.maxTabWidth = _kMaxTileWidth,
   })  : assert(tabs.length == bodies.length),
+        assert(minTabWidth > 0 && maxTabWidth > 0),
+        assert(minTabWidth < maxTabWidth),
         super(key: key);
 
   /// The index of the tab to be displayed
@@ -55,9 +66,6 @@ class TabView extends StatelessWidget {
   /// The icon of the new button
   final IconData addIconData;
 
-  /// Whenever the new button should be displayed.
-  bool get showNewButton => onNewPressed != null;
-
   /// Whether the following shortcuts are enabled:
   ///
   /// - Ctrl + T to create a new tab
@@ -70,8 +78,24 @@ class TabView extends StatelessWidget {
   /// reordering is disabled. It's disabled by default.
   final ReorderCallback? onReorder;
 
+  /// The min width a tab can have. Must not be negative.
+  /// Default to 100 logical pixels.
+  final double minTabWidth;
+
+  /// The max width a tab can have. Must not be negative
+  /// and must be greater than [minTabWidth]. Default to
+  /// 240 logical pixels
+  final double maxTabWidth;
+
+  /// Whether the buttons that scroll forward or backward
+  /// should be displayed, if necessary. Defaults to true
+  final bool showScrollButtons;
+
+  /// Whenever the new button should be displayed.
+  bool get showNewButton => onNewPressed != null;
+
   /// Whether reordering is enabled or not. To enable it,
-  /// make sure [onReorder] is not null.
+  /// make sure [widget.onReorder] is not null.
   bool get isReorderEnabled => onReorder != null;
 
   @override
@@ -100,6 +124,11 @@ class TabView extends StatelessWidget {
       value: isReorderEnabled,
       ifFalse: 'reorder disabled',
     ));
+    properties.add(FlagProperty(
+      'showScrollButtons',
+      value: showScrollButtons,
+      ifFalse: 'hide scroll buttons',
+    ));
   }
 
   Widget _tabBuilder(
@@ -115,7 +144,7 @@ class TabView extends StatelessWidget {
         child: _Tab(
           tab,
           key: ValueKey<int>(index),
-          reorderIndex: index,
+          reorderIndex: isReorderEnabled ? index : null,
           selected: index == currentIndex,
           onPressed: onChanged == null ? null : () => onChanged!(index),
           animationDuration: context.theme.fastAnimationDuration,
@@ -156,49 +185,45 @@ class TabView extends StatelessWidget {
             final width = consts.biggest.width;
             assert(
               width.isFinite,
-              'You can only create a tabview in a RenderBox with defined width',
+              'You can only create a TabView in a RenderBox with defined width',
             );
 
             /// The preferred size is the width / tabs.length, but it
             /// must be in the range of [_kMinTileWidth] to `_kMaxTileWidth`
             /// 8.0 is subtracted because of the dividers and the 'new' button
-            final preferredTabWidth = (width / tabs.length - 8.0).clamp(
-              _kMinTileWidth,
-              _kMaxTileWidth,
+            /// 8.0 is the minimum value that works. It can be greater
+            final preferredTabWidth = ((width / tabs.length) - 8.0).clamp(
+              minTabWidth,
+              maxTabWidth,
+            );
+
+            final listView = ReorderableListView.builder(
+              buildDefaultDragHandles: false,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              onReorder: onReorder!,
+              itemCount: tabs.length,
+              proxyDecorator: (child, index, animation) {
+                return child;
+              },
+              itemBuilder: (context, index) {
+                return _tabBuilder(
+                  context,
+                  index,
+                  divider,
+                  preferredTabWidth,
+                );
+              },
             );
             return Row(children: [
-              if (isReorderEnabled)
+              if (preferredTabWidth * tabs.length >
+                  width - (showNewButton ? 40.0 : 0))
+                Expanded(child: listView)
+              else
                 SizedBox(
                   width: preferredTabWidth * tabs.length,
-                  child: ReorderableListView.builder(
-                    buildDefaultDragHandles: false,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    onReorder: onReorder!,
-                    itemCount: tabs.length,
-                    proxyDecorator: (child, index, animation) {
-                      return child;
-                    },
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return _tabBuilder(
-                        context,
-                        index,
-                        divider,
-                        preferredTabWidth,
-                      );
-                    },
-                  ),
-                )
-              else
-                ...List.generate(tabs.length, (index) {
-                  return _tabBuilder(
-                    context,
-                    index,
-                    divider,
-                    preferredTabWidth,
-                  );
-                }),
+                  child: listView,
+                ),
               if (showNewButton)
                 IconButton(
                   key: ValueKey<int>(tabs.length),
@@ -251,9 +276,9 @@ class TabView extends StatelessWidget {
 
           /// Ctrl + (number from 1 to 8) navigate to that tab
           /// Ctrl + 9 navigates to the last tab
-          /// TODO: Ctrl + number. See https://github.com/bdlukaa/fluent_ui/issues/15
+          // TODO: Ctrl + number. See https://github.com/bdlukaa/fluent_ui/issues/15
           ...Map.fromIterable(
-            List.generate(9, (index) => index),
+            List<int>.generate(9, (index) => index),
             key: (number) {
               final digits = [
                 LogicalKeyboardKey.digit1,
@@ -306,7 +331,7 @@ class _ChangeTabIntent extends Intent {
 }
 
 const double _kMaxTileWidth = 240.0;
-const double _kMinTileWidth = 60.0;
+const double _kMinTileWidth = 100.0;
 const double _kTileHeight = 35.0;
 
 class Tab {
@@ -343,7 +368,7 @@ class _Tab extends StatefulWidget {
     this.onPressed,
     required this.selected,
     this.focusNode,
-    this.reorderIndex = -1,
+    this.reorderIndex,
     this.animationDuration = Duration.zero,
     this.animationCurve = Curves.linear,
   }) : super(key: key);
@@ -352,7 +377,7 @@ class _Tab extends StatefulWidget {
   final bool selected;
   final void Function()? onPressed;
   final FocusNode? focusNode;
-  final int reorderIndex;
+  final int? reorderIndex;
   final Duration animationDuration;
   final Curve animationCurve;
 
@@ -360,7 +385,8 @@ class _Tab extends StatefulWidget {
   __TabState createState() => __TabState();
 }
 
-class __TabState extends State<_Tab> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class __TabState extends State<_Tab>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late AnimationController _controller;
 
   @override
@@ -421,9 +447,8 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin, Automa
                 ? style.scaffoldBackgroundColor
                 : ButtonThemeData.uncheckedInputColor(style, state),
           ),
-          child: ReorderableDragStartListener(
-            index: widget.reorderIndex,
-            child: ClipRect(
+          child: () {
+            final result = ClipRect(
               child: Row(children: [
                 if (widget.tab.icon != null)
                   Padding(
@@ -472,8 +497,15 @@ class __TabState extends State<_Tab> with SingleTickerProviderStateMixin, Automa
                     ),
                   ),
               ]),
-            ),
-          ),
+            );
+            if (widget.reorderIndex != null) {
+              return ReorderableDragStartListener(
+                child: result,
+                index: widget.reorderIndex!,
+              );
+            }
+            return result;
+          }(),
         );
         return Semantics(
           selected: widget.selected,

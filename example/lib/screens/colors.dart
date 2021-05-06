@@ -92,8 +92,8 @@ class ColorsPage extends StatelessWidget {
     List<Widget> children = [];
     Colors.accentColors.forEach((AccentColor accent) {
       children.add(
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        Wrap(
+          // mainAxisSize: MainAxisSize.min,
           children: List.generate(accent.swatch.length, (index) {
             final name = accent.swatch.keys.toList()[index];
             final color = accent.swatch[name];

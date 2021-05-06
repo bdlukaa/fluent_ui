@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 - **FIX** Reworked the combo box widget to improve fidelity. ([#25](https://github.com/bdlukaa/fluent_ui/pull/25))
 - **FIX** Improved `HoverButton` focus management.
 - **FIX** Reworked the tooltip widget. Now, if any mouse is connected, the tooltip is displaying according to the pointer position, not to the child's. ([#26](https://github.com/bdlukaa/fluent_ui/pull/26))
+- **FIX** TabView is now scrollable if the size of the tabs overflow the width
 
 ## [1.10.0] - **BREAKING CHANGES** - [03/05/2021]
 
