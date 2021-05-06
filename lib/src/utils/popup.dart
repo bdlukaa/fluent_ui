@@ -11,20 +11,22 @@ class PopUp<T> extends StatefulWidget {
     Key? key,
     required this.child,
     required this.content,
-    required this.contentHeight,
+    this.contentHeight = 0,
     this.contentWidth,
+    this.verticalOffset = 0,
   }) : super(key: key);
 
   final Widget child;
   final WidgetBuilder content;
   final double contentHeight;
   final double? contentWidth;
+  final double verticalOffset;
 
   @override
   PopUpState<T> createState() => PopUpState<T>();
 }
 
-class PopUpState<T> extends State<PopUp> {
+class PopUpState<T> extends State<PopUp<T>> {
   _PopUpRoute<T>? _dropdownRoute;
 
   Future<void> openPopup() {
@@ -46,6 +48,7 @@ class PopUpState<T> extends State<PopUp> {
       capturedThemes:
           InheritedTheme.capture(from: context, to: navigator.context),
       transitionAnimationDuration: context.theme.mediumAnimationDuration,
+      verticalOffset: widget.verticalOffset,
     );
 
     return navigator.push(_dropdownRoute!).then((T? newValue) {
@@ -178,7 +181,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
       childSize: childSize,
       target: target,
       preferBelow: false,
-      verticalOffset: 24,
+      verticalOffset: verticalOffset,
     );
   }
 
@@ -199,6 +202,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     required this.transitionAnimationDuration,
     this.barrierLabel,
     this.width,
+    required this.verticalOffset,
   });
 
   final Widget content;
@@ -208,6 +212,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
   final CapturedThemes capturedThemes;
   final Offset target;
   final double? width;
+  final double verticalOffset;
 
   final Duration transitionAnimationDuration;
 
@@ -235,6 +240,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         elevation: elevation,
         width: width,
         capturedThemes: capturedThemes,
+        verticalOffset: verticalOffset,
       );
     });
   }
@@ -256,6 +262,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
     required this.target,
     this.elevation = 8,
     required this.capturedThemes,
+    required this.verticalOffset,
     this.style,
     this.width,
   }) : super(key: key);
@@ -269,6 +276,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   final CapturedThemes capturedThemes;
   final TextStyle? style;
   final double? width;
+  final double verticalOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +303,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
               buttonRect: buttonRect,
               route: route,
               textDirection: textDirection,
-              verticalOffset: 0.0,
+              verticalOffset: verticalOffset,
               width: width,
             ),
             child: capturedThemes.wrap(menu),

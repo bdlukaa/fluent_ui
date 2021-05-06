@@ -65,53 +65,17 @@ class FocusBorder extends StatelessWidget {
     ));
   }
 
-  Widget _buildBorder(FocusThemeData style, [Widget? child]) {
+  static Widget buildBorder(
+    FocusThemeData style,
+    bool focused, [
+    Widget? child,
+  ]) {
     return AnimatedContainer(
       duration: style.animationDuration ?? Duration.zero,
       curve: style.animationCurve ?? Curves.linear,
-      decoration: BoxDecoration(
-        borderRadius: style.borderRadius,
-        border: Border.fromBorderSide(
-          !focused ? BorderSide.none : style.primaryBorder ?? BorderSide.none,
-        ),
-        boxShadow: focused && style.glowFactor != 0 && style.glowColor != null
-            ? [
-                BoxShadow(
-                  offset: Offset(1, 1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(-1, -1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(-1, 1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-                BoxShadow(
-                  offset: Offset(1, -1),
-                  color: style.glowColor!,
-                  spreadRadius: style.glowFactor!,
-                  blurRadius: style.glowFactor! * 2.5,
-                ),
-              ]
-            : null,
-      ),
+      decoration: style.buildPrimaryDecoration(focused),
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: style.borderRadius,
-          border: Border.fromBorderSide(
-            !focused
-                ? BorderSide.none
-                : style.secondaryBorder ?? BorderSide.none,
-          ),
-        ),
+        decoration: style.buildSecondaryDecoration(focused),
         child: child,
       ),
     );
@@ -136,12 +100,12 @@ class FocusBorder extends StatelessWidget {
             right: renderOutside ? -borderWidth : 0,
             top: renderOutside ? -borderWidth : 0,
             bottom: renderOutside ? -borderWidth : 0,
-            child: _buildBorder(style),
+            child: buildBorder(style, focused),
           ),
         ],
       );
     } else {
-      return _buildBorder(style, child);
+      return buildBorder(style, focused, child);
     }
   }
 }
@@ -202,6 +166,52 @@ class FocusThemeData with Diagnosticable {
       renderOutside: other.renderOutside ?? renderOutside,
       animationCurve: other.animationCurve ?? animationCurve,
       animationDuration: other.animationDuration ?? animationDuration,
+    );
+  }
+
+  BoxDecoration buildPrimaryDecoration(bool focused) {
+    return BoxDecoration(
+      borderRadius: borderRadius,
+      border: Border.fromBorderSide(
+        !focused ? BorderSide.none : primaryBorder ?? BorderSide.none,
+      ),
+      boxShadow: focused && glowFactor != 0 && glowColor != null
+          ? [
+              BoxShadow(
+                offset: Offset(1, 1),
+                color: glowColor!,
+                spreadRadius: glowFactor!,
+                blurRadius: glowFactor! * 2.5,
+              ),
+              BoxShadow(
+                offset: Offset(-1, -1),
+                color: glowColor!,
+                spreadRadius: glowFactor!,
+                blurRadius: glowFactor! * 2.5,
+              ),
+              BoxShadow(
+                offset: Offset(-1, 1),
+                color: glowColor!,
+                spreadRadius: glowFactor!,
+                blurRadius: glowFactor! * 2.5,
+              ),
+              BoxShadow(
+                offset: Offset(1, -1),
+                color: glowColor!,
+                spreadRadius: glowFactor!,
+                blurRadius: glowFactor! * 2.5,
+              ),
+            ]
+          : null,
+    );
+  }
+
+  BoxDecoration buildSecondaryDecoration(bool focused) {
+    return BoxDecoration(
+      borderRadius: borderRadius,
+      border: Border.fromBorderSide(
+        !focused ? BorderSide.none : secondaryBorder ?? BorderSide.none,
+      ),
     );
   }
 

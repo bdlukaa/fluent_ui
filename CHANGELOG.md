@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.10.1] - [05/05/2021]
+
+- **FIX** Reworked the combo box widget to improve fidelity.
+- **FIX** Improved `HoverButton` focus management.
+
 ## [1.10.0] - **BREAKING CHANGES** - [03/05/2021]
 
 - **BREAKING** `InfoHeader` was renamed to `InfoLabel`. You can now set if the label will be rendered above the child or on the side of it.
