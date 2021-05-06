@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+export 'page.dart';
+
 class Scaffold extends StatelessWidget {
   const Scaffold({
     Key? key,

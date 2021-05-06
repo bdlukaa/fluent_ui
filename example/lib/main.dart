@@ -88,13 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int index = 0;
 
-  final otherController = ScrollController();
   final colorsController = ScrollController();
   final settingsController = ScrollController();
 
   @override
   void dispose() {
-    otherController.dispose();
     colorsController.dispose();
     settingsController.dispose();
     super.dispose();
@@ -136,69 +134,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         bottom: NavigationPanelItem(
-          // selected: index == 3,
           icon: Icon(Icons.settings),
           label: Text('Settings'),
           onTapped: () => setState(() => index = 4),
         ),
       ),
       body: NavigationPanelBody(index: index, children: [
-        _Panel(title: 'Inputs showcase', child: InputsPage()),
-        _Panel(title: 'Forms showcase', child: Forms()),
-        Scrollbar(
-          controller: otherController,
-          child: _Panel(
-            title: 'Others',
-            controller: otherController,
-            child: Others(),
-          ),
-        ),
-        Scrollbar(
-          controller: colorsController,
-          child: _Panel(
-            title: 'Colors showcase',
-            controller: colorsController,
-            child: ColorsPage(),
-          ),
-        ),
-        Scrollbar(
-          controller: settingsController,
-          child: _Panel(
-            title: 'Settings',
-            controller: settingsController,
-            child: Settings(),
-          ),
-        ),
+        InputsPage(),
+        Forms(),
+        Others(),
+        ColorsPage(controller: colorsController),
+        Settings(controller: settingsController),
       ]),
-    );
-  }
-}
-
-class _Panel extends StatelessWidget {
-  const _Panel({
-    Key? key,
-    this.title,
-    this.child,
-    this.controller,
-  }) : super(key: key);
-
-  final String? title;
-  final Widget? child;
-
-  final ScrollController? controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      controller: controller,
-      padding: const EdgeInsets.all(8.0),
-      children: [
-        Text(title!, style: context.theme.typography.subtitle),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6),
-          child: child,
-        ),
-      ],
     );
   }
 }
