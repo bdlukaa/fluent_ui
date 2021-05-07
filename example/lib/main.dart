@@ -123,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = context.watch<AppTheme>();
     return NavigationView(
       pane: NavigationPane(
         selected: index,
@@ -131,31 +132,35 @@ class _MyHomePageState extends State<MyHomePage> {
           child: MoveWindow(
             child: AppWindowBar(
               title: Text(appTitle),
-              remainingSpace:
-                  isDesktop ? Row(children: [Spacer(), WindowButtons()]) : null,
+              remainingSpace: isDesktop
+                  ? Row(children: [
+                      Spacer(),
+                      WindowButtons(),
+                    ])
+                  : null,
             ),
           ),
         ),
-        displayMode: PaneDisplayMode.top,
+        displayMode: appTheme.displayMode,
         items: [
           PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
             icon: Icon(Icons.input),
-            title: Text('Inputs'),
+            title: 'Inputs',
           ),
           PaneItem(
             icon: Icon(Icons.format_align_center),
-            title: Text('Forms'),
+            title: 'Forms',
           ),
           PaneItemSeparator(),
           PaneItemHeader(header: Text('Extra Widgets')),
           PaneItem(
             icon: Icon(Icons.miscellaneous_services),
-            title: Text('Others'),
+            title: 'Others',
           ),
           PaneItem(
             icon: Icon(Icons.color_lens_outlined),
-            title: Text('Colors'),
+            title: 'Colors',
           ),
         ],
         autoSuggestBox: AutoSuggestBox(
@@ -168,9 +173,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         footerItems: [
+          PaneItemSeparator(),
           PaneItem(
             icon: Icon(Icons.settings),
-            title: Text('Settings'),
+            title: 'Settings',
           ),
         ],
       ),

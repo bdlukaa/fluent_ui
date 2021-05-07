@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 part 'pane.dart';
@@ -18,10 +20,11 @@ class _NavigationViewState extends State<NavigationView> {
 
   @override
   Widget build(BuildContext context) {
+    late Widget paneResult;
     if (widget.pane != null) {
       final pane = widget.pane!;
       if (pane.displayMode == PaneDisplayMode.top) {
-        return Column(children: [
+        paneResult = Column(children: [
           _TopNavigationPane(pane: pane),
           if (widget.content != null) Expanded(child: widget.content!),
         ]);
@@ -52,14 +55,37 @@ class _NavigationViewState extends State<NavigationView> {
       } else {
         switch (pane.displayMode) {
           case PaneDisplayMode.compact:
-            return Row(children: [
-              _CompactNavigationPane(pane: pane),
-              if (widget.content != null) Expanded(child: widget.content!),
+            paneResult = Column(children: [
+              if (pane.appBar != null) pane.appBar!,
+              Expanded(
+                child: Row(children: [
+                  _CompactNavigationPane(pane: pane),
+                  if (widget.content != null) Expanded(child: widget.content!),
+                ]),
+              ),
             ]);
+            break;
+          case PaneDisplayMode.open:
+            paneResult = Column(children: [
+              if (pane.appBar != null) pane.appBar!,
+              Expanded(
+                child: Row(children: [
+                  _OpenNavigationPane(pane: pane),
+                  if (widget.content != null) Expanded(child: widget.content!),
+                ]),
+              ),
+            ]);
+            break;
           default:
+            paneResult = SizedBox.shrink();
         }
       }
+    } else {
+      paneResult = SizedBox.shrink();
     }
-    return Container();
+    return Container(
+      color: FluentTheme.of(context).scaffoldBackgroundColor,
+      child: paneResult,
+    );
   }
 }

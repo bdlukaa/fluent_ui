@@ -1,6 +1,7 @@
 part of 'view.dart';
 
 const kCompactNavigationPanelWidth = 50.0;
+const kOpenNavigationPanelWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -49,8 +50,114 @@ class PaneItem extends NavigationPaneItem {
     this.icon,
   }) : super(key: key);
 
-  final Widget title;
+  /// The title used by this pane. If the display mode is top
+  /// or compact, this is shown as a tooltip. If it's open, this
+  /// is shown by the side of the [icon].
+  final String title;
   final Widget? icon;
+
+  static Widget buildPaneItemButton(
+    BuildContext context,
+    PaneItem item,
+    PaneDisplayMode displayMode,
+    bool selected,
+    VoidCallback onPressed,
+  ) {
+    assert(displayMode != PaneDisplayMode.auto);
+    final bool isTop = displayMode == PaneDisplayMode.top;
+    final bool isOpen = displayMode == PaneDisplayMode.open;
+    final style = NavigationPanelThemeData.standard(context.theme).copyWith(
+      context.theme.navigationPanelTheme,
+    );
+    final result = SizedBox(
+      width: isTop ? 41.0 : null,
+      height: !isTop ? 41.0 : null,
+      child: HoverButton(
+        onPressed: onPressed,
+        builder: (context, state) {
+          Widget child = AnimatedContainer(
+            duration: style.animationDuration ?? Duration.zero,
+            curve: style.animationCurve ?? standartCurve,
+            color: ButtonThemeData.uncheckedInputColor(context.theme, state),
+            child: Flex(
+              direction: isTop ? Axis.vertical : Axis.horizontal,
+              textDirection:
+                  isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
+              children: [
+                if (isOpen)
+                  () {
+                    final textStyle = selected
+                        ? style.selectedTextStyle!(state)
+                        : style.unselectedTextStyle!(state);
+                    return Expanded(
+                      child: Padding(
+                        padding: style.labelPadding ?? EdgeInsets.zero,
+                        child: Text(item.title, style: textStyle),
+                      ),
+                    );
+                  }(),
+                if (item.icon != null)
+                  () {
+                    final icon = Padding(
+                      padding: style.iconPadding ?? EdgeInsets.zero,
+                      child: FluentTheme(
+                        data: context.theme.copyWith(
+                          iconTheme: IconThemeData(
+                            color: selected
+                                ? style.selectedIconColor!(state)
+                                : style.unselectedIconColor!(state),
+                          ),
+                        ),
+                        child: item.icon!,
+                      ),
+                    );
+                    if (isOpen) return icon;
+                    return Expanded(child: icon);
+                  }(),
+                // TODO: the indicator should be drawn above the widget
+                AnimatedSwitcher(
+                  duration: style.animationDuration ?? Duration.zero,
+                  transitionBuilder: (child, animation) {
+                    return SlideTransition(
+                      position: Tween<Offset>(
+                        begin: Offset(!isTop ? -1 : 0, isTop ? 1 : 0),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: style.animationCurve ?? standartCurve,
+                      )),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    key: ValueKey<bool>(selected),
+                    height: isTop ? 4 : double.infinity,
+                    width: !isTop ? 4 : null,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: isTop ? 10 : 0,
+                      vertical: !isTop ? 10 : 0,
+                    ),
+                    color: selected ? style.highlightColor : Colors.transparent,
+                  ),
+                ),
+              ],
+            ),
+          );
+          return Semantics(
+            label: item.title,
+            selected: selected,
+            child: FocusBorder(
+              child: child,
+              focused: state.isFocused,
+              renderOutside: false,
+            ),
+          );
+        },
+      ),
+    );
+    if (!isOpen) return Tooltip(message: item.title, child: result);
+    return result;
+  }
 }
 
 class PaneItemSeparator extends NavigationPaneItem {
@@ -78,6 +185,8 @@ class NavigationPane {
     this.appBar,
   });
 
+  /// Use this property to customize how the pane will be displayed.
+  /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
 
   final Key? key;
@@ -142,72 +251,15 @@ class _TopNavigationPane extends StatelessWidget {
         }),
       );
     } else if (item is PaneItem) {
-      final style = NavigationPanelThemeData.standard(context.theme).copyWith(
-        context.theme.navigationPanelTheme,
-      );
       final selected = pane.isSelected(item);
-      return SizedBox(
-        width: 41.0,
-        child: HoverButton(
-          onPressed: () {
-            pane.onChanged?.call(pane.effectiveIndexOf(item));
-          },
-          builder: (context, state) {
-            final child = AnimatedContainer(
-              duration: style.animationDuration ?? Duration.zero,
-              curve: style.animationCurve ?? standartCurve,
-              color: ButtonThemeData.uncheckedInputColor(context.theme, state),
-              child: Column(children: [
-                if (item.icon != null)
-                  Expanded(
-                    child: Padding(
-                      padding: style.iconPadding ?? EdgeInsets.zero,
-                      child: FluentTheme(
-                        data: context.theme.copyWith(
-                          iconTheme: IconThemeData(
-                            color: selected
-                                ? style.selectedIconColor!(state)
-                                : style.unselectedIconColor!(state),
-                          ),
-                        ),
-                        child: item.icon!,
-                      ),
-                    ),
-                  ),
-                AnimatedSwitcher(
-                  duration: style.animationDuration ?? Duration.zero,
-                  transitionBuilder: (child, animation) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                        begin: Offset(0, 1),
-                        end: Offset.zero,
-                      ).animate(CurvedAnimation(
-                        parent: animation,
-                        curve: style.animationCurve ?? standartCurve,
-                      )),
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    key: ValueKey<bool>(selected),
-                    height: 4,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    color: selected ? style.highlightColor : Colors.transparent,
-                  ),
-                ),
-              ]),
-            );
-            return Semantics(
-              selected: selected,
-              child: FocusBorder(
-                child: child,
-                focused: state.isFocused,
-                renderOutside: false,
-              ),
-            );
-          },
-        ),
+      return PaneItem.buildPaneItemButton(
+        context,
+        item,
+        pane.displayMode,
+        selected,
+        () {
+          pane.onChanged?.call(pane.effectiveIndexOf(item));
+        },
       );
     } else {
       throw UnsupportedError(
@@ -227,28 +279,7 @@ class _TopNavigationPane extends StatelessWidget {
         Spacer(),
         if (pane.autoSuggestBox != null) Flexible(child: pane.autoSuggestBox!),
         ...pane.footerItems.map((item) {
-          if (item is PaneItem) {
-            assert(item.icon != null, 'There must be an icon');
-            assert(item.title is Text,
-                'You can only provide a text widget for the title on footer items');
-            return SizedBox(
-              height: kOneLineTileHeight,
-              child: IconButton(
-                icon: item.icon!,
-                style: ButtonThemeData(
-                  margin: EdgeInsets.only(left: 8.0),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-                  scaleFactor: 1.0,
-                ),
-                onPressed: () {},
-              ),
-            );
-          } else {
-            throw UnsupportedError(
-              '${item.runtimeType} is not a supported pane item type.',
-            );
-          }
+          return _buildItem(context, item);
         }),
       ]),
     );
@@ -274,7 +305,7 @@ class _CompactNavigationPane extends StatelessWidget {
       return SizedBox();
     } else if (item is PaneItemSeparator) {
       return Divider(
-        direction: Axis.vertical,
+        direction: Axis.horizontal,
         style: DividerThemeData(margin: (axis) {
           return EdgeInsets.symmetric(
             horizontal: 8.0,
@@ -283,70 +314,15 @@ class _CompactNavigationPane extends StatelessWidget {
         }),
       );
     } else if (item is PaneItem) {
-      final style = NavigationPanelThemeData.standard(context.theme).copyWith(
-        context.theme.navigationPanelTheme,
-      );
       final selected = pane.isSelected(item);
-      return SizedBox(
-        height: 41.0,
-        child: HoverButton(
-          onPressed: () {
-            pane.onChanged?.call(pane.effectiveIndexOf(item));
-          },
-          builder: (context, state) {
-            final child = AnimatedContainer(
-              duration: style.animationDuration ?? Duration.zero,
-              curve: style.animationCurve ?? standartCurve,
-              color: ButtonThemeData.uncheckedInputColor(context.theme, state),
-              child: Row(children: [
-                AnimatedSwitcher(
-                  duration: style.animationDuration ?? Duration.zero,
-                  transitionBuilder: (child, animation) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                        begin: Offset(-1, 0),
-                        end: Offset.zero,
-                      ).animate(CurvedAnimation(
-                        parent: animation,
-                        curve: style.animationCurve ?? standartCurve,
-                      )),
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    key: ValueKey<bool>(selected),
-                    height: double.infinity,
-                    width: 4,
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    color: selected ? style.highlightColor : Colors.transparent,
-                  ),
-                ),
-                if (item.icon != null)
-                  Padding(
-                    padding: style.iconPadding ?? EdgeInsets.zero,
-                    child: FluentTheme(
-                      data: context.theme.copyWith(
-                        iconTheme: IconThemeData(
-                          color: selected
-                              ? style.selectedIconColor!(state)
-                              : style.unselectedIconColor!(state),
-                        ),
-                      ),
-                      child: item.icon!,
-                    ),
-                  ),
-              ]),
-            );
-            return Semantics(
-              selected: selected,
-              child: FocusBorder(
-                child: child,
-                focused: state.isFocused,
-                renderOutside: false,
-              ),
-            );
-          },
-        ),
+      return PaneItem.buildPaneItemButton(
+        context,
+        item,
+        pane.displayMode,
+        selected,
+        () {
+          pane.onChanged?.call(pane.effectiveIndexOf(item));
+        },
       );
     } else {
       throw UnsupportedError(
@@ -359,6 +335,79 @@ class _CompactNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     return Acrylic(
       width: kCompactNavigationPanelWidth,
+      child: Column(children: [
+        // if (menu != null)
+        //   Padding(
+        //     padding: EdgeInsets.only(bottom: 22),
+        //     child: NavigationPanelMenu(
+        //       item: menu!,
+        //       compact: true,
+        //       onTap: onMenuTapped,
+        //     ),
+        //   ),
+        Expanded(
+          child: ListView(children: [
+            ...pane.items.map((item) {
+              return _buildItem(context, item);
+            }),
+          ]),
+        ),
+        ...pane.footerItems.map((item) {
+          return _buildItem(context, item);
+        }),
+      ]),
+    );
+  }
+}
+
+class _OpenNavigationPane extends StatelessWidget {
+  _OpenNavigationPane({required this.pane}) : super(key: pane.key);
+
+  final NavigationPane pane;
+
+  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    if (item is PaneItemHeader) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: DefaultTextStyle(
+          style: theme.typography.base ?? TextStyle(),
+          child: item.header,
+        ),
+      );
+    } else if (item is PaneItemSeparator) {
+      return Divider(
+        direction: Axis.horizontal,
+        style: DividerThemeData(margin: (axis) {
+          return EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 10.0,
+          );
+        }),
+      );
+    } else if (item is PaneItem) {
+      final selected = pane.isSelected(item);
+      return PaneItem.buildPaneItemButton(
+        context,
+        item,
+        pane.displayMode,
+        selected,
+        () {
+          pane.onChanged?.call(pane.effectiveIndexOf(item));
+        },
+      );
+    } else {
+      throw UnsupportedError(
+        '${item.runtimeType} is not a supported pane item type.',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Acrylic(
+      width: kOpenNavigationPanelWidth,
       child: Column(children: [
         // if (menu != null)
         //   Padding(

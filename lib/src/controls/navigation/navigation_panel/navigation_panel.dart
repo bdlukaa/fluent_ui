@@ -155,7 +155,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
         curve: FluentTheme.of(context).animationCurve,
         width: displayMode != NavigationPanelDisplayMode.compact
             ? 0.0
-            : kOpenNavigationPanelWidth,
+            : 0.0,
         child: panel,
       );
       return Container(

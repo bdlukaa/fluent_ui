@@ -15,6 +15,14 @@ class AppTheme extends ChangeNotifier {
     _mode = mode;
     notifyListeners();
   }
+
+  PaneDisplayMode _displayMode = PaneDisplayMode.compact;
+  PaneDisplayMode get displayMode => _displayMode;
+  set displayMode(PaneDisplayMode displayMode) {
+    _displayMode = displayMode;
+    notifyListeners();
+  }
+
 }
 
 AccentColor get systemAccentColor => AccentColor('normal', {
