@@ -38,6 +38,7 @@ export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/inputs/slider.dart';
 
 export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
+export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view.dart';
 
 export 'src/controls/surfaces/calendar/calendar_view.dart';

@@ -23,12 +23,16 @@ part 'body.dart';
 
 /// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)
 enum NavigationPanelDisplayMode {
+  top,
   open,
   compact,
   minimal,
 
   /// Let the [NavigationPanel] decide what display mode should be used
-  /// based on the width.
+  /// based on the width. This is used by default on [NavigationPanel].
+  /// In Auto mode, the [NavigationPanel] adapts between [minimal] when
+  /// the window is narrow, to [compact], and then [open] as the window
+  /// gets wider.
   auto,
 }
 
@@ -150,7 +154,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
         duration: FluentTheme.of(context).fastAnimationDuration,
         curve: FluentTheme.of(context).animationCurve,
         width: displayMode != NavigationPanelDisplayMode.compact
-            ? kCompactNavigationPanelWidth
+            ? 0.0
             : kOpenNavigationPanelWidth,
         child: panel,
       );

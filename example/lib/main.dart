@@ -123,6 +123,65 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return NavigationView(
+      pane: NavigationPane(
+        selected: index,
+        onChanged: (i) => setState(() => index = i),
+        appBar: WindowTitleBarBox(
+          child: MoveWindow(
+            child: AppWindowBar(
+              title: Text(appTitle),
+              remainingSpace:
+                  isDesktop ? Row(children: [Spacer(), WindowButtons()]) : null,
+            ),
+          ),
+        ),
+        displayMode: PaneDisplayMode.top,
+        items: [
+          PaneItemHeader(header: Text('User Interaction')),
+          PaneItem(
+            icon: Icon(Icons.input),
+            title: Text('Inputs'),
+          ),
+          PaneItem(
+            icon: Icon(Icons.format_align_center),
+            title: Text('Forms'),
+          ),
+          PaneItemSeparator(),
+          PaneItemHeader(header: Text('Extra Widgets')),
+          PaneItem(
+            icon: Icon(Icons.miscellaneous_services),
+            title: Text('Others'),
+          ),
+          PaneItem(
+            icon: Icon(Icons.color_lens_outlined),
+            title: Text('Colors'),
+          ),
+        ],
+        autoSuggestBox: AutoSuggestBox(
+          controller: TextEditingController(),
+          items: [
+            'Item 1',
+            'Item 2',
+            'Item 3',
+            'Item 4',
+          ],
+        ),
+        footerItems: [
+          PaneItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings'),
+          ),
+        ],
+      ),
+      content: [
+        InputsPage(),
+        Forms(),
+        Others(),
+        ColorsPage(controller: colorsController),
+        Settings(controller: settingsController),
+      ][index],
+    );
     return NavigationPanel(
       menu: NavigationPanelMenuItem(
         icon: Icon(Icons.dehaze),
