@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/material.dart' as m;
 
 import 'display_modes/open.dart';
 import 'display_modes/compact.dart';
@@ -18,7 +17,7 @@ part 'body.dart';
 // - [ ] automatic mode. The current automatic mode is pretty simple and any deep usage can break it.
 // - [ ] selected indicator. Currently only one indicator is supported (sliding horizontally)
 // - [ ] pane footer. Currently, only one tile can be in the bottom, but in the offical implementation, there can be multiple tiles
-// - [ ] back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one
+// - [x] back button. There is no back button currently. This would also require to remove the default top bar and implement a custom one
 // For more info, head over to the official documentation: https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview
 // Track this on github: https://github.com/bdlukaa/fluent_ui/issues/3
 
@@ -41,7 +40,7 @@ class NavigationPanel extends StatefulWidget {
     this.menu,
     this.bottom,
     this.displayMode = NavigationPanelDisplayMode.auto,
-    this.useAcrylic = true,
+    this.useAcrylic = false,
     this.appBar,
     this.body,
   }) : super(key: key);
@@ -163,11 +162,7 @@ class _NavigationPanelState extends State<NavigationPanel> {
           context,
         ),
         child: Column(children: [
-          if (widget.appBar != null)
-            Acrylic(
-              enabled: widget.useAcrylic,
-              child: widget.appBar!,
-            ),
+          if (widget.appBar != null) widget.appBar!,
           Expanded(
             child: Row(children: [
               panel,
@@ -184,11 +179,18 @@ class NavigationPanelAppBar extends StatelessWidget {
   const NavigationPanelAppBar({
     Key? key,
     this.leading,
+    this.automaticallyImplyLeading = true,
     this.title,
     this.remainingSpace,
   }) : super(key: key);
 
   final Widget? leading;
+
+  /// If [leading] is null and this property is true, the
+  /// widget will decide if there's any leading widget that
+  /// can be automatically implied, such as the back button,
+  /// if the route can be poped.
+  final bool automaticallyImplyLeading;
 
   final Widget? title;
 
@@ -199,14 +201,14 @@ class NavigationPanelAppBar extends StatelessWidget {
     final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
     final bool canPop = parentRoute?.canPop ?? false;
     return Acrylic(
-      elevation: 0.0,
+      enabled: false,
       child: Row(children: [
         if (leading != null)
           Padding(
             padding: EdgeInsets.only(left: 12.0),
             child: leading,
           )
-        else if (!canPop)
+        else if (canPop && automaticallyImplyLeading)
           Container(
             width: 46.0,
             child: Tooltip(
@@ -218,6 +220,7 @@ class NavigationPanelAppBar extends StatelessWidget {
                 },
                 style: ButtonThemeData(
                   margin: EdgeInsets.zero,
+                  scaleFactor: 1.0,
                 ),
               ),
             ),
@@ -225,7 +228,10 @@ class NavigationPanelAppBar extends StatelessWidget {
         if (title != null)
           Padding(
             padding: EdgeInsets.only(left: 12.0),
-            child: title!,
+            child: DefaultTextStyle(
+              style: FluentTheme.of(context).typography.caption!,
+              child: title!,
+            ),
           ),
         if (remainingSpace != null) Expanded(child: remainingSpace!),
       ]),

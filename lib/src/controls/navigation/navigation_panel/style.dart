@@ -43,9 +43,9 @@ class NavigationPanelThemeData with Diagnosticable {
       highlightColor: style.accentColor,
       selectedTextStyle: (state) => state.isDisabled
           ? disabledTextStyle
-          : style.typography.base!.copyWith(color: style.accentColor),
+          : style.typography.body!.copyWith(color: style.accentColor),
       unselectedTextStyle: (state) =>
-          state.isDisabled ? disabledTextStyle : style.typography.base!,
+          state.isDisabled ? disabledTextStyle : style.typography.body!,
       cursor: style.inputMouseCursor,
       labelPadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.only(right: 10, left: 8),

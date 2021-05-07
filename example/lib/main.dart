@@ -45,8 +45,8 @@ void main() async {
   if (isDesktop)
     doWhenWindowReady(() {
       final win = appWindow;
-      final initialSize = Size(600, 450);
-      win.minSize = Size(600, 450);
+      final initialSize = Size(755, 545);
+      win.minSize = initialSize;
       win.size = initialSize;
       win.alignment = Alignment.center;
       win.title = appTitle;
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTapped: () => setState(() => index = 2),
         ),
         NavigationPanelItem(
-          icon: Icon(Icons.color_lens),
+          icon: Icon(Icons.color_lens_outlined),
           label: Text('Colors'),
           onTapped: () => setState(() => index = 3),
         ),
@@ -160,16 +160,14 @@ class _MyHomePageState extends State<MyHomePage> {
         label: Text('Settings'),
         onTapped: () => setState(() => index = 4),
       ),
-      appBar: NavigationPanelAppBar(
-        title: Text(appTitle),
-        remainingSpace: isDesktop
-            ? WindowTitleBarBox(
-                child: Row(children: [
-                  Expanded(child: MoveWindow()),
-                  WindowButtons(),
-                ]),
-              )
-            : null,
+      appBar: WindowTitleBarBox(
+        child: MoveWindow(
+          child: NavigationPanelAppBar(
+            title: Text(appTitle),
+            remainingSpace:
+                isDesktop ? Row(children: [Spacer(), WindowButtons()]) : null,
+          ),
+        ),
       ),
       body: NavigationPanelBody(index: index, children: [
         InputsPage(),
@@ -179,62 +177,6 @@ class _MyHomePageState extends State<MyHomePage> {
         Settings(controller: settingsController),
       ]),
     );
-    return SizedBox();
-    // return Scaffold(
-    //   topBar: isDesktop
-    //       ? WindowTitleBarBox(
-    //           child: Row(children: [
-    //             Expanded(child: MoveWindow()),
-    //             WindowButtons(),
-    //           ]),
-    //         )
-    //       : null,
-    //   left: NavigationPanel(
-    //     menu: NavigationPanelMenuItem(
-    //       icon: Icon(Icons.dehaze),
-    //       label: Text('Showcase'),
-    //     ),
-    //     currentIndex: index,
-    //     items: [
-    //       NavigationPanelSectionHeader(
-    //         header: Text('Cool Navigation Panel Header'),
-    //       ),
-    //       NavigationPanelItem(
-    //         icon: Icon(Icons.input),
-    //         label: Text('Inputs'),
-    //         onTapped: () => setState(() => index = 0),
-    //       ),
-    //       NavigationPanelItem(
-    //         icon: Icon(Icons.format_align_center),
-    //         label: Text('Forms'),
-    //         onTapped: () => setState(() => index = 1),
-    //       ),
-    //       NavigationPanelTileSeparator(),
-    //       NavigationPanelItem(
-    //         icon: Icon(Icons.miscellaneous_services),
-    //         label: Text('Others'),
-    //         onTapped: () => setState(() => index = 2),
-    //       ),
-    //       NavigationPanelItem(
-    //         icon: Icon(Icons.color_lens),
-    //         label: Text('Colors'),
-    //         onTapped: () => setState(() => index = 3),
-    //       ),
-    //     ],
-    //     bottom: NavigationPanelItem(
-    //       icon: Icon(Icons.settings),
-    //       label: Text('Settings'),
-    //       onTapped: () => setState(() => index = 4),
-    //     ),
-    //   ),
-    //   body: NavigationPanelBody(index: index, children: [
-    //     InputsPage(),
-    //     Forms(),
-    //     Others(),
-    //     ColorsPage(controller: colorsController),
-    //     Settings(controller: settingsController),
-    //   ]),
-    // );
   }
 }
 
@@ -251,17 +193,16 @@ class WindowButtons extends StatelessWidget {
       mouseDown: ButtonThemeData.buttonColor(theme, ButtonStates.pressing),
     );
     final closeButtonColors = WindowButtonColors(
-      mouseOver: Colors.red.light,
-      mouseDown: Colors.red,
+      mouseOver: Colors.red,
+      mouseDown: Colors.red.dark,
       iconNormal: theme.inactiveColor,
-      iconMouseOver: theme.inactiveColor,
+      iconMouseOver: Colors.red.basedOnLuminance(),
+      iconMouseDown: Colors.red.dark.basedOnLuminance(),
     );
-    return Row(
-      children: [
-        MinimizeWindowButton(colors: buttonColors),
-        MaximizeWindowButton(colors: buttonColors),
-        CloseWindowButton(colors: closeButtonColors),
-      ],
-    );
+    return Row(children: [
+      MinimizeWindowButton(colors: buttonColors),
+      MaximizeWindowButton(colors: buttonColors),
+      CloseWindowButton(colors: closeButtonColors),
+    ]);
   }
 }
