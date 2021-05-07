@@ -15,6 +15,7 @@ dependencies:
     path: ../
   provider: ^5.0.0
   system_theme: ^1.0.0
+  bitsdojo_window: ^0.1.0+1
 
 dev_dependencies:
   flutter_test:

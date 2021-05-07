@@ -111,48 +111,36 @@ class _OthersState extends State<Others> {
               ),
             );
           }),
-          Row(children: [
-            Expanded(
-              child: ListTile(
-                title: Text('ListTile Title'),
-                subtitle: Text('ListTile Subtitle'),
-              ),
+          Wrap(children: [
+            ListTile(
+              title: Text('ListTile Title'),
+              subtitle: Text('ListTile Subtitle'),
             ),
-            Expanded(
-              child: TappableListTile(
-                leading: CircleAvatar(),
-                title: Text('TappableListTile Title'),
-                subtitle: Text('TappableListTile Subtitle'),
-                onTap: () {
-                  print('tapped tappable list tile');
-                },
-              ),
+            TappableListTile(
+              leading: CircleAvatar(),
+              title: Text('TappableListTile Title'),
+              subtitle: Text('TappableListTile Subtitle'),
+              onTap: () {
+                print('tapped tappable list tile');
+              },
             ),
-          ]),
-          Row(children: [
-            Expanded(
-              child: CheckboxListTile(
-                checked: checked,
-                onChanged: (v) => setState(() => checked = v!),
-                title: Text('CheckboxListTile title'),
-                subtitle: Text('CheckboxListTile subtitle'),
-              ),
+            CheckboxListTile(
+              checked: checked,
+              onChanged: (v) => setState(() => checked = v!),
+              title: Text('CheckboxListTile title'),
+              subtitle: Text('CheckboxListTile subtitle'),
             ),
-            Expanded(
-              child: SwitchListTile(
-                checked: checked,
-                onChanged: (v) => setState(() => checked = v),
-                title: Text('SwitchListTile title'),
-                subtitle: Text('SwitchListTile subtitle'),
-              ),
+            SwitchListTile(
+              checked: checked,
+              onChanged: (v) => setState(() => checked = v),
+              title: Text('SwitchListTile title'),
+              subtitle: Text('SwitchListTile subtitle'),
             ),
-            Expanded(
-              child: RadioListTile(
-                checked: checked,
-                onChanged: (v) => setState(() => checked = v),
-                title: Text('RadioListTile title'),
-                subtitle: Text('RadioListTile subtitle'),
-              ),
+            RadioListTile(
+              checked: checked,
+              onChanged: (v) => setState(() => checked = v),
+              title: Text('RadioListTile title'),
+              subtitle: Text('RadioListTile subtitle'),
             ),
           ]),
           Row(children: [

@@ -12,6 +12,7 @@ class Scaffold extends StatelessWidget {
     this.backgroundColor,
     this.expandBody = true,
     this.left,
+    this.topBar,
   }) : super(key: key);
 
   final Widget? header;
@@ -25,6 +26,8 @@ class Scaffold extends StatelessWidget {
 
   /// Wheter the body expands or not
   final bool expandBody;
+
+  final Widget? topBar;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -49,16 +52,21 @@ class Scaffold extends StatelessWidget {
       duration: style.mediumAnimationDuration,
       curve: style.animationCurve,
       color: color,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (this.left != null) left!,
+      child: Column(children: [
+        if (topBar != null) topBar!,
         Expanded(
-          child: Column(
-            children: [
-              if (header != null) header!,
-              if (body != null) Expanded(child: body!),
-              if (footer != null) footer!,
-            ],
-          ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (this.left != null) left!,
+            Expanded(
+              child: Column(
+                children: [
+                  if (header != null) header!,
+                  if (body != null) Expanded(child: body!),
+                  if (footer != null) footer!,
+                ],
+              ),
+            ),
+          ]),
         ),
       ]),
     );
