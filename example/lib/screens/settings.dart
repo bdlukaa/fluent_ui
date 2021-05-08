@@ -74,6 +74,14 @@ class Settings extends StatelessWidget {
             );
           }),
 
+          /// MediaQuery.of(context).brightness only doesn't work on windows
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
+            Text(
+              'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on windows yet.'
+              '\nWe must wait until Flutter Desktop stable release',
+              style: context.theme.typography.caption,
+            ),
+
           Text(
             'Navigation Pane Display Mode',
             style: context.theme.typography.subtitle,
@@ -93,14 +101,6 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
-
-          /// MediaQuery.of(context).brightness only doesn't work on windows
-          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
-            Text(
-              'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on windows yet.'
-              '\nWe must wait until Flutter Desktop stable release',
-              style: context.theme.typography.caption,
-            ),
           Text('Accent Color', style: context.theme.typography.subtitle),
           Wrap(children: [
             Tooltip(

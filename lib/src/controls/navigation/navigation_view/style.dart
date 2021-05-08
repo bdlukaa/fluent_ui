@@ -1,4 +1,4 @@
-part of 'navigation_panel.dart';
+part of 'view.dart';
 
 class NavigationPanelThemeData with Diagnosticable {
   final ButtonState<Color?>? color;

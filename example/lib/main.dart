@@ -128,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
+        header: FlutterLogo(),
         appBar: WindowTitleBarBox(
           child: MoveWindow(
             child: AppWindowBar(
@@ -163,14 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
             title: 'Colors',
           ),
         ],
-        autoSuggestBox: AutoSuggestBox(
-          controller: TextEditingController(),
-          items: [
-            'Item 1',
-            'Item 2',
-            'Item 3',
-            'Item 4',
-          ],
+        autoSuggestBox: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AutoSuggestBox(
+            controller: TextEditingController(),
+            items: [
+              'Item 1',
+              'Item 2',
+              'Item 3',
+              'Item 4',
+            ],
+          ),
         ),
         footerItems: [
           PaneItemSeparator(),
@@ -187,60 +191,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ColorsPage(controller: colorsController),
         Settings(controller: settingsController),
       ][index],
-    );
-    return NavigationPanel(
-      menu: NavigationPanelMenuItem(
-        icon: Icon(Icons.dehaze),
-        label: Text('Showcase'),
-      ),
-      currentIndex: index,
-      items: [
-        NavigationPanelSectionHeader(
-          header: Text('Cool Navigation Panel Header'),
-        ),
-        NavigationPanelItem(
-          icon: Icon(Icons.input),
-          label: Text('Inputs'),
-          onTapped: () => setState(() => index = 0),
-        ),
-        NavigationPanelItem(
-          icon: Icon(Icons.format_align_center),
-          label: Text('Forms'),
-          onTapped: () => setState(() => index = 1),
-        ),
-        NavigationPanelTileSeparator(),
-        NavigationPanelItem(
-          icon: Icon(Icons.miscellaneous_services),
-          label: Text('Others'),
-          onTapped: () => setState(() => index = 2),
-        ),
-        NavigationPanelItem(
-          icon: Icon(Icons.color_lens_outlined),
-          label: Text('Colors'),
-          onTapped: () => setState(() => index = 3),
-        ),
-      ],
-      bottom: NavigationPanelItem(
-        icon: Icon(Icons.settings),
-        label: Text('Settings'),
-        onTapped: () => setState(() => index = 4),
-      ),
-      appBar: WindowTitleBarBox(
-        child: MoveWindow(
-          child: NavigationPanelAppBar(
-            title: Text(appTitle),
-            remainingSpace:
-                isDesktop ? Row(children: [Spacer(), WindowButtons()]) : null,
-          ),
-        ),
-      ),
-      body: NavigationPanelBody(index: index, children: [
-        InputsPage(),
-        Forms(),
-        Others(),
-        ColorsPage(controller: colorsController),
-        Settings(controller: settingsController),
-      ]),
     );
   }
 }

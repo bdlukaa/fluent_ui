@@ -37,7 +37,7 @@ enum PaneDisplayMode {
   auto,
 }
 
-class NavigationPaneItem {
+class NavigationPaneItem with Diagnosticable {
   final Key? key;
 
   const NavigationPaneItem({this.key});
@@ -50,99 +50,121 @@ class PaneItem extends NavigationPaneItem {
     this.icon,
   }) : super(key: key);
 
-  /// The title used by this pane. If the display mode is top
+  /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
   /// is shown by the side of the [icon].
+  ///
+  /// This is also used by [Semantics] to allow screen readers to
+  /// read the screen.
   final String title;
+
+  /// The icon used by this item.
   final Widget? icon;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+  }
 
   static Widget buildPaneItemButton(
     BuildContext context,
     PaneItem item,
     PaneDisplayMode displayMode,
     bool selected,
-    VoidCallback onPressed,
-  ) {
+    VoidCallback onPressed, {
+    bool showTextOnTop = true,
+  }) {
     assert(displayMode != PaneDisplayMode.auto);
     final bool isTop = displayMode == PaneDisplayMode.top;
+    final bool isCompact = displayMode == PaneDisplayMode.compact;
     final bool isOpen = displayMode == PaneDisplayMode.open;
     final style = NavigationPanelThemeData.standard(context.theme).copyWith(
       context.theme.navigationPanelTheme,
     );
-    final result = SizedBox(
-      width: isTop ? 41.0 : null,
+
+    final Widget result = SizedBox(
       height: !isTop ? 41.0 : null,
       child: HoverButton(
         onPressed: onPressed,
         builder: (context, state) {
-          Widget child = AnimatedContainer(
+          final textStyle = selected
+              ? style.selectedTextStyle!(state)
+              : style.unselectedTextStyle!(state);
+          final textResult = Padding(
+            padding: style.labelPadding ?? EdgeInsets.zero,
+            child: Text(item.title, style: textStyle),
+          );
+          Widget child = Flex(
+            direction: isTop ? Axis.vertical : Axis.horizontal,
+            textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
+            children: [
+              if (isOpen) Expanded(child: textResult),
+              if (item.icon != null)
+                () {
+                  final icon = Padding(
+                    padding: style.iconPadding ?? EdgeInsets.zero,
+                    child: FluentTheme(
+                      data: context.theme.copyWith(
+                        iconTheme: IconThemeData(
+                          color: selected
+                              ? style.selectedIconColor!(state)
+                              : style.unselectedIconColor!(state),
+                        ),
+                      ),
+                      child: item.icon!,
+                    ),
+                  );
+                  if (isOpen) return icon;
+                  return Expanded(child: icon);
+                }(),
+            ],
+          );
+          if (isTop && showTextOnTop)
+            child = Row(mainAxisSize: MainAxisSize.min, children: [
+              child,
+              Padding(
+                child: textResult,
+                padding: EdgeInsets.only(right: 8.0),
+              ),
+            ]);
+          child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
             color: ButtonThemeData.uncheckedInputColor(context.theme, state),
-            child: Flex(
-              direction: isTop ? Axis.vertical : Axis.horizontal,
-              textDirection:
-                  isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
-              children: [
-                if (isOpen)
-                  () {
-                    final textStyle = selected
-                        ? style.selectedTextStyle!(state)
-                        : style.unselectedTextStyle!(state);
-                    return Expanded(
-                      child: Padding(
-                        padding: style.labelPadding ?? EdgeInsets.zero,
-                        child: Text(item.title, style: textStyle),
-                      ),
-                    );
-                  }(),
-                if (item.icon != null)
-                  () {
-                    final icon = Padding(
-                      padding: style.iconPadding ?? EdgeInsets.zero,
-                      child: FluentTheme(
-                        data: context.theme.copyWith(
-                          iconTheme: IconThemeData(
-                            color: selected
-                                ? style.selectedIconColor!(state)
-                                : style.unselectedIconColor!(state),
-                          ),
-                        ),
-                        child: item.icon!,
-                      ),
-                    );
-                    if (isOpen) return icon;
-                    return Expanded(child: icon);
-                  }(),
-                // TODO: the indicator should be drawn above the widget
-                AnimatedSwitcher(
-                  duration: style.animationDuration ?? Duration.zero,
-                  transitionBuilder: (child, animation) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                        begin: Offset(!isTop ? -1 : 0, isTop ? 1 : 0),
-                        end: Offset.zero,
-                      ).animate(CurvedAnimation(
-                        parent: animation,
-                        curve: style.animationCurve ?? standartCurve,
-                      )),
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    key: ValueKey<bool>(selected),
-                    height: isTop ? 4 : double.infinity,
-                    width: !isTop ? 4 : null,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: isTop ? 10 : 0,
-                      vertical: !isTop ? 10 : 0,
-                    ),
-                    color: selected ? style.highlightColor : Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
+            child: child,
           );
+          child = Stack(fit: StackFit.passthrough, children: [
+            child,
+            Align(
+              alignment: isTop ? Alignment.bottomCenter : Alignment.centerLeft,
+              child: AnimatedSwitcher(
+                duration: style.animationDuration ?? Duration.zero,
+                transitionBuilder: (child, animation) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset(!isTop ? -1 : 0, isTop ? 1 : 0),
+                      end: Offset.zero,
+                    ).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: style.animationCurve ?? standartCurve,
+                    )),
+                    child: child,
+                  );
+                },
+                child: Container(
+                  key: ValueKey<bool>(selected),
+                  height: isTop ? 4 : double.infinity,
+                  width: !isTop ? 4 : null,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: isTop ? 10 : 0,
+                    vertical: !isTop ? 10 : 0,
+                  ),
+                  color: selected ? style.highlightColor : Colors.transparent,
+                ),
+              ),
+            ),
+          ]);
           return Semantics(
             label: item.title,
             selected: selected,
@@ -155,7 +177,8 @@ class PaneItem extends NavigationPaneItem {
         },
       ),
     );
-    if (!isOpen) return Tooltip(message: item.title, child: result);
+    if (((isTop && !showTextOnTop) || isCompact) && item.title.isNotEmpty)
+      return Tooltip(message: item.title, child: result);
     return result;
   }
 }
@@ -173,11 +196,12 @@ class PaneItemHeader extends NavigationPaneItem {
   final Widget header;
 }
 
-class NavigationPane {
+class NavigationPane with Diagnosticable {
   const NavigationPane({
     this.key,
     this.selected,
     this.onChanged,
+    this.header,
     this.items = const [],
     this.footerItems = const [],
     this.autoSuggestBox,
@@ -185,13 +209,34 @@ class NavigationPane {
     this.appBar,
   });
 
+  final Key? key;
+
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
 
-  final Key? key;
+  /// The header of the pane.
+  ///
+  /// Usually a [Text] or an [Image].
+  ///
+  /// ![Top Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-top.png)
+  /// ![Left Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-left.png)
+  final Widget? header;
+
+  /// The items used by this panel. These items are displayed before
+  /// [autoSuggestBox] and [footerItems].
+  ///
+  /// Only [PaneItem], [PaneItemSeparator] and [PaneItemHeader] are
+  /// accepted types. If other type is detected, an [UnsupportedError]
+  /// is thrown.
   final List<NavigationPaneItem> items;
 
+  /// The footer items used by this panel. These items are displayed at
+  /// the end of the panel and they can't be overflown.
+  ///
+  /// | Top | Left |
+  /// | --- | --- |
+  /// | ![Top Footer](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-footer-top.png) | ![Left Footer](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-footer-left.png) |
   final List<NavigationPaneItem> footerItems;
 
   /// An optional control to allow for app-level search. Usually
@@ -203,7 +248,18 @@ class NavigationPane {
 
   /// The current selected index.
   final int? selected;
+
+  /// Called when the current index changes.
   final ValueChanged<int>? onChanged;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty('displayMode', displayMode));
+    properties.add(IterableProperty('items', items));
+    properties.add(IterableProperty('footerItems', footerItems));
+    properties.add(IntProperty('selected', selected));
+  }
 
   /// A all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
@@ -273,6 +329,11 @@ class _TopNavigationPane extends StatelessWidget {
     Widget topBar = Acrylic(
       height: kOneLineTileHeight,
       child: Row(children: [
+        if (pane.header != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+            child: pane.header!,
+          ),
         ...pane.items.map((item) {
           return _buildItem(context, item);
         }),
@@ -336,15 +397,13 @@ class _CompactNavigationPane extends StatelessWidget {
     return Acrylic(
       width: kCompactNavigationPanelWidth,
       child: Column(children: [
-        // if (menu != null)
-        //   Padding(
-        //     padding: EdgeInsets.only(bottom: 22),
-        //     child: NavigationPanelMenu(
-        //       item: menu!,
-        //       compact: true,
-        //       onTap: onMenuTapped,
-        //     ),
-        //   ),
+        PaneItem.buildPaneItemButton(
+          context,
+          PaneItem(title: 'Close Navigation', icon: Icon(Icons.menu)),
+          pane.displayMode,
+          false,
+          () {},
+        ),
         Expanded(
           child: ListView(children: [
             ...pane.items.map((item) {
@@ -406,18 +465,32 @@ class _OpenNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuButton = SizedBox(
+      width: kCompactNavigationPanelWidth,
+      child: PaneItem.buildPaneItemButton(
+        context,
+        PaneItem(title: 'Open navigation', icon: Icon(Icons.menu)),
+        PaneDisplayMode.compact,
+        false,
+        () {},
+      ),
+    );
     return Acrylic(
       width: kOpenNavigationPanelWidth,
       child: Column(children: [
-        // if (menu != null)
-        //   Padding(
-        //     padding: EdgeInsets.only(bottom: 22),
-        //     child: NavigationPanelMenu(
-        //       item: menu!,
-        //       compact: true,
-        //       onTap: onMenuTapped,
-        //     ),
-        //   ),
+        if (pane.header != null)
+          Row(children: [
+            menuButton,
+            Expanded(
+              child: Align(
+                child: pane.header!,
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+          ])
+        else
+          menuButton,
+        if (pane.autoSuggestBox != null) pane.autoSuggestBox!,
         Expanded(
           child: ListView(children: [
             ...pane.items.map((item) {

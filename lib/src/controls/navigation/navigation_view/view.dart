@@ -2,7 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
+
+part 'body.dart';
 part 'pane.dart';
+part 'style.dart';
 
 class NavigationView extends StatefulWidget {
   const NavigationView({Key? key, this.pane, this.content}) : super(key: key);
