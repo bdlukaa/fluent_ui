@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         autoSuggestBox: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AutoSuggestBox(
             controller: TextEditingController(),
             items: [
@@ -176,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+        autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [
           PaneItemSeparator(),
           PaneItem(

@@ -84,6 +84,7 @@ class PaneItem extends NavigationPaneItem {
     );
 
     final Widget result = SizedBox(
+      key: item.key,
       height: !isTop ? 41.0 : null,
       child: HoverButton(
         onPressed: onPressed,
@@ -205,6 +206,7 @@ class NavigationPane with Diagnosticable {
     this.items = const [],
     this.footerItems = const [],
     this.autoSuggestBox,
+    this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
     this.appBar,
   });
@@ -242,6 +244,13 @@ class NavigationPane with Diagnosticable {
   /// An optional control to allow for app-level search. Usually
   /// an [AutoSuggestBox]
   final Widget? autoSuggestBox;
+
+  /// Used when the current display mode is [PaneDisplayMode.compact]
+  /// as a replacement to [autoSuggestBox]. It's only displayed if
+  /// [autoSuggestBox] is non-null.
+  ///
+  /// It's usually an [Icon] with [Icons.search] as the icon.
+  final Widget? autoSuggestBoxReplacement;
 
   /// Usualy an [AppWindowBar]
   final Widget? appBar;
@@ -290,6 +299,7 @@ class _TopNavigationPane extends StatelessWidget {
     final theme = FluentTheme.of(context);
     if (item is PaneItemHeader) {
       return Padding(
+        key: item.key,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: DefaultTextStyle(
           style: theme.typography.base ?? TextStyle(),
@@ -298,6 +308,7 @@ class _TopNavigationPane extends StatelessWidget {
       );
     } else if (item is PaneItemSeparator) {
       return Divider(
+        key: item.key,
         direction: Axis.vertical,
         style: DividerThemeData(margin: (axis) {
           return EdgeInsets.symmetric(
@@ -366,6 +377,7 @@ class _CompactNavigationPane extends StatelessWidget {
       return SizedBox();
     } else if (item is PaneItemSeparator) {
       return Divider(
+        key: item.key,
         direction: Axis.horizontal,
         style: DividerThemeData(margin: (axis) {
           return EdgeInsets.symmetric(
@@ -394,16 +406,36 @@ class _CompactNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
+    final bool showReplacement =
+        pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return Acrylic(
       width: kCompactNavigationPanelWidth,
       child: Column(children: [
-        PaneItem.buildPaneItemButton(
-          context,
-          PaneItem(title: 'Close Navigation', icon: Icon(Icons.menu)),
-          pane.displayMode,
-          false,
-          () {},
+        Padding(
+          padding: showReplacement ? EdgeInsets.zero : topPadding,
+          child: PaneItem.buildPaneItemButton(
+            context,
+            PaneItem(title: 'Open Navigation', icon: Icon(Icons.menu)),
+            pane.displayMode,
+            false,
+            () {},
+          ),
         ),
+        if (showReplacement)
+          Padding(
+            padding: topPadding,
+            child: PaneItem.buildPaneItemButton(
+              context,
+              PaneItem(
+                title: 'Click to search',
+                icon: pane.autoSuggestBoxReplacement,
+              ),
+              pane.displayMode,
+              false,
+              () {},
+            ),
+          ),
         Expanded(
           child: ListView(children: [
             ...pane.items.map((item) {
@@ -429,6 +461,7 @@ class _OpenNavigationPane extends StatelessWidget {
     final theme = FluentTheme.of(context);
     if (item is PaneItemHeader) {
       return Padding(
+        key: item.key,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: DefaultTextStyle(
           style: theme.typography.base ?? TextStyle(),
@@ -437,6 +470,7 @@ class _OpenNavigationPane extends StatelessWidget {
       );
     } else if (item is PaneItemSeparator) {
       return Divider(
+        key: item.key,
         direction: Axis.horizontal,
         style: DividerThemeData(margin: (axis) {
           return EdgeInsets.symmetric(
@@ -465,11 +499,12 @@ class _OpenNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = SizedBox(
       width: kCompactNavigationPanelWidth,
       child: PaneItem.buildPaneItemButton(
         context,
-        PaneItem(title: 'Open navigation', icon: Icon(Icons.menu)),
+        PaneItem(title: 'Close navigation', icon: Icon(Icons.menu)),
         PaneDisplayMode.compact,
         false,
         () {},
@@ -478,19 +513,29 @@ class _OpenNavigationPane extends StatelessWidget {
     return Acrylic(
       width: kOpenNavigationPanelWidth,
       child: Column(children: [
-        if (pane.header != null)
-          Row(children: [
-            menuButton,
-            Expanded(
-              child: Align(
-                child: pane.header!,
-                alignment: Alignment.centerLeft,
-              ),
-            ),
-          ])
-        else
-          menuButton,
-        if (pane.autoSuggestBox != null) pane.autoSuggestBox!,
+        Padding(
+          padding: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
+          child: () {
+            if (pane.header != null)
+              return Row(children: [
+                menuButton,
+                Expanded(
+                  child: Align(
+                    child: pane.header!,
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+              ]);
+            else
+              return menuButton;
+          }(),
+        ),
+        if (pane.autoSuggestBox != null)
+          Container(
+            height: 41.0,
+            margin: topPadding,
+            child: pane.autoSuggestBox!,
+          ),
         Expanded(
           child: ListView(children: [
             ...pane.items.map((item) {
