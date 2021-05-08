@@ -185,13 +185,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      content: [
-        InputsPage(),
-        Forms(),
-        Others(),
-        ColorsPage(controller: colorsController),
-        Settings(controller: settingsController),
-      ][index],
+      content: NavigationBody(
+        index: index,
+        children: [
+          InputsPage(),
+          Forms(),
+          Others(),
+          ColorsPage(controller: colorsController),
+          Settings(controller: settingsController),
+        ],
+      ),
     );
   }
 }

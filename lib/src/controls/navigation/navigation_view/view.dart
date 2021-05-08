@@ -90,7 +90,10 @@ class _NavigationViewState extends State<NavigationView> {
     }
     return Container(
       color: FluentTheme.of(context).scaffoldBackgroundColor,
-      child: paneResult,
+      child: _NavigationBody(
+        displayMode: widget.pane?.displayMode,
+        child: paneResult,
+      ),
     );
   }
 }
