@@ -10,11 +10,22 @@ part 'pane.dart';
 part 'style.dart';
 
 class NavigationView extends StatefulWidget {
-  const NavigationView({Key? key, this.pane, this.content}) : super(key: key);
+  const NavigationView({
+    Key? key,
+    this.pane,
+    this.content = const SizedBox.shrink(),
+    // If more properties are added here, make sure to
+    // add them to the automatic mode as well.
+  }) : super(key: key);
 
+  /// The navigation pane, that can be displayed either on the
+  /// left, on the top, or above [content].
   final NavigationPane? pane;
 
-  final Widget? content;
+  /// The content of the pane.
+  /// 
+  /// Usually an [NavigationBody].
+  final Widget content;
 
   @override
   _NavigationViewState createState() => _NavigationViewState();
@@ -31,7 +42,7 @@ class _NavigationViewState extends State<NavigationView> {
       if (pane.displayMode == PaneDisplayMode.top) {
         paneResult = Column(children: [
           _TopNavigationPane(pane: pane),
-          if (widget.content != null) Expanded(child: widget.content!),
+          Expanded(child: widget.content),
         ]);
       } else if (pane.displayMode == PaneDisplayMode.auto) {
         /// For more info on the adaptive behavior, see
@@ -54,7 +65,24 @@ class _NavigationViewState extends State<NavigationView> {
             } else {
               currentDisplayMode = PaneDisplayMode.minimal;
             }
-            return SizedBox();
+            /// We display a new navigation view with the [currentDisplayMode].
+            /// We can do this because [currentDisplayMode] can never be `auto`,
+            /// so it won't stack overflow (error).
+            return NavigationView(
+              content: widget.content,
+              pane: NavigationPane(
+                displayMode: currentDisplayMode!,
+                appBar: pane.appBar,
+                autoSuggestBox: pane.autoSuggestBox,
+                autoSuggestBoxReplacement: pane.autoSuggestBoxReplacement,
+                footerItems: pane.footerItems,
+                header: pane.header,
+                items: pane.items,
+                key: pane.key,
+                onChanged: pane.onChanged,
+                selected: pane.selected,
+              ),
+            );
           },
         );
       } else {
@@ -65,7 +93,7 @@ class _NavigationViewState extends State<NavigationView> {
               Expanded(
                 child: Row(children: [
                   _CompactNavigationPane(pane: pane),
-                  if (widget.content != null) Expanded(child: widget.content!),
+                  Expanded(child: widget.content),
                 ]),
               ),
             ]);
@@ -76,7 +104,7 @@ class _NavigationViewState extends State<NavigationView> {
               Expanded(
                 child: Row(children: [
                   _OpenNavigationPane(pane: pane),
-                  if (widget.content != null) Expanded(child: widget.content!),
+                  Expanded(child: widget.content),
                 ]),
               ),
             ]);
@@ -102,17 +130,17 @@ class _NavigationViewState extends State<NavigationView> {
                       },
                     ),
                   ),
-                  child: widget.content!,
+                  child: widget.content,
                 ),
               ),
             ]);
             break;
           default:
-            paneResult = SizedBox.shrink(child: widget.content!);
+            paneResult = widget.content;
         }
       }
     } else {
-      paneResult = SizedBox.shrink(child: widget.content!);
+      paneResult = widget.content;
     }
     return Container(
       color: FluentTheme.of(context).scaffoldBackgroundColor,

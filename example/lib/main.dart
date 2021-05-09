@@ -45,9 +45,8 @@ void main() async {
   if (isDesktop)
     doWhenWindowReady(() {
       final win = appWindow;
-      final initialSize = Size(755, 545);
-      win.minSize = initialSize;
-      win.size = initialSize;
+      win.minSize = Size(500, 500);
+      win.size = Size(755, 545);
       win.alignment = Alignment.center;
       win.title = appTitle;
       win.show();
