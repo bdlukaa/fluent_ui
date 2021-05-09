@@ -1,7 +1,9 @@
 part of 'view.dart';
 
+/// The theme data used by [NavigationView]
 class NavigationPanelThemeData with Diagnosticable {
-  final ButtonState<Color?>? color;
+  final Color? backgroundColor;
+  final ButtonState<Color?>? tileColor;
   final Color? highlightColor;
 
   final EdgeInsetsGeometry? labelPadding;
@@ -9,20 +11,23 @@ class NavigationPanelThemeData with Diagnosticable {
 
   final ButtonState<MouseCursor>? cursor;
 
+  final TextStyle? itemHeaderTextStyle;
   final ButtonState<TextStyle>? selectedTextStyle;
   final ButtonState<TextStyle>? unselectedTextStyle;
-  final ButtonState<Color?>? selectedIconColor;
-  final ButtonState<Color?>? unselectedIconColor;
+  final ButtonState<Color>? selectedIconColor;
+  final ButtonState<Color>? unselectedIconColor;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
 
   const NavigationPanelThemeData({
-    this.color,
+    this.backgroundColor,
+    this.tileColor,
     this.highlightColor,
     this.labelPadding,
     this.iconPadding,
     this.cursor,
+    this.itemHeaderTextStyle,
     this.selectedTextStyle,
     this.unselectedTextStyle,
     this.animationDuration,
@@ -30,6 +35,12 @@ class NavigationPanelThemeData with Diagnosticable {
     this.selectedIconColor,
     this.unselectedIconColor,
   });
+
+  static NavigationPanelThemeData of(BuildContext context) {
+    return NavigationPanelThemeData.standard(context.theme).copyWith(
+      context.theme.navigationPanelTheme,
+    );
+  }
 
   factory NavigationPanelThemeData.standard(ThemeData style) {
     final disabledTextStyle = TextStyle(
@@ -39,8 +50,13 @@ class NavigationPanelThemeData with Diagnosticable {
     return NavigationPanelThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      color: (state) => ButtonThemeData.uncheckedInputColor(style, state),
+      backgroundColor: AccentColor('normal', {
+        'normal': Color.fromARGB(255, 230, 230, 230),
+        'dark': Color.fromARGB(255, 25, 25, 25)
+      }).resolveFromBrightness(style.brightness),
+      tileColor: (state) => ButtonThemeData.uncheckedInputColor(style, state),
       highlightColor: style.accentColor,
+      itemHeaderTextStyle: style.typography.base,
       selectedTextStyle: (state) => state.isDisabled
           ? disabledTextStyle
           : style.typography.body!.copyWith(color: style.accentColor),
@@ -50,7 +66,7 @@ class NavigationPanelThemeData with Diagnosticable {
       labelPadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.only(right: 10, left: 8),
       selectedIconColor: (_) => style.accentColor,
-      unselectedIconColor: (_) => null,
+      unselectedIconColor: (_) => style.inactiveColor,
     );
   }
 
@@ -59,7 +75,9 @@ class NavigationPanelThemeData with Diagnosticable {
       cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,
-      color: style?.color ?? color,
+      tileColor: style?.tileColor ?? tileColor,
+      backgroundColor: style?.backgroundColor ?? backgroundColor,
+      itemHeaderTextStyle: style?.itemHeaderTextStyle ?? itemHeaderTextStyle,
       selectedTextStyle: style?.selectedTextStyle ?? selectedTextStyle,
       unselectedTextStyle: style?.unselectedTextStyle ?? unselectedTextStyle,
       highlightColor: style?.highlightColor ?? highlightColor,
@@ -73,7 +91,8 @@ class NavigationPanelThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty.has('color', color));
+    properties.add(ObjectFlagProperty.has('tileColor', tileColor));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
     properties.add(ColorProperty('highlightColor', highlightColor));
     properties.add(ObjectFlagProperty.has('cursor', cursor));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(

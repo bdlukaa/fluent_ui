@@ -36,7 +36,10 @@ class Acrylic extends StatelessWidget {
         ),
         super(key: key);
 
-  /// The color to fill the background of the box
+  /// The color to fill the background of the box.
+  /// 
+  /// If [decoration] and this is null, [ThemeData.acrylicBackgroundColor]
+  /// is used.
   final Color? color;
 
   /// The decoration to paint behind the [child].
@@ -114,7 +117,7 @@ class Acrylic extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final style = context.theme;
     final color = AccentColor.resolve(
-      this.color ?? style.navigationPanelBackgroundColor,
+      this.color ?? style.acrylicBackgroundColor,
       context,
     );
     Widget result = AnimatedContainer(

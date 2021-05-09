@@ -66,35 +66,38 @@ class _NavigationBodyState extends State<NavigationBody> {
     assert(debugCheckHasFluentTheme(context));
     final _body = _NavigationBody.maybeOf(context);
     final theme = FluentTheme.of(context);
-    return AnimatedSwitcher(
-      switchInCurve: widget.animationCurve ?? theme.animationCurve,
-      duration: widget.animationDuration ?? theme.fastAnimationDuration,
-      layoutBuilder: (child, children) {
-        return SizedBox(child: child);
-      },
-      transitionBuilder: (child, animation) {
-        if (widget.transitionBuilder != null)
-          return widget.transitionBuilder!(child, animation);
-        bool useDrillTransition = true;
-        if (_body != null && _body.displayMode != null) {
-          if (_body.displayMode! == PaneDisplayMode.top)
-            useDrillTransition = false;
-        }
-        if (useDrillTransition)
-          return DrillInPageTransition(
-            child: child,
-            animation: animation,
-          );
-        else
-          return HorizontalSlidePageTransition(
-            child: child,
-            animation: animation,
-            fromLeft: previousIndex > widget.index,
-          );
-      },
-      child: SizedBox(
-        key: ValueKey<int>(widget.index),
-        child: widget.children[widget.index],
+    return Container(
+      color: theme.scaffoldBackgroundColor,
+      child: AnimatedSwitcher(
+        switchInCurve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? theme.fastAnimationDuration,
+        layoutBuilder: (child, children) {
+          return SizedBox(child: child);
+        },
+        transitionBuilder: (child, animation) {
+          if (widget.transitionBuilder != null)
+            return widget.transitionBuilder!(child, animation);
+          bool useDrillTransition = true;
+          if (_body != null && _body.displayMode != null) {
+            if (_body.displayMode! == PaneDisplayMode.top)
+              useDrillTransition = false;
+          }
+          if (useDrillTransition)
+            return DrillInPageTransition(
+              child: child,
+              animation: animation,
+            );
+          else
+            return HorizontalSlidePageTransition(
+              child: child,
+              animation: animation,
+              fromLeft: previousIndex > widget.index,
+            );
+        },
+        child: SizedBox(
+          key: ValueKey<int>(widget.index),
+          child: widget.children[widget.index],
+        ),
       ),
     );
   }

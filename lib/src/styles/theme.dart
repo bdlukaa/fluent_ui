@@ -49,7 +49,7 @@ class ThemeData with Diagnosticable {
   final Color disabledColor;
   final Color shadowColor;
   final Color scaffoldBackgroundColor;
-  final Color navigationPanelBackgroundColor;
+  final Color acrylicBackgroundColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -97,7 +97,7 @@ class ThemeData with Diagnosticable {
     required this.animationCurve,
     required this.brightness,
     required this.scaffoldBackgroundColor,
-    required this.navigationPanelBackgroundColor,
+    required this.acrylicBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.toggleSwitchTheme,
@@ -133,7 +133,7 @@ class ThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
-    Color? navigationPanelBackgroundColor,
+    Color? acrylicBackgroundColor,
     Color? shadowColor,
     ButtonState<MouseCursor>? inputMouseCursor,
     Duration? fasterAnimationDuration,
@@ -182,7 +182,7 @@ class ThemeData with Diagnosticable {
       'normal': Colors.white,
       'dark': Colors.black,
     }).resolveFromBrightness(brightness);
-    navigationPanelBackgroundColor ??= navigationPanelBackgroundColor ??
+    acrylicBackgroundColor ??= acrylicBackgroundColor ??
         AccentColor('normal', {
           'normal': Color.fromARGB(255, 230, 230, 230),
           'dark': Color.fromARGB(255, 25, 25, 25)
@@ -229,7 +229,7 @@ class ThemeData with Diagnosticable {
       inactiveBackgroundColor: inactiveBackgroundColor,
       disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      navigationPanelBackgroundColor: navigationPanelBackgroundColor,
+      acrylicBackgroundColor: acrylicBackgroundColor,
       shadowColor: shadowColor,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
@@ -260,7 +260,7 @@ class ThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
-    Color? navigationPanelBackgroundColor,
+    Color? acrylicBackgroundColor,
     Color? shadowColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
@@ -296,8 +296,8 @@ class ThemeData with Diagnosticable {
       disabledColor: disabledColor ?? this.disabledColor,
       scaffoldBackgroundColor:
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
-      navigationPanelBackgroundColor:
-          navigationPanelBackgroundColor ?? this.navigationPanelBackgroundColor,
+      acrylicBackgroundColor:
+          acrylicBackgroundColor ?? this.acrylicBackgroundColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
@@ -341,8 +341,8 @@ class ThemeData with Diagnosticable {
       ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor),
     );
     properties.add(ColorProperty(
-      'navigationPanelBackgroundColor',
-      navigationPanelBackgroundColor,
+      'acrylicBackgroundColor',
+      acrylicBackgroundColor,
     ));
     properties.add(EnumProperty('brightness', brightness));
     properties.add(DiagnosticsProperty<Duration>(

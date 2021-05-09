@@ -2,8 +2,6 @@ Date format: DD/MM/YYYY
 
 ## [2.0.0] - [07/05/2021]
 
-- Reworked the navigation panel to improve fidelity
-- Implemented `ScaffoldPage`, a widget to help you to implement your screens in collaboration with NavigationPanel
 
 ## [1.10.1] - [05/05/2021]
 

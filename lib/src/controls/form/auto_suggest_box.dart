@@ -180,7 +180,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           child: Acrylic(
             width: box.size.width,
             decoration: BoxDecoration(
-              color: context.theme.navigationPanelBackgroundColor,
+              color: context.theme.acrylicBackgroundColor,
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(4.0),
               ),

@@ -9,7 +9,22 @@ part 'body.dart';
 part 'pane.dart';
 part 'style.dart';
 
+/// The NavigationView control provides top-level navigation
+/// for your app. It adapts to a variety of screen sizes and
+/// supports both top and left navigation styles.
+///
+/// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
+///
+/// See also:
+///   * [NavigationBody], a widget that implement fluent
+///     transitions into [NavigationView]
+///   * [NavigationPane], the pane used by [NavigationView],
+///     that can be displayed either at the left and top
+///   * [TabView], a widget similar to [NavigationView], useful
+///     to display several pages of content while giving a user
+///     the capability to rearrange, open, or close new tabs.
 class NavigationView extends StatefulWidget {
+  /// Creates a navigation view.
   const NavigationView({
     Key? key,
     this.pane,
@@ -23,15 +38,17 @@ class NavigationView extends StatefulWidget {
   final NavigationPane? pane;
 
   /// The content of the pane.
-  /// 
+  ///
   /// Usually an [NavigationBody].
   final Widget content;
 
   @override
-  _NavigationViewState createState() => _NavigationViewState();
+  NavigationViewState createState() => NavigationViewState();
 }
 
-class _NavigationViewState extends State<NavigationView> {
+class NavigationViewState extends State<NavigationView> {
+  /// The current display mode used by the automatic pane mode.
+  /// This can not be changed
   PaneDisplayMode? currentDisplayMode;
 
   @override
@@ -65,6 +82,7 @@ class _NavigationViewState extends State<NavigationView> {
             } else {
               currentDisplayMode = PaneDisplayMode.minimal;
             }
+
             /// We display a new navigation view with the [currentDisplayMode].
             /// We can do this because [currentDisplayMode] can never be `auto`,
             /// so it won't stack overflow (error).
