@@ -81,12 +81,38 @@ class _NavigationViewState extends State<NavigationView> {
               ),
             ]);
             break;
+          case PaneDisplayMode.minimal:
+            assert(debugCheckHasOverlay(context));
+            paneResult = Column(children: [
+              if (pane.appBar != null) pane.appBar!,
+              Expanded(
+                child: ScaffoldPageParent(
+                  paneButton: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: PaneItem.buildPaneItemButton(
+                      context,
+                      PaneItem(
+                        title: 'Open Navigation',
+                        icon: Icon(Icons.menu),
+                      ),
+                      PaneDisplayMode.compact,
+                      false,
+                      () {
+                        // TODO: open minimal overlay
+                      },
+                    ),
+                  ),
+                  child: widget.content!,
+                ),
+              ),
+            ]);
+            break;
           default:
-            paneResult = SizedBox.shrink();
+            paneResult = SizedBox.shrink(child: widget.content!);
         }
       }
     } else {
-      paneResult = SizedBox.shrink();
+      paneResult = SizedBox.shrink(child: widget.content!);
     }
     return Container(
       color: FluentTheme.of(context).scaffoldBackgroundColor,

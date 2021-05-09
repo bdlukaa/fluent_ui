@@ -33,11 +33,11 @@ class NavigationBody extends StatefulWidget {
 
   /// The curve used by the transition. If null, [ThemeData.animationCurve]
   /// is used.
-  /// 
+  ///
   /// See also:
   ///   * [Curves], a collection of common animation easing curves.
   final Curve? animationCurve;
-  
+
   /// The duration of the transition. If null, [ThemeData.fastAnimationDuration]
   /// is used.
   final Duration? animationDuration;
@@ -63,14 +63,12 @@ class _NavigationBodyState extends State<NavigationBody> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final _body = _NavigationBody.maybeOf(context);
+    final theme = FluentTheme.of(context);
     return AnimatedSwitcher(
-      switchInCurve: widget.animationCurve ??
-          context.maybeTheme?.animationCurve ??
-          Curves.linear,
-      duration: widget.animationDuration ??
-          context.maybeTheme?.fastAnimationDuration ??
-          Duration(milliseconds: 300),
+      switchInCurve: widget.animationCurve ?? theme.animationCurve,
+      duration: widget.animationDuration ?? theme.fastAnimationDuration,
       layoutBuilder: (child, children) {
         return SizedBox(child: child);
       },
@@ -102,6 +100,8 @@ class _NavigationBodyState extends State<NavigationBody> {
   }
 }
 
+/// A widget that tells [NavigationBody] what's the panel display
+/// mode of the parent [NavigationView], if any.
 class _NavigationBody extends InheritedWidget {
   _NavigationBody({
     Key? key,

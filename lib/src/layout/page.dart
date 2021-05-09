@@ -38,11 +38,7 @@ class ScaffoldPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: kPageDefaultVerticalPadding),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (topBar != null)
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: topBar,
-          ),
+        if (topBar != null) topBar!,
         Expanded(child: () {
           final finalContent = Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -69,9 +65,15 @@ class ScaffoldPage extends StatelessWidget {
 class PageTopBar extends StatelessWidget {
   const PageTopBar({
     Key? key,
+    this.leading,
     this.header,
     this.commandBar,
   }) : super(key: key);
+
+  /// The widget displayed before [header]. If null, some widget
+  /// can be inserted here implicitly. To avoid this, set this
+  /// property to [SizedBox.shrink()].
+  final Widget? leading;
 
   /// The header of this bar.
   ///
@@ -84,9 +86,22 @@ class PageTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final pageParent = ScaffoldPageParent.maybeOf(context);
+    final leading = this.leading ?? pageParent?.paneButton;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 640.0;
+    final double horizontalPadding =
+        isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
+      padding: EdgeInsets.only(
+        bottom: 18.0,
+        left: leading != null ? 0 : horizontalPadding,
+        right: horizontalPadding,
+      ),
       child: Row(children: [
+        if (leading != null) leading,
         Expanded(
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.subheader!,
@@ -96,5 +111,28 @@ class PageTopBar extends StatelessWidget {
         if (commandBar != null) commandBar!,
       ]),
     );
+  }
+}
+
+class ScaffoldPageParent extends InheritedWidget {
+  const ScaffoldPageParent({
+    Key? key,
+    required this.child,
+    this.paneButton,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+
+  /// The button used by [PageTopBar], displayed before [PageTopBar.header].
+  /// It can be overritten
+  final Widget? paneButton;
+
+  static ScaffoldPageParent? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ScaffoldPageParent>();
+  }
+
+  @override
+  bool updateShouldNotify(ScaffoldPageParent oldWidget) {
+    return true;
   }
 }

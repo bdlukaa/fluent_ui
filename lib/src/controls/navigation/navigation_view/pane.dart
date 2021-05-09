@@ -86,6 +86,7 @@ class PaneItem extends NavigationPaneItem {
     final Widget result = SizedBox(
       key: item.key,
       height: !isTop ? 41.0 : null,
+      width: isCompact ? kCompactNavigationPanelWidth : null,
       child: HoverButton(
         onPressed: onPressed,
         builder: (context, state) {
@@ -327,6 +328,7 @@ class _TopNavigationPane extends StatelessWidget {
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
         },
+        showTextOnTop: !pane.footerItems.contains(item),
       );
     } else {
       throw UnsupportedError(
