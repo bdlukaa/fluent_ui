@@ -1,14 +1,24 @@
 part of 'view.dart';
 
-/// The theme data used by [NavigationView]
-class NavigationPanelThemeData with Diagnosticable {
+/// The theme data used by [NavigationView]. The default theme
+/// data used is [NavigationPaneThemeData.standard].
+class NavigationPaneThemeData with Diagnosticable {
+  /// The pane background color. If null, [ThemeData.acrylicBackgroundColor]
+  /// is used.
   final Color? backgroundColor;
+
+  /// The color of the tiles. If null, [ButtonThemeData.uncheckedInputColor]
+  /// is used
   final ButtonState<Color?>? tileColor;
+
+  /// The highlight color used on the tiles. If null, [ThemeData.accentColor]
+  /// is used.
   final Color? highlightColor;
 
   final EdgeInsetsGeometry? labelPadding;
   final EdgeInsetsGeometry? iconPadding;
 
+  /// The cursor used by the tiles. [ThemeData.inputMouseCursor] is used by default
   final ButtonState<MouseCursor>? cursor;
 
   final TextStyle? itemHeaderTextStyle;
@@ -20,7 +30,7 @@ class NavigationPanelThemeData with Diagnosticable {
   final Duration? animationDuration;
   final Curve? animationCurve;
 
-  const NavigationPanelThemeData({
+  const NavigationPaneThemeData({
     this.backgroundColor,
     this.tileColor,
     this.highlightColor,
@@ -36,24 +46,21 @@ class NavigationPanelThemeData with Diagnosticable {
     this.unselectedIconColor,
   });
 
-  static NavigationPanelThemeData of(BuildContext context) {
-    return NavigationPanelThemeData.standard(context.theme).copyWith(
-      context.theme.navigationPanelTheme,
+  static NavigationPaneThemeData of(BuildContext context) {
+    return NavigationPaneThemeData.standard(context.theme).copyWith(
+      context.theme.navigationPaneTheme,
     );
   }
 
-  factory NavigationPanelThemeData.standard(ThemeData style) {
+  factory NavigationPaneThemeData.standard(ThemeData style) {
     final disabledTextStyle = TextStyle(
       color: style.disabledColor,
       fontWeight: FontWeight.bold,
     );
-    return NavigationPanelThemeData(
+    return NavigationPaneThemeData(
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      backgroundColor: AccentColor('normal', {
-        'normal': Color.fromARGB(255, 230, 230, 230),
-        'dark': Color.fromARGB(255, 25, 25, 25)
-      }).resolveFromBrightness(style.brightness),
+      backgroundColor: style.acrylicBackgroundColor,
       tileColor: (state) => ButtonThemeData.uncheckedInputColor(style, state),
       highlightColor: style.accentColor,
       itemHeaderTextStyle: style.typography.base,
@@ -70,8 +77,8 @@ class NavigationPanelThemeData with Diagnosticable {
     );
   }
 
-  NavigationPanelThemeData copyWith(NavigationPanelThemeData? style) {
-    return NavigationPanelThemeData(
+  NavigationPaneThemeData copyWith(NavigationPaneThemeData? style) {
+    return NavigationPaneThemeData(
       cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,

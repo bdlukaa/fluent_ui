@@ -31,15 +31,18 @@ class NavigationBody extends StatefulWidget {
   /// used, otherwise [DrillInPageTransition] is used.
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
-  /// The curve used by the transition. If null, [ThemeData.animationCurve]
-  /// is used.
+  /// The curve used by the transition. [NavigationPaneThemeData.animationCurve]
+  /// is used by default.
   ///
   /// See also:
   ///   * [Curves], a collection of common animation easing curves.
   final Curve? animationCurve;
 
-  /// The duration of the transition. If null, [ThemeData.fastAnimationDuration]
-  /// is used.
+  /// The duration of the transition. [NavigationPaneThemeData.animationDuration]
+  /// is used by default.
+  /// 
+  /// See also:
+  ///   * [ThemeData.fastAnimationDuration], the duration used by default.
   final Duration? animationDuration;
 
   @override
@@ -66,11 +69,15 @@ class _NavigationBodyState extends State<NavigationBody> {
     assert(debugCheckHasFluentTheme(context));
     final _body = _NavigationBody.maybeOf(context);
     final theme = FluentTheme.of(context);
+    final paneTheme = NavigationPaneThemeData.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve: widget.animationCurve ?? theme.animationCurve,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
+        switchInCurve:
+            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
+        duration: widget.animationDuration ??
+            paneTheme.animationDuration ??
+            Duration.zero,
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },

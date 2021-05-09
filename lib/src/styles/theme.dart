@@ -65,7 +65,7 @@ class ThemeData with Diagnosticable {
 
   final Brightness brightness;
 
-  final NavigationPanelThemeData navigationPanelTheme;
+  final NavigationPaneThemeData navigationPaneTheme;
   final CheckboxThemeData checkboxTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
@@ -106,7 +106,7 @@ class ThemeData with Diagnosticable {
     required this.dialogTheme,
     required this.tooltipTheme,
     required this.dividerTheme,
-    required this.navigationPanelTheme,
+    required this.navigationPaneTheme,
     required this.radioButtonTheme,
     required this.toggleButtonTheme,
     required this.sliderTheme,
@@ -149,7 +149,7 @@ class ThemeData with Diagnosticable {
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
-    NavigationPanelThemeData? navigationPanelTheme,
+    NavigationPaneThemeData? navigationPaneTheme,
     RadioButtonThemeData? radioButtonTheme,
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
@@ -211,7 +211,7 @@ class ThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPanelTheme ??= const NavigationPanelThemeData();
+    navigationPaneTheme ??= const NavigationPaneThemeData();
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
@@ -238,7 +238,7 @@ class ThemeData with Diagnosticable {
       focusTheme: focusTheme,
       iconTheme: iconTheme,
       infoBarTheme: infoBarTheme,
-      navigationPanelTheme: navigationPanelTheme,
+      navigationPaneTheme: navigationPaneTheme,
       radioButtonTheme: radioButtonTheme,
       scrollbarTheme: scrollbarTheme,
       sliderTheme: sliderTheme,
@@ -276,7 +276,7 @@ class ThemeData with Diagnosticable {
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
-    NavigationPanelThemeData? navigationPanelTheme,
+    NavigationPaneThemeData? navigationPaneTheme,
     RadioButtonThemeData? radioButtonTheme,
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
@@ -315,8 +315,8 @@ class ThemeData with Diagnosticable {
       focusTheme: this.focusTheme.copyWith(focusTheme),
       iconTheme: this.iconTheme.copyWith(iconTheme),
       infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
-      navigationPanelTheme:
-          this.navigationPanelTheme.copyWith(navigationPanelTheme),
+      navigationPaneTheme:
+          this.navigationPaneTheme.copyWith(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.copyWith(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.copyWith(scrollbarTheme),
       sliderTheme: this.sliderTheme.copyWith(sliderTheme),

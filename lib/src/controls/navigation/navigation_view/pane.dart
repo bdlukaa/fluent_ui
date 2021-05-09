@@ -80,7 +80,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isTop = displayMode == PaneDisplayMode.top;
     final bool isCompact = displayMode == PaneDisplayMode.compact;
     final bool isOpen = displayMode == PaneDisplayMode.open;
-    final style = NavigationPanelThemeData.of(context);
+    final style = NavigationPaneThemeData.of(context);
 
     final Widget result = SizedBox(
       key: item.key,
@@ -197,6 +197,15 @@ class PaneItemHeader extends NavigationPaneItem {
   final Widget header;
 }
 
+/// The pane used by [NavigationView].
+///
+/// The [NavigationView] doesn't perform any navigation tasks automatically.
+/// When the user taps on a navigation item, [onChanged], if non-null, is called.
+///
+/// See also:
+///   * [NavigationView], the widget that is used alongside this
+///   * [PaneDisplayMode], that defines how this pane is rendered
+///   * [NavigationBody], the widget that implement transitions to the pages
 class NavigationPane with Diagnosticable {
   const NavigationPane({
     this.key,
@@ -209,7 +218,7 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
     this.appBar,
-  });
+  }) : assert(selected == null || selected >= 0);
 
   final Key? key;
 
@@ -256,6 +265,16 @@ class NavigationPane with Diagnosticable {
   final Widget? appBar;
 
   /// The current selected index.
+  ///
+  /// If null, none of the items is selected. If non-null, it must be
+  /// a positive number.
+  ///
+  /// This property is called as the index of [allItems], that means it
+  /// must be in the range of 0 to [allItems.length]
+  ///
+  /// See also:
+  ///   * [allItems], a getter that merge [items] + [footerItems] into
+  ///     a single list
   final int? selected;
 
   /// Called when the current index changes.
@@ -268,6 +287,8 @@ class NavigationPane with Diagnosticable {
     properties.add(IterableProperty('items', items));
     properties.add(IterableProperty('footerItems', footerItems));
     properties.add(IntProperty('selected', selected));
+    properties
+        .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
   }
 
   /// A all of the items displayed on this pane.
@@ -296,7 +317,7 @@ class _TopNavigationPane extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPanelThemeData.of(context);
+    final theme = NavigationPaneThemeData.of(context);
     if (item is PaneItemHeader) {
       return Padding(
         key: item.key,
@@ -470,7 +491,7 @@ class _OpenNavigationPane extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPanelThemeData.of(context);
+    final theme = NavigationPaneThemeData.of(context);
     if (item is PaneItemHeader) {
       return Padding(
         key: item.key,
