@@ -60,6 +60,8 @@ class PaneItem extends NavigationPaneItem {
   final String title;
 
   /// The icon used by this item.
+  ///
+  /// Usually an [Icon] widget
   final Widget icon;
 
   @override
@@ -217,7 +219,6 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
-    this.appBar,
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -260,9 +261,6 @@ class NavigationPane with Diagnosticable {
   ///
   /// It's usually an [Icon] with [Icons.search] as the icon.
   final Widget? autoSuggestBoxReplacement;
-
-  /// Usualy an [AppWindowBar]
-  final Widget? appBar;
 
   /// The current selected index.
   ///
@@ -388,12 +386,6 @@ class _TopNavigationPane extends StatelessWidget {
         }),
       ]),
     );
-    if (pane.appBar != null) {
-      return Column(children: [
-        pane.appBar!,
-        topBar,
-      ]);
-    }
     return topBar;
   }
 }
@@ -532,6 +524,8 @@ class _OpenNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = SizedBox(
       width: _kCompactNavigationPanelWidth,
@@ -544,6 +538,7 @@ class _OpenNavigationPane extends StatelessWidget {
       ),
     );
     return Acrylic(
+      color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
       child: Column(children: [
         Padding(
@@ -579,70 +574,6 @@ class _OpenNavigationPane extends StatelessWidget {
         ...pane.footerItems.map((item) {
           return _buildItem(context, item);
         }),
-      ]),
-    );
-  }
-}
-
-class AppWindowBar extends StatelessWidget {
-  const AppWindowBar({
-    Key? key,
-    this.leading,
-    this.automaticallyImplyLeading = true,
-    this.title,
-    this.remainingSpace,
-  }) : super(key: key);
-
-  final Widget? leading;
-
-  /// If [leading] is null and this property is true, the
-  /// widget will decide if there's any leading widget that
-  /// can be automatically implied, such as the back button,
-  /// if the route can be poped.
-  final bool automaticallyImplyLeading;
-
-  final Widget? title;
-
-  final Widget? remainingSpace;
-
-  @override
-  Widget build(BuildContext context) {
-    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-    final bool canPop = parentRoute?.canPop ?? false;
-    return Acrylic(
-      enabled: false,
-      child: Row(children: [
-        if (leading != null)
-          Padding(
-            padding: EdgeInsets.only(left: 12.0),
-            child: leading,
-          )
-        else if (canPop && automaticallyImplyLeading)
-          Container(
-            width: 46.0,
-            child: Tooltip(
-              message: 'Back',
-              child: IconButton(
-                icon: Icon(Icons.arrow_back_sharp),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ButtonThemeData(
-                  margin: EdgeInsets.zero,
-                  scaleFactor: 1.0,
-                ),
-              ),
-            ),
-          ),
-        if (title != null)
-          Padding(
-            padding: EdgeInsets.only(left: 12.0),
-            child: DefaultTextStyle(
-              style: FluentTheme.of(context).typography.caption!,
-              child: title!,
-            ),
-          ),
-        if (remainingSpace != null) Expanded(child: remainingSpace!),
       ]),
     );
   }

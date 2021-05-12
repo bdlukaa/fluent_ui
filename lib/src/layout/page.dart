@@ -30,11 +30,7 @@ class ScaffoldPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasMediaQuery(context));
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 640.0;
-    final double horizontalPadding =
-        isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
+    final horizontalPadding = PageTopBar.horizontalPadding(context);
     return Container(
       margin: EdgeInsets.only(top: kPageDefaultVerticalPadding),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -83,16 +79,22 @@ class PageTopBar extends StatelessWidget {
   /// A bar with a list of actions an user can take
   final Widget? commandBar;
 
+  static double horizontalPadding(BuildContext context) {
+    assert(debugCheckHasMediaQuery(context));
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 640.0;
+    final double horizontalPadding =
+        isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
+    return horizontalPadding;
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final pageParent = ScaffoldPageParent.maybeOf(context);
     final leading = this.leading ?? pageParent?.paneButton;
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 640.0;
-    final double horizontalPadding =
-        isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
+    final horizontalPadding = PageTopBar.horizontalPadding(context);
 
     return Padding(
       padding: EdgeInsets.only(

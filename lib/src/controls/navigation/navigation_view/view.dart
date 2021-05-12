@@ -27,11 +27,15 @@ class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
   const NavigationView({
     Key? key,
+    this.appBar,
     this.pane,
     this.content = const SizedBox.shrink(),
     // If more properties are added here, make sure to
     // add them to the automatic mode as well.
   }) : super(key: key);
+
+  /// The top app bar.
+  final NavigationAppBar? appBar;
 
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above [content].
@@ -53,11 +57,21 @@ class NavigationViewState extends State<NavigationView> {
 
   @override
   Widget build(BuildContext context) {
+    Widget appBar = () {
+      if (widget.appBar != null)
+        return _NavigationAppBar(
+          appBar: widget.appBar!,
+          displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
+        );
+      return SizedBox.shrink();
+    }();
+
     late Widget paneResult;
     if (widget.pane != null) {
       final pane = widget.pane!;
       if (pane.displayMode == PaneDisplayMode.top) {
         paneResult = Column(children: [
+          appBar,
           _TopNavigationPane(pane: pane),
           Expanded(child: widget.content),
         ]);
@@ -87,10 +101,10 @@ class NavigationViewState extends State<NavigationView> {
             /// We can do this because [currentDisplayMode] can never be `auto`,
             /// so it won't stack overflow (error).
             return NavigationView(
+              appBar: widget.appBar,
               content: widget.content,
               pane: NavigationPane(
                 displayMode: currentDisplayMode!,
-                appBar: pane.appBar,
                 autoSuggestBox: pane.autoSuggestBox,
                 autoSuggestBoxReplacement: pane.autoSuggestBoxReplacement,
                 footerItems: pane.footerItems,
@@ -107,7 +121,7 @@ class NavigationViewState extends State<NavigationView> {
         switch (pane.displayMode) {
           case PaneDisplayMode.compact:
             paneResult = Column(children: [
-              if (pane.appBar != null) pane.appBar!,
+              appBar,
               Expanded(
                 child: Row(children: [
                   _CompactNavigationPane(pane: pane),
@@ -118,7 +132,7 @@ class NavigationViewState extends State<NavigationView> {
             break;
           case PaneDisplayMode.open:
             paneResult = Column(children: [
-              if (pane.appBar != null) pane.appBar!,
+              appBar,
               Expanded(
                 child: Row(children: [
                   _OpenNavigationPane(pane: pane),
@@ -130,7 +144,7 @@ class NavigationViewState extends State<NavigationView> {
           case PaneDisplayMode.minimal:
             assert(debugCheckHasOverlay(context));
             paneResult = Column(children: [
-              if (pane.appBar != null) pane.appBar!,
+              appBar,
               Expanded(
                 child: ScaffoldPageParent(
                   paneButton: Padding(
@@ -167,5 +181,148 @@ class NavigationViewState extends State<NavigationView> {
         child: paneResult,
       ),
     );
+  }
+}
+
+/// The bar displayed at the top of the app. It can adapt itself to
+/// all the display modes.
+///
+/// See also:
+///   - [NavigationView]
+///   - [NavigationPane]
+///   - [PaneDisplayMode]
+class NavigationAppBar {
+  final Key? key;
+
+  /// The widget at the beggining of the app bar.
+  final Widget? leading;
+
+  /// Whether if [leading], if null, can be autoamtically set based on
+  /// the current [BuildContext].
+  final bool automaticallyImplyLeading;
+
+  /// The app title
+  final Widget? title;
+
+  /// The actions of the app
+  final Widget? actions;
+
+  const NavigationAppBar({
+    this.key,
+    this.leading,
+    this.title,
+    this.actions,
+    this.automaticallyImplyLeading = true,
+  });
+}
+
+class _NavigationAppBar extends StatelessWidget {
+  const _NavigationAppBar({
+    Key? key,
+    required this.appBar,
+    required this.displayMode,
+  }) : super(key: key);
+
+  final NavigationAppBar appBar;
+  final PaneDisplayMode displayMode;
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
+    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+    final bool canPop = parentRoute?.canPop ?? false;
+    final leading = () {
+      late Widget widget;
+      if (appBar.leading != null)
+        widget = Padding(
+          padding: EdgeInsets.only(left: 12.0),
+          child: appBar.leading,
+        );
+      else if (appBar.automaticallyImplyLeading)
+        widget = Container(
+          width: _kCompactNavigationPanelWidth,
+          child: Tooltip(
+            message: 'Back',
+            child: IconButton(
+              icon: Icon(Icons.arrow_back_sharp),
+              onPressed: canPop ? () => Navigator.pop(context) : null,
+              style: ButtonThemeData(
+                margin: EdgeInsets.zero,
+                scaleFactor: 1.0,
+              ),
+            ),
+          ),
+        );
+      else
+        return SizedBox.shrink();
+      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+      return widget;
+    }();
+    final title = () {
+      if (appBar.title != null)
+        return AnimatedPadding(
+          duration: theme.animationDuration ?? Duration.zero,
+          curve: theme.animationCurve ?? Curves.linear,
+          padding: EdgeInsets.only(
+            left: displayMode == PaneDisplayMode.compact
+                ? PageTopBar.horizontalPadding(context)
+                : 12.0,
+          ),
+          child: DefaultTextStyle(
+            style: FluentTheme.of(context).typography.caption!,
+            child: appBar.title!,
+          ),
+        );
+      else
+        return SizedBox.shrink();
+    }();
+    switch (displayMode) {
+      case PaneDisplayMode.top:
+        return Acrylic(
+          height: 30.0,
+          enabled: false,
+          opacity: 1.0,
+          child: Row(children: [
+            leading,
+            title,
+            if (appBar.actions != null)
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: appBar.actions!,
+                ),
+              ),
+          ]),
+        );
+      case PaneDisplayMode.open:
+        return Row(children: [
+          Acrylic(
+            enabled: false,
+            height: 30.0,
+            width: _kOpenNavigationPanelWidth,
+            color: theme.backgroundColor,
+            child: Row(children: [
+              leading,
+              title,
+            ]),
+          ),
+          Expanded(child: appBar.actions ?? SizedBox()),
+        ]);
+      case PaneDisplayMode.compact:
+        return Row(children: [
+          Acrylic(
+            enabled: false,
+            height: 30.0,
+            color: theme.backgroundColor,
+            child: leading,
+          ),
+          title,
+          Expanded(child: appBar.actions ?? SizedBox()),
+        ]);
+      default:
+        return Container();
+    }
+    return Container();
   }
 }

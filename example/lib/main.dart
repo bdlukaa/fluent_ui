@@ -124,23 +124,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
+      appBar: NavigationAppBar(
+        title: Text(appTitle),
+        actions: Row(children: [Spacer(), WindowButtons()]),
+      ),
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
         header: FlutterLogo(),
-        appBar: WindowTitleBarBox(
-          child: MoveWindow(
-            child: AppWindowBar(
-              title: Text(appTitle),
-              remainingSpace: isDesktop
-                  ? Row(children: [
-                      Spacer(),
-                      WindowButtons(),
-                    ])
-                  : null,
-            ),
-          ),
-        ),
+        // appBar: WindowTitleBarBox(
+        //   child: MoveWindow(
+        //     child: AppWindowBar(
+        //       title: Text(appTitle),
+        //       remainingSpace: isDesktop
+        //           ? Row(children: [
+        //               Spacer(),
+        //               WindowButtons(),
+        //             ])
+        //           : null,
+        //     ),
+        //   ),
+        // ),
         displayMode: appTheme.displayMode,
         items: [
           PaneItemHeader(header: Text('User Interaction')),
