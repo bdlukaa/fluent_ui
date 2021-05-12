@@ -214,6 +214,52 @@ class NavigationAppBar {
     this.actions,
     this.automaticallyImplyLeading = true,
   });
+
+  static Widget buildLeading(
+    BuildContext context,
+    NavigationAppBar appBar, [
+    bool imply = true,
+  ]) {
+    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+    final bool canPop = parentRoute?.canPop ?? false;
+    late Widget widget;
+    if (appBar.leading != null) {
+      widget = Padding(
+        padding: EdgeInsets.only(left: 12.0),
+        child: appBar.leading,
+      );
+    } else if (appBar.automaticallyImplyLeading && imply) {
+      widget = Container(
+        width: _kCompactNavigationPanelWidth,
+        child: IconButton(
+          icon: Icon(Icons.arrow_back_sharp),
+          onPressed: canPop ? () => Navigator.pop(context) : null,
+          style: ButtonThemeData(
+            margin: EdgeInsets.zero,
+            scaleFactor: 1.0,
+            decoration: (state) {
+              if (state == ButtonStates.disabled) state = ButtonStates.none;
+              return BoxDecoration(
+                color:
+                    ButtonThemeData.uncheckedInputColor(context.theme, state),
+              );
+            },
+          ),
+          iconTheme: (state) {
+            return IconThemeData(
+              size: 22.0,
+              color: ButtonThemeData.buttonColor(context.theme, state),
+            );
+          },
+        ),
+      );
+      if (canPop) widget = Tooltip(message: 'Back', child: widget);
+    } else {
+      return SizedBox.shrink();
+    }
+    widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+    return widget;
+  }
 }
 
 class _NavigationAppBar extends StatelessWidget {
@@ -230,35 +276,11 @@ class _NavigationAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneThemeData.of(context);
-    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-    final bool canPop = parentRoute?.canPop ?? false;
-    final leading = () {
-      late Widget widget;
-      if (appBar.leading != null)
-        widget = Padding(
-          padding: EdgeInsets.only(left: 12.0),
-          child: appBar.leading,
-        );
-      else if (appBar.automaticallyImplyLeading)
-        widget = Container(
-          width: _kCompactNavigationPanelWidth,
-          child: Tooltip(
-            message: 'Back',
-            child: IconButton(
-              icon: Icon(Icons.arrow_back_sharp),
-              onPressed: canPop ? () => Navigator.pop(context) : null,
-              style: ButtonThemeData(
-                margin: EdgeInsets.zero,
-                scaleFactor: 1.0,
-              ),
-            ),
-          ),
-        );
-      else
-        return SizedBox.shrink();
-      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
-      return widget;
-    }();
+    final leading = NavigationAppBar.buildLeading(
+      context,
+      appBar,
+      displayMode != PaneDisplayMode.top,
+    );
     final title = () {
       if (appBar.title != null)
         return AnimatedPadding(
@@ -279,6 +301,7 @@ class _NavigationAppBar extends StatelessWidget {
     }();
     switch (displayMode) {
       case PaneDisplayMode.top:
+      case PaneDisplayMode.minimal:
         return Acrylic(
           height: 30.0,
           enabled: false,
@@ -302,10 +325,7 @@ class _NavigationAppBar extends StatelessWidget {
             height: 30.0,
             width: _kOpenNavigationPanelWidth,
             color: theme.backgroundColor,
-            child: Row(children: [
-              leading,
-              title,
-            ]),
+            child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
@@ -323,6 +343,5 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return Container();
     }
-    return Container();
   }
 }

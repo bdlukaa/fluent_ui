@@ -362,6 +362,7 @@ class _TopNavigationPane extends StatelessWidget {
       child: Row(children: [
         Expanded(
           child: Row(children: [
+            NavigationAppBar.buildLeading(context, NavigationAppBar()),
             if (pane.header != null)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
