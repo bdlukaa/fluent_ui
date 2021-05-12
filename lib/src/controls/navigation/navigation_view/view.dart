@@ -10,6 +10,8 @@ part 'pane.dart';
 part 'style.dart';
 
 /// The default size used by the app top bar.
+///
+/// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 31.0;
 
 /// The NavigationView control provides top-level navigation
@@ -54,6 +56,9 @@ class NavigationView extends StatefulWidget {
 }
 
 class NavigationViewState extends State<NavigationView> {
+
+  final _panelKey = GlobalKey();
+
   /// The current display mode used by the automatic pane mode.
   /// This can not be changed
   PaneDisplayMode? currentDisplayMode;
@@ -127,7 +132,7 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _CompactNavigationPane(pane: pane),
+                  _CompactNavigationPane(pane: pane, paneKey: _panelKey),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -138,7 +143,7 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _OpenNavigationPane(pane: pane),
+                  _OpenNavigationPane(pane: pane, paneKey: _panelKey),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -218,7 +223,7 @@ class NavigationAppBar {
 
   /// A list of Widgets to display in a row after the [title] widget.
   ///
-  /// Typically these widgets are [IconButton]s representing common 
+  /// Typically these widgets are [IconButton]s representing common
   /// operations.
   final Widget? actions;
 

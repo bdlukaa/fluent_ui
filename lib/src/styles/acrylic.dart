@@ -27,6 +27,8 @@ class Acrylic extends StatelessWidget {
     this.margin,
     this.shadowColor,
     this.elevation = 0.0,
+    this.animationDuration = Duration.zero,
+    this.animationCurve = Curves.linear,
     this.enabled,
   })  : assert(elevation >= 0, 'The elevation can NOT be negative'),
         assert(opacity >= 0, 'The opacity can NOT be negative'),
@@ -37,7 +39,7 @@ class Acrylic extends StatelessWidget {
         super(key: key);
 
   /// The color to fill the background of the box.
-  /// 
+  ///
   /// If [decoration] and this is null, [ThemeData.acrylicBackgroundColor]
   /// is used.
   final Color? color;
@@ -73,6 +75,9 @@ class Acrylic extends StatelessWidget {
 
   /// Empty space to surround the [decoration] and [child].
   final EdgeInsetsGeometry? margin;
+
+  final Duration animationDuration;
+  final Curve animationCurve;
 
   /// The color of the elevation
   final Color? shadowColor;
@@ -121,15 +126,15 @@ class Acrylic extends StatelessWidget {
       context,
     );
     Widget result = AnimatedContainer(
-      duration: style.fastAnimationDuration,
-      curve: style.animationCurve,
+      duration: animationDuration,
+      curve: animationCurve,
       width: width,
       height: height,
       child: () {
         Widget container = AnimatedContainer(
           padding: padding,
-          duration: style.fastAnimationDuration,
-          curve: style.animationCurve,
+          duration: animationDuration,
+          curve: animationCurve,
           decoration: () {
             if (decoration != null) {
               Color? color = decoration!.color ?? this.color;
@@ -151,14 +156,17 @@ class Acrylic extends StatelessWidget {
       }(),
     );
     if (isEnabled && elevation > 0) {
-      result = PhysicalModel(
+      result = AnimatedPhysicalModel(
+        duration: animationDuration,
+        curve: animationCurve,
         color: Colors.transparent,
         shadowColor: shadowColor ?? context.theme.shadowColor,
+        shape: BoxShape.rectangle,
         borderRadius: () {
           final radius = decoration?.borderRadius;
-          if (radius == null) return null;
+          if (radius == null) return BorderRadius.zero;
           if (radius is BorderRadius) return radius;
-          return null;
+          return BorderRadius.zero;
         }(),
         elevation: elevation,
         child: result,

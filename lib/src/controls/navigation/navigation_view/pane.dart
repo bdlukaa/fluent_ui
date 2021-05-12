@@ -392,9 +392,13 @@ class _TopNavigationPane extends StatelessWidget {
 }
 
 class _CompactNavigationPane extends StatelessWidget {
-  _CompactNavigationPane({required this.pane}) : super(key: pane.key);
+  _CompactNavigationPane({
+    required this.pane,
+    this.paneKey,
+  }) : super(key: pane.key);
 
   final NavigationPane pane;
+  final Key? paneKey;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
@@ -432,12 +436,17 @@ class _CompactNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return Acrylic(
+      key: paneKey,
       width: _kCompactNavigationPanelWidth,
-      child: Column(children: [
+      animationDuration: theme.animationDuration ?? Duration.zero,
+      animationCurve: theme.animationCurve ?? Curves.linear,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: showReplacement ? EdgeInsets.zero : topPadding,
           child: PaneItem.buildPaneItemButton(
@@ -478,9 +487,13 @@ class _CompactNavigationPane extends StatelessWidget {
 }
 
 class _OpenNavigationPane extends StatelessWidget {
-  _OpenNavigationPane({required this.pane}) : super(key: pane.key);
+  _OpenNavigationPane({
+    required this.pane,
+    this.paneKey,
+  }) : super(key: pane.key);
 
   final NavigationPane pane;
+  final Key? paneKey;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
@@ -492,6 +505,10 @@ class _OpenNavigationPane extends StatelessWidget {
         child: DefaultTextStyle(
           style: theme.itemHeaderTextStyle ?? TextStyle(),
           child: item.header,
+          softWrap: false,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          textAlign: TextAlign.left,
         ),
       );
     } else if (item is PaneItemSeparator) {
@@ -539,8 +556,11 @@ class _OpenNavigationPane extends StatelessWidget {
       ),
     );
     return Acrylic(
+      key: paneKey,
       color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
+      animationDuration: theme.animationDuration ?? Duration.zero,
+      animationCurve: theme.animationCurve ?? Curves.linear,
       child: Column(children: [
         Padding(
           padding: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
@@ -562,6 +582,7 @@ class _OpenNavigationPane extends StatelessWidget {
         if (pane.autoSuggestBox != null)
           Container(
             height: 41.0,
+            alignment: Alignment.center,
             margin: topPadding,
             child: pane.autoSuggestBox!,
           ),
