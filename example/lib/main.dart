@@ -125,84 +125,55 @@ class _MyHomePageState extends State<MyHomePage> {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
       appBar: NavigationAppBar(
-        title: Text(appTitle),
-        actions: Row(children: [Spacer(), WindowButtons()]),
+        height: appWindow.titleBarHeight,
+        title: MoveWindow(
+          child: Align(alignment: Alignment.center, child: Text(appTitle)),
+        ),
+        actions: MoveWindow(
+          child: Row(children: [Spacer(), WindowButtons()]),
+        ),
       ),
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
         header: FlutterLogo(),
-        // appBar: WindowTitleBarBox(
-        //   child: MoveWindow(
-        //     child: AppWindowBar(
-        //       title: Text(appTitle),
-        //       remainingSpace: isDesktop
-        //           ? Row(children: [
-        //               Spacer(),
-        //               WindowButtons(),
-        //             ])
-        //           : null,
-        //     ),
-        //   ),
-        // ),
         displayMode: appTheme.displayMode,
         items: [
           PaneItemHeader(header: Text('User Interaction')),
-          PaneItem(
-            icon: Icon(Icons.input),
-            title: 'Inputs',
-          ),
-          PaneItem(
-            icon: Icon(Icons.format_align_center),
-            title: 'Forms',
-          ),
+          PaneItem(icon: Icon(Icons.input), title: 'Inputs'),
+          PaneItem(icon: Icon(Icons.format_align_center), title: 'Forms'),
           PaneItemSeparator(),
           PaneItemHeader(header: Text('Extra Widgets')),
-          PaneItem(
-            icon: Icon(Icons.miscellaneous_services),
-            title: 'Others',
-          ),
-          PaneItem(
-            icon: Icon(Icons.color_lens_outlined),
-            title: 'Colors',
-          ),
+          PaneItem(icon: Icon(Icons.miscellaneous_services), title: 'Others'),
+          PaneItem(icon: Icon(Icons.color_lens_outlined), title: 'Colors'),
         ],
         autoSuggestBox: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AutoSuggestBox(
             controller: TextEditingController(),
-            items: [
-              'Item 1',
-              'Item 2',
-              'Item 3',
-              'Item 4',
-            ],
+            items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
           ),
         ),
         autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(
-            icon: Icon(Icons.settings),
-            title: 'Settings',
-          ),
+          PaneItem(icon: Icon(Icons.settings), title: 'Settings'),
         ],
       ),
-      content: NavigationBody(
-        index: index,
-        children: [
-          InputsPage(),
-          Forms(),
-          Others(),
-          ColorsPage(controller: colorsController),
-          Settings(controller: settingsController),
-        ],
-      ),
+      content: NavigationBody(index: index, children: [
+        InputsPage(),
+        Forms(),
+        Others(),
+        ColorsPage(controller: colorsController),
+        Settings(controller: settingsController),
+      ]),
     );
   }
 }
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));

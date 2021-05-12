@@ -9,6 +9,9 @@ part 'body.dart';
 part 'pane.dart';
 part 'style.dart';
 
+/// The default size used by the app top bar.
+const double _kDefaultAppBarHeight = 31.0;
+
 /// The NavigationView control provides top-level navigation
 /// for your app. It adapts to a variety of screen sizes and
 /// supports both top and left navigation styles.
@@ -194,18 +197,33 @@ class NavigationViewState extends State<NavigationView> {
 class NavigationAppBar {
   final Key? key;
 
-  /// The widget at the beggining of the app bar.
+  /// The widget at the beggining of the app bar, before [title].
+  ///
+  /// Typically the [leading] widget is an [Icon] or an [IconButton].
+  ///
+  /// If this is null and [automaticallyImplyLeading] is set to true, the
+  /// view will imply an appropriate widget. If  the parent [Navigator] can
+  /// go back, the app bar will use an [IconButton] that calls [Navigator.maybePop].
+  ///
+  /// See also:
+  ///   * [automaticallyImplyLeading], that controls whether we should try to
+  ///     imply the leading widget, if [leading] is null
   final Widget? leading;
 
-  /// Whether if [leading], if null, can be autoamtically set based on
-  /// the current [BuildContext].
+  /// {@macro flutter.material.appbar.automaticallyImplyLeading}
   final bool automaticallyImplyLeading;
 
-  /// The app title
+  /// Typically a [Text] widget that contains the app name.
   final Widget? title;
 
-  /// The actions of the app
+  /// A list of Widgets to display in a row after the [title] widget.
+  ///
+  /// Typically these widgets are [IconButton]s representing common 
+  /// operations.
   final Widget? actions;
+
+  /// The height of the app bar. [_kDefaultAppBarHeight] is used by default
+  final double height;
 
   const NavigationAppBar({
     this.key,
@@ -213,6 +231,7 @@ class NavigationAppBar {
     this.title,
     this.actions,
     this.automaticallyImplyLeading = true,
+    this.height = _kDefaultAppBarHeight,
   });
 
   static Widget buildLeading(
@@ -233,7 +252,7 @@ class NavigationAppBar {
         width: _kCompactNavigationPanelWidth,
         child: IconButton(
           icon: Icon(Icons.arrow_back_sharp),
-          onPressed: canPop ? () => Navigator.pop(context) : null,
+          onPressed: canPop ? () => Navigator.maybePop(context) : null,
           style: ButtonThemeData(
             margin: EdgeInsets.zero,
             scaleFactor: 1.0,
@@ -299,12 +318,11 @@ class _NavigationAppBar extends StatelessWidget {
       else
         return SizedBox.shrink();
     }();
+    late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
-        return Acrylic(
-          height: 30.0,
-          enabled: false,
+        result = Acrylic(
           opacity: 1.0,
           child: Row(children: [
             leading,
@@ -318,30 +336,30 @@ class _NavigationAppBar extends StatelessWidget {
               ),
           ]),
         );
+        break;
       case PaneDisplayMode.open:
-        return Row(children: [
+        result = Row(children: [
           Acrylic(
-            enabled: false,
-            height: 30.0,
             width: _kOpenNavigationPanelWidth,
             color: theme.backgroundColor,
             child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
+        break;
       case PaneDisplayMode.compact:
-        return Row(children: [
+        result = Row(children: [
           Acrylic(
-            enabled: false,
-            height: 30.0,
             color: theme.backgroundColor,
             child: leading,
           ),
           title,
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
+        break;
       default:
-        return Container();
+        return SizedBox.shrink();
     }
+    return Container(height: appBar.height, child: result);
   }
 }
