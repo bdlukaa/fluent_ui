@@ -626,8 +626,9 @@ class _OpenNavigationPane extends StatelessWidget {
       animationDuration: theme.animationDuration ?? Duration.zero,
       animationCurve: theme.animationCurve ?? Curves.linear,
       child: Column(children: [
-        Padding(
-          padding: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
+        Container(
+          margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
+          height: kOneLineTileHeight,
           child: () {
             if (pane.header != null)
               return Row(children: [

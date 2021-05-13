@@ -393,6 +393,7 @@ class _NavigationAppBar extends StatelessWidget {
         result = Row(children: [
           Acrylic(
             width: _kOpenNavigationPanelWidth,
+            height: appBar.height,
             color: theme.backgroundColor,
             child: Row(children: [leading, title]),
           ),
@@ -401,7 +402,11 @@ class _NavigationAppBar extends StatelessWidget {
         break;
       case PaneDisplayMode.compact:
         result = Row(children: [
-          Acrylic(color: theme.backgroundColor, child: leading),
+          Acrylic(
+            height: appBar.height,
+            color: theme.backgroundColor,
+            child: leading,
+          ),
           title,
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
