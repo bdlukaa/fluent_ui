@@ -125,11 +125,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
       appBar: NavigationAppBar(
-        height: appWindow.titleBarHeight,
-        title: MoveWindow(
+        height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
+        title: () {
+          if (kIsWeb) return Text(appTitle);
+          return MoveWindow(
           child: Align(alignment: Alignment.center, child: Text(appTitle)),
-        ),
-        actions: MoveWindow(
+        );
+        }(),
+        actions: kIsWeb ? null : MoveWindow(
           child: Row(children: [Spacer(), WindowButtons()]),
         ),
       ),
