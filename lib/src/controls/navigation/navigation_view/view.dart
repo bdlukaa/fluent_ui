@@ -56,7 +56,6 @@ class NavigationView extends StatefulWidget {
 }
 
 class NavigationViewState extends State<NavigationView> {
-
   /// The scroll controller used to keep the scrolling state of
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
@@ -84,7 +83,7 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     scrollController.dispose();
     super.dispose();
   }
@@ -178,7 +177,6 @@ class NavigationViewState extends State<NavigationView> {
             ]);
             break;
           case PaneDisplayMode.minimal:
-            assert(debugCheckHasOverlay(context));
             paneResult = Column(children: [
               appBar,
               Expanded(
@@ -193,9 +191,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                       PaneDisplayMode.compact,
                       false,
-                      () {
-                        // TODO: open minimal overlay
-                      },
+                      () => _openMinimalOverlay(context),
                     ),
                   ),
                   child: widget.content,
@@ -220,6 +216,27 @@ class NavigationViewState extends State<NavigationView> {
         ),
       ),
     );
+  }
+
+  void _openMinimalOverlay(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasOverlay(context));
+    final theme = NavigationPaneThemeData.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(builder: (_) {
+      return PrimaryScrollController(
+        controller: scrollController,
+        child: Padding(
+          padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
+          child: _MinimalNavigationPane(
+            pane: widget.pane!,
+            animationDuration: theme.animationDuration ?? Duration.zero,
+            entry: entry,
+          ),
+        ),
+      );
+    });
+    Overlay.of(context, debugRequiredFor: widget)!.insert(entry);
   }
 }
 
@@ -359,7 +376,6 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
-          opacity: 1.0,
           child: Row(children: [
             leading,
             title,
@@ -385,10 +401,7 @@ class _NavigationAppBar extends StatelessWidget {
         break;
       case PaneDisplayMode.compact:
         result = Row(children: [
-          Acrylic(
-            color: theme.backgroundColor,
-            child: leading,
-          ),
+          Acrylic(color: theme.backgroundColor, child: leading),
           title,
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);

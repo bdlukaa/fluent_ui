@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
-const double kDefaultAcrylicOpacity = 0.45;
+/// Value eyballed from Windows 10
+const double kDefaultAcrylicOpacity = 0.8;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help

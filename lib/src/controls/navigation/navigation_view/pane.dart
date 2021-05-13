@@ -81,7 +81,8 @@ class PaneItem extends NavigationPaneItem {
     assert(displayMode != PaneDisplayMode.auto);
     final bool isTop = displayMode == PaneDisplayMode.top;
     final bool isCompact = displayMode == PaneDisplayMode.compact;
-    final bool isOpen = displayMode == PaneDisplayMode.open;
+    final bool isOpen =
+        [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(displayMode);
     final style = NavigationPaneThemeData.of(context);
 
     final Widget result = SizedBox(
@@ -507,7 +508,12 @@ class _OpenNavigationPane extends StatelessWidget {
   final NavigationPane pane;
   final Key? paneKey;
 
-  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
+  static Widget buildItem(
+    BuildContext context,
+    NavigationPane pane,
+    NavigationPaneItem item, [
+    VoidCallback? onChanged,
+  ]) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneThemeData.of(context);
     if (item is PaneItemHeader) {
@@ -543,6 +549,7 @@ class _OpenNavigationPane extends StatelessWidget {
         selected,
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
+          onChanged?.call();
         },
       );
     } else {
@@ -602,15 +609,145 @@ class _OpenNavigationPane extends StatelessWidget {
           child: Scrollbar(
             child: ListView(primary: true, children: [
               ...pane.items.map((item) {
-                return _buildItem(context, item);
+                return buildItem(context, pane, item);
               }),
             ]),
           ),
         ),
         ...pane.footerItems.map((item) {
-          return _buildItem(context, item);
+          return buildItem(context, pane, item);
         }),
       ]),
     );
+  }
+}
+
+class _MinimalNavigationPane extends StatefulWidget {
+  _MinimalNavigationPane({
+    required this.pane,
+    required this.animationDuration,
+    required this.entry,
+  }) : super(key: pane.key);
+
+  final NavigationPane pane;
+
+  /// This duration can't be fetched from the theme when the state is
+  /// initialized, so it needs to be fetched from the parent
+  final Duration animationDuration;
+
+  /// This entry is used to remove the entry from the overlay list
+  /// when tapped outside.
+  final OverlayEntry entry;
+
+  @override
+  __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
+}
+
+class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
+    with SingleTickerProviderStateMixin<_MinimalNavigationPane> {
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: widget.animationDuration,
+    );
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
+    return _OpenNavigationPane.buildItem(
+      context,
+      widget.pane,
+      item,
+      _removeEntry,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
+    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
+    final menuButton = SizedBox(
+      width: _kCompactNavigationPanelWidth,
+      child: PaneItem.buildPaneItemButton(
+        context,
+        PaneItem(title: 'Close navigation', icon: Icon(Icons.menu)),
+        PaneDisplayMode.compact,
+        false,
+        () {},
+      ),
+    );
+    Widget minimalPane = SizeTransition(
+      sizeFactor: CurvedAnimation(
+        parent: controller,
+        curve: theme.animationCurve ?? Curves.linear,
+      ),
+      axis: Axis.horizontal,
+      child: Acrylic(
+        color: theme.backgroundColor,
+        width: _kOpenNavigationPanelWidth,
+        animationDuration: theme.animationDuration ?? Duration.zero,
+        animationCurve: theme.animationCurve ?? Curves.linear,
+        child: Column(children: [
+          Padding(
+            padding: widget.pane.autoSuggestBox != null
+                ? EdgeInsets.zero
+                : topPadding,
+            child: () {
+              if (widget.pane.header != null)
+                return Row(children: [
+                  menuButton,
+                  Expanded(
+                    child: Align(
+                      child: widget.pane.header!,
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ]);
+              else
+                return menuButton;
+            }(),
+          ),
+          if (widget.pane.autoSuggestBox != null)
+            Container(
+              height: 41.0,
+              alignment: Alignment.center,
+              margin: topPadding,
+              child: widget.pane.autoSuggestBox!,
+            ),
+          Expanded(
+            child: Scrollbar(
+              child: ListView(primary: true, children: [
+                ...widget.pane.items.map((item) {
+                  return _buildItem(context, item);
+                }),
+              ]),
+            ),
+          ),
+          ...widget.pane.footerItems.map((item) {
+            return _buildItem(context, item);
+          }),
+        ]),
+      ),
+    );
+    return Stack(children: [
+      Positioned.fill(child: GestureDetector(onTap: _removeEntry)),
+      Positioned(top: 0, left: 0, bottom: 0, child: minimalPane),
+    ]);
+  }
+
+  void _removeEntry() async {
+    await controller.reverse();
+    widget.entry.remove();
   }
 }
