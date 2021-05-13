@@ -138,6 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
         onChanged: (i) => setState(() => index = i),
         header: FlutterLogo(),
         displayMode: appTheme.displayMode,
+        onDisplayModeRequested: (mode) {
+          appTheme.displayMode = mode;
+        },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
           PaneItem(icon: Icon(Icons.input), title: 'Inputs'),

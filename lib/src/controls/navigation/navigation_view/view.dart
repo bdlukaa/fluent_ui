@@ -132,7 +132,7 @@ class NavigationViewState extends State<NavigationView> {
 
             assert(currentDisplayMode != PaneDisplayMode.auto);
 
-            /// We display a new navigation view with the [currentDisplayMode].
+            /// We display a new navigation view with the current display mode.
             /// We can do this because [currentDisplayMode] can never be `auto`,
             /// so it won't stack overflow (error).
             return NavigationView(

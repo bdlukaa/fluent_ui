@@ -220,6 +220,8 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
+    this.onDisplayModeRequested,
+    this.menuButton,
     this.scrollController,
   }) : assert(selected == null || selected >= 0);
 
@@ -228,6 +230,15 @@ class NavigationPane with Diagnosticable {
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
+
+  /// Whenever the display mode was requested to be changed. This can be
+  /// called from [PaneDisplayMode.open] to [PaneDisplayMode.compact], or
+  /// vice-versa.
+  final ValueChanged<PaneDisplayMode>? onDisplayModeRequested;
+
+  /// The menu button used by this pane. If null and [onDisplayModeRequested]
+  /// is null
+  final Widget? menuButton;
 
   /// The header of the pane.
   ///
@@ -247,6 +258,10 @@ class NavigationPane with Diagnosticable {
 
   /// The footer items used by this panel. These items are displayed at
   /// the end of the panel and they can't be overflown.
+  ///
+  /// Only [PaneItem], [PaneItemSeparator] and [PaneItemHeader] are
+  /// accepted types. If other type is detected, an [UnsupportedError]
+  /// is thrown.
   ///
   /// | Top | Left |
   /// | --- | --- |
@@ -313,6 +328,29 @@ class NavigationPane with Diagnosticable {
   /// Get the effective index of the navigation pane.
   int effectiveIndexOf(NavigationPaneItem item) {
     return (allItems..removeWhere((i) => i is! PaneItem)).indexOf(item);
+  }
+
+  static Widget buildMenuButton(
+    BuildContext context,
+    String itemTitle,
+    NavigationPane pane, {
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+    required VoidCallback onPressed,
+  }) {
+    if (pane.menuButton != null) return pane.menuButton!;
+    if (pane.onDisplayModeRequested != null)
+      return Container(
+        width: _kCompactNavigationPanelWidth,
+        margin: padding,
+        child: PaneItem.buildPaneItemButton(
+          context,
+          PaneItem(title: itemTitle, icon: Icon(Icons.menu)),
+          PaneDisplayMode.compact,
+          false,
+          onPressed,
+        ),
+      );
+    return SizedBox.shrink();
   }
 }
 
@@ -458,16 +496,20 @@ class _CompactNavigationPane extends StatelessWidget {
       animationDuration: theme.animationDuration ?? Duration.zero,
       animationCurve: theme.animationCurve ?? Curves.linear,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: showReplacement ? EdgeInsets.zero : topPadding,
-          child: PaneItem.buildPaneItemButton(
-            context,
-            PaneItem(title: 'Open Navigation', icon: Icon(Icons.menu)),
-            pane.displayMode,
-            false,
-            () {},
-          ),
-        ),
+        () {
+          if (pane.menuButton != null) return pane.menuButton!;
+          if (pane.onDisplayModeRequested != null)
+            return NavigationPane.buildMenuButton(
+              context,
+              'Open Navigation',
+              pane,
+              onPressed: () {
+                pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+              },
+              padding: showReplacement ? EdgeInsets.zero : topPadding,
+            );
+          return SizedBox.shrink();
+        }(),
         if (showReplacement)
           Padding(
             padding: topPadding,
@@ -564,16 +606,19 @@ class _OpenNavigationPane extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneThemeData.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    final menuButton = SizedBox(
-      width: _kCompactNavigationPanelWidth,
-      child: PaneItem.buildPaneItemButton(
-        context,
-        PaneItem(title: 'Close navigation', icon: Icon(Icons.menu)),
-        PaneDisplayMode.compact,
-        false,
-        () {},
-      ),
-    );
+    final menuButton = () {
+      if (pane.menuButton != null) return pane.menuButton!;
+      if (pane.onDisplayModeRequested != null)
+        return NavigationPane.buildMenuButton(
+          context,
+          'Close Navigation',
+          pane,
+          onPressed: () {
+            pane.onDisplayModeRequested?.call(PaneDisplayMode.compact);
+          },
+        );
+      return SizedBox.shrink();
+    }();
     return Acrylic(
       key: paneKey,
       color: theme.backgroundColor,
@@ -668,7 +713,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       context,
       widget.pane,
       item,
-      _removeEntry,
+      removeEntry,
     );
   }
 
@@ -741,12 +786,12 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       ),
     );
     return Stack(children: [
-      Positioned.fill(child: GestureDetector(onTap: _removeEntry)),
+      Positioned.fill(child: GestureDetector(onTap: removeEntry)),
       Positioned(top: 0, left: 0, bottom: 0, child: minimalPane),
     ]);
   }
 
-  void _removeEntry() async {
+  void removeEntry() async {
     await controller.reverse();
     widget.entry.remove();
   }
