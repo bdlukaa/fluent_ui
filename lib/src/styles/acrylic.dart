@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as m;
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
@@ -30,7 +31,6 @@ class Acrylic extends StatelessWidget {
     this.elevation = 0.0,
     this.animationDuration = Duration.zero,
     this.animationCurve = Curves.linear,
-    this.enabled,
   })  : assert(elevation >= 0, 'The elevation can NOT be negative'),
         assert(opacity >= 0, 'The opacity can NOT be negative'),
         assert(
@@ -88,18 +88,6 @@ class Acrylic extends StatelessWidget {
   /// The value is non-negative.
   final double elevation;
 
-  /// Whether the acrylic effect is enabled. This is usually disabled
-  /// when the system is in battery-save mode. If null, [acrylicEnabled]
-  /// is used.
-  ///
-  /// If disabled, there will be no backdrop effect nor elevation.
-  final bool? enabled;
-
-  /// Whether the acrylic blur effect is enabled. This value is used globally,
-  /// but can be overwritten using the [enabled] property. This is usually disabled
-  /// when the system is in battery-save mode.
-  static bool acrylicEnabled = true;
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -115,9 +103,6 @@ class Acrylic extends StatelessWidget {
     properties.add(DoubleProperty('elevation', elevation));
   }
 
-  /// Whether this acrylic widget is enabled or not.
-  bool get isEnabled => enabled ?? Acrylic.acrylicEnabled;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -126,6 +111,8 @@ class Acrylic extends StatelessWidget {
       this.color ?? style.acrylicBackgroundColor,
       context,
     );
+
+    final enabled = NoAcrylicBlurEffect.of(context) == null;
     Widget result = AnimatedContainer(
       duration: animationDuration,
       curve: animationCurve,
@@ -146,7 +133,7 @@ class Acrylic extends StatelessWidget {
           }(),
           child: child,
         );
-        if (isEnabled)
+        if (enabled)
           return ClipRect(
             child: BackdropFilter(
               filter: filter ?? kDefaultAcrylicFilter,
@@ -156,7 +143,7 @@ class Acrylic extends StatelessWidget {
         return container;
       }(),
     );
-    if (isEnabled && elevation > 0) {
+    if (elevation > 0) {
       result = AnimatedPhysicalModel(
         duration: animationDuration,
         curve: animationCurve,
@@ -175,5 +162,44 @@ class Acrylic extends StatelessWidget {
     }
     if (margin != null) result = Padding(padding: margin!, child: result);
     return result;
+  }
+}
+
+/// A widget that can disable the acrylic blur effect if wrapped above
+/// an Acrylic.
+/// 
+/// {@toolsnippet}
+/// 
+/// The following code shows how to disable the acrylic blur effect on
+/// the whole app:
+/// 
+/// ```dart
+/// runApp(NoAcrylicBlurEffect(child: MyApp()));
+/// ```
+/// 
+/// {@end-tool}
+/// 
+/// See also:
+///   * [Acrylic], the widget that can apply a blurred background on its child
+///   * [Container], a widget similar to acrylic, but with less options
+///   * [AnimatedContainer], a [Container] with animated properties. [Acrylic]
+///     uses this under the hood
+class NoAcrylicBlurEffect extends InheritedWidget {
+  /// Creates a widget that disable the acrylic blur effect in its tree
+  const NoAcrylicBlurEffect({
+    Key? key,
+    required this.child,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+
+  static NoAcrylicBlurEffect? of(BuildContext context) {
+    m.AppBar();
+    return context.dependOnInheritedWidgetOfExactType<NoAcrylicBlurEffect>();
+  }
+
+  @override
+  bool updateShouldNotify(NoAcrylicBlurEffect oldWidget) {
+    return true;
   }
 }

@@ -954,6 +954,14 @@ Acrylic(
 ),
 ```
 
+To disable the blur effect, wrap the acrylic in a `NoAcrylicBlurEffect`. It can be useful to disable `InfoBar`'s and `NavigationView`'s blur effect:
+
+```dart
+NoAcrylicBlurEffect(
+  child: InfoBar(...),
+),
+```
+
 ### Widgets using Acrylic
 
 Currently, the following widgets use acrylic in its implementation:
