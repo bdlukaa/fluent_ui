@@ -219,6 +219,7 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
+    this.scrollController,
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -278,6 +279,14 @@ class NavigationPane with Diagnosticable {
   /// Called when the current index changes.
   final ValueChanged<int>? onChanged;
 
+  /// The scroll controller used by the pane when [displayMode]
+  /// is [PaneDisplayMode.compact] and [PaneDisplayMode.open].
+  ///
+  /// If null, a local scroll controller is created to control
+  /// the scrolling and keep the state of the scroll when the
+  /// display mode is toggled.
+  final ScrollController? scrollController;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -287,9 +296,10 @@ class NavigationPane with Diagnosticable {
     properties.add(IntProperty('selected', selected));
     properties
         .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
+    properties.add(DiagnosticsProperty('scrollController', scrollController));
   }
 
-  /// A all of the items displayed on this pane.
+  /// A list of all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
     return items + footerItems;
   }
@@ -472,11 +482,13 @@ class _CompactNavigationPane extends StatelessWidget {
             ),
           ),
         Expanded(
-          child: ListView(children: [
-            ...pane.items.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
+          child: Scrollbar(
+            child: ListView(primary: true, children: [
+              ...pane.items.map((item) {
+                return _buildItem(context, item);
+              }),
+            ]),
+          ),
         ),
         ...pane.footerItems.map((item) {
           return _buildItem(context, item);
@@ -587,11 +599,13 @@ class _OpenNavigationPane extends StatelessWidget {
             child: pane.autoSuggestBox!,
           ),
         Expanded(
-          child: ListView(children: [
-            ...pane.items.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
+          child: Scrollbar(
+            child: ListView(primary: true, children: [
+              ...pane.items.map((item) {
+                return _buildItem(context, item);
+              }),
+            ]),
+          ),
         ),
         ...pane.footerItems.map((item) {
           return _buildItem(context, item);

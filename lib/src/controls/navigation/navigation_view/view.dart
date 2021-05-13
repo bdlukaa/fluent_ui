@@ -57,11 +57,37 @@ class NavigationView extends StatefulWidget {
 
 class NavigationViewState extends State<NavigationView> {
 
+  /// The scroll controller used to keep the scrolling state of
+  /// the list view when the display mode is switched between open
+  /// and compact, and even keep it for the minimal state.
+  late ScrollController scrollController;
+
+  /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
 
   /// The current display mode used by the automatic pane mode.
   /// This can not be changed
   PaneDisplayMode? currentDisplayMode;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = widget.pane?.scrollController ?? ScrollController();
+  }
+
+  @override
+  void didUpdateWidget(NavigationView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pane?.scrollController != scrollController) {
+      scrollController = widget.pane?.scrollController ?? scrollController;
+    }
+  }
+
+  @override
+  void dispose() { 
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +130,8 @@ class NavigationViewState extends State<NavigationView> {
             } else {
               currentDisplayMode = PaneDisplayMode.minimal;
             }
+
+            assert(currentDisplayMode != PaneDisplayMode.auto);
 
             /// We display a new navigation view with the [currentDisplayMode].
             /// We can do this because [currentDisplayMode] can never be `auto`,
@@ -186,7 +214,10 @@ class NavigationViewState extends State<NavigationView> {
       color: FluentTheme.of(context).scaffoldBackgroundColor,
       child: _NavigationBody(
         displayMode: widget.pane?.displayMode,
-        child: paneResult,
+        child: PrimaryScrollController(
+          controller: scrollController,
+          child: paneResult,
+        ),
       ),
     );
   }
