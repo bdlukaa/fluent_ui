@@ -35,11 +35,12 @@ class NavigationView extends StatefulWidget {
     this.appBar,
     this.pane,
     this.content = const SizedBox.shrink(),
+    this.useAcrylic = true,
     // If more properties are added here, make sure to
     // add them to the automatic mode as well.
   }) : super(key: key);
 
-  /// The top app bar.
+  /// The app bar of the app.
   final NavigationAppBar? appBar;
 
   /// The navigation pane, that can be displayed either on the
@@ -50,6 +51,9 @@ class NavigationView extends StatefulWidget {
   ///
   /// Usually an [NavigationBody].
   final Widget content;
+
+  /// Whether a [NoAcrylicBlurEffect] widget should be added to the tree
+  final bool useAcrylic;
 
   @override
   NavigationViewState createState() => NavigationViewState();
@@ -88,14 +92,20 @@ class NavigationViewState extends State<NavigationView> {
     super.dispose();
   }
 
+  Widget _buildAcrylic(Widget child) {
+    if (widget.useAcrylic) return child;
+    return NoAcrylicBlurEffect(child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget appBar = () {
-      if (widget.appBar != null)
-        return _NavigationAppBar(
+      if (widget.appBar != null) {
+        return _buildAcrylic(_NavigationAppBar(
           appBar: widget.appBar!,
           displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
-        );
+        ));
+      }
       return SizedBox.shrink();
     }();
 
@@ -105,7 +115,7 @@ class NavigationViewState extends State<NavigationView> {
       if (pane.displayMode == PaneDisplayMode.top) {
         paneResult = Column(children: [
           appBar,
-          _TopNavigationPane(pane: pane),
+          _buildAcrylic(_TopNavigationPane(pane: pane)),
           Expanded(child: widget.content),
         ]);
       } else if (pane.displayMode == PaneDisplayMode.auto) {
@@ -142,6 +152,7 @@ class NavigationViewState extends State<NavigationView> {
             return NavigationView(
               appBar: widget.appBar,
               content: widget.content,
+              useAcrylic: widget.useAcrylic,
               pane: NavigationPane(
                 displayMode: autoDisplayMode,
                 autoSuggestBox: pane.autoSuggestBox,
@@ -168,7 +179,9 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _CompactNavigationPane(pane: pane, paneKey: _panelKey),
+                  _buildAcrylic(
+                    _CompactNavigationPane(pane: pane, paneKey: _panelKey),
+                  ),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -179,7 +192,9 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _OpenNavigationPane(pane: pane, paneKey: _panelKey),
+                  _buildAcrylic(
+                    _OpenNavigationPane(pane: pane, paneKey: _panelKey),
+                  ),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -233,7 +248,7 @@ class NavigationViewState extends State<NavigationView> {
     final theme = NavigationPaneThemeData.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
-      return PrimaryScrollController(
+      return _buildAcrylic(PrimaryScrollController(
         controller: scrollController,
         child: Padding(
           padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
@@ -243,7 +258,7 @@ class NavigationViewState extends State<NavigationView> {
             entry: entry,
           ),
         ),
-      );
+      ));
     });
     Overlay.of(context, debugRequiredFor: widget)!.insert(entry);
   }

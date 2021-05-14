@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
-/// Value eyballed from Windows 10
+/// Value eyballed from Windows 10 v10.0.19041.928
 const double kDefaultAcrylicOpacity = 0.8;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
@@ -112,6 +112,7 @@ class Acrylic extends StatelessWidget {
     );
 
     final enabled = NoAcrylicBlurEffect.of(context) == null;
+    final opacity = enabled ? this.opacity : 1.0;
     Widget result = AnimatedContainer(
       duration: animationDuration,
       curve: animationCurve,

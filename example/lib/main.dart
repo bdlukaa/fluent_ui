@@ -129,13 +129,16 @@ class _MyHomePageState extends State<MyHomePage> {
         title: () {
           if (kIsWeb) return Text(appTitle);
           return MoveWindow(
-          child: Align(alignment: Alignment.center, child: Text(appTitle)),
-        );
+            child: Align(alignment: Alignment.center, child: Text(appTitle)),
+          );
         }(),
-        actions: kIsWeb ? null : MoveWindow(
-          child: Row(children: [Spacer(), WindowButtons()]),
-        ),
+        actions: kIsWeb
+            ? null
+            : MoveWindow(
+                child: Row(children: [Spacer(), WindowButtons()]),
+              ),
       ),
+      useAcrylic: false,
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),

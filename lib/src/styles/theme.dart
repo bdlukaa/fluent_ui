@@ -182,11 +182,10 @@ class ThemeData with Diagnosticable {
       'normal': Colors.white,
       'dark': Colors.black,
     }).resolveFromBrightness(brightness);
-    acrylicBackgroundColor ??= acrylicBackgroundColor ??
-        AccentColor('normal', {
-          'normal': Color.fromARGB(255, 230, 230, 230),
-          'dark': Color.fromARGB(255, 25, 25, 25)
-        }).resolveFromBrightness(brightness);
+    acrylicBackgroundColor ??= AccentColor('normal', {
+      'normal': Color(0xFFe6e6e6),
+      'dark': Color(0xFF1e1e1e),
+    }).resolveFromBrightness(brightness);
     typography =
         Typography.standart(brightness: brightness).copyWith(typography);
     inputMouseCursor ??= (state) {

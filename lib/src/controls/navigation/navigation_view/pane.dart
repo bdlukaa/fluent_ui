@@ -730,7 +730,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
         PaneItem(title: 'Close navigation', icon: Icon(Icons.menu)),
         PaneDisplayMode.compact,
         false,
-        () {},
+        removeEntry,
       ),
     );
     Widget minimalPane = SizeTransition(
