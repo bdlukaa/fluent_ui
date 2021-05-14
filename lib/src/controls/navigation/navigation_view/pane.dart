@@ -264,7 +264,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 
 /// Headers for labeling groups of items. This is not displayed if the display
 /// mode is [PaneDisplayMode.compact]
-/// 
+///
 /// See also:
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
@@ -310,7 +310,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [NavigationBody], the widget that implement transitions to the pages
 class NavigationPane with Diagnosticable {
   /// Creates a navigation pane.
-  /// 
+  ///
   /// If [selected] is non-null, [selected] must be greater or equal to 0
   const NavigationPane({
     this.key,
@@ -596,7 +596,9 @@ class _CompactNavigationPane extends StatelessWidget {
               ),
               pane.displayMode,
               false,
-              () {},
+              () {
+                pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+              },
             ),
           ),
         Expanded(
@@ -840,7 +842,20 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       ),
     );
     return Stack(children: [
-      Positioned.fill(child: GestureDetector(onTap: removeEntry)),
+      Positioned.fill(
+        child: GestureDetector(
+          onTap: removeEntry,
+          child: AbsorbPointer(
+            child: Semantics(
+              label: 'Close',
+              child: Container(
+                constraints: BoxConstraints.expand(),
+                color: Colors.black.withOpacity(0.03),
+              ),
+            ),
+          ),
+        ),
+      ),
       Positioned(top: 0, left: 0, bottom: 0, child: minimalPane),
     ]);
   }

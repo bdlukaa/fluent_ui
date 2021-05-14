@@ -231,14 +231,11 @@ class NavigationViewState extends State<NavigationView> {
     } else {
       paneResult = widget.content;
     }
-    return Container(
-      color: FluentTheme.of(context).scaffoldBackgroundColor,
-      child: _NavigationBody(
-        displayMode: widget.pane?.displayMode,
-        child: PrimaryScrollController(
-          controller: scrollController,
-          child: paneResult,
-        ),
+    return _NavigationBody(
+      displayMode: widget.pane?.displayMode,
+      child: PrimaryScrollController(
+        controller: scrollController,
+        child: paneResult,
       ),
     );
   }
@@ -303,6 +300,11 @@ class NavigationAppBar {
   /// The height of the app bar. [_kDefaultAppBarHeight] is used by default
   final double height;
 
+  /// The background color. If null, [ThemeData.scaffoldBackgroundColor] is
+  /// used.
+  final Color? backgroundColor;
+
+  /// Creates an app bar
   const NavigationAppBar({
     this.key,
     this.leading,
@@ -310,6 +312,7 @@ class NavigationAppBar {
     this.actions,
     this.automaticallyImplyLeading = true,
     this.height = _kDefaultAppBarHeight,
+    this.backgroundColor,
   });
 
   static Widget buildLeading(
@@ -401,6 +404,8 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
+          animationDuration: theme.animationDuration ?? Duration.zero,
+          animationCurve: theme.animationCurve ?? Curves.linear,
           child: Row(children: [
             leading,
             title,
@@ -420,6 +425,8 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
+            animationDuration: theme.animationDuration ?? Duration.zero,
+            animationCurve: theme.animationCurve ?? Curves.linear,
             child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
@@ -430,6 +437,8 @@ class _NavigationAppBar extends StatelessWidget {
           Acrylic(
             height: appBar.height,
             color: theme.backgroundColor,
+            animationDuration: theme.animationDuration ?? Duration.zero,
+            animationCurve: theme.animationCurve ?? Curves.linear,
             child: leading,
           ),
           title,
@@ -439,6 +448,12 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return SizedBox.shrink();
     }
-    return Container(height: appBar.height, child: result);
+    return AnimatedContainer(
+      duration: FluentTheme.of(context).fastAnimationDuration,
+      curve: FluentTheme.of(context).animationCurve,
+      color: appBar.backgroundColor ?? FluentTheme.of(context).scaffoldBackgroundColor,
+      height: appBar.height,
+      child: result,
+    );
   }
 }

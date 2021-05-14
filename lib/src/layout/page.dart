@@ -57,11 +57,16 @@ class ScaffoldPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     final horizontalPadding = EdgeInsets.only(
       left: padding?.left ?? PageHeader.horizontalPadding(context),
       right: padding?.right ?? PageHeader.horizontalPadding(context),
     );
-    return Padding(
+    return AnimatedContainer(
+      duration: theme.fastAnimationDuration,
+      curve: theme.animationCurve,
+      color: theme.scaffoldBackgroundColor,
       padding: EdgeInsets.only(
         top: padding?.top ?? kPageDefaultVerticalPadding,
         bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
@@ -89,7 +94,7 @@ class ScaffoldPage extends StatelessWidget {
 }
 
 class PageHeader extends StatelessWidget {
-  /// Creates a top bar.
+  /// Creates a page header.
   const PageHeader({
     Key? key,
     this.leading,
