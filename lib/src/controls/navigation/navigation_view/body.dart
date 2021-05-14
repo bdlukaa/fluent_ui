@@ -40,7 +40,7 @@ class NavigationBody extends StatefulWidget {
 
   /// The duration of the transition. [NavigationPaneThemeData.animationDuration]
   /// is used by default.
-  /// 
+  ///
   /// See also:
   ///   * [ThemeData.fastAnimationDuration], the duration used by default.
   final Duration? animationDuration;

@@ -167,18 +167,18 @@ class Acrylic extends StatelessWidget {
 
 /// A widget that can disable the acrylic blur effect if wrapped above
 /// an Acrylic.
-/// 
+///
 /// {@toolsnippet}
-/// 
+///
 /// The following code shows how to disable the acrylic blur effect on
 /// the whole app:
-/// 
+///
 /// ```dart
 /// runApp(NoAcrylicBlurEffect(child: MyApp()));
 /// ```
-/// 
+///
 /// {@end-tool}
-/// 
+///
 /// See also:
 ///   * [Acrylic], the widget that can apply a blurred background on its child
 ///   * [Container], a widget similar to acrylic, but with less options

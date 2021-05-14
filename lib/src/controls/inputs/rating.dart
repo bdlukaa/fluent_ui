@@ -226,8 +226,7 @@ class _RatingBarState extends State<RatingBar> {
         },
         child: GestureDetector(
           onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
-          onHorizontalDragStart: (d) =>
-              _handleUpdate(d.localPosition.dx, size),
+          onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx, size),
           onHorizontalDragUpdate: (d) =>
               _handleUpdate(d.localPosition.dx, size),
           child: FocusBorder(

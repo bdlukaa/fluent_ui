@@ -59,11 +59,13 @@ class _InputsPageState extends State<InputsPage> {
                   ),
                   ToggleSwitch(
                     checked: value,
-                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
                   ),
                   RadioButton(
                     checked: value,
-                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
                   ),
                   ToggleButton(
                     child: Text('Toggle Button'),
