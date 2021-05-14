@@ -45,7 +45,7 @@ class _OthersState extends State<Others> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      topBar: PageTopBar(header: Text('Others')),
+      header: PageHeader(title: Text('Others')),
       contentScrollController: otherController,
       content: ListView(
         padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),

@@ -28,8 +28,8 @@ class _InputsPageState extends State<InputsPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      topBar: PageTopBar(
-        header: Text('Inputs showcase'),
+      header: PageHeader(
+        title: Text('Inputs showcase'),
         commandBar: InfoLabel(
           label: 'Disabled',
           isHeader: false,

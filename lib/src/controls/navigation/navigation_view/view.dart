@@ -35,7 +35,7 @@ class NavigationView extends StatefulWidget {
     this.appBar,
     this.pane,
     this.content = const SizedBox.shrink(),
-    this.useAcrylic = true,
+    this.useAcrylic = false,
     // If more properties are added here, make sure to
     // add them to the automatic mode as well.
   }) : super(key: key);
@@ -52,7 +52,8 @@ class NavigationView extends StatefulWidget {
   /// Usually an [NavigationBody].
   final Widget content;
 
-  /// Whether a [NoAcrylicBlurEffect] widget should be added to the tree
+  /// Whether a [NoAcrylicBlurEffect] widget should be added to
+  /// the tree or not. Defaults to false.
   final bool useAcrylic;
 
   @override
@@ -384,7 +385,7 @@ class _NavigationAppBar extends StatelessWidget {
           curve: theme.animationCurve ?? Curves.linear,
           padding: EdgeInsets.only(
             left: displayMode == PaneDisplayMode.compact
-                ? PageTopBar.horizontalPadding(context)
+                ? PageHeader.horizontalPadding(context)
                 : 12.0,
           ),
           child: DefaultTextStyle(

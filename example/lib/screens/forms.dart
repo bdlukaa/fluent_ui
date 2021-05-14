@@ -21,7 +21,7 @@ class _FormsState extends State<Forms> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      topBar: PageTopBar(header: Text('Forms showcase')),
+      header: PageHeader(title: Text('Forms showcase')),
       content: ListView(
         padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
         children: [

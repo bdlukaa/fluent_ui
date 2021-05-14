@@ -2,6 +2,10 @@ part of 'view.dart';
 
 /// A helper widget that implements fluent page transitions into
 /// [NavigationView].
+///
+/// See also:
+///   * [NavigationView], used alongside this to navigate through pages
+///   * [NavigationAppBar], the app top bar
 class NavigationBody extends StatefulWidget {
   /// Creates a navigation body.
   ///

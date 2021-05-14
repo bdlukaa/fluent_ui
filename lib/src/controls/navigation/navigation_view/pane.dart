@@ -9,9 +9,25 @@ const _kOpenNavigationPanelWidth = 320.0;
 /// ![Display Modes](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)
 enum PaneDisplayMode {
   /// The pane is positioned above the content.
+  ///
+  /// Use top navigation when:
+  ///   * You have 5 or fewer top-level navigation categories that
+  ///     are equally important, and any additional top-level navigation
+  ///     categories that end up in the dropdown overflow menu are
+  ///     considered less important.
+  ///   * You need to show all navigation options on screen.
+  ///   * You want more space for your app content.
+  ///   * Icons cannot clearly describe your app's navigation categories.
+  ///
+  /// ![Top Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-top.png)
   top,
 
   /// The pane is expanded and positioned to the left of the content.
+  ///
+  /// Use open navigation when:
+  ///   * You have 5-10 equally important top-level navigation categories.
+  ///   * You want navigation categories to be very prominent, with less
+  ///     space for other app content.
   ///
   /// ![Open Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)
   open,
@@ -28,9 +44,9 @@ enum PaneDisplayMode {
   /// ![Minimal Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png)
   minimal,
 
-  /// Let the [NavigationPanel] decide what display mode should be used
+  /// Let the [NavigationPane] decide what display mode should be used
   /// based on the width. This is used by default on [NavigationPanel].
-  /// In Auto mode, the [NavigationPanel] adapts between [minimal] when
+  /// In Auto mode, the [NavigationPane] adapts between [minimal] when
   /// the window is narrow, to [compact], and then [open] as the window
   /// gets wider.
   ///
@@ -44,7 +60,17 @@ class NavigationPaneItem with Diagnosticable {
   const NavigationPaneItem({this.key});
 }
 
+/// The item used by [NavigationView] to display the tiles.
+///
+/// On [PaneDisplayMode.compact], only [item] is displayed, and [title] is
+/// used as a tooltip. On the other display modes, [item] and [title] are
+/// displayed in a [Row].
+///
+/// See also:
+///   * [PaneItemSeparator], used to group navigation items
+///   * [PaneItemHeader], used to label groups of items.
 class PaneItem extends NavigationPaneItem {
+  /// Creates a pane item.
   const PaneItem({
     Key? key,
     required this.icon,
@@ -54,6 +80,8 @@ class PaneItem extends NavigationPaneItem {
   /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
   /// is shown by the side of the [icon].
+  ///
+  /// The text style is fetched from the closest [NavigationPaneThemeData]
   ///
   /// This is also used by [Semantics] to allow screen readers to
   /// read the screen.
@@ -187,17 +215,88 @@ class PaneItem extends NavigationPaneItem {
   }
 }
 
+/// Separators for grouping navigation items. Set the color property to
+/// [Colors.transparent] to render the separator as space. Uses a [Divider]
+/// under the hood, consequently uses the closest [DividerThemeData].
+///
+/// See also:
+///   * [PaneItem], the item used by [NavigationView] to render tiles
+///   * [PaneItemHeader], used to label groups of items.
 class PaneItemSeparator extends NavigationPaneItem {
-  const PaneItemSeparator({Key? key}) : super(key: key);
+  /// Creates an item separator.
+  const PaneItemSeparator({
+    Key? key,
+    this.color,
+    this.thickness,
+  }) : super(key: key);
+
+  /// The color used by the [Divider].
+  final Color? color;
+
+  /// The separator thickness. Defaults to 1.0
+  final double? thickness;
+
+  Widget build(BuildContext context, Axis direction) {
+    return Divider(
+      key: key,
+      direction: direction,
+      style: DividerThemeData(
+        thickness: thickness,
+        decoration: color != null ? BoxDecoration(color: color) : null,
+        margin: (axis) {
+          switch (axis) {
+            case Axis.vertical:
+              return EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 10.0,
+              );
+            case Axis.horizontal:
+              return EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 10.0,
+              );
+          }
+        },
+      ),
+    );
+  }
 }
 
+/// Headers for labeling groups of items. This is not displayed if the display
+/// mode is [PaneDisplayMode.compact]
+/// 
+/// See also:
+///   * [PaneItem], the item used by [NavigationView] to render tiles
+///   * [PaneItemSeparator], used to group navigation items
 class PaneItemHeader extends NavigationPaneItem {
+  /// Creates a pane header.
   const PaneItemHeader({
     Key? key,
     required this.header,
   }) : super(key: key);
 
+  /// The header. The default style is [NavigationPaneThemeData.itemHeaderTextStyle],
+  /// but can be overriten by [Text.style].
+  ///
+  /// Usually a [Text] widget.
   final Widget header;
+
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
+    return Padding(
+      key: key,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: DefaultTextStyle(
+        style: theme.itemHeaderTextStyle ?? TextStyle(),
+        child: header,
+        softWrap: false,
+        maxLines: 1,
+        overflow: TextOverflow.fade,
+        textAlign: TextAlign.left,
+      ),
+    );
+  }
 }
 
 /// The pane used by [NavigationView].
@@ -206,10 +305,13 @@ class PaneItemHeader extends NavigationPaneItem {
 /// When the user taps on a navigation item, [onChanged], if non-null, is called.
 ///
 /// See also:
-///   * [NavigationView], the widget that is used alongside this
+///   * [NavigationView], used alongside this to navigate through pages
 ///   * [PaneDisplayMode], that defines how this pane is rendered
 ///   * [NavigationBody], the widget that implement transitions to the pages
 class NavigationPane with Diagnosticable {
+  /// Creates a navigation pane.
+  /// 
+  /// If [selected] is non-null, [selected] must be greater or equal to 0
   const NavigationPane({
     this.key,
     this.selected,
@@ -363,28 +465,10 @@ class _TopNavigationPane extends StatelessWidget {
   final NavigationPane pane;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
     if (item is PaneItemHeader) {
-      return Padding(
-        key: item.key,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: DefaultTextStyle(
-          style: theme.itemHeaderTextStyle ?? TextStyle(),
-          child: item.header,
-        ),
-      );
+      return item.build(context);
     } else if (item is PaneItemSeparator) {
-      return Divider(
-        key: item.key,
-        direction: Axis.vertical,
-        style: DividerThemeData(margin: (axis) {
-          return EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 10.0,
-          );
-        }),
-      );
+      return item.build(context, Axis.vertical);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
       return PaneItem.buildPaneItemButton(
@@ -455,16 +539,7 @@ class _CompactNavigationPane extends StatelessWidget {
       /// Item Header is not visible on compact pane
       return SizedBox();
     } else if (item is PaneItemSeparator) {
-      return Divider(
-        key: item.key,
-        direction: Axis.horizontal,
-        style: DividerThemeData(margin: (axis) {
-          return EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 10.0,
-          );
-        }),
-      );
+      return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
       return PaneItem.buildPaneItemButton(
@@ -556,32 +631,10 @@ class _OpenNavigationPane extends StatelessWidget {
     NavigationPaneItem item, [
     VoidCallback? onChanged,
   ]) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
     if (item is PaneItemHeader) {
-      return Padding(
-        key: item.key,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: DefaultTextStyle(
-          style: theme.itemHeaderTextStyle ?? TextStyle(),
-          child: item.header,
-          softWrap: false,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
-          textAlign: TextAlign.left,
-        ),
-      );
+      return item.build(context);
     } else if (item is PaneItemSeparator) {
-      return Divider(
-        key: item.key,
-        direction: Axis.horizontal,
-        style: DividerThemeData(margin: (axis) {
-          return EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 10.0,
-          );
-        }),
-      );
+      return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
       return PaneItem.buildPaneItemButton(
