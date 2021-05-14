@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [2.0.0] - [07/05/2021]
+## [2.0.0] - [20/05/2021]
 
 - New way to disable the acrylic blur effect. Just wrap the acrylic widget in a `NoAcrylicBlurEffect` to have it disabled.
 

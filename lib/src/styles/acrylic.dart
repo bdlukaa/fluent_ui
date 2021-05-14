@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as m;
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
@@ -194,7 +193,6 @@ class NoAcrylicBlurEffect extends InheritedWidget {
   final Widget child;
 
   static NoAcrylicBlurEffect? of(BuildContext context) {
-    m.AppBar();
     return context.dependOnInheritedWidgetOfExactType<NoAcrylicBlurEffect>();
   }
 

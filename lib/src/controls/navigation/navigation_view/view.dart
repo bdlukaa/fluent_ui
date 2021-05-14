@@ -122,24 +122,28 @@ class NavigationViewState extends State<NavigationView> {
           builder: (context, consts) {
             double width = consts.biggest.width;
             if (width.isInfinite) width = MediaQuery.of(context).size.width;
-            if (width >= 1008) {
-              currentDisplayMode = PaneDisplayMode.open;
+
+            late PaneDisplayMode autoDisplayMode;
+            if (width <= 640) {
+              autoDisplayMode = PaneDisplayMode.minimal;
+            } else if (currentDisplayMode != null) {
+              autoDisplayMode = currentDisplayMode!;
+            } else if (width >= 1008) {
+              autoDisplayMode = PaneDisplayMode.open;
             } else if (width > 640) {
-              currentDisplayMode = PaneDisplayMode.compact;
-            } else {
-              currentDisplayMode = PaneDisplayMode.minimal;
+              autoDisplayMode = PaneDisplayMode.compact;
             }
 
-            assert(currentDisplayMode != PaneDisplayMode.auto);
+            assert(autoDisplayMode != PaneDisplayMode.auto);
 
             /// We display a new navigation view with the current display mode.
-            /// We can do this because [currentDisplayMode] can never be `auto`,
+            /// We can do this because [autoDisplayMode] can never be `auto`,
             /// so it won't stack overflow (error).
             return NavigationView(
               appBar: widget.appBar,
               content: widget.content,
               pane: NavigationPane(
-                displayMode: currentDisplayMode!,
+                displayMode: autoDisplayMode,
                 autoSuggestBox: pane.autoSuggestBox,
                 autoSuggestBoxReplacement: pane.autoSuggestBoxReplacement,
                 footerItems: pane.footerItems,
@@ -148,6 +152,11 @@ class NavigationViewState extends State<NavigationView> {
                 key: pane.key,
                 onChanged: pane.onChanged,
                 selected: pane.selected,
+                menuButton: pane.menuButton,
+                scrollController: pane.scrollController,
+                onDisplayModeRequested: (mode) {
+                  setState(() => currentDisplayMode = mode);
+                },
               ),
             );
           },
