@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -5,9 +6,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import 'indicators.dart';
-
 part 'body.dart';
+part 'indicators.dart';
 part 'pane.dart';
 part 'style.dart';
 
@@ -453,7 +453,8 @@ class _NavigationAppBar extends StatelessWidget {
     return AnimatedContainer(
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
-      color: appBar.backgroundColor ?? FluentTheme.of(context).scaffoldBackgroundColor,
+      color: appBar.backgroundColor ??
+          FluentTheme.of(context).scaffoldBackgroundColor,
       height: appBar.height,
       child: result,
     );

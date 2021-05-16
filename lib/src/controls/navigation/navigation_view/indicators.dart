@@ -1,7 +1,6 @@
-import 'dart:math';
+part of 'view.dart';
 
-import 'package:fluent_ui/fluent_ui.dart';
-
+/// Creates a navigation indicator from a function.
 typedef NavigationIndicatorBuilder = Widget Function({
   required BuildContext context,
   int? index,
@@ -24,6 +23,8 @@ class NavigationIndicator extends StatefulWidget {
     required this.child,
     required this.axis,
     this.padding = const EdgeInsets.only(),
+    this.curve = Curves.linear,
+    this.color,
   }) : super(key: key);
 
   /// The [NavigationPane]. It can be open, compact, closed or top.
@@ -40,26 +41,132 @@ class NavigationIndicator extends StatefulWidget {
   final List<Size> Function() sizes;
 
   /// The axis corresponding to the current navigation pane. If it's
-  /// a top pane, [Axis.vertical] will be provided, otherwise 
+  /// a top pane, [Axis.vertical] will be provided, otherwise
   /// [Axis.horizontal].
   final Axis axis;
 
   /// The padding used on the indicators. [EdgeInsets.zero] used by default
   final EdgeInsets padding;
 
+  /// The curve used on the animation, if any
+  final Curve curve;
+
+  /// The highlight color
+  final Color? color;
+
   @override
   NavigationIndicatorState createState() => NavigationIndicatorState();
 }
 
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
+  List<Offset>? offsets;
+  List<Size>? sizes;
+
+  @override
+  void initState() {
+    super.initState();
+    fetch();
+  }
+
+  void fetch() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      setState(() {
+        offsets = widget.offsets();
+        sizes = widget.sizes();
+      });
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.child;
   }
 }
 
-// Sticky Indicator
+/// The end navigation indicator
+/// 
+/// Works on both top and left display modes
+class EndNavigationIndicator extends NavigationIndicator {
+  const EndNavigationIndicator({
+    Key? key,
+    required List<Offset> Function() offsets,
+    required List<Size> Function() sizes,
+    required int index,
+    required Widget child,
+    required Axis axis,
+    EdgeInsets padding = const EdgeInsets.only(left: 4.0),
+    Curve curve = Curves.easeInOut,
+    Color? color,
+  }) : super(
+          key: key,
+          axis: axis,
+          child: child,
+          index: index,
+          offsets: offsets,
+          sizes: sizes,
+          padding: padding,
+          curve: curve,
+          color: color,
+        );
+
+  @override
+  _EndNavigationIndicatorState createState() => _EndNavigationIndicatorState();
+}
+
+class _EndNavigationIndicatorState
+    extends NavigationIndicatorState<EndNavigationIndicator> {
+  @override
+  Widget build(BuildContext context) {
+    if (offsets == null || sizes == null) return widget.child;
+    fetch();
+    return Stack(children: [
+      widget.child,
+      ...List.generate(offsets!.length, (index) {
+        if (widget.index != index) return SizedBox.shrink();
+        final isTop = widget.axis != Axis.horizontal;
+        final offset = offsets![index];
+        final size =
+            (!isTop ? sizes![index].height : sizes![index].width) * 1.0;
+
+        final indicator = IgnorePointer(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: isTop ? 6.0 : 6.0,
+              horizontal: isTop ? 10.0 : 0.0,
+            ),
+            width: isTop ? size : 4,
+            height: isTop ? 4 : size,
+            color: widget.color,
+          ),
+        );
+        if (isTop)
+          return Positioned(
+            top: offset.dy,
+            left: offset.dx,
+            width: size,
+            child: indicator,
+          );
+        else {
+          return Positioned(
+            top: offset.dy - size + 10.0,
+            height: size,
+            child: indicator,
+          );
+        }
+      }),
+    ]);
+  }
+}
+
+// TODO(bdlukaa): implement sticky navigation indicator on top
+
+/// A sticky navigation indicator.
+///
+/// Made by [@raitonubero](https://gist.github.com/raitonoberu). Make
+/// sure to check him out.
 class StickyNavigationIndicator extends NavigationIndicator {
+  /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
     Key? key,
     required List<Offset> Function() offsets,
@@ -68,8 +175,8 @@ class StickyNavigationIndicator extends NavigationIndicator {
     required Widget child,
     required Axis axis,
     EdgeInsets padding = const EdgeInsets.only(left: 4.0),
-    this.curve = Curves.easeInOut,
-    this.color,
+    Curve curve = Curves.linear,
+    Color? color,
   }) : super(
           key: key,
           axis: axis,
@@ -77,22 +184,19 @@ class StickyNavigationIndicator extends NavigationIndicator {
           index: index,
           offsets: offsets,
           sizes: sizes,
-          padding: padding
+          padding: padding,
+          curve: curve,
+          color: color,
         );
-
-  final Curve curve;
-  final Color? color;
 
   @override
   _StickyNavigationIndicatorState createState() =>
       _StickyNavigationIndicatorState();
 }
 
-class _StickyNavigationIndicatorState extends NavigationIndicatorState<StickyNavigationIndicator>
+class _StickyNavigationIndicatorState
+    extends NavigationIndicatorState<StickyNavigationIndicator>
     with SingleTickerProviderStateMixin {
-  List<Offset>? offsets;
-  List<Size>? sizes;
-
   late AnimationController controller;
 
   late int oldIndex;
@@ -121,12 +225,6 @@ class _StickyNavigationIndicatorState extends NavigationIndicatorState<StickyNav
       duration: Duration(milliseconds: 1),
     );
     controller.repeat();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      setState(() {
-        offsets = widget.offsets();
-        sizes = widget.sizes();
-      });
-    });
   }
 
   @override
@@ -153,10 +251,7 @@ class _StickyNavigationIndicatorState extends NavigationIndicatorState<StickyNav
         return -sizes![widget.index].width * 2;
       }
     }();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      offsets = widget.offsets();
-      sizes = widget.sizes();
-    });
+    fetch();
 
     this.p1Start = offsets![minIndex].fromAxis(widget.axis) - (kFactor / 2);
     this.p1End = offsets![maxIndex].fromAxis(widget.axis) - (kFactor / 2);
