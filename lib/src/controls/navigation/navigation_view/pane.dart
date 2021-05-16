@@ -56,6 +56,7 @@ enum PaneDisplayMode {
 
 class NavigationPaneItem with Diagnosticable {
   final GlobalKey itemKey = GlobalKey();
+
   NavigationPaneItem();
 }
 
@@ -90,7 +91,7 @@ class PaneItem extends NavigationPaneItem {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('title', title, ifEmpty: 'no title'));
   }
 
   static Widget buildPaneItemButton(
@@ -414,7 +415,10 @@ class NavigationPane with Diagnosticable {
     properties.add(IntProperty('selected', selected));
     properties
         .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
-    properties.add(DiagnosticsProperty('scrollController', scrollController));
+    properties.add(DiagnosticsProperty<ScrollController>(
+      'scrollController',
+      scrollController,
+    ));
   }
 
   /// A list of all of the items displayed on this pane.

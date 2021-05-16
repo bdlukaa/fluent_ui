@@ -55,6 +55,15 @@ class NavigationIndicator extends StatefulWidget {
   final Color? color;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('index', index));
+    properties.add(EnumProperty('axis', axis));
+    properties.add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear));
+    properties.add(ColorProperty('highlight color', color));
+  }
+
+  @override
   NavigationIndicatorState createState() => NavigationIndicatorState();
 }
 

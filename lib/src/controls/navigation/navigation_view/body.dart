@@ -50,6 +50,18 @@ class NavigationBody extends StatefulWidget {
   final Duration? animationDuration;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('index', index));
+    properties.add(
+      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+    );
+    properties.add(
+      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+    );
+  }
+
+  @override
   _NavigationBodyState createState() => _NavigationBodyState();
 }
 

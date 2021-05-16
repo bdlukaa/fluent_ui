@@ -59,6 +59,15 @@ class NavigationView extends StatefulWidget {
   final bool useAcrylic;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('appBar', appBar));
+    properties.add(DiagnosticsProperty('pane', pane));
+    properties.add(FlagProperty('useAcrylic',
+        value: useAcrylic, ifFalse: 'do not use acrylic'));
+  }
+
+  @override
   NavigationViewState createState() => NavigationViewState();
 }
 
@@ -271,7 +280,7 @@ class NavigationViewState extends State<NavigationView> {
 ///   - [NavigationView]
 ///   - [NavigationPane]
 ///   - [PaneDisplayMode]
-class NavigationAppBar {
+class NavigationAppBar with Diagnosticable {
   final Key? key;
 
   /// The widget at the beggining of the app bar, before [title].
@@ -316,6 +325,23 @@ class NavigationAppBar {
     this.height = _kDefaultAppBarHeight,
     this.backgroundColor,
   });
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty(
+      'automatically imply leading',
+      value: automaticallyImplyLeading,
+      ifFalse: 'do not imply leading',
+      defaultValue: true,
+    ));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(DoubleProperty(
+      'height',
+      height,
+      defaultValue: _kDefaultAppBarHeight,
+    ));
+  }
 
   static Widget buildLeading(
     BuildContext context,
