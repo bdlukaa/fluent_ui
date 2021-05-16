@@ -5,6 +5,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+import 'indicators.dart';
+
 part 'body.dart';
 part 'pane.dart';
 part 'style.dart';
