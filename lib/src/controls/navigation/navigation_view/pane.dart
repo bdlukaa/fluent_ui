@@ -498,8 +498,11 @@ class _TopNavigationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
     Widget topBar = Acrylic(
       height: kOneLineTileHeight,
+      color: theme.backgroundColor,
       child: pane.indicatorBuilder(
         context: context,
         index: pane.selected,
@@ -585,6 +588,7 @@ class _CompactNavigationPane extends StatelessWidget {
       width: _kCompactNavigationPanelWidth,
       animationDuration: theme.animationDuration ?? Duration.zero,
       animationCurve: theme.animationCurve ?? Curves.linear,
+      color: theme.backgroundColor,
       child: pane.indicatorBuilder(
         context: context,
         index: pane.selected,
@@ -857,6 +861,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
             ),
             if (widget.pane.autoSuggestBox != null)
               Container(
+                padding: theme.iconPadding,
                 height: 41.0,
                 alignment: Alignment.center,
                 margin: topPadding,
