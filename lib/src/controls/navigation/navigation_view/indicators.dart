@@ -11,39 +11,85 @@ typedef NavigationIndicatorBuilder = Widget Function({
   required Widget child,
 });
 
-class StickyNavigationIndicator extends StatefulWidget {
-  const StickyNavigationIndicator({
+/// A indicator used by [NavigationPane] to render the selected
+/// indicator.
+class NavigationIndicator extends StatefulWidget {
+  /// Creates a navigation indicator used by [NavigationPane]
+  /// to render the selected indicator.
+  const NavigationIndicator({
     Key? key,
     required this.offsets,
     required this.sizes,
     required this.index,
     required this.child,
     required this.axis,
-    this.curve = Curves.easeInOut,
-    this.color,
-    this.padding = const EdgeInsets.only(left: 4.0),
+    this.padding = const EdgeInsets.only(),
   }) : super(key: key);
 
+  /// The [NavigationPane]. It can be open, compact, closed or top.
   final Widget child;
+
+  /// The current selected index;
   final int index;
+
+  /// A function that tells the indicator the item offsets.
   final List<Offset> Function() offsets;
+
+  /// A function that tells the indicator the item sizes. The sizes
+  /// must not be [Size.infinite]
   final List<Size> Function() sizes;
+
+  /// The axis corresponding to the current navigation pane. If it's
+  /// a top pane, [Axis.vertical] will be provided, otherwise 
+  /// [Axis.horizontal].
+  final Axis axis;
+
+  /// The padding used on the indicators. [EdgeInsets.zero] used by default
+  final EdgeInsets padding;
+
+  @override
+  NavigationIndicatorState createState() => NavigationIndicatorState();
+}
+
+class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+}
+
+// Sticky Indicator
+class StickyNavigationIndicator extends NavigationIndicator {
+  const StickyNavigationIndicator({
+    Key? key,
+    required List<Offset> Function() offsets,
+    required List<Size> Function() sizes,
+    required int index,
+    required Widget child,
+    required Axis axis,
+    EdgeInsets padding = const EdgeInsets.only(left: 4.0),
+    this.curve = Curves.easeInOut,
+    this.color,
+  }) : super(
+          key: key,
+          axis: axis,
+          child: child,
+          index: index,
+          offsets: offsets,
+          sizes: sizes,
+          padding: padding
+        );
 
   final Curve curve;
   final Color? color;
-
-  final EdgeInsets padding;
-  final Axis axis;
 
   @override
   _StickyNavigationIndicatorState createState() =>
       _StickyNavigationIndicatorState();
 }
 
-class _StickyNavigationIndicatorState extends State<StickyNavigationIndicator>
+class _StickyNavigationIndicatorState extends NavigationIndicatorState<StickyNavigationIndicator>
     with SingleTickerProviderStateMixin {
-  static const tileHeight = kOneLineTileHeight;
-
   List<Offset>? offsets;
   List<Size>? sizes;
 
