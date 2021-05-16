@@ -71,7 +71,7 @@ class NavigationPaneThemeData with Diagnosticable {
           state.isDisabled ? disabledTextStyle : style.typography.body!,
       cursor: style.inputMouseCursor,
       labelPadding: EdgeInsets.zero,
-      iconPadding: EdgeInsets.only(right: 10, left: 8),
+      iconPadding: EdgeInsets.symmetric(horizontal: 12.0),
       selectedIconColor: (_) => style.accentColor,
       unselectedIconColor: (_) => style.inactiveColor,
     );

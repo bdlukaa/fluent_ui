@@ -187,12 +187,9 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(icon: Icon(Icons.miscellaneous_services), title: 'Others'),
           PaneItem(icon: Icon(Icons.color_lens_outlined), title: 'Colors'),
         ],
-        autoSuggestBox: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: AutoSuggestBox(
-            controller: TextEditingController(),
-            items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
-          ),
+        autoSuggestBox: AutoSuggestBox(
+          controller: TextEditingController(),
+          items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
         ),
         autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [

@@ -243,7 +243,7 @@ class PaneItemHeader extends NavigationPaneItem {
     final theme = NavigationPaneThemeData.of(context);
     return Padding(
       key: itemKey,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: theme.iconPadding ?? EdgeInsets.zero,
       child: DefaultTextStyle(
         style: theme.itemHeaderTextStyle ?? TextStyle(),
         child: header,
@@ -725,6 +725,7 @@ class _OpenNavigationPane extends StatelessWidget {
           ),
           if (pane.autoSuggestBox != null)
             Container(
+              padding: theme.iconPadding ?? EdgeInsets.zero,
               height: 41.0,
               alignment: Alignment.center,
               margin: topPadding,
