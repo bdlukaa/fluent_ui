@@ -365,7 +365,7 @@ class NavigationAppBar {
 }
 
 class _NavigationAppBar extends StatelessWidget {
-  const _NavigationAppBar({
+  _NavigationAppBar({
     Key? key,
     required this.appBar,
     required this.displayMode,
@@ -373,6 +373,8 @@ class _NavigationAppBar extends StatelessWidget {
 
   final NavigationAppBar appBar;
   final PaneDisplayMode displayMode;
+
+  final GlobalKey _openCompactKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -424,6 +426,7 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.open:
         result = Row(children: [
           Acrylic(
+            key: _openCompactKey,
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
@@ -437,6 +440,8 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.compact:
         result = Row(children: [
           Acrylic(
+            key: _openCompactKey,
+            width: _kCompactNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
             animationDuration: theme.animationDuration ?? Duration.zero,
