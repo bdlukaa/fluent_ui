@@ -58,6 +58,10 @@ class NavigationView extends StatefulWidget {
   /// the tree or not. Defaults to false.
   final bool useAcrylic;
 
+  static NavigationViewState of(BuildContext context) {
+    return context.findAncestorStateOfType<NavigationViewState>()!;
+  }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

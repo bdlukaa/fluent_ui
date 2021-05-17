@@ -8,6 +8,7 @@ typedef NavigationIndicatorBuilder = Widget Function({
   required List<Size> Function() sizes,
   required Axis axis,
   required Widget child,
+  double? y,
 });
 
 /// A indicator used by [NavigationPane] to render the selected
@@ -22,6 +23,7 @@ class NavigationIndicator extends StatefulWidget {
     required this.index,
     required this.child,
     required this.axis,
+    this.y = 0,
     this.padding = const EdgeInsets.only(),
     this.curve = Curves.linear,
     this.color,
@@ -48,6 +50,9 @@ class NavigationIndicator extends StatefulWidget {
   /// The padding used on the indicators. [EdgeInsets.zero] used by default
   final EdgeInsets padding;
 
+  /// Where to start couting position from on the screen
+  final double y;
+
   /// The curve used on the animation, if any
   final Curve curve;
 
@@ -59,7 +64,8 @@ class NavigationIndicator extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(IntProperty('index', index));
     properties.add(EnumProperty('axis', axis));
-    properties.add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear));
+    properties
+        .add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear));
     properties.add(ColorProperty('highlight color', color));
   }
 
@@ -79,12 +85,11 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      setState(() {
-        offsets = widget.offsets();
-        sizes = widget.sizes();
-      });
+      offsets = widget.offsets().map((e) {
+        return e - Offset(0, widget.y);
+      }).toList();
+      sizes = widget.sizes();
     });
-
   }
 
   @override
@@ -94,7 +99,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 }
 
 /// The end navigation indicator
-/// 
+///
 /// Works on both top and left display modes
 class EndNavigationIndicator extends NavigationIndicator {
   const EndNavigationIndicator({
@@ -104,6 +109,7 @@ class EndNavigationIndicator extends NavigationIndicator {
     required int index,
     required Widget child,
     required Axis axis,
+    double y = 0,
     EdgeInsets padding = const EdgeInsets.only(left: 4.0),
     Curve curve = Curves.easeInOut,
     Color? color,
@@ -117,6 +123,7 @@ class EndNavigationIndicator extends NavigationIndicator {
           padding: padding,
           curve: curve,
           color: color,
+          y: y,
         );
 
   @override
@@ -129,37 +136,44 @@ class _EndNavigationIndicatorState
   Widget build(BuildContext context) {
     if (offsets == null || sizes == null) return widget.child;
     fetch();
-    return Stack(children: [
+    return Stack(clipBehavior: Clip.none, children: [
       widget.child,
       ...List.generate(offsets!.length, (index) {
         if (widget.index != index) return SizedBox.shrink();
         final isTop = widget.axis != Axis.horizontal;
         final offset = offsets![index];
-        final size =
-            (!isTop ? sizes![index].height : sizes![index].width) * 1.0;
+
+        final size = sizes![index];
 
         final indicator = IgnorePointer(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: isTop ? 6.0 : 6.0,
+              vertical: isTop ? 0.0 : 6.0,
               horizontal: isTop ? 10.0 : 0.0,
             ),
-            width: isTop ? size : 4,
-            height: isTop ? 4 : size,
+            width: isTop ? size.width : 4,
+            height: isTop ? 4 : size.height,
             color: widget.color,
           ),
         );
+
+        // print('at $offset with $size');
+
         if (isTop)
           return Positioned(
             top: offset.dy,
             left: offset.dx,
-            width: size,
-            child: indicator,
+            width: size.width,
+            height: size.height,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: indicator,
+            ),
           );
         else {
           return Positioned(
-            top: offset.dy - size + 10.0,
-            height: size,
+            top: offset.dy,
+            height: size.height,
             child: indicator,
           );
         }
@@ -186,6 +200,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
     EdgeInsets padding = const EdgeInsets.only(left: 4.0),
     Curve curve = Curves.linear,
     Color? color,
+    double y = 0,
   }) : super(
           key: key,
           axis: axis,
@@ -196,6 +211,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
           padding: padding,
           curve: curve,
           color: color,
+          y: 0,
         );
 
   @override
@@ -257,7 +273,7 @@ class _StickyNavigationIndicatorState
       if (widget.axis == Axis.horizontal) {
         return sizes![widget.index].height;
       } else {
-        return -sizes![widget.index].width * 2;
+        return -sizes![widget.index].width;
       }
     }();
     fetch();
@@ -298,6 +314,7 @@ class _StickyNavigationIndicatorState
         update(widget.index);
         return CustomPaint(
           foregroundPainter: _StickyPainter(
+            y: widget.axis == Axis.horizontal ? 0 : sizes!.first.height,
             padding: widget.axis == Axis.horizontal
                 ? widget.padding.left
                 : widget.padding.top,
@@ -324,6 +341,7 @@ class _StickyNavigationIndicatorState
 }
 
 class _StickyPainter extends CustomPainter {
+  final double y;
   final double padding;
   final double p1;
   final double p1Start;
@@ -337,6 +355,7 @@ class _StickyPainter extends CustomPainter {
   final Axis axis;
 
   const _StickyPainter({
+    this.y = 0,
     required this.padding,
     required this.p1,
     required this.p1Start,
@@ -360,10 +379,18 @@ class _StickyPainter extends CustomPainter {
     final second = p2Start + (p2End - p2Start) * p2;
     switch (axis) {
       case Axis.horizontal:
-        canvas.drawLine(Offset(padding, first), Offset(padding, second), paint);
+        canvas.drawLine(
+          Offset(padding, y + first),
+          Offset(padding, y + second),
+          paint,
+        );
         break;
       case Axis.vertical:
-        canvas.drawLine(Offset(first, padding), Offset(second, padding), paint);
+        canvas.drawLine(
+          Offset(padding + first, y + padding),
+          Offset(padding + second, y + padding),
+          paint,
+        );
         break;
     }
   }

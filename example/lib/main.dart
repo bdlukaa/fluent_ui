@@ -150,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
         indicatorBuilder: ({
           required BuildContext context,
           int? index,
+          double? y,
           required List<Offset> Function() offsets,
           required List<Size> Function() sizes,
           required Axis axis,
@@ -158,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == null) return child;
           assert(debugCheckHasFluentTheme(context));
           final theme = NavigationPaneThemeData.of(context);
-          if (appTheme.displayMode != PaneDisplayMode.top)
+          // if (appTheme.displayMode != PaneDisplayMode.top)
             return StickyNavigationIndicator(
               index: index,
               offsets: offsets,
@@ -167,6 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: theme.highlightColor,
               curve: theme.animationCurve ?? Curves.linear,
               axis: axis,
+              y: y ?? 0,
             );
           return EndNavigationIndicator(
             index: index,
@@ -175,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: child,
             color: theme.highlightColor,
             curve: theme.animationCurve ?? Curves.linear,
+            y: y ?? 0,
             axis: axis,
           );
         },

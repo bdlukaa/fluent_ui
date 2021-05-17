@@ -288,7 +288,7 @@ class NavigationPane with Diagnosticable {
   /// Creates a navigation pane.
   ///
   /// If [selected] is non-null, [selected] must be greater or equal to 0
-  const NavigationPane({
+  NavigationPane({
     this.key,
     this.selected,
     this.onChanged,
@@ -305,6 +305,8 @@ class NavigationPane with Diagnosticable {
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
+
+  final GlobalKey paneKey = GlobalKey();
 
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
@@ -387,6 +389,7 @@ class NavigationPane with Diagnosticable {
   static Widget _defaultNavigationIndicator({
     required BuildContext context,
     int? index,
+    double? y,
     required List<Offset> Function() offsets,
     required List<Size> Function() sizes,
     required Axis axis,
@@ -464,6 +467,10 @@ class NavigationPane with Diagnosticable {
   }
 }
 
+double _getIndicatorY(BuildContext context) {
+  return NavigationView.of(context).widget.appBar?.height ?? 0;
+}
+
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
@@ -509,6 +516,7 @@ class _TopNavigationPane extends StatelessWidget {
         offsets: pane.effectiveItems.getPaneItemsOffsets,
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.vertical,
+        y: _getIndicatorY(context),
         child: Row(children: [
           Expanded(
             child: Row(children: [
@@ -595,6 +603,7 @@ class _CompactNavigationPane extends StatelessWidget {
         offsets: pane.effectiveItems.getPaneItemsOffsets,
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.horizontal,
+        y: _getIndicatorY(context),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           () {
             if (pane.menuButton != null) return pane.menuButton!;
@@ -712,6 +721,7 @@ class _OpenNavigationPane extends StatelessWidget {
         offsets: pane.effectiveItems.getPaneItemsOffsets,
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.horizontal,
+        y: _getIndicatorY(context),
         child: Column(children: [
           Container(
             margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
@@ -839,6 +849,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
           offsets: widget.pane.effectiveItems.getPaneItemsOffsets,
           sizes: widget.pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
+          y: _getIndicatorY(context),
           child: Column(children: [
             Padding(
               padding: widget.pane.autoSuggestBox != null
