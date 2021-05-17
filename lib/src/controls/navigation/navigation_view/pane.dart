@@ -623,7 +623,7 @@ class _CompactNavigationPane extends StatelessWidget {
             if (pane.onDisplayModeRequested != null)
               return NavigationPane.buildMenuButton(
                 context,
-                'Open Navigation',
+                FluentLocalizations.of(context).openNavigationTooltip,
                 pane,
                 onPressed: () {
                   pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
@@ -638,7 +638,7 @@ class _CompactNavigationPane extends StatelessWidget {
               child: PaneItem.buildPaneItemButton(
                 context,
                 PaneItem(
-                  title: 'Click to search',
+                  title: FluentLocalizations.of(context).clickToSearch,
                   icon: pane.autoSuggestBoxReplacement!,
                 ),
                 pane.displayMode,
@@ -715,7 +715,7 @@ class _OpenNavigationPane extends StatelessWidget {
       if (pane.onDisplayModeRequested != null)
         return NavigationPane.buildMenuButton(
           context,
-          'Close Navigation',
+          FluentLocalizations.of(context).closeNavigationTooltip,
           pane,
           onPressed: () {
             pane.onDisplayModeRequested?.call(PaneDisplayMode.compact);
@@ -845,7 +845,10 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       width: _kCompactNavigationPanelWidth,
       child: PaneItem.buildPaneItemButton(
         context,
-        PaneItem(title: 'Close navigation', icon: Icon(Icons.menu)),
+        PaneItem(
+          title: FluentLocalizations.of(context).closeNavigationTooltip,
+          icon: Icon(Icons.menu),
+        ),
         PaneDisplayMode.compact,
         false,
         removeEntry,
@@ -920,7 +923,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
           onTap: removeEntry,
           child: AbsorbPointer(
             child: Semantics(
-              label: 'Close',
+              label: FluentLocalizations.of(context).modalBarrierDismissLabel,
               child: Container(
                 constraints: BoxConstraints.expand(),
                 color: Colors.black.withOpacity(0.03),

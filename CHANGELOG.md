@@ -7,6 +7,7 @@ Date format: DD/MM/YYYY
   - The legacy `NavigationPanel` and `Scaffold` were removed. Use `NavigationView` and `ScaffoldPage` instead
   - Implemented open, compact, top and minimal display modes.
   - Custom Selected Indicators
+- Implemented fluent localizations ([#30](https://github.com/bdlukaa/fluent_ui/issues/30))
 
 ## [1.10.1] - [05/05/2021]
 

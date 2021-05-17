@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as m;
 
 /// An application that uses fluent design.
 ///
@@ -346,6 +347,18 @@ class _FluentAppState extends State<FluentApp> {
     _heroController = HeroController();
   }
 
+  // Combine the Localizations for Material with the ones contributed
+  // by the localizationsDelegates parameter, if any. Only the first delegate
+  // of a particular LocalizationsDelegate.type is loaded so the
+  // localizationsDelegate parameter can be used to override
+  // _FluentLocalizationsDelegate.
+  Iterable<LocalizationsDelegate<dynamic>> get _localizationsDelegates sync* {
+    if (widget.localizationsDelegates != null)
+      yield* widget.localizationsDelegates!;
+    yield DefaultFluentLocalizations.delegate;
+    yield m.DefaultMaterialLocalizations.delegate;
+  }
+
   bool get _usesRouter => widget.routerDelegate != null;
 
   @override
@@ -410,7 +423,7 @@ class _FluentAppState extends State<FluentApp> {
         shortcuts: widget.shortcuts,
         actions: widget.actions,
         restorationScopeId: widget.restorationScopeId,
-        localizationsDelegates: widget.localizationsDelegates,
+        localizationsDelegates: _localizationsDelegates,
         textStyle: theme.typography.body,
       );
     }
@@ -441,7 +454,7 @@ class _FluentAppState extends State<FluentApp> {
       shortcuts: widget.shortcuts,
       actions: widget.actions,
       restorationScopeId: widget.restorationScopeId,
-      localizationsDelegates: widget.localizationsDelegates,
+      localizationsDelegates: _localizationsDelegates,
       pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
         return FluentPageRoute<T>(settings: settings, builder: builder);
       },

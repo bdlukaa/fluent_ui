@@ -79,7 +79,7 @@ class NavigationViewState extends State<NavigationView> {
   /// The scroll controller used to keep the scrolling state of
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
-  /// 
+  ///
   /// https://github.com/bdlukaa/fluent_ui/issues/3#issuecomment-842493396
   late ScrollController openScrollController;
   late ScrollController compactScrollController;
@@ -234,7 +234,8 @@ class NavigationViewState extends State<NavigationView> {
                     child: PaneItem.buildPaneItemButton(
                       context,
                       PaneItem(
-                        title: 'Open Navigation',
+                        title: FluentLocalizations.of(context)
+                            .openNavigationTooltip,
                         icon: Icon(Icons.menu),
                       ),
                       PaneDisplayMode.compact,
@@ -398,7 +399,11 @@ class NavigationAppBar with Diagnosticable {
           },
         ),
       );
-      if (canPop) widget = Tooltip(message: 'Back', child: widget);
+      if (canPop)
+        widget = Tooltip(
+          message: FluentLocalizations.of(context).backButtonTooltip,
+          child: widget,
+        );
     } else {
       return SizedBox.shrink();
     }
