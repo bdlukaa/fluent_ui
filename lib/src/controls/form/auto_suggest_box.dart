@@ -66,7 +66,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty('items', items));
+    properties.add(IterableProperty<T>('items', items));
     properties.add(ObjectFlagProperty<ValueChanged<T>?>(
       'onSelected',
       onSelected,
@@ -180,7 +180,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           child: Acrylic(
             width: box.size.width,
             decoration: BoxDecoration(
-              color: context.theme.navigationPanelBackgroundColor,
+              color: context.theme.acrylicBackgroundColor,
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(4.0),
               ),

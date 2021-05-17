@@ -283,7 +283,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
       child: CustomPaint(
         painter: _ComboboxMenuPainter(
           color: widget.comboboxColor ??
-              FluentTheme.of(context).navigationPanelBackgroundColor,
+              FluentTheme.of(context).acrylicBackgroundColor,
           elevation: route.elevation,
           selectedIndex: route.selectedIndex,
           resize: _resize,

@@ -33,11 +33,18 @@ class FluentPageRoute<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
+    assert(debugCheckHasFluentTheme(context));
     final Widget result = _builder(context);
     return Semantics(
       scopesRoute: true,
       explicitChildNodes: true,
-      child: result,
+      child: DrillInPageTransition(
+        animation: CurvedAnimation(
+          parent: animation,
+          curve: FluentTheme.of(context).animationCurve,
+        ),
+        child: result,
+      ),
     );
   }
 
@@ -45,5 +52,5 @@ class FluentPageRoute<T> extends PageRoute<T> {
   bool get maintainState => _maintainState;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 300);
+  Duration get transitionDuration => Duration(milliseconds: 200);
 }

@@ -350,7 +350,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.withOpacity(0.4),
+                  tileColor: context.theme.accentColor.resolveFrom(context),
                 ),
               ),
             ),

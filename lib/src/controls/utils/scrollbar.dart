@@ -78,8 +78,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 
   Color _trackColor(ButtonStates state) {
     if (state.isNone) return Colors.transparent;
-    return _scrollbarTheme.backgroundColor ??
-        context.theme.navigationPanelBackgroundColor;
+    return _scrollbarTheme.backgroundColor ?? Colors.transparent;
   }
 
   Color _thumbColor(ButtonStates state) {

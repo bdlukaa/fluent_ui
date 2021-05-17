@@ -42,8 +42,13 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
     - [Type ramp](#type-ramp)
   - [Reveal Focus](#reveal-focus)
   - **TODO** [Reveal Highlight](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal)
+- [Motion](#motion)
+  - [Page Transitions](#page-transitions)
 - [Navigation](#navigation)
-  - [Navigation panel](#navigation-panel)
+  - [Navigation View](#navigation-view)
+    - [App Bar](#app-bar)
+    - [Navigation Pane](#navigation-pane)
+    - [Navigation Body](#navigation-body)
   - [Tab View](#tab-view)
 - [Widgets](#widgets)
   - [Button](#button)
@@ -287,73 +292,15 @@ FluentTheme(
 ),
 ```
 
-# Navigation
+# Motion
 
-The default flutter navigation is available when using the `FluentApp` widget, that means you can simply call `Navigator.push` and `Navigator.pop` to navigate between routes. See [navigate to a new screen and back](https://flutter.dev/docs/cookbook/navigation/navigation-basics)
+This package widely uses animation in the widgets. The animation duration and curve can be defined on the app theme.
 
-## Navigation panel
-
-> Navigation Panel will be rewritten in a near future. See [#3](https://github.com/bdlukaa/fluent_ui/issues/3) for more info
-
-```dart
-int _currentIndex = 0;
-
-Scaffold(
-  left: NavigationPanel(
-    currentIndex: _currentIndex,
-    menu: NavigationPanelMenuItem(...),
-    items: [
-      NavigationPanelSectionHeader(
-        header: Text('Cool Navigation Panel Header'),
-      ),
-      NavigationPanelItem(
-        icon: Icon(Icons.input),
-        label: Text('Page 1'),
-        onTapped: () => setState(() => _currentIndex = 0),
-      ),
-      NavigationPanelTileSeparator(),
-      NavigationPanelItem(
-        icon: Icon(Icons.format_align_center),
-        label: Text('Page 2'),
-        onTapped: () => setState(() => _currentIndex = 1),
-      ),
-    ],
-  ),
-  body: ...,
-)
-```
-
-![Navigation Panel](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
-
-### Navigation body
-
-Usually used in Scaffold's `body` property. Example:
-
-```dart
-int _currentIndex = 0;
-
-Scaffold(
-  left: NavigationPanel(...),
-  body: NavigationPanelBody(
-    index: _currentIndex,
-    transitionBuilder: (child, animation) {
-      // Refer to page transitions to see more page transitions
-      return DrillInPageTransition(
-        child: child,
-        animation: animation,
-      );
-    }
-    children: [
-      Page1(),
-      Page2(),
-    ],
-  ),
-),
-```
-
-### Page transitions
+## Page transitions
 
 Page transitions navigate users between pages in an app, providing feedback as the relationship between pages. Page transitions help users understand if they are at the top of a navigation hierarchy, moving between sibling pages, or navigating deeper into the page hierarchy.
+
+It's recommended to widely use page transitions on `NavigationView`, that can be implemented using the widget `NavigationBody`.
 
 This library gives you the following implementations to navigate between your pages:
 
@@ -381,13 +328,141 @@ Avaiable with the widget `DrillInPageTransition`, it produces the following effe
 
 It's avaiable with the widget `HorizontalSlidePageTransition`.
 
-It's recommended to widely use these transitions when using the navigation panel.
+# Navigation
+
+The default Flutter Navigation is available on the `FluentApp` widget, that means you can simply call `Navigator.push` and `Navigator.pop` to navigate between routes. See [navigate to a new screen and back](https://flutter.dev/docs/cookbook/navigation/navigation-basics)
+
+## Navigation View
+
+The NavigationView control provides top-level navigation for your app. It adapts to a variety of screen sizes and supports both _top_ and _left_ navigation styles.
+
+![Navigation Panel](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
+
+The navigation view also handle the app bar and its content. You can enable the acrylic blur effect by setting `useAcrylic` to true.
+
+### App Bar
+
+The app bar is the top app bar that every desktop nowadays have.
+
+```dart
+NavigationView(
+  appBar: NavigationAppBar(
+    title: Text('Nice App Title :)'),
+    actions: Row(children: [
+      /// These actions are usually the minimize, maximize and close window
+    ]),
+    /// If automaticallyImplyLeading is true, a 'back button' will be added to
+    /// app bar. This property can be overritten by [leading]
+    automaticallyImplyLeading: true,
+  ),
+  ...
+)
+```
+
+### Navigation Pane
+
+The pane is the pane that can be displayed at the left or at the top.
+
+```dart
+NavigationView(
+  ...,
+  pane: NavigationPane(
+    /// The current selected index
+    selected: index,
+    /// Called whenever the current index changes
+    onChanged: (i) => setState(() => index = i),
+    displayMode: PaneDisplayMode.auto,
+  ),
+  ...
+)
+```
+
+You can change the `displayMode` to make it fit the screen.
+
+| Name    | Screenshot                                                                                                        | Info                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Top     | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-top.png)         | The pane is positioned above the content. We recommend top navigation when: <br>- You have 5 or fewer top-level navigation categories that are equally important, and any additional top-level navigation categories that end up in the dropdown overflow menu are considered less important.</br> - You need to show all navigation options on screen. - You want more space for your app content. <br>- Icons cannot clearly describe your app's navigation categories.</br> |
+| Open    | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)        | The pane is expanded and positioned to the left of the content. We recommend _open_ navigation when: <br>- You have 5-10 equally important top-level navigation categories.</br>- You want navigation categories to be very prominent, with less space for other app content.                                                                                                                                                                                                  |
+| Compact | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftcompact.png) | The pane shows only icons until opened and is positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                                                           |
+| Minimal | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png) | Only the menu button is shown until the pane is opened. When opened, it's positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                               |
+| Auto    | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)        | By default, `displayMode` is set to `auto`. In Auto mode, the NavigationView adapts between `minimal` when the window is narrow, to `compact`, and then `open` as the window gets wider.                                                                                                                                                                                                                                                                                       |
+
+You can customize the selected indicator. By default `StickyNavigationIndicator` is used, but you can also use the old windows indicator:
+
+```dart
+pane: NavigationPane(
+  indicatorBuilder: ({
+    required BuildContext context,
+    /// The current selected index
+    int? index,
+    /// The y axis to take into consideration when calculating the
+    /// position
+    double? y,
+    /// A function that, when executed, returns the position of all the
+    /// PaneItems. This function must be called after the widget was
+    /// rendered at least once
+    required List<Offset> Function() offsets,
+    /// A function that, when executed, returns the size of all the
+    /// PaneItems. This function must be called after the widget was
+    /// rendered at least once
+    required List<Size> Function() sizes,
+    /// Corresponds to the current display mode. If top, Axis.vertical
+    /// is passed, otherwise Axis.vertical
+    required Axis axis,
+    /// Corresponds to the pane itself as a widget. The indicator is
+    /// rendered over the whole pane.
+    required Widget child,
+  }) {
+    if (index == null) return child;
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
+    return EndNavigationIndicator(
+      index: index,
+      offsets: offsets,
+      sizes: sizes,
+      child: child,
+      color: theme.highlightColor,
+      curve: theme.animationCurve ?? Curves.linear,
+      y: y ?? 0,
+      axis: axis,
+    );
+  },
+)
+```
+
+### Navigation body
+
+A navigation body is used to implement page transitions into a navigation view. It knows what is the current diplay mode of the parent `NavigationView`, if any, and define the page transitions accordingly.
+
+For top mode, the horizontal page transition is used. For the others, drill in page transition is used.
+
+```dart
+int _currentIndex = 0;
+
+NavigationView(
+  ...,
+  content: NavigationBody(index: _currentIndex, children: [...]),
+)
+```
+
+`ScaffoldPage` is usually used with the navigation body as its children:
+
+```dart
+NavigationBody(
+  index: _currentIndex,
+  children: [
+    ScaffoldPage(
+      topBar: PageTopBar(header: Text('Your Songs'))
+    )
+  ],
+)
+```
 
 ## Tab View
 
 The TabView control is a way to display a set of tabs and their respective content. TabViews are useful for displaying several pages (or documents) of content while giving a user the capability to rearrange, open, or close new tabs. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tab-view)
 
-### Example
+Here's an example of how to create a tab view:
 
 ```dart
 SizedBox(
@@ -954,6 +1029,14 @@ Acrylic(
 ),
 ```
 
+To disable the blur effect, wrap the acrylic in a `NoAcrylicBlurEffect`. It can be useful to disable `InfoBar`'s and `NavigationView`'s blur effect:
+
+```dart
+NoAcrylicBlurEffect(
+  child: InfoBar(...),
+),
+```
+
 ### Widgets using Acrylic
 
 Currently, the following widgets use acrylic in its implementation:
@@ -1270,6 +1353,9 @@ The list of equivalents between this library and `flutter/material.dart`
 | CircularProgressIndicator | ProgressRing     |
 | \_DatePickerDialog        | DatePicker       |
 | \_TimePickerDialog        | TimePicker       |
+| Scaffold                  | ScaffoldPage     |
+| AppBar                    | NavigationAppBar |
+| Drawer                    | NavigationView   |
 
 ## Contribution
 

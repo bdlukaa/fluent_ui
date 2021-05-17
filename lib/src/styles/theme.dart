@@ -49,7 +49,7 @@ class ThemeData with Diagnosticable {
   final Color disabledColor;
   final Color shadowColor;
   final Color scaffoldBackgroundColor;
-  final Color navigationPanelBackgroundColor;
+  final Color acrylicBackgroundColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -65,7 +65,7 @@ class ThemeData with Diagnosticable {
 
   final Brightness brightness;
 
-  final NavigationPanelThemeData navigationPanelTheme;
+  final NavigationPaneThemeData navigationPaneTheme;
   final CheckboxThemeData checkboxTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
@@ -97,7 +97,7 @@ class ThemeData with Diagnosticable {
     required this.animationCurve,
     required this.brightness,
     required this.scaffoldBackgroundColor,
-    required this.navigationPanelBackgroundColor,
+    required this.acrylicBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.toggleSwitchTheme,
@@ -106,7 +106,7 @@ class ThemeData with Diagnosticable {
     required this.dialogTheme,
     required this.tooltipTheme,
     required this.dividerTheme,
-    required this.navigationPanelTheme,
+    required this.navigationPaneTheme,
     required this.radioButtonTheme,
     required this.toggleButtonTheme,
     required this.sliderTheme,
@@ -133,7 +133,7 @@ class ThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
-    Color? navigationPanelBackgroundColor,
+    Color? acrylicBackgroundColor,
     Color? shadowColor,
     ButtonState<MouseCursor>? inputMouseCursor,
     Duration? fasterAnimationDuration,
@@ -149,7 +149,7 @@ class ThemeData with Diagnosticable {
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
-    NavigationPanelThemeData? navigationPanelTheme,
+    NavigationPaneThemeData? navigationPaneTheme,
     RadioButtonThemeData? radioButtonTheme,
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
@@ -182,11 +182,10 @@ class ThemeData with Diagnosticable {
       'normal': Colors.white,
       'dark': Colors.black,
     }).resolveFromBrightness(brightness);
-    navigationPanelBackgroundColor ??= navigationPanelBackgroundColor ??
-        AccentColor('normal', {
-          'normal': Color.fromARGB(255, 230, 230, 230),
-          'dark': Color.fromARGB(255, 25, 25, 25)
-        }).resolveFromBrightness(brightness);
+    acrylicBackgroundColor ??= AccentColor('normal', {
+      'normal': Color(0xFFe6e6e6),
+      'dark': Color(0xFF1e1e1e),
+    }).resolveFromBrightness(brightness);
     typography =
         Typography.standart(brightness: brightness).copyWith(typography);
     inputMouseCursor ??= (state) {
@@ -211,7 +210,7 @@ class ThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPanelTheme ??= const NavigationPanelThemeData();
+    navigationPaneTheme ??= const NavigationPaneThemeData();
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
@@ -229,7 +228,7 @@ class ThemeData with Diagnosticable {
       inactiveBackgroundColor: inactiveBackgroundColor,
       disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      navigationPanelBackgroundColor: navigationPanelBackgroundColor,
+      acrylicBackgroundColor: acrylicBackgroundColor,
       shadowColor: shadowColor,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
@@ -238,7 +237,7 @@ class ThemeData with Diagnosticable {
       focusTheme: focusTheme,
       iconTheme: iconTheme,
       infoBarTheme: infoBarTheme,
-      navigationPanelTheme: navigationPanelTheme,
+      navigationPaneTheme: navigationPaneTheme,
       radioButtonTheme: radioButtonTheme,
       scrollbarTheme: scrollbarTheme,
       sliderTheme: sliderTheme,
@@ -260,7 +259,7 @@ class ThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
-    Color? navigationPanelBackgroundColor,
+    Color? acrylicBackgroundColor,
     Color? shadowColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
@@ -276,7 +275,7 @@ class ThemeData with Diagnosticable {
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
-    NavigationPanelThemeData? navigationPanelTheme,
+    NavigationPaneThemeData? navigationPaneTheme,
     RadioButtonThemeData? radioButtonTheme,
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
@@ -296,8 +295,8 @@ class ThemeData with Diagnosticable {
       disabledColor: disabledColor ?? this.disabledColor,
       scaffoldBackgroundColor:
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
-      navigationPanelBackgroundColor:
-          navigationPanelBackgroundColor ?? this.navigationPanelBackgroundColor,
+      acrylicBackgroundColor:
+          acrylicBackgroundColor ?? this.acrylicBackgroundColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
@@ -315,8 +314,8 @@ class ThemeData with Diagnosticable {
       focusTheme: this.focusTheme.copyWith(focusTheme),
       iconTheme: this.iconTheme.copyWith(iconTheme),
       infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
-      navigationPanelTheme:
-          this.navigationPanelTheme.copyWith(navigationPanelTheme),
+      navigationPaneTheme:
+          this.navigationPaneTheme.copyWith(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.copyWith(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.copyWith(scrollbarTheme),
       sliderTheme: this.sliderTheme.copyWith(sliderTheme),
@@ -341,8 +340,8 @@ class ThemeData with Diagnosticable {
       ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor),
     );
     properties.add(ColorProperty(
-      'navigationPanelBackgroundColor',
-      navigationPanelBackgroundColor,
+      'acrylicBackgroundColor',
+      acrylicBackgroundColor,
     ));
     properties.add(EnumProperty('brightness', brightness));
     properties.add(DiagnosticsProperty<Duration>(

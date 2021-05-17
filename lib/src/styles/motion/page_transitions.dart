@@ -100,7 +100,7 @@ class DrillInPageTransition extends StatelessWidget {
       opacity: animation,
       child: ScaleTransition(
         child: child,
-        scale: Tween<double>(begin: 0.85, end: 1.0).animate(animation),
+        scale: Tween<double>(begin: 0.88, end: 1.0).animate(animation),
       ),
     );
   }

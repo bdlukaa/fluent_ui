@@ -51,7 +51,7 @@ class Settings extends StatelessWidget {
       }
     }());
     return ScaffoldPage(
-      topBar: PageTopBar(header: Text('Others')),
+      header: PageHeader(title: Text('Others')),
       contentScrollController: controller,
       content: ListView(
         padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
@@ -67,8 +67,10 @@ class Settings extends StatelessWidget {
                   appTheme.mode = mode;
                 }
               },
-              title: Text('$mode',
-                  style: TextStyle(fontWeight: FontWeight.normal)),
+              title: Text(
+                '$mode'.replaceAll('ThemeMode.', ''),
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
             );
           }),
 
@@ -79,6 +81,26 @@ class Settings extends StatelessWidget {
               '\nWe must wait until Flutter Desktop stable release',
               style: context.theme.typography.caption,
             ),
+
+          Text(
+            'Navigation Pane Display Mode',
+            style: context.theme.typography.subtitle,
+          ),
+          ...List.generate(PaneDisplayMode.values.length, (index) {
+            final mode = PaneDisplayMode.values[index];
+            return RadioListTile(
+              checked: appTheme.displayMode == mode,
+              onChanged: (value) {
+                if (value) {
+                  appTheme.displayMode = mode;
+                }
+              },
+              title: Text(
+                mode.toString().replaceAll('PaneDisplayMode.', ''),
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+            );
+          }),
           Text('Accent Color', style: context.theme.typography.subtitle),
           Wrap(children: [
             Tooltip(

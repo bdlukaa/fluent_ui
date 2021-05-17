@@ -565,28 +565,30 @@ class _TextBoxState extends State<TextBox>
       valueListenable: _effectiveController,
       child: editableText,
       builder: (BuildContext context, TextEditingValue text, Widget? child) {
+        final result = Stack(
+          children: <Widget>[
+            if (widget.placeholder != null && text.text.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: widget.padding,
+                child: Text(
+                  widget.placeholder!,
+                  maxLines: widget.maxLines,
+                  overflow: TextOverflow.ellipsis,
+                  style: placeholderStyle,
+                  textAlign: widget.textAlign,
+                ),
+              ),
+            if (child != null) child,
+          ],
+        );
+        if (!_showPrefixWidget(text) && _showSuffixWidget(text)) return result;
         return Row(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             if (_showPrefixWidget(text)) widget.prefix!,
             Expanded(
-              child: Stack(
-                children: <Widget>[
-                  if (widget.placeholder != null && text.text.isEmpty)
-                    Container(
-                      width: double.infinity,
-                      padding: widget.padding,
-                      child: Text(
-                        widget.placeholder!,
-                        maxLines: widget.maxLines,
-                        overflow: TextOverflow.ellipsis,
-                        style: placeholderStyle,
-                        textAlign: widget.textAlign,
-                      ),
-                    ),
-                  if (child != null) child,
-                ],
-              ),
+              child: result,
             ),
             if (_showSuffixWidget(text)) widget.suffix!
           ],
@@ -756,11 +758,15 @@ class _TextBoxState extends State<TextBox>
 
     Widget listener = ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
-      builder: (context, text, _) => Row(children: [
-        if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-        Expanded(child: child),
-        if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
-      ]),
+      builder: (context, text, _) {
+        if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text))
+          return child;
+        return Row(children: [
+          if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
+          Expanded(child: child),
+          if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
+        ]);
+      },
     );
 
     return FluentTheme(

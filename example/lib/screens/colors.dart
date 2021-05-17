@@ -22,7 +22,7 @@ class ColorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      topBar: PageTopBar(header: Text('Colors Showcase')),
+      header: PageHeader(title: Text('Colors Showcase')),
       contentScrollController: controller,
       content: ListView(
         padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),

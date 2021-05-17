@@ -326,7 +326,7 @@ class ButtonThemeData with Diagnosticable {
       else if (state.isPressing)
         color = Color.fromARGB(255, 102, 102, 102);
       else if (state.isHovering)
-        color = Color.fromARGB(255, 31, 31, 31);
+        color = Colors.grey[150]!;
       else
         color = Color.fromARGB(255, 51, 51, 51);
       return color;

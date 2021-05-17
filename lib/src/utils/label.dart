@@ -34,7 +34,7 @@ class InfoLabel extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('label', label));
-    properties.add(DiagnosticsProperty('labelStyle', labelStyle));
+    properties.add(DiagnosticsProperty<TextStyle>('labelStyle', labelStyle));
   }
 
   @override

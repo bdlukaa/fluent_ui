@@ -28,8 +28,8 @@ class _InputsPageState extends State<InputsPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      topBar: PageTopBar(
-        header: Text('Inputs showcase'),
+      header: PageHeader(
+        title: Text('Inputs showcase'),
         commandBar: InfoLabel(
           label: 'Disabled',
           isHeader: false,
@@ -59,11 +59,13 @@ class _InputsPageState extends State<InputsPage> {
                   ),
                   ToggleSwitch(
                     checked: value,
-                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
                   ),
                   RadioButton(
                     checked: value,
-                    onChanged: disabled ? null : (v) => setState(() => value = v),
+                    onChanged:
+                        disabled ? null : (v) => setState(() => value = v),
                   ),
                   ToggleButton(
                     child: Text('Toggle Button'),

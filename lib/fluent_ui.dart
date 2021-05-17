@@ -24,7 +24,7 @@ export 'src/utils.dart';
 
 export 'src/navigation/route.dart';
 
-export 'src/layout/scaffold.dart';
+export 'src/layout/page.dart';
 
 export 'src/controls/inputs/hover_button.dart';
 export 'src/controls/inputs/button.dart';
@@ -37,7 +37,7 @@ export 'src/controls/inputs/toggle_button.dart';
 export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/inputs/slider.dart';
 
-export 'src/controls/navigation/navigation_panel/navigation_panel.dart';
+export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view.dart';
 
 export 'src/controls/surfaces/calendar/calendar_view.dart';

@@ -1,5 +1,13 @@
 Date format: DD/MM/YYYY
 
+## [2.0.0] - [20/05/2021]
+
+- New way to disable the acrylic blur effect. Just wrap the acrylic widget in a `NoAcrylicBlurEffect` to have it disabled.
+- Reworked the Navigation Panel from scratch ([#31](https://github.com/bdlukaa/fluent_ui/pull/31)):
+  - The legacy `NavigationPanel` and `Scaffold` were removed. Use `NavigationView` and `ScaffoldPage` instead
+  - Implemented open, compact, top and minimal display modes.
+  - Custom Selected Indicators
+
 ## [1.10.1] - [05/05/2021]
 
 - **FIX** Reworked the combo box widget to improve fidelity. ([#25](https://github.com/bdlukaa/fluent_ui/pull/25))

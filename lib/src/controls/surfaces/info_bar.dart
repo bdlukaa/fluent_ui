@@ -180,7 +180,7 @@ class InfoBarThemeData with Diagnosticable {
       color: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return style.navigationPanelBackgroundColor;
+            return style.acrylicBackgroundColor;
           case InfoBarSeverity.warning:
             return isDark ? Color(0xFF433519) : Colors.warningSecondaryColor;
           case InfoBarSeverity.success:
