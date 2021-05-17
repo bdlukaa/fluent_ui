@@ -29,6 +29,47 @@ bool debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
   return true;
 }
 
+/// Asserts that the given context has a [Localizations] ancestor that contains
+/// a [FluentLocalizations] delegate.
+///
+/// Used by many fluent design widgets to make sure that they are
+/// only used in contexts where they have access to localizations.
+///
+/// To call this function, use the following pattern, typically in the
+/// relevant Widget's build method:
+///
+/// ```dart
+/// assert(debugCheckHasFluentLocalizations(context));
+/// ```
+///
+/// Does nothing if asserts are disabled. Always returns true.
+bool debugCheckHasFluentLocalizations(BuildContext context) {
+  assert(() {
+    if (Localizations.of<FluentLocalizations>(context, FluentLocalizations) == null) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('No FluentLocalizations found.'),
+        ErrorDescription(
+          '${context.widget.runtimeType} widgets require FluentLocalizations '
+          'to be provided by a Localizations widget ancestor.'
+        ),
+        ErrorDescription(
+          'The material library uses Localizations to generate messages, '
+          'labels, and abbreviations.'
+        ),
+        ErrorHint(
+          'To introduce a FluentLocalizations, either use a '
+          'FluentApp at the root of your application to include them '
+          'automatically, or add a Localization widget with a '
+          'FluentLocalizations delegate.'
+        ),
+        ...context.describeMissingAncestor(expectedAncestorType: FluentLocalizations)
+      ]);
+    }
+    return true;
+  }());
+  return true;
+}
+
 /// Check if the current screen is 10 foot long or bigger.
 ///
 /// [width] is the width of the current screen. If not provided,

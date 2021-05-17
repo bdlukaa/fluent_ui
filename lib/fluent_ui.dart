@@ -20,6 +20,7 @@ export 'package:flutter/material.dart'
         ReorderableDragStartListener;
 
 export 'src/app.dart';
+export 'src/localization.dart';
 export 'src/utils.dart';
 
 export 'src/navigation/route.dart';
