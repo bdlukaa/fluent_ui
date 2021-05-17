@@ -787,6 +787,7 @@ class _MinimalNavigationPane extends StatefulWidget {
     required this.pane,
     required this.animationDuration,
     required this.entry,
+    this.y = 0,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
@@ -798,6 +799,9 @@ class _MinimalNavigationPane extends StatefulWidget {
   /// This entry is used to remove the entry from the overlay list
   /// when tapped outside.
   final OverlayEntry entry;
+
+  /// Usually the top bar height
+  final double y;
 
   @override
   __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
@@ -864,7 +868,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
           offsets: widget.pane.effectiveItems.getPaneItemsOffsets,
           sizes: widget.pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
-          y: _getIndicatorY(context),
+          y: widget.y,
           child: Column(children: [
             Padding(
               padding: widget.pane.autoSuggestBox != null

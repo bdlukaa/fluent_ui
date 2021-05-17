@@ -79,7 +79,11 @@ class NavigationViewState extends State<NavigationView> {
   /// The scroll controller used to keep the scrolling state of
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
-  late ScrollController scrollController;
+  /// 
+  /// https://github.com/bdlukaa/fluent_ui/issues/3#issuecomment-842493396
+  late ScrollController openScrollController;
+  late ScrollController compactScrollController;
+  late ScrollController topScrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
@@ -91,20 +95,24 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    scrollController = widget.pane?.scrollController ?? ScrollController();
+    openScrollController = ScrollController();
+    compactScrollController = ScrollController();
+    topScrollController = ScrollController();
   }
 
-  @override
-  void didUpdateWidget(NavigationView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.pane?.scrollController != scrollController) {
-      scrollController = widget.pane?.scrollController ?? scrollController;
-    }
-  }
+  // @override
+  // void didUpdateWidget(NavigationView oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (widget.pane?.scrollController != scrollController) {
+  //     scrollController = widget.pane?.scrollController ?? scrollController;
+  //   }
+  // }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    openScrollController.dispose();
+    compactScrollController.dispose();
+    topScrollController.dispose();
     super.dispose();
   }
 
@@ -249,7 +257,11 @@ class NavigationViewState extends State<NavigationView> {
     return _NavigationBody(
       displayMode: widget.pane?.displayMode,
       child: PrimaryScrollController(
-        controller: scrollController,
+        controller: widget.pane?.displayMode == PaneDisplayMode.top
+            ? topScrollController
+            : widget.pane?.displayMode == PaneDisplayMode.open
+                ? openScrollController
+                : compactScrollController,
         child: paneResult,
       ),
     );
@@ -262,13 +274,14 @@ class NavigationViewState extends State<NavigationView> {
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
-        controller: scrollController,
+        controller: compactScrollController,
         child: Padding(
           padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
           child: _MinimalNavigationPane(
             pane: widget.pane!,
             animationDuration: theme.animationDuration ?? Duration.zero,
             entry: entry,
+            y: widget.appBar?.height ?? 0,
           ),
         ),
       ));

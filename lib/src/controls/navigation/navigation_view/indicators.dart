@@ -81,10 +81,20 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      offsets = widget.offsets().map((e) {
+      final _offsets = widget.offsets().map((e) {
         return e - Offset(0, widget.y);
       }).toList();
-      sizes = widget.sizes();
+      final _sizes = widget.sizes();
+      if (mounted && offsets != _offsets && _sizes != sizes)
+
+        /// The screen is necessary to be updated because, in minimal display mode,
+        /// it's not automatically updated by the parent when the index is changed
+        setState(() {
+          offsets = widget.offsets().map((e) {
+            return e - Offset(0, widget.y);
+          }).toList();
+          sizes = widget.sizes();
+        });
     });
   }
 
@@ -95,8 +105,6 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 }
 
 /// The end navigation indicator
-///
-/// Works on both top and left display modes
 class EndNavigationIndicator extends NavigationIndicator {
   const EndNavigationIndicator({
     Key? key,
@@ -175,8 +183,6 @@ class _EndNavigationIndicatorState
     ]);
   }
 }
-
-// TODO(bdlukaa): implement sticky navigation indicator on top
 
 /// A sticky navigation indicator.
 ///
