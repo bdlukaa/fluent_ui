@@ -258,7 +258,9 @@ extension ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
   List<Offset> getPaneItemsOffsets() {
     return map((e) {
-      final box = e.itemKey.currentContext!.findRenderObject()! as RenderBox;
+      final context = e.itemKey.currentContext;
+      if (context == null) return Offset.zero;
+      final box = context.findRenderObject()! as RenderBox;
       return box.localToGlobal(Offset.zero);
     }).toList();
   }
@@ -266,7 +268,9 @@ extension ItemsExtension on List<NavigationPaneItem> {
   /// Get all the item sizes in this list
   List<Size> getPaneItemsSizes() {
     return map((e) {
-      final box = e.itemKey.currentContext!.findRenderObject()! as RenderBox;
+      final context = e.itemKey.currentContext;
+      if (context == null) return Size.zero;
+      final box = context.findRenderObject()! as RenderBox;
       return box.size;
     }).toList();
   }
