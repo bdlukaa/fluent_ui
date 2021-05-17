@@ -155,7 +155,7 @@ Future<T?> showDialog<T extends Object?>({
     builder: builder,
     barrierColor: barrierColor,
     barrierDismissible: barrierDismissible,
-    barrierLabel: barrierLabel,
+    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
     settings: routeSettings,
     transitionBuilder: transitionBuilder,
     transitionDuration: transitionDuration ??

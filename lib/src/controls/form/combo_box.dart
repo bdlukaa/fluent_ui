@@ -1222,7 +1222,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       capturedThemes:
           InheritedTheme.capture(from: context, to: navigator.context),
       style: _textStyle!,
-      // barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       itemHeight: widget.itemHeight,
       comboboxColor: widget.comboboxColor,
     );

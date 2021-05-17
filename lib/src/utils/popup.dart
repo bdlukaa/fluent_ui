@@ -49,6 +49,7 @@ class PopUpState<T> extends State<PopUp<T>> {
           InheritedTheme.capture(from: context, to: navigator.context),
       transitionAnimationDuration: context.theme.mediumAnimationDuration,
       verticalOffset: widget.verticalOffset,
+      barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
     );
 
     return navigator.push(_dropdownRoute!).then((T? newValue) {
