@@ -151,10 +151,7 @@ class PaneItem extends NavigationPaneItem {
           if (isTop && showTextOnTop)
             child = Row(mainAxisSize: MainAxisSize.min, children: [
               child,
-              Padding(
-                child: textResult,
-                padding: EdgeInsets.only(right: 8.0),
-              ),
+              textResult,
             ]);
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
@@ -398,6 +395,10 @@ class NavigationPane with Diagnosticable {
     if (index == null) return child;
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneThemeData.of(context);
+
+    final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
+    final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+
     return StickyNavigationIndicator(
       index: index,
       offsets: offsets,
@@ -406,6 +407,7 @@ class NavigationPane with Diagnosticable {
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
       axis: axis,
+      topPadding: EdgeInsets.only(left: left, right: right),
     );
   }
 
@@ -526,9 +528,20 @@ class _TopNavigationPane extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                   child: pane.header!,
                 ),
-              ...pane.items.map((item) {
-                return _buildItem(context, item);
-              }),
+              Expanded(
+                child: Scrollbar(
+                  isAlwaysShown: false,
+                  child: SingleChildScrollView(
+                    primary: true,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: pane.items.map((item) {
+                        return _buildItem(context, item);
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
             ]),
           ),
           if (pane.autoSuggestBox != null)
@@ -637,6 +650,7 @@ class _CompactNavigationPane extends StatelessWidget {
             ),
           Expanded(
             child: Scrollbar(
+              isAlwaysShown: false,
               child: ListView(primary: true, children: [
                 ...pane.items.map((item) {
                   return _buildItem(context, item);
@@ -751,6 +765,7 @@ class _OpenNavigationPane extends StatelessWidget {
             ),
           Expanded(
             child: Scrollbar(
+              isAlwaysShown: false,
               child: ListView(primary: true, children: [
                 ...pane.items.map((item) {
                   return buildItem(context, pane, item);
@@ -880,6 +895,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
               ),
             Expanded(
               child: Scrollbar(
+                isAlwaysShown: false,
                 child: ListView(primary: true, children: [
                   ...widget.pane.items.map((item) {
                     return _buildItem(context, item);

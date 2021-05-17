@@ -15,8 +15,8 @@ class NavigationPaneThemeData with Diagnosticable {
   /// is used.
   final Color? highlightColor;
 
-  final EdgeInsetsGeometry? labelPadding;
-  final EdgeInsetsGeometry? iconPadding;
+  final EdgeInsets? labelPadding;
+  final EdgeInsets? iconPadding;
 
   /// The cursor used by the tiles. [ThemeData.inputMouseCursor] is used by default
   final ButtonState<MouseCursor>? cursor;
@@ -70,7 +70,7 @@ class NavigationPaneThemeData with Diagnosticable {
       unselectedTextStyle: (state) =>
           state.isDisabled ? disabledTextStyle : style.typography.body!,
       cursor: style.inputMouseCursor,
-      labelPadding: EdgeInsets.zero,
+      labelPadding: EdgeInsets.only(right: 10.0),
       iconPadding: EdgeInsets.symmetric(horizontal: 12.0),
       selectedIconColor: (_) => style.accentColor,
       unselectedIconColor: (_) => style.inactiveColor,

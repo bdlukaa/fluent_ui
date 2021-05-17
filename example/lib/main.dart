@@ -147,40 +147,30 @@ class _MyHomePageState extends State<MyHomePage> {
         onDisplayModeRequested: (mode) {
           appTheme.displayMode = mode;
         },
-        indicatorBuilder: ({
-          required BuildContext context,
-          int? index,
-          double? y,
-          required List<Offset> Function() offsets,
-          required List<Size> Function() sizes,
-          required Axis axis,
-          required Widget child,
-        }) {
-          if (index == null) return child;
-          assert(debugCheckHasFluentTheme(context));
-          final theme = NavigationPaneThemeData.of(context);
-          // if (appTheme.displayMode != PaneDisplayMode.top)
-            return StickyNavigationIndicator(
-              index: index,
-              offsets: offsets,
-              sizes: sizes,
-              child: child,
-              color: theme.highlightColor,
-              curve: theme.animationCurve ?? Curves.linear,
-              axis: axis,
-              y: y ?? 0,
-            );
-          return EndNavigationIndicator(
-            index: index,
-            offsets: offsets,
-            sizes: sizes,
-            child: child,
-            color: theme.highlightColor,
-            curve: theme.animationCurve ?? Curves.linear,
-            y: y ?? 0,
-            axis: axis,
-          );
-        },
+        // Uncomment the following lines to use the end navigation indicator
+        // indicatorBuilder: ({
+        //   required BuildContext context,
+        //   int? index,
+        //   double? y,
+        //   required List<Offset> Function() offsets,
+        //   required List<Size> Function() sizes,
+        //   required Axis axis,
+        //   required Widget child,
+        // }) {
+        //   if (index == null) return child;
+        //   assert(debugCheckHasFluentTheme(context));
+        //   final theme = NavigationPaneThemeData.of(context);
+        //   return EndNavigationIndicator(
+        //     index: index,
+        //     offsets: offsets,
+        //     sizes: sizes,
+        //     child: child,
+        //     color: theme.highlightColor,
+        //     curve: theme.animationCurve ?? Curves.linear,
+        //     y: y ?? 0,
+        //     axis: axis,
+        //   );
+        // },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
           PaneItem(icon: Icon(Icons.input), title: 'Inputs'),

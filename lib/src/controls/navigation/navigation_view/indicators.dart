@@ -24,7 +24,6 @@ class NavigationIndicator extends StatefulWidget {
     required this.child,
     required this.axis,
     this.y = 0,
-    this.padding = const EdgeInsets.only(),
     this.curve = Curves.linear,
     this.color,
   }) : super(key: key);
@@ -46,9 +45,6 @@ class NavigationIndicator extends StatefulWidget {
   /// a top pane, [Axis.vertical] will be provided, otherwise
   /// [Axis.horizontal].
   final Axis axis;
-
-  /// The padding used on the indicators. [EdgeInsets.zero] used by default
-  final EdgeInsets padding;
 
   /// Where to start couting position from on the screen
   final double y;
@@ -110,7 +106,6 @@ class EndNavigationIndicator extends NavigationIndicator {
     required Widget child,
     required Axis axis,
     double y = 0,
-    EdgeInsets padding = const EdgeInsets.only(left: 4.0),
     Curve curve = Curves.easeInOut,
     Color? color,
   }) : super(
@@ -120,7 +115,6 @@ class EndNavigationIndicator extends NavigationIndicator {
           index: index,
           offsets: offsets,
           sizes: sizes,
-          padding: padding,
           curve: curve,
           color: color,
           y: y,
@@ -197,7 +191,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
     required int index,
     required Widget child,
     required Axis axis,
-    EdgeInsets padding = const EdgeInsets.only(left: 4.0),
+    this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.linear,
     Color? color,
     double y = 0,
@@ -208,11 +202,13 @@ class StickyNavigationIndicator extends NavigationIndicator {
           index: index,
           offsets: offsets,
           sizes: sizes,
-          padding: padding,
           curve: curve,
           color: color,
           y: 0,
         );
+
+  /// The padding applied to the indicator if [axis] is [Axis.vertical]
+  final EdgeInsets topPadding;
 
   @override
   _StickyNavigationIndicatorState createState() =>
@@ -229,6 +225,7 @@ class _StickyNavigationIndicatorState
 
   static const double step = 0.5;
   static const double startDelay = 8;
+  static const double indicatorPadding = 4.0;
 
   double p1Start = 0.0;
   double p2Start = 0.0;
@@ -269,35 +266,44 @@ class _StickyNavigationIndicatorState
     final minIndex = oldIndex;
     final maxIndex = newIndex;
 
+    fetch();
+
     final double kFactor = () {
       if (widget.axis == Axis.horizontal) {
         return sizes![widget.index].height;
       } else {
-        return -sizes![widget.index].width;
+        return sizes![widget.index].width - widget.topPadding.horizontal;
       }
     }();
-    fetch();
 
-    this.p1Start = offsets![minIndex].fromAxis(widget.axis) - (kFactor / 2);
-    this.p1End = offsets![maxIndex].fromAxis(widget.axis) - (kFactor / 2);
+    if (widget.axis == Axis.horizontal) {
+      this.p1Start = offsets![minIndex].fromAxis(widget.axis) - (kFactor / 2);
+      this.p1End = offsets![maxIndex].fromAxis(widget.axis) - (kFactor / 2);
 
-    this.p2Start = offsets![minIndex].fromAxis(widget.axis);
-    this.p2End = offsets![maxIndex].fromAxis(widget.axis);
+      this.p2Start = offsets![minIndex].fromAxis(widget.axis);
+      this.p2End = offsets![maxIndex].fromAxis(widget.axis);
+    } else {
+      this.p1Start = offsets![minIndex].fromAxis(widget.axis);
+      this.p1End = offsets![maxIndex].fromAxis(widget.axis);
+
+      this.p2Start = offsets![minIndex].fromAxis(widget.axis) + kFactor;
+      this.p2End = offsets![maxIndex].fromAxis(widget.axis) + kFactor;
+    }
 
     if (this.p2Start > this.p2End) {
       // move up
-      final v1 = calcVelocity(this.p1) + 0.1;
+      final v1 = calcVelocity(this.p1);
       this.p1 = min(this.p1 + step * v1, 1);
       if (this.delay == 0) {
-        final v2 = calcVelocity(this.p2) + 0.1;
+        final v2 = calcVelocity(this.p2);
         this.p2 = min(this.p2 + step * v2, 1);
       }
     } else {
       // move down
-      final v2 = calcVelocity(this.p2) + 0.1;
+      final v2 = calcVelocity(this.p2);
       this.p2 = min(this.p2 + step * v2, 1);
       if (this.delay == 0) {
-        final v1 = calcVelocity(this.p1) + 0.1;
+        final v1 = calcVelocity(this.p1);
         this.p1 = min(this.p1 + step * v1, 1);
       }
     }
@@ -314,10 +320,12 @@ class _StickyNavigationIndicatorState
         update(widget.index);
         return CustomPaint(
           foregroundPainter: _StickyPainter(
-            y: widget.axis == Axis.horizontal ? 0 : sizes!.first.height,
+            y: widget.axis == Axis.horizontal
+                ? 0
+                : sizes!.first.height - indicatorPadding,
             padding: widget.axis == Axis.horizontal
-                ? widget.padding.left
-                : widget.padding.top,
+                ? indicatorPadding
+                : widget.topPadding.left,
             p1: p1,
             p1Start: p1Start,
             p1End: p1End,
@@ -336,7 +344,7 @@ class _StickyNavigationIndicatorState
   }
 
   double calcVelocity(double p) {
-    return widget.curve.transform(p);
+    return widget.curve.transform(p) + 0.1;
   }
 }
 
@@ -387,8 +395,8 @@ class _StickyPainter extends CustomPainter {
         break;
       case Axis.vertical:
         canvas.drawLine(
-          Offset(padding + first, y + padding),
-          Offset(padding + second, y + padding),
+          Offset(padding + first, y),
+          Offset(padding + second, y),
           paint,
         );
         break;
@@ -397,7 +405,8 @@ class _StickyPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_StickyPainter oldDelegate) {
-    return padding != oldDelegate.padding ||
+    return y != oldDelegate.y ||
+        padding != oldDelegate.padding ||
         p1 != oldDelegate.p1 ||
         p1Start != oldDelegate.p1Start ||
         p1End != oldDelegate.p1End ||
