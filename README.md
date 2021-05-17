@@ -387,6 +387,49 @@ You can change the `displayMode` to make it fit the screen.
 | Minimal | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png) | Only the menu button is shown until the pane is opened. When opened, it's positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                               |
 | Auto    | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)        | By default, `displayMode` is set to `auto`. In Auto mode, the NavigationView adapts between `minimal` when the window is narrow, to `compact`, and then `open` as the window gets wider.                                                                                                                                                                                                                                                                                       |
 
+You can customize the selected indicator. By default `StickyNavigationIndicator` is used, but you can also use the old windows indicator:
+
+```dart
+pane: NavigationPane(
+  indicatorBuilder: ({
+    required BuildContext context,
+    /// The current selected index
+    int? index,
+    /// The y axis to take into consideration when calculating the
+    /// position
+    double? y,
+    /// A function that, when executed, returns the position of all the
+    /// PaneItems. This function must be called after the widget was
+    /// rendered at least once
+    required List<Offset> Function() offsets,
+    /// A function that, when executed, returns the size of all the
+    /// PaneItems. This function must be called after the widget was
+    /// rendered at least once
+    required List<Size> Function() sizes,
+    /// Corresponds to the current display mode. If top, Axis.vertical
+    /// is passed, otherwise Axis.vertical
+    required Axis axis,
+    /// Corresponds to the pane itself as a widget. The indicator is
+    /// rendered over the whole pane.
+    required Widget child,
+  }) {
+    if (index == null) return child;
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneThemeData.of(context);
+    return EndNavigationIndicator(
+      index: index,
+      offsets: offsets,
+      sizes: sizes,
+      child: child,
+      color: theme.highlightColor,
+      curve: theme.animationCurve ?? Curves.linear,
+      y: y ?? 0,
+      axis: axis,
+    );
+  },
+)
+```
+
 ### Navigation body
 
 A navigation body is used to implement page transitions into a navigation view. It knows what is the current diplay mode of the parent `NavigationView`, if any, and define the page transitions accordingly.

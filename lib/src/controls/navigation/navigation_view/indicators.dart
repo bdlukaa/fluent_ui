@@ -186,8 +186,8 @@ class _EndNavigationIndicatorState
 
 /// A sticky navigation indicator.
 ///
-/// Made by [@raitonubero](https://gist.github.com/raitonoberu). Make
-/// sure to check him out.
+/// Made by [@raitonubero](https://github.com/raitonoberu). Make
+/// sure to [check him out](https://gist.github.com/raitonoberu/af76d9b5813b7879e8db940bafa0f325).
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({

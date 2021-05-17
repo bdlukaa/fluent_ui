@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 - Reworked the Navigation Panel from scratch ([#31](https://github.com/bdlukaa/fluent_ui/pull/31)):
   - The legacy `NavigationPanel` and `Scaffold` were removed. Use `NavigationView` and `ScaffoldPage` instead
   - Implemented open, compact, top and minimal display modes.
+  - Custom Selected Indicators
 
 ## [1.10.1] - [05/05/2021]
 
