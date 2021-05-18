@@ -66,6 +66,7 @@ class ThemeData with Diagnosticable {
   final Brightness brightness;
 
   final NavigationPaneThemeData navigationPaneTheme;
+  final BottomNavigationThemeData bottomNavigationTheme;
   final CheckboxThemeData checkboxTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
@@ -101,6 +102,7 @@ class ThemeData with Diagnosticable {
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.toggleSwitchTheme,
+    required this.bottomNavigationTheme,
     required this.iconTheme,
     required this.splitButtonTheme,
     required this.dialogTheme,
@@ -141,6 +143,7 @@ class ThemeData with Diagnosticable {
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    BottomNavigationThemeData? bottomNavigationTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
@@ -201,6 +204,7 @@ class ThemeData with Diagnosticable {
       animationCurve: animationCurve,
       animationDuration: fasterAnimationDuration,
     ).copyWith(focusTheme);
+    bottomNavigationTheme ??= const BottomNavigationThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
@@ -230,6 +234,7 @@ class ThemeData with Diagnosticable {
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
       shadowColor: shadowColor,
+      bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
       dialogTheme: dialogTheme,
@@ -268,6 +273,7 @@ class ThemeData with Diagnosticable {
     Curve? animationCurve,
     ButtonState<MouseCursor>? inputMouseCursor,
     ButtonThemeData? buttonTheme,
+    BottomNavigationThemeData? bottomNavigationTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
@@ -308,6 +314,7 @@ class ThemeData with Diagnosticable {
       inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
       buttonTheme: this.buttonTheme.copyWith(buttonTheme),
+      bottomNavigationTheme: this.bottomNavigationTheme.copyWith(bottomNavigationTheme),
       checkboxTheme: this.checkboxTheme.copyWith(checkboxTheme),
       dialogTheme: this.dialogTheme.copyWith(dialogTheme),
       dividerTheme: this.dividerTheme.copyWith(dividerTheme),

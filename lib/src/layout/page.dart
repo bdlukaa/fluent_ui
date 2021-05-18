@@ -40,6 +40,8 @@ class ScaffoldPage extends StatelessWidget {
 
   /// The bottom bar of this page. This is usually provided when the current
   /// screen is small.
+  /// 
+  /// Usually a [BottomNavigation]
   final Widget? bottomBar;
 
   /// The scroll controller used by the [Scrollbar] implemented by this widget.
@@ -63,33 +65,37 @@ class ScaffoldPage extends StatelessWidget {
       left: padding?.left ?? PageHeader.horizontalPadding(context),
       right: padding?.right ?? PageHeader.horizontalPadding(context),
     );
-    return AnimatedContainer(
-      duration: theme.fastAnimationDuration,
-      curve: theme.animationCurve,
-      color: theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.only(
-        top: padding?.top ?? kPageDefaultVerticalPadding,
-        bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
+    return Column(children: [
+      Expanded(
+        child: AnimatedContainer(
+          duration: theme.fastAnimationDuration,
+          curve: theme.animationCurve,
+          color: theme.scaffoldBackgroundColor,
+          padding: EdgeInsets.only(
+            top: padding?.top ?? kPageDefaultVerticalPadding,
+            bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (header != null) header!,
+            Expanded(child: () {
+              final finalContent = Padding(
+                padding: horizontalPadding,
+                child: content,
+              );
+              if (contentScrollController != null) {
+                return Scrollbar(
+                  controller: contentScrollController,
+                  child: finalContent,
+                );
+              }
+              return finalContent;
+            }()),
+          ]),
+        ),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (header != null) header!,
-        Expanded(child: () {
-          final finalContent = Padding(
-            padding: horizontalPadding,
-            child: content,
-          );
-          if (contentScrollController != null) {
-            return Scrollbar(
-              controller: contentScrollController,
-              child: finalContent,
-            );
-          }
-          return finalContent;
-        }()),
-        if (bottomBar != null)
-          Padding(padding: horizontalPadding, child: bottomBar),
-      ]),
-    );
+      if (bottomBar != null) bottomBar!,
+    ]);
   }
 }
 

@@ -25,6 +25,7 @@ export 'src/utils.dart';
 
 export 'src/navigation/route.dart';
 
+export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/layout/page.dart';
 
 export 'src/controls/inputs/hover_button.dart';

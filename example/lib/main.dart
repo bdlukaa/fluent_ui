@@ -8,6 +8,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'screens/colors.dart';
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
+import 'screens/mobile.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 
@@ -176,9 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(icon: Icon(Icons.input), title: 'Inputs'),
           PaneItem(icon: Icon(Icons.format_align_center), title: 'Forms'),
           PaneItemSeparator(),
-          PaneItemHeader(header: Text('Extra Widgets')),
           PaneItem(icon: Icon(Icons.miscellaneous_services), title: 'Others'),
           PaneItem(icon: Icon(Icons.color_lens_outlined), title: 'Colors'),
+          PaneItem(icon: Icon(Icons.phone_android), title: 'Mobile'),
         ],
         autoSuggestBox: AutoSuggestBox(
           controller: TextEditingController(),
@@ -195,6 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Forms(),
         Others(),
         ColorsPage(controller: colorsController),
+        Mobile(),
         Settings(controller: settingsController),
       ]),
     );
