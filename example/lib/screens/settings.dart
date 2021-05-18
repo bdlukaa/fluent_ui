@@ -51,7 +51,7 @@ class Settings extends StatelessWidget {
       }
     }());
     return ScaffoldPage(
-      header: PageHeader(title: Text('Others')),
+      header: PageHeader(title: Text('Settings')),
       contentScrollController: controller,
       content: ListView(
         padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),

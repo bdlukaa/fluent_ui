@@ -357,6 +357,7 @@ class _FluentAppState extends State<FluentApp> {
       yield* widget.localizationsDelegates!;
     yield DefaultFluentLocalizations.delegate;
     yield m.DefaultMaterialLocalizations.delegate;
+    yield DefaultWidgetsLocalizations.delegate;
   }
 
   bool get _usesRouter => widget.routerDelegate != null;

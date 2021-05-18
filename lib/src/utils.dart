@@ -45,24 +45,25 @@ bool debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
 /// Does nothing if asserts are disabled. Always returns true.
 bool debugCheckHasFluentLocalizations(BuildContext context) {
   assert(() {
-    if (Localizations.of<FluentLocalizations>(context, FluentLocalizations) == null) {
+    if (Localizations.of<FluentLocalizations>(context, FluentLocalizations) ==
+        null) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('No FluentLocalizations found.'),
         ErrorDescription(
           '${context.widget.runtimeType} widgets require FluentLocalizations '
-          'to be provided by a Localizations widget ancestor.'
+          'to be provided by a Localizations widget ancestor.',
         ),
         ErrorDescription(
-          'The material library uses Localizations to generate messages, '
-          'labels, and abbreviations.'
-        ),
+            'The material library uses Localizations to generate messages, '
+            'labels, and abbreviations.'),
         ErrorHint(
           'To introduce a FluentLocalizations, either use a '
           'FluentApp at the root of your application to include them '
           'automatically, or add a Localization widget with a '
-          'FluentLocalizations delegate.'
+          'FluentLocalizations delegate.',
         ),
-        ...context.describeMissingAncestor(expectedAncestorType: FluentLocalizations)
+        ...context.describeMissingAncestor(
+            expectedAncestorType: FluentLocalizations)
       ]);
     }
     return true;

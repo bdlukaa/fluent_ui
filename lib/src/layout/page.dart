@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// The default vertical padding of the scaffold page
-/// 
+///
 /// Eyeballed from Windows 10
 const double kPageDefaultVerticalPadding = 24.0;
 
@@ -47,10 +47,10 @@ class ScaffoldPage extends StatelessWidget {
   final ScrollController? contentScrollController;
 
   /// The padding used by this widget.
-  /// 
+  ///
   /// If [contentScrollController] is not null, the scrollbar is rendered over
   /// this padding
-  /// 
+  ///
   /// If null, [PageHeader.horizontalPadding] is used horizontally and
   /// [kPageDefaultVerticalPadding] is used vertically
   final EdgeInsets? padding;

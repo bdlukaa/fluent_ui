@@ -3,7 +3,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' as m;
 
 /// The TabView control is a way to display a set of tabs
 /// and their respective content. TabViews are useful for
@@ -246,14 +245,6 @@ class TabView extends StatelessWidget {
         ),
         if (bodies.isNotEmpty) Expanded(child: bodies[currentIndex]),
       ]),
-    );
-    tabBar = Localizations(
-      locale: Locale('en', 'US'),
-      delegates: [
-        m.DefaultWidgetsLocalizations.delegate,
-        m.DefaultMaterialLocalizations.delegate
-      ],
-      child: tabBar,
     );
     if (shortcutsEnabled)
       return Shortcuts(

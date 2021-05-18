@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// Defines the localized resource values used by the fluent widgets
-/// 
+///
 /// See also:
 ///   * [DefaultFluentLocalizations], the default, English-only, implementation
 ///    of this interface.
@@ -91,7 +91,6 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   static const LocalizationsDelegate<FluentLocalizations> delegate =
       _FluentLocalizationsDelegate();
-
 }
 
 class _FluentLocalizationsDelegate
