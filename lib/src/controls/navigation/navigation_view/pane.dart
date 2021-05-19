@@ -120,10 +120,12 @@ class PaneItem extends NavigationPaneItem {
           final textStyle = selected
               ? style.selectedTextStyle!(state)
               : style.unselectedTextStyle!(state);
-          final textResult = Padding(
-            padding: style.labelPadding ?? EdgeInsets.zero,
-            child: Text(item.title, style: textStyle),
-          );
+          final textResult = item.title.isNotEmpty
+              ? Padding(
+                  padding: style.labelPadding ?? EdgeInsets.zero,
+                  child: Text(item.title, style: textStyle),
+                )
+              : SizedBox.shrink();
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
@@ -481,9 +483,10 @@ double _getIndicatorY(BuildContext context) {
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatelessWidget {
-  _TopNavigationPane({required this.pane}) : super(key: pane.key);
+  _TopNavigationPane({required this.pane, this.listKey}) : super(key: pane.key);
 
   final NavigationPane pane;
+  final Key? listKey;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     if (item is PaneItemHeader) {
@@ -535,7 +538,11 @@ class _TopNavigationPane extends StatelessWidget {
               Expanded(
                 child: Scrollbar(
                   isAlwaysShown: false,
+                  // A single child scroll view is used instead of a ListView
+                  // because the Row implies the cross axis alignment to center,
+                  // but ListView implies to top
                   child: SingleChildScrollView(
+                    key: listKey,
                     primary: true,
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -571,10 +578,12 @@ class _CompactNavigationPane extends StatelessWidget {
   _CompactNavigationPane({
     required this.pane,
     this.paneKey,
+    this.listKey,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
+  final Key? listKey;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
@@ -655,7 +664,7 @@ class _CompactNavigationPane extends StatelessWidget {
           Expanded(
             child: Scrollbar(
               isAlwaysShown: false,
-              child: ListView(primary: true, children: [
+              child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {
                   return _buildItem(context, item);
                 }),
@@ -675,10 +684,12 @@ class _OpenNavigationPane extends StatelessWidget {
   _OpenNavigationPane({
     required this.pane,
     this.paneKey,
+    this.listKey,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
+  final Key? listKey;
 
   static Widget buildItem(
     BuildContext context,
@@ -770,7 +781,7 @@ class _OpenNavigationPane extends StatelessWidget {
           Expanded(
             child: Scrollbar(
               isAlwaysShown: false,
-              child: ListView(primary: true, children: [
+              child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {
                   return buildItem(context, pane, item);
                 }),

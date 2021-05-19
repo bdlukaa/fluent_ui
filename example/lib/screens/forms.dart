@@ -23,7 +23,11 @@ class _FormsState extends State<Forms> {
     return ScaffoldPage(
       header: PageHeader(title: Text('Forms showcase')),
       content: ListView(
-        padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
+        padding: EdgeInsets.only(
+          bottom: kPageDefaultVerticalPadding,
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
         children: [
           TextBox(
             header: 'Email',

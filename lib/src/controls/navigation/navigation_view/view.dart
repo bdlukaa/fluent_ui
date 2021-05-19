@@ -79,14 +79,14 @@ class NavigationViewState extends State<NavigationView> {
   /// The scroll controller used to keep the scrolling state of
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
-  ///
-  /// https://github.com/bdlukaa/fluent_ui/issues/3#issuecomment-842493396
-  late ScrollController openScrollController;
-  late ScrollController compactScrollController;
-  late ScrollController topScrollController;
+  /// 
+  /// It's also used to display and control the [Scrollbar] introduced
+  /// by the panes.
+  late ScrollController scrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
+  final _listKey = GlobalKey();
 
   /// The current display mode used by the automatic pane mode.
   /// This can not be changed
@@ -95,24 +95,23 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    openScrollController = ScrollController();
-    compactScrollController = ScrollController();
-    topScrollController = ScrollController();
+    scrollController = ScrollController(
+      debugLabel: '${widget.runtimeType} scroll controller',
+      keepScrollOffset: true,
+    );
   }
 
-  // @override
-  // void didUpdateWidget(NavigationView oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (widget.pane?.scrollController != scrollController) {
-  //     scrollController = widget.pane?.scrollController ?? scrollController;
-  //   }
-  // }
+  @override
+  void didUpdateWidget(NavigationView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pane?.scrollController != scrollController) {
+      scrollController = widget.pane?.scrollController ?? scrollController;
+    }
+  }
 
   @override
   void dispose() {
-    openScrollController.dispose();
-    compactScrollController.dispose();
-    topScrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -139,7 +138,10 @@ class NavigationViewState extends State<NavigationView> {
       if (pane.displayMode == PaneDisplayMode.top) {
         paneResult = Column(children: [
           appBar,
-          _buildAcrylic(_TopNavigationPane(pane: pane)),
+          _buildAcrylic(PrimaryScrollController(
+            controller: scrollController,
+            child: _TopNavigationPane(pane: pane, listKey: _listKey,),
+          )),
           Expanded(child: widget.content),
         ]);
       } else if (pane.displayMode == PaneDisplayMode.auto) {
@@ -203,9 +205,14 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _buildAcrylic(
-                    _CompactNavigationPane(pane: pane, paneKey: _panelKey),
-                  ),
+                  _buildAcrylic(PrimaryScrollController(
+                    controller: scrollController,
+                    child: _CompactNavigationPane(
+                      pane: pane,
+                      paneKey: _panelKey,
+                      listKey: _listKey,
+                    ),
+                  )),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -216,9 +223,14 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _buildAcrylic(
-                    _OpenNavigationPane(pane: pane, paneKey: _panelKey),
-                  ),
+                  _buildAcrylic(PrimaryScrollController(
+                    controller: scrollController,
+                    child: _OpenNavigationPane(
+                      pane: pane,
+                      paneKey: _panelKey,
+                      listKey: _listKey,
+                    ),
+                  )),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -257,14 +269,7 @@ class NavigationViewState extends State<NavigationView> {
     }
     return _NavigationBody(
       displayMode: widget.pane?.displayMode,
-      child: PrimaryScrollController(
-        controller: widget.pane?.displayMode == PaneDisplayMode.top
-            ? topScrollController
-            : widget.pane?.displayMode == PaneDisplayMode.open
-                ? openScrollController
-                : compactScrollController,
-        child: paneResult,
-      ),
+      child: paneResult,
     );
   }
 
@@ -275,7 +280,7 @@ class NavigationViewState extends State<NavigationView> {
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
-        controller: compactScrollController,
+        controller: scrollController,
         child: Padding(
           padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
           child: _MinimalNavigationPane(
