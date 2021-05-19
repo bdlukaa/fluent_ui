@@ -39,9 +39,11 @@ class _InputsPageState extends State<InputsPage> {
           ),
         ),
       ),
-      contentScrollController: scrollController,
       content: SingleChildScrollView(
         controller: scrollController,
+        padding: EdgeInsets.symmetric(
+          horizontal: PageHeader.horizontalPadding(context),
+        ),
         child: Wrap(spacing: 10, runSpacing: 10, children: [
           Acrylic(
             padding: EdgeInsets.all(8.0),

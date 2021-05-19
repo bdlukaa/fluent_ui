@@ -28,6 +28,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 
 ### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
 
+Projects using this library should use the stable channel of Flutter
+
 ### Content
 
 - [Motivation](#motivation)

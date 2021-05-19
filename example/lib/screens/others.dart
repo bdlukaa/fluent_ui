@@ -46,9 +46,12 @@ class _OthersState extends State<Others> {
   Widget build(BuildContext context) {
     return ScaffoldPage(
       header: PageHeader(title: Text('Others')),
-      contentScrollController: otherController,
       content: ListView(
-        padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
+        padding: EdgeInsets.only(
+          bottom: kPageDefaultVerticalPadding,
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
         controller: otherController,
         children: [
           Acrylic(

@@ -52,9 +52,12 @@ class Settings extends StatelessWidget {
     }());
     return ScaffoldPage(
       header: PageHeader(title: Text('Settings')),
-      contentScrollController: controller,
       content: ListView(
-        padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
+        padding: EdgeInsets.only(
+          bottom: kPageDefaultVerticalPadding,
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
         controller: controller,
         children: [
           Text('Theme mode', style: context.theme.typography.subtitle),
