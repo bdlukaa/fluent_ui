@@ -33,7 +33,7 @@ Projects using this library should use the stable channel of Flutter
 ### Content
 
 - [Motivation](#motivation)
-  - [Roadmap](#roadmap)
+- [Installation](#installation)
 - [Style](#style)
   - [Icons](#icons)
   - [Colors](#colors)
@@ -90,6 +90,31 @@ See also:
 - [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
+
+## Installation
+
+You can use two versions of this package:
+
+1. You can use the [github version](https://github.com/bdlukaa/fluent_ui):
+
+```yaml
+dependencies:
+  fluent_ui:
+    git: https://github.com/bdlukaa/fluent_ui.git
+```
+
+Note that this version is not stable. You can see the example app deplyed using the github version [here](https://bdlukaa.github.io/fluent_ui/#/)
+
+2. You can use the [pub version](https://pub.dev/packages/fluent_ui/install):
+
+```yaml
+dependencies:
+  fluent_ui: ^2.0.0
+```
+
+Versions published to pub are stable and fully tested.
+
+Finally, run `dart pub get` to downlaod the package
 
 ---
 
@@ -1044,10 +1069,8 @@ NoAcrylicBlurEffect(
 Currently, the following widgets use acrylic in its implementation:
 
 - [InfoBar](#infobar)
-- [Navigation Panel](#navigation-panel)
+- [Navigation View](#navigation-view)
 - [TabView](#tab-view)
-
-> This widget MAY BE unperformatic on VERY OLD devices because it uses expensive widgets in its composition: `ClipRect` and `BackdropFilter`. It should not affect the most part of the devices
 
 ### Screenshots
 
@@ -1077,28 +1100,6 @@ InfoBar(
 ![Long Success InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)\
 ![Error InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-action-button.png)\
 ![Custom InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-custom-icon-color.png)
-
-## Calendar View
-
-A calendar view lets a user view and interact with a calendar that they can navigate by month, year, or decade. A user can select a single date or a range of dates. It doesn't have a picker surface and the calendar is always visible. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/calendar-view)
-
-Use a calendar view to let a user pick a single date or a range of dates from an always visible calendar. If you need to let a user select multiple dates at one time, you must use a calendar view. If you need to let a user pick only a single date and don't need a calendar to be always visible, consider using [date picker](#date-picker) control.
-
-The calendar view is made up of 3 separate views: the month view, year view, and decade view. By default, it starts with the month view open. You can specify a startup view by setting the `displayMode` property.
-
-![Calendar View Showcase](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/calendar-view-3-views.png)
-
-Users click the header in the month view to open the year view, and click the header in the year view to open the decade view. Users pick a year in the decade view to return to the year view, and pick a month in the year view to return to the month view. The two arrows to the side of the header navigate forward or backward by month, by year, or by decade.
-
-### Example
-
-```dart
-CalendarView()
-```
-
-The code above produces the following:
-
-![Calendar Month View Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_calendar_monthview.png)
 
 ## Date Picker
 
