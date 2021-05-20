@@ -192,7 +192,7 @@ class _DatePickerState extends State<DatePicker> {
         initControllers();
       },
       builder: (context, state) {
-        if (state == ButtonStates.disabled) state = ButtonStates.none;
+        if (state.isDisabled) state = <ButtonStates>[];
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(

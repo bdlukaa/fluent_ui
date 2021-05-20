@@ -307,25 +307,25 @@ class ButtonThemeData with Diagnosticable {
     ));
   }
 
-  static Color buttonColor(ThemeData style, ButtonStates state) {
+  static Color buttonColor(ThemeData style, List<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
       late Color color;
-      if (state.isDisabled)
+      if (states.isDisabled)
         color = style.disabledColor;
-      else if (state.isPressing)
+      else if (states.isPressing)
         color = Colors.grey[70]!;
-      else if (state.isHovering)
+      else if (states.isHovering)
         color = Colors.grey[40]!;
       else
         color = Colors.grey[50]!;
       return color;
     } else {
       late Color color;
-      if (state.isDisabled)
+      if (states.isDisabled)
         color = style.disabledColor;
-      else if (state.isPressing)
+      else if (states.isPressing)
         color = Color.fromARGB(255, 102, 102, 102);
-      else if (state.isHovering)
+      else if (states.isHovering)
         color = Colors.grey[150]!;
       else
         color = Color.fromARGB(255, 51, 51, 51);
@@ -333,26 +333,26 @@ class ButtonThemeData with Diagnosticable {
     }
   }
 
-  static Color checkedInputColor(ThemeData style, ButtonStates state) {
+  static Color checkedInputColor(ThemeData style, List<ButtonStates> states) {
     Color color = style.accentColor;
-    if (state.isDisabled)
+    if (states.isDisabled)
       return style.disabledColor;
-    else if (state.isHovering)
+    else if (states.isHovering)
       return color.withOpacity(0.70);
-    else if (state.isPressing) return color.withOpacity(0.90);
+    else if (states.isPressing) return color.withOpacity(0.90);
     return color;
   }
 
-  static Color uncheckedInputColor(ThemeData style, ButtonStates state) {
+  static Color uncheckedInputColor(ThemeData style, List<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
-      if (state.isDisabled) return style.disabledColor;
-      if (state.isPressing) return Colors.grey[70]!;
-      if (state.isHovering) return Colors.grey[40]!;
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return Colors.grey[70]!;
+      if (states.isHovering) return Colors.grey[40]!;
       return Colors.grey[40]!.withOpacity(0);
     } else {
-      if (state.isDisabled) return style.disabledColor;
-      if (state.isPressing) return Colors.grey[130]!;
-      if (state.isHovering) return Colors.grey[150]!;
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return Colors.grey[130]!;
+      if (states.isHovering) return Colors.grey[150]!;
       return Colors.grey[150]!.withOpacity(0);
     }
   }

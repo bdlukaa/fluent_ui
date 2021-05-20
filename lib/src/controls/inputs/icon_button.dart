@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef IconThemeButtonStateBuilder = IconThemeData Function(ButtonStates);
+typedef IconThemeButtonStateBuilder = IconThemeData Function(List<ButtonStates>);
 
 class IconButton extends StatelessWidget {
   const IconButton({

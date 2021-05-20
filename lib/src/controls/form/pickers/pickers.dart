@@ -24,16 +24,16 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
   return context.theme.typography.body?.copyWith(fontSize: 16);
 }
 
-Decoration kPickerDecorationBuilder(BuildContext context, ButtonStates state) {
+Decoration kPickerDecorationBuilder(BuildContext context, List<ButtonStates> states) {
   assert(debugCheckHasFluentTheme(context));
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
     border: Border.all(
       color: () {
         late Color color;
-        if (state == ButtonStates.hovering) {
+        if (states.isHovering) {
           color = context.theme.inactiveColor;
-        } else if (state == ButtonStates.disabled) {
+        } else if (states.isDisabled) {
           color = context.theme.disabledColor;
         } else {
           color = context.theme.inactiveColor.withOpacity(0.75);
@@ -43,9 +43,9 @@ Decoration kPickerDecorationBuilder(BuildContext context, ButtonStates state) {
       width: 1.0,
     ),
     color: () {
-      if (state == ButtonStates.pressing)
+      if (states.isPressing)
         return context.theme.disabledColor.withOpacity(0.2);
-      else if (state == ButtonStates.focused) {
+      else if (states.isFocused) {
         return context.theme.disabledColor.withOpacity(0.2);
       }
     }(),

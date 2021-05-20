@@ -389,7 +389,7 @@ class NavigationAppBar with Diagnosticable {
             margin: EdgeInsets.zero,
             scaleFactor: 1.0,
             decoration: (state) {
-              if (state == ButtonStates.disabled) state = ButtonStates.none;
+              if (state.isDisabled) state = [];
               return BoxDecoration(
                 color:
                     ButtonThemeData.uncheckedInputColor(context.theme, state),

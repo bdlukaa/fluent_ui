@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 typedef ButtonStateWidgetBuilder = Widget Function(
-    BuildContext, ButtonStates state);
+  BuildContext,
+  List<ButtonStates> state,
+);
 
 /// Base widget for any widget that requires input. It
 /// provides a [builder] callback to build the child with
@@ -25,10 +27,10 @@ class HoverButton extends StatefulWidget {
   /// Creates a hover button.
   const HoverButton({
     Key? key,
+    required this.builder,
     this.cursor,
     this.onPressed,
     this.onLongPress,
-    this.builder,
     this.focusNode,
     this.margin,
     this.semanticLabel,
@@ -40,13 +42,12 @@ class HoverButton extends StatefulWidget {
     this.onHorizontalDragStart,
     this.onHorizontalDragUpdate,
     this.onHorizontalDragEnd,
-    this.onShowFocusHighlight,
     this.onFocusChange,
     this.autofocus = false,
   }) : super(key: key);
 
   /// The cursor of this hover button. If null, [MouseCursor.defer] is used
-  final MouseCursor Function(ButtonStates)? cursor;
+  final MouseCursor Function(List<ButtonStates>)? cursor;
   final VoidCallback? onLongPress;
   final VoidCallback? onLongPressStart;
   final VoidCallback? onLongPressEnd;
@@ -60,7 +61,7 @@ class HoverButton extends StatefulWidget {
   final GestureDragUpdateCallback? onHorizontalDragUpdate;
   final GestureDragEndCallback? onHorizontalDragEnd;
 
-  final ButtonStateWidgetBuilder? builder;
+  final ButtonStateWidgetBuilder builder;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -85,11 +86,6 @@ class HoverButton extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  /// A function that will be called when the focus highlight should be shown or
-  /// hidden.
-  ///
-  /// This method is not triggered at the unmount of the widget.
-  final ValueChanged<bool>? onShowFocusHighlight;
   final ValueChanged<bool>? onFocusChange;
 
   @override
@@ -107,10 +103,10 @@ class _HoverButtonState extends State<HoverButton> {
     node = widget.focusNode ?? _createFocusNode();
     void _handleActionTap() async {
       if (!enabled) return;
-      update(() => _pressing = true);
+      setState(() => _pressing = true);
       widget.onPressed?.call();
       await Future.delayed(Duration(milliseconds: 100));
-      update(() => _pressing = false);
+      setState(() => _pressing = false);
     }
 
     _actionMap = <Type, Action<Intent>>{
@@ -143,7 +139,6 @@ class _HoverButtonState extends State<HoverButton> {
 
   bool _hovering = false;
   bool _pressing = false;
-  bool _focused = false;
   bool _shouldShowFocus = false;
 
   bool get enabled =>
@@ -155,25 +150,13 @@ class _HoverButtonState extends State<HoverButton> {
       widget.onLongPressStart != null ||
       widget.onLongPressEnd != null;
 
-  ButtonStates get state => !enabled
-      ? ButtonStates.disabled
-      : _pressing
-          ? ButtonStates.pressing
-          : _hovering
-              ? ButtonStates.hovering
-              : _focused && _shouldShowFocus
-                  ? ButtonStates.focused
-                  : ButtonStates.none;
-
-  void update(void Function() f) {
-    if (!enabled) return;
-    if (!mounted) return f();
-    setState(f);
-    if (_pressing) {
-      node.requestFocus();
-    } else {
-      if (node.hasFocus) node.unfocus();
-    }
+  List<ButtonStates> get states {
+    if (!enabled) return [ButtonStates.disabled];
+    return [
+      if (_pressing) ButtonStates.pressing,
+      if (_hovering) ButtonStates.hovering,
+      if (_shouldShowFocus) ButtonStates.focused,
+    ];
   }
 
   @override
@@ -182,51 +165,47 @@ class _HoverButtonState extends State<HoverButton> {
       behavior: HitTestBehavior.opaque,
       onTap: widget.onPressed,
       onTapDown: (_) {
-        update(() => _pressing = true);
+        if (mounted) setState(() => _pressing = true);
         widget.onTapDown?.call();
       },
       onTapUp: (_) async {
         widget.onTapUp?.call();
         if (!enabled) return;
         await Future.delayed(Duration(milliseconds: 100));
-        update(() => _pressing = false);
+        if (mounted) setState(() => _pressing = false);
       },
       onTapCancel: () {
         widget.onTapCancel?.call();
-        update(() => _pressing = false);
+        if (mounted) setState(() => _pressing = false);
       },
       onLongPress: widget.onLongPress,
       onLongPressStart: (_) {
         widget.onLongPressStart?.call();
-        update(() => _pressing = true);
+        if (mounted) setState(() => _pressing = true);
       },
       onLongPressEnd: (_) {
         widget.onLongPressEnd?.call();
-        update(() => _pressing = false);
+        if (mounted) setState(() => _pressing = false);
       },
       onHorizontalDragStart: widget.onHorizontalDragStart,
       onHorizontalDragUpdate: widget.onHorizontalDragUpdate,
       onHorizontalDragEnd: widget.onHorizontalDragEnd,
-      child: widget.builder?.call(context, state) ?? SizedBox(),
+      child: widget.builder(context, states),
     );
     w = FocusableActionDetector(
-      mouseCursor: widget.cursor?.call(state) ??
-          context.maybeTheme?.inputMouseCursor.call(state) ??
+      mouseCursor: widget.cursor?.call(states) ??
+          context.maybeTheme?.inputMouseCursor.call(states) ??
           MouseCursor.defer,
       focusNode: node,
       autofocus: widget.autofocus,
       enabled: enabled,
       actions: _actionMap,
-      onFocusChange: (v) {
-        setState(() => _focused = v);
-        widget.onFocusChange?.call(v);
-      },
+      onFocusChange: widget.onFocusChange,
       onShowFocusHighlight: (v) {
-        setState(() => _shouldShowFocus = v);
-        widget.onShowFocusHighlight?.call(v);
+        if (mounted) setState(() => _shouldShowFocus = v);
       },
       onShowHoverHighlight: (v) {
-        update(() => _hovering = v);
+        if (mounted) setState(() => _hovering = v);
       },
       child: w,
     );
@@ -236,7 +215,7 @@ class _HoverButtonState extends State<HoverButton> {
           label: widget.semanticLabel,
           button: true,
           enabled: enabled,
-          focusable: true,
+          focusable: enabled,
           focused: node.hasFocus,
           child: w,
         ),
@@ -247,29 +226,14 @@ class _HoverButtonState extends State<HoverButton> {
   }
 }
 
-@immutable
-class ButtonStates with Diagnosticable {
-  final String id;
+enum ButtonStates { disabled, hovering, pressing, focused, none }
 
-  const ButtonStates._(this.id);
+typedef ButtonState<T> = T Function(List<ButtonStates>);
 
-  static const ButtonStates disabled = ButtonStates._('disabled');
-  static const ButtonStates hovering = ButtonStates._('hovering');
-  static const ButtonStates pressing = ButtonStates._('pressing');
-  static const ButtonStates focused = ButtonStates._('focused');
-  static const ButtonStates none = ButtonStates._('none');
-
-  bool get isDisabled => this == disabled;
-  bool get isHovering => this == hovering;
-  bool get isPressing => this == pressing;
-  bool get isFocused => this == focused;
-  bool get isNone => this == none;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('state', id));
-  }
+extension ButtonStatesExtension on List<ButtonStates> {
+  bool get isFocused => contains(ButtonStates.focused);
+  bool get isDisabled => contains(ButtonStates.disabled);
+  bool get isPressing => contains(ButtonStates.pressing);
+  bool get isHovering => contains(ButtonStates.hovering);
+  bool get isNone => isEmpty;
 }
-
-typedef ButtonState<T> = T Function(ButtonStates);
