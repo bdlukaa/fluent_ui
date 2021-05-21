@@ -172,11 +172,7 @@ class _InputsPageState extends State<InputsPage> {
               Button(
                 child: SizedBox(
                   height: splitButtonHeight,
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    color:
-                        disabled ? FluentTheme.of(context).disabledColor : null,
-                  ),
+                  child: Icon(Icons.keyboard_arrow_down),
                 ),
                 onPressed: disabled ? null : () {},
                 style: ButtonThemeData(padding: EdgeInsets.all(6)),

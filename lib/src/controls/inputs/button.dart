@@ -196,6 +196,7 @@ class _ButtonState extends State<Button> {
             },
       onLongPress: widget.onLongPress,
       builder: (context, state) {
+        final textStyle = (style.textStyle?.call(state)) ?? TextStyle();
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
@@ -206,9 +207,12 @@ class _ButtonState extends State<Button> {
           child: AnimatedDefaultTextStyle(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? Curves.linear,
-            style: (style.textStyle?.call(state)) ?? TextStyle(),
+            style: textStyle,
             textAlign: TextAlign.center,
-            child: widget.child ?? widget.builder!(context, state),
+            child: IconTheme(
+              data: IconThemeData(color: textStyle.color),
+              child: widget.child ?? widget.builder!(context, state),
+            ),
           ),
         );
         return FocusBorder(
@@ -283,11 +287,9 @@ class ButtonThemeData with Diagnosticable {
         color: buttonColor(style, state),
       ),
       scaleFactor: 0.95,
-      textStyle: (state) =>
-          style.typography.body?.copyWith(
-            color: state.isDisabled ? style.disabledColor : null,
-          ) ??
-          TextStyle(),
+      textStyle: (state) => style.typography.body!.copyWith(
+        color: state.isDisabled ? style.disabledColor : null,
+      ),
     );
   }
 

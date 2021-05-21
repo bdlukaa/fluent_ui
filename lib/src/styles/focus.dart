@@ -121,8 +121,9 @@ class FocusTheme extends InheritedWidget {
   final Widget child;
 
   static FocusThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = context.dependOnInheritedWidgetOfExactType<FocusTheme>();
-    return theme?.data ?? FluentTheme.of(context).focusTheme;
+    return FluentTheme.of(context).focusTheme.copyWith(theme?.data);
   }
 
   @override
