@@ -106,7 +106,7 @@ class _HoverButtonState extends State<HoverButton> {
       setState(() => _pressing = true);
       widget.onPressed?.call();
       await Future.delayed(Duration(milliseconds: 100));
-      setState(() => _pressing = false);
+      if (mounted) setState(() => _pressing = false);
     }
 
     _actionMap = <Type, Action<Intent>>{

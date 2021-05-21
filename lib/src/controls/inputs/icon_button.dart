@@ -67,7 +67,6 @@ class IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    print(style);
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,

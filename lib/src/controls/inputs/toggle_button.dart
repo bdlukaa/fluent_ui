@@ -127,18 +127,13 @@ class ToggleButtonThemeData with Diagnosticable {
         if (state.isHovering || state.isPressing)
           return defaultDecoration.copyWith(
             color: ButtonThemeData.uncheckedInputColor(style, state),
-            border: Border.all(
-              width: 0.6,
-              color: ButtonThemeData.uncheckedInputColor(style, state),
-            ),
           );
         return defaultDecoration.copyWith(
           color: ButtonThemeData.buttonColor(style, state),
-          border: Border.all(width: 0.6, color: Colors.transparent),
         );
       },
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      margin: EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
     );
