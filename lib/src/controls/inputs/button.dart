@@ -161,9 +161,6 @@ class _ButtonState extends State<Button> {
     }
     assert(debugCheckHasFluentTheme(context));
     final style = ButtonTheme.of(context).copyWith(widget.style);
-    // final style = ButtonThemeData.standard(FluentTheme.of(context)).copyWith(
-    //   FluentTheme.of(context).buttonTheme.copyWith(widget.style),
-    // );
     return HoverButton(
       semanticLabel: widget.semanticLabel,
       margin: style.margin,
@@ -211,7 +208,7 @@ class _ButtonState extends State<Button> {
             curve: FluentTheme.of(context).animationCurve,
             style: textStyle,
             textAlign: TextAlign.center,
-            child: IconTheme(
+            child: IconTheme.merge(
               data: IconThemeData(color: textStyle.color),
               child: widget.child ?? widget.builder!(context, state),
             ),
@@ -346,7 +343,7 @@ class ButtonThemeData with Diagnosticable {
     late Color color;
     if (style.brightness == Brightness.light) {
       if (states.isDisabled)
-        color = style.disabledColor;
+        color = Color(0xFFcccccc);
       else if (states.isPressing)
         color = Colors.grey[70];
       else if (states.isHovering)

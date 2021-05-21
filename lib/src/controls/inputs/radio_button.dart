@@ -83,15 +83,16 @@ class RadioButton extends StatelessWidget {
       semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final decoration = checked
-            ? style.checkedDecoration?.resolve(state)
-            : style.uncheckedDecoration?.resolve(state);
+        final BoxDecoration decoration = (checked
+                ? style.checkedDecoration?.resolve(state)
+                : style.uncheckedDecoration?.resolve(state)) ??
+            BoxDecoration(shape: BoxShape.circle);
         Widget child = AnimatedContainer(
           duration: FluentTheme.of(context).mediumAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
-          decoration: decoration?.copyWith(color: Colors.transparent),
+          decoration: decoration.copyWith(color: Colors.transparent),
 
           /// We need two boxes here because flutter draws the color
           /// behind the border, and it results in an weird effect. This
@@ -101,8 +102,8 @@ class RadioButton extends StatelessWidget {
             duration: FluentTheme.of(context).mediumAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
-              color: decoration?.color ?? Colors.transparent,
-              shape: decoration?.shape ?? BoxShape.circle,
+              color: decoration.color ?? Colors.transparent,
+              shape: decoration.shape,
             ),
           ),
         );

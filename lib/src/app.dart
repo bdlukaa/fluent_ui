@@ -405,9 +405,8 @@ class _FluentAppState extends State<FluentApp> {
 
   Widget _builder(BuildContext context, Widget? child) {
     if (child == null) return SizedBox();
-    final theme = this.theme(context);
-    return FluentTheme(
-      data: theme,
+    return AnimatedFluentTheme(
+      data: theme(context),
       child: child,
     );
   }

@@ -467,8 +467,6 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
-          animationDuration: theme.animationDuration ?? Duration.zero,
-          animationCurve: theme.animationCurve ?? Curves.linear,
           child: Row(children: [
             leading,
             title,
@@ -483,8 +481,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
@@ -497,8 +493,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kCompactNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: leading,
           ),
           title,

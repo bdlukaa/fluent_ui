@@ -28,8 +28,6 @@ class Acrylic extends StatelessWidget {
     this.margin,
     this.shadowColor,
     this.elevation = 0.0,
-    this.animationDuration = Duration.zero,
-    this.animationCurve = Curves.linear,
   })  : assert(elevation >= 0, 'The elevation can NOT be negative'),
         assert(opacity >= 0, 'The opacity can NOT be negative'),
         assert(
@@ -76,9 +74,6 @@ class Acrylic extends StatelessWidget {
   /// Empty space to surround the [decoration] and [child].
   final EdgeInsetsGeometry? margin;
 
-  final Duration animationDuration;
-  final Curve animationCurve;
-
   /// The color of the elevation
   final Color? shadowColor;
 
@@ -113,16 +108,12 @@ class Acrylic extends StatelessWidget {
 
     final enabled = NoAcrylicBlurEffect.of(context) == null;
     final opacity = enabled ? this.opacity : 1.0;
-    Widget result = AnimatedContainer(
-      duration: animationDuration,
-      curve: animationCurve,
+    Widget result = SizedBox(
       width: width,
       height: height,
       child: () {
-        Widget container = AnimatedContainer(
+        Widget container = Container(
           padding: padding,
-          duration: animationDuration,
-          curve: animationCurve,
           decoration: () {
             if (decoration != null) {
               Color? color = decoration!.color ?? this.color;
@@ -144,9 +135,7 @@ class Acrylic extends StatelessWidget {
       }(),
     );
     if (elevation > 0) {
-      result = AnimatedPhysicalModel(
-        duration: animationDuration,
-        curve: animationCurve,
+      result = PhysicalModel(
         color: Colors.transparent,
         shadowColor: shadowColor ?? FluentTheme.of(context).shadowColor,
         shape: BoxShape.rectangle,

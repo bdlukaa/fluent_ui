@@ -53,6 +53,91 @@ class _FluentTheme extends InheritedWidget {
       oldWidget.data != data;
 }
 
+/// An interpolation between two [ThemeData]s.
+///
+/// This class specializes the interpolation of [Tween<ThemeData>] to call the
+/// [ThemeData.lerp] method.
+///
+/// See [Tween] for a discussion on how to use interpolation objects.
+class ThemeDataTween extends Tween<ThemeData> {
+  /// Creates a [ThemeData] tween.
+  ///
+  /// The [begin] and [end] properties must be non-null before the tween is
+  /// first used, but the arguments can be null if the values are going to be
+  /// filled in later.
+  ThemeDataTween({ThemeData? begin, ThemeData? end})
+      : super(begin: begin, end: end);
+
+  @override
+  ThemeData lerp(double t) => ThemeData.lerp(begin!, end!, t);
+}
+
+/// Animated version of [Theme] which automatically transitions the colors,
+/// etc, over a given duration whenever the given theme changes.
+///
+/// Here's an illustration of what using this widget looks like, using a [curve]
+/// of [Curves.elasticInOut].
+/// {@animation 250 266 https://flutter.github.io/assets-for-api-docs/assets/widgets/animated_theme.mp4}
+///
+/// See also:
+///
+///  * [FluentTheme], which [AnimatedFluentTheme] uses to actually apply the interpolated
+///    theme.
+///  * [ThemeData], which describes the actual configuration of a theme.
+///  * [FluentApp], which includes an [AnimatedFluentTheme] widget configured via
+///    the [FluentApp.theme] argument.
+class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
+  /// Creates an animated theme.
+  ///
+  /// By default, the theme transition uses a linear curve. The [data] and
+  /// [child] arguments must not be null.
+  const AnimatedFluentTheme({
+    Key? key,
+    required this.data,
+    Curve curve = Curves.linear,
+    Duration duration = kThemeAnimationDuration,
+    VoidCallback? onEnd,
+    required this.child,
+  }) : super(key: key, curve: curve, duration: duration, onEnd: onEnd);
+
+  /// Specifies the color and typography values for descendant widgets.
+  final ThemeData data;
+
+  /// The widget below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
+  final Widget child;
+
+  @override
+  _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
+}
+
+class _AnimatedFluentThemeState extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
+  ThemeDataTween? _data;
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _data = visitor(_data, widget.data,
+            (dynamic value) => ThemeDataTween(begin: value as ThemeData))!
+        as ThemeDataTween;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FluentTheme(
+      child: widget.child,
+      data: _data!.evaluate(animation),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder description) {
+    super.debugFillProperties(description);
+    description.add(DiagnosticsProperty<ThemeDataTween>('data', _data,
+        showName: false, defaultValue: null));
+  }
+}
+
 extension brightnessExtension on Brightness {
   bool get isLight => this == Brightness.light;
   bool get isDark => this == Brightness.dark;
@@ -198,7 +283,10 @@ class ThemeData with Diagnosticable {
       'normal': Color(0xFFd6d6d6),
       'dark': Color(0xFF292929),
     }).resolveFromBrightness(brightness);
-    disabledColor ??= Colors.grey[80].withOpacity(0.6);
+    disabledColor ??= AccentColor('normal', {
+      'normal': const Color(0xFF838383),
+      'dark': Colors.grey[80].withOpacity(0.6)
+    });
     shadowColor ??= AccentColor('normal', {
       'normal': Colors.black,
       'dark': Colors.grey[130],

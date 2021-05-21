@@ -58,9 +58,7 @@ class ScaffoldPage extends StatelessWidget {
       left: padding?.left ?? PageHeader.horizontalPadding(context),
       right: padding?.right ?? PageHeader.horizontalPadding(context),
     );
-    return AnimatedContainer(
-      duration: theme.fastAnimationDuration,
-      curve: theme.animationCurve,
+    return Container(
       color: theme.scaffoldBackgroundColor,
       padding: EdgeInsets.only(
         top: padding?.top ?? kPageDefaultVerticalPadding,

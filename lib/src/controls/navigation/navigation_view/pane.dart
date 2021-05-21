@@ -612,8 +612,6 @@ class _CompactNavigationPane extends StatelessWidget {
     return Acrylic(
       key: paneKey,
       width: _kCompactNavigationPanelWidth,
-      animationDuration: theme.animationDuration ?? Duration.zero,
-      animationCurve: theme.animationCurve ?? Curves.linear,
       color: theme.backgroundColor,
       child: pane.indicatorBuilder(
         context: context,
@@ -734,8 +732,6 @@ class _OpenNavigationPane extends StatelessWidget {
       key: paneKey,
       color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
-      animationDuration: theme.animationDuration ?? Duration.zero,
-      animationCurve: theme.animationCurve ?? Curves.linear,
       child: pane.indicatorBuilder(
         context: context,
         index: pane.selected,
@@ -870,8 +866,6 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       child: Acrylic(
         color: theme.backgroundColor,
         width: _kOpenNavigationPanelWidth,
-        animationDuration: theme.animationDuration ?? Duration.zero,
-        animationCurve: theme.animationCurve ?? Curves.linear,
         child: widget.pane.indicatorBuilder(
           context: context,
           index: widget.pane.selected,
