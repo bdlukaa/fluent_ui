@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -158,8 +160,6 @@ class FocusThemeData with Diagnosticable {
     required Color primaryBorderColor,
     required Color secondaryBorderColor,
     required Color glowColor,
-    required Duration animationDuration,
-    required Curve animationCurve,
   }) {
     return FocusThemeData(
       borderRadius: BorderRadius.zero,
@@ -168,6 +168,19 @@ class FocusThemeData with Diagnosticable {
       glowColor: glowColor,
       glowFactor: 0.0,
       renderOutside: true,
+    );
+  }
+
+  static FocusThemeData lerp(FocusThemeData? a, FocusThemeData? b, double t) {
+    return FocusThemeData(
+      borderRadius: BorderRadius.lerp(a?.borderRadius, b?.borderRadius, t),
+      primaryBorder: BorderSide.lerp(a?.primaryBorder ?? BorderSide.none,
+          b?.primaryBorder ?? BorderSide.none, t),
+      secondaryBorder: BorderSide.lerp(a?.secondaryBorder ?? BorderSide.none,
+          b?.secondaryBorder ?? BorderSide.none, t),
+      glowColor: Color.lerp(a?.glowColor, b?.glowColor, t),
+      glowFactor: lerpDouble(a?.glowFactor, b?.glowFactor, t),
+      renderOutside: t < 0.5 ? a?.renderOutside : b?.renderOutside,
     );
   }
 

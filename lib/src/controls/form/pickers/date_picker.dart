@@ -196,7 +196,8 @@ class _DatePickerState extends State<DatePicker> {
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
-            margin: (_) => EdgeInsets.zero,
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
@@ -333,7 +334,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(
+        verticalMargin: EdgeInsets.zero,
+        horizontalMargin: EdgeInsets.zero,
+      ),
     );
     return Acrylic(
       height: widget.height,
@@ -350,7 +354,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: FluentTheme.of(context).accentColor.resolveFrom(context),
+                  tileColor:
+                      FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),
@@ -538,7 +543,12 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
             ]),
           ]),
         ),
-        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
+        Divider(
+          style: DividerThemeData(
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
+          ),
+        ),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);

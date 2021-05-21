@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -90,8 +92,8 @@ class ToggleButton extends StatelessWidget {
 class ToggleButtonThemeData with Diagnosticable {
   final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<Decoration>? checkedDecoration;
-  final ButtonState<Decoration>? uncheckedDecoration;
+  final ButtonState<Decoration?>? checkedDecoration;
+  final ButtonState<Decoration?>? uncheckedDecoration;
 
   final double? scaleFactor;
 
@@ -132,6 +134,23 @@ class ToggleButtonThemeData with Diagnosticable {
     );
   }
 
+  static ToggleButtonThemeData lerp(
+    ToggleButtonThemeData? a,
+    ToggleButtonThemeData? b,
+    double t,
+  ) {
+    return ToggleButtonThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(
+          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+      scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
+    );
+  }
+
   ToggleButtonThemeData copyWith(ToggleButtonThemeData? style) {
     if (style == null) return this;
     return ToggleButtonThemeData(
@@ -151,13 +170,13 @@ class ToggleButtonThemeData with Diagnosticable {
     properties
         .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
     properties.add(
-      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
+      DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor),
     );
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
       'checkedDecoration',
       checkedDecoration,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
       'uncheckedDecoration',
       uncheckedDecoration,
     ));

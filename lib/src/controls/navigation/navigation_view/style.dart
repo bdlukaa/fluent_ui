@@ -22,10 +22,10 @@ class NavigationPaneThemeData with Diagnosticable {
   final ButtonState<MouseCursor>? cursor;
 
   final TextStyle? itemHeaderTextStyle;
-  final ButtonState<TextStyle>? selectedTextStyle;
-  final ButtonState<TextStyle>? unselectedTextStyle;
-  final ButtonState<Color>? selectedIconColor;
-  final ButtonState<Color>? unselectedIconColor;
+  final ButtonState<TextStyle?>? selectedTextStyle;
+  final ButtonState<TextStyle?>? unselectedTextStyle;
+  final ButtonState<Color?>? selectedIconColor;
+  final ButtonState<Color?>? unselectedIconColor;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
@@ -79,6 +79,34 @@ class NavigationPaneThemeData with Diagnosticable {
       iconPadding: EdgeInsets.symmetric(horizontal: 12.0),
       selectedIconColor: ButtonState.all(style.accentColor),
       unselectedIconColor: ButtonState.all(style.inactiveColor),
+    );
+  }
+
+  static NavigationPaneThemeData lerp(
+    NavigationPaneThemeData? a,
+    NavigationPaneThemeData? b,
+    double t,
+  ) {
+    return NavigationPaneThemeData(
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      iconPadding: EdgeInsets.lerp(a?.iconPadding, b?.iconPadding, t),
+      labelPadding: EdgeInsets.lerp(a?.labelPadding, b?.labelPadding, t),
+      tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
+      backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      itemHeaderTextStyle:
+          TextStyle.lerp(a?.itemHeaderTextStyle, b?.itemHeaderTextStyle, t),
+      selectedTextStyle: ButtonState.lerp(
+          a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
+      unselectedTextStyle: ButtonState.lerp(
+          a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
+      highlightColor: Color.lerp(a?.highlightColor, b?.highlightColor, t),
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
+          b?.animationDuration ?? Duration.zero, t),
+      selectedIconColor: ButtonState.lerp(
+          a?.selectedIconColor, b?.selectedIconColor, t, Color.lerp),
+      unselectedIconColor: ButtonState.lerp(
+          a?.unselectedIconColor, b?.unselectedIconColor, t, Color.lerp),
     );
   }
 

@@ -223,8 +223,6 @@ class ThemeData with Diagnosticable {
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
       secondaryBorderColor: scaffoldBackgroundColor,
-      animationCurve: animationCurve,
-      animationDuration: fasterAnimationDuration,
     ).copyWith(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
@@ -303,20 +301,28 @@ class ThemeData with Diagnosticable {
       animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
       inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
-      checkboxTheme: CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
-      toggleSwitchTheme: a.toggleSwitchTheme,
+      checkboxTheme:
+          CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      toggleSwitchTheme: ToggleSwitchThemeData.lerp(
+          a.toggleSwitchTheme, b.toggleSwitchTheme, t),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
-      splitButtonTheme: a.splitButtonTheme,
-      dialogTheme: a.dialogTheme,
-      tooltipTheme: a.tooltipTheme,
-      dividerTheme: a.dividerTheme,
-      navigationPaneTheme: a.navigationPaneTheme,
-      radioButtonTheme: a.radioButtonTheme,
-      toggleButtonTheme: a.toggleButtonTheme,
-      sliderTheme: a.sliderTheme,
-      infoBarTheme: a.infoBarTheme,
-      focusTheme: a.focusTheme,
-      scrollbarTheme: a.scrollbarTheme,
+      splitButtonTheme:
+          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
+      dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
+      tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
+      dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
+      navigationPaneTheme: NavigationPaneThemeData.lerp(
+          a.navigationPaneTheme, b.navigationPaneTheme, t),
+      radioButtonTheme:
+          RadioButtonThemeData.lerp(a.radioButtonTheme, b.radioButtonTheme, t),
+      toggleButtonTheme: ToggleButtonThemeData.lerp(
+          a.toggleButtonTheme, b.toggleButtonTheme, t),
+      sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
+      // TODO(bdlukaa): lerp info bar theme
+      infoBarTheme: t < 0.5 ? a.infoBarTheme : b.infoBarTheme,
+      focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
+      scrollbarTheme:
+          ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
     );
   }
 

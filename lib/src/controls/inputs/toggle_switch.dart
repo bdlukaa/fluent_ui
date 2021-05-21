@@ -201,13 +201,13 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
 @immutable
 class ToggleSwitchThemeData with Diagnosticable {
-  final ButtonState<Decoration>? checkedThumbDecoration;
-  final ButtonState<Decoration>? uncheckedThumbDecoration;
+  final ButtonState<Decoration?>? checkedThumbDecoration;
+  final ButtonState<Decoration?>? uncheckedThumbDecoration;
 
   final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<Decoration>? checkedDecoration;
-  final ButtonState<Decoration>? uncheckedDecoration;
+  final ButtonState<Decoration?>? checkedDecoration;
+  final ButtonState<Decoration?>? uncheckedDecoration;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -267,6 +267,29 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
   }
 
+  static ToggleSwitchThemeData lerp(
+    ToggleSwitchThemeData? a,
+    ToggleSwitchThemeData? b,
+    double t,
+  ) {
+    return ToggleSwitchThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
+          b?.animationDuration ?? Duration.zero, t),
+      checkedThumbDecoration: ButtonState.lerp(a?.checkedThumbDecoration,
+          b?.checkedThumbDecoration, t, Decoration.lerp),
+      uncheckedThumbDecoration: ButtonState.lerp(a?.uncheckedThumbDecoration,
+          b?.uncheckedThumbDecoration, t, Decoration.lerp),
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(
+          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+    );
+  }
+
   ToggleSwitchThemeData copyWith(ToggleSwitchThemeData? style) {
     return ToggleSwitchThemeData(
       margin: style?.margin ?? margin,
@@ -297,19 +320,19 @@ class ToggleSwitchThemeData with Diagnosticable {
         .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
     properties.add(
         DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'checkedDecoration',
       checkedDecoration,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'uncheckedDecoration',
       uncheckedDecoration,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'checkedThumbDecoration',
       checkedThumbDecoration,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'uncheckedThumbDecoration',
       uncheckedThumbDecoration,
     ));

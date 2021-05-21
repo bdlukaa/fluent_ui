@@ -84,14 +84,14 @@ class RadioButton extends StatelessWidget {
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         final decoration = checked
-            ? style.checkedDecoration!.resolve(state)
-            : style.uncheckedDecoration!.resolve(state);
+            ? style.checkedDecoration?.resolve(state)
+            : style.uncheckedDecoration?.resolve(state);
         Widget child = AnimatedContainer(
           duration: FluentTheme.of(context).mediumAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
-          decoration: decoration.copyWith(color: Colors.transparent),
+          decoration: decoration?.copyWith(color: Colors.transparent),
 
           /// We need two boxes here because flutter draws the color
           /// behind the border, and it results in an weird effect. This
@@ -101,8 +101,8 @@ class RadioButton extends StatelessWidget {
             duration: FluentTheme.of(context).mediumAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
-              color: decoration.color ?? Colors.transparent,
-              shape: decoration.shape,
+              color: decoration?.color ?? Colors.transparent,
+              shape: decoration?.shape ?? BoxShape.circle,
             ),
           ),
         );
@@ -120,8 +120,8 @@ class RadioButton extends StatelessWidget {
 
 @immutable
 class RadioButtonThemeData with Diagnosticable {
-  final ButtonState<BoxDecoration>? checkedDecoration;
-  final ButtonState<BoxDecoration>? uncheckedDecoration;
+  final ButtonState<BoxDecoration?>? checkedDecoration;
+  final ButtonState<BoxDecoration?>? uncheckedDecoration;
 
   final ButtonState<MouseCursor>? cursor;
 
@@ -162,6 +162,17 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
+  static RadioButtonThemeData lerp(
+      RadioButtonThemeData? a, RadioButtonThemeData? b, double t) {
+    return RadioButtonThemeData(
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
+          b?.uncheckedDecoration, t, BoxDecoration.lerp),
+    );
+  }
+
   RadioButtonThemeData copyWith(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       cursor: style?.cursor ?? cursor,
@@ -173,16 +184,11 @@ class RadioButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
-    );
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
-      'checkedDecoration',
-      checkedDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
-      'uncheckedDecoration',
-      uncheckedDecoration,
-    ));
+    properties
+        .add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+        'checkedDecoration', checkedDecoration));
+    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+        'uncheckedDecoration', uncheckedDecoration));
   }
 }

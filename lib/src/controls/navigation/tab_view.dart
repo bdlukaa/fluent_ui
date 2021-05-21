@@ -164,12 +164,12 @@ class TabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final divider = SizedBox(
+    final divider = const SizedBox(
       height: _kTileHeight,
-      child: Divider(
+      child: const Divider(
         direction: Axis.vertical,
-        style: DividerThemeData(
-          margin: (_) => EdgeInsets.symmetric(vertical: 8),
+        style: const DividerThemeData(
+          verticalMargin: const EdgeInsets.symmetric(vertical: 8),
         ),
       ),
     );

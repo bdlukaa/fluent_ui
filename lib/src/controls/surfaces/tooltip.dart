@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -467,6 +468,26 @@ class TooltipThemeData with Diagnosticable {
           );
         }
       }(),
+    );
+  }
+
+  static TooltipThemeData lerp(
+    TooltipThemeData? a,
+    TooltipThemeData? b,
+    double t,
+  ) {
+    return TooltipThemeData(
+      decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
+      height: lerpDouble(a?.height, b?.height, t),
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      preferBelow: t < 0.5 ? a?.preferBelow : b?.preferBelow,
+      showDuration: lerpDuration(a?.showDuration ?? Duration.zero,
+          b?.showDuration ?? Duration.zero, t),
+      textStyle: TextStyle.lerp(a?.textStyle, b?.textStyle, t),
+      verticalOffset: lerpDouble(a?.verticalOffset, b?.verticalOffset, t),
+      waitDuration: lerpDuration(a?.waitDuration ?? Duration.zero,
+          b?.waitDuration ?? Duration.zero, t),
     );
   }
 

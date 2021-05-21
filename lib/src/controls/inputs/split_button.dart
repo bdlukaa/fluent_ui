@@ -1,5 +1,8 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'dart:ui' show lerpDouble;
+
 import 'package:flutter/foundation.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 /// A Split Button has two parts that can be invoked separately.
 /// One part behaves like a standard button and invokes an immediate action.
@@ -53,6 +56,7 @@ class SplitButtonBar extends StatelessWidget {
           data: ButtonThemeData(
             decoration: ButtonState.resolveWith((states) {
               return BoxDecoration(
+                // is the last index
                 borderRadius: (index == 0 || index == buttons.length - 1)
                     ? BorderRadius.horizontal(
                         left: index == 0 ? Radius.circular(2) : Radius.zero,
@@ -104,6 +108,19 @@ class SplitButtonThemeData with Diagnosticable {
       defaultButtonThemeData: style.buttonTheme.copyWith(ButtonThemeData(
         margin: EdgeInsets.zero,
       )),
+    );
+  }
+
+  static SplitButtonThemeData lerp(
+    SplitButtonThemeData? a,
+    SplitButtonThemeData? b,
+    double t,
+  ) {
+    return SplitButtonThemeData(
+      borderRadius: BorderRadius.lerp(a?.borderRadius, b?.borderRadius, t),
+      interval: lerpDouble(a?.interval, b?.interval, t),
+      defaultButtonThemeData: ButtonThemeData.lerp(
+          a?.defaultButtonThemeData, b?.defaultButtonThemeData, t),
     );
   }
 

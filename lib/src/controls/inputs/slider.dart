@@ -387,6 +387,26 @@ class SliderThemeData with Diagnosticable {
     return def;
   }
 
+  static SliderThemeData lerp(
+      SliderThemeData? a, SliderThemeData? b, double t) {
+    return SliderThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      thumbColor: Color.lerp(a?.thumbColor, b?.thumbColor, t),
+      activeColor: Color.lerp(a?.activeColor, b?.activeColor, t),
+      inactiveColor: Color.lerp(a?.inactiveColor, b?.inactiveColor, t),
+      disabledActiveColor:
+          Color.lerp(a?.disabledActiveColor, b?.disabledActiveColor, t),
+      disabledInactiveColor:
+          Color.lerp(a?.disabledInactiveColor, b?.disabledInactiveColor, t),
+      disabledThumbColor:
+          Color.lerp(a?.disabledThumbColor, b?.disabledThumbColor, t),
+      labelBackgroundColor:
+          Color.lerp(a?.labelBackgroundColor, b?.labelBackgroundColor, t),
+      useThumbBall: t < 0.5 ? a?.useThumbBall : b?.useThumbBall,
+    );
+  }
+
   SliderThemeData copyWith(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,

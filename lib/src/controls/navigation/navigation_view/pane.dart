@@ -201,20 +201,14 @@ class PaneItemSeparator extends NavigationPaneItem {
       style: DividerThemeData(
         thickness: thickness,
         decoration: color != null ? BoxDecoration(color: color) : null,
-        margin: (axis) {
-          switch (axis) {
-            case Axis.vertical:
-              return EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 10.0,
-              );
-            case Axis.horizontal:
-              return EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 10.0,
-              );
-          }
-        },
+        verticalMargin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 10.0,
+        ),
+        horizontalMargin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 10.0,
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -295,6 +297,34 @@ class ScrollbarThemeData with Diagnosticable {
       hoveringTrackBorderColor: Colors.transparent,
       animationDuration: style.fasterAnimationDuration,
       animationCurve: Curves.linear,
+    );
+  }
+
+  static ScrollbarThemeData lerp(
+      ScrollbarThemeData? a, ScrollbarThemeData? b, double t) {
+    return ScrollbarThemeData(
+      backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      scrollbarColor: Color.lerp(a?.scrollbarColor, b?.scrollbarColor, t),
+      scrollbarPressingColor:
+          Color.lerp(a?.scrollbarPressingColor, b?.scrollbarPressingColor, t),
+      thickness: lerpDouble(a?.thickness, b?.thickness, t),
+      hoveringThickness:
+          lerpDouble(a?.hoveringThickness, b?.hoveringThickness, t),
+      radius: Radius.lerp(a?.radius, b?.radius, t),
+      hoveringRadius: Radius.lerp(a?.hoveringRadius, b?.hoveringRadius, t),
+      crossAxisMargin: lerpDouble(a?.crossAxisMargin, b?.crossAxisMargin, t),
+      hoveringCrossAxisMargin:
+          lerpDouble(a?.hoveringCrossAxisMargin, b?.hoveringCrossAxisMargin, t),
+      mainAxisMargin: lerpDouble(a?.mainAxisMargin, b?.mainAxisMargin, t),
+      hoveringMainAxisMargin:
+          lerpDouble(a?.hoveringMainAxisMargin, b?.hoveringMainAxisMargin, t),
+      minThumbLength: lerpDouble(a?.minThumbLength, b?.minThumbLength, t),
+      trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
+      hoveringTrackBorderColor: Color.lerp(
+          a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
+          b?.animationDuration ?? Duration.zero, t),
     );
   }
 

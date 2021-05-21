@@ -166,7 +166,8 @@ class _TimePickerState extends State<TimePicker> {
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
-            margin: (_) => EdgeInsets.zero,
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
@@ -289,7 +290,10 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(
+        verticalMargin: EdgeInsets.zero,
+        horizontalMargin: EdgeInsets.zero,
+      ),
     );
     final duration = FluentTheme.of(context).fasterAnimationDuration;
     final curve = FluentTheme.of(context).animationCurve;
@@ -309,7 +313,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: FluentTheme.of(context).accentColor.resolveFrom(context),
+                  tileColor:
+                      FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),
@@ -492,7 +497,12 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             ]),
           ]),
         ),
-        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
+        Divider(
+          style: DividerThemeData(
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
+          ),
+        ),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);
