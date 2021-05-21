@@ -12,16 +12,16 @@ const kPopupHeight = kOneLineTileHeight * 10;
 
 BoxDecoration kPickerBackgroundDecoration(BuildContext context) =>
     BoxDecoration(
-      color: context.theme.acrylicBackgroundColor,
+      color: FluentTheme.of(context).acrylicBackgroundColor,
       borderRadius: BorderRadius.circular(4.0),
       border: Border.all(
-        color: context.theme.scaffoldBackgroundColor,
+        color: FluentTheme.of(context).scaffoldBackgroundColor,
         width: 0.6,
       ),
     );
 
 TextStyle? kPickerPopupTextStyle(BuildContext context) {
-  return context.theme.typography.body?.copyWith(fontSize: 16);
+  return FluentTheme.of(context).typography.body?.copyWith(fontSize: 16);
 }
 
 Decoration kPickerDecorationBuilder(
@@ -33,11 +33,11 @@ Decoration kPickerDecorationBuilder(
       color: () {
         late Color color;
         if (states.isHovering) {
-          color = context.theme.inactiveColor;
+          color = FluentTheme.of(context).inactiveColor;
         } else if (states.isDisabled) {
-          color = context.theme.disabledColor;
+          color = FluentTheme.of(context).disabledColor;
         } else {
-          color = context.theme.inactiveColor.withOpacity(0.75);
+          color = FluentTheme.of(context).inactiveColor.withOpacity(0.75);
         }
         return color;
       }(),
@@ -45,9 +45,9 @@ Decoration kPickerDecorationBuilder(
     ),
     color: () {
       if (states.isPressing)
-        return context.theme.disabledColor.withOpacity(0.2);
+        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
       else if (states.isFocused) {
-        return context.theme.disabledColor.withOpacity(0.2);
+        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
       }
     }(),
   );
@@ -71,39 +71,42 @@ class YesNoPickerControl extends StatelessWidget {
       return ButtonThemeData(
         margin: EdgeInsets.zero,
         decoration: (state) => BoxDecoration(
-          color: ButtonThemeData.uncheckedInputColor(context.theme, state),
+          color: ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), state),
           borderRadius: radius,
         ),
         scaleFactor: 1.0,
       );
     }
 
-    return Row(children: [
-      Expanded(
-        child: SizedBox(
-          height: kOneLineTileHeight,
-          child: Button(
-            child: Icon(Icons.check),
-            onPressed: onChanged,
-            style: style(BorderRadius.only(
-              bottomLeft: Radius.circular(4.0),
-            )),
+    return FocusTheme(
+      data: FocusThemeData(renderOutside: false),
+      child: Row(children: [
+        Expanded(
+          child: SizedBox(
+            height: kOneLineTileHeight,
+            child: Button(
+              child: Icon(Icons.check),
+              onPressed: onChanged,
+              style: style(BorderRadius.only(
+                bottomLeft: Radius.circular(4.0),
+              )),
+            ),
           ),
         ),
-      ),
-      Expanded(
-        child: SizedBox(
-          height: kOneLineTileHeight,
-          child: Button(
-            child: Icon(Icons.close),
-            onPressed: onCancel,
-            style: style(BorderRadius.only(
-              bottomRight: Radius.circular(4.0),
-            )),
+        Expanded(
+          child: SizedBox(
+            height: kOneLineTileHeight,
+            child: Button(
+              child: Icon(Icons.close),
+              onPressed: onCancel,
+              style: style(BorderRadius.only(
+                bottomRight: Radius.circular(4.0),
+              )),
+            ),
           ),
         ),
-      ),
-    ]);
+      ]),
+    );
   }
 }
 
@@ -122,47 +125,45 @@ class PickerNavigatorIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ButtonThemeData(
-      padding: EdgeInsets.all(2.0),
-      margin: EdgeInsets.zero,
-      scaleFactor: 1.0,
-      decoration: (state) {
-        return BoxDecoration(
-          borderRadius: BorderRadius.circular(4.0),
-          color: ButtonThemeData.buttonColor(context.theme, state),
-        );
-      },
-    );
     return HoverButton(
       onPressed: () {},
       builder: (context, state) {
-        final isHovering =
-            state.isHovering || state.isPressing || state.isFocused;
-        return Stack(children: [
-          child,
-          if (isHovering)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Button(
-                child: Center(child: Icon(Icons.keyboard_arrow_up, size: 14)),
-                onPressed: onBackward,
-                style: style,
-              ),
-            ),
-          if (isHovering)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Button(
-                child: Center(child: Icon(Icons.keyboard_arrow_down, size: 14)),
-                onPressed: onForward,
-                style: style,
-              ),
-            ),
-        ]);
+        final show = state.isHovering || state.isPressing || state.isFocused;
+        return ButtonTheme(
+          data: ButtonThemeData(
+            padding: const EdgeInsets.all(2.0),
+            margin: EdgeInsets.zero,
+            scaleFactor: 1.0,
+          ),
+          child: FocusTheme(
+            data: FocusThemeData(renderOutside: false),
+            child: Stack(children: [
+              child,
+              if (show)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Button(
+                    child:
+                        Center(child: Icon(Icons.keyboard_arrow_up, size: 14)),
+                    onPressed: onBackward,
+                  ),
+                ),
+              if (show)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Button(
+                    child: Center(
+                        child: Icon(Icons.keyboard_arrow_down, size: 14)),
+                    onPressed: onForward,
+                  ),
+                ),
+            ]),
+          ),
+        );
       },
     );
   }
@@ -175,8 +176,8 @@ void navigateSides(
   int amount,
 ) {
   assert(debugCheckHasFluentTheme(context));
-  final duration = context.theme.fasterAnimationDuration;
-  final curve = context.theme.animationCurve;
+  final duration = FluentTheme.of(context).fasterAnimationDuration;
+  final curve = FluentTheme.of(context).animationCurve;
   if (forward) {
     final currentItem = controller.selectedItem;
     int to = currentItem + 1;

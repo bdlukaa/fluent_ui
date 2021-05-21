@@ -41,7 +41,7 @@ class InfoLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final labelWidget = Text(
       label,
-      style: labelStyle ?? context.maybeTheme?.typography.body,
+      style: labelStyle ?? FluentTheme.maybeOf(context)?.typography.body,
     );
     return Flex(
       direction: isHeader ? Axis.vertical : Axis.horizontal,

@@ -42,8 +42,8 @@ class SplitButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SplitButtonThemeData.standard(context.theme).copyWith(
-      context.theme.splitButtonTheme.copyWith(this.style),
+    final style = SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).splitButtonTheme.copyWith(this.style),
     );
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -59,7 +59,7 @@ class SplitButtonBar extends StatelessWidget {
                           : Radius.zero,
                     )
                   : null,
-              color: ButtonThemeData.buttonColor(context.theme, state),
+              color: ButtonThemeData.buttonColor(FluentTheme.of(context), state),
             ),
             margin: EdgeInsets.zero,
           ),

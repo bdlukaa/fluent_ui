@@ -62,7 +62,7 @@ class ListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return Container(
       decoration: ShapeDecoration(
         shape: shape ?? ContinuousRectangleBorder(),
@@ -155,7 +155,7 @@ class TappableListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return HoverButton(
       cursor: style.inputMouseCursor,
       onPressed: onTap,

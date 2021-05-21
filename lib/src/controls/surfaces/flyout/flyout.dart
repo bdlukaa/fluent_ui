@@ -97,11 +97,11 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final defaultDecoration = BoxDecoration(
-      color: context.theme.acrylicBackgroundColor
+      color: FluentTheme.of(context).acrylicBackgroundColor
           .withOpacity(kDefaultAcrylicOpacity),
       borderRadius: BorderRadius.circular(4.0),
       border: Border.all(
-        color: context.theme.inactiveBackgroundColor,
+        color: FluentTheme.of(context).inactiveBackgroundColor,
         width: 0.9,
       ),
     );
@@ -111,7 +111,7 @@ class FlyoutContent extends StatelessWidget {
       decoration: decoration ?? defaultDecoration,
       padding: padding,
       child: DefaultTextStyle(
-        style: context.theme.typography.body ?? TextStyle(),
+        style: FluentTheme.of(context).typography.body ?? TextStyle(),
         child: child,
       ),
     );

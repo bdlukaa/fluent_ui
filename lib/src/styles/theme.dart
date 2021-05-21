@@ -53,11 +53,6 @@ class _FluentTheme extends InheritedWidget {
       oldWidget.data != data;
 }
 
-extension themeContext on BuildContext {
-  ThemeData get theme => FluentTheme.of(this);
-  ThemeData? get maybeTheme => FluentTheme.maybeOf(this);
-}
-
 extension brightnessExtension on Brightness {
   bool get isLight => this == Brightness.light;
   bool get isDark => this == Brightness.dark;

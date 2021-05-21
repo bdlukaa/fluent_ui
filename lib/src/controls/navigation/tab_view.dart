@@ -146,8 +146,8 @@ class TabView extends StatelessWidget {
           reorderIndex: isReorderEnabled ? index : null,
           selected: index == currentIndex,
           onPressed: onChanged == null ? null : () => onChanged!(index),
-          animationDuration: context.theme.fastAnimationDuration,
-          animationCurve: context.theme.animationCurve,
+          animationDuration: FluentTheme.of(context).fastAnimationDuration,
+          animationCurve: FluentTheme.of(context).animationCurve,
         ),
       ),
       if (![currentIndex - 1, currentIndex].contains(index)) divider,
@@ -155,8 +155,8 @@ class TabView extends StatelessWidget {
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
       width: preferredTabWidth,
-      duration: context.theme.fastAnimationDuration,
-      curve: context.theme.animationCurve,
+      duration: FluentTheme.of(context).fastAnimationDuration,
+      curve: FluentTheme.of(context).animationCurve,
       child: child,
     );
   }
@@ -232,9 +232,9 @@ class TabView extends StatelessWidget {
                     return IconThemeData(
                       color: () {
                         if (state.isDisabled || state.isNone)
-                          return context.theme.disabledColor;
+                          return FluentTheme.of(context).disabledColor;
                         else
-                          return context.theme.inactiveColor;
+                          return FluentTheme.of(context).inactiveColor;
                       }(),
                     );
                   },
@@ -406,14 +406,14 @@ class __TabState extends State<_Tab>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
       cursor: widget.selected ? (_) => SystemMouseCursors.basic : null,
       onPressed: widget.onPressed,
       builder: (context, state) {
-        final primaryBorder = context.theme.focusTheme.primaryBorder;
+        final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
         Widget child = Container(
           height: _kTileHeight,
           constraints: BoxConstraints(
@@ -461,9 +461,9 @@ class __TabState extends State<_Tab>
                           size: 18,
                           color: () {
                             if (state.isDisabled || state.isNone)
-                              return context.theme.disabledColor;
+                              return FluentTheme.of(context).disabledColor;
                             else
-                              return context.theme.inactiveColor;
+                              return FluentTheme.of(context).inactiveColor;
                           }(),
                         );
                       },

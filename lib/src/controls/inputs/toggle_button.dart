@@ -62,8 +62,8 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleButtonThemeData.standard(context.theme).copyWith(
-      context.theme.toggleButtonTheme.copyWith(this.style),
+    final style = ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).toggleButtonTheme.copyWith(this.style),
     );
     return Button(
       autofocus: autofocus,

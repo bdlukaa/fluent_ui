@@ -201,8 +201,8 @@ class _DatePickerState extends State<DatePicker> {
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -350,7 +350,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.resolveFrom(context),
+                  tileColor: FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),

@@ -146,8 +146,8 @@ class _SliderState extends m.State<Slider> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SliderThemeData.standard(context.theme).copyWith(
-      context.theme.sliderTheme.copyWith(widget.style),
+    final style = SliderThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).sliderTheme.copyWith(widget.style),
     );
     Widget child = Padding(
       padding: style.margin ?? EdgeInsets.zero,

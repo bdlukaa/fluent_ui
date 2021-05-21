@@ -611,19 +611,19 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: context.theme.inactiveColor,
+      color: FluentTheme.of(context).inactiveColor,
     );
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: context.theme.disabledColor,
+          color: FluentTheme.of(context).disabledColor,
           fontWeight: FontWeight.w400,
         );
 
     final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? context.theme.brightness;
-    final Color cursorColor = context.theme.inactiveColor;
-    final Color? disabledColor = context.theme.disabledColor;
+        widget.keyboardAppearance ?? FluentTheme.of(context).brightness;
+    final Color cursorColor = FluentTheme.of(context).inactiveColor;
+    final Color? disabledColor = FluentTheme.of(context).disabledColor;
 
     final Color? decorationColor = widget.decoration.color;
 
@@ -637,8 +637,8 @@ class _TextBoxState extends State<TextBox>
                 style: enabled ? BorderStyle.solid : BorderStyle.none,
                 width: (showActiveBorder ? 1 : null),
                 color: (showActiveBorder
-                    ? context.theme.accentColor
-                    : context.theme.inactiveColor),
+                    ? FluentTheme.of(context).accentColor
+                    : FluentTheme.of(context).inactiveColor),
               );
       }
 
@@ -657,7 +657,7 @@ class _TextBoxState extends State<TextBox>
       color: enabled ? decorationColor : (decorationColor ?? disabledColor),
     );
 
-    final Color selectionColor = context.theme.accentColor.withOpacity(0.2);
+    final Color selectionColor = FluentTheme.of(context).accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -703,7 +703,7 @@ class _TextBoxState extends State<TextBox>
             cursorOffset: cursorOffset,
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
-            backgroundCursorColor: context.theme.disabledColor,
+            backgroundCursorColor: FluentTheme.of(context).disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -733,12 +733,10 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme.mediumAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           decoration: effectiveDecoration,
-          constraints: BoxConstraints(
-            minHeight: widget.minHeight ?? 0,
-          ),
+          constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
           child: _selectionGestureDetectorBuilder.buildGestureDetector(
             behavior: HitTestBehavior.translucent,
             child: Align(

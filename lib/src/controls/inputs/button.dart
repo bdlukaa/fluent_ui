@@ -159,8 +159,8 @@ class _ButtonState extends State<Button> {
     }
     assert(debugCheckHasFluentTheme(context));
     final style = ButtonTheme.of(context).copyWith(widget.style);
-    // final style = ButtonThemeData.standard(context.theme).copyWith(
-    //   context.theme.buttonTheme.copyWith(widget.style),
+    // final style = ButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    //   FluentTheme.of(context).buttonTheme.copyWith(widget.style),
     // );
     return HoverButton(
       semanticLabel: widget.semanticLabel,

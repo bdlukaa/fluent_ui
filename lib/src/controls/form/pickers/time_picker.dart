@@ -171,8 +171,8 @@ class _TimePickerState extends State<TimePicker> {
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -291,8 +291,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
       direction: Axis.vertical,
       style: DividerThemeData(margin: (_) => EdgeInsets.zero),
     );
-    final duration = context.theme.fasterAnimationDuration;
-    final curve = context.theme.animationCurve;
+    final duration = FluentTheme.of(context).fasterAnimationDuration;
+    final curve = FluentTheme.of(context).animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
     return Acrylic(
       height: widget.height,
@@ -309,7 +309,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.resolveFrom(context),
+                  tileColor: FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),

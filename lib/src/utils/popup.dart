@@ -47,7 +47,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       elevation: 4,
       capturedThemes:
           InheritedTheme.capture(from: context, to: navigator.context),
-      transitionAnimationDuration: context.theme.mediumAnimationDuration,
+      transitionAnimationDuration: FluentTheme.of(context).mediumAnimationDuration,
       verticalOffset: widget.verticalOffset,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
     );

@@ -194,7 +194,7 @@ class _HoverButtonState extends State<HoverButton> {
     );
     w = FocusableActionDetector(
       mouseCursor: widget.cursor?.call(states) ??
-          context.maybeTheme?.inputMouseCursor.call(states) ??
+          FluentTheme.maybeOf(context)?.inputMouseCursor.call(states) ??
           MouseCursor.defer,
       focusNode: node,
       autofocus: widget.autofocus,

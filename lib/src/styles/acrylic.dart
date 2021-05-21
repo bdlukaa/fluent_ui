@@ -105,7 +105,7 @@ class Acrylic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     final color = AccentColor.resolve(
       this.color ?? style.acrylicBackgroundColor,
       context,
@@ -148,7 +148,7 @@ class Acrylic extends StatelessWidget {
         duration: animationDuration,
         curve: animationCurve,
         color: Colors.transparent,
-        shadowColor: shadowColor ?? context.theme.shadowColor,
+        shadowColor: shadowColor ?? FluentTheme.of(context).shadowColor,
         shape: BoxShape.rectangle,
         borderRadius: () {
           final radius = decoration?.borderRadius;

@@ -81,8 +81,8 @@ class Checkbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = CheckboxThemeData.standard(context.theme).copyWith(
-      context.theme.checkboxTheme.copyWith(this.style),
+    final style = CheckboxThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).checkboxTheme.copyWith(this.style),
     );
     final double size = 22;
     return HoverButton(

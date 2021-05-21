@@ -133,13 +133,13 @@ class _InputsPageState extends State<InputsPage> {
                         actions: [
                           Button(
                             child: Text('Delete'),
-                            autofocus: true,
                             onPressed: () {
                               // Delete file here
                             },
                           ),
                           Button(
                             child: Text('Cancel'),
+                            autofocus: true,
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -161,7 +161,7 @@ class _InputsPageState extends State<InputsPage> {
                     child: Container(
                       color: states.isDisabled
                           ? FluentTheme.of(context).accentColor.darker
-                          : context.theme.accentColor,
+                          : FluentTheme.of(context).accentColor,
                       height: 24,
                       width: 24,
                     ),

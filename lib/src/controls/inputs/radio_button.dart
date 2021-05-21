@@ -72,8 +72,8 @@ class RadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = RadioButtonThemeData.standard(context.theme).copyWith(
-      context.theme.radioButtonTheme.copyWith(this.style),
+    final style = RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).radioButtonTheme.copyWith(this.style),
     );
     return HoverButton(
       cursor: style.cursor,

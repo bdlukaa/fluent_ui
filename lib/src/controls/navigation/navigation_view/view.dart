@@ -395,14 +395,14 @@ class NavigationAppBar with Diagnosticable {
               if (state.isDisabled) state = [];
               return BoxDecoration(
                 color:
-                    ButtonThemeData.uncheckedInputColor(context.theme, state),
+                    ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), state),
               );
             },
           ),
           iconTheme: (state) {
             return IconThemeData(
               size: 22.0,
-              color: ButtonThemeData.buttonColor(context.theme, state),
+              color: ButtonThemeData.buttonColor(FluentTheme.of(context), state),
             );
           },
         ),

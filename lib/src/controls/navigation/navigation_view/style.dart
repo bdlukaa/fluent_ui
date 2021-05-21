@@ -47,8 +47,8 @@ class NavigationPaneThemeData with Diagnosticable {
   });
 
   static NavigationPaneThemeData of(BuildContext context) {
-    return NavigationPaneThemeData.standard(context.theme).copyWith(
-      context.theme.navigationPaneTheme,
+    return NavigationPaneThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).navigationPaneTheme,
     );
   }
 

@@ -107,8 +107,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleSwitchThemeData.standard(context.theme).copyWith(
-      context.theme.toggleSwitchTheme.copyWith(this.widget.style),
+    final style = ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).toggleSwitchTheme.copyWith(this.widget.style),
     );
     final sliderGestureWidth = 45.0 + (style.padding?.horizontal ?? 0.0);
     return HoverButton(

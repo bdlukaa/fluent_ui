@@ -65,8 +65,8 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(context.theme).copyWith(
-      context.theme.dialogTheme.copyWith(this.style),
+    final style = ContentDialogThemeData.standard(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).dialogTheme.copyWith(this.style),
     );
     return PhysicalModel(
       color: style.elevationColor ?? Colors.black,
@@ -158,7 +158,7 @@ Future<T?> showDialog<T extends Object?>({
     settings: routeSettings,
     transitionBuilder: transitionBuilder,
     transitionDuration: transitionDuration ??
-        context.maybeTheme?.fastAnimationDuration ??
+        FluentTheme.maybeOf(context)?.fastAnimationDuration ??
         Duration(milliseconds: 300),
   ));
 }
