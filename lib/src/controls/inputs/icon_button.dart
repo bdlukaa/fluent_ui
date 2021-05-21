@@ -2,8 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef IconThemeButtonStateBuilder = IconThemeData Function(
-    List<ButtonStates>);
+typedef IconThemeButtonStateBuilder = IconThemeData Function(Set<ButtonStates>);
 
 class IconButton extends StatelessWidget {
   const IconButton({
@@ -78,7 +77,7 @@ class IconButton extends StatelessWidget {
       onLongPress: onLongPress,
       semanticLabel: semanticLabel,
       style: ButtonThemeData(
-        decoration: (states) {
+        decoration: ButtonState.resolveWith((states) {
           return BoxDecoration(
             borderRadius: BorderRadius.circular(2),
             color: states.isDisabled
@@ -88,7 +87,7 @@ class IconButton extends StatelessWidget {
                     states,
                   ),
           );
-        },
+        }),
         padding: const EdgeInsets.all(4),
       ).copyWith(style),
     );

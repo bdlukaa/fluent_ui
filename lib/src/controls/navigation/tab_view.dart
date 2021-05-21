@@ -410,7 +410,7 @@ class __TabState extends State<_Tab>
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
-      cursor: widget.selected ? (_) => SystemMouseCursors.basic : null,
+      cursor: widget.selected ? ButtonState.all(MouseCursor.defer) : null,
       onPressed: widget.onPressed,
       builder: (context, state) {
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
@@ -468,7 +468,7 @@ class __TabState extends State<_Tab>
                         );
                       },
                       style: ButtonThemeData(
-                        decoration: (state) {
+                        decoration: ButtonState.resolveWith((states) {
                           late Color? color;
                           if (state.isNone)
                             color = null;
@@ -479,7 +479,7 @@ class __TabState extends State<_Tab>
                             border: Border.all(style: BorderStyle.none),
                             color: color,
                           );
-                        },
+                        }),
                         margin: EdgeInsets.zero,
                         padding: EdgeInsets.zero,
                       ),

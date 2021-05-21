@@ -96,6 +96,18 @@ class Typography with Diagnosticable {
     );
   }
 
+  static Typography lerp(Typography? a, Typography? b, double t) {
+    return Typography(
+      header: TextStyle.lerp(a?.header, b?.header, t),
+      subheader: TextStyle.lerp(a?.subheader, b?.subheader, t),
+      title: TextStyle.lerp(a?.title, b?.title, t),
+      subtitle: TextStyle.lerp(a?.subtitle, b?.subtitle, t),
+      base: TextStyle.lerp(a?.base, b?.base, t),
+      body: TextStyle.lerp(a?.body, b?.body, t),
+      caption: TextStyle.lerp(a?.caption, b?.caption, t),
+    );
+  }
+
   /// Copy this with a new [typography]
   Typography copyWith(Typography? typography) {
     if (typography == null) return this;

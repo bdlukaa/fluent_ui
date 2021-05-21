@@ -42,7 +42,8 @@ class SplitButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    final style =
+        SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
       FluentTheme.of(context).splitButtonTheme.copyWith(this.style),
     );
     return Row(
@@ -50,17 +51,22 @@ class SplitButtonBar extends StatelessWidget {
       children: List.generate(buttons.length, (index) {
         final button = ButtonTheme(
           data: ButtonThemeData(
-            decoration: (state) => BoxDecoration(
-              borderRadius: (index == 0 || index == buttons.length - 1)
-                  ? BorderRadius.horizontal(
-                      left: index == 0 ? Radius.circular(2) : Radius.zero,
-                      right: index == buttons.length - 1
-                          ? Radius.circular(2)
-                          : Radius.zero,
-                    )
-                  : null,
-              color: ButtonThemeData.buttonColor(FluentTheme.of(context), state),
-            ),
+            decoration: ButtonState.resolveWith((states) {
+              return BoxDecoration(
+                borderRadius: (index == 0 || index == buttons.length - 1)
+                    ? BorderRadius.horizontal(
+                        left: index == 0 ? Radius.circular(2) : Radius.zero,
+                        right: index == buttons.length - 1
+                            ? Radius.circular(2)
+                            : Radius.zero,
+                      )
+                    : null,
+                color: ButtonThemeData.buttonColor(
+                  FluentTheme.of(context),
+                  states,
+                ),
+              );
+            }),
             margin: EdgeInsets.zero,
           ),
           child: FocusTheme(

@@ -180,7 +180,7 @@ class _DatePickerState extends State<DatePicker> {
     Widget picker = HoverButton(
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      cursor: (_) => widget.cursor,
+      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _monthController?.dispose();
@@ -192,7 +192,7 @@ class _DatePickerState extends State<DatePicker> {
         initControllers();
       },
       builder: (context, state) {
-        if (state.isDisabled) state = <ButtonStates>[];
+        if (state.isDisabled) state = <ButtonStates>{};
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(

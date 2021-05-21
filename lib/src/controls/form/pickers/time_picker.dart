@@ -151,7 +151,7 @@ class _TimePickerState extends State<TimePicker> {
     Widget picker = HoverButton(
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      cursor: (_) => widget.cursor,
+      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _hourController?.dispose();

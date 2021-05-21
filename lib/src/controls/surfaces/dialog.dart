@@ -65,7 +65,8 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(FluentTheme.of(context)).copyWith(
+    final style =
+        ContentDialogThemeData.standard(FluentTheme.of(context)).copyWith(
       FluentTheme.of(context).dialogTheme.copyWith(this.style),
     );
     return PhysicalModel(
@@ -257,9 +258,11 @@ class ContentDialogThemeData {
       bodyStyle: style.typography.body,
       actionThemeData: ButtonThemeData(
         margin: EdgeInsets.zero,
-        decoration: (state) => BoxDecoration(
-          color: ButtonThemeData.buttonColor(style, state),
-        ),
+        decoration: ButtonState.resolveWith((states) {
+          return BoxDecoration(
+            color: ButtonThemeData.buttonColor(style, states),
+          );
+        }),
       ),
       elevation: 8,
       elevationColor: Colors.black,

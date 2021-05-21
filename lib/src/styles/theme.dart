@@ -213,12 +213,12 @@ class ThemeData with Diagnosticable {
     }).resolveFromBrightness(brightness);
     typography =
         Typography.standart(brightness: brightness).copyWith(typography);
-    inputMouseCursor ??= (state) {
-      if (state.isHovering || state.isPressing)
+    inputMouseCursor ??= ButtonState.resolveWith((states) {
+      if (states.isHovering || states.isPressing)
         return SystemMouseCursors.click;
       else
         return MouseCursor.defer;
-    };
+    });
     focusTheme = FocusThemeData.standard(
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
@@ -274,6 +274,49 @@ class ThemeData with Diagnosticable {
       tooltipTheme: tooltipTheme,
       typography: typography,
       inputMouseCursor: inputMouseCursor,
+    );
+  }
+
+  static ThemeData lerp(ThemeData a, ThemeData b, double t) {
+    return ThemeData.raw(
+      brightness: t < 0.5 ? a.brightness : b.brightness,
+      accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
+      typography: Typography.lerp(a.typography, b.typography, t),
+      activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
+      inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
+      inactiveBackgroundColor:
+          Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
+      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
+      scaffoldBackgroundColor:
+          Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
+      acrylicBackgroundColor:
+          Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
+      shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
+      fasterAnimationDuration:
+          lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
+      fastAnimationDuration:
+          lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
+      mediumAnimationDuration:
+          lerpDuration(a.mediumAnimationDuration, b.mediumAnimationDuration, t),
+      slowAnimationDuration:
+          lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
+      animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+      inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
+      buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
+      checkboxTheme: CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      toggleSwitchTheme: a.toggleSwitchTheme,
+      iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
+      splitButtonTheme: a.splitButtonTheme,
+      dialogTheme: a.dialogTheme,
+      tooltipTheme: a.tooltipTheme,
+      dividerTheme: a.dividerTheme,
+      navigationPaneTheme: a.navigationPaneTheme,
+      radioButtonTheme: a.radioButtonTheme,
+      toggleButtonTheme: a.toggleButtonTheme,
+      sliderTheme: a.sliderTheme,
+      infoBarTheme: a.infoBarTheme,
+      focusTheme: a.focusTheme,
+      scrollbarTheme: a.scrollbarTheme,
     );
   }
 

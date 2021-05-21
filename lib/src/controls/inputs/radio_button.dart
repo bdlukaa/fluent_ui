@@ -72,7 +72,8 @@ class RadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    final style =
+        RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
       FluentTheme.of(context).radioButtonTheme.copyWith(this.style),
     );
     return HoverButton(
@@ -83,8 +84,8 @@ class RadioButton extends StatelessWidget {
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         final decoration = checked
-            ? style.checkedDecoration!(state)
-            : style.uncheckedDecoration!(state);
+            ? style.checkedDecoration!.resolve(state)
+            : style.uncheckedDecoration!.resolve(state);
         Widget child = AnimatedContainer(
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
@@ -140,26 +141,30 @@ class RadioButtonThemeData with Diagnosticable {
       cursor: style.inputMouseCursor,
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
-      checkedDecoration: (state) => BoxDecoration(
-        border: Border.all(
-          color: ButtonThemeData.checkedInputColor(style, state),
-          width: 4.5,
+      checkedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          border: Border.all(
+            color: ButtonThemeData.checkedInputColor(style, states),
+            width: 4.5,
+          ),
+          shape: BoxShape.circle,
+          color: Colors.white,
         ),
-        shape: BoxShape.circle,
-        color: Colors.white,
       ),
-      uncheckedDecoration: (state) => BoxDecoration(
-        color: ButtonThemeData.uncheckedInputColor(style, state),
-        border: Border.all(
-          style: state.isNone || state.isFocused
-              ? BorderStyle.solid
-              : BorderStyle.none,
-          width: 1,
-          color: state.isNone || state.isFocused
-              ? style.disabledColor
-              : ButtonThemeData.uncheckedInputColor(style, state),
+      uncheckedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          color: ButtonThemeData.uncheckedInputColor(style, states),
+          border: Border.all(
+            style: states.isNone || states.isFocused
+                ? BorderStyle.solid
+                : BorderStyle.none,
+            width: 1,
+            color: states.isNone || states.isFocused
+                ? style.disabledColor
+                : ButtonThemeData.uncheckedInputColor(style, states),
+          ),
+          shape: BoxShape.circle,
         ),
-        shape: BoxShape.circle,
       ),
     );
   }

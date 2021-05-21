@@ -61,19 +61,24 @@ class NavigationPaneThemeData with Diagnosticable {
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
       backgroundColor: style.acrylicBackgroundColor,
-      tileColor: (state) => ButtonThemeData.uncheckedInputColor(style, state),
+      tileColor: ButtonState.resolveWith((states) {
+        return ButtonThemeData.uncheckedInputColor(style, states);
+      }),
       highlightColor: style.accentColor,
       itemHeaderTextStyle: style.typography.base,
-      selectedTextStyle: (state) => state.isDisabled
-          ? disabledTextStyle
-          : style.typography.body!.copyWith(color: style.accentColor),
-      unselectedTextStyle: (state) =>
-          state.isDisabled ? disabledTextStyle : style.typography.body!,
+      selectedTextStyle: ButtonState.resolveWith((states) {
+        return states.isDisabled
+            ? disabledTextStyle
+            : style.typography.body!.copyWith(color: style.accentColor);
+      }),
+      unselectedTextStyle: ButtonState.resolveWith((states) {
+        return states.isDisabled ? disabledTextStyle : style.typography.body!;
+      }),
       cursor: style.inputMouseCursor,
       labelPadding: EdgeInsets.only(right: 10.0),
       iconPadding: EdgeInsets.symmetric(horizontal: 12.0),
-      selectedIconColor: (_) => style.accentColor,
-      unselectedIconColor: (_) => style.inactiveColor,
+      selectedIconColor: ButtonState.all(style.accentColor),
+      unselectedIconColor: ButtonState.all(style.inactiveColor),
     );
   }
 

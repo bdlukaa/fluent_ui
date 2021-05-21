@@ -107,7 +107,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
+    final style =
+        ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
       FluentTheme.of(context).toggleSwitchTheme.copyWith(this.widget.style),
     );
     final sliderGestureWidth = 45.0 + (style.padding?.horizontal ?? 0.0);
@@ -147,8 +148,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
           decoration: widget.checked
-              ? style.checkedDecoration?.call(states)
-              : style.uncheckedDecoration?.call(states),
+              ? style.checkedDecoration?.resolve(states)
+              : style.uncheckedDecoration?.resolve(states),
           child: widget.thumb ??
               DefaultToggleSwitchThumb(
                 checked: widget.checked,
@@ -178,7 +179,7 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
   final bool checked;
   final ToggleSwitchThemeData? style;
-  final List<ButtonStates> states;
+  final Set<ButtonStates> states;
 
   @override
   Widget build(BuildContext context) {
@@ -192,8 +193,8 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
         maxWidth: 12,
       ),
       decoration: checked
-          ? style?.checkedThumbDecoration?.call(states)
-          : style?.uncheckedThumbDecoration?.call(states),
+          ? style?.checkedThumbDecoration?.resolve(states)
+          : style?.uncheckedThumbDecoration?.resolve(states),
     );
   }
 }
@@ -235,34 +236,34 @@ class ToggleSwitchThemeData with Diagnosticable {
 
     return ToggleSwitchThemeData(
       cursor: style.inputMouseCursor,
-      checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: ButtonThemeData.checkedInputColor(style, state),
-        border: Border.all(style: BorderStyle.none),
-      ),
-      uncheckedDecoration: (state) {
+      checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonThemeData.uncheckedInputColor(style, state),
+          color: ButtonThemeData.checkedInputColor(style, states),
+          border: Border.all(style: BorderStyle.none),
+        );
+      }),
+      uncheckedDecoration: ButtonState.resolveWith((states) {
+        return defaultDecoration.copyWith(
+          color: ButtonThemeData.uncheckedInputColor(style, states),
           border: Border.all(
             width: 0.8,
-            color: state.isNone || state.isFocused
+            color: states.isNone || states.isFocused
                 ? style.inactiveColor
-                : ButtonThemeData.uncheckedInputColor(style, state),
+                : ButtonThemeData.uncheckedInputColor(style, states),
           ),
         );
-      },
-      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
-      margin: EdgeInsets.all(4),
+      }),
+      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
+      margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      checkedThumbDecoration: (_) => defaultThumbDecoration.copyWith(color: () {
-        if (style.brightness == Brightness.light)
-          return style.activeColor;
-        else
-          return style.inactiveColor;
-      }()),
-      uncheckedThumbDecoration: (_) => defaultThumbDecoration.copyWith(
+      checkedThumbDecoration: ButtonState.all(defaultThumbDecoration.copyWith(
+        color:
+            style.brightness.isLight ? style.activeColor : style.inactiveColor,
+      )),
+      uncheckedThumbDecoration: ButtonState.all(defaultThumbDecoration.copyWith(
         color: style.inactiveColor,
-      ),
+      )),
     );
   }
 

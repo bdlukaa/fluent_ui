@@ -391,18 +391,21 @@ class NavigationAppBar with Diagnosticable {
           style: ButtonThemeData(
             margin: EdgeInsets.zero,
             scaleFactor: 1.0,
-            decoration: (state) {
-              if (state.isDisabled) state = [];
+            decoration: ButtonState.resolveWith((states) {
+              if (states.isDisabled) states = {};
               return BoxDecoration(
-                color:
-                    ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), state),
+                color: ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  states,
+                ),
               );
-            },
+            }),
           ),
           iconTheme: (state) {
             return IconThemeData(
               size: 22.0,
-              color: ButtonThemeData.buttonColor(FluentTheme.of(context), state),
+              color:
+                  ButtonThemeData.buttonColor(FluentTheme.of(context), state),
             );
           },
         ),

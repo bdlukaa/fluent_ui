@@ -1385,8 +1385,8 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
             return Container(
               decoration: kPickerDecorationBuilder(context, () {
                 if (_showHighlight)
-                  return [ButtonStates.focused];
-                else if (states.isFocused) return <ButtonStates>[];
+                  return {ButtonStates.focused};
+                else if (states.isFocused) return <ButtonStates>{};
                 return states;
               }()),
               child: result,

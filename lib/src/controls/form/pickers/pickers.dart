@@ -25,7 +25,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
 }
 
 Decoration kPickerDecorationBuilder(
-    BuildContext context, List<ButtonStates> states) {
+    BuildContext context, Set<ButtonStates> states) {
   assert(debugCheckHasFluentTheme(context));
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
@@ -70,10 +70,10 @@ class YesNoPickerControl extends StatelessWidget {
     ButtonThemeData style(BorderRadiusGeometry radius) {
       return ButtonThemeData(
         margin: EdgeInsets.zero,
-        decoration: (state) => BoxDecoration(
-          color: ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), state),
+        decoration: ButtonState.resolveWith((states) => BoxDecoration(
+          color: ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), states),
           borderRadius: radius,
-        ),
+        )),
         scaleFactor: 1.0,
       );
     }

@@ -161,14 +161,14 @@ class TappableListTile extends StatelessWidget {
       onPressed: onTap,
       focusNode: focusNode,
       autofocus: autofocus,
-      builder: (context, state) {
+      builder: (context, states) {
         final Color _tileColor = () {
           if (tileColor != null) {
-            return tileColor!(state);
-          } else if (state.isFocused) {
+            return tileColor!.resolve(states);
+          } else if (states.isFocused) {
             return style.accentColor.resolve(context);
           }
-          return ButtonThemeData.uncheckedInputColor(style, state);
+          return ButtonThemeData.uncheckedInputColor(style, states);
         }();
         return ListTile(
           contentPadding: contentPadding,
@@ -177,7 +177,7 @@ class TappableListTile extends StatelessWidget {
           subtitle: subtitle,
           isThreeLine: isThreeLine,
           tileColor: _tileColor,
-          shape: shape?.call(state),
+          shape: shape?.resolve(states),
         );
       },
     );

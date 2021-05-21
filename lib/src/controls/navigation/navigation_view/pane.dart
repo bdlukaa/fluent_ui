@@ -116,10 +116,10 @@ class PaneItem extends NavigationPaneItem {
       child: HoverButton(
         onPressed: onPressed,
         cursor: style.cursor,
-        builder: (context, state) {
+        builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle!(state)
-              : style.unselectedTextStyle!(state);
+              ? style.selectedTextStyle!.resolve(states)
+              : style.unselectedTextStyle!.resolve(states);
           final textResult = item.title.isNotEmpty
               ? Padding(
                   padding: style.labelPadding ?? EdgeInsets.zero,
@@ -137,8 +137,8 @@ class PaneItem extends NavigationPaneItem {
                   child: IconTheme(
                     data: IconThemeData(
                       color: selected
-                          ? style.selectedIconColor!(state)
-                          : style.unselectedIconColor!(state),
+                          ? style.selectedIconColor!.resolve(states)
+                          : style.unselectedIconColor!.resolve(states),
                     ),
                     child: item.icon,
                   ),
@@ -156,7 +156,7 @@ class PaneItem extends NavigationPaneItem {
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: style.tileColor?.call(state),
+            color: style.tileColor?.resolve(states),
             child: child,
           );
           return Semantics(
@@ -164,7 +164,7 @@ class PaneItem extends NavigationPaneItem {
             selected: selected,
             child: FocusBorder(
               child: child,
-              focused: state.isFocused,
+              focused: states.isFocused,
               renderOutside: false,
             ),
           );

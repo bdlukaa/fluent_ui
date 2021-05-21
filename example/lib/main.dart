@@ -201,8 +201,8 @@ class WindowButtons extends StatelessWidget {
       iconNormal: theme.inactiveColor,
       iconMouseDown: theme.inactiveColor,
       iconMouseOver: theme.inactiveColor,
-      mouseOver: ButtonThemeData.buttonColor(theme, [ButtonStates.hovering]),
-      mouseDown: ButtonThemeData.buttonColor(theme, [ButtonStates.pressing]),
+      mouseOver: ButtonThemeData.buttonColor(theme, {ButtonStates.hovering}),
+      mouseDown: ButtonThemeData.buttonColor(theme, {ButtonStates.pressing}),
     );
     final closeButtonColors = WindowButtonColors(
       mouseOver: Colors.red,

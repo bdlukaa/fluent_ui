@@ -104,22 +104,22 @@ class Checkbox extends StatelessWidget {
           width: size,
           decoration: () {
             if (checked == null)
-              return style.thirdstateDecoration?.call(state);
+              return style.thirdstateDecoration?.resolve(state);
             else if (checked!)
-              return style.checkedDecoration?.call(state);
+              return style.checkedDecoration?.resolve(state);
             else
-              return style.uncheckedDecoration?.call(state);
+              return style.uncheckedDecoration?.resolve(state);
           }(),
           child: Icon(
             style.icon,
             size: 18,
             color: () {
               if (checked == null)
-                return style.thirdstateIconColor?.call(state);
+                return style.thirdstateIconColor?.resolve(state);
               else if (checked!)
-                return style.checkedIconColor?.call(state);
+                return style.checkedIconColor?.resolve(state);
               else
-                return style.uncheckedIconColor?.call(state);
+                return style.uncheckedIconColor?.resolve(state);
             }(),
           ),
         );
@@ -137,14 +137,14 @@ class Checkbox extends StatelessWidget {
 
 @immutable
 class CheckboxThemeData with Diagnosticable {
-  final ButtonState<Decoration>? checkedDecoration;
-  final ButtonState<Decoration>? uncheckedDecoration;
-  final ButtonState<Decoration>? thirdstateDecoration;
+  final ButtonState<Decoration?>? checkedDecoration;
+  final ButtonState<Decoration?>? uncheckedDecoration;
+  final ButtonState<Decoration?>? thirdstateDecoration;
 
   final IconData? icon;
   final ButtonState<Color?>? checkedIconColor;
-  final ButtonState<Color>? uncheckedIconColor;
-  final ButtonState<Color>? thirdstateIconColor;
+  final ButtonState<Color?>? uncheckedIconColor;
+  final ButtonState<Color?>? thirdstateIconColor;
 
   final ButtonState<MouseCursor>? cursor;
 
@@ -173,35 +173,72 @@ class CheckboxThemeData with Diagnosticable {
     final BorderRadiusGeometry radius = BorderRadius.circular(3);
     return CheckboxThemeData(
       cursor: style.inputMouseCursor,
-      checkedDecoration: (state) => BoxDecoration(
-        borderRadius: radius,
-        color: ButtonThemeData.checkedInputColor(style, state),
-      ),
-      uncheckedDecoration: (state) => BoxDecoration(
-        border: Border.all(
-          width: 0.6,
-          color: state.isDisabled ? style.disabledColor : style.inactiveColor,
+      checkedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          borderRadius: radius,
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
-        color: ButtonThemeData.checkedInputColor(style, state).withOpacity(0),
-        borderRadius: radius,
       ),
-      thirdstateDecoration: (state) => BoxDecoration(
-        borderRadius: radius,
-        color: Colors.white,
-        border: Border.all(
-            width: 6.5, color: ButtonThemeData.checkedInputColor(style, state)),
+      uncheckedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          border: Border.all(
+            width: 0.6,
+            color:
+                states.isDisabled ? style.disabledColor : style.inactiveColor,
+          ),
+          color:
+              ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
+          borderRadius: radius,
+        ),
       ),
-      checkedIconColor: (_) => style.activeColor,
-      uncheckedIconColor: (state) {
-        if (state.isHovering || state.isPressing)
-          return style.inactiveColor.withOpacity(0.8);
-        return Colors.transparent;
-      },
+      thirdstateDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          borderRadius: radius,
+          color: Colors.white,
+          border: Border.all(
+            width: 6.5,
+            color: ButtonThemeData.checkedInputColor(style, states),
+          ),
+        ),
+      ),
+      checkedIconColor: ButtonState.all(style.activeColor),
+      uncheckedIconColor: ButtonState.resolveWith(
+        (states) => states.isHovering || states.isPressing
+            ? style.inactiveColor.withOpacity(0.8)
+            : Colors.transparent,
+      ),
+      thirdstateIconColor: ButtonState.all(Colors.transparent),
       icon: Icons.check,
-      thirdstateIconColor: (_) => Colors.transparent,
       margin: const EdgeInsets.all(4.0),
       animationDuration: style.mediumAnimationDuration,
       animationCurve: style.animationCurve,
+    );
+  }
+
+  static CheckboxThemeData lerp(
+    CheckboxThemeData? a,
+    CheckboxThemeData? b,
+    double t,
+  ) {
+    return CheckboxThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      icon: t < 0.5 ? a?.icon : b?.icon,
+      checkedIconColor: ButtonState.lerp(
+          a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
+      uncheckedIconColor: ButtonState.lerp(
+          a?.uncheckedIconColor, b?.uncheckedIconColor, t, Color.lerp),
+      thirdstateIconColor: ButtonState.lerp(
+          a?.thirdstateIconColor, b?.thirdstateIconColor, t, Color.lerp),
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: t < 0.5 ? a?.animationDuration : b?.animationDuration,
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(
+          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+      thirdstateDecoration: ButtonState.lerp(
+          a?.thirdstateDecoration, b?.thirdstateDecoration, t, Decoration.lerp),
     );
   }
 

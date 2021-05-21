@@ -62,7 +62,8 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    final style =
+        ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
       FluentTheme.of(context).toggleButtonTheme.copyWith(this.style),
     );
     return Button(
@@ -71,9 +72,11 @@ class ToggleButton extends StatelessWidget {
       child: Semantics(child: child, selected: checked),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       style: ButtonThemeData(
-        decoration: (state) => checked
-            ? style.checkedDecoration!(state)
-            : style.uncheckedDecoration!(state),
+        decoration: ButtonState.resolveWith(
+          (states) => checked
+              ? style.checkedDecoration!.resolve(states)
+              : style.uncheckedDecoration!.resolve(states),
+        ),
         padding: style.padding,
         animationCurve: style.animationCurve,
         animationDuration: style.animationDuration,
@@ -118,20 +121,19 @@ class ToggleButtonThemeData with Diagnosticable {
     return ToggleButtonThemeData(
       scaleFactor: 0.95,
       cursor: style.inputMouseCursor,
-      checkedDecoration: (states) => defaultDecoration.copyWith(
-        color: states.isDisabled
-            ? ButtonThemeData.buttonColor(style, states)
-            : ButtonThemeData.checkedInputColor(style, states),
+      checkedDecoration: ButtonState.resolveWith(
+        (states) => defaultDecoration.copyWith(
+          color: states.isDisabled
+              ? ButtonThemeData.buttonColor(style, states)
+              : ButtonThemeData.checkedInputColor(style, states),
+        ),
       ),
-      uncheckedDecoration: (state) {
-        if (state.isHovering || state.isPressing)
-          return defaultDecoration.copyWith(
-            color: ButtonThemeData.uncheckedInputColor(style, state),
-          );
-        return defaultDecoration.copyWith(
-          color: ButtonThemeData.buttonColor(style, state),
-        );
-      },
+      uncheckedDecoration: ButtonState.resolveWith(
+        (states) => defaultDecoration.copyWith(
+            color: states.isHovering || states.isPressing
+                ? ButtonThemeData.uncheckedInputColor(style, states)
+                : ButtonThemeData.buttonColor(style, states)),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,

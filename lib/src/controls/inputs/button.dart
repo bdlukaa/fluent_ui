@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -196,14 +198,14 @@ class _ButtonState extends State<Button> {
             },
       onLongPress: widget.onLongPress,
       builder: (context, state) {
-        final textStyle = (style.textStyle?.call(state)) ?? TextStyle();
+        final textStyle = (style.textStyle?.resolve(state)) ?? TextStyle();
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
-          decoration: style.decoration?.call(state),
+          decoration: style.decoration?.resolve(state),
           child: AnimatedDefaultTextStyle(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? Curves.linear,
@@ -259,7 +261,7 @@ class ButtonThemeData with Diagnosticable {
 
   final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<TextStyle>? textStyle;
+  final ButtonState<TextStyle?>? textStyle;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
@@ -282,14 +284,38 @@ class ButtonThemeData with Diagnosticable {
       cursor: style.inputMouseCursor,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
-      decoration: (state) => BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        color: buttonColor(style, state),
-      ),
+      decoration: ButtonState.resolveWith((states) {
+        return BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          color: buttonColor(style, states),
+        );
+      }),
       scaleFactor: 0.95,
-      textStyle: (state) => style.typography.body!.copyWith(
-        color: state.isDisabled ? style.disabledColor : null,
+      textStyle: ButtonState.resolveWith(
+        (states) => style.typography.body!.copyWith(
+          color: states.isDisabled ? style.disabledColor : null,
+        ),
       ),
+    );
+  }
+
+  static ButtonThemeData lerp(
+    ButtonThemeData? a,
+    ButtonThemeData? b,
+    double t,
+  ) {
+    return ButtonThemeData(
+      decoration: ButtonState.lerp<Decoration>(
+          a?.decoration, b?.decoration, t, Decoration.lerp),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      textStyle: ButtonState.lerp<TextStyle>(
+          a?.textStyle, b?.textStyle, t, TextStyle.lerp),
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
+          b?.animationDuration ?? Duration.zero, t),
+      scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
     );
   }
 
@@ -322,7 +348,7 @@ class ButtonThemeData with Diagnosticable {
       'cursor',
       cursor,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<TextStyle>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<TextStyle?>?>.has(
       'textStyle',
       textStyle,
     ));
@@ -336,7 +362,7 @@ class ButtonThemeData with Diagnosticable {
     ));
   }
 
-  static Color buttonColor(ThemeData style, List<ButtonStates> states) {
+  static Color buttonColor(ThemeData style, Set<ButtonStates> states) {
     late Color color;
     if (style.brightness == Brightness.light) {
       if (states.isDisabled)
@@ -364,7 +390,7 @@ class ButtonThemeData with Diagnosticable {
     }
   }
 
-  static Color checkedInputColor(ThemeData style, List<ButtonStates> states) {
+  static Color checkedInputColor(ThemeData style, Set<ButtonStates> states) {
     Color color = style.accentColor;
     if (states.isDisabled)
       return style.disabledColor;
@@ -374,7 +400,7 @@ class ButtonThemeData with Diagnosticable {
     return color;
   }
 
-  static Color uncheckedInputColor(ThemeData style, List<ButtonStates> states) {
+  static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
       if (states.isDisabled) return style.disabledColor;
       if (states.isPressing) return Colors.grey[70];
