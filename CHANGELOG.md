@@ -1,10 +1,13 @@
 Date format: DD/MM/YYYY
 
-## [next] - [10/06/2021]
+## [2.0.1] - [21/05/2021]
 
-- Reworked the inputs api ([#36](https://github.com/bdlukaa/fluent_ui/issues/36)):
+- Minimal flutter version is now 2.2
+- Implement `FluentScrollBehavior`, that automatically adds a scrollbar into listviews ([#35](https://github.com/bdlukaa/fluent_ui/pull/35))
+- Reworked the inputs api ([#38](https://github.com/bdlukaa/fluent_ui/pull/38)):
   - A input can have multiple states. Now, if the widget is focused and pressed at the same time, it doesn't lose its focused border.
   - Now, the focus is not requested twice when the button is pressed, only once. This fixes a bug introduced in a previous version that combo boxes items we're not being focused.
+  - Semantics (acessibility) is now applied on all inputs
 
 ## [2.0.0] - [20/05/2021]
 

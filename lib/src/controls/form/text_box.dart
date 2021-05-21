@@ -35,7 +35,7 @@ class _TextBoxSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
   _TextBoxSelectionGestureDetectorBuilder({
     required _TextBoxState state,
-  })   : _state = state,
+  })  : _state = state,
         super(delegate: state);
 
   final _TextBoxState _state;

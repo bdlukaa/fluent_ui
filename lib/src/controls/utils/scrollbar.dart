@@ -83,7 +83,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 
   Color _thumbColor(ButtonStates state) {
     Color? color;
-    if (state == ButtonStates.pressing) color = _scrollbarTheme.scrollbarPressingColor;
+    if (state == ButtonStates.pressing)
+      color = _scrollbarTheme.scrollbarPressingColor;
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
     return color;
   }
@@ -109,14 +110,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         begin: _scrollbarTheme.thickness ?? 2.0,
         end: _scrollbarTheme.hoveringThickness ?? 16.0,
       ).evaluate(animation)
-      ..radius = !_hoverIsActive
-          ? _scrollbarTheme.radius
-          : _scrollbarTheme.hoveringRadius
-      // uncomment the next line to make radius animated
-      // ..radius = Tween<Radius>(
-      //   begin: _scrollbarTheme.radius ?? const Radius.circular(100.0),
-      //   end: _scrollbarTheme.hoveringRadius ?? const Radius.circular(0.0),
-      // ).evaluate(animation)
+      ..radius = _hoverController.status != AnimationStatus.dismissed
+          ? _scrollbarTheme.hoveringRadius
+          : _scrollbarTheme.radius
       ..crossAxisMargin = Tween<double>(
         begin: _scrollbarTheme.crossAxisMargin ?? 2.0,
         end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,

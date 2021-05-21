@@ -489,7 +489,7 @@ class _FluentAppState extends State<FluentApp> {
 ///
 ///  * [ScrollBehavior], the default scrolling behavior extended by this class.
 class FluentScrollBehavior extends ScrollBehavior {
-  /// Creates a MaterialScrollBehavior that decorates [Scrollable]s with
+  /// Creates a FluentScrollBehavior that decorates [Scrollable]s with
   /// [Scrollbar]s based on the current platform and provided [ScrollableDetails].
   const FluentScrollBehavior();
 
@@ -526,9 +526,14 @@ class FluentScrollBehavior extends ScrollBehavior {
       case TargetPlatform.linux:
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
+        return child;
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-        return child;
+        return GlowingOverscrollIndicator(
+          child: child,
+          axisDirection: details.direction,
+          color: FluentTheme.of(context).accentColor,
+        );
     }
   }
 }

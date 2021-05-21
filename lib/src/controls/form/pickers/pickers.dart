@@ -24,7 +24,8 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
   return context.theme.typography.body?.copyWith(fontSize: 16);
 }
 
-Decoration kPickerDecorationBuilder(BuildContext context, List<ButtonStates> states) {
+Decoration kPickerDecorationBuilder(
+    BuildContext context, List<ButtonStates> states) {
   assert(debugCheckHasFluentTheme(context));
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),

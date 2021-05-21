@@ -209,18 +209,16 @@ class _HoverButtonState extends State<HoverButton> {
       },
       child: w,
     );
-    if (widget.semanticLabel != null) {
-      w = MergeSemantics(
-        child: Semantics(
-          label: widget.semanticLabel,
-          button: true,
-          enabled: enabled,
-          focusable: enabled,
-          focused: node.hasFocus,
-          child: w,
-        ),
-      );
-    }
+    w = MergeSemantics(
+      child: Semantics(
+        label: widget.semanticLabel,
+        button: true,
+        enabled: enabled,
+        focusable: enabled,
+        focused: node.hasFocus,
+        child: w,
+      ),
+    );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
     return w;
   }

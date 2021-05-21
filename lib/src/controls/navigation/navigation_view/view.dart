@@ -79,7 +79,7 @@ class NavigationViewState extends State<NavigationView> {
   /// The scroll controller used to keep the scrolling state of
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
-  /// 
+  ///
   /// It's also used to display and control the [Scrollbar] introduced
   /// by the panes.
   late ScrollController scrollController;
@@ -140,7 +140,10 @@ class NavigationViewState extends State<NavigationView> {
           appBar,
           _buildAcrylic(PrimaryScrollController(
             controller: scrollController,
-            child: _TopNavigationPane(pane: pane, listKey: _listKey,),
+            child: _TopNavigationPane(
+              pane: pane,
+              listKey: _listKey,
+            ),
           )),
           Expanded(child: widget.content),
         ]);
