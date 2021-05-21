@@ -91,9 +91,9 @@ class InfoBar extends StatelessWidget {
     }();
     final action = () {
       if (this.action == null) return null;
-      return FluentTheme(
+      return ButtonTheme(
         child: this.action!,
-        data: context.theme.copyWith(buttonTheme: style.actionStyle),
+        data: style.actionStyle ?? context.theme.buttonTheme,
       );
     }();
     return Acrylic(

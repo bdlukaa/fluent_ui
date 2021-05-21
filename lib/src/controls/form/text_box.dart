@@ -769,12 +769,10 @@ class _TextBoxState extends State<TextBox>
       },
     );
 
-    return FluentTheme(
-      data: context.theme.copyWith(
-        buttonTheme: ButtonThemeData(
-          margin: EdgeInsets.zero,
-        ).copyWith(widget.iconButtonThemeData),
-      ),
+    return ButtonTheme(
+      data: ButtonThemeData(
+        margin: EdgeInsets.zero,
+      ).copyWith(widget.iconButtonThemeData),
       child: IconTheme(
         data: const IconThemeData(size: 18),
         child: () {

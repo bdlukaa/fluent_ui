@@ -48,31 +48,30 @@ class SplitButtonBar extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
-        final button = buttons[index];
-        Widget b = FluentTheme(
-          data: context.theme.copyWith(
-            focusTheme: FocusThemeData(renderOutside: false),
-            buttonTheme: ButtonThemeData(
-              decoration: (state) => BoxDecoration(
-                borderRadius: (index == 0 || index == buttons.length - 1)
-                    ? BorderRadius.horizontal(
-                        left: index == 0 ? Radius.circular(2) : Radius.zero,
-                        right: index == buttons.length - 1
-                            ? Radius.circular(2)
-                            : Radius.zero,
-                      )
-                    : null,
-                color: ButtonThemeData.buttonColor(context.theme, state),
-              ),
-              margin: EdgeInsets.zero,
+        final button = ButtonTheme(
+          data: ButtonThemeData(
+            decoration: (state) => BoxDecoration(
+              borderRadius: (index == 0 || index == buttons.length - 1)
+                  ? BorderRadius.horizontal(
+                      left: index == 0 ? Radius.circular(2) : Radius.zero,
+                      right: index == buttons.length - 1
+                          ? Radius.circular(2)
+                          : Radius.zero,
+                    )
+                  : null,
+              color: ButtonThemeData.buttonColor(context.theme, state),
             ),
+            margin: EdgeInsets.zero,
           ),
-          child: button,
+          child: FocusTheme(
+            data: FocusThemeData(renderOutside: false),
+            child: buttons[index],
+          ),
         );
-        if (index == 0) return b;
+        if (index == 0) return button;
         return Padding(
           padding: EdgeInsets.only(left: style.interval ?? 0),
-          child: b,
+          child: button,
         );
       }),
     );

@@ -96,10 +96,9 @@ class ContentDialog extends StatelessWidget {
                 ),
               ),
             if (actions != null)
-              FluentTheme(
-                data: context.theme.copyWith(
-                  buttonTheme: style.actionThemeData,
-                ),
+              ButtonTheme(
+                data: style.actionThemeData ??
+                    FluentTheme.of(context).buttonTheme,
                 child: () {
                   if (actions!.length == 1) {
                     return Align(
