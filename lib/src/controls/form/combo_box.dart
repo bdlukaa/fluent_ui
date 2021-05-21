@@ -4,6 +4,7 @@ import 'dart:ui' show window;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -34,7 +35,7 @@ class _ComboboxMenuPainter extends CustomPainter {
     this.selectedIndex,
     required this.resize,
     required this.getSelectedItemOffset,
-  })   : _painter = BoxDecoration(
+  })  : _painter = BoxDecoration(
           // If you add an image here, you must provide a real
           // configuration in the paint() function and you must provide some sort
           // of onChanged callback here.
@@ -180,17 +181,14 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
       opacity: opacity,
       child: HoverButton(
         autofocus: widget.itemIndex == widget.route.selectedIndex,
-        builder: (context, state) => Container(
+        builder: (context, states) => Container(
           decoration: BoxDecoration(
             color: () {
-              if (state.isFocused)
+              if (states.isFocused)
                 return FluentTheme.of(context).accentColor.resolveFrom(context);
               return ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),
-                () {
-                  if (state.isFocused) return ButtonStates.hovering;
-                  return state;
-                }(),
+                states,
               );
             }(),
           ),
@@ -1247,7 +1245,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
 
       switch (FluentTheme.of(context).brightness) {
         case Brightness.light:
-          return Colors.grey[190]!;
+          return Colors.grey[190];
         case Brightness.dark:
           return Colors.white.withOpacity(0.7);
       }
@@ -1256,7 +1254,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
 
       switch (FluentTheme.of(context).brightness) {
         case Brightness.light:
-          return Colors.grey[150]!;
+          return Colors.grey[150];
         case Brightness.dark:
           return Colors.white.withOpacity(0.10);
       }
@@ -1389,13 +1387,13 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
           focusNode: focusNode,
           autofocus: widget.autofocus,
           onPressed: _enabled ? _handleTap : null,
-          builder: (context, state) {
+          builder: (context, states) {
             return Container(
               decoration: kPickerDecorationBuilder(context, () {
                 if (_showHighlight)
-                  return ButtonStates.focused;
-                else if (state.isFocused) return ButtonStates.none;
-                return state;
+                  return [ButtonStates.focused];
+                else if (states.isFocused) return <ButtonStates>[];
+                return states;
               }()),
               child: result,
             );

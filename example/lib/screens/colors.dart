@@ -74,7 +74,7 @@ class ColorsPage extends StatelessWidget {
                 children: List.generate(22, (index) {
                   return buildColorBlock(
                     'Grey#${(index + 1) * 10}',
-                    Colors.grey[(index + 1) * 10]!,
+                    Colors.grey[(index + 1) * 10],
                   );
                 }),
               ),

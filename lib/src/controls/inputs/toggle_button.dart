@@ -5,8 +5,8 @@ import 'package:flutter/rendering.dart';
 /// A button that can be on or off.
 ///
 /// See also:
-/// - [Checkbox](https://github.com/bdlukaa/fluent_ui#checkbox)
-/// - [ToggleSwitch](https://github.com/bdlukaa/fluent_ui#toggle-switches)
+///   * [Checkbox](https://github.com/bdlukaa/fluent_ui#checkbox)
+///   * [ToggleSwitch](https://github.com/bdlukaa/fluent_ui#toggle-switches)
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
     Key? key,
@@ -118,27 +118,22 @@ class ToggleButtonThemeData with Diagnosticable {
     return ToggleButtonThemeData(
       scaleFactor: 0.95,
       cursor: style.inputMouseCursor,
-      checkedDecoration: (state) => defaultDecoration.copyWith(
-        color: ButtonThemeData.checkedInputColor(style, state),
-        border: Border.all(
-            width: 0.6, color: ButtonThemeData.checkedInputColor(style, state)),
+      checkedDecoration: (states) => defaultDecoration.copyWith(
+        color: states.isDisabled
+            ? ButtonThemeData.buttonColor(style, states)
+            : ButtonThemeData.checkedInputColor(style, states),
       ),
       uncheckedDecoration: (state) {
         if (state.isHovering || state.isPressing)
           return defaultDecoration.copyWith(
             color: ButtonThemeData.uncheckedInputColor(style, state),
-            border: Border.all(
-              width: 0.6,
-              color: ButtonThemeData.uncheckedInputColor(style, state),
-            ),
           );
         return defaultDecoration.copyWith(
           color: ButtonThemeData.buttonColor(style, state),
-          border: Border.all(width: 0.6, color: Colors.transparent),
         );
       },
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      margin: EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
     );

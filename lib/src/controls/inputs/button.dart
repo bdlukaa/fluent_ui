@@ -3,7 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import 'hover_button.dart';
+import '../utils/hover_button.dart';
 
 enum _ButtonType { def, icon, toggle }
 
@@ -202,7 +202,9 @@ class _ButtonState extends State<Button> {
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
           decoration: style.decoration!(state),
-          child: DefaultTextStyle(
+          child: AnimatedDefaultTextStyle(
+            duration: style.animationDuration ?? Duration.zero,
+            curve: style.animationCurve ?? Curves.linear,
             style: (style.textStyle?.call(state)) ?? TextStyle(),
             textAlign: TextAlign.center,
             child: widget.child ?? widget.builder!(context, state),
@@ -249,8 +251,8 @@ class ButtonThemeData with Diagnosticable {
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
       cursor: style.inputMouseCursor,
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      margin: EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      margin: const EdgeInsets.all(4),
       decoration: (state) => BoxDecoration(
         borderRadius: BorderRadius.circular(2),
         color: buttonColor(style, state),
@@ -258,7 +260,7 @@ class ButtonThemeData with Diagnosticable {
       scaleFactor: 0.95,
       textStyle: (state) =>
           style.typography.body?.copyWith(
-            color: state.isDisabled ? Colors.grey[100] : null,
+            color: state.isDisabled ? style.disabledColor : null,
           ) ??
           TextStyle(),
     );
@@ -307,53 +309,55 @@ class ButtonThemeData with Diagnosticable {
     ));
   }
 
-  static Color buttonColor(ThemeData style, ButtonStates state) {
+  static Color buttonColor(ThemeData style, List<ButtonStates> states) {
+    late Color color;
     if (style.brightness == Brightness.light) {
-      late Color color;
-      if (state.isDisabled)
+      if (states.isDisabled)
         color = style.disabledColor;
-      else if (state.isPressing)
-        color = Colors.grey[70]!;
-      else if (state.isHovering)
-        color = Colors.grey[40]!;
+      else if (states.isPressing)
+        color = Colors.grey[70];
+      else if (states.isHovering)
+        color = Colors.grey[40];
       else
-        color = Colors.grey[50]!;
+        color = Colors.grey[50];
       return color;
     } else {
-      late Color color;
-      if (state.isDisabled)
-        color = style.disabledColor;
-      else if (state.isPressing)
-        color = Color.fromARGB(255, 102, 102, 102);
-      else if (state.isHovering)
-        color = Colors.grey[150]!;
-      else
-        color = Color.fromARGB(255, 51, 51, 51);
+      if (states.isPressing) {
+        // Value eyeballed from Windows 10
+        color = Color(0xFF666666);
+      } else if (states.isHovering)
+        color = Colors.grey[170];
+      else {
+        // Value eyeballed from Windows 10
+        // Used when the state is not recieving any user
+        // interaction or is disabled
+        color = Color(0xFF333333);
+      }
       return color;
     }
   }
 
-  static Color checkedInputColor(ThemeData style, ButtonStates state) {
+  static Color checkedInputColor(ThemeData style, List<ButtonStates> states) {
     Color color = style.accentColor;
-    if (state.isDisabled)
+    if (states.isDisabled)
       return style.disabledColor;
-    else if (state.isHovering)
+    else if (states.isHovering)
       return color.withOpacity(0.70);
-    else if (state.isPressing) return color.withOpacity(0.90);
+    else if (states.isPressing) return color.withOpacity(0.90);
     return color;
   }
 
-  static Color uncheckedInputColor(ThemeData style, ButtonStates state) {
+  static Color uncheckedInputColor(ThemeData style, List<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
-      if (state.isDisabled) return style.disabledColor;
-      if (state.isPressing) return Colors.grey[70]!;
-      if (state.isHovering) return Colors.grey[40]!;
-      return Colors.grey[40]!.withOpacity(0);
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return Colors.grey[70];
+      if (states.isHovering) return Colors.grey[40];
+      return Colors.grey[40].withOpacity(0);
     } else {
-      if (state.isDisabled) return style.disabledColor;
-      if (state.isPressing) return Colors.grey[130]!;
-      if (state.isHovering) return Colors.grey[150]!;
-      return Colors.grey[150]!.withOpacity(0);
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return Colors.grey[130];
+      if (states.isHovering) return Colors.grey[150];
+      return Colors.grey[150].withOpacity(0);
     }
   }
 }

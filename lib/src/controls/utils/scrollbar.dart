@@ -77,13 +77,13 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(ButtonStates state) {
-    if (state.isNone) return Colors.transparent;
+    if (state == ButtonStates.none) return Colors.transparent;
     return _scrollbarTheme.backgroundColor ?? Colors.transparent;
   }
 
   Color _thumbColor(ButtonStates state) {
     Color? color;
-    if (state.isPressing) color = _scrollbarTheme.scrollbarPressingColor;
+    if (state == ButtonStates.pressing) color = _scrollbarTheme.scrollbarPressingColor;
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
     return color;
   }

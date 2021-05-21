@@ -171,6 +171,10 @@ class Colors {
 class ShadedColor extends ColorSwatch<int> {
   const ShadedColor(int primary, Map<int, Color> swatch)
       : super(primary, swatch);
+
+  Color operator [](int index) {
+    return super[index]!;
+  }
 }
 
 /// An accent color is a color that can have multiple shades. It's

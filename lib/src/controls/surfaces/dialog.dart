@@ -253,7 +253,7 @@ class ContentDialogThemeData {
       titlePadding: EdgeInsets.only(bottom: 12),
       bodyPadding: EdgeInsets.only(bottom: 30),
       actionsSpacing: 3,
-      barrierColor: Colors.grey[200]!.withOpacity(0.8),
+      barrierColor: Colors.grey[200].withOpacity(0.8),
       titleStyle: style.typography.title,
       bodyStyle: style.typography.body,
       actionThemeData: ButtonThemeData(

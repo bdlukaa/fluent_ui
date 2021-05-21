@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [next] - [10/06/2021]
+
+- Reworked the inputs api ([#36](https://github.com/bdlukaa/fluent_ui/issues/36)):
+  - A input can have multiple states. Now, if the widget is focused and pressed at the same time, it doesn't lose its focused border.
+  - Now, the focus is not requested twice when the button is pressed, only once. This fixes a bug introduced in a previous version that combo boxes items we're not being focused.
+
 ## [2.0.0] - [20/05/2021]
 
 - New way to disable the acrylic blur effect. Just wrap the acrylic widget in a `NoAcrylicBlurEffect` to have it disabled.

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart' as m;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// A check box is used to select or deselect action items. It can
@@ -69,8 +71,12 @@ class Checkbox extends StatelessWidget {
     properties.add(DiagnosticsProperty<CheckboxThemeData>('style', style));
     properties.add(StringProperty('semanticLabel', semanticLabel));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
-    properties.add(FlagProperty('autofocus',
-        value: autofocus, defaultValue: false, ifFalse: 'manual focus'));
+    properties.add(FlagProperty(
+      'autofocus',
+      value: autofocus,
+      defaultValue: false,
+      ifFalse: 'manual focus',
+    ));
   }
 
   @override

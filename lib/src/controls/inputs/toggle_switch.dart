@@ -137,7 +137,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           setState(() => _alignment = null);
         }
       },
-      builder: (context, state) {
+      builder: (context, states) {
         Widget child = AnimatedContainer(
           alignment: _alignment ??
               (widget.checked ? Alignment.centerRight : Alignment.centerLeft),
@@ -147,19 +147,19 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
           decoration: widget.checked
-              ? style.checkedDecoration?.call(state)
-              : style.uncheckedDecoration?.call(state),
+              ? style.checkedDecoration?.call(states)
+              : style.uncheckedDecoration?.call(states),
           child: widget.thumb ??
               DefaultToggleSwitchThumb(
                 checked: widget.checked,
                 style: style,
-                state: state,
+                states: states,
               ),
         );
         return Semantics(
           child: FocusBorder(
             child: child,
-            focused: state.isFocused,
+            focused: states.isFocused,
           ),
           checked: widget.checked,
         );
@@ -173,12 +173,12 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
     Key? key,
     required this.checked,
     required this.style,
-    required this.state,
+    required this.states,
   }) : super(key: key);
 
   final bool checked;
   final ToggleSwitchThemeData? style;
-  final ButtonStates state;
+  final List<ButtonStates> states;
 
   @override
   Widget build(BuildContext context) {
@@ -192,8 +192,8 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
         maxWidth: 12,
       ),
       decoration: checked
-          ? style?.checkedThumbDecoration?.call(state)
-          : style?.uncheckedThumbDecoration?.call(state),
+          ? style?.checkedThumbDecoration?.call(states)
+          : style?.uncheckedThumbDecoration?.call(states),
     );
   }
 }
