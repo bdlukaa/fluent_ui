@@ -74,7 +74,7 @@ class IconButton extends StatelessWidget {
         data: context.theme.copyWith(
           iconTheme: IconThemeData(
             color: state.isDisabled ? context.theme.disabledColor : null,
-          ).copyWith(iconTheme?.call(state)),
+          ).merge(iconTheme?.call(state)),
         ),
         child: icon,
       ),

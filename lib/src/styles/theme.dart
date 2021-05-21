@@ -3,23 +3,53 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-class FluentTheme extends InheritedWidget {
-  const FluentTheme({Key? key, required this.data, required this.child})
+class FluentTheme extends StatelessWidget {
+  /// Applies the given theme [data] to [child].
+  ///
+  /// The [data] and [child] arguments must not be null.
+  const FluentTheme({
+    Key? key,
+    required this.data,
+    required this.child,
+  }) : super(key: key);
+
+  /// Specifies the color and typography values for descendant widgets.
+  final ThemeData data;
+
+  /// The widget below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
+  final Widget child;
+
+  static ThemeData of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()!.data;
+  }
+
+  static ThemeData? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()?.data;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _FluentTheme(
+      data: data,
+      child: IconTheme(
+        data: data.iconTheme,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _FluentTheme extends InheritedWidget {
+  const _FluentTheme({Key? key, required this.data, required this.child})
       : super(key: key, child: child);
 
   final ThemeData data;
   final Widget child;
 
-  static ThemeData of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()!.data;
-  }
-
-  static ThemeData? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()?.data;
-  }
-
   @override
-  bool updateShouldNotify(covariant FluentTheme oldWidget) =>
+  bool updateShouldNotify(covariant _FluentTheme oldWidget) =>
       oldWidget.data != data;
 }
 
@@ -205,7 +235,9 @@ class ThemeData with Diagnosticable {
     checkboxTheme ??= const CheckboxThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
-    iconTheme ??= const IconThemeData();
+    iconTheme ??= brightness.isDark
+        ? const IconThemeData(color: Colors.white)
+        : const IconThemeData(color: Colors.black);
     splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
@@ -312,7 +344,7 @@ class ThemeData with Diagnosticable {
       dialogTheme: this.dialogTheme.copyWith(dialogTheme),
       dividerTheme: this.dividerTheme.copyWith(dividerTheme),
       focusTheme: this.focusTheme.copyWith(focusTheme),
-      iconTheme: this.iconTheme.copyWith(iconTheme),
+      iconTheme: this.iconTheme.merge(iconTheme),
       infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
       navigationPaneTheme:
           this.navigationPaneTheme.copyWith(navigationPaneTheme),
