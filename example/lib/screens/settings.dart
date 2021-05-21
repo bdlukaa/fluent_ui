@@ -33,7 +33,7 @@ class Settings extends StatelessWidget {
           blurRadius: 10.0,
         ),
       ];
-      final border = Border.all(color: Colors.grey[100]!, width: 0.5);
+      final border = Border.all(color: Colors.grey[100], width: 0.5);
       if (context.theme.brightness == Brightness.light) {
         return BoxDecoration(
           color: Colors.white,

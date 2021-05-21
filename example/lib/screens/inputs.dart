@@ -102,9 +102,7 @@ class _InputsPageState extends State<InputsPage> {
               controller: controller,
               child: Button(
                 child: Text('File'),
-                onPressed: () {
-                  controller.open = true;
-                },
+                onPressed: disabled ? null : () => controller.open = true,
               ),
             ),
           ),
@@ -157,20 +155,28 @@ class _InputsPageState extends State<InputsPage> {
             height: splitButtonHeight,
             child: SplitButtonBar(buttons: [
               Button(
-                child: SizedBox(
-                  height: splitButtonHeight,
-                  child: Container(
-                    color: context.theme.accentColor,
-                    height: 24,
-                    width: 24,
-                  ),
-                ),
+                builder: (context, states) {
+                  return SizedBox(
+                    height: splitButtonHeight,
+                    child: Container(
+                      color: states.isDisabled
+                          ? FluentTheme.of(context).accentColor.darker
+                          : context.theme.accentColor,
+                      height: 24,
+                      width: 24,
+                    ),
+                  );
+                },
                 onPressed: disabled ? null : () {},
               ),
               Button(
                 child: SizedBox(
                   height: splitButtonHeight,
-                  child: Icon(Icons.keyboard_arrow_down),
+                  child: Icon(
+                    Icons.keyboard_arrow_down,
+                    color:
+                        disabled ? FluentTheme.of(context).disabledColor : null,
+                  ),
                 ),
                 onPressed: disabled ? null : () {},
                 style: ButtonThemeData(padding: EdgeInsets.all(6)),

@@ -318,7 +318,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         fontSize: _getDefaultFontSize(),
       );
       defaultDecoration = BoxDecoration(
-        color: Colors.grey[150]!.withOpacity(0.9),
+        color: Colors.grey[150].withOpacity(0.9),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
       );
     }

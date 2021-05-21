@@ -123,7 +123,7 @@ class _HoverButtonState extends State<HoverButton> {
   void didUpdateWidget(HoverButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.focusNode != oldWidget.focusNode) {
-      node = widget.focusNode ?? _createFocusNode();
+      node = widget.focusNode ?? node;
     }
   }
 

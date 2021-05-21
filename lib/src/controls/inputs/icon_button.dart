@@ -2,7 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef IconThemeButtonStateBuilder = IconThemeData Function(List<ButtonStates>);
+typedef IconThemeButtonStateBuilder = IconThemeData Function(
+    List<ButtonStates>);
 
 class IconButton extends StatelessWidget {
   const IconButton({
@@ -27,7 +28,7 @@ class IconButton extends StatelessWidget {
   /// Callback called when the button is long pressed
   final VoidCallback? onLongPress;
 
-  /// The style of the button. This style is merged with [ThemeData.iconButtonThemeData]
+  /// The style of the button.
   final ButtonThemeData? style;
 
   /// The style applied to the icon.
@@ -66,30 +67,35 @@ class IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    print(style);
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
       builder: (context, state) => FluentTheme(
-        data: context.theme.copyWith(iconTheme: iconTheme?.call(state)),
+        data: context.theme.copyWith(
+          iconTheme: IconThemeData(
+            color: state.isDisabled ? context.theme.disabledColor : null,
+          ).copyWith(iconTheme?.call(state)),
+        ),
         child: icon,
       ),
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticLabel: semanticLabel,
       style: ButtonThemeData(
-        decoration: style?.decoration ??
-            (state) => BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  color: ButtonThemeData.uncheckedInputColor(
+        decoration: (states) {
+          return BoxDecoration(
+            borderRadius: BorderRadius.circular(2),
+            color: states.isDisabled
+                ? ButtonThemeData.buttonColor(context.theme, states)
+                : ButtonThemeData.uncheckedInputColor(
                     context.theme,
-                    state,
+                    states,
                   ),
-                ),
-        cursor: style?.cursor,
-        margin: style?.margin,
-        padding: style?.padding ?? EdgeInsets.all(4),
-        scaleFactor: style?.scaleFactor,
-      ),
+          );
+        },
+        padding: const EdgeInsets.all(4),
+      ).copyWith(style),
     );
   }
 }

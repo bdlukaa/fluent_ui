@@ -173,10 +173,10 @@ class ThemeData with Diagnosticable {
       'normal': Color(0xFFd6d6d6),
       'dark': Color(0xFF292929),
     }).resolveFromBrightness(brightness);
-    disabledColor ??= Colors.grey[100]!.withOpacity(0.6);
+    disabledColor ??= Colors.grey[80].withOpacity(0.6);
     shadowColor ??= AccentColor('normal', {
       'normal': Colors.black,
-      'dark': Colors.grey[130]!,
+      'dark': Colors.grey[130],
     }).resolveFromBrightness(brightness);
     scaffoldBackgroundColor ??= AccentColor('normal', {
       'normal': Colors.white,

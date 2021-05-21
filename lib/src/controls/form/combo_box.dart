@@ -1245,7 +1245,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
 
       switch (FluentTheme.of(context).brightness) {
         case Brightness.light:
-          return Colors.grey[190]!;
+          return Colors.grey[190];
         case Brightness.dark:
           return Colors.white.withOpacity(0.7);
       }
@@ -1254,7 +1254,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
 
       switch (FluentTheme.of(context).brightness) {
         case Brightness.light:
-          return Colors.grey[150]!;
+          return Colors.grey[150];
         case Brightness.dark:
           return Colors.white.withOpacity(0.10);
       }
