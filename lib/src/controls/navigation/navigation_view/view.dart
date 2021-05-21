@@ -472,13 +472,7 @@ class _NavigationAppBar extends StatelessWidget {
           child: Row(children: [
             leading,
             title,
-            if (appBar.actions != null)
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: appBar.actions!,
-                ),
-              ),
+            if (appBar.actions != null) Expanded(child: appBar.actions!),
           ]),
         );
         break;
@@ -514,9 +508,7 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return SizedBox.shrink();
     }
-    return AnimatedContainer(
-      duration: FluentTheme.of(context).fastAnimationDuration,
-      curve: FluentTheme.of(context).animationCurve,
+    return Container(
       color: appBar.backgroundColor ??
           FluentTheme.of(context).scaffoldBackgroundColor,
       height: appBar.height,

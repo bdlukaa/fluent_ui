@@ -78,8 +78,6 @@ class ToggleButton extends StatelessWidget {
               : style.uncheckedDecoration!.resolve(states),
         ),
         padding: style.padding,
-        animationCurve: style.animationCurve,
-        animationDuration: style.animationDuration,
         cursor: style.cursor,
         margin: style.margin,
         scaleFactor: style.scaleFactor,
@@ -100,15 +98,10 @@ class ToggleButtonThemeData with Diagnosticable {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const ToggleButtonThemeData({
     this.cursor,
     this.padding,
     this.margin,
-    this.animationDuration,
-    this.animationCurve,
     this.checkedDecoration,
     this.uncheckedDecoration,
     this.scaleFactor,
@@ -136,8 +129,6 @@ class ToggleButtonThemeData with Diagnosticable {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
-      animationDuration: style.fastAnimationDuration,
-      animationCurve: style.animationCurve,
     );
   }
 
@@ -147,8 +138,6 @@ class ToggleButtonThemeData with Diagnosticable {
       margin: style.margin ?? margin,
       padding: style.padding ?? padding,
       cursor: style.cursor ?? cursor,
-      animationCurve: style.animationCurve ?? animationCurve,
-      animationDuration: style.animationDuration ?? animationDuration,
       checkedDecoration: style.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style.uncheckedDecoration ?? uncheckedDecoration,
       scaleFactor: style.scaleFactor ?? scaleFactor,
@@ -164,10 +153,6 @@ class ToggleButtonThemeData with Diagnosticable {
     properties.add(
       ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
     );
-    properties
-        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
-    properties.add(
-        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
     properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
       'checkedDecoration',
       checkedDecoration,

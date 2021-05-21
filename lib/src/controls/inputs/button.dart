@@ -202,13 +202,13 @@ class _ButtonState extends State<Button> {
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
-          duration: style.animationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? Curves.linear,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
           decoration: style.decoration?.resolve(state),
           child: AnimatedDefaultTextStyle(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? Curves.linear,
+            duration: FluentTheme.of(context).fastAnimationDuration,
+            curve: FluentTheme.of(context).animationCurve,
             style: textStyle,
             textAlign: TextAlign.center,
             child: IconTheme(
@@ -263,9 +263,6 @@ class ButtonThemeData with Diagnosticable {
 
   final ButtonState<TextStyle?>? textStyle;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const ButtonThemeData({
     this.decoration,
     this.padding,
@@ -273,14 +270,10 @@ class ButtonThemeData with Diagnosticable {
     this.scaleFactor,
     this.cursor,
     this.textStyle,
-    this.animationDuration,
-    this.animationCurve,
   });
 
   factory ButtonThemeData.standard(ThemeData style) {
     return ButtonThemeData(
-      animationDuration: style.fastAnimationDuration,
-      animationCurve: style.animationCurve,
       cursor: style.inputMouseCursor,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
@@ -312,9 +305,6 @@ class ButtonThemeData with Diagnosticable {
           a?.textStyle, b?.textStyle, t, TextStyle.lerp),
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
-      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
-          b?.animationDuration ?? Duration.zero, t),
       scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
     );
   }
@@ -327,8 +317,6 @@ class ButtonThemeData with Diagnosticable {
       textStyle: style.textStyle ?? textStyle,
       margin: style.margin ?? margin,
       padding: style.padding ?? padding,
-      animationCurve: style.animationCurve ?? animationCurve,
-      animationDuration: style.animationDuration ?? animationDuration,
       scaleFactor: style.scaleFactor ?? scaleFactor,
     );
   }
@@ -351,14 +339,6 @@ class ButtonThemeData with Diagnosticable {
     properties.add(ObjectFlagProperty<ButtonState<TextStyle?>?>.has(
       'textStyle',
       textStyle,
-    ));
-    properties.add(DiagnosticsProperty<Duration?>(
-      'animationDuration',
-      animationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Curve?>(
-      'animationCurve',
-      animationCurve,
     ));
   }
 

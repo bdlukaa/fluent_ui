@@ -69,10 +69,15 @@ class IconButton extends StatelessWidget {
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
-      builder: (context, states) => IconTheme(
-        data: IconTheme.of(context).merge(iconTheme?.call(states)),
-        child: icon,
-      ),
+      builder: (context, states) {
+        if (iconTheme != null) {
+          return IconTheme(
+            data: IconTheme.of(context).merge(iconTheme?.call(states)),
+            child: icon,
+          );
+        }
+        return icon;
+      },
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticLabel: semanticLabel,

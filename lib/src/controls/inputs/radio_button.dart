@@ -87,8 +87,8 @@ class RadioButton extends StatelessWidget {
             ? style.checkedDecoration!.resolve(state)
             : style.uncheckedDecoration!.resolve(state);
         Widget child = AnimatedContainer(
-          duration: style.animationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? Curves.linear,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
           decoration: decoration.copyWith(color: Colors.transparent),
@@ -98,8 +98,8 @@ class RadioButton extends StatelessWidget {
           /// way, the inner color will only be rendered within the
           /// bounds of the border.
           child: AnimatedContainer(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? Curves.linear,
+            duration: FluentTheme.of(context).mediumAnimationDuration,
+            curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
               color: decoration.color ?? Colors.transparent,
               shape: decoration.shape,
@@ -125,13 +125,8 @@ class RadioButtonThemeData with Diagnosticable {
 
   final ButtonState<MouseCursor>? cursor;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const RadioButtonThemeData({
     this.cursor,
-    this.animationDuration,
-    this.animationCurve,
     this.checkedDecoration,
     this.uncheckedDecoration,
   });
@@ -139,8 +134,6 @@ class RadioButtonThemeData with Diagnosticable {
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
       cursor: style.inputMouseCursor,
-      animationDuration: style.mediumAnimationDuration,
-      animationCurve: style.animationCurve,
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
@@ -172,8 +165,6 @@ class RadioButtonThemeData with Diagnosticable {
   RadioButtonThemeData copyWith(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       cursor: style?.cursor ?? cursor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
     );
@@ -193,11 +184,5 @@ class RadioButtonThemeData with Diagnosticable {
       'uncheckedDecoration',
       uncheckedDecoration,
     ));
-    properties.add(
-      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
-    );
-    properties.add(
-      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
-    );
   }
 }

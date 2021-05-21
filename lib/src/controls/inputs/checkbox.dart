@@ -97,8 +97,8 @@ class Checkbox extends StatelessWidget {
       builder: (context, state) {
         Widget child = AnimatedContainer(
           alignment: Alignment.center,
-          duration: style.animationDuration!,
-          curve: style.animationCurve!,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
           height: size,
           width: size,
@@ -151,9 +151,6 @@ class CheckboxThemeData with Diagnosticable {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const CheckboxThemeData({
     this.checkedDecoration,
     this.uncheckedDecoration,
@@ -165,8 +162,6 @@ class CheckboxThemeData with Diagnosticable {
     this.checkedIconColor,
     this.uncheckedIconColor,
     this.thirdstateIconColor,
-    this.animationDuration,
-    this.animationCurve,
   });
 
   factory CheckboxThemeData.standard(ThemeData style) {
@@ -210,8 +205,6 @@ class CheckboxThemeData with Diagnosticable {
       thirdstateIconColor: ButtonState.all(Colors.transparent),
       icon: Icons.check,
       margin: const EdgeInsets.all(4.0),
-      animationDuration: style.mediumAnimationDuration,
-      animationCurve: style.animationCurve,
     );
   }
 
@@ -231,8 +224,6 @@ class CheckboxThemeData with Diagnosticable {
           a?.uncheckedIconColor, b?.uncheckedIconColor, t, Color.lerp),
       thirdstateIconColor: ButtonState.lerp(
           a?.thirdstateIconColor, b?.thirdstateIconColor, t, Color.lerp),
-      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
-      animationDuration: t < 0.5 ? a?.animationDuration : b?.animationDuration,
       checkedDecoration: ButtonState.lerp(
           a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
       uncheckedDecoration: ButtonState.lerp(
@@ -251,8 +242,6 @@ class CheckboxThemeData with Diagnosticable {
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
       uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
       thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
       thirdstateDecoration: style?.thirdstateDecoration ?? thirdstateDecoration,
@@ -302,12 +291,6 @@ class CheckboxThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(
       ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
-    );
-    properties.add(
-      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
-    );
-    properties.add(
-      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
     );
   }
 }

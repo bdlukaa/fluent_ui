@@ -66,13 +66,14 @@ class FocusBorder extends StatelessWidget {
   }
 
   static Widget buildBorder(
+    BuildContext context,
     FocusThemeData style,
     bool focused, [
     Widget? child,
   ]) {
     return AnimatedContainer(
-      duration: style.animationDuration ?? Duration.zero,
-      curve: style.animationCurve ?? Curves.linear,
+      duration: FluentTheme.of(context).fasterAnimationDuration,
+      curve: FluentTheme.of(context).animationCurve,
       decoration: style.buildPrimaryDecoration(focused),
       child: DecoratedBox(
         decoration: style.buildSecondaryDecoration(focused),
@@ -100,12 +101,12 @@ class FocusBorder extends StatelessWidget {
             right: renderOutside ? -borderWidth : 0,
             top: renderOutside ? -borderWidth : 0,
             bottom: renderOutside ? -borderWidth : 0,
-            child: buildBorder(style, focused),
+            child: buildBorder(context, style, focused),
           ),
         ],
       );
     } else {
-      return buildBorder(style, focused, child);
+      return buildBorder(context, style, focused, child);
     }
   }
 }
@@ -140,9 +141,6 @@ class FocusThemeData with Diagnosticable {
   final double? glowFactor;
   final bool? renderOutside;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const FocusThemeData({
     this.borderRadius,
     this.primaryBorder,
@@ -150,8 +148,6 @@ class FocusThemeData with Diagnosticable {
     this.glowColor,
     this.glowFactor,
     this.renderOutside,
-    this.animationDuration,
-    this.animationCurve,
   }) : assert(glowFactor == null || glowFactor >= 0);
 
   static FocusThemeData of(BuildContext context) {
@@ -172,8 +168,6 @@ class FocusThemeData with Diagnosticable {
       glowColor: glowColor,
       glowFactor: 0.0,
       renderOutside: true,
-      animationDuration: animationDuration,
-      animationCurve: animationCurve,
     );
   }
 
@@ -186,8 +180,6 @@ class FocusThemeData with Diagnosticable {
       glowFactor: other.glowFactor ?? glowFactor,
       glowColor: other.glowColor ?? glowColor,
       renderOutside: other.renderOutside ?? renderOutside,
-      animationCurve: other.animationCurve ?? animationCurve,
-      animationDuration: other.animationDuration ?? animationDuration,
     );
   }
 

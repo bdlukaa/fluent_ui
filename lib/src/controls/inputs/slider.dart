@@ -359,14 +359,9 @@ class SliderThemeData with Diagnosticable {
 
   final EdgeInsetsGeometry? margin;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const SliderThemeData({
     this.cursor,
     this.margin,
-    this.animationDuration,
-    this.animationCurve,
     this.thumbColor,
     this.disabledThumbColor,
     this.activeColor,
@@ -383,8 +378,6 @@ class SliderThemeData with Diagnosticable {
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor.withOpacity(1),
       margin: EdgeInsets.zero,
-      animationDuration: style?.mediumAnimationDuration,
-      animationCurve: style?.animationCurve,
       disabledActiveColor: style?.disabledColor.withOpacity(1),
       disabledThumbColor: style?.disabledColor.withOpacity(1),
       disabledInactiveColor: style?.disabledColor,
@@ -398,8 +391,6 @@ class SliderThemeData with Diagnosticable {
     return SliderThemeData(
       margin: style?.margin ?? margin,
       cursor: style?.cursor ?? cursor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       thumbColor: style?.thumbColor ?? thumbColor,
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
@@ -417,10 +408,6 @@ class SliderThemeData with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(DiagnosticsProperty<MouseCursor>('cursor', cursor));
-    properties
-        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
-    properties.add(
-        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
     properties.add(ColorProperty('thumbColor', thumbColor));
     properties.add(ColorProperty('activeColor', activeColor));
     properties.add(ColorProperty('inactiveColor', inactiveColor));
