@@ -257,13 +257,28 @@ class ToggleSwitchThemeData with Diagnosticable {
       margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
-      checkedThumbDecoration: ButtonState.all(defaultThumbDecoration.copyWith(
-        color:
-            style.brightness.isLight ? style.activeColor : style.inactiveColor,
-      )),
-      uncheckedThumbDecoration: ButtonState.all(defaultThumbDecoration.copyWith(
-        color: style.inactiveColor,
-      )),
+      checkedThumbDecoration: ButtonState.resolveWith((states) {
+        return defaultThumbDecoration.copyWith(
+          color: states.isDisabled
+              ? ButtonThemeData.checkedInputColor(
+                  style,
+                  states,
+                ).basedOnLuminance()
+              : style.brightness.isLight
+                  ? style.activeColor
+                  : style.inactiveColor,
+        );
+      }),
+      uncheckedThumbDecoration: ButtonState.resolveWith((states) {
+        return defaultThumbDecoration.copyWith(
+          color: states.isDisabled
+              ? ButtonThemeData.uncheckedInputColor(
+                  style,
+                  states,
+                ).basedOnLuminance()
+              : style.inactiveColor,
+        );
+      }),
     );
   }
 

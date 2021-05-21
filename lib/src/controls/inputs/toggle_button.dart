@@ -76,9 +76,12 @@ class ToggleButton extends StatelessWidget {
       style: ButtonThemeData(
         decoration: ButtonState.resolveWith(
           (states) => checked
-              ? style.checkedDecoration!.resolve(states)
-              : style.uncheckedDecoration!.resolve(states),
+              ? style.checkedDecoration?.resolve(states)
+              : style.uncheckedDecoration?.resolve(states),
         ),
+        textStyle: ButtonState.resolveWith((states) => checked
+            ? style.checkedTextStyle?.resolve(states)
+            : style.uncheckedTextStyle?.resolve(states)),
         padding: style.padding,
         cursor: style.cursor,
         margin: style.margin,
@@ -95,6 +98,9 @@ class ToggleButtonThemeData with Diagnosticable {
   final ButtonState<Decoration?>? checkedDecoration;
   final ButtonState<Decoration?>? uncheckedDecoration;
 
+  final ButtonState<TextStyle?>? checkedTextStyle;
+  final ButtonState<TextStyle?>? uncheckedTextStyle;
+
   final double? scaleFactor;
 
   final EdgeInsetsGeometry? padding;
@@ -106,6 +112,8 @@ class ToggleButtonThemeData with Diagnosticable {
     this.margin,
     this.checkedDecoration,
     this.uncheckedDecoration,
+    this.checkedTextStyle,
+    this.uncheckedTextStyle,
     this.scaleFactor,
   });
 
@@ -113,15 +121,14 @@ class ToggleButtonThemeData with Diagnosticable {
     final defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(2),
     );
+    Color checkedColor(Set<ButtonStates> states) => states.isDisabled
+        ? ButtonThemeData.buttonColor(style, states)
+        : ButtonThemeData.checkedInputColor(style, states);
     return ToggleButtonThemeData(
       scaleFactor: 0.95,
       cursor: style.inputMouseCursor,
       checkedDecoration: ButtonState.resolveWith(
-        (states) => defaultDecoration.copyWith(
-          color: states.isDisabled
-              ? ButtonThemeData.buttonColor(style, states)
-              : ButtonThemeData.checkedInputColor(style, states),
-        ),
+        (states) => defaultDecoration.copyWith(color: checkedColor(states)),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => defaultDecoration.copyWith(
@@ -129,6 +136,10 @@ class ToggleButtonThemeData with Diagnosticable {
                 ? ButtonThemeData.uncheckedInputColor(style, states)
                 : ButtonThemeData.buttonColor(style, states)),
       ),
+      checkedTextStyle: ButtonState.resolveWith((states) {
+        return TextStyle(color: checkedColor(states).basedOnLuminance());
+      }),
+      uncheckedTextStyle: ButtonState.all(style.typography.body),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
     );
@@ -148,6 +159,8 @@ class ToggleButtonThemeData with Diagnosticable {
       uncheckedDecoration: ButtonState.lerp(
           a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
       scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
+      checkedTextStyle: ButtonState.lerp(a?.checkedTextStyle, b?.checkedTextStyle, t, TextStyle.lerp),
+      uncheckedTextStyle: ButtonState.lerp(a?.uncheckedTextStyle, b?.uncheckedTextStyle, t, TextStyle.lerp),
     );
   }
 
@@ -160,6 +173,8 @@ class ToggleButtonThemeData with Diagnosticable {
       checkedDecoration: style.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style.uncheckedDecoration ?? uncheckedDecoration,
       scaleFactor: style.scaleFactor ?? scaleFactor,
+      checkedTextStyle: style.checkedTextStyle ?? checkedTextStyle,
+      uncheckedTextStyle: style.uncheckedTextStyle ?? uncheckedTextStyle,
     );
   }
 
@@ -181,5 +196,6 @@ class ToggleButtonThemeData with Diagnosticable {
       uncheckedDecoration,
     ));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
+    // TODO(bdlukaa): add text styles to devtools
   }
 }

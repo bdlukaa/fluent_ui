@@ -196,7 +196,14 @@ class CheckboxThemeData with Diagnosticable {
           ),
         ),
       ),
-      checkedIconColor: ButtonState.all(style.activeColor),
+      checkedIconColor: ButtonState.resolveWith((states) {
+        return states.isDisabled
+            ? ButtonThemeData.checkedInputColor(
+                style,
+                states,
+              ).basedOnLuminance()
+            : style.activeColor;
+      }),
       uncheckedIconColor: ButtonState.resolveWith(
         (states) => states.isHovering || states.isPressing
             ? style.inactiveColor.withOpacity(0.8)
