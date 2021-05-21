@@ -448,12 +448,10 @@ class __TabState extends State<_Tab>
                   ),
                 Expanded(child: widget.tab.text),
                 if (widget.tab.closeIcon != null)
-                  FluentTheme(
-                    data: style.copyWith(
-                      focusTheme: FocusThemeData(
-                        primaryBorder: BorderSide.none,
-                        secondaryBorder: BorderSide.none,
-                      ),
+                  FocusTheme(
+                    data: FocusThemeData(
+                      primaryBorder: BorderSide.none,
+                      secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
                       icon: Icon(widget.tab.closeIcon),

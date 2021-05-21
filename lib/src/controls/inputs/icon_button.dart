@@ -70,12 +70,11 @@ class IconButton extends StatelessWidget {
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
-      builder: (context, state) => FluentTheme(
-        data: context.theme.copyWith(
-          iconTheme: IconThemeData(
-            color: state.isDisabled ? context.theme.disabledColor : null,
-          ).merge(iconTheme?.call(state)),
-        ),
+      builder: (context, state) => IconTheme(
+        data: IconThemeData(
+          color:
+              state.isDisabled ? FluentTheme.of(context).disabledColor : null,
+        ).merge(iconTheme?.call(state)),
         child: icon,
       ),
       onPressed: onPressed,

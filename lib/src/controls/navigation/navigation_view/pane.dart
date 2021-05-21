@@ -134,13 +134,11 @@ class PaneItem extends NavigationPaneItem {
               () {
                 final icon = Padding(
                   padding: style.iconPadding ?? EdgeInsets.zero,
-                  child: FluentTheme(
-                    data: context.theme.copyWith(
-                      iconTheme: IconThemeData(
-                        color: selected
-                            ? style.selectedIconColor!(state)
-                            : style.unselectedIconColor!(state),
-                      ),
+                  child: IconTheme(
+                    data: IconThemeData(
+                      color: selected
+                          ? style.selectedIconColor!(state)
+                          : style.unselectedIconColor!(state),
                     ),
                     child: item.icon,
                   ),

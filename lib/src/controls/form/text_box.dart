@@ -774,17 +774,19 @@ class _TextBoxState extends State<TextBox>
         buttonTheme: ButtonThemeData(
           margin: EdgeInsets.zero,
         ).copyWith(widget.iconButtonThemeData),
-        iconTheme: IconThemeData(size: 18),
       ),
-      child: () {
-        if (widget.header != null)
-          return InfoLabel(
-            child: listener,
-            label: widget.header!,
-            labelStyle: widget.headerStyle,
-          );
-        return listener;
-      }(),
+      child: IconTheme(
+        data: const IconThemeData(size: 18),
+        child: () {
+          if (widget.header != null)
+            return InfoLabel(
+              child: listener,
+              label: widget.header!,
+              labelStyle: widget.headerStyle,
+            );
+          return listener;
+        }(),
+      ),
     );
   }
 }
