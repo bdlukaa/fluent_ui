@@ -112,7 +112,8 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
 }
 
-class _AnimatedFluentThemeState extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
+class _AnimatedFluentThemeState
+    extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
   ThemeDataTween? _data;
 
   @override
@@ -406,8 +407,7 @@ class ThemeData with Diagnosticable {
       toggleButtonTheme: ToggleButtonThemeData.lerp(
           a.toggleButtonTheme, b.toggleButtonTheme, t),
       sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
-      // TODO(bdlukaa): lerp info bar theme
-      infoBarTheme: t < 0.5 ? a.infoBarTheme : b.infoBarTheme,
+      infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
       focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
       scrollbarTheme:
           ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),

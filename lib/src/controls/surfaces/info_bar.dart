@@ -221,6 +221,33 @@ class InfoBarThemeData with Diagnosticable {
     );
   }
 
+  static InfoBarThemeData lerp(
+    InfoBarThemeData? a,
+    InfoBarThemeData? b,
+    double t,
+  ) {
+    return InfoBarThemeData(
+      closeIcon: t < 0.5 ? a?.closeIcon : b?.closeIcon,
+      icon: t < 0.5 ? a?.icon : b?.icon,
+      color: (severity) {
+        return Color.lerp(
+          a?.color?.call(severity),
+          b?.color?.call(severity),
+          t,
+        );
+      },
+      actionStyle: ButtonThemeData.lerp(a?.actionStyle, b?.actionStyle, t),
+      iconColor: (severity) {
+        return Color.lerp(
+          a?.iconColor?.call(severity),
+          b?.iconColor?.call(severity),
+          t,
+        );
+      },
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+    );
+  }
+
   InfoBarThemeData copyWith(InfoBarThemeData? style) {
     if (style == null) return this;
     return InfoBarThemeData(
@@ -229,6 +256,7 @@ class InfoBarThemeData with Diagnosticable {
       color: style.color ?? color,
       actionStyle: style.actionStyle ?? actionStyle,
       iconColor: style.iconColor ?? iconColor,
+      padding: style.padding ?? padding,
     );
   }
 

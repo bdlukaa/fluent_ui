@@ -159,8 +159,10 @@ class ToggleButtonThemeData with Diagnosticable {
       uncheckedDecoration: ButtonState.lerp(
           a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
       scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
-      checkedTextStyle: ButtonState.lerp(a?.checkedTextStyle, b?.checkedTextStyle, t, TextStyle.lerp),
-      uncheckedTextStyle: ButtonState.lerp(a?.uncheckedTextStyle, b?.uncheckedTextStyle, t, TextStyle.lerp),
+      checkedTextStyle: ButtonState.lerp(
+          a?.checkedTextStyle, b?.checkedTextStyle, t, TextStyle.lerp),
+      uncheckedTextStyle: ButtonState.lerp(
+          a?.uncheckedTextStyle, b?.uncheckedTextStyle, t, TextStyle.lerp),
     );
   }
 
@@ -182,20 +184,13 @@ class ToggleButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+    properties.add(DiagnosticsProperty('padding', padding));
+    properties.add(DiagnosticsProperty('cursor', cursor));
+    properties.add(DiagnosticsProperty('checkedDecoration', checkedDecoration));
     properties
-        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
-    properties.add(
-      DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor),
-    );
-    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
-      'checkedDecoration',
-      checkedDecoration,
-    ));
-    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
-      'uncheckedDecoration',
-      uncheckedDecoration,
-    ));
+        .add(DiagnosticsProperty('uncheckedDecoration', uncheckedDecoration));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
-    // TODO(bdlukaa): add text styles to devtools
+    properties.add(DiagnosticsProperty('checkedTextStyle', checkedTextStyle));
+    properties.add(DiagnosticsProperty('uncheckedTextStyle', uncheckedTextStyle));
   }
 }
