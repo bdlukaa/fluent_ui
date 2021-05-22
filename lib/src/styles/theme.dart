@@ -300,8 +300,7 @@ class ThemeData with Diagnosticable {
       'normal': Color(0xFFe6e6e6),
       'dark': Color(0xFF1e1e1e),
     }).resolveFromBrightness(brightness);
-    typography =
-        Typography.standard(brightness: brightness).copyWith(typography);
+    typography = Typography.standard(brightness: brightness).merge(typography);
     inputMouseCursor ??= ButtonState.resolveWith((states) {
       if (states.isHovering || states.isPressing)
         return SystemMouseCursors.click;
@@ -312,7 +311,7 @@ class ThemeData with Diagnosticable {
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
       secondaryBorderColor: scaffoldBackgroundColor,
-    ).copyWith(focusTheme);
+    ).merge(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
@@ -414,7 +413,7 @@ class ThemeData with Diagnosticable {
     );
   }
 
-  ThemeData copyWith({
+  ThemeData merge({
     Brightness? brightness,
     Typography? typography,
     AccentColor? accentColor,
@@ -471,22 +470,21 @@ class ThemeData with Diagnosticable {
           slowAnimationDuration ?? this.slowAnimationDuration,
       inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
-      buttonTheme: this.buttonTheme.copyWith(buttonTheme),
-      checkboxTheme: this.checkboxTheme.copyWith(checkboxTheme),
-      dialogTheme: this.dialogTheme.copyWith(dialogTheme),
-      dividerTheme: this.dividerTheme.copyWith(dividerTheme),
-      focusTheme: this.focusTheme.copyWith(focusTheme),
+      buttonTheme: this.buttonTheme.merge(buttonTheme),
+      checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
+      dialogTheme: this.dialogTheme.merge(dialogTheme),
+      dividerTheme: this.dividerTheme.merge(dividerTheme),
+      focusTheme: this.focusTheme.merge(focusTheme),
       iconTheme: this.iconTheme.merge(iconTheme),
-      infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
-      navigationPaneTheme:
-          this.navigationPaneTheme.copyWith(navigationPaneTheme),
-      radioButtonTheme: this.radioButtonTheme.copyWith(radioButtonTheme),
-      scrollbarTheme: this.scrollbarTheme.copyWith(scrollbarTheme),
-      sliderTheme: this.sliderTheme.copyWith(sliderTheme),
-      splitButtonTheme: this.splitButtonTheme.copyWith(splitButtonTheme),
-      toggleButtonTheme: this.toggleButtonTheme.copyWith(toggleButtonTheme),
-      toggleSwitchTheme: this.toggleSwitchTheme.copyWith(toggleSwitchTheme),
-      tooltipTheme: this.tooltipTheme.copyWith(tooltipTheme),
+      infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
+      navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
+      radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
+      scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
+      sliderTheme: this.sliderTheme.merge(sliderTheme),
+      splitButtonTheme: this.splitButtonTheme.merge(splitButtonTheme),
+      toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
+      toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
+      tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
     );
   }
 

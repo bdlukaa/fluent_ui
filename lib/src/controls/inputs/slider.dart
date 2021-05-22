@@ -146,8 +146,8 @@ class _SliderState extends m.State<Slider> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SliderThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).sliderTheme.copyWith(widget.style),
+    final style = SliderThemeData.standard(FluentTheme.of(context)).merge(
+      FluentTheme.of(context).sliderTheme.merge(widget.style),
     );
     Widget child = Padding(
       padding: style.margin ?? EdgeInsets.zero,
@@ -369,7 +369,7 @@ class SliderTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return SliderTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -390,7 +390,7 @@ class SliderTheme extends InheritedTheme {
   /// SliderThemeData theme = SliderTheme.of(context);
   /// ```
   static SliderThemeData of(BuildContext context) {
-    return SliderThemeData.standard(FluentTheme.of(context)).copyWith(
+    return SliderThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -469,7 +469,7 @@ class SliderThemeData with Diagnosticable {
     );
   }
 
-  SliderThemeData copyWith(SliderThemeData? style) {
+  SliderThemeData merge(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,
       cursor: style?.cursor ?? cursor,

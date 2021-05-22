@@ -60,7 +60,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
-    _scrollbarTheme = ScrollbarTheme.of(context).copyWith(widget.style);
+    _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
     _hoverController.duration = _scrollbarTheme.animationDuration ??
         FluentTheme.of(context).fasterAnimationDuration;
     super.didChangeDependencies();
@@ -202,7 +202,7 @@ class ScrollbarTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return ScrollbarTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -223,7 +223,7 @@ class ScrollbarTheme extends InheritedTheme {
   /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
   /// ```
   static ScrollbarThemeData of(BuildContext context) {
-    return ScrollbarThemeData.standard(FluentTheme.of(context)).copyWith(
+    return ScrollbarThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -387,7 +387,7 @@ class ScrollbarThemeData with Diagnosticable {
     );
   }
 
-  ScrollbarThemeData copyWith(ScrollbarThemeData? style) {
+  ScrollbarThemeData merge(ScrollbarThemeData? style) {
     if (style == null) return this;
     return ScrollbarThemeData(
       backgroundColor: style.backgroundColor ?? backgroundColor,

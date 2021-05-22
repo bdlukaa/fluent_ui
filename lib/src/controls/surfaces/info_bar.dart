@@ -72,7 +72,7 @@ class InfoBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = InfoBarTheme.of(context).copyWith(this.style);
+    final style = InfoBarTheme.of(context).merge(this.style);
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
@@ -179,7 +179,7 @@ class InfoBarTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return InfoBarTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -202,7 +202,7 @@ class InfoBarTheme extends InheritedTheme {
   static InfoBarThemeData of(BuildContext context) {
     final InfoBarTheme? theme =
         context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
-    return InfoBarThemeData.standard(FluentTheme.of(context)).copyWith(
+    return InfoBarThemeData.standard(FluentTheme.of(context)).merge(
       theme?.data ?? FluentTheme.of(context).infoBarTheme,
     );
   }
@@ -276,7 +276,7 @@ class InfoBarThemeData with Diagnosticable {
             return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
-      actionStyle: ButtonThemeData.standard(style).copyWith(ButtonThemeData(
+      actionStyle: ButtonThemeData.standard(style).merge(ButtonThemeData(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.all(6),
       )),
@@ -310,7 +310,7 @@ class InfoBarThemeData with Diagnosticable {
     );
   }
 
-  InfoBarThemeData copyWith(InfoBarThemeData? style) {
+  InfoBarThemeData merge(InfoBarThemeData? style) {
     if (style == null) return this;
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,

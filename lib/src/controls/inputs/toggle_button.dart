@@ -64,7 +64,7 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleButtonTheme.of(context).copyWith(this.style);
+    final style = ToggleButtonTheme.of(context).merge(this.style);
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
@@ -115,7 +115,7 @@ class ToggleButtonTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return ToggleButtonTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -137,7 +137,7 @@ class ToggleButtonTheme extends InheritedTheme {
   /// ToggleButtonThemeData theme = ToggleButtonTheme.of(context);
   /// ```
   static ToggleButtonThemeData of(BuildContext context) {
-    return ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    return ToggleButtonThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -186,7 +186,7 @@ class ToggleButtonThemeData with Diagnosticable {
         ? ButtonThemeData.buttonColor(style, states)
         : ButtonThemeData.checkedInputColor(style, states);
     return ToggleButtonThemeData(
-      scaleFactor: 0.95,
+      scaleFactor: kButtonDefaultScaleFactor,
       cursor: style.inputMouseCursor,
       checkedDecoration: ButtonState.resolveWith(
         (states) => defaultDecoration.copyWith(color: checkedColor(states)),
@@ -198,9 +198,15 @@ class ToggleButtonThemeData with Diagnosticable {
                 : ButtonThemeData.buttonColor(style, states)),
       ),
       checkedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: checkedColor(states).basedOnLuminance());
+        return TextStyle(
+          color: states.isDisabled
+              ? style.disabledColor
+              : checkedColor(states).basedOnLuminance(),
+        );
       }),
-      uncheckedTextStyle: ButtonState.all(style.typography.body),
+      uncheckedTextStyle: ButtonState.resolveWith((states) {
+        return TextStyle(color: states.isDisabled ? style.disabledColor : null);
+      }),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
     );
@@ -227,7 +233,7 @@ class ToggleButtonThemeData with Diagnosticable {
     );
   }
 
-  ToggleButtonThemeData copyWith(ToggleButtonThemeData? style) {
+  ToggleButtonThemeData merge(ToggleButtonThemeData? style) {
     if (style == null) return this;
     return ToggleButtonThemeData(
       margin: style.margin ?? margin,

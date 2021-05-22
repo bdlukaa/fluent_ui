@@ -46,7 +46,7 @@ class SplitButtonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final SplitButtonThemeData style =
-        SplitButtonTheme.of(context).copyWith(this.style);
+        SplitButtonTheme.of(context).merge(this.style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
@@ -108,7 +108,7 @@ class SplitButtonTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return SplitButtonTheme(
         key: key,
-        data: _getInheritedSplitButtonThemeData(context).copyWith(data),
+        data: _getInheritedSplitButtonThemeData(context).merge(data),
         child: child,
       );
     });
@@ -126,7 +126,7 @@ class SplitButtonTheme extends InheritedTheme {
   /// ```
   static SplitButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    return SplitButtonThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedSplitButtonThemeData(context),
     );
   }
@@ -166,7 +166,7 @@ class SplitButtonThemeData with Diagnosticable {
     return SplitButtonThemeData(
       borderRadius: BorderRadius.circular(4),
       interval: 1,
-      defaultButtonThemeData: style.buttonTheme.copyWith(ButtonThemeData(
+      defaultButtonThemeData: style.buttonTheme.merge(ButtonThemeData(
         margin: EdgeInsets.zero,
       )),
     );
@@ -185,7 +185,7 @@ class SplitButtonThemeData with Diagnosticable {
     );
   }
 
-  SplitButtonThemeData copyWith(SplitButtonThemeData? style) {
+  SplitButtonThemeData merge(SplitButtonThemeData? style) {
     return SplitButtonThemeData(
       borderRadius: style?.borderRadius ?? borderRadius,
       interval: style?.interval ?? interval,

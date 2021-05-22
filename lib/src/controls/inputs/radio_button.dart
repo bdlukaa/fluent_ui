@@ -72,7 +72,7 @@ class RadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = RadioButtonTheme.of(context).copyWith(this.style);
+    final style = RadioButtonTheme.of(context).merge(this.style);
     return HoverButton(
       cursor: style.cursor,
       autofocus: autofocus,
@@ -143,7 +143,7 @@ class RadioButtonTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return RadioButtonTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -165,7 +165,7 @@ class RadioButtonTheme extends InheritedTheme {
   /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
   /// ```
   static RadioButtonThemeData of(BuildContext context) {
-    return RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    return RadioButtonThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -234,7 +234,7 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
-  RadioButtonThemeData copyWith(RadioButtonThemeData? style) {
+  RadioButtonThemeData merge(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       cursor: style?.cursor ?? cursor,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,

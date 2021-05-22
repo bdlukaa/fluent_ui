@@ -300,7 +300,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(Overlay.of(context, debugRequiredFor: widget) != null);
     final ThemeData theme = FluentTheme.of(context);
     final TooltipThemeData tooltipTheme =
-        TooltipTheme.of(context).copyWith(widget.style);
+        TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
     if (theme.brightness == Brightness.dark) {
@@ -387,7 +387,7 @@ class TooltipTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return TooltipTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -408,7 +408,7 @@ class TooltipTheme extends InheritedTheme {
   /// TooltipThemeData theme = TooltipTheme.of(context);
   /// ```
   static TooltipThemeData of(BuildContext context) {
-    return TooltipThemeData.standard(FluentTheme.of(context)).copyWith(
+    return TooltipThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -552,7 +552,7 @@ class TooltipThemeData with Diagnosticable {
     );
   }
 
-  TooltipThemeData copyWith(TooltipThemeData? style) {
+  TooltipThemeData merge(TooltipThemeData? style) {
     if (style == null) return this;
     return TooltipThemeData(
       decoration: style.decoration ?? decoration,

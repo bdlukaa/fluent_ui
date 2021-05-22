@@ -108,7 +108,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final ToggleSwitchThemeData style =
-        ToggleSwitchTheme.of(context).copyWith(widget.style);
+        ToggleSwitchTheme.of(context).merge(widget.style);
     final sliderGestureWidth = 45.0 + (style.padding?.horizontal ?? 0.0);
     return HoverButton(
       autofocus: widget.autofocus,
@@ -219,7 +219,7 @@ class ToggleSwitchTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return ToggleSwitchTheme(
         key: key,
-        data: _getInheritedToggleSwitchThemeData(context).copyWith(data),
+        data: _getInheritedToggleSwitchThemeData(context).merge(data),
         child: child,
       );
     });
@@ -237,7 +237,7 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// ```
   static ToggleSwitchThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
+    return ToggleSwitchThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedToggleSwitchThemeData(context),
     );
   }
@@ -366,7 +366,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
   }
 
-  ToggleSwitchThemeData copyWith(ToggleSwitchThemeData? style) {
+  ToggleSwitchThemeData merge(ToggleSwitchThemeData? style) {
     return ToggleSwitchThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,

@@ -81,8 +81,7 @@ class Checkbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final CheckboxThemeData style =
-        CheckboxTheme.of(context).copyWith(this.style);
+    final CheckboxThemeData style = CheckboxTheme.of(context).merge(this.style);
     final double size = 22;
     return HoverButton(
       autofocus: autofocus,
@@ -156,7 +155,7 @@ class CheckboxTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return CheckboxTheme(
         key: key,
-        data: _getInheritedCheckboxThemeData(context).copyWith(data),
+        data: _getInheritedCheckboxThemeData(context).merge(data),
         child: child,
       );
     });
@@ -174,7 +173,7 @@ class CheckboxTheme extends InheritedTheme {
   /// ```
   static CheckboxThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return CheckboxThemeData.standard(FluentTheme.of(context)).copyWith(
+    return CheckboxThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedCheckboxThemeData(context),
     );
   }
@@ -302,7 +301,7 @@ class CheckboxThemeData with Diagnosticable {
     );
   }
 
-  CheckboxThemeData copyWith(CheckboxThemeData? style) {
+  CheckboxThemeData merge(CheckboxThemeData? style) {
     return CheckboxThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,

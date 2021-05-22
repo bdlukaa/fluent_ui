@@ -27,7 +27,7 @@ class NavigationPaneTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return NavigationPaneTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -49,7 +49,7 @@ class NavigationPaneTheme extends InheritedTheme {
   /// NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
   /// ```
   static NavigationPaneThemeData of(BuildContext context) {
-    return NavigationPaneThemeData.standard(FluentTheme.of(context)).copyWith(
+    return NavigationPaneThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -168,7 +168,7 @@ class NavigationPaneThemeData with Diagnosticable {
     );
   }
 
-  NavigationPaneThemeData copyWith(NavigationPaneThemeData? style) {
+  NavigationPaneThemeData merge(NavigationPaneThemeData? style) {
     return NavigationPaneThemeData(
       cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,

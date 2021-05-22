@@ -41,7 +41,7 @@ class Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = DividerTheme.of(context).copyWith(this.style);
+    final style = DividerTheme.of(context).merge(this.style);
     return AnimatedContainer(
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
@@ -82,7 +82,7 @@ class DividerTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return DividerTheme(
         key: key,
-        data: _getInheritedThemeData(context).copyWith(data),
+        data: _getInheritedThemeData(context).merge(data),
         child: child,
       );
     });
@@ -103,7 +103,7 @@ class DividerTheme extends InheritedTheme {
   /// DividerThemeData theme = DividerTheme.of(context);
   /// ```
   static DividerThemeData of(BuildContext context) {
-    return DividerThemeData.standard(FluentTheme.of(context)).copyWith(
+    return DividerThemeData.standard(FluentTheme.of(context)).merge(
       _getInheritedThemeData(context),
     );
   }
@@ -170,7 +170,7 @@ class DividerThemeData with Diagnosticable {
     );
   }
 
-  DividerThemeData copyWith(DividerThemeData? style) {
+  DividerThemeData merge(DividerThemeData? style) {
     if (style == null) return this;
     return DividerThemeData(
       decoration: style.decoration ?? decoration,

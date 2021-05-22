@@ -109,7 +109,7 @@ class Typography with Diagnosticable {
   }
 
   /// Copy this with a new [typography]
-  Typography copyWith(Typography? typography) {
+  Typography merge(Typography? typography) {
     if (typography == null) return this;
     return Typography(
       header: typography.header ?? header,

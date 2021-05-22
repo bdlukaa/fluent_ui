@@ -7,6 +7,9 @@ import 'package:flutter/rendering.dart';
 
 import '../utils/hover_button.dart';
 
+/// The scale factor used by default on [Button]
+const kButtonDefaultScaleFactor = 0.95;
+
 enum _ButtonType { def, icon, toggle }
 
 /// A button gives the user a way to trigger an immediate action
@@ -160,7 +163,7 @@ class _ButtonState extends State<Button> {
         break;
     }
     assert(debugCheckHasFluentTheme(context));
-    final style = ButtonTheme.of(context).copyWith(widget.style);
+    final style = ButtonTheme.of(context).merge(widget.style);
     return HoverButton(
       semanticLabel: widget.semanticLabel,
       margin: style.margin,
@@ -250,7 +253,7 @@ class ButtonTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return ButtonTheme(
         key: key,
-        data: _getInheritedButtonThemeData(context).copyWith(data),
+        data: _getInheritedButtonThemeData(context).merge(data),
         child: child,
       );
     });
@@ -268,7 +271,7 @@ class ButtonTheme extends InheritedTheme {
   /// ```
   static ButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+    return ButtonThemeData.standard(FluentTheme.of(context)).merge(
       context.dependOnInheritedWidgetOfExactType<ButtonTheme>()?.data ??
           FluentTheme.of(context).buttonTheme,
     );
@@ -324,12 +327,10 @@ class ButtonThemeData with Diagnosticable {
           color: buttonColor(style, states),
         );
       }),
-      scaleFactor: 0.95,
-      textStyle: ButtonState.resolveWith(
-        (states) => style.typography.body!.copyWith(
-          color: states.isDisabled ? style.disabledColor : null,
-        ),
-      ),
+      scaleFactor: kButtonDefaultScaleFactor,
+      textStyle: ButtonState.resolveWith((states) {
+        return TextStyle(color: states.isDisabled ? style.disabledColor : null);
+      }),
     );
   }
 
@@ -350,7 +351,7 @@ class ButtonThemeData with Diagnosticable {
     );
   }
 
-  ButtonThemeData copyWith(ButtonThemeData? style) {
+  ButtonThemeData merge(ButtonThemeData? style) {
     if (style == null) return this;
     return ButtonThemeData(
       decoration: style.decoration ?? decoration,

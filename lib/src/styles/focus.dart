@@ -87,7 +87,7 @@ class FocusBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FocusTheme.of(context).copyWith(this.style);
+    final style = FocusTheme.of(context).merge(this.style);
     final double borderWidth =
         (style.primaryBorder?.width ?? 0) + (style.secondaryBorder?.width ?? 0);
     if (useStackApproach) {
@@ -126,7 +126,7 @@ class FocusTheme extends InheritedWidget {
   static FocusThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = context.dependOnInheritedWidgetOfExactType<FocusTheme>();
-    return FluentTheme.of(context).focusTheme.copyWith(theme?.data);
+    return FluentTheme.of(context).focusTheme.merge(theme?.data);
   }
 
   @override
@@ -184,7 +184,7 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
-  FocusThemeData copyWith(FocusThemeData? other) {
+  FocusThemeData merge(FocusThemeData? other) {
     if (other == null) return this;
     return FocusThemeData(
       primaryBorder: other.primaryBorder ?? primaryBorder,

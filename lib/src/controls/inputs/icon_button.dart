@@ -94,7 +94,7 @@ class IconButton extends StatelessWidget {
           );
         }),
         padding: const EdgeInsets.all(4),
-      ).copyWith(style),
+      ).merge(style),
     );
   }
 }

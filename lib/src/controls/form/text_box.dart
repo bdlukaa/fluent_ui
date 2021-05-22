@@ -772,7 +772,7 @@ class _TextBoxState extends State<TextBox>
     return ButtonTheme.merge(
       data: ButtonThemeData(
         margin: EdgeInsets.zero,
-      ).copyWith(widget.iconButtonThemeData),
+      ).merge(widget.iconButtonThemeData),
       child: IconTheme(
         data: const IconThemeData(size: 18),
         child: () {
