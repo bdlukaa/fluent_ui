@@ -72,28 +72,26 @@ class InfoBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = InfoBarThemeData.standard(context.theme).copyWith(
-      context.theme.infoBarTheme.copyWith(this.style),
-    );
+    final style = InfoBarTheme.of(context).merge(this.style);
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
-      style: context.theme.typography.base ?? TextStyle(),
+      style: FluentTheme.of(context).typography.base ?? TextStyle(),
       child: this.title,
     );
     final content = () {
       if (this.content == null) return null;
       return DefaultTextStyle(
-        style: context.theme.typography.body ?? TextStyle(),
+        style: FluentTheme.of(context).typography.body ?? TextStyle(),
         child: this.content!,
         softWrap: true,
       );
     }();
     final action = () {
       if (this.action == null) return null;
-      return FluentTheme(
+      return ButtonTheme.merge(
         child: this.action!,
-        data: context.theme.copyWith(buttonTheme: style.actionStyle),
+        data: style.actionStyle ?? const ButtonThemeData(),
       );
     }();
     return Acrylic(
@@ -152,6 +150,70 @@ class InfoBar extends StatelessWidget {
       ),
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [InfoBar]s in this widget's subtree.
+///
+/// Values specified here are used for [InfoBar] properties that are not
+/// given an explicit non-null value.
+class InfoBarTheme extends InheritedTheme {
+  /// Creates a info bar theme that controls the configurations for
+  /// [InfoBar].
+  const InfoBarTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [InfoBar] widgets.
+  final InfoBarThemeData data;
+
+  /// Creates a button theme that controls how descendant [InfoBar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required InfoBarThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return InfoBarTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static InfoBarThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    return theme?.data ?? FluentTheme.of(context).infoBarTheme;
+  }
+
+  /// Returns the [data] from the closest [InfoBarTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.infoBarTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// InfoBarThemeData theme = InfoBarTheme.of(context);
+  /// ```
+  static InfoBarThemeData of(BuildContext context) {
+    final InfoBarTheme? theme =
+        context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    return InfoBarThemeData.standard(FluentTheme.of(context)).merge(
+      theme?.data ?? FluentTheme.of(context).infoBarTheme,
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return InfoBarTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
@@ -214,14 +276,41 @@ class InfoBarThemeData with Diagnosticable {
             return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
-      actionStyle: ButtonThemeData.standard(style).copyWith(ButtonThemeData(
+      actionStyle: ButtonThemeData.standard(style).merge(ButtonThemeData(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.all(6),
       )),
     );
   }
 
-  InfoBarThemeData copyWith(InfoBarThemeData? style) {
+  static InfoBarThemeData lerp(
+    InfoBarThemeData? a,
+    InfoBarThemeData? b,
+    double t,
+  ) {
+    return InfoBarThemeData(
+      closeIcon: t < 0.5 ? a?.closeIcon : b?.closeIcon,
+      icon: t < 0.5 ? a?.icon : b?.icon,
+      color: (severity) {
+        return Color.lerp(
+          a?.color?.call(severity),
+          b?.color?.call(severity),
+          t,
+        );
+      },
+      actionStyle: ButtonThemeData.lerp(a?.actionStyle, b?.actionStyle, t),
+      iconColor: (severity) {
+        return Color.lerp(
+          a?.iconColor?.call(severity),
+          b?.iconColor?.call(severity),
+          t,
+        );
+      },
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+    );
+  }
+
+  InfoBarThemeData merge(InfoBarThemeData? style) {
     if (style == null) return this;
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
@@ -229,6 +318,7 @@ class InfoBarThemeData with Diagnosticable {
       color: style.color ?? color,
       actionStyle: style.actionStyle ?? actionStyle,
       iconColor: style.iconColor ?? iconColor,
+      padding: style.padding ?? padding,
     );
   }
 

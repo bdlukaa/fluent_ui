@@ -62,7 +62,7 @@ class ListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return Container(
       decoration: ShapeDecoration(
         shape: shape ?? ContinuousRectangleBorder(),
@@ -155,20 +155,20 @@ class TappableListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return HoverButton(
       cursor: style.inputMouseCursor,
       onPressed: onTap,
       focusNode: focusNode,
       autofocus: autofocus,
-      builder: (context, state) {
+      builder: (context, states) {
         final Color _tileColor = () {
           if (tileColor != null) {
-            return tileColor!(state);
-          } else if (state.isFocused) {
+            return tileColor!.resolve(states);
+          } else if (states.isFocused) {
             return style.accentColor.resolve(context);
           }
-          return ButtonThemeData.uncheckedInputColor(style, state);
+          return ButtonThemeData.uncheckedInputColor(style, states);
         }();
         return ListTile(
           contentPadding: contentPadding,
@@ -177,7 +177,7 @@ class TappableListTile extends StatelessWidget {
           subtitle: subtitle,
           isThreeLine: isThreeLine,
           tileColor: _tileColor,
-          shape: shape?.call(state),
+          shape: shape?.resolve(states),
         );
       },
     );

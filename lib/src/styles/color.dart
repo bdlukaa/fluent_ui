@@ -235,6 +235,17 @@ class AccentColor extends ColorSwatch<String> {
   /// The lighest shade of the color
   Color get lightest => swatch['lightest'] ?? lighter;
 
+  static AccentColor lerp(AccentColor? a, AccentColor? b, double t) {
+    return AccentColor('normal', {
+      'darkest': Color.lerp(a?.darkest, b?.darkest, t)!,
+      'dark': Color.lerp(a?.dark, b?.dark, t)!,
+      'normal': Color.lerp(a?.normal, b?.normal, t)!,
+      'light': Color.lerp(a?.light, b?.light, t)!,
+      'lighter': Color.lerp(a?.lighter, b?.lighter, t)!,
+      'lightest': Color.lerp(a?.lightest, b?.lightest, t)!,
+    });
+  }
+
   static Color resolve(Color resolvable, BuildContext context) {
     return (resolvable is AccentColor)
         ? resolvable.resolveFrom(context)
@@ -299,7 +310,7 @@ extension colorExtension on Color {
     Color darkColor = Colors.black,
     Color lightColor = Colors.white,
   }) {
-    return computeLuminance() >= 0.5 ? darkColor : lightColor;
+    return computeLuminance() < 0.5 ? lightColor : darkColor;
   }
 
   /// Lerp this color with another color.

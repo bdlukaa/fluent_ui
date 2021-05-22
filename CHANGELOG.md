@@ -1,5 +1,38 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Reworked the theme api ([#39](https://github.com/bdlukaa/fluent_ui/pull/39)):
+  - Removed the theme extension (`context.theme`). Use `FluentTheme.of(context)` instead
+  - `ButtonState` is now a class that can receive a value. It now allows lerping between values, making `AnimatedFluentTheme` possible.
+
+    Here's an example of how to migrate your code:
+
+    *Before*: `cursor: (_) => SystemMouseCursors.click,`\
+    *Now*: `cursor: ButtonState.all(SystemMouseCursors.click),`
+
+  - All theme datas and `AccentColor` have now a lerp method, in order to make `AnimatedFluentTheme` possible.
+  - Implemented `AnimatedFluentTheme`, in order to replace `AnimateContainer`s all around the library
+  - Dedicated theme for each theme data ([#37](https://github.com/bdlukaa/fluent_ui/issues/37)): 
+    - IconTheme
+    - ButtonTheme
+    - RadioButtonTheme
+    - CheckboxTheme
+    - FocusTheme
+    - SplitButtonTheme
+    - ToggleButtonTheme
+    - ToggleSwitchTheme
+    - NavigationPaneTheme
+    - InfoBarTheme
+    - TooltipTheme
+    - DividerTheme
+    - ScrollbarTheme
+  - `DividerThemeData` now has `verticalMargin` and `horizontalMargin` instead of an axis callback.
+  - Updated button colors.
+  - Removed `animationDuration` and `animationCurve` from theme datas (except from `NavigationPaneThemeData`).
+  - Renamed `copyWith` to `merge` on theme datas (except from `ThemeData`)
+  - Fixed typo `standart` -> `standard`
+
 ## [2.0.1] - [21/05/2021]
 
 - Minimal flutter version is now 2.2
@@ -294,7 +327,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
   - **NEW** `Style.fastAnimationDuration` (Defaults to 150ms)
   - **NEW** `Style.mediumAnimationDuration` (Defaults to 300ms)
   - **NEW** `Style.slowAnimationDuration` (Defaults to 500ms)
-  - Default `animationCurve` is now `Curves.easeInOut` (standart) instead of `Curves.linear`
+  - Default `animationCurve` is now `Curves.easeInOut` (standard) instead of `Curves.linear`
   - **BREAKING** Removed `Style.animationDuration`
 - Refactored Navigation Panel
 

@@ -146,8 +146,8 @@ class TabView extends StatelessWidget {
           reorderIndex: isReorderEnabled ? index : null,
           selected: index == currentIndex,
           onPressed: onChanged == null ? null : () => onChanged!(index),
-          animationDuration: context.theme.fastAnimationDuration,
-          animationCurve: context.theme.animationCurve,
+          animationDuration: FluentTheme.of(context).fastAnimationDuration,
+          animationCurve: FluentTheme.of(context).animationCurve,
         ),
       ),
       if (![currentIndex - 1, currentIndex].contains(index)) divider,
@@ -155,8 +155,8 @@ class TabView extends StatelessWidget {
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
       width: preferredTabWidth,
-      duration: context.theme.fastAnimationDuration,
-      curve: context.theme.animationCurve,
+      duration: FluentTheme.of(context).fastAnimationDuration,
+      curve: FluentTheme.of(context).animationCurve,
       child: child,
     );
   }
@@ -164,12 +164,12 @@ class TabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final divider = SizedBox(
+    final divider = const SizedBox(
       height: _kTileHeight,
-      child: Divider(
+      child: const Divider(
         direction: Axis.vertical,
-        style: DividerThemeData(
-          margin: (_) => EdgeInsets.symmetric(vertical: 8),
+        style: const DividerThemeData(
+          verticalMargin: const EdgeInsets.symmetric(vertical: 8),
         ),
       ),
     );
@@ -232,9 +232,9 @@ class TabView extends StatelessWidget {
                     return IconThemeData(
                       color: () {
                         if (state.isDisabled || state.isNone)
-                          return context.theme.disabledColor;
+                          return FluentTheme.of(context).disabledColor;
                         else
-                          return context.theme.inactiveColor;
+                          return FluentTheme.of(context).inactiveColor;
                       }(),
                     );
                   },
@@ -406,14 +406,14 @@ class __TabState extends State<_Tab>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
-      cursor: widget.selected ? (_) => SystemMouseCursors.basic : null,
+      cursor: widget.selected ? ButtonState.all(MouseCursor.defer) : null,
       onPressed: widget.onPressed,
       builder: (context, state) {
-        final primaryBorder = context.theme.focusTheme.primaryBorder;
+        final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
         Widget child = Container(
           height: _kTileHeight,
           constraints: BoxConstraints(
@@ -448,12 +448,10 @@ class __TabState extends State<_Tab>
                   ),
                 Expanded(child: widget.tab.text),
                 if (widget.tab.closeIcon != null)
-                  FluentTheme(
-                    data: style.copyWith(
-                      focusTheme: FocusThemeData(
-                        primaryBorder: BorderSide.none,
-                        secondaryBorder: BorderSide.none,
-                      ),
+                  FocusTheme(
+                    data: FocusThemeData(
+                      primaryBorder: BorderSide.none,
+                      secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
                       icon: Icon(widget.tab.closeIcon),
@@ -463,14 +461,14 @@ class __TabState extends State<_Tab>
                           size: 18,
                           color: () {
                             if (state.isDisabled || state.isNone)
-                              return context.theme.disabledColor;
+                              return FluentTheme.of(context).disabledColor;
                             else
-                              return context.theme.inactiveColor;
+                              return FluentTheme.of(context).inactiveColor;
                           }(),
                         );
                       },
                       style: ButtonThemeData(
-                        decoration: (state) {
+                        decoration: ButtonState.resolveWith((states) {
                           late Color? color;
                           if (state.isNone)
                             color = null;
@@ -481,7 +479,7 @@ class __TabState extends State<_Tab>
                             border: Border.all(style: BorderStyle.none),
                             color: color,
                           );
-                        },
+                        }),
                         margin: EdgeInsets.zero,
                         padding: EdgeInsets.zero,
                       ),

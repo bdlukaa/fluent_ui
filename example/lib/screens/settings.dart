@@ -34,7 +34,7 @@ class Settings extends StatelessWidget {
         ),
       ];
       final border = Border.all(color: Colors.grey[100], width: 0.5);
-      if (context.theme.brightness == Brightness.light) {
+      if (FluentTheme.of(context).brightness == Brightness.light) {
         return BoxDecoration(
           color: Colors.white,
           borderRadius: radius,
@@ -60,7 +60,8 @@ class Settings extends StatelessWidget {
         ),
         controller: controller,
         children: [
-          Text('Theme mode', style: context.theme.typography.subtitle),
+          Text('Theme mode',
+              style: FluentTheme.of(context).typography.subtitle),
           ...List.generate(ThemeMode.values.length, (index) {
             final mode = ThemeMode.values[index];
             return RadioListTile(
@@ -82,12 +83,12 @@ class Settings extends StatelessWidget {
             Text(
               'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on windows yet.'
               '\nWe must wait until Flutter Desktop stable release',
-              style: context.theme.typography.caption,
+              style: FluentTheme.of(context).typography.caption,
             ),
 
           Text(
             'Navigation Pane Display Mode',
-            style: context.theme.typography.subtitle,
+            style: FluentTheme.of(context).typography.subtitle,
           ),
           ...List.generate(PaneDisplayMode.values.length, (index) {
             final mode = PaneDisplayMode.values[index];
@@ -104,7 +105,8 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
-          Text('Accent Color', style: context.theme.typography.subtitle),
+          Text('Accent Color',
+              style: FluentTheme.of(context).typography.subtitle),
           Wrap(children: [
             Tooltip(
               style: tooltipThemeData,

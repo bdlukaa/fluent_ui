@@ -72,9 +72,7 @@ class RadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = RadioButtonThemeData.standard(context.theme).copyWith(
-      context.theme.radioButtonTheme.copyWith(this.style),
-    );
+    final style = RadioButtonTheme.of(context).merge(this.style);
     return HoverButton(
       cursor: style.cursor,
       autofocus: autofocus,
@@ -82,12 +80,13 @@ class RadioButton extends StatelessWidget {
       semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final decoration = checked
-            ? style.checkedDecoration!(state)
-            : style.uncheckedDecoration!(state);
+        final BoxDecoration decoration = (checked
+                ? style.checkedDecoration?.resolve(state)
+                : style.uncheckedDecoration?.resolve(state)) ??
+            BoxDecoration(shape: BoxShape.circle);
         Widget child = AnimatedContainer(
-          duration: style.animationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? Curves.linear,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
           decoration: decoration.copyWith(color: Colors.transparent),
@@ -97,8 +96,8 @@ class RadioButton extends StatelessWidget {
           /// way, the inner color will only be rendered within the
           /// bounds of the border.
           child: AnimatedContainer(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? Curves.linear,
+            duration: FluentTheme.of(context).mediumAnimationDuration,
+            curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
               color: decoration.color ?? Colors.transparent,
               shape: decoration.shape,
@@ -117,20 +116,78 @@ class RadioButton extends StatelessWidget {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [RadioButton]s in this widget's subtree.
+///
+/// Values specified here are used for [RadioButton] properties that are not
+/// given an explicit non-null value.
+class RadioButtonTheme extends InheritedTheme {
+  /// Creates a radio button theme that controls the configurations for
+  /// [RadioButton].
+  const RadioButtonTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [RadioButton] widgets.
+  final RadioButtonThemeData data;
+
+  /// Creates a button theme that controls how descendant [RadioButton]s should
+  /// look like, and merges in the current radio button theme, if any.
+  static Widget merge({
+    Key? key,
+    required RadioButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return RadioButtonTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
+    final RadioButtonTheme? theme =
+        context.dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
+    return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
+  }
+
+  /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.radioButtonTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
+  /// ```
+  static RadioButtonThemeData of(BuildContext context) {
+    return RadioButtonThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return RadioButtonTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
+}
+
 @immutable
 class RadioButtonThemeData with Diagnosticable {
-  final ButtonState<BoxDecoration>? checkedDecoration;
-  final ButtonState<BoxDecoration>? uncheckedDecoration;
+  final ButtonState<BoxDecoration?>? checkedDecoration;
+  final ButtonState<BoxDecoration?>? uncheckedDecoration;
 
   final ButtonState<MouseCursor>? cursor;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const RadioButtonThemeData({
     this.cursor,
-    this.animationDuration,
-    this.animationCurve,
     this.checkedDecoration,
     this.uncheckedDecoration,
   });
@@ -138,37 +195,48 @@ class RadioButtonThemeData with Diagnosticable {
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
       cursor: style.inputMouseCursor,
-      animationDuration: style.mediumAnimationDuration,
-      animationCurve: style.animationCurve,
-      checkedDecoration: (state) => BoxDecoration(
-        border: Border.all(
-          color: ButtonThemeData.checkedInputColor(style, state),
-          width: 4.5,
+      checkedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          border: Border.all(
+            color: ButtonThemeData.checkedInputColor(style, states),
+            width: 4.5,
+          ),
+          shape: BoxShape.circle,
+          color: Colors.white,
         ),
-        shape: BoxShape.circle,
-        color: Colors.white,
       ),
-      uncheckedDecoration: (state) => BoxDecoration(
-        color: ButtonThemeData.uncheckedInputColor(style, state),
-        border: Border.all(
-          style: state.isNone || state.isFocused
-              ? BorderStyle.solid
-              : BorderStyle.none,
-          width: 1,
-          color: state.isNone || state.isFocused
-              ? style.disabledColor
-              : ButtonThemeData.uncheckedInputColor(style, state),
+      uncheckedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          color: ButtonThemeData.uncheckedInputColor(style, states),
+          border: Border.all(
+            style: states.isNone || states.isFocused
+                ? BorderStyle.solid
+                : BorderStyle.none,
+            width: 1,
+            color: states.isNone || states.isFocused
+                ? style.disabledColor
+                : ButtonThemeData.uncheckedInputColor(style, states),
+          ),
+          shape: BoxShape.circle,
         ),
-        shape: BoxShape.circle,
       ),
     );
   }
 
-  RadioButtonThemeData copyWith(RadioButtonThemeData? style) {
+  static RadioButtonThemeData lerp(
+      RadioButtonThemeData? a, RadioButtonThemeData? b, double t) {
+    return RadioButtonThemeData(
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
+          b?.uncheckedDecoration, t, BoxDecoration.lerp),
+    );
+  }
+
+  RadioButtonThemeData merge(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       cursor: style?.cursor ?? cursor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
     );
@@ -177,22 +245,11 @@ class RadioButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
-    );
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
-      'checkedDecoration',
-      checkedDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration>?>.has(
-      'uncheckedDecoration',
-      uncheckedDecoration,
-    ));
-    properties.add(
-      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
-    );
-    properties.add(
-      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
-    );
+    properties
+        .add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+        'checkedDecoration', checkedDecoration));
+    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+        'uncheckedDecoration', uncheckedDecoration));
   }
 }

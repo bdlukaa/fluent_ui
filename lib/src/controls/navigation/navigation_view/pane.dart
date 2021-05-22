@@ -107,7 +107,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = displayMode == PaneDisplayMode.compact;
     final bool isOpen =
         [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(displayMode);
-    final style = NavigationPaneThemeData.of(context);
+    final style = NavigationPaneTheme.of(context);
 
     Widget result = SizedBox(
       key: item.itemKey,
@@ -116,10 +116,10 @@ class PaneItem extends NavigationPaneItem {
       child: HoverButton(
         onPressed: onPressed,
         cursor: style.cursor,
-        builder: (context, state) {
+        builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle!(state)
-              : style.unselectedTextStyle!(state);
+              ? style.selectedTextStyle!.resolve(states)
+              : style.unselectedTextStyle!.resolve(states);
           final textResult = item.title.isNotEmpty
               ? Padding(
                   padding: style.labelPadding ?? EdgeInsets.zero,
@@ -129,24 +129,24 @@ class PaneItem extends NavigationPaneItem {
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
+            mainAxisAlignment:
+                isTop ? MainAxisAlignment.center : MainAxisAlignment.end,
             children: [
               if (isOpen) Expanded(child: textResult),
               () {
                 final icon = Padding(
                   padding: style.iconPadding ?? EdgeInsets.zero,
-                  child: FluentTheme(
-                    data: context.theme.copyWith(
-                      iconTheme: IconThemeData(
-                        color: selected
-                            ? style.selectedIconColor!(state)
-                            : style.unselectedIconColor!(state),
-                      ),
+                  child: IconTheme(
+                    data: IconThemeData(
+                      color: selected
+                          ? style.selectedIconColor!.resolve(states)
+                          : style.unselectedIconColor!.resolve(states),
                     ),
                     child: item.icon,
                   ),
                 );
                 if (isOpen) return icon;
-                return Expanded(child: icon);
+                return icon;
               }(),
             ],
           );
@@ -158,7 +158,7 @@ class PaneItem extends NavigationPaneItem {
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: style.tileColor?.call(state),
+            color: style.tileColor?.resolve(states),
             child: child,
           );
           return Semantics(
@@ -166,7 +166,7 @@ class PaneItem extends NavigationPaneItem {
             selected: selected,
             child: FocusBorder(
               child: child,
-              focused: state.isFocused,
+              focused: states.isFocused,
               renderOutside: false,
             ),
           );
@@ -203,20 +203,14 @@ class PaneItemSeparator extends NavigationPaneItem {
       style: DividerThemeData(
         thickness: thickness,
         decoration: color != null ? BoxDecoration(color: color) : null,
-        margin: (axis) {
-          switch (axis) {
-            case Axis.vertical:
-              return EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 10.0,
-              );
-            case Axis.horizontal:
-              return EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 10.0,
-              );
-          }
-        },
+        verticalMargin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 10.0,
+        ),
+        horizontalMargin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 10.0,
+        ),
       ),
     );
   }
@@ -240,7 +234,7 @@ class PaneItemHeader extends NavigationPaneItem {
 
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     return Padding(
       key: itemKey,
       padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -400,7 +394,7 @@ class NavigationPane with Diagnosticable {
   }) {
     if (index == null) return child;
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
 
     final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
     final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
@@ -515,7 +509,7 @@ class _TopNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     Widget topBar = Acrylic(
       height: kOneLineTileHeight,
       color: theme.backgroundColor,
@@ -613,15 +607,15 @@ class _CompactNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
-    return Acrylic(
+    return AnimatedAcrylic(
+      duration: theme.animationDuration ?? Duration.zero,
+      curve: theme.animationCurve ?? Curves.linear,
       key: paneKey,
       width: _kCompactNavigationPanelWidth,
-      animationDuration: theme.animationDuration ?? Duration.zero,
-      animationCurve: theme.animationCurve ?? Curves.linear,
       color: theme.backgroundColor,
       child: pane.indicatorBuilder(
         context: context,
@@ -630,51 +624,55 @@ class _CompactNavigationPane extends StatelessWidget {
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.horizontal,
         y: _getIndicatorY(context),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          () {
-            if (pane.menuButton != null) return pane.menuButton!;
-            if (pane.onDisplayModeRequested != null)
-              return NavigationPane.buildMenuButton(
-                context,
-                FluentLocalizations.of(context).openNavigationTooltip,
-                pane,
-                onPressed: () {
-                  pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                },
-                padding: showReplacement ? EdgeInsets.zero : topPadding,
-              );
-            return SizedBox.shrink();
-          }(),
-          if (showReplacement)
-            Padding(
-              padding: topPadding,
-              child: PaneItem.buildPaneItemButton(
-                context,
-                PaneItem(
-                  title: FluentLocalizations.of(context).clickToSearch,
-                  icon: pane.autoSuggestBoxReplacement!,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            () {
+              if (pane.menuButton != null) return pane.menuButton!;
+              if (pane.onDisplayModeRequested != null)
+                return NavigationPane.buildMenuButton(
+                  context,
+                  FluentLocalizations.of(context).openNavigationTooltip,
+                  pane,
+                  onPressed: () {
+                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                  },
+                  padding: showReplacement ? EdgeInsets.zero : topPadding,
+                );
+              return SizedBox.shrink();
+            }(),
+            if (showReplacement)
+              Padding(
+                padding: topPadding,
+                child: PaneItem.buildPaneItemButton(
+                  context,
+                  PaneItem(
+                    title: FluentLocalizations.of(context).clickToSearch,
+                    icon: pane.autoSuggestBoxReplacement!,
+                  ),
+                  pane.displayMode,
+                  false,
+                  () {
+                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                  },
                 ),
-                pane.displayMode,
-                false,
-                () {
-                  pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                },
+              ),
+            Expanded(
+              child: Scrollbar(
+                isAlwaysShown: false,
+                child: ListView(key: listKey, primary: true, children: [
+                  ...pane.items.map((item) {
+                    return _buildItem(context, item);
+                  }),
+                ]),
               ),
             ),
-          Expanded(
-            child: Scrollbar(
-              isAlwaysShown: false,
-              child: ListView(key: listKey, primary: true, children: [
-                ...pane.items.map((item) {
-                  return _buildItem(context, item);
-                }),
-              ]),
-            ),
-          ),
-          ...pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }),
-        ]),
+            ...pane.footerItems.map((item) {
+              return _buildItem(context, item);
+            }),
+          ]),
+        ),
       ),
     );
   }
@@ -723,7 +721,7 @@ class _OpenNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = () {
       if (pane.menuButton != null) return pane.menuButton!;
@@ -738,12 +736,12 @@ class _OpenNavigationPane extends StatelessWidget {
         );
       return SizedBox.shrink();
     }();
-    return Acrylic(
+    return AnimatedAcrylic(
+      duration: theme.animationDuration ?? Duration.zero,
+      curve: theme.animationCurve ?? Curves.linear,
       key: paneKey,
       color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
-      animationDuration: theme.animationDuration ?? Duration.zero,
-      animationCurve: theme.animationCurve ?? Curves.linear,
       child: pane.indicatorBuilder(
         context: context,
         index: pane.selected,
@@ -854,7 +852,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = SizedBox(
       width: _kCompactNavigationPanelWidth,
@@ -878,8 +876,6 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       child: Acrylic(
         color: theme.backgroundColor,
         width: _kOpenNavigationPanelWidth,
-        animationDuration: theme.animationDuration ?? Duration.zero,
-        animationCurve: theme.animationCurve ?? Curves.linear,
         child: widget.pane.indicatorBuilder(
           context: context,
           index: widget.pane.selected,

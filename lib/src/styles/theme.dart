@@ -3,29 +3,147 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-class FluentTheme extends InheritedWidget {
-  const FluentTheme({Key? key, required this.data, required this.child})
-      : super(key: key, child: child);
+class FluentTheme extends StatelessWidget {
+  /// Applies the given theme [data] to [child].
+  ///
+  /// The [data] and [child] arguments must not be null.
+  const FluentTheme({
+    Key? key,
+    required this.data,
+    required this.child,
+  }) : super(key: key);
 
+  /// Specifies the color and typography values for descendant widgets.
   final ThemeData data;
+
+  /// The widget below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
   static ThemeData of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()!.data;
+    return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()!.data;
   }
 
   static ThemeData? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<FluentTheme>()?.data;
+    return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()?.data;
   }
 
   @override
-  bool updateShouldNotify(covariant FluentTheme oldWidget) =>
-      oldWidget.data != data;
+  Widget build(BuildContext context) {
+    return _FluentTheme(
+      data: data,
+      child: IconTheme(
+        data: data.iconTheme,
+        child: child,
+      ),
+    );
+  }
 }
 
-extension themeContext on BuildContext {
-  ThemeData get theme => FluentTheme.of(this);
-  ThemeData? get maybeTheme => FluentTheme.maybeOf(this);
+class _FluentTheme extends InheritedTheme {
+  const _FluentTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  final ThemeData data;
+
+  @override
+  bool updateShouldNotify(covariant _FluentTheme oldWidget) =>
+      oldWidget.data != data;
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return _FluentTheme(child: child, data: data);
+  }
+}
+
+/// An interpolation between two [ThemeData]s.
+///
+/// This class specializes the interpolation of [Tween<ThemeData>] to call the
+/// [ThemeData.lerp] method.
+///
+/// See [Tween] for a discussion on how to use interpolation objects.
+class ThemeDataTween extends Tween<ThemeData> {
+  /// Creates a [ThemeData] tween.
+  ///
+  /// The [begin] and [end] properties must be non-null before the tween is
+  /// first used, but the arguments can be null if the values are going to be
+  /// filled in later.
+  ThemeDataTween({ThemeData? begin, ThemeData? end})
+      : super(begin: begin, end: end);
+
+  @override
+  ThemeData lerp(double t) => ThemeData.lerp(begin!, end!, t);
+}
+
+/// Animated version of [Theme] which automatically transitions the colors,
+/// etc, over a given duration whenever the given theme changes.
+///
+/// Here's an illustration of what using this widget looks like, using a [curve]
+/// of [Curves.elasticInOut].
+/// {@animation 250 266 https://flutter.github.io/assets-for-api-docs/assets/widgets/animated_theme.mp4}
+///
+/// See also:
+///
+///  * [FluentTheme], which [AnimatedFluentTheme] uses to actually apply the interpolated
+///    theme.
+///  * [ThemeData], which describes the actual configuration of a theme.
+///  * [FluentApp], which includes an [AnimatedFluentTheme] widget configured via
+///    the [FluentApp.theme] argument.
+class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
+  /// Creates an animated theme.
+  ///
+  /// By default, the theme transition uses a linear curve. The [data] and
+  /// [child] arguments must not be null.
+  const AnimatedFluentTheme({
+    Key? key,
+    required this.data,
+    Curve curve = Curves.linear,
+    Duration duration = kThemeAnimationDuration,
+    VoidCallback? onEnd,
+    required this.child,
+  }) : super(key: key, curve: curve, duration: duration, onEnd: onEnd);
+
+  /// Specifies the color and typography values for descendant widgets.
+  final ThemeData data;
+
+  /// The widget below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
+  final Widget child;
+
+  @override
+  _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
+}
+
+class _AnimatedFluentThemeState
+    extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
+  ThemeDataTween? _data;
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _data = visitor(_data, widget.data,
+            (dynamic value) => ThemeDataTween(begin: value as ThemeData))!
+        as ThemeDataTween;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FluentTheme(
+      child: widget.child,
+      data: _data!.evaluate(animation),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder description) {
+    super.debugFillProperties(description);
+    description.add(DiagnosticsProperty<ThemeDataTween>('data', _data,
+        showName: false, defaultValue: null));
+  }
 }
 
 extension brightnessExtension on Brightness {
@@ -173,7 +291,10 @@ class ThemeData with Diagnosticable {
       'normal': Color(0xFFd6d6d6),
       'dark': Color(0xFF292929),
     }).resolveFromBrightness(brightness);
-    disabledColor ??= Colors.grey[80].withOpacity(0.6);
+    disabledColor ??= AccentColor('normal', {
+      'normal': const Color(0xFF838383),
+      'dark': Colors.grey[80].withOpacity(0.6)
+    });
     shadowColor ??= AccentColor('normal', {
       'normal': Colors.black,
       'dark': Colors.grey[130],
@@ -186,26 +307,25 @@ class ThemeData with Diagnosticable {
       'normal': Color(0xFFe6e6e6),
       'dark': Color(0xFF1e1e1e),
     }).resolveFromBrightness(brightness);
-    typography =
-        Typography.standart(brightness: brightness).copyWith(typography);
-    inputMouseCursor ??= (state) {
-      if (state.isHovering || state.isPressing)
+    typography = Typography.standard(brightness: brightness).merge(typography);
+    inputMouseCursor ??= ButtonState.resolveWith((states) {
+      if (states.isHovering || states.isPressing)
         return SystemMouseCursors.click;
       else
         return MouseCursor.defer;
-    };
+    });
     focusTheme = FocusThemeData.standard(
       glowColor: accentColor.withOpacity(0.15),
       primaryBorderColor: inactiveColor,
       secondaryBorderColor: scaffoldBackgroundColor,
-      animationCurve: animationCurve,
-      animationDuration: fasterAnimationDuration,
-    ).copyWith(focusTheme);
+    ).merge(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
-    iconTheme ??= const IconThemeData();
+    iconTheme ??= brightness.isDark
+        ? const IconThemeData(color: Colors.white)
+        : const IconThemeData(color: Colors.black);
     splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
@@ -250,7 +370,57 @@ class ThemeData with Diagnosticable {
     );
   }
 
-  ThemeData copyWith({
+  static ThemeData lerp(ThemeData a, ThemeData b, double t) {
+    return ThemeData.raw(
+      brightness: t < 0.5 ? a.brightness : b.brightness,
+      accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
+      typography: Typography.lerp(a.typography, b.typography, t),
+      activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
+      inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
+      inactiveBackgroundColor:
+          Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
+      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
+      scaffoldBackgroundColor:
+          Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
+      acrylicBackgroundColor:
+          Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
+      shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
+      fasterAnimationDuration:
+          lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
+      fastAnimationDuration:
+          lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
+      mediumAnimationDuration:
+          lerpDuration(a.mediumAnimationDuration, b.mediumAnimationDuration, t),
+      slowAnimationDuration:
+          lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
+      animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+      inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
+      buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
+      checkboxTheme:
+          CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      toggleSwitchTheme: ToggleSwitchThemeData.lerp(
+          a.toggleSwitchTheme, b.toggleSwitchTheme, t),
+      iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
+      splitButtonTheme:
+          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
+      dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
+      tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
+      dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
+      navigationPaneTheme: NavigationPaneThemeData.lerp(
+          a.navigationPaneTheme, b.navigationPaneTheme, t),
+      radioButtonTheme:
+          RadioButtonThemeData.lerp(a.radioButtonTheme, b.radioButtonTheme, t),
+      toggleButtonTheme: ToggleButtonThemeData.lerp(
+          a.toggleButtonTheme, b.toggleButtonTheme, t),
+      sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
+      infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
+      focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
+      scrollbarTheme:
+          ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
+    );
+  }
+
+  ThemeData merge({
     Brightness? brightness,
     Typography? typography,
     AccentColor? accentColor,
@@ -307,22 +477,21 @@ class ThemeData with Diagnosticable {
           slowAnimationDuration ?? this.slowAnimationDuration,
       inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
-      buttonTheme: this.buttonTheme.copyWith(buttonTheme),
-      checkboxTheme: this.checkboxTheme.copyWith(checkboxTheme),
-      dialogTheme: this.dialogTheme.copyWith(dialogTheme),
-      dividerTheme: this.dividerTheme.copyWith(dividerTheme),
-      focusTheme: this.focusTheme.copyWith(focusTheme),
-      iconTheme: this.iconTheme.copyWith(iconTheme),
-      infoBarTheme: this.infoBarTheme.copyWith(infoBarTheme),
-      navigationPaneTheme:
-          this.navigationPaneTheme.copyWith(navigationPaneTheme),
-      radioButtonTheme: this.radioButtonTheme.copyWith(radioButtonTheme),
-      scrollbarTheme: this.scrollbarTheme.copyWith(scrollbarTheme),
-      sliderTheme: this.sliderTheme.copyWith(sliderTheme),
-      splitButtonTheme: this.splitButtonTheme.copyWith(splitButtonTheme),
-      toggleButtonTheme: this.toggleButtonTheme.copyWith(toggleButtonTheme),
-      toggleSwitchTheme: this.toggleSwitchTheme.copyWith(toggleSwitchTheme),
-      tooltipTheme: this.tooltipTheme.copyWith(tooltipTheme),
+      buttonTheme: this.buttonTheme.merge(buttonTheme),
+      checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
+      dialogTheme: this.dialogTheme.merge(dialogTheme),
+      dividerTheme: this.dividerTheme.merge(dividerTheme),
+      focusTheme: this.focusTheme.merge(focusTheme),
+      iconTheme: this.iconTheme.merge(iconTheme),
+      infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
+      navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
+      radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
+      scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
+      sliderTheme: this.sliderTheme.merge(sliderTheme),
+      splitButtonTheme: this.splitButtonTheme.merge(splitButtonTheme),
+      toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
+      toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
+      tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -39,18 +41,78 @@ class Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = DividerThemeData.standard(context.theme).copyWith(
-      context.theme.dividerTheme.copyWith(this.style),
-    );
-    return AnimatedContainer(
-      duration: context.theme.fastAnimationDuration,
-      curve: context.theme.animationCurve,
+    final style = DividerTheme.of(context).merge(this.style);
+    return Container(
       height: direction == Axis.horizontal ? style.thickness : size,
       width: direction == Axis.vertical ? style.thickness : size,
-      margin: style.margin?.call(direction),
+      margin: direction == Axis.horizontal
+          ? style.horizontalMargin
+          : style.verticalMargin,
       decoration: style.decoration,
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [Divider]s in this widget's subtree.
+///
+/// Values specified here are used for [Divider] properties that are not
+/// given an explicit non-null value.
+class DividerTheme extends InheritedTheme {
+  /// Creates a divider theme that controls the configurations for
+  /// [Divider].
+  const DividerTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Divider] widgets.
+  final DividerThemeData data;
+
+  /// Creates a button theme that controls how descendant [Divider]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required DividerThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return DividerTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static DividerThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<DividerTheme>();
+    return theme?.data ?? FluentTheme.of(context).dividerTheme;
+  }
+
+  /// Returns the [data] from the closest [DividerTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.dividerTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// DividerThemeData theme = DividerTheme.of(context);
+  /// ```
+  static DividerThemeData of(BuildContext context) {
+    return DividerThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return DividerTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(DividerTheme oldWidget) => data != oldWidget.data;
 }
 
 @immutable
@@ -66,20 +128,24 @@ class DividerThemeData with Diagnosticable {
   /// mode and `Color(0xFF484848)` for dark mode
   final Decoration? decoration;
 
-  /// The margin callback of the style.
-  final EdgeInsetsGeometry Function(Axis direction)? margin;
+  /// The vertical margin of the style.
+  final EdgeInsetsGeometry? verticalMargin;
 
-  const DividerThemeData({this.thickness, this.decoration, this.margin});
+  /// The horizontal margin of the style.
+  final EdgeInsetsGeometry? horizontalMargin;
+
+  const DividerThemeData({
+    this.thickness,
+    this.decoration,
+    this.verticalMargin,
+    this.horizontalMargin,
+  });
 
   factory DividerThemeData.standard(ThemeData style) {
     return DividerThemeData(
       thickness: 1,
-      margin: (direction) {
-        if (direction == Axis.horizontal)
-          return EdgeInsets.symmetric(horizontal: 10);
-        else
-          return EdgeInsets.symmetric(vertical: 10);
-      },
+      horizontalMargin: const EdgeInsets.symmetric(horizontal: 10),
+      verticalMargin: const EdgeInsets.symmetric(vertical: 10),
       decoration: () {
         if (style.brightness == Brightness.light) {
           return BoxDecoration(color: Color(0xFFB7B7B7));
@@ -90,12 +156,25 @@ class DividerThemeData with Diagnosticable {
     );
   }
 
-  DividerThemeData copyWith(DividerThemeData? style) {
+  static DividerThemeData lerp(
+      DividerThemeData? a, DividerThemeData? b, double t) {
+    return DividerThemeData(
+      decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
+      thickness: lerpDouble(a?.thickness, b?.thickness, t),
+      horizontalMargin:
+          EdgeInsetsGeometry.lerp(a?.horizontalMargin, b?.horizontalMargin, t),
+      verticalMargin:
+          EdgeInsetsGeometry.lerp(a?.verticalMargin, b?.verticalMargin, t),
+    );
+  }
+
+  DividerThemeData merge(DividerThemeData? style) {
     if (style == null) return this;
     return DividerThemeData(
       decoration: style.decoration ?? decoration,
-      margin: style.margin ?? margin,
       thickness: style.thickness ?? thickness,
+      horizontalMargin: style.horizontalMargin ?? horizontalMargin,
+      verticalMargin: style.verticalMargin ?? verticalMargin,
     );
   }
 
@@ -103,7 +182,8 @@ class DividerThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(ObjectFlagProperty.has('margin', margin));
+    properties.add(DiagnosticsProperty('horizontalMargin', horizontalMargin));
+    properties.add(DiagnosticsProperty('verticalMargin', verticalMargin));
     properties.add(DoubleProperty('thickness', thickness, defaultValue: 1.0));
   }
 }

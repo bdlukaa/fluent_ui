@@ -1,9 +1,14 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import '../utils/hover_button.dart';
+
+/// The scale factor used by default on [Button]
+const kButtonDefaultScaleFactor = 0.95;
 
 enum _ButtonType { def, icon, toggle }
 
@@ -158,9 +163,7 @@ class _ButtonState extends State<Button> {
         break;
     }
     assert(debugCheckHasFluentTheme(context));
-    final style = ButtonThemeData.standard(context.theme).copyWith(
-      context.theme.buttonTheme.copyWith(widget.style),
-    );
+    final style = ButtonTheme.of(context).merge(widget.style);
     return HoverButton(
       semanticLabel: widget.semanticLabel,
       margin: style.margin,
@@ -195,19 +198,23 @@ class _ButtonState extends State<Button> {
             },
       onLongPress: widget.onLongPress,
       builder: (context, state) {
+        final textStyle = (style.textStyle?.resolve(state)) ?? TextStyle();
         Widget child = AnimatedContainer(
           transformAlignment: Alignment.center,
           transform: Matrix4.diagonal3Values(buttonScale, buttonScale, 1.0),
-          duration: style.animationDuration ?? Duration.zero,
-          curve: style.animationCurve ?? Curves.linear,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
-          decoration: style.decoration!(state),
+          decoration: style.decoration?.resolve(state) ?? BoxDecoration(),
           child: AnimatedDefaultTextStyle(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? Curves.linear,
-            style: (style.textStyle?.call(state)) ?? TextStyle(),
+            duration: FluentTheme.of(context).fastAnimationDuration,
+            curve: FluentTheme.of(context).animationCurve,
+            style: textStyle,
             textAlign: TextAlign.center,
-            child: widget.child ?? widget.builder!(context, state),
+            child: IconTheme.merge(
+              data: IconThemeData(color: textStyle.color),
+              child: widget.child ?? widget.builder!(context, state),
+            ),
           ),
         );
         return FocusBorder(
@@ -216,6 +223,74 @@ class _ButtonState extends State<Button> {
         );
       },
     );
+  }
+}
+
+/// An inherited widget that defines the configuration for
+/// [Button]s in this widget's subtree.
+///
+/// Values specified here are used for [Button] properties that are not
+/// given an explicit non-null value.
+class ButtonTheme extends InheritedTheme {
+  /// Creates a button theme that controls the configurations for
+  /// [Button].
+  const ButtonTheme({
+    Key? key,
+    required Widget child,
+    required this.data,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Button] widgets.
+  final ButtonThemeData data;
+
+  /// Creates a button theme that controls how descendant [Button]s should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ButtonTheme(
+        key: key,
+        data: _getInheritedButtonThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.buttonTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ButtonThemeData theme = ButtonTheme.of(context);
+  /// ```
+  static ButtonThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    return ButtonThemeData.standard(FluentTheme.of(context)).merge(
+      context.dependOnInheritedWidgetOfExactType<ButtonTheme>()?.data ??
+          FluentTheme.of(context).buttonTheme,
+    );
+  }
+
+  static ButtonThemeData _getInheritedButtonThemeData(BuildContext context) {
+    final ButtonTheme? buttonTheme =
+        context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
+    return buttonTheme?.data ?? FluentTheme.of(context).buttonTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ButtonTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ButtonTheme oldWidget) {
+    return oldWidget.data != data;
   }
 }
 
@@ -230,10 +305,7 @@ class ButtonThemeData with Diagnosticable {
 
   final ButtonState<MouseCursor>? cursor;
 
-  final ButtonState<TextStyle>? textStyle;
-
-  final Duration? animationDuration;
-  final Curve? animationCurve;
+  final ButtonState<TextStyle?>? textStyle;
 
   const ButtonThemeData({
     this.decoration,
@@ -242,31 +314,44 @@ class ButtonThemeData with Diagnosticable {
     this.scaleFactor,
     this.cursor,
     this.textStyle,
-    this.animationDuration,
-    this.animationCurve,
   });
 
   factory ButtonThemeData.standard(ThemeData style) {
     return ButtonThemeData(
-      animationDuration: style.fastAnimationDuration,
-      animationCurve: style.animationCurve,
       cursor: style.inputMouseCursor,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),
-      decoration: (state) => BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        color: buttonColor(style, state),
-      ),
-      scaleFactor: 0.95,
-      textStyle: (state) =>
-          style.typography.body?.copyWith(
-            color: state.isDisabled ? style.disabledColor : null,
-          ) ??
-          TextStyle(),
+      decoration: ButtonState.resolveWith((states) {
+        return BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          color: buttonColor(style, states),
+        );
+      }),
+      scaleFactor: kButtonDefaultScaleFactor,
+      textStyle: ButtonState.resolveWith((states) {
+        return TextStyle(color: states.isDisabled ? style.disabledColor : null);
+      }),
     );
   }
 
-  ButtonThemeData copyWith(ButtonThemeData? style) {
+  static ButtonThemeData lerp(
+    ButtonThemeData? a,
+    ButtonThemeData? b,
+    double t,
+  ) {
+    return ButtonThemeData(
+      decoration: ButtonState.lerp<Decoration>(
+          a?.decoration, b?.decoration, t, Decoration.lerp),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      textStyle: ButtonState.lerp<TextStyle>(
+          a?.textStyle, b?.textStyle, t, TextStyle.lerp),
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
+    );
+  }
+
+  ButtonThemeData merge(ButtonThemeData? style) {
     if (style == null) return this;
     return ButtonThemeData(
       decoration: style.decoration ?? decoration,
@@ -274,8 +359,6 @@ class ButtonThemeData with Diagnosticable {
       textStyle: style.textStyle ?? textStyle,
       margin: style.margin ?? margin,
       padding: style.padding ?? padding,
-      animationCurve: style.animationCurve ?? animationCurve,
-      animationDuration: style.animationDuration ?? animationDuration,
       scaleFactor: style.scaleFactor ?? scaleFactor,
     );
   }
@@ -295,25 +378,17 @@ class ButtonThemeData with Diagnosticable {
       'cursor',
       cursor,
     ));
-    properties.add(ObjectFlagProperty<ButtonState<TextStyle>?>.has(
+    properties.add(ObjectFlagProperty<ButtonState<TextStyle?>?>.has(
       'textStyle',
       textStyle,
     ));
-    properties.add(DiagnosticsProperty<Duration?>(
-      'animationDuration',
-      animationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Curve?>(
-      'animationCurve',
-      animationCurve,
-    ));
   }
 
-  static Color buttonColor(ThemeData style, List<ButtonStates> states) {
+  static Color buttonColor(ThemeData style, Set<ButtonStates> states) {
     late Color color;
     if (style.brightness == Brightness.light) {
       if (states.isDisabled)
-        color = style.disabledColor;
+        color = Color(0xFFcccccc);
       else if (states.isPressing)
         color = Colors.grey[70];
       else if (states.isHovering)
@@ -337,7 +412,7 @@ class ButtonThemeData with Diagnosticable {
     }
   }
 
-  static Color checkedInputColor(ThemeData style, List<ButtonStates> states) {
+  static Color checkedInputColor(ThemeData style, Set<ButtonStates> states) {
     Color color = style.accentColor;
     if (states.isDisabled)
       return style.disabledColor;
@@ -347,7 +422,7 @@ class ButtonThemeData with Diagnosticable {
     return color;
   }
 
-  static Color uncheckedInputColor(ThemeData style, List<ButtonStates> states) {
+  static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
       if (states.isDisabled) return style.disabledColor;
       if (states.isPressing) return Colors.grey[70];

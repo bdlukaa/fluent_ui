@@ -11,7 +11,7 @@ import 'pickers/pickers.dart';
 
 const Duration _kComboboxMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemHeight = kPickerHeight;
-const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 16.0);
+const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
   top: 4.0,
   bottom: 4.0,
@@ -1364,13 +1364,8 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
               Expanded(child: innerItemsWidget)
             else
               innerItemsWidget,
-            FluentTheme(
-              data: context.theme.copyWith(
-                iconTheme: IconThemeData(
-                  color: _iconColor,
-                  size: widget.iconSize,
-                ),
-              ),
+            IconTheme(
+              data: IconThemeData(color: _iconColor, size: widget.iconSize),
               child: widget.icon ?? defaultIcon,
             ),
           ],
@@ -1390,8 +1385,8 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
             return Container(
               decoration: kPickerDecorationBuilder(context, () {
                 if (_showHighlight)
-                  return [ButtonStates.focused];
-                else if (states.isFocused) return <ButtonStates>[];
+                  return {ButtonStates.focused};
+                else if (states.isFocused) return <ButtonStates>{};
                 return states;
               }()),
               child: result,

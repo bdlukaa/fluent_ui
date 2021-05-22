@@ -2,8 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef IconThemeButtonStateBuilder = IconThemeData Function(
-    List<ButtonStates>);
+typedef IconThemeButtonStateBuilder = IconThemeData Function(Set<ButtonStates>);
 
 class IconButton extends StatelessWidget {
   const IconButton({
@@ -70,31 +69,32 @@ class IconButton extends StatelessWidget {
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
-      builder: (context, state) => FluentTheme(
-        data: context.theme.copyWith(
-          iconTheme: IconThemeData(
-            color: state.isDisabled ? context.theme.disabledColor : null,
-          ).copyWith(iconTheme?.call(state)),
-        ),
-        child: icon,
-      ),
+      builder: (context, states) {
+        if (iconTheme != null) {
+          return IconTheme(
+            data: IconTheme.of(context).merge(iconTheme?.call(states)),
+            child: icon,
+          );
+        }
+        return icon;
+      },
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticLabel: semanticLabel,
       style: ButtonThemeData(
-        decoration: (states) {
+        decoration: ButtonState.resolveWith((states) {
           return BoxDecoration(
             borderRadius: BorderRadius.circular(2),
             color: states.isDisabled
-                ? ButtonThemeData.buttonColor(context.theme, states)
+                ? ButtonThemeData.buttonColor(FluentTheme.of(context), states)
                 : ButtonThemeData.uncheckedInputColor(
-                    context.theme,
+                    FluentTheme.of(context),
                     states,
                   ),
           );
-        },
+        }),
         padding: const EdgeInsets.all(4),
-      ).copyWith(style),
+      ).merge(style),
     );
   }
 }

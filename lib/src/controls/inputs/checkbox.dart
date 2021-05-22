@@ -81,9 +81,7 @@ class Checkbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = CheckboxThemeData.standard(context.theme).copyWith(
-      context.theme.checkboxTheme.copyWith(this.style),
-    );
+    final CheckboxThemeData style = CheckboxTheme.of(context).merge(this.style);
     final double size = 22;
     return HoverButton(
       autofocus: autofocus,
@@ -97,29 +95,29 @@ class Checkbox extends StatelessWidget {
       builder: (context, state) {
         Widget child = AnimatedContainer(
           alignment: Alignment.center,
-          duration: style.animationDuration!,
-          curve: style.animationCurve!,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
           height: size,
           width: size,
           decoration: () {
             if (checked == null)
-              return style.thirdstateDecoration?.call(state);
+              return style.thirdstateDecoration?.resolve(state);
             else if (checked!)
-              return style.checkedDecoration?.call(state);
+              return style.checkedDecoration?.resolve(state);
             else
-              return style.uncheckedDecoration?.call(state);
+              return style.uncheckedDecoration?.resolve(state);
           }(),
           child: Icon(
             style.icon,
             size: 18,
             color: () {
               if (checked == null)
-                return style.thirdstateIconColor?.call(state);
+                return style.thirdstateIconColor?.resolve(state);
               else if (checked!)
-                return style.checkedIconColor?.call(state);
+                return style.checkedIconColor?.resolve(state);
               else
-                return style.uncheckedIconColor?.call(state);
+                return style.uncheckedIconColor?.resolve(state);
             }(),
           ),
         );
@@ -135,24 +133,84 @@ class Checkbox extends StatelessWidget {
   }
 }
 
+class CheckboxTheme extends InheritedTheme {
+  /// Creates a button theme that controls how descendant [Checkbox]es should
+  /// look like.
+  const CheckboxTheme({
+    Key? key,
+    required this.child,
+    required this.data,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+  final CheckboxThemeData data;
+
+  /// Creates a button theme that controls how descendant [Checkbox]es should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required CheckboxThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return CheckboxTheme(
+        key: key,
+        data: _getInheritedCheckboxThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.checkboxTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// CheckboxThemeData theme = CheckboxTheme.of(context);
+  /// ```
+  static CheckboxThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    return CheckboxThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedCheckboxThemeData(context),
+    );
+  }
+
+  static CheckboxThemeData _getInheritedCheckboxThemeData(
+      BuildContext context) {
+    final CheckboxTheme? checkboxTheme =
+        context.dependOnInheritedWidgetOfExactType<CheckboxTheme>();
+    return checkboxTheme?.data ?? FluentTheme.of(context).checkboxTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return CheckboxTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(CheckboxTheme oldWidget) {
+    return oldWidget.data != data;
+  }
+}
+
 @immutable
 class CheckboxThemeData with Diagnosticable {
-  final ButtonState<Decoration>? checkedDecoration;
-  final ButtonState<Decoration>? uncheckedDecoration;
-  final ButtonState<Decoration>? thirdstateDecoration;
+  final ButtonState<Decoration?>? checkedDecoration;
+  final ButtonState<Decoration?>? uncheckedDecoration;
+  final ButtonState<Decoration?>? thirdstateDecoration;
 
   final IconData? icon;
   final ButtonState<Color?>? checkedIconColor;
-  final ButtonState<Color>? uncheckedIconColor;
-  final ButtonState<Color>? thirdstateIconColor;
+  final ButtonState<Color?>? uncheckedIconColor;
+  final ButtonState<Color?>? thirdstateIconColor;
 
   final ButtonState<MouseCursor>? cursor;
 
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
-
-  final Duration? animationDuration;
-  final Curve? animationCurve;
 
   const CheckboxThemeData({
     this.checkedDecoration,
@@ -165,47 +223,85 @@ class CheckboxThemeData with Diagnosticable {
     this.checkedIconColor,
     this.uncheckedIconColor,
     this.thirdstateIconColor,
-    this.animationDuration,
-    this.animationCurve,
   });
 
   factory CheckboxThemeData.standard(ThemeData style) {
     final BorderRadiusGeometry radius = BorderRadius.circular(3);
     return CheckboxThemeData(
       cursor: style.inputMouseCursor,
-      checkedDecoration: (state) => BoxDecoration(
-        borderRadius: radius,
-        color: ButtonThemeData.checkedInputColor(style, state),
-      ),
-      uncheckedDecoration: (state) => BoxDecoration(
-        border: Border.all(
-          width: 0.6,
-          color: state.isDisabled ? style.disabledColor : style.inactiveColor,
+      checkedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          borderRadius: radius,
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
-        color: ButtonThemeData.checkedInputColor(style, state).withOpacity(0),
-        borderRadius: radius,
       ),
-      thirdstateDecoration: (state) => BoxDecoration(
-        borderRadius: radius,
-        color: Colors.white,
-        border: Border.all(
-            width: 6.5, color: ButtonThemeData.checkedInputColor(style, state)),
+      uncheckedDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          border: Border.all(
+            width: 0.6,
+            color:
+                states.isDisabled ? style.disabledColor : style.inactiveColor,
+          ),
+          color:
+              ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
+          borderRadius: radius,
+        ),
       ),
-      checkedIconColor: (_) => style.activeColor,
-      uncheckedIconColor: (state) {
-        if (state.isHovering || state.isPressing)
-          return style.inactiveColor.withOpacity(0.8);
-        return Colors.transparent;
-      },
+      thirdstateDecoration: ButtonState.resolveWith(
+        (states) => BoxDecoration(
+          borderRadius: radius,
+          color: Colors.white,
+          border: Border.all(
+            width: 6.5,
+            color: ButtonThemeData.checkedInputColor(style, states),
+          ),
+        ),
+      ),
+      checkedIconColor: ButtonState.resolveWith((states) {
+        return states.isDisabled
+            ? ButtonThemeData.checkedInputColor(
+                style,
+                states,
+              ).basedOnLuminance()
+            : style.activeColor;
+      }),
+      uncheckedIconColor: ButtonState.resolveWith(
+        (states) => states.isHovering || states.isPressing
+            ? style.inactiveColor.withOpacity(0.8)
+            : Colors.transparent,
+      ),
+      thirdstateIconColor: ButtonState.all(Colors.transparent),
       icon: Icons.check,
-      thirdstateIconColor: (_) => Colors.transparent,
       margin: const EdgeInsets.all(4.0),
-      animationDuration: style.mediumAnimationDuration,
-      animationCurve: style.animationCurve,
     );
   }
 
-  CheckboxThemeData copyWith(CheckboxThemeData? style) {
+  static CheckboxThemeData lerp(
+    CheckboxThemeData? a,
+    CheckboxThemeData? b,
+    double t,
+  ) {
+    return CheckboxThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      icon: t < 0.5 ? a?.icon : b?.icon,
+      checkedIconColor: ButtonState.lerp(
+          a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
+      uncheckedIconColor: ButtonState.lerp(
+          a?.uncheckedIconColor, b?.uncheckedIconColor, t, Color.lerp),
+      thirdstateIconColor: ButtonState.lerp(
+          a?.thirdstateIconColor, b?.thirdstateIconColor, t, Color.lerp),
+      checkedDecoration: ButtonState.lerp(
+          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+      uncheckedDecoration: ButtonState.lerp(
+          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+      thirdstateDecoration: ButtonState.lerp(
+          a?.thirdstateDecoration, b?.thirdstateDecoration, t, Decoration.lerp),
+    );
+  }
+
+  CheckboxThemeData merge(CheckboxThemeData? style) {
     return CheckboxThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
@@ -214,8 +310,6 @@ class CheckboxThemeData with Diagnosticable {
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
       uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
       thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
       thirdstateDecoration: style?.thirdstateDecoration ?? thirdstateDecoration,
@@ -265,12 +359,6 @@ class CheckboxThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(
       ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
-    );
-    properties.add(
-      DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
-    );
-    properties.add(
-      DiagnosticsProperty<Curve?>('animationCurve', animationCurve),
     );
   }
 }

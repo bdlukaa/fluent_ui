@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -58,12 +60,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
-    _scrollbarTheme = ScrollbarThemeData.standart(theme).copyWith(
-      theme.scrollbarTheme.copyWith(widget.style),
-    );
-    _hoverController.duration =
-        _scrollbarTheme.animationDuration ?? theme.fasterAnimationDuration;
+    _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
+    _hoverController.duration = _scrollbarTheme.animationDuration ??
+        FluentTheme.of(context).fasterAnimationDuration;
     super.didChangeDependencies();
   }
 
@@ -176,6 +175,68 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [Scrollbar]s in this widget's subtree.
+///
+/// Values specified here are used for [Scrollbar] properties that are not
+/// given an explicit non-null value.
+class ScrollbarTheme extends InheritedTheme {
+  /// Creates a scrollbar theme that controls the configurations for
+  /// [Scrollbar].
+  const ScrollbarTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Scrollbar] widgets.
+  final ScrollbarThemeData data;
+
+  /// Creates a button theme that controls how descendant [Scrollbar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ScrollbarThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ScrollbarTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static ScrollbarThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
+    return theme?.data ?? FluentTheme.of(context).scrollbarTheme;
+  }
+
+  /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.scrollbarTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
+  /// ```
+  static ScrollbarThemeData of(BuildContext context) {
+    return ScrollbarThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ScrollbarTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ScrollbarTheme oldWidget) => data != oldWidget.data;
+}
+
 @immutable
 class ScrollbarThemeData with Diagnosticable {
   /// Thickness of the scrollbar in its cross-axis in logical
@@ -270,7 +331,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.animationCurve,
   });
 
-  factory ScrollbarThemeData.standart(ThemeData style) {
+  factory ScrollbarThemeData.standard(ThemeData style) {
     final brightness = style.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
@@ -298,7 +359,35 @@ class ScrollbarThemeData with Diagnosticable {
     );
   }
 
-  ScrollbarThemeData copyWith(ScrollbarThemeData? style) {
+  static ScrollbarThemeData lerp(
+      ScrollbarThemeData? a, ScrollbarThemeData? b, double t) {
+    return ScrollbarThemeData(
+      backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      scrollbarColor: Color.lerp(a?.scrollbarColor, b?.scrollbarColor, t),
+      scrollbarPressingColor:
+          Color.lerp(a?.scrollbarPressingColor, b?.scrollbarPressingColor, t),
+      thickness: lerpDouble(a?.thickness, b?.thickness, t),
+      hoveringThickness:
+          lerpDouble(a?.hoveringThickness, b?.hoveringThickness, t),
+      radius: Radius.lerp(a?.radius, b?.radius, t),
+      hoveringRadius: Radius.lerp(a?.hoveringRadius, b?.hoveringRadius, t),
+      crossAxisMargin: lerpDouble(a?.crossAxisMargin, b?.crossAxisMargin, t),
+      hoveringCrossAxisMargin:
+          lerpDouble(a?.hoveringCrossAxisMargin, b?.hoveringCrossAxisMargin, t),
+      mainAxisMargin: lerpDouble(a?.mainAxisMargin, b?.mainAxisMargin, t),
+      hoveringMainAxisMargin:
+          lerpDouble(a?.hoveringMainAxisMargin, b?.hoveringMainAxisMargin, t),
+      minThumbLength: lerpDouble(a?.minThumbLength, b?.minThumbLength, t),
+      trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
+      hoveringTrackBorderColor: Color.lerp(
+          a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
+      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
+      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
+          b?.animationDuration ?? Duration.zero, t),
+    );
+  }
+
+  ScrollbarThemeData merge(ScrollbarThemeData? style) {
     if (style == null) return this;
     return ScrollbarThemeData(
       backgroundColor: style.backgroundColor ?? backgroundColor,

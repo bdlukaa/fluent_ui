@@ -305,13 +305,11 @@ focusTheme: FocusStyle(
 ),
 ```
 
-To customize it to a single widget, wrap the widget in a `FluentTheme` widget, and change the options you want:
+To customize it to a single widget, wrap the widget in a `FocusTheme` widget, and change the options you want:
 
 ```dart
-FluentTheme(
-  theme: context.theme?.copyWith(ThemeData(
-    focusStyle: ..., // set your FocusStyle here
-  )),
+FocusTheme(
+  data: FocusThemeData(...),
   child: Button(
     text: Text('Custom Focus Button'),
     onPressed: () {},
@@ -577,7 +575,7 @@ SplitButtonBar(
         text: Container(
           height: 24,
           width: 24,
-          color: context.theme.accentColor,
+          color: FluentTheme.of(context).accentColor,
         ),
         onPressed: () {},
       ),

@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// Dialog controls are modal UI overlays that provide contextual
@@ -65,8 +67,9 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(context.theme).copyWith(
-      context.theme.dialogTheme.copyWith(this.style),
+    final style =
+        ContentDialogThemeData.standard(FluentTheme.of(context)).merge(
+      FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return PhysicalModel(
       color: style.elevationColor ?? Colors.black,
@@ -96,10 +99,9 @@ class ContentDialog extends StatelessWidget {
                 ),
               ),
             if (actions != null)
-              FluentTheme(
-                data: context.theme.copyWith(
-                  buttonTheme: style.actionThemeData,
-                ),
+              ButtonTheme.merge(
+                data: style.actionThemeData ??
+                    FluentTheme.of(context).buttonTheme,
                 child: () {
                   if (actions!.length == 1) {
                     return Align(
@@ -159,7 +161,7 @@ Future<T?> showDialog<T extends Object?>({
     settings: routeSettings,
     transitionBuilder: transitionBuilder,
     transitionDuration: transitionDuration ??
-        context.maybeTheme?.fastAnimationDuration ??
+        FluentTheme.maybeOf(context)?.fastAnimationDuration ??
         Duration(milliseconds: 300),
   ));
 }
@@ -213,6 +215,7 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
   }
 }
 
+@immutable
 class ContentDialogThemeData {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? titlePadding;
@@ -236,9 +239,9 @@ class ContentDialogThemeData {
     this.bodyPadding,
     this.padding,
     this.actionsSpacing,
+    this.actionThemeData,
     this.titleStyle,
     this.bodyStyle,
-    this.actionThemeData,
     this.elevation,
     this.elevationColor,
   });
@@ -258,27 +261,53 @@ class ContentDialogThemeData {
       bodyStyle: style.typography.body,
       actionThemeData: ButtonThemeData(
         margin: EdgeInsets.zero,
-        decoration: (state) => BoxDecoration(
-          color: ButtonThemeData.buttonColor(style, state),
-        ),
+        decoration: ButtonState.resolveWith((states) {
+          return BoxDecoration(
+            color: ButtonThemeData.buttonColor(style, states),
+          );
+        }),
       ),
       elevation: 8,
       elevationColor: Colors.black,
     );
   }
 
-  ContentDialogThemeData copyWith(ContentDialogThemeData? style) {
+  static ContentDialogThemeData lerp(
+    ContentDialogThemeData? a,
+    ContentDialogThemeData? b,
+    double t,
+  ) {
+    return ContentDialogThemeData(
+      decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
+      barrierColor: Color.lerp(a?.barrierColor, b?.barrierColor, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      bodyPadding: EdgeInsetsGeometry.lerp(a?.bodyPadding, b?.bodyPadding, t),
+      titlePadding:
+          EdgeInsetsGeometry.lerp(a?.titlePadding, b?.titlePadding, t),
+      actionsSpacing: lerpDouble(a?.actionsSpacing, b?.actionsSpacing, t),
+      actionThemeData:
+          ButtonThemeData.lerp(a?.actionThemeData, b?.actionThemeData, t),
+      titleStyle: TextStyle.lerp(a?.titleStyle, b?.titleStyle, t),
+      bodyStyle: TextStyle.lerp(a?.bodyStyle, b?.bodyStyle, t),
+      elevation: lerpDouble(a?.elevation, b?.elevation, t),
+      elevationColor: Color.lerp(a?.elevationColor, b?.elevationColor, t),
+    );
+  }
+
+  ContentDialogThemeData merge(ContentDialogThemeData? style) {
     if (style == null) return this;
     return ContentDialogThemeData(
       decoration: style.decoration ?? decoration,
+      barrierColor: style.barrierColor ?? barrierColor,
       padding: style.padding ?? padding,
       bodyPadding: style.bodyPadding ?? bodyPadding,
-      barrierColor: style.barrierColor ?? barrierColor,
-      titleStyle: style.titleStyle ?? titleStyle,
-      bodyStyle: style.bodyStyle ?? bodyStyle,
       titlePadding: style.titlePadding ?? titlePadding,
       actionsSpacing: style.actionsSpacing ?? actionsSpacing,
       actionThemeData: style.actionThemeData ?? actionThemeData,
+      titleStyle: style.titleStyle ?? titleStyle,
+      bodyStyle: style.bodyStyle ?? bodyStyle,
+      elevation: style.elevation ?? elevation,
+      elevationColor: style.elevationColor ?? elevationColor,
     );
   }
 }

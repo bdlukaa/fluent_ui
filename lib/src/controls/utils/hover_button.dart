@@ -1,10 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 typedef ButtonStateWidgetBuilder = Widget Function(
   BuildContext,
-  List<ButtonStates> state,
+  Set<ButtonStates> state,
 );
 
 /// Base widget for any widget that requires input. It
@@ -47,7 +48,7 @@ class HoverButton extends StatefulWidget {
   }) : super(key: key);
 
   /// The cursor of this hover button. If null, [MouseCursor.defer] is used
-  final MouseCursor Function(List<ButtonStates>)? cursor;
+  final ButtonState<MouseCursor>? cursor;
   final VoidCallback? onLongPress;
   final VoidCallback? onLongPressStart;
   final VoidCallback? onLongPressEnd;
@@ -150,13 +151,13 @@ class _HoverButtonState extends State<HoverButton> {
       widget.onLongPressStart != null ||
       widget.onLongPressEnd != null;
 
-  List<ButtonStates> get states {
-    if (!enabled) return [ButtonStates.disabled];
-    return [
+  Set<ButtonStates> get states {
+    if (!enabled) return {ButtonStates.disabled};
+    return {
       if (_pressing) ButtonStates.pressing,
       if (_hovering) ButtonStates.hovering,
       if (_shouldShowFocus) ButtonStates.focused,
-    ];
+    };
   }
 
   @override
@@ -193,8 +194,8 @@ class _HoverButtonState extends State<HoverButton> {
       child: widget.builder(context, states),
     );
     w = FocusableActionDetector(
-      mouseCursor: widget.cursor?.call(states) ??
-          context.maybeTheme?.inputMouseCursor.call(states) ??
+      mouseCursor: widget.cursor?.resolve(states) ??
+          FluentTheme.maybeOf(context)?.inputMouseCursor.resolve(states) ??
           MouseCursor.defer,
       focusNode: node,
       autofocus: widget.autofocus,
@@ -226,9 +227,66 @@ class _HoverButtonState extends State<HoverButton> {
 
 enum ButtonStates { disabled, hovering, pressing, focused, none }
 
-typedef ButtonState<T> = T Function(List<ButtonStates>);
+// typedef ButtonState<T> = T Function(Set<ButtonStates>);
 
-extension ButtonStatesExtension on List<ButtonStates> {
+/// Signature for the function that returns a value of type `T` based on a given
+/// set of states.
+typedef ButtonStateResolver<T> = T Function(Set<ButtonStates> states);
+
+abstract class ButtonState<T> {
+  T resolve(Set<ButtonStates> states);
+
+  static ButtonState<T> all<T>(T value) => _AllButtonState(value);
+
+  static ButtonState<T> resolveWith<T>(ButtonStateResolver<T> callback) {
+    return _ButtonState(callback);
+  }
+
+  static ButtonState<T?> lerp<T>(
+    ButtonState<T?>? a,
+    ButtonState<T?>? b,
+    double t,
+    T? Function(T?, T?, double) lerpFunction,
+  ) {
+    return _LerpProperties<T>(a, b, t, lerpFunction);
+  }
+}
+
+class _ButtonState<T> extends ButtonState<T> {
+  _ButtonState(this._resolve);
+
+  final ButtonStateResolver<T> _resolve;
+
+  @override
+  T resolve(Set<ButtonStates> states) => _resolve(states);
+}
+
+class _AllButtonState<T> extends ButtonState<T> {
+  _AllButtonState(this._value);
+
+  final T _value;
+
+  @override
+  T resolve(states) => _value;
+}
+
+class _LerpProperties<T> implements ButtonState<T?> {
+  const _LerpProperties(this.a, this.b, this.t, this.lerpFunction);
+
+  final ButtonState<T?>? a;
+  final ButtonState<T?>? b;
+  final double t;
+  final T? Function(T?, T?, double) lerpFunction;
+
+  @override
+  T? resolve(Set<ButtonStates> states) {
+    final T? resolvedA = a?.resolve(states);
+    final T? resolvedB = b?.resolve(states);
+    return lerpFunction(resolvedA, resolvedB, t);
+  }
+}
+
+extension ButtonStatesExtension on Set<ButtonStates> {
   bool get isFocused => contains(ButtonStates.focused);
   bool get isDisabled => contains(ButtonStates.disabled);
   bool get isPressing => contains(ButtonStates.pressing);

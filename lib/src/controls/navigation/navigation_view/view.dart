@@ -279,7 +279,7 @@ class NavigationViewState extends State<NavigationView> {
   void _openMinimalOverlay(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
@@ -391,18 +391,21 @@ class NavigationAppBar with Diagnosticable {
           style: ButtonThemeData(
             margin: EdgeInsets.zero,
             scaleFactor: 1.0,
-            decoration: (state) {
-              if (state.isDisabled) state = [];
+            decoration: ButtonState.resolveWith((states) {
+              if (states.isDisabled) states = {};
               return BoxDecoration(
-                color:
-                    ButtonThemeData.uncheckedInputColor(context.theme, state),
+                color: ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  states,
+                ),
               );
-            },
+            }),
           ),
           iconTheme: (state) {
             return IconThemeData(
               size: 22.0,
-              color: ButtonThemeData.buttonColor(context.theme, state),
+              color:
+                  ButtonThemeData.buttonColor(FluentTheme.of(context), state),
             );
           },
         ),
@@ -435,7 +438,7 @@ class _NavigationAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
       appBar,
@@ -464,18 +467,10 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
-          animationDuration: theme.animationDuration ?? Duration.zero,
-          animationCurve: theme.animationCurve ?? Curves.linear,
           child: Row(children: [
             leading,
             title,
-            if (appBar.actions != null)
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: appBar.actions!,
-                ),
-              ),
+            if (appBar.actions != null) Expanded(child: appBar.actions!),
           ]),
         );
         break;
@@ -486,8 +481,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
@@ -500,8 +493,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kCompactNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: leading,
           ),
           title,
@@ -511,9 +502,7 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return SizedBox.shrink();
     }
-    return AnimatedContainer(
-      duration: FluentTheme.of(context).fastAnimationDuration,
-      curve: FluentTheme.of(context).animationCurve,
+    return Container(
       color: appBar.backgroundColor ??
           FluentTheme.of(context).scaffoldBackgroundColor,
       height: appBar.height,
