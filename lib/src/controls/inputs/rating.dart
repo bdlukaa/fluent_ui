@@ -207,7 +207,8 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final double size = widget.iconSize ?? FluentTheme.of(context).iconTheme.size ?? 22;
+    final double size =
+        widget.iconSize ?? FluentTheme.of(context).iconTheme.size ?? 22;
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed

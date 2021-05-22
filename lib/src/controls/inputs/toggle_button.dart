@@ -64,10 +64,7 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style =
-        ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).toggleButtonTheme.copyWith(this.style),
-    );
+    final style = ToggleButtonTheme.of(context).copyWith(this.style);
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
@@ -89,6 +86,70 @@ class ToggleButton extends StatelessWidget {
       ),
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [ToggleButton]s in this widget's subtree.
+///
+/// Values specified here are used for [ToggleButton] properties that are not
+/// given an explicit non-null value.
+class ToggleButtonTheme extends InheritedTheme {
+  /// Creates a toggle button theme that controls the configurations for
+  /// [ToggleButton].
+  const ToggleButtonTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [ToggleButton] widgets.
+  final ToggleButtonThemeData data;
+
+  /// Creates a button theme that controls how descendant [ToggleButton]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ToggleButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ToggleButtonTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static ToggleButtonThemeData _getInheritedThemeData(BuildContext context) {
+    final theme =
+        context.dependOnInheritedWidgetOfExactType<ToggleButtonTheme>();
+    return theme?.data ?? FluentTheme.of(context).toggleButtonTheme;
+  }
+
+  /// Returns the [data] from the closest [ToggleButtonTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.toggleButtonTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ToggleButtonThemeData theme = ToggleButtonTheme.of(context);
+  /// ```
+  static ToggleButtonThemeData of(BuildContext context) {
+    return ToggleButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ToggleButtonTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ToggleButtonTheme oldWidget) =>
+      data != oldWidget.data;
 }
 
 @immutable
@@ -191,6 +252,7 @@ class ToggleButtonThemeData with Diagnosticable {
         .add(DiagnosticsProperty('uncheckedDecoration', uncheckedDecoration));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
     properties.add(DiagnosticsProperty('checkedTextStyle', checkedTextStyle));
-    properties.add(DiagnosticsProperty('uncheckedTextStyle', uncheckedTextStyle));
+    properties
+        .add(DiagnosticsProperty('uncheckedTextStyle', uncheckedTextStyle));
   }
 }

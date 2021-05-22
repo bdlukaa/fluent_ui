@@ -107,7 +107,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = displayMode == PaneDisplayMode.compact;
     final bool isOpen =
         [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(displayMode);
-    final style = NavigationPaneThemeData.of(context);
+    final style = NavigationPaneTheme.of(context);
 
     Widget result = SizedBox(
       key: item.itemKey,
@@ -232,7 +232,7 @@ class PaneItemHeader extends NavigationPaneItem {
 
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     return Padding(
       key: itemKey,
       padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -392,7 +392,7 @@ class NavigationPane with Diagnosticable {
   }) {
     if (index == null) return child;
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
 
     final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
     final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
@@ -507,7 +507,7 @@ class _TopNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     Widget topBar = Acrylic(
       height: kOneLineTileHeight,
       color: theme.backgroundColor,
@@ -605,7 +605,7 @@ class _CompactNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
@@ -713,7 +713,7 @@ class _OpenNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = () {
       if (pane.menuButton != null) return pane.menuButton!;
@@ -842,7 +842,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = SizedBox(
       width: _kCompactNavigationPanelWidth,

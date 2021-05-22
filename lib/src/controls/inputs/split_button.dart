@@ -45,14 +45,12 @@ class SplitButtonBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style =
-        SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).splitButtonTheme.copyWith(this.style),
-    );
+    final SplitButtonThemeData style =
+        SplitButtonTheme.of(context).copyWith(this.style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
-        final button = ButtonTheme(
+        final button = ButtonTheme.merge(
           data: ButtonThemeData(
             decoration: ButtonState.resolveWith((states) {
               return BoxDecoration(
@@ -85,6 +83,69 @@ class SplitButtonBar extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+class SplitButtonTheme extends InheritedTheme {
+  /// Creates a button theme that controls how descendant [SplitButtonBar]s should
+  /// look like.
+  const SplitButtonTheme({
+    Key? key,
+    required this.child,
+    required this.data,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+  final SplitButtonThemeData data;
+
+  /// Creates a button theme that controls how descendant [SplitButtonBar]s should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required SplitButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return SplitButtonTheme(
+        key: key,
+        data: _getInheritedSplitButtonThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.splitButtonTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// SplitButtonThemeData theme = SplitButtonTheme.of(context);
+  /// ```
+  static SplitButtonThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    return SplitButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedSplitButtonThemeData(context),
+    );
+  }
+
+  static SplitButtonThemeData _getInheritedSplitButtonThemeData(
+      BuildContext context) {
+    final SplitButtonTheme? checkboxTheme =
+        context.dependOnInheritedWidgetOfExactType<SplitButtonTheme>();
+    return checkboxTheme?.data ?? FluentTheme.of(context).splitButtonTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return SplitButtonTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(SplitButtonTheme oldWidget) {
+    return oldWidget.data != data;
   }
 }
 

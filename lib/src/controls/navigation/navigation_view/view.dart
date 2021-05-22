@@ -279,7 +279,7 @@ class NavigationViewState extends State<NavigationView> {
   void _openMinimalOverlay(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
@@ -438,7 +438,7 @@ class _NavigationAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
       appBar,

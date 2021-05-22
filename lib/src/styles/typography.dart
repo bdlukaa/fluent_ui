@@ -56,7 +56,7 @@ class Typography with Diagnosticable {
   /// The default typography.
   ///
   /// If [color] is null, uses [Colors.black] if [brightness] is [Brightness.dark], otherwise uses [Colors.white]
-  factory Typography.standart({
+  factory Typography.standard({
     required Brightness brightness,
     Color? color,
   }) {

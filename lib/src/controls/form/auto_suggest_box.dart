@@ -162,7 +162,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         widget.onSelected?.call(value);
         focusNode.unfocus();
       },
-      title: Text('$value', style: FluentTheme.maybeOf(context)?.typography.body),
+      title:
+          Text('$value', style: FluentTheme.maybeOf(context)?.typography.body),
     );
   }
 

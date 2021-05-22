@@ -301,7 +301,7 @@ class ThemeData with Diagnosticable {
       'dark': Color(0xFF1e1e1e),
     }).resolveFromBrightness(brightness);
     typography =
-        Typography.standart(brightness: brightness).copyWith(typography);
+        Typography.standard(brightness: brightness).copyWith(typography);
     inputMouseCursor ??= ButtonState.resolveWith((states) {
       if (states.isHovering || states.isPressing)
         return SystemMouseCursors.click;

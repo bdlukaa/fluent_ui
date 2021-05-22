@@ -41,9 +41,7 @@ class Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = DividerThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).dividerTheme.copyWith(this.style),
-    );
+    final style = DividerTheme.of(context).copyWith(this.style);
     return AnimatedContainer(
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
@@ -55,6 +53,68 @@ class Divider extends StatelessWidget {
       decoration: style.decoration,
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [Divider]s in this widget's subtree.
+///
+/// Values specified here are used for [Divider] properties that are not
+/// given an explicit non-null value.
+class DividerTheme extends InheritedTheme {
+  /// Creates a divider theme that controls the configurations for
+  /// [Divider].
+  const DividerTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Divider] widgets.
+  final DividerThemeData data;
+
+  /// Creates a button theme that controls how descendant [Divider]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required DividerThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return DividerTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static DividerThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<DividerTheme>();
+    return theme?.data ?? FluentTheme.of(context).dividerTheme;
+  }
+
+  /// Returns the [data] from the closest [DividerTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.dividerTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// DividerThemeData theme = DividerTheme.of(context);
+  /// ```
+  static DividerThemeData of(BuildContext context) {
+    return DividerThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return DividerTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(DividerTheme oldWidget) => data != oldWidget.data;
 }
 
 @immutable

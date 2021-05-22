@@ -97,7 +97,8 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final defaultDecoration = BoxDecoration(
-      color: FluentTheme.of(context).acrylicBackgroundColor
+      color: FluentTheme.of(context)
+          .acrylicBackgroundColor
           .withOpacity(kDefaultAcrylicOpacity),
       borderRadius: BorderRadius.circular(4.0),
       border: Border.all(

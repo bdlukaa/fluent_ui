@@ -72,9 +72,7 @@ class InfoBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = InfoBarThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).infoBarTheme.copyWith(this.style),
-    );
+    final style = InfoBarTheme.of(context).copyWith(this.style);
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
@@ -91,9 +89,9 @@ class InfoBar extends StatelessWidget {
     }();
     final action = () {
       if (this.action == null) return null;
-      return ButtonTheme(
+      return ButtonTheme.merge(
         child: this.action!,
-        data: style.actionStyle ?? FluentTheme.of(context).buttonTheme,
+        data: style.actionStyle ?? const ButtonThemeData(),
       );
     }();
     return Acrylic(
@@ -152,6 +150,70 @@ class InfoBar extends StatelessWidget {
       ),
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [InfoBar]s in this widget's subtree.
+///
+/// Values specified here are used for [InfoBar] properties that are not
+/// given an explicit non-null value.
+class InfoBarTheme extends InheritedTheme {
+  /// Creates a info bar theme that controls the configurations for
+  /// [InfoBar].
+  const InfoBarTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [InfoBar] widgets.
+  final InfoBarThemeData data;
+
+  /// Creates a button theme that controls how descendant [InfoBar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required InfoBarThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return InfoBarTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static InfoBarThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    return theme?.data ?? FluentTheme.of(context).infoBarTheme;
+  }
+
+  /// Returns the [data] from the closest [InfoBarTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.infoBarTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// InfoBarThemeData theme = InfoBarTheme.of(context);
+  /// ```
+  static InfoBarThemeData of(BuildContext context) {
+    final InfoBarTheme? theme =
+        context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    return InfoBarThemeData.standard(FluentTheme.of(context)).copyWith(
+      theme?.data ?? FluentTheme.of(context).infoBarTheme,
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return InfoBarTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);

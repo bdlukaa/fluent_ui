@@ -81,9 +81,8 @@ class Checkbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = CheckboxThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).checkboxTheme.copyWith(this.style),
-    );
+    final CheckboxThemeData style =
+        CheckboxTheme.of(context).copyWith(this.style);
     final double size = 22;
     return HoverButton(
       autofocus: autofocus,
@@ -132,6 +131,69 @@ class Checkbox extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class CheckboxTheme extends InheritedTheme {
+  /// Creates a button theme that controls how descendant [Checkbox]es should
+  /// look like.
+  const CheckboxTheme({
+    Key? key,
+    required this.child,
+    required this.data,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+  final CheckboxThemeData data;
+
+  /// Creates a button theme that controls how descendant [Checkbox]es should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required CheckboxThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return CheckboxTheme(
+        key: key,
+        data: _getInheritedCheckboxThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.checkboxTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// CheckboxThemeData theme = CheckboxTheme.of(context);
+  /// ```
+  static CheckboxThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    return CheckboxThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedCheckboxThemeData(context),
+    );
+  }
+
+  static CheckboxThemeData _getInheritedCheckboxThemeData(
+      BuildContext context) {
+    final CheckboxTheme? checkboxTheme =
+        context.dependOnInheritedWidgetOfExactType<CheckboxTheme>();
+    return checkboxTheme?.data ?? FluentTheme.of(context).checkboxTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return CheckboxTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(CheckboxTheme oldWidget) {
+    return oldWidget.data != data;
   }
 }
 

@@ -299,9 +299,8 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(debugCheckHasFluentTheme(context));
     assert(Overlay.of(context, debugRequiredFor: widget) != null);
     final ThemeData theme = FluentTheme.of(context);
-    final tooltipTheme = TooltipThemeData.standard(theme).copyWith(
-      theme.tooltipTheme.copyWith(this.widget.style),
-    );
+    final TooltipThemeData tooltipTheme =
+        TooltipTheme.of(context).copyWith(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
     if (theme.brightness == Brightness.dark) {
@@ -359,6 +358,68 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
     return result;
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [Tooltip]s in this widget's subtree.
+///
+/// Values specified here are used for [Tooltip] properties that are not
+/// given an explicit non-null value.
+class TooltipTheme extends InheritedTheme {
+  /// Creates a tooltip theme that controls the configurations for
+  /// [Tooltip].
+  const TooltipTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Tooltip] widgets.
+  final TooltipThemeData data;
+
+  /// Creates a button theme that controls how descendant [InfoBar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required TooltipThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return TooltipTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static TooltipThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<TooltipTheme>();
+    return theme?.data ?? FluentTheme.of(context).tooltipTheme;
+  }
+
+  /// Returns the [data] from the closest [TooltipTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.tooltipTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// TooltipThemeData theme = TooltipTheme.of(context);
+  /// ```
+  static TooltipThemeData of(BuildContext context) {
+    return TooltipThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return TooltipTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(TooltipTheme oldWidget) => data != oldWidget.data;
 }
 
 class TooltipThemeData with Diagnosticable {

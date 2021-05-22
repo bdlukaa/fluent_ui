@@ -614,18 +614,19 @@ class _TextBoxState extends State<TextBox>
       color: FluentTheme.of(context).inactiveColor,
     );
 
-    final TextStyle placeholderStyle = widget.placeholderStyle ??
-        textStyle.copyWith(
-          color: FluentTheme.of(context).disabledColor,
-          fontWeight: FontWeight.w400,
-        );
-
     final Brightness keyboardAppearance =
         widget.keyboardAppearance ?? FluentTheme.of(context).brightness;
     final Color cursorColor = FluentTheme.of(context).inactiveColor;
-    final Color? disabledColor = FluentTheme.of(context).disabledColor;
-
+    final Color disabledColor = FluentTheme.of(context).disabledColor;
     final Color? decorationColor = widget.decoration.color;
+
+    final TextStyle placeholderStyle = widget.placeholderStyle ??
+        textStyle.copyWith(
+          color: !enabled
+              ? (decorationColor ?? disabledColor).basedOnLuminance()
+              : disabledColor,
+          fontWeight: FontWeight.w400,
+        );
 
     final BoxBorder? border = widget.decoration.border;
     Border? resolvedBorder = border as Border?;
@@ -657,7 +658,8 @@ class _TextBoxState extends State<TextBox>
       color: enabled ? decorationColor : (decorationColor ?? disabledColor),
     );
 
-    final Color selectionColor = FluentTheme.of(context).accentColor.withOpacity(0.2);
+    final Color selectionColor =
+        FluentTheme.of(context).accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -703,7 +705,7 @@ class _TextBoxState extends State<TextBox>
             cursorOffset: cursorOffset,
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
-            backgroundCursorColor: FluentTheme.of(context).disabledColor,
+            backgroundCursorColor: disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -767,7 +769,7 @@ class _TextBoxState extends State<TextBox>
       },
     );
 
-    return ButtonTheme(
+    return ButtonTheme.merge(
       data: ButtonThemeData(
         margin: EdgeInsets.zero,
       ).copyWith(widget.iconButtonThemeData),

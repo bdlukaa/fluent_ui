@@ -294,7 +294,7 @@ This version provides the fix for [#5](https://github.com/bdlukaa/fluent_ui/issu
   - **NEW** `Style.fastAnimationDuration` (Defaults to 150ms)
   - **NEW** `Style.mediumAnimationDuration` (Defaults to 300ms)
   - **NEW** `Style.slowAnimationDuration` (Defaults to 500ms)
-  - Default `animationCurve` is now `Curves.easeInOut` (standart) instead of `Curves.linear`
+  - Default `animationCurve` is now `Curves.easeInOut` (standard) instead of `Curves.linear`
   - **BREAKING** Removed `Style.animationDuration`
 - Refactored Navigation Panel
 

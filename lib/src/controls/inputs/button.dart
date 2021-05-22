@@ -223,22 +223,66 @@ class _ButtonState extends State<Button> {
   }
 }
 
-class ButtonTheme extends InheritedWidget {
+/// An inherited widget that defines the configuration for
+/// [Button]s in this widget's subtree.
+///
+/// Values specified here are used for [Button] properties that are not
+/// given an explicit non-null value.
+class ButtonTheme extends InheritedTheme {
+  /// Creates a button theme that controls the configurations for
+  /// [Button].
   const ButtonTheme({
     Key? key,
-    required this.child,
+    required Widget child,
     required this.data,
   }) : super(key: key, child: child);
 
-  final Widget child;
+  /// The properties for descendant [Button] widgets.
   final ButtonThemeData data;
 
+  /// Creates a button theme that controls how descendant [Button]s should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ButtonTheme(
+        key: key,
+        data: _getInheritedButtonThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.buttonTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ButtonThemeData theme = ButtonTheme.of(context);
+  /// ```
   static ButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return ButtonThemeData.standard(FluentTheme.of(context)).copyWith(
       context.dependOnInheritedWidgetOfExactType<ButtonTheme>()?.data ??
           FluentTheme.of(context).buttonTheme,
     );
+  }
+
+  static ButtonThemeData _getInheritedButtonThemeData(BuildContext context) {
+    final ButtonTheme? buttonTheme =
+        context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
+    return buttonTheme?.data ?? FluentTheme.of(context).buttonTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ButtonTheme(data: data, child: child);
   }
 
   @override

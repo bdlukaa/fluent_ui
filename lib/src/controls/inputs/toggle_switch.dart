@@ -107,10 +107,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style =
-        ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).toggleSwitchTheme.copyWith(this.widget.style),
-    );
+    final ToggleSwitchThemeData style =
+        ToggleSwitchTheme.of(context).copyWith(widget.style);
     final sliderGestureWidth = 45.0 + (style.padding?.horizontal ?? 0.0);
     return HoverButton(
       autofocus: widget.autofocus,
@@ -196,6 +194,69 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
           ? style?.checkedThumbDecoration?.resolve(states)
           : style?.uncheckedThumbDecoration?.resolve(states),
     );
+  }
+}
+
+class ToggleSwitchTheme extends InheritedTheme {
+  /// Creates a button theme that controls how descendant [ToggleSwitch]es should
+  /// look like.
+  const ToggleSwitchTheme({
+    Key? key,
+    required this.child,
+    required this.data,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+  final ToggleSwitchThemeData data;
+
+  /// Creates a button theme that controls how descendant [ToggleSwitch]es should
+  /// look like, and merges in the current button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ToggleSwitchThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ToggleSwitchTheme(
+        key: key,
+        data: _getInheritedToggleSwitchThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  /// The data from the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// Defaults to [ThemeData.toggleSwitchTheme]
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ToggleSwitchThemeData theme = ToggleSwitchTheme.of(context);
+  /// ```
+  static ToggleSwitchThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    return ToggleSwitchThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedToggleSwitchThemeData(context),
+    );
+  }
+
+  static ToggleSwitchThemeData _getInheritedToggleSwitchThemeData(
+      BuildContext context) {
+    final ToggleSwitchTheme? checkboxTheme =
+        context.dependOnInheritedWidgetOfExactType<ToggleSwitchTheme>();
+    return checkboxTheme?.data ?? FluentTheme.of(context).toggleSwitchTheme;
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ToggleSwitchTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ToggleSwitchTheme oldWidget) {
+    return oldWidget.data != data;
   }
 }
 

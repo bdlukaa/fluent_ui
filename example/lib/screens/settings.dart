@@ -60,7 +60,8 @@ class Settings extends StatelessWidget {
         ),
         controller: controller,
         children: [
-          Text('Theme mode', style: FluentTheme.of(context).typography.subtitle),
+          Text('Theme mode',
+              style: FluentTheme.of(context).typography.subtitle),
           ...List.generate(ThemeMode.values.length, (index) {
             final mode = ThemeMode.values[index];
             return RadioListTile(
@@ -104,7 +105,8 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
-          Text('Accent Color', style: FluentTheme.of(context).typography.subtitle),
+          Text('Accent Color',
+              style: FluentTheme.of(context).typography.subtitle),
           Wrap(children: [
             Tooltip(
               style: tooltipThemeData,

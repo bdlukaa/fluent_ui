@@ -71,9 +71,10 @@ class YesNoPickerControl extends StatelessWidget {
       return ButtonThemeData(
         margin: EdgeInsets.zero,
         decoration: ButtonState.resolveWith((states) => BoxDecoration(
-          color: ButtonThemeData.uncheckedInputColor(FluentTheme.of(context), states),
-          borderRadius: radius,
-        )),
+              color: ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context), states),
+              borderRadius: radius,
+            )),
         scaleFactor: 1.0,
       );
     }
@@ -129,7 +130,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
       onPressed: () {},
       builder: (context, state) {
         final show = state.isHovering || state.isPressing || state.isFocused;
-        return ButtonTheme(
+        return ButtonTheme.merge(
           data: ButtonThemeData(
             padding: const EdgeInsets.all(2.0),
             margin: EdgeInsets.zero,

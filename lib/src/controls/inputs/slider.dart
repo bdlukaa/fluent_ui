@@ -342,6 +342,68 @@ class SliderThumbShape extends m.SliderComponentShape {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [Slider]s in this widget's subtree.
+///
+/// Values specified here are used for [Slider] properties that are not
+/// given an explicit non-null value.
+class SliderTheme extends InheritedTheme {
+  /// Creates a slider theme that controls the configurations for
+  /// [Slider].
+  const SliderTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Slider] widgets.
+  final SliderThemeData data;
+
+  /// Creates a button theme that controls how descendant [Slider]s should
+  /// look like, and merges in the current slider theme, if any.
+  static Widget merge({
+    Key? key,
+    required SliderThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return SliderTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static SliderThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<SliderTheme>();
+    return theme?.data ?? FluentTheme.of(context).sliderTheme;
+  }
+
+  /// Returns the [data] from the closest [SliderTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.sliderTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// SliderThemeData theme = SliderTheme.of(context);
+  /// ```
+  static SliderThemeData of(BuildContext context) {
+    return SliderThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return SliderTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
+}
+
 @immutable
 class SliderThemeData with Diagnosticable {
   final Color? thumbColor;

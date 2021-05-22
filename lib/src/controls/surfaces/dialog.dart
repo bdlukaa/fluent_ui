@@ -99,7 +99,7 @@ class ContentDialog extends StatelessWidget {
                 ),
               ),
             if (actions != null)
-              ButtonTheme(
+              ButtonTheme.merge(
                 data: style.actionThemeData ??
                     FluentTheme.of(context).buttonTheme,
                 child: () {
@@ -282,9 +282,11 @@ class ContentDialogThemeData {
       barrierColor: Color.lerp(a?.barrierColor, b?.barrierColor, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       bodyPadding: EdgeInsetsGeometry.lerp(a?.bodyPadding, b?.bodyPadding, t),
-      titlePadding: EdgeInsetsGeometry.lerp(a?.titlePadding, b?.titlePadding, t),
+      titlePadding:
+          EdgeInsetsGeometry.lerp(a?.titlePadding, b?.titlePadding, t),
       actionsSpacing: lerpDouble(a?.actionsSpacing, b?.actionsSpacing, t),
-      actionThemeData: ButtonThemeData.lerp(a?.actionThemeData, b?.actionThemeData, t),
+      actionThemeData:
+          ButtonThemeData.lerp(a?.actionThemeData, b?.actionThemeData, t),
       titleStyle: TextStyle.lerp(a?.titleStyle, b?.titleStyle, t),
       bodyStyle: TextStyle.lerp(a?.bodyStyle, b?.bodyStyle, t),
       elevation: lerpDouble(a?.elevation, b?.elevation, t),

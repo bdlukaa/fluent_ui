@@ -60,12 +60,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
-    _scrollbarTheme = ScrollbarThemeData.standart(theme).copyWith(
-      theme.scrollbarTheme.copyWith(widget.style),
-    );
-    _hoverController.duration =
-        _scrollbarTheme.animationDuration ?? theme.fasterAnimationDuration;
+    _scrollbarTheme = ScrollbarTheme.of(context).copyWith(widget.style);
+    _hoverController.duration = _scrollbarTheme.animationDuration ??
+        FluentTheme.of(context).fasterAnimationDuration;
     super.didChangeDependencies();
   }
 
@@ -178,6 +175,68 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [Scrollbar]s in this widget's subtree.
+///
+/// Values specified here are used for [Scrollbar] properties that are not
+/// given an explicit non-null value.
+class ScrollbarTheme extends InheritedTheme {
+  /// Creates a scrollbar theme that controls the configurations for
+  /// [Scrollbar].
+  const ScrollbarTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Scrollbar] widgets.
+  final ScrollbarThemeData data;
+
+  /// Creates a button theme that controls how descendant [Scrollbar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required ScrollbarThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return ScrollbarTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static ScrollbarThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
+    return theme?.data ?? FluentTheme.of(context).scrollbarTheme;
+  }
+
+  /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.scrollbarTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
+  /// ```
+  static ScrollbarThemeData of(BuildContext context) {
+    return ScrollbarThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ScrollbarTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ScrollbarTheme oldWidget) => data != oldWidget.data;
+}
+
 @immutable
 class ScrollbarThemeData with Diagnosticable {
   /// Thickness of the scrollbar in its cross-axis in logical
@@ -272,7 +331,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.animationCurve,
   });
 
-  factory ScrollbarThemeData.standart(ThemeData style) {
+  factory ScrollbarThemeData.standard(ThemeData style) {
     final brightness = style.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight

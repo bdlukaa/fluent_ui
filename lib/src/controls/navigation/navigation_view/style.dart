@@ -1,5 +1,69 @@
 part of 'view.dart';
 
+/// An inherited widget that defines the configuration for
+/// [NavigationPane]s in this widget's subtree.
+///
+/// Values specified here are used for [NavigationPane] properties that are not
+/// given an explicit non-null value.
+class NavigationPaneTheme extends InheritedTheme {
+  /// Creates a navigation pane theme that controls the configurations for
+  /// [NavigationPane].
+  const NavigationPaneTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [NavigationPane] widgets.
+  final NavigationPaneThemeData data;
+
+  /// Creates a button theme that controls how descendant [NavigationPane]s
+  /// should look like, and merges in the current slider theme, if any.
+  static Widget merge({
+    Key? key,
+    required NavigationPaneThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return NavigationPaneTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static NavigationPaneThemeData _getInheritedThemeData(BuildContext context) {
+    final theme =
+        context.dependOnInheritedWidgetOfExactType<NavigationPaneTheme>();
+    return theme?.data ?? FluentTheme.of(context).navigationPaneTheme;
+  }
+
+  /// Returns the [data] from the closest [NavigationPaneTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.navigationPaneTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
+  /// ```
+  static NavigationPaneThemeData of(BuildContext context) {
+    return NavigationPaneThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return NavigationPaneTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(NavigationPaneTheme oldWidget) =>
+      data != oldWidget.data;
+}
+
 /// The theme data used by [NavigationView]. The default theme
 /// data used is [NavigationPaneThemeData.standard].
 class NavigationPaneThemeData with Diagnosticable {
@@ -45,12 +109,6 @@ class NavigationPaneThemeData with Diagnosticable {
     this.selectedIconColor,
     this.unselectedIconColor,
   });
-
-  static NavigationPaneThemeData of(BuildContext context) {
-    return NavigationPaneThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).navigationPaneTheme,
-    );
-  }
 
   factory NavigationPaneThemeData.standard(ThemeData style) {
     final disabledTextStyle = TextStyle(

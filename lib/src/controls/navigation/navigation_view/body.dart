@@ -85,7 +85,7 @@ class _NavigationBodyState extends State<NavigationBody> {
     assert(debugCheckHasFluentTheme(context));
     final _body = _NavigationBody.maybeOf(context);
     final theme = FluentTheme.of(context);
-    final paneTheme = NavigationPaneThemeData.of(context);
+    final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(

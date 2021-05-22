@@ -72,10 +72,7 @@ class RadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style =
-        RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
-      FluentTheme.of(context).radioButtonTheme.copyWith(this.style),
-    );
+    final style = RadioButtonTheme.of(context).copyWith(this.style);
     return HoverButton(
       cursor: style.cursor,
       autofocus: autofocus,
@@ -117,6 +114,69 @@ class RadioButton extends StatelessWidget {
       },
     );
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [RadioButton]s in this widget's subtree.
+///
+/// Values specified here are used for [RadioButton] properties that are not
+/// given an explicit non-null value.
+class RadioButtonTheme extends InheritedTheme {
+  /// Creates a radio button theme that controls the configurations for
+  /// [RadioButton].
+  const RadioButtonTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [RadioButton] widgets.
+  final RadioButtonThemeData data;
+
+  /// Creates a button theme that controls how descendant [RadioButton]s should
+  /// look like, and merges in the current radio button theme, if any.
+  static Widget merge({
+    Key? key,
+    required RadioButtonThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return RadioButtonTheme(
+        key: key,
+        data: _getInheritedThemeData(context).copyWith(data),
+        child: child,
+      );
+    });
+  }
+
+  static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
+    final RadioButtonTheme? theme =
+        context.dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
+    return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
+  }
+
+  /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.radioButtonTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
+  /// ```
+  static RadioButtonThemeData of(BuildContext context) {
+    return RadioButtonThemeData.standard(FluentTheme.of(context)).copyWith(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return RadioButtonTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
 }
 
 @immutable
