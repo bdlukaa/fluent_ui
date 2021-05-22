@@ -11,7 +11,7 @@ import 'pickers/pickers.dart';
 
 const Duration _kComboboxMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemHeight = kPickerHeight;
-const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 16.0);
+const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
   top: 4.0,
   bottom: 4.0,

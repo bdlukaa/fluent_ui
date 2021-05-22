@@ -117,11 +117,10 @@ class FocusTheme extends InheritedWidget {
   const FocusTheme({
     Key? key,
     required this.data,
-    required this.child,
+    required Widget child,
   }) : super(key: key, child: child);
 
   final FocusThemeData data;
-  final Widget child;
 
   static FocusThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -130,9 +129,7 @@ class FocusTheme extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(FocusTheme oldWidget) {
-    return oldWidget.data != data;
-  }
+  bool updateShouldNotify(FocusTheme oldWidget) => oldWidget.data != data;
 }
 
 class FocusThemeData with Diagnosticable {

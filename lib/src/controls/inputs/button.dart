@@ -205,7 +205,7 @@ class _ButtonState extends State<Button> {
           duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
-          decoration: style.decoration?.resolve(state),
+          decoration: style.decoration?.resolve(state) ?? BoxDecoration(),
           child: AnimatedDefaultTextStyle(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,

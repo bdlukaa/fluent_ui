@@ -41,16 +41,23 @@ class FluentTheme extends StatelessWidget {
   }
 }
 
-class _FluentTheme extends InheritedWidget {
-  const _FluentTheme({Key? key, required this.data, required this.child})
-      : super(key: key, child: child);
+class _FluentTheme extends InheritedTheme {
+  const _FluentTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
 
   final ThemeData data;
-  final Widget child;
 
   @override
   bool updateShouldNotify(covariant _FluentTheme oldWidget) =>
       oldWidget.data != data;
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return _FluentTheme(child: child, data: data);
+  }
 }
 
 /// An interpolation between two [ThemeData]s.

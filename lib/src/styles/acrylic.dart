@@ -1,7 +1,8 @@
-import 'dart:ui';
+import 'dart:ui' show ImageFilter;
+
+import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 
 final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
 
@@ -151,6 +152,128 @@ class Acrylic extends StatelessWidget {
     }
     if (margin != null) result = Padding(padding: margin!, child: result);
     return result;
+  }
+}
+
+class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
+  const AnimatedAcrylic({
+    Key? key,
+    this.color,
+    this.decoration,
+    this.filter,
+    this.child,
+    this.opacity = kDefaultAcrylicOpacity,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.shadowColor,
+    this.elevation = 0.0,
+    Curve curve = Curves.linear,
+    required Duration duration,
+  }) : super(key: key, curve: curve, duration: duration);
+
+  /// The color to fill the background of the box.
+  ///
+  /// If [decoration] and this is null, [ThemeData.acrylicBackgroundColor]
+  /// is used.
+  final Color? color;
+
+  /// The decoration to paint behind the [child].
+  ///
+  /// Use the [color] property to specify a simple solid color.
+  final BoxDecoration? decoration;
+
+  /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,
+  /// this has no effect
+  final double opacity;
+
+  /// The image filter to apply to the existing painted content before painting the
+  /// child. If null, [kDefaultAcrylicFilter] is used. If [enabled] if `false`, this
+  /// has no effect.
+  ///
+  /// For example, consider using [ImageFilter.blur] to create a backdrop blur effect.
+  final ImageFilter? filter;
+
+  /// The child contained by this box
+  final Widget? child;
+
+  /// The width of the box
+  final double? width;
+
+  /// The height of the box
+  final double? height;
+
+  /// Empty space to inscribe inside the [decoration].
+  /// The [child], if any, is placed inside this padding.
+  final EdgeInsetsGeometry? padding;
+
+  /// Empty space to surround the [decoration] and [child].
+  final EdgeInsetsGeometry? margin;
+
+  /// The color of the elevation
+  final Color? shadowColor;
+
+  /// The z-coordinate relative to the parent at which to place this physical object.
+  ///
+  /// The value is non-negative.
+  final double elevation;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('color', color));
+    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
+    properties.add(DoubleProperty('opacity', opacity));
+    properties.add(DiagnosticsProperty<ImageFilter>('filter', filter));
+    properties.add(DoubleProperty('width', width));
+    properties.add(DoubleProperty('height', height));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+    properties.add(ColorProperty('shadowColor', shadowColor));
+    properties.add(DoubleProperty('elevation', elevation));
+  }
+
+  @override
+  _AnimatedAcrylicState createState() => _AnimatedAcrylicState();
+}
+
+class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
+
+  EdgeInsetsGeometryTween? _padding;
+  EdgeInsetsGeometryTween? _margin;
+  DecorationTween? _decoration;
+  ColorTween? _color;
+  Tween<double?>? _height;
+  Tween<double?>? _width;
+  ColorTween? _elevationColor;
+  Tween<double?>? _opacity;
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _padding = visitor(_padding, widget.padding, (dynamic value) => EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry)) as EdgeInsetsGeometryTween?;
+    _margin = visitor(_margin, widget.margin, (dynamic value) => EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry)) as EdgeInsetsGeometryTween?;
+    _decoration = visitor(_decoration, widget.decoration, (dynamic value) => DecorationTween(begin: value as Decoration)) as DecorationTween?;
+    _color = visitor(_color, widget.color, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
+    _height = visitor(_height, widget.height, (dynamic value) => Tween<double>(begin: value as double)) as Tween<double>?;
+    _width = visitor(_width, widget.width, (dynamic value) => Tween<double>(begin: value as double)) as Tween<double>?;
+    _elevationColor = visitor(_elevationColor, widget.shadowColor, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Acrylic(
+      padding: _padding?.evaluate(animation),
+      margin: _margin?.evaluate(animation),
+      decoration: _decoration?.evaluate(animation) as BoxDecoration?,
+      color: _color?.evaluate(animation),
+      height: _height?.evaluate(animation),
+      width: _width?.evaluate(animation),
+      opacity: _opacity?.evaluate(animation) ?? kDefaultAcrylicOpacity,
+      shadowColor: _elevationColor?.evaluate(animation),
+      filter: widget.filter,
+      child: widget.child,
+    );
   }
 }
 

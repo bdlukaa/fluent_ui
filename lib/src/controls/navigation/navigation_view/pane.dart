@@ -129,6 +129,8 @@ class PaneItem extends NavigationPaneItem {
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
+            mainAxisAlignment:
+                isTop ? MainAxisAlignment.center : MainAxisAlignment.end,
             children: [
               if (isOpen) Expanded(child: textResult),
               () {
@@ -144,7 +146,7 @@ class PaneItem extends NavigationPaneItem {
                   ),
                 );
                 if (isOpen) return icon;
-                return Expanded(child: icon);
+                return icon;
               }(),
             ],
           );
@@ -609,7 +611,9 @@ class _CompactNavigationPane extends StatelessWidget {
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
-    return Acrylic(
+    return AnimatedAcrylic(
+      duration: theme.animationDuration ?? Duration.zero,
+      curve: theme.animationCurve ?? Curves.linear,
       key: paneKey,
       width: _kCompactNavigationPanelWidth,
       color: theme.backgroundColor,
@@ -620,51 +624,55 @@ class _CompactNavigationPane extends StatelessWidget {
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.horizontal,
         y: _getIndicatorY(context),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          () {
-            if (pane.menuButton != null) return pane.menuButton!;
-            if (pane.onDisplayModeRequested != null)
-              return NavigationPane.buildMenuButton(
-                context,
-                FluentLocalizations.of(context).openNavigationTooltip,
-                pane,
-                onPressed: () {
-                  pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                },
-                padding: showReplacement ? EdgeInsets.zero : topPadding,
-              );
-            return SizedBox.shrink();
-          }(),
-          if (showReplacement)
-            Padding(
-              padding: topPadding,
-              child: PaneItem.buildPaneItemButton(
-                context,
-                PaneItem(
-                  title: FluentLocalizations.of(context).clickToSearch,
-                  icon: pane.autoSuggestBoxReplacement!,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            () {
+              if (pane.menuButton != null) return pane.menuButton!;
+              if (pane.onDisplayModeRequested != null)
+                return NavigationPane.buildMenuButton(
+                  context,
+                  FluentLocalizations.of(context).openNavigationTooltip,
+                  pane,
+                  onPressed: () {
+                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                  },
+                  padding: showReplacement ? EdgeInsets.zero : topPadding,
+                );
+              return SizedBox.shrink();
+            }(),
+            if (showReplacement)
+              Padding(
+                padding: topPadding,
+                child: PaneItem.buildPaneItemButton(
+                  context,
+                  PaneItem(
+                    title: FluentLocalizations.of(context).clickToSearch,
+                    icon: pane.autoSuggestBoxReplacement!,
+                  ),
+                  pane.displayMode,
+                  false,
+                  () {
+                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                  },
                 ),
-                pane.displayMode,
-                false,
-                () {
-                  pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                },
+              ),
+            Expanded(
+              child: Scrollbar(
+                isAlwaysShown: false,
+                child: ListView(key: listKey, primary: true, children: [
+                  ...pane.items.map((item) {
+                    return _buildItem(context, item);
+                  }),
+                ]),
               ),
             ),
-          Expanded(
-            child: Scrollbar(
-              isAlwaysShown: false,
-              child: ListView(key: listKey, primary: true, children: [
-                ...pane.items.map((item) {
-                  return _buildItem(context, item);
-                }),
-              ]),
-            ),
-          ),
-          ...pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }),
-        ]),
+            ...pane.footerItems.map((item) {
+              return _buildItem(context, item);
+            }),
+          ]),
+        ),
       ),
     );
   }
@@ -728,7 +736,9 @@ class _OpenNavigationPane extends StatelessWidget {
         );
       return SizedBox.shrink();
     }();
-    return Acrylic(
+    return AnimatedAcrylic(
+      duration: theme.animationDuration ?? Duration.zero,
+      curve: theme.animationCurve ?? Curves.linear,
       key: paneKey,
       color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
