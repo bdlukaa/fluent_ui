@@ -42,9 +42,7 @@ class Divider extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = DividerTheme.of(context).merge(this.style);
-    return AnimatedContainer(
-      duration: FluentTheme.of(context).fastAnimationDuration,
-      curve: FluentTheme.of(context).animationCurve,
+    return Container(
       height: direction == Axis.horizontal ? style.thickness : size,
       width: direction == Axis.vertical ? style.thickness : size,
       margin: direction == Axis.horizontal
