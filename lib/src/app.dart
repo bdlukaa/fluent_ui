@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
 
 /// An application that uses fluent design.
 ///
@@ -70,6 +71,7 @@ class FluentApp extends StatefulWidget {
     this.darkTheme,
     this.themeMode,
     this.restorationScopeId,
+    this.scrollBehavior = const FluentScrollBehavior(),
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
@@ -103,6 +105,7 @@ class FluentApp extends StatefulWidget {
     this.shortcuts,
     this.actions,
     this.restorationScopeId,
+    this.scrollBehavior = const FluentScrollBehavior(),
   })  : assert(routeInformationParser != null && routerDelegate != null,
             'The routeInformationParser and routerDelegate cannot be null.'),
         assert(supportedLocales.isNotEmpty),
@@ -328,6 +331,14 @@ class FluentApp extends StatefulWidget {
   /// {@macro flutter.widgets.widgetsApp.restorationScopeId}
   final String? restorationScopeId;
 
+  /// {@macro flutter.material.materialApp.scrollBehavior}
+  ///
+  /// See also:
+  ///
+  ///  * [ScrollConfiguration], which controls how [Scrollable] widgets behave
+  ///    in a subtree.
+  final ScrollBehavior scrollBehavior;
+
   static bool showPerformanceOverlayOverride = false;
 
   static bool debugShowWidgetInspectorOverride = false;
@@ -356,7 +367,7 @@ class _FluentAppState extends State<FluentApp> {
     if (widget.localizationsDelegates != null)
       yield* widget.localizationsDelegates!;
     yield DefaultFluentLocalizations.delegate;
-    yield m.DefaultMaterialLocalizations.delegate;
+    yield DefaultMaterialLocalizations.delegate;
     yield DefaultWidgetsLocalizations.delegate;
   }
 
@@ -365,9 +376,12 @@ class _FluentAppState extends State<FluentApp> {
   @override
   Widget build(BuildContext context) {
     final result = _buildApp(context);
-    return HeroControllerScope(
-      controller: _heroController,
-      child: result,
+    return ScrollConfiguration(
+      behavior: widget.scrollBehavior,
+      child: HeroControllerScope(
+        controller: _heroController,
+        child: result,
+      ),
     );
   }
 
@@ -391,9 +405,10 @@ class _FluentAppState extends State<FluentApp> {
 
   Widget _builder(BuildContext context, Widget? child) {
     if (child == null) return SizedBox();
-    final theme = this.theme(context);
-    return FluentTheme(
-      data: theme,
+    final themeData = theme(context);
+    return AnimatedFluentTheme(
+      curve: themeData.animationCurve,
+      data: themeData,
       child: child,
     );
   }
@@ -461,5 +476,65 @@ class _FluentAppState extends State<FluentApp> {
       },
       textStyle: theme.typography.body,
     );
+  }
+}
+
+/// Describes how [Scrollable] widgets behave for [FluentApp]s.
+///
+/// {@macro flutter.widgets.scrollBehavior}
+///
+/// When using the desktop platform, if the [Scrollable] widget scrolls in the
+/// [Axis.vertical], a [Scrollbar] is applied.
+///
+/// See also:
+///
+///  * [ScrollBehavior], the default scrolling behavior extended by this class.
+class FluentScrollBehavior extends ScrollBehavior {
+  /// Creates a FluentScrollBehavior that decorates [Scrollable]s with
+  /// [Scrollbar]s based on the current platform and provided [ScrollableDetails].
+  const FluentScrollBehavior();
+
+  @override
+  Widget buildScrollbar(context, child, details) {
+    // When modifying this function, consider modifying the implementation in
+    // the base class as well.
+    switch (axisDirectionToAxis(details.direction)) {
+      case Axis.horizontal:
+        return child;
+      case Axis.vertical:
+        switch (getPlatform(context)) {
+          case TargetPlatform.linux:
+          case TargetPlatform.macOS:
+          case TargetPlatform.windows:
+            return Scrollbar(
+              child: child,
+              controller: details.controller,
+            );
+          case TargetPlatform.android:
+          case TargetPlatform.fuchsia:
+          case TargetPlatform.iOS:
+            return child;
+        }
+    }
+  }
+
+  @override
+  Widget buildOverscrollIndicator(context, child, details) {
+    // When modifying this function, consider modifying the implementation in
+    // the base class as well.
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+        return child;
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+        return GlowingOverscrollIndicator(
+          child: child,
+          axisDirection: details.direction,
+          color: FluentTheme.of(context).accentColor,
+        );
+    }
   }
 }

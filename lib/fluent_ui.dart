@@ -1,7 +1,6 @@
 library fluent_ui;
 
-export 'package:flutter/widgets.dart'
-    hide Icon, IconTheme, TextBox, IconThemeData;
+export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:flutter/material.dart'
     show
         Brightness,
@@ -17,7 +16,8 @@ export 'package:flutter/material.dart'
         SelectableDayPredicate,
         DatePickerMode,
         ReorderableListView,
-        ReorderableDragStartListener;
+        ReorderableDragStartListener,
+        kThemeAnimationDuration;
 
 export 'src/app.dart';
 export 'src/localization.dart';
@@ -28,7 +28,7 @@ export 'src/navigation/route.dart';
 export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/layout/page.dart';
 
-export 'src/controls/inputs/hover_button.dart';
+export 'src/controls/utils/hover_button.dart';
 export 'src/controls/inputs/button.dart';
 export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/icon_button.dart';
@@ -50,7 +50,6 @@ export 'src/controls/surfaces/list_tile.dart';
 export 'src/controls/surfaces/progress_indicators.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
-export 'src/controls/utils/icon.dart';
 export 'src/controls/utils/divider.dart';
 export 'src/controls/utils/scrollbar.dart';
 

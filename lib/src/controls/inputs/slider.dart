@@ -146,8 +146,8 @@ class _SliderState extends m.State<Slider> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SliderThemeData.standard(context.theme).copyWith(
-      context.theme.sliderTheme.copyWith(widget.style),
+    final style = SliderThemeData.standard(FluentTheme.of(context)).merge(
+      FluentTheme.of(context).sliderTheme.merge(widget.style),
     );
     Widget child = Padding(
       padding: style.margin ?? EdgeInsets.zero,
@@ -342,6 +342,68 @@ class SliderThumbShape extends m.SliderComponentShape {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [Slider]s in this widget's subtree.
+///
+/// Values specified here are used for [Slider] properties that are not
+/// given an explicit non-null value.
+class SliderTheme extends InheritedTheme {
+  /// Creates a slider theme that controls the configurations for
+  /// [Slider].
+  const SliderTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Slider] widgets.
+  final SliderThemeData data;
+
+  /// Creates a button theme that controls how descendant [Slider]s should
+  /// look like, and merges in the current slider theme, if any.
+  static Widget merge({
+    Key? key,
+    required SliderThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return SliderTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static SliderThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<SliderTheme>();
+    return theme?.data ?? FluentTheme.of(context).sliderTheme;
+  }
+
+  /// Returns the [data] from the closest [SliderTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.sliderTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// SliderThemeData theme = SliderTheme.of(context);
+  /// ```
+  static SliderThemeData of(BuildContext context) {
+    return SliderThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return SliderTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
+}
+
 @immutable
 class SliderThemeData with Diagnosticable {
   final Color? thumbColor;
@@ -359,14 +421,9 @@ class SliderThemeData with Diagnosticable {
 
   final EdgeInsetsGeometry? margin;
 
-  final Duration? animationDuration;
-  final Curve? animationCurve;
-
   const SliderThemeData({
     this.cursor,
     this.margin,
-    this.animationDuration,
-    this.animationCurve,
     this.thumbColor,
     this.disabledThumbColor,
     this.activeColor,
@@ -383,8 +440,6 @@ class SliderThemeData with Diagnosticable {
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor.withOpacity(1),
       margin: EdgeInsets.zero,
-      animationDuration: style?.mediumAnimationDuration,
-      animationCurve: style?.animationCurve,
       disabledActiveColor: style?.disabledColor.withOpacity(1),
       disabledThumbColor: style?.disabledColor.withOpacity(1),
       disabledInactiveColor: style?.disabledColor,
@@ -394,12 +449,30 @@ class SliderThemeData with Diagnosticable {
     return def;
   }
 
-  SliderThemeData copyWith(SliderThemeData? style) {
+  static SliderThemeData lerp(
+      SliderThemeData? a, SliderThemeData? b, double t) {
+    return SliderThemeData(
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      cursor: t < 0.5 ? a?.cursor : b?.cursor,
+      thumbColor: Color.lerp(a?.thumbColor, b?.thumbColor, t),
+      activeColor: Color.lerp(a?.activeColor, b?.activeColor, t),
+      inactiveColor: Color.lerp(a?.inactiveColor, b?.inactiveColor, t),
+      disabledActiveColor:
+          Color.lerp(a?.disabledActiveColor, b?.disabledActiveColor, t),
+      disabledInactiveColor:
+          Color.lerp(a?.disabledInactiveColor, b?.disabledInactiveColor, t),
+      disabledThumbColor:
+          Color.lerp(a?.disabledThumbColor, b?.disabledThumbColor, t),
+      labelBackgroundColor:
+          Color.lerp(a?.labelBackgroundColor, b?.labelBackgroundColor, t),
+      useThumbBall: t < 0.5 ? a?.useThumbBall : b?.useThumbBall,
+    );
+  }
+
+  SliderThemeData merge(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,
       cursor: style?.cursor ?? cursor,
-      animationCurve: style?.animationCurve ?? animationCurve,
-      animationDuration: style?.animationDuration ?? animationDuration,
       thumbColor: style?.thumbColor ?? thumbColor,
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
@@ -417,10 +490,6 @@ class SliderThemeData with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(DiagnosticsProperty<MouseCursor>('cursor', cursor));
-    properties
-        .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
-    properties.add(
-        DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
     properties.add(ColorProperty('thumbColor', thumbColor));
     properties.add(ColorProperty('activeColor', activeColor));
     properties.add(ColorProperty('inactiveColor', inactiveColor));

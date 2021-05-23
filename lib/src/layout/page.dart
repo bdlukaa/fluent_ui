@@ -20,7 +20,6 @@ class ScaffoldPage extends StatelessWidget {
     this.header,
     this.content = const SizedBox.expand(),
     this.bottomBar,
-    this.contentScrollController,
     this.padding,
   }) : super(key: key);
 
@@ -40,13 +39,9 @@ class ScaffoldPage extends StatelessWidget {
 
   /// The bottom bar of this page. This is usually provided when the current
   /// screen is small.
-  /// 
+  ///
   /// Usually a [BottomNavigation]
   final Widget? bottomBar;
-
-  /// The scroll controller used by the [Scrollbar] implemented by this widget.
-  /// If null, no scrollbar will be added.
-  final ScrollController? contentScrollController;
 
   /// The padding used by this widget.
   ///
@@ -61,15 +56,9 @@ class ScaffoldPage extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final horizontalPadding = EdgeInsets.only(
-      left: padding?.left ?? PageHeader.horizontalPadding(context),
-      right: padding?.right ?? PageHeader.horizontalPadding(context),
-    );
     return Column(children: [
       Expanded(
-        child: AnimatedContainer(
-          duration: theme.fastAnimationDuration,
-          curve: theme.animationCurve,
+        child: Container(
           color: theme.scaffoldBackgroundColor,
           padding: EdgeInsets.only(
             top: padding?.top ?? kPageDefaultVerticalPadding,
@@ -78,19 +67,7 @@ class ScaffoldPage extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             if (header != null) header!,
-            Expanded(child: () {
-              final finalContent = Padding(
-                padding: horizontalPadding,
-                child: content,
-              );
-              if (contentScrollController != null) {
-                return Scrollbar(
-                  controller: contentScrollController,
-                  child: finalContent,
-                );
-              }
-              return finalContent;
-            }()),
+            Expanded(child: content),
           ]),
         ),
       ),

@@ -98,7 +98,7 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return Container(
       height: widget.strokeWidth,
       constraints: BoxConstraints(minWidth: _kMinProgressBarWidth),
@@ -335,7 +335,7 @@ class _ProgressRingState extends State<ProgressRing>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = context.theme;
+    final style = FluentTheme.of(context);
     return Container(
       constraints: BoxConstraints(
         minWidth: _kMinProgressRingIndicatorSize,

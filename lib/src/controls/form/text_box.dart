@@ -35,7 +35,7 @@ class _TextBoxSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
   _TextBoxSelectionGestureDetectorBuilder({
     required _TextBoxState state,
-  })   : _state = state,
+  })  : _state = state,
         super(delegate: state);
 
   final _TextBoxState _state;
@@ -611,21 +611,22 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: context.theme.inactiveColor,
+      color: FluentTheme.of(context).inactiveColor,
     );
+
+    final Brightness keyboardAppearance =
+        widget.keyboardAppearance ?? FluentTheme.of(context).brightness;
+    final Color cursorColor = FluentTheme.of(context).inactiveColor;
+    final Color disabledColor = FluentTheme.of(context).disabledColor;
+    final Color? decorationColor = widget.decoration.color;
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: context.theme.disabledColor,
+          color: !enabled
+              ? (decorationColor ?? disabledColor).basedOnLuminance()
+              : disabledColor,
           fontWeight: FontWeight.w400,
         );
-
-    final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? context.theme.brightness;
-    final Color cursorColor = context.theme.inactiveColor;
-    final Color? disabledColor = context.theme.disabledColor;
-
-    final Color? decorationColor = widget.decoration.color;
 
     final BoxBorder? border = widget.decoration.border;
     Border? resolvedBorder = border as Border?;
@@ -637,8 +638,8 @@ class _TextBoxState extends State<TextBox>
                 style: enabled ? BorderStyle.solid : BorderStyle.none,
                 width: (showActiveBorder ? 1 : null),
                 color: (showActiveBorder
-                    ? context.theme.accentColor
-                    : context.theme.inactiveColor),
+                    ? FluentTheme.of(context).accentColor
+                    : FluentTheme.of(context).inactiveColor),
               );
       }
 
@@ -657,7 +658,8 @@ class _TextBoxState extends State<TextBox>
       color: enabled ? decorationColor : (decorationColor ?? disabledColor),
     );
 
-    final Color selectionColor = context.theme.accentColor.withOpacity(0.2);
+    final Color selectionColor =
+        FluentTheme.of(context).accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -703,7 +705,7 @@ class _TextBoxState extends State<TextBox>
             cursorOffset: cursorOffset,
             paintCursorAboveText: false,
             autocorrectionTextRectColor: selectionColor,
-            backgroundCursorColor: context.theme.disabledColor,
+            backgroundCursorColor: disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
             scrollPadding: widget.scrollPadding,
@@ -733,12 +735,10 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: context.theme.mediumAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).mediumAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           decoration: effectiveDecoration,
-          constraints: BoxConstraints(
-            minHeight: widget.minHeight ?? 0,
-          ),
+          constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
           child: _selectionGestureDetectorBuilder.buildGestureDetector(
             behavior: HitTestBehavior.translucent,
             child: Align(
@@ -769,22 +769,22 @@ class _TextBoxState extends State<TextBox>
       },
     );
 
-    return FluentTheme(
-      data: context.theme.copyWith(
-        buttonTheme: ButtonThemeData(
-          margin: EdgeInsets.zero,
-        ).copyWith(widget.iconButtonThemeData),
-        iconTheme: IconThemeData(size: 18),
+    return ButtonTheme.merge(
+      data: ButtonThemeData(
+        margin: EdgeInsets.zero,
+      ).merge(widget.iconButtonThemeData),
+      child: IconTheme(
+        data: const IconThemeData(size: 18),
+        child: () {
+          if (widget.header != null)
+            return InfoLabel(
+              child: listener,
+              label: widget.header!,
+              labelStyle: widget.headerStyle,
+            );
+          return listener;
+        }(),
       ),
-      child: () {
-        if (widget.header != null)
-          return InfoLabel(
-            child: listener,
-            label: widget.header!,
-            labelStyle: widget.headerStyle,
-          );
-        return listener;
-      }(),
     );
   }
 }

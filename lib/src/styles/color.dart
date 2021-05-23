@@ -171,6 +171,10 @@ class Colors {
 class ShadedColor extends ColorSwatch<int> {
   const ShadedColor(int primary, Map<int, Color> swatch)
       : super(primary, swatch);
+
+  Color operator [](int index) {
+    return super[index]!;
+  }
 }
 
 /// An accent color is a color that can have multiple shades. It's
@@ -230,6 +234,24 @@ class AccentColor extends ColorSwatch<String> {
 
   /// The lighest shade of the color
   Color get lightest => swatch['lightest'] ?? lighter;
+
+  static AccentColor lerp(AccentColor? a, AccentColor? b, double t) {
+    final darkest = Color.lerp(a?.darkest, b?.darkest, t);
+    final darker = Color.lerp(a?.darker, b?.darker, t);
+    final dark = Color.lerp(a?.dark, b?.dark, t);
+    final light = Color.lerp(a?.light, b?.light, t);
+    final lighter = Color.lerp(a?.lighter, b?.lighter, t);
+    final lightest = Color.lerp(a?.lightest, b?.lightest, t);
+    return AccentColor('normal', {
+      if (darkest != null) 'darkest': darkest,
+      if (darker != null) 'darker': darker,
+      if (dark != null) 'dark': dark,
+      'normal': Color.lerp(a?.normal, b?.normal, t)!,
+      if (light != null) 'light': light,
+      if (lighter != null) 'lighter': lighter,
+      if (lightest != null) 'lightest': lightest,
+    });
+  }
 
   static Color resolve(Color resolvable, BuildContext context) {
     return (resolvable is AccentColor)
@@ -295,7 +317,7 @@ extension colorExtension on Color {
     Color darkColor = Colors.black,
     Color lightColor = Colors.white,
   }) {
-    return computeLuminance() >= 0.5 ? darkColor : lightColor;
+    return computeLuminance() < 0.5 ? lightColor : darkColor;
   }
 
   /// Lerp this color with another color.

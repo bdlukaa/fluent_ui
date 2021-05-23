@@ -180,7 +180,7 @@ class _DatePickerState extends State<DatePicker> {
     Widget picker = HoverButton(
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      cursor: (_) => widget.cursor,
+      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _monthController?.dispose();
@@ -192,17 +192,18 @@ class _DatePickerState extends State<DatePicker> {
         initControllers();
       },
       builder: (context, state) {
-        if (state == ButtonStates.disabled) state = ButtonStates.none;
+        if (state.isDisabled) state = <ButtonStates>{};
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
-            margin: (_) => EdgeInsets.zero,
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -333,7 +334,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(
+        verticalMargin: EdgeInsets.zero,
+        horizontalMargin: EdgeInsets.zero,
+      ),
     );
     return Acrylic(
       height: widget.height,
@@ -350,7 +354,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.resolveFrom(context),
+                  tileColor:
+                      FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),
@@ -538,7 +543,12 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
             ]),
           ]),
         ),
-        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
+        Divider(
+          style: DividerThemeData(
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
+          ),
+        ),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);

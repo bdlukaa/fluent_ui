@@ -151,7 +151,7 @@ class _TimePickerState extends State<TimePicker> {
     Widget picker = HoverButton(
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      cursor: (_) => widget.cursor,
+      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _hourController?.dispose();
@@ -166,13 +166,14 @@ class _TimePickerState extends State<TimePicker> {
         final divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
-            margin: (_) => EdgeInsets.zero,
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
             thickness: 0.6,
           ),
         );
         return AnimatedContainer(
-          duration: context.theme.fastAnimationDuration,
-          curve: context.theme.animationCurve,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
           height: kPickerHeight,
           decoration: kPickerDecorationBuilder(context, state),
           child: Row(children: [
@@ -289,10 +290,13 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     assert(debugCheckHasFluentTheme(context));
     final divider = Divider(
       direction: Axis.vertical,
-      style: DividerThemeData(margin: (_) => EdgeInsets.zero),
+      style: DividerThemeData(
+        verticalMargin: EdgeInsets.zero,
+        horizontalMargin: EdgeInsets.zero,
+      ),
     );
-    final duration = context.theme.fasterAnimationDuration;
-    final curve = context.theme.animationCurve;
+    final duration = FluentTheme.of(context).fasterAnimationDuration;
+    final curve = FluentTheme.of(context).animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
     return Acrylic(
       height: widget.height,
@@ -309,7 +313,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 alignment: Alignment.center,
                 height: kOneLineTileHeight,
                 child: ListTile(
-                  tileColor: context.theme.accentColor.resolveFrom(context),
+                  tileColor:
+                      FluentTheme.of(context).accentColor.resolveFrom(context),
                 ),
               ),
             ),
@@ -492,7 +497,12 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             ]),
           ]),
         ),
-        Divider(style: DividerThemeData(margin: (_) => EdgeInsets.zero)),
+        Divider(
+          style: DividerThemeData(
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
+          ),
+        ),
         YesNoPickerControl(
           onChanged: () {
             Navigator.pop(context);

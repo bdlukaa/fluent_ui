@@ -46,9 +46,12 @@ class _OthersState extends State<Others> {
   Widget build(BuildContext context) {
     return ScaffoldPage(
       header: PageHeader(title: Text('Others')),
-      contentScrollController: otherController,
       content: ListView(
-        padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
+        padding: EdgeInsets.only(
+          bottom: kPageDefaultVerticalPadding,
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
         controller: otherController,
         children: [
           Acrylic(
@@ -56,7 +59,8 @@ class _OthersState extends State<Others> {
             opacity: 1.0,
             elevation: 4.0,
             child: Column(children: [
-              Text('Surfaces', style: context.theme.typography.subtitle),
+              Text('Surfaces',
+                  style: FluentTheme.of(context).typography.subtitle),
               Wrap(spacing: 10, runSpacing: 10, children: [
                 Tooltip(
                   message: 'This is a tooltip',
@@ -178,7 +182,8 @@ class _OthersState extends State<Others> {
           Container(
             height: 400,
             decoration: BoxDecoration(
-              border: Border.all(color: context.theme.accentColor, width: 1.0),
+              border: Border.all(
+                  color: FluentTheme.of(context).accentColor, width: 1.0),
             ),
             child: TabView(
               currentIndex: currentIndex,

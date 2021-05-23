@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -298,9 +299,8 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(debugCheckHasFluentTheme(context));
     assert(Overlay.of(context, debugRequiredFor: widget) != null);
     final ThemeData theme = FluentTheme.of(context);
-    final tooltipTheme = TooltipThemeData.standard(theme).copyWith(
-      theme.tooltipTheme.copyWith(this.widget.style),
-    );
+    final TooltipThemeData tooltipTheme =
+        TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
     if (theme.brightness == Brightness.dark) {
@@ -318,7 +318,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         fontSize: _getDefaultFontSize(),
       );
       defaultDecoration = BoxDecoration(
-        color: Colors.grey[150]!.withOpacity(0.9),
+        color: Colors.grey[150].withOpacity(0.9),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
       );
     }
@@ -358,6 +358,68 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
     return result;
   }
+}
+
+/// An inherited widget that defines the configuration for
+/// [Tooltip]s in this widget's subtree.
+///
+/// Values specified here are used for [Tooltip] properties that are not
+/// given an explicit non-null value.
+class TooltipTheme extends InheritedTheme {
+  /// Creates a tooltip theme that controls the configurations for
+  /// [Tooltip].
+  const TooltipTheme({
+    Key? key,
+    required this.data,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  /// The properties for descendant [Tooltip] widgets.
+  final TooltipThemeData data;
+
+  /// Creates a button theme that controls how descendant [InfoBar]s should
+  /// look like, and merges in the current toggle button theme, if any.
+  static Widget merge({
+    Key? key,
+    required TooltipThemeData data,
+    required Widget child,
+  }) {
+    return Builder(builder: (BuildContext context) {
+      return TooltipTheme(
+        key: key,
+        data: _getInheritedThemeData(context).merge(data),
+        child: child,
+      );
+    });
+  }
+
+  static TooltipThemeData _getInheritedThemeData(BuildContext context) {
+    final theme = context.dependOnInheritedWidgetOfExactType<TooltipTheme>();
+    return theme?.data ?? FluentTheme.of(context).tooltipTheme;
+  }
+
+  /// Returns the [data] from the closest [TooltipTheme] ancestor. If there is
+  /// no ancestor, it returns [ThemeData.tooltipTheme]. Applications can assume
+  /// that the returned value will not be null.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// TooltipThemeData theme = TooltipTheme.of(context);
+  /// ```
+  static TooltipThemeData of(BuildContext context) {
+    return TooltipThemeData.standard(FluentTheme.of(context)).merge(
+      _getInheritedThemeData(context),
+    );
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return TooltipTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(TooltipTheme oldWidget) => data != oldWidget.data;
 }
 
 class TooltipThemeData with Diagnosticable {
@@ -470,7 +532,27 @@ class TooltipThemeData with Diagnosticable {
     );
   }
 
-  TooltipThemeData copyWith(TooltipThemeData? style) {
+  static TooltipThemeData lerp(
+    TooltipThemeData? a,
+    TooltipThemeData? b,
+    double t,
+  ) {
+    return TooltipThemeData(
+      decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
+      height: lerpDouble(a?.height, b?.height, t),
+      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      preferBelow: t < 0.5 ? a?.preferBelow : b?.preferBelow,
+      showDuration: lerpDuration(a?.showDuration ?? Duration.zero,
+          b?.showDuration ?? Duration.zero, t),
+      textStyle: TextStyle.lerp(a?.textStyle, b?.textStyle, t),
+      verticalOffset: lerpDouble(a?.verticalOffset, b?.verticalOffset, t),
+      waitDuration: lerpDuration(a?.waitDuration ?? Duration.zero,
+          b?.waitDuration ?? Duration.zero, t),
+    );
+  }
+
+  TooltipThemeData merge(TooltipThemeData? style) {
     if (style == null) return this;
     return TooltipThemeData(
       decoration: style.decoration ?? decoration,

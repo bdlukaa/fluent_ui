@@ -162,7 +162,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         widget.onSelected?.call(value);
         focusNode.unfocus();
       },
-      title: Text('$value', style: context.maybeTheme?.typography.body),
+      title:
+          Text('$value', style: FluentTheme.maybeOf(context)?.typography.body),
     );
   }
 
@@ -180,12 +181,12 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           child: Acrylic(
             width: box.size.width,
             decoration: BoxDecoration(
-              color: context.theme.acrylicBackgroundColor,
+              color: FluentTheme.of(context).acrylicBackgroundColor,
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(4.0),
               ),
               border: Border.all(
-                color: context.theme.scaffoldBackgroundColor,
+                color: FluentTheme.of(context).scaffoldBackgroundColor,
                 width: 0.8,
               ),
             ),
@@ -206,8 +207,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                   );
                 }
                 return AnimatedSwitcher(
-                  duration: context.theme.fastAnimationDuration,
-                  switchInCurve: context.theme.animationCurve,
+                  duration: FluentTheme.of(context).fastAnimationDuration,
+                  switchInCurve: FluentTheme.of(context).animationCurve,
                   transitionBuilder: (child, animation) {
                     if (child is ListView) {
                       return child;

@@ -69,7 +69,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {'/': (_) => MyHomePage()},
-          navigatorObservers: [ClearFocusOnPush()],
           theme: ThemeData(
             accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
@@ -86,16 +85,6 @@ class MyApp extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-// This is the current solution for this. See https://github.com/flutter/flutter/issues/48464
-class ClearFocusOnPush extends NavigatorObserver {
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    super.didPush(route, previousRoute);
-    final focus = FocusManager.instance.primaryFocus;
-    focus?.unfocus();
   }
 }
 
@@ -214,8 +203,10 @@ class WindowButtons extends StatelessWidget {
       iconNormal: theme.inactiveColor,
       iconMouseDown: theme.inactiveColor,
       iconMouseOver: theme.inactiveColor,
-      mouseOver: ButtonThemeData.buttonColor(theme, ButtonStates.hovering),
-      mouseDown: ButtonThemeData.buttonColor(theme, ButtonStates.pressing),
+      mouseOver: ButtonThemeData.buttonColor(
+          theme.brightness, {ButtonStates.hovering}),
+      mouseDown: ButtonThemeData.buttonColor(
+          theme.brightness, {ButtonStates.pressing}),
     );
     final closeButtonColors = WindowButtonColors(
       mouseOver: Colors.red,

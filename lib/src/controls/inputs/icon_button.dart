@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef IconThemeButtonStateBuilder = IconThemeData Function(ButtonStates);
+typedef IconThemeButtonStateBuilder = IconThemeData Function(Set<ButtonStates>);
 
 class IconButton extends StatelessWidget {
   const IconButton({
@@ -27,7 +27,7 @@ class IconButton extends StatelessWidget {
   /// Callback called when the button is long pressed
   final VoidCallback? onLongPress;
 
-  /// The style of the button. This style is merged with [ThemeData.iconButtonThemeData]
+  /// The style of the button.
   final ButtonThemeData? style;
 
   /// The style applied to the icon.
@@ -69,27 +69,35 @@ class IconButton extends StatelessWidget {
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
-      builder: (context, state) => FluentTheme(
-        data: context.theme.copyWith(iconTheme: iconTheme?.call(state)),
-        child: icon,
-      ),
+      builder: (context, states) {
+        if (iconTheme != null) {
+          return IconTheme(
+            data: IconTheme.of(context).merge(iconTheme?.call(states)),
+            child: icon,
+          );
+        }
+        return icon;
+      },
       onPressed: onPressed,
       onLongPress: onLongPress,
       semanticLabel: semanticLabel,
       style: ButtonThemeData(
-        decoration: style?.decoration ??
-            (state) => BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  color: ButtonThemeData.uncheckedInputColor(
-                    context.theme,
-                    state,
+        decoration: ButtonState.resolveWith((states) {
+          return BoxDecoration(
+            borderRadius: BorderRadius.circular(2),
+            color: states.isDisabled
+                ? ButtonThemeData.buttonColor(
+                    FluentTheme.of(context).brightness,
+                    states,
+                  )
+                : ButtonThemeData.uncheckedInputColor(
+                    FluentTheme.of(context),
+                    states,
                   ),
-                ),
-        cursor: style?.cursor,
-        margin: style?.margin,
-        padding: style?.padding ?? EdgeInsets.all(4),
-        scaleFactor: style?.scaleFactor,
-      ),
+          );
+        }),
+        padding: const EdgeInsets.all(4),
+      ).merge(style),
     );
   }
 }

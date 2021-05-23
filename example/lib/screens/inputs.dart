@@ -39,9 +39,11 @@ class _InputsPageState extends State<InputsPage> {
           ),
         ),
       ),
-      contentScrollController: scrollController,
       content: SingleChildScrollView(
         controller: scrollController,
+        padding: EdgeInsets.symmetric(
+          horizontal: PageHeader.horizontalPadding(context),
+        ),
         child: Wrap(spacing: 10, runSpacing: 10, children: [
           Acrylic(
             padding: EdgeInsets.all(8.0),
@@ -100,9 +102,7 @@ class _InputsPageState extends State<InputsPage> {
               controller: controller,
               child: Button(
                 child: Text('File'),
-                onPressed: () {
-                  controller.open = true;
-                },
+                onPressed: disabled ? null : () => controller.open = true,
               ),
             ),
           ),
@@ -133,13 +133,13 @@ class _InputsPageState extends State<InputsPage> {
                         actions: [
                           Button(
                             child: Text('Delete'),
-                            autofocus: true,
                             onPressed: () {
                               // Delete file here
                             },
                           ),
                           Button(
                             child: Text('Cancel'),
+                            autofocus: true,
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -155,14 +155,18 @@ class _InputsPageState extends State<InputsPage> {
             height: splitButtonHeight,
             child: SplitButtonBar(buttons: [
               Button(
-                child: SizedBox(
-                  height: splitButtonHeight,
-                  child: Container(
-                    color: context.theme.accentColor,
-                    height: 24,
-                    width: 24,
-                  ),
-                ),
+                builder: (context, states) {
+                  return SizedBox(
+                    height: splitButtonHeight,
+                    child: Container(
+                      color: states.isDisabled
+                          ? FluentTheme.of(context).accentColor.darker
+                          : FluentTheme.of(context).accentColor,
+                      height: 24,
+                      width: 24,
+                    ),
+                  );
+                },
                 onPressed: disabled ? null : () {},
               ),
               Button(

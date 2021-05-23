@@ -80,13 +80,13 @@ class NavigationViewState extends State<NavigationView> {
   /// the list view when the display mode is switched between open
   /// and compact, and even keep it for the minimal state.
   ///
-  /// https://github.com/bdlukaa/fluent_ui/issues/3#issuecomment-842493396
-  late ScrollController openScrollController;
-  late ScrollController compactScrollController;
-  late ScrollController topScrollController;
+  /// It's also used to display and control the [Scrollbar] introduced
+  /// by the panes.
+  late ScrollController scrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
+  final _listKey = GlobalKey();
 
   /// The current display mode used by the automatic pane mode.
   /// This can not be changed
@@ -95,24 +95,23 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    openScrollController = ScrollController();
-    compactScrollController = ScrollController();
-    topScrollController = ScrollController();
+    scrollController = ScrollController(
+      debugLabel: '${widget.runtimeType} scroll controller',
+      keepScrollOffset: true,
+    );
   }
 
-  // @override
-  // void didUpdateWidget(NavigationView oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (widget.pane?.scrollController != scrollController) {
-  //     scrollController = widget.pane?.scrollController ?? scrollController;
-  //   }
-  // }
+  @override
+  void didUpdateWidget(NavigationView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pane?.scrollController != scrollController) {
+      scrollController = widget.pane?.scrollController ?? scrollController;
+    }
+  }
 
   @override
   void dispose() {
-    openScrollController.dispose();
-    compactScrollController.dispose();
-    topScrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -139,7 +138,13 @@ class NavigationViewState extends State<NavigationView> {
       if (pane.displayMode == PaneDisplayMode.top) {
         paneResult = Column(children: [
           appBar,
-          _buildAcrylic(_TopNavigationPane(pane: pane)),
+          _buildAcrylic(PrimaryScrollController(
+            controller: scrollController,
+            child: _TopNavigationPane(
+              pane: pane,
+              listKey: _listKey,
+            ),
+          )),
           Expanded(child: widget.content),
         ]);
       } else if (pane.displayMode == PaneDisplayMode.auto) {
@@ -203,9 +208,14 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _buildAcrylic(
-                    _CompactNavigationPane(pane: pane, paneKey: _panelKey),
-                  ),
+                  _buildAcrylic(PrimaryScrollController(
+                    controller: scrollController,
+                    child: _CompactNavigationPane(
+                      pane: pane,
+                      paneKey: _panelKey,
+                      listKey: _listKey,
+                    ),
+                  )),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -216,9 +226,14 @@ class NavigationViewState extends State<NavigationView> {
               appBar,
               Expanded(
                 child: Row(children: [
-                  _buildAcrylic(
-                    _OpenNavigationPane(pane: pane, paneKey: _panelKey),
-                  ),
+                  _buildAcrylic(PrimaryScrollController(
+                    controller: scrollController,
+                    child: _OpenNavigationPane(
+                      pane: pane,
+                      paneKey: _panelKey,
+                      listKey: _listKey,
+                    ),
+                  )),
                   Expanded(child: widget.content),
                 ]),
               ),
@@ -257,25 +272,18 @@ class NavigationViewState extends State<NavigationView> {
     }
     return _NavigationBody(
       displayMode: widget.pane?.displayMode,
-      child: PrimaryScrollController(
-        controller: widget.pane?.displayMode == PaneDisplayMode.top
-            ? topScrollController
-            : widget.pane?.displayMode == PaneDisplayMode.open
-                ? openScrollController
-                : compactScrollController,
-        child: paneResult,
-      ),
+      child: paneResult,
     );
   }
 
   void _openMinimalOverlay(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
-        controller: compactScrollController,
+        controller: scrollController,
         child: Padding(
           padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
           child: _MinimalNavigationPane(
@@ -383,18 +391,23 @@ class NavigationAppBar with Diagnosticable {
           style: ButtonThemeData(
             margin: EdgeInsets.zero,
             scaleFactor: 1.0,
-            decoration: (state) {
-              if (state == ButtonStates.disabled) state = ButtonStates.none;
+            decoration: ButtonState.resolveWith((states) {
+              if (states.isDisabled) states = {};
               return BoxDecoration(
-                color:
-                    ButtonThemeData.uncheckedInputColor(context.theme, state),
+                color: ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  states,
+                ),
               );
-            },
+            }),
           ),
           iconTheme: (state) {
             return IconThemeData(
               size: 22.0,
-              color: ButtonThemeData.buttonColor(context.theme, state),
+              color: ButtonThemeData.buttonColor(
+                FluentTheme.of(context).brightness,
+                state,
+              ),
             );
           },
         ),
@@ -427,7 +440,7 @@ class _NavigationAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
+    final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
       appBar,
@@ -456,18 +469,10 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
-          animationDuration: theme.animationDuration ?? Duration.zero,
-          animationCurve: theme.animationCurve ?? Curves.linear,
           child: Row(children: [
             leading,
             title,
-            if (appBar.actions != null)
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: appBar.actions!,
-                ),
-              ),
+            if (appBar.actions != null) Expanded(child: appBar.actions!),
           ]),
         );
         break;
@@ -478,8 +483,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: Row(children: [leading, title]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
@@ -492,8 +495,6 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kCompactNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            animationCurve: theme.animationCurve ?? Curves.linear,
             child: leading,
           ),
           title,
@@ -503,9 +504,7 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return SizedBox.shrink();
     }
-    return AnimatedContainer(
-      duration: FluentTheme.of(context).fastAnimationDuration,
-      curve: FluentTheme.of(context).animationCurve,
+    return Container(
       color: appBar.backgroundColor ??
           FluentTheme.of(context).scaffoldBackgroundColor,
       height: appBar.height,

@@ -21,11 +21,20 @@ class ColorsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const Divider divider = const Divider(
+      style: const DividerThemeData(
+        verticalMargin: const EdgeInsets.all(10),
+        horizontalMargin: const EdgeInsets.all(10),
+      ),
+    );
     return ScaffoldPage(
       header: PageHeader(title: Text('Colors Showcase')),
-      contentScrollController: controller,
       content: ListView(
-        padding: EdgeInsets.only(bottom: kPageDefaultVerticalPadding),
+        padding: EdgeInsets.only(
+          bottom: kPageDefaultVerticalPadding,
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
         controller: controller,
         children: [
           InfoLabel(
@@ -38,8 +47,7 @@ class ColorsPage extends StatelessWidget {
               }).toList(),
             ),
           ),
-          Divider(
-              style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
+          divider,
           InfoLabel(
             label: 'Info Colors',
             child: Wrap(
@@ -56,8 +64,7 @@ class ColorsPage extends StatelessWidget {
               ],
             ),
           ),
-          Divider(
-              style: DividerThemeData(margin: (axis) => EdgeInsets.all(10))),
+          divider,
           InfoLabel(
             label: 'All Shades',
             child:
@@ -71,7 +78,7 @@ class ColorsPage extends StatelessWidget {
                 children: List.generate(22, (index) {
                   return buildColorBlock(
                     'Grey#${(index + 1) * 10}',
-                    Colors.grey[(index + 1) * 10]!,
+                    Colors.grey[(index + 1) * 10],
                   );
                 }),
               ),
