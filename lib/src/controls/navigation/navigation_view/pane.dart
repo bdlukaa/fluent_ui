@@ -118,8 +118,7 @@ class PaneItem extends NavigationPaneItem {
         cursor: style.cursor,
         builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle?.resolve(states) ??
-                  TextStyle(color: style.highlightColor)
+              ? style.selectedTextStyle?.resolve(states)
               : style.unselectedTextStyle?.resolve(states);
           final textResult = item.title.isNotEmpty
               ? Padding(
@@ -139,10 +138,10 @@ class PaneItem extends NavigationPaneItem {
                   padding: style.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme(
                     data: IconThemeData(
-                      color: selected
-                          ? style.selectedIconColor?.resolve(states) ??
-                              style.highlightColor
-                          : style.unselectedIconColor?.resolve(states),
+                      color: (selected
+                              ? style.selectedIconColor?.resolve(states)
+                              : style.unselectedIconColor?.resolve(states)) ??
+                          textStyle?.color,
                     ),
                     child: item.icon,
                   ),
@@ -160,7 +159,12 @@ class PaneItem extends NavigationPaneItem {
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: style.tileColor?.resolve(states),
+            color: (style.tileColor ??
+                    ButtonState.resolveWith((states) {
+                      return ButtonThemeData.uncheckedInputColor(
+                          FluentTheme.of(context), states);
+                    }))
+                .resolve(states),
             child: child,
           );
           return Semantics(

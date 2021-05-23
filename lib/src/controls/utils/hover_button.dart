@@ -242,12 +242,13 @@ abstract class ButtonState<T> {
     return _ButtonState(callback);
   }
 
-  static ButtonState<T?> lerp<T>(
+  static ButtonState<T?>? lerp<T>(
     ButtonState<T?>? a,
     ButtonState<T?>? b,
     double t,
     T? Function(T?, T?, double) lerpFunction,
   ) {
+    if (a == null && b == null) return null;
     return _LerpProperties<T>(a, b, t, lerpFunction);
   }
 }

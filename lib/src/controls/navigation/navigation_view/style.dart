@@ -49,7 +49,7 @@ class NavigationPaneTheme extends InheritedTheme {
   /// NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
   /// ```
   static NavigationPaneThemeData of(BuildContext context) {
-    return NavigationPaneThemeData.standard(FluentTheme.of(context)).merge(
+    return FluentTheme.of(context).navigationPaneTheme.merge(
       _getInheritedThemeData(context),
     );
   }
@@ -110,33 +110,39 @@ class NavigationPaneThemeData with Diagnosticable {
     this.unselectedIconColor,
   });
 
-  factory NavigationPaneThemeData.standard(ThemeData style) {
+  factory NavigationPaneThemeData.standard({
+    required Color disabledColor,
+    required Duration animationDuration,
+    required Curve animationCurve,
+    required Color backgroundColor,
+    required Color highlightColor,
+    required Typography typography,
+    required Color inactiveColor,
+    required ButtonState<MouseCursor>? inputMouseCursor,
+  }) {
     final disabledTextStyle = TextStyle(
-      color: style.disabledColor,
+      color: disabledColor,
       fontWeight: FontWeight.bold,
     );
     return NavigationPaneThemeData(
-      animationDuration: style.fastAnimationDuration,
-      animationCurve: style.animationCurve,
-      backgroundColor: style.acrylicBackgroundColor,
-      tileColor: ButtonState.resolveWith((states) {
-        return ButtonThemeData.uncheckedInputColor(style, states);
-      }),
-      highlightColor: style.accentColor,
-      itemHeaderTextStyle: style.typography.base,
+      animationDuration: animationDuration,
+      animationCurve: animationCurve,
+      backgroundColor: backgroundColor,
+      highlightColor: highlightColor,
+      itemHeaderTextStyle: typography.base,
       selectedTextStyle: ButtonState.resolveWith((states) {
         return states.isDisabled
             ? disabledTextStyle
-            : style.typography.body!.copyWith(color: style.accentColor);
+            : typography.body!.copyWith(color: highlightColor);
       }),
       unselectedTextStyle: ButtonState.resolveWith((states) {
-        return states.isDisabled ? disabledTextStyle : style.typography.body!;
+        return states.isDisabled ? disabledTextStyle : typography.body!;
       }),
-      cursor: style.inputMouseCursor,
+      cursor: inputMouseCursor,
       labelPadding: EdgeInsets.only(right: 10.0),
       iconPadding: EdgeInsets.symmetric(horizontal: 12.0),
-      selectedIconColor: ButtonState.all(style.accentColor),
-      unselectedIconColor: ButtonState.all(style.inactiveColor),
+      selectedIconColor: ButtonState.all(highlightColor),
+      unselectedIconColor: ButtonState.all(inactiveColor),
     );
   }
 

@@ -35,10 +35,7 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: NavigationPaneTheme(
-          data: NavigationPaneThemeData.standard(data).merge(data.navigationPaneTheme),
-          child: child,
-        ),
+        child: child,
       ),
     );
   }
@@ -333,7 +330,16 @@ class ThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPaneTheme ??= const NavigationPaneThemeData();
+    navigationPaneTheme ??= NavigationPaneThemeData.standard(
+      animationCurve: animationCurve,
+      animationDuration: fastAnimationDuration,
+      backgroundColor: acrylicBackgroundColor,
+      disabledColor: disabledColor,
+      highlightColor: accentColor,
+      inputMouseCursor: inputMouseCursor,
+      typography: typography,
+      inactiveColor: inactiveColor,
+    );
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
