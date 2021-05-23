@@ -404,8 +404,10 @@ class NavigationAppBar with Diagnosticable {
           iconTheme: (state) {
             return IconThemeData(
               size: 22.0,
-              color:
-                  ButtonThemeData.buttonColor(FluentTheme.of(context), state),
+              color: ButtonThemeData.buttonColor(
+                FluentTheme.of(context).brightness,
+                state,
+              ),
             );
           },
         ),

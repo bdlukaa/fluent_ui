@@ -239,7 +239,6 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
 }
 
 class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
-
   EdgeInsetsGeometryTween? _padding;
   EdgeInsetsGeometryTween? _margin;
   DecorationTween? _decoration;
@@ -251,13 +250,31 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _padding = visitor(_padding, widget.padding, (dynamic value) => EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry)) as EdgeInsetsGeometryTween?;
-    _margin = visitor(_margin, widget.margin, (dynamic value) => EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry)) as EdgeInsetsGeometryTween?;
-    _decoration = visitor(_decoration, widget.decoration, (dynamic value) => DecorationTween(begin: value as Decoration)) as DecorationTween?;
-    _color = visitor(_color, widget.color, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
-    _height = visitor(_height, widget.height, (dynamic value) => Tween<double>(begin: value as double)) as Tween<double>?;
-    _width = visitor(_width, widget.width, (dynamic value) => Tween<double>(begin: value as double)) as Tween<double>?;
-    _elevationColor = visitor(_elevationColor, widget.shadowColor, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
+    _padding = visitor(
+            _padding,
+            widget.padding,
+            (dynamic value) =>
+                EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry))
+        as EdgeInsetsGeometryTween?;
+    _margin = visitor(
+            _margin,
+            widget.margin,
+            (dynamic value) =>
+                EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry))
+        as EdgeInsetsGeometryTween?;
+    _decoration = visitor(_decoration, widget.decoration,
+            (dynamic value) => DecorationTween(begin: value as Decoration))
+        as DecorationTween?;
+    _color = visitor(_color, widget.color,
+        (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
+    _height = visitor(_height, widget.height,
+            (dynamic value) => Tween<double>(begin: value as double))
+        as Tween<double>?;
+    _width = visitor(_width, widget.width,
+            (dynamic value) => Tween<double>(begin: value as double))
+        as Tween<double>?;
+    _elevationColor = visitor(_elevationColor, widget.shadowColor,
+        (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
   }
 
   @override
@@ -294,8 +311,6 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
 /// See also:
 ///   * [Acrylic], the widget that can apply a blurred background on its child
 ///   * [Container], a widget similar to acrylic, but with less options
-///   * [AnimatedContainer], a [Container] with animated properties. [Acrylic]
-///     uses this under the hood
 class NoAcrylicBlurEffect extends InheritedWidget {
   /// Creates a widget that disable the acrylic blur effect in its tree
   const NoAcrylicBlurEffect({

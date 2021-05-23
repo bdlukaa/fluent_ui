@@ -473,7 +473,10 @@ class __TabState extends State<_Tab>
                           if (state.isNone)
                             color = null;
                           else
-                            color = ButtonThemeData.buttonColor(style, state);
+                            color = ButtonThemeData.buttonColor(
+                              style.brightness,
+                              state,
+                            );
                           return BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             border: Border.all(style: BorderStyle.none),

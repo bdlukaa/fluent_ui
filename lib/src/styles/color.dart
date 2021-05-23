@@ -317,7 +317,7 @@ extension colorExtension on Color {
     Color darkColor = Colors.black,
     Color lightColor = Colors.white,
   }) {
-    return computeLuminance() < 0.5 ? darkColor : lightColor;
+    return computeLuminance() < 0.5 ? lightColor : darkColor;
   }
 
   /// Lerp this color with another color.

@@ -64,7 +64,7 @@ class SplitButtonBar extends StatelessWidget {
                       )
                     : null,
                 color: ButtonThemeData.buttonColor(
-                  FluentTheme.of(context),
+                  FluentTheme.of(context).brightness,
                   states,
                 ),
               );

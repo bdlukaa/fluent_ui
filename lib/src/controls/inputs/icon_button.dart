@@ -86,7 +86,10 @@ class IconButton extends StatelessWidget {
           return BoxDecoration(
             borderRadius: BorderRadius.circular(2),
             color: states.isDisabled
-                ? ButtonThemeData.buttonColor(FluentTheme.of(context), states)
+                ? ButtonThemeData.buttonColor(
+                    FluentTheme.of(context).brightness,
+                    states,
+                  )
                 : ButtonThemeData.uncheckedInputColor(
                     FluentTheme.of(context),
                     states,

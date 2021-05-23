@@ -183,8 +183,12 @@ class ToggleButtonThemeData with Diagnosticable {
       borderRadius: BorderRadius.circular(2),
     );
     Color checkedColor(Set<ButtonStates> states) => states.isDisabled
-        ? ButtonThemeData.buttonColor(style, states)
+        ? ButtonThemeData.buttonColor(style.brightness, states)
         : ButtonThemeData.checkedInputColor(style, states);
+    Color uncheckedColor(Set<ButtonStates> states) =>
+        states.isHovering || states.isPressing
+            ? ButtonThemeData.uncheckedInputColor(style, states)
+            : ButtonThemeData.buttonColor(style.brightness, states);
     return ToggleButtonThemeData(
       scaleFactor: kButtonDefaultScaleFactor,
       cursor: style.inputMouseCursor,
@@ -192,10 +196,7 @@ class ToggleButtonThemeData with Diagnosticable {
         (states) => defaultDecoration.copyWith(color: checkedColor(states)),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
-        (states) => defaultDecoration.copyWith(
-            color: states.isHovering || states.isPressing
-                ? ButtonThemeData.uncheckedInputColor(style, states)
-                : ButtonThemeData.buttonColor(style, states)),
+        (states) => defaultDecoration.copyWith(color: uncheckedColor(states)),
       ),
       checkedTextStyle: ButtonState.resolveWith((states) {
         return TextStyle(
@@ -205,7 +206,11 @@ class ToggleButtonThemeData with Diagnosticable {
         );
       }),
       uncheckedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: states.isDisabled ? style.disabledColor : null);
+        return TextStyle(
+          color: states.isDisabled
+              ? style.disabledColor
+              : uncheckedColor(states).basedOnLuminance(),
+        );
       }),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       margin: const EdgeInsets.all(4),

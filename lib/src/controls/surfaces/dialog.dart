@@ -263,7 +263,7 @@ class ContentDialogThemeData {
         margin: EdgeInsets.zero,
         decoration: ButtonState.resolveWith((states) {
           return BoxDecoration(
-            color: ButtonThemeData.buttonColor(style, states),
+            color: ButtonThemeData.buttonColor(style.brightness, states),
           );
         }),
       ),

@@ -50,8 +50,8 @@ class NavigationPaneTheme extends InheritedTheme {
   /// ```
   static NavigationPaneThemeData of(BuildContext context) {
     return FluentTheme.of(context).navigationPaneTheme.merge(
-      _getInheritedThemeData(context),
-    );
+          _getInheritedThemeData(context),
+        );
   }
 
   @override

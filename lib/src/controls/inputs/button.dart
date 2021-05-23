@@ -323,12 +323,16 @@ class ButtonThemeData with Diagnosticable {
       decoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          color: buttonColor(style, states),
+          color: buttonColor(style.brightness, states),
         );
       }),
       scaleFactor: kButtonDefaultScaleFactor,
       textStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: states.isDisabled ? style.disabledColor : null);
+        return TextStyle(
+          color: states.isDisabled
+              ? style.disabledColor
+              : buttonColor(style.brightness, states).basedOnLuminance(),
+        );
       }),
     );
   }
@@ -365,63 +369,65 @@ class ButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'decoration',
-      decoration,
-    ));
+    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
+        'decoration', decoration));
     properties
         .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties.add(DoubleProperty('scaleFactor', scaleFactor));
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>.has(
-      'cursor',
-      cursor,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<TextStyle?>?>.has(
-      'textStyle',
-      textStyle,
-    ));
+    properties
+        .add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor));
+    properties.add(
+        DiagnosticsProperty<ButtonState<TextStyle?>?>('textStyle', textStyle));
   }
 
-  static Color buttonColor(ThemeData style, Set<ButtonStates> states) {
+  /// Defines the default color used by [Button]s using the current brightness
+  /// and state.
+  ///
+  /// The color used for none and disabled are the same. Only the button
+  /// content color should be changed. This can be done using the function
+  /// [Color.basedOnLuminance] to define the contrast color.
+  // Values eyeballed from Windows 10
+  // Used when the state is not recieving any user
+  // interaction or is disabled
+  static Color buttonColor(Brightness brightness, Set<ButtonStates> states) {
     late Color color;
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled)
-        color = Color(0xFFcccccc);
-      else if (states.isPressing)
+    if (brightness == Brightness.light) {
+      if (states.isPressing)
         color = Colors.grey[70];
       else if (states.isHovering)
         color = Colors.grey[40];
       else
-        color = Colors.grey[50];
+        color = Color(0xFFcccccc);
       return color;
     } else {
       if (states.isPressing) {
-        // Value eyeballed from Windows 10
         color = Color(0xFF666666);
       } else if (states.isHovering)
         color = Colors.grey[170];
       else {
-        // Value eyeballed from Windows 10
-        // Used when the state is not recieving any user
-        // interaction or is disabled
         color = Color(0xFF333333);
       }
       return color;
     }
   }
 
+  /// Defines the default color used for inputs when checked, such as checkbox,
+  /// radio button and toggle switch. It's based on the current style and the
+  /// current state.
   static Color checkedInputColor(ThemeData style, Set<ButtonStates> states) {
-    Color color = style.accentColor;
+    AccentColor color = style.accentColor;
     if (states.isDisabled)
       return style.disabledColor;
-    else if (states.isHovering)
-      return color.withOpacity(0.70);
-    else if (states.isPressing) return color.withOpacity(0.90);
+    else if (states.isPressing)
+      return color.dark;
+    else if (states.isHovering) return color.lighter;
     return color;
   }
 
   static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
+    // The opacity is 0 because, when transitioning between [Colors.transparent]
+    // and the actual color gives a weird effect
     if (style.brightness == Brightness.light) {
       if (states.isDisabled) return style.disabledColor;
       if (states.isPressing) return Colors.grey[70];
