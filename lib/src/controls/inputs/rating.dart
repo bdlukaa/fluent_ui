@@ -220,6 +220,7 @@ class _RatingBarState extends State<RatingBar> {
       child: FocusableActionDetector(
         focusNode: _focusNode,
         autofocus: widget.autofocus,
+        enabled: widget.onChanged != null,
         actions: _actionMap,
         shortcuts: _shortcutMap,
         onShowFocusHighlight: (v) {
@@ -231,7 +232,7 @@ class _RatingBarState extends State<RatingBar> {
           onHorizontalDragUpdate: (d) =>
               _handleUpdate(d.localPosition.dx, size),
           child: FocusBorder(
-            focused: _showFocusHighlight,
+            focused: widget.onChanged != null && _showFocusHighlight,
             useStackApproach: false,
             child: TweenAnimationBuilder<double>(
               builder: (context, value, child) {

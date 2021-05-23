@@ -1,19 +1,24 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- `PaneItem`s' `build` method is now overridable. You can know customize how the items in `NavigationView` should look like by overriding the method.
+
 ## [2.0.2] - [23/05/2021]
 
 - **BREAKING CHANGES:** Reworked the theme api ([#39](https://github.com/bdlukaa/fluent_ui/pull/39)):
+
   - Removed the theme extension (`context.theme`). Use `FluentTheme.of(context)` instead
   - `ButtonState` is now a class that can receive a value. It now allows lerping between values, making `AnimatedFluentTheme` possible.
 
     Here's an example of how to migrate your code:
 
-    *Before*: `cursor: (_) => SystemMouseCursors.click,`\
-    *Now*: `cursor: ButtonState.all(SystemMouseCursors.click),`
+    _Before_: `cursor: (_) => SystemMouseCursors.click,`\
+    _Now_: `cursor: ButtonState.all(SystemMouseCursors.click),`
 
   - All theme datas and `AccentColor` have now a lerp method, in order to make `AnimatedFluentTheme` possible.
   - Implemented `AnimatedFluentTheme`, in order to replace `AnimateContainer`s all around the library
-  - Dedicated theme for each theme data ([#37](https://github.com/bdlukaa/fluent_ui/issues/37)): 
+  - Dedicated theme for each theme data ([#37](https://github.com/bdlukaa/fluent_ui/issues/37)):
     - IconTheme
     - ButtonTheme
     - RadioButtonTheme

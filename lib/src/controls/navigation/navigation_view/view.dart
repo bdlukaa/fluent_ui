@@ -67,7 +67,7 @@ class NavigationView extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('appBar', appBar));
     properties.add(DiagnosticsProperty('pane', pane));
-    properties.add(FlagProperty('useAcrylic',
+    properties.add(FlagProperty('use acrylic',
         value: useAcrylic, ifFalse: 'do not use acrylic'));
   }
 
@@ -97,7 +97,7 @@ class NavigationViewState extends State<NavigationView> {
   final minimalPaneKey = GlobalKey<__MinimalNavigationPaneState>();
 
   bool get isMinimalPaneOpen =>
-      minimalOverlayEntry != null && minimalOverlayEntry!.mounted;
+      minimalOverlayEntry != null || (minimalOverlayEntry?.mounted ?? false);
 
   @override
   void initState() {
@@ -137,25 +137,26 @@ class NavigationViewState extends State<NavigationView> {
           appBar: widget.appBar!,
           displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
           additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
-              ? PaneItem.buildPaneItemButton(
-                  context,
-                  PaneItem(
-                    title: !isMinimalPaneOpen
+              ? FocusTheme(
+                  data: FocusThemeData(renderOutside: false),
+                  child: PaneItem(
+                    title: Text(!isMinimalPaneOpen
                         ? localizations.openNavigationTooltip
-                        : localizations.closeNavigationTooltip,
-                    icon: Icon(Icons.menu_outlined),
+                        : localizations.closeNavigationTooltip),
+                    icon: const Icon(Icons.menu_outlined),
+                  ).build(
+                    context,
+                    false,
+                    () async {
+                      if (isMinimalPaneOpen) {
+                        minimalPaneKey.currentState?.removeEntry();
+                      } else {
+                        _openMinimalOverlay(context);
+                      }
+                      setState(() {});
+                    },
+                    displayMode: PaneDisplayMode.compact,
                   ),
-                  PaneDisplayMode.compact,
-                  false,
-                  () async {
-                    if (isMinimalPaneOpen) {
-                      await minimalPaneKey.currentState?.removeEntry();
-                      minimalOverlayEntry = null;
-                    } else {
-                      _openMinimalOverlay(context);
-                    }
-                    setState(() {});
-                  },
                 )
               : null,
         ));
@@ -182,7 +183,8 @@ class NavigationViewState extends State<NavigationView> {
         /// For more info on the adaptive behavior, see
         /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
         ///
-        /// (07/05/2021)
+        ///  DD/MM/YYYY
+        /// (23/05/2021)
         ///
         /// When PaneDisplayMode is set to its default value of Auto, the adaptive behavior is to show:
         /// - An expanded left pane on large window widths (1008px or greater).
@@ -294,19 +296,25 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasOverlay(context));
     final theme = NavigationPaneTheme.of(context);
     minimalOverlayEntry = OverlayEntry(builder: (_) {
-      return _buildAcrylic(PrimaryScrollController(
-        controller: scrollController,
-        child: Padding(
-          padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
-          child: _MinimalNavigationPane(
-            key: minimalPaneKey,
-            pane: widget.pane!,
-            animationDuration: theme.animationDuration ?? Duration.zero,
-            entry: minimalOverlayEntry!,
-            y: widget.appBar?.height ?? 0,
+      return FocusScope(
+        autofocus: true,
+        child: _buildAcrylic(PrimaryScrollController(
+          controller: scrollController,
+          child: Padding(
+            padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
+            child: _MinimalNavigationPane(
+              key: minimalPaneKey,
+              pane: widget.pane!,
+              animationDuration: theme.animationDuration ?? Duration.zero,
+              entry: minimalOverlayEntry!,
+              onBack: () {
+                minimalOverlayEntry = null;
+              },
+              y: widget.appBar?.height ?? 0,
+            ),
           ),
-        ),
-      ));
+        )),
+      );
     });
     Overlay.of(context, debugRequiredFor: widget)!.insert(minimalOverlayEntry!);
   }

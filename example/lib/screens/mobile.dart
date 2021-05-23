@@ -13,18 +13,14 @@ class _MobileState extends State<Mobile> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      header: PageHeader(
-        title: Text([
-          'Mobile',
-          'Android',
-          'iOS',
-        ][_currentIndex]),
+      content: NavigationBody(
+        children: [
+          ScaffoldPage(header: PageHeader(title: Text('Mobile'))),
+          ScaffoldPage(header: PageHeader(title: Text('Android'))),
+          ScaffoldPage(header: PageHeader(title: Text('iOS'))),
+        ],
+        index: _currentIndex,
       ),
-      content: [
-        SizedBox(),
-        SizedBox(),
-        SizedBox(),
-      ][_currentIndex],
       bottomBar: BottomNavigation(
         index: _currentIndex,
         onChanged: (i) => setState(() => _currentIndex = i),

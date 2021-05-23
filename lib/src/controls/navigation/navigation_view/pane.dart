@@ -71,7 +71,7 @@ class NavigationPaneItem with Diagnosticable {
 ///   * [PaneItemHeader], used to label groups of items.
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
-  PaneItem({required this.icon, this.title = ''});
+  PaneItem({required this.icon, this.title});
 
   /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
@@ -79,51 +79,55 @@ class PaneItem extends NavigationPaneItem {
   ///
   /// The text style is fetched from the closest [NavigationPaneThemeData]
   ///
+  /// If it' s a [Text], its [Text.data] is used to display the tooltip.
   /// This is also used by [Semantics] to allow screen readers to
   /// read the screen.
-  final String title;
+  ///
+  /// Usually a [Text].
+  final Widget? title;
 
   /// The icon used by this item.
   ///
   /// Usually an [Icon] widget
   final Widget icon;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('title', title, ifEmpty: 'no title'));
-  }
-
-  static Widget buildPaneItemButton(
+  /// Used to construct the pane items all around [NavigationView]. You can
+  /// customize how the pane items should look like by overriding this method
+  Widget build(
     BuildContext context,
-    PaneItem item,
-    PaneDisplayMode displayMode,
     bool selected,
     VoidCallback onPressed, {
+    PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    bool autofocus = false,
   }) {
+    final mode = displayMode ?? _NavigationBody.maybeOf(context)?.displayMode;
     assert(displayMode != PaneDisplayMode.auto);
-    final bool isTop = displayMode == PaneDisplayMode.top;
-    final bool isCompact = displayMode == PaneDisplayMode.compact;
+    final bool isTop = mode == PaneDisplayMode.top;
+    final bool isCompact = mode == PaneDisplayMode.compact;
     final bool isOpen =
-        [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(displayMode);
+        [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(mode);
     final style = NavigationPaneTheme.of(context);
 
+    final String titleText =
+        title != null && title is Text ? (title! as Text).data ?? '' : '';
+
     Widget result = SizedBox(
-      key: item.itemKey,
+      key: itemKey,
       height: !isTop ? 41.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
       child: HoverButton(
+        autofocus: autofocus,
         onPressed: onPressed,
         cursor: style.cursor,
         builder: (context, states) {
           final textStyle = selected
               ? style.selectedTextStyle?.resolve(states)
               : style.unselectedTextStyle?.resolve(states);
-          final textResult = item.title.isNotEmpty
+          final textResult = titleText.isNotEmpty
               ? Padding(
                   padding: style.labelPadding ?? EdgeInsets.zero,
-                  child: Text(item.title, style: textStyle),
+                  child: Text(titleText, style: textStyle),
                 )
               : SizedBox.shrink();
           Widget child = Flex(
@@ -143,7 +147,7 @@ class PaneItem extends NavigationPaneItem {
                               : style.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
                     ),
-                    child: item.icon,
+                    child: this.icon,
                   ),
                 );
                 if (isOpen) return icon;
@@ -159,16 +163,20 @@ class PaneItem extends NavigationPaneItem {
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: (style.tileColor ??
-                    ButtonState.resolveWith((states) {
-                      return ButtonThemeData.uncheckedInputColor(
-                          FluentTheme.of(context), states);
-                    }))
-                .resolve(states),
+            color: () {
+              final ButtonState<Color?> tileColor = style.tileColor ??
+                  ButtonState.resolveWith((states) {
+                    return ButtonThemeData.uncheckedInputColor(
+                      FluentTheme.of(context),
+                      states,
+                    );
+                  });
+              return tileColor.resolve(states);
+            }(),
             child: child,
           );
           return Semantics(
-            label: item.title,
+            label: title == null ? null : titleText,
             selected: selected,
             child: FocusBorder(
               child: child,
@@ -179,8 +187,14 @@ class PaneItem extends NavigationPaneItem {
         },
       ),
     );
-    if (((isTop && !showTextOnTop) || isCompact) && item.title.isNotEmpty)
-      return Tooltip(message: item.title, child: result);
+    if (((isTop && !showTextOnTop) || isCompact) && titleText.isNotEmpty)
+      return Tooltip(
+        message: titleText,
+        style: TooltipThemeData(
+          textStyle: title is Text ? (title as Text).style : null,
+        ),
+        child: result,
+      );
     return result;
   }
 }
@@ -453,7 +467,7 @@ class NavigationPane with Diagnosticable {
 
   static Widget buildMenuButton(
     BuildContext context,
-    String itemTitle,
+    Widget itemTitle,
     NavigationPane pane, {
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     required VoidCallback onPressed,
@@ -463,12 +477,11 @@ class NavigationPane with Diagnosticable {
       return Container(
         width: _kCompactNavigationPanelWidth,
         margin: padding,
-        child: PaneItem.buildPaneItemButton(
+        child: PaneItem(title: itemTitle, icon: Icon(Icons.menu)).build(
           context,
-          PaneItem(title: itemTitle, icon: Icon(Icons.menu)),
-          PaneDisplayMode.compact,
           false,
           onPressed,
+          displayMode: PaneDisplayMode.compact,
         ),
       );
     return SizedBox.shrink();
@@ -495,10 +508,8 @@ class _TopNavigationPane extends StatelessWidget {
       return item.build(context, Axis.vertical);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
-      return PaneItem.buildPaneItemButton(
+      return item.build(
         context,
-        item,
-        pane.displayMode,
         selected,
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
@@ -594,10 +605,8 @@ class _CompactNavigationPane extends StatelessWidget {
       return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
-      return PaneItem.buildPaneItemButton(
+      return item.build(
         context,
-        item,
-        pane.displayMode,
         selected,
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
@@ -640,7 +649,7 @@ class _CompactNavigationPane extends StatelessWidget {
                 if (pane.onDisplayModeRequested != null)
                   return NavigationPane.buildMenuButton(
                     context,
-                    FluentLocalizations.of(context).openNavigationTooltip,
+                    Text(FluentLocalizations.of(context).openNavigationTooltip),
                     pane,
                     onPressed: () {
                       pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
@@ -652,13 +661,11 @@ class _CompactNavigationPane extends StatelessWidget {
               if (showReplacement)
                 Padding(
                   padding: topPadding,
-                  child: PaneItem.buildPaneItemButton(
+                  child: PaneItem(
+                    title: Text(FluentLocalizations.of(context).clickToSearch),
+                    icon: pane.autoSuggestBoxReplacement!,
+                  ).build(
                     context,
-                    PaneItem(
-                      title: FluentLocalizations.of(context).clickToSearch,
-                      icon: pane.autoSuggestBoxReplacement!,
-                    ),
-                    pane.displayMode,
                     false,
                     () {
                       pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
@@ -702,6 +709,7 @@ class _OpenNavigationPane extends StatelessWidget {
     NavigationPane pane,
     NavigationPaneItem item, [
     VoidCallback? onChanged,
+    bool autofocus = false,
   ]) {
     if (item is PaneItemHeader) {
       return item.build(context);
@@ -709,15 +717,14 @@ class _OpenNavigationPane extends StatelessWidget {
       return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
-      return PaneItem.buildPaneItemButton(
+      return item.build(
         context,
-        item,
-        pane.displayMode,
         selected,
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
           onChanged?.call();
         },
+        autofocus: autofocus,
       );
     } else {
       throw UnsupportedError(
@@ -736,7 +743,7 @@ class _OpenNavigationPane extends StatelessWidget {
       if (pane.onDisplayModeRequested != null)
         return NavigationPane.buildMenuButton(
           context,
-          FluentLocalizations.of(context).closeNavigationTooltip,
+          Text(FluentLocalizations.of(context).closeNavigationTooltip),
           pane,
           onPressed: () {
             pane.onDisplayModeRequested?.call(PaneDisplayMode.compact);
@@ -812,6 +819,7 @@ class _MinimalNavigationPane extends StatefulWidget {
     required this.pane,
     required this.animationDuration,
     required this.entry,
+    required this.onBack,
     this.y = 0,
   }) : super(key: key);
 
@@ -827,6 +835,8 @@ class _MinimalNavigationPane extends StatefulWidget {
 
   /// Usually the top bar height
   final double y;
+
+  final VoidCallback onBack;
 
   @override
   __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
@@ -858,6 +868,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       widget.pane,
       item,
       removeEntry,
+      widget.pane.isSelected(item), // autofocus
     );
   }
 
@@ -941,5 +952,6 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
   Future<void> removeEntry() async {
     await controller.reverse();
     widget.entry.remove();
+    widget.onBack();
   }
 }

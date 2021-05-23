@@ -163,12 +163,12 @@ class _MyHomePageState extends State<MyHomePage> {
         // },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
-          PaneItem(icon: Icon(Icons.input), title: 'Inputs'),
-          PaneItem(icon: Icon(Icons.format_align_center), title: 'Forms'),
+          PaneItem(icon: Icon(Icons.input), title: Text('Inputs')),
+          PaneItem(icon: Icon(Icons.format_align_center), title: Text('Forms')),
           PaneItemSeparator(),
-          PaneItem(icon: Icon(Icons.miscellaneous_services), title: 'Others'),
-          PaneItem(icon: Icon(Icons.color_lens_outlined), title: 'Colors'),
-          PaneItem(icon: Icon(Icons.phone_android), title: 'Mobile'),
+          PaneItem(icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
+          PaneItem(icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
+          PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
         ],
         autoSuggestBox: AutoSuggestBox(
           controller: TextEditingController(),
@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
         autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(icon: Icon(Icons.settings), title: 'Settings'),
+          PaneItem(icon: Icon(Icons.settings), title: Text('Settings')),
         ],
       ),
       content: NavigationBody(index: index, children: [
