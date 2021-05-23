@@ -808,11 +808,12 @@ class _OpenNavigationPane extends StatelessWidget {
 
 class _MinimalNavigationPane extends StatefulWidget {
   _MinimalNavigationPane({
+    Key? key,
     required this.pane,
     required this.animationDuration,
     required this.entry,
     this.y = 0,
-  }) : super(key: pane.key);
+  }) : super(key: key);
 
   final NavigationPane pane;
 
@@ -865,19 +866,6 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    final menuButton = SizedBox(
-      width: _kCompactNavigationPanelWidth,
-      child: PaneItem.buildPaneItemButton(
-        context,
-        PaneItem(
-          title: FluentLocalizations.of(context).closeNavigationTooltip,
-          icon: Icon(Icons.menu),
-        ),
-        PaneDisplayMode.compact,
-        false,
-        removeEntry,
-      ),
-    );
     Widget minimalPane = SizeTransition(
       sizeFactor: CurvedAnimation(
         parent: controller,
@@ -899,20 +887,12 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
               padding: widget.pane.autoSuggestBox != null
                   ? EdgeInsets.zero
                   : topPadding,
-              child: () {
-                if (widget.pane.header != null)
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        child: widget.pane.header!,
-                        alignment: Alignment.centerLeft,
-                      ),
-                    ),
-                  ]);
-                else
-                  return menuButton;
-              }(),
+              child: widget.pane.header != null
+                  ? Align(
+                      child: widget.pane.header!,
+                      alignment: Alignment.centerLeft,
+                    )
+                  : null,
             ),
             if (widget.pane.autoSuggestBox != null)
               Container(
@@ -958,7 +938,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
     ]);
   }
 
-  void removeEntry() async {
+  Future<void> removeEntry() async {
     await controller.reverse();
     widget.entry.remove();
   }

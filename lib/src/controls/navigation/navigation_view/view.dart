@@ -92,6 +92,13 @@ class NavigationViewState extends State<NavigationView> {
   /// This can not be changed
   PaneDisplayMode? currentDisplayMode;
 
+  /// The overlay entry used for minimal pane
+  OverlayEntry? minimalOverlayEntry;
+  final minimalPaneKey = GlobalKey<__MinimalNavigationPaneState>();
+
+  bool get isMinimalPaneOpen =>
+      minimalOverlayEntry != null && minimalOverlayEntry!.mounted;
+
   @override
   void initState() {
     super.initState();
@@ -122,21 +129,35 @@ class NavigationViewState extends State<NavigationView> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
+    final localizations = FluentLocalizations.of(context);
     Widget appBar = () {
       if (widget.appBar != null) {
         return _buildAcrylic(_NavigationAppBar(
           appBar: widget.appBar!,
           displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
-          additionalLeading: PaneItem.buildPaneItemButton(
-            context,
-            PaneItem(
-              title: FluentLocalizations.of(context).openNavigationTooltip,
-              icon: Icon(Icons.menu_outlined),
-            ),
-            PaneDisplayMode.compact,
-            false,
-            () => _openMinimalOverlay(context),
-          ),
+          additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
+              ? PaneItem.buildPaneItemButton(
+                  context,
+                  PaneItem(
+                    title: !isMinimalPaneOpen
+                        ? localizations.openNavigationTooltip
+                        : localizations.closeNavigationTooltip,
+                    icon: Icon(Icons.menu_outlined),
+                  ),
+                  PaneDisplayMode.compact,
+                  false,
+                  () async {
+                    if (isMinimalPaneOpen) {
+                      await minimalPaneKey.currentState?.removeEntry();
+                      minimalOverlayEntry = null;
+                    } else {
+                      _openMinimalOverlay(context);
+                    }
+                    setState(() {});
+                  },
+                )
+              : null,
         ));
       }
       return SizedBox.shrink();
@@ -272,22 +293,22 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
     final theme = NavigationPaneTheme.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(builder: (_) {
+    minimalOverlayEntry = OverlayEntry(builder: (_) {
       return _buildAcrylic(PrimaryScrollController(
         controller: scrollController,
         child: Padding(
           padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
           child: _MinimalNavigationPane(
+            key: minimalPaneKey,
             pane: widget.pane!,
             animationDuration: theme.animationDuration ?? Duration.zero,
-            entry: entry,
+            entry: minimalOverlayEntry!,
             y: widget.appBar?.height ?? 0,
           ),
         ),
       ));
     });
-    Overlay.of(context, debugRequiredFor: widget)!.insert(entry);
+    Overlay.of(context, debugRequiredFor: widget)!.insert(minimalOverlayEntry!);
   }
 }
 
