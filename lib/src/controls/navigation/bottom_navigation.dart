@@ -61,7 +61,7 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = BottomNavigationThemeData.standart(context.theme).copyWith(
+    final style = BottomNavigationThemeData.standart(FluentTheme.of(context)).copyWith(
       this.style,
     );
     return PhysicalModel(
@@ -168,8 +168,8 @@ class BottomNavigationThemeData with Diagnosticable {
 
   static BottomNavigationThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return BottomNavigationThemeData.standart(context.theme).copyWith(
-      context.theme.bottomNavigationTheme,
+    return BottomNavigationThemeData.standart(FluentTheme.of(context)).copyWith(
+      FluentTheme.of(context).bottomNavigationTheme,
     );
   }
 

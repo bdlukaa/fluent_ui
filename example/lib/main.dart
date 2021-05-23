@@ -198,6 +198,7 @@ class WindowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
     final ThemeData theme = FluentTheme.of(context);
     final buttonColors = WindowButtonColors(
       iconNormal: theme.inactiveColor,
@@ -216,9 +217,18 @@ class WindowButtons extends StatelessWidget {
       iconMouseDown: Colors.red.dark.basedOnLuminance(),
     );
     return Row(children: [
-      MinimizeWindowButton(colors: buttonColors),
-      MaximizeWindowButton(colors: buttonColors),
-      CloseWindowButton(colors: closeButtonColors),
+      Tooltip(
+        message: FluentLocalizations.of(context).minimizeWindowTooltip,
+        child: MinimizeWindowButton(colors: buttonColors),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).restoreWindowTooltip,
+        child: MaximizeWindowButton(colors: buttonColors),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).closeWindowTooltip,
+        child: CloseWindowButton(colors: closeButtonColors),
+      ),
     ]);
   }
 }

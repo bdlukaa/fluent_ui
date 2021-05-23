@@ -127,6 +127,16 @@ class NavigationViewState extends State<NavigationView> {
         return _buildAcrylic(_NavigationAppBar(
           appBar: widget.appBar!,
           displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
+          additionalLeading: PaneItem.buildPaneItemButton(
+            context,
+            PaneItem(
+              title: FluentLocalizations.of(context).openNavigationTooltip,
+              icon: Icon(Icons.menu_outlined),
+            ),
+            PaneDisplayMode.compact,
+            false,
+            () => _openMinimalOverlay(context),
+          ),
         ));
       }
       return SizedBox.shrink();
@@ -242,25 +252,7 @@ class NavigationViewState extends State<NavigationView> {
           case PaneDisplayMode.minimal:
             paneResult = Column(children: [
               appBar,
-              Expanded(
-                child: ScaffoldPageParent(
-                  paneButton: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: PaneItem.buildPaneItemButton(
-                      context,
-                      PaneItem(
-                        title: FluentLocalizations.of(context)
-                            .openNavigationTooltip,
-                        icon: Icon(Icons.menu),
-                      ),
-                      PaneDisplayMode.compact,
-                      false,
-                      () => _openMinimalOverlay(context),
-                    ),
-                  ),
-                  child: widget.content,
-                ),
-              ),
+              Expanded(child: widget.content),
             ]);
             break;
           default:
@@ -430,10 +422,12 @@ class _NavigationAppBar extends StatelessWidget {
     Key? key,
     required this.appBar,
     required this.displayMode,
+    this.additionalLeading,
   }) : super(key: key);
 
   final NavigationAppBar appBar;
   final PaneDisplayMode displayMode;
+  final Widget? additionalLeading;
 
   final GlobalKey _openCompactKey = GlobalKey();
 
@@ -471,6 +465,7 @@ class _NavigationAppBar extends StatelessWidget {
         result = Acrylic(
           child: Row(children: [
             leading,
+            if (additionalLeading != null) additionalLeading!,
             title,
             if (appBar.actions != null) Expanded(child: appBar.actions!),
           ]),
@@ -483,7 +478,11 @@ class _NavigationAppBar extends StatelessWidget {
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
             color: theme.backgroundColor,
-            child: Row(children: [leading, title]),
+            child: Row(children: [
+              leading,
+              if (additionalLeading != null) additionalLeading!,
+              title,
+            ]),
           ),
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
@@ -497,6 +496,7 @@ class _NavigationAppBar extends StatelessWidget {
             color: theme.backgroundColor,
             child: leading,
           ),
+          if (additionalLeading != null) additionalLeading!,
           title,
           Expanded(child: appBar.actions ?? SizedBox()),
         ]);
