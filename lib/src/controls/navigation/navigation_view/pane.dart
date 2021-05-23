@@ -118,8 +118,9 @@ class PaneItem extends NavigationPaneItem {
         cursor: style.cursor,
         builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle!.resolve(states)
-              : style.unselectedTextStyle!.resolve(states);
+              ? style.selectedTextStyle?.resolve(states) ??
+                  TextStyle(color: style.highlightColor)
+              : style.unselectedTextStyle?.resolve(states);
           final textResult = item.title.isNotEmpty
               ? Padding(
                   padding: style.labelPadding ?? EdgeInsets.zero,
@@ -139,8 +140,9 @@ class PaneItem extends NavigationPaneItem {
                   child: IconTheme(
                     data: IconThemeData(
                       color: selected
-                          ? style.selectedIconColor!.resolve(states)
-                          : style.unselectedIconColor!.resolve(states),
+                          ? style.selectedIconColor?.resolve(states) ??
+                              style.highlightColor
+                          : style.unselectedIconColor?.resolve(states),
                     ),
                     child: item.icon,
                   ),

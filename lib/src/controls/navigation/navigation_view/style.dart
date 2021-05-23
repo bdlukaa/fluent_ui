@@ -189,41 +189,22 @@ class NavigationPaneThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty.has('tileColor', tileColor));
+    properties.add(DiagnosticsProperty('tileColor', tileColor));
     properties.add(ColorProperty('backgroundColor', backgroundColor));
     properties.add(ColorProperty('highlightColor', highlightColor));
-    properties.add(ObjectFlagProperty.has('cursor', cursor));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
-      'labelPadding',
-      labelPadding,
-    ));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
-      'iconPadding',
-      iconPadding,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'animationDuration',
-      animationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Curve>(
-      'animationCurve',
-      animationCurve,
-    ));
-    properties.add(ObjectFlagProperty.has(
-      'selectedTextStyle',
-      selectedTextStyle,
-    ));
-    properties.add(ObjectFlagProperty.has(
-      'unselectedTextStyle',
-      unselectedTextStyle,
-    ));
-    properties.add(ObjectFlagProperty.has(
-      'selectedIconColor',
-      selectedIconColor,
-    ));
-    properties.add(ObjectFlagProperty.has(
-      'unselectedIconColor',
-      unselectedIconColor,
-    ));
+    properties.add(DiagnosticsProperty('cursor', cursor));
+    properties.add(
+        DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding));
+    properties.add(DiagnosticsProperty('iconPadding', iconPadding));
+    properties.add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration));
+    properties
+        .add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
+    properties.add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle));
+    properties
+        .add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle));
+    properties.add(DiagnosticsProperty('selectedIconColor', selectedIconColor));
+    properties
+        .add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
   }
 }

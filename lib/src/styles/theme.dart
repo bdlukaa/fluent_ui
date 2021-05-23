@@ -35,7 +35,10 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: child,
+        child: NavigationPaneTheme(
+          data: NavigationPaneThemeData.standard(data).merge(data.navigationPaneTheme),
+          child: child,
+        ),
       ),
     );
   }
@@ -420,7 +423,7 @@ class ThemeData with Diagnosticable {
     );
   }
 
-  ThemeData merge({
+  ThemeData copyWith({
     Brightness? brightness,
     Typography? typography,
     AccentColor? accentColor,

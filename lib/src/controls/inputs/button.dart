@@ -272,8 +272,7 @@ class ButtonTheme extends InheritedTheme {
   static ButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return ButtonThemeData.standard(FluentTheme.of(context)).merge(
-      context.dependOnInheritedWidgetOfExactType<ButtonTheme>()?.data ??
-          FluentTheme.of(context).buttonTheme,
+      _getInheritedButtonThemeData(context),
     );
   }
 
@@ -340,11 +339,11 @@ class ButtonThemeData with Diagnosticable {
     double t,
   ) {
     return ButtonThemeData(
-      decoration: ButtonState.lerp<Decoration>(
-          a?.decoration, b?.decoration, t, Decoration.lerp),
+      decoration:
+          ButtonState.lerp(a?.decoration, b?.decoration, t, Decoration.lerp),
       cursor: t < 0.5 ? a?.cursor : b?.cursor,
-      textStyle: ButtonState.lerp<TextStyle>(
-          a?.textStyle, b?.textStyle, t, TextStyle.lerp),
+      textStyle:
+          ButtonState.lerp(a?.textStyle, b?.textStyle, t, TextStyle.lerp),
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
