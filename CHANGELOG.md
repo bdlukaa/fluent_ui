@@ -1,8 +1,8 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [2.0.2] - [23/05/2021]
 
-- Reworked the theme api ([#39](https://github.com/bdlukaa/fluent_ui/pull/39)):
+- **BREAKING CHANGES:** Reworked the theme api ([#39](https://github.com/bdlukaa/fluent_ui/pull/39)):
   - Removed the theme extension (`context.theme`). Use `FluentTheme.of(context)` instead
   - `ButtonState` is now a class that can receive a value. It now allows lerping between values, making `AnimatedFluentTheme` possible.
 
@@ -32,6 +32,7 @@ Date format: DD/MM/YYYY
   - Removed `animationDuration` and `animationCurve` from theme datas (except from `NavigationPaneThemeData`).
   - Renamed `copyWith` to `merge` on theme datas (except from `ThemeData`)
   - Fixed typo `standart` -> `standard`
+  - Implement `AnimatedAcrylic`
 
 ## [2.0.1] - [21/05/2021]
 

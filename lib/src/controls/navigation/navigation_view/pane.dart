@@ -617,67 +617,69 @@ class _CompactNavigationPane extends StatelessWidget {
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
-    return AnimatedAcrylic(
+    return AnimatedContainer(
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      key: paneKey,
       width: _kCompactNavigationPanelWidth,
-      color: theme.backgroundColor,
-      child: pane.indicatorBuilder(
-        context: context,
-        index: pane.selected,
-        offsets: pane.effectiveItems.getPaneItemsOffsets,
-        sizes: pane.effectiveItems.getPaneItemsSizes,
-        axis: Axis.horizontal,
-        y: _getIndicatorY(context),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            () {
-              if (pane.menuButton != null) return pane.menuButton!;
-              if (pane.onDisplayModeRequested != null)
-                return NavigationPane.buildMenuButton(
-                  context,
-                  FluentLocalizations.of(context).openNavigationTooltip,
-                  pane,
-                  onPressed: () {
-                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                  },
-                  padding: showReplacement ? EdgeInsets.zero : topPadding,
-                );
-              return SizedBox.shrink();
-            }(),
-            if (showReplacement)
-              Padding(
-                padding: topPadding,
-                child: PaneItem.buildPaneItemButton(
-                  context,
-                  PaneItem(
-                    title: FluentLocalizations.of(context).clickToSearch,
-                    icon: pane.autoSuggestBoxReplacement!,
+      key: paneKey,
+      child: Acrylic(
+        color: theme.backgroundColor,
+        child: pane.indicatorBuilder(
+          context: context,
+          index: pane.selected,
+          offsets: pane.effectiveItems.getPaneItemsOffsets,
+          sizes: pane.effectiveItems.getPaneItemsSizes,
+          axis: Axis.horizontal,
+          y: _getIndicatorY(context),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              () {
+                if (pane.menuButton != null) return pane.menuButton!;
+                if (pane.onDisplayModeRequested != null)
+                  return NavigationPane.buildMenuButton(
+                    context,
+                    FluentLocalizations.of(context).openNavigationTooltip,
+                    pane,
+                    onPressed: () {
+                      pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                    },
+                    padding: showReplacement ? EdgeInsets.zero : topPadding,
+                  );
+                return SizedBox.shrink();
+              }(),
+              if (showReplacement)
+                Padding(
+                  padding: topPadding,
+                  child: PaneItem.buildPaneItemButton(
+                    context,
+                    PaneItem(
+                      title: FluentLocalizations.of(context).clickToSearch,
+                      icon: pane.autoSuggestBoxReplacement!,
+                    ),
+                    pane.displayMode,
+                    false,
+                    () {
+                      pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                    },
                   ),
-                  pane.displayMode,
-                  false,
-                  () {
-                    pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                  },
+                ),
+              Expanded(
+                child: Scrollbar(
+                  isAlwaysShown: false,
+                  child: ListView(key: listKey, primary: true, children: [
+                    ...pane.items.map((item) {
+                      return _buildItem(context, item);
+                    }),
+                  ]),
                 ),
               ),
-            Expanded(
-              child: Scrollbar(
-                isAlwaysShown: false,
-                child: ListView(key: listKey, primary: true, children: [
-                  ...pane.items.map((item) {
-                    return _buildItem(context, item);
-                  }),
-                ]),
-              ),
-            ),
-            ...pane.footerItems.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
+              ...pane.footerItems.map((item) {
+                return _buildItem(context, item);
+              }),
+            ]),
+          ),
         ),
       ),
     );
@@ -742,60 +744,63 @@ class _OpenNavigationPane extends StatelessWidget {
         );
       return SizedBox.shrink();
     }();
-    return AnimatedAcrylic(
+    return AnimatedContainer(
+      key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      key: paneKey,
-      color: theme.backgroundColor,
       width: _kOpenNavigationPanelWidth,
-      child: pane.indicatorBuilder(
-        context: context,
-        index: pane.selected,
-        offsets: pane.effectiveItems.getPaneItemsOffsets,
-        sizes: pane.effectiveItems.getPaneItemsSizes,
-        axis: Axis.horizontal,
-        y: _getIndicatorY(context),
-        child: Column(children: [
-          Container(
-            margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
-            height: kOneLineTileHeight,
-            child: () {
-              if (pane.header != null)
-                return Row(children: [
-                  menuButton,
-                  Expanded(
-                    child: Align(
-                      child: pane.header!,
-                      alignment: Alignment.centerLeft,
-                    ),
-                  ),
-                ]);
-              else
-                return menuButton;
-            }(),
-          ),
-          if (pane.autoSuggestBox != null)
+      child: Acrylic(
+        color: theme.backgroundColor,
+        child: pane.indicatorBuilder(
+          context: context,
+          index: pane.selected,
+          offsets: pane.effectiveItems.getPaneItemsOffsets,
+          sizes: pane.effectiveItems.getPaneItemsSizes,
+          axis: Axis.horizontal,
+          y: _getIndicatorY(context),
+          child: Column(children: [
             Container(
-              padding: theme.iconPadding ?? EdgeInsets.zero,
-              height: 41.0,
-              alignment: Alignment.center,
-              margin: topPadding,
-              child: pane.autoSuggestBox!,
+              margin:
+                  pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
+              height: kOneLineTileHeight,
+              child: () {
+                if (pane.header != null)
+                  return Row(children: [
+                    menuButton,
+                    Expanded(
+                      child: Align(
+                        child: pane.header!,
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ]);
+                else
+                  return menuButton;
+              }(),
             ),
-          Expanded(
-            child: Scrollbar(
-              isAlwaysShown: false,
-              child: ListView(key: listKey, primary: true, children: [
-                ...pane.items.map((item) {
-                  return buildItem(context, pane, item);
-                }),
-              ]),
+            if (pane.autoSuggestBox != null)
+              Container(
+                padding: theme.iconPadding ?? EdgeInsets.zero,
+                height: 41.0,
+                alignment: Alignment.center,
+                margin: topPadding,
+                child: pane.autoSuggestBox!,
+              ),
+            Expanded(
+              child: Scrollbar(
+                isAlwaysShown: false,
+                child: ListView(key: listKey, primary: true, children: [
+                  ...pane.items.map((item) {
+                    return buildItem(context, pane, item);
+                  }),
+                ]),
+              ),
             ),
-          ),
-          ...pane.footerItems.map((item) {
-            return buildItem(context, pane, item);
-          }),
-        ]),
+            ...pane.footerItems.map((item) {
+              return buildItem(context, pane, item);
+            }),
+          ]),
+        ),
       ),
     );
   }
