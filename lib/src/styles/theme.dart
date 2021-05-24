@@ -431,8 +431,8 @@ class ThemeData with Diagnosticable {
       focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
       scrollbarTheme:
           ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
-      // TODO: lerp bottom navigation theme
-      bottomNavigationTheme: a.bottomNavigationTheme,
+      bottomNavigationTheme: BottomNavigationThemeData.lerp(
+          a.bottomNavigationTheme, b.bottomNavigationTheme, t),
     );
   }
 
@@ -495,7 +495,8 @@ class ThemeData with Diagnosticable {
       inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
-      bottomNavigationTheme: this.bottomNavigationTheme.copyWith(bottomNavigationTheme),
+      bottomNavigationTheme:
+          this.bottomNavigationTheme.merge(bottomNavigationTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
