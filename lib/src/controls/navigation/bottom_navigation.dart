@@ -34,7 +34,7 @@ class BottomNavigationItem {
 /// destinations in an app.
 ///
 /// It's usually used on [ScaffoldPage.bottomBar]
-/// 
+///
 /// ![BottomNavigation Preview](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_bottomnavigation_01_dark.png?text=DarkMode)
 ///
 /// See also:
@@ -59,9 +59,9 @@ class BottomNavigation extends StatelessWidget {
 
   /// The items displayed by this widget. There must be at least 2
   /// items in the list.
-  /// 
+  ///
   /// See also:
-  ///   
+  ///
   ///   * [BottomNavigationItem], the items used on this bottom navigation
   final List<BottomNavigationItem> items;
 
@@ -70,12 +70,12 @@ class BottomNavigation extends StatelessWidget {
 
   /// Called when the current index should be changed. If null, the bottom
   /// navigation items are considered disabled.
-  /// 
+  ///
   /// {@toolSnippet}
   /// ```dart
-  /// 
+  ///
   /// int index = 0;
-  /// 
+  ///
   /// BottomNavigation(
   ///   index: index,
   ///   onChanged: (i) => setState(() => index = i),
@@ -140,11 +140,9 @@ class _BottomNavigationItem extends StatelessWidget {
         builder: (context, state) {
           final content =
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            FluentTheme(
-              data: FluentTheme.of(context).copyWith(
-                iconTheme: IconThemeData(
-                  color: selected ? style.selectedColor : style.inactiveColor,
-                ),
+            IconTheme.merge(
+              data: IconThemeData(
+                color: selected ? style.selectedColor : style.inactiveColor,
               ),
               child: selected ? item.selectedIcon ?? item.icon : item.icon,
             ),

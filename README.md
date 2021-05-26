@@ -76,7 +76,8 @@ Projects using this library should use the stable channel of Flutter
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - [Scrollbar](#scrollbar)
   - [List Tile](#list-tile)
-  - [Info Header](info-header)
+  - [Info Header](#info-header)
+- [Mobile Widgets](#mobile-widgets)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -1318,6 +1319,32 @@ ComboBox(
 ```
 
 This will produce the same as the image above.
+
+# Mobile Widgets
+
+Widgets with focus on mobile. Based on the official documentation and source code for [iOS](https://developer.microsoft.com/pt-br/fluentui#/controls/ios) and [Android](https://developer.microsoft.com/pt-br/fluentui#/controls/android). Most of the widgets above can adapt to small screens, and will fit on all your devices.
+
+## Chip
+
+Chips are compact representations of entities (most commonly, people) that can be clicked, deleted, or dragged easily.
+
+Here's an example of how to create a chip:
+
+```dart
+Chip(
+  image: CircleAvatar(size: 12.0),
+  text: Text('Chip'),
+),
+Chip.selected(
+  image: FlutterLogo(size: 14.0),
+  text: Text('Chip'),
+)
+```
+
+![Light Chips](https://user-images.githubusercontent.com/45696119/119724339-f9a00700-be44-11eb-940b-1966eefe3798.png)
+
+![Dark Chips](https://user-images.githubusercontent.com/45696119/119724337-f9077080-be44-11eb-9b73-e1dc4ffbeefd.png)
+
 
 ---
 

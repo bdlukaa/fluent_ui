@@ -186,6 +186,7 @@ class ThemeData with Diagnosticable {
   final NavigationPaneThemeData navigationPaneTheme;
   final BottomNavigationThemeData bottomNavigationTheme;
   final CheckboxThemeData checkboxTheme;
+  final ChipThemeData chipTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
   final FocusThemeData focusTheme;
@@ -219,6 +220,7 @@ class ThemeData with Diagnosticable {
     required this.acrylicBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
+    required this.chipTheme,
     required this.toggleSwitchTheme,
     required this.bottomNavigationTheme,
     required this.iconTheme,
@@ -264,6 +266,7 @@ class ThemeData with Diagnosticable {
     BottomNavigationThemeData? bottomNavigationTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
+    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     SplitButtonThemeData? splitButtonTheme,
@@ -324,6 +327,7 @@ class ThemeData with Diagnosticable {
     ).merge(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
+    chipTheme ??= const ChipThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= brightness.isDark
@@ -366,6 +370,7 @@ class ThemeData with Diagnosticable {
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
+      chipTheme: chipTheme,
       dialogTheme: dialogTheme,
       dividerTheme: dividerTheme,
       focusTheme: focusTheme,
@@ -412,6 +417,7 @@ class ThemeData with Diagnosticable {
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
           a.toggleSwitchTheme, b.toggleSwitchTheme, t),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
@@ -456,6 +462,7 @@ class ThemeData with Diagnosticable {
     ButtonThemeData? buttonTheme,
     BottomNavigationThemeData? bottomNavigationTheme,
     CheckboxThemeData? checkboxTheme,
+    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     SplitButtonThemeData? splitButtonTheme,
@@ -498,6 +505,7 @@ class ThemeData with Diagnosticable {
       bottomNavigationTheme:
           this.bottomNavigationTheme.merge(bottomNavigationTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
+      chipTheme: this.chipTheme.merge(chipTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
       focusTheme: this.focusTheme.merge(focusTheme),

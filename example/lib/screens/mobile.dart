@@ -15,7 +15,53 @@ class _MobileState extends State<Mobile> {
     return ScaffoldPage(
       content: NavigationBody(
         children: [
-          ScaffoldPage(header: PageHeader(title: Text('Mobile'))),
+          ScaffoldPage(
+            header: PageHeader(title: Text('Mobile')),
+            content: ListView(
+              padding: EdgeInsets.symmetric(
+                horizontal: PageHeader.horizontalPadding(context),
+              ),
+              children: [
+                Text(
+                  'Chips',
+                  style: FluentTheme.of(context).typography.subtitle,
+                ),
+                Wrap(spacing: 10.0, runSpacing: 10.0, children: [
+                  Chip(
+                    image: CircleAvatar(
+                      radius: 12.0,
+                      child: FlutterLogo(size: 14.0),
+                    ),
+                    text: Text('Default'),
+                    onPressed: () => print('pressed chip'),
+                  ),
+                  Chip(
+                    image: FlutterLogo(size: 14.0),
+                    text: Text('Disabled'),
+                    // Comment the onPressed function to disable the chip
+                    // onPressed: () => print('pressed chip'),
+                  ),
+                  Chip.selected(
+                    image: CircleAvatar(
+                      radius: 12.0,
+                      child: FlutterLogo(size: 14.0),
+                    ),
+                    text: Text('Active and selected'),
+                    onPressed: () => print('pressed selected chip'),
+                  ),
+                  Chip.selected(
+                    image: CircleAvatar(
+                      radius: 12.0,
+                      child: FlutterLogo(size: 14.0),
+                    ),
+                    text: Text('Selected'),
+                    // Comment the onPressed function to disable the chip
+                    // onPressed: () => print('pressed chip'),
+                  ),
+                ]),
+              ],
+            ),
+          ),
           ScaffoldPage(header: PageHeader(title: Text('Android'))),
           ScaffoldPage(header: PageHeader(title: Text('iOS'))),
         ],
