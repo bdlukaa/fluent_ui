@@ -68,6 +68,7 @@ class Chip extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = ChipTheme.of(context);
+    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
     final double spacing = theme.spacing ?? _kChipSpacing;
     return HoverButton(
       semanticLabel: semanticLabel,
@@ -89,9 +90,9 @@ class Chip extends StatelessWidget {
           ),
           decoration: decoration?.resolve(states),
           padding: EdgeInsets.only(
-            left: spacing,
-            top: spacing,
-            bottom: spacing,
+            left: spacing + visualDensity.horizontal,
+            top: spacing + visualDensity.vertical,
+            bottom: spacing + visualDensity.vertical,
           ),
           child: AnimatedDefaultTextStyle(
             duration: FluentTheme.of(context).fastAnimationDuration,
@@ -104,13 +105,13 @@ class Chip extends StatelessWidget {
                   curve: FluentTheme.of(context).animationCurve,
                   opacity: isEnabled || _type == _ChipType.selected ? 1.0 : 0.6,
                   child: Padding(
-                    padding: EdgeInsets.only(right: spacing),
+                    padding: EdgeInsets.only(right: spacing + visualDensity.horizontal),
                     child: image,
                   ),
                 ),
               if (text != null)
                 Padding(
-                  padding: EdgeInsets.only(right: spacing),
+                  padding: EdgeInsets.only(right: spacing + visualDensity.horizontal),
                   child: text,
                 ),
             ]),

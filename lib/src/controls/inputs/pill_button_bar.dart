@@ -4,8 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 const double _kMinHeight = 28.0;
 
-const double _kMinButtonsSpacing = 8.0;
-const double _kMaxButtonsSpacing = 10.0;
+const double _kButtonsSpacing = 8.0;
 
 const double _kMinButtonWidth = 56.0;
 const double _kMaxButtonHeight = _kMinHeight;
@@ -42,8 +41,11 @@ class PillButtonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = PillButtonBarTheme.of(context);
+    final visualDensity = FluentTheme.of(context).visualDensity;
     return Container(
-      constraints: const BoxConstraints(minHeight: _kMinHeight),
+      constraints: BoxConstraints(
+        minHeight: _kMinHeight + visualDensity.vertical,
+      ),
       color: theme.backgroundColor ?? FluentTheme.of(context).accentColor,
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         ...List.generate(items.length, (index) {
@@ -74,7 +76,7 @@ class _PillButtonBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = PillButtonBarTheme.of(context);
-
+    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
@@ -87,13 +89,16 @@ class _PillButtonBarItem extends StatelessWidget {
             color: selected ? selectedColor : unselectedColor,
             borderRadius: BorderRadius.circular(20.0),
           ),
-          constraints: const BoxConstraints(
-            minWidth: _kMinButtonWidth,
-            maxHeight: _kMaxButtonHeight,
+          constraints: BoxConstraints(
+            minWidth: _kMinButtonWidth + visualDensity.horizontal,
+            maxHeight: _kMaxButtonHeight + visualDensity.vertical,
           ),
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
-          margin: const EdgeInsets.all(_kMinButtonsSpacing),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0 + visualDensity.horizontal,
+            vertical: 3.0,
+          ),
+          margin: EdgeInsets.all(_kButtonsSpacing + visualDensity.horizontal),
           child: DefaultTextStyle(
             style: (selected
                     ? theme.selectedTextStyle
@@ -237,10 +242,14 @@ class PillButtonBarThemeData with Diagnosticable {
   ) {
     return PillButtonBarThemeData(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
-      selectedTextStyle: TextStyle.lerp(a?.selectedTextStyle, b?.selectedTextStyle, t),
-      unselectedTextStyle: TextStyle.lerp(a?.unselectedTextStyle, b?.unselectedTextStyle, t),
-      selectedColor: ButtonState.lerp(a?.selectedColor, b?.selectedColor, t, Color.lerp),
-      unselectedColor: ButtonState.lerp(a?.unselectedColor, b?.unselectedColor, t, Color.lerp),
+      selectedTextStyle:
+          TextStyle.lerp(a?.selectedTextStyle, b?.selectedTextStyle, t),
+      unselectedTextStyle:
+          TextStyle.lerp(a?.unselectedTextStyle, b?.unselectedTextStyle, t),
+      selectedColor:
+          ButtonState.lerp(a?.selectedColor, b?.selectedColor, t, Color.lerp),
+      unselectedColor: ButtonState.lerp(
+          a?.unselectedColor, b?.unselectedColor, t, Color.lerp),
     );
   }
 

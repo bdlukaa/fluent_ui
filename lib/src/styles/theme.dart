@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/material.dart' as m;
 
 class FluentTheme extends StatelessWidget {
   /// Applies the given theme [data] to [child].
@@ -32,7 +31,6 @@ class FluentTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    m.ThemeData();  
     return _FluentTheme(
       data: data,
       child: IconTheme(
@@ -256,6 +254,7 @@ class ThemeData with Diagnosticable {
 
   factory ThemeData({
     Brightness? brightness,
+    VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
     Color? activeColor,
@@ -292,6 +291,7 @@ class ThemeData with Diagnosticable {
     SnackbarThemeData? snackbarTheme,
   }) {
     brightness ??= Brightness.light;
+    visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= Duration(milliseconds: 90);
     fastAnimationDuration ??= Duration(milliseconds: 150);
     mediumAnimationDuration ??= Duration(milliseconds: 300);
@@ -366,6 +366,7 @@ class ThemeData with Diagnosticable {
     snackbarTheme ??= const SnackbarThemeData();
     return ThemeData.raw(
       brightness: brightness,
+      visualDensity: visualDensity,
       fasterAnimationDuration: fasterAnimationDuration,
       fastAnimationDuration: fastAnimationDuration,
       mediumAnimationDuration: mediumAnimationDuration,
@@ -406,6 +407,7 @@ class ThemeData with Diagnosticable {
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
     return ThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
+      visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
       typography: Typography.lerp(a.typography, b.typography, t),
       activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
@@ -462,6 +464,7 @@ class ThemeData with Diagnosticable {
 
   ThemeData copyWith({
     Brightness? brightness,
+    VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
     Color? activeColor,
@@ -499,6 +502,7 @@ class ThemeData with Diagnosticable {
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
+      visualDensity: visualDensity ?? this.visualDensity,
       typography: typography ?? this.typography,
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,

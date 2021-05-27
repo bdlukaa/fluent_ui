@@ -131,6 +131,7 @@ class SnackbarState extends State<Snackbar>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final SnackbarThemeData theme = SnackbarTheme.of(context);
+    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
     return FadeTransition(
       opacity: controller,
       child: Container(
@@ -150,10 +151,13 @@ class SnackbarState extends State<Snackbar>
               if (widget.action != null)
                 Padding(
                   padding: EdgeInsets.only(
-                    left: widget.extended ? 0 : 16.0,
-                    top: !widget.extended ? 0 : 8.0,
+                    left: widget.extended ? 0 : 16.0 + visualDensity.horizontal,
+                    top: !widget.extended ? 0 : 8.0 + visualDensity.vertical,
                   ),
-                  child: widget.action!,
+                  child: ButtonTheme.merge(
+                    data: theme.actionStyle ?? ButtonThemeData(),
+                    child: widget.action!,
+                  ),
                 ),
             ],
           ),
@@ -238,12 +242,19 @@ class SnackbarThemeData with Diagnosticable {
 
   factory SnackbarThemeData.standard(ThemeData style) {
     return SnackbarThemeData(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 8.0 + style.visualDensity.vertical,
+        horizontal: 16.0 + style.visualDensity.horizontal,
+      ),
       actionStyle: ButtonThemeData.standard(style).merge(ButtonThemeData(
         margin: EdgeInsets.zero,
-        padding: EdgeInsets.all(6),
+        padding: EdgeInsets.all(6.0 + style.visualDensity.horizontal),
         decoration: ButtonState.all(BoxDecoration()),
-        textStyle: ButtonState.resolveWith((states) {}),
+        textStyle: ButtonState.resolveWith((states) {
+          return TextStyle(
+            color: ButtonThemeData.buttonColor(style.brightness, states),
+          );
+        }),
       )),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Mobile extends StatefulWidget {
   const Mobile({Key? key}) : super(key: key);
@@ -37,7 +38,10 @@ class _MobileState extends State<Mobile> {
                     onPressed: () => print('pressed chip'),
                   ),
                   Chip(
-                    image: FlutterLogo(size: 14.0),
+                    image: CircleAvatar(
+                      radius: 12.0,
+                      child: FlutterLogo(size: 14.0),
+                    ),
                     text: Text('Disabled'),
                     // Comment the onPressed function to disable the chip
                     // onPressed: () => print('pressed chip'),
@@ -71,7 +75,7 @@ class _MobileState extends State<Mobile> {
                   Snackbar(
                     content: const Text('Single-line snackbar'),
                     action: Button(
-                      child: const Text('Action'),
+                      child: const Text('ACTION'),
                       style: const ButtonThemeData(margin: EdgeInsets.zero),
                       onPressed: () {
                         showSnackbar(
@@ -87,7 +91,7 @@ class _MobileState extends State<Mobile> {
                     ),
                     extended: true,
                     action: Button(
-                      child: const Text('Action'),
+                      child: const Text('ACTION'),
                       style: const ButtonThemeData(margin: EdgeInsets.zero),
                       onPressed: () {
                         showSnackbar(
@@ -95,7 +99,7 @@ class _MobileState extends State<Mobile> {
                           Snackbar(
                             content: Text('New update is availble!'),
                             action: Button(
-                              child: Text('Download'),
+                              child: Text('DOWNLOAD'),
                               style: ButtonThemeData(margin: EdgeInsets.zero),
                               onPressed: () {},
                             ),
