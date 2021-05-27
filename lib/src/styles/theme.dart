@@ -196,6 +196,7 @@ class ThemeData with Diagnosticable {
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
   final SplitButtonThemeData splitButtonTheme;
+  final SnackbarThemeData snackbarTheme;
   final ToggleButtonThemeData toggleButtonTheme;
   final ToggleSwitchThemeData toggleSwitchTheme;
   final TooltipThemeData tooltipTheme;
@@ -236,6 +237,7 @@ class ThemeData with Diagnosticable {
     required this.focusTheme,
     required this.scrollbarTheme,
     required this.inputMouseCursor,
+    required this.snackbarTheme,
   });
 
   static ThemeData light() {
@@ -280,6 +282,7 @@ class ThemeData with Diagnosticable {
     InfoBarThemeData? infoBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
+    SnackbarThemeData? snackbarTheme,
   }) {
     brightness ??= Brightness.light;
     fasterAnimationDuration ??= Duration(milliseconds: 90);
@@ -352,6 +355,7 @@ class ThemeData with Diagnosticable {
     infoBarTheme ??= const InfoBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
     bottomNavigationTheme ??= const BottomNavigationThemeData();
+    snackbarTheme ??= const SnackbarThemeData();
     return ThemeData.raw(
       brightness: brightness,
       fasterAnimationDuration: fasterAnimationDuration,
@@ -386,6 +390,7 @@ class ThemeData with Diagnosticable {
       tooltipTheme: tooltipTheme,
       typography: typography,
       inputMouseCursor: inputMouseCursor,
+      snackbarTheme: snackbarTheme,
     );
   }
 
@@ -439,6 +444,8 @@ class ThemeData with Diagnosticable {
           ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
       bottomNavigationTheme: BottomNavigationThemeData.lerp(
           a.bottomNavigationTheme, b.bottomNavigationTheme, t),
+      snackbarTheme:
+          SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
     );
   }
 
@@ -476,6 +483,7 @@ class ThemeData with Diagnosticable {
     InfoBarThemeData? infoBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
+    SnackbarThemeData? snackbarTheme,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
@@ -519,6 +527,7 @@ class ThemeData with Diagnosticable {
       toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
+      snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
     );
   }
 

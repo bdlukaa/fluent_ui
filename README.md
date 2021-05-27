@@ -78,6 +78,8 @@ Projects using this library should use the stable channel of Flutter
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
 - [Mobile Widgets](#mobile-widgets)
+  - [Chip](#chip)
+  - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -1345,6 +1347,22 @@ Chip.selected(
 
 ![Dark Chips](https://user-images.githubusercontent.com/45696119/119724337-f9077080-be44-11eb-9b73-e1dc4ffbeefd.png)
 
+## Snackbar
+
+Snackbars provide a brief message about an operation at the bottom of the screen. They can contain a custom action or view or use a style geared towards making special announcements to your users.
+
+Here's an example of how to display a snackbar at the bottom of the screen:
+
+```dart
+showSnackbar(
+  context,
+  Snackbar(
+    content: Text('A new update is available!'),
+  ),
+);
+```
+
+![Snackbar Example](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_snackbar_01_standard_dark.png?text=DarkMode)
 
 ---
 
@@ -1384,6 +1402,8 @@ The list of equivalents between this library and `flutter/material.dart`
 | Scaffold                  | ScaffoldPage     |
 | AppBar                    | NavigationAppBar |
 | Drawer                    | NavigationView   |
+| Chip                      | Chip             |
+| Snackbar                  | Snackbar         |
 
 ## Contribution
 

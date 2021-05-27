@@ -233,7 +233,7 @@ class ChipThemeData with Diagnosticable {
       spacing: _kChipSpacing,
       decoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: BorderRadius.circular(4.0),
           color: normalColor(states),
         );
       }),
@@ -246,7 +246,7 @@ class ChipThemeData with Diagnosticable {
       }),
       selectedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: BorderRadius.circular(4.0),
           color: selectedColor(states),
         );
       }),

@@ -59,6 +59,49 @@ class _MobileState extends State<Mobile> {
                     // onPressed: () => print('pressed chip'),
                   ),
                 ]),
+                Text(
+                  'Snackbar',
+                  style: FluentTheme.of(context).typography.subtitle,
+                ),
+                Wrap(runSpacing: 10.0, spacing: 10.0, children: [
+                  Snackbar(
+                    content: const Text('Single-line snackbar'),
+                    action: Button(
+                      child: const Text('Action'),
+                      style: const ButtonThemeData(margin: EdgeInsets.zero),
+                      onPressed: () {
+                        showSnackbar(
+                          context,
+                          Snackbar(content: Text('New update is available!')),
+                        );
+                      },
+                    ),
+                  ),
+                  Snackbar(
+                    content: const Text(
+                        'Multi-line snackbar block. Used when the content is too big'),
+                    extended: true,
+                    action: Button(
+                      child: const Text('Action'),
+                      style: const ButtonThemeData(margin: EdgeInsets.zero),
+                      onPressed: () {
+                        showSnackbar(
+                          context,
+                          Snackbar(
+                            content: Text(
+                                'Multi line snackbar. Used when the content is too big'),
+                            extended: true,
+                            action: Button(
+                              child: Text('Action'),
+                              style: ButtonThemeData(margin: EdgeInsets.zero),
+                              onPressed: () {},
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ]),
               ],
             ),
           ),

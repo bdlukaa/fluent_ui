@@ -52,6 +52,7 @@ export 'src/controls/surfaces/flyout/flyout.dart';
 export 'src/controls/surfaces/info_bar.dart';
 export 'src/controls/surfaces/list_tile.dart';
 export 'src/controls/surfaces/progress_indicators.dart';
+export 'src/controls/surfaces/snackbar.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/divider.dart';
