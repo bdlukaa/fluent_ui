@@ -9,6 +9,7 @@ class Mobile extends StatefulWidget {
 
 class _MobileState extends State<Mobile> {
   int _currentIndex = 0;
+  int _pillButtonBarIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,9 @@ class _MobileState extends State<Mobile> {
                   style: FluentTheme.of(context).typography.subtitle,
                 ),
                 Wrap(runSpacing: 10.0, spacing: 10.0, children: [
+                  // TODO(bdlukaa): add more snackbar examples. The buttons
+                  // should not have a decoration, only text style. This should
+                  // happen after the button rework.
                   Snackbar(
                     content: const Text('Single-line snackbar'),
                     action: Button(
@@ -79,7 +83,8 @@ class _MobileState extends State<Mobile> {
                   ),
                   Snackbar(
                     content: const Text(
-                        'Multi-line snackbar block. Used when the content is too big'),
+                      'Multi-line snackbar block. Used when the content is too big',
+                    ),
                     extended: true,
                     action: Button(
                       child: const Text('Action'),
@@ -88,11 +93,9 @@ class _MobileState extends State<Mobile> {
                         showSnackbar(
                           context,
                           Snackbar(
-                            content: Text(
-                                'Multi line snackbar. Used when the content is too big'),
-                            extended: true,
+                            content: Text('New update is availble!'),
                             action: Button(
-                              child: Text('Action'),
+                              child: Text('Download'),
                               style: ButtonThemeData(margin: EdgeInsets.zero),
                               onPressed: () {},
                             ),
@@ -102,6 +105,22 @@ class _MobileState extends State<Mobile> {
                     ),
                   )
                 ]),
+                Text(
+                  'Other',
+                  style: FluentTheme.of(context).typography.subtitle,
+                ),
+                Center(
+                  child: PillButtonBar(
+                    selected: _pillButtonBarIndex,
+                    onChanged: (i) => setState(() => _pillButtonBarIndex = i),
+                    items: [
+                      PillButtonBarItem(text: Text('All')),
+                      PillButtonBarItem(text: Text('Mail')),
+                      PillButtonBarItem(text: Text('People')),
+                      PillButtonBarItem(text: Text('Events')),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

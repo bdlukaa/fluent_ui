@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart' as m;
 
 class FluentTheme extends StatelessWidget {
   /// Applies the given theme [data] to [child].
@@ -31,6 +32,7 @@ class FluentTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    m.ThemeData();  
     return _FluentTheme(
       data: data,
       child: IconTheme(
@@ -182,6 +184,7 @@ class ThemeData with Diagnosticable {
   final ButtonState<MouseCursor> inputMouseCursor;
 
   final Brightness brightness;
+  final VisualDensity visualDensity;
 
   final NavigationPaneThemeData navigationPaneTheme;
   final BottomNavigationThemeData bottomNavigationTheme;
@@ -192,6 +195,7 @@ class ThemeData with Diagnosticable {
   final FocusThemeData focusTheme;
   final IconThemeData iconTheme;
   final InfoBarThemeData infoBarTheme;
+  final PillButtonBarThemeData pillButtonBarTheme;
   final RadioButtonThemeData radioButtonTheme;
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
@@ -217,6 +221,7 @@ class ThemeData with Diagnosticable {
     required this.slowAnimationDuration,
     required this.animationCurve,
     required this.brightness,
+    required this.visualDensity,
     required this.scaffoldBackgroundColor,
     required this.acrylicBackgroundColor,
     required this.buttonTheme,
@@ -238,6 +243,7 @@ class ThemeData with Diagnosticable {
     required this.scrollbarTheme,
     required this.inputMouseCursor,
     required this.snackbarTheme,
+    required this.pillButtonBarTheme,
   });
 
   static ThemeData light() {
@@ -280,6 +286,7 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
+    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
@@ -353,6 +360,7 @@ class ThemeData with Diagnosticable {
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
+    pillButtonBarTheme ??= const PillButtonBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
     bottomNavigationTheme ??= const BottomNavigationThemeData();
     snackbarTheme ??= const SnackbarThemeData();
@@ -391,6 +399,7 @@ class ThemeData with Diagnosticable {
       typography: typography,
       inputMouseCursor: inputMouseCursor,
       snackbarTheme: snackbarTheme,
+      pillButtonBarTheme: pillButtonBarTheme,
     );
   }
 
@@ -446,6 +455,8 @@ class ThemeData with Diagnosticable {
           a.bottomNavigationTheme, b.bottomNavigationTheme, t),
       snackbarTheme:
           SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
+      pillButtonBarTheme: PillButtonBarThemeData.lerp(
+          a.pillButtonBarTheme, b.pillButtonBarTheme, t),
     );
   }
 
@@ -481,6 +492,7 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
+    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
@@ -519,6 +531,7 @@ class ThemeData with Diagnosticable {
       focusTheme: this.focusTheme.merge(focusTheme),
       iconTheme: this.iconTheme.merge(iconTheme),
       infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
+      pillButtonBarTheme: this.pillButtonBarTheme.merge(pillButtonBarTheme),
       navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),

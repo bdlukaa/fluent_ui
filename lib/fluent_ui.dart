@@ -4,6 +4,7 @@ export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:flutter/material.dart'
     show
         Brightness,
+        VisualDensity,
         ThemeMode,
         Feedback,
         FlutterLogo,
@@ -36,6 +37,7 @@ export 'src/controls/inputs/button.dart';
 export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/chip.dart';
 export 'src/controls/inputs/icon_button.dart';
+export 'src/controls/inputs/pill_button_bar.dart';
 export 'src/controls/inputs/radio_button.dart';
 export 'src/controls/inputs/rating.dart';
 export 'src/controls/inputs/split_button.dart';
