@@ -3,52 +3,80 @@ import 'package:flutter/foundation.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 const double _kMinHeight = 28.0;
+const double _kMaxHeight = 46.0;
 
 const double _kButtonsSpacing = 8.0;
 
 const double _kMinButtonWidth = 56.0;
 const double _kMaxButtonHeight = _kMinHeight;
 
+/// The item used by [PillButtonBar]
 class PillButtonBarItem {
+  /// The text
   final Widget text;
 
-  const PillButtonBarItem({
-    required this.text,
-  });
+  /// Create a new pill button item
+  const PillButtonBarItem({required this.text});
 }
 
-/// Pill button bar is a horizontal scrollable list of
-/// pill-shaped text buttons in which only one button
-/// can be selected at a given time.
+/// Pill button bar is a horizontal scrollable list of pill-shaped
+/// text buttons in which only one button can be selected at a given
+/// time.
+///
+/// ![Light PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_light.png?text=LightMode)
+///
+/// ![Dark PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_dark.png?text=DarkMode)
+///
+/// See also:
+///
+///   * [PillButtonBarItem], the item used by pill button bar
+///   * [PillButtonTheme], used to style the pill button bar
 class PillButtonBar extends StatelessWidget {
   /// Creates a pill button bar.
+  ///
+  /// [selected] must be in the range of 0 to [items.length]
   const PillButtonBar({
     Key? key,
     required this.items,
     required this.selected,
     this.onChanged,
+    this.controller,
   })  : assert(items.length > 2),
+        assert(selected >= 0 && selected < items.length),
         super(key: key);
 
-  /// The items used on this
+  /// The items of the bar. There must be at least 2 items in the list
   final List<PillButtonBarItem> items;
 
+  /// The current selected item index. It must be in the range
+  /// of 0 to [items.length]
   final int selected;
 
+  /// Called when the items are changed. If null, the bar is
+  /// considered disabled.
   final ValueChanged<int>? onChanged;
+
+  /// The scroll controller used to control the current scroll
+  /// position of the bar.
+  final ScrollController? controller;
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = PillButtonBarTheme.of(context);
     final visualDensity = FluentTheme.of(context).visualDensity;
-    return Container(
+    Widget bar = Container(
       constraints: BoxConstraints(
         minHeight: _kMinHeight + visualDensity.vertical,
+        maxHeight: _kMaxHeight + visualDensity.vertical,
       ),
       color: theme.backgroundColor ?? FluentTheme.of(context).accentColor,
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        ...List.generate(items.length, (index) {
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        controller: controller,
+        semanticChildCount: items.length,
+        children: List<Widget>.generate(items.length, (index) {
           final item = items[index];
           return _PillButtonBarItem(
             item: item,
@@ -56,8 +84,9 @@ class PillButtonBar extends StatelessWidget {
             onPressed: onChanged == null ? null : () => onChanged!(index),
           );
         }),
-      ]),
+      ),
     );
+    return Align(alignment: Alignment.topLeft, child: bar);
   }
 }
 
@@ -84,31 +113,37 @@ class _PillButtonBarItem extends StatelessWidget {
             theme.selectedColor?.resolve(states) ?? Colors.transparent;
         final Color unselectedColor = theme.unselectedColor?.resolve(states) ??
             FluentTheme.of(context).accentColor.dark;
-        return Container(
-          decoration: BoxDecoration(
-            color: selected ? selectedColor : unselectedColor,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          constraints: BoxConstraints(
-            minWidth: _kMinButtonWidth + visualDensity.horizontal,
-            maxHeight: _kMaxButtonHeight + visualDensity.vertical,
-          ),
+        return Align(
           alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.0 + visualDensity.horizontal,
-            vertical: 3.0,
-          ),
-          margin: EdgeInsets.all(_kButtonsSpacing + visualDensity.horizontal),
-          child: DefaultTextStyle(
-            style: (selected
-                    ? theme.selectedTextStyle
-                    : theme.unselectedTextStyle) ??
-                TextStyle(
-                  color: selected
-                      ? selectedColor
-                      : unselectedColor.basedOnLuminance(),
-                ),
-            child: item.text,
+          child: Container(
+            decoration: BoxDecoration(
+              color: selected ? selectedColor : unselectedColor,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            constraints: BoxConstraints(
+              minWidth: _kMinButtonWidth + visualDensity.horizontal,
+              maxHeight: _kMaxButtonHeight + visualDensity.vertical,
+            ),
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.0 + visualDensity.horizontal,
+              vertical: 3.0,
+            ),
+            margin: EdgeInsets.symmetric(
+              horizontal: _kButtonsSpacing + visualDensity.horizontal,
+              vertical: _kButtonsSpacing + visualDensity.vertical,
+            ),
+            child: DefaultTextStyle(
+              style: (selected
+                      ? theme.selectedTextStyle
+                      : theme.unselectedTextStyle) ??
+                  TextStyle(
+                    color: selected
+                        ? selectedColor
+                        : unselectedColor.basedOnLuminance(),
+                  ),
+              child: item.text,
+            ),
           ),
         );
       },
@@ -209,9 +244,11 @@ class PillButtonBarThemeData with Diagnosticable {
       return color.withOpacity(
         states.isPressing
             ? 0.925
-            : states.isHovering
-                ? 0.85
-                : 1.0,
+            : states.isFocused
+                ? 0.4
+                : states.isHovering
+                    ? 0.85
+                    : 1.0,
       );
     }
 

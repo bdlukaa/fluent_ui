@@ -91,8 +91,8 @@ class Chip extends StatelessWidget {
           decoration: decoration?.resolve(states),
           padding: EdgeInsets.only(
             left: spacing + visualDensity.horizontal,
-            top: spacing + visualDensity.vertical,
-            bottom: spacing + visualDensity.vertical,
+            top: spacing,
+            bottom: spacing,
           ),
           child: AnimatedDefaultTextStyle(
             duration: FluentTheme.of(context).fastAnimationDuration,
@@ -105,13 +105,15 @@ class Chip extends StatelessWidget {
                   curve: FluentTheme.of(context).animationCurve,
                   opacity: isEnabled || _type == _ChipType.selected ? 1.0 : 0.6,
                   child: Padding(
-                    padding: EdgeInsets.only(right: spacing + visualDensity.horizontal),
+                    padding: EdgeInsets.only(
+                        right: spacing + visualDensity.horizontal),
                     child: image,
                   ),
                 ),
               if (text != null)
                 Padding(
-                  padding: EdgeInsets.only(right: spacing + visualDensity.horizontal),
+                  padding: EdgeInsets.only(
+                      right: spacing + visualDensity.horizontal),
                   child: text,
                 ),
             ]),
@@ -214,19 +216,23 @@ class ChipThemeData with Diagnosticable {
     Color normalColor(Set<ButtonStates> states) => style.brightness.isLight
         ? states.isPressing
             ? Color(0xFFc1c1c1)
-            : states.isHovering
+            : states.isFocused || states.isHovering
                 ? Color(0xFFe1e1e1)
                 : Color(0xFFf1f1f1)
         : states.isPressing
             ? Color(0xFF292929)
-            : states.isHovering
+            : states.isFocused || states.isHovering
                 ? Color(0xFF383838)
                 : Color(0xFF212121);
     Color selectedColor(Set<ButtonStates> states) =>
-        states.isPressing || states.isHovering
+        states.isFocused || states.isPressing || states.isHovering
             ? style.accentColor.resolveFromBrightness(
                 style.brightness,
-                level: states.isPressing ? 2 : 1,
+                level: states.isPressing
+                    ? 2
+                    : states.isFocused
+                        ? 0
+                        : 1,
               )
             : style.accentColor;
     return ChipThemeData(

@@ -78,6 +78,7 @@ class MyApp extends StatelessWidget {
                 : appTheme.mode == ThemeMode.dark
                     ? Brightness.dark
                     : Brightness.light,
+            visualDensity: VisualDensity.standard,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),

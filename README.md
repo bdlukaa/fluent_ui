@@ -39,6 +39,7 @@ Projects using this library should use the stable channel of Flutter
   - [Colors](#colors)
     - [Accent color](#accent-color)
   - [Brightness](#brightness)
+  - [Visual Density](#visual-density)
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
@@ -52,6 +53,7 @@ Projects using this library should use the stable channel of Flutter
     - [Navigation Pane](#navigation-pane)
     - [Navigation Body](#navigation-body)
   - [Tab View](#tab-view)
+  - [Bottom Navigation](#bottom-navigation)
 - [Widgets](#widgets)
   - [Button](#button)
   - [Split Button](#split-button)
@@ -79,6 +81,7 @@ Projects using this library should use the stable channel of Flutter
   - [Info Header](#info-header)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
+  - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
@@ -210,7 +213,7 @@ ThemeData(
 
 ## Brightness
 
-You can change the theme brightness to change the color of your app.
+You can change the theme brightness to change the color of your app to
 
 1. `Brightness.light`
 
@@ -221,6 +224,32 @@ You can change the theme brightness to change the color of your app.
    ![Dark theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/dark-theme.svg)
 
 It defaults to the brightness of the device. (`MediaQuery.of(context).brightness`)
+
+```dart
+ThemeData(
+  brightness: Brightness.light // or Brightness.dark
+)
+```
+
+## Visual Density
+
+Density, in the context of a UI, is the vertical and horizontal "compactness" of the components in the UI. It is unitless, since it means different things to different UI components.
+
+The default for visual densities is zero for both vertical and horizontal densities. It does not affect text sizes, icon sizes, or padding values.
+
+For example, for buttons, it affects the spacing around the child of the button. For lists, it affects the distance between baselines of entries in the list. For chips, it only affects the vertical size, not the horizontal size.
+
+```dart
+ThemeData(
+  visualDensity: VisualDensity.adaptivePlatformDensity,
+)
+```
+
+The following widgets make use of visual density:
+
+- Chip
+- PillButtonBar
+- Snackbar
 
 ## Typography
 
@@ -529,6 +558,46 @@ SizedBox(
 The code above produces the following:
 
 ![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
+
+## Bottom Navigation
+
+The bottom navigation displays icons and optional text at the bottom of the screen for switching between different primary destinations in an app. This is commomly used on small screens. [Learn more](https://developer.microsoft.com/pt-br/fluentui#/controls/android/bottomnavigation)
+
+Here's an example of how to create a bottom navigation:
+
+```dart
+int index = 0;
+
+ScaffoldPage(
+  content: NavigationBody(index: index, children: [
+    Container(),
+    Container(),
+    Container(),
+  ]),
+  bottomBar: BottomNavigation(
+    index: index,
+    onChanged: (i) => setState(() => index = i),
+    items: [
+      BottomNavigationItem(
+        icon: Icon(Icons.two_k),
+        selectedIcon: Icon(Icons.two_k_plus),
+        title: Text('Both'),
+      ),
+      BottomNavigationItem(
+        icon: Icon(Icons.phone_android_outlined),
+        selectedIcon: Icon(Icons.phone_android),
+        title: Text('Android'),
+      ),
+      BottomNavigationItem(
+        icon: Icon(Icons.phone_iphone_outlined),
+        selectedIcon: Icon(Icons.phone_iphone),
+        title: Text('iOS'),
+      ),
+    ],
+  )
+)
+
+```
 
 # Widgets:
 
@@ -1347,6 +1416,31 @@ Chip.selected(
 
 ![Dark Chips](https://user-images.githubusercontent.com/45696119/119724337-f9077080-be44-11eb-9b73-e1dc4ffbeefd.png)
 
+## Pill Button Bar
+
+A Pill Button Bar is a horizontal scrollable list of pill-shaped text buttons in which only one button can be selected at a given time.
+
+Here's an example of how to create a pill button bar:
+
+```dart
+int index = 0;
+
+PillButtonBar(
+  selected: index,
+  onChanged: (i) => setState(() => index = i),
+  items: [
+    PillButtonBarItem(text: Text('All')),
+    PillButtonBarItem(text: Text('Mail')),
+    PillButtonBarItem(text: Text('Peopl')),
+    PillButtonBarItem(text: Text('Events')),
+  ]
+)
+```
+
+![Light PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_light.png?text=LightMode)
+
+![Dark PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_dark.png?text=DarkMode)
+
 ## Snackbar
 
 Snackbars provide a brief message about an operation at the bottom of the screen. They can contain a custom action or view or use a style geared towards making special announcements to your users.
@@ -1387,7 +1481,8 @@ The list of equivalents between this library and `flutter/material.dart`
 | MaterialBanner            | InfoBar          |
 | Tooltip                   | Tooltip          |
 | -                         | Flyout           |
-| Drawer                    | NavigationPanel  |
+| Drawer                    | NavigationPane   |
+| BottomNavigation          | BottomNavigation |
 | Divider                   | Divider          |
 | VerticalDivider           | Divider          |
 | Card                      | Acrylic          |
@@ -1404,6 +1499,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Drawer                    | NavigationView   |
 | Chip                      | Chip             |
 | Snackbar                  | Snackbar         |
+| -                         | PillButtonBar    |
 
 ## Contribution
 

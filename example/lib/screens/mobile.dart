@@ -69,9 +69,6 @@ class _MobileState extends State<Mobile> {
                   style: FluentTheme.of(context).typography.subtitle,
                 ),
                 Wrap(runSpacing: 10.0, spacing: 10.0, children: [
-                  // TODO(bdlukaa): add more snackbar examples. The buttons
-                  // should not have a decoration, only text style. This should
-                  // happen after the button rework.
                   Snackbar(
                     content: const Text('Single-line snackbar'),
                     action: Button(
@@ -113,17 +110,15 @@ class _MobileState extends State<Mobile> {
                   'Other',
                   style: FluentTheme.of(context).typography.subtitle,
                 ),
-                Center(
-                  child: PillButtonBar(
-                    selected: _pillButtonBarIndex,
-                    onChanged: (i) => setState(() => _pillButtonBarIndex = i),
-                    items: [
-                      PillButtonBarItem(text: Text('All')),
-                      PillButtonBarItem(text: Text('Mail')),
-                      PillButtonBarItem(text: Text('People')),
-                      PillButtonBarItem(text: Text('Events')),
-                    ],
-                  ),
+                PillButtonBar(
+                  selected: _pillButtonBarIndex,
+                  onChanged: (i) => setState(() => _pillButtonBarIndex = i),
+                  items: [
+                    PillButtonBarItem(text: Text('All')),
+                    PillButtonBarItem(text: Text('Mail')),
+                    PillButtonBarItem(text: Text('People')),
+                    PillButtonBarItem(text: Text('Events')),
+                  ],
                 ),
               ],
             ),
