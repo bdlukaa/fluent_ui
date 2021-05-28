@@ -140,7 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // indicatorBuilder: ({
         //   required BuildContext context,
         //   int? index,
-        //   double? y,
         //   required List<Offset> Function() offsets,
         //   required List<Size> Function() sizes,
         //   required Axis axis,
@@ -148,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // }) {
         //   if (index == null) return child;
         //   assert(debugCheckHasFluentTheme(context));
-        //   final theme = NavigationPaneThemeData.of(context);
+        //   final theme = NavigationPaneTheme.of(context);
         //   return EndNavigationIndicator(
         //     index: index,
         //     offsets: offsets,
@@ -156,7 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
         //     child: child,
         //     color: theme.highlightColor,
         //     curve: theme.animationCurve ?? Curves.linear,
-        //     y: y ?? 0,
         //     axis: axis,
         //   );
         // },

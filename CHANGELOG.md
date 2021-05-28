@@ -1,19 +1,25 @@
 Date format: DD/MM/YYYY
 
+## [2.0.3] - [28/05/2021]
+
+- Correctly apply items positions to pane indicators, regardless of external factors, such as navigation view app bar ([#41](https://github.com/bdlukaa/fluent_ui/issues/41))
+- Improved `NavigationIndicator`s performance
+
 ## [2.0.2] - [23/05/2021]
 
 - **BREAKING CHANGES:** Reworked the theme api ([#39](https://github.com/bdlukaa/fluent_ui/pull/39)):
+
   - Removed the theme extension (`context.theme`). Use `FluentTheme.of(context)` instead
   - `ButtonState` is now a class that can receive a value. It now allows lerping between values, making `AnimatedFluentTheme` possible.
 
     Here's an example of how to migrate your code:
 
-    *Before*: `cursor: (_) => SystemMouseCursors.click,`\
-    *Now*: `cursor: ButtonState.all(SystemMouseCursors.click),`
+    _Before_: `cursor: (_) => SystemMouseCursors.click,`\
+    _Now_: `cursor: ButtonState.all(SystemMouseCursors.click),`
 
   - All theme datas and `AccentColor` have now a lerp method, in order to make `AnimatedFluentTheme` possible.
   - Implemented `AnimatedFluentTheme`, in order to replace `AnimateContainer`s all around the library
-  - Dedicated theme for each theme data ([#37](https://github.com/bdlukaa/fluent_ui/issues/37)): 
+  - Dedicated theme for each theme data ([#37](https://github.com/bdlukaa/fluent_ui/issues/37)):
     - IconTheme
     - ButtonTheme
     - RadioButtonTheme

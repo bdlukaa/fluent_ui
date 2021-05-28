@@ -258,12 +258,19 @@ class PaneItemHeader extends NavigationPaneItem {
 
 extension ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> getPaneItemsOffsets() {
+  List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
-      final context = e.itemKey.currentContext;
-      if (context == null) return Offset.zero;
-      final box = context.findRenderObject()! as RenderBox;
-      return box.localToGlobal(Offset.zero);
+      // Gets the item global position
+      final itemContext = e.itemKey.currentContext;
+      if (itemContext == null) return Offset.zero;
+      final box = itemContext.findRenderObject()! as RenderBox;
+      final globalPosition = box.localToGlobal(Offset.zero);
+      // And then convert it to the local position
+      final paneContext = paneKey.currentContext;
+      if (paneContext == null) return Offset.zero;
+      final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
+      final position = paneBox.globalToLocal(globalPosition);
+      return position;
     }).toList();
   }
 
@@ -392,7 +399,6 @@ class NavigationPane with Diagnosticable {
   static Widget _defaultNavigationIndicator({
     required BuildContext context,
     int? index,
-    double? y,
     required List<Offset> Function() offsets,
     required List<Size> Function() sizes,
     required Axis axis,
@@ -475,10 +481,6 @@ class NavigationPane with Diagnosticable {
   }
 }
 
-double _getIndicatorY(BuildContext context) {
-  return NavigationView.of(context).widget.appBar?.height ?? 0;
-}
-
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
@@ -522,11 +524,10 @@ class _TopNavigationPane extends StatelessWidget {
       child: pane.indicatorBuilder(
         context: context,
         index: pane.selected,
-        offsets: pane.effectiveItems.getPaneItemsOffsets,
+        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
         sizes: pane.effectiveItems.getPaneItemsSizes,
         axis: Axis.vertical,
-        y: _getIndicatorY(context),
-        child: Row(children: [
+        child: Row(key: pane.paneKey, children: [
           Expanded(
             child: Row(children: [
               NavigationAppBar.buildLeading(context, NavigationAppBar()),
@@ -627,11 +628,11 @@ class _CompactNavigationPane extends StatelessWidget {
         child: pane.indicatorBuilder(
           context: context,
           index: pane.selected,
-          offsets: pane.effectiveItems.getPaneItemsOffsets,
+          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
           sizes: pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
-          y: _getIndicatorY(context),
           child: Align(
+            key: pane.paneKey,
             alignment: Alignment.topCenter,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -754,11 +755,10 @@ class _OpenNavigationPane extends StatelessWidget {
         child: pane.indicatorBuilder(
           context: context,
           index: pane.selected,
-          offsets: pane.effectiveItems.getPaneItemsOffsets,
+          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
           sizes: pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
-          y: _getIndicatorY(context),
-          child: Column(children: [
+          child: Column(key: pane.paneKey, children: [
             Container(
               margin:
                   pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
@@ -843,6 +843,10 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       duration: widget.animationDuration,
     );
     controller.forward();
+    // update the screen in order to make selected indicators appear
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      setState(() {});
+    });
   }
 
   @override
@@ -890,11 +894,11 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
         child: widget.pane.indicatorBuilder(
           context: context,
           index: widget.pane.selected,
-          offsets: widget.pane.effectiveItems.getPaneItemsOffsets,
+          offsets: () => widget.pane.effectiveItems
+              .getPaneItemsOffsets(widget.pane.paneKey),
           sizes: widget.pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
-          y: widget.y,
-          child: Column(children: [
+          child: Column(key: widget.pane.paneKey, children: [
             Padding(
               padding: widget.pane.autoSuggestBox != null
                   ? EdgeInsets.zero
