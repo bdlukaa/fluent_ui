@@ -167,8 +167,10 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(icon: Icon(Icons.input), title: Text('Inputs')),
           PaneItem(icon: Icon(Icons.format_align_center), title: Text('Forms')),
           PaneItemSeparator(),
-          PaneItem(icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
-          PaneItem(icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
+          PaneItem(
+              icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
+          PaneItem(
+              icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
           PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
         ],
         autoSuggestBox: AutoSuggestBox(

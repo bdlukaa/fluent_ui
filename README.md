@@ -1395,6 +1395,32 @@ This will produce the same as the image above.
 
 Widgets with focus on mobile. Based on the official documentation and source code for [iOS](https://developer.microsoft.com/pt-br/fluentui#/controls/ios) and [Android](https://developer.microsoft.com/pt-br/fluentui#/controls/android). Most of the widgets above can adapt to small screens, and will fit on all your devices.
 
+## Bottom Sheet
+
+Bottom Sheet is used to display a modal list of menu items. They slide up over the main app content as a result of a user triggered action. [Learn more](https://developer.microsoft.com/pt-br/fluentui#/controls/android/bottomsheet)
+
+Here's an example of how to display a bottom sheet:
+
+```dart
+showBottomSheet(
+  context: context,
+  builder: (context) {
+    return BottomSheet(
+      // header: ...,
+      description: Text('Description or Details here'),
+      children: [
+        ...,
+        // Usually a `ListTile` or `TappableListTile`
+      ],
+    );
+  },
+),
+```
+
+To close it, just call `Navigator.of(context).pop()`
+
+![Bottom Sheet Showcase](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_bottomsheet_01_light.png?text=LightMode)
+
 ## Chip
 
 Chips are compact representations of entities (most commonly, people) that can be clicked, deleted, or dragged easily.

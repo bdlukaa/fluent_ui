@@ -35,7 +35,52 @@ class _MobileState extends State<Mobile> {
                       child: FlutterLogo(size: 14.0),
                     ),
                     text: Text('Default'),
-                    onPressed: () => print('pressed chip'),
+                    onPressed: () {
+                      showBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return BottomSheet(
+                            // header: ListTile(
+                            //   title: Text(
+                            //     'Title',
+                            //     style: FluentTheme.of(context)
+                            //         .typography
+                            //         .subtitle!
+                            //         .copyWith(fontWeight: FontWeight.bold),
+                            //   ),
+                            //   trailing: Row(
+                            //     children: List.generate(
+                            //       6,
+                            //       (_) => Padding(
+                            //         padding: EdgeInsets.only(left: 24.0),
+                            //         child: Icon(Icons.circle_outlined),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            description: Text('Description or Details here'),
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.mail_outline),
+                                title: Text('Label'),
+                                subtitle: Text('Label'),
+                                trailing: Icon(Icons.navigate_next),
+                              ),
+                              TappableListTile(
+                                leading: Icon(Icons.mail_outline),
+                                title: Text('Label'),
+                                subtitle: Text('Label'),
+                                trailing: Icon(Icons.navigate_next),
+                                onTap: () {
+                                  print('tapped tile');
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                   Chip(
                     image: CircleAvatar(

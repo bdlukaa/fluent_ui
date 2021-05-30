@@ -3,6 +3,7 @@ Date format: DD/MM/YYYY
 ## [next]
 
 - Implement `BottomNavigation`
+- Implement `BottomSheet`
 - `PaneItem`s' `build` method is now overridable. You can know customize how the items in `NavigationView` should look like by overriding the method.
 
 ## [2.0.2] - [23/05/2021]
