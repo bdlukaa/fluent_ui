@@ -1,5 +1,3 @@
-import 'dart:ui' show lerpDouble;
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -64,26 +62,13 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ToggleButtonTheme.of(context).merge(this.style);
+    final theme = ToggleButtonTheme.of(context).merge(style);
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
       child: Semantics(child: child, selected: checked),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
-      style: ButtonThemeData(
-        decoration: ButtonState.resolveWith(
-          (states) => checked
-              ? style.checkedDecoration?.resolve(states)
-              : style.uncheckedDecoration?.resolve(states),
-        ),
-        textStyle: ButtonState.resolveWith((states) => checked
-            ? style.checkedTextStyle?.resolve(states)
-            : style.uncheckedTextStyle?.resolve(states)),
-        padding: style.padding,
-        cursor: style.cursor,
-        margin: style.margin,
-        scaleFactor: style.scaleFactor,
-      ),
+      style: checked ? theme.checkedButtonStyle : theme.uncheckedButtonStyle,
     );
   }
 }
@@ -154,34 +139,15 @@ class ToggleButtonTheme extends InheritedTheme {
 
 @immutable
 class ToggleButtonThemeData with Diagnosticable {
-  final ButtonState<MouseCursor>? cursor;
-
-  final ButtonState<Decoration?>? checkedDecoration;
-  final ButtonState<Decoration?>? uncheckedDecoration;
-
-  final ButtonState<TextStyle?>? checkedTextStyle;
-  final ButtonState<TextStyle?>? uncheckedTextStyle;
-
-  final double? scaleFactor;
-
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
+  final ButtonStyle? checkedButtonStyle;
+  final ButtonStyle? uncheckedButtonStyle;
 
   const ToggleButtonThemeData({
-    this.cursor,
-    this.padding,
-    this.margin,
-    this.checkedDecoration,
-    this.uncheckedDecoration,
-    this.checkedTextStyle,
-    this.uncheckedTextStyle,
-    this.scaleFactor,
+    this.checkedButtonStyle,
+    this.uncheckedButtonStyle,
   });
 
   factory ToggleButtonThemeData.standard(ThemeData style) {
-    final defaultDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(2),
-    );
     Color checkedColor(Set<ButtonStates> states) => states.isDisabled
         ? ButtonThemeData.buttonColor(style.brightness, states)
         : ButtonThemeData.checkedInputColor(style, states);
@@ -189,31 +155,31 @@ class ToggleButtonThemeData with Diagnosticable {
         states.isHovering || states.isPressing
             ? ButtonThemeData.uncheckedInputColor(style, states)
             : ButtonThemeData.buttonColor(style.brightness, states);
+
+    const padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
     return ToggleButtonThemeData(
-      scaleFactor: kButtonDefaultScaleFactor,
-      cursor: style.inputMouseCursor,
-      checkedDecoration: ButtonState.resolveWith(
-        (states) => defaultDecoration.copyWith(color: checkedColor(states)),
+      checkedButtonStyle: ButtonStyle(
+        zFactor: ButtonState.all(kDefaultButtonZFactor),
+        cursor: style.inputMouseCursor,
+        shape: ButtonState.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),
+        backgroundColor: ButtonState.resolveWith(checkedColor),
+        foregroundColor: ButtonState.resolveWith((states) => states.isDisabled
+            ? style.disabledColor
+            : checkedColor(states).basedOnLuminance()),
+        padding: ButtonState.all(padding),
       ),
-      uncheckedDecoration: ButtonState.resolveWith(
-        (states) => defaultDecoration.copyWith(color: uncheckedColor(states)),
+      uncheckedButtonStyle: ButtonStyle(
+        zFactor: ButtonState.all(kDefaultButtonZFactor),
+        cursor: style.inputMouseCursor,
+        shape: ButtonState.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),
+        backgroundColor: ButtonState.resolveWith(uncheckedColor),
+        foregroundColor: ButtonState.resolveWith((states) => states.isDisabled
+            ? style.disabledColor
+            : uncheckedColor(states).basedOnLuminance()),
+        padding: ButtonState.all(padding),
       ),
-      checkedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(
-          color: states.isDisabled
-              ? style.disabledColor
-              : checkedColor(states).basedOnLuminance(),
-        );
-      }),
-      uncheckedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(
-          color: states.isDisabled
-              ? style.disabledColor
-              : uncheckedColor(states).basedOnLuminance(),
-        );
-      }),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      margin: const EdgeInsets.all(4),
     );
   }
 
@@ -223,47 +189,23 @@ class ToggleButtonThemeData with Diagnosticable {
     double t,
   ) {
     return ToggleButtonThemeData(
-      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
-      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
-      checkedDecoration: ButtonState.lerp(
-          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(
-          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
-      scaleFactor: lerpDouble(a?.scaleFactor, b?.scaleFactor, t),
-      checkedTextStyle: ButtonState.lerp(
-          a?.checkedTextStyle, b?.checkedTextStyle, t, TextStyle.lerp),
-      uncheckedTextStyle: ButtonState.lerp(
-          a?.uncheckedTextStyle, b?.uncheckedTextStyle, t, TextStyle.lerp),
+      checkedButtonStyle:
+          ButtonStyle.lerp(a?.checkedButtonStyle, b?.checkedButtonStyle, t),
+      uncheckedButtonStyle:
+          ButtonStyle.lerp(a?.uncheckedButtonStyle, b?.uncheckedButtonStyle, t),
     );
   }
 
-  ToggleButtonThemeData merge(ToggleButtonThemeData? style) {
-    if (style == null) return this;
+  ToggleButtonThemeData merge(ToggleButtonThemeData? other) {
+    if (other == null) return this;
     return ToggleButtonThemeData(
-      margin: style.margin ?? margin,
-      padding: style.padding ?? padding,
-      cursor: style.cursor ?? cursor,
-      checkedDecoration: style.checkedDecoration ?? checkedDecoration,
-      uncheckedDecoration: style.uncheckedDecoration ?? uncheckedDecoration,
-      scaleFactor: style.scaleFactor ?? scaleFactor,
-      checkedTextStyle: style.checkedTextStyle ?? checkedTextStyle,
-      uncheckedTextStyle: style.uncheckedTextStyle ?? uncheckedTextStyle,
+      checkedButtonStyle: other.checkedButtonStyle ?? checkedButtonStyle,
+      uncheckedButtonStyle: other.uncheckedButtonStyle ?? uncheckedButtonStyle,
     );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(DiagnosticsProperty('padding', padding));
-    properties.add(DiagnosticsProperty('cursor', cursor));
-    properties.add(DiagnosticsProperty('checkedDecoration', checkedDecoration));
-    properties
-        .add(DiagnosticsProperty('uncheckedDecoration', uncheckedDecoration));
-    properties.add(DoubleProperty('scaleFactor', scaleFactor));
-    properties.add(DiagnosticsProperty('checkedTextStyle', checkedTextStyle));
-    properties
-        .add(DiagnosticsProperty('uncheckedTextStyle', uncheckedTextStyle));
   }
 }

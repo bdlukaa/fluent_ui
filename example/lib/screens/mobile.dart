@@ -116,9 +116,9 @@ class _MobileState extends State<Mobile> {
                 Wrap(runSpacing: 10.0, spacing: 10.0, children: [
                   Snackbar(
                     content: const Text('Single-line snackbar'),
-                    action: Button(
+                    action: TextButton(
                       child: const Text('ACTION'),
-                      style: const ButtonThemeData(margin: EdgeInsets.zero),
+                      // style: const ButtonThemeData(margin: EdgeInsets.zero),
                       onPressed: () {
                         showSnackbar(
                           context,
@@ -132,17 +132,15 @@ class _MobileState extends State<Mobile> {
                       'Multi-line snackbar block. Used when the content is too big',
                     ),
                     extended: true,
-                    action: Button(
+                    action: TextButton(
                       child: const Text('ACTION'),
-                      style: const ButtonThemeData(margin: EdgeInsets.zero),
                       onPressed: () {
                         showSnackbar(
                           context,
                           Snackbar(
                             content: Text('New update is availble!'),
-                            action: Button(
+                            action: TextButton(
                               child: Text('DOWNLOAD'),
-                              style: ButtonThemeData(margin: EdgeInsets.zero),
                               onPressed: () {},
                             ),
                           ),

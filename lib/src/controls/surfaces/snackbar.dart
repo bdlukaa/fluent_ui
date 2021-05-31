@@ -246,16 +246,6 @@ class SnackbarThemeData with Diagnosticable {
         vertical: 8.0 + style.visualDensity.vertical,
         horizontal: 16.0 + style.visualDensity.horizontal,
       ),
-      actionStyle: ButtonThemeData.standard(style).merge(ButtonThemeData(
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.all(6.0 + style.visualDensity.horizontal),
-        decoration: ButtonState.all(BoxDecoration()),
-        textStyle: ButtonState.resolveWith((states) {
-          return TextStyle(
-            color: ButtonThemeData.buttonColor(style.brightness, states),
-          );
-        }),
-      )),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
         color: style.brightness == Brightness.light

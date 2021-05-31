@@ -128,16 +128,16 @@ class Settings extends StatelessWidget {
   }
 
   Widget _buildColorBlock(AppTheme appTheme, AccentColor color) {
-    return Button(
-      onPressed: () {
-        appTheme.color = color;
-      },
-      style: ButtonThemeData(
-        padding: EdgeInsets.zero,
-        margin: EdgeInsets.all(2.0),
-      ),
-      builder: (context, state) {
-        return Container(
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Button(
+        onPressed: () {
+          appTheme.color = color;
+        },
+        style: ButtonStyle(
+          padding: ButtonState.all(EdgeInsets.zero),
+        ),
+        child: Container(
           height: 40,
           width: 40,
           color: color,
@@ -145,8 +145,8 @@ class Settings extends StatelessWidget {
           child: appTheme.color == color
               ? Icon(Icons.check, color: color.basedOnLuminance())
               : null,
-        );
-      },
+        ),
+      ),
     );
   }
 }

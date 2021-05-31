@@ -82,7 +82,7 @@ class InfoBar extends StatelessWidget {
     final content = () {
       if (this.content == null) return null;
       return DefaultTextStyle(
-        style: FluentTheme.of(context).typography.body ?? TextStyle(),
+        style: FluentTheme.of(context).typography.body ?? const TextStyle(),
         child: this.content!,
         softWrap: true,
       );
@@ -276,9 +276,8 @@ class InfoBarThemeData with Diagnosticable {
             return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
-      actionStyle: ButtonThemeData.standard(style).merge(ButtonThemeData(
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.all(6),
+      actionStyle: ButtonThemeData.all(ButtonStyle(
+        padding: ButtonState.all(EdgeInsets.all(6)),
       )),
     );
   }

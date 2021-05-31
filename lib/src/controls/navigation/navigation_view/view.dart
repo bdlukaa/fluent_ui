@@ -249,7 +249,7 @@ class NavigationViewState extends State<NavigationView> {
                       listKey: _listKey,
                     ),
                   )),
-                  Expanded(child: widget.content),
+                  Expanded(child: ClipRect(child: widget.content)),
                 ]),
               ),
             ]);
@@ -267,7 +267,7 @@ class NavigationViewState extends State<NavigationView> {
                       listKey: _listKey,
                     ),
                   )),
-                  Expanded(child: widget.content),
+                  Expanded(child: ClipRect(child: widget.content)),
                 ]),
               ),
             ]);
@@ -404,33 +404,32 @@ class NavigationAppBar with Diagnosticable {
         child: appBar.leading,
       );
     } else if (appBar.automaticallyImplyLeading && imply) {
+      final onPressed = canPop ? () => Navigator.maybePop(context) : null;
       widget = Container(
         width: _kCompactNavigationPanelWidth,
         child: IconButton(
-          icon: Icon(Icons.arrow_back_sharp),
-          onPressed: canPop ? () => Navigator.maybePop(context) : null,
-          style: ButtonThemeData(
-            margin: EdgeInsets.zero,
-            scaleFactor: 1.0,
-            decoration: ButtonState.resolveWith((states) {
-              if (states.isDisabled) states = {};
-              return BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context),
-                  states,
-                ),
+          icon: Icon(Icons.arrow_back_sharp, size: 20.0),
+          onPressed: onPressed,
+          style: ButtonStyle(
+            backgroundColor: ButtonState.resolveWith((states) {
+              if (states.isNone || states.isDisabled) return Colors.transparent;
+              return ButtonThemeData.uncheckedInputColor(
+                FluentTheme.of(context),
+                states,
               );
             }),
+            foregroundColor: ButtonState.resolveWith((states) {
+              if (states.isDisabled)
+                return ButtonThemeData.buttonColor(
+                  FluentTheme.of(context).brightness,
+                  states,
+                );
+              return ButtonThemeData.uncheckedInputColor(
+                FluentTheme.of(context),
+                states,
+              ).basedOnLuminance();
+            }),
           ),
-          iconTheme: (state) {
-            return IconThemeData(
-              size: 22.0,
-              color: ButtonThemeData.buttonColor(
-                FluentTheme.of(context).brightness,
-                state,
-              ),
-            );
-          },
         ),
       );
       if (canPop)
@@ -502,7 +501,9 @@ class _NavigationAppBar extends StatelessWidget {
         break;
       case PaneDisplayMode.open:
         result = Row(children: [
-          Acrylic(
+          AnimatedAcrylic(
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kOpenNavigationPanelWidth,
             height: appBar.height,
@@ -518,7 +519,9 @@ class _NavigationAppBar extends StatelessWidget {
         break;
       case PaneDisplayMode.compact:
         result = Row(children: [
-          Acrylic(
+          AnimatedAcrylic(
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kCompactNavigationPanelWidth,
             height: appBar.height,

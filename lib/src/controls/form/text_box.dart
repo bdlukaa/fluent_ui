@@ -770,9 +770,7 @@ class _TextBoxState extends State<TextBox>
     );
 
     return ButtonTheme.merge(
-      data: ButtonThemeData(
-        margin: EdgeInsets.zero,
-      ).merge(widget.iconButtonThemeData),
+      data: widget.iconButtonThemeData ?? ButtonThemeData(),
       child: IconTheme(
         data: const IconThemeData(size: 18),
         child: () {

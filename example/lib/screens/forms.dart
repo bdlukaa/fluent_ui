@@ -104,7 +104,6 @@ class _FormsState extends State<Forms> {
             minHeight: 100,
             suffix: IconButton(
               icon: Icon(Icons.close),
-              style: ButtonThemeData(margin: EdgeInsets.zero),
               onPressed: () {
                 _clearController.clear();
               },
@@ -123,13 +122,13 @@ class _FormsState extends State<Forms> {
                 !_showPassword ? Icons.visibility : Icons.visibility_off,
               ),
               onPressed: () => setState(() => _showPassword = !_showPassword),
-              style: ButtonThemeData(margin: EdgeInsets.zero),
             ),
-            outsideSuffix: Button(
-              style:
-                  ButtonThemeData(margin: EdgeInsets.symmetric(horizontal: 4)),
-              child: Text('Done'),
-              onPressed: () {},
+            outsideSuffix: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Button(
+                child: Text('Done'),
+                onPressed: () {},
+              ),
             ),
           ),
           SizedBox(height: 20),

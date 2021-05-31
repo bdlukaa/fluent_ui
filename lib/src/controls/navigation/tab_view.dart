@@ -224,21 +224,21 @@ class TabView extends StatelessWidget {
                   child: listView,
                 ),
               if (showNewButton)
-                IconButton(
-                  key: ValueKey<int>(tabs.length),
-                  icon: Icon(addIconData),
-                  onPressed: onNewPressed,
-                  iconTheme: (state) {
-                    return IconThemeData(
-                      color: () {
-                        if (state.isDisabled || state.isNone)
+                Padding(
+                  padding: const EdgeInsets.only(left: 2),
+                  child: IconButton(
+                    key: ValueKey<int>(tabs.length),
+                    icon: Icon(addIconData),
+                    onPressed: onNewPressed,
+                    style: ButtonStyle(
+                      foregroundColor: ButtonState.resolveWith((states) {
+                        if (states.isDisabled || states.isNone)
                           return FluentTheme.of(context).disabledColor;
                         else
                           return FluentTheme.of(context).inactiveColor;
-                      }(),
-                    );
-                  },
-                  style: ButtonThemeData(margin: EdgeInsets.only(left: 2)),
+                      }),
+                    ),
+                  ),
                 ),
             ]);
           }),
@@ -454,37 +454,27 @@ class __TabState extends State<_Tab>
                       secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
-                      icon: Icon(widget.tab.closeIcon),
+                      icon: Icon(widget.tab.closeIcon, size: 18.0),
                       onPressed: widget.tab.onClosed,
-                      iconTheme: (state) {
-                        return IconThemeData(
-                          size: 18,
-                          color: () {
-                            if (state.isDisabled || state.isNone)
-                              return FluentTheme.of(context).disabledColor;
-                            else
-                              return FluentTheme.of(context).inactiveColor;
-                          }(),
-                        );
-                      },
-                      style: ButtonThemeData(
-                        decoration: ButtonState.resolveWith((states) {
-                          late Color? color;
-                          if (state.isNone)
-                            color = null;
+                      style: ButtonStyle(
+                        foregroundColor: ButtonState.resolveWith((states) {
+                          if (state.isDisabled || state.isNone)
+                            return FluentTheme.of(context).disabledColor;
                           else
-                            color = ButtonThemeData.buttonColor(
-                              style.brightness,
-                              state,
-                            );
-                          return BoxDecoration(
-                            borderRadius: BorderRadius.circular(2),
-                            border: Border.all(style: BorderStyle.none),
-                            color: color,
-                          );
+                            return FluentTheme.of(context).inactiveColor;
                         }),
-                        margin: EdgeInsets.zero,
-                        padding: EdgeInsets.zero,
+                        backgroundColor: ButtonState.resolveWith((states) {
+                          return state.isNone
+                              ? Colors.transparent
+                              : ButtonThemeData.buttonColor(
+                                  style.brightness,
+                                  state,
+                                );
+                        }),
+                        shape: ButtonState.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(2),
+                        )),
+                        padding: ButtonState.all(EdgeInsets.zero),
                       ),
                     ),
                   ),
