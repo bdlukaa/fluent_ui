@@ -445,7 +445,7 @@ class NavigationAppBar with Diagnosticable {
   }
 }
 
-class _NavigationAppBar extends StatelessWidget {
+class _NavigationAppBar extends StatefulWidget {
   _NavigationAppBar({
     Key? key,
     required this.appBar,
@@ -457,7 +457,13 @@ class _NavigationAppBar extends StatelessWidget {
   final PaneDisplayMode displayMode;
   final Widget? additionalLeading;
 
+  @override
+  __NavigationAppBarState createState() => __NavigationAppBarState();
+}
+
+class __NavigationAppBarState extends State<_NavigationAppBar> {
   final GlobalKey _openCompactKey = GlobalKey();
+  final GlobalKey _titleText = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -465,37 +471,42 @@ class _NavigationAppBar extends StatelessWidget {
     final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
-      appBar,
-      displayMode != PaneDisplayMode.top,
+      widget.appBar,
+      widget.displayMode != PaneDisplayMode.top,
     );
     final title = () {
-      if (appBar.title != null)
+      if (widget.appBar.title != null) {
         return AnimatedPadding(
+          key: _titleText,
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
           padding: EdgeInsets.only(
-            left: displayMode == PaneDisplayMode.compact
+            left: widget.displayMode == PaneDisplayMode.compact
                 ? PageHeader.horizontalPadding(context)
                 : 12.0,
           ),
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.caption!,
-            child: appBar.title!,
+            overflow: TextOverflow.clip,
+            maxLines: 1,
+            softWrap: false,
+            child: widget.appBar.title!,
           ),
         );
-      else
+      } else
         return SizedBox.shrink();
     }();
     late Widget result;
-    switch (displayMode) {
+    switch (widget.displayMode) {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
           child: Row(children: [
             leading,
-            if (additionalLeading != null) additionalLeading!,
+            if (widget.additionalLeading != null) widget.additionalLeading!,
             title,
-            if (appBar.actions != null) Expanded(child: appBar.actions!),
+            if (widget.appBar.actions != null)
+              Expanded(child: widget.appBar.actions!),
           ]),
         );
         break;
@@ -506,15 +517,15 @@ class _NavigationAppBar extends StatelessWidget {
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kOpenNavigationPanelWidth,
-            height: appBar.height,
+            height: widget.appBar.height,
             color: theme.backgroundColor,
             child: Row(children: [
               leading,
-              if (additionalLeading != null) additionalLeading!,
-              title,
+              if (widget.additionalLeading != null) widget.additionalLeading!,
+              Flexible(child: title),
             ]),
           ),
-          Expanded(child: appBar.actions ?? SizedBox()),
+          Expanded(child: widget.appBar.actions ?? SizedBox()),
         ]);
         break;
       case PaneDisplayMode.compact:
@@ -524,22 +535,22 @@ class _NavigationAppBar extends StatelessWidget {
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kCompactNavigationPanelWidth,
-            height: appBar.height,
+            height: widget.appBar.height,
             color: theme.backgroundColor,
             child: leading,
           ),
-          if (additionalLeading != null) additionalLeading!,
+          if (widget.additionalLeading != null) widget.additionalLeading!,
           title,
-          Expanded(child: appBar.actions ?? SizedBox()),
+          Expanded(child: widget.appBar.actions ?? SizedBox()),
         ]);
         break;
       default:
         return SizedBox.shrink();
     }
     return Container(
-      color: appBar.backgroundColor ??
+      color: widget.appBar.backgroundColor ??
           FluentTheme.of(context).scaffoldBackgroundColor,
-      height: appBar.height,
+      height: widget.appBar.height,
       child: result,
     );
   }

@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: () {
           if (kIsWeb) return Text(appTitle);
           return MoveWindow(
-            child: Align(alignment: Alignment.center, child: Text(appTitle)),
+            child: Align(alignment: Alignment.centerLeft, child: Text(appTitle)),
           );
         }(),
         actions: kIsWeb
