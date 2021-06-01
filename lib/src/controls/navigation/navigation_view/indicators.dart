@@ -8,7 +8,6 @@ typedef NavigationIndicatorBuilder = Widget Function({
   required List<Size> Function() sizes,
   required Axis axis,
   required Widget child,
-  double? y,
 });
 
 /// A indicator used by [NavigationPane] to render the selected
@@ -23,7 +22,6 @@ class NavigationIndicator extends StatefulWidget {
     required this.index,
     required this.child,
     required this.axis,
-    this.y = 0,
     this.curve = Curves.linear,
     this.color,
   }) : super(key: key);
@@ -45,9 +43,6 @@ class NavigationIndicator extends StatefulWidget {
   /// a top pane, [Axis.vertical] will be provided, otherwise
   /// [Axis.horizontal].
   final Axis axis;
-
-  /// Where to start couting position from on the screen
-  final double y;
 
   /// The curve used on the animation, if any
   final Curve curve;
@@ -81,20 +76,14 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      final _offsets = widget.offsets().map((e) {
-        return e - Offset(0, widget.y);
-      }).toList();
+      final _offsets = widget.offsets();
       final _sizes = widget.sizes();
-      if (mounted && offsets != _offsets && _sizes != sizes)
-
+      if (mounted && offsets != _offsets && _sizes != sizes) {
         /// The screen is necessary to be updated because, in minimal display mode,
         /// it's not automatically updated by the parent when the index is changed
-        setState(() {
-          offsets = widget.offsets().map((e) {
-            return e - Offset(0, widget.y);
-          }).toList();
-          sizes = widget.sizes();
-        });
+        offsets = _offsets;
+        sizes = _sizes;
+      }
     });
   }
 
@@ -113,7 +102,6 @@ class EndNavigationIndicator extends NavigationIndicator {
     required int index,
     required Widget child,
     required Axis axis,
-    double y = 0,
     Curve curve = Curves.easeInOut,
     Color? color,
   }) : super(
@@ -125,7 +113,6 @@ class EndNavigationIndicator extends NavigationIndicator {
           sizes: sizes,
           curve: curve,
           color: color,
-          y: y,
         );
 
   @override
@@ -200,7 +187,6 @@ class StickyNavigationIndicator extends NavigationIndicator {
     this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.linear,
     Color? color,
-    double y = 0,
   }) : super(
           key: key,
           axis: axis,
@@ -210,7 +196,6 @@ class StickyNavigationIndicator extends NavigationIndicator {
           sizes: sizes,
           curve: curve,
           color: color,
-          y: 0,
         );
 
   /// The padding applied to the indicator if [axis] is [Axis.vertical]
@@ -327,7 +312,7 @@ class _StickyNavigationIndicatorState
         return CustomPaint(
           foregroundPainter: _StickyPainter(
             y: widget.axis == Axis.horizontal
-                ? 0
+                ? sizes!.first.height * 0.75
                 : sizes!.first.height - indicatorPadding,
             padding: widget.axis == Axis.horizontal
                 ? indicatorPadding
@@ -383,7 +368,6 @@ class _StickyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // print('from ${p1Start + (p1End - p1Start) * p1} to ${p2Start + (p2End - p2Start) * p2}');
     final paint = Paint()
       ..color = color
       ..strokeJoin = StrokeJoin.round
@@ -391,6 +375,9 @@ class _StickyPainter extends CustomPainter {
       ..strokeWidth = 2.0;
     final first = p1Start + (p1End - p1Start) * p1;
     final second = p2Start + (p2End - p2Start) * p2;
+
+    // print('from $first to $second');
+
     switch (axis) {
       case Axis.horizontal:
         canvas.drawLine(
