@@ -771,7 +771,7 @@ class _TextBoxState extends State<TextBox>
 
     return ButtonTheme.merge(
       data: widget.iconButtonThemeData ?? ButtonThemeData(),
-      child: IconTheme(
+      child: IconTheme.merge(
         data: const IconThemeData(size: 18),
         child: () {
           if (widget.header != null)

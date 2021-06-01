@@ -247,6 +247,7 @@ class NavigationViewState extends State<NavigationView> {
                       pane: pane,
                       paneKey: _panelKey,
                       listKey: _listKey,
+                      onToggle: () {},
                     ),
                   )),
                   Expanded(child: ClipRect(child: widget.content)),
@@ -414,7 +415,8 @@ class NavigationAppBar with Diagnosticable {
             onPressed: onPressed,
             style: ButtonStyle(
               backgroundColor: ButtonState.resolveWith((states) {
-                if (states.isNone || states.isDisabled) return Colors.transparent;
+                if (states.isNone || states.isDisabled)
+                  return Colors.transparent;
                 return ButtonThemeData.uncheckedInputColor(
                   FluentTheme.of(context),
                   states,
@@ -515,32 +517,36 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
         break;
       case PaneDisplayMode.open:
         result = Row(children: [
-          AnimatedAcrylic(
+          AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kOpenNavigationPanelWidth,
-            height: widget.appBar.height,
-            color: theme.backgroundColor,
-            child: Row(children: [
-              leading,
-              if (widget.additionalLeading != null) widget.additionalLeading!,
-              Flexible(child: title),
-            ]),
+            child: Acrylic(
+              height: widget.appBar.height,
+              color: theme.backgroundColor,
+              child: Row(children: [
+                leading,
+                if (widget.additionalLeading != null) widget.additionalLeading!,
+                Flexible(child: title),
+              ]),
+            ),
           ),
           Expanded(child: widget.appBar.actions ?? SizedBox()),
         ]);
         break;
       case PaneDisplayMode.compact:
         result = Row(children: [
-          AnimatedAcrylic(
+          AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kCompactNavigationPanelWidth,
-            height: widget.appBar.height,
-            color: theme.backgroundColor,
-            child: leading,
+            child: Acrylic(
+              height: widget.appBar.height,
+              color: theme.backgroundColor,
+              child: leading,
+            ),
           ),
           if (widget.additionalLeading != null) widget.additionalLeading!,
           title,

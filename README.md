@@ -54,7 +54,7 @@ Projects using this library should use the stable channel of Flutter
     - [Navigation Body](#navigation-body)
   - [Tab View](#tab-view)
   - [Bottom Navigation](#bottom-navigation)
-- [Widgets](#widgets)
+- [Inputs](#inputs)
   - [Button](#button)
   - [Split Button](#split-button)
   - [Toggle Button](#toggle-button)
@@ -62,6 +62,7 @@ Projects using this library should use the stable channel of Flutter
   - [Toggle Switches](#toggle-switches)
   - [Radio Buttons](#radio-buttons)
   - [Slider](#slider)
+- [Forms](#forms)
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
   - [Combo Box](#combo-box)
@@ -599,30 +600,77 @@ ScaffoldPage(
 
 ```
 
-# Widgets:
+# Inputs
+
+Inputs are widgets that reacts to user interection. On most of the inputs you can set `onPressed` or `onChanged` to `null` to disable it.
 
 ## Button
 
 A button gives the user a way to trigger an immediate action. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons)
 
-### Creating
+Here's an example of how to create a basic button:
 
 ```dart
 Button(
-  text: Text('Cool button'),
+  text: Text('Button'),
   onPressed: () {
     print('button pressed'),
   }
 )
 ```
 
-To disable the button, set `onPressed` to `null`
+The code above produces the following:
 
-### Screenshots
+![Button](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext1.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext2.png)
+You can also use some alternative buttons:
+
+- `FilledButton`
+  ```dart
+  FilledButton(
+    child: Text('FILLED BUTTON'),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+  ![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
+- `IconButton`
+
+  ```dart
+  IconButton(
+    Icon: Icon(Icons.add),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+
+- `OutlinedButton`
+
+  ```dart
+  OutlinedButton(
+    child: Text('OUTLINED BUTTON'),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+
+  ![Outlined Button](https://user-images.githubusercontent.com/45696119/120252439-e339e700-c25a-11eb-9695-6d5c3c471166.png)
+
+- `TextButton`
+
+  ```dart
+  TextButton(
+    child: Text('TEXT BUTTON'),
+    onPressed: () {
+      print('pressed text button');
+    },
+  ),
+  ```
+
+  ![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png)
 
 ## Split Button
 
@@ -630,7 +678,7 @@ A Split Button has two parts that can be invoked separately. One part behaves li
 
 You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its theme.
 
-### Example
+Here's an example of how to create a split button:
 
 ```dart
 const double splitButtonHeight = 50.0;
@@ -674,7 +722,7 @@ The code above produces the following button:
 
 A button that can be on or off.
 
-### Example
+Here's an example of how to create a basic toggle button:
 
 ```dart
 bool _value = false;
@@ -690,9 +738,7 @@ ToggleButton(
 
 A check box is used to select or deselect action items. It can be used for a single item or for a list of multiple items that a user can choose from. The control has three selection states: unselected, selected, and indeterminate. Use the indeterminate state when a collection of sub-choices have both unselected and selected states. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/checkbox)
 
-### Creating
-
-To create a checkbox, use the widget `Checkbox`:
+Here's an example of how to create a checkbox:
 
 ```dart
 bool _checked = true;
@@ -852,6 +898,10 @@ RatingBar(
 You can set `amount` to change the amount of stars. The `rating` must be less than the stars and more than 0. You can also change the `icon`, its size and color. You can make the bar read only by setting `onChanged` to `null`.
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+
+# Forms
+
+A form is a group of controls that collect and submit data from users. Forms are typically used for settings pages, surveys, creating accounts, and much more.
 
 ## TextBox
 

@@ -101,7 +101,9 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool autofocus = false,
   }) {
-    final mode = displayMode ?? _NavigationBody.maybeOf(context)?.displayMode;
+    final mode = displayMode ??
+        _NavigationBody.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.minimal;
     assert(displayMode != PaneDisplayMode.auto);
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
@@ -140,7 +142,7 @@ class PaneItem extends NavigationPaneItem {
               () {
                 final icon = Padding(
                   padding: style.iconPadding ?? EdgeInsets.zero,
-                  child: IconTheme(
+                  child: IconTheme.merge(
                     data: IconThemeData(
                       color: (selected
                               ? style.selectedIconColor?.resolve(states)
@@ -590,11 +592,13 @@ class _CompactNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
+    this.onToggle,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final Key? listKey;
+  final VoidCallback? onToggle;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
@@ -653,6 +657,7 @@ class _CompactNavigationPane extends StatelessWidget {
                     pane,
                     onPressed: () {
                       pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                      onToggle?.call();
                     },
                     padding: showReplacement ? EdgeInsets.zero : topPadding,
                   );
