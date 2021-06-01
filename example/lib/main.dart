@@ -120,7 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: () {
           if (kIsWeb) return Text(appTitle);
           return MoveWindow(
-            child: Align(alignment: Alignment.centerLeft, child: Text(appTitle)),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(appTitle),
+            ),
           );
         }(),
         actions: kIsWeb
@@ -138,28 +141,49 @@ class _MyHomePageState extends State<MyHomePage> {
         onDisplayModeRequested: (mode) {
           appTheme.displayMode = mode;
         },
-        // Uncomment the following lines to use the end navigation indicator
-        // indicatorBuilder: ({
-        //   required BuildContext context,
-        //   int? index,
-        //   required List<Offset> Function() offsets,
-        //   required List<Size> Function() sizes,
-        //   required Axis axis,
-        //   required Widget child,
-        // }) {
-        //   if (index == null) return child;
-        //   assert(debugCheckHasFluentTheme(context));
-        //   final theme = NavigationPaneTheme.of(context);
-        //   return EndNavigationIndicator(
-        //     index: index,
-        //     offsets: offsets,
-        //     sizes: sizes,
-        //     child: child,
-        //     color: theme.highlightColor,
-        //     curve: theme.animationCurve ?? Curves.linear,
-        //     axis: axis,
-        //   );
-        // },
+        indicatorBuilder: ({
+          required BuildContext context,
+          int? index,
+          required List<Offset> Function() offsets,
+          required List<Size> Function() sizes,
+          required Axis axis,
+          required Widget child,
+        }) {
+          if (index == null) return child;
+          assert(debugCheckHasFluentTheme(context));
+          final theme = NavigationPaneTheme.of(context);
+          switch (appTheme.indicator) {
+            case NavigationIndicators.end:
+              return EndNavigationIndicator(
+                index: index,
+                offsets: offsets,
+                sizes: sizes,
+                child: child,
+                color: theme.highlightColor,
+                curve: theme.animationCurve ?? Curves.linear,
+                axis: axis,
+              );
+            case NavigationIndicators.sticky:
+              return NavigationPane.defaultNavigationIndicator(
+                index: index,
+                context: context,
+                offsets: offsets,
+                sizes: sizes,
+                axis: axis,
+                child: child,
+              );
+            default:
+              return NavigationIndicator(
+                index: index,
+                offsets: offsets,
+                sizes: sizes,
+                child: child,
+                color: theme.highlightColor,
+                curve: theme.animationCurve ?? Curves.linear,
+                axis: axis,
+              );
+          }
+        },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
           PaneItem(icon: Icon(Icons.input), title: Text('Inputs')),

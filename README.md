@@ -7,6 +7,9 @@
     <a title="Pub" href="https://pub.dartlang.org/packages/fluent_ui" >
       <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=popout&include_prereleases" />
     </a>
+    <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+    </a>
     <a title="Github License">
       <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui" />
     </a>
@@ -28,12 +31,11 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 
 ### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
 
-Projects using this library should use the stable channel of Flutter
-
 ### Content
 
 - [Motivation](#motivation)
 - [Installation](#installation)
+  - [Badge](#badge)
 - [Style](#style)
   - [Icons](#icons)
   - [Colors](#colors)
@@ -86,6 +88,7 @@ Projects using this library should use the stable channel of Flutter
   - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
+  - [Acknowledgements](#acknowledgements)
 
 ## Motivation
 
@@ -116,12 +119,30 @@ Note that this version is not stable. You can see the example app deplyed using 
 
 ```yaml
 dependencies:
-  fluent_ui: ^2.0.0
+  fluent_ui: ^2.1.0
 ```
 
 Versions published to pub are stable and fully tested.
 
-Finally, run `dart pub get` to downlaod the package
+Finally, run `dart pub get` to downlaod the package.
+
+Projects using this library should use the stable channel of Flutter
+
+### Badge
+
+Are you using this library on your app? You can use a badge to tell others:
+
+<a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+  <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+</a>
+
+Add the following code to your `README.md` or to your website:
+
+```html
+<a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+  <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+</a>
+```
 
 ---
 
@@ -160,7 +181,7 @@ FluentTheme(
 Inside your app, you use icons to represent an action, such as copying text or navigating to the settings page. This library includes an icon library with it, so you can just call `Icons.[icon_name]` in any `Icon` widget:
 
 ```dart
-Icon(Icons.add)
+Icon(Icons.add),
 ```
 
 To style icons, you can use `IconTheme` in the app `ThemeData` or use the property `style` in the `Icon` widget. You can see the list of icons [here](https://github.com/microsoft/fluentui-system-icons/blob/master/icons.md)
@@ -172,7 +193,7 @@ To style icons, you can use `IconTheme` in the app `ThemeData` or use the proper
 This library also includes the Fluent UI colors with it, so you can just call `Colors.[color_name]`:
 
 ```dart
-TextStyle(color: Colors.black)
+TextStyle(color: Colors.black),
 ```
 
 Avaiable colors:
@@ -228,8 +249,8 @@ It defaults to the brightness of the device. (`MediaQuery.of(context).brightness
 
 ```dart
 ThemeData(
-  brightness: Brightness.light // or Brightness.dark
-)
+  brightness: Brightness.light, // or Brightness.dark
+),
 ```
 
 ## Visual Density
@@ -243,7 +264,7 @@ For example, for buttons, it affects the spacing around the child of the button.
 ```dart
 ThemeData(
   visualDensity: VisualDensity.adaptivePlatformDensity,
-)
+),
 ```
 
 The following widgets make use of visual density:
@@ -1579,8 +1600,12 @@ The list of equivalents between this library and `flutter/material.dart`
 
 ## Contribution
 
-Feel free to [open an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if you find an error or [make pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
+Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if you find a problem or [make pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
 
-All the widgets above with the mark of (3) will not be implemented soon, so you can create a pull request with the implementation for them :). You can also help to improve the documentation for all the widgets, and in this readme.
+All contributions are welcome :)
 
-All type of contributions are welcome :)
+### Acknowledgements
+
+Thanks for all these paople
+
+- [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`

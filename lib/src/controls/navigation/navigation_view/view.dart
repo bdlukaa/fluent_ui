@@ -149,7 +149,7 @@ class NavigationViewState extends State<NavigationView> {
                     false,
                     () async {
                       if (isMinimalPaneOpen) {
-                        minimalPaneKey.currentState?.removeEntry();
+                        await minimalPaneKey.currentState?.removeEntry();
                       } else {
                         _openMinimalOverlay(context);
                       }
@@ -309,7 +309,7 @@ class NavigationViewState extends State<NavigationView> {
               animationDuration: theme.animationDuration ?? Duration.zero,
               entry: minimalOverlayEntry!,
               onBack: () {
-                minimalOverlayEntry = null;
+                setState(() => minimalOverlayEntry = null);
               },
               y: widget.appBar?.height ?? 0,
             ),

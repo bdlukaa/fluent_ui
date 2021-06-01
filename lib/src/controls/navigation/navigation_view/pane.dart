@@ -327,7 +327,7 @@ class NavigationPane with Diagnosticable {
     this.onDisplayModeRequested,
     this.menuButton,
     this.scrollController,
-    this.indicatorBuilder = _defaultNavigationIndicator,
+    this.indicatorBuilder = defaultNavigationIndicator,
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -410,9 +410,10 @@ class NavigationPane with Diagnosticable {
   /// display mode is toggled.
   final ScrollController? scrollController;
 
+  /// A function called when building the navigation indicator
   final NavigationIndicatorBuilder indicatorBuilder;
 
-  static Widget _defaultNavigationIndicator({
+  static Widget defaultNavigationIndicator({
     required BuildContext context,
     int? index,
     required List<Offset> Function() offsets,
@@ -503,7 +504,7 @@ class _TopNavigationPane extends StatelessWidget {
   _TopNavigationPane({required this.pane, this.listKey}) : super(key: pane.key);
 
   final NavigationPane pane;
-  final Key? listKey;
+  final GlobalKey? listKey;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     if (item is PaneItemHeader) {
@@ -598,7 +599,7 @@ class _CompactNavigationPane extends StatelessWidget {
 
   final NavigationPane pane;
   final Key? paneKey;
-  final Key? listKey;
+  final GlobalKey? listKey;
   final VoidCallback? onToggle;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -708,7 +709,7 @@ class _OpenNavigationPane extends StatelessWidget {
 
   final NavigationPane pane;
   final Key? paneKey;
-  final Key? listKey;
+  final GlobalKey? listKey;
 
   static Widget buildItem(
     BuildContext context,
@@ -825,6 +826,7 @@ class _MinimalNavigationPane extends StatefulWidget {
     required this.animationDuration,
     required this.entry,
     required this.onBack,
+    this.listKey,
     this.y = 0,
   }) : super(key: key);
 
@@ -843,6 +845,8 @@ class _MinimalNavigationPane extends StatefulWidget {
 
   final VoidCallback onBack;
 
+  final GlobalKey? listKey;
+
   @override
   __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
 }
@@ -859,10 +863,6 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
       duration: widget.animationDuration,
     );
     controller.forward();
-    // update the screen in order to make selected indicators appear
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      setState(() {});
-    });
   }
 
   @override
@@ -925,7 +925,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
             Expanded(
               child: Scrollbar(
                 isAlwaysShown: false,
-                child: ListView(primary: true, children: [
+                child: ListView(key: widget.listKey, primary: true, children: [
                   ...widget.pane.items.map((item) {
                     return _buildItem(context, item);
                   }),

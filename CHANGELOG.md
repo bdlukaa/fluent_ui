@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [2.1.0] - Mobile Update - [01/06/2021]
 
 - Implemented `BottomNavigation`
 - Implemented `BottomSheet`
@@ -11,7 +11,13 @@ Date format: DD/MM/YYYY
   - `FillButton`
   - `OutlinedButton`
   - `TextButton`
+
+---
+
 - `PaneItem`s' `build` method is now overridable. You can know customize how the items in `NavigationView` should look like by overriding the method.
+- Fixed bug that navigation indicator was not showing on the first frame
+- Fixed minimal tooltip not updating when closed the overlay
+- **EXAMPLE APP:** Navigation indicator is now configurable on the `Settings` page
 
 ## [2.0.3] - [28/05/2021]
 

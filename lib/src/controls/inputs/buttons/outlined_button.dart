@@ -31,10 +31,10 @@ class OutlinedButton extends BaseButton {
       if (states.isDisabled)
         return theme.disabledColor;
       else if (states.isPressing)
-        return theme.accentColor
-            .resolveFromBrightness(theme.brightness);
+        return theme.accentColor.resolveFromBrightness(theme.brightness);
       else if (states.isHovering)
-        return theme.accentColor.resolveFromBrightness(theme.brightness, level: 1);
+        return theme.accentColor
+            .resolveFromBrightness(theme.brightness, level: 1);
       else
         return theme.accentColor;
     }

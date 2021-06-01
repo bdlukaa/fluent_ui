@@ -77,15 +77,6 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
-
-          /// MediaQuery.of(context).brightness only doesn't work on windows
-          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
-            Text(
-              'ThemeMode.system may not work because MediaQuery.of(context).brightness is not implemented on windows yet.'
-              '\nWe must wait until Flutter Desktop stable release',
-              style: FluentTheme.of(context).typography.caption,
-            ),
-
           Text(
             'Navigation Pane Display Mode',
             style: FluentTheme.of(context).typography.subtitle,
@@ -95,12 +86,25 @@ class Settings extends StatelessWidget {
             return RadioListTile(
               checked: appTheme.displayMode == mode,
               onChanged: (value) {
-                if (value) {
-                  appTheme.displayMode = mode;
-                }
+                if (value) appTheme.displayMode = mode;
               },
               title: Text(
                 mode.toString().replaceAll('PaneDisplayMode.', ''),
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+            );
+          }),
+          Text('Navigation Indicator',
+              style: FluentTheme.of(context).typography.subtitle),
+          ...List.generate(NavigationIndicators.values.length, (index) {
+            final mode = NavigationIndicators.values[index];
+            return RadioListTile(
+              checked: appTheme.indicator == mode,
+              onChanged: (value) {
+                if (value) appTheme.indicator = mode;
+              },
+              title: Text(
+                mode.toString().replaceAll('NavigationIndicators.', ''),
                 style: TextStyle(fontWeight: FontWeight.normal),
               ),
             );

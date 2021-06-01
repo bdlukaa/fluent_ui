@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
 
+enum NavigationIndicators { sticky, end }
+
 class AppTheme extends ChangeNotifier {
   AccentColor _color = systemAccentColor;
   AccentColor get color => _color;
@@ -21,6 +23,13 @@ class AppTheme extends ChangeNotifier {
   PaneDisplayMode get displayMode => _displayMode;
   set displayMode(PaneDisplayMode displayMode) {
     _displayMode = displayMode;
+    notifyListeners();
+  }
+
+  NavigationIndicators _indicator = NavigationIndicators.sticky;
+  NavigationIndicators get indicator => _indicator;
+  set indicator(NavigationIndicators indicator) {
+    _indicator = indicator;
     notifyListeners();
   }
 }

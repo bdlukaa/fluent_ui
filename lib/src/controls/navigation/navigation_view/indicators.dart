@@ -72,6 +72,9 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   void initState() {
     super.initState();
     fetch();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      setState(() {});
+    });
   }
 
   void fetch() {
@@ -79,8 +82,6 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
       final _offsets = widget.offsets();
       final _sizes = widget.sizes();
       if (mounted && offsets != _offsets && _sizes != sizes) {
-        /// The screen is necessary to be updated because, in minimal display mode,
-        /// it's not automatically updated by the parent when the index is changed
         offsets = _offsets;
         sizes = _sizes;
       }
@@ -137,7 +138,7 @@ class _EndNavigationIndicatorState
         final indicator = IgnorePointer(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: isTop ? 0.0 : 6.0,
+              vertical: isTop ? 0.0 : 8.0,
               horizontal: isTop ? 10.0 : 0.0,
             ),
             width: isTop ? size.width : 4,
@@ -373,10 +374,12 @@ class _StickyPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 2.0;
-    final first = p1Start + (p1End - p1Start) * p1;
-    final second = p2Start + (p2End - p2Start) * p2;
+    final double first = p1Start + (p1End - p1Start) * p1;
+    final double second = p2Start + (p2End - p2Start) * p2;
 
-    // print('from $first to $second');
+    if (first.isNegative || second.isNegative) return;
+
+    // print('from $first to $second within $size');
 
     switch (axis) {
       case Axis.horizontal:
@@ -421,3 +424,12 @@ extension _offset on Offset {
       return dx;
   }
 }
+
+// extension _size on Size {
+//   double fromAxis(Axis axis) {
+//     if (axis == Axis.horizontal)
+//       return height;
+//     else
+//       return width;
+//   }
+// }
