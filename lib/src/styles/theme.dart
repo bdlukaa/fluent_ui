@@ -182,18 +182,24 @@ class ThemeData with Diagnosticable {
   final ButtonState<MouseCursor> inputMouseCursor;
 
   final Brightness brightness;
+  final VisualDensity visualDensity;
 
   final NavigationPaneThemeData navigationPaneTheme;
+  final BottomNavigationThemeData bottomNavigationTheme;
+  final BottomSheetThemeData bottomSheetTheme;
   final CheckboxThemeData checkboxTheme;
+  final ChipThemeData chipTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
   final FocusThemeData focusTheme;
   final IconThemeData iconTheme;
   final InfoBarThemeData infoBarTheme;
+  final PillButtonBarThemeData pillButtonBarTheme;
   final RadioButtonThemeData radioButtonTheme;
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
   final SplitButtonThemeData splitButtonTheme;
+  final SnackbarThemeData snackbarTheme;
   final ToggleButtonThemeData toggleButtonTheme;
   final ToggleSwitchThemeData toggleSwitchTheme;
   final TooltipThemeData tooltipTheme;
@@ -214,11 +220,14 @@ class ThemeData with Diagnosticable {
     required this.slowAnimationDuration,
     required this.animationCurve,
     required this.brightness,
+    required this.visualDensity,
     required this.scaffoldBackgroundColor,
     required this.acrylicBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
+    required this.chipTheme,
     required this.toggleSwitchTheme,
+    required this.bottomNavigationTheme,
     required this.iconTheme,
     required this.splitButtonTheme,
     required this.dialogTheme,
@@ -232,6 +241,9 @@ class ThemeData with Diagnosticable {
     required this.focusTheme,
     required this.scrollbarTheme,
     required this.inputMouseCursor,
+    required this.snackbarTheme,
+    required this.pillButtonBarTheme,
+    required this.bottomSheetTheme,
   });
 
   static ThemeData light() {
@@ -244,6 +256,7 @@ class ThemeData with Diagnosticable {
 
   factory ThemeData({
     Brightness? brightness,
+    VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
     Color? activeColor,
@@ -259,8 +272,11 @@ class ThemeData with Diagnosticable {
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    BottomNavigationThemeData? bottomNavigationTheme,
+    BottomSheetThemeData? bottomSheetTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
+    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     SplitButtonThemeData? splitButtonTheme,
@@ -272,10 +288,13 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
+    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
+    SnackbarThemeData? snackbarTheme,
   }) {
     brightness ??= Brightness.light;
+    visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= Duration(milliseconds: 90);
     fastAnimationDuration ??= Duration(milliseconds: 150);
     mediumAnimationDuration ??= Duration(milliseconds: 300);
@@ -321,6 +340,7 @@ class ThemeData with Diagnosticable {
     ).merge(focusTheme);
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
+    chipTheme ??= const ChipThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= brightness.isDark
@@ -343,9 +363,14 @@ class ThemeData with Diagnosticable {
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
+    pillButtonBarTheme ??= const PillButtonBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
+    bottomNavigationTheme ??= const BottomNavigationThemeData();
+    snackbarTheme ??= const SnackbarThemeData();
+    bottomSheetTheme ??= const BottomSheetThemeData();
     return ThemeData.raw(
       brightness: brightness,
+      visualDensity: visualDensity,
       fasterAnimationDuration: fasterAnimationDuration,
       fastAnimationDuration: fastAnimationDuration,
       mediumAnimationDuration: mediumAnimationDuration,
@@ -359,8 +384,10 @@ class ThemeData with Diagnosticable {
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
       shadowColor: shadowColor,
+      bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
+      chipTheme: chipTheme,
       dialogTheme: dialogTheme,
       dividerTheme: dividerTheme,
       focusTheme: focusTheme,
@@ -376,61 +403,75 @@ class ThemeData with Diagnosticable {
       tooltipTheme: tooltipTheme,
       typography: typography,
       inputMouseCursor: inputMouseCursor,
+      snackbarTheme: snackbarTheme,
+      pillButtonBarTheme: pillButtonBarTheme,
+      bottomSheetTheme: bottomSheetTheme,
     );
   }
 
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
     return ThemeData.raw(
-      brightness: t < 0.5 ? a.brightness : b.brightness,
-      accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
-      typography: Typography.lerp(a.typography, b.typography, t),
-      activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
-      inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
-      inactiveBackgroundColor:
-          Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
-      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
-      scaffoldBackgroundColor:
-          Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
-      acrylicBackgroundColor:
-          Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
-      shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
-      fasterAnimationDuration:
-          lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
-      fastAnimationDuration:
-          lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
-      mediumAnimationDuration:
-          lerpDuration(a.mediumAnimationDuration, b.mediumAnimationDuration, t),
-      slowAnimationDuration:
-          lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
-      animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
-      inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
-      buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
-      checkboxTheme:
-          CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
-      toggleSwitchTheme: ToggleSwitchThemeData.lerp(
-          a.toggleSwitchTheme, b.toggleSwitchTheme, t),
-      iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
-      splitButtonTheme:
-          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
-      dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
-      tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
-      dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
-      navigationPaneTheme: NavigationPaneThemeData.lerp(
-          a.navigationPaneTheme, b.navigationPaneTheme, t),
-      radioButtonTheme:
-          RadioButtonThemeData.lerp(a.radioButtonTheme, b.radioButtonTheme, t),
-      toggleButtonTheme: ToggleButtonThemeData.lerp(
-          a.toggleButtonTheme, b.toggleButtonTheme, t),
-      sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
-      infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
-      focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
-      scrollbarTheme:
-          ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
-    );
+        brightness: t < 0.5 ? a.brightness : b.brightness,
+        visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
+        accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
+        typography: Typography.lerp(a.typography, b.typography, t),
+        activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
+        inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
+        inactiveBackgroundColor: Color.lerp(
+            a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
+        disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
+        scaffoldBackgroundColor: Color.lerp(
+            a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
+        acrylicBackgroundColor:
+            Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
+        shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
+        fasterAnimationDuration: lerpDuration(
+            a.fasterAnimationDuration, b.fasterAnimationDuration, t),
+        fastAnimationDuration:
+            lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
+        mediumAnimationDuration: lerpDuration(
+            a.mediumAnimationDuration, b.mediumAnimationDuration, t),
+        slowAnimationDuration:
+            lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
+        animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+        inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
+        buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
+        checkboxTheme:
+            CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+        chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
+        toggleSwitchTheme: ToggleSwitchThemeData.lerp(
+            a.toggleSwitchTheme, b.toggleSwitchTheme, t),
+        iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
+        splitButtonTheme: SplitButtonThemeData.lerp(
+            a.splitButtonTheme, b.splitButtonTheme, t),
+        dialogTheme:
+            ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
+        tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
+        dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
+        navigationPaneTheme: NavigationPaneThemeData.lerp(
+            a.navigationPaneTheme, b.navigationPaneTheme, t),
+        radioButtonTheme: RadioButtonThemeData.lerp(
+            a.radioButtonTheme, b.radioButtonTheme, t),
+        toggleButtonTheme: ToggleButtonThemeData.lerp(
+            a.toggleButtonTheme, b.toggleButtonTheme, t),
+        sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
+        infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
+        focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
+        scrollbarTheme:
+            ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
+        bottomNavigationTheme: BottomNavigationThemeData.lerp(
+            a.bottomNavigationTheme, b.bottomNavigationTheme, t),
+        snackbarTheme:
+            SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
+        pillButtonBarTheme: PillButtonBarThemeData.lerp(
+            a.pillButtonBarTheme, b.pillButtonBarTheme, t),
+        bottomSheetTheme: BottomSheetThemeData.lerp(
+            a.bottomSheetTheme, b.bottomSheetTheme, t));
   }
 
   ThemeData copyWith({
     Brightness? brightness,
+    VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
     Color? activeColor,
@@ -447,7 +488,10 @@ class ThemeData with Diagnosticable {
     Curve? animationCurve,
     ButtonState<MouseCursor>? inputMouseCursor,
     ButtonThemeData? buttonTheme,
+    BottomNavigationThemeData? bottomNavigationTheme,
+    BottomSheetThemeData? bottomSheetTheme,
     CheckboxThemeData? checkboxTheme,
+    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     SplitButtonThemeData? splitButtonTheme,
@@ -459,11 +503,14 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
+    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
+    SnackbarThemeData? snackbarTheme,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
+      visualDensity: visualDensity ?? this.visualDensity,
       typography: typography ?? this.typography,
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
@@ -487,12 +534,17 @@ class ThemeData with Diagnosticable {
       inputMouseCursor: inputMouseCursor ?? this.inputMouseCursor,
       animationCurve: animationCurve ?? this.animationCurve,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
+      bottomNavigationTheme:
+          this.bottomNavigationTheme.merge(bottomNavigationTheme),
+      bottomSheetTheme: this.bottomSheetTheme.merge(bottomSheetTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
+      chipTheme: this.chipTheme.merge(chipTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
       focusTheme: this.focusTheme.merge(focusTheme),
       iconTheme: this.iconTheme.merge(iconTheme),
       infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
+      pillButtonBarTheme: this.pillButtonBarTheme.merge(pillButtonBarTheme),
       navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
@@ -501,6 +553,7 @@ class ThemeData with Diagnosticable {
       toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
+      snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
     );
   }
 

@@ -19,6 +19,7 @@ class ListTile extends StatelessWidget {
     this.leading,
     this.title,
     this.subtitle,
+    this.trailing,
     this.isThreeLine = false,
     this.contentPadding = kDefaultContentPadding,
   })  : assert(
@@ -36,6 +37,7 @@ class ListTile extends StatelessWidget {
   final Widget? leading;
   final Widget? title;
   final Widget? subtitle;
+  final Widget? trailing;
 
   final bool isThreeLine;
 
@@ -89,7 +91,7 @@ class ListTile extends StatelessWidget {
               if (title != null)
                 DefaultTextStyle(
                   child: title!,
-                  style: (style.typography.base ?? TextStyle()).copyWith(
+                  style: (style.typography.body ?? TextStyle()).copyWith(
                     fontSize: 16,
                   ),
                   overflow: TextOverflow.clip,
@@ -97,12 +99,13 @@ class ListTile extends StatelessWidget {
               if (subtitle != null)
                 DefaultTextStyle(
                   child: subtitle!,
-                  style: style.typography.body ?? TextStyle(),
+                  style: style.typography.caption ?? TextStyle(),
                   overflow: TextOverflow.clip,
                 ),
             ],
           ),
-        )
+        ),
+        if (trailing != null) trailing!,
       ]),
     );
   }
@@ -116,6 +119,7 @@ class TappableListTile extends StatelessWidget {
     this.leading,
     this.title,
     this.subtitle,
+    this.trailing,
     this.isThreeLine = false,
     this.onTap,
     this.focusNode,
@@ -131,6 +135,7 @@ class TappableListTile extends StatelessWidget {
   final Widget? leading;
   final Widget? title;
   final Widget? subtitle;
+  final Widget? trailing;
 
   final bool isThreeLine;
 
@@ -175,6 +180,7 @@ class TappableListTile extends StatelessWidget {
           leading: leading,
           title: title,
           subtitle: subtitle,
+          trailing: trailing,
           isThreeLine: isThreeLine,
           tileColor: _tileColor,
           shape: shape?.resolve(states),
@@ -191,6 +197,7 @@ class CheckboxListTile extends StatelessWidget {
     this.onChanged,
     this.title,
     this.subtitle,
+    this.opposite,
     this.isThreeLine = false,
     this.style,
     this.autofocus = false,
@@ -204,6 +211,8 @@ class CheckboxListTile extends StatelessWidget {
 
   final Widget? title;
   final Widget? subtitle;
+  final Widget? opposite;
+
   final bool isThreeLine;
 
   final CheckboxThemeData? style;
@@ -228,6 +237,7 @@ class CheckboxListTile extends StatelessWidget {
       ),
       title: title,
       subtitle: subtitle,
+      trailing: opposite,
       onTap: onChanged == null
           ? null
           : () => onChanged!(checked == null ? null : !(checked!)),
@@ -247,6 +257,7 @@ class SwitchListTile extends StatelessWidget {
     this.onChanged,
     this.title,
     this.subtitle,
+    this.opposite,
     this.autofocus = false,
     this.focusNode,
     this.isThreeLine = false,
@@ -261,6 +272,7 @@ class SwitchListTile extends StatelessWidget {
 
   final Widget? title;
   final Widget? subtitle;
+  final Widget? opposite;
   final bool isThreeLine;
 
   final ToggleSwitchThemeData? style;
@@ -287,6 +299,7 @@ class SwitchListTile extends StatelessWidget {
       ),
       title: title,
       subtitle: subtitle,
+      trailing: opposite,
       onTap: onChanged == null ? null : () => onChanged!(!checked),
       autofocus: autofocus,
       focusNode: focusNode,
@@ -304,6 +317,7 @@ class RadioListTile extends StatelessWidget {
     this.onChanged,
     this.title,
     this.subtitle,
+    this.opposite,
     this.isThreeLine = false,
     this.style,
     this.autofocus = false,
@@ -317,6 +331,8 @@ class RadioListTile extends StatelessWidget {
 
   final Widget? title;
   final Widget? subtitle;
+  final Widget? opposite;
+
   final bool isThreeLine;
 
   final RadioButtonThemeData? style;
@@ -341,6 +357,7 @@ class RadioListTile extends StatelessWidget {
       ),
       title: title,
       subtitle: subtitle,
+      trailing: opposite,
       onTap: onChanged == null ? null : () => onChanged!(!checked),
       autofocus: autofocus,
       focusNode: focusNode,

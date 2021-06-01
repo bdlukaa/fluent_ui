@@ -4,6 +4,7 @@ export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:flutter/material.dart'
     show
         Brightness,
+        VisualDensity,
         ThemeMode,
         Feedback,
         FlutterLogo,
@@ -12,6 +13,9 @@ export 'package:flutter/material.dart'
         DateTimeRange,
         HourFormat,
         Icons,
+        AnimatedIcon,
+        AnimatedIcons,
+        AnimatedIconData,
         DateUtils,
         SelectableDayPredicate,
         DatePickerMode,
@@ -25,12 +29,20 @@ export 'src/utils.dart';
 
 export 'src/navigation/route.dart';
 
+export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/layout/page.dart';
 
-export 'src/controls/utils/hover_button.dart';
-export 'src/controls/inputs/button.dart';
+export 'src/controls/inputs/buttons/base.dart';
+export 'src/controls/inputs/buttons/theme.dart';
+export 'src/controls/inputs/buttons/button.dart';
+export 'src/controls/inputs/buttons/icon_button.dart';
+export 'src/controls/inputs/buttons/filled_button.dart';
+export 'src/controls/inputs/buttons/outlined_button.dart';
+export 'src/controls/inputs/buttons/text_button.dart';
+
 export 'src/controls/inputs/checkbox.dart';
-export 'src/controls/inputs/icon_button.dart';
+export 'src/controls/inputs/chip.dart';
+export 'src/controls/inputs/pill_button_bar.dart';
 export 'src/controls/inputs/radio_button.dart';
 export 'src/controls/inputs/rating.dart';
 export 'src/controls/inputs/split_button.dart';
@@ -42,14 +54,17 @@ export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view.dart';
 
 export 'src/controls/surfaces/calendar/calendar_view.dart';
+export 'src/controls/surfaces/bottom_sheet.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/flyout/flyout.dart';
 export 'src/controls/surfaces/info_bar.dart';
 export 'src/controls/surfaces/list_tile.dart';
 export 'src/controls/surfaces/progress_indicators.dart';
+export 'src/controls/surfaces/snackbar.dart';
 export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/divider.dart';
+export 'src/controls/utils/hover_button.dart';
 export 'src/controls/utils/scrollbar.dart';
 
 export 'src/controls/form/auto_suggest_box.dart';

@@ -67,15 +67,16 @@ class YesNoPickerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    ButtonThemeData style(BorderRadiusGeometry radius) {
-      return ButtonThemeData(
-        margin: EdgeInsets.zero,
-        decoration: ButtonState.resolveWith((states) => BoxDecoration(
-              color: ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context), states),
-              borderRadius: radius,
-            )),
-        scaleFactor: 1.0,
+    ButtonStyle style(BorderRadiusGeometry radius) {
+      return ButtonStyle(
+        backgroundColor: ButtonState.resolveWith(
+          (states) => ButtonThemeData.uncheckedInputColor(
+              FluentTheme.of(context), states),
+        ),
+        shape: ButtonState.all(RoundedRectangleBorder(
+          borderRadius: radius,
+        )),
+        zFactor: ButtonState.all(1.0),
       );
     }
 
@@ -131,11 +132,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
       builder: (context, state) {
         final show = state.isHovering || state.isPressing || state.isFocused;
         return ButtonTheme.merge(
-          data: ButtonThemeData(
-            padding: const EdgeInsets.all(2.0),
-            margin: EdgeInsets.zero,
-            scaleFactor: 1.0,
-          ),
+          data: ButtonThemeData.all(ButtonStyle(
+            padding: ButtonState.all(EdgeInsets.all(2.0)),
+            zFactor: ButtonState.all(1.0),
+          )),
           child: FocusTheme(
             data: FocusThemeData(renderOutside: false),
             child: Stack(children: [

@@ -1,5 +1,18 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Implemented `BottomNavigation`
+- Implemented `BottomSheet`
+- Implemented `Chip`
+- Implemented `Snackbar`
+- Implemented `PillButtonBar`
+- New buttons variations:
+  - `FillButton`
+  - `OutlinedButton`
+  - `TextButton`
+- `PaneItem`s' `build` method is now overridable. You can know customize how the items in `NavigationView` should look like by overriding the method.
+
 ## [2.0.3] - [28/05/2021]
 
 - Correctly apply items positions to pane indicators, regardless of external factors, such as navigation view app bar ([#41](https://github.com/bdlukaa/fluent_ui/issues/41))

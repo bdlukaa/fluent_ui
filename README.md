@@ -39,6 +39,7 @@ Projects using this library should use the stable channel of Flutter
   - [Colors](#colors)
     - [Accent color](#accent-color)
   - [Brightness](#brightness)
+  - [Visual Density](#visual-density)
   - [Typograpy](#typography)
     - [Font](#font)
     - [Type ramp](#type-ramp)
@@ -52,7 +53,8 @@ Projects using this library should use the stable channel of Flutter
     - [Navigation Pane](#navigation-pane)
     - [Navigation Body](#navigation-body)
   - [Tab View](#tab-view)
-- [Widgets](#widgets)
+  - [Bottom Navigation](#bottom-navigation)
+- [Inputs](#inputs)
   - [Button](#button)
   - [Split Button](#split-button)
   - [Toggle Button](#toggle-button)
@@ -60,6 +62,7 @@ Projects using this library should use the stable channel of Flutter
   - [Toggle Switches](#toggle-switches)
   - [Radio Buttons](#radio-buttons)
   - [Slider](#slider)
+- [Forms](#forms)
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
   - [Combo Box](#combo-box)
@@ -76,7 +79,11 @@ Projects using this library should use the stable channel of Flutter
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - [Scrollbar](#scrollbar)
   - [List Tile](#list-tile)
-  - [Info Header](info-header)
+  - [Info Header](#info-header)
+- [Mobile Widgets](#mobile-widgets)
+  - [Chip](#chip)
+  - [Pill Button Bar](#pill-button-bar)
+  - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Contribution](#contribution)
 
@@ -207,7 +214,7 @@ ThemeData(
 
 ## Brightness
 
-You can change the theme brightness to change the color of your app.
+You can change the theme brightness to change the color of your app to
 
 1. `Brightness.light`
 
@@ -218,6 +225,32 @@ You can change the theme brightness to change the color of your app.
    ![Dark theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/dark-theme.svg)
 
 It defaults to the brightness of the device. (`MediaQuery.of(context).brightness`)
+
+```dart
+ThemeData(
+  brightness: Brightness.light // or Brightness.dark
+)
+```
+
+## Visual Density
+
+Density, in the context of a UI, is the vertical and horizontal "compactness" of the components in the UI. It is unitless, since it means different things to different UI components.
+
+The default for visual densities is zero for both vertical and horizontal densities. It does not affect text sizes, icon sizes, or padding values.
+
+For example, for buttons, it affects the spacing around the child of the button. For lists, it affects the distance between baselines of entries in the list. For chips, it only affects the vertical size, not the horizontal size.
+
+```dart
+ThemeData(
+  visualDensity: VisualDensity.adaptivePlatformDensity,
+)
+```
+
+The following widgets make use of visual density:
+
+- Chip
+- PillButtonBar
+- Snackbar
 
 ## Typography
 
@@ -527,30 +560,117 @@ The code above produces the following:
 
 ![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
 
-# Widgets:
+## Bottom Navigation
+
+The bottom navigation displays icons and optional text at the bottom of the screen for switching between different primary destinations in an app. This is commomly used on small screens. [Learn more](https://developer.microsoft.com/pt-br/fluentui#/controls/android/bottomnavigation)
+
+Here's an example of how to create a bottom navigation:
+
+```dart
+int index = 0;
+
+ScaffoldPage(
+  content: NavigationBody(index: index, children: [
+    Container(),
+    Container(),
+    Container(),
+  ]),
+  bottomBar: BottomNavigation(
+    index: index,
+    onChanged: (i) => setState(() => index = i),
+    items: [
+      BottomNavigationItem(
+        icon: Icon(Icons.two_k),
+        selectedIcon: Icon(Icons.two_k_plus),
+        title: Text('Both'),
+      ),
+      BottomNavigationItem(
+        icon: Icon(Icons.phone_android_outlined),
+        selectedIcon: Icon(Icons.phone_android),
+        title: Text('Android'),
+      ),
+      BottomNavigationItem(
+        icon: Icon(Icons.phone_iphone_outlined),
+        selectedIcon: Icon(Icons.phone_iphone),
+        title: Text('iOS'),
+      ),
+    ],
+  )
+)
+
+```
+
+# Inputs
+
+Inputs are widgets that reacts to user interection. On most of the inputs you can set `onPressed` or `onChanged` to `null` to disable it.
 
 ## Button
 
 A button gives the user a way to trigger an immediate action. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons)
 
-### Creating
+Here's an example of how to create a basic button:
 
 ```dart
 Button(
-  text: Text('Cool button'),
+  text: Text('Button'),
   onPressed: () {
     print('button pressed'),
   }
 )
 ```
 
-To disable the button, set `onPressed` to `null`
+The code above produces the following:
 
-### Screenshots
+![Button](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext1.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/button-wraptext2.png)
+You can also use some alternative buttons:
+
+- `FilledButton`
+  ```dart
+  FilledButton(
+    child: Text('FILLED BUTTON'),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+  ![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
+- `IconButton`
+
+  ```dart
+  IconButton(
+    Icon: Icon(Icons.add),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+
+- `OutlinedButton`
+
+  ```dart
+  OutlinedButton(
+    child: Text('OUTLINED BUTTON'),
+    onPressed: () {
+      print('pressed filled button');
+    },
+  ),
+  ```
+
+  ![Outlined Button](https://user-images.githubusercontent.com/45696119/120252439-e339e700-c25a-11eb-9695-6d5c3c471166.png)
+
+- `TextButton`
+
+  ```dart
+  TextButton(
+    child: Text('TEXT BUTTON'),
+    onPressed: () {
+      print('pressed text button');
+    },
+  ),
+  ```
+
+  ![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png)
 
 ## Split Button
 
@@ -558,7 +678,7 @@ A Split Button has two parts that can be invoked separately. One part behaves li
 
 You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its theme.
 
-### Example
+Here's an example of how to create a split button:
 
 ```dart
 const double splitButtonHeight = 50.0;
@@ -602,7 +722,7 @@ The code above produces the following button:
 
 A button that can be on or off.
 
-### Example
+Here's an example of how to create a basic toggle button:
 
 ```dart
 bool _value = false;
@@ -618,9 +738,7 @@ ToggleButton(
 
 A check box is used to select or deselect action items. It can be used for a single item or for a list of multiple items that a user can choose from. The control has three selection states: unselected, selected, and indeterminate. Use the indeterminate state when a collection of sub-choices have both unselected and selected states. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/checkbox)
 
-### Creating
-
-To create a checkbox, use the widget `Checkbox`:
+Here's an example of how to create a checkbox:
 
 ```dart
 bool _checked = true;
@@ -780,6 +898,10 @@ RatingBar(
 You can set `amount` to change the amount of stars. The `rating` must be less than the stars and more than 0. You can also change the `icon`, its size and color. You can make the bar read only by setting `onChanged` to `null`.
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+
+# Forms
+
+A form is a group of controls that collect and submit data from users. Forms are typically used for settings pages, surveys, creating accounts, and much more.
 
 ## TextBox
 
@@ -1319,6 +1441,99 @@ ComboBox(
 
 This will produce the same as the image above.
 
+# Mobile Widgets
+
+Widgets with focus on mobile. Based on the official documentation and source code for [iOS](https://developer.microsoft.com/pt-br/fluentui#/controls/ios) and [Android](https://developer.microsoft.com/pt-br/fluentui#/controls/android). Most of the widgets above can adapt to small screens, and will fit on all your devices.
+
+## Bottom Sheet
+
+Bottom Sheet is used to display a modal list of menu items. They slide up over the main app content as a result of a user triggered action. [Learn more](https://developer.microsoft.com/pt-br/fluentui#/controls/android/bottomsheet)
+
+Here's an example of how to display a bottom sheet:
+
+```dart
+showBottomSheet(
+  context: context,
+  builder: (context) {
+    return BottomSheet(
+      // header: ...,
+      description: Text('Description or Details here'),
+      children: [
+        ...,
+        // Usually a `ListTile` or `TappableListTile`
+      ],
+    );
+  },
+),
+```
+
+To close it, just call `Navigator.of(context).pop()`
+
+![Bottom Sheet Showcase](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_bottomsheet_01_light.png?text=LightMode)
+
+## Chip
+
+Chips are compact representations of entities (most commonly, people) that can be clicked, deleted, or dragged easily.
+
+Here's an example of how to create a chip:
+
+```dart
+Chip(
+  image: CircleAvatar(size: 12.0),
+  text: Text('Chip'),
+),
+Chip.selected(
+  image: FlutterLogo(size: 14.0),
+  text: Text('Chip'),
+)
+```
+
+![Light Chips](https://user-images.githubusercontent.com/45696119/119724339-f9a00700-be44-11eb-940b-1966eefe3798.png)
+
+![Dark Chips](https://user-images.githubusercontent.com/45696119/119724337-f9077080-be44-11eb-9b73-e1dc4ffbeefd.png)
+
+## Pill Button Bar
+
+A Pill Button Bar is a horizontal scrollable list of pill-shaped text buttons in which only one button can be selected at a given time.
+
+Here's an example of how to create a pill button bar:
+
+```dart
+int index = 0;
+
+PillButtonBar(
+  selected: index,
+  onChanged: (i) => setState(() => index = i),
+  items: [
+    PillButtonBarItem(text: Text('All')),
+    PillButtonBarItem(text: Text('Mail')),
+    PillButtonBarItem(text: Text('Peopl')),
+    PillButtonBarItem(text: Text('Events')),
+  ]
+)
+```
+
+![Light PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_light.png?text=LightMode)
+
+![Dark PillButtonBar](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/ios/updated/img_pillbar_01_dark.png?text=DarkMode)
+
+## Snackbar
+
+Snackbars provide a brief message about an operation at the bottom of the screen. They can contain a custom action or view or use a style geared towards making special announcements to your users.
+
+Here's an example of how to display a snackbar at the bottom of the screen:
+
+```dart
+showSnackbar(
+  context,
+  Snackbar(
+    content: Text('A new update is available!'),
+  ),
+);
+```
+
+![Snackbar Example](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_snackbar_01_standard_dark.png?text=DarkMode)
+
 ---
 
 ### Equivalents with the material library
@@ -1342,7 +1557,8 @@ The list of equivalents between this library and `flutter/material.dart`
 | MaterialBanner            | InfoBar          |
 | Tooltip                   | Tooltip          |
 | -                         | Flyout           |
-| Drawer                    | NavigationPanel  |
+| Drawer                    | NavigationPane   |
+| BottomNavigation          | BottomNavigation |
 | Divider                   | Divider          |
 | VerticalDivider           | Divider          |
 | Card                      | Acrylic          |
@@ -1357,6 +1573,9 @@ The list of equivalents between this library and `flutter/material.dart`
 | Scaffold                  | ScaffoldPage     |
 | AppBar                    | NavigationAppBar |
 | Drawer                    | NavigationView   |
+| Chip                      | Chip             |
+| Snackbar                  | Snackbar         |
+| -                         | PillButtonBar    |
 
 ## Contribution
 

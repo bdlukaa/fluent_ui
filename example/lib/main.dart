@@ -8,6 +8,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'screens/colors.dart';
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
+import 'screens/mobile.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 
@@ -45,7 +46,7 @@ void main() async {
   if (isDesktop)
     doWhenWindowReady(() {
       final win = appWindow;
-      win.minSize = Size(360, 640);
+      win.minSize = Size(410, 640);
       win.size = Size(755, 545);
       win.alignment = Alignment.center;
       win.title = appTitle;
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
                 : appTheme.mode == ThemeMode.dark
                     ? Brightness.dark
                     : Brightness.light,
+            visualDensity: VisualDensity.standard,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
@@ -118,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: () {
           if (kIsWeb) return Text(appTitle);
           return MoveWindow(
-            child: Align(alignment: Alignment.center, child: Text(appTitle)),
+            child: Align(alignment: Alignment.centerLeft, child: Text(appTitle)),
           );
         }(),
         actions: kIsWeb
@@ -160,12 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
-          PaneItem(icon: Icon(Icons.input), title: 'Inputs'),
-          PaneItem(icon: Icon(Icons.format_align_center), title: 'Forms'),
+          PaneItem(icon: Icon(Icons.input), title: Text('Inputs')),
+          PaneItem(icon: Icon(Icons.format_align_center), title: Text('Forms')),
           PaneItemSeparator(),
-          PaneItemHeader(header: Text('Extra Widgets')),
-          PaneItem(icon: Icon(Icons.miscellaneous_services), title: 'Others'),
-          PaneItem(icon: Icon(Icons.color_lens_outlined), title: 'Colors'),
+          PaneItem(
+              icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
+          PaneItem(
+              icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
+          PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
         ],
         autoSuggestBox: AutoSuggestBox(
           controller: TextEditingController(),
@@ -174,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
         autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(icon: Icon(Icons.settings), title: 'Settings'),
+          PaneItem(icon: Icon(Icons.settings), title: Text('Settings')),
         ],
       ),
       content: NavigationBody(index: index, children: [
@@ -182,6 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Forms(),
         Others(),
         ColorsPage(controller: colorsController),
+        Mobile(),
         Settings(controller: settingsController),
       ]),
     );
@@ -194,6 +199,7 @@ class WindowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
     final ThemeData theme = FluentTheme.of(context);
     final buttonColors = WindowButtonColors(
       iconNormal: theme.inactiveColor,
@@ -212,9 +218,18 @@ class WindowButtons extends StatelessWidget {
       iconMouseDown: Colors.red.dark.basedOnLuminance(),
     );
     return Row(children: [
-      MinimizeWindowButton(colors: buttonColors),
-      MaximizeWindowButton(colors: buttonColors),
-      CloseWindowButton(colors: closeButtonColors),
+      Tooltip(
+        message: FluentLocalizations.of(context).minimizeWindowTooltip,
+        child: MinimizeWindowButton(colors: buttonColors),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).restoreWindowTooltip,
+        child: MaximizeWindowButton(colors: buttonColors),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).closeWindowTooltip,
+        child: CloseWindowButton(colors: closeButtonColors),
+      ),
     ]);
   }
 }

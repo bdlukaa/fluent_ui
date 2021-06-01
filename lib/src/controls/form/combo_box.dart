@@ -1364,7 +1364,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
               Expanded(child: innerItemsWidget)
             else
               innerItemsWidget,
-            IconTheme(
+            IconTheme.merge(
               data: IconThemeData(color: _iconColor, size: widget.iconSize),
               child: widget.icon ?? defaultIcon,
             ),

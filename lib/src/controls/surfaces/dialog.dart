@@ -100,8 +100,7 @@ class ContentDialog extends StatelessWidget {
               ),
             if (actions != null)
               ButtonTheme.merge(
-                data: style.actionThemeData ??
-                    FluentTheme.of(context).buttonTheme,
+                data: style.actionThemeData ?? ButtonThemeData(),
                 child: () {
                   if (actions!.length == 1) {
                     return Align(
@@ -259,14 +258,6 @@ class ContentDialogThemeData {
       barrierColor: Colors.grey[200].withOpacity(0.8),
       titleStyle: style.typography.title,
       bodyStyle: style.typography.body,
-      actionThemeData: ButtonThemeData(
-        margin: EdgeInsets.zero,
-        decoration: ButtonState.resolveWith((states) {
-          return BoxDecoration(
-            color: ButtonThemeData.buttonColor(style.brightness, states),
-          );
-        }),
-      ),
       elevation: 8,
       elevationColor: Colors.black,
     );

@@ -39,6 +39,8 @@ class ScaffoldPage extends StatelessWidget {
 
   /// The bottom bar of this page. This is usually provided when the current
   /// screen is small.
+  ///
+  /// Usually a [BottomNavigation]
   final Widget? bottomBar;
 
   /// The padding used by this widget.
@@ -54,23 +56,23 @@ class ScaffoldPage extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final horizontalPadding = EdgeInsets.only(
-      left: padding?.left ?? PageHeader.horizontalPadding(context),
-      right: padding?.right ?? PageHeader.horizontalPadding(context),
-    );
-    return Container(
-      color: theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.only(
-        top: padding?.top ?? kPageDefaultVerticalPadding,
-        bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
+    return Column(children: [
+      Expanded(
+        child: Container(
+          color: theme.scaffoldBackgroundColor,
+          padding: EdgeInsets.only(
+            top: padding?.top ?? kPageDefaultVerticalPadding,
+            bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (header != null) header!,
+            Expanded(child: content),
+          ]),
+        ),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (header != null) header!,
-        Expanded(child: content),
-        if (bottomBar != null)
-          Padding(padding: horizontalPadding, child: bottomBar),
-      ]),
-    );
+      if (bottomBar != null) bottomBar!,
+    ]);
   }
 }
 
@@ -110,8 +112,7 @@ class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final pageParent = ScaffoldPageParent.maybeOf(context);
-    final leading = this.leading ?? pageParent?.paneButton;
+    final leading = this.leading;
     final horizontalPadding = PageHeader.horizontalPadding(context);
     return Padding(
       padding: EdgeInsets.only(
@@ -130,28 +131,5 @@ class PageHeader extends StatelessWidget {
         if (commandBar != null) commandBar!,
       ]),
     );
-  }
-}
-
-class ScaffoldPageParent extends InheritedWidget {
-  const ScaffoldPageParent({
-    Key? key,
-    required this.child,
-    this.paneButton,
-  }) : super(key: key, child: child);
-
-  final Widget child;
-
-  /// The button used by [PageHeader], displayed before [PageHeader.header].
-  /// It can be overritten
-  final Widget? paneButton;
-
-  static ScaffoldPageParent? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ScaffoldPageParent>();
-  }
-
-  @override
-  bool updateShouldNotify(ScaffoldPageParent oldWidget) {
-    return true;
   }
 }

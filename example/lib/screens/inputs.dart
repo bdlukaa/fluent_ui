@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+const Widget spacer = const SizedBox(height: 5.0);
+
 class InputsPage extends StatefulWidget {
   const InputsPage({Key? key}) : super(key: key);
 
@@ -69,6 +71,7 @@ class _InputsPageState extends State<InputsPage> {
                     onChanged:
                         disabled ? null : (v) => setState(() => value = v),
                   ),
+                  spacer,
                   ToggleButton(
                     child: Text('Toggle Button'),
                     checked: value,
@@ -114,7 +117,7 @@ class _InputsPageState extends State<InputsPage> {
   Widget _buildButtons() {
     final splitButtonHeight = 50.0;
     return Acrylic(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: InfoLabel(
         label: 'Buttons',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -147,26 +150,26 @@ class _InputsPageState extends State<InputsPage> {
                     );
                   },
           ),
-          Button.icon(
+          spacer,
+          IconButton(
             icon: Icon(Icons.add),
             onPressed: disabled ? null : () => print('pressed icon button'),
           ),
+          spacer,
           SizedBox(
             height: splitButtonHeight,
             child: SplitButtonBar(buttons: [
               Button(
-                builder: (context, states) {
-                  return SizedBox(
-                    height: splitButtonHeight,
-                    child: Container(
-                      color: states.isDisabled
-                          ? FluentTheme.of(context).accentColor.darker
-                          : FluentTheme.of(context).accentColor,
-                      height: 24,
-                      width: 24,
-                    ),
-                  );
-                },
+                child: SizedBox(
+                  height: splitButtonHeight,
+                  child: Container(
+                    color: disabled
+                        ? FluentTheme.of(context).accentColor.darker
+                        : FluentTheme.of(context).accentColor,
+                    height: 24,
+                    width: 24,
+                  ),
+                ),
                 onPressed: disabled ? null : () {},
               ),
               Button(
@@ -175,9 +178,36 @@ class _InputsPageState extends State<InputsPage> {
                   child: Icon(Icons.keyboard_arrow_down),
                 ),
                 onPressed: disabled ? null : () {},
-                style: ButtonThemeData(padding: EdgeInsets.all(6)),
+                style: ButtonStyle(padding: ButtonState.all(EdgeInsets.all(6))),
               ),
             ]),
+          ),
+          spacer,
+          TextButton(
+            child: Text('TEXT BUTTON'),
+            onPressed: disabled
+                ? null
+                : () {
+                    print('pressed text button');
+                  },
+          ),
+          spacer,
+          FilledButton(
+            child: Text('FILLED BUTTON'),
+            onPressed: disabled
+                ? null
+                : () {
+                    print('pressed filled button');
+                  },
+          ),
+          spacer,
+          OutlinedButton(
+            child: Text('OUTLINED BUTTON'),
+            onPressed: disabled
+                ? null
+                : () {
+                    print('pressed outlined button');
+                  },
           ),
         ]),
       ),

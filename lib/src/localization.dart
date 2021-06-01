@@ -29,6 +29,18 @@ abstract class FluentLocalizations {
   /// user interaction with elements behind it.
   String get modalBarrierDismissLabel;
 
+  /// The tooltip used by the "Minimize" button on desktop windows.
+  String get minimizeWindowTooltip;
+
+  /// The tooltip used by the "Restore" button on desktop windows.
+  String get restoreWindowTooltip;
+
+  /// The tooltip used by the "Close" button on desktop windows.
+  String get closeWindowTooltip;
+
+  /// The dialog label
+  String get dialogLabel;
+
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
   ///
@@ -76,6 +88,18 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   @override
   String get modalBarrierDismissLabel => 'Dismiss';
+
+  @override
+  String get minimizeWindowTooltip => 'Minimze';
+
+  @override
+  String get restoreWindowTooltip => 'Restore';
+
+  @override
+  String get closeWindowTooltip => 'Close';
+
+  @override
+  String get dialogLabel => 'Dialog';
 
   /// Creates an object that provides US English resource values for the material
   /// library widgets.

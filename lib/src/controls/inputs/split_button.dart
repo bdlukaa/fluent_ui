@@ -51,25 +51,16 @@ class SplitButtonBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
         final button = ButtonTheme.merge(
-          data: ButtonThemeData(
-            decoration: ButtonState.resolveWith((states) {
-              return BoxDecoration(
-                // is the last index
-                borderRadius: (index == 0 || index == buttons.length - 1)
-                    ? BorderRadius.horizontal(
-                        left: index == 0 ? Radius.circular(2) : Radius.zero,
-                        right: index == buttons.length - 1
-                            ? Radius.circular(2)
-                            : Radius.zero,
-                      )
-                    : null,
-                color: ButtonThemeData.buttonColor(
-                  FluentTheme.of(context).brightness,
-                  states,
-                ),
-              );
-            }),
-            margin: EdgeInsets.zero,
+          data: ButtonThemeData.all(
+            ButtonStyle(
+                shape: ButtonState.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.horizontal(
+                left: index == 0 ? Radius.circular(2) : Radius.zero,
+                right: index == buttons.length - 1
+                    ? Radius.circular(2)
+                    : Radius.zero,
+              ),
+            ))),
           ),
           child: FocusTheme(
             data: FocusThemeData(renderOutside: false),
@@ -166,9 +157,6 @@ class SplitButtonThemeData with Diagnosticable {
     return SplitButtonThemeData(
       borderRadius: BorderRadius.circular(4),
       interval: 1,
-      defaultButtonThemeData: style.buttonTheme.merge(ButtonThemeData(
-        margin: EdgeInsets.zero,
-      )),
     );
   }
 

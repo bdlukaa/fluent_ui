@@ -265,12 +265,20 @@ class AccentColor extends ColorSwatch<String> {
     return resolveFromBrightness(brightness);
   }
 
-  Color resolveFromBrightness(Brightness brightness) {
+  Color resolveFromBrightness(Brightness brightness, {int level = 0}) {
     switch (brightness) {
       case Brightness.light:
-        return light;
+        return level == 0
+            ? light
+            : level == 1
+                ? lighter
+                : lightest;
       case Brightness.dark:
-        return dark;
+        return level == 0
+            ? dark
+            : level == 1
+                ? darker
+                : darkest;
     }
   }
 }
