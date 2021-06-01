@@ -42,9 +42,10 @@ class FilledButton extends BaseButton {
               return theme.accentColor.darkest;
           }
         } else if (states.isPressing)
-          return theme.accentColor.resolveFromBrightness(theme.brightness, level: 2);
-        else if (states.isHovering)
           return theme.accentColor.resolveFromBrightness(theme.brightness);
+        else if (states.isHovering)
+          return theme.accentColor
+              .resolveFromBrightness(theme.brightness, level: 1);
         else
           return theme.accentColor;
       }),

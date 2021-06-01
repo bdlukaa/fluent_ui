@@ -405,30 +405,33 @@ class NavigationAppBar with Diagnosticable {
       );
     } else if (appBar.automaticallyImplyLeading && imply) {
       final onPressed = canPop ? () => Navigator.maybePop(context) : null;
-      widget = Container(
-        width: _kCompactNavigationPanelWidth,
-        child: IconButton(
-          icon: Icon(Icons.arrow_back_sharp, size: 20.0),
-          onPressed: onPressed,
-          style: ButtonStyle(
-            backgroundColor: ButtonState.resolveWith((states) {
-              if (states.isNone || states.isDisabled) return Colors.transparent;
-              return ButtonThemeData.uncheckedInputColor(
-                FluentTheme.of(context),
-                states,
-              );
-            }),
-            foregroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled)
-                return ButtonThemeData.buttonColor(
-                  FluentTheme.of(context).brightness,
+      widget = Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: _kCompactNavigationPanelWidth,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back_sharp, size: 20.0),
+            onPressed: onPressed,
+            style: ButtonStyle(
+              backgroundColor: ButtonState.resolveWith((states) {
+                if (states.isNone || states.isDisabled) return Colors.transparent;
+                return ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
                   states,
                 );
-              return ButtonThemeData.uncheckedInputColor(
-                FluentTheme.of(context),
-                states,
-              ).basedOnLuminance();
-            }),
+              }),
+              foregroundColor: ButtonState.resolveWith((states) {
+                if (states.isDisabled)
+                  return ButtonThemeData.buttonColor(
+                    FluentTheme.of(context).brightness,
+                    states,
+                  );
+                return ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  states,
+                ).basedOnLuminance();
+              }),
+            ),
           ),
         ),
       );

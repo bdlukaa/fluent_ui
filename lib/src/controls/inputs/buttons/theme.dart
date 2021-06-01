@@ -193,6 +193,24 @@ class ButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'outlinedButtonStyle',
+      outlinedButtonStyle,
+    ));
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'filledButtonStyle',
+      filledButtonStyle,
+    ));
+    properties.add(
+      DiagnosticsProperty<ButtonStyle>('textButtonStyle', textButtonStyle),
+    );
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'defaultButtonStyle',
+      defaultButtonStyle,
+    ));
+    properties.add(
+      DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle),
+    );
   }
 
   /// Defines the default color used by [Button]s using the current brightness

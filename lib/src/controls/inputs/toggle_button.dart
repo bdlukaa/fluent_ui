@@ -207,5 +207,13 @@ class ToggleButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'checkedButtonStyle',
+      checkedButtonStyle,
+    ));
+    properties.add(DiagnosticsProperty<ButtonStyle>(
+      'uncheckedButtonStyle',
+      uncheckedButtonStyle,
+    ));
   }
 }
