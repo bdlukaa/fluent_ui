@@ -227,6 +227,7 @@ class NavigationViewState extends State<NavigationView> {
                 selected: pane.selected,
                 menuButton: pane.menuButton,
                 scrollController: pane.scrollController,
+                indicatorBuilder: pane.indicatorBuilder,
                 onDisplayModeRequested: (mode) {
                   setState(() => currentDisplayMode = mode);
                 },
