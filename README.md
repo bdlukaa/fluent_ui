@@ -68,6 +68,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
   - [Combo Box](#combo-box)
+- [Widgets](#widgets)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
   - [Flyout](#flyout)
@@ -140,7 +141,9 @@ Add the following code to your `README.md` or to your website:
 
 ```html
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-  <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+  <img
+    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7"
+  />
 </a>
 ```
 
@@ -1055,17 +1058,17 @@ The code above produces the following:
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_listitemstate.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_scroll.png)
 
+# Widgets
+
 ## Tooltip
 
 A tooltip is a short description that is linked to another control or object. Tooltips help users understand unfamiliar objects that aren't described directly in the UI. They display automatically when the user moves focus to, presses and holds, or hovers the mouse pointer over a control. The tooltip disappears after a few seconds, or when the user moves the finger, pointer or keyboard/gamepad focus. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
-
-### Creating
 
 To add a tooltip to a widget, wrap it in a `Tooltip` widget:
 
 ```dart
 Tooltip(
-  message: 'Tooltip message hehe',
+  message: 'Click to perform action.',
   child: Button(
     text: Text('Button with tooltip'),
     onPressed: () {
@@ -1077,15 +1080,11 @@ Tooltip(
 
 It's located above or below the `child` widget. You can specify the preffered location when both locations are available using the `preferBelow` property.
 
-### Screenshots
-
 ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
 
 ## Content Dialog
 
 Dialogs are modal UI overlays that provide contextual app information. They block interactions with the app window until being explicitly dismissed. They often request some kind of action from the user. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/dialogs-and-flyouts/dialogs)
-
-### Creating
 
 You can create a Dialog with the widget `ContentDialog`:
 
@@ -1104,7 +1103,9 @@ ContentDialog(
 ),
 ```
 
-### Display
+The code above produces the following:
+
+![No Wifi Connection Dialog](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_one_button.png)
 
 You can display the dialog as an overlay by calling the function `showDialog`:
 
@@ -1117,10 +1118,7 @@ showDialog(
 );
 ```
 
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_one_button.png)\
+![Delete File Dialog](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_two_button.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button.png)\
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button_default.png)
@@ -1605,7 +1603,5 @@ Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if
 All contributions are welcome :)
 
 ### Acknowledgements
-
-Thanks for all these paople
 
 - [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`

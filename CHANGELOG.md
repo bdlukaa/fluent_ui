@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [2.1.1] - [03/06/2021]
 
 - Option to set a default font family on the theme data (`ThemeData.fontFamily`)
 - `indicatorBuilder` is correctly applied to the automatic display mode in `NavigationView`
