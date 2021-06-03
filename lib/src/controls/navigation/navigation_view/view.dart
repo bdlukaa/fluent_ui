@@ -244,6 +244,21 @@ class NavigationViewState extends State<NavigationView> {
                           bottom: 0,
                           child: ClipRect(child: widget.content),
                         ),
+                        if (_compactOverlayOpen)
+                          Positioned.fill(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() => _compactOverlayOpen = false);
+                              },
+                              child: AbsorbPointer(
+                                child: Semantics(
+                                  label: FluentLocalizations.of(context)
+                                      .modalBarrierDismissLabel,
+                                  child: SizedBox.expand(),
+                                ),
+                              ),
+                            ),
+                          ),
                         _buildAcrylic(PrimaryScrollController(
                           controller: scrollController,
                           child: _compactOverlayOpen

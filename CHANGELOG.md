@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - Option to set a default font family on the theme data (`ThemeData.fontFamily`)
 - `indicatorBuilder` is correctly applied to the automatic display mode in `NavigationView`
+- An overlay is open when the toggle button is pressed on the compact display mode ([#43](https://github.com/bdlukaa/fluent_ui/issues/43))
 
 ## [2.1.0] - Mobile Update - [01/06/2021]
 

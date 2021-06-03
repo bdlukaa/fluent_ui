@@ -947,10 +947,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
           child: AbsorbPointer(
             child: Semantics(
               label: FluentLocalizations.of(context).modalBarrierDismissLabel,
-              child: Container(
-                constraints: BoxConstraints.expand(),
-                color: Colors.black.withOpacity(0.03),
-              ),
+              child: SizedBox.expand(),
             ),
           ),
         ),

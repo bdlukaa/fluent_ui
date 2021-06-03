@@ -136,7 +136,14 @@ class _MyHomePageState extends State<MyHomePage> {
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
-        header: FlutterLogo(),
+        header: Container(
+          height: kOneLineTileHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: FlutterLogo(
+            style: FlutterLogoStyle.horizontal,
+            size: 100,
+          ),
+        ),
         displayMode: appTheme.displayMode,
         indicatorBuilder: ({
           required BuildContext context,
