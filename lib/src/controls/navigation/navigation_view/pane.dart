@@ -324,7 +324,6 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
-    this.onDisplayModeRequested,
     this.menuButton,
     this.scrollController,
     this.indicatorBuilder = defaultNavigationIndicator,
@@ -337,11 +336,6 @@ class NavigationPane with Diagnosticable {
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
-
-  /// Whenever the display mode was requested to be changed. This can be
-  /// called from [PaneDisplayMode.open] to [PaneDisplayMode.compact], or
-  /// vice-versa.
-  final ValueChanged<PaneDisplayMode>? onDisplayModeRequested;
 
   /// The menu button used by this pane. If null and [onDisplayModeRequested]
   /// is null
@@ -482,18 +476,16 @@ class NavigationPane with Diagnosticable {
     required VoidCallback onPressed,
   }) {
     if (pane.menuButton != null) return pane.menuButton!;
-    if (pane.onDisplayModeRequested != null)
-      return Container(
-        width: _kCompactNavigationPanelWidth,
-        margin: padding,
-        child: PaneItem(title: itemTitle, icon: Icon(Icons.menu)).build(
-          context,
-          false,
-          onPressed,
-          displayMode: PaneDisplayMode.compact,
-        ),
-      );
-    return SizedBox.shrink();
+    return Container(
+      width: _kCompactNavigationPanelWidth,
+      margin: padding,
+      child: PaneItem(title: itemTitle, icon: Icon(Icons.menu)).build(
+        context,
+        false,
+        onPressed,
+        displayMode: PaneDisplayMode.compact,
+      ),
+    );
   }
 }
 
@@ -589,7 +581,7 @@ class _TopNavigationPane extends StatelessWidget {
   }
 }
 
-class _CompactNavigationPane extends StatelessWidget {
+class _CompactNavigationPane extends StatefulWidget {
   _CompactNavigationPane({
     required this.pane,
     this.paneKey,
@@ -602,6 +594,11 @@ class _CompactNavigationPane extends StatelessWidget {
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
 
+  @override
+  __CompactNavigationPaneState createState() => __CompactNavigationPaneState();
+}
+
+class __CompactNavigationPaneState extends State<_CompactNavigationPane> {
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
     if (item is PaneItemHeader) {
@@ -610,12 +607,12 @@ class _CompactNavigationPane extends StatelessWidget {
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
-      final selected = pane.isSelected(item);
+      final selected = widget.pane.isSelected(item);
       return item.build(
         context,
         selected,
         () {
-          pane.onChanged?.call(pane.effectiveIndexOf(item));
+          widget.pane.onChanged?.call(widget.pane.effectiveIndexOf(item));
         },
       );
     } else {
@@ -630,36 +627,37 @@ class _CompactNavigationPane extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    final bool showReplacement =
-        pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
+    final bool showReplacement = widget.pane.autoSuggestBox != null &&
+        widget.pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: _kCompactNavigationPanelWidth,
-      key: paneKey,
+      key: widget.paneKey,
       child: Acrylic(
         color: theme.backgroundColor,
-        child: pane.indicatorBuilder(
+        child: widget.pane.indicatorBuilder(
           context: context,
-          index: pane.selected,
-          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-          sizes: pane.effectiveItems.getPaneItemsSizes,
+          index: widget.pane.selected,
+          offsets: () => widget.pane.effectiveItems
+              .getPaneItemsOffsets(widget.pane.paneKey),
+          sizes: widget.pane.effectiveItems.getPaneItemsSizes,
           axis: Axis.horizontal,
           child: Align(
-            key: pane.paneKey,
+            key: widget.pane.paneKey,
             alignment: Alignment.topCenter,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               () {
-                if (pane.menuButton != null) return pane.menuButton!;
-                if (pane.onDisplayModeRequested != null)
+                if (widget.pane.menuButton != null)
+                  return widget.pane.menuButton!;
+                if (widget.onToggle != null)
                   return NavigationPane.buildMenuButton(
                     context,
                     Text(FluentLocalizations.of(context).openNavigationTooltip),
-                    pane,
+                    widget.pane,
                     onPressed: () {
-                      pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
-                      onToggle?.call();
+                      widget.onToggle?.call();
                     },
                     padding: showReplacement ? EdgeInsets.zero : topPadding,
                   );
@@ -670,26 +668,27 @@ class _CompactNavigationPane extends StatelessWidget {
                   padding: topPadding,
                   child: PaneItem(
                     title: Text(FluentLocalizations.of(context).clickToSearch),
-                    icon: pane.autoSuggestBoxReplacement!,
+                    icon: widget.pane.autoSuggestBoxReplacement!,
                   ).build(
                     context,
                     false,
                     () {
-                      pane.onDisplayModeRequested?.call(PaneDisplayMode.open);
+                      widget.onToggle?.call();
                     },
                   ),
                 ),
               Expanded(
                 child: Scrollbar(
                   isAlwaysShown: false,
-                  child: ListView(key: listKey, primary: true, children: [
-                    ...pane.items.map((item) {
+                  child:
+                      ListView(key: widget.listKey, primary: true, children: [
+                    ...widget.pane.items.map((item) {
                       return _buildItem(context, item);
                     }),
                   ]),
                 ),
               ),
-              ...pane.footerItems.map((item) {
+              ...widget.pane.footerItems.map((item) {
                 return _buildItem(context, item);
               }),
             ]),
@@ -705,11 +704,13 @@ class _OpenNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
+    this.onToggle,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final VoidCallback? onToggle;
 
   static Widget buildItem(
     BuildContext context,
@@ -747,13 +748,13 @@ class _OpenNavigationPane extends StatelessWidget {
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     final menuButton = () {
       if (pane.menuButton != null) return pane.menuButton!;
-      if (pane.onDisplayModeRequested != null)
+      if (onToggle != null)
         return NavigationPane.buildMenuButton(
           context,
           Text(FluentLocalizations.of(context).closeNavigationTooltip),
           pane,
           onPressed: () {
-            pane.onDisplayModeRequested?.call(PaneDisplayMode.compact);
+            onToggle?.call();
           },
         );
       return SizedBox.shrink();

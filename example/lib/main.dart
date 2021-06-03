@@ -138,9 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
         onChanged: (i) => setState(() => index = i),
         header: FlutterLogo(),
         displayMode: appTheme.displayMode,
-        onDisplayModeRequested: (mode) {
-          appTheme.displayMode = mode;
-        },
         indicatorBuilder: ({
           required BuildContext context,
           int? index,

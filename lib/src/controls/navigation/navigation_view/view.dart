@@ -88,16 +88,14 @@ class NavigationViewState extends State<NavigationView> {
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
 
-  /// The current display mode used by the automatic pane mode.
-  /// This can not be changed
-  PaneDisplayMode? currentDisplayMode;
-
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
   final minimalPaneKey = GlobalKey<__MinimalNavigationPaneState>();
 
   bool get isMinimalPaneOpen =>
       minimalOverlayEntry != null || (minimalOverlayEntry?.mounted ?? false);
+
+  bool _compactOverlayOpen = false;
 
   @override
   void initState() {
@@ -135,7 +133,6 @@ class NavigationViewState extends State<NavigationView> {
       if (widget.appBar != null) {
         return _buildAcrylic(_NavigationAppBar(
           appBar: widget.appBar!,
-          displayMode: widget.pane?.displayMode ?? PaneDisplayMode.top,
           additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
               ? FocusTheme(
                   data: FocusThemeData(renderOutside: false),
@@ -164,42 +161,28 @@ class NavigationViewState extends State<NavigationView> {
       return SizedBox.shrink();
     }();
 
-    late Widget paneResult;
-    if (widget.pane != null) {
-      final pane = widget.pane!;
-      if (pane.displayMode == PaneDisplayMode.top) {
-        paneResult = Column(children: [
-          appBar,
-          _buildAcrylic(PrimaryScrollController(
-            controller: scrollController,
-            child: _TopNavigationPane(
-              pane: pane,
-              listKey: _listKey,
-            ),
-          )),
-          Expanded(child: widget.content),
-        ]);
-      } else if (pane.displayMode == PaneDisplayMode.auto) {
-        /// For more info on the adaptive behavior, see
-        /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
-        ///
-        ///  DD/MM/YYYY
-        /// (23/05/2021)
-        ///
-        /// When PaneDisplayMode is set to its default value of Auto, the adaptive behavior is to show:
-        /// - An expanded left pane on large window widths (1008px or greater).
-        /// - A left, icon-only, nav pane (compact) on medium window widths (641px to 1007px).
-        /// - Only a menu button (minimal) on small window widths (640px or less).
-        return LayoutBuilder(
-          builder: (context, consts) {
+    Widget paneResult = LayoutBuilder(
+      builder: (context, consts) {
+        late Widget paneResult;
+        if (widget.pane != null) {
+          final pane = widget.pane!;
+          if (pane.displayMode == PaneDisplayMode.auto) {
+            /// For more info on the adaptive behavior, see
+            /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
+            ///
+            ///  DD/MM/YYYY
+            /// (23/05/2021)
+            ///
+            /// When PaneDisplayMode is set to its default value of Auto, the adaptive behavior is to show:
+            /// - An expanded left pane on large window widths (1008px or greater).
+            /// - A left, icon-only, nav pane (compact) on medium window widths (641px to 1007px).
+            /// - Only a menu button (minimal) on small window widths (640px or less).
             double width = consts.biggest.width;
             if (width.isInfinite) width = MediaQuery.of(context).size.width;
 
             late PaneDisplayMode autoDisplayMode;
             if (width <= 640) {
               autoDisplayMode = PaneDisplayMode.minimal;
-            } else if (currentDisplayMode != null) {
-              autoDisplayMode = currentDisplayMode!;
             } else if (width >= 1008) {
               autoDisplayMode = PaneDisplayMode.open;
             } else if (width > 640) {
@@ -228,67 +211,101 @@ class NavigationViewState extends State<NavigationView> {
                 menuButton: pane.menuButton,
                 scrollController: pane.scrollController,
                 indicatorBuilder: pane.indicatorBuilder,
-                onDisplayModeRequested: (mode) {
-                  setState(() => currentDisplayMode = mode);
-                },
               ),
             );
-          },
-        );
-      } else {
-        switch (pane.displayMode) {
-          case PaneDisplayMode.compact:
-            paneResult = Column(children: [
-              appBar,
-              Expanded(
-                child: Row(children: [
+          } else {
+            if (pane.displayMode != PaneDisplayMode.compact)
+              _compactOverlayOpen = false;
+            switch (pane.displayMode) {
+              case PaneDisplayMode.top:
+                paneResult = Column(children: [
+                  appBar,
                   _buildAcrylic(PrimaryScrollController(
                     controller: scrollController,
-                    child: _CompactNavigationPane(
+                    child: _TopNavigationPane(
                       pane: pane,
-                      paneKey: _panelKey,
-                      listKey: _listKey,
-                      onToggle: () {},
-                    ),
-                  )),
-                  Expanded(child: ClipRect(child: widget.content)),
-                ]),
-              ),
-            ]);
-            break;
-          case PaneDisplayMode.open:
-            paneResult = Column(children: [
-              appBar,
-              Expanded(
-                child: Row(children: [
-                  _buildAcrylic(PrimaryScrollController(
-                    controller: scrollController,
-                    child: _OpenNavigationPane(
-                      pane: pane,
-                      paneKey: _panelKey,
                       listKey: _listKey,
                     ),
                   )),
-                  Expanded(child: ClipRect(child: widget.content)),
-                ]),
-              ),
-            ]);
-            break;
-          case PaneDisplayMode.minimal:
-            paneResult = Column(children: [
-              appBar,
-              Expanded(child: widget.content),
-            ]);
-            break;
-          default:
-            paneResult = widget.content;
+                  Expanded(child: widget.content),
+                ]);
+                break;
+              case PaneDisplayMode.compact:
+                paneResult = Column(children: [
+                  appBar,
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Stack(clipBehavior: Clip.none, children: [
+                        Positioned(
+                          left: _kCompactNavigationPanelWidth,
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: ClipRect(child: widget.content),
+                        ),
+                        _buildAcrylic(PrimaryScrollController(
+                          controller: scrollController,
+                          child: _compactOverlayOpen
+                              ? _OpenNavigationPane(
+                                  pane: pane,
+                                  paneKey: _panelKey,
+                                  listKey: _listKey,
+                                  onToggle: () {
+                                    setState(() => _compactOverlayOpen = false);
+                                  },
+                                )
+                              : _CompactNavigationPane(
+                                  pane: pane,
+                                  paneKey: _panelKey,
+                                  listKey: _listKey,
+                                  onToggle: () {
+                                    setState(() => _compactOverlayOpen = true);
+                                  },
+                                ),
+                        )),
+                      ]),
+                    ),
+                  ),
+                ]);
+                break;
+              case PaneDisplayMode.open:
+                paneResult = Column(children: [
+                  appBar,
+                  Expanded(
+                    child: Row(children: [
+                      _buildAcrylic(PrimaryScrollController(
+                        controller: scrollController,
+                        child: _OpenNavigationPane(
+                          pane: pane,
+                          paneKey: _panelKey,
+                          listKey: _listKey,
+                        ),
+                      )),
+                      Expanded(child: ClipRect(child: widget.content)),
+                    ]),
+                  ),
+                ]);
+                break;
+              case PaneDisplayMode.minimal:
+                paneResult = Column(children: [
+                  appBar,
+                  Expanded(child: widget.content),
+                ]);
+                break;
+              default:
+                paneResult = widget.content;
+            }
+          }
+        } else {
+          paneResult = widget.content;
         }
-      }
-    } else {
-      paneResult = widget.content;
-    }
+        return paneResult;
+      },
+    );
     return _NavigationBody(
-      displayMode: widget.pane?.displayMode,
+      displayMode:
+          _compactOverlayOpen ? PaneDisplayMode.open : widget.pane?.displayMode,
       child: paneResult,
     );
   }
@@ -455,12 +472,12 @@ class _NavigationAppBar extends StatefulWidget {
   _NavigationAppBar({
     Key? key,
     required this.appBar,
-    required this.displayMode,
+    this.displayMode,
     this.additionalLeading,
   }) : super(key: key);
 
   final NavigationAppBar appBar;
-  final PaneDisplayMode displayMode;
+  final PaneDisplayMode? displayMode;
   final Widget? additionalLeading;
 
   @override
@@ -474,11 +491,14 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final displayMode = widget.displayMode ??
+        _NavigationBody.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.top;
     final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
       widget.appBar,
-      widget.displayMode != PaneDisplayMode.top,
+      displayMode != PaneDisplayMode.top,
     );
     final title = () {
       if (widget.appBar.title != null) {
@@ -487,7 +507,7 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
           padding: EdgeInsets.only(
-            left: widget.displayMode == PaneDisplayMode.compact
+            left: displayMode == PaneDisplayMode.compact
                 ? PageHeader.horizontalPadding(context)
                 : 12.0,
           ),
@@ -503,7 +523,7 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
         return SizedBox.shrink();
     }();
     late Widget result;
-    switch (widget.displayMode) {
+    switch (displayMode) {
       case PaneDisplayMode.top:
       case PaneDisplayMode.minimal:
         result = Acrylic(
