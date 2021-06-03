@@ -11,6 +11,7 @@ import 'screens/inputs.dart';
 import 'screens/mobile.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
+import 'screens/typography.dart';
 
 import 'theme.dart';
 
@@ -197,6 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
           PaneItem(
               icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
+          PaneItem(icon: Icon(Icons.title), title: Text('Typography')),
           PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
         ],
         autoSuggestBox: AutoSuggestBox(
@@ -214,6 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Forms(),
         Others(),
         ColorsPage(controller: colorsController),
+        TypographyPage(),
         Mobile(),
         Settings(controller: settingsController),
       ]),
