@@ -52,13 +52,7 @@ class _FormsState extends State<Forms> {
             Expanded(
               child: AutoSuggestBox<String>(
                 controller: autoSuggestBox,
-                items: [
-                  'Blue',
-                  'Green',
-                  'Red',
-                  'Yellow',
-                  'Grey',
-                ],
+                items: values,
                 onSelected: (text) {
                   print(text);
                 },

@@ -1,5 +1,7 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
@@ -126,6 +128,32 @@ class Settings extends StatelessWidget {
               );
             }),
           ]),
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
+            Text('Window Transparency',
+                style: FluentTheme.of(context).typography.subtitle),
+            ...List.generate(FlutterAcrylic.AcrylicEffect.values.length,
+                (index) {
+              final mode = FlutterAcrylic.AcrylicEffect.values[index];
+              return RadioListTile(
+                checked: appTheme.acrylicEffect == mode,
+                onChanged: (value) {
+                  if (value) {
+                    appTheme.acrylicEffect = mode;
+                    FlutterAcrylic.Acrylic.setEffect(
+                      effect: mode,
+                      gradientColor: FluentTheme.of(context)
+                          .acrylicBackgroundColor
+                          .withOpacity(0.2),
+                    );
+                  }
+                },
+                title: Text(
+                  mode.toString().replaceAll('AcrylicEffect.', ''),
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+              );
+            }),
+          ],
         ],
       ),
     );

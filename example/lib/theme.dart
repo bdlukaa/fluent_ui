@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
 
 enum NavigationIndicators { sticky, end }
 
@@ -30,6 +31,14 @@ class AppTheme extends ChangeNotifier {
   NavigationIndicators get indicator => _indicator;
   set indicator(NavigationIndicators indicator) {
     _indicator = indicator;
+    notifyListeners();
+  }
+
+  FlutterAcrylic.AcrylicEffect _acrylicEffect =
+      FlutterAcrylic.AcrylicEffect.disabled;
+  FlutterAcrylic.AcrylicEffect get acrylicEffect => _acrylicEffect;
+  set acrylicEffect(FlutterAcrylic.AcrylicEffect acrylicEffect) {
+    _acrylicEffect = acrylicEffect;
     notifyListeners();
   }
 }

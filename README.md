@@ -120,7 +120,7 @@ Note that this version is not stable. You can see the example app deplyed using 
 
 ```yaml
 dependencies:
-  fluent_ui: ^2.1.0
+  fluent_ui: ^2.1.1
 ```
 
 Versions published to pub are stable and fully tested.
@@ -1605,3 +1605,5 @@ All contributions are welcome :)
 ### Acknowledgements
 
 - [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`
+- [@alexmercerind](https://github.com/alexmercerind) for the [flutter_acrylic](https://github.com/alexmercerind/flutter_acrylic) plugin, used on the example app
+- [@bitsdojo](https://github.com/bitsdojo) for the [bitsdojo_window](https://github.com/bitsdojo/bitsdojo_window) plugin, used on the example app.

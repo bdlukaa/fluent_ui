@@ -537,6 +537,8 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
       } else
         return SizedBox.shrink();
     }();
+    final Color backgroundColor = widget.appBar.backgroundColor ??
+        FluentTheme.of(context).scaffoldBackgroundColor;
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
@@ -568,7 +570,12 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
               ]),
             ),
           ),
-          Expanded(child: widget.appBar.actions ?? SizedBox()),
+          Expanded(
+            child: ColoredBox(
+              color: backgroundColor,
+              child: widget.appBar.actions ?? SizedBox(),
+            ),
+          ),
         ]);
         break;
       case PaneDisplayMode.compact:
@@ -585,16 +592,19 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             ),
           ),
           if (widget.additionalLeading != null) widget.additionalLeading!,
-          title,
-          Expanded(child: widget.appBar.actions ?? SizedBox()),
+          ColoredBox(color: backgroundColor, child: title),
+          Expanded(
+            child: ColoredBox(
+              color: backgroundColor,
+              child: widget.appBar.actions ?? SizedBox(),
+            ),
+          ),
         ]);
         break;
       default:
         return SizedBox.shrink();
     }
-    return Container(
-      color: widget.appBar.backgroundColor ??
-          FluentTheme.of(context).scaffoldBackgroundColor,
+    return SizedBox(
       height: widget.appBar.height,
       child: result,
     );

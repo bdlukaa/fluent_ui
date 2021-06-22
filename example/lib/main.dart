@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
 
 import 'screens/colors.dart';
 import 'screens/forms.dart';
@@ -43,7 +44,11 @@ void main() async {
   } else {
     darkMode = true;
   }
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
+    await FlutterAcrylic.Acrylic.initialize();
+
   runApp(MyApp());
+
   if (isDesktop)
     doWhenWindowReady(() {
       final win = appWindow;
@@ -133,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Row(children: [Spacer(), WindowButtons()]),
               ),
       ),
-      useAcrylic: false,
+      useAcrylic: appTheme.acrylicEffect != FlutterAcrylic.AcrylicEffect.disabled,
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
@@ -201,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(icon: Icon(Icons.title), title: Text('Typography')),
           PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
         ],
-        autoSuggestBox: AutoSuggestBox(
+        autoSuggestBox: AutoSuggestBox<String>(
           controller: TextEditingController(),
           items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
         ),

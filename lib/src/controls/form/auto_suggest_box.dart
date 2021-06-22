@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
 
 // TODO: Navigate through items using keyboard (https://github.com/bdlukaa/fluent_ui/issues/19)
