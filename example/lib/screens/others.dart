@@ -54,39 +54,41 @@ class _OthersState extends State<Others> {
         ),
         controller: otherController,
         children: [
-          Acrylic(
-            margin: EdgeInsets.only(bottom: 10),
-            opacity: 1.0,
-            elevation: 4.0,
-            child: Column(children: [
-              Text('Surfaces',
-                  style: FluentTheme.of(context).typography.subtitle),
-              Wrap(spacing: 10, runSpacing: 10, children: [
-                Tooltip(
-                  message: 'This is a tooltip',
-                  child: Button(
-                    child: Text('Button with tooltip'),
-                    onPressed: () {
-                      print('pressed button with tooltip');
-                    },
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Acrylic(
+              tintAlpha: 1.0,
+              elevation: 4.0,
+              child: Column(children: [
+                Text('Surfaces',
+                    style: FluentTheme.of(context).typography.subtitle),
+                Wrap(spacing: 10, runSpacing: 10, children: [
+                  Tooltip(
+                    message: 'This is a tooltip',
+                    child: Button(
+                      child: Text('Button with tooltip'),
+                      onPressed: () {
+                        print('pressed button with tooltip');
+                      },
+                    ),
                   ),
-                ),
-                Flyout(
-                  controller: flyoutController,
-                  contentWidth: 450,
-                  content: FlyoutContent(
-                    child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                  Flyout(
+                    controller: flyoutController,
+                    contentWidth: 450,
+                    content: FlyoutContent(
+                      child: Text(
+                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                    ),
+                    child: Button(
+                      child: Text('Open flyout'),
+                      onPressed: () {
+                        flyoutController.open = true;
+                      },
+                    ),
                   ),
-                  child: Button(
-                    child: Text('Open flyout'),
-                    onPressed: () {
-                      flyoutController.open = true;
-                    },
-                  ),
-                ),
+                ]),
               ]),
-            ]),
+            ),
           ),
           ...List.generate(InfoBarSeverity.values.length, (index) {
             final severity = InfoBarSeverity.values[index];
@@ -224,14 +226,17 @@ class _OthersState extends State<Others> {
                     Positioned.fill(child: FlutterLogo()),
                     Align(
                       alignment: Alignment.center,
-                      child: Acrylic(
+                      child: SizedBox(
                         width: 250.0,
                         height: 200.0,
-                        child: Center(
-                          child: Text(
-                            'A C R Y L I C',
-                            style: FluentTheme.of(context).typography.subheader,
-                            textAlign: TextAlign.center,
+                        child: Acrylic(
+                          child: Center(
+                            child: Text(
+                              'A C R Y L I C',
+                              style:
+                                  FluentTheme.of(context).typography.subheader,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),

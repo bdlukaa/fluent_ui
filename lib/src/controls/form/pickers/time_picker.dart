@@ -298,186 +298,70 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     final duration = FluentTheme.of(context).fasterAnimationDuration;
     final curve = FluentTheme.of(context).animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
-    return Acrylic(
+    return SizedBox(
       height: widget.height,
-      decoration: kPickerBackgroundDecoration(context),
-      child: Column(children: [
-        Expanded(
-          child: Stack(children: [
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                height: kOneLineTileHeight,
-                child: ListTile(
-                  tileColor:
-                      FluentTheme.of(context).accentColor.resolveFrom(context),
+      child: Acrylic(
+        tint: kPickerBackgroundColor(context),
+        shape: kPickerShape(context),
+        child: Column(children: [
+          Expanded(
+            child: Stack(children: [
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: kOneLineTileHeight,
+                  child: ListTile(
+                    tileColor: FluentTheme.of(context)
+                        .accentColor
+                        .resolveFrom(context),
+                  ),
                 ),
               ),
-            ),
-            Row(children: [
-              Expanded(
-                child: PickerNavigatorIndicator(
-                  onBackward: () {
-                    navigateSides(
-                      context,
-                      widget.hourController,
-                      false,
-                      hoursAmount,
-                    );
-                  },
-                  onForward: () {
-                    navigateSides(
-                      context,
-                      widget.hourController,
-                      true,
-                      hoursAmount,
-                    );
-                  },
-                  child: ListWheelScrollView.useDelegate(
-                    controller: widget.hourController,
-                    childDelegate: ListWheelChildLoopingListDelegate(
-                      children: List.generate(
+              Row(children: [
+                Expanded(
+                  child: PickerNavigatorIndicator(
+                    onBackward: () {
+                      navigateSides(
+                        context,
+                        widget.hourController,
+                        false,
                         hoursAmount,
-                        (index) => ListTile(
-                          title: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: kPickerPopupTextStyle(context),
+                      );
+                    },
+                    onForward: () {
+                      navigateSides(
+                        context,
+                        widget.hourController,
+                        true,
+                        hoursAmount,
+                      );
+                    },
+                    child: ListWheelScrollView.useDelegate(
+                      controller: widget.hourController,
+                      childDelegate: ListWheelChildLoopingListDelegate(
+                        children: List.generate(
+                          hoursAmount,
+                          (index) => ListTile(
+                            title: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: kPickerPopupTextStyle(context),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    itemExtent: kOneLineTileHeight,
-                    diameterRatio: kPickerDiameterRatio,
-                    physics: const FixedExtentScrollPhysics(),
-                    onSelectedItemChanged: (index) {
-                      int _hour = index + 1;
-                      if (!widget.use24Format && !isAm) {
-                        _hour += 12;
-                      }
-                      widget.handleDateChanged(DateTime(
-                        widget.date.year,
-                        widget.date.month,
-                        widget.date.day,
-                        _hour,
-                        widget.date.minute,
-                        widget.date.second,
-                        widget.date.millisecond,
-                        widget.date.microsecond,
-                      ));
-                    },
-                  ),
-                ),
-              ),
-              divider,
-              Expanded(
-                child: PickerNavigatorIndicator(
-                  onBackward: () {
-                    navigateSides(
-                      context,
-                      widget.minuteController,
-                      false,
-                      60,
-                    );
-                  },
-                  onForward: () {
-                    navigateSides(
-                      context,
-                      widget.minuteController,
-                      true,
-                      60,
-                    );
-                  },
-                  child: ListWheelScrollView.useDelegate(
-                    controller: widget.minuteController,
-                    childDelegate: ListWheelChildLoopingListDelegate(
-                      children:
-                          List.generate(60 ~/ widget.minuteIncrement, (index) {
-                        return ListTile(
-                          title: Center(
-                            child: Text(
-                              '${(index * widget.minuteIncrement).toInt()}',
-                              style: kPickerPopupTextStyle(context),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                    itemExtent: kOneLineTileHeight,
-                    diameterRatio: kPickerDiameterRatio,
-                    physics: const FixedExtentScrollPhysics(),
-                    onSelectedItemChanged: (index) {
-                      widget.handleDateChanged(DateTime(
-                        widget.date.year,
-                        widget.date.month,
-                        widget.date.day,
-                        widget.date.hour,
-                        index,
-                        widget.date.second,
-                        widget.date.millisecond,
-                        widget.date.microsecond,
-                      ));
-                    },
-                  ),
-                ),
-              ),
-              if (!widget.use24Format) ...[
-                divider,
-                Expanded(
-                  child: PickerNavigatorIndicator(
-                    onBackward: () {
-                      widget.amPmController.animateToItem(
-                        0,
-                        duration: duration,
-                        curve: curve,
-                      );
-                    },
-                    onForward: () {
-                      widget.amPmController.animateToItem(
-                        1,
-                        duration: duration,
-                        curve: curve,
-                      );
-                    },
-                    child: ListWheelScrollView(
-                      controller: widget.amPmController,
                       itemExtent: kOneLineTileHeight,
+                      diameterRatio: kPickerDiameterRatio,
                       physics: const FixedExtentScrollPhysics(),
-                      children: [
-                        ListTile(
-                          title: Center(
-                            child: Text(
-                              widget.amText,
-                              style: kPickerPopupTextStyle(context),
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Center(
-                            child: Text(
-                              widget.pmText,
-                              style: kPickerPopupTextStyle(context),
-                            ),
-                          ),
-                        ),
-                      ],
                       onSelectedItemChanged: (index) {
-                        setState(() {});
-                        int _hour = widget.date.hour;
-                        final isAm = index == 0;
-                        if (!widget.use24Format) {
-                          // If it was previously am and now it's pm
-                          if (!isAm) {
-                            _hour += 12;
-                            // If it was previously pm and now it's am
-                          } else if (isAm) {
-                            _hour -= 12;
-                          }
+                        int _hour = index + 1;
+                        if (!widget.use24Format && !isAm) {
+                          _hour += 12;
                         }
                         widget.handleDateChanged(DateTime(
                           widget.date.year,
@@ -493,27 +377,147 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     ),
                   ),
                 ),
-              ],
+                divider,
+                Expanded(
+                  child: PickerNavigatorIndicator(
+                    onBackward: () {
+                      navigateSides(
+                        context,
+                        widget.minuteController,
+                        false,
+                        60,
+                      );
+                    },
+                    onForward: () {
+                      navigateSides(
+                        context,
+                        widget.minuteController,
+                        true,
+                        60,
+                      );
+                    },
+                    child: ListWheelScrollView.useDelegate(
+                      controller: widget.minuteController,
+                      childDelegate: ListWheelChildLoopingListDelegate(
+                        children: List.generate(60 ~/ widget.minuteIncrement,
+                            (index) {
+                          return ListTile(
+                            title: Center(
+                              child: Text(
+                                '${(index * widget.minuteIncrement).toInt()}',
+                                style: kPickerPopupTextStyle(context),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      itemExtent: kOneLineTileHeight,
+                      diameterRatio: kPickerDiameterRatio,
+                      physics: const FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (index) {
+                        widget.handleDateChanged(DateTime(
+                          widget.date.year,
+                          widget.date.month,
+                          widget.date.day,
+                          widget.date.hour,
+                          index,
+                          widget.date.second,
+                          widget.date.millisecond,
+                          widget.date.microsecond,
+                        ));
+                      },
+                    ),
+                  ),
+                ),
+                if (!widget.use24Format) ...[
+                  divider,
+                  Expanded(
+                    child: PickerNavigatorIndicator(
+                      onBackward: () {
+                        widget.amPmController.animateToItem(
+                          0,
+                          duration: duration,
+                          curve: curve,
+                        );
+                      },
+                      onForward: () {
+                        widget.amPmController.animateToItem(
+                          1,
+                          duration: duration,
+                          curve: curve,
+                        );
+                      },
+                      child: ListWheelScrollView(
+                        controller: widget.amPmController,
+                        itemExtent: kOneLineTileHeight,
+                        physics: const FixedExtentScrollPhysics(),
+                        children: [
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                widget.amText,
+                                style: kPickerPopupTextStyle(context),
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                widget.pmText,
+                                style: kPickerPopupTextStyle(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                        onSelectedItemChanged: (index) {
+                          setState(() {});
+                          int _hour = widget.date.hour;
+                          final isAm = index == 0;
+                          if (!widget.use24Format) {
+                            // If it was previously am and now it's pm
+                            if (!isAm) {
+                              _hour += 12;
+                              // If it was previously pm and now it's am
+                            } else if (isAm) {
+                              _hour -= 12;
+                            }
+                          }
+                          widget.handleDateChanged(DateTime(
+                            widget.date.year,
+                            widget.date.month,
+                            widget.date.day,
+                            _hour,
+                            widget.date.minute,
+                            widget.date.second,
+                            widget.date.millisecond,
+                            widget.date.microsecond,
+                          ));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ]),
             ]),
-          ]),
-        ),
-        Divider(
-          style: DividerThemeData(
-            verticalMargin: EdgeInsets.zero,
-            horizontalMargin: EdgeInsets.zero,
           ),
-        ),
-        YesNoPickerControl(
-          onChanged: () {
-            Navigator.pop(context);
-            widget.onChanged();
-          },
-          onCancel: () {
-            Navigator.pop(context);
-            widget.onCancel();
-          },
-        ),
-      ]),
+          Divider(
+            style: DividerThemeData(
+              verticalMargin: EdgeInsets.zero,
+              horizontalMargin: EdgeInsets.zero,
+            ),
+          ),
+          YesNoPickerControl(
+            onChanged: () {
+              Navigator.pop(context);
+              widget.onChanged();
+            },
+            onCancel: () {
+              Navigator.pop(context);
+              widget.onCancel();
+            },
+          ),
+        ]),
+      ),
     );
   }
 }

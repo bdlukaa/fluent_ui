@@ -339,227 +339,231 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         horizontalMargin: EdgeInsets.zero,
       ),
     );
-    return Acrylic(
+    return SizedBox(
       height: widget.height,
-      decoration: kPickerBackgroundDecoration(context),
-      child: Column(children: [
-        Expanded(
-          child: Stack(children: [
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                height: kOneLineTileHeight,
-                child: ListTile(
-                  tileColor:
-                      FluentTheme.of(context).accentColor.resolveFrom(context),
+      child: Acrylic(
+        tint: kPickerBackgroundColor(context),
+        shape: kPickerShape(context),
+        child: Column(children: [
+          Expanded(
+            child: Stack(children: [
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: kOneLineTileHeight,
+                  child: ListTile(
+                    tileColor: FluentTheme.of(context)
+                        .accentColor
+                        .resolveFrom(context),
+                  ),
                 ),
               ),
-            ),
-            Row(children: [
-              if (widget.showMonth)
-                Expanded(
-                  flex: 2,
-                  child: () {
-                    final items = List.generate(
-                      12,
-                      (index) {
-                        final text = DateFormat.MMMM().format(
-                          DateTime(1, index + 1),
-                        );
-                        return ListTile(
-                          title: Text(
-                            text,
-                            style: kPickerPopupTextStyle(context),
-                          ),
-                        );
-                      },
-                    );
-                    // MONTH
-                    return PickerNavigatorIndicator(
-                      onBackward: () {
-                        navigateSides(
-                          context,
-                          widget.monthController,
-                          false,
-                          12,
-                        );
-                      },
-                      onForward: () {
-                        navigateSides(
-                          context,
-                          widget.monthController,
-                          true,
-                          12,
-                        );
-                      },
-                      child: ListWheelScrollView.useDelegate(
-                        controller: widget.monthController,
-                        itemExtent: kOneLineTileHeight,
-                        diameterRatio: kPickerDiameterRatio,
-                        physics: const FixedExtentScrollPhysics(),
-                        childDelegate: ListWheelChildLoopingListDelegate(
-                          children: items,
-                        ),
-                        onSelectedItemChanged: (index) {
-                          final month = index + 1;
-                          final daysInMonth =
-                              _getDaysInMonth(month, widget.date.year);
-                          int day = widget.date.day;
-                          if (day > daysInMonth) day = daysInMonth;
-                          widget.handleDateChanged(DateTime(
-                            widget.date.year,
-                            month,
-                            day,
-                            widget.date.hour,
-                            widget.date.minute,
-                            widget.date.second,
-                            widget.date.millisecond,
-                            widget.date.microsecond,
-                          ));
-                          setState(() {});
+              Row(children: [
+                if (widget.showMonth)
+                  Expanded(
+                    flex: 2,
+                    child: () {
+                      final items = List.generate(
+                        12,
+                        (index) {
+                          final text = DateFormat.MMMM().format(
+                            DateTime(1, index + 1),
+                          );
+                          return ListTile(
+                            title: Text(
+                              text,
+                              style: kPickerPopupTextStyle(context),
+                            ),
+                          );
                         },
-                      ),
-                    );
-                  }(),
-                ),
-              if (widget.showDay) ...[
-                divider,
-                Expanded(
-                  child: () {
-                    // DAY
-                    final daysInMonth =
-                        _getDaysInMonth(widget.date.month, widget.date.year);
-                    return PickerNavigatorIndicator(
-                      onBackward: () {
-                        navigateSides(
-                          context,
-                          widget.dayController,
-                          false,
-                          daysInMonth,
-                        );
-                      },
-                      onForward: () {
-                        navigateSides(
-                          context,
-                          widget.dayController,
-                          true,
-                          daysInMonth,
-                        );
-                      },
-                      child: ListWheelScrollView.useDelegate(
-                        controller: widget.dayController,
-                        itemExtent: kOneLineTileHeight,
-                        diameterRatio: kPickerDiameterRatio,
-                        physics: const FixedExtentScrollPhysics(),
-                        childDelegate: ListWheelChildLoopingListDelegate(
-                          children: List<Widget>.generate(
+                      );
+                      // MONTH
+                      return PickerNavigatorIndicator(
+                        onBackward: () {
+                          navigateSides(
+                            context,
+                            widget.monthController,
+                            false,
+                            12,
+                          );
+                        },
+                        onForward: () {
+                          navigateSides(
+                            context,
+                            widget.monthController,
+                            true,
+                            12,
+                          );
+                        },
+                        child: ListWheelScrollView.useDelegate(
+                          controller: widget.monthController,
+                          itemExtent: kOneLineTileHeight,
+                          diameterRatio: kPickerDiameterRatio,
+                          physics: const FixedExtentScrollPhysics(),
+                          childDelegate: ListWheelChildLoopingListDelegate(
+                            children: items,
+                          ),
+                          onSelectedItemChanged: (index) {
+                            final month = index + 1;
+                            final daysInMonth =
+                                _getDaysInMonth(month, widget.date.year);
+                            int day = widget.date.day;
+                            if (day > daysInMonth) day = daysInMonth;
+                            widget.handleDateChanged(DateTime(
+                              widget.date.year,
+                              month,
+                              day,
+                              widget.date.hour,
+                              widget.date.minute,
+                              widget.date.second,
+                              widget.date.millisecond,
+                              widget.date.microsecond,
+                            ));
+                            setState(() {});
+                          },
+                        ),
+                      );
+                    }(),
+                  ),
+                if (widget.showDay) ...[
+                  divider,
+                  Expanded(
+                    child: () {
+                      // DAY
+                      final daysInMonth =
+                          _getDaysInMonth(widget.date.month, widget.date.year);
+                      return PickerNavigatorIndicator(
+                        onBackward: () {
+                          navigateSides(
+                            context,
+                            widget.dayController,
+                            false,
                             daysInMonth,
-                            (index) => ListTile(
-                              title: Center(
-                                child: Text(
-                                  '${index + 1}',
-                                  style: kPickerPopupTextStyle(context),
+                          );
+                        },
+                        onForward: () {
+                          navigateSides(
+                            context,
+                            widget.dayController,
+                            true,
+                            daysInMonth,
+                          );
+                        },
+                        child: ListWheelScrollView.useDelegate(
+                          controller: widget.dayController,
+                          itemExtent: kOneLineTileHeight,
+                          diameterRatio: kPickerDiameterRatio,
+                          physics: const FixedExtentScrollPhysics(),
+                          childDelegate: ListWheelChildLoopingListDelegate(
+                            children: List<Widget>.generate(
+                              daysInMonth,
+                              (index) => ListTile(
+                                title: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: kPickerPopupTextStyle(context),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
+                          onSelectedItemChanged: (index) {
+                            widget.handleDateChanged(DateTime(
+                              widget.date.year,
+                              widget.date.month,
+                              index + 1,
+                              widget.date.hour,
+                              widget.date.minute,
+                              widget.date.second,
+                              widget.date.millisecond,
+                              widget.date.microsecond,
+                            ));
+                          },
                         ),
-                        onSelectedItemChanged: (index) {
-                          widget.handleDateChanged(DateTime(
-                            widget.date.year,
-                            widget.date.month,
-                            index + 1,
-                            widget.date.hour,
-                            widget.date.minute,
-                            widget.date.second,
-                            widget.date.millisecond,
-                            widget.date.microsecond,
-                          ));
-                        },
-                      ),
-                    );
-                  }(),
-                ),
-              ],
-              if (widget.showYear) ...[
-                divider,
-                Expanded(
-                  child: () {
-                    final years = widget.endYear - widget.startYear;
-                    // YEAR
-                    return PickerNavigatorIndicator(
-                      onBackward: () {
-                        navigateSides(
-                          context,
-                          widget.yearController,
-                          false,
-                          years,
-                        );
-                      },
-                      onForward: () {
-                        navigateSides(
-                          context,
-                          widget.yearController,
-                          true,
-                          years,
-                        );
-                      },
-                      child: ListWheelScrollView(
-                        controller: widget.yearController,
-                        children: List.generate(years, (index) {
-                          return ListTile(
-                            title: Center(
-                              child: Text(
-                                '${widget.startYear + index + 1}',
-                                style: kPickerPopupTextStyle(context),
-                              ),
-                            ),
+                      );
+                    }(),
+                  ),
+                ],
+                if (widget.showYear) ...[
+                  divider,
+                  Expanded(
+                    child: () {
+                      final years = widget.endYear - widget.startYear;
+                      // YEAR
+                      return PickerNavigatorIndicator(
+                        onBackward: () {
+                          navigateSides(
+                            context,
+                            widget.yearController,
+                            false,
+                            years,
                           );
-                        }),
-                        itemExtent: kOneLineTileHeight,
-                        diameterRatio: kPickerDiameterRatio,
-                        physics: const FixedExtentScrollPhysics(),
-                        onSelectedItemChanged: (index) {
-                          widget.handleDateChanged(DateTime(
-                            widget.startYear + index + 1,
-                            widget.date.month,
-                            widget.date.day,
-                            widget.date.hour,
-                            widget.date.minute,
-                            widget.date.second,
-                            widget.date.millisecond,
-                            widget.date.microsecond,
-                          ));
                         },
-                      ),
-                    );
-                  }(),
-                ),
-              ],
+                        onForward: () {
+                          navigateSides(
+                            context,
+                            widget.yearController,
+                            true,
+                            years,
+                          );
+                        },
+                        child: ListWheelScrollView(
+                          controller: widget.yearController,
+                          children: List.generate(years, (index) {
+                            return ListTile(
+                              title: Center(
+                                child: Text(
+                                  '${widget.startYear + index + 1}',
+                                  style: kPickerPopupTextStyle(context),
+                                ),
+                              ),
+                            );
+                          }),
+                          itemExtent: kOneLineTileHeight,
+                          diameterRatio: kPickerDiameterRatio,
+                          physics: const FixedExtentScrollPhysics(),
+                          onSelectedItemChanged: (index) {
+                            widget.handleDateChanged(DateTime(
+                              widget.startYear + index + 1,
+                              widget.date.month,
+                              widget.date.day,
+                              widget.date.hour,
+                              widget.date.minute,
+                              widget.date.second,
+                              widget.date.millisecond,
+                              widget.date.microsecond,
+                            ));
+                          },
+                        ),
+                      );
+                    }(),
+                  ),
+                ],
+              ]),
             ]),
-          ]),
-        ),
-        Divider(
-          style: DividerThemeData(
-            verticalMargin: EdgeInsets.zero,
-            horizontalMargin: EdgeInsets.zero,
           ),
-        ),
-        YesNoPickerControl(
-          onChanged: () {
-            Navigator.pop(context);
-            widget.onChanged();
-          },
-          onCancel: () {
-            Navigator.pop(context);
-            widget.onCancel();
-          },
-        ),
-      ]),
+          Divider(
+            style: DividerThemeData(
+              verticalMargin: EdgeInsets.zero,
+              horizontalMargin: EdgeInsets.zero,
+            ),
+          ),
+          YesNoPickerControl(
+            onChanged: () {
+              Navigator.pop(context);
+              widget.onChanged();
+            },
+            onCancel: () {
+              Navigator.pop(context);
+              widget.onCancel();
+            },
+          ),
+        ]),
+      ),
     );
   }
 }

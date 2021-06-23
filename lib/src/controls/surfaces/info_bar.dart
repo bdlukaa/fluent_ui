@@ -95,58 +95,60 @@ class InfoBar extends StatelessWidget {
       );
     }();
     return Acrylic(
-      color: style.color?.call(severity),
-      padding: style.padding ?? EdgeInsets.all(10),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment:
-            isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 6.0),
-              child: Icon(icon, color: style.iconColor?.call(severity)),
-            ),
-          if (isLong)
-            Flexible(
-              fit: FlexFit.loose,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  title,
-                  if (content != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: content,
-                    ),
-                  if (action != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: action,
-                    ),
-                ],
+      tint: style.color?.call(severity),
+      child: Padding(
+        padding: style.padding ?? EdgeInsets.all(10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment:
+              isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 6.0),
+                child: Icon(icon, color: style.iconColor?.call(severity)),
               ),
-            )
-          else
-            Flexible(
-              fit: FlexFit.loose,
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 6,
-                children: [
-                  title,
-                  if (content != null) content,
-                  if (action != null) action,
-                ],
+            if (isLong)
+              Flexible(
+                fit: FlexFit.loose,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    title,
+                    if (content != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: content,
+                      ),
+                    if (action != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: action,
+                      ),
+                  ],
+                ),
+              )
+            else
+              Flexible(
+                fit: FlexFit.loose,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  children: [
+                    title,
+                    if (content != null) content,
+                    if (action != null) action,
+                  ],
+                ),
               ),
-            ),
-          if (closeIcon != null && onClose != null)
-            IconButton(
-              icon: Icon(closeIcon),
-              onPressed: onClose,
-            ),
-        ],
+            if (closeIcon != null && onClose != null)
+              IconButton(
+                icon: Icon(closeIcon),
+                onPressed: onClose,
+              ),
+          ],
+        ),
       ),
     );
   }

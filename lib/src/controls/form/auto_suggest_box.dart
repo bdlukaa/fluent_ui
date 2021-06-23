@@ -179,51 +179,53 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           link: _layerLink,
           showWhenUnlinked: false,
           offset: Offset(0, box.size.height + 0.8),
-          child: Acrylic(
+          child: SizedBox(
             width: box.size.width,
-            decoration: BoxDecoration(
-              color: FluentTheme.of(context).acrylicBackgroundColor,
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(4.0),
+            child: Acrylic(
+              tint: FluentTheme.of(context).acrylicBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(4.0),
+                ),
+                side: BorderSide(
+                  color: FluentTheme.of(context).scaffoldBackgroundColor,
+                  width: 0.8,
+                ),
               ),
-              border: Border.all(
-                color: FluentTheme.of(context).scaffoldBackgroundColor,
-                width: 0.8,
-              ),
-            ),
-            child: ValueListenableBuilder<TextEditingValue>(
-              valueListenable: widget.controller,
-              builder: (context, value, _) {
-                final items = widget.sorter(value.text, widget.items);
-                late Widget result;
-                if (items.isEmpty) {
-                  result = widget.noResultsFound(context);
-                } else {
-                  result = ListView(
-                    shrinkWrap: true,
-                    children: List.generate(items.length, (index) {
-                      final item = items[index];
-                      return itemBuilder(context, item);
-                    }),
-                  );
-                }
-                return AnimatedSwitcher(
-                  duration: FluentTheme.of(context).fastAnimationDuration,
-                  switchInCurve: FluentTheme.of(context).animationCurve,
-                  transitionBuilder: (child, animation) {
-                    if (child is ListView) {
-                      return child;
-                    }
-                    return EntrancePageTransition(
-                      child: child,
-                      animation: animation,
-                      vertical: true,
+              child: ValueListenableBuilder<TextEditingValue>(
+                valueListenable: widget.controller,
+                builder: (context, value, _) {
+                  final items = widget.sorter(value.text, widget.items);
+                  late Widget result;
+                  if (items.isEmpty) {
+                    result = widget.noResultsFound(context);
+                  } else {
+                    result = ListView(
+                      shrinkWrap: true,
+                      children: List.generate(items.length, (index) {
+                        final item = items[index];
+                        return itemBuilder(context, item);
+                      }),
                     );
-                  },
-                  layoutBuilder: (child, children) => child ?? SizedBox(),
-                  child: result,
-                );
-              },
+                  }
+                  return AnimatedSwitcher(
+                    duration: FluentTheme.of(context).fastAnimationDuration,
+                    switchInCurve: FluentTheme.of(context).animationCurve,
+                    transitionBuilder: (child, animation) {
+                      if (child is ListView) {
+                        return child;
+                      }
+                      return EntrancePageTransition(
+                        child: child,
+                        animation: animation,
+                        vertical: true,
+                      );
+                    },
+                    layoutBuilder: (child, children) => child ?? SizedBox(),
+                    child: result,
+                  );
+                },
+              ),
             ),
           ),
         ),
