@@ -560,9 +560,9 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kOpenNavigationPanelWidth,
+            height: widget.appBar.height,
             child: Acrylic(
-              height: widget.appBar.height,
-              color: theme.backgroundColor,
+              tint: theme.backgroundColor,
               child: Row(children: [
                 leading,
                 if (widget.additionalLeading != null) widget.additionalLeading!,
@@ -585,9 +585,9 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             curve: theme.animationCurve ?? Curves.linear,
             key: _openCompactKey,
             width: _kCompactNavigationPanelWidth,
+            height: widget.appBar.height,
             child: Acrylic(
-              height: widget.appBar.height,
-              color: theme.backgroundColor,
+              tint: theme.backgroundColor,
               child: leading,
             ),
           ),

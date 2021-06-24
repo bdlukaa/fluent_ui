@@ -79,7 +79,8 @@ class FlyoutContent extends StatelessWidget {
   const FlyoutContent({
     Key? key,
     required this.child,
-    this.decoration,
+    this.color,
+    this.shape,
     this.padding = const EdgeInsets.all(12.0),
     this.shadowColor,
     this.elevation = 8,
@@ -87,7 +88,8 @@ class FlyoutContent extends StatelessWidget {
 
   final Widget child;
 
-  final BoxDecoration? decoration;
+  final Color? color;
+  final ShapeBorder? shape;
   final EdgeInsetsGeometry padding;
 
   final Color? shadowColor;
@@ -96,24 +98,27 @@ class FlyoutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final defaultDecoration = BoxDecoration(
-      color: FluentTheme.of(context)
-          .acrylicBackgroundColor
-          .withOpacity(kDefaultAcrylicOpacity),
-      borderRadius: BorderRadius.circular(4.0),
-      border: Border.all(
-        color: FluentTheme.of(context).inactiveBackgroundColor,
-        width: 0.9,
-      ),
-    );
-    return Acrylic(
-      elevation: elevation,
-      opacity: 1.0,
-      decoration: decoration ?? defaultDecoration,
-      padding: padding,
-      child: DefaultTextStyle(
-        style: FluentTheme.of(context).typography.body ?? TextStyle(),
-        child: child,
+    return DefaultTextStyle(
+      style: FluentTheme.of(context).typography.body ?? TextStyle(),
+      child: Acrylic(
+        elevation: elevation,
+        tintAlpha: 1.0,
+        tint: color ??
+            FluentTheme.of(context)
+                .acrylicBackgroundColor
+                .withOpacity(kDefaultAcrylicAlpha),
+        shape: shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              side: BorderSide(
+                color: FluentTheme.of(context).inactiveBackgroundColor,
+                width: 0.9,
+              ),
+            ),
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
       ),
     );
   }

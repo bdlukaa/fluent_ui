@@ -524,57 +524,60 @@ class _TopNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    Widget topBar = Acrylic(
+    Widget topBar = SizedBox(
       height: kOneLineTileHeight,
-      color: theme.backgroundColor,
-      child: pane.indicatorBuilder(
-        context: context,
-        index: pane.selected,
-        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-        sizes: pane.effectiveItems.getPaneItemsSizes,
-        axis: Axis.vertical,
-        child: Row(key: pane.paneKey, children: [
-          Expanded(
-            child: Row(children: [
-              NavigationAppBar.buildLeading(context, NavigationAppBar()),
-              if (pane.header != null)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                  child: pane.header!,
-                ),
-              Expanded(
-                child: Scrollbar(
-                  isAlwaysShown: false,
-                  // A single child scroll view is used instead of a ListView
-                  // because the Row implies the cross axis alignment to center,
-                  // but ListView implies to top
-                  child: SingleChildScrollView(
-                    key: listKey,
-                    primary: true,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: pane.items.map((item) {
-                        return _buildItem(context, item);
-                      }).toList(),
+      child: Acrylic(
+        tint: theme.backgroundColor,
+        child: pane.indicatorBuilder(
+          context: context,
+          index: pane.selected,
+          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+          sizes: pane.effectiveItems.getPaneItemsSizes,
+          axis: Axis.vertical,
+          child: Row(key: pane.paneKey, children: [
+            Expanded(
+              child: Row(children: [
+                NavigationAppBar.buildLeading(context, NavigationAppBar()),
+                if (pane.header != null)
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                    child: pane.header!,
+                  ),
+                Expanded(
+                  child: Scrollbar(
+                    isAlwaysShown: false,
+                    // A single child scroll view is used instead of a ListView
+                    // because the Row implies the cross axis alignment to center,
+                    // but ListView implies to top
+                    child: SingleChildScrollView(
+                      key: listKey,
+                      primary: true,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: pane.items.map((item) {
+                          return _buildItem(context, item);
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
-          ),
-          if (pane.autoSuggestBox != null)
-            Container(
-              margin: const EdgeInsets.only(left: 50.0),
-              constraints: BoxConstraints(
-                minWidth: 215.0,
-                maxWidth: _kOpenNavigationPanelWidth,
-              ),
-              child: pane.autoSuggestBox!,
+              ]),
             ),
-          ...pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }),
-        ]),
+            if (pane.autoSuggestBox != null)
+              Container(
+                margin: const EdgeInsets.only(left: 50.0),
+                constraints: BoxConstraints(
+                  minWidth: 215.0,
+                  maxWidth: _kOpenNavigationPanelWidth,
+                ),
+                child: pane.autoSuggestBox!,
+              ),
+            ...pane.footerItems.map((item) {
+              return _buildItem(context, item);
+            }),
+          ]),
+        ),
       ),
     );
     return topBar;
@@ -635,7 +638,7 @@ class __CompactNavigationPaneState extends State<_CompactNavigationPane> {
       width: _kCompactNavigationPanelWidth,
       key: widget.paneKey,
       child: Acrylic(
-        color: theme.backgroundColor,
+        tint: theme.backgroundColor,
         child: widget.pane.indicatorBuilder(
           context: context,
           index: widget.pane.selected,
@@ -765,7 +768,7 @@ class _OpenNavigationPane extends StatelessWidget {
       curve: theme.animationCurve ?? Curves.linear,
       width: _kOpenNavigationPanelWidth,
       child: Acrylic(
-        color: theme.backgroundColor,
+        tint: theme.backgroundColor,
         child: pane.indicatorBuilder(
           context: context,
           index: pane.selected,
@@ -893,50 +896,53 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
         curve: theme.animationCurve ?? Curves.linear,
       ),
       axis: Axis.horizontal,
-      child: Acrylic(
-        color: theme.backgroundColor,
+      child: SizedBox(
         width: _kOpenNavigationPanelWidth,
-        child: widget.pane.indicatorBuilder(
-          context: context,
-          index: widget.pane.selected,
-          offsets: () => widget.pane.effectiveItems
-              .getPaneItemsOffsets(widget.pane.paneKey),
-          sizes: widget.pane.effectiveItems.getPaneItemsSizes,
-          axis: Axis.horizontal,
-          child: Column(key: widget.pane.paneKey, children: [
-            Padding(
-              padding: widget.pane.autoSuggestBox != null
-                  ? EdgeInsets.zero
-                  : topPadding,
-              child: widget.pane.header != null
-                  ? Align(
-                      child: widget.pane.header!,
-                      alignment: Alignment.centerLeft,
-                    )
-                  : null,
-            ),
-            if (widget.pane.autoSuggestBox != null)
-              Container(
-                padding: theme.iconPadding,
-                height: 41.0,
-                alignment: Alignment.center,
-                margin: topPadding,
-                child: widget.pane.autoSuggestBox!,
+        child: Acrylic(
+          tint: theme.backgroundColor,
+          child: widget.pane.indicatorBuilder(
+            context: context,
+            index: widget.pane.selected,
+            offsets: () => widget.pane.effectiveItems
+                .getPaneItemsOffsets(widget.pane.paneKey),
+            sizes: widget.pane.effectiveItems.getPaneItemsSizes,
+            axis: Axis.horizontal,
+            child: Column(key: widget.pane.paneKey, children: [
+              Padding(
+                padding: widget.pane.autoSuggestBox != null
+                    ? EdgeInsets.zero
+                    : topPadding,
+                child: widget.pane.header != null
+                    ? Align(
+                        child: widget.pane.header!,
+                        alignment: Alignment.centerLeft,
+                      )
+                    : null,
               ),
-            Expanded(
-              child: Scrollbar(
-                isAlwaysShown: false,
-                child: ListView(key: widget.listKey, primary: true, children: [
-                  ...widget.pane.items.map((item) {
-                    return _buildItem(context, item);
-                  }),
-                ]),
+              if (widget.pane.autoSuggestBox != null)
+                Container(
+                  padding: theme.iconPadding,
+                  height: 41.0,
+                  alignment: Alignment.center,
+                  margin: topPadding,
+                  child: widget.pane.autoSuggestBox!,
+                ),
+              Expanded(
+                child: Scrollbar(
+                  isAlwaysShown: false,
+                  child:
+                      ListView(key: widget.listKey, primary: true, children: [
+                    ...widget.pane.items.map((item) {
+                      return _buildItem(context, item);
+                    }),
+                  ]),
+                ),
               ),
-            ),
-            ...widget.pane.footerItems.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
+              ...widget.pane.footerItems.map((item) {
+                return _buildItem(context, item);
+              }),
+            ]),
+          ),
         ),
       ),
     );

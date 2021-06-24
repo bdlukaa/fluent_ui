@@ -1,235 +1,239 @@
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
+import 'dart:ui' as ui show Image;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-final kDefaultAcrylicFilter = ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0);
+const double kBlurAmount = 30.0;
 
 /// Value eyballed from Windows 10 v10.0.19041.928
-const double kDefaultAcrylicOpacity = 0.8;
+const double kDefaultAcrylicAlpha = 0.8;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help
 /// establish a visual hierarchy.
 ///
 /// ![Acrylic Example](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/acrylic_lighttheme_base.png)
-class Acrylic extends StatelessWidget {
-  /// The [color] and [decoration] arguments can not be both supplied.
+class Acrylic extends StatefulWidget {
   const Acrylic({
     Key? key,
-    this.color,
-    this.decoration,
-    this.filter,
+    this.tint,
     this.child,
-    this.opacity = kDefaultAcrylicOpacity,
-    this.width,
-    this.height,
-    this.padding,
-    this.margin,
+    this.tintAlpha,
+    this.luminosityAlpha,
+    this.blurAmount,
+    this.shape,
     this.shadowColor,
     this.elevation = 0.0,
-  })  : assert(elevation >= 0, 'The elevation can NOT be negative'),
-        assert(opacity >= 0, 'The opacity can NOT be negative'),
-        assert(
-          elevation == 0.0 || opacity == 1.0,
-          'You can NOT provide both opacity and elevation',
-        ),
-        super(key: key);
+  }) : super(key: key);
 
-  /// The color to fill the background of the box.
+  /// The tint to apply to the acrylic layers.
   ///
-  /// If [decoration] and this is null, [ThemeData.acrylicBackgroundColor]
-  /// is used.
-  final Color? color;
+  /// Defaults to the acrylicBackgroundColor from the nearest [FluentTheme].
+  final Color? tint;
 
-  /// The decoration to paint behind the [child].
+  /// The opacity applied to the [tint] from 0.0 to 1.0.
   ///
-  /// Use the [color] property to specify a simple solid color.
-  final BoxDecoration? decoration;
-
-  /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,
-  /// this has no effect
-  final double opacity;
-
-  /// The image filter to apply to the existing painted content before painting the
-  /// child. If null, [kDefaultAcrylicFilter] is used. If [enabled] if `false`, this
-  /// has no effect.
-  ///
-  /// For example, consider using [ImageFilter.blur] to create a backdrop blur effect.
-  final ImageFilter? filter;
+  /// Defaults to 0.8.
+  final double? tintAlpha;
 
   /// The child contained by this box
   final Widget? child;
 
-  /// The width of the box
-  final double? width;
+  /// The opacity applied to the luminosity layer of the acrylic, from 0.0 to 1.0.
+  ///
+  /// Defaults to 0.8.
+  final double? luminosityAlpha;
 
-  /// The height of the box
-  final double? height;
+  /// The amount of blur to apply to the content behind the acrylic.
+  ///
+  /// Defaults to 30.
+  final double? blurAmount;
 
-  /// Empty space to inscribe inside the [decoration].
-  /// The [child], if any, is placed inside this padding.
-  final EdgeInsetsGeometry? padding;
-
-  /// Empty space to surround the [decoration] and [child].
-  final EdgeInsetsGeometry? margin;
+  /// The shape of the acrylic.
+  ///
+  /// Defaults to a square [RoundedRectangleBorder].
+  final ShapeBorder? shape;
 
   /// The color of the elevation
+  ///
+  /// Defaults to the shadowColor from the nearest [FluentTheme].
   final Color? shadowColor;
 
   /// The z-coordinate relative to the parent at which to place this physical object.
   ///
-  /// The value is non-negative.
+  /// The value is non-negative. Defaults to 0.
   final double elevation;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('color', color));
-    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(DoubleProperty('opacity', opacity));
-    properties.add(DiagnosticsProperty<ImageFilter>('filter', filter));
-    properties.add(DoubleProperty('width', width));
-    properties.add(DoubleProperty('height', height));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+    properties.add(ColorProperty('tint', tint));
+    properties.add(DoubleProperty('tintAlpha', tintAlpha));
+    properties.add(DoubleProperty('luminosityAlpha', luminosityAlpha));
+    properties.add(DoubleProperty('blurAmount', blurAmount));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape));
     properties.add(ColorProperty('shadowColor', shadowColor));
     properties.add(DoubleProperty('elevation', elevation));
   }
 
   @override
+  State<Acrylic> createState() => _AcrylicState();
+}
+
+class _AcrylicState extends State<Acrylic> {
+  AcrylicProperties _properties = AcrylicProperties.empty();
+
+  @override
+  void initState() {
+    super.initState();
+    _NoiseTextureCacher._instance ??= _NoiseTextureCacher._new();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _updateProperties();
+      setState(() {});
+    });
+  }
+
+  @override
+  void didUpdateWidget(Acrylic old) {
+    super.didUpdateWidget(old);
+
+    if (_compareAcrylics(old)) {
+      _updateProperties();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateProperties();
+  }
+
+  bool _compareAcrylics(Acrylic other) {
+    return widget.blurAmount != other.blurAmount ||
+        widget.elevation != other.elevation ||
+        widget.luminosityAlpha != other.luminosityAlpha ||
+        widget.shape != other.shape ||
+        widget.tint != other.tint ||
+        widget.tintAlpha != other.tintAlpha;
+  }
+
+  void _updateProperties() {
+    _properties = AcrylicProperties(
+      tint: widget.tint ?? FluentTheme.of(context).acrylicBackgroundColor,
+      tintAlpha: widget.tintAlpha ?? kDefaultAcrylicAlpha,
+      luminosityAlpha: widget.luminosityAlpha ?? kDefaultAcrylicAlpha,
+      blurAmount: widget.blurAmount ?? 30,
+      shape: widget.shape ?? const RoundedRectangleBorder(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
-    final color = AccentColor.resolve(
-      this.color ?? style.acrylicBackgroundColor,
-      context,
-    );
+    assert(widget.elevation >= 0, "The elevation must be always positive");
+    assert(_properties.tintAlpha >= 0, "The tintAlpha must be always positive");
+    assert(_properties.luminosityAlpha >= 0,
+        "The luminosityAlpha must be always positive");
 
-    final enabled = NoAcrylicBlurEffect.of(context) == null;
-    final opacity = enabled ? this.opacity : 1.0;
-    Widget result = SizedBox(
-      width: width,
-      height: height,
-      child: () {
-        Widget container = Container(
-          padding: padding,
-          decoration: () {
-            if (decoration != null) {
-              Color? color = decoration!.color ?? this.color;
-              if (color != null) color = color.withOpacity(opacity);
-              return decoration!.copyWith(color: color);
-            }
-            return BoxDecoration(color: color.withOpacity(opacity));
-          }(),
-          child: child,
-        );
-        if (enabled)
-          return ClipRect(
-            child: BackdropFilter(
-              filter: filter ?? kDefaultAcrylicFilter,
-              child: container,
+    final Color _shadowColor =
+        widget.shadowColor ?? FluentTheme.of(context).shadowColor;
+
+    return _AcrylicInheritedWidget(
+      state: this,
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          shape: _properties.shape,
+          shadows: [
+            /* The shadows were taken from the official FluentUI design kit on Figma */
+            BoxShadow(
+              color: _shadowColor.withOpacity(0.13),
+              blurRadius: 0.9 * widget.elevation,
+              offset: Offset(0, 0.4 * widget.elevation),
             ),
-          );
-        return container;
-      }(),
+            BoxShadow(
+              color: _shadowColor.withOpacity(0.11),
+              blurRadius: 0.225 * widget.elevation,
+              offset: Offset(0, 0.085 * widget.elevation),
+            ),
+          ],
+        ),
+        child: _AcrylicGuts(
+          child: m.Material(
+            type: m.MaterialType.transparency,
+            shape: widget.shape,
+            child: widget.child,
+          ),
+        ),
+      ),
     );
-    if (elevation > 0) {
-      result = PhysicalModel(
-        color: Colors.transparent,
-        shadowColor: shadowColor ?? FluentTheme.of(context).shadowColor,
-        shape: BoxShape.rectangle,
-        borderRadius: () {
-          final radius = decoration?.borderRadius;
-          if (radius == null) return BorderRadius.zero;
-          if (radius is BorderRadius) return radius;
-          return BorderRadius.zero;
-        }(),
-        elevation: elevation,
-        child: result,
-      );
-    }
-    if (margin != null) result = Padding(padding: margin!, child: result);
-    return result;
   }
 }
 
 class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
   const AnimatedAcrylic({
     Key? key,
-    this.color,
-    this.decoration,
-    this.filter,
+    this.tint,
     this.child,
-    this.opacity = kDefaultAcrylicOpacity,
-    this.width,
-    this.height,
-    this.padding,
-    this.margin,
+    this.tintAlpha,
+    this.luminosityAlpha,
+    this.blurAmount,
+    this.shape,
     this.shadowColor,
     this.elevation = 0.0,
     Curve curve = Curves.linear,
     required Duration duration,
   }) : super(key: key, curve: curve, duration: duration);
 
-  /// The color to fill the background of the box.
+  /// The tint to apply to the acrylic layers.
   ///
-  /// If [decoration] and this is null, [ThemeData.acrylicBackgroundColor]
-  /// is used.
-  final Color? color;
+  /// Defaults to the acrylicBackgroundColor from the nearest [FluentTheme].
+  final Color? tint;
 
-  /// The decoration to paint behind the [child].
+  /// The opacity applied to the [tint] from 0.0 to 1.0.
   ///
-  /// Use the [color] property to specify a simple solid color.
-  final BoxDecoration? decoration;
-
-  /// The opacity applied to the [color] from 0.0 to 1.0. If [enabled] is `false`,
-  /// this has no effect
-  final double opacity;
-
-  /// The image filter to apply to the existing painted content before painting the
-  /// child. If null, [kDefaultAcrylicFilter] is used. If [enabled] if `false`, this
-  /// has no effect.
-  ///
-  /// For example, consider using [ImageFilter.blur] to create a backdrop blur effect.
-  final ImageFilter? filter;
+  /// Defaults to 0.8.
+  final double? tintAlpha;
 
   /// The child contained by this box
   final Widget? child;
 
-  /// The width of the box
-  final double? width;
+  /// The opacity applied to the luminosity layer of the acrylic, from 0.0 to 1.0.
+  ///
+  /// Defaults to 0.8.
+  final double? luminosityAlpha;
 
-  /// The height of the box
-  final double? height;
+  /// The amount of blur to apply to the content behind the acrylic.
+  ///
+  /// Defaults to 30.
+  final double? blurAmount;
 
-  /// Empty space to inscribe inside the [decoration].
-  /// The [child], if any, is placed inside this padding.
-  final EdgeInsetsGeometry? padding;
-
-  /// Empty space to surround the [decoration] and [child].
-  final EdgeInsetsGeometry? margin;
+  /// The shape of the acrylic.
+  ///
+  /// Defaults to a square [RoundedRectangleBorder].
+  final ShapeBorder? shape;
 
   /// The color of the elevation
+  ///
+  /// Defaults to the shadowColor from the nearest [FluentTheme].
   final Color? shadowColor;
 
   /// The z-coordinate relative to the parent at which to place this physical object.
   ///
-  /// The value is non-negative.
+  /// The value is non-negative. Defaults to 0.
   final double elevation;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('color', color));
-    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(DoubleProperty('opacity', opacity));
-    properties.add(DiagnosticsProperty<ImageFilter>('filter', filter));
-    properties.add(DoubleProperty('width', width));
-    properties.add(DoubleProperty('height', height));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin));
+    properties.add(ColorProperty('tint', tint));
+    properties.add(DoubleProperty('tintAlpha', tintAlpha));
+    properties.add(DoubleProperty('luminosityAlpha', luminosityAlpha));
+    properties.add(DoubleProperty('blurAmount', blurAmount));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape));
     properties.add(ColorProperty('shadowColor', shadowColor));
     properties.add(DoubleProperty('elevation', elevation));
   }
@@ -239,56 +243,47 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
 }
 
 class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
-  EdgeInsetsGeometryTween? _padding;
-  EdgeInsetsGeometryTween? _margin;
-  DecorationTween? _decoration;
-  ColorTween? _color;
-  Tween<double?>? _height;
-  Tween<double?>? _width;
-  ColorTween? _elevationColor;
-  Tween<double?>? _opacity;
+  ColorTween? _tint;
+  Tween<double?>? _tintAlpha;
+  Tween<double?>? _luminosityAlpha;
+  Tween<double?>? _blurAmount;
+  m.ShapeBorderTween? _shape;
+  ColorTween? _shadowColor;
+  Tween<double?>? _elevation;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _padding = visitor(
-            _padding,
-            widget.padding,
-            (dynamic value) =>
-                EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry))
-        as EdgeInsetsGeometryTween?;
-    _margin = visitor(
-            _margin,
-            widget.margin,
-            (dynamic value) =>
-                EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry))
-        as EdgeInsetsGeometryTween?;
-    _decoration = visitor(_decoration, widget.decoration,
-            (dynamic value) => DecorationTween(begin: value as Decoration))
-        as DecorationTween?;
-    _color = visitor(_color, widget.color,
+    _tint = visitor(_tint, widget.tint,
         (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
-    _height = visitor(_height, widget.height,
+    _tintAlpha = visitor(_tintAlpha, widget.tintAlpha,
             (dynamic value) => Tween<double>(begin: value as double))
         as Tween<double>?;
-    _width = visitor(_width, widget.width,
+    _luminosityAlpha = visitor(_luminosityAlpha, widget.luminosityAlpha,
             (dynamic value) => Tween<double>(begin: value as double))
         as Tween<double>?;
-    _elevationColor = visitor(_elevationColor, widget.shadowColor,
+    _blurAmount = visitor(_blurAmount, widget.blurAmount,
+            (dynamic value) => Tween<double>(begin: value as double))
+        as Tween<double>?;
+    _shape = visitor(_shape, widget.shape,
+            (dynamic value) => m.ShapeBorderTween(begin: value as ShapeBorder))
+        as m.ShapeBorderTween?;
+    _shadowColor = visitor(_shadowColor, widget.shadowColor,
         (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
+    _elevation = visitor(_elevation, widget.elevation,
+            (dynamic value) => Tween<double>(begin: value as double))
+        as Tween<double>?;
   }
 
   @override
   Widget build(BuildContext context) {
     return Acrylic(
-      padding: _padding?.evaluate(animation),
-      margin: _margin?.evaluate(animation),
-      decoration: _decoration?.evaluate(animation) as BoxDecoration?,
-      color: _color?.evaluate(animation),
-      height: _height?.evaluate(animation),
-      width: _width?.evaluate(animation),
-      opacity: _opacity?.evaluate(animation) ?? kDefaultAcrylicOpacity,
-      shadowColor: _elevationColor?.evaluate(animation),
-      filter: widget.filter,
+      tint: _tint?.evaluate(animation),
+      tintAlpha: _tintAlpha?.evaluate(animation),
+      luminosityAlpha: _luminosityAlpha?.evaluate(animation),
+      blurAmount: _blurAmount?.evaluate(animation),
+      shape: _shape?.evaluate(animation),
+      shadowColor: _shadowColor?.evaluate(animation),
+      elevation: _elevation?.evaluate(animation) ?? 0,
       child: widget.child,
     );
   }
@@ -310,7 +305,7 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
 ///
 /// See also:
 ///   * [Acrylic], the widget that can apply a blurred background on its child
-///   * [Container], a widget similar to acrylic, but with less options
+///   * [Material], the direct material counterpart to acrylic
 class NoAcrylicBlurEffect extends InheritedWidget {
   /// Creates a widget that disable the acrylic blur effect in its tree
   const NoAcrylicBlurEffect({
@@ -327,5 +322,259 @@ class NoAcrylicBlurEffect extends InheritedWidget {
   @override
   bool updateShouldNotify(NoAcrylicBlurEffect oldWidget) {
     return true;
+  }
+}
+
+/// Represents the properties of an Acrylic material
+@immutable
+class AcrylicProperties {
+  final Color tint;
+  final double tintAlpha;
+  final double luminosityAlpha;
+  final double blurAmount;
+  final ShapeBorder shape;
+
+  const AcrylicProperties({
+    required this.tint,
+    required this.tintAlpha,
+    required this.luminosityAlpha,
+    required this.blurAmount,
+    required this.shape,
+  });
+
+  const AcrylicProperties.empty()
+      : this.tint = Colors.black,
+        this.tintAlpha = kDefaultAcrylicAlpha,
+        this.luminosityAlpha = kDefaultAcrylicAlpha,
+        this.blurAmount = kBlurAmount,
+        this.shape = const RoundedRectangleBorder();
+
+  @override
+  int get hashCode => hashValues(
+        tint,
+        tintAlpha,
+        luminosityAlpha,
+        blurAmount,
+        shape,
+      );
+
+  bool operator ==(Object other) {
+    if (other is AcrylicProperties) {
+      return this.tint == other.tint &&
+          this.tintAlpha == other.tintAlpha &&
+          this.luminosityAlpha == other.luminosityAlpha &&
+          this.blurAmount == other.blurAmount &&
+          this.shape == other.shape;
+    }
+
+    return false;
+  }
+
+  static AcrylicProperties of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_AcrylicInheritedWidget>()!
+        .state
+        ._properties;
+  }
+}
+
+class _AcrylicInheritedWidget extends InheritedWidget {
+  final _AcrylicState state;
+
+  _AcrylicInheritedWidget({
+    required this.state,
+    required Widget child,
+  }) : super(child: child);
+
+  @override
+  bool updateShouldNotify(_AcrylicInheritedWidget old) {
+    return this.state != old.state;
+  }
+}
+
+class _AcrylicGuts extends StatelessWidget {
+  final Widget child;
+
+  const _AcrylicGuts({required this.child, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final properties = AcrylicProperties.of(context);
+    final _tint = AcrylicHelper.getEffectiveTintColor(
+      properties.tint,
+      AcrylicHelper.getTintOpacityModifier(properties.tint),
+    );
+
+    return ClipPath(
+      clipper: ShapeBorderClipper(shape: properties.shape),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: properties.blurAmount,
+          sigmaY: properties.blurAmount,
+        ),
+        child: CustomPaint(
+          painter: _AcrylicPainter(
+            tintColor: _tint,
+            luminosityColor: AcrylicHelper.getLuminosityColor(
+              _tint,
+              properties.luminosityAlpha,
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class _AcrylicPainter extends CustomPainter {
+  final Color luminosityColor;
+  final Color tintColor;
+
+  _AcrylicPainter({
+    required this.luminosityColor,
+    required this.tintColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawColor(luminosityColor, BlendMode.luminosity);
+    canvas.drawColor(
+      tintColor,
+      tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
+    );
+    if (_NoiseTextureCacher._instance!.texture != null) {
+      paintImage(
+        canvas: canvas,
+        rect: Offset.zero & size,
+        image: _NoiseTextureCacher._instance!.texture!,
+        opacity: 0.02,
+        alignment: Alignment.topLeft,
+        repeat: ImageRepeat.repeat,
+        colorFilter: ColorFilter.mode(Colors.transparent, BlendMode.srcOver),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_AcrylicPainter old) {
+    return this.luminosityColor != old.luminosityColor ||
+        this.tintColor != old.tintColor;
+  }
+}
+
+/// Microsoft utils converted from C# to dart
+class AcrylicHelper {
+  static Color getEffectiveTintColor(Color color, double opacity) =>
+      color.withOpacity(opacity);
+
+  static Color getLuminosityColor(Color tintColor, double? luminosityOpacity) {
+    // If luminosity opacity is specified, just use the values as is
+    if (luminosityOpacity != null) {
+      return Color.fromRGBO(
+        tintColor.red,
+        tintColor.green,
+        tintColor.blue,
+        luminosityOpacity.clamp(0.0, 1.0),
+      );
+    } else {
+      // To create the Luminosity blend input color without luminosity opacity,
+      // we're taking the TintColor input, converting to HSV, and clamping the V between these values
+      const double minHsvV = 0.125;
+      const double maxHsvV = 0.965;
+
+      HSVColor hsvTintColor = HSVColor.fromColor(tintColor);
+
+      double clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
+
+      HSVColor hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
+      Color rgbLuminosityColor = hsvLuminosityColor.toColor();
+
+      // Now figure out luminosity opacity
+      // Map original *tint* opacity to this range
+      const double minLuminosityOpacity = 0.15;
+      const double maxLuminosityOpacity = 1.03;
+
+      const double luminosityOpacityRangeMax =
+          maxLuminosityOpacity - minLuminosityOpacity;
+      double mappedTintOpacity =
+          ((tintColor.alpha / 255.0) * luminosityOpacityRangeMax) +
+              minLuminosityOpacity;
+
+      // Finally, combine the luminosity opacity and the HsvV-clamped tint color
+      return Color.fromRGBO(
+        rgbLuminosityColor.red,
+        rgbLuminosityColor.green,
+        rgbLuminosityColor.blue,
+        math.min(mappedTintOpacity, 1.0),
+      );
+    }
+  }
+
+  static double getTintOpacityModifier(Color color) {
+    // Mid point of HsvV range that these calculations are based on. This is here for easy tuning.
+    const double midPoint = 0.50;
+
+    const double whiteMaxOpacity = 0.45; // 100% luminosity
+    const double midPointMaxOpacity = 0.90; // 50% luminosity
+    const double blackMaxOpacity = 0.85; // 0% luminosity
+
+    HSVColor hsv = HSVColor.fromColor(color);
+
+    double opacityModifier = midPointMaxOpacity;
+
+    if (hsv.value != midPoint) {
+      // Determine maximum suppression amount
+      double lowestMaxOpacity = midPointMaxOpacity;
+      double maxDeviation = midPoint;
+
+      if (hsv.value > midPoint) {
+        lowestMaxOpacity = whiteMaxOpacity; // At white (100% hsvV)
+        maxDeviation = 1 - maxDeviation;
+      } else if (hsv.value < midPoint) {
+        lowestMaxOpacity = blackMaxOpacity; // At black (0% hsvV)
+      }
+
+      double maxOpacitySuppression = midPointMaxOpacity - lowestMaxOpacity;
+
+      // Determine normalized deviation from the midpoint
+      double deviation = (hsv.value - midPoint);
+      double normalizedDeviation = deviation / maxDeviation;
+
+      // If we have saturation, reduce opacity suppression to allow that color to come through more
+      if (hsv.saturation > 0) {
+        // Dampen opacity suppression based on how much saturation there is
+        maxOpacitySuppression *= math.max(1 - (hsv.saturation * 2), 0.0);
+      }
+
+      double opacitySuppression = maxOpacitySuppression * normalizedDeviation;
+
+      opacityModifier = midPointMaxOpacity - opacitySuppression;
+    }
+
+    return opacityModifier;
+  }
+}
+
+class _NoiseTextureCacher {
+  static _NoiseTextureCacher? _instance;
+
+  ui.Image? texture;
+
+  _NoiseTextureCacher._new() {
+    _computeImage();
+  }
+
+  void _computeImage() async {
+    final ImageProvider provider = AssetImage(
+      "assets/AcrylicNoise.png",
+      package: "fluent_ui",
+    );
+
+    provider.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener((image, synchronousCall) {
+        texture = image.image;
+      }),
+    );
   }
 }
