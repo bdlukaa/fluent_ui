@@ -527,65 +527,61 @@ class _TopNavigationPane extends StatelessWidget {
     final theme = NavigationPaneTheme.of(context);
     Widget topBar = SizedBox(
       height: kOneLineTileHeight,
-      child: Acrylic(
-        tint: theme.backgroundColor,
-        child: pane.indicatorBuilder(
-          context: context,
-          index: pane.selected,
-          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-          sizes: pane.effectiveItems.getPaneItemsSizes,
-          axis: Axis.vertical,
-          child: Row(key: pane.paneKey, children: [
-            Expanded(
-              child: Row(children: [
-                NavigationAppBar.buildLeading(context, NavigationAppBar()),
-                if (pane.header != null)
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                    child: pane.header!,
-                  ),
-                Expanded(
-                  child: Scrollbar(
-                    isAlwaysShown: false,
-                    // A single child scroll view is used instead of a ListView
-                    // because the Row implies the cross axis alignment to center,
-                    // but ListView implies to top
-                    child: SingleChildScrollView(
-                      key: listKey,
-                      primary: true,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: pane.items.map((item) {
-                          return _buildItem(context, item);
-                        }).toList(),
-                      ),
+      child: pane.indicatorBuilder(
+        context: context,
+        index: pane.selected,
+        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+        sizes: pane.effectiveItems.getPaneItemsSizes,
+        axis: Axis.vertical,
+        child: Row(key: pane.paneKey, children: [
+          Expanded(
+            child: Row(children: [
+              NavigationAppBar.buildLeading(context, NavigationAppBar()),
+              if (pane.header != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                  child: pane.header!,
+                ),
+              Expanded(
+                child: Scrollbar(
+                  isAlwaysShown: false,
+                  // A single child scroll view is used instead of a ListView
+                  // because the Row implies the cross axis alignment to center,
+                  // but ListView implies to top
+                  child: SingleChildScrollView(
+                    key: listKey,
+                    primary: true,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: pane.items.map((item) {
+                        return _buildItem(context, item);
+                      }).toList(),
                     ),
                   ),
                 ),
-              ]),
-            ),
-            if (pane.autoSuggestBox != null)
-              Container(
-                margin: const EdgeInsets.only(left: 50.0),
-                constraints: BoxConstraints(
-                  minWidth: 215.0,
-                  maxWidth: _kOpenNavigationPanelWidth,
-                ),
-                child: pane.autoSuggestBox!,
               ),
-            ...pane.footerItems.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
-        ),
+            ]),
+          ),
+          if (pane.autoSuggestBox != null)
+            Container(
+              margin: const EdgeInsets.only(left: 50.0),
+              constraints: BoxConstraints(
+                minWidth: 215.0,
+                maxWidth: _kOpenNavigationPanelWidth,
+              ),
+              child: pane.autoSuggestBox!,
+            ),
+          ...pane.footerItems.map((item) {
+            return _buildItem(context, item);
+          }),
+        ]),
       ),
     );
     return topBar;
   }
 }
 
-class _CompactNavigationPane extends StatefulWidget {
+class _CompactNavigationPane extends StatelessWidget {
   _CompactNavigationPane({
     required this.pane,
     this.paneKey,
@@ -598,11 +594,6 @@ class _CompactNavigationPane extends StatefulWidget {
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
 
-  @override
-  __CompactNavigationPaneState createState() => __CompactNavigationPaneState();
-}
-
-class __CompactNavigationPaneState extends State<_CompactNavigationPane> {
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
     if (item is PaneItemHeader) {
@@ -611,12 +602,12 @@ class __CompactNavigationPaneState extends State<_CompactNavigationPane> {
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
-      final selected = widget.pane.isSelected(item);
+      final selected = pane.isSelected(item);
       return item.build(
         context,
         selected,
         () {
-          widget.pane.onChanged?.call(widget.pane.effectiveIndexOf(item));
+          pane.onChanged?.call(pane.effectiveIndexOf(item));
         },
       );
     } else {
@@ -631,72 +622,66 @@ class __CompactNavigationPaneState extends State<_CompactNavigationPane> {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    final bool showReplacement = widget.pane.autoSuggestBox != null &&
-        widget.pane.autoSuggestBoxReplacement != null;
+    final bool showReplacement =
+        pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
+      key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: _kCompactNavigationPanelWidth,
-      key: widget.paneKey,
-      child: Acrylic(
-        tint: theme.backgroundColor,
-        child: widget.pane.indicatorBuilder(
-          context: context,
-          index: widget.pane.selected,
-          offsets: () => widget.pane.effectiveItems
-              .getPaneItemsOffsets(widget.pane.paneKey),
-          sizes: widget.pane.effectiveItems.getPaneItemsSizes,
-          axis: Axis.horizontal,
-          child: Align(
-            key: widget.pane.paneKey,
-            alignment: Alignment.topCenter,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              () {
-                if (widget.pane.menuButton != null)
-                  return widget.pane.menuButton!;
-                if (widget.onToggle != null)
-                  return NavigationPane.buildMenuButton(
-                    context,
-                    Text(FluentLocalizations.of(context).openNavigationTooltip),
-                    widget.pane,
-                    onPressed: () {
-                      widget.onToggle?.call();
-                    },
-                    padding: showReplacement ? EdgeInsets.zero : topPadding,
-                  );
-                return SizedBox.shrink();
-              }(),
-              if (showReplacement)
-                Padding(
-                  padding: topPadding,
-                  child: PaneItem(
-                    title: Text(FluentLocalizations.of(context).clickToSearch),
-                    icon: widget.pane.autoSuggestBoxReplacement!,
-                  ).build(
-                    context,
-                    false,
-                    () {
-                      widget.onToggle?.call();
-                    },
-                  ),
-                ),
-              Expanded(
-                child: Scrollbar(
-                  isAlwaysShown: false,
-                  child:
-                      ListView(key: widget.listKey, primary: true, children: [
-                    ...widget.pane.items.map((item) {
-                      return _buildItem(context, item);
-                    }),
-                  ]),
+      child: pane.indicatorBuilder(
+        context: context,
+        index: pane.selected,
+        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+        sizes: pane.effectiveItems.getPaneItemsSizes,
+        axis: Axis.horizontal,
+        child: Align(
+          key: pane.paneKey,
+          alignment: Alignment.topCenter,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            () {
+              if (pane.menuButton != null) return pane.menuButton!;
+              if (onToggle != null)
+                return NavigationPane.buildMenuButton(
+                  context,
+                  Text(FluentLocalizations.of(context).openNavigationTooltip),
+                  pane,
+                  onPressed: () {
+                    onToggle?.call();
+                  },
+                  padding: showReplacement ? EdgeInsets.zero : topPadding,
+                );
+              return SizedBox.shrink();
+            }(),
+            if (showReplacement)
+              Padding(
+                padding: topPadding,
+                child: PaneItem(
+                  title: Text(FluentLocalizations.of(context).clickToSearch),
+                  icon: pane.autoSuggestBoxReplacement!,
+                ).build(
+                  context,
+                  false,
+                  () {
+                    onToggle?.call();
+                  },
                 ),
               ),
-              ...widget.pane.footerItems.map((item) {
-                return _buildItem(context, item);
-              }),
-            ]),
-          ),
+            Expanded(
+              child: Scrollbar(
+                isAlwaysShown: false,
+                child: ListView(key: listKey, primary: true, children: [
+                  ...pane.items.map((item) {
+                    return _buildItem(context, item);
+                  }),
+                ]),
+              ),
+            ),
+            ...pane.footerItems.map((item) {
+              return _buildItem(context, item);
+            }),
+          ]),
         ),
       ),
     );
@@ -768,57 +753,53 @@ class _OpenNavigationPane extends StatelessWidget {
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: _kOpenNavigationPanelWidth,
-      child: Acrylic(
-        tint: theme.backgroundColor,
-        child: pane.indicatorBuilder(
-          context: context,
-          index: pane.selected,
-          offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-          sizes: pane.effectiveItems.getPaneItemsSizes,
-          axis: Axis.horizontal,
-          child: Column(key: pane.paneKey, children: [
-            Container(
-              margin:
-                  pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
-              height: kOneLineTileHeight,
-              child: () {
-                if (pane.header != null)
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        child: pane.header!,
-                        alignment: Alignment.centerLeft,
-                      ),
+      child: pane.indicatorBuilder(
+        context: context,
+        index: pane.selected,
+        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+        sizes: pane.effectiveItems.getPaneItemsSizes,
+        axis: Axis.horizontal,
+        child: Column(key: pane.paneKey, children: [
+          Container(
+            margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
+            height: kOneLineTileHeight,
+            child: () {
+              if (pane.header != null)
+                return Row(children: [
+                  menuButton,
+                  Expanded(
+                    child: Align(
+                      child: pane.header!,
+                      alignment: Alignment.centerLeft,
                     ),
-                  ]);
-                else
-                  return menuButton;
-              }(),
+                  ),
+                ]);
+              else
+                return menuButton;
+            }(),
+          ),
+          if (pane.autoSuggestBox != null)
+            Container(
+              padding: theme.iconPadding ?? EdgeInsets.zero,
+              height: 41.0,
+              alignment: Alignment.center,
+              margin: topPadding,
+              child: pane.autoSuggestBox!,
             ),
-            if (pane.autoSuggestBox != null)
-              Container(
-                padding: theme.iconPadding ?? EdgeInsets.zero,
-                height: 41.0,
-                alignment: Alignment.center,
-                margin: topPadding,
-                child: pane.autoSuggestBox!,
-              ),
-            Expanded(
-              child: Scrollbar(
-                isAlwaysShown: false,
-                child: ListView(key: listKey, primary: true, children: [
-                  ...pane.items.map((item) {
-                    return buildItem(context, pane, item);
-                  }),
-                ]),
-              ),
+          Expanded(
+            child: Scrollbar(
+              isAlwaysShown: false,
+              child: ListView(key: listKey, primary: true, children: [
+                ...pane.items.map((item) {
+                  return buildItem(context, pane, item);
+                }),
+              ]),
             ),
-            ...pane.footerItems.map((item) {
-              return buildItem(context, pane, item);
-            }),
-          ]),
-        ),
+          ),
+          ...pane.footerItems.map((item) {
+            return buildItem(context, pane, item);
+          }),
+        ]),
       ),
     );
   }

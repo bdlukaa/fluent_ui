@@ -259,7 +259,15 @@ class WindowButtons extends StatelessWidget {
       ),
       Tooltip(
         message: FluentLocalizations.of(context).restoreWindowTooltip,
-        child: MaximizeWindowButton(colors: buttonColors),
+        child: WindowButton(
+          colors: buttonColors,
+          iconBuilder: (context) {
+            if (appWindow.isMaximized)
+              return RestoreIcon(color: context.iconColor);
+            return MaximizeIcon(color: context.iconColor);
+          },
+          onPressed: appWindow.maximizeOrRestore,
+        ),
       ),
       Tooltip(
         message: FluentLocalizations.of(context).closeWindowTooltip,
