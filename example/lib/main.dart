@@ -212,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
         autoSuggestBoxReplacement: Icon(Icons.search),
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(icon: Icon(Icons.settings), title: Text('Settings')),
+          PaneItem(icon: Icon(FluentIcons.settings), title: Text('Settings')),
         ],
       ),
       content: NavigationBody(index: index, children: [

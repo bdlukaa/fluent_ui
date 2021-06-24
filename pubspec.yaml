@@ -15,8 +15,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  recase: any
 
 flutter:
   uses-material-design: true
   assets:
     - assets/AcrylicNoise.png
+  fonts:
+    - family: FluentIcons
+      fonts:
+        - asset: fonts/FluentIcons.ttf
