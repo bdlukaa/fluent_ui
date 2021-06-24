@@ -138,7 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Row(children: [Spacer(), WindowButtons()]),
               ),
       ),
-      useAcrylic: appTheme.acrylicEffect != FlutterAcrylic.AcrylicEffect.disabled,
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),

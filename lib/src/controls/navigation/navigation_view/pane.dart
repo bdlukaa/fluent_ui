@@ -1,6 +1,6 @@
 part of 'view.dart';
 
-const _kCompactNavigationPanelWidth = 50.0;
+const _kCompactNavigationPanelWidth = 40.0;
 const _kOpenNavigationPanelWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
@@ -148,6 +148,7 @@ class PaneItem extends NavigationPaneItem {
                               ? style.selectedIconColor?.resolve(states)
                               : style.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
+                      size: 20,
                     ),
                     child: this.icon,
                   ),

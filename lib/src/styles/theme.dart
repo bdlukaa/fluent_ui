@@ -324,8 +324,8 @@ class ThemeData with Diagnosticable {
       'dark': Colors.black,
     }).resolveFromBrightness(brightness);
     acrylicBackgroundColor ??= AccentColor('normal', {
-      'normal': Color(0xFFe6e6e6),
-      'dark': Color(0xFF1e1e1e),
+      'normal': Color.fromARGB(204, 255, 255, 255),
+      'dark': Color(0x7F1e1e1e),
     }).resolveFromBrightness(brightness);
     typography = Typography.standard(brightness: brightness)
         .merge(typography)
@@ -414,62 +414,62 @@ class ThemeData with Diagnosticable {
 
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
     return ThemeData.raw(
-        brightness: t < 0.5 ? a.brightness : b.brightness,
-        visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
-        accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
-        typography: Typography.lerp(a.typography, b.typography, t),
-        activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
-        inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
-        inactiveBackgroundColor: Color.lerp(
-            a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
-        disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
-        scaffoldBackgroundColor: Color.lerp(
-            a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
-        acrylicBackgroundColor:
-            Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
-        shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
-        fasterAnimationDuration: lerpDuration(
-            a.fasterAnimationDuration, b.fasterAnimationDuration, t),
-        fastAnimationDuration:
-            lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
-        mediumAnimationDuration: lerpDuration(
-            a.mediumAnimationDuration, b.mediumAnimationDuration, t),
-        slowAnimationDuration:
-            lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
-        animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
-        inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
-        buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
-        checkboxTheme:
-            CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
-        chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
-        toggleSwitchTheme: ToggleSwitchThemeData.lerp(
-            a.toggleSwitchTheme, b.toggleSwitchTheme, t),
-        iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
-        splitButtonTheme: SplitButtonThemeData.lerp(
-            a.splitButtonTheme, b.splitButtonTheme, t),
-        dialogTheme:
-            ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
-        tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
-        dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
-        navigationPaneTheme: NavigationPaneThemeData.lerp(
-            a.navigationPaneTheme, b.navigationPaneTheme, t),
-        radioButtonTheme: RadioButtonThemeData.lerp(
-            a.radioButtonTheme, b.radioButtonTheme, t),
-        toggleButtonTheme: ToggleButtonThemeData.lerp(
-            a.toggleButtonTheme, b.toggleButtonTheme, t),
-        sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
-        infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
-        focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
-        scrollbarTheme:
-            ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
-        bottomNavigationTheme: BottomNavigationThemeData.lerp(
-            a.bottomNavigationTheme, b.bottomNavigationTheme, t),
-        snackbarTheme:
-            SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
-        pillButtonBarTheme: PillButtonBarThemeData.lerp(
-            a.pillButtonBarTheme, b.pillButtonBarTheme, t),
-        bottomSheetTheme: BottomSheetThemeData.lerp(
-            a.bottomSheetTheme, b.bottomSheetTheme, t));
+      brightness: t < 0.5 ? a.brightness : b.brightness,
+      visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
+      accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
+      typography: Typography.lerp(a.typography, b.typography, t),
+      activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
+      inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
+      inactiveBackgroundColor:
+          Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
+      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
+      scaffoldBackgroundColor:
+          Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
+      acrylicBackgroundColor:
+          Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
+      shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
+      fasterAnimationDuration:
+          lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
+      fastAnimationDuration:
+          lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
+      mediumAnimationDuration:
+          lerpDuration(a.mediumAnimationDuration, b.mediumAnimationDuration, t),
+      slowAnimationDuration:
+          lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
+      animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+      inputMouseCursor: t < 0.5 ? a.inputMouseCursor : b.inputMouseCursor,
+      buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
+      checkboxTheme:
+          CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
+      toggleSwitchTheme: ToggleSwitchThemeData.lerp(
+          a.toggleSwitchTheme, b.toggleSwitchTheme, t),
+      iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
+      splitButtonTheme:
+          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
+      dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
+      tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
+      dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
+      navigationPaneTheme: NavigationPaneThemeData.lerp(
+          a.navigationPaneTheme, b.navigationPaneTheme, t),
+      radioButtonTheme:
+          RadioButtonThemeData.lerp(a.radioButtonTheme, b.radioButtonTheme, t),
+      toggleButtonTheme: ToggleButtonThemeData.lerp(
+          a.toggleButtonTheme, b.toggleButtonTheme, t),
+      sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
+      infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
+      focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
+      scrollbarTheme:
+          ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
+      bottomNavigationTheme: BottomNavigationThemeData.lerp(
+          a.bottomNavigationTheme, b.bottomNavigationTheme, t),
+      snackbarTheme:
+          SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
+      pillButtonBarTheme: PillButtonBarThemeData.lerp(
+          a.pillButtonBarTheme, b.pillButtonBarTheme, t),
+      bottomSheetTheme:
+          BottomSheetThemeData.lerp(a.bottomSheetTheme, b.bottomSheetTheme, t),
+    );
   }
 
   ThemeData copyWith({

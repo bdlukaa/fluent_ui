@@ -1165,13 +1165,9 @@ The code above produces the following:
 
 ## Acrylic
 
-Acrylic is a type of Brush that creates a translucent texture. You can apply acrylic to app surfaces to add depth and help establish a visual hierarchy.
+Acrylic is a type of Brush that creates a translucent texture. You can apply acrylic to app surfaces to add depth and help establish a visual hierarchy. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/acrylic)
 
 ![Acrylic](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/header-acrylic.svg)
-
-#### Usage
-
-You can easily use the `Acrylic` widget as a substitute for the `Container`, because it has all the necessary properties it has, but don't use it everywhere everytime:
 
 | Do                                                                                                                                  | Don't                                                                                                                                                     |
 | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1182,7 +1178,6 @@ You can easily use the `Acrylic` widget as a substitute for the `Container`, bec
 
 ```dart
 Acrylic(
-  padding: EdgeInsets.all(12), // Defaults to EdgeInsets.zero
   child: Button(
     text: Text('Mom it\'s me hehe <3'),
     onPressed: () {
@@ -1192,14 +1187,6 @@ Acrylic(
   color: ...,
   width: ...,
   height: ...,
-),
-```
-
-To disable the blur effect, wrap the acrylic in a `NoAcrylicBlurEffect`. It can be useful to disable `InfoBar`'s and `NavigationView`'s blur effect:
-
-```dart
-NoAcrylicBlurEffect(
-  child: InfoBar(...),
 ),
 ```
 
@@ -1580,7 +1567,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | BottomNavigation          | BottomNavigation |
 | Divider                   | Divider          |
 | VerticalDivider           | Divider          |
-| Card                      | Acrylic          |
+| Material                  | Acrylic          |
 | ListTile                  | ListTile         |
 | RadioListTile             | RadioListTile    |
 | CheckboxListTile          | CheckboxListTile |
@@ -1604,6 +1591,9 @@ All contributions are welcome :)
 
 ### Acknowledgements
 
+Irrespective of order, thanks to all the people below for contributing with the project. It means a lot to me :)
+
+- [@HrX03](https://github.com/HrX03) for the `Acrylic` implementation.
 - [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`
 - [@alexmercerind](https://github.com/alexmercerind) for the [flutter_acrylic](https://github.com/alexmercerind/flutter_acrylic) plugin, used on the example app
 - [@bitsdojo](https://github.com/bitsdojo) for the [bitsdojo_window](https://github.com/bitsdojo/bitsdojo_window) plugin, used on the example app.

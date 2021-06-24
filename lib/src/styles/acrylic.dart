@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 import 'dart:ui' as ui show Image;
+import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -289,42 +291,6 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
   }
 }
 
-/// A widget that can disable the acrylic blur effect if wrapped above
-/// an Acrylic.
-///
-/// {@toolsnippet}
-///
-/// The following code shows how to disable the acrylic blur effect on
-/// the whole app:
-///
-/// ```dart
-/// runApp(NoAcrylicBlurEffect(child: MyApp()));
-/// ```
-///
-/// {@end-tool}
-///
-/// See also:
-///   * [Acrylic], the widget that can apply a blurred background on its child
-///   * [Material], the direct material counterpart to acrylic
-class NoAcrylicBlurEffect extends InheritedWidget {
-  /// Creates a widget that disable the acrylic blur effect in its tree
-  const NoAcrylicBlurEffect({
-    Key? key,
-    required this.child,
-  }) : super(key: key, child: child);
-
-  final Widget child;
-
-  static NoAcrylicBlurEffect? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<NoAcrylicBlurEffect>();
-  }
-
-  @override
-  bool updateShouldNotify(NoAcrylicBlurEffect oldWidget) {
-    return true;
-  }
-}
-
 /// Represents the properties of an Acrylic material
 @immutable
 class AcrylicProperties {
@@ -381,7 +347,7 @@ class AcrylicProperties {
 class _AcrylicInheritedWidget extends InheritedWidget {
   final _AcrylicState state;
 
-  _AcrylicInheritedWidget({
+  const _AcrylicInheritedWidget({
     required this.state,
     required Widget child,
   }) : super(child: child);
@@ -444,7 +410,7 @@ class _AcrylicPainter extends CustomPainter {
       tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
     );
     if (_NoiseTextureCacher._instance!.texture != null) {
-      paintImage(
+      _paintImage(
         canvas: canvas,
         rect: Offset.zero & size,
         image: _NoiseTextureCacher._instance!.texture!,
@@ -460,6 +426,243 @@ class _AcrylicPainter extends CustomPainter {
   bool shouldRepaint(_AcrylicPainter old) {
     return this.luminosityColor != old.luminosityColor ||
         this.tintColor != old.tintColor;
+  }
+
+  // TODO(bdlukaa): replace the method below with [paintImage] when it lands on stable
+
+  Set<ImageSizeInfo> _lastFrameImageSizeInfo = <ImageSizeInfo>{};
+
+  Map<String, ImageSizeInfo> _pendingImageSizeInfo = <String, ImageSizeInfo>{};
+
+  void _paintImage({
+    required Canvas canvas,
+    required Rect rect,
+    required ui.Image image,
+    String? debugImageLabel,
+    double scale = 1.0,
+    double opacity = 1.0,
+    ColorFilter? colorFilter,
+    BoxFit? fit,
+    Alignment alignment = Alignment.center,
+    Rect? centerSlice,
+    ImageRepeat repeat = ImageRepeat.noRepeat,
+    bool flipHorizontally = false,
+    bool invertColors = false,
+    FilterQuality filterQuality = FilterQuality.low,
+    bool isAntiAlias = false,
+  }) {
+    assert(
+      image.debugGetOpenHandleStackTraces()?.isNotEmpty ?? true,
+      'Cannot paint an image that is disposed.\n'
+      'The caller of paintImage is expected to wait to dispose the image until '
+      'after painting has completed.',
+    );
+
+    Rect _scaleRect(Rect rect, double scale) => Rect.fromLTRB(rect.left * scale,
+        rect.top * scale, rect.right * scale, rect.bottom * scale);
+
+    Iterable<Rect> _generateImageTileRects(
+        Rect outputRect, Rect fundamentalRect, ImageRepeat repeat) sync* {
+      int startX = 0;
+      int startY = 0;
+      int stopX = 0;
+      int stopY = 0;
+      final double strideX = fundamentalRect.width;
+      final double strideY = fundamentalRect.height;
+
+      if (repeat == ImageRepeat.repeat || repeat == ImageRepeat.repeatX) {
+        startX = ((outputRect.left - fundamentalRect.left) / strideX).floor();
+        stopX = ((outputRect.right - fundamentalRect.right) / strideX).ceil();
+      }
+
+      if (repeat == ImageRepeat.repeat || repeat == ImageRepeat.repeatY) {
+        startY = ((outputRect.top - fundamentalRect.top) / strideY).floor();
+        stopY = ((outputRect.bottom - fundamentalRect.bottom) / strideY).ceil();
+      }
+
+      for (int i = startX; i <= stopX; ++i) {
+        for (int j = startY; j <= stopY; ++j)
+          yield fundamentalRect.shift(Offset(i * strideX, j * strideY));
+      }
+    }
+
+    if (rect.isEmpty) return;
+    Size outputSize = rect.size;
+    Size inputSize = Size(image.width.toDouble(), image.height.toDouble());
+    Offset? sliceBorder;
+    if (centerSlice != null) {
+      sliceBorder = inputSize / scale - centerSlice.size as Offset;
+      outputSize = outputSize - sliceBorder as Size;
+      inputSize = inputSize - sliceBorder * scale as Size;
+    }
+    fit ??= centerSlice == null ? BoxFit.scaleDown : BoxFit.fill;
+    assert(centerSlice == null || (fit != BoxFit.none && fit != BoxFit.cover));
+    final FittedSizes fittedSizes =
+        applyBoxFit(fit, inputSize / scale, outputSize);
+    final Size sourceSize = fittedSizes.source * scale;
+    Size destinationSize = fittedSizes.destination;
+    if (centerSlice != null) {
+      outputSize += sliceBorder!;
+      destinationSize += sliceBorder;
+      // We don't have the ability to draw a subset of the image at the same time
+      // as we apply a nine-patch stretch.
+      assert(sourceSize == inputSize,
+          'centerSlice was used with a BoxFit that does not guarantee that the image is fully visible.');
+    }
+
+    if (repeat != ImageRepeat.noRepeat && destinationSize == outputSize) {
+      // There's no need to repeat the image because we're exactly filling the
+      // output rect with the image.
+      repeat = ImageRepeat.noRepeat;
+    }
+    final Paint paint = Paint()..isAntiAlias = isAntiAlias;
+    if (colorFilter != null) paint.colorFilter = colorFilter;
+    paint.color = Color.fromRGBO(0, 0, 0, opacity);
+    paint.filterQuality = filterQuality;
+    paint.invertColors = invertColors;
+    final double halfWidthDelta =
+        (outputSize.width - destinationSize.width) / 2.0;
+    final double halfHeightDelta =
+        (outputSize.height - destinationSize.height) / 2.0;
+    final double dx = halfWidthDelta +
+        (flipHorizontally ? -alignment.x : alignment.x) * halfWidthDelta;
+    final double dy = halfHeightDelta + alignment.y * halfHeightDelta;
+    final Offset destinationPosition = rect.topLeft.translate(dx, dy);
+    final Rect destinationRect = destinationPosition & destinationSize;
+
+    // Set to true if we added a saveLayer to the canvas to invert/flip the image.
+    bool invertedCanvas = false;
+    // Output size and destination rect are fully calculated.
+    if (!kReleaseMode) {
+      final ImageSizeInfo sizeInfo = ImageSizeInfo(
+        // Some ImageProvider implementations may not have given this.
+        source: debugImageLabel ??
+            '<Unknown Image(${image.width}×${image.height})>',
+        imageSize: Size(image.width.toDouble(), image.height.toDouble()),
+        displaySize: outputSize,
+      );
+      assert(() {
+        if (debugInvertOversizedImages &&
+            sizeInfo.decodedSizeInBytes >
+                sizeInfo.displaySizeInBytes + debugImageOverheadAllowance) {
+          final int overheadInKilobytes =
+              (sizeInfo.decodedSizeInBytes - sizeInfo.displaySizeInBytes) ~/
+                  1024;
+          final int outputWidth = outputSize.width.toInt();
+          final int outputHeight = outputSize.height.toInt();
+          FlutterError.reportError(FlutterErrorDetails(
+            exception: 'Image $debugImageLabel has a display size of '
+                '$outputWidth×$outputHeight but a decode size of '
+                '${image.width}×${image.height}, which uses an additional '
+                '${overheadInKilobytes}KB.\n\n'
+                'Consider resizing the asset ahead of time, supplying a cacheWidth '
+                'parameter of $outputWidth, a cacheHeight parameter of '
+                '$outputHeight, or using a ResizeImage.',
+            library: 'painting library',
+            context: ErrorDescription('while painting an image'),
+          ));
+          // Invert the colors of the canvas.
+          canvas.saveLayer(
+            destinationRect,
+            Paint()
+              ..colorFilter = const ColorFilter.matrix(<double>[
+                -1,
+                0,
+                0,
+                0,
+                255,
+                0,
+                -1,
+                0,
+                0,
+                255,
+                0,
+                0,
+                -1,
+                0,
+                255,
+                0,
+                0,
+                0,
+                1,
+                0,
+              ]),
+          );
+          // Flip the canvas vertically.
+          final double dy = -(rect.top + rect.height / 2.0);
+          canvas.translate(0.0, -dy);
+          canvas.scale(1.0, -1.0);
+          canvas.translate(0.0, dy);
+          invertedCanvas = true;
+        }
+        return true;
+      }());
+      // Avoid emitting events that are the same as those emitted in the last frame.
+      if (!_lastFrameImageSizeInfo.contains(sizeInfo)) {
+        final ImageSizeInfo? existingSizeInfo =
+            _pendingImageSizeInfo[sizeInfo.source];
+        if (existingSizeInfo == null ||
+            existingSizeInfo.displaySizeInBytes < sizeInfo.displaySizeInBytes) {
+          _pendingImageSizeInfo[sizeInfo.source!] = sizeInfo;
+        }
+        debugOnPaintImage?.call(sizeInfo);
+        SchedulerBinding.instance!.addPostFrameCallback((Duration timeStamp) {
+          _lastFrameImageSizeInfo = _pendingImageSizeInfo.values.toSet();
+          if (_pendingImageSizeInfo.isEmpty) {
+            return;
+          }
+          developer.postEvent(
+            'Flutter.ImageSizesForFrame',
+            <String, Object>{
+              for (ImageSizeInfo imageSizeInfo in _pendingImageSizeInfo.values)
+                imageSizeInfo.source!: imageSizeInfo.toJson(),
+            },
+          );
+          _pendingImageSizeInfo = <String, ImageSizeInfo>{};
+        });
+      }
+    }
+
+    final bool needSave = centerSlice != null ||
+        repeat != ImageRepeat.noRepeat ||
+        flipHorizontally;
+    if (needSave) canvas.save();
+    if (repeat != ImageRepeat.noRepeat) canvas.clipRect(rect);
+    if (flipHorizontally) {
+      final double dx = -(rect.left + rect.width / 2.0);
+      canvas.translate(-dx, 0.0);
+      canvas.scale(-1.0, 1.0);
+      canvas.translate(dx, 0.0);
+    }
+    if (centerSlice == null) {
+      final Rect sourceRect = alignment.inscribe(
+        sourceSize,
+        Offset.zero & inputSize,
+      );
+      if (repeat == ImageRepeat.noRepeat) {
+        canvas.drawImageRect(image, sourceRect, destinationRect, paint);
+      } else {
+        for (final Rect tileRect
+            in _generateImageTileRects(rect, destinationRect, repeat))
+          canvas.drawImageRect(image, sourceRect, tileRect, paint);
+      }
+    } else {
+      canvas.scale(1 / scale);
+      if (repeat == ImageRepeat.noRepeat) {
+        canvas.drawImageNine(image, _scaleRect(centerSlice, scale),
+            _scaleRect(destinationRect, scale), paint);
+      } else {
+        for (final Rect tileRect
+            in _generateImageTileRects(rect, destinationRect, repeat))
+          canvas.drawImageNine(image, _scaleRect(centerSlice, scale),
+              _scaleRect(tileRect, scale), paint);
+      }
+    }
+    if (needSave) canvas.restore();
+
+    if (invertedCanvas) {
+      canvas.restore();
+    }
   }
 }
 

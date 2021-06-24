@@ -1,5 +1,12 @@
 Date format: DD/MM/YYYY
 
+## [next] - BREAKING CHANGES - [##/06/2021]
+
+- **BREAKING:** Reworked the `Acrylic` widget implementation ([#47](https://github.com/bdlukaa/fluent_ui/pull/47))
+- **BREAKING:** Removed the `useAcrylic` property from `NavigationView`. Acrylic is now used by default.
+- `PaneDisplayMode.compact` has now a width of 40, not 50.
+- Removed `SizeTransition` from `TabView`.
+
 ## [2.1.1] - [03/06/2021]
 
 - Option to set a default font family on the theme data (`ThemeData.fontFamily`)

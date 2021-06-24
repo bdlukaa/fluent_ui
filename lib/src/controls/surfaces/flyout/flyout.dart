@@ -98,25 +98,23 @@ class FlyoutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return DefaultTextStyle(
-      style: FluentTheme.of(context).typography.body ?? TextStyle(),
-      child: Acrylic(
-        elevation: elevation,
-        tintAlpha: 1.0,
-        tint: color ??
-            FluentTheme.of(context)
-                .acrylicBackgroundColor
-                .withOpacity(kDefaultAcrylicAlpha),
-        shape: shape ??
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(
-                color: FluentTheme.of(context).inactiveBackgroundColor,
-                width: 0.9,
-              ),
+    final ThemeData theme = FluentTheme.of(context);
+    return Acrylic(
+      elevation: elevation,
+      tintAlpha: 1.0,
+      tint: color ?? theme.acrylicBackgroundColor,
+      shape: shape ??
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(
+              color: theme.inactiveBackgroundColor,
+              width: 0.9,
             ),
-        child: Padding(
-          padding: padding,
+          ),
+      child: Padding(
+        padding: padding,
+        child: DefaultTextStyle(
+          style: theme.typography.body ?? TextStyle(),
           child: child,
         ),
       ),

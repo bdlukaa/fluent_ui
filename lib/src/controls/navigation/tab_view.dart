@@ -406,7 +406,7 @@ class __TabState extends State<_Tab>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
+    final ThemeData theme = FluentTheme.of(context);
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
@@ -435,8 +435,8 @@ class __TabState extends State<_Tab>
                 ? BorderRadius.zero
                 : BorderRadius.vertical(top: Radius.circular(4)),
             color: widget.selected
-                ? style.scaffoldBackgroundColor
-                : ButtonThemeData.uncheckedInputColor(style, state),
+                ? theme.scaffoldBackgroundColor
+                : ButtonThemeData.uncheckedInputColor(theme, state),
           ),
           child: () {
             final result = ClipRect(
@@ -446,7 +446,12 @@ class __TabState extends State<_Tab>
                     padding: EdgeInsets.only(right: 5),
                     child: widget.tab.icon!,
                   ),
-                Expanded(child: widget.tab.text),
+                Expanded(
+                  child: DefaultTextStyle(
+                    style: theme.typography.body ?? TextStyle(),
+                    child: widget.tab.text,
+                  ),
+                ),
                 if (widget.tab.closeIcon != null)
                   FocusTheme(
                     data: FocusThemeData(
@@ -467,7 +472,7 @@ class __TabState extends State<_Tab>
                           return state.isNone
                               ? Colors.transparent
                               : ButtonThemeData.buttonColor(
-                                  style.brightness,
+                                  theme.brightness,
                                   state,
                                 );
                         }),
@@ -493,17 +498,18 @@ class __TabState extends State<_Tab>
           selected: widget.selected,
           focusable: true,
           focused: state.isFocused,
-          child: SizeTransition(
-            sizeFactor: Tween<double>(
-              begin: 0.8,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              curve: widget.animationCurve,
-              parent: _controller,
-            )),
-            axis: Axis.horizontal,
-            child: child,
-          ),
+          child: child,
+          // child: SizeTransition(
+          //   sizeFactor: Tween<double>(
+          //     begin: 0.8,
+          //     end: 1.0,
+          //   ).animate(CurvedAnimation(
+          //     curve: widget.animationCurve,
+          //     parent: _controller,
+          //   )),
+          //   axis: Axis.horizontal,
+          //   child: child,
+          // ),
         );
       },
     );
