@@ -24,6 +24,7 @@ export 'package:flutter/material.dart'
         kThemeAnimationDuration;
 
 export 'src/app.dart';
+export 'src/icons.dart';
 export 'src/localization.dart';
 export 'src/utils.dart';
 
