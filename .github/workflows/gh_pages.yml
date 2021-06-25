@@ -21,7 +21,7 @@ jobs:
         run: flutter pub get
         working-directory: ./example
       - name: Build Web
-        run: flutter build web
+        run: flutter build web --release --source-maps
         working-directory: ./example
       - name: Deploy
         run: |
