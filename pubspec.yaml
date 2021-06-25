@@ -1,6 +1,6 @@
 name: fluent_ui
 description: Implements Fluent UI in Flutter. Based on the official documentation
-version: 2.1.1
+version: 2.2.0
 homepage: https://github.com/bdlukaa/fluent_ui
 
 environment:

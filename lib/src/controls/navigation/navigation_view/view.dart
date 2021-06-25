@@ -616,50 +616,34 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
         ]);
         break;
       case PaneDisplayMode.open:
-        result = Row(children: [
-          AnimatedContainer(
-            duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? Curves.linear,
-            key: _openCompactKey,
-            width: _kOpenNavigationPanelWidth,
-            height: widget.appBar.height,
-            child: Row(children: [
-              leading,
-              if (widget.additionalLeading != null) widget.additionalLeading!,
-              Flexible(child: title),
-            ]),
-          ),
-          Expanded(
-            child: ColoredBox(
-              color: backgroundColor,
-              child: widget.appBar.actions ?? SizedBox(),
-            ),
-          ),
-        ]);
-        break;
       case PaneDisplayMode.compact:
-        result = Stack(children: [
-          Row(children: [
+        final double width = displayMode == PaneDisplayMode.open
+            ? _kOpenNavigationPanelWidth
+            : _kCompactNavigationPanelWidth;
+        result = SizedBox(
+          height: widget.appBar.height,
+          child: Stack(children: [
             AnimatedContainer(
               duration: theme.animationDuration ?? Duration.zero,
               curve: theme.animationCurve ?? Curves.linear,
               key: _openCompactKey,
-              width: _kCompactNavigationPanelWidth,
+              width: width,
               height: widget.appBar.height,
             ),
-            Expanded(
+            Padding(
+              padding: EdgeInsets.only(left: width),
               child: ColoredBox(
                 color: backgroundColor,
                 child: widget.appBar.actions ?? SizedBox(),
               ),
             ),
+            Row(children: [
+              leading,
+              if (widget.additionalLeading != null) widget.additionalLeading!,
+              title,
+            ]),
           ]),
-          Row(children: [
-            leading,
-            if (widget.additionalLeading != null) widget.additionalLeading!,
-            title,
-          ]),
-        ]);
+        );
         break;
       default:
         return SizedBox.shrink();

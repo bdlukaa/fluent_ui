@@ -35,7 +35,8 @@ class _TypographyPageState extends State<TypographyPage> {
               items: [
                 ComboboxItem(
                   child: Row(children: [
-                    Container(height: boxSize, width: boxSize, color: Colors.white),
+                    Container(
+                        height: boxSize, width: boxSize, color: Colors.white),
                     SizedBox(width: 10.0),
                     Text('White'),
                   ]),
@@ -43,7 +44,8 @@ class _TypographyPageState extends State<TypographyPage> {
                 ),
                 ComboboxItem(
                   child: Row(children: [
-                    Container(height: boxSize, width: boxSize, color: Colors.black),
+                    Container(
+                        height: boxSize, width: boxSize, color: Colors.black),
                     SizedBox(width: 10.0),
                     Text('Black'),
                   ]),

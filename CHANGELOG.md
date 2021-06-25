@@ -1,7 +1,8 @@
 Date format: DD/MM/YYYY
 
-## [next] - BREAKING CHANGES - [##/06/2021]
+## [2.2.0] - BREAKING CHANGES - [##/06/2021]
 
+- **BREAKING:** Material `Icons` are not used anymore. Use `FluentIcons` instead.
 - **BREAKING:** Reworked the `Acrylic` widget implementation ([#47](https://github.com/bdlukaa/fluent_ui/pull/47))
 - **BREAKING:** Removed the `useAcrylic` property from `NavigationView`. Acrylic is now used by default.
 - `PaneDisplayMode.compact` has now a width of 40, not 50.
