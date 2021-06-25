@@ -448,6 +448,7 @@ class FluentIcons {
   static const IconData clipboard_solid = IconData(0xf5dc, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');
   static const IconData clock = IconData(0xe917, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');
   static const IconData clone_to_desktop = IconData(0xf28c, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');
+  static const IconData close = FluentIcons.calculator_multiply;
   static const IconData close_pane = IconData(0xe89f, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');
   static const IconData close_pane_mirrored = IconData(0xea49, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');
   static const IconData closed_caption = IconData(0xef84, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui');

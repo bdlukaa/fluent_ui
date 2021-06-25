@@ -271,7 +271,7 @@ class CheckboxThemeData with Diagnosticable {
             : Colors.transparent,
       ),
       thirdstateIconColor: ButtonState.all(Colors.transparent),
-      icon: Icons.check,
+      icon: FluentIcons.check_mark,
       margin: const EdgeInsets.all(4.0),
     );
   }

@@ -347,8 +347,8 @@ class ThemeData with Diagnosticable {
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= brightness.isDark
-        ? const IconThemeData(color: Colors.white)
-        : const IconThemeData(color: Colors.black);
+        ? const IconThemeData(color: Colors.white, size: 18.0)
+        : const IconThemeData(color: Colors.black, size: 18.0);
     splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();

@@ -31,7 +31,7 @@ class TabView extends StatelessWidget {
     required this.tabs,
     required this.bodies,
     this.onNewPressed,
-    this.addIconData = Icons.add,
+    this.addIconData = FluentIcons.add,
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
@@ -228,7 +228,7 @@ class TabView extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 2),
                   child: IconButton(
                     key: ValueKey<int>(tabs.length),
-                    icon: Icon(addIconData),
+                    icon: Icon(addIconData, size: 18.0),
                     onPressed: onNewPressed,
                     style: ButtonStyle(
                       foregroundColor: ButtonState.resolveWith((states) {
@@ -330,7 +330,7 @@ class Tab {
     Key? key,
     this.icon = const FlutterLogo(),
     required this.text,
-    this.closeIcon = Icons.close,
+    this.closeIcon = FluentIcons.close,
     this.onClosed,
     this.semanticLabel,
   });
@@ -459,7 +459,7 @@ class __TabState extends State<_Tab>
                       secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
-                      icon: Icon(widget.tab.closeIcon, size: 18.0),
+                      icon: Icon(widget.tab.closeIcon, size: 14.0),
                       onPressed: widget.tab.onClosed,
                       style: ButtonStyle(
                         foregroundColor: ButtonState.resolveWith((states) {

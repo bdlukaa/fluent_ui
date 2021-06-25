@@ -195,21 +195,28 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: [
           PaneItemHeader(header: Text('User Interaction')),
-          PaneItem(icon: Icon(Icons.input), title: Text('Inputs')),
-          PaneItem(icon: Icon(Icons.format_align_center), title: Text('Forms')),
+          PaneItem(
+            icon: Icon(FluentIcons.checkbox_composite),
+            title: Text('Inputs'),
+          ),
+          PaneItem(icon: Icon(FluentIcons.text_field), title: Text('Forms')),
           PaneItemSeparator(),
+          PaneItem(icon: Icon(FluentIcons.color), title: Text('Colors')),
           PaneItem(
-              icon: Icon(Icons.miscellaneous_services), title: Text('Others')),
+            icon: Icon(FluentIcons.plain_text),
+            title: Text('Typography'),
+          ),
+          PaneItem(icon: Icon(FluentIcons.cell_phone), title: Text('Mobile')),
           PaneItem(
-              icon: Icon(Icons.color_lens_outlined), title: Text('Colors')),
-          PaneItem(icon: Icon(Icons.title), title: Text('Typography')),
-          PaneItem(icon: Icon(Icons.phone_android), title: Text('Mobile')),
+            icon: Icon(FluentIcons.more_vertical),
+            title: Text('Others'),
+          ),
         ],
         autoSuggestBox: AutoSuggestBox<String>(
           controller: TextEditingController(),
           items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
         ),
-        autoSuggestBoxReplacement: Icon(Icons.search),
+        autoSuggestBoxReplacement: Icon(FluentIcons.search),
         footerItems: [
           PaneItemSeparator(),
           PaneItem(icon: Icon(FluentIcons.settings), title: Text('Settings')),
@@ -218,10 +225,10 @@ class _MyHomePageState extends State<MyHomePage> {
       content: NavigationBody(index: index, children: [
         InputsPage(),
         Forms(),
-        Others(),
         ColorsPage(controller: colorsController),
         TypographyPage(),
         Mobile(),
+        Others(),
         Settings(controller: settingsController),
       ]),
     );

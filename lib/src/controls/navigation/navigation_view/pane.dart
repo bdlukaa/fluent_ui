@@ -378,7 +378,7 @@ class NavigationPane with Diagnosticable {
   /// as a replacement to [autoSuggestBox]. It's only displayed if
   /// [autoSuggestBox] is non-null.
   ///
-  /// It's usually an [Icon] with [Icons.search] as the icon.
+  /// It's usually an [Icon] with [FluentIcons.search] as the icon.
   final Widget? autoSuggestBoxReplacement;
 
   /// The current selected index.
@@ -480,7 +480,10 @@ class NavigationPane with Diagnosticable {
     return Container(
       width: _kCompactNavigationPanelWidth,
       margin: padding,
-      child: PaneItem(title: itemTitle, icon: Icon(Icons.menu)).build(
+      child: PaneItem(
+        title: itemTitle,
+        icon: Icon(FluentIcons.collapse_menu),
+      ).build(
         context,
         false,
         onPressed,
@@ -524,7 +527,6 @@ class _TopNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneTheme.of(context);
     Widget topBar = SizedBox(
       height: kOneLineTileHeight,
       child: pane.indicatorBuilder(

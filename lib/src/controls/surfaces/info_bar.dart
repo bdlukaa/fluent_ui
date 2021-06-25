@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show Icons;
 
 // This file implements info bar into this library.
 // It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
@@ -253,17 +255,17 @@ class InfoBarThemeData with Diagnosticable {
             return isDark ? Color(0xFF442726) : Colors.errorSecondaryColor;
         }
       },
-      closeIcon: Icons.close,
+      closeIcon: FluentIcons.close,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return Icons.info_outlined;
+            return FluentIcons.info;
           case InfoBarSeverity.warning:
-            return Icons.error_outline;
+            return FluentIcons.error;
           case InfoBarSeverity.success:
             return Icons.check_circle_outlined;
           case InfoBarSeverity.error:
-            return Icons.cancel_outlined;
+            return FluentIcons.error_badge;
         }
       },
       iconColor: (severity) {

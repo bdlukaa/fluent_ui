@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
+
 /// The rating bar allows users to view and set ratings that
 /// reflect degrees of satisfaction with content and services.
 /// Users can interact with the rating control with touch, pen,
@@ -56,7 +58,7 @@ class RatingBar extends StatefulWidget {
   /// The curve of the animation. If `null`, uses [ThemeData.animationCurve]
   final Curve? animationCurve;
 
-  /// The icon used in the bar. If `null`, uses [Icons.star_rate_sharp]
+  /// The icon used in the bar. If `null`, uses [kRatingBarIcon]
   final IconData? icon;
 
   /// The size of the icon. If `null`, uses [IconThemeData.size]
@@ -207,8 +209,7 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final double size =
-        widget.iconSize ?? FluentTheme.of(context).iconTheme.size ?? 22;
+    final double size = widget.iconSize ?? 22;
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed
@@ -248,7 +249,7 @@ class _RatingBarState extends State<RatingBar> {
                       else if (r < 0) r = 0;
                       Widget icon = RatingIcon(
                         rating: r,
-                        icon: widget.icon ?? Icons.star_rate_sharp,
+                        icon: widget.icon ?? kRatingBarIcon,
                         ratedColor: widget.ratedIconColor,
                         unratedColor: widget.unratedIconColor,
                         size: widget.iconSize ?? size,
@@ -306,7 +307,7 @@ class RatingIcon extends StatelessWidget {
     required this.rating,
     this.ratedColor,
     this.unratedColor,
-    this.icon = Icons.star_rate_sharp,
+    this.icon = kRatingBarIcon,
     this.size,
   })  : assert(rating >= 0.0 && rating <= 1.0),
         super(key: key);

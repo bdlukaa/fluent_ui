@@ -126,7 +126,7 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildButtons() {
-    final splitButtonHeight = 50.0;
+    const double splitButtonHeight = 50.0;
     return Acrylic(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -165,7 +165,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             spacer,
             IconButton(
-              icon: Icon(Icons.add),
+              icon: Icon(FluentIcons.add),
               onPressed: disabled ? null : () => print('pressed icon button'),
             ),
             spacer,
@@ -186,9 +186,9 @@ class _InputsPageState extends State<InputsPage> {
                   onPressed: disabled ? null : () {},
                 ),
                 Button(
-                  child: SizedBox(
+                  child: const SizedBox(
                     height: splitButtonHeight,
-                    child: Icon(Icons.keyboard_arrow_down),
+                    child: const Icon(FluentIcons.chevron_down, size: 14.0),
                   ),
                   onPressed: disabled ? null : () {},
                   style:

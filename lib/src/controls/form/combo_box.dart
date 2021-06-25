@@ -753,7 +753,7 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 /// Widget build(BuildContext context) {
 ///   return Combobox<String>(
 ///     value: comboboxValue,
-///     icon: Icon(Icons.arrow_downward),
+///     icon: Icon(FluentIcons.chevron_down),
 ///     iconSize: 24,
 ///     elevation: 16,
 ///     style: TextStyle(
@@ -1012,7 +1012,7 @@ class Combobox<T> extends StatefulWidget {
 
   /// The widget to use for the drop-down button's icon.
   ///
-  /// Defaults to an [Icon] with the [Icons.arrow_drop_down] glyph.
+  /// Defaults to an [Icon] with the [FluentIcons.chevron_down] glyph.
   final Widget? icon;
 
   /// The color of any [Icon] descendant of [icon] if this button is disabled,
@@ -1347,7 +1347,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       );
     }
 
-    const Icon defaultIcon = Icon(Icons.keyboard_arrow_down);
+    const Icon defaultIcon = Icon(FluentIcons.chevron_down, size: 16.0);
 
     Widget result = DefaultTextStyle(
       style: _enabled

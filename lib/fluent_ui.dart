@@ -12,7 +12,6 @@ export 'package:flutter/material.dart'
         kElevationToShadow,
         DateTimeRange,
         HourFormat,
-        Icons,
         AnimatedIcon,
         AnimatedIcons,
         AnimatedIconData,

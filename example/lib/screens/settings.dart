@@ -175,7 +175,11 @@ class Settings extends StatelessWidget {
           color: color,
           alignment: Alignment.center,
           child: appTheme.color == color
-              ? Icon(Icons.check, color: color.basedOnLuminance())
+              ? Icon(
+                  FluentIcons.check_mark,
+                  color: color.basedOnLuminance(),
+                  size: 22.0,
+                )
               : null,
         ),
       ),

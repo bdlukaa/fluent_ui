@@ -132,7 +132,7 @@ class NavigationViewState extends State<NavigationView> {
                     title: Text(!isMinimalPaneOpen
                         ? localizations.openNavigationTooltip
                         : localizations.closeNavigationTooltip),
-                    icon: const Icon(Icons.menu_outlined),
+                    icon: const Icon(FluentIcons.collapse_menu),
                   ).build(
                     context,
                     false,
@@ -516,7 +516,7 @@ class NavigationAppBar with Diagnosticable {
         child: SizedBox(
           width: _kCompactNavigationPanelWidth,
           child: IconButton(
-            icon: Icon(Icons.arrow_back_sharp, size: 20.0),
+            icon: Icon(FluentIcons.back, size: 18.0),
             onPressed: onPressed,
             style: ButtonStyle(
               backgroundColor: ButtonState.resolveWith((states) {

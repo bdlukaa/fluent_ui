@@ -181,13 +181,11 @@ FluentTheme(
 
 ![Icons Preview](https://github.com/microsoft/fluentui-system-icons/raw/master/art/readme-banner.png)
 
-Inside your app, you use icons to represent an action, such as copying text or navigating to the settings page. This library includes an icon library with it, so you can just call `Icons.[icon_name]` in any `Icon` widget:
+Inside your app, you use icons to represent an action, such as copying text or navigating to the settings page. This library includes an icon library with it, so you can just call `FluentIcons.[icon_name]` in any `Icon` widget:
 
 ```dart
-Icon(Icons.add),
+Icon(FluentIcons.add),
 ```
-
-To style icons, you can use `IconTheme` in the app `ThemeData` or use the property `style` in the `Icon` widget. You can see the list of icons [here](https://github.com/microsoft/fluentui-system-icons/blob/master/icons.md)
 
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
 
@@ -561,7 +559,7 @@ SizedBox(
         closeIcon: Tooltip(
           message: 'Close tab',
           child: IconButton(
-            icon: Icon(Icons.close),
+            icon: Icon(FluentIcons.close),
             onPressed: () {
               setState(() => tabs--);
               if (currentIndex > tabs - 1) currentIndex--;
@@ -984,7 +982,7 @@ AutoSuggestBox<String>(
       focusNode: focusNode,
       suffixMode: OverlayVisibilityMode.editing,
       suffix: IconButton(
-        icon: Icon(Icons.close),
+        icon: Icon(FluentIcons.close),
         onPressed: () {
           controller.clear();
           focusNode.unfocus();

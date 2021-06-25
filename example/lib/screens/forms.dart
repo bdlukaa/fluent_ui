@@ -67,7 +67,7 @@ class _FormsState extends State<Forms> {
                     focusNode: focusNode,
                     suffixMode: OverlayVisibilityMode.editing,
                     suffix: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: Icon(FluentIcons.close),
                       onPressed: () {
                         controller.clear();
                         focusNode.unfocus();
@@ -97,7 +97,7 @@ class _FormsState extends State<Forms> {
             suffixMode: OverlayVisibilityMode.always,
             minHeight: 100,
             suffix: IconButton(
-              icon: Icon(Icons.close),
+              icon: Icon(FluentIcons.close),
               onPressed: () {
                 _clearController.clear();
               },
@@ -110,10 +110,10 @@ class _FormsState extends State<Forms> {
             placeholder: 'Type your placeholder here',
             obscureText: !_showPassword,
             maxLines: 1,
-            suffixMode: OverlayVisibilityMode.editing,
+            suffixMode: OverlayVisibilityMode.always,
             suffix: IconButton(
               icon: Icon(
-                !_showPassword ? Icons.visibility : Icons.visibility_off,
+                !_showPassword ? FluentIcons.lock : FluentIcons.unlock,
               ),
               onPressed: () => setState(() => _showPassword = !_showPassword),
             ),

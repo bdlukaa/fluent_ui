@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show Icons;
 
 class Mobile extends StatefulWidget {
   const Mobile({Key? key}) : super(key: key);
@@ -54,7 +56,7 @@ class _MobileState extends State<Mobile> {
                             //       6,
                             //       (_) => Padding(
                             //         padding: EdgeInsets.only(left: 24.0),
-                            //         child: Icon(Icons.circle_outlined),
+                            //         child: Icon(FluentIcons.circle_shape),
                             //       ),
                             //     ),
                             //   ),
@@ -62,16 +64,16 @@ class _MobileState extends State<Mobile> {
                             description: Text('Description or Details here'),
                             children: [
                               ListTile(
-                                leading: Icon(Icons.mail_outline),
+                                leading: Icon(FluentIcons.mail),
                                 title: Text('Label'),
                                 subtitle: Text('Label'),
-                                trailing: Icon(Icons.navigate_next),
+                                trailing: Icon(FluentIcons.chevron_right),
                               ),
                               TappableListTile(
-                                leading: Icon(Icons.mail_outline),
+                                leading: Icon(FluentIcons.mail),
                                 title: Text('Label'),
                                 subtitle: Text('Label'),
-                                trailing: Icon(Icons.navigate_next),
+                                trailing: Icon(FluentIcons.chevron_right),
                                 onTap: () {
                                   print('tapped tile');
                                 },
@@ -176,8 +178,7 @@ class _MobileState extends State<Mobile> {
         onChanged: (i) => setState(() => _currentIndex = i),
         items: [
           BottomNavigationItem(
-            icon: Icon(Icons.two_k),
-            selectedIcon: Icon(Icons.two_k_plus),
+            icon: Icon(FluentIcons.split),
             title: Text('Both'),
           ),
           BottomNavigationItem(
