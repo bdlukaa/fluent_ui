@@ -132,7 +132,7 @@ class NavigationViewState extends State<NavigationView> {
                     title: Text(!isMinimalPaneOpen
                         ? localizations.openNavigationTooltip
                         : localizations.closeNavigationTooltip),
-                    icon: const Icon(FluentIcons.collapse_menu),
+                    icon: const Icon(FluentIcons.global_nav_button),
                   ).build(
                     context,
                     false,

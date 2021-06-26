@@ -28,6 +28,7 @@ class Tooltip extends StatefulWidget {
     this.style,
     this.excludeFromSemantics = false,
     this.useMousePosition = true,
+    this.displayOnFocus = true,
   }) : super(key: key);
 
   /// The text to display in the tooltip.
@@ -57,6 +58,9 @@ class Tooltip extends StatefulWidget {
   /// mouse position and the tooltip will be removed as soon as the
   /// pointer exit the [child].
   final bool useMousePosition;
+
+  /// Whether the tooltip should be displayed when focused.
+  final bool displayOnFocus;
 
   @override
   _TooltipState createState() => _TooltipState();
@@ -218,7 +222,10 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       box.size.center(Offset.zero),
       ancestor: overlayState.context.findRenderObject(),
     );
-    if (_mouseIsConnected && widget.useMousePosition && mousePosition != null) {
+    if (_mouseIsConnected &&
+        widget.useMousePosition &&
+        mousePosition != null &&
+        box.size.contains(mousePosition!)) {
       target = mousePosition!;
     }
 
@@ -265,6 +272,17 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       _hideTooltip();
     } else if (event is PointerDownEvent) {
       _hideTooltip(immediately: true);
+    }
+  }
+
+  void _handleFocusChanged(bool focused) {
+    // if (_entry == null) {
+    //   return;
+    // }
+    if (!focused) {
+      _hideTooltip();
+    } else {
+      _showTooltip(immediately: true);
     }
   }
 
@@ -356,6 +374,8 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       );
     }
 
+    if (widget.displayOnFocus)
+      result = Focus(onFocusChange: _handleFocusChanged, child: result);
     return result;
   }
 }

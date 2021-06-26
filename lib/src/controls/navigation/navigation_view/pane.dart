@@ -148,7 +148,7 @@ class PaneItem extends NavigationPaneItem {
                               ? style.selectedIconColor?.resolve(states)
                               : style.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
-                      size: 20,
+                      size: 18.0,
                     ),
                     child: this.icon,
                   ),
@@ -482,7 +482,7 @@ class NavigationPane with Diagnosticable {
       margin: padding,
       child: PaneItem(
         title: itemTitle,
-        icon: Icon(FluentIcons.collapse_menu),
+        icon: Icon(FluentIcons.global_nav_button),
       ).build(
         context,
         false,

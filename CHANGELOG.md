@@ -1,6 +1,11 @@
 Date format: DD/MM/YYYY
 
-## [2.2.0] - BREAKING CHANGES - [##/06/2021]
+## [2.2.1] - [26/06/2021]
+
+- Implement Fluent Selection Controls for `TextBox` ([#49](https://github.com/bdlukaa/fluent_ui/pull/49))
+- `Tooltip` is now displayed when focused ([#45](https://github.com/bdlukaa/fluent_ui/issues/45))
+
+## [2.2.0] - BREAKING CHANGES - [25/06/2021]
 
 - **BREAKING:** Material `Icons` are not used anymore. Use `FluentIcons` instead.
 - **BREAKING:** Reworked the `Acrylic` widget implementation ([#47](https://github.com/bdlukaa/fluent_ui/pull/47))
