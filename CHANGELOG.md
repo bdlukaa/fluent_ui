@@ -4,6 +4,8 @@ Date format: DD/MM/YYYY
 
 - Implement Fluent Selection Controls for `TextBox` ([#49](https://github.com/bdlukaa/fluent_ui/pull/49))
 - `Tooltip` is now displayed when focused ([#45](https://github.com/bdlukaa/fluent_ui/issues/45))
+- AppBar is now displayed when minimal pane is open.
+- AppBar's animation now follows the pane animation
 
 ## [2.2.0] - BREAKING CHANGES - [25/06/2021]
 

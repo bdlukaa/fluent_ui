@@ -87,6 +87,7 @@ class NavigationViewState extends State<NavigationView> {
 
   bool get isMinimalPaneOpen =>
       minimalOverlayEntry != null || (minimalOverlayEntry?.mounted ?? false);
+  bool isMinimalPaneClosing = false;
 
   bool _compactOverlayOpen = false;
 
@@ -123,30 +124,29 @@ class NavigationViewState extends State<NavigationView> {
     final localizations = FluentLocalizations.of(context);
     Widget appBar = () {
       if (widget.appBar != null) {
+        final additionalLeading = PaneItem(
+          title: Text(!isMinimalPaneOpen
+              ? localizations.openNavigationTooltip
+              : localizations.closeNavigationTooltip),
+          icon: const Icon(FluentIcons.global_nav_button),
+        ).build(
+          context,
+          false,
+          () async {
+            if (isMinimalPaneOpen) {
+              setState(() => isMinimalPaneClosing = true);
+              await minimalPaneKey.currentState?.removeEntry();
+            } else {
+              _openMinimalOverlay(context);
+            }
+            setState(() {});
+          },
+          displayMode: PaneDisplayMode.compact,
+        );
         return _NavigationAppBar(
           appBar: widget.appBar!,
           additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
-              ? FocusTheme(
-                  data: FocusThemeData(renderOutside: false),
-                  child: PaneItem(
-                    title: Text(!isMinimalPaneOpen
-                        ? localizations.openNavigationTooltip
-                        : localizations.closeNavigationTooltip),
-                    icon: const Icon(FluentIcons.global_nav_button),
-                  ).build(
-                    context,
-                    false,
-                    () async {
-                      if (isMinimalPaneOpen) {
-                        await minimalPaneKey.currentState?.removeEntry();
-                      } else {
-                        _openMinimalOverlay(context);
-                      }
-                      setState(() {});
-                    },
-                    displayMode: PaneDisplayMode.compact,
-                  ),
-                )
+              ? additionalLeading
               : null,
         );
       }
@@ -393,6 +393,7 @@ class NavigationViewState extends State<NavigationView> {
     return _NavigationBody(
       displayMode:
           _compactOverlayOpen ? PaneDisplayMode.open : widget.pane?.displayMode,
+      minimalPaneOpen: isMinimalPaneOpen && !isMinimalPaneClosing,
       child: paneResult,
     );
   }
@@ -400,6 +401,7 @@ class NavigationViewState extends State<NavigationView> {
   void _openMinimalOverlay(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
+    setState(() => isMinimalPaneClosing = false);
     final theme = NavigationPaneTheme.of(context);
     minimalOverlayEntry = OverlayEntry(builder: (_) {
       return FocusScope(
@@ -413,6 +415,9 @@ class NavigationViewState extends State<NavigationView> {
               pane: widget.pane!,
               animationDuration: theme.animationDuration ?? Duration.zero,
               entry: minimalOverlayEntry!,
+              onStartBack: () {
+                setState(() => isMinimalPaneClosing = true);
+              },
               onBack: () {
                 setState(() => minimalOverlayEntry = null);
               },
@@ -556,7 +561,7 @@ class NavigationAppBar with Diagnosticable {
 }
 
 class _NavigationAppBar extends StatefulWidget {
-  _NavigationAppBar({
+  const _NavigationAppBar({
     Key? key,
     required this.appBar,
     this.displayMode,
@@ -606,7 +611,6 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
-      case PaneDisplayMode.minimal:
         result = Row(children: [
           leading,
           if (widget.additionalLeading != null) widget.additionalLeading!,
@@ -615,35 +619,45 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             Expanded(child: widget.appBar.actions!),
         ]);
         break;
+      case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
-        final double width = displayMode == PaneDisplayMode.open
-            ? _kOpenNavigationPanelWidth
-            : _kCompactNavigationPanelWidth;
-        result = SizedBox(
-          height: widget.appBar.height,
-          child: Stack(children: [
-            AnimatedContainer(
-              duration: theme.animationDuration ?? Duration.zero,
-              curve: theme.animationCurve ?? Curves.linear,
-              key: _openCompactKey,
-              width: width,
-              height: widget.appBar.height,
+        final isMinimalPaneOpen =
+            _NavigationBody.maybeOf(context)?.minimalPaneOpen ?? false;
+        final double width =
+            displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
+                ? 1.0
+                : displayMode == PaneDisplayMode.compact
+                    ? _kCompactNavigationPanelWidth
+                    : _kOpenNavigationPanelWidth;
+        result = Stack(children: [
+          AnimatedContainer(
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? Curves.linear,
+            key: _openCompactKey,
+            width: width,
+            height: widget.appBar.height,
+            child: displayMode == PaneDisplayMode.minimal
+                ? Acrylic(tint: theme.backgroundColor)
+                : null,
+          ),
+          AnimatedPadding(
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? Curves.linear,
+            padding: EdgeInsets.only(left: width),
+            child: ColoredBox(
+              color: backgroundColor,
+              child: widget.appBar.actions ?? SizedBox(),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: width),
-              child: ColoredBox(
-                color: backgroundColor,
-                child: widget.appBar.actions ?? SizedBox(),
-              ),
-            ),
-            Row(children: [
-              leading,
-              if (widget.additionalLeading != null) widget.additionalLeading!,
-              title,
-            ]),
+          ),
+          Row(children: [
+            leading,
+            if (widget.additionalLeading != null) widget.additionalLeading!,
+            title,
           ]),
-        );
+        ]);
+        if (displayMode == PaneDisplayMode.minimal)
+          result = ColoredBox(color: backgroundColor, child: result);
         break;
       default:
         return SizedBox.shrink();

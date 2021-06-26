@@ -129,15 +129,17 @@ class _NavigationBodyState extends State<NavigationBody> {
 /// A widget that tells [NavigationBody] what's the panel display
 /// mode of the parent [NavigationView], if any.
 class _NavigationBody extends InheritedWidget {
-  _NavigationBody({
+  const _NavigationBody({
     Key? key,
     required this.child,
     required this.displayMode,
+    required this.minimalPaneOpen,
   }) : super(key: key, child: child);
 
   final Widget child;
 
   final PaneDisplayMode? displayMode;
+  final bool minimalPaneOpen;
 
   static _NavigationBody? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_NavigationBody>();

@@ -814,6 +814,7 @@ class _MinimalNavigationPane extends StatefulWidget {
     required this.animationDuration,
     required this.entry,
     required this.onBack,
+    required this.onStartBack,
     this.listKey,
     this.y = 0,
   }) : super(key: key);
@@ -832,6 +833,7 @@ class _MinimalNavigationPane extends StatefulWidget {
   final double y;
 
   final VoidCallback onBack;
+  final VoidCallback onStartBack;
 
   final GlobalKey? listKey;
 
@@ -872,7 +874,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneTheme.of(context);
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
     Widget minimalPane = SizeTransition(
       sizeFactor: CurvedAnimation(
@@ -947,6 +949,7 @@ class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
   }
 
   Future<void> removeEntry() async {
+    widget.onStartBack();
     await controller.reverse();
     widget.entry.remove();
     widget.onBack();
