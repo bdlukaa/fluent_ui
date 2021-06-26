@@ -482,7 +482,7 @@ class NavigationPane with Diagnosticable {
       margin: padding,
       child: PaneItem(
         title: itemTitle,
-        icon: Icon(FluentIcons.collapse_menu),
+        icon: Icon(FluentIcons.global_nav_button),
       ).build(
         context,
         false,

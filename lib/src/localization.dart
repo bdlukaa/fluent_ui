@@ -41,6 +41,18 @@ abstract class FluentLocalizations {
   /// The dialog label
   String get dialogLabel;
 
+  /// The label for the cut button on the text selection controls
+  String get cutButtonLabel;
+
+  /// The label for the copy button on the text selection controls
+  String get copyButtonLabel;
+
+  /// The label for the paste button on the text selection controls
+  String get pasteButtonLabel;
+
+  /// The label for the select all button on the text selection controls
+  String get selectAllButtonLabel;
+
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
   ///
@@ -100,6 +112,18 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   @override
   String get dialogLabel => 'Dialog';
+
+  @override
+  String get cutButtonLabel => 'Cut';
+
+  @override
+  String get copyButtonLabel => 'Copy';
+
+  @override
+  String get pasteButtonLabel => 'Paste';
+
+  @override
+  String get selectAllButtonLabel => 'Select all';
 
   /// Creates an object that provides US English resource values for the material
   /// library widgets.

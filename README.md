@@ -1591,7 +1591,7 @@ All contributions are welcome :)
 
 Irrespective of order, thanks to all the people below for contributing with the project. It means a lot to me :)
 
-- [@HrX03](https://github.com/HrX03) for the `Acrylic` and the `FluentIcons` generator implementation.
+- [@HrX03](https://github.com/HrX03) for the `Acrylic`, `FluentIcons` generator and `_FluentTextSelectionControls` implementation.
 - [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`
 - [@alexmercerind](https://github.com/alexmercerind) for the [flutter_acrylic](https://github.com/alexmercerind/flutter_acrylic) plugin, used on the example app
 - [@bitsdojo](https://github.com/bitsdojo) for the [bitsdojo_window](https://github.com/bitsdojo/bitsdojo_window) plugin, used on the example app.
