@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [next] - [##/##/2021]
+
+- Update `NavigationView` design
+
 ## [2.2.1] - [26/06/2021]
 
 - Implement Fluent Selection Controls for `TextBox` ([#49](https://github.com/bdlukaa/fluent_ui/pull/49))

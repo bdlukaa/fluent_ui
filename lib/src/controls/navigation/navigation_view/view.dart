@@ -16,6 +16,13 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 31.0;
 
+const ShapeBorder kDefaultContentClipper = RoundedRectangleBorder(
+  side: BorderSide(width: 0.8, color: Colors.black),
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(8.0),
+  ),
+);
+
 /// The NavigationView control provides top-level navigation
 /// for your app. It adapts to a variety of screen sizes and
 /// supports both top and left navigation styles.
@@ -37,6 +44,8 @@ class NavigationView extends StatefulWidget {
     this.appBar,
     this.pane,
     this.content = const SizedBox.shrink(),
+    this.clipBehavior = Clip.antiAlias,
+    this.contentShape = kDefaultContentClipper,
     // If more properties are added here, make sure to
     // add them to the automatic mode as well.
   }) : super(key: key);
@@ -52,6 +61,17 @@ class NavigationView extends StatefulWidget {
   ///
   /// Usually an [NavigationBody].
   final Widget content;
+
+  /// {@macro flutter.rendering.ClipRectLayer.clipBehavior}
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip clipBehavior;
+
+  /// How the content should be clipped
+  ///
+  /// The content is not clipped on when [PaneDisplayMode.displayMode]
+  /// is [PaneDisplayMode.minimal]
+  final ShapeBorder contentShape;
 
   static NavigationViewState of(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>()!;
@@ -118,8 +138,6 @@ class NavigationViewState extends State<NavigationView> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
-
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
     final localizations = FluentLocalizations.of(context);
     Widget appBar = () {
@@ -189,6 +207,8 @@ class NavigationViewState extends State<NavigationView> {
             return NavigationView(
               appBar: widget.appBar,
               content: widget.content,
+              clipBehavior: widget.clipBehavior,
+              contentShape: widget.contentShape,
               pane: NavigationPane(
                 displayMode: autoDisplayMode,
                 autoSuggestBox: pane.autoSuggestBox,
@@ -205,183 +225,111 @@ class NavigationViewState extends State<NavigationView> {
               ),
             );
           } else {
+            Widget content = pane.displayMode == PaneDisplayMode.minimal
+                ? widget.content
+                : DecoratedBox(
+                    decoration: ShapeDecoration(shape: widget.contentShape),
+                    child: ClipPath(
+                      clipBehavior: widget.clipBehavior,
+                      clipper: ShapeBorderClipper(shape: widget.contentShape),
+                      child: widget.content,
+                    ),
+                  );
             if (pane.displayMode != PaneDisplayMode.compact)
               _compactOverlayOpen = false;
             switch (pane.displayMode) {
               case PaneDisplayMode.top:
-                paneResult = Acrylic(
-                  tint: theme.backgroundColor,
-                  child: Column(children: [
-                    appBar,
-                    PrimaryScrollController(
-                      controller: scrollController,
-                      child: _TopNavigationPane(
-                        pane: pane,
-                        listKey: _listKey,
-                      ),
+                paneResult = Column(children: [
+                  appBar,
+                  PrimaryScrollController(
+                    controller: scrollController,
+                    child: _TopNavigationPane(
+                      pane: pane,
+                      listKey: _listKey,
                     ),
-                    Expanded(child: widget.content),
-                  ]),
-                );
+                  ),
+                  Expanded(child: content),
+                ]);
                 break;
               case PaneDisplayMode.compact:
-                paneResult = Container(
-                  color: FluentTheme.of(context).scaffoldBackgroundColor,
-                  child: Stack(children: [
-                    Positioned(
-                      top: widget.appBar?.height ?? 0.0,
-                      left: _kCompactNavigationPanelWidth,
-                      right: 0,
-                      bottom: 0,
-                      child: ClipRect(child: widget.content),
-                    ),
-                    if (_compactOverlayOpen)
-                      Positioned.fill(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() => _compactOverlayOpen = false);
-                          },
-                          child: AbsorbPointer(
-                            child: Semantics(
-                              label: FluentLocalizations.of(context)
-                                  .modalBarrierDismissLabel,
-                              child: SizedBox.expand(),
-                            ),
+                paneResult = Stack(children: [
+                  Positioned(
+                    top: widget.appBar?.height ?? 0.0,
+                    left: _kCompactNavigationPanelWidth,
+                    right: 0,
+                    bottom: 0,
+                    child: ClipRect(child: content),
+                  ),
+                  if (_compactOverlayOpen)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() => _compactOverlayOpen = false);
+                        },
+                        child: AbsorbPointer(
+                          child: Semantics(
+                            label: localizations.modalBarrierDismissLabel,
+                            child: SizedBox.expand(),
                           ),
                         ),
                       ),
-                    Acrylic(
-                      tint: theme.backgroundColor,
-                      shadowColor: Colors.black,
-                      child: appBar,
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: widget.appBar?.height ?? 0.0),
-                      child: PrimaryScrollController(
-                        controller: scrollController,
-                        child: _compactOverlayOpen
-                            ? Acrylic(
-                                tint: theme.backgroundColor,
-                                child: _OpenNavigationPane(
-                                  pane: pane,
-                                  paneKey: _panelKey,
-                                  listKey: _listKey,
-                                  onToggle: () {
-                                    setState(() => _compactOverlayOpen = false);
-                                  },
-                                ),
-                              )
-                            : Acrylic(
-                                tint: theme.backgroundColor,
-                                child: _CompactNavigationPane(
-                                  pane: pane,
-                                  paneKey: _panelKey,
-                                  listKey: _listKey,
-                                  onToggle: () {
-                                    setState(() => _compactOverlayOpen = true);
-                                  },
-                                ),
+                  appBar,
+                  Padding(
+                    padding: EdgeInsets.only(top: widget.appBar?.height ?? 0.0),
+                    child: PrimaryScrollController(
+                      controller: scrollController,
+                      child: _compactOverlayOpen
+                          ? Mica(
+                              child: _OpenNavigationPane(
+                                pane: pane,
+                                paneKey: _panelKey,
+                                listKey: _listKey,
+                                onToggle: () {
+                                  setState(() => _compactOverlayOpen = false);
+                                },
                               ),
-                      ),
+                            )
+                          : Mica(
+                              child: _CompactNavigationPane(
+                                pane: pane,
+                                paneKey: _panelKey,
+                                listKey: _listKey,
+                                onToggle: () {
+                                  setState(() => _compactOverlayOpen = true);
+                                },
+                              ),
+                            ),
                     ),
-                  ]),
-                );
-                // paneResult = Column(children: [
-                //   Acrylic(
-                //     tint: theme.backgroundColor,
-                //     child: appBar,
-                //   ),
-                //   Expanded(
-                //     child: SizedBox.expand(
-                //       child: Stack(
-                //         clipBehavior: Clip.none,
-                //         children: [
-                //           Positioned(
-                //             left: _kCompactNavigationPanelWidth,
-                //             right: 0,
-                //             top: 0,
-                //             bottom: 0,
-                //             child: ClipRect(child: widget.content),
-                //           ),
-                //           if (_compactOverlayOpen)
-                //             Positioned.fill(
-                //               child: GestureDetector(
-                //                 onTap: () {
-                //                   setState(() => _compactOverlayOpen = false);
-                //                 },
-                //                 child: AbsorbPointer(
-                //                   child: Semantics(
-                //                     label: FluentLocalizations.of(context)
-                //                         .modalBarrierDismissLabel,
-                //                     child: SizedBox.expand(),
-                //                   ),
-                //                 ),
-                //               ),
-                //             ),
-                //           PrimaryScrollController(
-                //             controller: scrollController,
-                //             child: _compactOverlayOpen
-                //                 ? Acrylic(
-                //                     tint: theme.backgroundColor,
-                //                     child: _OpenNavigationPane(
-                //                       pane: pane,
-                //                       paneKey: _panelKey,
-                //                       listKey: _listKey,
-                //                       onToggle: () {
-                //                         setState(() =>
-                //                             _compactOverlayOpen = false);
-                //                       },
-                //                     ),
-                //                   )
-                //                 : Acrylic(
-                //                     tint: theme.backgroundColor,
-                //                     child: _CompactNavigationPane(
-                //                       pane: pane,
-                //                       paneKey: _panelKey,
-                //                       listKey: _listKey,
-                //                       onToggle: () {
-                //                         setState(
-                //                             () => _compactOverlayOpen = true);
-                //                       },
-                //                     ),
-                //                   ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ]);
+                  ),
+                ]);
                 break;
               case PaneDisplayMode.open:
-                paneResult = Acrylic(
-                  tint: theme.backgroundColor,
-                  child: Column(children: [
-                    appBar,
-                    Expanded(
-                      child: Row(children: [
-                        PrimaryScrollController(
-                          controller: scrollController,
-                          child: _OpenNavigationPane(
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                          ),
+                paneResult = Column(children: [
+                  appBar,
+                  Expanded(
+                    child: Row(children: [
+                      PrimaryScrollController(
+                        controller: scrollController,
+                        child: _OpenNavigationPane(
+                          pane: pane,
+                          paneKey: _panelKey,
+                          listKey: _listKey,
                         ),
-                        Expanded(child: ClipRect(child: widget.content)),
-                      ]),
-                    ),
-                  ]),
-                );
+                      ),
+                      Expanded(child: ClipRect(child: content)),
+                    ]),
+                  ),
+                ]);
                 break;
               case PaneDisplayMode.minimal:
                 paneResult = Column(children: [
                   appBar,
-                  Expanded(child: widget.content),
+                  Expanded(child: content),
                 ]);
                 break;
               default:
-                paneResult = widget.content;
+                paneResult = content;
             }
           }
         } else {
@@ -390,11 +338,14 @@ class NavigationViewState extends State<NavigationView> {
         return paneResult;
       },
     );
-    return _NavigationBody(
-      displayMode:
-          _compactOverlayOpen ? PaneDisplayMode.open : widget.pane?.displayMode,
-      minimalPaneOpen: isMinimalPaneOpen && !isMinimalPaneClosing,
-      child: paneResult,
+    return Mica(
+      child: _NavigationBody(
+        displayMode: _compactOverlayOpen
+            ? PaneDisplayMode.open
+            : widget.pane?.displayMode,
+        minimalPaneOpen: isMinimalPaneOpen && !isMinimalPaneClosing,
+        child: paneResult,
+      ),
     );
   }
 
@@ -606,8 +557,6 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
       } else
         return SizedBox.shrink();
     }();
-    final Color backgroundColor = widget.appBar.backgroundColor ??
-        FluentTheme.of(context).scaffoldBackgroundColor;
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
@@ -626,7 +575,7 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             _NavigationBody.maybeOf(context)?.minimalPaneOpen ?? false;
         final double width =
             displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
-                ? 1.0
+                ? 0.0
                 : displayMode == PaneDisplayMode.compact
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
@@ -637,27 +586,19 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             key: _openCompactKey,
             width: width,
             height: widget.appBar.height,
-            child: displayMode == PaneDisplayMode.minimal
-                ? Acrylic(tint: theme.backgroundColor)
-                : null,
           ),
           AnimatedPadding(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? Curves.linear,
             padding: EdgeInsets.only(left: width),
-            child: ColoredBox(
-              color: backgroundColor,
-              child: widget.appBar.actions ?? SizedBox(),
-            ),
+            child: widget.appBar.actions ?? SizedBox(),
           ),
           Row(children: [
             leading,
             if (widget.additionalLeading != null) widget.additionalLeading!,
-            title,
+            Expanded(child: title),
           ]),
         ]);
-        if (displayMode == PaneDisplayMode.minimal)
-          result = ColoredBox(color: backgroundColor, child: result);
         break;
       default:
         return SizedBox.shrink();

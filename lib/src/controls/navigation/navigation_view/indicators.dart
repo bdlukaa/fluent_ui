@@ -217,7 +217,7 @@ class _StickyNavigationIndicatorState
 
   static const double step = 0.5;
   static const double startDelay = 8;
-  static const double indicatorPadding = 4.0;
+  static const double indicatorPadding = 8.0;
 
   double p1Start = 0.0;
   double p2Start = 0.0;
@@ -262,9 +262,10 @@ class _StickyNavigationIndicatorState
 
     final double kFactor = () {
       if (widget.axis == Axis.horizontal) {
-        return sizes![widget.index].height;
+        return sizes![widget.index].height - 2.0;
       } else {
-        return sizes![widget.index].width - widget.topPadding.horizontal;
+        // 6.0 of padding
+        return sizes![widget.index].width - widget.topPadding.horizontal - 6.0;
       }
     }();
 
@@ -314,10 +315,10 @@ class _StickyNavigationIndicatorState
           foregroundPainter: _StickyPainter(
             y: widget.axis == Axis.horizontal
                 ? sizes!.first.height * 0.75
-                : sizes!.first.height - indicatorPadding,
+                : sizes!.first.height - (indicatorPadding / 2),
             padding: widget.axis == Axis.horizontal
                 ? indicatorPadding
-                : widget.topPadding.left,
+                : widget.topPadding.left + 4.0,
             p1: p1,
             p1Start: p1Start,
             p1End: p1End,

@@ -1,7 +1,7 @@
 part of 'view.dart';
 
-const _kCompactNavigationPanelWidth = 40.0;
-const _kOpenNavigationPanelWidth = 320.0;
+const double _kCompactNavigationPanelWidth = 50.0;
+const double _kOpenNavigationPanelWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -114,10 +114,11 @@ class PaneItem extends NavigationPaneItem {
     final String titleText =
         title != null && title is Text ? (title! as Text).data ?? '' : '';
 
-    Widget result = SizedBox(
+    Widget result = Container(
       key: itemKey,
       height: !isTop ? 41.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
+      margin: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
       child: HoverButton(
         autofocus: autofocus,
         onPressed: onPressed,
@@ -135,8 +136,9 @@ class PaneItem extends NavigationPaneItem {
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
-            mainAxisAlignment:
-                isTop ? MainAxisAlignment.center : MainAxisAlignment.end,
+            mainAxisAlignment: isTop || !isOpen
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.end,
             children: [
               if (isOpen) Expanded(child: textResult),
               () {
@@ -148,7 +150,7 @@ class PaneItem extends NavigationPaneItem {
                               ? style.selectedIconColor?.resolve(states)
                               : style.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
-                      size: 18.0,
+                      size: 16.0,
                     ),
                     child: this.icon,
                   ),
@@ -166,16 +168,22 @@ class PaneItem extends NavigationPaneItem {
           child = AnimatedContainer(
             duration: style.animationDuration ?? Duration.zero,
             curve: style.animationCurve ?? standartCurve,
-            color: () {
-              final ButtonState<Color?> tileColor = style.tileColor ??
-                  ButtonState.resolveWith((states) {
-                    return ButtonThemeData.uncheckedInputColor(
-                      FluentTheme.of(context),
-                      states,
-                    );
-                  });
-              return tileColor.resolve(states);
-            }(),
+            decoration: BoxDecoration(
+              color: () {
+                final ButtonState<Color?> tileColor = style.tileColor ??
+                    ButtonState.resolveWith((states) {
+                      if (isTop) return Colors.transparent;
+                      return ButtonThemeData.uncheckedInputColor(
+                        FluentTheme.of(context),
+                        states,
+                      );
+                    });
+                return tileColor.resolve(
+                  selected ? {ButtonStates.hovering} : states,
+                );
+              }(),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
             child: child,
           );
           return Semantics(
@@ -273,7 +281,7 @@ class PaneItemHeader extends NavigationPaneItem {
   }
 }
 
-extension ItemsExtension on List<NavigationPaneItem> {
+extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
   List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {

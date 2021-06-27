@@ -320,8 +320,8 @@ class ThemeData with Diagnosticable {
       'dark': Colors.grey[130],
     }).resolveFromBrightness(brightness);
     scaffoldBackgroundColor ??= AccentColor('normal', {
-      'normal': Colors.white,
-      'dark': Colors.black,
+      'normal': Color(0xFFf9f9f9),
+      'dark': Color(0xFF272727),
     }).resolveFromBrightness(brightness);
     acrylicBackgroundColor ??= AccentColor('normal', {
       'normal': Color.fromARGB(204, 255, 255, 255),
