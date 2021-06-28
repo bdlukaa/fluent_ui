@@ -119,6 +119,7 @@ class PaneItem extends NavigationPaneItem {
       height: !isTop ? 41.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
       margin: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+      alignment: Alignment.center,
       child: HoverButton(
         autofocus: autofocus,
         onPressed: onPressed,

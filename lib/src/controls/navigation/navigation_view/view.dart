@@ -252,6 +252,8 @@ class NavigationViewState extends State<NavigationView> {
                 ]);
                 break;
               case PaneDisplayMode.compact:
+                final appBarPadding =
+                    EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
                 paneResult = Stack(children: [
                   Positioned(
                     top: widget.appBar?.height ?? 0.0,
@@ -274,13 +276,21 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                       ),
                     ),
-                  appBar,
-                  Padding(
-                    padding: EdgeInsets.only(top: widget.appBar?.height ?? 0.0),
-                    child: PrimaryScrollController(
-                      controller: scrollController,
-                      child: _compactOverlayOpen
-                          ? Mica(
+                  PrimaryScrollController(
+                    controller: scrollController,
+                    child: _compactOverlayOpen
+                        ? Mica(
+                            elevation: 10.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFF6c6c6c),
+                                  width: 0.15,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              margin: const EdgeInsets.symmetric(vertical: 1.0),
+                              padding: appBarPadding,
                               child: _OpenNavigationPane(
                                 pane: pane,
                                 paneKey: _panelKey,
@@ -289,8 +299,11 @@ class NavigationViewState extends State<NavigationView> {
                                   setState(() => _compactOverlayOpen = false);
                                 },
                               ),
-                            )
-                          : Mica(
+                            ),
+                          )
+                        : Padding(
+                            padding: appBarPadding,
+                            child: Mica(
                               child: _CompactNavigationPane(
                                 pane: pane,
                                 paneKey: _panelKey,
@@ -300,8 +313,9 @@ class NavigationViewState extends State<NavigationView> {
                                 },
                               ),
                             ),
-                    ),
+                          ),
                   ),
+                  appBar,
                 ]);
                 break;
               case PaneDisplayMode.open:

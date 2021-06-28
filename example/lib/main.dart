@@ -194,7 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         items: [
-          PaneItemHeader(header: Text('User Interaction')),
+          // It doesn't look good when resizing from compact to open
+          // PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
             icon: Icon(FluentIcons.checkbox_composite),
             title: Text('Inputs'),
@@ -208,7 +209,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           PaneItem(icon: Icon(FluentIcons.cell_phone), title: Text('Mobile')),
           PaneItem(
-            icon: Icon(FluentIcons.more_vertical),
+            icon: Icon(
+              appTheme.displayMode == PaneDisplayMode.top
+                  ? FluentIcons.more
+                  : FluentIcons.more_vertical,
+            ),
             title: Text('Others'),
           ),
         ],
