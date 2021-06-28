@@ -14,7 +14,7 @@ part 'style.dart';
 /// The default size used by the app top bar.
 ///
 /// Value eyeballed from Windows 10 v10.0.19041.928
-const double _kDefaultAppBarHeight = 31.0;
+const double _kDefaultAppBarHeight = 50.0;
 
 const ShapeBorder kDefaultContentClipper = RoundedRectangleBorder(
   side: BorderSide(width: 0.8, color: Colors.black),
@@ -245,6 +245,9 @@ class NavigationViewState extends State<NavigationView> {
                 ]);
                 break;
               case PaneDisplayMode.compact:
+                void toggleCompactOpenMode() {
+                  setState(() => _compactOverlayOpen = !_compactOverlayOpen);
+                }
                 paneResult = Stack(children: [
                   Positioned(
                     top: widget.appBar?.height ?? 0.0,
@@ -256,9 +259,7 @@ class NavigationViewState extends State<NavigationView> {
                   if (_compactOverlayOpen)
                     Positioned.fill(
                       child: GestureDetector(
-                        onTap: () {
-                          setState(() => _compactOverlayOpen = false);
-                        },
+                        onTap: toggleCompactOpenMode,
                         child: AbsorbPointer(
                           child: Semantics(
                             label: localizations.modalBarrierDismissLabel,
@@ -287,9 +288,8 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
-                                onToggle: () {
-                                  setState(() => _compactOverlayOpen = false);
-                                },
+                                onToggle: toggleCompactOpenMode,
+                                onItemSelected: toggleCompactOpenMode,
                               ),
                             ),
                           )
@@ -301,9 +301,7 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
-                                onToggle: () {
-                                  setState(() => _compactOverlayOpen = true);
-                                },
+                                onToggle: toggleCompactOpenMode,
                               ),
                             ),
                           ),
@@ -495,43 +493,31 @@ class NavigationAppBar with Diagnosticable {
         child: appBar.leading,
       );
     } else if (appBar.automaticallyImplyLeading && imply) {
+      assert(debugCheckHasFluentLocalizations(context));
+      assert(debugCheckHasFluentTheme(context));
+      final localizations = FluentLocalizations.of(context);
       final onPressed = canPop ? () => Navigator.maybePop(context) : null;
-      widget = Align(
-        alignment: Alignment.centerLeft,
-        child: SizedBox(
-          width: _kCompactNavigationPanelWidth,
-          child: IconButton(
-            icon: Icon(FluentIcons.back, size: 18.0),
-            onPressed: onPressed,
-            style: ButtonStyle(
-              backgroundColor: ButtonState.resolveWith((states) {
-                if (states.isNone || states.isDisabled)
-                  return Colors.transparent;
-                return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context),
-                  states,
-                );
-              }),
-              foregroundColor: ButtonState.resolveWith((states) {
-                if (states.isDisabled)
-                  return ButtonThemeData.buttonColor(
-                    FluentTheme.of(context).brightness,
-                    states,
-                  );
-                return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context),
-                  states,
-                ).basedOnLuminance();
-              }),
-            ),
-          ),
+      widget = NavigationPaneTheme(
+        data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
+          unselectedIconColor: ButtonState.resolveWith((states) {
+            if (states.isDisabled)
+              return ButtonThemeData.buttonColor(
+                FluentTheme.of(context).brightness,
+                states,
+              );
+            return ButtonThemeData.uncheckedInputColor(
+              FluentTheme.of(context),
+              states,
+            ).basedOnLuminance();
+          }),
+        )),
+        child: Builder(
+          builder: (context) => PaneItem(
+            icon: Icon(FluentIcons.back, size: 14.0),
+            title: Text(localizations.backButtonTooltip),
+          ).build(context, false, onPressed),
         ),
       );
-      if (canPop)
-        widget = Tooltip(
-          message: FluentLocalizations.of(context).backButtonTooltip,
-          child: widget,
-        );
     } else {
       return SizedBox.shrink();
     }
@@ -540,7 +526,7 @@ class NavigationAppBar with Diagnosticable {
   }
 }
 
-class _NavigationAppBar extends StatefulWidget {
+class _NavigationAppBar extends StatelessWidget {
   const _NavigationAppBar({
     Key? key,
     required this.appBar,
@@ -553,28 +539,21 @@ class _NavigationAppBar extends StatefulWidget {
   final Widget? additionalLeading;
 
   @override
-  __NavigationAppBarState createState() => __NavigationAppBarState();
-}
-
-class __NavigationAppBarState extends State<_NavigationAppBar> {
-  final GlobalKey _openCompactKey = GlobalKey();
-
-  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final PaneDisplayMode displayMode = widget.displayMode ??
+    final PaneDisplayMode displayMode = this.displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
-    final theme = NavigationPaneTheme.of(context);
     final leading = NavigationAppBar.buildLeading(
       context,
-      widget.appBar,
+      appBar,
       displayMode != PaneDisplayMode.top,
     );
     final title = () {
-      if (widget.appBar.title != null) {
+      if (appBar.title != null) {
         return Padding(
-          padding: [PaneDisplayMode.minimal, PaneDisplayMode.open].contains(displayMode)
+          padding: [PaneDisplayMode.minimal, PaneDisplayMode.open]
+                  .contains(displayMode)
               ? EdgeInsets.zero
               : const EdgeInsets.only(left: 24.0),
           child: DefaultTextStyle(
@@ -582,7 +561,7 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
             overflow: TextOverflow.clip,
             maxLines: 1,
             softWrap: false,
-            child: widget.appBar.title!,
+            child: appBar.title!,
           ),
         );
       } else
@@ -593,10 +572,9 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
       case PaneDisplayMode.top:
         result = Row(children: [
           leading,
-          if (widget.additionalLeading != null) widget.additionalLeading!,
+          if (additionalLeading != null) additionalLeading!,
           title,
-          if (widget.appBar.actions != null)
-            Expanded(child: widget.appBar.actions!),
+          if (appBar.actions != null) Expanded(child: appBar.actions!),
         ]);
         break;
       case PaneDisplayMode.minimal:
@@ -611,22 +589,19 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
         result = Stack(children: [
-          AnimatedContainer(
-            duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? Curves.linear,
-            key: _openCompactKey,
-            width: width,
-            height: widget.appBar.height,
+          Positioned(
+            left: width,
+            right: 0.0,
+            top: 0.0,
+            bottom: 0.0,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: appBar.actions ?? SizedBox(),
+            ),
           ),
-          AnimatedPadding(
-            duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? Curves.linear,
-            padding: EdgeInsets.only(left: width),
-            child: widget.appBar.actions ?? SizedBox(),
-          ),
-          Row(children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             leading,
-            if (widget.additionalLeading != null) widget.additionalLeading!,
+            if (additionalLeading != null) additionalLeading!,
             Expanded(child: title),
           ]),
         ]);
@@ -634,6 +609,6 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
       default:
         return SizedBox.shrink();
     }
-    return SizedBox(height: widget.appBar.height, child: result);
+    return SizedBox(height: appBar.height, child: result);
   }
 }

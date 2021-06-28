@@ -131,9 +131,7 @@ class NavigationPaneThemeData with Diagnosticable {
       highlightColor: highlightColor,
       itemHeaderTextStyle: typography.base,
       selectedTextStyle: ButtonState.resolveWith((states) {
-        return states.isDisabled
-            ? disabledTextStyle
-            : typography.body!.copyWith(color: highlightColor);
+        return states.isDisabled ? disabledTextStyle : typography.body;
       }),
       unselectedTextStyle: ButtonState.resolveWith((states) {
         return states.isDisabled ? disabledTextStyle : typography.body!;
@@ -141,8 +139,6 @@ class NavigationPaneThemeData with Diagnosticable {
       cursor: inputMouseCursor,
       labelPadding: EdgeInsets.only(right: 10.0),
       iconPadding: EdgeInsets.symmetric(horizontal: 10.0),
-      selectedIconColor: ButtonState.all(highlightColor),
-      unselectedIconColor: ButtonState.all(inactiveColor),
     );
   }
 

@@ -62,16 +62,24 @@ class NavigationPaneItem with Diagnosticable {
 
 /// The item used by [NavigationView] to display the tiles.
 ///
-/// On [PaneDisplayMode.compact], only [item] is displayed, and [title] is
-/// used as a tooltip. On the other display modes, [item] and [title] are
+/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
+/// used as a tooltip. On the other display modes, [icon] and [title] are
 /// displayed in a [Row].
 ///
+/// This is the only [NavigationPaneItem] that is affected by [NavigationIndicator]s
+///
 /// See also:
+///
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
-  PaneItem({required this.icon, this.title});
+  PaneItem({
+    required this.icon,
+    this.title,
+    this.focusNode,
+    this.autofocus = false,
+  });
 
   /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
@@ -79,11 +87,13 @@ class PaneItem extends NavigationPaneItem {
   ///
   /// The text style is fetched from the closest [NavigationPaneThemeData]
   ///
-  /// If it' s a [Text], its [Text.data] is used to display the tooltip.
-  /// This is also used by [Semantics] to allow screen readers to
+  /// If this is a [Text], its [Text.data] is used to display the tooltip. The
+  /// tooltip is only displayed only on compact mode and when the item is not
+  /// disabled.
+  /// It is also used by [Semantics] to allow screen readers to
   /// read the screen.
   ///
-  /// Usually a [Text].
+  /// Usually a [Text] widget.
   final Widget? title;
 
   /// The icon used by this item.
@@ -91,17 +101,23 @@ class PaneItem extends NavigationPaneItem {
   /// Usually an [Icon] widget
   final Widget icon;
 
+  /// {@macro flutter.widgets.Focus.focusNode}
+  final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
+
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
     BuildContext context,
     bool selected,
-    VoidCallback onPressed, {
+    VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool autofocus = false,
+    bool? autofocus,
   }) {
-    final mode = displayMode ??
+    final PaneDisplayMode mode = displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.minimal;
     assert(displayMode != PaneDisplayMode.auto);
@@ -109,28 +125,29 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = mode == PaneDisplayMode.compact;
     final bool isOpen =
         [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(mode);
-    final style = NavigationPaneTheme.of(context);
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
     final String titleText =
         title != null && title is Text ? (title! as Text).data ?? '' : '';
 
-    Widget result = Container(
+    return Container(
       key: itemKey,
       height: !isTop ? 36.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
-      margin: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+      margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
       alignment: Alignment.center,
       child: HoverButton(
-        autofocus: autofocus,
+        autofocus: autofocus ?? this.autofocus,
+        focusNode: focusNode,
         onPressed: onPressed,
-        cursor: style.cursor,
+        cursor: theme.cursor,
         builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle?.resolve(states)
-              : style.unselectedTextStyle?.resolve(states);
+              ? theme.selectedTextStyle?.resolve(states)
+              : theme.unselectedTextStyle?.resolve(states);
           final textResult = titleText.isNotEmpty
               ? Padding(
-                  padding: style.labelPadding ?? EdgeInsets.zero,
+                  padding: theme.labelPadding ?? EdgeInsets.zero,
                   child: Text(titleText, style: textStyle),
                 )
               : SizedBox.shrink();
@@ -144,12 +161,12 @@ class PaneItem extends NavigationPaneItem {
               if (isOpen) Expanded(child: textResult),
               () {
                 final icon = Padding(
-                  padding: style.iconPadding ?? EdgeInsets.zero,
+                  padding: theme.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme.merge(
                     data: IconThemeData(
                       color: (selected
-                              ? style.selectedIconColor?.resolve(states)
-                              : style.unselectedIconColor?.resolve(states)) ??
+                              ? theme.selectedIconColor?.resolve(states)
+                              : theme.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
                       size: 16.0,
                     ),
@@ -167,11 +184,11 @@ class PaneItem extends NavigationPaneItem {
               textResult,
             ]);
           child = AnimatedContainer(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? standartCurve,
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? standartCurve,
             decoration: BoxDecoration(
               color: () {
-                final ButtonState<Color?> tileColor = style.tileColor ??
+                final ButtonState<Color?> tileColor = theme.tileColor ??
                     ButtonState.resolveWith((states) {
                       if (isTop) return Colors.transparent;
                       return ButtonThemeData.uncheckedInputColor(
@@ -179,15 +196,16 @@ class PaneItem extends NavigationPaneItem {
                         states,
                       );
                     });
+                final newStates = states.toSet()..remove(ButtonStates.disabled);
                 return tileColor.resolve(
-                  selected ? {ButtonStates.hovering} : states,
+                  selected ? {ButtonStates.hovering} : newStates,
                 );
               }(),
               borderRadius: BorderRadius.circular(4.0),
             ),
             child: child,
           );
-          return Semantics(
+          child = Semantics(
             label: title == null ? null : titleText,
             selected: selected,
             child: FocusBorder(
@@ -196,18 +214,20 @@ class PaneItem extends NavigationPaneItem {
               renderOutside: false,
             ),
           );
+          if (((isTop && !showTextOnTop) || isCompact) &&
+              titleText.isNotEmpty &&
+              !states.isDisabled)
+            return Tooltip(
+              message: titleText,
+              style: TooltipThemeData(
+                textStyle: title is Text ? (title as Text).style : null,
+              ),
+              child: child,
+            );
+          return child;
         },
       ),
     );
-    if (((isTop && !showTextOnTop) || isCompact) && titleText.isNotEmpty)
-      return Tooltip(
-        message: titleText,
-        style: TooltipThemeData(
-          textStyle: title is Text ? (title as Text).style : null,
-        ),
-        child: result,
-      );
-    return result;
   }
 }
 

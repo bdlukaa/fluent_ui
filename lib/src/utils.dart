@@ -54,8 +54,9 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
           'to be provided by a Localizations widget ancestor.',
         ),
         ErrorDescription(
-            'The material library uses Localizations to generate messages, '
-            'labels, and abbreviations.'),
+          'The fluent library uses Localizations to generate messages, '
+          'labels, and abbreviations.',
+        ),
         ErrorHint(
           'To introduce a FluentLocalizations, either use a '
           'FluentApp at the root of your application to include them '
