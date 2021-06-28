@@ -140,7 +140,7 @@ class NavigationPaneThemeData with Diagnosticable {
       }),
       cursor: inputMouseCursor,
       labelPadding: EdgeInsets.only(right: 10.0),
-      iconPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      iconPadding: EdgeInsets.symmetric(horizontal: 10.0),
       selectedIconColor: ButtonState.all(highlightColor),
       unselectedIconColor: ButtonState.all(inactiveColor),
     );

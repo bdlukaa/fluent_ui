@@ -116,7 +116,7 @@ class PaneItem extends NavigationPaneItem {
 
     Widget result = Container(
       key: itemKey,
-      height: !isTop ? 41.0 : null,
+      height: !isTop ? 36.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
       margin: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
       alignment: Alignment.center,
@@ -153,7 +153,7 @@ class PaneItem extends NavigationPaneItem {
                           textStyle?.color,
                       size: 16.0,
                     ),
-                    child: this.icon,
+                    child: Center(child: this.icon),
                   ),
                 );
                 if (isOpen) return icon;
@@ -705,12 +705,14 @@ class _OpenNavigationPane extends StatelessWidget {
     this.paneKey,
     this.listKey,
     this.onToggle,
+    this.onItemSelected,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
+  final VoidCallback? onItemSelected;
 
   static Widget buildItem(
     BuildContext context,
@@ -802,165 +804,16 @@ class _OpenNavigationPane extends StatelessWidget {
               isAlwaysShown: false,
               child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {
-                  return buildItem(context, pane, item);
+                  return buildItem(context, pane, item, onItemSelected);
                 }),
               ]),
             ),
           ),
           ...pane.footerItems.map((item) {
-            return buildItem(context, pane, item);
+            return buildItem(context, pane, item, onItemSelected);
           }),
         ]),
       ),
     );
-  }
-}
-
-class _MinimalNavigationPane extends StatefulWidget {
-  _MinimalNavigationPane({
-    Key? key,
-    required this.pane,
-    required this.animationDuration,
-    required this.entry,
-    required this.onBack,
-    required this.onStartBack,
-    this.listKey,
-    this.y = 0,
-  }) : super(key: key);
-
-  final NavigationPane pane;
-
-  /// This duration can't be fetched from the theme when the state is
-  /// initialized, so it needs to be fetched from the parent
-  final Duration animationDuration;
-
-  /// This entry is used to remove the entry from the overlay list
-  /// when tapped outside.
-  final OverlayEntry entry;
-
-  /// Usually the top bar height
-  final double y;
-
-  final VoidCallback onBack;
-  final VoidCallback onStartBack;
-
-  final GlobalKey? listKey;
-
-  @override
-  __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
-}
-
-class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
-    with SingleTickerProviderStateMixin<_MinimalNavigationPane> {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration,
-    );
-    controller.forward();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
-    return _OpenNavigationPane.buildItem(
-      context,
-      widget.pane,
-      item,
-      removeEntry,
-      widget.pane.isSelected(item), // autofocus
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    Widget minimalPane = SizeTransition(
-      sizeFactor: CurvedAnimation(
-        parent: controller,
-        curve: theme.animationCurve ?? Curves.linear,
-      ),
-      axis: Axis.horizontal,
-      child: SizedBox(
-        width: _kOpenNavigationPanelWidth,
-        child: Acrylic(
-          tint: theme.backgroundColor,
-          child: widget.pane.indicatorBuilder(
-            context: context,
-            index: widget.pane.selected,
-            offsets: () => widget.pane.effectiveItems
-                .getPaneItemsOffsets(widget.pane.paneKey),
-            sizes: widget.pane.effectiveItems.getPaneItemsSizes,
-            axis: Axis.horizontal,
-            child: Column(key: widget.pane.paneKey, children: [
-              Padding(
-                padding: widget.pane.autoSuggestBox != null
-                    ? EdgeInsets.zero
-                    : topPadding,
-                child: widget.pane.header != null
-                    ? Align(
-                        child: widget.pane.header!,
-                        alignment: Alignment.centerLeft,
-                      )
-                    : null,
-              ),
-              if (widget.pane.autoSuggestBox != null)
-                Container(
-                  padding: theme.iconPadding,
-                  height: 41.0,
-                  alignment: Alignment.center,
-                  margin: topPadding,
-                  child: widget.pane.autoSuggestBox!,
-                ),
-              Expanded(
-                child: Scrollbar(
-                  isAlwaysShown: false,
-                  child:
-                      ListView(key: widget.listKey, primary: true, children: [
-                    ...widget.pane.items.map((item) {
-                      return _buildItem(context, item);
-                    }),
-                  ]),
-                ),
-              ),
-              ...widget.pane.footerItems.map((item) {
-                return _buildItem(context, item);
-              }),
-            ]),
-          ),
-        ),
-      ),
-    );
-    return Stack(children: [
-      Positioned.fill(
-        child: GestureDetector(
-          onTap: removeEntry,
-          child: AbsorbPointer(
-            child: Semantics(
-              label: FluentLocalizations.of(context).modalBarrierDismissLabel,
-              child: SizedBox.expand(),
-            ),
-          ),
-        ),
-      ),
-      Positioned(top: 0, left: 0, bottom: 0, child: minimalPane),
-    ]);
-  }
-
-  Future<void> removeEntry() async {
-    widget.onStartBack();
-    await controller.reverse();
-    widget.entry.remove();
-    widget.onBack();
   }
 }

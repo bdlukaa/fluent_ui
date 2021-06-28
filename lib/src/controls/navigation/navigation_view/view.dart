@@ -103,12 +103,8 @@ class NavigationViewState extends State<NavigationView> {
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
-  final minimalPaneKey = GlobalKey<__MinimalNavigationPaneState>();
 
-  bool get isMinimalPaneOpen =>
-      minimalOverlayEntry != null || (minimalOverlayEntry?.mounted ?? false);
-  bool isMinimalPaneClosing = false;
-
+  bool _minimalPaneOpen = false;
   bool _compactOverlayOpen = false;
 
   @override
@@ -139,11 +135,14 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
 
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
+    final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
+
     Widget appBar = () {
       if (widget.appBar != null) {
-        final additionalLeading = PaneItem(
-          title: Text(!isMinimalPaneOpen
+        final minimalLeading = PaneItem(
+          title: Text(!_minimalPaneOpen
               ? localizations.openNavigationTooltip
               : localizations.closeNavigationTooltip),
           icon: const Icon(FluentIcons.global_nav_button),
@@ -151,20 +150,14 @@ class NavigationViewState extends State<NavigationView> {
           context,
           false,
           () async {
-            if (isMinimalPaneOpen) {
-              setState(() => isMinimalPaneClosing = true);
-              await minimalPaneKey.currentState?.removeEntry();
-            } else {
-              _openMinimalOverlay(context);
-            }
-            setState(() {});
+            setState(() => _minimalPaneOpen = !_minimalPaneOpen);
           },
           displayMode: PaneDisplayMode.compact,
         );
         return _NavigationAppBar(
           appBar: widget.appBar!,
           additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
-              ? additionalLeading
+              ? minimalLeading
               : null,
         );
       }
@@ -252,8 +245,6 @@ class NavigationViewState extends State<NavigationView> {
                 ]);
                 break;
               case PaneDisplayMode.compact:
-                final appBarPadding =
-                    EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
                 paneResult = Stack(children: [
                   Positioned(
                     top: widget.appBar?.height ?? 0.0,
@@ -280,6 +271,7 @@ class NavigationViewState extends State<NavigationView> {
                     controller: scrollController,
                     child: _compactOverlayOpen
                         ? Mica(
+                            backgroundColor: theme.backgroundColor,
                             elevation: 10.0,
                             child: Container(
                               decoration: BoxDecoration(
@@ -304,6 +296,7 @@ class NavigationViewState extends State<NavigationView> {
                         : Padding(
                             padding: appBarPadding,
                             child: Mica(
+                              backgroundColor: theme.backgroundColor,
                               child: _CompactNavigationPane(
                                 pane: pane,
                                 paneKey: _panelKey,
@@ -337,9 +330,62 @@ class NavigationViewState extends State<NavigationView> {
                 ]);
                 break;
               case PaneDisplayMode.minimal:
-                paneResult = Column(children: [
+                paneResult = Stack(children: [
+                  Positioned(
+                    top: widget.appBar?.height ?? 0.0,
+                    left: 0.0,
+                    right: 0.0,
+                    bottom: 0.0,
+                    child: ClipRect(child: content),
+                  ),
+                  if (_minimalPaneOpen)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() => _minimalPaneOpen = false);
+                        },
+                        child: AbsorbPointer(
+                          child: Semantics(
+                            label: localizations.modalBarrierDismissLabel,
+                            child: SizedBox.expand(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  AnimatedPositioned(
+                    duration: theme.animationDuration ?? Duration.zero,
+                    curve: theme.animationCurve ?? Curves.linear,
+                    left: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
+                    width: _kOpenNavigationPanelWidth,
+                    height: MediaQuery.of(context).size.height,
+                    child: PrimaryScrollController(
+                      controller: scrollController,
+                      child: Mica(
+                        backgroundColor: theme.backgroundColor,
+                        elevation: 10.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF6c6c6c),
+                              width: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 1.0),
+                          padding: appBarPadding,
+                          child: _OpenNavigationPane(
+                            pane: pane,
+                            paneKey: _panelKey,
+                            listKey: _listKey,
+                            onItemSelected: () {
+                              setState(() => _minimalPaneOpen = false);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   appBar,
-                  Expanded(child: content),
                 ]);
                 break;
               default:
@@ -353,46 +399,15 @@ class NavigationViewState extends State<NavigationView> {
       },
     );
     return Mica(
+      backgroundColor: theme.backgroundColor,
       child: _NavigationBody(
         displayMode: _compactOverlayOpen
             ? PaneDisplayMode.open
             : widget.pane?.displayMode,
-        minimalPaneOpen: isMinimalPaneOpen && !isMinimalPaneClosing,
+        minimalPaneOpen: _minimalPaneOpen,
         child: paneResult,
       ),
     );
-  }
-
-  void _openMinimalOverlay(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    assert(debugCheckHasOverlay(context));
-    setState(() => isMinimalPaneClosing = false);
-    final theme = NavigationPaneTheme.of(context);
-    minimalOverlayEntry = OverlayEntry(builder: (_) {
-      return FocusScope(
-        autofocus: true,
-        child: PrimaryScrollController(
-          controller: scrollController,
-          child: Padding(
-            padding: EdgeInsets.only(top: widget.appBar?.height ?? 0),
-            child: _MinimalNavigationPane(
-              key: minimalPaneKey,
-              pane: widget.pane!,
-              animationDuration: theme.animationDuration ?? Duration.zero,
-              entry: minimalOverlayEntry!,
-              onStartBack: () {
-                setState(() => isMinimalPaneClosing = true);
-              },
-              onBack: () {
-                setState(() => minimalOverlayEntry = null);
-              },
-              y: widget.appBar?.height ?? 0,
-            ),
-          ),
-        ),
-      );
-    });
-    Overlay.of(context, debugRequiredFor: widget)!.insert(minimalOverlayEntry!);
   }
 }
 
@@ -559,7 +574,9 @@ class __NavigationAppBarState extends State<_NavigationAppBar> {
     final title = () {
       if (widget.appBar.title != null) {
         return Padding(
-          padding: const EdgeInsets.only(left: 24.0),
+          padding: [PaneDisplayMode.minimal, PaneDisplayMode.open].contains(displayMode)
+              ? EdgeInsets.zero
+              : const EdgeInsets.only(left: 24.0),
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.caption!,
             overflow: TextOverflow.clip,
