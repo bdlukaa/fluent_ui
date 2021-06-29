@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/foundation.dart';
@@ -29,6 +30,7 @@ class Tooltip extends StatefulWidget {
     this.excludeFromSemantics = false,
     this.useMousePosition = true,
     this.displayOnFocus = true,
+    this.displayHorizontally = false,
   }) : super(key: key);
 
   /// The text to display in the tooltip.
@@ -61,6 +63,11 @@ class Tooltip extends StatefulWidget {
 
   /// Whether the tooltip should be displayed when focused.
   final bool displayOnFocus;
+
+  /// Whether the tooltip should be displayed at the left or right of
+  /// the [child]. If true, [TooltipThemeData.preferBelow] is used as
+  /// "preferLeft"
+  final bool displayHorizontally;
 
   @override
   _TooltipState createState() => _TooltipState();
@@ -248,6 +255,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         target: target,
         verticalOffset: verticalOffset,
         preferBelow: preferBelow,
+        displayHorizontally: widget.displayHorizontally,
       ),
     );
     _entry = OverlayEntry(builder: (BuildContext context) => overlay);
@@ -620,6 +628,7 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
     required this.target,
     required this.verticalOffset,
     required this.preferBelow,
+    required this.horizontal,
   });
 
   /// The offset of the target the tooltip is positioned near in the global
@@ -636,12 +645,22 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
   /// direction, the tooltip will be displayed in the opposite direction.
   final bool preferBelow;
 
+  final bool horizontal;
+
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
+    if (horizontal)
+      return _horizontalPositionDependentBox(
+        size: size,
+        childSize: childSize,
+        target: target,
+        verticalOffset: verticalOffset,
+        preferLeft: preferBelow,
+      );
     return positionDependentBox(
       size: size,
       childSize: childSize,
@@ -656,6 +675,46 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
     return target != oldDelegate.target ||
         verticalOffset != oldDelegate.verticalOffset ||
         preferBelow != oldDelegate.preferBelow;
+  }
+
+  static Offset _horizontalPositionDependentBox({
+    required Size size,
+    required Size childSize,
+    required Offset target,
+    required bool preferLeft,
+    double verticalOffset = 0.0,
+    double margin = 10.0,
+  }) {
+    // VERTICAL DIRECTION
+    final bool fitsLeft =
+        target.dx + verticalOffset + childSize.width <= size.width - margin;
+    final bool fitsRight =
+        target.dx - verticalOffset - childSize.width >= margin;
+    final bool tooltipLeft =
+        preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
+    double x;
+    if (tooltipLeft) {
+      x = math.min(target.dx + verticalOffset, size.width - margin);
+    } else {
+      x = math.max(target.dx - verticalOffset - childSize.width, margin);
+    }
+    // HORIZONTAL DIRECTION
+    double y;
+    if (size.height - margin * 2.0 < childSize.height) {
+      y = (size.height - childSize.height) / 2.0;
+    } else {
+      final double normalizedTargetY =
+          target.dy.clamp(margin, size.height - margin);
+      final double edge = margin + childSize.height / 2.0;
+      if (normalizedTargetY < edge) {
+        y = margin;
+      } else if (normalizedTargetY > size.height - edge) {
+        y = size.height - margin - childSize.height;
+      } else {
+        y = normalizedTargetY - childSize.height / 2.0;
+      }
+    }
+    return Offset(x, y);
   }
 }
 
@@ -672,6 +731,7 @@ class _TooltipOverlay extends StatelessWidget {
     required this.target,
     required this.verticalOffset,
     required this.preferBelow,
+    this.displayHorizontally = false,
   }) : super(key: key);
 
   final String message;
@@ -684,6 +744,7 @@ class _TooltipOverlay extends StatelessWidget {
   final Offset target;
   final double verticalOffset;
   final bool preferBelow;
+  final bool displayHorizontally;
 
   @override
   Widget build(BuildContext context) {
@@ -694,6 +755,7 @@ class _TooltipOverlay extends StatelessWidget {
             target: target,
             verticalOffset: verticalOffset,
             preferBelow: preferBelow,
+            horizontal: displayHorizontally,
           ),
           child: FadeTransition(
             opacity: animation,

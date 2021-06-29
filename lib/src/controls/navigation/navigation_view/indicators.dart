@@ -138,16 +138,16 @@ class _EndNavigationIndicatorState
         final indicator = IgnorePointer(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: isTop ? 0.0 : 8.0,
+              vertical: isTop ? 0.0 : 10.0,
               horizontal: isTop ? 10.0 : 0.0,
             ),
-            width: isTop ? size.width : 4,
+            width: isTop ? size.width : 6.0,
             height: isTop ? 4 : size.height,
             color: widget.color,
           ),
         );
 
-        // print('at $offset with $size');
+        // debugPrint('at $offset with $size');
 
         if (isTop)
           return Positioned(
@@ -164,7 +164,10 @@ class _EndNavigationIndicatorState
           return Positioned(
             top: offset.dy,
             height: size.height,
-            child: indicator,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: indicator,
+            ),
           );
         }
       }),
@@ -260,27 +263,34 @@ class _StickyNavigationIndicatorState
 
     fetch();
 
-    final double kFactor = () {
+    final double hFactor = () {
       if (widget.axis == Axis.horizontal) {
-        return sizes![widget.index].height - 2.0;
+        return sizes![widget.index].height * 0.7;
       } else {
         // 6.0 of padding
         return sizes![widget.index].width - widget.topPadding.horizontal - 6.0;
       }
     }();
 
+    final minOffsetAxis = offsets![minIndex].fromAxis(widget.axis);
+    final maxOffsetAxis = offsets![maxIndex].fromAxis(widget.axis);
+
     if (widget.axis == Axis.horizontal) {
-      this.p1Start = offsets![minIndex].fromAxis(widget.axis) - (kFactor / 2);
-      this.p1End = offsets![maxIndex].fromAxis(widget.axis) - (kFactor / 2);
+      this.p1Start = minOffsetAxis - (hFactor / 2);
+      this.p1End = maxOffsetAxis - (hFactor / 2);
 
-      this.p2Start = offsets![minIndex].fromAxis(widget.axis);
-      this.p2End = offsets![maxIndex].fromAxis(widget.axis);
+      this.p2Start = minOffsetAxis;
+      this.p2End = maxOffsetAxis;
     } else {
-      this.p1Start = offsets![minIndex].fromAxis(widget.axis);
-      this.p1End = offsets![maxIndex].fromAxis(widget.axis);
+      this.p1Start = minOffsetAxis;
+      this.p1End = maxOffsetAxis;
 
-      this.p2Start = offsets![minIndex].fromAxis(widget.axis) + kFactor;
-      this.p2End = offsets![maxIndex].fromAxis(widget.axis) + kFactor;
+      this.p2Start = minOffsetAxis + hFactor;
+      this.p2End = maxOffsetAxis + hFactor;
+    }
+
+    double calcVelocity(double p) {
+      return widget.curve.transform(p) + 0.05;
     }
 
     if (this.p2Start > this.p2End) {
@@ -314,7 +324,7 @@ class _StickyNavigationIndicatorState
         return CustomPaint(
           foregroundPainter: _StickyPainter(
             y: widget.axis == Axis.horizontal
-                ? sizes!.first.height * 0.75
+                ? sizes!.first.height / 1.6
                 : sizes!.first.height - (indicatorPadding / 2),
             padding: widget.axis == Axis.horizontal
                 ? indicatorPadding
@@ -335,10 +345,6 @@ class _StickyNavigationIndicatorState
       },
     );
   }
-
-  double calcVelocity(double p) {
-    return widget.curve.transform(p) + 0.1;
-  }
 }
 
 class _StickyPainter extends CustomPainter {
@@ -355,6 +361,8 @@ class _StickyPainter extends CustomPainter {
 
   final Axis axis;
 
+  final double strokeWidth;
+
   const _StickyPainter({
     this.y = 0,
     required this.padding,
@@ -366,6 +374,7 @@ class _StickyPainter extends CustomPainter {
     required this.p2End,
     required this.color,
     required this.axis,
+    this.strokeWidth = 3,
   });
 
   @override
@@ -374,13 +383,13 @@ class _StickyPainter extends CustomPainter {
       ..color = color
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 2.0;
+      ..strokeWidth = strokeWidth;
     final double first = p1Start + (p1End - p1Start) * p1;
     final double second = p2Start + (p2End - p2Start) * p2;
 
     if (first.isNegative || second.isNegative) return;
 
-    // print('from $first to $second within $size');
+    // debugPrint('from $first to $second within $size');
 
     switch (axis) {
       case Axis.horizontal:

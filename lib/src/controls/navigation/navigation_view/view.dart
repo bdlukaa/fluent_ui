@@ -515,7 +515,12 @@ class NavigationAppBar with Diagnosticable {
           builder: (context) => PaneItem(
             icon: Icon(FluentIcons.back, size: 14.0),
             title: Text(localizations.backButtonTooltip),
-          ).build(context, false, onPressed),
+          ).build(
+            context,
+            false,
+            onPressed,
+            displayMode: PaneDisplayMode.compact,
+          ),
         ),
       );
     } else {
@@ -551,7 +556,10 @@ class _NavigationAppBar extends StatelessWidget {
     );
     final title = () {
       if (appBar.title != null) {
-        return Padding(
+        final theme = NavigationPaneTheme.of(context);
+        return AnimatedPadding(
+          duration: theme.animationDuration ?? Duration.zero,
+          curve: theme.animationCurve ?? Curves.linear,
           padding: [PaneDisplayMode.minimal, PaneDisplayMode.open]
                   .contains(displayMode)
               ? EdgeInsets.zero
