@@ -1,7 +1,7 @@
 part of 'view.dart';
 
-const _kCompactNavigationPanelWidth = 40.0;
-const _kOpenNavigationPanelWidth = 320.0;
+const double _kCompactNavigationPanelWidth = 50.0;
+const double _kOpenNavigationPanelWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -62,16 +62,24 @@ class NavigationPaneItem with Diagnosticable {
 
 /// The item used by [NavigationView] to display the tiles.
 ///
-/// On [PaneDisplayMode.compact], only [item] is displayed, and [title] is
-/// used as a tooltip. On the other display modes, [item] and [title] are
+/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
+/// used as a tooltip. On the other display modes, [icon] and [title] are
 /// displayed in a [Row].
 ///
+/// This is the only [NavigationPaneItem] that is affected by [NavigationIndicator]s
+///
 /// See also:
+///
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
-  PaneItem({required this.icon, this.title});
+  PaneItem({
+    required this.icon,
+    this.title,
+    this.focusNode,
+    this.autofocus = false,
+  });
 
   /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
@@ -79,11 +87,13 @@ class PaneItem extends NavigationPaneItem {
   ///
   /// The text style is fetched from the closest [NavigationPaneThemeData]
   ///
-  /// If it' s a [Text], its [Text.data] is used to display the tooltip.
-  /// This is also used by [Semantics] to allow screen readers to
+  /// If this is a [Text], its [Text.data] is used to display the tooltip. The
+  /// tooltip is only displayed only on compact mode and when the item is not
+  /// disabled.
+  /// It is also used by [Semantics] to allow screen readers to
   /// read the screen.
   ///
-  /// Usually a [Text].
+  /// Usually a [Text] widget.
   final Widget? title;
 
   /// The icon used by this item.
@@ -91,17 +101,23 @@ class PaneItem extends NavigationPaneItem {
   /// Usually an [Icon] widget
   final Widget icon;
 
+  /// {@macro flutter.widgets.Focus.focusNode}
+  final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
+
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
     BuildContext context,
     bool selected,
-    VoidCallback onPressed, {
+    VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool autofocus = false,
+    bool? autofocus,
   }) {
-    final mode = displayMode ??
+    final PaneDisplayMode mode = displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.minimal;
     assert(displayMode != PaneDisplayMode.auto);
@@ -109,48 +125,52 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = mode == PaneDisplayMode.compact;
     final bool isOpen =
         [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(mode);
-    final style = NavigationPaneTheme.of(context);
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
     final String titleText =
         title != null && title is Text ? (title! as Text).data ?? '' : '';
 
-    Widget result = SizedBox(
+    return Container(
       key: itemKey,
-      height: !isTop ? 41.0 : null,
+      height: !isTop ? 36.0 : null,
       width: isCompact ? _kCompactNavigationPanelWidth : null,
+      margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+      alignment: Alignment.center,
       child: HoverButton(
-        autofocus: autofocus,
+        autofocus: autofocus ?? this.autofocus,
+        focusNode: focusNode,
         onPressed: onPressed,
-        cursor: style.cursor,
+        cursor: theme.cursor,
         builder: (context, states) {
           final textStyle = selected
-              ? style.selectedTextStyle?.resolve(states)
-              : style.unselectedTextStyle?.resolve(states);
+              ? theme.selectedTextStyle?.resolve(states)
+              : theme.unselectedTextStyle?.resolve(states);
           final textResult = titleText.isNotEmpty
               ? Padding(
-                  padding: style.labelPadding ?? EdgeInsets.zero,
+                  padding: theme.labelPadding ?? EdgeInsets.zero,
                   child: Text(titleText, style: textStyle),
                 )
               : SizedBox.shrink();
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
-            mainAxisAlignment:
-                isTop ? MainAxisAlignment.center : MainAxisAlignment.end,
+            mainAxisAlignment: isTop || !isOpen
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.end,
             children: [
               if (isOpen) Expanded(child: textResult),
               () {
                 final icon = Padding(
-                  padding: style.iconPadding ?? EdgeInsets.zero,
+                  padding: theme.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme.merge(
                     data: IconThemeData(
                       color: (selected
-                              ? style.selectedIconColor?.resolve(states)
-                              : style.unselectedIconColor?.resolve(states)) ??
+                              ? theme.selectedIconColor?.resolve(states)
+                              : theme.unselectedIconColor?.resolve(states)) ??
                           textStyle?.color,
-                      size: 18.0,
+                      size: 16.0,
                     ),
-                    child: this.icon,
+                    child: Center(child: this.icon),
                   ),
                 );
                 if (isOpen) return icon;
@@ -164,21 +184,28 @@ class PaneItem extends NavigationPaneItem {
               textResult,
             ]);
           child = AnimatedContainer(
-            duration: style.animationDuration ?? Duration.zero,
-            curve: style.animationCurve ?? standartCurve,
-            color: () {
-              final ButtonState<Color?> tileColor = style.tileColor ??
-                  ButtonState.resolveWith((states) {
-                    return ButtonThemeData.uncheckedInputColor(
-                      FluentTheme.of(context),
-                      states,
-                    );
-                  });
-              return tileColor.resolve(states);
-            }(),
+            duration: theme.animationDuration ?? Duration.zero,
+            curve: theme.animationCurve ?? standartCurve,
+            decoration: BoxDecoration(
+              color: () {
+                final ButtonState<Color?> tileColor = theme.tileColor ??
+                    ButtonState.resolveWith((states) {
+                      if (isTop) return Colors.transparent;
+                      return ButtonThemeData.uncheckedInputColor(
+                        FluentTheme.of(context),
+                        states,
+                      );
+                    });
+                final newStates = states.toSet()..remove(ButtonStates.disabled);
+                return tileColor.resolve(
+                  selected ? {ButtonStates.hovering} : newStates,
+                );
+              }(),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
             child: child,
           );
-          return Semantics(
+          child = Semantics(
             label: title == null ? null : titleText,
             selected: selected,
             child: FocusBorder(
@@ -187,18 +214,20 @@ class PaneItem extends NavigationPaneItem {
               renderOutside: false,
             ),
           );
+          if (((isTop && !showTextOnTop) || isCompact) &&
+              titleText.isNotEmpty &&
+              !states.isDisabled)
+            return Tooltip(
+              message: titleText,
+              style: TooltipThemeData(
+                textStyle: title is Text ? (title as Text).style : null,
+              ),
+              child: child,
+            );
+          return child;
         },
       ),
     );
-    if (((isTop && !showTextOnTop) || isCompact) && titleText.isNotEmpty)
-      return Tooltip(
-        message: titleText,
-        style: TooltipThemeData(
-          textStyle: title is Text ? (title as Text).style : null,
-        ),
-        child: result,
-      );
-    return result;
   }
 }
 
@@ -273,7 +302,7 @@ class PaneItemHeader extends NavigationPaneItem {
   }
 }
 
-extension ItemsExtension on List<NavigationPaneItem> {
+extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
   List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
@@ -696,12 +725,14 @@ class _OpenNavigationPane extends StatelessWidget {
     this.paneKey,
     this.listKey,
     this.onToggle,
+    this.onItemSelected,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
+  final VoidCallback? onItemSelected;
 
   static Widget buildItem(
     BuildContext context,
@@ -793,165 +824,16 @@ class _OpenNavigationPane extends StatelessWidget {
               isAlwaysShown: false,
               child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {
-                  return buildItem(context, pane, item);
+                  return buildItem(context, pane, item, onItemSelected);
                 }),
               ]),
             ),
           ),
           ...pane.footerItems.map((item) {
-            return buildItem(context, pane, item);
+            return buildItem(context, pane, item, onItemSelected);
           }),
         ]),
       ),
     );
-  }
-}
-
-class _MinimalNavigationPane extends StatefulWidget {
-  _MinimalNavigationPane({
-    Key? key,
-    required this.pane,
-    required this.animationDuration,
-    required this.entry,
-    required this.onBack,
-    required this.onStartBack,
-    this.listKey,
-    this.y = 0,
-  }) : super(key: key);
-
-  final NavigationPane pane;
-
-  /// This duration can't be fetched from the theme when the state is
-  /// initialized, so it needs to be fetched from the parent
-  final Duration animationDuration;
-
-  /// This entry is used to remove the entry from the overlay list
-  /// when tapped outside.
-  final OverlayEntry entry;
-
-  /// Usually the top bar height
-  final double y;
-
-  final VoidCallback onBack;
-  final VoidCallback onStartBack;
-
-  final GlobalKey? listKey;
-
-  @override
-  __MinimalNavigationPaneState createState() => __MinimalNavigationPaneState();
-}
-
-class __MinimalNavigationPaneState extends State<_MinimalNavigationPane>
-    with SingleTickerProviderStateMixin<_MinimalNavigationPane> {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration,
-    );
-    controller.forward();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
-    return _OpenNavigationPane.buildItem(
-      context,
-      widget.pane,
-      item,
-      removeEntry,
-      widget.pane.isSelected(item), // autofocus
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
-    Widget minimalPane = SizeTransition(
-      sizeFactor: CurvedAnimation(
-        parent: controller,
-        curve: theme.animationCurve ?? Curves.linear,
-      ),
-      axis: Axis.horizontal,
-      child: SizedBox(
-        width: _kOpenNavigationPanelWidth,
-        child: Acrylic(
-          tint: theme.backgroundColor,
-          child: widget.pane.indicatorBuilder(
-            context: context,
-            index: widget.pane.selected,
-            offsets: () => widget.pane.effectiveItems
-                .getPaneItemsOffsets(widget.pane.paneKey),
-            sizes: widget.pane.effectiveItems.getPaneItemsSizes,
-            axis: Axis.horizontal,
-            child: Column(key: widget.pane.paneKey, children: [
-              Padding(
-                padding: widget.pane.autoSuggestBox != null
-                    ? EdgeInsets.zero
-                    : topPadding,
-                child: widget.pane.header != null
-                    ? Align(
-                        child: widget.pane.header!,
-                        alignment: Alignment.centerLeft,
-                      )
-                    : null,
-              ),
-              if (widget.pane.autoSuggestBox != null)
-                Container(
-                  padding: theme.iconPadding,
-                  height: 41.0,
-                  alignment: Alignment.center,
-                  margin: topPadding,
-                  child: widget.pane.autoSuggestBox!,
-                ),
-              Expanded(
-                child: Scrollbar(
-                  isAlwaysShown: false,
-                  child:
-                      ListView(key: widget.listKey, primary: true, children: [
-                    ...widget.pane.items.map((item) {
-                      return _buildItem(context, item);
-                    }),
-                  ]),
-                ),
-              ),
-              ...widget.pane.footerItems.map((item) {
-                return _buildItem(context, item);
-              }),
-            ]),
-          ),
-        ),
-      ),
-    );
-    return Stack(children: [
-      Positioned.fill(
-        child: GestureDetector(
-          onTap: removeEntry,
-          child: AbsorbPointer(
-            child: Semantics(
-              label: FluentLocalizations.of(context).modalBarrierDismissLabel,
-              child: SizedBox.expand(),
-            ),
-          ),
-        ),
-      ),
-      Positioned(top: 0, left: 0, bottom: 0, child: minimalPane),
-    ]);
-  }
-
-  Future<void> removeEntry() async {
-    widget.onStartBack();
-    await controller.reverse();
-    widget.entry.remove();
-    widget.onBack();
   }
 }

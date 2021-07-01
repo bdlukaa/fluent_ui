@@ -52,7 +52,7 @@ void main() async {
   if (isDesktop)
     doWhenWindowReady(() {
       final win = appWindow;
-      win.minSize = Size(410, 640);
+      win.minSize = Size(410, 540);
       win.size = Size(755, 545);
       win.alignment = Alignment.center;
       win.title = appTitle;
@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
       appBar: NavigationAppBar(
-        height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
+        // height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
         title: () {
           if (kIsWeb) return Text(appTitle);
           return MoveWindow(
@@ -135,7 +135,10 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: kIsWeb
             ? null
             : MoveWindow(
-                child: Row(children: [Spacer(), WindowButtons()]),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Spacer(), WindowButtons()],
+                ),
               ),
       ),
       pane: NavigationPane(
@@ -194,7 +197,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         items: [
-          PaneItemHeader(header: Text('User Interaction')),
+          // It doesn't look good when resizing from compact to open
+          // PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
             icon: Icon(FluentIcons.checkbox_composite),
             title: Text('Inputs'),
@@ -208,7 +212,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           PaneItem(icon: Icon(FluentIcons.cell_phone), title: Text('Mobile')),
           PaneItem(
-            icon: Icon(FluentIcons.more_vertical),
+            icon: Icon(
+              appTheme.displayMode == PaneDisplayMode.top
+                  ? FluentIcons.more
+                  : FluentIcons.more_vertical,
+            ),
             title: Text('Others'),
           ),
         ],

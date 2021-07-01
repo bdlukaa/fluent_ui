@@ -168,6 +168,7 @@ class ThemeData with Diagnosticable {
   final Color shadowColor;
   final Color scaffoldBackgroundColor;
   final Color acrylicBackgroundColor;
+  final Color micaBackgroundColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -223,6 +224,7 @@ class ThemeData with Diagnosticable {
     required this.visualDensity,
     required this.scaffoldBackgroundColor,
     required this.acrylicBackgroundColor,
+    required this.micaBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.chipTheme,
@@ -266,6 +268,7 @@ class ThemeData with Diagnosticable {
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
+    Color? micaBackgroundColor,
     Color? shadowColor,
     ButtonState<MouseCursor>? inputMouseCursor,
     Duration? fasterAnimationDuration,
@@ -295,6 +298,9 @@ class ThemeData with Diagnosticable {
     SnackbarThemeData? snackbarTheme,
   }) {
     brightness ??= Brightness.light;
+
+    final bool isLight = brightness == Brightness.light;
+
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= Duration(milliseconds: 90);
     fastAnimationDuration ??= Duration(milliseconds: 150);
@@ -303,30 +309,15 @@ class ThemeData with Diagnosticable {
     animationCurve ??= standartCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
-    inactiveColor ??= AccentColor('normal', {
-      'normal': Colors.black,
-      'dark': Colors.white,
-    }).resolveFromBrightness(brightness);
-    inactiveBackgroundColor ??= AccentColor('normal', {
-      'normal': Color(0xFFd6d6d6),
-      'dark': Color(0xFF292929),
-    }).resolveFromBrightness(brightness);
-    disabledColor ??= AccentColor('normal', {
-      'normal': const Color(0xFF838383),
-      'dark': Colors.grey[80].withOpacity(0.6)
-    });
-    shadowColor ??= AccentColor('normal', {
-      'normal': Colors.black,
-      'dark': Colors.grey[130],
-    }).resolveFromBrightness(brightness);
-    scaffoldBackgroundColor ??= AccentColor('normal', {
-      'normal': Colors.white,
-      'dark': Colors.black,
-    }).resolveFromBrightness(brightness);
-    acrylicBackgroundColor ??= AccentColor('normal', {
-      'normal': Color.fromARGB(204, 255, 255, 255),
-      'dark': Color(0x7F1e1e1e),
-    }).resolveFromBrightness(brightness);
+    inactiveColor ??= isLight ? Colors.black : Colors.white;
+    inactiveBackgroundColor ??= isLight ? Color(0xFFd6d6d6) : Color(0xFF292929);
+    disabledColor ??=
+        isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
+    shadowColor ??= isLight ? Colors.black : Colors.grey[130];
+    scaffoldBackgroundColor ??= isLight ? Color(0xFFf9f9f9) : Color(0xFF272727);
+    acrylicBackgroundColor ??=
+        isLight ? Color.fromARGB(204, 255, 255, 255) : Color(0x7F1e1e1e);
+    micaBackgroundColor ??= isLight ? Color(0xFFf3f3f3) : Color(0xFF202020);
     typography = Typography.standard(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
@@ -346,9 +337,9 @@ class ThemeData with Diagnosticable {
     chipTheme ??= const ChipThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
-    iconTheme ??= brightness.isDark
-        ? const IconThemeData(color: Colors.white, size: 18.0)
-        : const IconThemeData(color: Colors.black, size: 18.0);
+    iconTheme ??= isLight
+        ? const IconThemeData(color: Colors.black, size: 18.0)
+        : const IconThemeData(color: Colors.white, size: 18.0);
     splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
@@ -356,7 +347,7 @@ class ThemeData with Diagnosticable {
     navigationPaneTheme ??= NavigationPaneThemeData.standard(
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
-      backgroundColor: acrylicBackgroundColor,
+      backgroundColor: micaBackgroundColor,
       disabledColor: disabledColor,
       highlightColor: accentColor,
       inputMouseCursor: inputMouseCursor,
@@ -386,6 +377,7 @@ class ThemeData with Diagnosticable {
       disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
+      micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
@@ -427,6 +419,8 @@ class ThemeData with Diagnosticable {
           Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
       acrylicBackgroundColor:
           Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
+      micaBackgroundColor:
+          Color.lerp(a.micaBackgroundColor, b.micaBackgroundColor, t)!,
       shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
       fasterAnimationDuration:
           lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
@@ -483,6 +477,7 @@ class ThemeData with Diagnosticable {
     Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
+    Color? micaBackgroundColor,
     Color? shadowColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
@@ -526,6 +521,7 @@ class ThemeData with Diagnosticable {
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
       acrylicBackgroundColor:
           acrylicBackgroundColor ?? this.acrylicBackgroundColor,
+      micaBackgroundColor: micaBackgroundColor ?? this.micaBackgroundColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
@@ -563,20 +559,16 @@ class ThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('accentColor', accentColor));
-    properties.add(ColorProperty('activeColor', activeColor));
-    properties.add(ColorProperty('inactiveColor', inactiveColor));
-    properties.add(
-      ColorProperty('inactiveBackgroundColor', inactiveBackgroundColor),
-    );
-    properties.add(ColorProperty('disabledColor', disabledColor));
-    properties.add(
-      ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor),
-    );
-    properties.add(ColorProperty(
-      'acrylicBackgroundColor',
-      acrylicBackgroundColor,
-    ));
+    properties
+      ..add(ColorProperty('accentColor', accentColor))
+      ..add(ColorProperty('activeColor', activeColor))
+      ..add(ColorProperty('inactiveColor', inactiveColor))
+      ..add(ColorProperty('inactiveBackgroundColor', inactiveBackgroundColor))
+      ..add(ColorProperty('disabledColor', disabledColor))
+      ..add(ColorProperty('shadowColor', shadowColor))
+      ..add(ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor))
+      ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
+      ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor));
     properties.add(EnumProperty('brightness', brightness));
     properties.add(DiagnosticsProperty<Duration>(
       'slowAnimationDuration',

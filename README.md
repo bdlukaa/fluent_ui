@@ -418,8 +418,6 @@ The NavigationView control provides top-level navigation for your app. It adapts
 
 ![Navigation Panel](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
 
-The navigation view also handle the app bar and its content. You can enable the acrylic blur effect by setting `useAcrylic` to true.
-
 ### App Bar
 
 The app bar is the top app bar that every desktop nowadays have.
@@ -475,9 +473,6 @@ pane: NavigationPane(
     required BuildContext context,
     /// The current selected index
     int? index,
-    /// The y axis to take into consideration when calculating the
-    /// position
-    double? y,
     /// A function that, when executed, returns the position of all the
     /// PaneItems. This function must be called after the widget was
     /// rendered at least once
@@ -503,7 +498,6 @@ pane: NavigationPane(
       child: child,
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
-      y: y ?? 0,
       axis: axis,
     );
   },
