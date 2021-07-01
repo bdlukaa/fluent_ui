@@ -597,17 +597,18 @@ class _NavigationAppBar extends StatelessWidget {
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
         result = Stack(children: [
-          Positioned(
-            left: width,
-            right: 0.0,
-            top: 0.0,
-            bottom: 0.0,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: appBar.actions ?? SizedBox(),
+          if (appBar.actions != null)
+            Positioned(
+              left: width,
+              right: 0.0,
+              top: 0.0,
+              bottom: 0.0,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: appBar.actions!,
+              ),
             ),
-          ),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
             leading,
             if (additionalLeading != null) additionalLeading!,
             Expanded(child: title),
