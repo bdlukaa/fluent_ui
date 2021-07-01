@@ -6,9 +6,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// application backdrop to delight users and create visual hierarchy,
 /// aiding productivity, by increasing clarity about which window
 /// is in focus.
-/// 
+///
 /// See also:
-/// 
+///
 ///  * [Acrylic], a type of Brush that creates a translucent texture
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/style/mica>
 class Mica extends StatelessWidget {
