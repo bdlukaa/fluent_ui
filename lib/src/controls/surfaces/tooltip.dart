@@ -653,7 +653,7 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    if (horizontal)
+    if (horizontal) {
       return _horizontalPositionDependentBox(
         size: size,
         childSize: childSize,
@@ -661,13 +661,15 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
         verticalOffset: verticalOffset,
         preferLeft: preferBelow,
       );
-    return positionDependentBox(
-      size: size,
-      childSize: childSize,
-      target: target,
-      verticalOffset: verticalOffset,
-      preferBelow: preferBelow,
-    );
+    } else {
+      return positionDependentBox(
+        size: size,
+        childSize: childSize,
+        target: target,
+        verticalOffset: verticalOffset,
+        preferBelow: preferBelow,
+      );
+    }
   }
 
   @override

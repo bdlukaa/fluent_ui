@@ -218,7 +218,7 @@ class NavigationViewState extends State<NavigationView> {
               ),
             );
           } else {
-            Widget content = pane.displayMode == PaneDisplayMode.minimal
+            final Widget content = pane.displayMode == PaneDisplayMode.minimal
                 ? widget.content
                 : DecoratedBox(
                     decoration: ShapeDecoration(shape: widget.contentShape),
@@ -489,7 +489,7 @@ class NavigationAppBar with Diagnosticable {
     late Widget widget;
     if (appBar.leading != null) {
       widget = Padding(
-        padding: EdgeInsets.only(left: 12.0),
+        padding: const EdgeInsets.only(left: 12.0),
         child: appBar.leading,
       );
     } else if (appBar.automaticallyImplyLeading && imply) {
@@ -513,7 +513,7 @@ class NavigationAppBar with Diagnosticable {
         )),
         child: Builder(
           builder: (context) => PaneItem(
-            icon: Icon(FluentIcons.back, size: 14.0),
+            icon: const Icon(FluentIcons.back, size: 14.0),
             title: Text(localizations.backButtonTooltip),
           ).build(
             context,
@@ -545,7 +545,6 @@ class _NavigationAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
     final PaneDisplayMode displayMode = this.displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
@@ -556,6 +555,7 @@ class _NavigationAppBar extends StatelessWidget {
     );
     final title = () {
       if (appBar.title != null) {
+        assert(debugCheckHasFluentTheme(context));
         final theme = NavigationPaneTheme.of(context);
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,

@@ -11,7 +11,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 const double kBlurAmount = 30.0;
 
-/// Value eyballed from Windows 10 v10.0.19041.928
 const double kDefaultAcrylicAlpha = 0.8;
 
 /// Acrylic is a type of Brush that creates a translucent texture.
