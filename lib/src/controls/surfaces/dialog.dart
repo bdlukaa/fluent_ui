@@ -71,35 +71,42 @@ class ContentDialog extends StatelessWidget {
         ContentDialogThemeData.standard(FluentTheme.of(context)).merge(
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
-    return PhysicalModel(
-      color: style.elevationColor ?? Colors.black,
-      elevation: style.elevation ?? 0,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 368),
-        decoration: style.decoration,
-        padding: style.padding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (title != null)
-              Padding(
-                padding: style.titlePadding ?? EdgeInsets.zero,
-                child: DefaultTextStyle(
-                  style: style.titleStyle ?? TextStyle(),
-                  child: title!,
-                ),
-              ),
-            if (content != null)
-              Padding(
-                padding: style.bodyPadding ?? EdgeInsets.zero,
-                child: DefaultTextStyle(
-                  style: style.bodyStyle ?? TextStyle(),
-                  child: content!,
-                ),
-              ),
-            if (actions != null)
-              ButtonTheme.merge(
+    return Container(
+      constraints: BoxConstraints(maxWidth: 368),
+      decoration: style.decoration,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: style.padding ?? EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title != null)
+                  Padding(
+                    padding: style.titlePadding ?? EdgeInsets.zero,
+                    child: DefaultTextStyle(
+                      style: style.titleStyle ?? TextStyle(),
+                      child: title!,
+                    ),
+                  ),
+                if (content != null)
+                  Padding(
+                    padding: style.bodyPadding ?? EdgeInsets.zero,
+                    child: DefaultTextStyle(
+                      style: style.bodyStyle ?? TextStyle(),
+                      child: content!,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (actions != null)
+            Container(
+              decoration: style.actionsDecoration,
+              padding: style.actionsPadding,
+              child: ButtonTheme.merge(
                 data: style.actionThemeData ?? ButtonThemeData(),
                 child: () {
                   if (actions!.length == 1) {
@@ -110,26 +117,24 @@ class ContentDialog extends StatelessWidget {
                   }
                   return Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: () {
-                      return actions!.map((e) {
-                        final index = actions!.indexOf(e);
-                        return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right: index != (actions!.length - 1)
-                                  ? style.actionsSpacing ?? 3
-                                  : 0,
-                            ),
-                            child: e,
+                    children: actions!.map((e) {
+                      final index = actions!.indexOf(e);
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: index != (actions!.length - 1)
+                                ? style.actionsSpacing ?? 3
+                                : 0,
                           ),
-                        );
-                      }).toList();
-                    }(),
+                          child: e,
+                        ),
+                      );
+                    }).toList(),
                   );
                 }(),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -219,17 +224,17 @@ class ContentDialogThemeData {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? titlePadding;
   final EdgeInsetsGeometry? bodyPadding;
-  final double? actionsSpacing;
 
   final Decoration? decoration;
   final Color? barrierColor;
 
+  final ButtonThemeData? actionThemeData;
+  final double? actionsSpacing;
+  final Decoration? actionsDecoration;
+  final EdgeInsetsGeometry? actionsPadding;
+
   final TextStyle? titleStyle;
   final TextStyle? bodyStyle;
-  final ButtonThemeData? actionThemeData;
-
-  final double? elevation;
-  final Color? elevationColor;
 
   const ContentDialogThemeData({
     this.decoration,
@@ -239,27 +244,30 @@ class ContentDialogThemeData {
     this.padding,
     this.actionsSpacing,
     this.actionThemeData,
+    this.actionsDecoration,
+    this.actionsPadding,
     this.titleStyle,
     this.bodyStyle,
-    this.elevation,
-    this.elevationColor,
   });
 
   factory ContentDialogThemeData.standard(ThemeData style) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
         color: style.scaffoldBackgroundColor,
-        border: Border.all(color: style.disabledColor, width: 1.2),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: kElevationToShadow[8],
       ),
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       titlePadding: EdgeInsets.only(bottom: 12),
-      bodyPadding: EdgeInsets.only(bottom: 30),
-      actionsSpacing: 3,
+      actionsSpacing: 10,
+      actionsDecoration: BoxDecoration(
+        color: style.micaBackgroundColor,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+      ),
+      actionsPadding: EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),
       titleStyle: style.typography.title,
       bodyStyle: style.typography.body,
-      elevation: 8,
-      elevationColor: Colors.black,
     );
   }
 
@@ -278,10 +286,12 @@ class ContentDialogThemeData {
       actionsSpacing: lerpDouble(a?.actionsSpacing, b?.actionsSpacing, t),
       actionThemeData:
           ButtonThemeData.lerp(a?.actionThemeData, b?.actionThemeData, t),
+      actionsDecoration:
+          Decoration.lerp(a?.actionsDecoration, b?.actionsDecoration, t),
+      actionsPadding:
+          EdgeInsetsGeometry.lerp(a?.actionsPadding, b?.actionsPadding, t),
       titleStyle: TextStyle.lerp(a?.titleStyle, b?.titleStyle, t),
       bodyStyle: TextStyle.lerp(a?.bodyStyle, b?.bodyStyle, t),
-      elevation: lerpDouble(a?.elevation, b?.elevation, t),
-      elevationColor: Color.lerp(a?.elevationColor, b?.elevationColor, t),
     );
   }
 
@@ -295,10 +305,10 @@ class ContentDialogThemeData {
       titlePadding: style.titlePadding ?? titlePadding,
       actionsSpacing: style.actionsSpacing ?? actionsSpacing,
       actionThemeData: style.actionThemeData ?? actionThemeData,
+      actionsDecoration: style.actionsDecoration ?? actionsDecoration,
+      actionsPadding: style.actionsPadding ?? actionsPadding,
       titleStyle: style.titleStyle ?? titleStyle,
       bodyStyle: style.bodyStyle ?? bodyStyle,
-      elevation: style.elevation ?? elevation,
-      elevationColor: style.elevationColor ?? elevationColor,
     );
   }
 }
