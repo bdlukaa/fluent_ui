@@ -263,6 +263,7 @@ class ContentDialogThemeData {
       actionsDecoration: BoxDecoration(
         color: style.micaBackgroundColor,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+        boxShadow: kElevationToShadow[1],
       ),
       actionsPadding: EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),
