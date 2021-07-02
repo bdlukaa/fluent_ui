@@ -1097,7 +1097,7 @@ ContentDialog(
 
 The code above produces the following:
 
-![No Wifi Connection Dialog](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_one_button.png)
+![No Wifi Connection Dialog](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_one_button.png)
 
 You can display the dialog as an overlay by calling the function `showDialog`:
 
@@ -1110,10 +1110,8 @@ showDialog(
 );
 ```
 
-![Delete File Dialog](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_two_button.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_three_button_default.png)
+![Delete File Dialog](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_delete_file.png)\
+![Subscribe to App Service Dialog](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_three_button_default.png)\
 
 ## Flyout
 

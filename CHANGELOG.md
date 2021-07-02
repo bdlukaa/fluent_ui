@@ -2,6 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [next] - [##/##/2021]
 
+- Update `ContentDialog` design.
 - Update `NavigationView` design:
   - **BREAKING:** Acryic is not used anymore. Consequently, `useAcrylic` method was removed.
 - Implemented `Mica`, used by the new `NavigationView`
