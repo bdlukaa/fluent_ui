@@ -223,21 +223,6 @@ class _MyHomePageState extends State<MyHomePage> {
         autoSuggestBox: AutoSuggestBox<String>(
           controller: TextEditingController(),
           items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
-          textBoxBuilder: (
-            BuildContext context,
-            TextEditingController controller,
-            FocusNode focusNode,
-            GlobalKey key,
-          ) {
-            return TextBox(
-              key: key,
-              controller: controller,
-              focusNode: focusNode,
-              placeholder: 'Search',
-              clipBehavior:
-                  focusNode.hasFocus ? Clip.none : Clip.antiAliasWithSaveLayer,
-            );
-          },
         ),
         autoSuggestBoxReplacement: Icon(FluentIcons.search),
         footerItems: [

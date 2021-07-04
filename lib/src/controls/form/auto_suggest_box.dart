@@ -100,11 +100,12 @@ class AutoSuggestBox<T> extends StatefulWidget {
     GlobalKey key,
   ) {
     // assert(debugCheckHasFluentLocalizations(context));
-    // final localizations = FluentLocalizations.of(context).clickToSearch;
+    final FluentLocalizations localizations = FluentLocalizations.of(context);
     return TextBox(
       key: key,
       controller: controller,
       focusNode: focusNode,
+      placeholder: localizations.searchLabel,
       clipBehavior:
           focusNode.hasFocus ? Clip.none : Clip.antiAliasWithSaveLayer,
     );
