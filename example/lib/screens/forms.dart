@@ -74,17 +74,17 @@ class _FormsState extends State<Forms> {
                       },
                     ),
                     placeholder: 'Type a color',
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: _kDefaultRoundedBorderSide,
-                        bottom: _kDefaultRoundedBorderSide,
-                        left: _kDefaultRoundedBorderSide,
-                        right: _kDefaultRoundedBorderSide,
-                      ),
-                      borderRadius: focusNode.hasFocus
-                          ? BorderRadius.vertical(top: Radius.circular(3.0))
-                          : BorderRadius.all(Radius.circular(3.0)),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   border: Border(
+                    //     top: _kDefaultRoundedBorderSide,
+                    //     bottom: _kDefaultRoundedBorderSide,
+                    //     left: _kDefaultRoundedBorderSide,
+                    //     right: _kDefaultRoundedBorderSide,
+                    //   ),
+                    //   borderRadius: focusNode.hasFocus
+                    //       ? BorderRadius.vertical(top: Radius.circular(3.0))
+                    //       : BorderRadius.all(Radius.circular(3.0)),
+                    // ),
                   );
                 },
               ),

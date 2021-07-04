@@ -7,22 +7,6 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter/services.dart';
 
-const BorderSide _kDefaultRoundedBorderSide = BorderSide(
-  style: BorderStyle.solid,
-  width: 0.8,
-);
-const Border _kDefaultRoundedBorder = Border(
-  top: _kDefaultRoundedBorderSide,
-  bottom: _kDefaultRoundedBorderSide,
-  left: _kDefaultRoundedBorderSide,
-  right: _kDefaultRoundedBorderSide,
-);
-
-const BoxDecoration _kDefaultRoundedBorderDecoration = BoxDecoration(
-  border: _kDefaultRoundedBorder,
-  borderRadius: BorderRadius.all(Radius.circular(3.0)),
-);
-
 const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 6);
 
 enum OverlayVisibilityMode {
@@ -68,7 +52,6 @@ class TextBox extends StatefulWidget {
     Key? key,
     this.controller,
     this.focusNode,
-    this.decoration = _kDefaultRoundedBorderDecoration,
     this.padding = kTextBoxPadding,
     this.placeholder,
     this.placeholderStyle,
@@ -168,7 +151,6 @@ class TextBox extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
 
-  final BoxDecoration decoration;
   final EdgeInsetsGeometry padding;
 
   final String? placeholder;
@@ -283,7 +265,6 @@ class TextBox extends StatefulWidget {
           defaultValue: null))
       ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
           defaultValue: null))
-      ..add(DiagnosticsProperty<BoxDecoration>('decoration', decoration))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
       ..add(StringProperty('placeholder', placeholder))
       ..add(
@@ -582,6 +563,7 @@ class _TextBoxState extends State<TextBox>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
+    final ThemeData theme = FluentTheme.of(context);
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -591,25 +573,27 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: FluentTheme.of(context).inactiveColor,
+      color: enabled ? theme.inactiveColor : theme.disabledColor,
     );
 
     final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? FluentTheme.of(context).brightness;
-    final Color cursorColor = FluentTheme.of(context).inactiveColor;
-    final Color disabledColor = FluentTheme.of(context).disabledColor;
-    final Color? decorationColor = widget.decoration.color;
+        widget.keyboardAppearance ?? theme.brightness;
+    final Color cursorColor = theme.inactiveColor;
+    final Color disabledColor = theme.disabledColor;
+    final Color backgroundColor = _effectiveFocusNode.hasFocus
+        ? theme.scaffoldBackgroundColor
+        : AccentColor('normal', {
+            'normal': Colors.white,
+            'dark': Color(0xFF2d2d2d),
+          }).resolve(context);
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: !enabled
-              ? (decorationColor ?? disabledColor).basedOnLuminance()
-              : disabledColor,
+          color: !enabled ? backgroundColor.basedOnLuminance() : disabledColor,
           fontWeight: FontWeight.w400,
         );
 
-    final Color selectionColor =
-        FluentTheme.of(context).accentColor.withOpacity(0.2);
+    final Color selectionColor = theme.accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -689,23 +673,16 @@ class _TextBoxState extends State<TextBox>
         child: ClipRRect(
           borderRadius: radius,
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).mediumAnimationDuration,
-            curve: FluentTheme.of(context).animationCurve,
-            // decoration: effectiveDecoration,
+            duration: theme.fasterAnimationDuration,
+            curve: theme.animationCurve,
             decoration: BoxDecoration(
               borderRadius: radius,
-              border: Border.all(
-                width: 0.2,
-                color: FluentTheme.of(context).disabledColor,
-              ),
-              color: FluentTheme.of(context).scaffoldBackgroundColor,
+              border: Border.all(width: 0.3, color: theme.disabledColor),
+              color: backgroundColor,
             ),
             foregroundDecoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(
-                  color: FluentTheme.of(context).accentColor,
-                  width: 3.0,
-                ),
+                bottom: BorderSide(color: theme.accentColor, width: 3.0),
               ),
             ),
             constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
@@ -743,7 +720,7 @@ class _TextBoxState extends State<TextBox>
     return ButtonTheme.merge(
       data: widget.iconButtonThemeData ?? ButtonThemeData(),
       child: IconTheme.merge(
-        data: const IconThemeData(size: 18),
+        data: const IconThemeData(size: 14),
         child: () {
           if (widget.header != null)
             return InfoLabel(
