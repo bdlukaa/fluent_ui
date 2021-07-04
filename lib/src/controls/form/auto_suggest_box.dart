@@ -99,26 +99,15 @@ class AutoSuggestBox<T> extends StatefulWidget {
     FocusNode focusNode,
     GlobalKey key,
   ) {
-    assert(debugCheckHasFluentTheme(context));
-    const BorderSide _kDefaultRoundedBorderSide = BorderSide(
-      style: BorderStyle.solid,
-      width: 0.8,
-    );
+    assert(debugCheckHasFluentLocalizations(context));
+    final FluentLocalizations localizations = FluentLocalizations.of(context);
     return TextBox(
       key: key,
       controller: controller,
       focusNode: focusNode,
-      decoration: BoxDecoration(
-        border: Border(
-          top: _kDefaultRoundedBorderSide,
-          bottom: _kDefaultRoundedBorderSide,
-          left: _kDefaultRoundedBorderSide,
-          right: _kDefaultRoundedBorderSide,
-        ),
-        borderRadius: focusNode.hasFocus
-            ? BorderRadius.vertical(top: Radius.circular(3.0))
-            : BorderRadius.all(Radius.circular(3.0)),
-      ),
+      placeholder: localizations.searchLabel,
+      clipBehavior:
+          focusNode.hasFocus ? Clip.none : Clip.antiAliasWithSaveLayer,
     );
   }
 }

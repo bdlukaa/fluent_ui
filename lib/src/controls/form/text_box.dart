@@ -7,22 +7,6 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter/services.dart';
 
-const BorderSide _kDefaultRoundedBorderSide = BorderSide(
-  style: BorderStyle.solid,
-  width: 0.8,
-);
-const Border _kDefaultRoundedBorder = Border(
-  top: _kDefaultRoundedBorderSide,
-  bottom: _kDefaultRoundedBorderSide,
-  left: _kDefaultRoundedBorderSide,
-  right: _kDefaultRoundedBorderSide,
-);
-
-const BoxDecoration _kDefaultRoundedBorderDecoration = BoxDecoration(
-  border: _kDefaultRoundedBorder,
-  borderRadius: BorderRadius.all(Radius.circular(3.0)),
-);
-
 const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 6);
 
 enum OverlayVisibilityMode {
@@ -68,8 +52,8 @@ class TextBox extends StatefulWidget {
     Key? key,
     this.controller,
     this.focusNode,
-    this.decoration = _kDefaultRoundedBorderDecoration,
     this.padding = kTextBoxPadding,
+    this.clipBehavior = Clip.antiAlias,
     this.placeholder,
     this.placeholderStyle,
     this.prefix,
@@ -168,8 +152,9 @@ class TextBox extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
 
-  final BoxDecoration decoration;
   final EdgeInsetsGeometry padding;
+
+  final Clip clipBehavior;
 
   final String? placeholder;
   final TextStyle? placeholderStyle;
@@ -278,86 +263,71 @@ class TextBox extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>(
-        'controller', controller,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
     properties
-        .add(DiagnosticsProperty<BoxDecoration>('decoration', decoration));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
-    properties.add(StringProperty('placeholder', placeholder));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle));
-    properties.add(DiagnosticsProperty<OverlayVisibilityMode>(
-        'prefix', prefix == null ? null : prefixMode));
-    properties.add(DiagnosticsProperty<OverlayVisibilityMode>(
-        'suffix', suffix == null ? null : suffixMode));
-    properties.add(DiagnosticsProperty<TextInputType>(
-        'keyboardType', keyboardType,
-        defaultValue: TextInputType.text));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
-    properties.add(DiagnosticsProperty<String>(
-        'obscuringCharacter', obscuringCharacter,
-        defaultValue: '•'));
-    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText,
-        defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
-        defaultValue: true));
-    properties.add(EnumProperty<SmartDashesType>(
-        'smartDashesType', smartDashesType,
-        defaultValue:
-            obscureText ? SmartDashesType.disabled : SmartDashesType.enabled));
-    properties.add(EnumProperty<SmartQuotesType>(
-        'smartQuotesType', smartQuotesType,
-        defaultValue:
-            obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled));
-    properties.add(DiagnosticsProperty<bool>(
-        'enableSuggestions', enableSuggestions,
-        defaultValue: true));
-    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));
-    properties.add(IntProperty('minLines', minLines, defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<bool>('expands', expands, defaultValue: false));
-    properties.add(IntProperty('maxLength', maxLength, defaultValue: null));
-    properties.add(FlagProperty(
-      'maxLengthEnforced',
-      value: maxLengthEnforced,
-      ifTrue: 'max length enforced',
-    ));
-    properties
-        .add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
-    properties
-        .add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
-    properties.add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
-        defaultValue: null));
-
-    properties.add(FlagProperty(
-      'selectionEnabled',
-      value: selectionEnabled,
-      defaultValue: true,
-      ifFalse: 'selection disabled',
-    ));
-    properties.add(DiagnosticsProperty<ScrollController>(
-      'scrollController',
-      scrollController,
-      defaultValue: null,
-    ));
-    properties.add(DiagnosticsProperty<ScrollPhysics>(
-      'scrollPhysics',
-      scrollPhysics,
-      defaultValue: null,
-    ));
-    properties.add(EnumProperty<TextAlign>('textAlign', textAlign,
-        defaultValue: TextAlign.start));
-    properties.add(DiagnosticsProperty<TextAlignVertical>(
-      'textAlignVertical',
-      textAlignVertical,
-      defaultValue: null,
-    ));
+      ..add(DiagnosticsProperty<TextEditingController>('controller', controller,
+          defaultValue: null))
+      ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
+          defaultValue: null))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(StringProperty('placeholder', placeholder))
+      ..add(
+          DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle))
+      ..add(DiagnosticsProperty<OverlayVisibilityMode>(
+          'prefix', prefix == null ? null : prefixMode))
+      ..add(DiagnosticsProperty<OverlayVisibilityMode>(
+          'suffix', suffix == null ? null : suffixMode))
+      ..add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType,
+          defaultValue: TextInputType.text))
+      ..add(DiagnosticsProperty<TextStyle>('style', style, defaultValue: null))
+      ..add(FlagProperty('autofocus',
+          value: autofocus, ifFalse: 'manual focus', defaultValue: false))
+      ..add(StringProperty('obscuringCharacter', obscuringCharacter,
+          defaultValue: '•'))
+      ..add(DiagnosticsProperty<bool>('obscureText', obscureText,
+          defaultValue: false))
+      ..add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
+          defaultValue: true))
+      ..add(EnumProperty<SmartDashesType>('smartDashesType', smartDashesType,
+          defaultValue:
+              obscureText ? SmartDashesType.disabled : SmartDashesType.enabled))
+      ..add(EnumProperty<SmartQuotesType>('smartQuotesType', smartQuotesType,
+          defaultValue:
+              obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled))
+      ..add(DiagnosticsProperty<bool>('enableSuggestions', enableSuggestions,
+          defaultValue: true))
+      ..add(IntProperty('maxLines', maxLines, defaultValue: 1))
+      ..add(IntProperty('minLines', minLines, defaultValue: null))
+      ..add(DiagnosticsProperty<bool>('expands', expands, defaultValue: false))
+      ..add(IntProperty('maxLength', maxLength, defaultValue: null))
+      ..add(FlagProperty('maxLengthEnforced',
+          value: maxLengthEnforced, ifTrue: 'max length enforced'))
+      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0))
+      ..add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null))
+      ..add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
+          defaultValue: null))
+      ..add(FlagProperty(
+        'selectionEnabled',
+        value: selectionEnabled,
+        defaultValue: true,
+        ifFalse: 'selection disabled',
+      ))
+      ..add(DiagnosticsProperty<ScrollController>(
+        'scrollController',
+        scrollController,
+        defaultValue: null,
+      ))
+      ..add(DiagnosticsProperty<ScrollPhysics>(
+        'scrollPhysics',
+        scrollPhysics,
+        defaultValue: null,
+      ))
+      ..add(EnumProperty<TextAlign>('textAlign', textAlign,
+          defaultValue: TextAlign.start))
+      ..add(DiagnosticsProperty<TextAlignVertical>(
+        'textAlignVertical',
+        textAlignVertical,
+        defaultValue: null,
+      ));
   }
 }
 
@@ -585,7 +555,11 @@ class _TextBoxState extends State<TextBox>
         return Row(children: <Widget>[
           if (_showPrefixWidget(text)) widget.prefix!,
           Expanded(child: result),
-          if (_showSuffixWidget(text)) widget.suffix!,
+          if (_showSuffixWidget(text))
+            Padding(
+              padding: EdgeInsets.all(4.0),
+              child: widget.suffix!,
+            ),
         ]);
       },
     );
@@ -596,6 +570,7 @@ class _TextBoxState extends State<TextBox>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
+    final ThemeData theme = FluentTheme.of(context);
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -605,55 +580,27 @@ class _TextBoxState extends State<TextBox>
     }
 
     final TextStyle textStyle = TextStyle(
-      color: FluentTheme.of(context).inactiveColor,
+      color: enabled ? theme.inactiveColor : theme.disabledColor,
     );
 
     final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? FluentTheme.of(context).brightness;
-    final Color cursorColor = FluentTheme.of(context).inactiveColor;
-    final Color disabledColor = FluentTheme.of(context).disabledColor;
-    final Color? decorationColor = widget.decoration.color;
+        widget.keyboardAppearance ?? theme.brightness;
+    final Color cursorColor = theme.inactiveColor;
+    final Color disabledColor = theme.disabledColor;
+    final Color backgroundColor = _effectiveFocusNode.hasFocus
+        ? theme.scaffoldBackgroundColor
+        : AccentColor('normal', {
+            'normal': Colors.white,
+            'dark': Color(0xFF2d2d2d),
+          }).resolve(context);
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: !enabled
-              ? (decorationColor ?? disabledColor).basedOnLuminance()
-              : disabledColor,
+          color: !enabled ? backgroundColor.basedOnLuminance() : disabledColor,
           fontWeight: FontWeight.w400,
         );
 
-    final BoxBorder? border = widget.decoration.border;
-    Border? resolvedBorder = border as Border?;
-    if (border is Border) {
-      BorderSide resolveBorderSide(BorderSide side) {
-        return side == BorderSide.none
-            ? side
-            : side.copyWith(
-                style: enabled ? BorderStyle.solid : BorderStyle.none,
-                width: (showActiveBorder ? 1 : null),
-                color: (showActiveBorder
-                    ? FluentTheme.of(context).accentColor
-                    : FluentTheme.of(context).inactiveColor),
-              );
-      }
-
-      resolvedBorder = border.runtimeType != Border
-          ? border
-          : Border(
-              top: resolveBorderSide(border.top),
-              left: resolveBorderSide(border.left),
-              bottom: resolveBorderSide(border.bottom),
-              right: resolveBorderSide(border.right),
-            );
-    }
-
-    final BoxDecoration effectiveDecoration = widget.decoration.copyWith(
-      border: resolvedBorder,
-      color: enabled ? decorationColor : (decorationColor ?? disabledColor),
-    );
-
-    final Color selectionColor =
-        FluentTheme.of(context).accentColor.withOpacity(0.2);
+    final Color selectionColor = theme.accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -716,6 +663,7 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
+    final radius = BorderRadius.circular(4.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
@@ -730,9 +678,23 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: FluentTheme.of(context).mediumAnimationDuration,
-          curve: FluentTheme.of(context).animationCurve,
-          decoration: effectiveDecoration,
+          duration: theme.fasterAnimationDuration,
+          curve: theme.animationCurve,
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(width: 0.3, color: theme.disabledColor),
+            color: backgroundColor,
+          ),
+          foregroundDecoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: _effectiveFocusNode.hasFocus
+                    ? theme.accentColor
+                    : theme.inactiveColor.withOpacity(0.6),
+                width: _effectiveFocusNode.hasFocus ? 2 : 0.8,
+              ),
+            ),
+          ),
           constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
           child: _selectionGestureDetectorBuilder.buildGestureDetector(
             behavior: HitTestBehavior.translucent,
@@ -753,12 +715,22 @@ class _TextBoxState extends State<TextBox>
 
     Widget listener = ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
-      builder: (context, text, _) {
+      child: () {
+        /// This has to be done this way because [ClipRRect] doesn't allow
+        /// [Clip.none] as a value to [clipBehavior]
+        if (widget.clipBehavior == Clip.none) return child;
+        return ClipRRect(
+          clipBehavior: widget.clipBehavior,
+          borderRadius: radius,
+          child: child,
+        );
+      }(),
+      builder: (context, text, child) {
         if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text))
-          return child;
+          return child!;
         return Row(children: [
           if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-          Expanded(child: child),
+          Expanded(child: child!),
           if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
         ]);
       },
@@ -767,7 +739,7 @@ class _TextBoxState extends State<TextBox>
     return ButtonTheme.merge(
       data: widget.iconButtonThemeData ?? ButtonThemeData(),
       child: IconTheme.merge(
-        data: const IconThemeData(size: 18),
+        data: const IconThemeData(size: 14),
         child: () {
           if (widget.header != null)
             return InfoLabel(

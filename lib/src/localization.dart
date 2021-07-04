@@ -10,6 +10,9 @@ abstract class FluentLocalizations {
   /// Label for "close" buttons and menu items.
   String get closeButtonLabel;
 
+  /// Label for "search" text fields.
+  String get searchLabel;
+
   /// The tooltip for the back button on [NavigationAppBar].
   String get backButtonTooltip;
 
@@ -88,6 +91,9 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   @override
   String get closeButtonLabel => 'Close';
+
+  @override
+  String get searchLabel => 'Search';
 
   @override
   String get closeNavigationTooltip => 'Close Navigation';
