@@ -53,6 +53,7 @@ class TextBox extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.padding = kTextBoxPadding,
+    this.clipBehavior = Clip.antiAlias,
     this.placeholder,
     this.placeholderStyle,
     this.prefix,
@@ -152,6 +153,8 @@ class TextBox extends StatefulWidget {
   final FocusNode? focusNode;
 
   final EdgeInsetsGeometry padding;
+
+  final Clip clipBehavior;
 
   final String? placeholder;
   final TextStyle? placeholderStyle;
@@ -552,7 +555,11 @@ class _TextBoxState extends State<TextBox>
         return Row(children: <Widget>[
           if (_showPrefixWidget(text)) widget.prefix!,
           Expanded(child: result),
-          if (_showSuffixWidget(text)) widget.suffix!,
+          if (_showSuffixWidget(text))
+            Padding(
+              padding: EdgeInsets.all(4.0),
+              child: widget.suffix!,
+            ),
         ]);
       },
     );
@@ -656,7 +663,7 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    final radius = BorderRadius.circular(6.0);
+    final radius = BorderRadius.circular(4.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
@@ -670,33 +677,35 @@ class _TextBoxState extends State<TextBox>
             },
       child: IgnorePointer(
         ignoring: !enabled,
-        child: ClipRRect(
-          borderRadius: radius,
-          child: AnimatedContainer(
-            duration: theme.fasterAnimationDuration,
-            curve: theme.animationCurve,
-            decoration: BoxDecoration(
-              borderRadius: radius,
-              border: Border.all(width: 0.3, color: theme.disabledColor),
-              color: backgroundColor,
-            ),
-            foregroundDecoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: theme.accentColor, width: 3.0),
+        child: AnimatedContainer(
+          duration: theme.fasterAnimationDuration,
+          curve: theme.animationCurve,
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(width: 0.3, color: theme.disabledColor),
+            color: backgroundColor,
+          ),
+          foregroundDecoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: _effectiveFocusNode.hasFocus
+                    ? theme.accentColor
+                    : theme.inactiveColor.withOpacity(0.6),
+                width: _effectiveFocusNode.hasFocus ? 2.5 : 0.8,
               ),
             ),
-            constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
-            child: _selectionGestureDetectorBuilder.buildGestureDetector(
-              behavior: HitTestBehavior.translucent,
-              child: Align(
-                alignment: Alignment(-1.0, _textAlignVertical.y),
-                widthFactor: 1.0,
-                heightFactor: 1.0,
-                child: _addTextDependentAttachments(
-                  paddedEditable,
-                  textStyle,
-                  placeholderStyle,
-                ),
+          ),
+          constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
+          child: _selectionGestureDetectorBuilder.buildGestureDetector(
+            behavior: HitTestBehavior.translucent,
+            child: Align(
+              alignment: Alignment(-1.0, _textAlignVertical.y),
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: _addTextDependentAttachments(
+                paddedEditable,
+                textStyle,
+                placeholderStyle,
               ),
             ),
           ),
@@ -706,12 +715,22 @@ class _TextBoxState extends State<TextBox>
 
     Widget listener = ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
-      builder: (context, text, _) {
+      child: () {
+        /// This has to be done this way because [ClipRRect] doesn't allow
+        /// [Clip.none] as a value to [clipBehavior]
+        if (widget.clipBehavior == Clip.none) return child;
+        return ClipRRect(
+          clipBehavior: widget.clipBehavior,
+          borderRadius: radius,
+          child: child,
+        );
+      }(),
+      builder: (context, text, child) {
         if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text))
-          return child;
+          return child!;
         return Row(children: [
           if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-          Expanded(child: child),
+          Expanded(child: child!),
           if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
         ]);
       },
