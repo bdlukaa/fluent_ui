@@ -608,36 +608,6 @@ class _TextBoxState extends State<TextBox>
           fontWeight: FontWeight.w400,
         );
 
-    final BoxBorder? border = widget.decoration.border;
-    Border? resolvedBorder = border as Border?;
-    if (border is Border) {
-      BorderSide resolveBorderSide(BorderSide side) {
-        return side == BorderSide.none
-            ? side
-            : side.copyWith(
-                style: enabled ? BorderStyle.solid : BorderStyle.none,
-                width: (showActiveBorder ? 1 : null),
-                color: (showActiveBorder
-                    ? FluentTheme.of(context).accentColor
-                    : FluentTheme.of(context).inactiveColor),
-              );
-      }
-
-      resolvedBorder = border.runtimeType != Border
-          ? border
-          : Border(
-              top: resolveBorderSide(border.top),
-              left: resolveBorderSide(border.left),
-              bottom: resolveBorderSide(border.bottom),
-              right: resolveBorderSide(border.right),
-            );
-    }
-
-    final BoxDecoration effectiveDecoration = widget.decoration.copyWith(
-      border: resolvedBorder,
-      color: enabled ? decorationColor : (decorationColor ?? disabledColor),
-    );
-
     final Color selectionColor =
         FluentTheme.of(context).accentColor.withOpacity(0.2);
 
@@ -702,6 +672,7 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
+    final radius = BorderRadius.circular(6.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
@@ -715,21 +686,40 @@ class _TextBoxState extends State<TextBox>
             },
       child: IgnorePointer(
         ignoring: !enabled,
-        child: AnimatedContainer(
-          duration: FluentTheme.of(context).mediumAnimationDuration,
-          curve: FluentTheme.of(context).animationCurve,
-          decoration: effectiveDecoration,
-          constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
-          child: _selectionGestureDetectorBuilder.buildGestureDetector(
-            behavior: HitTestBehavior.translucent,
-            child: Align(
-              alignment: Alignment(-1.0, _textAlignVertical.y),
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: _addTextDependentAttachments(
-                paddedEditable,
-                textStyle,
-                placeholderStyle,
+        child: ClipRRect(
+          borderRadius: radius,
+          child: AnimatedContainer(
+            duration: FluentTheme.of(context).mediumAnimationDuration,
+            curve: FluentTheme.of(context).animationCurve,
+            // decoration: effectiveDecoration,
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              border: Border.all(
+                width: 0.2,
+                color: FluentTheme.of(context).disabledColor,
+              ),
+              color: FluentTheme.of(context).scaffoldBackgroundColor,
+            ),
+            foregroundDecoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: FluentTheme.of(context).accentColor,
+                  width: 3.0,
+                ),
+              ),
+            ),
+            constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
+            child: _selectionGestureDetectorBuilder.buildGestureDetector(
+              behavior: HitTestBehavior.translucent,
+              child: Align(
+                alignment: Alignment(-1.0, _textAlignVertical.y),
+                widthFactor: 1.0,
+                heightFactor: 1.0,
+                child: _addTextDependentAttachments(
+                  paddedEditable,
+                  textStyle,
+                  placeholderStyle,
+                ),
               ),
             ),
           ),
