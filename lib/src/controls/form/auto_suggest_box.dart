@@ -99,7 +99,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     FocusNode focusNode,
     GlobalKey key,
   ) {
-    // assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasFluentLocalizations(context));
     final FluentLocalizations localizations = FluentLocalizations.of(context);
     return TextBox(
       key: key,
