@@ -25,7 +25,6 @@ abstract class FluentLocalizations {
   /// The tooltip for the "Click to Search" button.
   String get clickToSearch;
 
-
   /// Label read out by accessibility tools (TalkBack or VoiceOver) for a modal
   /// barrier to indicate that a tap dismisses the barrier.
   ///
