@@ -691,7 +691,7 @@ class _TextBoxState extends State<TextBox>
                 color: _effectiveFocusNode.hasFocus
                     ? theme.accentColor
                     : theme.inactiveColor.withOpacity(0.6),
-                width: _effectiveFocusNode.hasFocus ? 2.5 : 0.8,
+                width: _effectiveFocusNode.hasFocus ? 2 : 0.8,
               ),
             ),
           ),
