@@ -72,7 +72,7 @@ class _FormsState extends State<Forms> {
                     placeholder: 'Type a color',
                     clipBehavior: focusNode.hasFocus
                         ? Clip.none
-                        : Clip.antiAliasWithSaveLayer,
+                        : Clip.antiAlias,
                   );
                 },
               ),
