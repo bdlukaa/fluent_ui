@@ -48,7 +48,7 @@ class RadioButton extends StatelessWidget {
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
-  /// {@macro flutter.widgets.Focus.autofocus}
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
   /// {@macro flutter.widgets.Focus.autofocus}
@@ -57,16 +57,14 @@ class RadioButton extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      FlagProperty('checked', value: checked, ifFalse: 'unchecked'),
-    );
-    properties.add(
-      FlagProperty('disabled', value: onChanged == null, ifFalse: 'enabled'),
-    );
-    properties.add(ObjectFlagProperty.has('style', style));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(FlagProperty('disabled',
+          value: onChanged == null, ifFalse: 'enabled'))
+      ..add(ObjectFlagProperty.has('style', style))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(StringProperty('semanticLabel', semanticLabel));
   }
 
   @override
@@ -85,7 +83,7 @@ class RadioButton extends StatelessWidget {
                 : style.uncheckedDecoration?.resolve(state)) ??
             BoxDecoration(shape: BoxShape.circle);
         Widget child = AnimatedContainer(
-          duration: FluentTheme.of(context).mediumAnimationDuration,
+          duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
@@ -96,7 +94,7 @@ class RadioButton extends StatelessWidget {
           /// way, the inner color will only be rendered within the
           /// bounds of the border.
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).mediumAnimationDuration,
+            duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
               color: decoration.color ?? Colors.transparent,
@@ -195,31 +193,33 @@ class RadioButtonThemeData with Diagnosticable {
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
       cursor: style.inputMouseCursor,
-      checkedDecoration: ButtonState.resolveWith(
-        (states) => BoxDecoration(
+      checkedDecoration: ButtonState.resolveWith((states) {
+        return BoxDecoration(
           border: Border.all(
-            color: ButtonThemeData.checkedInputColor(style, states),
-            width: 4.5,
+            color: style.accentColor.light,
+            width: states.isHovering && !states.isPressing ? 3.4 : 5.0,
           ),
           shape: BoxShape.circle,
-          color: Colors.white,
-        ),
-      ),
-      uncheckedDecoration: ButtonState.resolveWith(
-        (states) => BoxDecoration(
-          color: ButtonThemeData.uncheckedInputColor(style, states),
+          color: style.brightness.isLight ? Colors.white : Colors.black,
+        );
+      }),
+      uncheckedDecoration: ButtonState.resolveWith((states) {
+        final backgroundColor = style.inactiveBackgroundColor;
+        return BoxDecoration(
+          color: states.isPressing
+              ? backgroundColor
+              : states.isHovering
+                  ? backgroundColor.withOpacity(0.8)
+                  : backgroundColor.withOpacity(0.0),
           border: Border.all(
-            style: states.isNone || states.isFocused
-                ? BorderStyle.solid
-                : BorderStyle.none,
-            width: 1,
-            color: states.isNone || states.isFocused
-                ? style.disabledColor
-                : ButtonThemeData.uncheckedInputColor(style, states),
+            width: states.isPressing ? 4.5 : 1,
+            color: states.isPressing
+                ? style.accentColor
+                : style.inactiveColor.withOpacity(0.5),
           ),
           shape: BoxShape.circle,
-        ),
-      ),
+        );
+      }),
     );
   }
 
