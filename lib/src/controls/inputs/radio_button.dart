@@ -20,10 +20,15 @@ import 'package:flutter/rendering.dart';
 /// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
 ///
 /// See also:
-///   - [ToggleSwitch]
-///   - [Checkbox]
-///   - [ToggleButton]
+///
+///   * [Slider], which let the user lie within a range of values,
+///     (for example, 10, 20, 30, ... 100).
+///   * [Checkbox], which let the user select multiple options.
+///   * [ComboBox], which let the user select multiple options, when
+///     there's more than eight options.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
+  /// Creates a radio button.
   const RadioButton({
     Key? key,
     required this.checked,
@@ -35,17 +40,31 @@ class RadioButton extends StatelessWidget {
     this.autofocus = false,
   }) : super(key: key);
 
-  /// Whether the button is checked of not
+  /// Whether this radio button is checked.
   final bool checked;
 
-  /// Called when the value of the button is changed.
-  /// If this is `null`, the button is considered disabled
+  /// Called when the value of the radio button should change.
+  ///
+  /// The radio button passes the new value to the callback but does
+  /// not actually change state until the parent widget rebuilds the
+  /// radio button with the new value.
+  ///
+  /// If this callback is null, the radio button will be displayed as
+  /// disabled and will not respond to input gestures.
   final ValueChanged<bool>? onChanged;
 
-  /// The style of the button. If non-null, this is merged
-  /// with [ThemeData.radioButtonThemeData]
+  /// The style of the radio buttonbutton.
+  ///
+  /// If non-null, this is merged with the closest [RadioButtonTheme].
+  /// If null, the closest [RadioButtonTheme] is used.
   final RadioButtonThemeData? style;
 
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the radio button,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
   final Widget? content;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
@@ -78,7 +97,6 @@ class RadioButton extends StatelessWidget {
       cursor: style.cursor,
       autofocus: autofocus,
       focusNode: focusNode,
-      semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         final BoxDecoration decoration = (checked
@@ -113,6 +131,7 @@ class RadioButton extends StatelessWidget {
           ]);
         }
         return Semantics(
+          label: semanticLabel,
           selected: checked,
           child: FocusBorder(focused: state.isFocused, child: child),
         );
