@@ -20,35 +20,57 @@ import 'package:flutter/rendering.dart';
 /// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
 ///
 /// See also:
-///   - [ToggleSwitch]
-///   - [Checkbox]
-///   - [ToggleButton]
+///
+///   * [Slider], which let the user lie within a range of values,
+///     (for example, 10, 20, 30, ... 100).
+///   * [Checkbox], which let the user select multiple options.
+///   * [ComboBox], which let the user select multiple options, when
+///     there's more than eight options.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
+  /// Creates a radio button.
   const RadioButton({
     Key? key,
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
 
-  /// Whether the button is checked of not
+  /// Whether this radio button is checked.
   final bool checked;
 
-  /// Called when the value of the button is changed.
-  /// If this is `null`, the button is considered disabled
+  /// Called when the value of the radio button should change.
+  ///
+  /// The radio button passes the new value to the callback but does
+  /// not actually change state until the parent widget rebuilds the
+  /// radio button with the new value.
+  ///
+  /// If this callback is null, the radio button will be displayed as
+  /// disabled and will not respond to input gestures.
   final ValueChanged<bool>? onChanged;
 
-  /// The style of the button. If non-null, this is merged
-  /// with [ThemeData.radioButtonThemeData]
+  /// The style of the radio buttonbutton.
+  ///
+  /// If non-null, this is merged with the closest [RadioButtonTheme].
+  /// If null, the closest [RadioButtonTheme] is used.
   final RadioButtonThemeData? style;
+
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the radio button,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
+  final Widget? content;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
-  /// {@macro flutter.widgets.Focus.autofocus}
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
   /// {@macro flutter.widgets.Focus.autofocus}
@@ -57,16 +79,14 @@ class RadioButton extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      FlagProperty('checked', value: checked, ifFalse: 'unchecked'),
-    );
-    properties.add(
-      FlagProperty('disabled', value: onChanged == null, ifFalse: 'enabled'),
-    );
-    properties.add(ObjectFlagProperty.has('style', style));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(FlagProperty('disabled',
+          value: onChanged == null, ifFalse: 'enabled'))
+      ..add(ObjectFlagProperty.has('style', style))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(StringProperty('semanticLabel', semanticLabel));
   }
 
   @override
@@ -77,7 +97,6 @@ class RadioButton extends StatelessWidget {
       cursor: style.cursor,
       autofocus: autofocus,
       focusNode: focusNode,
-      semanticLabel: semanticLabel,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
         final BoxDecoration decoration = (checked
@@ -85,7 +104,7 @@ class RadioButton extends StatelessWidget {
                 : style.uncheckedDecoration?.resolve(state)) ??
             BoxDecoration(shape: BoxShape.circle);
         Widget child = AnimatedContainer(
-          duration: FluentTheme.of(context).mediumAnimationDuration,
+          duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           height: 20,
           width: 20,
@@ -96,7 +115,7 @@ class RadioButton extends StatelessWidget {
           /// way, the inner color will only be rendered within the
           /// bounds of the border.
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).mediumAnimationDuration,
+            duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: BoxDecoration(
               color: decoration.color ?? Colors.transparent,
@@ -104,12 +123,17 @@ class RadioButton extends StatelessWidget {
             ),
           ),
         );
+        if (content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            content!,
+          ]);
+        }
         return Semantics(
-          child: FocusBorder(
-            focused: state.isFocused,
-            child: child,
-          ),
+          label: semanticLabel,
           selected: checked,
+          child: FocusBorder(focused: state.isFocused, child: child),
         );
       },
     );
@@ -194,32 +218,34 @@ class RadioButtonThemeData with Diagnosticable {
 
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
-      cursor: style.inputMouseCursor,
-      checkedDecoration: ButtonState.resolveWith(
-        (states) => BoxDecoration(
+      cursor: ButtonState.all(MouseCursor.defer),
+      checkedDecoration: ButtonState.resolveWith((states) {
+        return BoxDecoration(
           border: Border.all(
-            color: ButtonThemeData.checkedInputColor(style, states),
-            width: 4.5,
+            color: style.accentColor.light,
+            width: states.isHovering && !states.isPressing ? 3.4 : 5.0,
           ),
           shape: BoxShape.circle,
-          color: Colors.white,
-        ),
-      ),
-      uncheckedDecoration: ButtonState.resolveWith(
-        (states) => BoxDecoration(
-          color: ButtonThemeData.uncheckedInputColor(style, states),
+          color: style.brightness.isLight ? Colors.white : Colors.black,
+        );
+      }),
+      uncheckedDecoration: ButtonState.resolveWith((states) {
+        final backgroundColor = style.inactiveBackgroundColor;
+        return BoxDecoration(
+          color: states.isPressing
+              ? backgroundColor
+              : states.isHovering
+                  ? backgroundColor.withOpacity(0.8)
+                  : backgroundColor.withOpacity(0.0),
           border: Border.all(
-            style: states.isNone || states.isFocused
-                ? BorderStyle.solid
-                : BorderStyle.none,
-            width: 1,
-            color: states.isNone || states.isFocused
-                ? style.disabledColor
-                : ButtonThemeData.uncheckedInputColor(style, states),
+            width: states.isPressing ? 4.5 : 1,
+            color: states.isPressing
+                ? style.accentColor
+                : style.inactiveColor.withOpacity(0.5),
           ),
           shape: BoxShape.circle,
-        ),
-      ),
+        );
+      }),
     );
   }
 

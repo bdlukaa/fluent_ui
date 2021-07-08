@@ -814,12 +814,12 @@ The singular behavior of a RadioButtons group distinguishes it from check boxes,
 
 [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button)
 
-### Example
+Here's an example of how to create a basic set of radio buttons:
 
 ```dart
 int _currentIndex = -1;
 
-final radioButtons = [
+final List<String> radioButtons = <String>[
   'RadioButton 1',
   'RadioButton 2',
   'RadioButton 3',
@@ -827,15 +827,12 @@ final radioButtons = [
 
 Column(
   children: List.generate(radioButtons.length, (index) {
-    return Row(children: [
-      RadioButton(
-        selected: _currentIndex == index,
-        // set onChanged to null to disable the button
-        onChanged: () => setState(() => _currentIndex = index),
-      ),
-      SizedBox(width: 4),
-      Text(radioButtons[index])
-    ]);
+    return RadioButton(
+      checked: _currentIndex == index,
+      // set onChanged to null to disable the button
+      onChanged: () => setState(() => _currentIndex = index),
+      content: Text(radioButtons[index]),
+    );
   }),
 ),
 ```
@@ -843,16 +840,6 @@ Column(
 The code above produces the following:
 
 ![Radio Buttons](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
-
-- [Is this the right control for you?](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/radio-button#is-this-the-right-control)
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-default-group.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-symbolicon.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobuttons-multi-column.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radio-button-groups.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/radiobutton-layout.png)
 
 ## Slider
 
