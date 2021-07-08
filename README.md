@@ -1373,7 +1373,6 @@ You can create the following variations of a `ListTile`:
 
 - CheckboxListTile: a `TappableListTile` with a `Checkbox` in the leading.
 - SwitchListTile: a `TappableListTile` with a `ToggleSwitch` in the leading.
-- RadioListTile: a `TappableListTile` with a `RadioButton` in the leading.
 
 They share a single pattern. Here's how to implement the following image:
 
@@ -1546,7 +1545,6 @@ The list of equivalents between this library and `flutter/material.dart`
 | VerticalDivider           | Divider          |
 | Material                  | Acrylic          |
 | ListTile                  | ListTile         |
-| RadioListTile             | RadioListTile    |
 | CheckboxListTile          | CheckboxListTile |
 | SwitchListTile            | SwitchListTile   |
 | LinearProgressIndicator   | ProgressBar      |
