@@ -29,6 +29,7 @@ class RadioButton extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
@@ -44,6 +45,8 @@ class RadioButton extends StatelessWidget {
   /// The style of the button. If non-null, this is merged
   /// with [ThemeData.radioButtonThemeData]
   final RadioButtonThemeData? style;
+
+  final Widget? content;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
@@ -102,12 +105,16 @@ class RadioButton extends StatelessWidget {
             ),
           ),
         );
+        if (content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            content!,
+          ]);
+        }
         return Semantics(
-          child: FocusBorder(
-            focused: state.isFocused,
-            child: child,
-          ),
           selected: checked,
+          child: FocusBorder(focused: state.isFocused, child: child),
         );
       },
     );
@@ -192,7 +199,7 @@ class RadioButtonThemeData with Diagnosticable {
 
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
-      cursor: style.inputMouseCursor,
+      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(

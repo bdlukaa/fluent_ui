@@ -76,6 +76,12 @@ class _InputsPageState extends State<InputsPage> {
                           onChanged: disabled
                               ? null
                               : (v) => setState(() => value = v),
+                          content: Text(
+                            'Radio Button ${value ? 'on' : 'off'}',
+                            style: TextStyle(
+                              color: FluentTheme.of(context).inactiveColor,
+                            ),
+                          ),
                         ),
                         spacer,
                         ToggleButton(
