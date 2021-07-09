@@ -221,19 +221,19 @@ class ButtonThemeData with Diagnosticable {
     late Color color;
     if (brightness == Brightness.light) {
       if (states.isPressing)
-        color = Colors.grey[70];
+        color = Color(0xFFf2f2f2);
       else if (states.isHovering)
-        color = Colors.grey[40];
+        color = Color(0xFFF6F6F6);
       else
-        color = Color(0xFFcccccc);
+        color = Colors.white;
       return color;
     } else {
       if (states.isPressing) {
-        color = Color(0xFF666666);
+        color = Color(0xFF272727);
       } else if (states.isHovering)
-        color = Colors.grey[170];
+        color = Color(0xFF323232);
       else {
-        color = Color(0xFF333333);
+        color = Color(0xFF2b2b2b);
       }
       return color;
     }
