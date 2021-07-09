@@ -159,7 +159,6 @@ class ToggleButtonThemeData with Diagnosticable {
     const padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        zFactor: ButtonState.all(kDefaultButtonZFactor),
         cursor: style.inputMouseCursor,
         shape: ButtonState.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),
@@ -170,7 +169,6 @@ class ToggleButtonThemeData with Diagnosticable {
         padding: ButtonState.all(padding),
       ),
       uncheckedButtonStyle: ButtonStyle(
-        zFactor: ButtonState.all(kDefaultButtonZFactor),
         cursor: style.inputMouseCursor,
         shape: ButtonState.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),

@@ -1,7 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const kDefaultButtonZFactor = 0.95;
-
 class Button extends BaseButton {
   const Button({
     Key? key,
@@ -27,9 +25,6 @@ class Button extends BaseButton {
     final theme = FluentTheme.of(context);
     return ButtonStyle(
       cursor: theme.inputMouseCursor,
-      zFactor: ButtonState.resolveWith((states) {
-        if (states.isPressing) return kDefaultButtonZFactor;
-      }),
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 12.0,
         vertical: 8.0,

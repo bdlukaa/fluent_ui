@@ -15,7 +15,6 @@ class ButtonStyle with Diagnosticable {
     this.border,
     this.shape,
     this.cursor,
-    this.zFactor,
   });
 
   final ButtonState<TextStyle?>? textStyle;
@@ -36,8 +35,6 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<MouseCursor?>? cursor;
 
-  final ButtonState<double?>? zFactor;
-
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
     return ButtonStyle(
@@ -50,7 +47,6 @@ class ButtonStyle with Diagnosticable {
       border: other.border ?? border,
       shape: other.shape ?? shape,
       cursor: other.cursor ?? cursor,
-      zFactor: other.zFactor ?? zFactor,
     );
   }
 
@@ -76,7 +72,6 @@ class ButtonStyle with Diagnosticable {
       shape: ButtonState.lerp(a?.shape, b?.shape, t, (a, b, t) {
         return ShapeBorder.lerp(a, b, t) as OutlinedBorder;
       }),
-      zFactor: ButtonState.lerp(a?.zFactor, b?.zFactor, t, lerpDouble),
     );
   }
 }

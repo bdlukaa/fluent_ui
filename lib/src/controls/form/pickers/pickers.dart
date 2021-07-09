@@ -77,7 +77,6 @@ class YesNoPickerControl extends StatelessWidget {
         shape: ButtonState.all(RoundedRectangleBorder(
           borderRadius: radius,
         )),
-        zFactor: ButtonState.all(1.0),
       );
     }
 
@@ -135,7 +134,6 @@ class PickerNavigatorIndicator extends StatelessWidget {
         return ButtonTheme.merge(
           data: ButtonThemeData.all(ButtonStyle(
             padding: ButtonState.all(EdgeInsets.all(2.0)),
-            zFactor: ButtonState.all(1.0),
           )),
           child: FocusTheme(
             data: FocusThemeData(renderOutside: false),
