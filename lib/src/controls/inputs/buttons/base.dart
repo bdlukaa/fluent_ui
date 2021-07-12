@@ -76,8 +76,6 @@ abstract class BaseButton extends StatefulWidget {
 }
 
 class _BaseButtonState extends State<BaseButton> {
-  double _scaleFactor = 1.0;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -94,10 +92,6 @@ class _BaseButtonState extends State<BaseButton> {
       return widgetValue ?? themeValue ?? defaultValue;
     }
 
-    final double zFactor = effectiveValue<double?>((ButtonStyle? style) =>
-            style?.zFactor?.resolve({ButtonStates.pressing})) ??
-        1.0;
-
     final Widget result = HoverButton(
       onLongPress: widget.onLongPress,
       autofocus: widget.autofocus,
@@ -107,29 +101,7 @@ class _BaseButtonState extends State<BaseButton> {
                 (style) => style?.cursor?.resolve(states)) ??
             MouseCursor.defer;
       }),
-      onTapDown: !widget.enabled
-          ? null
-          : () {
-              if (mounted) setState(() => _scaleFactor = zFactor);
-            },
-      onLongPressStart: !widget.enabled
-          ? null
-          : () {
-              if (mounted) setState(() => _scaleFactor = zFactor);
-            },
-      onLongPressEnd: !widget.enabled
-          ? null
-          : () {
-              if (mounted) setState(() => _scaleFactor = 1);
-            },
-      onPressed: !widget.enabled
-          ? null
-          : () async {
-              widget.onPressed!();
-              if (mounted) setState(() => _scaleFactor = zFactor);
-              await Future.delayed(Duration(milliseconds: 120));
-              if (mounted) setState(() => _scaleFactor = 1);
-            },
+      onPressed: widget.onPressed,
       builder: (context, states) {
         T? resolve<T>(
             ButtonState<T>? Function(ButtonStyle? style) getProperty) {
@@ -167,10 +139,13 @@ class _BaseButtonState extends State<BaseButton> {
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? const Color(4278190080),
           elevation: resolvedElevation ?? 0.0,
+          borderRadius: resolvedShape is RoundedRectangleBorder
+              ? resolvedShape.borderRadius is BorderRadius
+                  ? resolvedShape.borderRadius as BorderRadius
+                  : BorderRadius.zero
+              : BorderRadius.zero,
           child: AnimatedContainer(
-            transformAlignment: Alignment.center,
-            transform: Matrix4.diagonal3Values(_scaleFactor, _scaleFactor, 1.0),
-            duration: FluentTheme.of(context).fastAnimationDuration,
+            duration: FluentTheme.of(context).fasterAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: ShapeDecoration(
               shape: resolvedShape.copyWith(side: resolvedBorder),

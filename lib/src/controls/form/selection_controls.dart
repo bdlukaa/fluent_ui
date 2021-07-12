@@ -392,7 +392,6 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
           },
         ),
         padding: ButtonState.all(EdgeInsets.zero),
-        zFactor: ButtonState.all(1),
       ),
       onPressed: onPressed,
       child: Container(

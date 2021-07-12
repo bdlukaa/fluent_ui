@@ -622,13 +622,14 @@ Inputs are widgets that reacts to user interection. On most of the inputs you ca
 
 ## Button
 
-A button gives the user a way to trigger an immediate action. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons)
+A button gives the user a way to trigger an immediate action. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons)
 
 Here's an example of how to create a basic button:
 
 ```dart
 Button(
-  text: Text('Button'),
+  text: Text('Standard XAML button'),
+  // Set onPressed to null to disable the button
   onPressed: () {
     print('button pressed'),
   }
@@ -637,7 +638,7 @@ Button(
 
 The code above produces the following:
 
-![Button](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/button.png)
+![Button](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/button.png)
 
 You can also use some alternative buttons:
 
@@ -1373,7 +1374,6 @@ You can create the following variations of a `ListTile`:
 
 - CheckboxListTile: a `TappableListTile` with a `Checkbox` in the leading.
 - SwitchListTile: a `TappableListTile` with a `ToggleSwitch` in the leading.
-- RadioListTile: a `TappableListTile` with a `RadioButton` in the leading.
 
 They share a single pattern. Here's how to implement the following image:
 
@@ -1546,7 +1546,6 @@ The list of equivalents between this library and `flutter/material.dart`
 | VerticalDivider           | Divider          |
 | Material                  | Acrylic          |
 | ListTile                  | ListTile         |
-| RadioListTile             | RadioListTile    |
 | CheckboxListTile          | CheckboxListTile |
 | SwitchListTile            | SwitchListTile   |
 | LinearProgressIndicator   | ProgressBar      |

@@ -142,12 +142,6 @@ class _OthersState extends State<Others> {
               title: Text('SwitchListTile title'),
               subtitle: Text('SwitchListTile subtitle'),
             ),
-            RadioListTile(
-              checked: checked,
-              onChanged: (v) => setState(() => checked = v),
-              title: Text('RadioListTile title'),
-              subtitle: Text('RadioListTile subtitle'),
-            ),
           ]),
           Row(children: [
             Container(

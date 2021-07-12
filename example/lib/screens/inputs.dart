@@ -51,7 +51,7 @@ class _InputsPageState extends State<InputsPage> {
           child: Wrap(spacing: 10, runSpacing: 10, children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Acrylic(
+              child: Mica(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InfoLabel(
@@ -99,7 +99,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             _buildButtons(),
             _buildSliders(),
-            Acrylic(
+            Mica(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Flyout(
@@ -133,7 +133,7 @@ class _InputsPageState extends State<InputsPage> {
 
   Widget _buildButtons() {
     const double splitButtonHeight = 50.0;
-    return Acrylic(
+    return Mica(
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: InfoLabel(
@@ -161,7 +161,6 @@ class _InputsPageState extends State<InputsPage> {
                             ),
                             Button(
                               child: Text('Cancel'),
-                              autofocus: true,
                               onPressed: () => Navigator.pop(context),
                             ),
                           ],
@@ -236,7 +235,7 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildSliders() {
-    return Acrylic(
+    return Mica(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: InfoLabel(

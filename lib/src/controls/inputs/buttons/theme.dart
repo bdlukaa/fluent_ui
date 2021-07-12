@@ -15,7 +15,6 @@ class ButtonStyle with Diagnosticable {
     this.border,
     this.shape,
     this.cursor,
-    this.zFactor,
   });
 
   final ButtonState<TextStyle?>? textStyle;
@@ -36,8 +35,6 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<MouseCursor?>? cursor;
 
-  final ButtonState<double?>? zFactor;
-
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
     return ButtonStyle(
@@ -50,7 +47,6 @@ class ButtonStyle with Diagnosticable {
       border: other.border ?? border,
       shape: other.shape ?? shape,
       cursor: other.cursor ?? cursor,
-      zFactor: other.zFactor ?? zFactor,
     );
   }
 
@@ -76,7 +72,6 @@ class ButtonStyle with Diagnosticable {
       shape: ButtonState.lerp(a?.shape, b?.shape, t, (a, b, t) {
         return ShapeBorder.lerp(a, b, t) as OutlinedBorder;
       }),
-      zFactor: ButtonState.lerp(a?.zFactor, b?.zFactor, t, lerpDouble),
     );
   }
 }
@@ -193,24 +188,17 @@ class ButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonStyle>(
-      'outlinedButtonStyle',
-      outlinedButtonStyle,
-    ));
-    properties.add(DiagnosticsProperty<ButtonStyle>(
-      'filledButtonStyle',
-      filledButtonStyle,
-    ));
-    properties.add(
-      DiagnosticsProperty<ButtonStyle>('textButtonStyle', textButtonStyle),
-    );
-    properties.add(DiagnosticsProperty<ButtonStyle>(
-      'defaultButtonStyle',
-      defaultButtonStyle,
-    ));
-    properties.add(
-      DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle),
-    );
+    properties
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'outlinedButtonStyle', outlinedButtonStyle))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'filledButtonStyle', filledButtonStyle))
+      ..add(
+          DiagnosticsProperty<ButtonStyle>('textButtonStyle', textButtonStyle))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'defaultButtonStyle', defaultButtonStyle))
+      ..add(
+          DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle));
   }
 
   /// Defines the default color used by [Button]s using the current brightness
@@ -226,19 +214,19 @@ class ButtonThemeData with Diagnosticable {
     late Color color;
     if (brightness == Brightness.light) {
       if (states.isPressing)
-        color = Colors.grey[70];
+        color = Color(0xFFf2f2f2);
       else if (states.isHovering)
-        color = Colors.grey[40];
+        color = Color(0xFFF6F6F6);
       else
-        color = Color(0xFFcccccc);
+        color = Colors.white;
       return color;
     } else {
       if (states.isPressing) {
-        color = Color(0xFF666666);
+        color = Color(0xFF272727);
       } else if (states.isHovering)
-        color = Colors.grey[170];
+        color = Color(0xFF323232);
       else {
-        color = Color(0xFF333333);
+        color = Color(0xFF2b2b2b);
       }
       return color;
     }
@@ -247,14 +235,17 @@ class ButtonThemeData with Diagnosticable {
   /// Defines the default color used for inputs when checked, such as checkbox,
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
-  static Color checkedInputColor(ThemeData style, Set<ButtonStates> states) {
-    AccentColor color = style.accentColor;
-    if (states.isDisabled)
-      return style.disabledColor;
-    else if (states.isPressing)
-      return color.dark;
-    else if (states.isHovering) return color.lighter;
-    return color;
+  static Color checkedInputColor(ThemeData theme, Set<ButtonStates> states) {
+    final bool isDark = theme.brightness == Brightness.dark;
+    return states.isPressing
+        ? isDark
+            ? theme.accentColor.darker
+            : theme.accentColor.lighter
+        : states.isHovering
+            ? isDark
+                ? theme.accentColor.dark
+                : theme.accentColor.light
+            : theme.accentColor;
   }
 
   static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {

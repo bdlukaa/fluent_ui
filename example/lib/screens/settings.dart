@@ -66,16 +66,16 @@ class Settings extends StatelessWidget {
               style: FluentTheme.of(context).typography.subtitle),
           ...List.generate(ThemeMode.values.length, (index) {
             final mode = ThemeMode.values[index];
-            return RadioListTile(
-              checked: appTheme.mode == mode,
-              onChanged: (value) {
-                if (value) {
-                  appTheme.mode = mode;
-                }
-              },
-              title: Text(
-                '$mode'.replaceAll('ThemeMode.', ''),
-                style: TextStyle(fontWeight: FontWeight.normal),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: RadioButton(
+                checked: appTheme.mode == mode,
+                onChanged: (value) {
+                  if (value) {
+                    appTheme.mode = mode;
+                  }
+                },
+                content: Text('$mode'.replaceAll('ThemeMode.', '')),
               ),
             );
           }),
@@ -85,14 +85,16 @@ class Settings extends StatelessWidget {
           ),
           ...List.generate(PaneDisplayMode.values.length, (index) {
             final mode = PaneDisplayMode.values[index];
-            return RadioListTile(
-              checked: appTheme.displayMode == mode,
-              onChanged: (value) {
-                if (value) appTheme.displayMode = mode;
-              },
-              title: Text(
-                mode.toString().replaceAll('PaneDisplayMode.', ''),
-                style: TextStyle(fontWeight: FontWeight.normal),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: RadioButton(
+                checked: appTheme.displayMode == mode,
+                onChanged: (value) {
+                  if (value) appTheme.displayMode = mode;
+                },
+                content: Text(
+                  mode.toString().replaceAll('PaneDisplayMode.', ''),
+                ),
               ),
             );
           }),
@@ -100,14 +102,16 @@ class Settings extends StatelessWidget {
               style: FluentTheme.of(context).typography.subtitle),
           ...List.generate(NavigationIndicators.values.length, (index) {
             final mode = NavigationIndicators.values[index];
-            return RadioListTile(
-              checked: appTheme.indicator == mode,
-              onChanged: (value) {
-                if (value) appTheme.indicator = mode;
-              },
-              title: Text(
-                mode.toString().replaceAll('NavigationIndicators.', ''),
-                style: TextStyle(fontWeight: FontWeight.normal),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: RadioButton(
+                checked: appTheme.indicator == mode,
+                onChanged: (value) {
+                  if (value) appTheme.indicator = mode;
+                },
+                content: Text(
+                  mode.toString().replaceAll('NavigationIndicators.', ''),
+                ),
               ),
             );
           }),
@@ -134,22 +138,24 @@ class Settings extends StatelessWidget {
             ...List.generate(FlutterAcrylic.AcrylicEffect.values.length,
                 (index) {
               final mode = FlutterAcrylic.AcrylicEffect.values[index];
-              return RadioListTile(
-                checked: appTheme.acrylicEffect == mode,
-                onChanged: (value) {
-                  if (value) {
-                    appTheme.acrylicEffect = mode;
-                    FlutterAcrylic.Acrylic.setEffect(
-                      effect: mode,
-                      gradientColor: FluentTheme.of(context)
-                          .acrylicBackgroundColor
-                          .withOpacity(0.2),
-                    );
-                  }
-                },
-                title: Text(
-                  mode.toString().replaceAll('AcrylicEffect.', ''),
-                  style: TextStyle(fontWeight: FontWeight.normal),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: RadioButton(
+                  checked: appTheme.acrylicEffect == mode,
+                  onChanged: (value) {
+                    if (value) {
+                      appTheme.acrylicEffect = mode;
+                      FlutterAcrylic.Acrylic.setEffect(
+                        effect: mode,
+                        gradientColor: FluentTheme.of(context)
+                            .acrylicBackgroundColor
+                            .withOpacity(0.2),
+                      );
+                    }
+                  },
+                  content: Text(
+                    mode.toString().replaceAll('AcrylicEffect.', ''),
+                  ),
                 ),
               );
             }),
@@ -166,9 +172,7 @@ class Settings extends StatelessWidget {
         onPressed: () {
           appTheme.color = color;
         },
-        style: ButtonStyle(
-          padding: ButtonState.all(EdgeInsets.zero),
-        ),
+        style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
         child: Container(
           height: 40,
           width: 40,
