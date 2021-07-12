@@ -235,14 +235,17 @@ class ButtonThemeData with Diagnosticable {
   /// Defines the default color used for inputs when checked, such as checkbox,
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
-  static Color checkedInputColor(ThemeData style, Set<ButtonStates> states) {
-    AccentColor color = style.accentColor;
-    if (states.isDisabled)
-      return style.disabledColor;
-    else if (states.isPressing)
-      return color.dark;
-    else if (states.isHovering) return color.lighter;
-    return color;
+  static Color checkedInputColor(ThemeData theme, Set<ButtonStates> states) {
+    final bool isDark = theme.brightness == Brightness.dark;
+    return states.isPressing
+        ? isDark
+            ? theme.accentColor.darker
+            : theme.accentColor.lighter
+        : states.isHovering
+            ? isDark
+                ? theme.accentColor.dark
+                : theme.accentColor.light
+            : theme.accentColor;
   }
 
   static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {

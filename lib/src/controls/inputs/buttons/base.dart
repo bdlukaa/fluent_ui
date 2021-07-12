@@ -139,8 +139,13 @@ class _BaseButtonState extends State<BaseButton> {
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? const Color(4278190080),
           elevation: resolvedElevation ?? 0.0,
+          borderRadius: resolvedShape is RoundedRectangleBorder
+              ? resolvedShape.borderRadius is BorderRadius
+                  ? resolvedShape.borderRadius as BorderRadius
+                  : BorderRadius.zero
+              : BorderRadius.zero,
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).fastAnimationDuration,
+            duration: FluentTheme.of(context).fasterAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: ShapeDecoration(
               shape: resolvedShape.copyWith(side: resolvedBorder),

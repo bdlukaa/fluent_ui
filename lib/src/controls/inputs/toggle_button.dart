@@ -147,36 +147,26 @@ class ToggleButtonThemeData with Diagnosticable {
     this.uncheckedButtonStyle,
   });
 
-  factory ToggleButtonThemeData.standard(ThemeData style) {
+  factory ToggleButtonThemeData.standard(ThemeData theme) {
+    bool isDark = theme.brightness == Brightness.dark;
     Color checkedColor(Set<ButtonStates> states) => states.isDisabled
-        ? ButtonThemeData.buttonColor(style.brightness, states)
-        : ButtonThemeData.checkedInputColor(style, states);
-    Color uncheckedColor(Set<ButtonStates> states) =>
-        states.isHovering || states.isPressing
-            ? ButtonThemeData.uncheckedInputColor(style, states)
-            : ButtonThemeData.buttonColor(style.brightness, states);
+        ? ButtonThemeData.buttonColor(theme.brightness, states)
+        : states.isPressing
+            ? isDark
+                ? theme.accentColor.darker
+                : theme.accentColor.lighter
+            : states.isHovering
+                ? isDark
+                    ? theme.accentColor.dark
+                    : theme.accentColor.light
+                : theme.accentColor;
 
-    const padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        cursor: style.inputMouseCursor,
-        shape: ButtonState.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),
         backgroundColor: ButtonState.resolveWith(checkedColor),
-        foregroundColor: ButtonState.resolveWith((states) => states.isDisabled
-            ? style.disabledColor
-            : checkedColor(states).basedOnLuminance()),
-        padding: ButtonState.all(padding),
-      ),
-      uncheckedButtonStyle: ButtonStyle(
-        cursor: style.inputMouseCursor,
-        shape: ButtonState.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))),
-        backgroundColor: ButtonState.resolveWith(uncheckedColor),
-        foregroundColor: ButtonState.resolveWith((states) => states.isDisabled
-            ? style.disabledColor
-            : uncheckedColor(states).basedOnLuminance()),
-        padding: ButtonState.all(padding),
+        shape: ButtonState.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        )),
       ),
     );
   }
@@ -205,13 +195,10 @@ class ToggleButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonStyle>(
-      'checkedButtonStyle',
-      checkedButtonStyle,
-    ));
-    properties.add(DiagnosticsProperty<ButtonStyle>(
-      'uncheckedButtonStyle',
-      uncheckedButtonStyle,
-    ));
+    properties
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'checkedButtonStyle', checkedButtonStyle))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'uncheckedButtonStyle', uncheckedButtonStyle));
   }
 }

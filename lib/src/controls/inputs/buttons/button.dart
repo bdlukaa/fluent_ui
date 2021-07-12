@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// A button gives the user a way to trigger an immediate action.
-/// 
+///
 /// ![Button Example](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/button.png)
 ///
 /// See also:
@@ -35,14 +35,20 @@ class Button extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
     return ButtonStyle(
-      cursor: theme.inputMouseCursor,
-      elevation: ButtonState.all(1.0),
+      elevation: ButtonState.resolveWith((states) {
+        if (states.isPressing) return 0.0;
+        return 0.3;
+      }),
+      shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 10.0,
         vertical: 6.0,
       )),
       shape: ButtonState.all(RoundedRectangleBorder(
-        side: BorderSide(color: theme.disabledColor, width: 0.25),
+        side: BorderSide(
+          color: theme.disabledColor.withOpacity(0.75),
+          width: 0.1,
+        ),
         borderRadius: BorderRadius.circular(4.0),
       )),
       backgroundColor: ButtonState.resolveWith((states) {
@@ -50,8 +56,12 @@ class Button extends BaseButton {
       }),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;
-        return ButtonThemeData.buttonColor(theme.brightness, states)
-            .basedOnLuminance();
+        return ButtonThemeData.buttonColor(theme.brightness, states).basedOnLuminance().toAccentColor()[
+            states.isPressing
+                ? theme.brightness.isLight
+                    ? 'lighter'
+                    : 'dark'
+                : 'normal'];
       }),
     );
   }
