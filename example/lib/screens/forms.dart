@@ -70,9 +70,8 @@ class _FormsState extends State<Forms> {
                       },
                     ),
                     placeholder: 'Type a color',
-                    clipBehavior: focusNode.hasFocus
-                        ? Clip.none
-                        : Clip.antiAlias,
+                    clipBehavior:
+                        focusNode.hasFocus ? Clip.none : Clip.antiAlias,
                   );
                 },
               ),
