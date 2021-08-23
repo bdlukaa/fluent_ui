@@ -28,6 +28,7 @@ class ToggleSwitch extends StatefulWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.thumb,
     this.focusNode,
@@ -53,6 +54,14 @@ class ToggleSwitch extends StatefulWidget {
   /// This style is mescled with [ThemeData.toggleSwitchThemeData]
   final ToggleSwitchThemeData? style;
 
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the switcher,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
+  final Widget? content;
+
   /// The `semanticLabel` of this [ToggleSwitch]
   final String? semanticLabel;
 
@@ -65,24 +74,14 @@ class ToggleSwitch extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'checked',
-      value: checked,
-      ifFalse: 'unchecked',
-    ));
-    properties.add(ObjectFlagProperty(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      ifFalse: 'manual focus',
-    ));
-    properties.add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
-    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
+      ..add(StringProperty('semanticLabel', semanticLabel))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
   @override
@@ -155,6 +154,13 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
                 states: states,
               ),
         );
+        if (widget.content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            widget.content!,
+          ]);
+        }
         return Semantics(
           child: FocusBorder(
             child: child,
