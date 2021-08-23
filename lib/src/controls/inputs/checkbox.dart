@@ -109,8 +109,8 @@ class Checkbox extends StatelessWidget {
               return style.uncheckedDecoration?.resolve(state);
           }(),
           child: Icon(
-            style.icon,
-            size: 18,
+            checked == null ? style.thirdstateIcon : style.icon,
+            size: 14,
             color: () {
               if (checked == null)
                 return style.thirdstateIconColor?.resolve(state);
@@ -203,6 +203,7 @@ class CheckboxThemeData with Diagnosticable {
   final ButtonState<Decoration?>? thirdstateDecoration;
 
   final IconData? icon;
+  final IconData? thirdstateIcon;
   final ButtonState<Color?>? checkedIconColor;
   final ButtonState<Color?>? uncheckedIconColor;
   final ButtonState<Color?>? thirdstateIconColor;
@@ -220,13 +221,14 @@ class CheckboxThemeData with Diagnosticable {
     this.padding,
     this.margin,
     this.icon,
+    this.thirdstateIcon,
     this.checkedIconColor,
     this.uncheckedIconColor,
     this.thirdstateIconColor,
   });
 
   factory CheckboxThemeData.standard(ThemeData style) {
-    final BorderRadiusGeometry radius = BorderRadius.circular(3);
+    final BorderRadiusGeometry radius = BorderRadius.circular(4.0);
     return CheckboxThemeData(
       cursor: style.inputMouseCursor,
       checkedDecoration: ButtonState.resolveWith(
@@ -239,8 +241,7 @@ class CheckboxThemeData with Diagnosticable {
         (states) => BoxDecoration(
           border: Border.all(
             width: 0.6,
-            color:
-                states.isDisabled ? style.disabledColor : style.inactiveColor,
+            color: states.isDisabled ? style.disabledColor : Color(0xFF8b8b8b),
           ),
           color:
               ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
@@ -250,11 +251,7 @@ class CheckboxThemeData with Diagnosticable {
       thirdstateDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: Colors.white,
-          border: Border.all(
-            width: 6.5,
-            color: ButtonThemeData.checkedInputColor(style, states),
-          ),
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
@@ -270,8 +267,8 @@ class CheckboxThemeData with Diagnosticable {
             ? style.inactiveColor.withOpacity(0.8)
             : Colors.transparent,
       ),
-      thirdstateIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,
+      thirdstateIcon: FluentIcons.charticulator_line_style_dashed,
       margin: const EdgeInsets.all(4.0),
     );
   }
@@ -286,6 +283,7 @@ class CheckboxThemeData with Diagnosticable {
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       cursor: t < 0.5 ? a?.cursor : b?.cursor,
       icon: t < 0.5 ? a?.icon : b?.icon,
+      thirdstateIcon: t < 0.5 ? a?.thirdstateIcon : b?.thirdstateIcon,
       checkedIconColor: ButtonState.lerp(
           a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
       uncheckedIconColor: ButtonState.lerp(
@@ -307,6 +305,7 @@ class CheckboxThemeData with Diagnosticable {
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,
       icon: style?.icon ?? icon,
+      thirdstateIcon: style?.thirdstateIcon ?? thirdstateIcon,
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
       uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
       thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
@@ -344,7 +343,7 @@ class CheckboxThemeData with Diagnosticable {
       checkedIconColor,
     ));
     properties.add(IconDataProperty('icon', icon));
-    properties.add(IconDataProperty('icon', icon));
+    properties.add(IconDataProperty('thirdstateIcon', thirdstateIcon));
     properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'checkedDecoration',
       checkedDecoration,

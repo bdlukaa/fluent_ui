@@ -60,7 +60,7 @@ class _InputsPageState extends State<InputsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Checkbox(
-                          checked: value,
+                          checked: null,
                           onChanged: disabled
                               ? null
                               : (v) => setState(() => value = v ?? false),
