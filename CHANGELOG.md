@@ -11,6 +11,7 @@ Date format: DD/MM/YYYY
   - **BREAKING:** Acryic is not used anymore. Consequently, `useAcrylic` method was removed.
 - Implemented `Mica`, used by the new `NavigationView`
 - Added support for horizontal tooltips. Set `Tooltip.displayHorizontally` to true to enable it.
+- Updated Acrylic to support the web
 
 ## [2.2.1] - [26/06/2021]
 
