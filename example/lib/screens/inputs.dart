@@ -60,10 +60,16 @@ class _InputsPageState extends State<InputsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Checkbox(
-                          checked: null,
+                          checked: value,
                           onChanged: disabled
                               ? null
                               : (v) => setState(() => value = v ?? false),
+                          content: Text(
+                            'Checkbox ${value ? 'on ' : 'off'}',
+                            style: TextStyle(
+                              color: FluentTheme.of(context).inactiveColor,
+                            ),
+                          ),
                         ),
                         ToggleSwitch(
                           checked: value,
@@ -77,7 +83,7 @@ class _InputsPageState extends State<InputsPage> {
                               ? null
                               : (v) => setState(() => value = v),
                           content: Text(
-                            'Radio Button ${value ? 'on' : 'off'}',
+                            'Radio Button ${value ? 'on ' : 'off'}',
                             style: TextStyle(
                               color: FluentTheme.of(context).inactiveColor,
                             ),

@@ -23,6 +23,7 @@ class Checkbox extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
@@ -45,6 +46,14 @@ class Checkbox extends StatelessWidget {
   /// with [ThemeData.checkboxThemeData]
   final CheckboxThemeData? style;
 
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the radio button,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
+  final Widget? content;
+
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
@@ -57,25 +66,18 @@ class Checkbox extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'checked',
-      value: checked,
-      ifFalse: 'unchecked',
-    ));
-    properties.add(ObjectFlagProperty(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(DiagnosticsProperty<CheckboxThemeData>('style', style));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      defaultValue: false,
-      ifFalse: 'manual focus',
-    ));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(DiagnosticsProperty<CheckboxThemeData>('style', style))
+      ..add(StringProperty('semanticLabel', semanticLabel))
+      ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode))
+      ..add(FlagProperty(
+        'autofocus',
+        value: autofocus,
+        defaultValue: false,
+        ifFalse: 'manual focus',
+      ));
   }
 
   @override
@@ -95,7 +97,7 @@ class Checkbox extends StatelessWidget {
       builder: (context, state) {
         Widget child = AnimatedContainer(
           alignment: Alignment.center,
-          duration: FluentTheme.of(context).mediumAnimationDuration,
+          duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
           height: size,
@@ -121,6 +123,13 @@ class Checkbox extends StatelessWidget {
             }(),
           ),
         );
+        if (content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            content!,
+          ]);
+        }
         return Semantics(
           checked: checked,
           child: FocusBorder(
@@ -230,7 +239,7 @@ class CheckboxThemeData with Diagnosticable {
   factory CheckboxThemeData.standard(ThemeData style) {
     final BorderRadiusGeometry radius = BorderRadius.circular(4.0);
     return CheckboxThemeData(
-      cursor: style.inputMouseCursor,
+      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
