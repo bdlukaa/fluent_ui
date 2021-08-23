@@ -187,15 +187,18 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkedFactor = (checked ? 0 : 1);
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
-      constraints: BoxConstraints(
-        minHeight: 8,
-        minWidth: 8,
-        maxHeight: 12,
-        maxWidth: 12,
-      ),
+      margin: states.isHovering
+          ? EdgeInsets.all(2.0 + checkedFactor)
+          : EdgeInsets.symmetric(
+              horizontal: 2.0 + checkedFactor,
+              vertical: 3.0 + checkedFactor,
+            ),
+      height: 18,
+      width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
       decoration: checked
           ? style?.checkedThumbDecoration?.resolve(states)
           : style?.uncheckedThumbDecoration?.resolve(states),
@@ -295,10 +298,12 @@ class ToggleSwitchThemeData with Diagnosticable {
   });
 
   factory ToggleSwitchThemeData.standard(ThemeData style) {
-    final defaultThumbDecoration = BoxDecoration(shape: BoxShape.circle);
+    final defaultThumbDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(100),
+    );
 
     final defaultDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(100),
     );
 
     return ToggleSwitchThemeData(
@@ -318,7 +323,6 @@ class ToggleSwitchThemeData with Diagnosticable {
           ),
         );
       }),
-      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
       margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,
