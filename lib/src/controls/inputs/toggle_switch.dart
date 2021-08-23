@@ -28,6 +28,7 @@ class ToggleSwitch extends StatefulWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.thumb,
     this.focusNode,
@@ -53,6 +54,14 @@ class ToggleSwitch extends StatefulWidget {
   /// This style is mescled with [ThemeData.toggleSwitchThemeData]
   final ToggleSwitchThemeData? style;
 
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the switcher,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
+  final Widget? content;
+
   /// The `semanticLabel` of this [ToggleSwitch]
   final String? semanticLabel;
 
@@ -65,24 +74,14 @@ class ToggleSwitch extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'checked',
-      value: checked,
-      ifFalse: 'unchecked',
-    ));
-    properties.add(ObjectFlagProperty(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      ifFalse: 'manual focus',
-    ));
-    properties.add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
-    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
+      ..add(StringProperty('semanticLabel', semanticLabel))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
   @override
@@ -141,7 +140,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           alignment: _alignment ??
               (widget.checked ? Alignment.centerRight : Alignment.centerLeft),
           height: 20,
-          width: 45,
+          width: 40,
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
@@ -155,6 +154,13 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
                 states: states,
               ),
         );
+        if (widget.content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            widget.content!,
+          ]);
+        }
         return Semantics(
           child: FocusBorder(
             child: child,
@@ -181,15 +187,18 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkedFactor = (checked ? 0 : 1);
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
-      constraints: BoxConstraints(
-        minHeight: 8,
-        minWidth: 8,
-        maxHeight: 12,
-        maxWidth: 12,
-      ),
+      margin: states.isHovering
+          ? EdgeInsets.all(2.0 + checkedFactor)
+          : EdgeInsets.symmetric(
+              horizontal: 2.0 + checkedFactor,
+              vertical: 3.0 + checkedFactor,
+            ),
+      height: 18,
+      width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
       decoration: checked
           ? style?.checkedThumbDecoration?.resolve(states)
           : style?.uncheckedThumbDecoration?.resolve(states),
@@ -289,14 +298,16 @@ class ToggleSwitchThemeData with Diagnosticable {
   });
 
   factory ToggleSwitchThemeData.standard(ThemeData style) {
-    final defaultThumbDecoration = BoxDecoration(shape: BoxShape.circle);
+    final defaultThumbDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(100),
+    );
 
     final defaultDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(100),
     );
 
     return ToggleSwitchThemeData(
-      cursor: style.inputMouseCursor,
+      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.checkedInputColor(style, states),
@@ -307,14 +318,11 @@ class ToggleSwitchThemeData with Diagnosticable {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.uncheckedInputColor(style, states),
           border: Border.all(
-            width: 0.8,
-            color: states.isNone || states.isFocused
-                ? style.inactiveColor
-                : ButtonThemeData.uncheckedInputColor(style, states),
+            width: 0.6,
+            color: style.inactiveColor,
           ),
         );
       }),
-      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
       margin: const EdgeInsets.all(4),
       animationDuration: style.fastAnimationDuration,
       animationCurve: style.animationCurve,

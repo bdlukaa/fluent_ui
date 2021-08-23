@@ -48,7 +48,7 @@ class Checkbox extends StatelessWidget {
 
   /// The content of the radio button.
   ///
-  /// This, if non-null, is displayed at the right of the radio button,
+  /// This, if non-null, is displayed at the right of the checkbox,
   /// and is affected by user touch.
   ///
   /// Usually a [Text] or [Icon] widget
