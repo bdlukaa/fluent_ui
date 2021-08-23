@@ -140,7 +140,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           alignment: _alignment ??
               (widget.checked ? Alignment.centerRight : Alignment.centerLeft),
           height: 20,
-          width: 45,
+          width: 40,
           duration: style.animationDuration ?? Duration.zero,
           curve: style.animationCurve ?? Curves.linear,
           padding: style.padding,
@@ -302,7 +302,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      cursor: style.inputMouseCursor,
+      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.checkedInputColor(style, states),
@@ -313,10 +313,8 @@ class ToggleSwitchThemeData with Diagnosticable {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.uncheckedInputColor(style, states),
           border: Border.all(
-            width: 0.8,
-            color: states.isNone || states.isFocused
-                ? style.inactiveColor
-                : ButtonThemeData.uncheckedInputColor(style, states),
+            width: 0.6,
+            color: style.inactiveColor,
           ),
         );
       }),
