@@ -23,6 +23,7 @@ class Checkbox extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.style,
+    this.content,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
@@ -45,6 +46,14 @@ class Checkbox extends StatelessWidget {
   /// with [ThemeData.checkboxThemeData]
   final CheckboxThemeData? style;
 
+  /// The content of the radio button.
+  ///
+  /// This, if non-null, is displayed at the right of the radio button,
+  /// and is affected by user touch.
+  ///
+  /// Usually a [Text] or [Icon] widget
+  final Widget? content;
+
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
@@ -57,25 +66,18 @@ class Checkbox extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'checked',
-      value: checked,
-      ifFalse: 'unchecked',
-    ));
-    properties.add(ObjectFlagProperty(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(DiagnosticsProperty<CheckboxThemeData>('style', style));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      defaultValue: false,
-      ifFalse: 'manual focus',
-    ));
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(DiagnosticsProperty<CheckboxThemeData>('style', style))
+      ..add(StringProperty('semanticLabel', semanticLabel))
+      ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode))
+      ..add(FlagProperty(
+        'autofocus',
+        value: autofocus,
+        defaultValue: false,
+        ifFalse: 'manual focus',
+      ));
   }
 
   @override
@@ -95,7 +97,7 @@ class Checkbox extends StatelessWidget {
       builder: (context, state) {
         Widget child = AnimatedContainer(
           alignment: Alignment.center,
-          duration: FluentTheme.of(context).mediumAnimationDuration,
+          duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
           height: size,
@@ -109,8 +111,8 @@ class Checkbox extends StatelessWidget {
               return style.uncheckedDecoration?.resolve(state);
           }(),
           child: Icon(
-            style.icon,
-            size: 18,
+            checked == null ? style.thirdstateIcon : style.icon,
+            size: 14,
             color: () {
               if (checked == null)
                 return style.thirdstateIconColor?.resolve(state);
@@ -121,6 +123,13 @@ class Checkbox extends StatelessWidget {
             }(),
           ),
         );
+        if (content != null) {
+          child = Row(mainAxisSize: MainAxisSize.min, children: [
+            child,
+            const SizedBox(width: 6.0),
+            content!,
+          ]);
+        }
         return Semantics(
           checked: checked,
           child: FocusBorder(
@@ -203,6 +212,7 @@ class CheckboxThemeData with Diagnosticable {
   final ButtonState<Decoration?>? thirdstateDecoration;
 
   final IconData? icon;
+  final IconData? thirdstateIcon;
   final ButtonState<Color?>? checkedIconColor;
   final ButtonState<Color?>? uncheckedIconColor;
   final ButtonState<Color?>? thirdstateIconColor;
@@ -220,15 +230,16 @@ class CheckboxThemeData with Diagnosticable {
     this.padding,
     this.margin,
     this.icon,
+    this.thirdstateIcon,
     this.checkedIconColor,
     this.uncheckedIconColor,
     this.thirdstateIconColor,
   });
 
   factory CheckboxThemeData.standard(ThemeData style) {
-    final BorderRadiusGeometry radius = BorderRadius.circular(3);
+    final BorderRadiusGeometry radius = BorderRadius.circular(4.0);
     return CheckboxThemeData(
-      cursor: style.inputMouseCursor,
+      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
@@ -239,8 +250,7 @@ class CheckboxThemeData with Diagnosticable {
         (states) => BoxDecoration(
           border: Border.all(
             width: 0.6,
-            color:
-                states.isDisabled ? style.disabledColor : style.inactiveColor,
+            color: states.isDisabled ? style.disabledColor : Color(0xFF8b8b8b),
           ),
           color:
               ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
@@ -250,11 +260,7 @@ class CheckboxThemeData with Diagnosticable {
       thirdstateDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: Colors.white,
-          border: Border.all(
-            width: 6.5,
-            color: ButtonThemeData.checkedInputColor(style, states),
-          ),
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
@@ -270,8 +276,8 @@ class CheckboxThemeData with Diagnosticable {
             ? style.inactiveColor.withOpacity(0.8)
             : Colors.transparent,
       ),
-      thirdstateIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,
+      thirdstateIcon: FluentIcons.charticulator_line_style_dashed,
       margin: const EdgeInsets.all(4.0),
     );
   }
@@ -286,6 +292,7 @@ class CheckboxThemeData with Diagnosticable {
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       cursor: t < 0.5 ? a?.cursor : b?.cursor,
       icon: t < 0.5 ? a?.icon : b?.icon,
+      thirdstateIcon: t < 0.5 ? a?.thirdstateIcon : b?.thirdstateIcon,
       checkedIconColor: ButtonState.lerp(
           a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
       uncheckedIconColor: ButtonState.lerp(
@@ -307,6 +314,7 @@ class CheckboxThemeData with Diagnosticable {
       padding: style?.padding ?? padding,
       cursor: style?.cursor ?? cursor,
       icon: style?.icon ?? icon,
+      thirdstateIcon: style?.thirdstateIcon ?? thirdstateIcon,
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
       uncheckedIconColor: style?.uncheckedIconColor ?? uncheckedIconColor,
       thirdstateIconColor: style?.thirdstateIconColor ?? thirdstateIconColor,
@@ -344,7 +352,7 @@ class CheckboxThemeData with Diagnosticable {
       checkedIconColor,
     ));
     properties.add(IconDataProperty('icon', icon));
-    properties.add(IconDataProperty('icon', icon));
+    properties.add(IconDataProperty('thirdstateIcon', thirdstateIcon));
     properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
       'checkedDecoration',
       checkedDecoration,

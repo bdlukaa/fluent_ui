@@ -776,11 +776,7 @@ Checkbox(
 | enabled       | onChanged | non-null |
 | disabled      | onChanged | `null`   |
 
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/templates-checkbox-states-default.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox1.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox3.png)
+![](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
 
 ## Toggle Switches
 
