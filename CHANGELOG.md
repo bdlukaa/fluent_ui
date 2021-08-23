@@ -13,6 +13,7 @@ Date format: DD/MM/YYYY
 - Added support for horizontal tooltips. Set `Tooltip.displayHorizontally` to true to enable it.
 - Updated Acrylic to support the web
 - Update `Checkbox` design
+- Update `ToggleSwitch` design
 
 ## [2.2.1] - [26/06/2021]
 

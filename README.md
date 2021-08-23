@@ -782,7 +782,7 @@ Checkbox(
 
 The toggle switch represents a physical switch that allows users to turn things on or off, like a light switch. Use toggle switch controls to present users with two mutually exclusive options (such as on/off), where choosing an option provides immediate results. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/toggles)
 
-### Example
+Here's an example of how to create a basic toggle switcher:
 
 ```dart
 bool _checked = false;
@@ -790,16 +790,11 @@ bool _checked = false;
 ToggleSwitch(
   checked: _checked,
   onChanged: (v) => setState(() => _checked = v),
+  content: Text(_checked ? 'On' : 'Off');
 )
 ```
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
-
-| Toggle Switch                                                                                                  | Checkbox                                                                                                                                                                                |
-| -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Use a toggle switch for binary settings when changes become effective immediately after the user changes them. | Use check boxes for optional ("nice to have") items.                                                                                                                                    |
-|                                                                                                                | Use a checkbox when the user has to perform extra steps for changes to be effective. For example, if the user must click a "submit" or "next" button to apply changes, use a check box. |
-|                                                                                                                | Use check boxes when the user can select multiple items that are related to a single setting or feature.                                                                                |
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)                                                                             |
 
 ## Radio Buttons
 
