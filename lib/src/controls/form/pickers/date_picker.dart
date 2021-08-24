@@ -94,21 +94,23 @@ class DatePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('selected', selected));
-    properties.add(FlagProperty('showMonth',
-        value: showMonth, ifFalse: 'not displaying month'));
-    properties.add(
-        FlagProperty('showDay', value: showDay, ifFalse: 'not displaying day'));
-    properties.add(FlagProperty('showYear',
-        value: showYear, ifFalse: 'not displaying year'));
-    properties.add(IntProperty('startYear', startYear ?? selected.year - 100));
-    properties.add(IntProperty('endYear', endYear ?? selected.year + 25));
-    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
-    properties.add(DiagnosticsProperty('cursor', cursor));
-    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
-    properties.add(DoubleProperty('popupHeight', popupHeight));
+    properties
+      ..add(DiagnosticsProperty('selected', selected,
+          ifNull: '${DateTime.now()}'))
+      ..add(FlagProperty('showMonth',
+          value: showMonth, ifFalse: 'not displaying month'))
+      ..add(FlagProperty('showDay',
+          value: showDay, ifFalse: 'not displaying day'))
+      ..add(FlagProperty('showYear',
+          value: showYear, ifFalse: 'not displaying year'))
+      ..add(IntProperty('startYear', startYear ?? selected.year - 100))
+      ..add(IntProperty('endYear', endYear ?? selected.year + 25))
+      ..add(DiagnosticsProperty('contentPadding', contentPadding))
+      ..add(DiagnosticsProperty('cursor', cursor))
+      ..add(ObjectFlagProperty.has('focusNode', focusNode))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(DoubleProperty('popupHeight', popupHeight));
   }
 }
 
@@ -332,6 +334,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     final divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
@@ -339,6 +342,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         horizontalMargin: EdgeInsets.zero,
       ),
     );
+
+    final highlightTileColor =
+        theme.accentColor.resolveFromBrightness(theme.brightness);
+
     return SizedBox(
       height: widget.height,
       child: Acrylic(
@@ -347,21 +354,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         child: Column(children: [
           Expanded(
             child: Stack(children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  alignment: Alignment.center,
-                  height: kOneLineTileHeight,
-                  child: ListTile(
-                    tileColor: FluentTheme.of(context)
-                        .accentColor
-                        .resolveFrom(context),
-                  ),
-                ),
-              ),
+              kHighlightTile(),
               Row(children: [
                 if (widget.showMonth)
                   Expanded(
@@ -369,14 +362,19 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                     child: () {
                       final items = List.generate(
                         12,
-                        (index) {
+                        (month) {
+                          month++;
                           final text = DateFormat.MMMM().format(
-                            DateTime(1, index + 1),
+                            DateTime(1, month),
                           );
                           return ListTile(
                             title: Text(
                               text,
-                              style: kPickerPopupTextStyle(context),
+                              style: kPickerPopupTextStyle(context)?.copyWith(
+                                color: month == widget.date.month
+                                    ? highlightTileColor.basedOnLuminance()
+                                    : null,
+                              ),
                             ),
                           );
                         },
@@ -461,14 +459,23 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           childDelegate: ListWheelChildLoopingListDelegate(
                             children: List<Widget>.generate(
                               daysInMonth,
-                              (index) => ListTile(
-                                title: Center(
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: kPickerPopupTextStyle(context),
+                              (day) {
+                                day++;
+                                return ListTile(
+                                  title: Center(
+                                    child: Text(
+                                      '$day',
+                                      style: kPickerPopupTextStyle(context)
+                                          ?.copyWith(
+                                        color: day == widget.date.day
+                                            ? highlightTileColor
+                                                .basedOnLuminance()
+                                            : null,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                           ),
                           onSelectedItemChanged: (index) {
@@ -482,6 +489,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                               widget.date.millisecond,
                               widget.date.microsecond,
                             ));
+                            setState(() {});
                           },
                         ),
                       );
@@ -514,11 +522,18 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         child: ListWheelScrollView(
                           controller: widget.yearController,
                           children: List.generate(years, (index) {
+                            // index++;
+                            final realYear = widget.startYear + index + 1;
                             return ListTile(
                               title: Center(
                                 child: Text(
-                                  '${widget.startYear + index + 1}',
-                                  style: kPickerPopupTextStyle(context),
+                                  '$realYear',
+                                  style: kPickerPopupTextStyle(context)
+                                      ?.copyWith(
+                                          color: realYear == widget.date.year
+                                              ? highlightTileColor
+                                                  .basedOnLuminance()
+                                              : null),
                                 ),
                               ),
                             );
@@ -537,6 +552,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                               widget.date.millisecond,
                               widget.date.microsecond,
                             ));
+                            setState(() {});
                           },
                         ),
                       );

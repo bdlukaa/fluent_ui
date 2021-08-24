@@ -306,21 +306,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
         child: Column(children: [
           Expanded(
             child: Stack(children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  alignment: Alignment.center,
-                  height: kOneLineTileHeight,
-                  child: ListTile(
-                    tileColor: FluentTheme.of(context)
-                        .accentColor
-                        .resolveFrom(context),
-                  ),
-                ),
-              ),
+              kHighlightTile(),
               Row(children: [
                 Expanded(
                   child: PickerNavigatorIndicator(
