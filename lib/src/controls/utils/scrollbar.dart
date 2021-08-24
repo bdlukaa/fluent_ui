@@ -76,8 +76,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(ButtonStates state) {
-    if (state == ButtonStates.none) return Colors.transparent;
-    return _scrollbarTheme.backgroundColor ?? Colors.transparent;
+    return Colors.transparent;
   }
 
   Color _thumbColor(ButtonStates state) {
@@ -341,16 +340,16 @@ class ScrollbarThemeData with Diagnosticable {
           ? const Color(0xFF5d5d5d)
           : const Color(0xFFa4a4a4),
       thickness: 2.0,
-      hoveringThickness: 16.0,
+      hoveringThickness: 6.0,
       backgroundColor: brightness.isLight
           ? const Color(0xFFe9e9e9)
           : const Color(0xFF1b1b1b),
       radius: const Radius.circular(100.0),
-      hoveringRadius: const Radius.circular(0.0),
-      crossAxisMargin: 2.0,
-      hoveringCrossAxisMargin: 0.0,
+      hoveringRadius: const Radius.circular(100.0),
+      crossAxisMargin: 4.0,
+      hoveringCrossAxisMargin: 4.0,
       mainAxisMargin: 2.0,
-      hoveringMainAxisMargin: 0.0,
+      hoveringMainAxisMargin: 2.0,
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
