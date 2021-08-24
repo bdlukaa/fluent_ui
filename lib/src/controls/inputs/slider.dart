@@ -93,29 +93,15 @@ class Slider extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('value', value));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>.has(
-      'onChangeStart',
-      onChangeStart,
-    ));
-    properties.add(ObjectFlagProperty<ValueChanged<double>>.has(
-      'onChangeEnd',
-      onChangeEnd,
-    ));
-    properties.add(DoubleProperty('min', min));
-    properties.add(DoubleProperty('max', max));
-    properties.add(IntProperty('divisions', divisions));
-    properties.add(StringProperty('label', label));
-    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(DiagnosticsProperty<SliderThemeData>('style', style));
-    properties.add(
-      FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'),
-    );
+    properties
+      ..add(DoubleProperty('value', value))
+      ..add(DoubleProperty('min', min))
+      ..add(DoubleProperty('max', max))
+      ..add(IntProperty('divisions', divisions))
+      ..add(StringProperty('label', label))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
+      ..add(DiagnosticsProperty<SliderThemeData>('style', style))
+      ..add(FlagProperty('vertical', value: vertical, ifFalse: 'horizontal'));
   }
 }
 
@@ -146,12 +132,12 @@ class _SliderState extends m.State<Slider> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = SliderThemeData.standard(FluentTheme.of(context)).merge(
-      FluentTheme.of(context).sliderTheme.merge(widget.style),
-    );
-    Widget child = Padding(
-      padding: style.margin ?? EdgeInsets.zero,
-      child: m.Material(
+    final style = SliderTheme.of(context).merge(widget.style);
+    Widget child = HoverButton(
+      cursor: ButtonState.all(style.cursor ?? MouseCursor.defer),
+      onPressed: () {},
+      margin: style.margin ?? EdgeInsets.zero,
+      builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
         child: m.SliderTheme(
           data: m.SliderThemeData(
@@ -162,12 +148,13 @@ class _SliderState extends m.State<Slider> {
               elevation: 0,
               pressedElevation: 0,
               useBall: style.useThumbBall ?? true,
+              states: states,
             ),
             valueIndicatorShape: _RectangularSliderValueIndicatorShape(
               backgroundColor: style.labelBackgroundColor,
               vertical: widget.vertical,
             ),
-            trackHeight: 0.25,
+            trackHeight: 1.75,
             trackShape: _CustomTrackShape(),
             disabledThumbColor: style.disabledThumbColor,
             disabledInactiveTrackColor: style.disabledInactiveColor,
@@ -209,6 +196,7 @@ class _SliderState extends m.State<Slider> {
   }
 }
 
+/// This is used to remove the padding the Material Slider adds automatically
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
   Rect getPreferredRect({
     required RenderBox parentBox,
@@ -237,8 +225,12 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.elevation = 1.0,
     this.pressedElevation = 6.0,
     this.useBall = true,
+    this.states = const {},
   });
 
+  /// The button states
+  final Set<ButtonStates> states;
+ 
   /// Whether to draw a ball instead of a line
   final bool useBall;
 
@@ -436,6 +428,7 @@ class SliderThemeData with Diagnosticable {
 
   factory SliderThemeData.standard(ThemeData? style) {
     final def = SliderThemeData(
+      cursor: MouseCursor.defer,
       thumbColor: style?.accentColor,
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor.withOpacity(1),
