@@ -1,11 +1,10 @@
 Date format: DD/MM/YYYY
 
-## [next] - [##/##/2021]
+## [3.0.0] - Windows 11 - [24/08/2021]
 
 - Update `ToggleButton` design.
 - Update `Button` design.
 - Update `RadioButton` design:
-  - Added support for radio button content (`RadioButton.content`)
 - Update `ContentDialog` design.
 - Update `NavigationView` design:
   - **BREAKING:** Acryic is not used anymore. Consequently, `useAcrylic` method was removed.

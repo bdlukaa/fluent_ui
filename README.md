@@ -13,9 +13,6 @@
     <a title="Github License">
       <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui" />
     </a>
-    <a title="PRs are welcome">
-      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" />
-    </a>
   </p>
   <p align="center">
     <a title="Buy me a coffee" href="https://www.buymeacoffee.com/bdlukaa">
@@ -46,7 +43,6 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
     - [Font](#font)
     - [Type ramp](#type-ramp)
   - [Reveal Focus](#reveal-focus)
-  - **TODO** [Reveal Highlight](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal)
 - [Motion](#motion)
   - [Page Transitions](#page-transitions)
 - [Navigation](#navigation)
@@ -120,7 +116,7 @@ Note that this version is not stable. You can see the example app deplyed using 
 
 ```yaml
 dependencies:
-  fluent_ui: ^2.1.1
+  fluent_ui: ^3.0.0
 ```
 
 Versions published to pub are stable and fully tested.
