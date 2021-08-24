@@ -109,6 +109,7 @@ class _SliderState extends m.State<Slider> {
   bool _showFocusHighlight = false;
 
   late FocusNode _focusNode;
+  bool _sliding = false;
 
   @override
   void initState() {
@@ -143,7 +144,7 @@ class _SliderState extends m.State<Slider> {
           duration: FluentTheme.of(context).fastAnimationDuration,
           tween: Tween<double>(
             begin: 1.0,
-            end: states.isPressing
+            end: states.isPressing || _sliding
                 ? 0.45
                 : states.isHovering
                     ? 0.66
@@ -177,8 +178,14 @@ class _SliderState extends m.State<Slider> {
             max: widget.max,
             min: widget.min,
             onChanged: widget.onChanged,
-            onChangeEnd: widget.onChangeEnd,
-            onChangeStart: widget.onChangeStart,
+            onChangeEnd: (v) {
+              widget.onChangeEnd?.call(v);
+              setState(() => _sliding = false);
+            },
+            onChangeStart: (v) {
+              widget.onChangeStart?.call(v);
+              setState(() => _sliding = true);
+            },
             activeColor: style.activeColor,
             inactiveColor: style.inactiveColor,
             divisions: widget.divisions,
