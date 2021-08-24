@@ -1163,7 +1163,6 @@ Acrylic(
 
 Currently, the following widgets use acrylic in its implementation:
 
-- [InfoBar](#infobar)
 - [Navigation View](#navigation-view)
 - [TabView](#tab-view)
 
@@ -1173,28 +1172,28 @@ Currently, the following widgets use acrylic in its implementation:
 
 ## InfoBar
 
-The `InfoBar` widget is for displaying app-wide status messages to users that are highly visible yet non-intrusive. There are built-in Severity levels to easily indicate the type of message shown as well as the option to include your own call to action or hyperlink button. Since the InfoBar is inline with other UI content the option is there for the control to always be visible or dismissed by the user.
-
-#### Usage
+The `InfoBar` control is for displaying app-wide status messages to users that are highly visible yet non-intrusive. There are built-in Severity levels to easily indicate the type of message shown as well as the option to include your own call to action or hyperlink button. Since the InfoBar is inline with other UI content the option is there for the control to always be visible or dismissed by the user.
 
 You can easility create it using the `InfoBar` widget and theme it using `InfoBarThemeData`. It has built-in support for both light and dark theme:
 
 ```dart
-InfoBar(
-  title: Text('Update available'),
-  content: Text('Restart the app to apply the latest update.'), // optional
-  severity: InfoBarSeverity.info, // optional. Default to InfoBarSeverity.info
-),
+bool _visible = true;
+
+if (_visible)
+  InfoBar(
+    title: Text('Update available'),
+    content: Text('Restart the app to apply the latest update.'), // optional
+    severity: InfoBarSeverity.info, // optional. Default to InfoBarSeverity.info
+    onClose: () {
+      // Dismiss the info bar
+      setState(() => _visible = false);
+    }
+  ),
 ```
 
-#### Some screenshots
+Which produces the following:
 
-![Info InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-title-message.png)\
-![Long Info InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-hyperlink.png)\
-![Warning InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-warning-title-message.png)\
-![Long Success InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)\
-![Error InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-action-button.png)\
-![Custom InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-custom-icon-color.png)
+![InfoBar Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobar-default-title-message.png)
 
 ## Date Picker
 
