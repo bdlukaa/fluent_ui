@@ -850,7 +850,7 @@ class Combobox<T> extends StatefulWidget {
     this.icon,
     this.iconDisabledColor,
     this.iconEnabledColor,
-    this.iconSize = 24.0,
+    this.iconSize = 10.0,
     this.isExpanded = false,
     this.itemHeight = kMinInteractiveDimension,
     this.focusColor,
@@ -1368,7 +1368,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       );
     }
 
-    const Icon defaultIcon = Icon(FluentIcons.chevron_down, size: 16.0);
+    const Icon defaultIcon = Icon(FluentIcons.chevron_down);
 
     Widget result = DefaultTextStyle(
       style: _enabled

@@ -28,29 +28,10 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
 Decoration kPickerDecorationBuilder(
     BuildContext context, Set<ButtonStates> states) {
   assert(debugCheckHasFluentTheme(context));
+  final theme = FluentTheme.of(context);
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
-    border: Border.all(
-      color: () {
-        late Color color;
-        if (states.isHovering) {
-          color = FluentTheme.of(context).inactiveColor;
-        } else if (states.isDisabled) {
-          color = FluentTheme.of(context).disabledColor;
-        } else {
-          color = FluentTheme.of(context).inactiveColor.withOpacity(0.75);
-        }
-        return color;
-      }(),
-      width: 1.0,
-    ),
-    color: () {
-      if (states.isPressing)
-        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
-      else if (states.isFocused) {
-        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
-      }
-    }(),
+    color: ButtonThemeData.buttonColor(theme.brightness, states),
   );
 }
 
