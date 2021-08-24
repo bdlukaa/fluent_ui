@@ -229,10 +229,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       box.size.center(Offset.zero),
       ancestor: overlayState.context.findRenderObject(),
     );
-    if (_mouseIsConnected &&
-        widget.useMousePosition &&
-        mousePosition != null &&
-        box.size.contains(mousePosition!)) {
+    if (_mouseIsConnected && widget.useMousePosition && mousePosition != null) {
       target = mousePosition!;
     }
 
