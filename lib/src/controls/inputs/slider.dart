@@ -160,6 +160,7 @@ class _SliderState extends m.State<Slider> {
                 pressedElevation: 0,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
+                brightness: FluentTheme.of(context).brightness,
               ),
               valueIndicatorShape: _RectangularSliderValueIndicatorShape(
                 backgroundColor: style.labelBackgroundColor,
@@ -245,9 +246,12 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.pressedElevation = 6.0,
     this.useBall = true,
     this.innerFactor = 1.0,
+    this.brightness = Brightness.light,
   });
 
   final double innerFactor;
+
+  final Brightness brightness;
 
   /// Whether to draw a ball instead of a line
   final bool useBall;
@@ -346,7 +350,9 @@ class SliderThumbShape extends m.SliderComponentShape {
       canvas.drawCircle(
         center,
         radius,
-        Paint()..color = Color(0xFF454545),
+        Paint()
+          ..color =
+              brightness == Brightness.light ? Colors.white : Color(0xFF454545),
       );
       canvas.drawCircle(
         center,
