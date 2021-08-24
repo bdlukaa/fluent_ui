@@ -17,6 +17,7 @@ Date format: DD/MM/YYYY
 - Update `Scrollbar` design
 - Update `Slider` design
 - Update `InfoBar` design
+- Update pickers design (`Combobox`, `DatePicker` and `TimePicker`)
 
 ## [2.2.1] - [26/06/2021]
 

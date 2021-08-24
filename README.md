@@ -794,7 +794,7 @@ ToggleSwitch(
 )
 ```
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)                                                                             |
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png) |
 
 ## Radio Buttons
 
@@ -989,9 +989,9 @@ The code above produces the following:
 
 ## Combo Box
 
-Use a combo box to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. When the combo box is closed, it either displays the current selection or is empty if there is no selected item. When the user expands the combo box, it displays the list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/combo-box)
+Use a combo box (also known as a drop-down list) to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. A ListBox is similar to a combo box, but is not collapsible/does not have a compact state. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box)
 
-### Example
+Here's an example of how to create a basic combo box:
 
 ```dart
 
@@ -1012,7 +1012,7 @@ SizedBox(
         .toList(),
     value: comboBoxValue,
     onChanged: (value) {
-      print(value);
+      // print(value);
       if (value != null) setState(() => comboBoxValue = value);
     },
   ),
@@ -1021,13 +1021,7 @@ SizedBox(
 
 The code above produces the following:
 
-![Combo box example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo-box-expand.gif)
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_collapsed.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_listitemstate.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_scroll.png)
+![Combo box Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-no-selection.png)
 
 # Widgets
 
@@ -1197,15 +1191,13 @@ Which produces the following:
 
 ## Date Picker
 
-The date picker gives you a standardized way to let users pick a localized date value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/date-picker)
+The date picker gives you a standardized way to let users pick a localized date value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/date-picker)
 
 The entry point displays the chosen date, and when the user selects the entry point, a picker surface expands vertically from the middle for the user to make a selection. The date picker overlays other UI; it doesn't push other UI out of the way.
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_datepicker_expand.png)
-
 We use [intl](https://pub.dev/packages/intl) to format the dates. You can [change the current locale](https://pub.dev/packages/intl#current-locale) to change formatting
 
-### Example
+Here's an example of how to create a basic date picker:
 
 ```dart
 DateTime date = DateTime.now();
@@ -1220,19 +1212,17 @@ SizedBox(
 );
 ```
 
-The code above produces the following:
+Which produces the following:
 
-![DatePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/date-picker-closed.png)
+![DatePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
 
 ## Time Picker
 
-The time picker gives you a standardized way to let users pick a time value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/time-picker)
+The time picker gives you a standardized way to let users pick a time value using touch, mouse, or keyboard input. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/time-picker)
 
 Use a time picker to let a user pick a single time value.
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_timepicker_expand.png)
-
-### Example
+Here's an example of how to create a basic time picker:
 
 ```dart
 DateTime date = DateTime.now();
@@ -1249,7 +1239,7 @@ SizedBox(
 
 The code above produces the following:
 
-![Time Picker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/time-picker-closed.png)
+![Time Picker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
 
 ## Progress Bar and Progress Ring
 
