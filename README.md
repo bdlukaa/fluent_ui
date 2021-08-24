@@ -1298,11 +1298,14 @@ A scrollbar thumb indicates which portion of a [ScrollView] is actually visible.
 
 Depending on the situation, the scrollbar uses two different visualizations, shown in the following illustration: the panning indicator (left) and the traditional scrollbar (right).
 
-![Scrollbar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/scrollbar.png)
+> Note that the arrows aren't visible. See [this](https://github.com/flutter/flutter/issues/80370) and [this](https://github.com/bdlukaa/fluent_ui/issues/14) issues for more info.
+
+![Scrollbar Panning Indicator](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/scrollbar-panning.png)
+![Traditional Scrollbar](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/scrollbar-traditional.png)
 
 > When the scrollbar is visible it is overlaid as 16px on top of the content inside your ScrollView. In order to ensure good UX design you will want to ensure that no interactive content is obscured by this overlay. Additionally if you would prefer not to have UX overlap, leave 16px of padding on the edge of the viewport to allow for the scrollbar.
 
-### Example
+Here's an example of how to add a scrollbar to a ScrollView:
 
 ```dart
 final _controller = ScrollController();
@@ -1325,8 +1328,6 @@ Which produces the following:
 ![Scrollbar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/conscious-scroll.gif)
 
 You can change the `isAlwaysVisible` property to either enable or disable the fade effect. It's disabled by default.
-
-> Note: Currently, the leading and trailing arrows are not implemented. See [this issue](https://github.com/bdlukaa/fluent_ui/issues/14) to learn more
 
 ## List Tile
 

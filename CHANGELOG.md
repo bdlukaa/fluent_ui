@@ -14,6 +14,7 @@ Date format: DD/MM/YYYY
 - Updated Acrylic to support the web
 - Update `Checkbox` design
 - Update `ToggleSwitch` design
+- Update `Scrollbar` design
 
 ## [2.2.1] - [26/06/2021]
 
