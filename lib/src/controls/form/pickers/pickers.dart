@@ -28,30 +28,37 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
 Decoration kPickerDecorationBuilder(
     BuildContext context, Set<ButtonStates> states) {
   assert(debugCheckHasFluentTheme(context));
+  final theme = FluentTheme.of(context);
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
-    border: Border.all(
-      color: () {
-        late Color color;
-        if (states.isHovering) {
-          color = FluentTheme.of(context).inactiveColor;
-        } else if (states.isDisabled) {
-          color = FluentTheme.of(context).disabledColor;
-        } else {
-          color = FluentTheme.of(context).inactiveColor.withOpacity(0.75);
-        }
-        return color;
-      }(),
-      width: 1.0,
-    ),
-    color: () {
-      if (states.isPressing)
-        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
-      else if (states.isFocused) {
-        return FluentTheme.of(context).disabledColor.withOpacity(0.2);
-      }
-    }(),
+    color: ButtonThemeData.buttonColor(theme.brightness, states),
   );
+}
+
+Widget kHighlightTile() {
+  return Builder(builder: (context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final highlightTileColor =
+        theme.accentColor.resolveFromBrightness(theme.brightness);
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        alignment: Alignment.center,
+        height: kOneLineTileHeight,
+        padding: EdgeInsets.all(6.0),
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          tileColor: highlightTileColor,
+        ),
+      ),
+    );
+  });
 }
 
 class YesNoPickerControl extends StatelessWidget {
@@ -68,15 +75,15 @@ class YesNoPickerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    ButtonStyle style(BorderRadiusGeometry radius) {
+    ButtonStyle style() {
       return ButtonStyle(
         backgroundColor: ButtonState.resolveWith(
           (states) => ButtonThemeData.uncheckedInputColor(
-              FluentTheme.of(context), states),
+            FluentTheme.of(context),
+            states,
+          ),
         ),
-        shape: ButtonState.all(RoundedRectangleBorder(
-          borderRadius: radius,
-        )),
+        border: ButtonState.all(BorderSide.none),
       );
     }
 
@@ -84,26 +91,24 @@ class YesNoPickerControl extends StatelessWidget {
       data: FocusThemeData(renderOutside: false),
       child: Row(children: [
         Expanded(
-          child: SizedBox(
-            height: kOneLineTileHeight,
+          child: Container(
+            margin: EdgeInsets.all(4.0),
+            height: kOneLineTileHeight / 1.2,
             child: Button(
               child: Icon(FluentIcons.check_mark),
               onPressed: onChanged,
-              style: style(BorderRadius.only(
-                bottomLeft: Radius.circular(4.0),
-              )),
+              style: style(),
             ),
           ),
         ),
         Expanded(
-          child: SizedBox(
-            height: kOneLineTileHeight,
+          child: Container(
+            margin: EdgeInsets.all(4.0),
+            height: kOneLineTileHeight / 1.2,
             child: Button(
               child: Icon(FluentIcons.close),
               onPressed: onCancel,
-              style: style(BorderRadius.only(
-                bottomRight: Radius.circular(4.0),
-              )),
+              style: style(),
             ),
           ),
         ),
@@ -134,6 +139,8 @@ class PickerNavigatorIndicator extends StatelessWidget {
         return ButtonTheme.merge(
           data: ButtonThemeData.all(ButtonStyle(
             padding: ButtonState.all(EdgeInsets.all(2.0)),
+            backgroundColor: ButtonState.all(kPickerBackgroundColor(context)),
+            border: ButtonState.all(BorderSide.none),
           )),
           child: FocusTheme(
             data: FocusThemeData(renderOutside: false),
@@ -144,6 +151,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   top: 0,
                   left: 0,
                   right: 0,
+                  height: kOneLineTileHeight,
                   child: Button(
                     child:
                         Center(child: Icon(FluentIcons.chevron_up, size: 12)),
@@ -155,6 +163,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   bottom: 0,
                   left: 0,
                   right: 0,
+                  height: kOneLineTileHeight,
                   child: Button(
                     child:
                         Center(child: Icon(FluentIcons.chevron_down, size: 12)),
