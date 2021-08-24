@@ -841,12 +841,12 @@ A slider is a good choice when you know that users think of the value as a relat
 
 Don't use a slider for binary settings. Use a [toggle switch](#toggle-switches) instead.
 
-### Creating
+Here's an example of how to create a basic slider:
 
 ```dart
 double _value = 0;
 
-Container(
+SizedBox(
   // The default width is 200.
   // The slider does not have its own widget, so you have to add it yourself.
   // The slider always try to be as big as possible
@@ -863,7 +863,7 @@ Container(
 
 The code above produces the following:
 
-![Slider preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)
+![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
 
 You can set `vertical` to `true` to create a vertical slider
 

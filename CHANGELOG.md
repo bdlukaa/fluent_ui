@@ -15,6 +15,7 @@ Date format: DD/MM/YYYY
 - Update `Checkbox` design
 - Update `ToggleSwitch` design
 - Update `Scrollbar` design
+- Update `Slider` design
 
 ## [2.2.1] - [26/06/2021]
 
