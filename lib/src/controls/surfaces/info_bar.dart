@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -65,15 +67,18 @@ class InfoBar extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty('isLong', value: isLong, ifFalse: 'short'));
-    properties.add(EnumProperty('severity', severity));
-    properties.add(ObjectFlagProperty.has('onClose', onClose));
-    properties.add(DiagnosticsProperty('style', style, ifNull: 'no style'));
+    properties
+      ..add(FlagProperty('long', value: isLong, ifFalse: 'short'))
+      ..add(EnumProperty('severity', severity))
+      ..add(ObjectFlagProperty.has('onClose', onClose))
+      ..add(DiagnosticsProperty('style', style, ifNull: 'no style'));
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+    final localizations = FluentLocalizations.of(context);
     final style = InfoBarTheme.of(context).merge(this.style);
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
@@ -93,64 +98,70 @@ class InfoBar extends StatelessWidget {
       if (this.action == null) return null;
       return ButtonTheme.merge(
         child: this.action!,
-        data: style.actionStyle ?? const ButtonThemeData(),
+        data: ButtonThemeData.all(style.actionStyle),
       );
     }();
-    return Acrylic(
-      tint: style.color?.call(severity),
-      child: Padding(
-        padding: style.padding ?? EdgeInsets.all(10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment:
-              isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-          children: [
-            if (icon != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 6.0),
-                child: Icon(icon, color: style.iconColor?.call(severity)),
+    return Container(
+      decoration: style.decoration?.call(severity),
+      padding: style.padding ?? EdgeInsets.all(10),
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment:
+            isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        children: [
+          if (icon != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 6.0),
+              child: Icon(icon, color: style.iconColor?.call(severity)),
+            ),
+          if (isLong)
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title,
+                  if (content != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: content,
+                    ),
+                  if (action != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: action,
+                    ),
+                ],
               ),
-            if (isLong)
-              Flexible(
-                fit: FlexFit.loose,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    title,
-                    if (content != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: content,
-                      ),
-                    if (action != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: action,
-                      ),
-                  ],
+            )
+          else
+            Flexible(
+              fit: FlexFit.loose,
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6,
+                children: [
+                  title,
+                  if (content != null) content,
+                  if (action != null) action,
+                ],
+              ),
+            ),
+          if (closeIcon != null && onClose != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Tooltip(
+                message: localizations.closeButtonLabel,
+                child: IconButton(
+                  icon: Icon(closeIcon, size: style.closeIconSize),
+                  onPressed: onClose,
+                  style: style.closeButtonStyle,
                 ),
-              )
-            else
-              Flexible(
-                fit: FlexFit.loose,
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 6,
-                  children: [
-                    title,
-                    if (content != null) content,
-                    if (action != null) action,
-                  ],
-                ),
               ),
-            if (closeIcon != null && onClose != null)
-              IconButton(
-                icon: Icon(closeIcon),
-                onPressed: onClose,
-              ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -223,18 +234,24 @@ class InfoBarTheme extends InheritedTheme {
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
 class InfoBarThemeData with Diagnosticable {
-  final InfoBarSeverityCheck<Color?>? color;
+  final InfoBarSeverityCheck<Decoration?>? decoration;
   final InfoBarSeverityCheck<Color?>? iconColor;
   final InfoBarSeverityCheck<IconData>? icon;
+
+  final ButtonStyle? closeButtonStyle;
   final IconData? closeIcon;
-  final ButtonThemeData? actionStyle;
+  final double? closeIconSize;
+
+  final ButtonStyle? actionStyle;
   final EdgeInsetsGeometry? padding;
 
   const InfoBarThemeData({
-    this.color,
+    this.decoration,
     this.icon,
     this.iconColor,
+    this.closeButtonStyle,
     this.closeIcon,
+    this.closeIconSize,
     this.actionStyle,
     this.padding,
   });
@@ -243,35 +260,50 @@ class InfoBarThemeData with Diagnosticable {
     final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
       padding: EdgeInsets.all(10),
-      color: (severity) {
+      decoration: (severity) {
+        late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
-            return style.acrylicBackgroundColor;
+            color = isDark ? Color(0xFF272727) : Color(0xFFf4f4f4);
+            break;
           case InfoBarSeverity.warning:
-            return isDark ? Color(0xFF433519) : Colors.warningSecondaryColor;
+            color = Colors.warningSecondaryColor
+                .resolveFromBrightness(style.brightness);
+            break;
           case InfoBarSeverity.success:
-            return isDark ? Color(0xFF393d1b) : Colors.successSecondaryColor;
+            color = Colors.successSecondaryColor
+                .resolveFromBrightness(style.brightness);
+            break;
           case InfoBarSeverity.error:
-            return isDark ? Color(0xFF442726) : Colors.errorSecondaryColor;
+            color = Colors.errorSecondaryColor
+                .resolveFromBrightness(style.brightness);
+            break;
         }
+        return BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4.0),
+          boxShadow: kElevationToShadow[2],
+        );
       },
       closeIcon: FluentIcons.close,
+      closeIconSize: 16.0,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return FluentIcons.info;
+            return FluentIcons.info_solid;
           case InfoBarSeverity.warning:
-            return FluentIcons.error;
+            return FluentIcons.critical_error_solid;
           case InfoBarSeverity.success:
-            return Icons.check_circle_outlined;
+            return Icons.check_circle;
           case InfoBarSeverity.error:
-            return FluentIcons.error_badge;
+            return Icons.cancel;
         }
       },
       iconColor: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return isDark ? Colors.grey[120] : Colors.grey[160];
+            return style.accentColor
+                .resolveFromReverseBrightness(style.brightness);
           case InfoBarSeverity.warning:
             return isDark ? Colors.yellow : Colors.warningPrimaryColor;
           case InfoBarSeverity.success:
@@ -280,9 +312,9 @@ class InfoBarThemeData with Diagnosticable {
             return isDark ? Colors.red : Colors.errorPrimaryColor;
         }
       },
-      actionStyle: ButtonThemeData.all(ButtonStyle(
+      actionStyle: ButtonStyle(
         padding: ButtonState.all(EdgeInsets.all(6)),
-      )),
+      ),
     );
   }
 
@@ -292,16 +324,19 @@ class InfoBarThemeData with Diagnosticable {
     double t,
   ) {
     return InfoBarThemeData(
+      closeIconSize: lerpDouble(a?.closeIconSize, b?.closeIconSize, t),
       closeIcon: t < 0.5 ? a?.closeIcon : b?.closeIcon,
+      closeButtonStyle:
+          ButtonStyle.lerp(a?.closeButtonStyle, b?.closeButtonStyle, t),
       icon: t < 0.5 ? a?.icon : b?.icon,
-      color: (severity) {
-        return Color.lerp(
-          a?.color?.call(severity),
-          b?.color?.call(severity),
+      decoration: (severity) {
+        return Decoration.lerp(
+          a?.decoration?.call(severity),
+          b?.decoration?.call(severity),
           t,
         );
       },
-      actionStyle: ButtonThemeData.lerp(a?.actionStyle, b?.actionStyle, t),
+      actionStyle: ButtonStyle.lerp(a?.actionStyle, b?.actionStyle, t),
       iconColor: (severity) {
         return Color.lerp(
           a?.iconColor?.call(severity),
@@ -318,7 +353,7 @@ class InfoBarThemeData with Diagnosticable {
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
       icon: style.icon ?? icon,
-      color: style.color ?? color,
+      decoration: style.decoration ?? decoration,
       actionStyle: style.actionStyle ?? actionStyle,
       iconColor: style.iconColor ?? iconColor,
       padding: style.padding ?? padding,
@@ -328,14 +363,15 @@ class InfoBarThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty.has('icon', icon));
-    properties.add(ObjectFlagProperty.has('closeIcon', closeIcon));
-    properties.add(ObjectFlagProperty.has('color', color));
-    properties.add(ObjectFlagProperty.has('iconColor', iconColor));
-    properties.add(DiagnosticsProperty<ButtonThemeData>(
-      'actionStyle',
-      actionStyle,
-      ifNull: 'no style',
-    ));
+    properties
+      ..add(ObjectFlagProperty.has('icon', icon))
+      ..add(IconDataProperty('closeIcon', closeIcon))
+      ..add(ObjectFlagProperty.has('decoration', decoration))
+      ..add(ObjectFlagProperty.has('iconColor', iconColor))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+        'actionStyle',
+        actionStyle,
+        ifNull: 'no style',
+      ));
   }
 }

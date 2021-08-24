@@ -153,7 +153,7 @@ class _BaseButtonState extends State<BaseButton> {
             ),
             padding: padding,
             child: IconTheme.merge(
-              data: IconThemeData(color: resolvedForegroundColor),
+              data: IconThemeData(color: resolvedForegroundColor, size: 14.0),
               child: DefaultTextStyle(
                 style: (resolvedTextStyle ?? TextStyle(inherit: true))
                     .copyWith(color: resolvedForegroundColor),

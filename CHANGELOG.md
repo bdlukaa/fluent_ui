@@ -16,6 +16,7 @@ Date format: DD/MM/YYYY
 - Update `ToggleSwitch` design
 - Update `Scrollbar` design
 - Update `Slider` design
+- Update `InfoBar` design
 
 ## [2.2.1] - [26/06/2021]
 
