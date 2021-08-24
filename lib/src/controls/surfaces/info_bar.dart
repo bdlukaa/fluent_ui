@@ -96,8 +96,8 @@ class InfoBar extends StatelessWidget {
         data: style.actionStyle ?? const ButtonThemeData(),
       );
     }();
-    return Acrylic(
-      tint: style.color?.call(severity),
+    return Container(
+      decoration: style.decoration?.call(severity),
       child: Padding(
         padding: style.padding ?? EdgeInsets.all(10),
         child: Row(
@@ -223,7 +223,7 @@ class InfoBarTheme extends InheritedTheme {
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
 class InfoBarThemeData with Diagnosticable {
-  final InfoBarSeverityCheck<Color?>? color;
+  final InfoBarSeverityCheck<Decoration?>? decoration;
   final InfoBarSeverityCheck<Color?>? iconColor;
   final InfoBarSeverityCheck<IconData>? icon;
   final IconData? closeIcon;
@@ -231,7 +231,7 @@ class InfoBarThemeData with Diagnosticable {
   final EdgeInsetsGeometry? padding;
 
   const InfoBarThemeData({
-    this.color,
+    this.decoration,
     this.icon,
     this.iconColor,
     this.closeIcon,
@@ -243,35 +243,45 @@ class InfoBarThemeData with Diagnosticable {
     final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
       padding: EdgeInsets.all(10),
-      color: (severity) {
+      decoration: (severity) {
+        late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
-            return style.acrylicBackgroundColor;
+            color = isDark ? Color(0xFF272727) : Color(0xFFf4f4f4);
+            break;
           case InfoBarSeverity.warning:
-            return isDark ? Color(0xFF433519) : Colors.warningSecondaryColor;
+            color = Colors.warningSecondaryColor.resolveFromBrightness(style.brightness);
+            break;
           case InfoBarSeverity.success:
-            return isDark ? Color(0xFF393d1b) : Colors.successSecondaryColor;
+            color = Colors.successSecondaryColor.resolveFromBrightness(style.brightness);
+            break;
           case InfoBarSeverity.error:
-            return isDark ? Color(0xFF442726) : Colors.errorSecondaryColor;
+            color = Colors.errorSecondaryColor.resolveFromBrightness(style.brightness);
+            break;
         }
+        return BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4.0),
+          boxShadow: kElevationToShadow[2],
+        );
       },
       closeIcon: FluentIcons.close,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return FluentIcons.info;
+            return FluentIcons.info_solid;
           case InfoBarSeverity.warning:
-            return FluentIcons.error;
+            return FluentIcons.critical_error_solid;
           case InfoBarSeverity.success:
-            return Icons.check_circle_outlined;
+            return Icons.check_circle;
           case InfoBarSeverity.error:
-            return FluentIcons.error_badge;
+            return Icons.cancel;
         }
       },
       iconColor: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return isDark ? Colors.grey[120] : Colors.grey[160];
+            return style.accentColor.resolveFromReverseBrightness(style.brightness);
           case InfoBarSeverity.warning:
             return isDark ? Colors.yellow : Colors.warningPrimaryColor;
           case InfoBarSeverity.success:
@@ -294,10 +304,10 @@ class InfoBarThemeData with Diagnosticable {
     return InfoBarThemeData(
       closeIcon: t < 0.5 ? a?.closeIcon : b?.closeIcon,
       icon: t < 0.5 ? a?.icon : b?.icon,
-      color: (severity) {
-        return Color.lerp(
-          a?.color?.call(severity),
-          b?.color?.call(severity),
+      decoration: (severity) {
+        return Decoration.lerp(
+          a?.decoration?.call(severity),
+          b?.decoration?.call(severity),
           t,
         );
       },
@@ -318,7 +328,7 @@ class InfoBarThemeData with Diagnosticable {
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
       icon: style.icon ?? icon,
-      color: style.color ?? color,
+      decoration: style.decoration ?? decoration,
       actionStyle: style.actionStyle ?? actionStyle,
       iconColor: style.iconColor ?? iconColor,
       padding: style.padding ?? padding,
@@ -330,7 +340,7 @@ class InfoBarThemeData with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty.has('icon', icon));
     properties.add(ObjectFlagProperty.has('closeIcon', closeIcon));
-    properties.add(ObjectFlagProperty.has('color', color));
+    properties.add(ObjectFlagProperty.has('decoration', decoration));
     properties.add(ObjectFlagProperty.has('iconColor', iconColor));
     properties.add(DiagnosticsProperty<ButtonThemeData>(
       'actionStyle',

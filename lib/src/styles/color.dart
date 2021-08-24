@@ -149,11 +149,20 @@ class Colors {
   });
 
   static const Color warningPrimaryColor = Color(0xFFd83b01);
-  static const Color warningSecondaryColor = Color(0xFFfff4ce);
+  static final warningSecondaryColor = AccentColor('normal', <String, Color>{
+    'dark': Color(0xFF433519),
+    'normal': Color(0xFFfff4ce),
+  });
   static const Color errorPrimaryColor = Color(0xFFa80000);
-  static const Color errorSecondaryColor = Color(0xFFfde7e9);
+  static final errorSecondaryColor = AccentColor('normal', <String, Color>{
+    'dark': Color(0xFF442726),
+    'normal': Color(0xFFfde7e9),
+  });
   static const Color successPrimaryColor = Color(0xFF107c10);
-  static const Color successSecondaryColor = Color(0xFFdff6dd);
+  static final successSecondaryColor = AccentColor('normal', <String, Color>{
+    'dark': Color(0xFF393d1b),
+    'normal': Color(0xFFdff6dd),
+  });
 
   /// A list of all the accent colors provided by this library.
   static final List<AccentColor> accentColors = [
@@ -274,6 +283,23 @@ class AccentColor extends ColorSwatch<String> {
                 ? lighter
                 : lightest;
       case Brightness.dark:
+        return level == 0
+            ? dark
+            : level == 1
+                ? darker
+                : darkest;
+    }
+  }
+
+  Color resolveFromReverseBrightness(Brightness brightness, {int level = 0}) {
+    switch (brightness) {
+      case Brightness.dark:
+        return level == 0
+            ? light
+            : level == 1
+                ? lighter
+                : lightest;
+      case Brightness.light:
         return level == 0
             ? dark
             : level == 1
