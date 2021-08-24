@@ -116,7 +116,7 @@ class _TypographyPageState extends State<TypographyPage> {
               label: scale.toStringAsFixed(2),
               max: 2,
               min: 0.5,
-              style: SliderThemeData(useThumbBall: false),
+              // style: SliderThemeData(useThumbBall: false),
             ),
           ),
         ]),

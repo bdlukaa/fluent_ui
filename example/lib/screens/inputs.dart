@@ -289,7 +289,7 @@ class _InputsPageState extends State<InputsPage> {
                   value: sliderValue,
                   onChanged:
                       disabled ? null : (v) => setState(() => sliderValue = v),
-                  style: SliderThemeData(useThumbBall: false),
+                  // style: SliderThemeData(useThumbBall: false),
                 ),
               ),
             ]),

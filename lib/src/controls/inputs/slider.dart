@@ -139,26 +139,38 @@ class _SliderState extends m.State<Slider> {
       margin: style.margin ?? EdgeInsets.zero,
       builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
-        child: m.SliderTheme(
-          data: m.SliderThemeData(
-            showValueIndicator: m.ShowValueIndicator.always,
-            thumbColor: style.thumbColor ?? style.activeColor,
-            overlayShape: m.RoundSliderOverlayShape(overlayRadius: 0),
-            thumbShape: SliderThumbShape(
-              elevation: 0,
-              pressedElevation: 0,
-              useBall: style.useThumbBall ?? true,
-              states: states,
+        child: TweenAnimationBuilder<double>(
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          tween: Tween<double>(
+            begin: 1.0,
+            end: states.isPressing
+                ? 0.45
+                : states.isHovering
+                    ? 0.66
+                    : 0.5,
+          ),
+          builder: (context, innerFactor, child) => m.SliderTheme(
+            data: m.SliderThemeData(
+              showValueIndicator: m.ShowValueIndicator.always,
+              thumbColor: style.thumbColor ?? style.activeColor,
+              overlayShape: m.RoundSliderOverlayShape(overlayRadius: 0),
+              thumbShape: SliderThumbShape(
+                elevation: 0,
+                pressedElevation: 0,
+                useBall: style.useThumbBall ?? true,
+                innerFactor: innerFactor,
+              ),
+              valueIndicatorShape: _RectangularSliderValueIndicatorShape(
+                backgroundColor: style.labelBackgroundColor,
+                vertical: widget.vertical,
+              ),
+              trackHeight: 1.75,
+              trackShape: _CustomTrackShape(),
+              disabledThumbColor: style.disabledThumbColor,
+              disabledInactiveTrackColor: style.disabledInactiveColor,
+              disabledActiveTrackColor: style.disabledActiveColor,
             ),
-            valueIndicatorShape: _RectangularSliderValueIndicatorShape(
-              backgroundColor: style.labelBackgroundColor,
-              vertical: widget.vertical,
-            ),
-            trackHeight: 1.75,
-            trackShape: _CustomTrackShape(),
-            disabledThumbColor: style.disabledThumbColor,
-            disabledInactiveTrackColor: style.disabledInactiveColor,
-            disabledActiveTrackColor: style.disabledActiveColor,
+            child: child!,
           ),
           child: m.Slider(
             value: widget.value,
@@ -225,12 +237,11 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.elevation = 1.0,
     this.pressedElevation = 6.0,
     this.useBall = true,
-    this.states = const {},
+    this.innerFactor = 1.0,
   });
 
-  /// The button states
-  final Set<ButtonStates> states;
- 
+  final double innerFactor;
+
   /// Whether to draw a ball instead of a line
   final bool useBall;
 
@@ -328,6 +339,11 @@ class SliderThumbShape extends m.SliderComponentShape {
       canvas.drawCircle(
         center,
         radius,
+        Paint()..color = Color(0xFF454545),
+      );
+      canvas.drawCircle(
+        center,
+        radius * innerFactor,
         Paint()..color = color,
       );
     }
