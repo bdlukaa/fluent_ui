@@ -61,6 +61,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Toggle Switch](#toggle-switch)
   - [Radio Buttons](#radio-buttons)
   - [Slider](#slider)
+    - [Choosing between vertical and horizontal sliders](#choosing-between-vertical-and-horizontal-sliders)
 - [Forms](#forms)
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
@@ -791,7 +792,7 @@ ToggleSwitch(
 )
 ```
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png) |
+![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 
 ## Radio Buttons
 
@@ -862,9 +863,10 @@ The code above produces the following:
 
 ![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
 
-You can set `vertical` to `true` to create a vertical slider
 
 ### Choosing between vertical and horizontal sliders
+
+You can set `vertical` to `true` to create a vertical slider
 
 | Horizontal                                                        | Vertical                                                                                             |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -897,11 +899,11 @@ A form is a group of controls that collect and submit data from users. Forms are
 
 ## TextBox
 
-The TextBox control lets a user type text into an app. It's typically used to capture a single line of text, but can be configured to capture multiple lines of text. The text displays on the screen in a simple, uniform, plaintext format. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/text-box)
+A Text Box lets a user type text into an app. It's typically used to capture a single line of text, but can be configured to capture multiple lines of text. The text displays on the screen in a simple, uniform, plaintext format. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box)
 
-You can use the [forms screen](example/lib/screens/forms.dart) in the example app for reference.
+![TextBox Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/text-box.png)
 
-### Creating
+You can use the [Forms screen](example/lib/screens/forms.dart) in the example app for reference.
 
 You can use the widget `TextBox` to create text boxes:
 
@@ -913,12 +915,9 @@ TextBox(
 ),
 ```
 
-### Screenshots
+Which produces the following:
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-clear-all.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-multi-line.png)
+![TextBox Example Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/text-box-ex1.png)
 
 ## Auto Suggest Box
 
@@ -1024,13 +1023,13 @@ The code above produces the following:
 
 ## Tooltip
 
-A tooltip is a short description that is linked to another control or object. Tooltips help users understand unfamiliar objects that aren't described directly in the UI. They display automatically when the user moves focus to, presses and holds, or hovers the mouse pointer over a control. The tooltip disappears after a few seconds, or when the user moves the finger, pointer or keyboard/gamepad focus. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
+A tooltip is a short description that is linked to another control or object. Tooltips help users understand unfamiliar objects that aren't described directly in the UI. They display automatically when the user moves focus to, presses and holds, or hovers the mouse pointer over a control. The tooltip disappears after a few seconds, or when the user moves the finger, pointer or keyboard/gamepad focus. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/tooltips)
 
 To add a tooltip to a widget, wrap it in a `Tooltip` widget:
 
 ```dart
 Tooltip(
-  message: 'Click to perform action.',
+  message: 'Click to perform an action',
   child: Button(
     text: Text('Button with tooltip'),
     onPressed: () {
@@ -1042,7 +1041,7 @@ Tooltip(
 
 It's located above or below the `child` widget. You can specify the preffered location when both locations are available using the `preferBelow` property.
 
-![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
+![Tooltip Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/tool-tip.png)
 
 ## Content Dialog
 
@@ -1150,15 +1149,6 @@ Acrylic(
 ),
 ```
 
-### Widgets using Acrylic
-
-Currently, the following widgets use acrylic in its implementation:
-
-- [Navigation View](#navigation-view)
-- [TabView](#tab-view)
-
-### Screenshots
-
 ![Acrylic preview](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/luminosityversustint.png)
 
 ## InfoBar
@@ -1242,9 +1232,7 @@ The code above produces the following:
 
 A progress control provides feedback to the user that a long-running operation is underway. It can mean that the user cannot interact with the app when the progress indicator is visible, and can also indicate how long the wait time might be, depending on the indicator used.
 
-### Example
-
-Creating a ProgressBar:
+Here's an example of how to create a ProgressBar:
 
 ```dart
 ProgressBar(value: 35)
@@ -1258,7 +1246,7 @@ You can omit the `value` property to create an indeterminate progress bar:
 
 Indeterminate Progress Bar is a courtesy of [@raitonubero](https://github.com/raitonoberu). Show him some love
 
-Creating a ProgressRing:
+Here's an example of how to create a progress ring:
 
 ```dart
 ProgressRing(value: 35)
@@ -1271,12 +1259,6 @@ You can omit the `value` property to create an indeterminate progress ring:
 ![Indeterminate Progress Ring](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressring-indeterminate.gif)
 
 Both Indeterminate ProgressBar and Indeterminate ProgressRing is a courtesy of [@raitonubero](https://github.com/raitonoberu). Show him some love ❤
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-determinate-example.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress-bar-indeterminate-example.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progress_ring_determinate_example.png)
 
 ## Scrollbar
 
@@ -1348,37 +1330,11 @@ The code above produces the following:
 
 If you want to create a tappable tile, use `TappableListTile` instead.
 
-You can create the following variations of a `ListTile`:
-
-- CheckboxListTile: a `TappableListTile` with a `Checkbox` in the leading.
-- SwitchListTile: a `TappableListTile` with a `ToggleSwitch` in the leading.
-
-They share a single pattern. Here's how to implement the following image:
-
-![CheckboxListTile Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/checkbox1.png)
-
-```dart
-CheckboxListTile(
-  value: true,
-  onChanged: (v) => print(v),
-  title: Text(
-    'I agree to the terms of service for this site',
-    style: TextStyle(fontWeight: FontWeight.normal),
-  ),
-)
-```
-
-### Screenshots
-
-![Single line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/singlelineicon.png)\
-![Double line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineicon.png)\
-![Three line](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/tripleline.png)
-
 ## Info Header
 
 You can use an `InfoHeader` to tell the user the purpose of something
 
-### Example
+Here's an example of how to add an info header to a combobox:
 
 ```dart
 InfoHeader(
@@ -1389,7 +1345,7 @@ InfoHeader(
 
 The code above produces the following:
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/combo_box_collapsed.png)
+![InfoHeader Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-no-selection.png)
 
 Some widgets, such as `ComboBox` and `TextBox`, already come with a `header` property, so you can use them easily with them:
 
