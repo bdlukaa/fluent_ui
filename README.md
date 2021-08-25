@@ -58,7 +58,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Split Button](#split-button)
   - [Toggle Button](#toggle-button)
   - [Checkbox](#checkbox)
-  - [Toggle Switches](#toggle-switches)
+  - [Toggle Switch](#toggle-switch)
   - [Radio Buttons](#radio-buttons)
   - [Slider](#slider)
 - [Forms](#forms)
@@ -775,11 +775,11 @@ Checkbox(
 
 ![](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
 
-## Toggle Switches
+## Toggle Switch
 
 The toggle switch represents a physical switch that allows users to turn things on or off, like a light switch. Use toggle switch controls to present users with two mutually exclusive options (such as on/off), where choosing an option provides immediate results. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/toggles)
 
-Here's an example of how to create a basic toggle switcher:
+Here's an example of how to create a basic toggle switch:
 
 ```dart
 bool _checked = false;

@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - Update `SplitButton` design
 - Update `IconButton` design
+- Fixed `ToggleSwitch` not showing expanded mode when dragging the thumb
 
 ## [3.0.0] - Windows 11 - [24/08/2021]
 

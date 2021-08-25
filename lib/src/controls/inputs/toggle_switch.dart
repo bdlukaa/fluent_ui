@@ -90,6 +90,7 @@ class ToggleSwitch extends StatefulWidget {
 
 class _ToggleSwitchState extends State<ToggleSwitch> {
   bool get isDisabled => widget.onChanged == null;
+  bool _dragging = false;
 
   Alignment? _alignment;
 
@@ -119,10 +120,13 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
       onHorizontalDragStart: (e) {
         if (isDisabled) return;
         _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+        setState(() => _dragging = true);
       },
       onHorizontalDragUpdate: (e) {
         if (isDisabled) return;
         _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+        if (!_dragging)
+          setState(() => _dragging = true);
       },
       onHorizontalDragEnd: (e) {
         if (isDisabled) return;
@@ -132,7 +136,10 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           } else {
             widget.onChanged!(false);
           }
-          setState(() => _alignment = null);
+          setState(() {
+            _alignment = null;
+            _dragging = false;
+          });
         }
       },
       builder: (context, states) {
@@ -151,7 +158,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               DefaultToggleSwitchThumb(
                 checked: widget.checked,
                 style: style,
-                states: states,
+                states: _dragging ? {ButtonStates.pressing} : states,
               ),
         );
         if (widget.content != null) {
