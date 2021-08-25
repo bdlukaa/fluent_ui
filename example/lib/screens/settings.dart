@@ -52,6 +52,9 @@ class Settings extends StatelessWidget {
         );
       }
     }());
+
+    const spacer = const SizedBox(height: 10.0);
+    const biggerSpacer = const SizedBox(height: 40.0);
     return ScaffoldPage(
       header: PageHeader(title: Text('Settings')),
       content: ListView(
@@ -64,6 +67,7 @@ class Settings extends StatelessWidget {
         children: [
           Text('Theme mode',
               style: FluentTheme.of(context).typography.subtitle),
+          spacer,
           ...List.generate(ThemeMode.values.length, (index) {
             final mode = ThemeMode.values[index];
             return Padding(
@@ -79,10 +83,12 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
+          biggerSpacer,
           Text(
             'Navigation Pane Display Mode',
             style: FluentTheme.of(context).typography.subtitle,
           ),
+          spacer,
           ...List.generate(PaneDisplayMode.values.length, (index) {
             final mode = PaneDisplayMode.values[index];
             return Padding(
@@ -98,8 +104,10 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
+          biggerSpacer,
           Text('Navigation Indicator',
               style: FluentTheme.of(context).typography.subtitle),
+          spacer,
           ...List.generate(NavigationIndicators.values.length, (index) {
             final mode = NavigationIndicators.values[index];
             return Padding(
@@ -115,8 +123,10 @@ class Settings extends StatelessWidget {
               ),
             );
           }),
+          biggerSpacer,
           Text('Accent Color',
               style: FluentTheme.of(context).typography.subtitle),
+          spacer,
           Wrap(children: [
             Tooltip(
               style: tooltipThemeData,
@@ -133,8 +143,10 @@ class Settings extends StatelessWidget {
             }),
           ]),
           if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
+            biggerSpacer,
             Text('Window Transparency',
                 style: FluentTheme.of(context).typography.subtitle),
+            spacer,
             ...List.generate(FlutterAcrylic.AcrylicEffect.values.length,
                 (index) {
               final mode = FlutterAcrylic.AcrylicEffect.values[index];

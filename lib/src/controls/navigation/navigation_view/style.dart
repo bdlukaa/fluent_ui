@@ -129,7 +129,7 @@ class NavigationPaneThemeData with Diagnosticable {
       animationCurve: animationCurve,
       backgroundColor: backgroundColor,
       highlightColor: highlightColor,
-      itemHeaderTextStyle: typography.base,
+      itemHeaderTextStyle: typography.bodyStrong,
       selectedTextStyle: ButtonState.resolveWith((states) {
         return states.isDisabled ? disabledTextStyle : typography.body;
       }),

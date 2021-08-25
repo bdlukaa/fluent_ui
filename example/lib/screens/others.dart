@@ -206,7 +206,7 @@ class _OthersState extends State<Others> {
                             child: Text(
                               'A C R Y L I C',
                               style:
-                                  FluentTheme.of(context).typography.subheader,
+                                  FluentTheme.of(context).typography.titleLarge,
                               textAlign: TextAlign.center,
                             ),
                           ),

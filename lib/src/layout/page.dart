@@ -124,7 +124,7 @@ class PageHeader extends StatelessWidget {
         if (leading != null) leading,
         Expanded(
           child: DefaultTextStyle(
-            style: FluentTheme.of(context).typography.subheader!,
+            style: FluentTheme.of(context).typography.title!,
             child: title ?? SizedBox(),
           ),
         ),

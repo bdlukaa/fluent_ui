@@ -13,14 +13,25 @@ class _TypographyPageState extends State<TypographyPage> {
   Color? color;
   double scale = 1.0;
 
+  Widget buildColorBox(Color color) {
+    const double boxSize = 25.0;
+    return Container(
+      height: boxSize,
+      width: boxSize,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     Typography typography = FluentTheme.of(context).typography;
-    if (color == null) color = typography.header!.color;
+    if (color == null) color = typography.display!.color;
     typography = typography.apply(displayColor: color!);
     const Widget spacer = const SizedBox(height: 4.0);
-    const double boxSize = 25.0;
     return ScaffoldPage(
       header: PageHeader(
         title: Text('Typography showcase'),
@@ -35,8 +46,7 @@ class _TypographyPageState extends State<TypographyPage> {
               items: [
                 ComboboxItem(
                   child: Row(children: [
-                    Container(
-                        height: boxSize, width: boxSize, color: Colors.white),
+                    buildColorBox(Colors.white),
                     SizedBox(width: 10.0),
                     Text('White'),
                   ]),
@@ -44,8 +54,7 @@ class _TypographyPageState extends State<TypographyPage> {
                 ),
                 ComboboxItem(
                   child: Row(children: [
-                    Container(
-                        height: boxSize, width: boxSize, color: Colors.black),
+                    buildColorBox(Colors.black),
                     SizedBox(width: 10.0),
                     Text('Black'),
                   ]),
@@ -55,7 +64,7 @@ class _TypographyPageState extends State<TypographyPage> {
                   final color = Colors.accentColors[index];
                   return ComboboxItem(
                     child: Row(children: [
-                      Container(height: boxSize, width: boxSize, color: color),
+                      buildColorBox(color),
                       SizedBox(width: 10.0),
                       Text(accentColorNames[index + 1]),
                     ]),
@@ -87,15 +96,17 @@ class _TypographyPageState extends State<TypographyPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Header', style: typography.header),
+                      Text('Display', style: typography.display),
                       spacer,
-                      Text('Subheader', style: typography.subheader),
+                      Text('Title Large', style: typography.titleLarge),
                       spacer,
                       Text('Title', style: typography.title),
                       spacer,
                       Text('Subtitle', style: typography.subtitle),
                       spacer,
-                      Text('Base', style: typography.base),
+                      Text('Body Large', style: typography.bodyLarge),
+                      spacer,
+                      Text('Body Strong', style: typography.bodyStrong),
                       spacer,
                       Text('Body', style: typography.body),
                       spacer,

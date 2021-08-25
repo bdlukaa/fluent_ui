@@ -1,7 +1,13 @@
 Date format: DD/MM/YYYY
 
-## [next] - [##/08/2021]
+## [next] - Texts and Fixes - [25/08/2021]
 
+- Updated Typography:
+  - **BREAKING** Renamed `header` -> `display`
+  - **BREAKING** Renamed `subHeader` -> `titleLarge`
+  - **BREAKING** Renamed `base` -> `bodyStrong`
+  - Added `bodyLarge`
+  - Updated font size and weight for most of the text styles
 - Update `SplitButton` design
 - Update `IconButton` design
 - Fixed `ToggleSwitch` not showing expanded mode when dragging the thumb

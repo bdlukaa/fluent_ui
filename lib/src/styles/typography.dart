@@ -19,12 +19,9 @@ class Typography with Diagnosticable {
   /// The header style. Use this as the top of the hierarchy
   ///
   /// Don't use [header] if the text needs to wrap.
-  final TextStyle? header;
+  final TextStyle? display;
 
-  /// The subheader style.
-  ///
-  /// Don't use [subheader] if the text needs to wrap.
-  final TextStyle? subheader;
+  final TextStyle? titleLarge;
 
   /// The title style.
   final TextStyle? title;
@@ -32,8 +29,10 @@ class Typography with Diagnosticable {
   /// The subtitle style.
   final TextStyle? subtitle;
 
+  final TextStyle? bodyLarge;
+
   /// The base style. Use [base] for titles when space is constrained.
-  final TextStyle? base;
+  final TextStyle? bodyStrong;
 
   /// The body style. Use [body] for most of the text.
   final TextStyle? body;
@@ -45,11 +44,12 @@ class Typography with Diagnosticable {
 
   /// Creates a new [Typography]. To create the default typography, use [Typography.defaultTypography]
   const Typography({
-    this.header,
-    this.subheader,
+    this.display,
+    this.titleLarge,
     this.title,
     this.subtitle,
-    this.base,
+    this.bodyLarge,
+    this.bodyStrong,
     this.body,
     this.caption,
   });
@@ -64,26 +64,35 @@ class Typography with Diagnosticable {
     assert(brightness != null || color != null);
     color ??= brightness == Brightness.light ? Colors.black : Colors.white;
     return Typography(
-      header: TextStyle(
+      display: TextStyle(
         fontSize: 42,
         color: color,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w600,
       ),
-      subheader: TextStyle(
+      titleLarge: TextStyle(
         fontSize: 34,
         color: color,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w500,
       ),
-      title: TextStyle(fontSize: 24, color: color, fontWeight: FontWeight.w600),
+      title: TextStyle(
+        fontSize: 22,
+        color: color,
+        fontWeight: FontWeight.w600,
+      ),
       subtitle: TextStyle(
-        fontSize: 20,
+        fontSize: 28,
+        color: color,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 18,
         color: color,
         fontWeight: FontWeight.normal,
       ),
-      base: TextStyle(
+      bodyStrong: TextStyle(
         fontSize: 14,
         color: color,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
       ),
       body: TextStyle(
         fontSize: 14,
@@ -100,11 +109,12 @@ class Typography with Diagnosticable {
 
   static Typography lerp(Typography? a, Typography? b, double t) {
     return Typography(
-      header: TextStyle.lerp(a?.header, b?.header, t),
-      subheader: TextStyle.lerp(a?.subheader, b?.subheader, t),
+      display: TextStyle.lerp(a?.display, b?.display, t),
+      titleLarge: TextStyle.lerp(a?.titleLarge, b?.titleLarge, t),
       title: TextStyle.lerp(a?.title, b?.title, t),
       subtitle: TextStyle.lerp(a?.subtitle, b?.subtitle, t),
-      base: TextStyle.lerp(a?.base, b?.base, t),
+      bodyLarge: TextStyle.lerp(a?.bodyLarge, b?.bodyLarge, t),
+      bodyStrong: TextStyle.lerp(a?.bodyStrong, b?.bodyStrong, t),
       body: TextStyle.lerp(a?.body, b?.body, t),
       caption: TextStyle.lerp(a?.caption, b?.caption, t),
     );
@@ -114,11 +124,12 @@ class Typography with Diagnosticable {
   Typography merge(Typography? typography) {
     if (typography == null) return this;
     return Typography(
-      header: typography.header ?? header,
-      subheader: typography.subheader ?? subheader,
+      display: typography.display ?? display,
+      titleLarge: typography.titleLarge ?? titleLarge,
       title: typography.title ?? title,
       subtitle: typography.subtitle ?? subtitle,
-      base: typography.base ?? base,
+      bodyLarge: typography.bodyLarge ?? bodyLarge,
+      bodyStrong: typography.bodyStrong ?? bodyStrong,
       body: typography.body ?? body,
       caption: typography.caption ?? caption,
     );
@@ -135,7 +146,7 @@ class Typography with Diagnosticable {
     TextDecorationStyle? decorationStyle,
   }) {
     return Typography(
-      header: header?.apply(
+      display: display?.apply(
         color: displayColor,
         decoration: decoration,
         decorationColor: decorationColor,
@@ -144,7 +155,7 @@ class Typography with Diagnosticable {
         fontSizeFactor: fontSizeFactor,
         fontSizeDelta: fontSizeDelta,
       ),
-      subheader: subheader?.apply(
+      titleLarge: titleLarge?.apply(
         color: displayColor,
         decoration: decoration,
         decorationColor: decorationColor,
@@ -171,7 +182,16 @@ class Typography with Diagnosticable {
         fontSizeFactor: fontSizeFactor,
         fontSizeDelta: fontSizeDelta,
       ),
-      base: base?.apply(
+      bodyLarge: bodyLarge?.apply(
+        color: displayColor,
+        decoration: decoration,
+        decorationColor: decorationColor,
+        decorationStyle: decorationStyle,
+        fontFamily: fontFamily,
+        fontSizeFactor: fontSizeFactor,
+        fontSizeDelta: fontSizeDelta,
+      ),
+      bodyStrong: bodyStrong?.apply(
         color: displayColor,
         decoration: decoration,
         decorationColor: decorationColor,
@@ -204,11 +224,12 @@ class Typography with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextStyle>('header', header));
-    properties.add(DiagnosticsProperty<TextStyle>('subheader', subheader));
+    properties.add(DiagnosticsProperty<TextStyle>('header', display));
+    properties.add(DiagnosticsProperty<TextStyle>('titleLarge', titleLarge));
     properties.add(DiagnosticsProperty<TextStyle>('title', title));
     properties.add(DiagnosticsProperty<TextStyle>('subtitle', subtitle));
-    properties.add(DiagnosticsProperty<TextStyle>('base', base));
+    properties.add(DiagnosticsProperty<TextStyle>('bodyLarge', bodyLarge));
+    properties.add(DiagnosticsProperty<TextStyle>('bodyStrong', bodyStrong));
     properties.add(DiagnosticsProperty<TextStyle>('body', body));
     properties.add(DiagnosticsProperty<TextStyle>('caption', caption));
   }

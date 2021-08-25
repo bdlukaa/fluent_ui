@@ -83,7 +83,7 @@ class InfoBar extends StatelessWidget {
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
-      style: FluentTheme.of(context).typography.base ?? TextStyle(),
+      style: FluentTheme.of(context).typography.bodyStrong ?? TextStyle(),
       child: this.title,
     );
     final content = () {
