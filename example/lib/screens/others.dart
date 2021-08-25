@@ -120,18 +120,6 @@ class _OthersState extends State<Others> {
                 print('tapped tappable list tile');
               },
             ),
-            CheckboxListTile(
-              checked: checked,
-              onChanged: (v) => setState(() => checked = v!),
-              title: Text('CheckboxListTile title'),
-              subtitle: Text('CheckboxListTile subtitle'),
-            ),
-            SwitchListTile(
-              checked: checked,
-              onChanged: (v) => setState(() => checked = v),
-              title: Text('SwitchListTile title'),
-              subtitle: Text('SwitchListTile subtitle'),
-            ),
           ]),
           Row(children: [
             Container(

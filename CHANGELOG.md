@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 - Update `SplitButton` design
 - Update `IconButton` design
 - Fixed `ToggleSwitch` not showing expanded mode when dragging the thumb
+- **BREAKING** Remove `CheckboxListTile`, `RadioListTile` and `SwitchListTile`. Use the respective widget with the `content` property
 
 ## [3.0.0] - Windows 11 - [24/08/2021]
 
