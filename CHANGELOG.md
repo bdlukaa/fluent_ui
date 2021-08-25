@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [next] - [##/08/2021]
+
+- Update `SplitButton` design
+
 ## [3.0.0] - Windows 11 - [24/08/2021]
 
 - Update `ToggleButton` design.

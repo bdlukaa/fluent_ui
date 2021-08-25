@@ -144,7 +144,7 @@ class _InputsPageState extends State<InputsPage> {
   }
 
   Widget _buildButtons() {
-    const double splitButtonHeight = 50.0;
+    const double splitButtonHeight = 25.0;
     return Mica(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -193,23 +193,24 @@ class _InputsPageState extends State<InputsPage> {
                   child: SizedBox(
                     height: splitButtonHeight,
                     child: Container(
-                      color: disabled
-                          ? FluentTheme.of(context).accentColor.darker
-                          : FluentTheme.of(context).accentColor,
+                      decoration: BoxDecoration(
+                        color: disabled
+                            ? FluentTheme.of(context).accentColor.darker
+                            : FluentTheme.of(context).accentColor,
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(4.0)),
+                      ),
                       height: 24,
                       width: 24,
                     ),
                   ),
                   onPressed: disabled ? null : () {},
                 ),
-                Button(
-                  child: const SizedBox(
+                IconButton(
+                  icon: const SizedBox(
                     height: splitButtonHeight,
-                    child: const Icon(FluentIcons.chevron_down, size: 14.0),
+                    child: const Icon(FluentIcons.chevron_down, size: 10.0),
                   ),
                   onPressed: disabled ? null : () {},
-                  style:
-                      ButtonStyle(padding: ButtonState.all(EdgeInsets.all(6))),
                 ),
               ]),
             ),

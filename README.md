@@ -687,14 +687,14 @@ You can also use some alternative buttons:
 
 ## Split Button
 
-A Split Button has two parts that can be invoked separately. One part behaves like a standard button and invokes an immediate action. The other part invokes a flyout that contains additional options that the user can choose from. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/buttons#create-a-split-button)
+A Split Button has two parts that can be invoked separately. One part behaves like a standard button and invokes an immediate action. The other part invokes a flyout that contains additional options that the user can choose from. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-split-button)
 
-You can use a `SplitButtonBar` to create a Split Button. It usually takes `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its theme.
+You can use a `SplitButtonBar` to create a Split Button. It takes two `Button`s in the `buttons` property. You can also customize the button spacing by changing the property `interval` in its theme.
 
 Here's an example of how to create a split button:
 
 ```dart
-const double splitButtonHeight = 50.0;
+const double splitButtonHeight = 25.0;
 
 SplitButtonBar(
   theme: SplitButtonThemeData(
@@ -713,23 +713,20 @@ SplitButtonBar(
         onPressed: () {},
       ),
     ),
-    SizedBox(
-      height: splitButtonHeight,
-      child: Button(
-        text: Icon(Icons.keyboard_arrow_down),
-        onPressed: () {
-          // TODO: open the color list here
-        },
-        theme: ButtonThemeData(padding: EdgeInsets.all(6)),
-      )
-    )
+    IconButton(
+      icon: const SizedBox(
+        height: splitButtonHeight,
+        child: const Icon(FluentIcons.chevron_down, size: 10.0),
+      ),
+      onPressed: () {},
+    ),
   ],
 )
 ```
 
 The code above produces the following button:
 
-![SplitButtonBar preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/split-button-rtb.png)
+![SplitButtonBar Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/split-button-rtb.png)
 
 ## Toggle Button
 

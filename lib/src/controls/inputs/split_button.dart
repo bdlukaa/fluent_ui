@@ -23,44 +23,57 @@ class SplitButtonBar extends StatelessWidget {
     Key? key,
     required this.buttons,
     this.style,
-  })  : assert(buttons.length > 1, 'There must 2 or more buttons'),
+  })  : assert(buttons.length == 2, 'There must 2 buttons'),
         super(key: key);
 
-  /// The buttons in this button bar. Must be more than 1 button
+  /// The buttons in this button bar. Must be only two buttons
   ///
   /// Usually a List of [Button]s
   final List<Widget> buttons;
 
   /// The style applied to this button bar. If non-null, it's
-  /// mescled with [ThemeData.splitButtonThemeData]
+  /// merged with [ThemeData.splitButtonThemeData]
   final SplitButtonThemeData? style;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('buttonsAmount', buttons.length));
-    properties.add(DiagnosticsProperty<SplitButtonThemeData?>('style', style));
+    properties
+      ..add(IntProperty('buttonsAmount', buttons.length))
+      ..add(DiagnosticsProperty<SplitButtonThemeData?>('style', style));
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final SplitButtonThemeData style =
-        SplitButtonTheme.of(context).merge(this.style);
+    final theme = FluentTheme.of(context);
+    final style = SplitButtonTheme.of(context).merge(this.style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(buttons.length, (index) {
+        final buttonStyle = index == buttons.length - 1
+            ? style.actionButtonStyle
+            : style.primaryButtonStyle;
         final button = ButtonTheme.merge(
           data: ButtonThemeData.all(
             ButtonStyle(
-                shape: ButtonState.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.horizontal(
-                left: index == 0 ? Radius.circular(2) : Radius.zero,
-                right: index == buttons.length - 1
-                    ? Radius.circular(2)
-                    : Radius.zero,
+              shape: ButtonState.all(
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: theme.disabledColor.withOpacity(0.75),
+                    width: 0.1,
+                  ),
+                  borderRadius: BorderRadius.horizontal(
+                    left: index == 0
+                        ? style.borderRadius?.topLeft ?? Radius.zero
+                        : Radius.zero,
+                    right: index == buttons.length - 1
+                        ? style.borderRadius?.topRight ?? Radius.zero
+                        : Radius.zero,
+                  ),
+                ),
               ),
-            ))),
+            ).merge(buttonStyle),
           ),
           child: FocusTheme(
             data: FocusThemeData(renderOutside: false),
@@ -145,18 +158,26 @@ class SplitButtonThemeData with Diagnosticable {
   final BorderRadius? borderRadius;
   final double? interval;
 
-  final ButtonThemeData? defaultButtonThemeData;
+  final ButtonStyle? primaryButtonStyle;
+  final ButtonStyle? actionButtonStyle;
 
   const SplitButtonThemeData({
     this.borderRadius,
     this.interval,
-    this.defaultButtonThemeData,
+    this.primaryButtonStyle,
+    this.actionButtonStyle,
   });
 
   factory SplitButtonThemeData.standard(ThemeData style) {
     return SplitButtonThemeData(
       borderRadius: BorderRadius.circular(4),
       interval: 1,
+      primaryButtonStyle: ButtonStyle(
+        padding: ButtonState.all(EdgeInsets.zero),
+      ),
+      actionButtonStyle: ButtonStyle(
+        padding: ButtonState.all(EdgeInsets.all(6)),
+      ),
     );
   }
 
@@ -168,8 +189,10 @@ class SplitButtonThemeData with Diagnosticable {
     return SplitButtonThemeData(
       borderRadius: BorderRadius.lerp(a?.borderRadius, b?.borderRadius, t),
       interval: lerpDouble(a?.interval, b?.interval, t),
-      defaultButtonThemeData: ButtonThemeData.lerp(
-          a?.defaultButtonThemeData, b?.defaultButtonThemeData, t),
+      primaryButtonStyle:
+          ButtonStyle.lerp(a?.primaryButtonStyle, b?.primaryButtonStyle, t),
+      actionButtonStyle:
+          ButtonStyle.lerp(a?.actionButtonStyle, b?.actionButtonStyle, t),
     );
   }
 
@@ -177,16 +200,19 @@ class SplitButtonThemeData with Diagnosticable {
     return SplitButtonThemeData(
       borderRadius: style?.borderRadius ?? borderRadius,
       interval: style?.interval ?? interval,
+      primaryButtonStyle: style?.primaryButtonStyle ?? primaryButtonStyle,
+      actionButtonStyle: style?.actionButtonStyle ?? actionButtonStyle,
     );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BorderRadiusGeometry>(
-      'borderRadius',
-      borderRadius,
-    ));
-    properties.add(DoubleProperty('interval', interval));
+    properties
+      ..add(DiagnosticsProperty<BorderRadiusGeometry>(
+          'borderRadius', borderRadius))
+      ..add(DoubleProperty('interval', interval))
+      ..add(DiagnosticsProperty('primaryButtonStyle', primaryButtonStyle))
+      ..add(DiagnosticsProperty('actionButtonStyle', actionButtonStyle));
   }
 }
