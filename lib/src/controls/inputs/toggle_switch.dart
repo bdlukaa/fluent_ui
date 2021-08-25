@@ -125,8 +125,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
       onHorizontalDragUpdate: (e) {
         if (isDisabled) return;
         _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
-        if (!_dragging)
-          setState(() => _dragging = true);
+        if (!_dragging) setState(() => _dragging = true);
       },
       onHorizontalDragEnd: (e) {
         if (isDisabled) return;
