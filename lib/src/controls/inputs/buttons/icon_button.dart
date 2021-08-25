@@ -27,18 +27,18 @@ class IconButton extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     return ButtonStyle(
-      cursor: theme.inputMouseCursor,
-      padding: ButtonState.all(const EdgeInsets.all(4.0)),
+      padding: ButtonState.all(const EdgeInsets.all(10.0)),
       backgroundColor: ButtonState.resolveWith((states) {
         return states.isDisabled
             ? ButtonThemeData.buttonColor(theme.brightness, states)
-            : ButtonThemeData.uncheckedInputColor(theme, states);
+            : ButtonThemeData.uncheckedInputColor(theme, states)
+                .withOpacity(states.isNone ? 0 : 0.2);
       }),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;
       }),
       shape: ButtonState.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(2.0),
+        borderRadius: BorderRadius.circular(4.0),
       )),
     );
   }

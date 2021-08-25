@@ -3,12 +3,13 @@ Date format: DD/MM/YYYY
 ## [next] - [##/08/2021]
 
 - Update `SplitButton` design
+- Update `IconButton` design
 
 ## [3.0.0] - Windows 11 - [24/08/2021]
 
 - Update `ToggleButton` design.
 - Update `Button` design.
-- Update `RadioButton` design:
+- Update `RadioButton` design.
 - Update `ContentDialog` design.
 - Update `NavigationView` design:
   - **BREAKING:** Acryic is not used anymore. Consequently, `useAcrylic` method was removed.

@@ -54,6 +54,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Bottom Navigation](#bottom-navigation)
 - [Inputs](#inputs)
   - [Button](#button)
+    - [Icon Button](#icon-button)
   - [Split Button](#split-button)
   - [Toggle Button](#toggle-button)
   - [Checkbox](#checkbox)
@@ -638,7 +639,20 @@ The code above produces the following:
 
 You can also use some alternative buttons:
 
-- `FilledButton`
+### Icon Button
+
+This button is used to display an `Icon` as content. It's optmized to show icons.
+
+```dart
+IconButton(
+  icon: Icon(FluentIcons.add),
+  onPressed: () {
+    print('pressed icon button');
+  },
+),
+```
+
+<!-- - `FilledButton`
   ```dart
   FilledButton(
     child: Text('FILLED BUTTON'),
@@ -648,16 +662,6 @@ You can also use some alternative buttons:
   ),
   ```
   ![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
-- `IconButton`
-
-  ```dart
-  IconButton(
-    Icon: Icon(Icons.add),
-    onPressed: () {
-      print('pressed filled button');
-    },
-  ),
-  ```
 
 - `OutlinedButton`
 
@@ -665,7 +669,7 @@ You can also use some alternative buttons:
   OutlinedButton(
     child: Text('OUTLINED BUTTON'),
     onPressed: () {
-      print('pressed filled button');
+      print('pressed outlined button');
     },
   ),
   ```
@@ -683,7 +687,7 @@ You can also use some alternative buttons:
   ),
   ```
 
-  ![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png)
+  ![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png) -->
 
 ## Split Button
 
