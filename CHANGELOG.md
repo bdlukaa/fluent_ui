@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next] - Texts and Fixes - [25/08/2021]
+## [3.1.0] - Texts and Fixes - [25/08/2021]
 
 - Updated Typography:
   - **BREAKING** Renamed `header` -> `display`
@@ -10,7 +10,7 @@ Date format: DD/MM/YYYY
   - Updated font size and weight for most of the text styles
 - Update `SplitButton` design
 - Update `IconButton` design
-- Fixed `ToggleSwitch` not showing expanded mode when dragging the thumb
+- Fixed `ToggleSwitch` not showing expanded thumb mode when dragging
 - **BREAKING** Remove `CheckboxListTile`, `RadioListTile` and `SwitchListTile`. Use the respective widget with the `content` property
 
 ## [3.0.0] - Windows 11 - [24/08/2021]

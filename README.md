@@ -118,7 +118,7 @@ Note that this version is not stable. You can see the example app deplyed using 
 
 ```yaml
 dependencies:
-  fluent_ui: ^3.0.0
+  fluent_ui: ^3.1.0
 ```
 
 Versions published to pub are stable and fully tested.
