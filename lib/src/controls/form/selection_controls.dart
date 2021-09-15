@@ -52,13 +52,20 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     TextSelectionHandleType type,
     double textLineHeight, [
     VoidCallback? onTap,
+    double? startGlyphHeight,
+    double? endGlyphHeight,
   ]) {
     return const SizedBox.shrink();
   }
 
   /// Gets the position for the text selection handles, but desktop has none.
   @override
-  Offset getHandleAnchor(TextSelectionHandleType type, double textLineHeight) {
+  Offset getHandleAnchor(
+    TextSelectionHandleType type,
+    double textLineHeight, [
+    double? startGlyphHeight,
+    double? endGlyphHeight,
+  ]) {
     return Offset.zero;
   }
 
