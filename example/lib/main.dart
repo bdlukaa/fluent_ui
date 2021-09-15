@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
+import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/colors.dart';
 import 'screens/forms.dart';
@@ -32,6 +33,9 @@ bool get isDesktop {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  setPathUrlStrategy();
+
   // The platforms the plugin support (01/04/2021 - DD/MM/YYYY):
   //   - Windows
   //   - Web
@@ -44,8 +48,11 @@ void main() async {
   } else {
     darkMode = true;
   }
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
+  if (!kIsWeb &&
+      [TargetPlatform.windows, TargetPlatform.linux]
+          .contains(defaultTargetPlatform)) {
     await FlutterAcrylic.Acrylic.initialize();
+  }
 
   runApp(MyApp());
 

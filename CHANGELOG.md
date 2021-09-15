@@ -4,6 +4,8 @@ Date format: DD/MM/YYYY
 
 - Added missing parameters in `_FluentTextSelectionControls` methods ([#67](https://github.com/bdlukaa/fluent_ui/issues/67))
 - Min Flutter version is now 2.5.0
+- **EXAMPLE APP** Updated the url strategy on web.
+- **EXAMPLE APP** Upgraded dependencies
 
 ## [3.1.0] - Texts and Fixes - [25/08/2021]
 
