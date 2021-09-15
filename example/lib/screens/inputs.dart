@@ -37,7 +37,7 @@ class _InputsPageState extends State<InputsPage> {
         commandBar: ToggleSwitch(
           checked: disabled,
           onChanged: (v) => setState(() => disabled = v),
-          content: Text('Disabled'),
+          content: const Text('Disabled'),
         ),
       ),
       content: SingleChildScrollView(
