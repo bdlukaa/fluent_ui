@@ -67,7 +67,7 @@ class ListTile extends StatelessWidget {
     final style = FluentTheme.of(context);
     return Container(
       decoration: ShapeDecoration(
-        shape: shape ?? ContinuousRectangleBorder(),
+        shape: shape ?? const ContinuousRectangleBorder(),
         color: tileColor,
       ),
       height: isThreeLine
@@ -79,7 +79,7 @@ class ListTile extends StatelessWidget {
       child: Row(children: [
         if (leading != null)
           Padding(
-            padding: EdgeInsets.only(right: 14),
+            padding: const EdgeInsets.only(right: 14),
             child: leading,
           ),
         Expanded(
@@ -91,7 +91,7 @@ class ListTile extends StatelessWidget {
               if (title != null)
                 DefaultTextStyle(
                   child: title!,
-                  style: (style.typography.body ?? TextStyle()).copyWith(
+                  style: (style.typography.body ?? const TextStyle()).copyWith(
                     fontSize: 16,
                   ),
                   overflow: TextOverflow.clip,
@@ -99,7 +99,7 @@ class ListTile extends StatelessWidget {
               if (subtitle != null)
                 DefaultTextStyle(
                   child: subtitle!,
-                  style: style.typography.caption ?? TextStyle(),
+                  style: style.typography.caption ?? const TextStyle(),
                   overflow: TextOverflow.clip,
                 ),
             ],

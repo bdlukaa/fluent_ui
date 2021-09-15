@@ -2,9 +2,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 /// A modal route that replaces the entire screen.
 class FluentPageRoute<T> extends PageRoute<T> {
-  late WidgetBuilder _builder;
+  late final WidgetBuilder _builder;
+  // ignore: prefer_final_fields
   bool _maintainState = true;
-  String? _barrierLabel;
+  final String? _barrierLabel;
 
   /// Creates a modal route that replaces the entire screen.
   FluentPageRoute({
@@ -52,5 +53,5 @@ class FluentPageRoute<T> extends PageRoute<T> {
   bool get maintainState => _maintainState;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
+  Duration get transitionDuration => const Duration(milliseconds: 200);
 }

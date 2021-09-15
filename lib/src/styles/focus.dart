@@ -202,25 +202,25 @@ class FocusThemeData with Diagnosticable {
       boxShadow: focused && glowFactor != 0 && glowColor != null
           ? [
               BoxShadow(
-                offset: Offset(1, 1),
+                offset: const Offset(1, 1),
                 color: glowColor!,
                 spreadRadius: glowFactor!,
                 blurRadius: glowFactor! * 2.5,
               ),
               BoxShadow(
-                offset: Offset(-1, -1),
+                offset: const Offset(-1, -1),
                 color: glowColor!,
                 spreadRadius: glowFactor!,
                 blurRadius: glowFactor! * 2.5,
               ),
               BoxShadow(
-                offset: Offset(-1, 1),
+                offset: const Offset(-1, 1),
                 color: glowColor!,
                 spreadRadius: glowFactor!,
                 blurRadius: glowFactor! * 2.5,
               ),
               BoxShadow(
-                offset: Offset(1, -1),
+                offset: const Offset(1, -1),
                 color: glowColor!,
                 spreadRadius: glowFactor!,
                 blurRadius: glowFactor! * 2.5,

@@ -134,7 +134,7 @@ class _FluentTextSelectionControlsToolbarState
     super.initState();
     _ac = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
     );
     if (widget.handlePaste != null) {
       _clipboardStatus = widget.clipboardStatus ?? ClipboardStatusNotifier();
@@ -323,14 +323,14 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           builder: (context, child) {
             return Acrylic(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 side: BorderSide(
                   width: 1,
                   color: Colors.black.withOpacity(isDark ? 0.36 : 0.14),
                 ),
               ),
               elevation: 32.0,
-              tint: isDark ? Color(0xFF2F2F2F) : Color(0xFFEFEFEF),
+              tint: isDark ? const Color(0xFF2F2F2F) : const Color(0xFFEFEFEF),
               child: Align(
                 alignment: Alignment.topLeft,
                 widthFactor: animation.value,
@@ -338,7 +338,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
                 child: SizedBox(
                   width: _kToolbarWidth,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: children,
@@ -363,7 +363,7 @@ const TextStyle _kToolbarButtonFontStyle = TextStyle(
 
 /// A [TextButton] for the Material desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
-  _FluentTextSelectionToolbarButton({
+  const _FluentTextSelectionToolbarButton({
     Key? key,
     required this.onPressed,
     required this.text,
@@ -402,11 +402,11 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Container(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           minWidth: kMinInteractiveDimension,
           minHeight: 32,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
@@ -415,7 +415,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
               size: 20,
               color: primary.withOpacity(1),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               text,
               overflow: TextOverflow.ellipsis,
@@ -423,7 +423,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                 color: primary.withOpacity(1),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Text(
               tooltip,
               style: _kToolbarButtonFontStyle.copyWith(

@@ -106,7 +106,7 @@ class _HoverButtonState extends State<HoverButton> {
       if (!enabled) return;
       setState(() => _pressing = true);
       widget.onPressed?.call();
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
       if (mounted) setState(() => _pressing = false);
     }
 
@@ -172,7 +172,7 @@ class _HoverButtonState extends State<HoverButton> {
       onTapUp: (_) async {
         widget.onTapUp?.call();
         if (!enabled) return;
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) setState(() => _pressing = false);
       },
       onTapCancel: () {

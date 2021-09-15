@@ -37,17 +37,18 @@ class FilledButton extends BaseButton {
         if (states.isDisabled) {
           switch (theme.brightness) {
             case Brightness.light:
-              return Color(0xFFf1f1f1);
+              return const Color(0xFFf1f1f1);
             case Brightness.dark:
               return theme.accentColor.darkest;
           }
-        } else if (states.isPressing)
+        } else if (states.isPressing) {
           return theme.accentColor.resolveFromBrightness(theme.brightness);
-        else if (states.isHovering)
+        } else if (states.isHovering) {
           return theme.accentColor
               .resolveFromBrightness(theme.brightness, level: 1);
-        else
+        } else {
           return theme.accentColor;
+        }
       }),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;

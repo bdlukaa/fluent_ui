@@ -146,7 +146,7 @@ class _AnimatedFluentThemeState
   }
 }
 
-extension brightnessExtension on Brightness {
+extension BrightnessExtension on Brightness {
   bool get isLight => this == Brightness.light;
   bool get isDark => this == Brightness.dark;
 
@@ -302,30 +302,35 @@ class ThemeData with Diagnosticable {
     final bool isLight = brightness == Brightness.light;
 
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
-    fasterAnimationDuration ??= Duration(milliseconds: 90);
-    fastAnimationDuration ??= Duration(milliseconds: 150);
-    mediumAnimationDuration ??= Duration(milliseconds: 300);
-    slowAnimationDuration ??= Duration(milliseconds: 500);
+    fasterAnimationDuration ??= const Duration(milliseconds: 90);
+    fastAnimationDuration ??= const Duration(milliseconds: 150);
+    mediumAnimationDuration ??= const Duration(milliseconds: 300);
+    slowAnimationDuration ??= const Duration(milliseconds: 500);
     animationCurve ??= standartCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
-    inactiveBackgroundColor ??= isLight ? Color(0xFFd6d6d6) : Color(0xFF292929);
+    inactiveBackgroundColor ??=
+        isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
     disabledColor ??=
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??= isLight ? Color(0xFFf9f9f9) : Color(0xFF272727);
-    acrylicBackgroundColor ??=
-        isLight ? Color.fromARGB(204, 255, 255, 255) : Color(0x7F1e1e1e);
-    micaBackgroundColor ??= isLight ? Color(0xFFf3f3f3) : Color(0xFF202020);
+    scaffoldBackgroundColor ??=
+        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
+    acrylicBackgroundColor ??= isLight
+        ? const Color.fromARGB(204, 255, 255, 255)
+        : const Color(0x7F1e1e1e);
+    micaBackgroundColor ??=
+        isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
     typography = Typography.standard(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
     inputMouseCursor ??= ButtonState.resolveWith((states) {
-      if (states.isHovering || states.isPressing)
+      if (states.isHovering || states.isPressing) {
         return SystemMouseCursors.click;
-      else
+      } else {
         return MouseCursor.defer;
+      }
     });
     focusTheme = FocusThemeData.standard(
       glowColor: accentColor.withOpacity(0.15),

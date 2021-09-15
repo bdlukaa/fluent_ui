@@ -114,7 +114,7 @@ class FlyoutContent extends StatelessWidget {
       child: Padding(
         padding: padding,
         child: DefaultTextStyle(
-          style: theme.typography.body ?? TextStyle(),
+          style: theme.typography.body ?? const TextStyle(),
           child: child,
         ),
       ),

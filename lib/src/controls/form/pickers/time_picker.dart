@@ -163,7 +163,7 @@ class _TimePickerState extends State<TimePicker> {
         initControllers();
       },
       builder: (context, state) {
-        final divider = Divider(
+        const divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
             verticalMargin: EdgeInsets.zero,
@@ -246,7 +246,7 @@ class _TimePickerState extends State<TimePicker> {
 }
 
 class _TimePickerContentPopup extends StatefulWidget {
-  _TimePickerContentPopup({
+  const _TimePickerContentPopup({
     Key? key,
     required this.date,
     required this.onChanged,
@@ -288,7 +288,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final divider = Divider(
+    const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
         verticalMargin: EdgeInsets.zero,
@@ -486,7 +486,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
               ]),
             ]),
           ),
-          Divider(
+          const Divider(
             style: DividerThemeData(
               verticalMargin: EdgeInsets.zero,
               horizontalMargin: EdgeInsets.zero,

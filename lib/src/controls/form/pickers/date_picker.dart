@@ -195,7 +195,7 @@ class _DatePickerState extends State<DatePicker> {
       },
       builder: (context, state) {
         if (state.isDisabled) state = <ButtonStates>{};
-        final divider = Divider(
+        const divider = Divider(
           direction: Axis.vertical,
           style: DividerThemeData(
             verticalMargin: EdgeInsets.zero,
@@ -274,12 +274,13 @@ class _DatePickerState extends State<DatePicker> {
         yearController: _yearController!,
       ),
     );
-    if (widget.header != null)
+    if (widget.header != null) {
       return InfoLabel(
         label: widget.header!,
         labelStyle: widget.headerStyle,
         child: picker,
       );
+    }
     return picker;
   }
 }
@@ -335,7 +336,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final divider = Divider(
+    const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
         verticalMargin: EdgeInsets.zero,
@@ -562,7 +563,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               ]),
             ]),
           ),
-          Divider(
+          const Divider(
             style: DividerThemeData(
               verticalMargin: EdgeInsets.zero,
               horizontalMargin: EdgeInsets.zero,

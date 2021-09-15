@@ -72,7 +72,7 @@ class ContentDialog extends StatelessWidget {
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return Container(
-      constraints: BoxConstraints(maxWidth: 368),
+      constraints: const BoxConstraints(maxWidth: 368),
       decoration: style.decoration,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -87,7 +87,7 @@ class ContentDialog extends StatelessWidget {
                   Padding(
                     padding: style.titlePadding ?? EdgeInsets.zero,
                     child: DefaultTextStyle(
-                      style: style.titleStyle ?? TextStyle(),
+                      style: style.titleStyle ?? const TextStyle(),
                       child: title!,
                     ),
                   ),
@@ -95,7 +95,7 @@ class ContentDialog extends StatelessWidget {
                   Padding(
                     padding: style.bodyPadding ?? EdgeInsets.zero,
                     child: DefaultTextStyle(
-                      style: style.bodyStyle ?? TextStyle(),
+                      style: style.bodyStyle ?? const TextStyle(),
                       child: content!,
                     ),
                   ),
@@ -107,7 +107,7 @@ class ContentDialog extends StatelessWidget {
               decoration: style.actionsDecoration,
               padding: style.actionsPadding,
               child: ButtonTheme.merge(
-                data: style.actionThemeData ?? ButtonThemeData(),
+                data: style.actionThemeData ?? const ButtonThemeData(),
                 child: () {
                   if (actions!.length == 1) {
                     return Align(
@@ -166,7 +166,7 @@ Future<T?> showDialog<T extends Object?>({
     transitionBuilder: transitionBuilder,
     transitionDuration: transitionDuration ??
         FluentTheme.maybeOf(context)?.fastAnimationDuration ??
-        Duration(milliseconds: 300),
+        const Duration(milliseconds: 300),
   ));
 }
 
@@ -258,14 +258,14 @@ class ContentDialogThemeData {
         boxShadow: kElevationToShadow[8],
       ),
       padding: const EdgeInsets.all(20),
-      titlePadding: EdgeInsets.only(bottom: 12),
+      titlePadding: const EdgeInsets.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
         color: style.micaBackgroundColor,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
         boxShadow: kElevationToShadow[1],
       ),
-      actionsPadding: EdgeInsets.all(20),
+      actionsPadding: const EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),
       titleStyle: style.typography.title,
       bodyStyle: style.typography.body,

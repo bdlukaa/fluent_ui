@@ -217,11 +217,10 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// look like.
   const ToggleSwitchTheme({
     Key? key,
-    required this.child,
+    required Widget child,
     required this.data,
   }) : super(key: key, child: child);
 
-  final Widget child;
   final ToggleSwitchThemeData data;
 
   /// Creates a button theme that controls how descendant [ToggleSwitch]es should

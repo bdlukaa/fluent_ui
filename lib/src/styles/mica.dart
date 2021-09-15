@@ -44,12 +44,13 @@ class Mica extends StatelessWidget {
     final ThemeData theme = FluentTheme.of(context);
     final Color boxColor = backgroundColor ?? theme.micaBackgroundColor;
     final Widget result = ColoredBox(color: boxColor, child: child);
-    if (elevation > 0.0)
+    if (elevation > 0.0) {
       return PhysicalModel(
         color: boxColor,
         elevation: elevation,
         child: result,
       );
+    }
     return result;
   }
 }

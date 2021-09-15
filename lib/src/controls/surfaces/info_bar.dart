@@ -83,7 +83,7 @@ class InfoBar extends StatelessWidget {
     final icon = style.icon?.call(severity);
     final closeIcon = style.closeIcon;
     final title = DefaultTextStyle(
-      style: FluentTheme.of(context).typography.bodyStrong ?? TextStyle(),
+      style: FluentTheme.of(context).typography.bodyStrong ?? const TextStyle(),
       child: this.title,
     );
     final content = () {
@@ -103,7 +103,7 @@ class InfoBar extends StatelessWidget {
     }();
     return Container(
       decoration: style.decoration?.call(severity),
-      padding: style.padding ?? EdgeInsets.all(10),
+      padding: style.padding ?? const EdgeInsets.all(10),
       alignment: Alignment.centerLeft,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -259,12 +259,12 @@ class InfoBarThemeData with Diagnosticable {
   factory InfoBarThemeData.standard(ThemeData style) {
     final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: (severity) {
         late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
-            color = isDark ? Color(0xFF272727) : Color(0xFFf4f4f4);
+            color = isDark ? const Color(0xFF272727) : const Color(0xFFf4f4f4);
             break;
           case InfoBarSeverity.warning:
             color = Colors.warningSecondaryColor
@@ -313,7 +313,7 @@ class InfoBarThemeData with Diagnosticable {
         }
       },
       actionStyle: ButtonStyle(
-        padding: ButtonState.all(EdgeInsets.all(6)),
+        padding: ButtonState.all(const EdgeInsets.all(6)),
       ),
     );
   }

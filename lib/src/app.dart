@@ -364,8 +364,9 @@ class _FluentAppState extends State<FluentApp> {
   // localizationsDelegate parameter can be used to override
   // _FluentLocalizationsDelegate.
   Iterable<LocalizationsDelegate<dynamic>> get _localizationsDelegates sync* {
-    if (widget.localizationsDelegates != null)
+    if (widget.localizationsDelegates != null) {
       yield* widget.localizationsDelegates!;
+    }
     yield DefaultFluentLocalizations.delegate;
     yield DefaultMaterialLocalizations.delegate;
     yield DefaultWidgetsLocalizations.delegate;
@@ -404,7 +405,7 @@ class _FluentAppState extends State<FluentApp> {
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    if (child == null) return SizedBox();
+    if (child == null) return const SizedBox();
     final themeData = theme(context);
     return AnimatedFluentTheme(
       curve: themeData.animationCurve,

@@ -379,8 +379,9 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       );
     }
 
-    if (widget.displayOnFocus)
+    if (widget.displayOnFocus) {
       result = Focus(onFocusChange: _handleFocusChanged, child: result);
+    }
     return result;
   }
 }
@@ -536,7 +537,7 @@ class TooltipThemeData with Diagnosticable {
         final shadow = [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
-            offset: Offset(1, 1),
+            offset: const Offset(1, 1),
             blurRadius: 10.0,
           ),
         ];

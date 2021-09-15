@@ -97,7 +97,7 @@ class Chip extends StatelessWidget {
           child: AnimatedDefaultTextStyle(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
-            style: textStyle?.resolve(states) ?? TextStyle(),
+            style: textStyle?.resolve(states) ?? const TextStyle(),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (image != null)
                 AnimatedOpacity(
@@ -215,15 +215,15 @@ class ChipThemeData with Diagnosticable {
   factory ChipThemeData.standard(ThemeData style) {
     Color normalColor(Set<ButtonStates> states) => style.brightness.isLight
         ? states.isPressing
-            ? Color(0xFFc1c1c1)
+            ? const Color(0xFFc1c1c1)
             : states.isFocused || states.isHovering
-                ? Color(0xFFe1e1e1)
-                : Color(0xFFf1f1f1)
+                ? const Color(0xFFe1e1e1)
+                : const Color(0xFFf1f1f1)
         : states.isPressing
-            ? Color(0xFF292929)
+            ? const Color(0xFF292929)
             : states.isFocused || states.isHovering
-                ? Color(0xFF383838)
-                : Color(0xFF212121);
+                ? const Color(0xFF383838)
+                : const Color(0xFF212121);
     Color selectedColor(Set<ButtonStates> states) =>
         states.isFocused || states.isPressing || states.isHovering
             ? style.accentColor.resolveFromBrightness(

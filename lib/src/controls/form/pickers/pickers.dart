@@ -49,7 +49,7 @@ Widget kHighlightTile() {
       child: Container(
         alignment: Alignment.center,
         height: kOneLineTileHeight,
-        padding: EdgeInsets.all(6.0),
+        padding: const EdgeInsets.all(6.0),
         child: ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
@@ -88,14 +88,14 @@ class YesNoPickerControl extends StatelessWidget {
     }
 
     return FocusTheme(
-      data: FocusThemeData(renderOutside: false),
+      data: const FocusThemeData(renderOutside: false),
       child: Row(children: [
         Expanded(
           child: Container(
-            margin: EdgeInsets.all(4.0),
+            margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: Icon(FluentIcons.check_mark),
+              child: const Icon(FluentIcons.check_mark),
               onPressed: onChanged,
               style: style(),
             ),
@@ -103,10 +103,10 @@ class YesNoPickerControl extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            margin: EdgeInsets.all(4.0),
+            margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: Icon(FluentIcons.close),
+              child: const Icon(FluentIcons.close),
               onPressed: onCancel,
               style: style(),
             ),
@@ -138,12 +138,12 @@ class PickerNavigatorIndicator extends StatelessWidget {
         final show = state.isHovering || state.isPressing || state.isFocused;
         return ButtonTheme.merge(
           data: ButtonThemeData.all(ButtonStyle(
-            padding: ButtonState.all(EdgeInsets.all(2.0)),
+            padding: ButtonState.all(const EdgeInsets.all(2.0)),
             backgroundColor: ButtonState.all(kPickerBackgroundColor(context)),
             border: ButtonState.all(BorderSide.none),
           )),
           child: FocusTheme(
-            data: FocusThemeData(renderOutside: false),
+            data: const FocusThemeData(renderOutside: false),
             child: Stack(children: [
               child,
               if (show)
@@ -153,8 +153,9 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
-                    child:
-                        Center(child: Icon(FluentIcons.chevron_up, size: 12)),
+                    child: const Center(
+                      child: Icon(FluentIcons.chevron_up, size: 12),
+                    ),
                     onPressed: onBackward,
                   ),
                 ),
@@ -165,8 +166,9 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
-                    child:
-                        Center(child: Icon(FluentIcons.chevron_down, size: 12)),
+                    child: const Center(
+                      child: Icon(FluentIcons.chevron_down, size: 12),
+                    ),
                     onPressed: onForward,
                   ),
                 ),

@@ -264,7 +264,8 @@ class BottomNavigationThemeData with Diagnosticable {
   factory BottomNavigationThemeData.standard(ThemeData style) {
     final isLight = style.brightness.isLight;
     return BottomNavigationThemeData(
-      backgroundColor: isLight ? Color(0xFFf8f8f8) : Color(0xFF0c0c0c),
+      backgroundColor:
+          isLight ? const Color(0xFFf8f8f8) : const Color(0xFF0c0c0c),
       selectedColor: style.accentColor,
       inactiveColor: style.disabledColor,
     );

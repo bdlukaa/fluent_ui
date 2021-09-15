@@ -164,20 +164,20 @@ class TabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final divider = const SizedBox(
+    const divider = SizedBox(
       height: _kTileHeight,
-      child: const Divider(
+      child: Divider(
         direction: Axis.vertical,
-        style: const DividerThemeData(
-          verticalMargin: const EdgeInsets.symmetric(vertical: 8),
+        style: DividerThemeData(
+          verticalMargin: EdgeInsets.symmetric(vertical: 8),
         ),
       ),
     );
     Widget tabBar = Acrylic(
       child: Column(children: [
         Container(
-          margin: EdgeInsets.only(top: 4.5),
-          padding: EdgeInsets.only(left: 8),
+          margin: const EdgeInsets.only(top: 4.5),
+          padding: const EdgeInsets.only(left: 8),
           height: _kTileHeight,
           width: double.infinity,
           child: LayoutBuilder(builder: (context, consts) {
@@ -232,10 +232,11 @@ class TabView extends StatelessWidget {
                     onPressed: onNewPressed,
                     style: ButtonStyle(
                       foregroundColor: ButtonState.resolveWith((states) {
-                        if (states.isDisabled || states.isNone)
+                        if (states.isDisabled || states.isNone) {
                           return FluentTheme.of(context).disabledColor;
-                        else
+                        } else {
                           return FluentTheme.of(context).inactiveColor;
+                        }
                       }),
                     ),
                   ),
@@ -246,7 +247,7 @@ class TabView extends StatelessWidget {
         if (bodies.isNotEmpty) Expanded(child: bodies[currentIndex]),
       ]),
     );
-    if (shortcutsEnabled)
+    if (shortcutsEnabled) {
       return Shortcuts(
         shortcuts: {
           /// Ctrl + F4 or Ctrl + W closes the current tab
@@ -307,6 +308,7 @@ class TabView extends StatelessWidget {
           child: Focus(child: tabBar),
         ),
       );
+    }
     return tabBar;
   }
 }
@@ -318,7 +320,7 @@ class _OpenNewTabIntent extends Intent {}
 class _ChangeTabIntent extends Intent {
   final int tab;
 
-  _ChangeTabIntent(this.tab);
+  const _ChangeTabIntent(this.tab);
 }
 
 const double _kMaxTileWidth = 240.0;
@@ -416,11 +418,11 @@ class __TabState extends State<_Tab>
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
         Widget child = Container(
           height: _kTileHeight,
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxWidth: _kMaxTileWidth,
             minWidth: _kMinTileWidth,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
             /// Using a [FocusBorder] here would be more adequate, but it
             /// seems it disabled the reordering effect. Using this boder
@@ -433,7 +435,7 @@ class __TabState extends State<_Tab>
             ),
             borderRadius: state.isFocused
                 ? BorderRadius.zero
-                : BorderRadius.vertical(top: Radius.circular(4)),
+                : const BorderRadius.vertical(top: Radius.circular(4)),
             color: widget.selected
                 ? theme.scaffoldBackgroundColor
                 : ButtonThemeData.uncheckedInputColor(theme, state),
@@ -443,18 +445,18 @@ class __TabState extends State<_Tab>
               child: Row(children: [
                 if (widget.tab.icon != null)
                   Padding(
-                    padding: EdgeInsets.only(right: 5),
+                    padding: const EdgeInsets.only(right: 5),
                     child: widget.tab.icon!,
                   ),
                 Expanded(
                   child: DefaultTextStyle(
-                    style: theme.typography.body ?? TextStyle(),
+                    style: theme.typography.body ?? const TextStyle(),
                     child: widget.tab.text,
                   ),
                 ),
                 if (widget.tab.closeIcon != null)
                   FocusTheme(
-                    data: FocusThemeData(
+                    data: const FocusThemeData(
                       primaryBorder: BorderSide.none,
                       secondaryBorder: BorderSide.none,
                     ),
@@ -463,10 +465,11 @@ class __TabState extends State<_Tab>
                       onPressed: widget.tab.onClosed,
                       style: ButtonStyle(
                         foregroundColor: ButtonState.resolveWith((states) {
-                          if (state.isDisabled || state.isNone)
+                          if (state.isDisabled || state.isNone) {
                             return FluentTheme.of(context).disabledColor;
-                          else
+                          } else {
                             return FluentTheme.of(context).inactiveColor;
+                          }
                         }),
                         backgroundColor: ButtonState.resolveWith((states) {
                           return state.isNone

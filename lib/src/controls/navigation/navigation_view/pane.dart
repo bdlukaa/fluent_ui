@@ -150,7 +150,7 @@ class PaneItem extends NavigationPaneItem {
                   padding: theme.labelPadding ?? EdgeInsets.zero,
                   child: Text(titleText, style: textStyle),
                 )
-              : SizedBox.shrink();
+              : const SizedBox.shrink();
           Widget child = Flex(
             direction: isTop ? Axis.vertical : Axis.horizontal,
             textDirection: isTop ? ui.TextDirection.ltr : ui.TextDirection.rtl,
@@ -178,11 +178,12 @@ class PaneItem extends NavigationPaneItem {
               }(),
             ],
           );
-          if (isTop && showTextOnTop)
+          if (isTop && showTextOnTop) {
             child = Row(mainAxisSize: MainAxisSize.min, children: [
               child,
               textResult,
             ]);
+          }
           child = AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standartCurve,
@@ -216,7 +217,7 @@ class PaneItem extends NavigationPaneItem {
           );
           if (((isTop && !showTextOnTop) || isCompact) &&
               titleText.isNotEmpty &&
-              !states.isDisabled)
+              !states.isDisabled) {
             return Tooltip(
               message: titleText,
               style: TooltipThemeData(
@@ -224,6 +225,7 @@ class PaneItem extends NavigationPaneItem {
               ),
               child: child,
             );
+          }
           return child;
         },
       ),
@@ -255,11 +257,11 @@ class PaneItemSeparator extends NavigationPaneItem {
       style: DividerThemeData(
         thickness: thickness,
         decoration: color != null ? BoxDecoration(color: color) : null,
-        verticalMargin: EdgeInsets.symmetric(
+        verticalMargin: const EdgeInsets.symmetric(
           horizontal: 8.0,
           vertical: 10.0,
         ),
-        horizontalMargin: EdgeInsets.symmetric(
+        horizontalMargin: const EdgeInsets.symmetric(
           horizontal: 8.0,
           vertical: 10.0,
         ),
@@ -291,7 +293,7 @@ class PaneItemHeader extends NavigationPaneItem {
       key: itemKey,
       padding: theme.iconPadding ?? EdgeInsets.zero,
       child: DefaultTextStyle(
-        style: theme.itemHeaderTextStyle ?? TextStyle(),
+        style: theme.itemHeaderTextStyle ?? const TextStyle(),
         child: header,
         softWrap: false,
         maxLines: 1,
@@ -511,7 +513,7 @@ class NavigationPane with Diagnosticable {
       margin: padding,
       child: PaneItem(
         title: itemTitle,
-        icon: Icon(FluentIcons.global_nav_button),
+        icon: const Icon(FluentIcons.global_nav_button),
       ).build(
         context,
         false,
@@ -567,10 +569,10 @@ class _TopNavigationPane extends StatelessWidget {
         child: Row(key: pane.paneKey, children: [
           Expanded(
             child: Row(children: [
-              NavigationAppBar.buildLeading(context, NavigationAppBar()),
+              NavigationAppBar.buildLeading(context, const NavigationAppBar()),
               if (pane.header != null)
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                   child: pane.header!,
                 ),
               Expanded(
@@ -596,7 +598,7 @@ class _TopNavigationPane extends StatelessWidget {
           if (pane.autoSuggestBox != null)
             Container(
               margin: const EdgeInsets.only(left: 50.0),
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 minWidth: 215.0,
                 maxWidth: _kOpenNavigationPanelWidth,
               ),
@@ -629,7 +631,7 @@ class _CompactNavigationPane extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     if (item is PaneItemHeader) {
       /// Item Header is not visible on compact pane
-      return SizedBox();
+      return const SizedBox();
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
     } else if (item is PaneItem) {
@@ -652,7 +654,7 @@ class _CompactNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
+    const EdgeInsetsGeometry topPadding = EdgeInsets.only(bottom: 6.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
@@ -673,7 +675,7 @@ class _CompactNavigationPane extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             () {
               if (pane.menuButton != null) return pane.menuButton!;
-              if (onToggle != null)
+              if (onToggle != null) {
                 return NavigationPane.buildMenuButton(
                   context,
                   Text(FluentLocalizations.of(context).openNavigationTooltip),
@@ -683,7 +685,8 @@ class _CompactNavigationPane extends StatelessWidget {
                   },
                   padding: showReplacement ? EdgeInsets.zero : topPadding,
                 );
-              return SizedBox.shrink();
+              }
+              return const SizedBox.shrink();
             }(),
             if (showReplacement)
               Padding(
@@ -767,10 +770,10 @@ class _OpenNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = const EdgeInsets.only(bottom: 6.0);
+    const EdgeInsetsGeometry topPadding = EdgeInsets.only(bottom: 6.0);
     final menuButton = () {
       if (pane.menuButton != null) return pane.menuButton!;
-      if (onToggle != null)
+      if (onToggle != null) {
         return NavigationPane.buildMenuButton(
           context,
           Text(FluentLocalizations.of(context).closeNavigationTooltip),
@@ -779,7 +782,8 @@ class _OpenNavigationPane extends StatelessWidget {
             onToggle?.call();
           },
         );
-      return SizedBox.shrink();
+      }
+      return const SizedBox.shrink();
     }();
     return AnimatedContainer(
       key: paneKey,
@@ -797,7 +801,7 @@ class _OpenNavigationPane extends StatelessWidget {
             margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,
             height: kOneLineTileHeight,
             child: () {
-              if (pane.header != null)
+              if (pane.header != null) {
                 return Row(children: [
                   menuButton,
                   Expanded(
@@ -807,8 +811,9 @@ class _OpenNavigationPane extends StatelessWidget {
                     ),
                   ),
                 ]);
-              else
+              } else {
                 return menuButton;
+              }
             }(),
           ),
           if (pane.autoSuggestBox != null)

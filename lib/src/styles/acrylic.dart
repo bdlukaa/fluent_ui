@@ -84,7 +84,7 @@ class Acrylic extends StatefulWidget {
 }
 
 class _AcrylicState extends State<Acrylic> {
-  AcrylicProperties _properties = AcrylicProperties.empty();
+  AcrylicProperties _properties = const AcrylicProperties.empty();
 
   @override
   void initState() {
@@ -306,11 +306,11 @@ class AcrylicProperties {
   });
 
   const AcrylicProperties.empty()
-      : this.tint = Colors.black,
-        this.tintAlpha = kDefaultAcrylicAlpha,
-        this.luminosityAlpha = kDefaultAcrylicAlpha,
-        this.blurAmount = kBlurAmount,
-        this.shape = const RoundedRectangleBorder();
+      : tint = Colors.black,
+        tintAlpha = kDefaultAcrylicAlpha,
+        luminosityAlpha = kDefaultAcrylicAlpha,
+        blurAmount = kBlurAmount,
+        shape = const RoundedRectangleBorder();
 
   @override
   int get hashCode => hashValues(
@@ -321,13 +321,14 @@ class AcrylicProperties {
         shape,
       );
 
+  @override
   bool operator ==(Object other) {
     if (other is AcrylicProperties) {
-      return this.tint == other.tint &&
-          this.tintAlpha == other.tintAlpha &&
-          this.luminosityAlpha == other.luminosityAlpha &&
-          this.blurAmount == other.blurAmount &&
-          this.shape == other.shape;
+      return tint == other.tint &&
+          tintAlpha == other.tintAlpha &&
+          luminosityAlpha == other.luminosityAlpha &&
+          blurAmount == other.blurAmount &&
+          shape == other.shape;
     }
 
     return false;
@@ -351,7 +352,7 @@ class _AcrylicInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_AcrylicInheritedWidget old) {
-    return this.state != old.state;
+    return state != old.state;
   }
 }
 
@@ -384,7 +385,7 @@ class _AcrylicGuts extends StatelessWidget {
             sigmaY: properties.blurAmount,
           ),
           child: Stack(children: [
-            Opacity(
+            const Opacity(
               opacity: 0.02,
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -410,9 +411,9 @@ class _AcrylicGuts extends StatelessWidget {
 }
 
 class _AcrylicPainter extends CustomPainter {
-  static final Color red = Color(0xFFFF0000).withOpacity(0.12);
-  static final Color blue = Color(0xFF00FF00).withOpacity(0.12);
-  static final Color green = Color(0xFF0000FF).withOpacity(0.12);
+  static final Color red = const Color(0xFFFF0000).withOpacity(0.12);
+  static final Color blue = const Color(0xFF00FF00).withOpacity(0.12);
+  static final Color green = const Color(0xFF0000FF).withOpacity(0.12);
 
   final Color luminosityColor;
   final Color tintColor;
@@ -436,8 +437,7 @@ class _AcrylicPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_AcrylicPainter old) {
-    return this.luminosityColor != old.luminosityColor ||
-        this.tintColor != old.tintColor;
+    return luminosityColor != old.luminosityColor || tintColor != old.tintColor;
   }
 }
 
@@ -548,7 +548,7 @@ class _NoiseTextureCacher {
   }
 
   void _computeImage() async {
-    final ImageProvider provider = AssetImage(
+    const ImageProvider provider = AssetImage(
       "assets/AcrylicNoise.png",
       package: "fluent_ui",
     );

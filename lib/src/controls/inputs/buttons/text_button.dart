@@ -35,18 +35,19 @@ class TextButton extends BaseButton {
       )),
       foregroundColor: ButtonState.resolveWith((states) {
         late Color color;
-        if (states.isDisabled)
+        if (states.isDisabled) {
           color = theme.disabledColor;
-        else if (states.isPressing)
+        } else if (states.isPressing) {
           color = theme.accentColor.resolveFromBrightness(theme.brightness);
-        else if (states.isHovering)
+        } else if (states.isHovering) {
           color = theme.accentColor
               .resolveFromBrightness(theme.brightness, level: 1);
-        else
+        } else {
           color = theme.accentColor;
+        }
         return color;
       }),
-      textStyle: ButtonState.all(TextStyle(fontWeight: FontWeight.w600)),
+      textStyle: ButtonState.all(const TextStyle(fontWeight: FontWeight.w600)),
     );
   }
 

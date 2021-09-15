@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -75,7 +77,7 @@ String sanitizeName(String name) {
 
 String get pathSeparator => Platform.isWindows ? "\\" : "/";
 
-final String fileHeader = """
+const String fileHeader = """
 // GENERATED FILE, DO NOT EDIT
 
 import 'package:flutter/widgets.dart' show IconData;

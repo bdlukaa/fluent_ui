@@ -102,7 +102,7 @@ class RadioButton extends StatelessWidget {
         final BoxDecoration decoration = (checked
                 ? style.checkedDecoration?.resolve(state)
                 : style.uncheckedDecoration?.resolve(state)) ??
-            BoxDecoration(shape: BoxShape.circle);
+            const BoxDecoration(shape: BoxShape.circle);
         Widget child = AnimatedContainer(
           duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,

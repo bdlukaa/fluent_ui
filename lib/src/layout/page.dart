@@ -125,7 +125,7 @@ class PageHeader extends StatelessWidget {
         Expanded(
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.title!,
-            child: title ?? SizedBox(),
+            child: title ?? const SizedBox(),
           ),
         ),
         if (commandBar != null) commandBar!,

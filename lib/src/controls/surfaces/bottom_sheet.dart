@@ -159,8 +159,9 @@ class _BottomSheetState extends State<_BottomSheet> {
         isClosing = true;
       }
     } else if (widget.animationController!.value < _closeProgressThreshold) {
-      if (widget.animationController!.value > 0.0)
+      if (widget.animationController!.value > 0.0) {
         widget.animationController!.fling(velocity: -1.0);
+      }
       isClosing = true;
     } else {
       widget.animationController!.forward();
@@ -203,7 +204,7 @@ class _BottomSheetState extends State<_BottomSheet> {
       child: Container(
         key: _childKey,
         decoration: ShapeDecoration(
-          shape: shape ?? RoundedRectangleBorder(),
+          shape: shape ?? const RoundedRectangleBorder(),
           color: color,
         ),
         child: NotificationListener<DraggableScrollableNotification>(
@@ -734,7 +735,7 @@ class BottomSheet extends StatelessWidget {
               if (showDivider != false &&
                   (header != null || description != null))
                 const Divider(
-                  style: const DividerThemeData(
+                  style: DividerThemeData(
                     horizontalMargin: EdgeInsets.zero,
                   ),
                 ),
@@ -827,10 +828,10 @@ class BottomSheetThemeData with Diagnosticable {
     final bool isLight = style.brightness.isLight;
     return BottomSheetThemeData(
       backgroundColor:
-          isLight ? style.scaffoldBackgroundColor : Color(0xFF212121),
-      handleColor: isLight ? Color(0xFF919191) : Color(0xFF6e6e6e),
+          isLight ? style.scaffoldBackgroundColor : const Color(0xFF212121),
+      handleColor: isLight ? const Color(0xFF919191) : const Color(0xFF6e6e6e),
       elevation: 8.0,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
       ),
     );

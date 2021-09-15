@@ -148,14 +148,14 @@ class HorizontalSlidePageTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final offsetTween = () {
-      if (fromLeft)
+      if (fromLeft) {
         return Tween<Offset>(
-          begin: Offset(-1, 0),
+          begin: const Offset(-1, 0),
           end: Offset.zero,
         );
-      else {
+      } else {
         return Tween<Offset>(
-          begin: Offset(1, 0),
+          begin: const Offset(1, 0),
           end: Offset.zero,
         );
       }

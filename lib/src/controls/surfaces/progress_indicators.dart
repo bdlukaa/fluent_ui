@@ -80,10 +80,11 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   void didUpdateWidget(ProgressBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value == null && !_controller.isAnimating)
+    if (widget.value == null && !_controller.isAnimating) {
       _controller.repeat();
-    else if (widget.value != null && _controller.isAnimating)
+    } else if (widget.value != null && _controller.isAnimating) {
       _controller.stop();
+    }
   }
 
   @override
@@ -101,7 +102,7 @@ class _ProgressBarState extends State<ProgressBar>
     final style = FluentTheme.of(context);
     return Container(
       height: widget.strokeWidth,
-      constraints: BoxConstraints(minWidth: _kMinProgressBarWidth),
+      constraints: const BoxConstraints(minWidth: _kMinProgressBarWidth),
       child: Semantics(
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
@@ -318,10 +319,11 @@ class _ProgressRingState extends State<ProgressRing>
   @override
   void didUpdateWidget(ProgressRing oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value == null && !_controller.isAnimating)
+    if (widget.value == null && !_controller.isAnimating) {
       _controller.repeat();
-    else if (widget.value != null && _controller.isAnimating)
+    } else if (widget.value != null && _controller.isAnimating) {
       _controller.stop();
+    }
   }
 
   @override
@@ -337,7 +339,7 @@ class _ProgressRingState extends State<ProgressRing>
     assert(debugCheckHasFluentTheme(context));
     final style = FluentTheme.of(context);
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         minWidth: _kMinProgressRingIndicatorSize,
         minHeight: _kMinProgressRingIndicatorSize,
       ),
@@ -345,7 +347,7 @@ class _ProgressRingState extends State<ProgressRing>
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
         child: () {
-          if (widget.value == null)
+          if (widget.value == null) {
             return AnimatedBuilder(
               animation: _controller,
               builder: (context, value) {
@@ -370,6 +372,7 @@ class _ProgressRingState extends State<ProgressRing>
                 );
               },
             );
+          }
           return CustomPaint(
             painter: _RingPainter(
               backgroundColor: style.inactiveBackgroundColor,
@@ -435,10 +438,7 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
     if (value == null) {
-      double d1 = this.d1,
-          d2 = this.d2,
-          speed1 = this.lowSpeed,
-          speed2 = this.highSpeed;
+      double d1 = this.d1, d2 = this.d2, speed1 = lowSpeed, speed2 = highSpeed;
 
       void drawArc() {
         canvas.drawArc(
@@ -469,7 +469,7 @@ class _RingPainter extends CustomPainter {
       update();
       if (d1 == d2 && d1 % 360 == 0) return;
       drawArc();
-    } else
+    } else {
       canvas.drawArc(
         Offset.zero & size,
         _startAngle,
@@ -477,6 +477,7 @@ class _RingPainter extends CustomPainter {
         false,
         paint,
       );
+    }
   }
 
   @override

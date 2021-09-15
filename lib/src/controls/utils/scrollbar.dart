@@ -20,16 +20,15 @@ class Scrollbar extends RawScrollbar {
   const Scrollbar({
     Key? key,
     required Widget child,
-    this.controller,
-    this.isAlwaysShown = true,
+    ScrollController? controller,
+    bool isAlwaysShown = true,
     this.style,
-  }) : super(key: key, child: child);
-
-  /// {@macro flutter.widgets.Scrollbar.controller}
-  final ScrollController? controller;
-
-  /// {@macro flutter.widgets.Scrollbar.isAlwaysShown}
-  final bool isAlwaysShown;
+  }) : super(
+          key: key,
+          child: child,
+          isAlwaysShown: isAlwaysShown,
+          controller: controller,
+        );
 
   /// The style applied to the scroll bar. If non-null, it's mescled
   /// with [ThemeData.scrollbarThemeData]
@@ -67,12 +66,13 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   ButtonStates get _currentState {
-    if (_dragIsActive)
+    if (_dragIsActive) {
       return ButtonStates.pressing;
-    else if (_hoverIsActive)
+    } else if (_hoverIsActive) {
       return ButtonStates.hovering;
-    else
+    } else {
       return ButtonStates.none;
+    }
   }
 
   Color _trackColor(ButtonStates state) {
@@ -81,8 +81,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 
   Color _thumbColor(ButtonStates state) {
     Color? color;
-    if (state == ButtonStates.pressing)
+    if (state == ButtonStates.pressing) {
       color = _scrollbarTheme.scrollbarPressingColor;
+    }
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
     return color;
   }
@@ -429,7 +430,7 @@ class ScrollbarThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<Radius>(
       'radius',
       radius,
-      defaultValue: Radius.circular(100),
+      defaultValue: const Radius.circular(100),
     ));
     properties.add(DiagnosticsProperty<Radius>(
       'hoveringRadius',
@@ -462,7 +463,7 @@ class ScrollbarThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<Duration>(
       'animationDuration',
       animationDuration,
-      defaultValue: Duration(milliseconds: 90),
+      defaultValue: const Duration(milliseconds: 90),
     ));
     properties.add(DiagnosticsProperty<Curve>(
       'animationCurve',

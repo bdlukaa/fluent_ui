@@ -254,13 +254,13 @@ class PillButtonBarThemeData with Diagnosticable {
 
     final isLight = style.brightness.isLight;
     final unselectedColor =
-        isLight ? style.accentColor.dark : Color(0xFF141414);
+        isLight ? style.accentColor.dark : const Color(0xFF141414);
 
     return PillButtonBarThemeData(
-      backgroundColor: isLight ? style.accentColor : Color(0xFF212121),
+      backgroundColor: isLight ? style.accentColor : const Color(0xFF212121),
       selectedColor: ButtonState.resolveWith((states) {
         return _applyOpacity(
-            isLight ? Colors.white : Color(0xFF404040), states);
+            isLight ? Colors.white : const Color(0xFF404040), states);
       }),
       unselectedColor: ButtonState.resolveWith((states) {
         return _applyOpacity(unselectedColor, states);

@@ -161,7 +161,7 @@ class NavigationViewState extends State<NavigationView> {
               : null,
         );
       }
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }();
 
     Widget paneResult = LayoutBuilder(
@@ -228,8 +228,9 @@ class NavigationViewState extends State<NavigationView> {
                       child: widget.content,
                     ),
                   );
-            if (pane.displayMode != PaneDisplayMode.compact)
+            if (pane.displayMode != PaneDisplayMode.compact) {
               _compactOverlayOpen = false;
+            }
             switch (pane.displayMode) {
               case PaneDisplayMode.top:
                 paneResult = Column(children: [
@@ -263,7 +264,7 @@ class NavigationViewState extends State<NavigationView> {
                         child: AbsorbPointer(
                           child: Semantics(
                             label: localizations.modalBarrierDismissLabel,
-                            child: SizedBox.expand(),
+                            child: const SizedBox.expand(),
                           ),
                         ),
                       ),
@@ -345,7 +346,7 @@ class NavigationViewState extends State<NavigationView> {
                         child: AbsorbPointer(
                           child: Semantics(
                             label: localizations.modalBarrierDismissLabel,
-                            child: SizedBox.expand(),
+                            child: const SizedBox.expand(),
                           ),
                         ),
                       ),
@@ -500,11 +501,12 @@ class NavigationAppBar with Diagnosticable {
       widget = NavigationPaneTheme(
         data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
           unselectedIconColor: ButtonState.resolveWith((states) {
-            if (states.isDisabled)
+            if (states.isDisabled) {
               return ButtonThemeData.buttonColor(
                 FluentTheme.of(context).brightness,
                 states,
               );
+            }
             return ButtonThemeData.uncheckedInputColor(
               FluentTheme.of(context),
               states,
@@ -524,7 +526,7 @@ class NavigationAppBar with Diagnosticable {
         ),
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
     return widget;
@@ -572,8 +574,9 @@ class _NavigationAppBar extends StatelessWidget {
             child: appBar.title!,
           ),
         );
-      } else
-        return SizedBox.shrink();
+      } else {
+        return const SizedBox.shrink();
+      }
     }();
     late Widget result;
     switch (displayMode) {
@@ -616,7 +619,7 @@ class _NavigationAppBar extends StatelessWidget {
         ]);
         break;
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
     return SizedBox(height: appBar.height, child: result);
   }

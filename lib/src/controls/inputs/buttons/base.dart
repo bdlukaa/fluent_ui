@@ -127,7 +127,7 @@ class _BaseButtonState extends State<BaseButton> {
             resolve<BorderSide?>((ButtonStyle? style) => style?.border);
         final OutlinedBorder resolvedShape =
             resolve<OutlinedBorder?>((ButtonStyle? style) => style?.shape) ??
-                RoundedRectangleBorder();
+                const RoundedRectangleBorder();
 
         final EdgeInsetsGeometry padding = resolvedPadding
             .add(EdgeInsets.symmetric(
@@ -137,7 +137,7 @@ class _BaseButtonState extends State<BaseButton> {
             .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
         Widget result = PhysicalModel(
           color: Colors.transparent,
-          shadowColor: resolvedShadowColor ?? const Color(4278190080),
+          shadowColor: resolvedShadowColor ?? Colors.black,
           elevation: resolvedElevation ?? 0.0,
           borderRadius: resolvedShape is RoundedRectangleBorder
               ? resolvedShape.borderRadius is BorderRadius
@@ -155,7 +155,7 @@ class _BaseButtonState extends State<BaseButton> {
             child: IconTheme.merge(
               data: IconThemeData(color: resolvedForegroundColor, size: 14.0),
               child: DefaultTextStyle(
-                style: (resolvedTextStyle ?? TextStyle(inherit: true))
+                style: (resolvedTextStyle ?? const TextStyle(inherit: true))
                     .copyWith(color: resolvedForegroundColor),
                 textAlign: TextAlign.center,
                 child: widget.child,

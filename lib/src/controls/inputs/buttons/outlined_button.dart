@@ -28,15 +28,16 @@ class OutlinedButton extends BaseButton {
     final theme = FluentTheme.of(context);
 
     Color _color(Set<ButtonStates> states) {
-      if (states.isDisabled)
+      if (states.isDisabled) {
         return theme.disabledColor;
-      else if (states.isPressing)
+      } else if (states.isPressing) {
         return theme.accentColor.resolveFromBrightness(theme.brightness);
-      else if (states.isHovering)
+      } else if (states.isHovering) {
         return theme.accentColor
             .resolveFromBrightness(theme.brightness, level: 1);
-      else
+      } else {
         return theme.accentColor;
+      }
     }
 
     return ButtonStyle(

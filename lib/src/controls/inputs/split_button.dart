@@ -76,7 +76,7 @@ class SplitButtonBar extends StatelessWidget {
             ).merge(buttonStyle),
           ),
           child: FocusTheme(
-            data: FocusThemeData(renderOutside: false),
+            data: const FocusThemeData(renderOutside: false),
             child: buttons[index],
           ),
         );
@@ -95,11 +95,10 @@ class SplitButtonTheme extends InheritedTheme {
   /// look like.
   const SplitButtonTheme({
     Key? key,
-    required this.child,
+    required Widget child,
     required this.data,
   }) : super(key: key, child: child);
 
-  final Widget child;
   final SplitButtonThemeData data;
 
   /// Creates a button theme that controls how descendant [SplitButtonBar]s should
@@ -176,7 +175,7 @@ class SplitButtonThemeData with Diagnosticable {
         padding: ButtonState.all(EdgeInsets.zero),
       ),
       actionButtonStyle: ButtonStyle(
-        padding: ButtonState.all(EdgeInsets.all(6)),
+        padding: ButtonState.all(const EdgeInsets.all(6)),
       ),
     );
   }

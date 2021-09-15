@@ -129,7 +129,7 @@ class _EndNavigationIndicatorState
     return Stack(clipBehavior: Clip.none, children: [
       widget.child,
       ...List.generate(offsets!.length, (index) {
-        if (widget.index != index) return SizedBox.shrink();
+        if (widget.index != index) return const SizedBox.shrink();
         final isTop = widget.axis != Axis.horizontal;
         final offset = offsets![index];
 
@@ -149,7 +149,7 @@ class _EndNavigationIndicatorState
 
         // debugPrint('at $offset with $size');
 
-        if (isTop)
+        if (isTop) {
           return Positioned(
             top: offset.dy,
             left: offset.dx,
@@ -160,7 +160,7 @@ class _EndNavigationIndicatorState
               child: indicator,
             ),
           );
-        else {
+        } else {
           return Positioned(
             top: offset.dy,
             height: size.height,
@@ -239,7 +239,7 @@ class _StickyNavigationIndicatorState
     oldIndex = widget.index;
     controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1),
+      duration: const Duration(milliseconds: 1),
     );
     controller.repeat();
   }
@@ -276,41 +276,41 @@ class _StickyNavigationIndicatorState
     final maxOffsetAxis = offsets![maxIndex].fromAxis(widget.axis);
 
     if (widget.axis == Axis.horizontal) {
-      this.p1Start = minOffsetAxis - (hFactor / 2);
-      this.p1End = maxOffsetAxis - (hFactor / 2);
+      p1Start = minOffsetAxis - (hFactor / 2);
+      p1End = maxOffsetAxis - (hFactor / 2);
 
-      this.p2Start = minOffsetAxis;
-      this.p2End = maxOffsetAxis;
+      p2Start = minOffsetAxis;
+      p2End = maxOffsetAxis;
     } else {
-      this.p1Start = minOffsetAxis;
-      this.p1End = maxOffsetAxis;
+      p1Start = minOffsetAxis;
+      p1End = maxOffsetAxis;
 
-      this.p2Start = minOffsetAxis + hFactor;
-      this.p2End = maxOffsetAxis + hFactor;
+      p2Start = minOffsetAxis + hFactor;
+      p2End = maxOffsetAxis + hFactor;
     }
 
     double calcVelocity(double p) {
       return widget.curve.transform(p) + 0.05;
     }
 
-    if (this.p2Start > this.p2End) {
+    if (p2Start > p2End) {
       // move up
-      final v1 = calcVelocity(this.p1);
-      this.p1 = min(this.p1 + step * v1, 1);
-      if (this.delay == 0) {
-        final v2 = calcVelocity(this.p2);
-        this.p2 = min(this.p2 + step * v2, 1);
+      final v1 = calcVelocity(p1);
+      p1 = min(p1 + step * v1, 1);
+      if (delay == 0) {
+        final v2 = calcVelocity(p2);
+        p2 = min(p2 + step * v2, 1);
       }
     } else {
       // move down
-      final v2 = calcVelocity(this.p2);
-      this.p2 = min(this.p2 + step * v2, 1);
-      if (this.delay == 0) {
-        final v1 = calcVelocity(this.p1);
-        this.p1 = min(this.p1 + step * v1, 1);
+      final v2 = calcVelocity(p2);
+      p2 = min(p2 + step * v2, 1);
+      if (delay == 0) {
+        final v1 = calcVelocity(p1);
+        p1 = min(p1 + step * v1, 1);
       }
     }
-    if (this.delay > 0) this.delay -= 1;
+    if (delay > 0) delay -= 1;
   }
 
   @override
@@ -426,12 +426,13 @@ class _StickyPainter extends CustomPainter {
   bool shouldRebuildSemantics(_StickyPainter oldDelegate) => false;
 }
 
-extension _offset on Offset {
+extension OffsetExtension on Offset {
   double fromAxis(Axis axis) {
-    if (axis == Axis.horizontal)
+    if (axis == Axis.horizontal) {
       return dy;
-    else
+    } else {
       return dx;
+    }
   }
 }
 

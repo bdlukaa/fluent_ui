@@ -171,7 +171,7 @@ class ButtonThemeData with Diagnosticable {
     ButtonThemeData? b,
     double t,
   ) {
-    return ButtonThemeData();
+    return const ButtonThemeData();
   }
 
   ButtonThemeData merge(ButtonThemeData? style) {
@@ -213,20 +213,21 @@ class ButtonThemeData with Diagnosticable {
   static Color buttonColor(Brightness brightness, Set<ButtonStates> states) {
     late Color color;
     if (brightness == Brightness.light) {
-      if (states.isPressing)
-        color = Color(0xFFf2f2f2);
-      else if (states.isHovering)
-        color = Color(0xFFF6F6F6);
-      else
+      if (states.isPressing) {
+        color = const Color(0xFFf2f2f2);
+      } else if (states.isHovering) {
+        color = const Color(0xFFF6F6F6);
+      } else {
         color = Colors.white;
+      }
       return color;
     } else {
       if (states.isPressing) {
-        color = Color(0xFF272727);
-      } else if (states.isHovering)
-        color = Color(0xFF323232);
-      else {
-        color = Color(0xFF2b2b2b);
+        color = const Color(0xFF272727);
+      } else if (states.isHovering) {
+        color = const Color(0xFF323232);
+      } else {
+        color = const Color(0xFF2b2b2b);
       }
       return color;
     }

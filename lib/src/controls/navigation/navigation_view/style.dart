@@ -137,8 +137,8 @@ class NavigationPaneThemeData with Diagnosticable {
         return states.isDisabled ? disabledTextStyle : typography.body!;
       }),
       cursor: inputMouseCursor,
-      labelPadding: EdgeInsets.only(right: 10.0),
-      iconPadding: EdgeInsets.symmetric(horizontal: 10.0),
+      labelPadding: const EdgeInsets.only(right: 10.0),
+      iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
     );
   }
 

@@ -98,24 +98,27 @@ class _NavigationBodyState extends State<NavigationBody> {
           return SizedBox(child: child);
         },
         transitionBuilder: (child, animation) {
-          if (widget.transitionBuilder != null)
+          if (widget.transitionBuilder != null) {
             return widget.transitionBuilder!(child, animation);
+          }
           bool useDrillTransition = true;
           if (_body != null && _body.displayMode != null) {
-            if (_body.displayMode! == PaneDisplayMode.top)
+            if (_body.displayMode! == PaneDisplayMode.top) {
               useDrillTransition = false;
+            }
           }
-          if (useDrillTransition)
+          if (useDrillTransition) {
             return DrillInPageTransition(
               child: child,
               animation: animation,
             );
-          else
+          } else {
             return HorizontalSlidePageTransition(
               child: child,
               animation: animation,
               fromLeft: previousIndex > widget.index,
             );
+          }
         },
         child: SizedBox(
           key: ValueKey<int>(widget.index),
@@ -131,12 +134,10 @@ class _NavigationBodyState extends State<NavigationBody> {
 class _NavigationBody extends InheritedWidget {
   const _NavigationBody({
     Key? key,
-    required this.child,
+    required Widget child,
     required this.displayMode,
     required this.minimalPaneOpen,
   }) : super(key: key, child: child);
-
-  final Widget child;
 
   final PaneDisplayMode? displayMode;
   final bool minimalPaneOpen;

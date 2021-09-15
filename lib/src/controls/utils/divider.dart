@@ -148,9 +148,9 @@ class DividerThemeData with Diagnosticable {
       verticalMargin: const EdgeInsets.symmetric(vertical: 10),
       decoration: () {
         if (style.brightness == Brightness.light) {
-          return BoxDecoration(color: Color(0xFFB7B7B7));
+          return const BoxDecoration(color: Color(0xFFB7B7B7));
         } else {
-          return BoxDecoration(color: Color(0xFF484848));
+          return const BoxDecoration(color: Color(0xFF484848));
         }
       }(),
     );

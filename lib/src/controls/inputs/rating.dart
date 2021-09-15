@@ -202,8 +202,9 @@ class _RatingBarState extends State<RatingBar> {
   void _handleUpdate(double x, double? size) {
     final iSize = (widget.iconSize ?? size ?? 24);
     final value = (x / iSize) - (widget.starSpacing / widget.amount);
-    if (value <= widget.amount && !value.isNegative)
+    if (value <= widget.amount && !value.isNegative) {
       widget.onChanged?.call(value);
+    }
   }
 
   @override
@@ -244,9 +245,11 @@ class _RatingBarState extends State<RatingBar> {
                     final items = List.generate(widget.amount, (index) {
                       double r = v - 1;
                       v -= 1;
-                      if (r > 1)
+                      if (r > 1) {
                         r = 1;
-                      else if (r < 0) r = 0;
+                      } else if (r < 0) {
+                        r = 0;
+                      }
                       Widget icon = RatingIcon(
                         rating: r,
                         icon: widget.icon ?? kRatingBarIcon,
@@ -333,10 +336,11 @@ class RatingIcon extends StatelessWidget {
     final style = FluentTheme.of(context);
     final icon = this.icon;
     final size = this.size;
-    if (rating == 1.0)
+    if (rating == 1.0) {
       return Icon(icon, color: ratedColor ?? style.accentColor, size: size);
-    else if (rating == 0.0)
+    } else if (rating == 0.0) {
       return Icon(icon, color: unratedColor ?? style.disabledColor, size: size);
+    }
     return Stack(
       children: [
         Icon(icon, color: unratedColor ?? style.disabledColor, size: size),

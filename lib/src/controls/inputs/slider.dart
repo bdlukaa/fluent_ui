@@ -154,7 +154,7 @@ class _SliderState extends m.State<Slider> {
             data: m.SliderThemeData(
               showValueIndicator: m.ShowValueIndicator.always,
               thumbColor: style.thumbColor ?? style.activeColor,
-              overlayShape: m.RoundSliderOverlayShape(overlayRadius: 0),
+              overlayShape: const m.RoundSliderOverlayShape(overlayRadius: 0),
               thumbShape: SliderThumbShape(
                 elevation: 0,
                 pressedElevation: 0,
@@ -218,6 +218,7 @@ class _SliderState extends m.State<Slider> {
 
 /// This is used to remove the padding the Material Slider adds automatically
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
+  @override
   Rect getPreferredRect({
     required RenderBox parentBox,
     Offset offset = Offset.zero,
@@ -324,8 +325,8 @@ class SliderThumbShape extends m.SliderComponentShape {
 
     if (!useBall) {
       canvas.drawLine(
-        center - Offset(0, 6),
-        center + Offset(0, 6),
+        center - const Offset(0, 6),
+        center + const Offset(0, 6),
         Paint()
           ..color = color
           ..style = PaintingStyle.stroke
@@ -351,8 +352,9 @@ class SliderThumbShape extends m.SliderComponentShape {
         center,
         radius,
         Paint()
-          ..color =
-              brightness == Brightness.light ? Colors.white : Color(0xFF454545),
+          ..color = brightness == Brightness.light
+              ? Colors.white
+              : const Color(0xFF454545),
       );
       canvas.drawCircle(
         center,
@@ -696,7 +698,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     canvas.save();
     // Prepare the canvas for the base of the tooltip, which is relative to the
     // center of the thumb.
-    final verticalFactor = 20;
+    const verticalFactor = 20;
     canvas.translate(
       center.dx + (vertical ? -verticalFactor : 0),
       center.dy - _bottomTipYOffset + (vertical ? -verticalFactor : 0),

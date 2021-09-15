@@ -68,7 +68,7 @@ class Colors {
   /// A opaque white color.
   static const Color white = Color(0xFFFFFFFF);
 
-  static final AccentColor yellow = AccentColor('normal', <String, Color>{
+  static final AccentColor yellow = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xfff9a825),
     'darker': Color(0xfffbc02d),
     'dark': Color(0xfffdd835),
@@ -78,7 +78,7 @@ class Colors {
     'lightest': Color(0xfffff59d),
   });
 
-  static final AccentColor orange = AccentColor('normal', <String, Color>{
+  static final AccentColor orange = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff993d07),
     'darker': Color(0xffac4508),
     'dark': Color(0xffd1540a),
@@ -88,7 +88,7 @@ class Colors {
     'lightest': Color(0xfffa9e68),
   });
 
-  static final AccentColor red = AccentColor('normal', <String, Color>{
+  static final AccentColor red = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff8f0a15),
     'darker': Color(0xffa20b18),
     'dark': Color(0xffb90d1c),
@@ -98,7 +98,7 @@ class Colors {
     'lightest': Color(0xfff06b76),
   });
 
-  static final AccentColor magenta = AccentColor('normal', <String, Color>{
+  static final AccentColor magenta = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff6f0061),
     'darker': Color(0xff7e006e),
     'dark': Color(0xff90007e),
@@ -108,7 +108,7 @@ class Colors {
     'lightest': Color(0xffd060c2),
   });
 
-  static final AccentColor purple = AccentColor('normal', <String, Color>{
+  static final AccentColor purple = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff472f68),
     'darker': Color(0xff513576),
     'dark': Color(0xff644293),
@@ -118,7 +118,7 @@ class Colors {
     'lightest': Color(0xffa890c9),
   });
 
-  static final AccentColor blue = AccentColor('normal', <String, Color>{
+  static final AccentColor blue = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff004a83),
     'darker': Color(0xff005494),
     'dark': Color(0xff0066b4),
@@ -128,7 +128,7 @@ class Colors {
     'lightest': Color(0xff60abe4),
   });
 
-  static final AccentColor teal = AccentColor('normal', <String, Color>{
+  static final AccentColor teal = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff006e5b),
     'darker': Color(0xff007c67),
     'dark': Color(0xff00977d),
@@ -138,7 +138,7 @@ class Colors {
     'lightest': Color(0xff60cfbc),
   });
 
-  static final AccentColor green = AccentColor('normal', <String, Color>{
+  static final AccentColor green = AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff094c09),
     'darker': Color(0xff0c5d0c),
     'dark': Color(0xff0e6f0e),
@@ -149,17 +149,17 @@ class Colors {
   });
 
   static const Color warningPrimaryColor = Color(0xFFd83b01);
-  static final warningSecondaryColor = AccentColor('normal', <String, Color>{
+  static final warningSecondaryColor = AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF433519),
     'normal': Color(0xFFfff4ce),
   });
   static const Color errorPrimaryColor = Color(0xFFa80000);
-  static final errorSecondaryColor = AccentColor('normal', <String, Color>{
+  static final errorSecondaryColor = AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF442726),
     'normal': Color(0xFFfde7e9),
   });
   static const Color successPrimaryColor = Color(0xFF107c10);
-  static final successSecondaryColor = AccentColor('normal', <String, Color>{
+  static final successSecondaryColor = AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF393d1b),
     'normal': Color(0xFFdff6dd),
   });
@@ -181,6 +181,7 @@ class ShadedColor extends ColorSwatch<int> {
   const ShadedColor(int primary, Map<int, Color> swatch)
       : super(primary, swatch);
 
+  @override
   Color operator [](int index) {
     return super[index]!;
   }
@@ -310,7 +311,7 @@ class AccentColor extends ColorSwatch<String> {
 }
 
 /// Extension methods to help dealing with colors.
-extension colorExtension on Color {
+extension ColorExtension on Color {
   /// Creates a new accent color based on this color. This provides
   /// the shades by lerping this color with [Colors.black] if dark
   /// or darker, and with [Colors.white] if light or lighter.

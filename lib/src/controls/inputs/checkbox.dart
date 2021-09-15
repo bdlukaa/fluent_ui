@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -84,7 +86,7 @@ class Checkbox extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final CheckboxThemeData style = CheckboxTheme.of(context).merge(this.style);
-    final double size = 22;
+    const double size = 22;
     return HoverButton(
       autofocus: autofocus,
       semanticLabel: semanticLabel,
@@ -103,23 +105,25 @@ class Checkbox extends StatelessWidget {
           height: size,
           width: size,
           decoration: () {
-            if (checked == null)
+            if (checked == null) {
               return style.thirdstateDecoration?.resolve(state);
-            else if (checked!)
+            } else if (checked!) {
               return style.checkedDecoration?.resolve(state);
-            else
+            } else {
               return style.uncheckedDecoration?.resolve(state);
+            }
           }(),
           child: Icon(
             checked == null ? style.thirdstateIcon : style.icon,
             size: 14,
             color: () {
-              if (checked == null)
+              if (checked == null) {
                 return style.thirdstateIconColor?.resolve(state);
-              else if (checked!)
+              } else if (checked!) {
                 return style.checkedIconColor?.resolve(state);
-              else
+              } else {
                 return style.uncheckedIconColor?.resolve(state);
+              }
             }(),
           ),
         );
@@ -151,6 +155,7 @@ class CheckboxTheme extends InheritedTheme {
     required this.data,
   }) : super(key: key, child: child);
 
+  @override
   final Widget child;
   final CheckboxThemeData data;
 
@@ -250,7 +255,9 @@ class CheckboxThemeData with Diagnosticable {
         (states) => BoxDecoration(
           border: Border.all(
             width: 0.6,
-            color: states.isDisabled ? style.disabledColor : Color(0xFF8b8b8b),
+            color: states.isDisabled
+                ? style.disabledColor
+                : const Color(0xFF8b8b8b),
           ),
           color:
               ButtonThemeData.checkedInputColor(style, states).withOpacity(0),

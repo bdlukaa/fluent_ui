@@ -372,8 +372,9 @@ class _TextBoxState extends State<TextBox>
   }
 
   void _handleFocusChanged() {
-    if (!enabled && _effectiveFocusNode.hasPrimaryFocus)
+    if (!enabled && _effectiveFocusNode.hasPrimaryFocus) {
       _effectiveFocusNode.nextFocus();
+    }
     setState(() {});
   }
 
@@ -437,8 +438,9 @@ class _TextBoxState extends State<TextBox>
   }
 
   bool _shouldShowSelectionHandles(SelectionChangedCause? cause) {
-    if (!_selectionGestureDetectorBuilder.shouldShowSelectionToolbar)
+    if (!_selectionGestureDetectorBuilder.shouldShowSelectionToolbar) {
       return false;
+    }
 
     if (_effectiveController.selection.isCollapsed) return false;
 
@@ -557,7 +559,7 @@ class _TextBoxState extends State<TextBox>
           Expanded(child: result),
           if (_showSuffixWidget(text))
             Padding(
-              padding: EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(4.0),
               child: widget.suffix!,
             ),
         ]);
@@ -574,7 +576,7 @@ class _TextBoxState extends State<TextBox>
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
-    final Offset cursorOffset = Offset(0, -1);
+    const Offset cursorOffset = Offset(0, -1);
     if (widget.maxLength != null && widget.maxLengthEnforced) {
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
     }
@@ -589,7 +591,7 @@ class _TextBoxState extends State<TextBox>
     final Color disabledColor = theme.disabledColor;
     final Color backgroundColor = _effectiveFocusNode.hasFocus
         ? theme.scaffoldBackgroundColor
-        : AccentColor('normal', {
+        : AccentColor('normal', const {
             'normal': Colors.white,
             'dark': Color(0xFF2d2d2d),
           }).resolve(context);
@@ -726,8 +728,9 @@ class _TextBoxState extends State<TextBox>
         );
       }(),
       builder: (context, text, child) {
-        if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text))
+        if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text)) {
           return child!;
+        }
         return Row(children: [
           if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
           Expanded(child: child!),
@@ -737,16 +740,17 @@ class _TextBoxState extends State<TextBox>
     );
 
     return ButtonTheme.merge(
-      data: widget.iconButtonThemeData ?? ButtonThemeData(),
+      data: widget.iconButtonThemeData ?? const ButtonThemeData(),
       child: IconTheme.merge(
         data: const IconThemeData(size: 14),
         child: () {
-          if (widget.header != null)
+          if (widget.header != null) {
             return InfoLabel(
               child: listener,
               label: widget.header!,
               labelStyle: widget.headerStyle,
             );
+          }
           return listener;
         }(),
       ),

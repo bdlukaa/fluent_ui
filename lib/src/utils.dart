@@ -14,7 +14,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// Does nothing if asserts are disabled. Always returns true.
 bool debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
   assert(() {
-    if (FluentTheme.maybeOf(context) == null)
+    if (FluentTheme.maybeOf(context) == null) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('A FluentTheme widget is necessary to draw this layout.'),
         ErrorHint(
@@ -24,6 +24,7 @@ bool debugCheckHasFluentTheme(BuildContext context, [bool check = true]) {
         ),
         ...context.describeMissingAncestor(expectedAncestorType: FluentTheme),
       ]);
+    }
     return true;
   }());
   return true;

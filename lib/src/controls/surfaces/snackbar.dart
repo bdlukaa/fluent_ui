@@ -64,7 +64,7 @@ OverlayEntry showSnackbar(
     );
   });
   Overlay.of(context)!.insert(entry);
-  if (duration != null)
+  if (duration != null) {
     Future.delayed(duration).then((value) async {
       if (entry.mounted) {
         if (snackbar is Snackbar) await key.currentState?.controller.reverse();
@@ -74,6 +74,7 @@ OverlayEntry showSnackbar(
         onDismiss?.call();
       }
     });
+  }
   return entry;
 }
 
@@ -116,7 +117,7 @@ class SnackbarState extends State<Snackbar>
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
     controller.forward();
   }
@@ -155,7 +156,7 @@ class SnackbarState extends State<Snackbar>
                     top: !widget.extended ? 0 : 8.0 + visualDensity.vertical,
                   ),
                   child: ButtonTheme.merge(
-                    data: theme.actionStyle ?? ButtonThemeData(),
+                    data: theme.actionStyle ?? const ButtonThemeData(),
                     child: widget.action!,
                   ),
                 ),
@@ -250,7 +251,7 @@ class SnackbarThemeData with Diagnosticable {
         borderRadius: BorderRadius.circular(4.0),
         color: style.brightness == Brightness.light
             ? Colors.black
-            : Color(0xFF212121),
+            : const Color(0xFF212121),
       ),
     );
   }

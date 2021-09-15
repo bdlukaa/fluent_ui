@@ -85,7 +85,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   ///
   /// ![No results found Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_noresults.png)
   static Widget defaultNoResultsFound(context) {
-    return ListTile(
+    return const ListTile(
       title: DefaultTextStyle(
         style: TextStyle(fontWeight: FontWeight.normal),
         child: Text('No results found'),
@@ -160,7 +160,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   void _insertOverlay() {
     _entry = OverlayEntry(builder: (context) {
       final context = _textBoxKey.currentContext;
-      if (context == null) return SizedBox.shrink();
+      if (context == null) return const SizedBox.shrink();
       final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
       return Positioned(
         width: box.size.width,
@@ -173,7 +173,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             child: Acrylic(
               tint: FluentTheme.of(context).acrylicBackgroundColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(4.0),
                 ),
                 side: BorderSide(
@@ -210,7 +210,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                         vertical: true,
                       );
                     },
-                    layoutBuilder: (child, children) => child ?? SizedBox(),
+                    layoutBuilder: (child, children) => child ?? const SizedBox(),
                     child: result,
                   );
                 },
@@ -221,8 +221,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       );
     });
 
-    if (_textBoxKey.currentContext != null)
+    if (_textBoxKey.currentContext != null) {
       Overlay.of(context)?.insert(_entry!);
+    }
   }
 
   void _dismissOverlay() {

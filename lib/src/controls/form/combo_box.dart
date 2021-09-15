@@ -539,9 +539,10 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     double menuTop = (buttonTop - selectedItemOffset) -
         (itemHeights[selectedIndex] - buttonRect.height) / 2.0;
     double preferredMenuHeight = _kListPadding.vertical;
-    if (items.isNotEmpty)
+    if (items.isNotEmpty) {
       preferredMenuHeight +=
           itemHeights.reduce((double total, double height) => total + height);
+    }
 
     // If there are too many elements in the menu, we need to shrink it down
     // so it is at most the maxMenuHeight.
@@ -1203,7 +1204,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
 
   void _handleTap() {
     final TextDirection? textDirection = Directionality.maybeOf(context);
-    final EdgeInsetsGeometry menuMargin = _kAlignedMenuMargin;
+    const EdgeInsetsGeometry menuMargin = _kAlignedMenuMargin;
 
     final List<_MenuItem<T>> menuItems = <_MenuItem<T>>[
       for (int index = 0; index < widget.items!.length; index += 1)
@@ -1332,8 +1333,9 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       Widget displayedHint = _enabled
           ? widget.placeholder!
           : widget.disabledHint ?? widget.placeholder!;
-      if (widget.selectedItemBuilder == null)
+      if (widget.selectedItemBuilder == null) {
         displayedHint = _ComboboxItemContainer(child: displayedHint);
+      }
 
       placeholderIndex = items.length;
       items.add(DefaultTextStyle(
@@ -1346,7 +1348,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       ));
     }
 
-    final EdgeInsetsGeometry padding = _kAlignedButtonPadding;
+    const EdgeInsetsGeometry padding = _kAlignedButtonPadding;
 
     // If value is null (then _selectedIndex is null) then we
     // display the placeholder or nothing at all.
@@ -1405,9 +1407,11 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
           builder: (context, states) {
             return Container(
               decoration: kPickerDecorationBuilder(context, () {
-                if (_showHighlight)
+                if (_showHighlight) {
                   return {ButtonStates.focused};
-                else if (states.isFocused) return <ButtonStates>{};
+                } else if (states.isFocused) {
+                  return <ButtonStates>{};
+                }
                 return states;
               }()),
               child: result,
