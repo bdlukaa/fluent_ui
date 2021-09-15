@@ -34,13 +34,10 @@ class _InputsPageState extends State<InputsPage> {
     return ScaffoldPage(
       header: PageHeader(
         title: const Text('Inputs showcase'),
-        commandBar: InfoLabel(
-          label: 'Disabled',
-          isHeader: false,
-          child: ToggleSwitch(
-            checked: disabled,
-            onChanged: (v) => setState(() => disabled = v),
-          ),
+        commandBar: ToggleSwitch(
+          checked: disabled,
+          onChanged: (v) => setState(() => disabled = v),
+          content: Text('Disabled'),
         ),
       ),
       content: SingleChildScrollView(

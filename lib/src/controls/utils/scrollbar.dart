@@ -127,17 +127,21 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void handleThumbPressStart(Offset localPosition) {
     super.handleThumbPressStart(localPosition);
-    setState(() {
+    if (mounted) {
+      setState(() {
       _dragIsActive = true;
     });
+    }
   }
 
   @override
   void handleThumbPressEnd(Offset localPosition, Velocity velocity) {
     super.handleThumbPressEnd(localPosition, velocity);
-    setState(() {
+    if (mounted) {
+      setState(() {
       _dragIsActive = false;
     });
+    }
   }
 
   @override
@@ -146,25 +150,31 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     // Check if the position of the pointer falls over the painted scrollbar
     if (isPointerOverScrollbar(event.position, event.kind)) {
       // Pointer is hovering over the scrollbar
-      setState(() {
+      if (mounted) {
+        setState(() {
         _hoverIsActive = true;
       });
+      }
       _hoverController.forward();
     } else if (_hoverIsActive) {
       await _hoverController.reverse();
       // Pointer was, but is no longer over painted scrollbar.
-      setState(() {
+      if (mounted) {
+        setState(() {
         _hoverIsActive = false;
       });
+      }
     }
   }
 
   @override
   void handleHoverExit(PointerExitEvent event) {
     super.handleHoverExit(event);
-    setState(() {
+    if (mounted) {
+      setState(() {
       _hoverIsActive = false;
     });
+    }
     _hoverController.reverse();
   }
 
