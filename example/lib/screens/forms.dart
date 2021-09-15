@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Forms extends StatefulWidget {
@@ -21,7 +23,7 @@ class _FormsState extends State<Forms> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      header: PageHeader(title: Text('Forms showcase')),
+      header: const PageHeader(title: Text('Forms showcase')),
       content: ListView(
         padding: EdgeInsets.only(
           bottom: kPageDefaultVerticalPadding,
@@ -29,26 +31,26 @@ class _FormsState extends State<Forms> {
           right: PageHeader.horizontalPadding(context),
         ),
         children: [
-          TextBox(
+          const TextBox(
             header: 'Email',
             placeholder: 'Type your email here :)',
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(children: [
-            Expanded(
+            const Expanded(
               child: TextBox(
                 readOnly: true,
                 placeholder: 'Read only text box',
               ),
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: TextBox(
                 enabled: false,
                 placeholder: 'Disabled text box',
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: AutoSuggestBox<String>(
                 controller: autoSuggestBox,
@@ -63,7 +65,7 @@ class _FormsState extends State<Forms> {
                     focusNode: focusNode,
                     suffixMode: OverlayVisibilityMode.editing,
                     suffix: IconButton(
-                      icon: Icon(FluentIcons.close),
+                      icon: const Icon(FluentIcons.close),
                       onPressed: () {
                         controller.clear();
                         focusNode.unfocus();
@@ -77,21 +79,21 @@ class _FormsState extends State<Forms> {
               ),
             ),
           ]),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextBox(
             maxLines: null,
             controller: _clearController,
             suffixMode: OverlayVisibilityMode.always,
             minHeight: 100,
             suffix: IconButton(
-              icon: Icon(FluentIcons.close),
+              icon: const Icon(FluentIcons.close),
               onPressed: () {
                 _clearController.clear();
               },
             ),
             placeholder: 'Text box with clear button',
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextBox(
             header: 'Password',
             placeholder: 'Type your placeholder here',
@@ -107,12 +109,12 @@ class _FormsState extends State<Forms> {
             outsideSuffix: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Button(
-                child: Text('Done'),
+                child: const Text('Done'),
                 onPressed: () {},
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Mica(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -122,7 +124,7 @@ class _FormsState extends State<Forms> {
                   child: InfoLabel(
                     label: 'Colors',
                     child: Combobox<String>(
-                      placeholder: Text('Choose a color'),
+                      placeholder: const Text('Choose a color'),
                       isExpanded: true,
                       items: values
                           .map((e) => ComboboxItem<String>(
@@ -133,13 +135,14 @@ class _FormsState extends State<Forms> {
                       value: comboBoxValue,
                       onChanged: (value) {
                         print(value);
-                        if (value != null)
+                        if (value != null) {
                           setState(() => comboBoxValue = value);
+                        }
                       },
                     ),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 SizedBox(
                   width: 295,
                   child: DatePicker(
@@ -149,7 +152,7 @@ class _FormsState extends State<Forms> {
                     onChanged: (v) => setState(() => date = v),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 SizedBox(
                   width: 240,
                   child: TimePicker(
@@ -162,7 +165,7 @@ class _FormsState extends State<Forms> {
               ]),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );

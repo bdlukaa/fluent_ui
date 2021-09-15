@@ -7,11 +7,11 @@ class ColorsPage extends StatelessWidget {
 
   Widget buildColorBlock(String name, Color color) {
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         minHeight: 65,
         minWidth: 65,
       ),
-      padding: EdgeInsets.all(2.0),
+      padding: const EdgeInsets.all(2.0),
       color: color,
       child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
         Text(name, style: TextStyle(color: color.basedOnLuminance())),
@@ -21,14 +21,14 @@ class ColorsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Divider divider = const Divider(
-      style: const DividerThemeData(
-        verticalMargin: const EdgeInsets.all(10),
-        horizontalMargin: const EdgeInsets.all(10),
+    const Divider divider = Divider(
+      style: DividerThemeData(
+        verticalMargin: EdgeInsets.all(10),
+        horizontalMargin: EdgeInsets.all(10),
       ),
     );
     return ScaffoldPage(
-      header: PageHeader(title: Text('Colors Showcase')),
+      header: const PageHeader(title: Text('Colors Showcase')),
       content: ListView(
         padding: EdgeInsets.only(
           bottom: kPageDefaultVerticalPadding,
@@ -73,7 +73,7 @@ class ColorsPage extends StatelessWidget {
                 buildColorBlock('Black', Colors.black),
                 buildColorBlock('White', Colors.white),
               ]),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 children: List.generate(22, (index) {
                   return buildColorBlock(
@@ -82,7 +82,7 @@ class ColorsPage extends StatelessWidget {
                   );
                 }),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Wrap(
                 children: accent,
                 runSpacing: 10,
@@ -97,7 +97,7 @@ class ColorsPage extends StatelessWidget {
 
   List<Widget> get accent {
     List<Widget> children = [];
-    Colors.accentColors.forEach((AccentColor accent) {
+    for (final accent in Colors.accentColors) {
       children.add(
         Wrap(
           // mainAxisSize: MainAxisSize.min,
@@ -108,7 +108,7 @@ class ColorsPage extends StatelessWidget {
           }),
         ),
       );
-    });
+    }
     return children;
   }
 }

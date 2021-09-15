@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Others extends StatefulWidget {
@@ -45,7 +47,7 @@ class _OthersState extends State<Others> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      header: PageHeader(title: Text('Others')),
+      header: const PageHeader(title: Text('Others')),
       content: ListView(
         padding: EdgeInsets.only(
           bottom: kPageDefaultVerticalPadding,
@@ -76,7 +78,7 @@ class _OthersState extends State<Others> {
                     return Tooltip(
                       message: 'This is a tooltip',
                       child: Button(
-                        child: Text('Hover this button to see a tooltip'),
+                        child: const Text('Hover this button to see a tooltip'),
                         onPressed: () {
                           print('pressed button with tooltip');
                         },
@@ -87,12 +89,12 @@ class _OthersState extends State<Others> {
                       return Flyout(
                         controller: flyoutController,
                         contentWidth: 450,
-                        content: FlyoutContent(
+                        content: const FlyoutContent(
                           child: Text(
                               'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
                         ),
                         child: Button(
-                          child: Text('Open flyout'),
+                          child: const Text('Open flyout'),
                           onPressed: () {
                             flyoutController.open = true;
                           },
@@ -108,24 +110,26 @@ class _OthersState extends State<Others> {
             );
           }),
           Wrap(children: [
-            ListTile(
+            const ListTile(
               title: Text('ListTile Title'),
               subtitle: Text('ListTile Subtitle'),
             ),
             TappableListTile(
-              leading: CircleAvatar(),
-              title: Text('TappableListTile Title'),
-              subtitle: Text('TappableListTile Subtitle'),
+              leading: const CircleAvatar(),
+              title: const Text('TappableListTile Title'),
+              subtitle: const Text('TappableListTile Subtitle'),
               onTap: () {
                 print('tapped tappable list tile');
               },
             ),
           ]),
-          Row(children: [
-            Container(
-                padding: EdgeInsets.all(6), child: ProgressBar(value: 50)),
-            Container(
-              margin: EdgeInsets.all(10),
+          Row(children: const [
+            Padding(
+              padding: EdgeInsets.all(6),
+              child: ProgressBar(value: 50),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
               child: ProgressRing(value: 85),
             ),
           ]),
@@ -152,7 +156,7 @@ class _OthersState extends State<Others> {
           //     initialCalendarMode: DatePickerMode.year,
           //   ),
           // ]),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             height: 400,
             decoration: BoxDecoration(
@@ -169,9 +173,11 @@ class _OthersState extends State<Others> {
                   }
                   final Tab item = tabs.removeAt(oldIndex);
                   tabs.insert(newIndex, item);
-                  if (currentIndex == newIndex)
+                  if (currentIndex == newIndex) {
                     currentIndex = oldIndex;
-                  else if (currentIndex == oldIndex) currentIndex = newIndex;
+                  } else if (currentIndex == oldIndex) {
+                    currentIndex = newIndex;
+                  }
                 });
               },
               onNewPressed: () {
@@ -195,7 +201,7 @@ class _OthersState extends State<Others> {
                     Colors.accentColors.length - 1,
                   )],
                   child: Stack(children: [
-                    Positioned.fill(child: FlutterLogo()),
+                    const Positioned.fill(child: FlutterLogo()),
                     Align(
                       alignment: Alignment.center,
                       child: SizedBox(

@@ -1,6 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:fluent_ui/fluent_ui.dart';
 
-const Widget spacer = const SizedBox(height: 5.0);
+const Widget spacer = SizedBox(height: 5.0);
 
 class InputsPage extends StatefulWidget {
   const InputsPage({Key? key}) : super(key: key);
@@ -31,7 +33,7 @@ class _InputsPageState extends State<InputsPage> {
   Widget build(BuildContext context) {
     return ScaffoldPage(
       header: PageHeader(
-        title: Text('Inputs showcase'),
+        title: const Text('Inputs showcase'),
         commandBar: InfoLabel(
           label: 'Disabled',
           isHeader: false,
@@ -97,7 +99,7 @@ class _InputsPageState extends State<InputsPage> {
                         ),
                         spacer,
                         ToggleButton(
-                          child: Text('Toggle Button'),
+                          child: const Text('Toggle Button'),
                           checked: value,
                           onChanged: disabled
                               ? null
@@ -116,14 +118,18 @@ class _InputsPageState extends State<InputsPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: Flyout(
                   content: Padding(
-                    padding: EdgeInsets.only(left: 27),
+                    padding: const EdgeInsets.only(left: 27),
                     child: FlyoutContent(
                       padding: EdgeInsets.zero,
                       child: ListView(shrinkWrap: true, children: [
-                        TappableListTile(title: Text('New'), onTap: () {}),
-                        TappableListTile(title: Text('Open'), onTap: () {}),
-                        TappableListTile(title: Text('Save'), onTap: () {}),
-                        TappableListTile(title: Text('Exit'), onTap: () {}),
+                        TappableListTile(
+                            title: const Text('New'), onTap: () {}),
+                        TappableListTile(
+                            title: const Text('Open'), onTap: () {}),
+                        TappableListTile(
+                            title: const Text('Save'), onTap: () {}),
+                        TappableListTile(
+                            title: const Text('Exit'), onTap: () {}),
                       ]),
                     ),
                   ),
@@ -131,7 +137,7 @@ class _InputsPageState extends State<InputsPage> {
                   contentWidth: 100,
                   controller: controller,
                   child: Button(
-                    child: Text('File'),
+                    child: const Text('File'),
                     onPressed: disabled ? null : () => controller.open = true,
                   ),
                 ),
@@ -153,26 +159,26 @@ class _InputsPageState extends State<InputsPage> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Button(
-              child: Text('Show Dialog'),
+              child: const Text('Show Dialog'),
               onPressed: disabled
                   ? null
                   : () {
                       showDialog(
                         context: context,
                         builder: (_) => ContentDialog(
-                          title: Text('Delete file permanently?'),
-                          content: Text(
+                          title: const Text('Delete file permanently?'),
+                          content: const Text(
                             'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
                           ),
                           actions: [
                             Button(
-                              child: Text('Delete'),
+                              child: const Text('Delete'),
                               onPressed: () {
                                 // Delete file here
                               },
                             ),
                             Button(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ],
@@ -182,7 +188,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             spacer,
             IconButton(
-              icon: Icon(FluentIcons.add),
+              icon: const Icon(FluentIcons.add),
               onPressed: disabled ? null : () => print('pressed icon button'),
             ),
             spacer,
@@ -198,7 +204,7 @@ class _InputsPageState extends State<InputsPage> {
                             ? FluentTheme.of(context).accentColor.darker
                             : FluentTheme.of(context).accentColor,
                         borderRadius:
-                            BorderRadius.horizontal(left: Radius.circular(4.0)),
+                            const BorderRadius.horizontal(left: Radius.circular(4.0)),
                       ),
                       height: 24,
                       width: 24,
@@ -209,7 +215,7 @@ class _InputsPageState extends State<InputsPage> {
                 IconButton(
                   icon: const SizedBox(
                     height: splitButtonHeight,
-                    child: const Icon(FluentIcons.chevron_down, size: 10.0),
+                    child: Icon(FluentIcons.chevron_down, size: 10.0),
                   ),
                   onPressed: disabled ? null : () {},
                 ),
@@ -217,7 +223,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             spacer,
             TextButton(
-              child: Text('TEXT BUTTON'),
+              child: const Text('TEXT BUTTON'),
               onPressed: disabled
                   ? null
                   : () {
@@ -226,7 +232,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             spacer,
             FilledButton(
-              child: Text('FILLED BUTTON'),
+              child: const Text('FILLED BUTTON'),
               onPressed: disabled
                   ? null
                   : () {
@@ -235,7 +241,7 @@ class _InputsPageState extends State<InputsPage> {
             ),
             spacer,
             OutlinedButton(
-              child: Text('OUTLINED BUTTON'),
+              child: const Text('OUTLINED BUTTON'),
               onPressed: disabled
                   ? null
                   : () {
@@ -261,7 +267,7 @@ class _InputsPageState extends State<InputsPage> {
                 fit: FlexFit.loose,
                 child: Column(children: [
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     width: 200,
                     child: Slider(
                       max: max,
@@ -282,8 +288,8 @@ class _InputsPageState extends State<InputsPage> {
                   ),
                 ]),
               ),
-              Container(
-                margin: EdgeInsets.all(8),
+              Padding(
+                padding: const EdgeInsets.all(8),
                 child: Slider(
                   vertical: true,
                   max: max,

@@ -29,34 +29,34 @@ class _TypographyPageState extends State<TypographyPage> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     Typography typography = FluentTheme.of(context).typography;
-    if (color == null) color = typography.display!.color;
+    color ??= typography.display!.color;
     typography = typography.apply(displayColor: color!);
-    const Widget spacer = const SizedBox(height: 4.0);
+    const Widget spacer = SizedBox(height: 4.0);
     return ScaffoldPage(
       header: PageHeader(
-        title: Text('Typography showcase'),
+        title: const Text('Typography showcase'),
         commandBar: SizedBox(
           width: 180.0,
           child: Tooltip(
             message: 'Pick a text color',
             child: Combobox<Color>(
-              placeholder: Text('Text Color'),
+              placeholder: const Text('Text Color'),
               onChanged: (c) => setState(() => color = c),
               value: color,
               items: [
                 ComboboxItem(
                   child: Row(children: [
                     buildColorBox(Colors.white),
-                    SizedBox(width: 10.0),
-                    Text('White'),
+                    const SizedBox(width: 10.0),
+                    const Text('White'),
                   ]),
                   value: Colors.white,
                 ),
                 ComboboxItem(
                   child: Row(children: [
                     buildColorBox(Colors.black),
-                    SizedBox(width: 10.0),
-                    Text('Black'),
+                    const SizedBox(width: 10.0),
+                    const Text('Black'),
                   ]),
                   value: Colors.black,
                 ),
@@ -65,7 +65,7 @@ class _TypographyPageState extends State<TypographyPage> {
                   return ComboboxItem(
                     child: Row(children: [
                       buildColorBox(color),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       Text(accentColorNames[index + 1]),
                     ]),
                     value: color,
@@ -86,7 +86,7 @@ class _TypographyPageState extends State<TypographyPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Divider(
+                const Divider(
                   style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
                 ),
                 Transform.scale(

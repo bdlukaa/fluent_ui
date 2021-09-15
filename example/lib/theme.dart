@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 
 enum NavigationIndicators { sticky, end }
 
@@ -34,10 +34,10 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  FlutterAcrylic.AcrylicEffect _acrylicEffect =
-      FlutterAcrylic.AcrylicEffect.disabled;
-  FlutterAcrylic.AcrylicEffect get acrylicEffect => _acrylicEffect;
-  set acrylicEffect(FlutterAcrylic.AcrylicEffect acrylicEffect) {
+  flutter_acrylic.AcrylicEffect _acrylicEffect =
+      flutter_acrylic.AcrylicEffect.disabled;
+  flutter_acrylic.AcrylicEffect get acrylicEffect => _acrylicEffect;
+  set acrylicEffect(flutter_acrylic.AcrylicEffect acrylicEffect) {
     _acrylicEffect = acrylicEffect;
     notifyListeners();
   }
@@ -46,7 +46,7 @@ class AppTheme extends ChangeNotifier {
 AccentColor get systemAccentColor {
   if (defaultTargetPlatform == TargetPlatform.windows ||
       defaultTargetPlatform == TargetPlatform.android ||
-      kIsWeb)
+      kIsWeb) {
     return AccentColor('normal', {
       'darkest': SystemTheme.accentInstance.darkest,
       'darker': SystemTheme.accentInstance.darker,
@@ -56,5 +56,6 @@ AccentColor get systemAccentColor {
       'lighter': SystemTheme.accentInstance.lighter,
       'lightest': SystemTheme.accentInstance.lightest,
     });
+  }
   return Colors.blue;
 }

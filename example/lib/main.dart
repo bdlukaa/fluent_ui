@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/colors.dart';
@@ -51,20 +51,21 @@ void main() async {
   if (!kIsWeb &&
       [TargetPlatform.windows, TargetPlatform.linux]
           .contains(defaultTargetPlatform)) {
-    await FlutterAcrylic.Acrylic.initialize();
+    await flutter_acrylic.Acrylic.initialize();
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 
-  if (isDesktop)
+  if (isDesktop) {
     doWhenWindowReady(() {
       final win = appWindow;
-      win.minSize = Size(410, 540);
-      win.size = Size(755, 545);
+      win.minSize = const Size(410, 540);
+      win.size = const Size(755, 545);
       win.alignment = Alignment.center;
       win.title = appTitle;
       win.show();
     });
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -81,7 +82,7 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          routes: {'/': (_) => MyHomePage()},
+          routes: {'/': (_) => const MyHomePage()},
           theme: ThemeData(
             accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
@@ -131,9 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: NavigationAppBar(
         // height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
         title: () {
-          if (kIsWeb) return Text(appTitle);
+          if (kIsWeb) return const Text(appTitle);
           return MoveWindow(
-            child: Align(
+            child: const Align(
               alignment: Alignment.centerLeft,
               child: Text(appTitle),
             ),
@@ -144,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
             : MoveWindow(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Spacer(), WindowButtons()],
+                  children: const [Spacer(), WindowButtons()],
                 ),
               ),
       ),
@@ -154,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
         header: Container(
           height: kOneLineTileHeight,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: FlutterLogo(
+          child: const FlutterLogo(
             style: FlutterLogoStyle.horizontal,
             size: 100,
           ),
@@ -207,43 +208,53 @@ class _MyHomePageState extends State<MyHomePage> {
           // It doesn't look good when resizing from compact to open
           // PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
-            icon: Icon(FluentIcons.checkbox_composite),
-            title: Text('Inputs'),
+            icon: const Icon(FluentIcons.checkbox_composite),
+            title: const Text('Inputs'),
           ),
-          PaneItem(icon: Icon(FluentIcons.text_field), title: Text('Forms')),
-          PaneItemSeparator(),
-          PaneItem(icon: Icon(FluentIcons.color), title: Text('Colors')),
           PaneItem(
-            icon: Icon(FluentIcons.plain_text),
-            title: Text('Typography'),
+            icon: const Icon(FluentIcons.text_field),
+            title: const Text('Forms'),
           ),
-          PaneItem(icon: Icon(FluentIcons.cell_phone), title: Text('Mobile')),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.color),
+            title: const Text('Colors'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.plain_text),
+            title: const Text('Typography'),
+          ),
+          PaneItem(
+              icon: const Icon(FluentIcons.cell_phone),
+              title: const Text('Mobile')),
           PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
                   : FluentIcons.more_vertical,
             ),
-            title: Text('Others'),
+            title: const Text('Others'),
           ),
         ],
         autoSuggestBox: AutoSuggestBox<String>(
           controller: TextEditingController(),
-          items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+          items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
         ),
-        autoSuggestBoxReplacement: Icon(FluentIcons.search),
+        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(icon: Icon(FluentIcons.settings), title: Text('Settings')),
+          PaneItem(
+              icon: const Icon(FluentIcons.settings),
+              title: const Text('Settings')),
         ],
       ),
       content: NavigationBody(index: index, children: [
-        InputsPage(),
-        Forms(),
+        const InputsPage(),
+        const Forms(),
         ColorsPage(controller: colorsController),
-        TypographyPage(),
-        Mobile(),
-        Others(),
+        const TypographyPage(),
+        const Mobile(),
+        const Others(),
         Settings(controller: settingsController),
       ]),
     );
@@ -284,8 +295,9 @@ class WindowButtons extends StatelessWidget {
         child: WindowButton(
           colors: buttonColors,
           iconBuilder: (context) {
-            if (appWindow.isMaximized)
+            if (appWindow.isMaximized) {
               return RestoreIcon(color: context.iconColor);
+            }
             return MaximizeIcon(color: context.iconColor);
           },
           onPressed: appWindow.maximizeOrRestore,

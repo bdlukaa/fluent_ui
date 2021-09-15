@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as FlutterAcrylic;
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
@@ -27,11 +27,11 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     final tooltipThemeData = TooltipThemeData(decoration: () {
-      final radius = BorderRadius.zero;
+      const radius = BorderRadius.zero;
       final shadow = [
         BoxShadow(
           color: Colors.black.withOpacity(0.2),
-          offset: Offset(1, 1),
+          offset: const Offset(1, 1),
           blurRadius: 10.0,
         ),
       ];
@@ -53,10 +53,10 @@ class Settings extends StatelessWidget {
       }
     }());
 
-    const spacer = const SizedBox(height: 10.0);
-    const biggerSpacer = const SizedBox(height: 40.0);
+    const spacer = SizedBox(height: 10.0);
+    const biggerSpacer = SizedBox(height: 40.0);
     return ScaffoldPage(
-      header: PageHeader(title: Text('Settings')),
+      header: const PageHeader(title: Text('Settings')),
       content: ListView(
         padding: EdgeInsets.only(
           bottom: kPageDefaultVerticalPadding,
@@ -147,9 +147,9 @@ class Settings extends StatelessWidget {
             Text('Window Transparency',
                 style: FluentTheme.of(context).typography.subtitle),
             spacer,
-            ...List.generate(FlutterAcrylic.AcrylicEffect.values.length,
+            ...List.generate(flutter_acrylic.AcrylicEffect.values.length,
                 (index) {
-              final mode = FlutterAcrylic.AcrylicEffect.values[index];
+              final mode = flutter_acrylic.AcrylicEffect.values[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: RadioButton(
@@ -157,7 +157,7 @@ class Settings extends StatelessWidget {
                   onChanged: (value) {
                     if (value) {
                       appTheme.acrylicEffect = mode;
-                      FlutterAcrylic.Acrylic.setEffect(
+                      flutter_acrylic.Acrylic.setEffect(
                         effect: mode,
                         gradientColor: FluentTheme.of(context)
                             .acrylicBackgroundColor

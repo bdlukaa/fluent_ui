@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -20,7 +22,7 @@ class _MobileState extends State<Mobile> {
       content: NavigationBody(
         children: [
           ScaffoldPage(
-            header: PageHeader(title: Text('Mobile')),
+            header: const PageHeader(title: Text('Mobile')),
             content: ListView(
               padding: EdgeInsets.symmetric(
                 horizontal: PageHeader.horizontalPadding(context),
@@ -32,11 +34,11 @@ class _MobileState extends State<Mobile> {
                 ),
                 Wrap(spacing: 10.0, runSpacing: 10.0, children: [
                   Chip(
-                    image: CircleAvatar(
+                    image: const CircleAvatar(
                       radius: 12.0,
                       child: FlutterLogo(size: 14.0),
                     ),
-                    text: Text('Default'),
+                    text: const Text('Default'),
                     onPressed: () {
                       showBottomSheet(
                         context: context,
@@ -61,19 +63,20 @@ class _MobileState extends State<Mobile> {
                             //     ),
                             //   ),
                             // ),
-                            description: Text('Description or Details here'),
+                            description:
+                                const Text('Description or Details here'),
                             children: [
-                              ListTile(
+                              const ListTile(
                                 leading: Icon(FluentIcons.mail),
                                 title: Text('Label'),
                                 subtitle: Text('Label'),
                                 trailing: Icon(FluentIcons.chevron_right),
                               ),
                               TappableListTile(
-                                leading: Icon(FluentIcons.mail),
-                                title: Text('Label'),
-                                subtitle: Text('Label'),
-                                trailing: Icon(FluentIcons.chevron_right),
+                                leading: const Icon(FluentIcons.mail),
+                                title: const Text('Label'),
+                                subtitle: const Text('Label'),
+                                trailing: const Icon(FluentIcons.chevron_right),
                                 onTap: () {
                                   print('tapped tile');
                                 },
@@ -84,7 +87,7 @@ class _MobileState extends State<Mobile> {
                       );
                     },
                   ),
-                  Chip(
+                  const Chip(
                     image: CircleAvatar(
                       radius: 12.0,
                       child: FlutterLogo(size: 14.0),
@@ -94,14 +97,14 @@ class _MobileState extends State<Mobile> {
                     // onPressed: () => print('pressed chip'),
                   ),
                   Chip.selected(
-                    image: CircleAvatar(
+                    image: const CircleAvatar(
                       radius: 12.0,
                       child: FlutterLogo(size: 14.0),
                     ),
-                    text: Text('Active and selected'),
+                    text: const Text('Active and selected'),
                     onPressed: () => print('pressed selected chip'),
                   ),
-                  Chip.selected(
+                  const Chip.selected(
                     image: CircleAvatar(
                       radius: 12.0,
                       child: FlutterLogo(size: 14.0),
@@ -124,7 +127,8 @@ class _MobileState extends State<Mobile> {
                       onPressed: () {
                         showSnackbar(
                           context,
-                          Snackbar(content: Text('New update is available!')),
+                          const Snackbar(
+                              content: Text('New update is available!')),
                         );
                       },
                     ),
@@ -140,9 +144,9 @@ class _MobileState extends State<Mobile> {
                         showSnackbar(
                           context,
                           Snackbar(
-                            content: Text('New update is availble!'),
+                            content: const Text('New update is availble!'),
                             action: TextButton(
-                              child: Text('DOWNLOAD'),
+                              child: const Text('DOWNLOAD'),
                               onPressed: () {},
                             ),
                           ),
@@ -158,7 +162,7 @@ class _MobileState extends State<Mobile> {
                 PillButtonBar(
                   selected: _pillButtonBarIndex,
                   onChanged: (i) => setState(() => _pillButtonBarIndex = i),
-                  items: [
+                  items: const [
                     PillButtonBarItem(text: Text('All')),
                     PillButtonBarItem(text: Text('Mail')),
                     PillButtonBarItem(text: Text('People')),
@@ -168,15 +172,15 @@ class _MobileState extends State<Mobile> {
               ],
             ),
           ),
-          ScaffoldPage(header: PageHeader(title: Text('Android'))),
-          ScaffoldPage(header: PageHeader(title: Text('iOS'))),
+          const ScaffoldPage(header: PageHeader(title: Text('Android'))),
+          const ScaffoldPage(header: PageHeader(title: Text('iOS'))),
         ],
         index: _currentIndex,
       ),
       bottomBar: BottomNavigation(
         index: _currentIndex,
         onChanged: (i) => setState(() => _currentIndex = i),
-        items: [
+        items: const [
           BottomNavigationItem(
             icon: Icon(FluentIcons.split),
             title: Text('Both'),
