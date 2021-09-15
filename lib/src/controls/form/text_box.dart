@@ -728,7 +728,8 @@ class _TextBoxState extends State<TextBox>
         );
       }(),
       builder: (context, text, child) {
-        if (!_showOutsidePrefixWidget(text) && !_showOutsideSuffixWidget(text)) {
+        if (!_showOutsidePrefixWidget(text) &&
+            !_showOutsideSuffixWidget(text)) {
           return child!;
         }
         return Row(children: [

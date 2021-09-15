@@ -98,7 +98,8 @@ class Colors {
     'lightest': Color(0xfff06b76),
   });
 
-  static final AccentColor magenta = AccentColor('normal', const <String, Color>{
+  static final AccentColor magenta =
+      AccentColor('normal', const <String, Color>{
     'darkest': Color(0xff6f0061),
     'darker': Color(0xff7e006e),
     'dark': Color(0xff90007e),
@@ -149,17 +150,20 @@ class Colors {
   });
 
   static const Color warningPrimaryColor = Color(0xFFd83b01);
-  static final warningSecondaryColor = AccentColor('normal', const <String, Color>{
+  static final warningSecondaryColor =
+      AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF433519),
     'normal': Color(0xFFfff4ce),
   });
   static const Color errorPrimaryColor = Color(0xFFa80000);
-  static final errorSecondaryColor = AccentColor('normal', const <String, Color>{
+  static final errorSecondaryColor =
+      AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF442726),
     'normal': Color(0xFFfde7e9),
   });
   static const Color successPrimaryColor = Color(0xFF107c10);
-  static final successSecondaryColor = AccentColor('normal', const <String, Color>{
+  static final successSecondaryColor =
+      AccentColor('normal', const <String, Color>{
     'dark': Color(0xFF393d1b),
     'normal': Color(0xFFdff6dd),
   });

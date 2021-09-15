@@ -210,7 +210,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                         vertical: true,
                       );
                     },
-                    layoutBuilder: (child, children) => child ?? const SizedBox(),
+                    layoutBuilder: (child, children) =>
+                        child ?? const SizedBox(),
                     child: result,
                   );
                 },
