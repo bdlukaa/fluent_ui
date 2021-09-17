@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 - Min Flutter version is now 2.5.0
 - **EXAMPLE APP** Updated the url strategy on web.
 - **EXAMPLE APP** Upgraded dependencies
+- Format code according to flutter_lints
 
 ## [3.1.0] - Texts and Fixes - [25/08/2021]
 

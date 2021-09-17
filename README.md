@@ -102,9 +102,7 @@ See also:
 
 ## Installation
 
-You can use two versions of this package:
-
-1. You can use the [github version](https://github.com/bdlukaa/fluent_ui):
+Add the package to your dependencies:
 
 ```yaml
 dependencies:
@@ -112,16 +110,7 @@ dependencies:
     git: https://github.com/bdlukaa/fluent_ui.git
 ```
 
-Note that this version is not stable. You can see the example app deplyed using the github version [here](https://bdlukaa.github.io/fluent_ui/#/)
-
-2. You can use the [pub version](https://pub.dev/packages/fluent_ui/install):
-
-```yaml
-dependencies:
-  fluent_ui: ^3.1.0
-```
-
-Versions published to pub are stable and fully tested.
+You can see the example app [here](https://bdlukaa.github.io/fluent_ui//)
 
 Finally, run `dart pub get` to downlaod the package.
 
