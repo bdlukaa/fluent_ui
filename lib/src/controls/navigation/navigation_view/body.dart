@@ -113,8 +113,11 @@ class _NavigationBodyState extends State<NavigationBody> {
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve: widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
-        duration: widget.animationDuration ?? paneTheme.animationDuration ?? Duration.zero,
+        switchInCurve:
+            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
+        duration: widget.animationDuration ??
+            paneTheme.animationDuration ??
+            Duration.zero,
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },
@@ -143,7 +146,8 @@ class _NavigationBodyState extends State<NavigationBody> {
         },
         child: SizedBox(
           key: ValueKey<int>(widget.index),
-          child: widget.itemBuilder?.call(context, widget.index) ?? widget.children![widget.index],
+          child: widget.itemBuilder?.call(context, widget.index) ??
+              widget.children![widget.index],
         ),
       ),
     );
