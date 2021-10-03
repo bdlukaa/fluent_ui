@@ -493,9 +493,11 @@ pane: NavigationPane(
 
 ### Navigation body
 
-A navigation body is used to implement page transitions into a navigation view. It knows what is the current diplay mode of the parent `NavigationView`, if any, and define the page transitions accordingly.
+A navigation body is used to implement page transitions into a navigation view. It knows what is the current display mode of the parent `NavigationView`, if any, and define the page transitions accordingly.
 
 For top mode, the horizontal page transition is used. For the others, drill in page transition is used.
+
+You can also supply a builder function to create the pages instead of a list of widgets. For this use the `NavigationBody.builder` constructor. 
 
 ```dart
 int _currentIndex = 0;
@@ -985,12 +987,12 @@ String? comboBoxValue;
 
 SizedBox(
   width: 200,
-  child: ComboBox<String>(
+  child: Combobox<String>(
     header: 'Colors',
     placeholder: 'Selected list item',
     isExpanded: true,
     items: values
-        .map((e) => ComboboxMenuItem<String>(
+        .map((e) => ComboboxItem<String>(
               value: e,
               child: Text(e),
             ))
@@ -1457,7 +1459,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | -                         | ToggleButton     |
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
-| DropdownButton            | ComboBox         |
+| DropdownButton            | Combobox         |
 | -                         | AutoSuggestBox   |
 | AlertDialog               | ContentDialog    |
 | MaterialBanner            | InfoBar          |

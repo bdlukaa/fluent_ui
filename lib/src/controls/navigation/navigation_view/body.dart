@@ -24,6 +24,9 @@ class NavigationBody extends StatefulWidget {
         itemCount = null,
         super(key: key);
 
+  /// Creates a navigation body that uses a builder to supply child pages
+  ///
+  /// [index] must be greater than 0 and less than [itemCount] if it is provided
   const NavigationBody.builder({
     Key? key,
     required this.index,
