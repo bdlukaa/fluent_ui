@@ -13,18 +13,42 @@ class NavigationBody extends StatefulWidget {
   const NavigationBody({
     Key? key,
     required this.index,
-    required this.children,
+    required List<Widget> children,
     this.transitionBuilder,
     this.animationCurve,
     this.animationDuration,
   })  : assert(index >= 0 && index <= children.length),
+        // ignore: prefer_initializing_formals
+        children = children,
+        itemBuilder = null,
+        itemCount = null,
         super(key: key);
 
-  /// The pages this body can have.
-  final List<Widget> children;
+  const NavigationBody.builder({
+    Key? key,
+    required this.index,
+    required IndexedWidgetBuilder itemBuilder,
+    this.itemCount,
+    this.transitionBuilder,
+    this.animationCurve,
+    this.animationDuration,
+  })  : assert(index >= 0 && (itemCount == null || index <= itemCount)),
+        // ignore: prefer_initializing_formals
+        itemBuilder = itemBuilder,
+        children = null,
+        super(key: key);
+
+  /// The pages this body can have
+  final List<Widget>? children;
+
+  /// The builder that will be used to build the pages
+  final IndexedWidgetBuilder? itemBuilder;
+
+  /// Optional number of items to assume builder can create.
+  final int? itemCount;
 
   /// The current page index. It must be greater than 0 and less
-  /// than [children.length].
+  /// than [children.length] or [itemCount].
   final int index;
 
   /// The transition builder.
@@ -89,11 +113,8 @@ class _NavigationBodyState extends State<NavigationBody> {
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve:
-            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
-        duration: widget.animationDuration ??
-            paneTheme.animationDuration ??
-            Duration.zero,
+        switchInCurve: widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
+        duration: widget.animationDuration ?? paneTheme.animationDuration ?? Duration.zero,
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },
@@ -122,7 +143,7 @@ class _NavigationBodyState extends State<NavigationBody> {
         },
         child: SizedBox(
           key: ValueKey<int>(widget.index),
-          child: widget.children[widget.index],
+          child: widget.itemBuilder?.call(context, widget.index) ?? widget.children![widget.index],
         ),
       ),
     );
