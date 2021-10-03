@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_initializing_formals
 part of 'view.dart';
 
 /// A helper widget that implements fluent page transitions into
@@ -18,7 +19,6 @@ class NavigationBody extends StatefulWidget {
     this.animationCurve,
     this.animationDuration,
   })  : assert(index >= 0 && index <= children.length),
-        // ignore: prefer_initializing_formals
         children = children,
         itemBuilder = null,
         itemCount = null,
@@ -36,7 +36,6 @@ class NavigationBody extends StatefulWidget {
     this.animationCurve,
     this.animationDuration,
   })  : assert(index >= 0 && (itemCount == null || index <= itemCount)),
-        // ignore: prefer_initializing_formals
         itemBuilder = itemBuilder,
         children = null,
         super(key: key);
