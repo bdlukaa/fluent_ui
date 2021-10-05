@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.x.x] - Flutter 2.5.0 - [DD/MM/YYYY]
+
+- Added builder variant to `NavigationBody`. 
+
 ## [3.2.0] - Flutter 2.5.0 - [15/09/2021]
 
 - Added missing parameters in `_FluentTextSelectionControls` methods ([#67](https://github.com/bdlukaa/fluent_ui/issues/67))

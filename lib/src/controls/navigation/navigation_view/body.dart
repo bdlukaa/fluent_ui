@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_initializing_formals
 part of 'view.dart';
 
 /// A helper widget that implements fluent page transitions into
@@ -13,18 +14,43 @@ class NavigationBody extends StatefulWidget {
   const NavigationBody({
     Key? key,
     required this.index,
-    required this.children,
+    required List<Widget> children,
     this.transitionBuilder,
     this.animationCurve,
     this.animationDuration,
   })  : assert(index >= 0 && index <= children.length),
+        children = children,
+        itemBuilder = null,
+        itemCount = null,
         super(key: key);
 
-  /// The pages this body can have.
-  final List<Widget> children;
+  /// Creates a navigation body that uses a builder to supply child pages
+  ///
+  /// [index] must be greater than 0 and less than [itemCount] if it is provided
+  const NavigationBody.builder({
+    Key? key,
+    required this.index,
+    required IndexedWidgetBuilder itemBuilder,
+    this.itemCount,
+    this.transitionBuilder,
+    this.animationCurve,
+    this.animationDuration,
+  })  : assert(index >= 0 && (itemCount == null || index <= itemCount)),
+        itemBuilder = itemBuilder,
+        children = null,
+        super(key: key);
+
+  /// The pages this body can have
+  final List<Widget>? children;
+
+  /// The builder that will be used to build the pages
+  final IndexedWidgetBuilder? itemBuilder;
+
+  /// Optional number of items to assume builder can create.
+  final int? itemCount;
 
   /// The current page index. It must be greater than 0 and less
-  /// than [children.length].
+  /// than [children.length] or [itemCount].
   final int index;
 
   /// The transition builder.
@@ -122,7 +148,8 @@ class _NavigationBodyState extends State<NavigationBody> {
         },
         child: SizedBox(
           key: ValueKey<int>(widget.index),
-          child: widget.children[widget.index],
+          child: widget.itemBuilder?.call(context, widget.index) ??
+              widget.children![widget.index],
         ),
       ),
     );
