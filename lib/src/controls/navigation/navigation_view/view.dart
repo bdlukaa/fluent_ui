@@ -161,7 +161,10 @@ class NavigationViewState extends State<NavigationView> {
               : null,
         );
       }
-      return const SizedBox.shrink();
+      return LayoutBuilder(
+        builder: (context, constraints) =>
+            SizedBox(width: constraints.maxWidth, height: 0),
+      );
     }();
 
     Widget paneResult = LayoutBuilder(
