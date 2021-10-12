@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.x.x] - Flutter 2.5.0 - [DD/MM/YYYY]
+## [3.3.0] - [DD/10/2021]
 
 - Added builder variant to `NavigationBody`. 
 - Fixed content bug when `AppBar` was not supplied too `NavigationView`

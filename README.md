@@ -508,6 +508,20 @@ NavigationView(
 )
 ```
 
+You can use `NavigationBody.builder`
+
+```dart
+NavigationView(
+  ...,
+  content: NavigationBody(
+    index: _currentIndex,
+    itemBuilder: (context, index) {
+      return ...;
+    }
+  )
+)
+```
+
 `ScaffoldPage` is usually used with the navigation body as its children:
 
 ```dart
