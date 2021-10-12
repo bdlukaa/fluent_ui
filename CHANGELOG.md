@@ -2,6 +2,8 @@ Date format: DD/MM/YYYY
 
 ## [3.3.0] - [DD/10/2021]
 
+- Back button now isn't forced when using top navigation mode ([#74](https://github.com/bdlukaa/fluent_ui/issues/74))
+- `PilButtonBar` now accept 2 items ([#66](https://github.com/bdlukaa/fluent_ui/issues/66))
 - Added builder variant to `NavigationBody`. 
 - Fixed content bug when `AppBar` was not supplied too `NavigationView`
 
