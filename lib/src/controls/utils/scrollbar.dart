@@ -129,8 +129,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressStart(localPosition);
     if (mounted) {
       setState(() {
-      _dragIsActive = true;
-    });
+        _dragIsActive = true;
+      });
     }
   }
 
@@ -139,8 +139,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressEnd(localPosition, velocity);
     if (mounted) {
       setState(() {
-      _dragIsActive = false;
-    });
+        _dragIsActive = false;
+      });
     }
   }
 
@@ -152,8 +152,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       // Pointer is hovering over the scrollbar
       if (mounted) {
         setState(() {
-        _hoverIsActive = true;
-      });
+          _hoverIsActive = true;
+        });
       }
       _hoverController.forward();
     } else if (_hoverIsActive) {
@@ -161,8 +161,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       // Pointer was, but is no longer over painted scrollbar.
       if (mounted) {
         setState(() {
-        _hoverIsActive = false;
-      });
+          _hoverIsActive = false;
+        });
       }
     }
   }
@@ -172,8 +172,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleHoverExit(event);
     if (mounted) {
       setState(() {
-      _hoverIsActive = false;
-    });
+        _hoverIsActive = false;
+      });
     }
     _hoverController.reverse();
   }

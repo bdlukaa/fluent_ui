@@ -94,21 +94,36 @@ class _TypographyPageState extends State<TypographyPage> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Display', style: typography.display?.apply(fontSizeFactor: scale)),
+                      Text('Display',
+                          style:
+                              typography.display?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Title Large', style: typography.titleLarge?.apply(fontSizeFactor: scale)),
+                      Text('Title Large',
+                          style: typography.titleLarge
+                              ?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Title', style: typography.title?.apply(fontSizeFactor: scale)),
+                      Text('Title',
+                          style:
+                              typography.title?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Subtitle', style: typography.subtitle?.apply(fontSizeFactor: scale)),
+                      Text('Subtitle',
+                          style: typography.subtitle
+                              ?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Body Large', style: typography.bodyLarge?.apply(fontSizeFactor: scale)),
+                      Text('Body Large',
+                          style: typography.bodyLarge
+                              ?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Body Strong', style: typography.bodyStrong?.apply(fontSizeFactor: scale)),
+                      Text('Body Strong',
+                          style: typography.bodyStrong
+                              ?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Body', style: typography.body?.apply(fontSizeFactor: scale)),
+                      Text('Body',
+                          style: typography.body?.apply(fontSizeFactor: scale)),
                       spacer,
-                      Text('Caption', style: typography.caption?.apply(fontSizeFactor: scale)),
+                      Text('Caption',
+                          style:
+                              typography.caption?.apply(fontSizeFactor: scale)),
                       spacer,
                     ],
                   ),
