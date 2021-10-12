@@ -243,6 +243,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: _TopNavigationPane(
                       pane: pane,
                       listKey: _listKey,
+                      appBar: widget.appBar,
                     ),
                   ),
                   Expanded(child: content),

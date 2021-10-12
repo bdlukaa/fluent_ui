@@ -528,10 +528,15 @@ class NavigationPane with Diagnosticable {
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatelessWidget {
-  _TopNavigationPane({required this.pane, this.listKey}) : super(key: pane.key);
+  _TopNavigationPane({
+    required this.pane,
+    this.listKey,
+    this.appBar,
+  }) : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
+  final NavigationAppBar? appBar;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     if (item is PaneItemHeader) {
@@ -569,7 +574,8 @@ class _TopNavigationPane extends StatelessWidget {
         child: Row(key: pane.paneKey, children: [
           Expanded(
             child: Row(children: [
-              NavigationAppBar.buildLeading(context, const NavigationAppBar()),
+              if (appBar != null)
+                NavigationAppBar.buildLeading(context, appBar!),
               if (pane.header != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(
