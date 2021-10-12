@@ -41,7 +41,7 @@ class PillButtonBar extends StatelessWidget {
     required this.selected,
     this.onChanged,
     this.controller,
-  })  : assert(items.length > 2),
+  })  : assert(items.length >= 2),
         assert(selected >= 0 && selected < items.length),
         super(key: key);
 
