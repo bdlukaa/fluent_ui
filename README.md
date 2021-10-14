@@ -631,10 +631,10 @@ Here's an example of how to create a basic button:
 
 ```dart
 Button(
-  text: Text('Standard XAML button'),
+  child: Text('Standard XAML button'),
   // Set onPressed to null to disable the button
   onPressed: () {
-    print('button pressed'),
+    print('button pressed');
   }
 )
 ```
@@ -707,7 +707,7 @@ Here's an example of how to create a split button:
 const double splitButtonHeight = 25.0;
 
 SplitButtonBar(
-  theme: SplitButtonThemeData(
+  style: SplitButtonThemeData(
     interval: 1, // the default value is one
   ),
   // There need to be at least 2 items in the buttons, and they must be non-null
@@ -715,7 +715,7 @@ SplitButtonBar(
     SizedBox(
       height: splitButtonHeight,
       child: Button(
-        text: Container(
+        child: Container(
           height: 24,
           width: 24,
           color: FluentTheme.of(context).accentColor,
@@ -825,7 +825,7 @@ Column(
     return RadioButton(
       checked: _currentIndex == index,
       // set onChanged to null to disable the button
-      onChanged: () => setState(() => _currentIndex = index),
+      onChanged: (value) => setState(() => _currentIndex = index),
       content: Text(radioButtons[index]),
     );
   }),
@@ -847,7 +847,7 @@ Don't use a slider for binary settings. Use a [toggle switch](#toggle-switches) 
 Here's an example of how to create a basic slider:
 
 ```dart
-double _value = 0;
+double _sliderValue = 0;
 
 SizedBox(
   // The default width is 200.
@@ -856,10 +856,10 @@ SizedBox(
   width: 200,
   child: Slider(
     max: 100,
-    value: _value,
-    onChanged: (v) => setState(() => value = v),
+    value: _sliderValue,
+    onChanged: (v) => setState(() => _sliderValue = v),
     // Label is the text displayed above the slider when the user is interacting with it.
-    label: '${sliderValue.toInt()}',
+    label: '${_sliderValue.toInt()}',
   ),
 )
 ```
@@ -963,17 +963,6 @@ AutoSuggestBox<String>(
         },
       ),
       placeholder: 'Type a color',
-      decoration: BoxDecoration(
-        border: Border(
-          top: _kDefaultRoundedBorderSide,
-          bottom: _kDefaultRoundedBorderSide,
-          left: _kDefaultRoundedBorderSide,
-          right: _kDefaultRoundedBorderSide,
-        ),
-        borderRadius: focusNode.hasFocus
-            ? BorderRadius.vertical(top: Radius.circular(3.0))
-            : BorderRadius.all(Radius.circular(3.0)),
-      ),
     );
   },
 )
@@ -1002,8 +991,7 @@ String? comboBoxValue;
 SizedBox(
   width: 200,
   child: Combobox<String>(
-    header: 'Colors',
-    placeholder: 'Selected list item',
+    placeholder: Text('Selected list item'),
     isExpanded: true,
     items: values
         .map((e) => ComboboxItem<String>(
@@ -1036,9 +1024,9 @@ To add a tooltip to a widget, wrap it in a `Tooltip` widget:
 Tooltip(
   message: 'Click to perform an action',
   child: Button(
-    text: Text('Button with tooltip'),
+    child: Text('Button with tooltip'),
     onPressed: () {
-      print('pressed button with tooltip');
+      print('Pressed button with tooltip');
     }
   ),
 )
@@ -1060,7 +1048,7 @@ ContentDialog(
   content: Text('Check your connection and try again'),
   actions: [
     Button(
-      text: Text('Ok'),
+      child: Text('Ok'),
       onPressed: () {
         Navigator.pop(context);
       }
@@ -1104,7 +1092,7 @@ Flyout(
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
   ),
   child: Button(
-    text: Text('Open flyout'),
+    child: Text('Open flyout'),
     onPressed: () {
       flyoutController.open = true;
     },
@@ -1141,16 +1129,17 @@ Acrylic is a type of Brush that creates a translucent texture. You can apply acr
 |                                                                                                                                     | Don’t place accent-colored text over acrylic surfaces.                                                                                                    |
 
 ```dart
-Acrylic(
-  child: Button(
-    text: Text('Mom it\'s me hehe <3'),
-    onPressed: () {
-      print('button inside acrylic pressed');
-    }
-  ),
-  color: ...,
-  width: ...,
+SizedBox(
   height: ...,
+  width: ...,
+  child: Acrylic(
+          child: Button(
+            child: Text('Mom it\'s me hehe <3'),
+            onPressed: () {
+              print('button inside acrylic pressed');
+            }
+          ),
+        ),
 ),
 ```
 
@@ -1284,12 +1273,12 @@ Here's an example of how to add a scrollbar to a ScrollView:
 final _controller = ScrollController();
 
 Scrollbar(
-  controller: controller,
+  controller: _controller,
   child: ListView.builder(
     /// You can add a padding to the view to avoid having the scrollbar over the UI elements
     padding: EdgeInsets.only(right: 16.0),
     itemCount: 100,
-    builder: (context, index) {
+    itemBuilder: (context, index) {
       return ListTile(title: Text('$index'));
     }
   ),
@@ -1318,12 +1307,12 @@ final people = {
 ListView.builder(
   itemCount: people.length,
   itemBuilder: (context, index) {
-    final title = people.keys[index];
+    final title = people.keys.elementAt(index);
     final subtitle = people[title];
     return ListTile(
       leading: CircleAvatar(),
       title: Text(title),
-      subtitle: Text(subtitle),
+      subtitle: Text(subtitle!),
     );
   }
 ),
@@ -1335,15 +1324,15 @@ The code above produces the following:
 
 If you want to create a tappable tile, use `TappableListTile` instead.
 
-## Info Header
+## Info Label
 
-You can use an `InfoHeader` to tell the user the purpose of something
+You can use an `InfoLabel` to tell the user the purpose of something.
 
 Here's an example of how to add an info header to a combobox:
 
 ```dart
-InfoHeader(
-  header: 'Control header',
+InfoLabel(
+  label: 'Colors',
   child: ComboBox(...),
 ),
 ```
