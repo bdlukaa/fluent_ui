@@ -132,6 +132,14 @@ class _OthersState extends State<Others> {
               padding: EdgeInsets.all(10),
               child: ProgressRing(value: 85),
             ),
+            Padding(
+              padding: EdgeInsets.all(6),
+              child: ProgressBar(),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: ProgressRing(),
+            ),
           ]),
           // Row(children: [
           //   CalendarView(

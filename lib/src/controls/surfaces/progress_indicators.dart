@@ -266,6 +266,7 @@ class ProgressRing extends StatefulWidget {
     this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
+    this.backwards = false,
   })  : assert(value == null || value >= 0 && value <= 100),
         super(key: key);
 
@@ -290,6 +291,9 @@ class ProgressRing extends StatefulWidget {
   /// The active color of the progress ring. If null,
   /// [ThemeData.accentColor] is used
   final Color? activeColor;
+
+  /// Whether the indicator spins backwards or not. Defaults to false
+  final bool backwards;
 
   @override
   _ProgressRingState createState() => _ProgressRingState();
@@ -368,6 +372,7 @@ class _ProgressRingState extends State<ProgressRing>
                       lowSpeed = v[2];
                       highSpeed = v[3];
                     },
+                    backwards: widget.backwards,
                   ),
                 );
               },
@@ -384,6 +389,7 @@ class _ProgressRingState extends State<ProgressRing>
               lowSpeed: lowSpeed,
               highSpeed: highSpeed,
               onUpdate: (v) {},
+              backwards: widget.backwards,
             ),
           );
         }(),
@@ -399,6 +405,7 @@ class _RingPainter extends CustomPainter {
   final double? value;
   final double d1, d2, lowSpeed, highSpeed;
   final ValueChanged onUpdate;
+  final bool backwards;
 
   const _RingPainter({
     required this.color,
@@ -410,6 +417,7 @@ class _RingPainter extends CustomPainter {
     required this.lowSpeed,
     required this.highSpeed,
     required this.onUpdate,
+    required this.backwards,
   });
 
   static const double _twoPi = math.pi * 2.0;
@@ -443,7 +451,7 @@ class _RingPainter extends CustomPainter {
       void drawArc() {
         canvas.drawArc(
           Offset.zero & size,
-          (90 - d2) * _deg2Rad,
+          (backwards ? (90 - d2) : (90 + d2)) * _deg2Rad,
           ((d2 - d1) * _deg2Rad),
           false,
           paint,
