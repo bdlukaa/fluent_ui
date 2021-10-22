@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - `ProgressRing` now spins on the correct direction ([#83](https://github.com/bdlukaa/fluent_ui/issues/83))
 - Added the `backwards` property to `ProgressRing`
+- `FluentApp.builder` now works as expected ([#84](https://github.com/bdlukaa/fluent_ui/issues/84))
 
 ## [3.3.0] - [12/10/2021]
 

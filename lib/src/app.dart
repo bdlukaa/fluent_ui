@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
+import 'package:flutter/material.dart'
+    show DefaultMaterialLocalizations, MaterialApp;
 
 /// An application that uses fluent design.
 ///
@@ -405,12 +406,28 @@ class _FluentAppState extends State<FluentApp> {
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    if (child == null) return const SizedBox();
     final themeData = theme(context);
     return AnimatedFluentTheme(
       curve: themeData.animationCurve,
       data: themeData,
-      child: child,
+      child: widget.builder != null
+          ? Builder(
+              builder: (BuildContext context) {
+                // Why are we surrounding a builder with a builder?
+                //
+                // The widget.builder may contain code that invokes
+                // Theme.of(), which should return the theme we selected
+                // above in AnimatedTheme. However, if we invoke
+                // widget.builder() directly as the child of AnimatedTheme
+                // then there is no Context separating them, and the
+                // widget.builder() will not find the theme. Therefore, we
+                // surround widget.builder with yet another builder so that
+                // a context separates them and Theme.of() correctly
+                // resolves to the theme we passed to AnimatedTheme.
+                return widget.builder!(context, child);
+              },
+            )
+          : child ?? const SizedBox.shrink(),
     );
   }
 
