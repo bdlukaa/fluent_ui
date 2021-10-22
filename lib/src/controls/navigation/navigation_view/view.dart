@@ -174,7 +174,15 @@ class NavigationViewState extends State<NavigationView> {
         if (widget.pane != null) {
           final pane = widget.pane!;
           if (pane.customPane != null) {
-            paneResult = pane.customPane!;
+            paneResult = Builder(builder: (context) {
+              return pane.customPane!.build(context, NavigationPaneWidgetData(
+                appBar: appBar,
+                content: ClipRect(child: widget.content),
+                listKey: _listKey,
+                paneKey: _panelKey,
+                scrollController: scrollController,
+              ));
+            });
           } else if (pane.displayMode == PaneDisplayMode.auto) {
             /// For more info on the adaptive behavior, see
             /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
@@ -224,16 +232,18 @@ class NavigationViewState extends State<NavigationView> {
               ),
             );
           } else {
-            final Widget content = pane.displayMode == PaneDisplayMode.minimal
-                ? widget.content
-                : DecoratedBox(
-                    decoration: ShapeDecoration(shape: widget.contentShape),
-                    child: ClipPath(
-                      clipBehavior: widget.clipBehavior,
-                      clipper: ShapeBorderClipper(shape: widget.contentShape),
-                      child: widget.content,
+            final Widget content = ClipRect(
+              child: pane.displayMode == PaneDisplayMode.minimal
+                  ? widget.content
+                  : DecoratedBox(
+                      decoration: ShapeDecoration(shape: widget.contentShape),
+                      child: ClipPath(
+                        clipBehavior: widget.clipBehavior,
+                        clipper: ShapeBorderClipper(shape: widget.contentShape),
+                        child: widget.content,
+                      ),
                     ),
-                  );
+            );
             if (pane.displayMode != PaneDisplayMode.compact) {
               _compactOverlayOpen = false;
             }
@@ -262,7 +272,7 @@ class NavigationViewState extends State<NavigationView> {
                     left: _kCompactNavigationPanelWidth,
                     right: 0,
                     bottom: 0,
-                    child: ClipRect(child: content),
+                    child: content,
                   ),
                   if (_compactOverlayOpen)
                     Positioned.fill(
@@ -330,7 +340,7 @@ class NavigationViewState extends State<NavigationView> {
                           listKey: _listKey,
                         ),
                       ),
-                      Expanded(child: ClipRect(child: content)),
+                      Expanded(child: content),
                     ]),
                   ),
                 ]);
@@ -342,7 +352,7 @@ class NavigationViewState extends State<NavigationView> {
                     left: 0.0,
                     right: 0.0,
                     bottom: 0.0,
-                    child: ClipRect(child: content),
+                    child: content,
                   ),
                   if (_minimalPaneOpen)
                     Positioned.fill(

@@ -247,6 +247,22 @@ class NavigationPane with Diagnosticable {
   }
 }
 
+class NavigationPaneWidgetData {
+  const NavigationPaneWidgetData({
+    required this.content,
+    required this.appBar,
+    required this.scrollController,
+    required this.paneKey,
+    required this.listKey,
+  });
+
+  final Widget content;
+  final Widget appBar;
+  final ScrollController scrollController;
+  final Key? paneKey;
+  final GlobalKey? listKey;
+}
+
 /// Base class for creating custom navigation panes.
 ///
 /// ```dart
@@ -254,25 +270,12 @@ class NavigationPane with Diagnosticable {
 ///   CustomNavigationPane();
 ///
 ///   @override
-///   Widget build(BuildContext context) {
+///   Widget build(BuildContext context, NavigationPaneWidgetData data) {
 ///   }
 /// }
 /// ```
-abstract class NavigationPaneWidget extends StatelessWidget {
-  const NavigationPaneWidget({
-    Key? key,
-    required this.content,
-    required this.paneKey,
-    required this.listKey,
-    required this.onToggle,
-    required this.onItemSelected,
-  }) : super(key: key);
-
-  final Widget content;
-  final Key? paneKey;
-  final GlobalKey? listKey;
-  final VoidCallback? onToggle;
-  final VoidCallback? onItemSelected;
+abstract class NavigationPaneWidget {
+  Widget build(BuildContext context, NavigationPaneWidgetData data);
 }
 
 /// Creates a top navigation pane.
