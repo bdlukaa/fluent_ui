@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart'
-    show DefaultMaterialLocalizations, MaterialApp;
+import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
 
 /// An application that uses fluent design.
 ///

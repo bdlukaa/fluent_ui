@@ -175,14 +175,16 @@ class NavigationViewState extends State<NavigationView> {
           final pane = widget.pane!;
           if (pane.customPane != null) {
             paneResult = Builder(builder: (context) {
-              return pane.customPane!.build(context, NavigationPaneWidgetData(
-                appBar: appBar,
-                content: ClipRect(child: widget.content),
-                listKey: _listKey,
-                paneKey: _panelKey,
-                scrollController: scrollController,
-                pane: pane,
-              ));
+              return pane.customPane!.build(
+                  context,
+                  NavigationPaneWidgetData(
+                    appBar: appBar,
+                    content: ClipRect(child: widget.content),
+                    listKey: _listKey,
+                    paneKey: _panelKey,
+                    scrollController: scrollController,
+                    pane: pane,
+                  ));
             });
           } else if (pane.displayMode == PaneDisplayMode.auto) {
             /// For more info on the adaptive behavior, see

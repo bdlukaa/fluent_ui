@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.4.0] - Flexibility - [20/10/2021]
+## [3.4.0] - Flexibility - [22/10/2021]
 
 - `ProgressRing` now spins on the correct direction ([#83](https://github.com/bdlukaa/fluent_ui/issues/83))
 - Added the `backwards` property to `ProgressRing`
