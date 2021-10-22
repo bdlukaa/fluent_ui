@@ -458,30 +458,25 @@ You can customize the selected indicator. By default `StickyNavigationIndicator`
 pane: NavigationPane(
   indicatorBuilder: ({
     required BuildContext context,
-    /// The current selected index
-    int? index,
-    /// A function that, when executed, returns the position of all the
-    /// PaneItems. This function must be called after the widget was
-    /// rendered at least once
-    required List<Offset> Function() offsets,
-    /// A function that, when executed, returns the size of all the
-    /// PaneItems. This function must be called after the widget was
-    /// rendered at least once
-    required List<Size> Function() sizes,
+    /// The navigation pane corresponding to this indicator
+    required NavigationPane pane,
     /// Corresponds to the current display mode. If top, Axis.vertical
     /// is passed, otherwise Axis.vertical
-    required Axis axis,
+    Axis? axis,
     /// Corresponds to the pane itself as a widget. The indicator is
     /// rendered over the whole pane.
     required Widget child,
   }) {
-    if (index == null) return child;
+    if (pane.selected == null) return child;
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneThemeData.of(context);
+
+    axis??= Axis.horizontal;
+
     return EndNavigationIndicator(
-      index: index,
-      offsets: offsets,
-      sizes: sizes,
+      index: pane.selected,
+      offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+      sizes: pane.effectiveItems.getPaneItemsSizes,
       child: child,
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
@@ -497,7 +492,7 @@ A navigation body is used to implement page transitions into a navigation view. 
 
 For top mode, the horizontal page transition is used. For the others, drill in page transition is used.
 
-You can also supply a builder function to create the pages instead of a list of widgets. For this use the `NavigationBody.builder` constructor. 
+You can also supply a builder function to create the pages instead of a list of widgets. For this use the `NavigationBody.builder` constructor.
 
 ```dart
 int _currentIndex = 0;
@@ -867,7 +862,6 @@ SizedBox(
 The code above produces the following:
 
 ![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
-
 
 ### Choosing between vertical and horizontal sliders
 

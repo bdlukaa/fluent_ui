@@ -163,21 +163,21 @@ class _MyHomePageState extends State<MyHomePage> {
         displayMode: appTheme.displayMode,
         indicatorBuilder: ({
           required BuildContext context,
-          int? index,
-          required List<Offset> Function() offsets,
-          required List<Size> Function() sizes,
-          required Axis axis,
+          required NavigationPane pane,
+          Axis? axis,
           required Widget child,
         }) {
-          if (index == null) return child;
+          if (pane.selected == null) return child;
+          axis ??= Axis.horizontal;
           assert(debugCheckHasFluentTheme(context));
           final theme = NavigationPaneTheme.of(context);
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
               return EndNavigationIndicator(
-                index: index,
-                offsets: offsets,
-                sizes: sizes,
+                index: pane.selected!,
+                offsets: () =>
+                    pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+                sizes: pane.effectiveItems.getPaneItemsSizes,
                 child: child,
                 color: theme.highlightColor,
                 curve: theme.animationCurve ?? Curves.linear,
@@ -185,18 +185,17 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             case NavigationIndicators.sticky:
               return NavigationPane.defaultNavigationIndicator(
-                index: index,
                 context: context,
-                offsets: offsets,
-                sizes: sizes,
                 axis: axis,
+                pane: pane,
                 child: child,
               );
             default:
               return NavigationIndicator(
-                index: index,
-                offsets: offsets,
-                sizes: sizes,
+                index: pane.selected!,
+                offsets: () =>
+                    pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+                sizes: pane.effectiveItems.getPaneItemsSizes,
                 child: child,
                 color: theme.highlightColor,
                 curve: theme.animationCurve ?? Curves.linear,

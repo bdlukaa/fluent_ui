@@ -165,23 +165,22 @@ class NavigationPane with Diagnosticable {
 
   static Widget defaultNavigationIndicator({
     required BuildContext context,
-    int? index,
-    required List<Offset> Function() offsets,
-    required List<Size> Function() sizes,
-    required Axis axis,
+    required NavigationPane pane,
+    Axis? axis,
     required Widget child,
   }) {
-    if (index == null) return child;
+    if (pane.selected == null) return child;
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
+    axis ??= Axis.horizontal;
 
     final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
     final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
 
     return StickyNavigationIndicator(
-      index: index,
-      offsets: offsets,
-      sizes: sizes,
+      index: pane.selected!,
+      offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
+      sizes: pane.effectiveItems.getPaneItemsSizes,
       child: child,
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
@@ -249,11 +248,11 @@ class NavigationPane with Diagnosticable {
 }
 
 /// Base class for creating custom navigation panes.
-/// 
+///
 /// ```dart
 /// class CustomNavigationPane extends NavigationPaneWidget {
 ///   CustomNavigationPane();
-/// 
+///
 ///   @override
 ///   Widget build(BuildContext context) {
 ///   }
@@ -319,9 +318,7 @@ class _TopNavigationPane extends StatelessWidget {
       height: kOneLineTileHeight,
       child: pane.indicatorBuilder(
         context: context,
-        index: pane.selected,
-        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-        sizes: pane.effectiveItems.getPaneItemsSizes,
+        pane: pane,
         axis: Axis.vertical,
         child: Row(key: pane.paneKey, children: [
           Expanded(
@@ -423,10 +420,7 @@ class _CompactNavigationPane extends StatelessWidget {
       width: _kCompactNavigationPanelWidth,
       child: pane.indicatorBuilder(
         context: context,
-        index: pane.selected,
-        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-        sizes: pane.effectiveItems.getPaneItemsSizes,
-        axis: Axis.horizontal,
+        pane: pane,
         child: Align(
           key: pane.paneKey,
           alignment: Alignment.topCenter,
@@ -551,10 +545,7 @@ class _OpenNavigationPane extends StatelessWidget {
       width: _kOpenNavigationPanelWidth,
       child: pane.indicatorBuilder(
         context: context,
-        index: pane.selected,
-        offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-        sizes: pane.effectiveItems.getPaneItemsSizes,
-        axis: Axis.horizontal,
+        pane: pane,
         child: Column(key: pane.paneKey, children: [
           Container(
             margin: pane.autoSuggestBox != null ? EdgeInsets.zero : topPadding,

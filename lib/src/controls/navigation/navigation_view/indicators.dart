@@ -1,12 +1,14 @@
 part of 'view.dart';
 
 /// Creates a navigation indicator from a function.
+///
+/// [pane] is the current NavigationPane used
+///
+/// [axis], if null, defaults to [Axis.horinzontal]
 typedef NavigationIndicatorBuilder = Widget Function({
   required BuildContext context,
-  int? index,
-  required List<Offset> Function() offsets,
-  required List<Size> Function() sizes,
-  required Axis axis,
+  required NavigationPane pane,
+  Axis? axis,
   required Widget child,
 });
 

@@ -250,7 +250,7 @@ class PaneItemHeader extends NavigationPaneItem {
   }
 }
 
-extension _ItemsExtension on List<NavigationPaneItem> {
+extension ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
   List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
