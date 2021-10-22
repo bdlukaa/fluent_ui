@@ -254,6 +254,7 @@ class NavigationPaneWidgetData {
     required this.scrollController,
     required this.paneKey,
     required this.listKey,
+    required this.pane,
   });
 
   final Widget content;
@@ -261,6 +262,7 @@ class NavigationPaneWidgetData {
   final ScrollController scrollController;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final NavigationPane pane;
 }
 
 /// Base class for creating custom navigation panes.

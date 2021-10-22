@@ -181,6 +181,7 @@ class NavigationViewState extends State<NavigationView> {
                 listKey: _listKey,
                 paneKey: _panelKey,
                 scrollController: scrollController,
+                pane: pane,
               ));
             });
           } else if (pane.displayMode == PaneDisplayMode.auto) {

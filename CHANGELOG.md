@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 - Added the `backwards` property to `ProgressRing`
 - `FluentApp.builder` now works as expected ([#84](https://github.com/bdlukaa/fluent_ui/issues/84))
 - Implemented `NavigationPane.customPane`, which now gives you the ability to create custom panes for `NavigationView`
+- **BREAKING** `sizes`, `offsets` and `index` parameters from `NavigationIndicatorBuilder` were replaced by `pane`
 
 ## [3.3.0] - [12/10/2021]
 
