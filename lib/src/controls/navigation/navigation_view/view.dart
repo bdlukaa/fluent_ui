@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 
 part 'body.dart';
 part 'indicators.dart';
+part 'pane_items.dart';
 part 'pane.dart';
 part 'style.dart';
 
@@ -172,7 +173,9 @@ class NavigationViewState extends State<NavigationView> {
         late Widget paneResult;
         if (widget.pane != null) {
           final pane = widget.pane!;
-          if (pane.displayMode == PaneDisplayMode.auto) {
+          if (pane.customPane != null) {
+            paneResult = pane.customPane!;
+          } else if (pane.displayMode == PaneDisplayMode.auto) {
             /// For more info on the adaptive behavior, see
             /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
             ///
