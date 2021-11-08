@@ -46,6 +46,7 @@ class ContentDialog extends StatelessWidget {
     this.actions,
     this.style,
     this.backgroundDismiss = true,
+    this.constraints = const BoxConstraints(maxWidth: 368),
   }) : super(key: key);
 
   /// The title of the dialog. Usually, a [Text] widget
@@ -64,6 +65,9 @@ class ContentDialog extends StatelessWidget {
   /// Whether the background is dismissible or not.
   final bool backgroundDismiss;
 
+  /// The constraints of the dialog. It defaults to `BoxConstraints(maxWidth: 368)`
+  final BoxConstraints constraints;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -72,7 +76,7 @@ class ContentDialog extends StatelessWidget {
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return Container(
-      constraints: const BoxConstraints(maxWidth: 368),
+      constraints: constraints,
       decoration: style.decoration,
       child: Column(
         mainAxisSize: MainAxisSize.min,
