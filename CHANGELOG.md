@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.4.1] - [08/11/2021]
+
+* [next]
+
 ## [3.4.0] - Flexibility - [22/10/2021]
 
 - `ProgressRing` now spins on the correct direction ([#83](https://github.com/bdlukaa/fluent_ui/issues/83))

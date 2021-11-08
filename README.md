@@ -523,8 +523,8 @@ NavigationView(
 NavigationBody(
   index: _currentIndex,
   children: [
-    ScaffoldPage(
-      topBar: PageTopBar(header: Text('Your Songs'))
+    const ScaffoldPage(
+      topBar: PageHeader(header: Text('Your Songs'))
     )
   ],
 )
