@@ -200,7 +200,9 @@ class TabView extends StatelessWidget {
               buildDefaultDragHandles: false,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              onReorder: onReorder!,
+              onReorder: (i, ii) {
+                onReorder?.call(i, ii);
+              },
               itemCount: tabs.length,
               proxyDecorator: (child, index, animation) {
                 return child;

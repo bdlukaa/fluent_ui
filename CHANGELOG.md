@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - `ContentDialog` constraints can now be customizable ([#86](https://github.com/bdlukaa/fluent_ui/issues/86))
 - Add possibility to disable acrylic by wrapping it in a `DisableAcrylic` ([#89](https://github.com/bdlukaa/fluent_ui/issues/89))
+- Fix `onReaorder null exception` ([#88](https://github.com/bdlukaa/fluent_ui/issues/88))
 
 ## [3.4.0] - Flexibility - [22/10/2021]
 
