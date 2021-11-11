@@ -23,6 +23,7 @@ class PaneItem extends NavigationPaneItem {
   PaneItem({
     required this.icon,
     this.title,
+    this.infoBadge,
     this.focusNode,
     this.autofocus = false,
   });
@@ -46,6 +47,9 @@ class PaneItem extends NavigationPaneItem {
   ///
   /// Usually an [Icon] widget
   final Widget icon;
+
+  /// The info badge used by this item
+  final InfoBadge? infoBadge;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -104,6 +108,11 @@ class PaneItem extends NavigationPaneItem {
                 ? MainAxisAlignment.center
                 : MainAxisAlignment.end,
             children: [
+              if (isOpen && infoBadge != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6.0),
+                  child: infoBadge!,
+                ),
               if (isOpen) Expanded(child: textResult),
               () {
                 final icon = Padding(
@@ -116,10 +125,23 @@ class PaneItem extends NavigationPaneItem {
                           textStyle?.color,
                       size: 16.0,
                     ),
-                    child: Center(child: this.icon),
+                    child: Center(
+                      child: Stack(clipBehavior: Clip.none, children: [
+                        this.icon,
+                        // Show here if it's not on top and not open
+                        if (infoBadge != null && !isTop && !isOpen)
+                          Positioned(
+                            right: -8,
+                            top: -8,
+                            child: infoBadge!,
+                          ),
+                      ]),
+                    ),
                   ),
                 );
-                if (isOpen) return icon;
+                if (isOpen) {
+                  return icon;
+                }
                 return icon;
               }(),
             ],
@@ -128,6 +150,16 @@ class PaneItem extends NavigationPaneItem {
             child = Row(mainAxisSize: MainAxisSize.min, children: [
               child,
               textResult,
+            ]);
+          }
+          if (isTop && infoBadge != null) {
+            child = Stack(children: [
+              child,
+              Positioned(
+                top: 0,
+                right: 0,
+                child: infoBadge!,
+              ),
             ]);
           }
           child = AnimatedContainer(

@@ -15,11 +15,6 @@
     </a>
   </p>
   <p align="center">
-    <a title="Buy me a coffee" href="https://www.buymeacoffee.com/bdlukaa">
-      <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00">
-    </a>
-  </p>
-  <p align="center">
   Design beautiful native windows apps using Flutter
   </p>
 </div>
@@ -50,6 +45,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
     - [App Bar](#app-bar)
     - [Navigation Pane](#navigation-pane)
     - [Navigation Body](#navigation-body)
+    - [InfoBadge](#info-badge)
   - [Tab View](#tab-view)
   - [Bottom Navigation](#bottom-navigation)
 - [Inputs](#inputs)
@@ -529,6 +525,37 @@ NavigationBody(
   ],
 )
 ```
+
+### Info Badge
+
+Badging is a non-intrusive and intuitive way to display notifications or bring focus to an area within an app - whether that be for notifications, indicating new content, or showing an alert. An InfoBadge is a small piece of UI that can be added into an app and customized to display a number, icon, or a simple dot. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/info-badge)
+
+![InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/infobadge-example-1.png)
+
+Here's an example of how to add a info badge to a `PaneItem`:
+
+```dart
+NavigationView(
+  ...,
+  pane: NavigationPane(
+    ...
+    children: [
+      PaneItem(
+        icon: Icon(FluentIcons.more),
+        title: const Text('Others'),
+        infoBadge: const InfoBadge(
+          source: Text('9'),
+        ),
+      ),
+    ],
+  ),
+  ...
+)
+```
+
+| Open | Compact | Top |
+| ---- | ------- | --- |
+| ![Open InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/navview-expanded.png) | ![Compact InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/navview-compact.png) | ![Top InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/navview-top.png) |
 
 ## Tab View
 

@@ -233,6 +233,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   : FluentIcons.more_vertical,
             ),
             title: const Text('Others'),
+            infoBadge: const InfoBadge(
+              source: Text('9'),
+            ),
           ),
         ],
         autoSuggestBox: AutoSuggestBox<String>(
@@ -243,8 +246,9 @@ class _MyHomePageState extends State<MyHomePage> {
         footerItems: [
           PaneItemSeparator(),
           PaneItem(
-              icon: const Icon(FluentIcons.settings),
-              title: const Text('Settings')),
+            icon: const Icon(FluentIcons.settings),
+            title: const Text('Settings'),
+          ),
         ],
       ),
       content: NavigationBody(index: index, children: [

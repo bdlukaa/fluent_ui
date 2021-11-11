@@ -65,6 +65,7 @@ export 'src/controls/surfaces/tooltip.dart';
 
 export 'src/controls/utils/divider.dart';
 export 'src/controls/utils/hover_button.dart';
+export 'src/controls/utils/info_badge.dart';
 export 'src/controls/utils/scrollbar.dart';
 
 export 'src/controls/form/auto_suggest_box.dart';
