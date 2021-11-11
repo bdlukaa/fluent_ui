@@ -369,6 +369,8 @@ class _AcrylicGuts extends StatelessWidget {
       AcrylicHelper.getTintOpacityModifier(properties.tint),
     );
 
+    final disabled = DisableAcrylic.of(context) != null;
+
     return ClipPath(
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: CustomPaint(
@@ -379,32 +381,34 @@ class _AcrylicGuts extends StatelessWidget {
             properties.luminosityAlpha,
           ),
         ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: properties.blurAmount,
-            sigmaY: properties.blurAmount,
-          ),
-          child: Stack(children: [
-            const Opacity(
-              opacity: 0.02,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      "assets/AcrylicNoise.png",
-                      package: "fluent_ui",
-                    ),
-                    alignment: Alignment.topLeft,
-                    repeat: ImageRepeat.repeat,
-                  ),
-                  backgroundBlendMode: BlendMode.srcOver,
-                  color: Colors.transparent,
+        child: disabled
+            ? child
+            : BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: properties.blurAmount,
+                  sigmaY: properties.blurAmount,
                 ),
+                child: Stack(children: [
+                  const Opacity(
+                    opacity: 0.02,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            "assets/AcrylicNoise.png",
+                            package: "fluent_ui",
+                          ),
+                          alignment: Alignment.topLeft,
+                          repeat: ImageRepeat.repeat,
+                        ),
+                        backgroundBlendMode: BlendMode.srcOver,
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  child,
+                ]),
               ),
-            ),
-            child,
-          ]),
-        ),
       ),
     );
   }
@@ -558,5 +562,21 @@ class _NoiseTextureCacher {
         texture = image.image;
       }),
     );
+  }
+}
+
+class DisableAcrylic extends InheritedWidget {
+  const DisableAcrylic({
+    Key? key,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static DisableAcrylic? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DisableAcrylic>();
+  }
+
+  @override
+  bool updateShouldNotify(DisableAcrylic oldWidget) {
+    return true;
   }
 }
