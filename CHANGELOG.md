@@ -6,6 +6,8 @@ Date format: DD/MM/YYYY
 - Add possibility to disable acrylic by wrapping it in a `DisableAcrylic` ([#89](https://github.com/bdlukaa/fluent_ui/issues/89))
 - Fix `onReaorder null exception` ([#88](https://github.com/bdlukaa/fluent_ui/issues/88))
 - Implement `InfoBadge`
+- Implement `Expander` ([#85](https://github.com/bdlukaa/fluent_ui/issues/85))
+- Default `inputMouseCursor` is now `MouseCursor.defer`
 
 ## [3.4.0] - Flexibility - [22/10/2021]
 

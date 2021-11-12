@@ -326,11 +326,10 @@ class ThemeData with Diagnosticable {
         .merge(typography)
         .apply(fontFamily: fontFamily);
     inputMouseCursor ??= ButtonState.resolveWith((states) {
-      if (states.isHovering || states.isPressing) {
-        return SystemMouseCursors.click;
-      } else {
-        return MouseCursor.defer;
-      }
+      // if (states.isHovering || states.isPressing) {
+      //   return SystemMouseCursors.click;
+      // }
+      return MouseCursor.defer;
     });
     focusTheme = FocusThemeData.standard(
       glowColor: accentColor.withOpacity(0.15),

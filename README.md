@@ -65,6 +65,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 - [Widgets](#widgets)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
+  - [Expander](#expander)
   - [Flyout](#flyout)
   - **TODO** [Teaching tip]()
   - [Acrylic](#acrylic)
@@ -1095,6 +1096,43 @@ showDialog(
 
 ![Delete File Dialog](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_delete_file.png)\
 ![Subscribe to App Service Dialog](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_three_button_default.png)\
+
+## Expander
+
+Expander lets you show or hide less important content that's related to a piece of primary content that's always visible. Items contained in the `header` are always visible. The user can expand and collapse the `content` area, where secondary content is displayed, by interacting with the header. When the content area is expanded, it pushes other UI elements out of the way; it does not overlay other UI. The Expander can expand upwards or downwards.
+
+Both the `header` and `content` areas can contain any content, from simple text to complex UI layouts. For example, you can use the control to show additional options for an item.
+
+![](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+
+Use an Expander when some primary content should always be visible, but related secondary content may be hidden until needed. This UI is commonly used when display space is limited and when information or options can be grouped together. Hiding the secondary content until it's needed can also help to focus the user on the most important parts of your app.
+
+Here's an example of how to create an expander:
+
+```dart
+Expander(
+  header: const Text('This thext is in header'),
+  content: const Text('This is the content'),
+  direction: ExpanderDirection.down, // (optional). Defaults to ExpanderDirection.down
+  initiallyExpanded: false, // (false). Defaults to false
+),
+```
+
+Open and close the expander programatically:
+
+```dart
+final _expanderKey = GlobalKey<ExpanderState>();
+
+Expander(
+  header: const Text('This thext is in header'),
+  content: const Text('This is the content'),
+),
+
+// Call this function to close the expander
+void close() {
+  _expanderKey.currentState?.open = false;
+}
+```
 
 ## Flyout
 

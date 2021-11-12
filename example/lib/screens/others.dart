@@ -10,6 +10,8 @@ class Others extends StatefulWidget {
 }
 
 class _OthersState extends State<Others> {
+  final _expanderKey = GlobalKey<ExpanderState>();
+
   final otherController = ScrollController();
 
   int currentIndex = 0;
@@ -56,59 +58,70 @@ class _OthersState extends State<Others> {
         ),
         controller: otherController,
         children: [
-          ...List.generate(InfoBarSeverity.values.length, (index) {
-            final severity = InfoBarSeverity.values[index];
-            final titles = [
-              'Long title',
-              'Short title',
-            ];
-            final descs = [
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-              'Short desc',
-            ];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: InfoBar(
-                title: Text(titles[index.isEven ? 0 : 1]),
-                content: Text(descs[index.isEven ? 0 : 1]),
-                isLong: InfoBarSeverity.values.indexOf(severity).isEven,
-                severity: severity,
-                action: () {
-                  if (index == 0) {
-                    return Tooltip(
-                      message: 'This is a tooltip',
-                      child: Button(
-                        child: const Text('Hover this button to see a tooltip'),
-                        onPressed: () {
-                          print('pressed button with tooltip');
-                        },
+          Mica(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Expander(
+                key: _expanderKey,
+                header: const Text('Info bars'),
+                content: Column(
+                  children:
+                      List.generate(InfoBarSeverity.values.length, (index) {
+                    final severity = InfoBarSeverity.values[index];
+                    final titles = [
+                      'Long title',
+                      'Short title',
+                    ];
+                    final descs = [
+                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'Short desc',
+                    ];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: InfoBar(
+                        title: Text(titles[index.isEven ? 0 : 1]),
+                        content: Text(descs[index.isEven ? 0 : 1]),
+                        isLong: InfoBarSeverity.values.indexOf(severity).isEven,
+                        severity: severity,
+                        action: () {
+                          if (index == 0) {
+                            return Tooltip(
+                              message: 'This is a tooltip',
+                              child: Button(
+                                child: const Text(
+                                    'Hover this button to see a tooltip'),
+                                onPressed: () {
+                                  print('pressed button with tooltip');
+                                },
+                              ),
+                            );
+                          } else {
+                            if (index == 3) {
+                              return Flyout(
+                                controller: flyoutController,
+                                contentWidth: 450,
+                                content: const FlyoutContent(
+                                  child: Text(
+                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                                ),
+                                child: Button(
+                                  child: const Text('Open flyout'),
+                                  onPressed: () {
+                                    flyoutController.open = true;
+                                  },
+                                ),
+                              );
+                            }
+                          }
+                        }(),
+                        onClose: () => _expanderKey.currentState?.open = false,
                       ),
                     );
-                  } else {
-                    if (index == 3) {
-                      return Flyout(
-                        controller: flyoutController,
-                        contentWidth: 450,
-                        content: const FlyoutContent(
-                          child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
-                        ),
-                        child: Button(
-                          child: const Text('Open flyout'),
-                          onPressed: () {
-                            flyoutController.open = true;
-                          },
-                        ),
-                      );
-                    }
-                  }
-                }(),
-                onClose: () {
-                  print('closed');
-                },
+                  }),
+                ),
               ),
-            );
-          }),
+            ),
+          ),
           Wrap(children: [
             const ListTile(
               title: Text('ListTile Title'),
