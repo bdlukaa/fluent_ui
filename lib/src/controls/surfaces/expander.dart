@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 enum ExpanderDirection {
   /// Whether the [Expander] expands down
   down,
+
   /// Whether the [Expander] expands up
   up,
 }
@@ -134,7 +135,10 @@ class ExpanderState extends State<Expander>
             height: 48.0,
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
-              border: Border.all(width: 0.25),
+              border: Border.all(
+                width: 0.25,
+                color: Color(0xffBCBCBC),
+              ),
               borderRadius: BorderRadius.vertical(
                 top: const Radius.circular(4.0),
                 bottom: Radius.circular(open ? 0.0 : 4.0),
@@ -178,8 +182,11 @@ class ExpanderState extends State<Expander>
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            border: Border.all(width: 0.25),
-            color: theme.acrylicBackgroundColor,
+            border: Border.all(
+              width: 0.25,
+              color: Color(0xffBCBCBC),
+            ),
+            color: theme.acrylicBackgroundColor, 
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
