@@ -63,7 +63,15 @@ class _OthersState extends State<Others> {
               padding: const EdgeInsets.all(8.0),
               child: Expander(
                 key: _expanderKey,
+                leading: RadioButton(
+                  checked: false,
+                  onChanged: (v) {},
+                ),
                 header: const Text('Info bars'),
+                trailing: ToggleSwitch(
+                  checked: true,
+                  onChanged: (v) {},
+                ),
                 content: Column(
                   children:
                       List.generate(InfoBarSeverity.values.length, (index) {

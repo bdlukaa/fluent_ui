@@ -30,15 +30,26 @@ class Expander extends StatefulWidget {
   /// Creates an expander
   const Expander({
     Key? key,
+    this.leading,
     required this.header,
     required this.content,
     this.icon,
+    this.trailing,
     this.animationCurve,
     this.animationDuration,
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
   }) : super(key: key);
+
+  /// The leading widget.
+  ///
+  /// See also:
+  ///
+  ///  * [Icon]
+  ///  * [RadioButton]
+  ///  * [Checkbox]
+  final Widget? leading;
 
   /// The expander header
   ///
@@ -56,6 +67,14 @@ class Expander extends StatefulWidget {
 
   /// The icon of the toggle button.
   final Widget? icon;
+
+  /// The trailing widget. It's positioned at the right of [header]
+  /// and at the left of [icon].
+  /// 
+  /// See also:
+  /// 
+  ///  * [ToggleSwitch]
+  final Widget? trailing;
 
   /// The expand-collapse animation duration. If null, defaults to
   /// [FluentTheme.fastAnimationDuration]
@@ -146,11 +165,19 @@ class ExpanderState extends State<Expander>
             ),
             padding: const EdgeInsets.only(left: 16.0),
             alignment: Alignment.centerLeft,
-            child: Row(children: [
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              if (widget.leading != null) Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: widget.leading!,
+              ),
               Expanded(child: widget.header),
+              if (widget.trailing != null) Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: widget.trailing!,
+              ),
               Container(
-                margin: const EdgeInsets.only(
-                  left: 20.0,
+                margin: EdgeInsets.only(
+                  left: widget.trailing != null ? 8.0 : 20.0,
                   right: 8.0,
                   top: 8.0,
                   bottom: 8.0,
