@@ -40,6 +40,9 @@ class Expander extends StatefulWidget {
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
+    this.headerHeight = 48.0,
+    this.headerBackgroundColor,
+    this.contentBackgroundColor,
   }) : super(key: key);
 
   /// The leading widget.
@@ -93,6 +96,19 @@ class Expander extends StatefulWidget {
   /// A callback called when the current state is changed. `true` when
   /// open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
+
+  /// The height of the header.
+  /// 
+  /// Defaults to 48.0
+  final double headerHeight;
+
+  /// The background color of the header. If null, [ThemeData.scaffoldBackgroundColor]
+  /// is used
+  final Color? headerBackgroundColor;
+  
+  /// The content color of the header. If null, [ThemeData.acrylicBackgroundColor]
+  /// is used
+  final Color? contentBackgroundColor;
 
   @override
   ExpanderState createState() => ExpanderState();
@@ -151,9 +167,9 @@ class ExpanderState extends State<Expander>
         onPressed: _handlePressed,
         builder: (context, states) {
           return Container(
-            height: 48.0,
+            height: widget.headerHeight,
             decoration: BoxDecoration(
-              color: theme.scaffoldBackgroundColor,
+              color: widget.headerBackgroundColor ?? theme.scaffoldBackgroundColor,
               border: Border.all(
                 width: 0.25,
                 color: theme.brightness.isDark
@@ -220,7 +236,7 @@ class ExpanderState extends State<Expander>
                   ? Colors.black
                   : const Color(0xffBCBCBC),
             ),
-            color: theme.acrylicBackgroundColor,
+            color: widget.contentBackgroundColor ?? theme.acrylicBackgroundColor,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),

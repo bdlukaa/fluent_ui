@@ -8,6 +8,7 @@ Date format: DD/MM/YYYY
 - Implement `InfoBadge`
 - Implement `Expander` ([#85](https://github.com/bdlukaa/fluent_ui/issues/85))
 - Default `inputMouseCursor` is now `MouseCursor.defer`
+- `NavigationView.contentShape` is now rendered at the foreground
 
 ## [3.4.0] - Flexibility - [22/10/2021]
 

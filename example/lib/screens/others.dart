@@ -189,6 +189,7 @@ class _OthersState extends State<Others> {
           Container(
             height: 400,
             decoration: BoxDecoration(
+              color: Colors.black,
               border: Border.all(
                   color: FluentTheme.of(context).accentColor, width: 1.0),
             ),

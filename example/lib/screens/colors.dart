@@ -36,6 +36,7 @@ class ColorsPage extends StatelessWidget {
           right: PageHeader.horizontalPadding(context),
         ),
         controller: controller,
+        addRepaintBoundaries: true,
         children: [
           InfoLabel(
             label: 'Primary Colors',

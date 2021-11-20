@@ -175,6 +175,7 @@ class _NavigationBody extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_NavigationBody oldWidget) {
-    return true;
+    return oldWidget.displayMode != displayMode ||
+        oldWidget.minimalPaneOpen != minimalPaneOpen;
   }
 }
