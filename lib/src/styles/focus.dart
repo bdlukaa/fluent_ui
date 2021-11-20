@@ -73,13 +73,15 @@ class FocusBorder extends StatelessWidget {
     bool focused, [
     Widget? child,
   ]) {
-    return AnimatedContainer(
-      duration: FluentTheme.of(context).fasterAnimationDuration,
-      curve: FluentTheme.of(context).animationCurve,
-      decoration: style.buildPrimaryDecoration(focused),
-      child: DecoratedBox(
-        decoration: style.buildSecondaryDecoration(focused),
-        child: child,
+    return IgnorePointer(
+      child: AnimatedContainer(
+        duration: FluentTheme.of(context).fasterAnimationDuration,
+        curve: FluentTheme.of(context).animationCurve,
+        decoration: style.buildPrimaryDecoration(focused),
+        child: DecoratedBox(
+          decoration: style.buildSecondaryDecoration(focused),
+          child: child,
+        ),
       ),
     );
   }

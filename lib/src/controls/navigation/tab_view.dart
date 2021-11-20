@@ -250,30 +250,19 @@ class TabView extends StatelessWidget {
       ]),
     );
     if (shortcutsEnabled) {
-      return Shortcuts(
-        shortcuts: {
-          /// Ctrl + F4 or Ctrl + W closes the current tab
-          LogicalKeySet(
-            LogicalKeyboardKey.control,
-            LogicalKeyboardKey.f4,
-          ): _TabCloseIntent(),
-          LogicalKeySet(
-            LogicalKeyboardKey.control,
-            LogicalKeyboardKey.keyW,
-          ): _TabCloseIntent(),
-
-          /// Ctrl + T creates a new tab
-          LogicalKeySet(
-            LogicalKeyboardKey.control,
-            LogicalKeyboardKey.keyT,
-          ): _OpenNewTabIntent(),
-
-          /// Ctrl + (number from 1 to 8) navigate to that tab
-          /// Ctrl + 9 navigates to the last tab
-          // TODO: Ctrl + number. See https://github.com/bdlukaa/fluent_ui/issues/15
+      void _onClosePressed() {
+        tabs[currentIndex].onClosed?.call();
+      }
+      return CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.f4, control: true): _onClosePressed,
+          const SingleActivator(LogicalKeyboardKey.keyW, control: true): _onClosePressed,
+          const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
+            onNewPressed?.call();
+          },
           ...Map.fromIterable(
             List<int>.generate(9, (index) => index),
-            key: (number) {
+            key: (i) {
               final digits = [
                 LogicalKeyboardKey.digit1,
                 LogicalKeyboardKey.digit2,
@@ -285,44 +274,25 @@ class TabView extends StatelessWidget {
                 LogicalKeyboardKey.digit8,
                 LogicalKeyboardKey.digit9,
               ];
-              return LogicalKeySet(digits[number]);
+              return SingleActivator(digits[i], control: true);
             },
-            value: (number) => _ChangeTabIntent(number),
+            value: (tab) {
+              return () {
+                // If it's the last, move to the last tab
+                if (tab == 8) {
+                  onChanged?.call(tabs.length - 1);
+                } else {
+                  if (tabs.length - 1 >= tab) onChanged?.call(tab);
+                }
+              };
+            },
           ),
         },
-        child: Actions(
-          actions: {
-            _TabCloseIntent: CallbackAction<_TabCloseIntent>(onInvoke: (_) {
-              tabs[currentIndex].onClosed?.call();
-            }),
-            _OpenNewTabIntent: CallbackAction<_OpenNewTabIntent>(onInvoke: (_) {
-              onNewPressed?.call();
-            }),
-            _ChangeTabIntent: CallbackAction<_ChangeTabIntent>(onInvoke: (i) {
-              final tab = i.tab;
-              if (tab == 8) {
-                onChanged?.call(tabs.length - 1);
-              } else {
-                if (tabs.length - 1 >= tab) onChanged?.call(tab);
-              }
-            }),
-          },
-          child: Focus(child: tabBar),
-        ),
+        child: tabBar,
       );
     }
     return tabBar;
   }
-}
-
-class _TabCloseIntent extends Intent {}
-
-class _OpenNewTabIntent extends Intent {}
-
-class _ChangeTabIntent extends Intent {
-  final int tab;
-
-  const _ChangeTabIntent(this.tab);
 }
 
 const double _kMaxTileWidth = 240.0;
@@ -414,7 +384,7 @@ class __TabState extends State<_Tab>
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
-      cursor: widget.selected ? ButtonState.all(MouseCursor.defer) : null,
+      cursor: ButtonState.all(MouseCursor.defer),
       onPressed: widget.onPressed,
       builder: (context, state) {
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
