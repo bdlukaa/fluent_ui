@@ -70,9 +70,9 @@ class Expander extends StatefulWidget {
 
   /// The trailing widget. It's positioned at the right of [header]
   /// and at the left of [icon].
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   ///  * [ToggleSwitch]
   final Widget? trailing;
 
@@ -156,7 +156,9 @@ class ExpanderState extends State<Expander>
               color: theme.scaffoldBackgroundColor,
               border: Border.all(
                 width: 0.25,
-                color: Color(0xffBCBCBC),
+                color: theme.brightness.isDark
+                    ? Colors.black
+                    : const Color(0xffBCBCBC),
               ),
               borderRadius: BorderRadius.vertical(
                 top: const Radius.circular(4.0),
@@ -166,15 +168,17 @@ class ExpanderState extends State<Expander>
             padding: const EdgeInsets.only(left: 16.0),
             alignment: Alignment.centerLeft,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              if (widget.leading != null) Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: widget.leading!,
-              ),
+              if (widget.leading != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: widget.leading!,
+                ),
               Expanded(child: widget.header),
-              if (widget.trailing != null) Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: widget.trailing!,
-              ),
+              if (widget.trailing != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: widget.trailing!,
+                ),
               Container(
                 margin: EdgeInsets.only(
                   left: widget.trailing != null ? 8.0 : 20.0,
@@ -207,13 +211,16 @@ class ExpanderState extends State<Expander>
       SizeTransition(
         sizeFactor: _controller,
         child: Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
               width: 0.25,
-              color: Color(0xffBCBCBC),
+              color: theme.brightness.isDark
+                  ? Colors.black
+                  : const Color(0xffBCBCBC),
             ),
-            color: theme.acrylicBackgroundColor, 
+            color: theme.acrylicBackgroundColor,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),

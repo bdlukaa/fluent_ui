@@ -17,13 +17,6 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
 
-const ShapeBorder kDefaultContentClipper = RoundedRectangleBorder(
-  side: BorderSide(width: 0.8, color: Colors.black),
-  borderRadius: BorderRadius.only(
-    topLeft: Radius.circular(8.0),
-  ),
-);
-
 /// The NavigationView control provides top-level navigation
 /// for your app. It adapts to a variety of screen sizes and
 /// supports both top and left navigation styles.
@@ -46,7 +39,7 @@ class NavigationView extends StatefulWidget {
     this.pane,
     this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
-    this.contentShape = kDefaultContentClipper,
+    this.contentShape,
     // If more properties are added here, make sure to
     // add them to the automatic mode as well.
   }) : super(key: key);
@@ -72,7 +65,7 @@ class NavigationView extends StatefulWidget {
   ///
   /// The content is not clipped on when [PaneDisplayMode.displayMode]
   /// is [PaneDisplayMode.minimal]
-  final ShapeBorder contentShape;
+  final ShapeBorder? contentShape;
 
   static NavigationViewState of(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>()!;
@@ -176,15 +169,16 @@ class NavigationViewState extends State<NavigationView> {
           if (pane.customPane != null) {
             paneResult = Builder(builder: (context) {
               return pane.customPane!.build(
-                  context,
-                  NavigationPaneWidgetData(
-                    appBar: appBar,
-                    content: ClipRect(child: widget.content),
-                    listKey: _listKey,
-                    paneKey: _panelKey,
-                    scrollController: scrollController,
-                    pane: pane,
-                  ));
+                context,
+                NavigationPaneWidgetData(
+                  appBar: appBar,
+                  content: ClipRect(child: widget.content),
+                  listKey: _listKey,
+                  paneKey: _panelKey,
+                  scrollController: scrollController,
+                  pane: pane,
+                ),
+              );
             });
           } else if (pane.displayMode == PaneDisplayMode.auto) {
             /// For more info on the adaptive behavior, see
@@ -235,14 +229,29 @@ class NavigationViewState extends State<NavigationView> {
               ),
             );
           } else {
+            final contentShape = widget.contentShape ??
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 0.3,
+                    color: FluentTheme.of(context).brightness.isDark
+                        ? Colors.black
+                        : const Color(0xffBCBCBC),
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                  ),
+                );
             final Widget content = ClipRect(
               child: pane.displayMode == PaneDisplayMode.minimal
                   ? widget.content
                   : DecoratedBox(
-                      decoration: ShapeDecoration(shape: widget.contentShape),
+                      position: DecorationPosition.foreground,
+                      decoration: ShapeDecoration(
+                        shape: contentShape,
+                      ),
                       child: ClipPath(
                         clipBehavior: widget.clipBehavior,
-                        clipper: ShapeBorderClipper(shape: widget.contentShape),
+                        clipper: ShapeBorderClipper(shape: contentShape),
                         child: widget.content,
                       ),
                     ),
