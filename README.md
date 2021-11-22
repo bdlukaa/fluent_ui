@@ -1545,6 +1545,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Chip                      | Chip             |
 | Snackbar                  | Snackbar         |
 | -                         | PillButtonBar    |
+| ExpansionPanel            | Expander         |
 
 ## Contribution
 
