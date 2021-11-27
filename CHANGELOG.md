@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.4.2] - [DD/MM/YYYY]
+
+- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99)) 
+
 ## [3.4.1] - [08/11/2021]
 
 - `ContentDialog` constraints can now be customizable ([#86](https://github.com/bdlukaa/fluent_ui/issues/86))
