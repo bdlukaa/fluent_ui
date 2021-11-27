@@ -71,6 +71,9 @@ class NavigationPane with Diagnosticable {
     this.key,
     this.selected,
     this.onChanged,
+    this.width,
+    this.maxWidth,
+    this.minWidth,
     this.header,
     this.items = const [],
     this.footerItems = const [],
@@ -81,7 +84,8 @@ class NavigationPane with Diagnosticable {
     this.menuButton,
     this.scrollController,
     this.indicatorBuilder = defaultNavigationIndicator,
-  }) : assert(selected == null || selected >= 0);
+  })  : assert(selected == null || selected >= 0),
+        assert(minWidth == null || maxWidth == null || minWidth <= maxWidth);
 
   final Key? key;
 
@@ -96,6 +100,31 @@ class NavigationPane with Diagnosticable {
   /// The menu button used by this pane. If null and [onDisplayModeRequested]
   /// is null
   final Widget? menuButton;
+
+  /// The width of the pane.
+  ///
+  /// If the value is null, [_kOpenNavigationPanelWidth] is used.
+  /// The width can be based on MediaQuery and used
+  /// with [minWidth] and [maxWidth].
+  ///
+  /// Only used when the pane is open.
+  final double? width;
+
+  /// The minimum width of the pane.
+  ///
+  /// If width is smaller than minWidth, minWidth is used as width.
+  /// minWidth must be smaller or equal to maxWidth.
+  ///
+  /// Only used when the pane is open.
+  final double? minWidth;
+
+  /// The maximum width of the pane.
+  ///
+  /// If width is greater than maxWidth, maxWidth is used as width.
+  /// maxWidth must be greater or equal than minWidth.
+  ///
+  /// Only used when the pane is open.
+  final double? maxWidth;
 
   /// The header of the pane.
   ///
@@ -543,11 +572,19 @@ class _OpenNavigationPane extends StatelessWidget {
       }
       return const SizedBox.shrink();
     }();
+    var paneWidth = pane.width ?? _kOpenNavigationPanelWidth;
+    if (pane.maxWidth != null && paneWidth > pane.maxWidth!) {
+      paneWidth = pane.maxWidth!;
+    }
+    if (pane.minWidth != null && paneWidth < pane.minWidth!) {
+      paneWidth = pane.minWidth!;
+    }
+
     return AnimatedContainer(
       key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      width: _kOpenNavigationPanelWidth,
+      width: paneWidth,
       child: pane.indicatorBuilder(
         context: context,
         pane: pane,
