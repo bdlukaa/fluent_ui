@@ -238,14 +238,6 @@ class _MyHomePageState extends State<MyHomePage> {
               source: Text('9'),
             ),
           ),
-          PaneItemSeparator(),
-          PaneItemAction(
-            icon: const Icon(FluentIcons.open_source),
-            title: const Text('Source code'),
-            onTap: () {
-              launch('https://github.com/bdlukaa/fluent_ui');
-            },
-          ),
         ],
         autoSuggestBox: AutoSuggestBox<String>(
           controller: TextEditingController(),
@@ -257,6 +249,13 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.open_source),
+            title: const Text('Source code'),
+            onTap: () {
+              launch('https://github.com/bdlukaa/fluent_ui');
+            },
           ),
         ],
       ),
