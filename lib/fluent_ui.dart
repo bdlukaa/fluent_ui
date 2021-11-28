@@ -42,6 +42,7 @@ export 'src/controls/inputs/buttons/text_button.dart';
 
 export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/chip.dart';
+export 'src/controls/inputs/dropdown_button.dart';
 export 'src/controls/inputs/pill_button_bar.dart';
 export 'src/controls/inputs/radio_button.dart';
 export 'src/controls/inputs/rating.dart';
