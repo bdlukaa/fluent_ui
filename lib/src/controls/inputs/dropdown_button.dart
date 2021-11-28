@@ -42,17 +42,17 @@ class DropDownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final buttonChilds = <Widget>[];
+    final buttonChildren = <Widget>[];
     if (leading != null) {
-      buttonChilds.add(Padding(
+      buttonChildren.add(Padding(
         padding: EdgeInsets.only(right: padding?.right ?? _kDefaultPadding),
         child: leading,
       ));
     }
     if (title != null) {
-      buttonChilds.add(title!);
+      buttonChildren.add(title!);
     }
-    buttonChilds.add(Padding(
+    buttonChildren.add(Padding(
       padding: EdgeInsets.only(left: padding?.left ?? _kDefaultPadding),
       child: trailing ?? const Icon(FluentIcons.chevron_down, size: 12),
     ));
@@ -86,7 +86,7 @@ class DropDownButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: buttonChilds,
+          children: buttonChildren,
         ),
         onPressed: disabled ? null : () => controller.open = true,
         autofocus: autofocus,
@@ -98,10 +98,10 @@ class DropDownButton extends StatelessWidget {
 
 class DropDownButtonItem {
   DropDownButtonItem({
+    required this.onTap,
     this.leading,
     this.title,
     this.trailing,
-    required this.onTap,
   }) : assert(leading != null || title != null || trailing != null);
 
   final Widget? leading;
