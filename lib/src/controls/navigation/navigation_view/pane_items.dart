@@ -83,7 +83,6 @@ class PaneItem extends NavigationPaneItem {
     return Container(
       key: itemKey,
       height: !isTop ? 36.0 : null,
-      width: isCompact ? _kCompactNavigationPanelWidth : null,
       margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
       alignment: Alignment.center,
       child: HoverButton(
