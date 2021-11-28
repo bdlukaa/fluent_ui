@@ -107,5 +107,5 @@ class DropDownButtonItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
-  final Function() onTap;
+  final VoidCallback onTap;
 }
