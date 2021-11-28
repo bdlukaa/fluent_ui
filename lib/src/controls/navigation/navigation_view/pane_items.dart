@@ -308,11 +308,12 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
     focusNode,
     autofocus = false,
   }) : super(
-            icon: icon,
-            title: title,
-            infoBadge: infoBadge,
-            focusNode: focusNode,
-            autofocus: autofocus);
+          icon: icon,
+          title: title,
+          infoBadge: infoBadge,
+          focusNode: focusNode,
+          autofocus: autofocus,
+        );
 
   /// The function who will be executed when the item is clicked
   final Function() onTap;
@@ -326,10 +327,14 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
-    return super.build(context, selected, onTap,
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        autofocus: autofocus);
+    return super.build(
+      context,
+      selected,
+      onTap,
+      displayMode: displayMode,
+      showTextOnTop: showTextOnTop,
+      autofocus: autofocus,
+    );
   }
 }
 
