@@ -18,6 +18,7 @@ dependencies:
   bitsdojo_window: ^0.1.1+1
   flutter_acrylic: ^0.0.3
   url_strategy: ^0.2.0
+  url_launcher: ^6.0.15
 
 dev_dependencies:
   flutter_test:
