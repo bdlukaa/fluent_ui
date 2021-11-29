@@ -18,6 +18,7 @@ class NavigationPaneItem with Diagnosticable {
 ///
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
+///   * [PaneItemAction], the item used for execute an action on click
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
@@ -217,6 +218,7 @@ class PaneItem extends NavigationPaneItem {
 /// See also:
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemHeader], used to label groups of items.
+///   * [PaneItemAction], the item used for execute an action on click
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
   PaneItemSeparator({this.color, this.thickness});
@@ -253,6 +255,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 /// See also:
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
+///   * [PaneItemAction], the item used for execute an action on click
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemHeader({required this.header});
@@ -277,6 +280,59 @@ class PaneItemHeader extends NavigationPaneItem {
         overflow: TextOverflow.fade,
         textAlign: TextAlign.left,
       ),
+    );
+  }
+}
+
+/// The item used by [NavigationView] to display the tiles.
+///
+/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
+/// used as a tooltip. On the other display modes, [icon] and [title] are
+/// displayed in a [Row].
+///
+/// The difference with [PaneItem] is that the item is not linked
+/// to a page but to an action passed in parameter (callback)
+///
+/// See also:
+///
+///   * [PaneItem], the item used by [NavigationView] to render tiles
+///   * [PaneItemSeparator], used to group navigation items
+///   * [PaneItemHeader], used to label groups of items.
+class PaneItemAction extends PaneItem implements NavigationPaneItem {
+  PaneItemAction({
+    required icon,
+    required this.onTap,
+    title,
+    infoBadge,
+    focusNode,
+    autofocus = false,
+  }) : super(
+          icon: icon,
+          title: title,
+          infoBadge: infoBadge,
+          focusNode: focusNode,
+          autofocus: autofocus,
+        );
+
+  /// The function who will be executed when the item is clicked
+  final Function() onTap;
+
+  @override
+  Widget build(
+    BuildContext context,
+    bool selected,
+    VoidCallback? onPressed, {
+    PaneDisplayMode? displayMode,
+    bool showTextOnTop = true,
+    bool? autofocus,
+  }) {
+    return super.build(
+      context,
+      selected,
+      onTap,
+      displayMode: displayMode,
+      showTextOnTop: showTextOnTop,
+      autofocus: autofocus,
     );
   }
 }

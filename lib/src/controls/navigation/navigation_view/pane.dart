@@ -214,7 +214,8 @@ class NavigationPane with Diagnosticable {
   }
 
   List<NavigationPaneItem> get effectiveItems {
-    return (allItems..removeWhere((i) => i is! PaneItem));
+    return (allItems
+      ..removeWhere((i) => i is! PaneItem || i is PaneItemAction));
   }
 
   /// Check if the provided [item] is selected on not.

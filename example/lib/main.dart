@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/colors.dart';
@@ -253,6 +254,13 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.open_source),
+            title: const Text('Source code'),
+            onTap: () {
+              launch('https://github.com/bdlukaa/fluent_ui');
+            },
           ),
         ],
       ),
