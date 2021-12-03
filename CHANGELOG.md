@@ -1,7 +1,8 @@
 Date format: DD/MM/YYYY
 
-## [3.4.2] - [DD/MM/YYYY]
+## [next] - [DD/MM/YYYY]
 
+- ComboBox's Popup Acrylic can now be disabled if wrapped in a `DisableAcrylic` ([#105](https://github.com/bdlukaa/fluent_ui/issues/105))
 - `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99)) 
 - Implement `PaneItemAction` for `NavigationPane` ([#104](https://github.com/bdlukaa/fluent_ui/issues/104))
 

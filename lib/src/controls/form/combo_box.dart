@@ -449,6 +449,7 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     this.elevation = 16,
     required this.capturedThemes,
     required this.style,
+    required this.acrylicEnabled,
     this.barrierLabel,
     this.itemHeight,
     this.comboboxColor,
@@ -464,6 +465,7 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
   final TextStyle style;
   final double? itemHeight;
   final Color? comboboxColor;
+  final bool acrylicEnabled;
 
   final List<double> itemHeights;
   ScrollController? scrollController;
@@ -481,11 +483,9 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
   final String? barrierLabel;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return _ComboboxRoutePage<T>(
+  Widget buildPage(context, animation, secondaryAnimation) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final page = _ComboboxRoutePage<T>(
         route: this,
         constraints: constraints,
         items: items,
@@ -497,6 +497,8 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
         style: style,
         comboboxColor: comboboxColor,
       );
+      if (acrylicEnabled) return page;
+      return DisableAcrylic(child: page);
     });
   }
 
@@ -1233,6 +1235,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
             ancestor: navigator.context.findRenderObject()) &
         itemBox.size;
     _comboboxRoute = _ComboboxRoute<T>(
+      acrylicEnabled: DisableAcrylic.of(context) != null,
       items: menuItems,
       buttonRect: menuMargin.resolve(textDirection).inflateRect(itemRect),
       padding: _kMenuItemPadding.resolve(textDirection),
