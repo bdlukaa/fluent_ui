@@ -253,6 +253,23 @@ class NavigationPane with Diagnosticable {
 }
 
 /// Configure the size of the pane in its various mode.
+///
+/// ```dart
+/// NavigationView(
+///   pane: NavigationPane(
+///     size: NavigationPaneSize(
+///       openWidth: MediaQuery.of(context).size.width / 5,
+///       openMinWidth: 250,
+///       openMaxWidth: 320,
+///     ),
+///   ),
+/// )
+/// ```
+///
+/// See also:
+///
+///  * [NavigationPane], which this configures the size of
+///  * [NavigationView], used to display [NavigationPane]s
 class NavigationPaneSize {
   /// The height of the pane when he is in top mode.
   ///
@@ -283,15 +300,18 @@ class NavigationPaneSize {
   /// maxWidth must be greater or equal than minWidth.
   final double? openMaxWidth;
 
-  NavigationPaneSize({
+  const NavigationPaneSize({
     this.topHeight,
     this.compactWidth,
     this.openWidth,
     this.openMinWidth,
     this.openMaxWidth,
-  }) : assert(openMinWidth == null ||
-            openMaxWidth == null ||
-            openMinWidth <= openMaxWidth);
+  }) : assert(
+          openMinWidth == null ||
+              openMaxWidth == null ||
+              openMinWidth <= openMaxWidth,
+          'openMinWidth should be greater than openMaxWidth',
+        );
 }
 
 class NavigationPaneWidgetData {
