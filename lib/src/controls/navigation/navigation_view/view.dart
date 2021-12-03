@@ -218,6 +218,7 @@ class NavigationViewState extends State<NavigationView> {
                 autoSuggestBox: pane.autoSuggestBox,
                 autoSuggestBoxReplacement: pane.autoSuggestBoxReplacement,
                 footerItems: pane.footerItems,
+                size: pane.size,
                 header: pane.header,
                 items: pane.items,
                 key: pane.key,
@@ -281,7 +282,8 @@ class NavigationViewState extends State<NavigationView> {
                 paneResult = Stack(children: [
                   Positioned(
                     top: widget.appBar?.height ?? 0.0,
-                    left: _kCompactNavigationPanelWidth,
+                    left: pane.size?.compactWidth ??
+                        _kCompactNavigationPanelWidth,
                     right: 0,
                     bottom: 0,
                     child: content,
