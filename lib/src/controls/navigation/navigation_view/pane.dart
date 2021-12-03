@@ -405,6 +405,7 @@ class _TopNavigationPane extends StatelessWidget {
                 ),
               Expanded(
                 child: Scrollbar(
+                  controller: pane.scrollController,
                   isAlwaysShown: false,
                   // A single child scroll view is used instead of a ListView
                   // because the Row implies the cross axis alignment to center,
@@ -529,6 +530,7 @@ class _CompactNavigationPane extends StatelessWidget {
               ),
             Expanded(
               child: Scrollbar(
+                controller: pane.scrollController,
                 isAlwaysShown: false,
                 child: ListView(key: listKey, primary: true, children: [
                   ...pane.items.map((item) {
@@ -658,6 +660,7 @@ class _OpenNavigationPane extends StatelessWidget {
             ),
           Expanded(
             child: Scrollbar(
+              controller: pane.scrollController,
               isAlwaysShown: false,
               child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {
