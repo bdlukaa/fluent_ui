@@ -479,8 +479,7 @@ class NavigationAppBar with Diagnosticable {
   /// The height of the app bar. [_kDefaultAppBarHeight] is used by default
   final double height;
 
-  /// The background color. If null, [ThemeData.scaffoldBackgroundColor] is
-  /// used.
+  /// The background color of this app bar.
   final Color? backgroundColor;
 
   /// Creates an app bar
@@ -652,6 +651,10 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-    return SizedBox(height: appBar.height, child: result);
+    return Container(
+      color: appBar.backgroundColor,
+      height: appBar.height,
+      child: result,
+    );
   }
 }
