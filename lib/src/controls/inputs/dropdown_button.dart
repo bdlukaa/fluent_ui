@@ -4,6 +4,11 @@ const double _kDefaultPadding = 5.0;
 const double _kVerticalOffset = 20.0;
 const double _kContentWidth = 100.0;
 
+/// A button that can be opened for show sub-button.
+/// This button is a shortcut to a specific Flyout.
+///
+/// See also:
+///   * [Flyout](https://github.com/bdlukaa/fluent_ui#flyout)
 class DropDownButton extends StatelessWidget {
   const DropDownButton({
     Key? key,
@@ -21,15 +26,42 @@ class DropDownButton extends StatelessWidget {
     this.autofocus = false,
   }) : super(key: key);
 
+  /// Leading show a content at the left of this widget.
   final Widget? leading;
+
+  /// Title show a content at the center of this widget.
+  /// Generally it's a Text.
   final Widget? title;
+
+  /// Trailing show a content at the right of this widget.
+  /// If trailing is null, an Icon chevron_down is displayed.
   final Widget? trailing;
+
+  /// When leading is not null, padding.right is applied on leading.
+  /// When trailing is not null, padding.left is applied on trailing.
+  /// padding.top and padding.bottom are not used.
+  /// If padding is null, _kDefaultPadding is used.
   final EdgeInsets? padding;
+
+  /// VerticalOffset define the space between the button and the flyout.
+  /// By default it's value is _kVerticalOffset.
   final double? verticalOffset;
+
+  /// ContentWidth define the width of the flyout.
+  /// By default it's value is _kContentWidth.
   final double? contentWidth;
+
+  /// Items define the list of buttons in the flyout.
   final List<DropDownButtonItem> items;
+
+  /// A flyout controller for control when the button is opened or not.
   final FlyoutController controller;
+
+  /// If closeAfterClick is true, after a click on an item, the flyout is
+  /// automatically closed, otherwise not.
   final bool closeAfterClick;
+
+  /// If value of disabled is true, the DropDownButton can't be clicked.
   final bool disabled;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -94,6 +126,8 @@ class DropDownButton extends StatelessWidget {
   }
 }
 
+/// An item for DropDownButton.
+/// This item is transformed as a button.
 class DropDownButtonItem {
   const DropDownButtonItem({
     required this.onTap,
@@ -105,8 +139,15 @@ class DropDownButtonItem {
           'You must provide at least one property: leading, title or trailing',
         );
 
+  /// Show a content at the left of this button.
   final Widget? leading;
+
+  /// Show a content at the center of this button.
   final Widget? title;
+
+  /// Show a content at the right of this widget.
   final Widget? trailing;
+
+  /// When the button is clicked, onTap is executed.
   final VoidCallback onTap;
 }
