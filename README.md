@@ -859,6 +859,52 @@ The code above produces the following:
 
 ![Radio Buttons](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
 
+## DropDown button
+
+A DropDownButton is a light dismiss container that contain buttons.
+
+See also [Flyout](https://github.com/bdlukaa/fluent_ui#flyout) for more freedom.
+
+### Example
+
+```dart
+final flyoutController = FlyoutController();
+
+DropDownButton(
+  controller: dpController,
+  contentWidth: 150,
+  leading: const Icon(FluentIcons.align_left),
+  title: const Text('Alignment'),
+  items: [
+    DropDownButtonItem(
+      title: const Text('Left'),
+      leading: const Icon(FluentIcons.align_left),
+      onTap: () {},
+    ),
+    DropDownButtonItem(
+      title: const Text('Center'),
+      leading: const Icon(FluentIcons.align_center),
+      onTap: () {},
+    ),
+    DropDownButtonItem(
+      title: const Text('Right'),
+      leading: const Icon(FluentIcons.align_right),
+      onTap: () {},
+    ),
+  ],
+);
+
+@override
+void dispose() {
+  flyoutController.dispose();
+  super.dispose();
+}
+```
+
+### Screenshot
+
+![DropDownButton with light theme](https://user-images.githubusercontent.com/8223773/143767305-4de7f74f-e0e8-4509-9911-ec97c2926430.png)
+
 ## Slider
 
 A slider is a control that lets the user select from a range of values by moving a thumb control along a track. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/slider)
@@ -1522,6 +1568,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
 | DropdownButton            | Combobox         |
+| -                         | DropDownButton   |
 | -                         | AutoSuggestBox   |
 | AlertDialog               | ContentDialog    |
 | MaterialBanner            | InfoBar          |
