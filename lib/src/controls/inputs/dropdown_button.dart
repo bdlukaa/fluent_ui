@@ -42,20 +42,18 @@ class DropDownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final buttonChildren = <Widget>[];
-    if (leading != null) {
-      buttonChildren.add(Padding(
-        padding: EdgeInsets.only(right: padding?.right ?? _kDefaultPadding),
-        child: leading,
-      ));
-    }
-    if (title != null) {
-      buttonChildren.add(title!);
-    }
-    buttonChildren.add(Padding(
-      padding: EdgeInsets.only(left: padding?.left ?? _kDefaultPadding),
-      child: trailing ?? const Icon(FluentIcons.chevron_down, size: 12),
-    ));
+    final buttonChildren = <Widget>[
+      if (leading != null)
+        Padding(
+          padding: EdgeInsets.only(right: padding?.right ?? _kDefaultPadding),
+          child: leading,
+        ),
+      if (title != null) title!,
+      Padding(
+        padding: EdgeInsets.only(left: padding?.left ?? _kDefaultPadding),
+        child: trailing ?? const Icon(FluentIcons.chevron_down, size: 12),
+      ),
+    ];
 
     return Flyout(
       content: Padding(
@@ -97,12 +95,15 @@ class DropDownButton extends StatelessWidget {
 }
 
 class DropDownButtonItem {
-  DropDownButtonItem({
+  const DropDownButtonItem({
     required this.onTap,
     this.leading,
     this.title,
     this.trailing,
-  }) : assert(leading != null || title != null || trailing != null);
+  }) : assert(
+          leading != null || title != null || trailing != null,
+          'You must provide at least one property: leading, title or trailing',
+        );
 
   final Widget? leading;
   final Widget? title;
