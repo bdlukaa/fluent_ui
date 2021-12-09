@@ -71,6 +71,7 @@ class NavigationPane with Diagnosticable {
     this.key,
     this.selected,
     this.onChanged,
+    this.size,
     this.header,
     this.items = const [],
     this.footerItems = const [],
@@ -96,6 +97,9 @@ class NavigationPane with Diagnosticable {
   /// The menu button used by this pane. If null and [onDisplayModeRequested]
   /// is null
   final Widget? menuButton;
+
+  /// The size of the pane in its various mode.
+  final NavigationPaneSize? size;
 
   /// The header of the pane.
   ///
@@ -233,7 +237,7 @@ class NavigationPane with Diagnosticable {
   }) {
     if (pane.menuButton != null) return pane.menuButton!;
     return Container(
-      width: _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
       margin: padding,
       child: PaneItem(
         title: itemTitle,
@@ -246,6 +250,68 @@ class NavigationPane with Diagnosticable {
       ),
     );
   }
+}
+
+/// Configure the size of the pane in its various mode.
+///
+/// ```dart
+/// NavigationView(
+///   pane: NavigationPane(
+///     size: NavigationPaneSize(
+///       openWidth: MediaQuery.of(context).size.width / 5,
+///       openMinWidth: 250,
+///       openMaxWidth: 320,
+///     ),
+///   ),
+/// )
+/// ```
+///
+/// See also:
+///
+///  * [NavigationPane], which this configures the size of
+///  * [NavigationView], used to display [NavigationPane]s
+class NavigationPaneSize {
+  /// The height of the pane when he is in top mode.
+  ///
+  /// If the value is null, [kOneLineTileHeight] is used.
+  final double? topHeight;
+
+  /// The width of the pane when he is in compact mode.
+  ///
+  /// If the value is null, [_kCompactNavigationPanelWidth] is used.
+  final double? compactWidth;
+
+  /// The width of the pane when he is open.
+  ///
+  /// If the value is null, [_kOpenNavigationPanelWidth] is used.
+  /// The width can be based on MediaQuery and used
+  /// with [minWidth] and [maxWidth].
+  final double? openWidth;
+
+  /// The minimum width of the pane when he is open.
+  ///
+  /// If width is smaller than minWidth, minWidth is used as width.
+  /// minWidth must be smaller or equal to maxWidth.
+  final double? openMinWidth;
+
+  /// The maximum width of the pane when he is open.
+  ///
+  /// If width is greater than maxWidth, maxWidth is used as width.
+  /// maxWidth must be greater or equal than minWidth.
+  final double? openMaxWidth;
+
+  const NavigationPaneSize({
+    this.topHeight,
+    this.compactWidth,
+    this.openWidth,
+    this.openMinWidth,
+    this.openMaxWidth,
+  }) : assert(
+          openMinWidth == null ||
+              openMaxWidth == null ||
+              openMinWidth <= openMaxWidth,
+          'openMinWidth should be greater than openMaxWidth',
+        );
 }
 
 class NavigationPaneWidgetData {
@@ -288,11 +354,13 @@ class _TopNavigationPane extends StatelessWidget {
   _TopNavigationPane({
     required this.pane,
     this.listKey,
+    this.scrollbarKey,
     this.appBar,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
+  final GlobalKey? scrollbarKey;
   final NavigationAppBar? appBar;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -321,7 +389,7 @@ class _TopNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     Widget topBar = SizedBox(
-      height: kOneLineTileHeight,
+      height: pane.size?.topHeight ?? kOneLineTileHeight,
       child: pane.indicatorBuilder(
         context: context,
         pane: pane,
@@ -339,6 +407,8 @@ class _TopNavigationPane extends StatelessWidget {
                 ),
               Expanded(
                 child: Scrollbar(
+                  key: scrollbarKey,
+                  controller: pane.scrollController,
                   isAlwaysShown: false,
                   // A single child scroll view is used instead of a ListView
                   // because the Row implies the cross axis alignment to center,
@@ -381,12 +451,14 @@ class _CompactNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
+    this.scrollbarKey,
     this.onToggle,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -423,7 +495,7 @@ class _CompactNavigationPane extends StatelessWidget {
       key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      width: _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
       child: pane.indicatorBuilder(
         context: context,
         pane: pane,
@@ -463,6 +535,8 @@ class _CompactNavigationPane extends StatelessWidget {
               ),
             Expanded(
               child: Scrollbar(
+                key: scrollbarKey,
+                controller: pane.scrollController,
                 isAlwaysShown: false,
                 child: ListView(key: listKey, primary: true, children: [
                   ...pane.items.map((item) {
@@ -486,6 +560,7 @@ class _OpenNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
+    this.scrollbarKey,
     this.onToggle,
     this.onItemSelected,
   }) : super(key: pane.key);
@@ -493,6 +568,7 @@ class _OpenNavigationPane extends StatelessWidget {
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
 
@@ -544,11 +620,21 @@ class _OpenNavigationPane extends StatelessWidget {
       }
       return const SizedBox.shrink();
     }();
+    var paneWidth = pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+    if (pane.size?.openMaxWidth != null &&
+        paneWidth > pane.size!.openMaxWidth!) {
+      paneWidth = pane.size!.openMaxWidth!;
+    }
+    if (pane.size?.openMinWidth != null &&
+        paneWidth < pane.size!.openMinWidth!) {
+      paneWidth = pane.size!.openMinWidth!;
+    }
+
     return AnimatedContainer(
       key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      width: _kOpenNavigationPanelWidth,
+      width: paneWidth,
       child: pane.indicatorBuilder(
         context: context,
         pane: pane,
@@ -582,6 +668,8 @@ class _OpenNavigationPane extends StatelessWidget {
             ),
           Expanded(
             child: Scrollbar(
+              key: scrollbarKey,
+              controller: pane.scrollController,
               isAlwaysShown: false,
               child: ListView(key: listKey, primary: true, children: [
                 ...pane.items.map((item) {

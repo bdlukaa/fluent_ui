@@ -94,6 +94,7 @@ class NavigationViewState extends State<NavigationView> {
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
+  final _scrollbarKey = GlobalKey();
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
@@ -218,6 +219,7 @@ class NavigationViewState extends State<NavigationView> {
                 autoSuggestBox: pane.autoSuggestBox,
                 autoSuggestBoxReplacement: pane.autoSuggestBoxReplacement,
                 footerItems: pane.footerItems,
+                size: pane.size,
                 header: pane.header,
                 items: pane.items,
                 key: pane.key,
@@ -268,6 +270,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: _TopNavigationPane(
                       pane: pane,
                       listKey: _listKey,
+                      scrollbarKey: _scrollbarKey,
                       appBar: widget.appBar,
                     ),
                   ),
@@ -281,7 +284,8 @@ class NavigationViewState extends State<NavigationView> {
                 paneResult = Stack(children: [
                   Positioned(
                     top: widget.appBar?.height ?? 0.0,
-                    left: _kCompactNavigationPanelWidth,
+                    left: pane.size?.compactWidth ??
+                        _kCompactNavigationPanelWidth,
                     right: 0,
                     bottom: 0,
                     child: content,
@@ -318,6 +322,7 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
+                                scrollbarKey: _scrollbarKey,
                                 onToggle: toggleCompactOpenMode,
                                 onItemSelected: toggleCompactOpenMode,
                               ),
@@ -331,6 +336,7 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
+                                scrollbarKey: _scrollbarKey,
                                 onToggle: toggleCompactOpenMode,
                               ),
                             ),
@@ -350,6 +356,7 @@ class NavigationViewState extends State<NavigationView> {
                           pane: pane,
                           paneKey: _panelKey,
                           listKey: _listKey,
+                          scrollbarKey: _scrollbarKey,
                         ),
                       ),
                       Expanded(child: content),
@@ -405,6 +412,7 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
+                            scrollbarKey: _scrollbarKey,
                             onItemSelected: () {
                               setState(() => _minimalPaneOpen = false);
                             },
@@ -477,8 +485,7 @@ class NavigationAppBar with Diagnosticable {
   /// The height of the app bar. [_kDefaultAppBarHeight] is used by default
   final double height;
 
-  /// The background color. If null, [ThemeData.scaffoldBackgroundColor] is
-  /// used.
+  /// The background color of this app bar.
   final Color? backgroundColor;
 
   /// Creates an app bar
@@ -650,6 +657,10 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-    return SizedBox(height: appBar.height, child: result);
+    return Container(
+      color: appBar.backgroundColor,
+      height: appBar.height,
+      child: result,
+    );
   }
 }

@@ -1,8 +1,15 @@
 Date format: DD/MM/YYYY
 
-## [3.4.2] - [DD/MM/YYYY]
+## [3.5.1] - [DD/MM/YYYY]
 
 - Implement `DropDownButton` ([#85](https://github.com/bdlukaa/fluent_ui/issues/85))
+
+## [3.5.0] - Flutter 2.8 - [09/12/2021]
+
+- **BREAKING** Minimal Flutter version is now 2.8
+- `NavigationAppBar.backgroundColor` is now applied correctly. ([#100](https://github.com/bdlukaa/fluent_ui/issues/100))
+- ComboBox's Popup Acrylic can now be disabled if wrapped in a `DisableAcrylic` ([#105](https://github.com/bdlukaa/fluent_ui/issues/105))
+- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99)) 
 - Implement `PaneItemAction` for `NavigationPane` ([#104](https://github.com/bdlukaa/fluent_ui/issues/104))
 
 ## [3.4.1] - [08/11/2021]

@@ -153,6 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
+        size: NavigationPaneSize(
+          openWidth: MediaQuery.of(context).size.width / 5,
+          openMinWidth: 250,
+          openMaxWidth: 320,
+        ),
         header: Container(
           height: kOneLineTileHeight,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -225,8 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Typography'),
           ),
           PaneItem(
-              icon: const Icon(FluentIcons.cell_phone),
-              title: const Text('Mobile')),
+            icon: const Icon(FluentIcons.cell_phone),
+            title: const Text('Mobile'),
+          ),
           PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
