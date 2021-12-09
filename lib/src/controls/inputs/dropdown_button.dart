@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const double _kDefaultPadding = 5.0;
+const EdgeInsets _kDefaultPadding = EdgeInsets.all(5.0);
 const double _kVerticalOffset = 20.0;
 const double _kContentWidth = 100.0;
 
@@ -8,7 +8,8 @@ const double _kContentWidth = 100.0;
 /// This button is a shortcut to a specific Flyout.
 ///
 /// See also:
-///   * [Flyout](https://github.com/bdlukaa/fluent_ui#flyout)
+///   * [Flyout], a light dismiss container that can show arbitrary UI as its content
+///   * [ComboBox], a list of items that a user can select from
 class DropDownButton extends StatelessWidget {
   const DropDownButton({
     Key? key,
@@ -17,51 +18,58 @@ class DropDownButton extends StatelessWidget {
     this.leading,
     this.title,
     this.trailing,
-    this.padding,
-    this.verticalOffset,
-    this.contentWidth,
+    this.padding = _kDefaultPadding,
+    this.verticalOffset = _kVerticalOffset,
+    this.contentWidth = _kContentWidth,
     this.closeAfterClick = true,
     this.disabled = false,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  })  : assert(items.length > 0, 'You must provide at least one item'),
+        super(key: key);
 
   /// Leading show a content at the left of this widget.
   final Widget? leading;
 
   /// Title show a content at the center of this widget.
-  /// Generally it's a Text.
+  ///
+  /// Usually a [Text]
   final Widget? title;
 
   /// Trailing show a content at the right of this widget.
   /// If trailing is null, an Icon chevron_down is displayed.
   final Widget? trailing;
 
+  /// Applied horizontally to the widgets, adding a space between leading,
+  /// title and trailing.
+  ///
   /// When leading is not null, padding.right is applied on leading.
   /// When trailing is not null, padding.left is applied on trailing.
   /// padding.top and padding.bottom are not used.
-  /// If padding is null, _kDefaultPadding is used.
-  final EdgeInsets? padding;
+  ///
+  /// If null, [_kDefaultPadding] is used.
+  final EdgeInsets padding;
 
-  /// VerticalOffset define the space between the button and the flyout.
-  /// By default it's value is _kVerticalOffset.
-  final double? verticalOffset;
+  /// The space between the button and the flyout.
+  ///
+  /// [_kVerticalOffset] is used by default
+  final double verticalOffset;
 
-  /// ContentWidth define the width of the flyout.
-  /// By default it's value is _kContentWidth.
-  final double? contentWidth;
+  /// The width of the flyout.
+  ///
+  /// [_kContentWidth] is used by default.
+  final double contentWidth;
 
-  /// Items define the list of buttons in the flyout.
+  /// The items in the flyout. Must not be empty
   final List<DropDownButtonItem> items;
 
-  /// A flyout controller for control when the button is opened or not.
+  /// Controls whether the button is opened or not.
   final FlyoutController controller;
 
-  /// If closeAfterClick is true, after a click on an item, the flyout is
-  /// automatically closed, otherwise not.
+  /// If `true`, the flyout is closed after an item is tapped
   final bool closeAfterClick;
 
-  /// If value of disabled is true, the DropDownButton can't be clicked.
+  /// If `true`, the button won't be clickable.
   final bool disabled;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -77,12 +85,12 @@ class DropDownButton extends StatelessWidget {
     final buttonChildren = <Widget>[
       if (leading != null)
         Padding(
-          padding: EdgeInsets.only(right: padding?.right ?? _kDefaultPadding),
+          padding: EdgeInsets.only(right: padding.right),
           child: leading,
         ),
       if (title != null) title!,
       Padding(
-        padding: EdgeInsets.only(left: padding?.left ?? _kDefaultPadding),
+        padding: EdgeInsets.only(left: padding.left),
         child: trailing ?? const Icon(FluentIcons.chevron_down, size: 12),
       ),
     ];
@@ -109,8 +117,8 @@ class DropDownButton extends StatelessWidget {
           ),
         ),
       ),
-      verticalOffset: verticalOffset ?? _kVerticalOffset,
-      contentWidth: contentWidth ?? _kContentWidth,
+      verticalOffset: verticalOffset,
+      contentWidth: contentWidth,
       controller: controller,
       child: Button(
         child: Row(

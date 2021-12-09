@@ -56,6 +56,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Checkbox](#checkbox)
   - [Toggle Switch](#toggle-switch)
   - [Radio Buttons](#radio-buttons)
+  - [DropDown Button](#dropdown-button) 
   - [Slider](#slider)
     - [Choosing between vertical and horizontal sliders](#choosing-between-vertical-and-horizontal-sliders)
 - [Forms](#forms)
@@ -861,7 +862,8 @@ The code above produces the following:
 
 ## DropDown button
 
-A DropDownButton is a light dismiss container that contain buttons.
+A DropDownButton is a light dismiss container that contain buttons. 
+[Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button)
 
 See also [Flyout](https://github.com/bdlukaa/fluent_ui#flyout) for more freedom.
 
@@ -1568,7 +1570,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
 | DropdownButton            | Combobox         |
-| -                         | DropDownButton   |
+| PopupMenuButton           | DropDownButton   |
 | -                         | AutoSuggestBox   |
 | AlertDialog               | ContentDialog    |
 | MaterialBanner            | InfoBar          |
