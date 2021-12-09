@@ -230,8 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Typography'),
           ),
           PaneItem(
-              icon: const Icon(FluentIcons.cell_phone),
-              title: const Text('Mobile')),
+            icon: const Icon(FluentIcons.cell_phone),
+            title: const Text('Mobile'),
+          ),
           PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top

@@ -94,6 +94,7 @@ class NavigationViewState extends State<NavigationView> {
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
+  final _scrollbarKey = GlobalKey();
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
@@ -269,6 +270,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: _TopNavigationPane(
                       pane: pane,
                       listKey: _listKey,
+                      scrollbarKey: _scrollbarKey,
                       appBar: widget.appBar,
                     ),
                   ),
@@ -320,6 +322,7 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
+                                scrollbarKey: _scrollbarKey,
                                 onToggle: toggleCompactOpenMode,
                                 onItemSelected: toggleCompactOpenMode,
                               ),
@@ -333,6 +336,7 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
+                                scrollbarKey: _scrollbarKey,
                                 onToggle: toggleCompactOpenMode,
                               ),
                             ),
@@ -352,6 +356,7 @@ class NavigationViewState extends State<NavigationView> {
                           pane: pane,
                           paneKey: _panelKey,
                           listKey: _listKey,
+                          scrollbarKey: _scrollbarKey,
                         ),
                       ),
                       Expanded(child: content),
@@ -407,6 +412,7 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
+                            scrollbarKey: _scrollbarKey,
                             onItemSelected: () {
                               setState(() => _minimalPaneOpen = false);
                             },
