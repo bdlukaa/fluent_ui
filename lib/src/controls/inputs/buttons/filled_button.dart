@@ -1,8 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'base.dart';
-import 'theme.dart';
-
 class FilledButton extends BaseButton {
   const FilledButton({
     Key? key,
