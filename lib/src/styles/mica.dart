@@ -20,6 +20,8 @@ class Mica extends StatelessWidget {
     required this.child,
     this.elevation = 0,
     this.backgroundColor,
+    this.borderRadius,
+    this.shape = BoxShape.rectangle,
   })  : assert(elevation >= 0.0),
         super(key: key);
 
@@ -38,17 +40,33 @@ class Mica extends StatelessWidget {
   /// [ThemeData.micaBackgroundColor] is used.
   final Color? backgroundColor;
 
+  /// The border radius applied to the area.
+  final BorderRadius? borderRadius;
+
+  /// The box shape applied to the area.
+  /// By default, the value of shape is [BoxShape.rectangle]
+  final BoxShape shape;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
     final Color boxColor = backgroundColor ?? theme.micaBackgroundColor;
-    final Widget result = ColoredBox(color: boxColor, child: child);
+    final Widget result = Container(
+      child: child,
+      decoration: BoxDecoration(
+        color: boxColor,
+        borderRadius: borderRadius,
+        shape: shape,
+      ),
+    );
     if (elevation > 0.0) {
       return PhysicalModel(
         color: boxColor,
         elevation: elevation,
         child: result,
+        borderRadius: borderRadius,
+        shape: shape,
       );
     }
     return result;
