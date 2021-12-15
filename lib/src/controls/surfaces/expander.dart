@@ -102,9 +102,8 @@ class Expander extends StatefulWidget {
   /// Defaults to 48.0
   final double headerHeight;
 
-  /// The background color of the header. If null, [ThemeData.scaffoldBackgroundColor]
-  /// is used
-  final Color? headerBackgroundColor;
+  /// The background color of the header.
+  final ButtonState<Color>? headerBackgroundColor;
 
   /// The content color of the header. If null, [ThemeData.acrylicBackgroundColor]
   /// is used
@@ -159,6 +158,44 @@ class ExpanderState extends State<Expander>
   bool get _isDown => widget.direction == ExpanderDirection.down;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  static Color backgroundColor(ThemeData style, Set<ButtonStates> states) {
+    if (style.brightness == Brightness.light) {
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return const Color(0xFFf9f9f9).withOpacity(0.2);
+      if (states.isHovering) return const Color(0xFFf9f9f9).withOpacity(0.4);
+      return Colors.white.withOpacity(0.7);
+    } else {
+      if (states.isDisabled) return style.disabledColor;
+      if (states.isPressing) return Colors.white.withOpacity(0.03);
+      if (states.isHovering) return Colors.white.withOpacity(0.082);
+      return Colors.white.withOpacity(0.05);
+    }
+  }
+
+  static Color borderColor(ThemeData style, Set<ButtonStates> states) {
+    if (style.brightness == Brightness.light) {
+      if (states.isHovering && !states.isPressing) {
+        return const Color(0xFF212121).withOpacity(0.22);
+      }
+      return const Color(0xFF212121).withOpacity(0.17);
+    } else {
+      if (states.isPressing) return Colors.white.withOpacity(0.062);
+      if (states.isHovering) return Colors.white.withOpacity(0.02);
+      return Colors.black.withOpacity(0.52);
+    }
+  }
+
+  static const double borderSize = 0.5;
+  static final Color darkBorderColor = Colors.black.withOpacity(0.8);
+
+  static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     theme = FluentTheme.of(context);
@@ -166,16 +203,15 @@ class ExpanderState extends State<Expander>
       HoverButton(
         onPressed: _handlePressed,
         builder: (context, states) {
-          return Container(
+          return AnimatedContainer(
+            duration: expanderAnimationDuration,
             height: widget.headerHeight,
             decoration: BoxDecoration(
-              color:
-                  widget.headerBackgroundColor ?? theme.scaffoldBackgroundColor,
+              color: widget.headerBackgroundColor?.resolve(states) ??
+                  backgroundColor(theme, states),
               border: Border.all(
-                width: 0.25,
-                color: theme.brightness.isDark
-                    ? Colors.black
-                    : const Color(0xffBCBCBC),
+                width: borderSize,
+                color: borderColor(theme, states),
               ),
               borderRadius: BorderRadius.vertical(
                 top: const Radius.circular(4.0),
@@ -232,13 +268,11 @@ class ExpanderState extends State<Expander>
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
-              width: 0.25,
-              color: theme.brightness.isDark
-                  ? Colors.black
-                  : const Color(0xffBCBCBC),
+              width: borderSize,
+              color: borderColor(theme, {ButtonStates.none}),
             ),
-            color:
-                widget.contentBackgroundColor ?? theme.acrylicBackgroundColor,
+            color: widget.contentBackgroundColor ??
+                backgroundColor(theme, {ButtonStates.none}),
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),

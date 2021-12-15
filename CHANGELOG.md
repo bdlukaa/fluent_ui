@@ -2,6 +2,8 @@ Date format: DD/MM/YYYY
 
 ## [3.5.1] - [DD/MM/YYYY]
 
+- Update inputs colors
+- `Expander` now properly disposes its resources
 - Add the `borderRadius` and `shape` attributes to the `Mica` widget
 - Implement `DropDownButton` ([#85](https://github.com/bdlukaa/fluent_ui/issues/85))
 
