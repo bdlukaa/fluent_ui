@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.5.1] - [DD/MM/YYYY]
+## [3.5.1] - [15/12/2021]
 
 - Update inputs colors
 - `Expander` now properly disposes its resources

@@ -36,7 +36,6 @@ class PopUpState<T> extends State<PopUp<T>> {
       ancestor: navigator.context.findRenderObject(),
     );
     final Rect itemRect = target & itemBox.size;
-    final acrylicDisabled = DisableAcrylic.of(context) != null;
     _dropdownRoute = _PopUpRoute<T>(
       width: widget.contentWidth,
       target: target,
