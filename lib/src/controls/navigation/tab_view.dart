@@ -253,10 +253,13 @@ class TabView extends StatelessWidget {
       void _onClosePressed() {
         tabs[currentIndex].onClosed?.call();
       }
+
       return CallbackShortcuts(
         bindings: {
-          const SingleActivator(LogicalKeyboardKey.f4, control: true): _onClosePressed,
-          const SingleActivator(LogicalKeyboardKey.keyW, control: true): _onClosePressed,
+          const SingleActivator(LogicalKeyboardKey.f4, control: true):
+              _onClosePressed,
+          const SingleActivator(LogicalKeyboardKey.keyW, control: true):
+              _onClosePressed,
           const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
             onNewPressed?.call();
           },

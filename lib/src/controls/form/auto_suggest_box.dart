@@ -158,11 +158,12 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   }
 
   void _insertOverlay() {
+    final acrylicDisabled = DisableAcrylic.of(context) != null;
     _entry = OverlayEntry(builder: (context) {
       final context = _textBoxKey.currentContext;
       if (context == null) return const SizedBox.shrink();
       final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
-      return Positioned(
+      final child = Positioned(
         width: box.size.width,
         child: CompositedTransformFollower(
           link: _layerLink,
@@ -171,7 +172,6 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           child: SizedBox(
             width: box.size.width,
             child: Acrylic(
-              tint: FluentTheme.of(context).acrylicBackgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(4.0),
@@ -220,6 +220,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           ),
         ),
       );
+
+      if (acrylicDisabled) return DisableAcrylic(child: child);
+      return child;
     });
 
     if (_textBoxKey.currentContext != null) {

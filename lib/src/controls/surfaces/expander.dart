@@ -98,14 +98,14 @@ class Expander extends StatefulWidget {
   final ValueChanged<bool>? onStateChanged;
 
   /// The height of the header.
-  /// 
+  ///
   /// Defaults to 48.0
   final double headerHeight;
 
   /// The background color of the header. If null, [ThemeData.scaffoldBackgroundColor]
   /// is used
   final Color? headerBackgroundColor;
-  
+
   /// The content color of the header. If null, [ThemeData.acrylicBackgroundColor]
   /// is used
   final Color? contentBackgroundColor;
@@ -169,7 +169,8 @@ class ExpanderState extends State<Expander>
           return Container(
             height: widget.headerHeight,
             decoration: BoxDecoration(
-              color: widget.headerBackgroundColor ?? theme.scaffoldBackgroundColor,
+              color:
+                  widget.headerBackgroundColor ?? theme.scaffoldBackgroundColor,
               border: Border.all(
                 width: 0.25,
                 color: theme.brightness.isDark
@@ -236,7 +237,8 @@ class ExpanderState extends State<Expander>
                   ? Colors.black
                   : const Color(0xffBCBCBC),
             ),
-            color: widget.contentBackgroundColor ?? theme.acrylicBackgroundColor,
+            color:
+                widget.contentBackgroundColor ?? theme.acrylicBackgroundColor,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),

@@ -28,6 +28,7 @@ class PopUpState<T> extends State<PopUp<T>> {
   _PopUpRoute<T>? _dropdownRoute;
 
   Future<void> openPopup() {
+    assert(_dropdownRoute == null, 'You can NOT open a popup twice');
     final NavigatorState navigator = Navigator.of(context);
     final RenderBox itemBox = context.findRenderObject()! as RenderBox;
     final Offset target = itemBox.localToGlobal(
@@ -35,7 +36,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       ancestor: navigator.context.findRenderObject(),
     );
     final Rect itemRect = target & itemBox.size;
-    assert(_dropdownRoute == null, 'You can NOT open it twice');
+    final acrylicDisabled = DisableAcrylic.of(context) != null;
     _dropdownRoute = _PopUpRoute<T>(
       width: widget.contentWidth,
       target: target,
@@ -203,8 +204,10 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     this.barrierLabel,
     this.width,
     required this.verticalOffset,
+    this.acrylicDisabled = false,
   });
 
+  final bool acrylicDisabled;
   final Widget content;
   final double contentHeight;
   final Rect buttonRect;
@@ -231,7 +234,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
   @override
   Widget buildPage(context, animation, secondaryAnimation) {
     return LayoutBuilder(builder: (context, constraints) {
-      return _PopUpRoutePage<T>(
+      final page = _PopUpRoutePage<T>(
         target: target,
         route: this,
         constraints: constraints,
@@ -242,6 +245,8 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         capturedThemes: capturedThemes,
         verticalOffset: verticalOffset,
       );
+      if (acrylicDisabled) return DisableAcrylic(child: page);
+      return page;
     });
   }
 
