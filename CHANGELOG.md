@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next] - [17/12/2021]
+## [3.5.2] - [17/12/2021]
 
 - **BREAKING** Removed `ThemeData.inputMouseCursor`
 - **BREAKING** Removed `cursor` from `DatePicker`, `TimePicker`, `ButtonStyle`, `CheckboxThemeData`, `RadioButtonThemeData`, `SliderThemeData`, `ToggleSwitchThemeData`, `NavigationPaneThemeData`

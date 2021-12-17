@@ -34,10 +34,10 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  flutter_acrylic.AcrylicEffect _acrylicEffect =
-      flutter_acrylic.AcrylicEffect.disabled;
-  flutter_acrylic.AcrylicEffect get acrylicEffect => _acrylicEffect;
-  set acrylicEffect(flutter_acrylic.AcrylicEffect acrylicEffect) {
+  flutter_acrylic.WindowEffect _acrylicEffect =
+      flutter_acrylic.WindowEffect.disabled;
+  flutter_acrylic.WindowEffect get acrylicEffect => _acrylicEffect;
+  set acrylicEffect(flutter_acrylic.WindowEffect acrylicEffect) {
     _acrylicEffect = acrylicEffect;
     notifyListeners();
   }

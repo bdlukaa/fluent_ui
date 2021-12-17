@@ -5,6 +5,7 @@ import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
+import '../main.dart';
 
 const List<String> accentColorNames = [
   'System',
@@ -147,9 +148,9 @@ class Settings extends StatelessWidget {
             Text('Window Transparency',
                 style: FluentTheme.of(context).typography.subtitle),
             spacer,
-            ...List.generate(flutter_acrylic.AcrylicEffect.values.length,
+            ...List.generate(flutter_acrylic.WindowEffect.values.length,
                 (index) {
-              final mode = flutter_acrylic.AcrylicEffect.values[index];
+              final mode = flutter_acrylic.WindowEffect.values[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: RadioButton(
@@ -157,11 +158,12 @@ class Settings extends StatelessWidget {
                   onChanged: (value) {
                     if (value) {
                       appTheme.acrylicEffect = mode;
-                      flutter_acrylic.Acrylic.setEffect(
+                      flutter_acrylic.Window.setEffect(
                         effect: mode,
-                        gradientColor: FluentTheme.of(context)
+                        color: FluentTheme.of(context)
                             .acrylicBackgroundColor
                             .withOpacity(0.2),
+                        dark: darkMode,
                       );
                     }
                   },
