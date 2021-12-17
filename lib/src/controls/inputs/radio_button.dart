@@ -94,7 +94,6 @@ class RadioButton extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final style = RadioButtonTheme.of(context).merge(this.style);
     return HoverButton(
-      cursor: style.cursor,
       autofocus: autofocus,
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
@@ -208,17 +207,13 @@ class RadioButtonThemeData with Diagnosticable {
   final ButtonState<BoxDecoration?>? checkedDecoration;
   final ButtonState<BoxDecoration?>? uncheckedDecoration;
 
-  final ButtonState<MouseCursor>? cursor;
-
   const RadioButtonThemeData({
-    this.cursor,
     this.checkedDecoration,
     this.uncheckedDecoration,
   });
 
   factory RadioButtonThemeData.standard(ThemeData style) {
     return RadioButtonThemeData(
-      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
@@ -252,7 +247,6 @@ class RadioButtonThemeData with Diagnosticable {
   static RadioButtonThemeData lerp(
       RadioButtonThemeData? a, RadioButtonThemeData? b, double t) {
     return RadioButtonThemeData(
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
       checkedDecoration: ButtonState.lerp(
           a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
       uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
@@ -262,7 +256,6 @@ class RadioButtonThemeData with Diagnosticable {
 
   RadioButtonThemeData merge(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
-      cursor: style?.cursor ?? cursor,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
     );
@@ -271,8 +264,6 @@ class RadioButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor));
     properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
         'checkedDecoration', checkedDecoration));
     properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(

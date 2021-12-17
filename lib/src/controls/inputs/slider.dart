@@ -135,7 +135,6 @@ class _SliderState extends m.State<Slider> {
     assert(debugCheckHasFluentTheme(context));
     final style = SliderTheme.of(context).merge(widget.style);
     Widget child = HoverButton(
-      cursor: ButtonState.all(style.cursor ?? MouseCursor.defer),
       onPressed: () {},
       margin: style.margin ?? EdgeInsets.zero,
       builder: (context, states) => m.Material(
@@ -190,7 +189,6 @@ class _SliderState extends m.State<Slider> {
             activeColor: style.activeColor,
             inactiveColor: style.inactiveColor,
             divisions: widget.divisions,
-            mouseCursor: style.cursor,
             label: widget.label,
             focusNode: _focusNode,
             autofocus: widget.autofocus,
@@ -434,7 +432,6 @@ class SliderThemeData with Diagnosticable {
   final Color? labelBackgroundColor;
 
   final bool? useThumbBall;
-  final MouseCursor? cursor;
 
   final Color? activeColor;
   final Color? inactiveColor;
@@ -445,7 +442,6 @@ class SliderThemeData with Diagnosticable {
   final EdgeInsetsGeometry? margin;
 
   const SliderThemeData({
-    this.cursor,
     this.margin,
     this.thumbColor,
     this.disabledThumbColor,
@@ -459,7 +455,6 @@ class SliderThemeData with Diagnosticable {
 
   factory SliderThemeData.standard(ThemeData? style) {
     final def = SliderThemeData(
-      cursor: MouseCursor.defer,
       thumbColor: style?.accentColor,
       activeColor: style?.accentColor,
       inactiveColor: style?.disabledColor.withOpacity(1),
@@ -477,7 +472,6 @@ class SliderThemeData with Diagnosticable {
       SliderThemeData? a, SliderThemeData? b, double t) {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
       thumbColor: Color.lerp(a?.thumbColor, b?.thumbColor, t),
       activeColor: Color.lerp(a?.activeColor, b?.activeColor, t),
       inactiveColor: Color.lerp(a?.inactiveColor, b?.inactiveColor, t),
@@ -496,7 +490,6 @@ class SliderThemeData with Diagnosticable {
   SliderThemeData merge(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,
-      cursor: style?.cursor ?? cursor,
       thumbColor: style?.thumbColor ?? thumbColor,
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
@@ -513,7 +506,6 @@ class SliderThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(DiagnosticsProperty<MouseCursor>('cursor', cursor));
     properties.add(ColorProperty('thumbColor', thumbColor));
     properties.add(ColorProperty('activeColor', activeColor));
     properties.add(ColorProperty('inactiveColor', inactiveColor));

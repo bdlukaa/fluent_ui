@@ -25,7 +25,6 @@ class TextButton extends BaseButton {
     final theme = FluentTheme.of(context);
     return ButtonStyle(
       backgroundColor: ButtonState.all(Colors.transparent),
-      cursor: theme.inputMouseCursor,
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 8.0,

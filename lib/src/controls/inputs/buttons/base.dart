@@ -94,11 +94,6 @@ class _BaseButtonState extends State<BaseButton> {
       onLongPress: widget.onLongPress,
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      cursor: ButtonState.resolveWith((states) {
-        return effectiveValue<MouseCursor?>(
-                (style) => style?.cursor?.resolve(states)) ??
-            MouseCursor.defer;
-      }),
       onPressed: widget.onPressed,
       builder: (context, states) {
         T? resolve<T>(

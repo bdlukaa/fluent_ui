@@ -38,7 +38,6 @@ class DatePicker extends StatefulWidget {
     this.endYear,
     this.contentPadding = kPickerContentPadding,
     this.popupHeight = kPopupHeight,
-    this.cursor = SystemMouseCursors.click,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
@@ -76,9 +75,6 @@ class DatePicker extends StatefulWidget {
   /// The padding of the picker. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
 
-  /// The cursor of the picker. Defaults to [SystemMouseCursors.click]
-  final MouseCursor cursor;
-
   /// The focus node of the picker.
   final FocusNode? focusNode;
 
@@ -106,7 +102,6 @@ class DatePicker extends StatefulWidget {
       ..add(IntProperty('startYear', startYear ?? selected.year - 100))
       ..add(IntProperty('endYear', endYear ?? selected.year + 25))
       ..add(DiagnosticsProperty('contentPadding', contentPadding))
-      ..add(DiagnosticsProperty('cursor', cursor))
       ..add(ObjectFlagProperty.has('focusNode', focusNode))
       ..add(
           FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
@@ -182,7 +177,6 @@ class _DatePickerState extends State<DatePicker> {
     Widget picker = HoverButton(
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
-      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _monthController?.dispose();

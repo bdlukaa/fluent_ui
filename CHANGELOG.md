@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [next] - [17/12/2021]
+
+- **BREAKING** Removed `ThemeData.inputMouseCursor`
+- **BREAKING** Removed `cursor` from `DatePicker`, `TimePicker`, `ButtonStyle`, `CheckboxThemeData`, `RadioButtonThemeData`, `SliderThemeData`, `ToggleSwitchThemeData`, `NavigationPaneThemeData`
+
 ## [3.5.1] - [15/12/2021]
 
 - Update inputs colors

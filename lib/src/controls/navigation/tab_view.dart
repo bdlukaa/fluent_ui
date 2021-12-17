@@ -387,7 +387,6 @@ class __TabState extends State<_Tab>
     return HoverButton(
       semanticLabel: widget.tab.semanticLabel,
       focusNode: widget.focusNode,
-      cursor: ButtonState.all(MouseCursor.defer),
       onPressed: widget.onPressed,
       builder: (context, state) {
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;

@@ -27,6 +27,7 @@ class PaneItem extends NavigationPaneItem {
     this.infoBadge,
     this.focusNode,
     this.autofocus = false,
+    this.mouseCursor,
   });
 
   /// The title used by this item. If the display mode is top
@@ -58,6 +59,8 @@ class PaneItem extends NavigationPaneItem {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  final MouseCursor? mouseCursor;
+
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
@@ -72,14 +75,50 @@ class PaneItem extends NavigationPaneItem {
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.minimal;
     assert(displayMode != PaneDisplayMode.auto);
+
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
+    final String titleText =
+        title != null && title is Text ? (title! as Text).data ?? '' : '';
+
+    switch (displayMode) {
+      case PaneDisplayMode.compact:
+        break;
+      case PaneDisplayMode.minimal:
+      case PaneDisplayMode.open:
+        return Container(
+          key: itemKey,
+          height: 36.0,
+          margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+          alignment: Alignment.center,
+          child: HoverButton(
+            autofocus: autofocus ?? this.autofocus,
+            focusNode: focusNode,
+            onPressed: onPressed,
+            cursor: mouseCursor,
+            builder: (context, states) {
+              final textStyle = selected
+                  ? theme.selectedTextStyle?.resolve(states)
+                  : theme.unselectedTextStyle?.resolve(states);
+              final textResult = titleText.isNotEmpty
+                  ? Padding(
+                      padding: theme.labelPadding ?? EdgeInsets.zero,
+                      child: Text(titleText, style: textStyle),
+                    )
+                  : const SizedBox.shrink();
+              return Row();
+            },
+          ),
+        );
+      case PaneDisplayMode.top:
+        break;
+      default:
+        break;
+    }
+
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
     final bool isOpen =
         [PaneDisplayMode.open, PaneDisplayMode.minimal].contains(mode);
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-
-    final String titleText =
-        title != null && title is Text ? (title! as Text).data ?? '' : '';
 
     return Container(
       key: itemKey,
@@ -90,7 +129,6 @@ class PaneItem extends NavigationPaneItem {
         autofocus: autofocus ?? this.autofocus,
         focusNode: focusNode,
         onPressed: onPressed,
-        cursor: theme.cursor,
         builder: (context, states) {
           final textStyle = selected
               ? theme.selectedTextStyle?.resolve(states)

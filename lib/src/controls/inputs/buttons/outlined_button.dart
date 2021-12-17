@@ -38,7 +38,6 @@ class OutlinedButton extends BaseButton {
     }
 
     return ButtonStyle(
-      cursor: theme.inputMouseCursor,
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 12.0,
         vertical: 8.0,

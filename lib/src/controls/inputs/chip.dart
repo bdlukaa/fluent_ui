@@ -236,7 +236,6 @@ class ChipThemeData with Diagnosticable {
               )
             : style.accentColor;
     return ChipThemeData(
-      cursor: style.inputMouseCursor,
       spacing: _kChipSpacing,
       decoration: ButtonState.resolveWith((states) {
         return BoxDecoration(

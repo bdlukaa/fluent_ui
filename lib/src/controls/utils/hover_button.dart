@@ -47,7 +47,7 @@ class HoverButton extends StatefulWidget {
   }) : super(key: key);
 
   /// The cursor of this hover button. If null, [MouseCursor.defer] is used
-  final ButtonState<MouseCursor>? cursor;
+  final MouseCursor? cursor;
   final VoidCallback? onLongPress;
   final VoidCallback? onLongPressStart;
   final VoidCallback? onLongPressEnd;
@@ -193,9 +193,7 @@ class _HoverButtonState extends State<HoverButton> {
       child: widget.builder(context, states),
     );
     w = FocusableActionDetector(
-      mouseCursor: widget.cursor?.resolve(states) ??
-          FluentTheme.maybeOf(context)?.inputMouseCursor.resolve(states) ??
-          MouseCursor.defer,
+      mouseCursor: widget.cursor ?? MouseCursor.defer,
       focusNode: node,
       autofocus: widget.autofocus,
       enabled: enabled,

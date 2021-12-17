@@ -14,7 +14,6 @@ class ButtonStyle with Diagnosticable {
     this.padding,
     this.border,
     this.shape,
-    this.cursor,
   });
 
   final ButtonState<TextStyle?>? textStyle;
@@ -33,8 +32,6 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<OutlinedBorder?>? shape;
 
-  final ButtonState<MouseCursor?>? cursor;
-
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
     return ButtonStyle(
@@ -46,7 +43,6 @@ class ButtonStyle with Diagnosticable {
       padding: other.padding ?? padding,
       border: other.border ?? border,
       shape: other.shape ?? shape,
-      cursor: other.cursor ?? cursor,
     );
   }
 

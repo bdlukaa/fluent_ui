@@ -24,7 +24,6 @@ class FilledButton extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     return ButtonStyle(
-      cursor: theme.inputMouseCursor,
       elevation: ButtonState.all(4.0),
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 12.0,

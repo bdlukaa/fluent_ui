@@ -82,9 +82,6 @@ class NavigationPaneThemeData with Diagnosticable {
   final EdgeInsets? labelPadding;
   final EdgeInsets? iconPadding;
 
-  /// The cursor used by the tiles. [ThemeData.inputMouseCursor] is used by default
-  final ButtonState<MouseCursor>? cursor;
-
   final TextStyle? itemHeaderTextStyle;
   final ButtonState<TextStyle?>? selectedTextStyle;
   final ButtonState<TextStyle?>? unselectedTextStyle;
@@ -100,7 +97,6 @@ class NavigationPaneThemeData with Diagnosticable {
     this.highlightColor,
     this.labelPadding,
     this.iconPadding,
-    this.cursor,
     this.itemHeaderTextStyle,
     this.selectedTextStyle,
     this.unselectedTextStyle,
@@ -118,7 +114,6 @@ class NavigationPaneThemeData with Diagnosticable {
     required Color highlightColor,
     required Typography typography,
     required Color inactiveColor,
-    required ButtonState<MouseCursor>? inputMouseCursor,
   }) {
     final disabledTextStyle = TextStyle(
       color: disabledColor,
@@ -136,7 +131,6 @@ class NavigationPaneThemeData with Diagnosticable {
       unselectedTextStyle: ButtonState.resolveWith((states) {
         return states.isDisabled ? disabledTextStyle : typography.body!;
       }),
-      cursor: inputMouseCursor,
       labelPadding: const EdgeInsets.only(right: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
     );
@@ -148,7 +142,6 @@ class NavigationPaneThemeData with Diagnosticable {
     double t,
   ) {
     return NavigationPaneThemeData(
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
       iconPadding: EdgeInsets.lerp(a?.iconPadding, b?.iconPadding, t),
       labelPadding: EdgeInsets.lerp(a?.labelPadding, b?.labelPadding, t),
       tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
@@ -172,7 +165,6 @@ class NavigationPaneThemeData with Diagnosticable {
 
   NavigationPaneThemeData merge(NavigationPaneThemeData? style) {
     return NavigationPaneThemeData(
-      cursor: style?.cursor ?? cursor,
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,
       tileColor: style?.tileColor ?? tileColor,
@@ -194,7 +186,6 @@ class NavigationPaneThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty('tileColor', tileColor));
     properties.add(ColorProperty('backgroundColor', backgroundColor));
     properties.add(ColorProperty('highlightColor', highlightColor));
-    properties.add(DiagnosticsProperty('cursor', cursor));
     properties.add(
         DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding));
     properties.add(DiagnosticsProperty('iconPadding', iconPadding));

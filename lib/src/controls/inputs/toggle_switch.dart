@@ -115,7 +115,6 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
       semanticLabel: widget.semanticLabel,
       margin: style.margin,
       focusNode: widget.focusNode,
-      cursor: style.cursor,
       onPressed: isDisabled ? null : () => widget.onChanged!(!widget.checked),
       onHorizontalDragStart: (e) {
         if (isDisabled) return;
@@ -279,8 +278,6 @@ class ToggleSwitchThemeData with Diagnosticable {
   final ButtonState<Decoration?>? checkedThumbDecoration;
   final ButtonState<Decoration?>? uncheckedThumbDecoration;
 
-  final ButtonState<MouseCursor>? cursor;
-
   final ButtonState<Decoration?>? checkedDecoration;
   final ButtonState<Decoration?>? uncheckedDecoration;
 
@@ -291,7 +288,6 @@ class ToggleSwitchThemeData with Diagnosticable {
   final Curve? animationCurve;
 
   const ToggleSwitchThemeData({
-    this.cursor,
     this.padding,
     this.margin,
     this.animationDuration,
@@ -312,7 +308,6 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.checkedInputColor(style, states),
@@ -364,7 +359,6 @@ class ToggleSwitchThemeData with Diagnosticable {
     return ToggleSwitchThemeData(
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
@@ -383,7 +377,6 @@ class ToggleSwitchThemeData with Diagnosticable {
     return ToggleSwitchThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
-      cursor: style?.cursor ?? cursor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
       checkedThumbDecoration:
@@ -401,10 +394,6 @@ class ToggleSwitchThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
     properties
         .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
-    properties.add(ObjectFlagProperty<ButtonState<MouseCursor>?>.has(
-      'cursor',
-      cursor,
-    ));
     properties
         .add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve));
     properties.add(

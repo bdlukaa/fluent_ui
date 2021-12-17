@@ -26,7 +26,6 @@ class TimePicker extends StatefulWidget {
     this.headerStyle,
     this.contentPadding = kPickerContentPadding,
     this.popupHeight = kPopupHeight,
-    this.cursor = SystemMouseCursors.click,
     this.focusNode,
     this.autofocus = false,
     this.hourFormat = HourFormat.h,
@@ -46,7 +45,6 @@ class TimePicker extends StatefulWidget {
   final TextStyle? headerStyle;
 
   final EdgeInsetsGeometry contentPadding;
-  final MouseCursor cursor;
   final FocusNode? focusNode;
   final bool autofocus;
 
@@ -69,7 +67,6 @@ class TimePicker extends StatefulWidget {
     properties.add(DiagnosticsProperty<DateTime>('selected', selected));
     properties.add(EnumProperty<HourFormat>('hourFormat', hourFormat));
     properties.add(DiagnosticsProperty('contentPadding', contentPadding));
-    properties.add(DiagnosticsProperty('cursor', cursor));
     properties.add(ObjectFlagProperty.has('focusNode', focusNode));
     properties.add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
@@ -151,7 +148,6 @@ class _TimePickerState extends State<TimePicker> {
     Widget picker = HoverButton(
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      cursor: ButtonState.all(widget.cursor),
       onPressed: () async {
         await popupKey.currentState?.openPopup();
         _hourController?.dispose();

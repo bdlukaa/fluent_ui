@@ -92,7 +92,6 @@ class Checkbox extends StatelessWidget {
       semanticLabel: semanticLabel,
       margin: style.margin,
       focusNode: focusNode,
-      cursor: style.cursor,
       onPressed: onChanged == null
           ? null
           : () => onChanged!(checked == null ? null : !(checked!)),
@@ -222,8 +221,6 @@ class CheckboxThemeData with Diagnosticable {
   final ButtonState<Color?>? uncheckedIconColor;
   final ButtonState<Color?>? thirdstateIconColor;
 
-  final ButtonState<MouseCursor>? cursor;
-
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
@@ -231,7 +228,6 @@ class CheckboxThemeData with Diagnosticable {
     this.checkedDecoration,
     this.uncheckedDecoration,
     this.thirdstateDecoration,
-    this.cursor,
     this.padding,
     this.margin,
     this.icon,
@@ -244,7 +240,6 @@ class CheckboxThemeData with Diagnosticable {
   factory CheckboxThemeData.standard(ThemeData style) {
     final BorderRadiusGeometry radius = BorderRadius.circular(4.0);
     return CheckboxThemeData(
-      cursor: ButtonState.all(MouseCursor.defer),
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
@@ -297,7 +292,6 @@ class CheckboxThemeData with Diagnosticable {
     return CheckboxThemeData(
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      cursor: t < 0.5 ? a?.cursor : b?.cursor,
       icon: t < 0.5 ? a?.icon : b?.icon,
       thirdstateIcon: t < 0.5 ? a?.thirdstateIcon : b?.thirdstateIcon,
       checkedIconColor: ButtonState.lerp(
@@ -319,7 +313,6 @@ class CheckboxThemeData with Diagnosticable {
     return CheckboxThemeData(
       margin: style?.margin ?? margin,
       padding: style?.padding ?? padding,
-      cursor: style?.cursor ?? cursor,
       icon: style?.icon ?? icon,
       thirdstateIcon: style?.thirdstateIcon ?? thirdstateIcon,
       checkedIconColor: style?.checkedIconColor ?? checkedIconColor,
@@ -372,8 +365,5 @@ class CheckboxThemeData with Diagnosticable {
       DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
     );
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(
-      ObjectFlagProperty<ButtonState<MouseCursor>?>.has('cursor', cursor),
-    );
   }
 }
