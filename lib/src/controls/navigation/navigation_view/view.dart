@@ -319,6 +319,7 @@ class NavigationViewState extends State<NavigationView> {
                               margin: const EdgeInsets.symmetric(vertical: 1.0),
                               padding: appBarPadding,
                               child: _OpenNavigationPane(
+                                theme: theme,
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
@@ -353,6 +354,7 @@ class NavigationViewState extends State<NavigationView> {
                       PrimaryScrollController(
                         controller: scrollController,
                         child: _OpenNavigationPane(
+                          theme: theme,
                           pane: pane,
                           paneKey: _panelKey,
                           listKey: _listKey,
@@ -409,6 +411,7 @@ class NavigationViewState extends State<NavigationView> {
                           margin: const EdgeInsets.symmetric(vertical: 1.0),
                           padding: appBarPadding,
                           child: _OpenNavigationPane(
+                            theme: theme,
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,

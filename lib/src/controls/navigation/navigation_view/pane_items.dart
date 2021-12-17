@@ -92,7 +92,13 @@ class PaneItem extends NavigationPaneItem {
         final textResult = titleText.isNotEmpty
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
-                child: Text(titleText, style: textStyle),
+                child: Text(
+                  titleText,
+                  style: textStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
               )
             : const SizedBox.shrink();
         Widget result() {
@@ -137,7 +143,6 @@ class PaneItem extends NavigationPaneItem {
               return SizedBox(
                 key: itemKey,
                 height: 36.0,
-                // alignment: Alignment.center,
                 child: Row(children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -163,12 +168,24 @@ class PaneItem extends NavigationPaneItem {
             case PaneDisplayMode.top:
               final result = Row(
                 children: [
-                  icon,
+                  Padding(
+                    padding: theme.iconPadding ?? EdgeInsets.zero,
+                    child: IconTheme.merge(
+                      data: IconThemeData(
+                        color: (selected
+                                ? theme.selectedIconColor?.resolve(states)
+                                : theme.unselectedIconColor?.resolve(states)) ??
+                            textStyle?.color,
+                        size: 16.0,
+                      ),
+                      child: Center(child: icon),
+                    ),
+                  ),
                   textResult,
                 ],
               );
               if (infoBadge != null) {
-                return Stack(children: [
+                return Stack(clipBehavior: Clip.none, children: [
                   result,
                   if (infoBadge != null)
                     Positioned(
@@ -178,7 +195,7 @@ class PaneItem extends NavigationPaneItem {
                     ),
                 ]);
               }
-              return result;
+              return Center(child: result);
             default:
               throw '$mode is not a supported type';
           }
@@ -198,7 +215,8 @@ class PaneItem extends NavigationPaneItem {
               color: () {
                 final ButtonState<Color?> tileColor = theme.tileColor ??
                     ButtonState.resolveWith((states) {
-                      // if (isTop) return Colors.transparent;
+                      // By default, if it's top, do not show any color
+                      if (isTop) return Colors.transparent;
                       return ButtonThemeData.uncheckedInputColor(
                         FluentTheme.of(context),
                         states,
