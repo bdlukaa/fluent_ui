@@ -281,15 +281,28 @@ class NavigationViewState extends State<NavigationView> {
                 void toggleCompactOpenMode() {
                   setState(() => _compactOverlayOpen = !_compactOverlayOpen);
                 }
+
+                final openSize =
+                    pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+
+                final bool openedWithoutOverlay =
+                    _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
+
                 paneResult = Stack(children: [
-                  Positioned(
+                  AnimatedPositioned(
+                    duration: theme.animationDuration ?? Duration.zero,
+                    curve: theme.animationCurve ?? Curves.linear,
                     top: widget.appBar?.height ?? 0.0,
-                    left: pane.size?.compactWidth ??
-                        _kCompactNavigationPanelWidth,
+                    left: openedWithoutOverlay
+                        ? openSize
+                        : pane.size?.compactWidth ??
+                            _kCompactNavigationPanelWidth,
                     right: 0,
                     bottom: 0,
                     child: content,
                   ),
+                  // If the overlay is open, add a gesture detector above the
+                  // content to close if the user click outside the overlay
                   if (_compactOverlayOpen)
                     Positioned.fill(
                       child: GestureDetector(
@@ -304,44 +317,65 @@ class NavigationViewState extends State<NavigationView> {
                     ),
                   PrimaryScrollController(
                     controller: scrollController,
-                    child: _compactOverlayOpen
-                        ? Mica(
-                            backgroundColor: theme.backgroundColor,
-                            elevation: 10.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: const Color(0xFF6c6c6c),
-                                  width: 0.15,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              margin: const EdgeInsets.symmetric(vertical: 1.0),
-                              padding: appBarPadding,
-                              child: _OpenNavigationPane(
-                                theme: theme,
-                                pane: pane,
-                                paneKey: _panelKey,
-                                listKey: _listKey,
-                                scrollbarKey: _scrollbarKey,
-                                onToggle: toggleCompactOpenMode,
-                                onItemSelected: toggleCompactOpenMode,
-                              ),
-                            ),
-                          )
-                        : Padding(
+                    child: () {
+                      if (openedWithoutOverlay) {
+                        return Mica(
+                          backgroundColor: theme.backgroundColor,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
                             padding: appBarPadding,
-                            child: Mica(
-                              backgroundColor: theme.backgroundColor,
-                              child: _CompactNavigationPane(
-                                pane: pane,
-                                paneKey: _panelKey,
-                                listKey: _listKey,
-                                scrollbarKey: _scrollbarKey,
-                                onToggle: toggleCompactOpenMode,
-                              ),
+                            child: _OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              scrollbarKey: _scrollbarKey,
+                              onToggle: toggleCompactOpenMode,
+                              onItemSelected: toggleCompactOpenMode,
                             ),
                           ),
+                        );
+                      } else if (_compactOverlayOpen) {
+                        return Mica(
+                          backgroundColor: theme.backgroundColor,
+                          elevation: 10.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFF6c6c6c),
+                                width: 0.15,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            padding: appBarPadding,
+                            child: _OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              scrollbarKey: _scrollbarKey,
+                              onToggle: toggleCompactOpenMode,
+                              onItemSelected: toggleCompactOpenMode,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: appBarPadding,
+                          child: Mica(
+                            backgroundColor: theme.backgroundColor,
+                            child: _CompactNavigationPane(
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              scrollbarKey: _scrollbarKey,
+                              onToggle: toggleCompactOpenMode,
+                            ),
+                          ),
+                        );
+                      }
+                    }(),
                   ),
                   appBar,
                 ]);

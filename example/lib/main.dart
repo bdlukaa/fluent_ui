@@ -153,8 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
-        size: NavigationPaneSize(
-          openWidth: MediaQuery.of(context).size.width / 5,
+        size: const NavigationPaneSize(
           openMinWidth: 250,
           openMaxWidth: 320,
         ),
