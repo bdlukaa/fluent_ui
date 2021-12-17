@@ -20,7 +20,9 @@ export 'package:flutter/material.dart'
         DatePickerMode,
         ReorderableListView,
         ReorderableDragStartListener,
-        kThemeAnimationDuration;
+        kThemeAnimationDuration,
+        TooltipVisibility,
+        TooltipTriggerMode;
 
 export 'src/app.dart';
 export 'src/icons.dart';

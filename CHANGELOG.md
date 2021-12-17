@@ -6,6 +6,8 @@ Date format: DD/MM/YYYY
 - **BREAKING** Removed `cursor` from `DatePicker`, `TimePicker`, `ButtonStyle`, `CheckboxThemeData`, `RadioButtonThemeData`, `SliderThemeData`, `ToggleSwitchThemeData`, `NavigationPaneThemeData`
 - Scrollbar is not longer shown if `PaneDisplayMode` is `top`
 - If open the compact pane, it's not always a overlay
+- Added `triggerMode` and `enableFeedback` to `Tooltip`.
+- Added `Tooltip.dismissAllToolTips`
 
 ## [3.5.1] - [15/12/2021]
 
