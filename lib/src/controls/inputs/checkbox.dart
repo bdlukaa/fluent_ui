@@ -86,7 +86,7 @@ class Checkbox extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final CheckboxThemeData style = CheckboxTheme.of(context).merge(this.style);
-    const double size = 22;
+    const double size = 20;
     return HoverButton(
       autofocus: autofocus,
       semanticLabel: semanticLabel,
@@ -254,8 +254,7 @@ class CheckboxThemeData with Diagnosticable {
                 ? style.disabledColor
                 : const Color(0xFF8b8b8b),
           ),
-          color:
-              ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
+          color: states.isHovering ? style.inactiveColor.withOpacity(0.1) : ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
           borderRadius: radius,
         ),
       ),
@@ -275,7 +274,7 @@ class CheckboxThemeData with Diagnosticable {
       }),
       uncheckedIconColor: ButtonState.resolveWith(
         (states) => states.isHovering || states.isPressing
-            ? style.inactiveColor.withOpacity(0.8)
+            ? style.inactiveColor.withOpacity(0)
             : Colors.transparent,
       ),
       icon: FluentIcons.check_mark,
