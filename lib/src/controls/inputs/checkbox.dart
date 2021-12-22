@@ -256,7 +256,7 @@ class CheckboxThemeData with Diagnosticable {
           ),
           color: states.isHovering
               ? style.inactiveColor.withOpacity(0.1)
-              : ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
+              : null,
           borderRadius: radius,
         ),
       ),
@@ -276,7 +276,7 @@ class CheckboxThemeData with Diagnosticable {
       }),
       uncheckedIconColor: ButtonState.resolveWith(
         (states) => states.isHovering || states.isPressing
-            ? style.inactiveColor.withOpacity(0)
+            ? Colors.transparent
             : Colors.transparent,
       ),
       icon: FluentIcons.check_mark,

@@ -166,6 +166,8 @@ class ThemeData with Diagnosticable {
   final Color inactiveBackgroundColor;
   final Color disabledColor;
   final Color shadowColor;
+  final Color uncheckedColor;
+  final Color checkedColor;
   final Color scaffoldBackgroundColor;
   final Color acrylicBackgroundColor;
   final Color micaBackgroundColor;
@@ -209,6 +211,8 @@ class ThemeData with Diagnosticable {
     required this.inactiveBackgroundColor,
     required this.disabledColor,
     required this.shadowColor,
+    required this.uncheckedColor,
+    required this.checkedColor,
     required this.fasterAnimationDuration,
     required this.fastAnimationDuration,
     required this.mediumAnimationDuration,
@@ -263,6 +267,8 @@ class ThemeData with Diagnosticable {
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
+    Color? uncheckedColor,
+    Color? checkedColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -314,6 +320,8 @@ class ThemeData with Diagnosticable {
         : const Color(0x7F1e1e1e);
     micaBackgroundColor ??=
         isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
+    uncheckedColor ??= const Color(0xFF8b8b8b);
+    checkedColor ??= isLight ? Colors.white : Colors.black;
     typography = Typography.standard(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
@@ -368,6 +376,8 @@ class ThemeData with Diagnosticable {
       acrylicBackgroundColor: acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
+      uncheckedColor: uncheckedColor,
+      checkedColor: checkedColor,
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
@@ -410,6 +420,8 @@ class ThemeData with Diagnosticable {
       micaBackgroundColor:
           Color.lerp(a.micaBackgroundColor, b.micaBackgroundColor, t)!,
       shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
+      uncheckedColor: Color.lerp(a.uncheckedColor, b.uncheckedColor, t)!,
+      checkedColor: Color.lerp(a.checkedColor, b.checkedColor, t)!,
       fasterAnimationDuration:
           lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
       fastAnimationDuration:
@@ -466,6 +478,8 @@ class ThemeData with Diagnosticable {
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
+    Color? uncheckedColor,
+    Color? checkedColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -500,6 +514,8 @@ class ThemeData with Diagnosticable {
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
       shadowColor: shadowColor ?? this.shadowColor,
+      uncheckedColor: uncheckedColor ?? this.uncheckedColor,
+      checkedColor: checkedColor ?? this.checkedColor,
       inactiveBackgroundColor:
           inactiveBackgroundColor ?? this.inactiveBackgroundColor,
       disabledColor: disabledColor ?? this.disabledColor,

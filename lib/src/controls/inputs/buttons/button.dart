@@ -41,11 +41,7 @@ class Button extends BaseButton {
       }),
       shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(const EdgeInsets.only(
-          left: 11.0, top: 5.0, right: 11.0, bottom: 6.0)),
-      /*padding: ButtonState.all(const EdgeInsets.symmetric(
-        horizontal: 10.0,
-        vertical: 6.0,
-      )),*/
+          left: 11.0, top: 5.0, right: 11.0, bottom: 6.0,)),
       shape: ButtonState.all(RoundedRectangleBorder(
         side: BorderSide(
           color: theme.brightness.isLight

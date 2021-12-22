@@ -321,7 +321,7 @@ class ToggleSwitchThemeData with Diagnosticable {
             width: 0.6,
             color: states.isDisabled
                 ? style.disabledColor
-                : const Color(0xFF8b8b8b),
+                : style.uncheckedColor,
           ),
         );
       }),
@@ -335,9 +335,7 @@ class ToggleSwitchThemeData with Diagnosticable {
                   style,
                   states,
                 ).basedOnLuminance()
-              : style.brightness.isLight
-                  ? Colors.white
-                  : Colors.black,
+              : style.checkedColor,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
