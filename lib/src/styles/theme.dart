@@ -301,8 +301,7 @@ class ThemeData with Diagnosticable {
     animationCurve ??= standartCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
-    inactiveColor ??=
-        isLight ? const Color(0xFF5A5A5A) : const Color(0xFFCCCCCC);
+    inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
     disabledColor ??=

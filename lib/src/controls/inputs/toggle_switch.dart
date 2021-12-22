@@ -347,7 +347,7 @@ class ToggleSwitchThemeData with Diagnosticable {
                   style,
                   states,
                 ).basedOnLuminance()
-              : style.inactiveColor,
+              : style.brightness.isLight ? const Color(0xFF5A5A5A) : const Color(0xFFCCCCCC),
         );
       }),
     );
