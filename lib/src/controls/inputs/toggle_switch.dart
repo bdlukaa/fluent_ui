@@ -162,7 +162,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
         if (widget.content != null) {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
-            const SizedBox(width: 6.0),
+            const SizedBox(width: 10.0),
             widget.content!,
           ]);
         }
@@ -197,10 +197,10 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
       margin: states.isHovering
-          ? EdgeInsets.all(2.0 + checkedFactor)
+          ? EdgeInsets.all(1.5 + checkedFactor)
           : EdgeInsets.symmetric(
               horizontal: 2.0 + checkedFactor,
-              vertical: 3.0 + checkedFactor,
+              vertical: 2.5 + checkedFactor,
             ),
       height: 18,
       width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
@@ -319,7 +319,9 @@ class ToggleSwitchThemeData with Diagnosticable {
           color: ButtonThemeData.uncheckedInputColor(style, states),
           border: Border.all(
             width: 0.6,
-            color: style.inactiveColor,
+            color: states.isDisabled
+                ? style.disabledColor
+                : const Color(0xFF8b8b8b),
           ),
         );
       }),
@@ -333,9 +335,7 @@ class ToggleSwitchThemeData with Diagnosticable {
                   style,
                   states,
                 ).basedOnLuminance()
-              : style.brightness.isLight
-                  ? style.activeColor
-                  : style.inactiveColor,
+              : style.brightness.isLight ? Colors.white : Colors.black,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
