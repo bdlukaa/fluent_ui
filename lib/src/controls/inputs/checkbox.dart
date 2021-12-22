@@ -254,7 +254,9 @@ class CheckboxThemeData with Diagnosticable {
                 ? style.disabledColor
                 : const Color(0xFF8b8b8b),
           ),
-          color: states.isHovering ? style.inactiveColor.withOpacity(0.1) : ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
+          color: states.isHovering
+              ? style.inactiveColor.withOpacity(0.1)
+              : ButtonThemeData.checkedInputColor(style, states).withOpacity(0),
           borderRadius: radius,
         ),
       ),

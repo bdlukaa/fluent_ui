@@ -335,7 +335,9 @@ class ToggleSwitchThemeData with Diagnosticable {
                   style,
                   states,
                 ).basedOnLuminance()
-              : style.brightness.isLight ? Colors.white : Colors.black,
+              : style.brightness.isLight
+                  ? Colors.white
+                  : Colors.black,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {

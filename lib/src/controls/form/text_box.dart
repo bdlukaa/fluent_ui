@@ -598,7 +598,9 @@ class _TextBoxState extends State<TextBox>
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: !enabled ? disabledColor : backgroundColor.basedOnLuminance().withOpacity(0.6),
+          color: !enabled
+              ? disabledColor
+              : backgroundColor.basedOnLuminance().withOpacity(0.6),
           fontWeight: FontWeight.w400,
         );
 
@@ -684,7 +686,13 @@ class _TextBoxState extends State<TextBox>
           curve: theme.animationCurve,
           decoration: BoxDecoration(
             borderRadius: radius,
-            border: Border.all(width: 0.2, color: _effectiveFocusNode.hasFocus ? theme.disabledColor.withOpacity(0.5) : theme.brightness.isLight ? theme.disabledColor.withOpacity(0.5) : theme.disabledColor.withOpacity(0.2)),
+            border: Border.all(
+                width: 0.2,
+                color: _effectiveFocusNode.hasFocus
+                    ? theme.disabledColor.withOpacity(0.5)
+                    : theme.brightness.isLight
+                        ? theme.disabledColor.withOpacity(0.5)
+                        : theme.disabledColor.withOpacity(0.2)),
             color: backgroundColor,
           ),
           foregroundDecoration: BoxDecoration(
