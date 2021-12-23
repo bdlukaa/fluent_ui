@@ -165,6 +165,10 @@ class ToggleButtonThemeData with Diagnosticable {
       checkedButtonStyle: ButtonStyle(
         backgroundColor: ButtonState.resolveWith(checkedColor),
         shape: ButtonState.all(RoundedRectangleBorder(
+          side: const BorderSide(
+            color: Colors.transparent,
+            width: 1,
+          ),
           borderRadius: BorderRadius.circular(4.0),
         )),
       ),
