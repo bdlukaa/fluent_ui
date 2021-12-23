@@ -200,7 +200,7 @@ class _SliderState extends m.State<Slider> {
       onShowFocusHighlight: (v) => setState(() => _showFocusHighlight = v),
       child: FocusBorder(
         focused: _showFocusHighlight && (_focusNode.hasPrimaryFocus),
-        useStackApproach: false,
+        useStackApproach: true,
         child: child,
       ),
     );
