@@ -2,7 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [3.5.3] - [DD/MM/YYYY]
 
-- Fix sliders ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
+- Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
 
 ## [3.5.2] - [17/12/2021]
 
