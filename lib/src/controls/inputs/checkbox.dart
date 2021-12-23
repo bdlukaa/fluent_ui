@@ -279,11 +279,7 @@ class CheckboxThemeData with Diagnosticable {
                   ? Colors.white
                   : const Color.fromRGBO(255, 255, 255, 0.5302);
       }),
-      uncheckedIconColor: ButtonState.resolveWith(
-        (states) => states.isHovering || states.isPressing
-            ? Colors.transparent
-            : Colors.transparent,
-      ),
+      uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,
       thirdstateIcon: FluentIcons.charticulator_line_style_dashed,
       margin: const EdgeInsets.all(4.0),
