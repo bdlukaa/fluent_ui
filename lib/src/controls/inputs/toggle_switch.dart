@@ -192,15 +192,15 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final checkedFactor = (checked ? 0 : 1);
+    const checkedFactor = 1;
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
       margin: states.isHovering
-          ? EdgeInsets.all(1.5 + checkedFactor)
-          : EdgeInsets.symmetric(
+          ? const EdgeInsets.all(1.0 + checkedFactor)
+          : const EdgeInsets.symmetric(
               horizontal: 2.0 + checkedFactor,
-              vertical: 2.5 + checkedFactor,
+              vertical: 2.0 + checkedFactor,
             ),
       height: 18,
       width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
@@ -315,7 +315,10 @@ class ToggleSwitchThemeData with Diagnosticable {
               : style.brightness.isLight
                   ? const Color.fromRGBO(0, 0, 0, 0.2169)
                   : const Color.fromRGBO(255, 255, 255, 0.1581),
-          border: Border.all(style: BorderStyle.none),
+          border: Border.all(
+            width: 1,
+            color: Colors.transparent,
+          ),
         );
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
@@ -324,7 +327,7 @@ class ToggleSwitchThemeData with Diagnosticable {
               ? ButtonThemeData.uncheckedInputColor(style, states)
               : Colors.transparent,
           border: Border.all(
-            width: 0.6,
+            width: 1,
             color: !states.isDisabled
                 ? style.borderInputColor
                 : style.brightness.isLight

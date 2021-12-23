@@ -253,7 +253,7 @@ class CheckboxThemeData with Diagnosticable {
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
-            width: 0.6,
+            width: 1,
             color: !states.isDisabled
                 ? style.borderInputColor
                 : style.brightness.isLight
