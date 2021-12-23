@@ -323,9 +323,13 @@ class ThemeData with Diagnosticable {
         : const Color(0x7F1e1e1e);
     micaBackgroundColor ??=
         isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
-    uncheckedColor ??= isLight ? const Color.fromRGBO(0, 0, 0, 0.6063) : const Color.fromRGBO(255, 255, 255, 0.786);
+    uncheckedColor ??= isLight
+        ? const Color.fromRGBO(0, 0, 0, 0.6063)
+        : const Color.fromRGBO(255, 255, 255, 0.786);
     checkedColor ??= isLight ? Colors.white : Colors.black;
-    borderInputColor ??= isLight ? const Color.fromRGBO(0, 0, 0, 0.4458) : const Color.fromRGBO(255, 255, 255, 0.5442);
+    borderInputColor ??= isLight
+        ? const Color.fromRGBO(0, 0, 0, 0.4458)
+        : const Color.fromRGBO(255, 255, 255, 0.5442);
     typography = Typography.standard(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
