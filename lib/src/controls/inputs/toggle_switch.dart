@@ -310,18 +310,26 @@ class ToggleSwitchThemeData with Diagnosticable {
     return ToggleSwitchThemeData(
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: !states.isDisabled
+              ? ButtonThemeData.checkedInputColor(style, states)
+              : style.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                  : const Color.fromRGBO(255, 255, 255, 0.1581),
           border: Border.all(style: BorderStyle.none),
         );
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonThemeData.uncheckedInputColor(style, states),
+          color: !states.isDisabled
+              ? ButtonThemeData.uncheckedInputColor(style, states)
+              : Colors.transparent,
           border: Border.all(
             width: 0.6,
-            color: states.isDisabled
-                ? style.disabledColor
-                : style.uncheckedColor,
+            color: !states.isDisabled
+                ? style.borderInputColor
+                : style.brightness.isLight
+                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                    : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),
         );
       }),
@@ -330,22 +338,20 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: style.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: states.isDisabled
-              ? ButtonThemeData.checkedInputColor(
-                  style,
-                  states,
-                ).basedOnLuminance()
-              : style.checkedColor,
+          color: !states.isDisabled
+              ? style.checkedColor
+              : style.brightness.isLight
+                  ? Colors.white
+                  : const Color.fromRGBO(255, 255, 255, 0.5302),
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: states.isDisabled
-              ? ButtonThemeData.uncheckedInputColor(
-                  style,
-                  states,
-                ).basedOnLuminance()
-              : style.brightness.isLight ? const Color(0xFF5A5A5A) : const Color(0xFFCCCCCC),
+          color: !states.isDisabled
+              ? style.uncheckedColor
+              : style.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.3614)
+                  : const Color.fromRGBO(255, 255, 255, 0.3628),
         );
       }),
     );
