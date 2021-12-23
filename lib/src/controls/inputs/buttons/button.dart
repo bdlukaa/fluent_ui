@@ -49,9 +49,9 @@ class Button extends BaseButton {
       shape: ButtonState.all(RoundedRectangleBorder(
         side: BorderSide(
           color: theme.brightness.isLight
-              ? theme.disabledColor.withOpacity(0.6)
-              : theme.disabledColor.withOpacity(0.2),
-          width: 0.2,
+              ? const Color.fromRGBO(0, 0, 0, 0.09)
+              : const Color.fromRGBO(255, 255, 255, 0.05),
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(4.0),
       )),
