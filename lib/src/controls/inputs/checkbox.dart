@@ -114,7 +114,7 @@ class Checkbox extends StatelessWidget {
           }(),
           child: Icon(
             checked == null ? style.thirdstateIcon : style.icon,
-            size: 14,
+            size: 12,
             color: () {
               if (checked == null) {
                 return style.thirdstateIconColor?.resolve(state);
@@ -243,16 +243,22 @@ class CheckboxThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: !states.isDisabled
+              ? ButtonThemeData.checkedInputColor(style, states)
+              : style.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                  : const Color.fromRGBO(255, 255, 255, 0.1581),
         ),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
             width: 0.6,
-            color: states.isDisabled
-                ? style.disabledColor
-                : const Color(0xFF8b8b8b),
+            color: !states.isDisabled
+                ? style.borderInputColor
+                : style.brightness.isLight
+                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                    : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),
           color: states.isHovering
               ? style.inactiveColor.withOpacity(0.1)
@@ -267,12 +273,11 @@ class CheckboxThemeData with Diagnosticable {
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
-        return states.isDisabled
-            ? ButtonThemeData.checkedInputColor(
-                style,
-                states,
-              ).basedOnLuminance()
-            : style.activeColor;
+        return !states.isDisabled
+              ? style.checkedColor
+              : style.brightness.isLight
+                  ? Colors.white
+                  : const Color.fromRGBO(255, 255, 255, 0.5302);
       }),
       uncheckedIconColor: ButtonState.resolveWith(
         (states) => states.isHovering || states.isPressing
