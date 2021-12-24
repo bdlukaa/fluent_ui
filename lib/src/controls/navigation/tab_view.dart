@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:scroll_pos/scroll_pos.dart';
 
 const double _kMaxTileWidth = 240.0;
 const double _kMinTileWidth = 100.0;
@@ -23,7 +22,7 @@ const double _kButtonWidth = 40.0;
 ///
 /// See also:
 ///   - [NavigationPanel]
-class TabView extends StatelessWidget {
+class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
   /// [tabs] must have the same length as [bodies]
@@ -43,14 +42,14 @@ class TabView extends StatelessWidget {
     this.onReorder,
     this.showScrollButtons = true,
     this.wheelScroll = false,
-    ScrollPosController? scrollPosController,
+    ScrollPosController? scrollController,
     this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
   })  : assert(tabs.length == bodies.length),
         assert(minTabWidth > 0 && maxTabWidth > 0),
         assert(minTabWidth < maxTabWidth),
         super(key: key) {
-    this.scrollController = scrollPosController ??
+    this.scrollController = scrollController ??
         ScrollPosController(
           itemCount: tabs.length,
           animationDuration: const Duration(milliseconds: 100),
@@ -124,6 +123,9 @@ class TabView extends StatelessWidget {
   bool get isReorderEnabled => onReorder != null;
 
   @override
+  State<StatefulWidget> createState() => _TabViewState();
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('currentIndex', currentIndex));
@@ -155,14 +157,16 @@ class TabView extends StatelessWidget {
       ifFalse: 'hide scroll buttons',
     ));
   }
+}
 
+class _TabViewState extends State<TabView> {
   Widget _tabBuilder(
     BuildContext context,
     int index,
     Widget divider,
     double preferredTabWidth,
   ) {
-    final Tab tab = tabs[index];
+    final Tab tab = widget.tabs[index];
     final Widget child = GestureDetector(
       onTertiaryTapUp: (_) => tab.onClosed?.call(),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -171,14 +175,17 @@ class TabView extends StatelessWidget {
           child: _Tab(
             tab,
             key: ValueKey<int>(index),
-            reorderIndex: isReorderEnabled ? index : null,
-            selected: index == currentIndex,
-            onPressed: onChanged == null ? null : () => onChanged!(index),
+            reorderIndex: widget.isReorderEnabled ? index : null,
+            selected: index == widget.currentIndex,
+            onPressed: widget.onChanged == null
+                ? null
+                : () => widget.onChanged!(index),
             animationDuration: FluentTheme.of(context).fastAnimationDuration,
             animationCurve: FluentTheme.of(context).animationCurve,
           ),
         ),
-        if (![currentIndex - 1, currentIndex].contains(index)) divider,
+        if (![widget.currentIndex - 1, widget.currentIndex].contains(index))
+          divider,
       ]),
     );
     return AnimatedContainer(
@@ -249,22 +256,27 @@ class TabView extends StatelessWidget {
             );
 
             final preferredTabWidth =
-                ((width - (showNewButton ? _kButtonWidth : 0)) / tabs.length)
+                ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
+                        widget.tabs.length)
                     .clamp(
-              minTabWidth,
-              maxTabWidth,
+              widget.minTabWidth,
+              widget.maxTabWidth,
             );
 
             final listView = Listener(
-              onPointerSignal: wheelScroll
+              onPointerSignal: widget.wheelScroll
                   ? (PointerSignalEvent e) {
                       if (e is PointerScrollEvent) {
                         if (e.scrollDelta.dy > 0) {
-                          scrollController.forward(
-                              align: false, animate: false);
+                          widget.scrollController.forward(
+                            align: false,
+                            animate: false,
+                          );
                         } else {
-                          scrollController.backward(
-                              align: false, animate: false);
+                          widget.scrollController.backward(
+                            align: false,
+                            animate: false,
+                          );
                         }
                       }
                     }
@@ -273,11 +285,11 @@ class TabView extends StatelessWidget {
                 buildDefaultDragHandles: false,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                scrollController: scrollController,
+                scrollController: widget.scrollController,
                 onReorder: (i, ii) {
-                  onReorder?.call(i, ii);
+                  widget.onReorder?.call(i, ii);
                 },
-                itemCount: tabs.length,
+                itemCount: widget.tabs.length,
                 proxyDecorator: (child, index, animation) {
                   return child;
                 },
@@ -292,48 +304,49 @@ class TabView extends StatelessWidget {
               ),
             );
 
-            bool scrollable = preferredTabWidth * tabs.length >
-                width - (showNewButton ? _kButtonWidth : 0);
+            bool scrollable = preferredTabWidth * widget.tabs.length >
+                width - (widget.showNewButton ? _kButtonWidth : 0);
 
             return Row(children: [
-              if (showScrollButtons && scrollable)
+              if (widget.showScrollButtons && scrollable)
                 _buttonTabBuilder(
                   context,
                   const Icon(FluentIcons.caret_left_solid8, size: 10),
                   () {
-                    scrollController.backward();
+                    widget.scrollController.backward();
                   },
                 ),
               if (scrollable)
                 Expanded(child: listView)
               else
                 SizedBox(
-                  width: preferredTabWidth * tabs.length,
+                  width: preferredTabWidth * widget.tabs.length,
                   child: listView,
                 ),
-              if (showScrollButtons && scrollable)
+              if (widget.showScrollButtons && scrollable)
                 _buttonTabBuilder(
                   context,
                   const Icon(FluentIcons.caret_right_solid8, size: 10),
                   () {
-                    scrollController.forward();
+                    widget.scrollController.forward();
                   },
                 ),
-              if (showNewButton)
+              if (widget.showNewButton)
                 _buttonTabBuilder(
                   context,
-                  Icon(addIconData, size: 16.0),
-                  onNewPressed!,
+                  Icon(widget.addIconData, size: 16.0),
+                  widget.onNewPressed!,
                 ),
             ]);
           }),
         ),
-        if (bodies.isNotEmpty) Expanded(child: bodies[currentIndex]),
+        if (widget.bodies.isNotEmpty)
+          Expanded(child: widget.bodies[widget.currentIndex]),
       ]),
     );
-    if (shortcutsEnabled) {
+    if (widget.shortcutsEnabled) {
       void _onClosePressed() {
-        tabs[currentIndex].onClosed?.call();
+        widget.tabs[widget.currentIndex].onClosed?.call();
       }
 
       return CallbackShortcuts(
@@ -343,7 +356,7 @@ class TabView extends StatelessWidget {
           const SingleActivator(LogicalKeyboardKey.keyW, control: true):
               _onClosePressed,
           const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
-            onNewPressed?.call();
+            widget.onNewPressed?.call();
           },
           ...Map.fromIterable(
             List<int>.generate(9, (index) => index),
@@ -365,9 +378,11 @@ class TabView extends StatelessWidget {
               return () {
                 // If it's the last, move to the last tab
                 if (tab == 8) {
-                  onChanged?.call(tabs.length - 1);
+                  widget.onChanged?.call(widget.tabs.length - 1);
                 } else {
-                  if (tabs.length - 1 >= tab) onChanged?.call(tab);
+                  if (widget.tabs.length - 1 >= tab) {
+                    widget.onChanged?.call(tab);
+                  }
                 }
               };
             },
@@ -377,6 +392,12 @@ class TabView extends StatelessWidget {
       );
     }
     return tabBar;
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.dispose();
+    super.dispose();
   }
 }
 
