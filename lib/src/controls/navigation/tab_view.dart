@@ -396,7 +396,7 @@ class __TabState extends State<_Tab>
             maxWidth: _kMaxTileWidth,
             minWidth: _kMinTileWidth,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           decoration: BoxDecoration(
             /// Using a [FocusBorder] here would be more adequate, but it
             /// seems it disabled the reordering effect. Using this boder
@@ -438,25 +438,13 @@ class __TabState extends State<_Tab>
                       icon: Icon(widget.tab.closeIcon, size: 14.0),
                       onPressed: widget.tab.onClosed,
                       style: ButtonStyle(
-                        foregroundColor: ButtonState.resolveWith((states) {
-                          if (state.isDisabled || state.isNone) {
-                            return FluentTheme.of(context).disabledColor;
-                          } else {
-                            return FluentTheme.of(context).inactiveColor;
-                          }
-                        }),
-                        backgroundColor: ButtonState.resolveWith((states) {
-                          return state.isNone
-                              ? Colors.transparent
-                              : ButtonThemeData.buttonColor(
-                                  theme.brightness,
-                                  state,
-                                );
-                        }),
                         shape: ButtonState.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(2),
                         )),
-                        padding: ButtonState.all(EdgeInsets.zero),
+                        padding: ButtonState.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                        ),
                       ),
                     ),
                   ),
