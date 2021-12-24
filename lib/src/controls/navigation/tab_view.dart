@@ -252,15 +252,19 @@ class TabView extends StatelessWidget {
             );
 
             final listView = Listener(
-              onPointerSignal: wheelScroll ? (PointerSignalEvent e) {
-                if (e is PointerScrollEvent) {
-                  if (e.scrollDelta.dy > 0) {
-                    scrollPosController.forward(align: false, animate: false);
-                  } else {
-                    scrollPosController.backward(align: false, animate: false);
-                  }
-                }
-              } : null,
+              onPointerSignal: wheelScroll
+                  ? (PointerSignalEvent e) {
+                      if (e is PointerScrollEvent) {
+                        if (e.scrollDelta.dy > 0) {
+                          scrollPosController.forward(
+                              align: false, animate: false);
+                        } else {
+                          scrollPosController.backward(
+                              align: false, animate: false);
+                        }
+                      }
+                    }
+                  : null,
               child: ReorderableListView.builder(
                 buildDefaultDragHandles: false,
                 shrinkWrap: true,
