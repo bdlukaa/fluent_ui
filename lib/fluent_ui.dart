@@ -23,6 +23,7 @@ export 'package:flutter/material.dart'
         kThemeAnimationDuration,
         TooltipVisibility,
         TooltipTriggerMode;
+export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';
 export 'src/icons.dart';

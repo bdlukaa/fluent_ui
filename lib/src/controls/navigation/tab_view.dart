@@ -50,7 +50,7 @@ class TabView extends StatelessWidget {
         assert(minTabWidth > 0 && maxTabWidth > 0),
         assert(minTabWidth < maxTabWidth),
         super(key: key) {
-    this.scrollPosController = scrollPosController ??
+    this.scrollController = scrollPosController ??
         ScrollPosController(
           itemCount: tabs.length,
           animationDuration: const Duration(milliseconds: 100),
@@ -105,11 +105,15 @@ class TabView extends StatelessWidget {
   /// should be displayed, if necessary. Defaults to true
   final bool showScrollButtons;
 
-  /// The controller used for move tabview to right and left when the
-  /// larger of all items is bigger than screen width.
-  late final ScrollPosController scrollPosController;
+  /// The [ScrollPosController] used to move tabview to right and left when the
+  /// tabs don't fit the available horizontal space.
+  ///
+  /// If null, a [ScrollPosController] is created internally.
+  late final ScrollPosController scrollController;
 
-  /// Indicate if the wheel scroll change the tabs positions.
+  /// Indicate if the wheel scroll changes the tabs positions.
+  ///
+  /// Defaults to `false`
   final bool wheelScroll;
 
   /// Whenever the new button should be displayed.
@@ -160,7 +164,7 @@ class TabView extends StatelessWidget {
   ) {
     final Tab tab = tabs[index];
     final Widget child = GestureDetector(
-      onTertiaryTapUp: (_) => tabs[index].onClosed?.call(),
+      onTertiaryTapUp: (_) => tab.onClosed?.call(),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Flexible(
           fit: FlexFit.loose,
@@ -256,10 +260,10 @@ class TabView extends StatelessWidget {
                   ? (PointerSignalEvent e) {
                       if (e is PointerScrollEvent) {
                         if (e.scrollDelta.dy > 0) {
-                          scrollPosController.forward(
+                          scrollController.forward(
                               align: false, animate: false);
                         } else {
-                          scrollPosController.backward(
+                          scrollController.backward(
                               align: false, animate: false);
                         }
                       }
@@ -269,7 +273,7 @@ class TabView extends StatelessWidget {
                 buildDefaultDragHandles: false,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                scrollController: scrollPosController,
+                scrollController: scrollController,
                 onReorder: (i, ii) {
                   onReorder?.call(i, ii);
                 },
@@ -297,7 +301,7 @@ class TabView extends StatelessWidget {
                   context,
                   const Icon(FluentIcons.caret_left_solid8, size: 10),
                   () {
-                    scrollPosController.backward();
+                    scrollController.backward();
                   },
                 ),
               if (scrollable)
@@ -312,7 +316,7 @@ class TabView extends StatelessWidget {
                   context,
                   const Icon(FluentIcons.caret_right_solid8, size: 10),
                   () {
-                    scrollPosController.forward();
+                    scrollController.forward();
                   },
                 ),
               if (showNewButton)
