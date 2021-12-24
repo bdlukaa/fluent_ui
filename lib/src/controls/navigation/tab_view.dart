@@ -6,7 +6,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:scroll_pos/scroll_pos.dart';
 
-const _kButtonWidth = 40.0;
+const double _kMaxTileWidth = 240.0;
+const double _kMinTileWidth = 100.0;
+const double _kTileHeight = 35.0;
+const double _kButtonWidth = 40.0;
 
 /// The TabView control is a way to display a set of tabs
 /// and their respective content. TabViews are useful for
@@ -364,10 +367,6 @@ class TabView extends StatelessWidget {
     return tabBar;
   }
 }
-
-const double _kMaxTileWidth = 240.0;
-const double _kMinTileWidth = 100.0;
-const double _kTileHeight = 35.0;
 
 class Tab {
   const Tab({
