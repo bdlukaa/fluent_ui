@@ -1,8 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:scroll_pos/scroll_pos.dart';
+
+const _kButtonWidth = 40.0;
 
 /// The TabView control is a way to display a set of tabs
 /// and their respective content. TabViews are useful for
@@ -24,7 +28,7 @@ class TabView extends StatelessWidget {
   /// [minTabWidth] and [maxTabWidth] must be non-negative
   ///
   /// [maxTabWidth] must be greater than [minTabWidth]
-  const TabView({
+  TabView({
     Key? key,
     required this.currentIndex,
     this.onChanged,
@@ -35,12 +39,19 @@ class TabView extends StatelessWidget {
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
+    ScrollPosController? scrollPosController,
     this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
   })  : assert(tabs.length == bodies.length),
         assert(minTabWidth > 0 && maxTabWidth > 0),
         assert(minTabWidth < maxTabWidth),
-        super(key: key);
+        super(key: key) {
+    this.scrollPosController = scrollPosController ??
+        ScrollPosController(
+          itemCount: tabs.length,
+          animationDuration: const Duration(milliseconds: 100),
+        );
+  }
 
   /// The index of the tab to be displayed
   final int currentIndex;
@@ -89,6 +100,10 @@ class TabView extends StatelessWidget {
   /// Whether the buttons that scroll forward or backward
   /// should be displayed, if necessary. Defaults to true
   final bool showScrollButtons;
+
+  /// The controller used for move tabview to right and left when the
+  /// larger of all items is bigger than screen width.
+  late final ScrollPosController scrollPosController;
 
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
@@ -161,6 +176,38 @@ class TabView extends StatelessWidget {
     );
   }
 
+  Widget _buttonTabBuilder(
+    BuildContext context,
+    Icon icon,
+    VoidCallback onPressed,
+  ) {
+    return SizedBox(
+      width: _kButtonWidth,
+      height: _kTileHeight - 10,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 2),
+        child: IconButton(
+          icon: icon,
+          onPressed: onPressed,
+          style: ButtonStyle(
+            foregroundColor: ButtonState.resolveWith((states) {
+              if (states.isDisabled || states.isNone) {
+                return FluentTheme.of(context).disabledColor;
+              } else {
+                return FluentTheme.of(context).inactiveColor;
+              }
+            }),
+            padding: ButtonState.all(
+              const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -187,61 +234,78 @@ class TabView extends StatelessWidget {
               'You can only create a TabView in a RenderBox with defined width',
             );
 
-            /// The preferred size is the width / tabs.length, but it
-            /// must be in the range of [_kMinTileWidth] to `_kMaxTileWidth`
-            /// 8.0 is subtracted because of the dividers and the 'new' button
-            /// 8.0 is the minimum value that works. It can be greater
-            final preferredTabWidth = ((width / tabs.length) - 8.0).clamp(
+            final preferredTabWidth =
+                ((width - (showNewButton ? _kButtonWidth : 0)) / tabs.length)
+                    .clamp(
               minTabWidth,
               maxTabWidth,
             );
 
-            final listView = ReorderableListView.builder(
-              buildDefaultDragHandles: false,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              onReorder: (i, ii) {
-                onReorder?.call(i, ii);
+            final listView = Listener(
+              onPointerSignal: (PointerSignalEvent e) {
+                if (e is PointerScrollEvent) {
+                  if (e.scrollDelta.dy > 0) {
+                    scrollPosController.forward(align: false, animate: false);
+                  } else {
+                    scrollPosController.backward(align: false, animate: false);
+                  }
+                }
               },
-              itemCount: tabs.length,
-              proxyDecorator: (child, index, animation) {
-                return child;
-              },
-              itemBuilder: (context, index) {
-                return _tabBuilder(
-                  context,
-                  index,
-                  divider,
-                  preferredTabWidth,
-                );
-              },
+              child: ReorderableListView.builder(
+                buildDefaultDragHandles: false,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                scrollController: scrollPosController,
+                onReorder: (i, ii) {
+                  onReorder?.call(i, ii);
+                },
+                itemCount: tabs.length,
+                proxyDecorator: (child, index, animation) {
+                  return child;
+                },
+                itemBuilder: (context, index) {
+                  return _tabBuilder(
+                    context,
+                    index,
+                    divider,
+                    preferredTabWidth,
+                  );
+                },
+              ),
             );
+
+            bool scrollable = preferredTabWidth * tabs.length >
+                width - (showNewButton ? _kButtonWidth : 0);
+
             return Row(children: [
-              if (preferredTabWidth * tabs.length >
-                  width - (showNewButton ? 40.0 : 0))
+              if (showScrollButtons && scrollable)
+                _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_left_solid8, size: 10),
+                  () {
+                    scrollPosController.backward();
+                  },
+                ),
+              if (scrollable)
                 Expanded(child: listView)
               else
                 SizedBox(
                   width: preferredTabWidth * tabs.length,
                   child: listView,
                 ),
+              if (showScrollButtons && scrollable)
+                _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_right_solid8, size: 10),
+                  () {
+                    scrollPosController.forward();
+                  },
+                ),
               if (showNewButton)
-                Padding(
-                  padding: const EdgeInsets.only(left: 2),
-                  child: IconButton(
-                    key: ValueKey<int>(tabs.length),
-                    icon: Icon(addIconData, size: 18.0),
-                    onPressed: onNewPressed,
-                    style: ButtonStyle(
-                      foregroundColor: ButtonState.resolveWith((states) {
-                        if (states.isDisabled || states.isNone) {
-                          return FluentTheme.of(context).disabledColor;
-                        } else {
-                          return FluentTheme.of(context).inactiveColor;
-                        }
-                      }),
-                    ),
-                  ),
+                _buttonTabBuilder(
+                  context,
+                  Icon(addIconData, size: 16.0),
+                  onNewPressed!,
                 ),
             ]);
           }),
@@ -435,7 +499,7 @@ class __TabState extends State<_Tab>
                       secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
-                      icon: Icon(widget.tab.closeIcon, size: 14.0),
+                      icon: Icon(widget.tab.closeIcon, size: 12.0),
                       onPressed: widget.tab.onClosed,
                       style: ButtonStyle(
                         shape: ButtonState.all(RoundedRectangleBorder(
@@ -443,7 +507,7 @@ class __TabState extends State<_Tab>
                         )),
                         padding: ButtonState.all(
                           const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 5),
+                              horizontal: 8, vertical: 6),
                         ),
                       ),
                     ),
