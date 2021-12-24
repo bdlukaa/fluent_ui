@@ -42,6 +42,7 @@ class TabView extends StatelessWidget {
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
+    this.wheelScroll = false,
     ScrollPosController? scrollPosController,
     this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
@@ -107,6 +108,9 @@ class TabView extends StatelessWidget {
   /// The controller used for move tabview to right and left when the
   /// larger of all items is bigger than screen width.
   late final ScrollPosController scrollPosController;
+
+  /// Indicate if the wheel scroll change the tabs positions.
+  final bool wheelScroll;
 
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
@@ -248,7 +252,7 @@ class TabView extends StatelessWidget {
             );
 
             final listView = Listener(
-              onPointerSignal: (PointerSignalEvent e) {
+              onPointerSignal: wheelScroll ? (PointerSignalEvent e) {
                 if (e is PointerScrollEvent) {
                   if (e.scrollDelta.dy > 0) {
                     scrollPosController.forward(align: false, animate: false);
@@ -256,7 +260,7 @@ class TabView extends StatelessWidget {
                     scrollPosController.backward(align: false, animate: false);
                   }
                 }
-              },
+              } : null,
               child: ReorderableListView.builder(
                 buildDefaultDragHandles: false,
                 shrinkWrap: true,
