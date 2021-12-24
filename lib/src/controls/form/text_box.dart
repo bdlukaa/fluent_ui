@@ -598,7 +598,13 @@ class _TextBoxState extends State<TextBox>
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
         textStyle.copyWith(
-          color: !enabled ? backgroundColor.basedOnLuminance() : disabledColor,
+          color: !enabled
+              ? theme.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.3614)
+                  : const Color.fromRGBO(255, 255, 255, 0.3628)
+              : theme.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.6063)
+                  : const Color.fromRGBO(255, 255, 255, 0.786),
           fontWeight: FontWeight.w400,
         );
 
@@ -684,16 +690,28 @@ class _TextBoxState extends State<TextBox>
           curve: theme.animationCurve,
           decoration: BoxDecoration(
             borderRadius: radius,
-            border: Border.all(width: 0.3, color: theme.disabledColor),
-            color: backgroundColor,
+            border: Border.all(
+                width: 1,
+                color: theme.brightness.isLight
+                    ? const Color.fromRGBO(0, 0, 0, 0.08)
+                    : const Color.fromRGBO(255, 255, 255, 0.07)),
+            color: enabled
+                ? backgroundColor
+                : theme.brightness.isLight
+                    ? const Color.fromRGBO(249, 249, 249, 0.3)
+                    : const Color.fromRGBO(255, 255, 255, 0.04),
           ),
           foregroundDecoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
                 color: _effectiveFocusNode.hasFocus
                     ? theme.accentColor
-                    : theme.inactiveColor.withOpacity(0.6),
-                width: _effectiveFocusNode.hasFocus ? 2 : 0.8,
+                    : !enabled
+                        ? Colors.transparent
+                        : theme.brightness.isLight
+                            ? const Color.fromRGBO(0, 0, 0, 0.45)
+                            : const Color.fromRGBO(255, 255, 255, 0.54),
+                width: _effectiveFocusNode.hasFocus ? 2 : 0,
               ),
             ),
           ),

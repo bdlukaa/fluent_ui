@@ -40,14 +40,18 @@ class Button extends BaseButton {
         return 0.3;
       }),
       shadowColor: ButtonState.all(theme.shadowColor),
-      padding: ButtonState.all(const EdgeInsets.symmetric(
-        horizontal: 10.0,
-        vertical: 6.0,
+      padding: ButtonState.all(const EdgeInsets.only(
+        left: 11.0,
+        top: 5.0,
+        right: 11.0,
+        bottom: 6.0,
       )),
       shape: ButtonState.all(RoundedRectangleBorder(
         side: BorderSide(
-          color: theme.disabledColor.withOpacity(0.75),
-          width: 0.1,
+          color: theme.brightness.isLight
+              ? const Color.fromRGBO(0, 0, 0, 0.09)
+              : const Color.fromRGBO(255, 255, 255, 0.05),
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(4.0),
       )),

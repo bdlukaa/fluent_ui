@@ -217,11 +217,25 @@ class RadioButtonThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: style.accentColor.light,
-            width: states.isHovering && !states.isPressing ? 3.4 : 5.0,
+            color: !states.isDisabled
+                ? style.accentColor.light
+                : style.brightness.isLight
+                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            width: !states.isDisabled
+                ? states.isHovering && !states.isPressing
+                    ? 3.4
+                    : 5.0
+                : 4.0,
           ),
           shape: BoxShape.circle,
-          color: style.brightness.isLight ? Colors.white : Colors.black,
+          color: !states.isDisabled
+              ? style.brightness.isLight
+                  ? Colors.white
+                  : Colors.black
+              : style.brightness.isLight
+                  ? Colors.white
+                  : const Color.fromRGBO(255, 255, 255, 0.5302),
         );
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
@@ -234,9 +248,13 @@ class RadioButtonThemeData with Diagnosticable {
                   : backgroundColor.withOpacity(0.0),
           border: Border.all(
             width: states.isPressing ? 4.5 : 1,
-            color: states.isPressing
-                ? style.accentColor
-                : style.inactiveColor.withOpacity(0.5),
+            color: !states.isDisabled
+                ? states.isPressing
+                    ? style.accentColor
+                    : style.borderInputColor
+                : style.brightness.isLight
+                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
+                    : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),
           shape: BoxShape.circle,
         );
