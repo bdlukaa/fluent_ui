@@ -152,21 +152,24 @@ class TabView extends StatelessWidget {
     double preferredTabWidth,
   ) {
     final Tab tab = tabs[index];
-    final Widget child = Row(mainAxisSize: MainAxisSize.min, children: [
-      Flexible(
-        fit: FlexFit.loose,
-        child: _Tab(
-          tab,
-          key: ValueKey<int>(index),
-          reorderIndex: isReorderEnabled ? index : null,
-          selected: index == currentIndex,
-          onPressed: onChanged == null ? null : () => onChanged!(index),
-          animationDuration: FluentTheme.of(context).fastAnimationDuration,
-          animationCurve: FluentTheme.of(context).animationCurve,
+    final Widget child = GestureDetector(
+      onTertiaryTapUp: (_) => tabs[index].onClosed?.call(),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: _Tab(
+            tab,
+            key: ValueKey<int>(index),
+            reorderIndex: isReorderEnabled ? index : null,
+            selected: index == currentIndex,
+            onPressed: onChanged == null ? null : () => onChanged!(index),
+            animationDuration: FluentTheme.of(context).fastAnimationDuration,
+            animationCurve: FluentTheme.of(context).animationCurve,
+          ),
         ),
-      ),
-      if (![currentIndex - 1, currentIndex].contains(index)) divider,
-    ]);
+        if (![currentIndex - 1, currentIndex].contains(index)) divider,
+      ]),
+    );
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
       width: preferredTabWidth,
