@@ -215,12 +215,13 @@ class _OthersState extends State<Others> {
           Container(
             height: 400,
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: FluentTheme.of(context).accentColor.resolve(context),
               border: Border.all(
                   color: FluentTheme.of(context).accentColor, width: 1.0),
             ),
             child: TabView(
               currentIndex: currentIndex,
+              tabWidthBehavior: TabWidthBehavior.sizeToContent,
               onChanged: _handleTabChanged,
               onReorder: (oldIndex, newIndex) {
                 setState(() {

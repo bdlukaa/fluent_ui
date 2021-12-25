@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.5.3] - [DD/MM/YYYY]
+## [3.6.0] - TabView Update - [DD/MM/YYYY]
 
 - Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))
 - Fix `Tooltip.useMousePosition`
@@ -11,6 +11,9 @@ Date format: DD/MM/YYYY
 - Added `newTabLabel`, `closeTabLabel`, `scrollTabBackward`, `scrollTabForward` to `FluentLocalizations`
 - Fix `TabView`'s text when it's too long. Now it's clipped when overflow and line doesn't break
 - Added `TabView.closeButtonVisibility`. Defaults to `CloseButtonVisibilityMode.always`
+- Updated selected tab paint
+- Added `TabView.tabWidthBehavior`. Defaults to `TabWidthBehavior.equal`
+- Added `TabView.header` and `TabView.footer`
 
 ## [3.5.2] - [17/12/2021]
 
