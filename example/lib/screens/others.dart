@@ -282,52 +282,58 @@ class _OthersState extends State<Others> {
           ),
           const SizedBox(height: 20.0),
           SizedBox(
-            height: 380.0,
+            height: 403.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                Container(
-                  constraints: const BoxConstraints(
-                    maxHeight: 380,
-                    minHeight: 380,
-                    maxWidth: 350,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: FluentTheme.of(context).inactiveColor),
-                  ),
-                  child: TreeView(items: items),
-                ),
-                Container(
-                  constraints: const BoxConstraints(
-                    maxHeight: 380,
-                    minHeight: 380,
-                    maxWidth: 350,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: FluentTheme.of(context).inactiveColor),
-                  ),
-                  child: TreeView(
-                    selectionMode: TreeViewSelectionMode.single,
-                    items: items,
-                    onItemInvoked: (item) => debugPrint('$item'),
+                InfoLabel(
+                  label: 'Simple',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(items: items),
                   ),
                 ),
-                Container(
-                  constraints: const BoxConstraints(
-                    maxHeight: 380,
-                    minHeight: 380,
-                    maxWidth: 350,
+                InfoLabel(
+                  label: 'Single Selection',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(
+                      selectionMode: TreeViewSelectionMode.single,
+                      items: items,
+                      onItemInvoked: (item) => debugPrint('$item'),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: FluentTheme.of(context).inactiveColor),
-                  ),
-                  child: TreeView(
-                    selectionMode: TreeViewSelectionMode.multiple,
-                    items: items,
-                    onItemInvoked: (item) => debugPrint('$item'),
+                ),
+                InfoLabel(
+                  label: 'Multiple selection',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(
+                      selectionMode: TreeViewSelectionMode.multiple,
+                      items: items,
+                      onItemInvoked: (item) => debugPrint('$item'),
+                    ),
                   ),
                 ),
               ],

@@ -26,6 +26,12 @@ enum TreeViewSelectionMode {
 }
 
 /// The item used by [TreeView] to render tiles
+///
+/// See also:
+///
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
+///  * [TreeView], which render [TreeViewItem]s as tiles
+///  * [Checkbox], used on multiple selection mode
 class TreeViewItem with Diagnosticable {
   final Key? key;
 
@@ -71,6 +77,13 @@ class TreeViewItem with Diagnosticable {
   /// Called when this item is invoked
   final VoidCallback? onInvoked;
 
+  /// The background color of this item.
+  ///
+  /// See also:
+  ///
+  ///   * [ButtonThemeData.uncheckedInputColor], which is used by default
+  final ButtonState<Color>? backgroundColor;
+
   /// Whether this item is visible or not. Used to not lose the item state while
   /// it's not on the screen
   bool _visible = true;
@@ -94,6 +107,7 @@ class TreeViewItem with Diagnosticable {
     this.expanded = true,
     this.selected = false,
     this.onInvoked,
+    this.backgroundColor,
     this.autofocus = false,
     this.focusNode,
     this.semanticLabel,
@@ -191,6 +205,9 @@ extension TreeViewItemCollection on List<TreeViewItem> {
       for (final item in [...this]) {
         list.add(item);
         if (assignParent) item._parent = parent;
+        if (parent != null) {
+          item._visible = parent._visible;
+        }
         for (final child in item.children) {
           // only add the children when it's expanded
           child._visible = item.expanded;
@@ -235,6 +252,7 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 /// See also:
 ///
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
+///  * [TreeViewItem], used to render the tiles
 ///  * [Checkbox], used on multiple selection mode
 class TreeView extends StatefulWidget {
   /// Creates a tree view.
@@ -258,6 +276,7 @@ class TreeView extends StatefulWidget {
   /// [TreeViewSelectionMode.none] is used by default
   final TreeViewSelectionMode selectionMode;
 
+  /// Called when an item is invoked
   final ValueChanged<TreeViewItem>? onItemInvoked;
 
   @override
@@ -411,17 +430,20 @@ class _TreeViewItem extends StatelessWidget {
                 left: 20.0 + item.depth * _whiteSpace,
               ),
               decoration: BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(
-                  theme,
-                  [TreeViewSelectionMode.multiple, TreeViewSelectionMode.none]
-                          .contains(selectionMode)
-                      ? states
-                      : selected && (states.isPressing || states.isNone)
-                          ? {ButtonStates.hovering}
-                          : selected && states.isHovering
-                              ? {ButtonStates.pressing}
-                              : states,
-                ),
+                color: item.backgroundColor?.resolve(states) ??
+                    ButtonThemeData.uncheckedInputColor(
+                      theme,
+                      [
+                        TreeViewSelectionMode.multiple,
+                        TreeViewSelectionMode.none
+                      ].contains(selectionMode)
+                          ? states
+                          : selected && (states.isPressing || states.isNone)
+                              ? {ButtonStates.hovering}
+                              : selected && states.isHovering
+                                  ? {ButtonStates.pressing}
+                                  : states,
+                    ),
                 borderRadius: BorderRadius.circular(6.0),
               ),
               child: Row(
