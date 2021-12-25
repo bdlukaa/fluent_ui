@@ -2,6 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [3.5.3] - [DD/MM/YYYY]
 
+- Implement `TreeView`
 - Fix scroll buttons when there are too many tabs in `TabView` ([#92](https://github.com/bdlukaa/fluent_ui/issues/92))
 - Fix button style on tab in `TabView` ([#90](https://github.com/bdlukaa/fluent_ui/issues/90))
 - Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
