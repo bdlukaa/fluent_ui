@@ -1,8 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+
+const double _kMaxTileWidth = 240.0;
+const double _kMinTileWidth = 100.0;
+const double _kTileHeight = 35.0;
+const double _kButtonWidth = 40.0;
 
 /// The TabView control is a way to display a set of tabs
 /// and their respective content. TabViews are useful for
@@ -16,7 +22,7 @@ import 'package:flutter/services.dart';
 ///
 /// See also:
 ///   - [NavigationPanel]
-class TabView extends StatelessWidget {
+class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
   /// [tabs] must have the same length as [bodies]
@@ -24,7 +30,7 @@ class TabView extends StatelessWidget {
   /// [minTabWidth] and [maxTabWidth] must be non-negative
   ///
   /// [maxTabWidth] must be greater than [minTabWidth]
-  const TabView({
+  TabView({
     Key? key,
     required this.currentIndex,
     this.onChanged,
@@ -35,12 +41,20 @@ class TabView extends StatelessWidget {
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
+    this.wheelScroll = false,
+    ScrollPosController? scrollController,
     this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
   })  : assert(tabs.length == bodies.length),
         assert(minTabWidth > 0 && maxTabWidth > 0),
         assert(minTabWidth < maxTabWidth),
-        super(key: key);
+        super(key: key) {
+    this.scrollController = scrollController ??
+        ScrollPosController(
+          itemCount: tabs.length,
+          animationDuration: const Duration(milliseconds: 100),
+        );
+  }
 
   /// The index of the tab to be displayed
   final int currentIndex;
@@ -90,12 +104,26 @@ class TabView extends StatelessWidget {
   /// should be displayed, if necessary. Defaults to true
   final bool showScrollButtons;
 
+  /// The [ScrollPosController] used to move tabview to right and left when the
+  /// tabs don't fit the available horizontal space.
+  ///
+  /// If null, a [ScrollPosController] is created internally.
+  late final ScrollPosController scrollController;
+
+  /// Indicate if the wheel scroll changes the tabs positions.
+  ///
+  /// Defaults to `false`
+  final bool wheelScroll;
+
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
 
   /// Whether reordering is enabled or not. To enable it,
   /// make sure [widget.onReorder] is not null.
   bool get isReorderEnabled => onReorder != null;
+
+  @override
+  State<StatefulWidget> createState() => _TabViewState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -129,35 +157,75 @@ class TabView extends StatelessWidget {
       ifFalse: 'hide scroll buttons',
     ));
   }
+}
 
+class _TabViewState extends State<TabView> {
   Widget _tabBuilder(
     BuildContext context,
     int index,
     Widget divider,
     double preferredTabWidth,
   ) {
-    final Tab tab = tabs[index];
-    final Widget child = Row(mainAxisSize: MainAxisSize.min, children: [
-      Flexible(
-        fit: FlexFit.loose,
-        child: _Tab(
-          tab,
-          key: ValueKey<int>(index),
-          reorderIndex: isReorderEnabled ? index : null,
-          selected: index == currentIndex,
-          onPressed: onChanged == null ? null : () => onChanged!(index),
-          animationDuration: FluentTheme.of(context).fastAnimationDuration,
-          animationCurve: FluentTheme.of(context).animationCurve,
+    final Tab tab = widget.tabs[index];
+    final Widget child = GestureDetector(
+      onTertiaryTapUp: (_) => tab.onClosed?.call(),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: _Tab(
+            tab,
+            key: ValueKey<int>(index),
+            reorderIndex: widget.isReorderEnabled ? index : null,
+            selected: index == widget.currentIndex,
+            onPressed: widget.onChanged == null
+                ? null
+                : () => widget.onChanged!(index),
+            animationDuration: FluentTheme.of(context).fastAnimationDuration,
+            animationCurve: FluentTheme.of(context).animationCurve,
+          ),
         ),
-      ),
-      if (![currentIndex - 1, currentIndex].contains(index)) divider,
-    ]);
+        if (![widget.currentIndex - 1, widget.currentIndex].contains(index))
+          divider,
+      ]),
+    );
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
       width: preferredTabWidth,
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
       child: child,
+    );
+  }
+
+  Widget _buttonTabBuilder(
+    BuildContext context,
+    Icon icon,
+    VoidCallback onPressed,
+  ) {
+    return SizedBox(
+      width: _kButtonWidth,
+      height: _kTileHeight - 10,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 2),
+        child: IconButton(
+          icon: icon,
+          onPressed: onPressed,
+          style: ButtonStyle(
+            foregroundColor: ButtonState.resolveWith((states) {
+              if (states.isDisabled || states.isNone) {
+                return FluentTheme.of(context).disabledColor;
+              } else {
+                return FluentTheme.of(context).inactiveColor;
+              }
+            }),
+            padding: ButtonState.all(
+              const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -187,71 +255,98 @@ class TabView extends StatelessWidget {
               'You can only create a TabView in a RenderBox with defined width',
             );
 
-            /// The preferred size is the width / tabs.length, but it
-            /// must be in the range of [_kMinTileWidth] to `_kMaxTileWidth`
-            /// 8.0 is subtracted because of the dividers and the 'new' button
-            /// 8.0 is the minimum value that works. It can be greater
-            final preferredTabWidth = ((width / tabs.length) - 8.0).clamp(
-              minTabWidth,
-              maxTabWidth,
+            final preferredTabWidth =
+                ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
+                        widget.tabs.length)
+                    .clamp(
+              widget.minTabWidth,
+              widget.maxTabWidth,
             );
 
-            final listView = ReorderableListView.builder(
-              buildDefaultDragHandles: false,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              onReorder: (i, ii) {
-                onReorder?.call(i, ii);
-              },
-              itemCount: tabs.length,
-              proxyDecorator: (child, index, animation) {
-                return child;
-              },
-              itemBuilder: (context, index) {
-                return _tabBuilder(
-                  context,
-                  index,
-                  divider,
-                  preferredTabWidth,
-                );
-              },
+            final listView = Listener(
+              onPointerSignal: widget.wheelScroll
+                  ? (PointerSignalEvent e) {
+                      if (e is PointerScrollEvent) {
+                        if (e.scrollDelta.dy > 0) {
+                          widget.scrollController.forward(
+                            align: false,
+                            animate: false,
+                          );
+                        } else {
+                          widget.scrollController.backward(
+                            align: false,
+                            animate: false,
+                          );
+                        }
+                      }
+                    }
+                  : null,
+              child: ReorderableListView.builder(
+                buildDefaultDragHandles: false,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                scrollController: widget.scrollController,
+                onReorder: (i, ii) {
+                  widget.onReorder?.call(i, ii);
+                },
+                itemCount: widget.tabs.length,
+                proxyDecorator: (child, index, animation) {
+                  return child;
+                },
+                itemBuilder: (context, index) {
+                  return _tabBuilder(
+                    context,
+                    index,
+                    divider,
+                    preferredTabWidth,
+                  );
+                },
+              ),
             );
+
+            bool scrollable = preferredTabWidth * widget.tabs.length >
+                width - (widget.showNewButton ? _kButtonWidth : 0);
+
             return Row(children: [
-              if (preferredTabWidth * tabs.length >
-                  width - (showNewButton ? 40.0 : 0))
+              if (widget.showScrollButtons && scrollable)
+                _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_left_solid8, size: 10),
+                  () {
+                    widget.scrollController.backward();
+                  },
+                ),
+              if (scrollable)
                 Expanded(child: listView)
               else
                 SizedBox(
-                  width: preferredTabWidth * tabs.length,
+                  width: preferredTabWidth * widget.tabs.length,
                   child: listView,
                 ),
-              if (showNewButton)
-                Padding(
-                  padding: const EdgeInsets.only(left: 2),
-                  child: IconButton(
-                    key: ValueKey<int>(tabs.length),
-                    icon: Icon(addIconData, size: 18.0),
-                    onPressed: onNewPressed,
-                    style: ButtonStyle(
-                      foregroundColor: ButtonState.resolveWith((states) {
-                        if (states.isDisabled || states.isNone) {
-                          return FluentTheme.of(context).disabledColor;
-                        } else {
-                          return FluentTheme.of(context).inactiveColor;
-                        }
-                      }),
-                    ),
-                  ),
+              if (widget.showScrollButtons && scrollable)
+                _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_right_solid8, size: 10),
+                  () {
+                    widget.scrollController.forward();
+                  },
+                ),
+              if (widget.showNewButton)
+                _buttonTabBuilder(
+                  context,
+                  Icon(widget.addIconData, size: 16.0),
+                  widget.onNewPressed!,
                 ),
             ]);
           }),
         ),
-        if (bodies.isNotEmpty) Expanded(child: bodies[currentIndex]),
+        if (widget.bodies.isNotEmpty)
+          Expanded(child: widget.bodies[widget.currentIndex]),
       ]),
     );
-    if (shortcutsEnabled) {
+    if (widget.shortcutsEnabled) {
       void _onClosePressed() {
-        tabs[currentIndex].onClosed?.call();
+        widget.tabs[widget.currentIndex].onClosed?.call();
       }
 
       return CallbackShortcuts(
@@ -261,7 +356,7 @@ class TabView extends StatelessWidget {
           const SingleActivator(LogicalKeyboardKey.keyW, control: true):
               _onClosePressed,
           const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
-            onNewPressed?.call();
+            widget.onNewPressed?.call();
           },
           ...Map.fromIterable(
             List<int>.generate(9, (index) => index),
@@ -283,9 +378,11 @@ class TabView extends StatelessWidget {
               return () {
                 // If it's the last, move to the last tab
                 if (tab == 8) {
-                  onChanged?.call(tabs.length - 1);
+                  widget.onChanged?.call(widget.tabs.length - 1);
                 } else {
-                  if (tabs.length - 1 >= tab) onChanged?.call(tab);
+                  if (widget.tabs.length - 1 >= tab) {
+                    widget.onChanged?.call(tab);
+                  }
                 }
               };
             },
@@ -296,11 +393,13 @@ class TabView extends StatelessWidget {
     }
     return tabBar;
   }
-}
 
-const double _kMaxTileWidth = 240.0;
-const double _kMinTileWidth = 100.0;
-const double _kTileHeight = 35.0;
+  @override
+  void dispose() {
+    widget.scrollController.dispose();
+    super.dispose();
+  }
+}
 
 class Tab {
   const Tab({
@@ -396,7 +495,7 @@ class __TabState extends State<_Tab>
             maxWidth: _kMaxTileWidth,
             minWidth: _kMinTileWidth,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           decoration: BoxDecoration(
             /// Using a [FocusBorder] here would be more adequate, but it
             /// seems it disabled the reordering effect. Using this boder
@@ -435,28 +534,16 @@ class __TabState extends State<_Tab>
                       secondaryBorder: BorderSide.none,
                     ),
                     child: IconButton(
-                      icon: Icon(widget.tab.closeIcon, size: 14.0),
+                      icon: Icon(widget.tab.closeIcon, size: 12.0),
                       onPressed: widget.tab.onClosed,
                       style: ButtonStyle(
-                        foregroundColor: ButtonState.resolveWith((states) {
-                          if (state.isDisabled || state.isNone) {
-                            return FluentTheme.of(context).disabledColor;
-                          } else {
-                            return FluentTheme.of(context).inactiveColor;
-                          }
-                        }),
-                        backgroundColor: ButtonState.resolveWith((states) {
-                          return state.isNone
-                              ? Colors.transparent
-                              : ButtonThemeData.buttonColor(
-                                  theme.brightness,
-                                  state,
-                                );
-                        }),
                         shape: ButtonState.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(2),
                         )),
-                        padding: ButtonState.all(EdgeInsets.zero),
+                        padding: ButtonState.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
+                        ),
                       ),
                     ),
                   ),
