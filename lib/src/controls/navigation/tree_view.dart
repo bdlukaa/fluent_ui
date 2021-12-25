@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _whiteSpace = 28.0;
 
@@ -24,8 +25,10 @@ enum TreeViewSelectionMode {
   multiple,
 }
 
-/// The item used by [TreeView]
-class TreeViewItem {
+/// The item used by [TreeView] to render tiles
+class TreeViewItem with Diagnosticable {
+  final Key? key;
+
   /// The item leading
   ///
   /// Usually an [Icon]
@@ -44,26 +47,56 @@ class TreeViewItem {
   /// Defaults to `true`
   final bool collapsable;
 
+  TreeViewItem? _parent;
+
   /// [TreeViewItem] that owns the [children] collection that this node is part
   /// of.
   ///
   /// If null, this is the root node
-  TreeViewItem? parent;
+  TreeViewItem? get parent => _parent;
 
   /// Whether the current item is expanded.
   ///
   /// It has no effect if [children] is empty.
   bool expanded;
 
+  /// Whether the current item is selected.
+  ///
+  /// If [TreeView.selectionMode] is [TreeViewSelectionMode.none], this has no
+  /// effect. If it's [TreeViewSelectionMode.single], this item is going to be
+  /// the only selected item. If it's [TreeViewSelectionMode.multiple], this
+  /// item is going to be one of the selected items
   bool? selected;
 
+  /// Called when this item is invoked
+  final VoidCallback? onInvoked;
+
+  /// Whether this item is visible or not. Used to not lose the item state while
+  /// it's not on the screen
+  bool _visible = true;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
+  final FocusNode? focusNode;
+
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  final String? semanticLabel;
+
+  /// Creates a tab view item
   TreeViewItem({
+    this.key,
     this.leading,
     required this.content,
     this.children = const [],
     this.collapsable = true,
     this.expanded = true,
     this.selected = false,
+    this.onInvoked,
+    this.autofocus = false,
+    this.focusNode,
+    this.semanticLabel,
   });
 
   /// Indicates how far from the root node this child node is.
@@ -127,6 +160,24 @@ class TreeViewItem {
 
     selected = hasNull || (hasTrue && hasFalse) ? null : hasTrue;
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('hasLeading',
+          value: leading != null, ifFalse: 'no leading'))
+      ..add(FlagProperty('hasChildren',
+          value: children.isNotEmpty, ifFalse: 'has children'))
+      ..add(FlagProperty('collapsable',
+          value: collapsable, defaultValue: true, ifFalse: 'uncollapsable'))
+      ..add(FlagProperty('isRootNode',
+          value: parent == null, ifFalse: 'has parent'))
+      ..add(FlagProperty('expanded',
+          value: expanded, defaultValue: true, ifFalse: 'collapsed'))
+      ..add(FlagProperty('selected',
+          value: selected, defaultValue: false, ifFalse: 'unselected'));
+  }
 }
 
 extension TreeViewItemCollection on List<TreeViewItem> {
@@ -139,15 +190,14 @@ extension TreeViewItemCollection on List<TreeViewItem> {
       final List<TreeViewItem> list = [];
       for (final item in [...this]) {
         list.add(item);
-        if (assignParent) item.parent = parent;
-        if (item.expanded) {
+        if (assignParent) item._parent = parent;
+        for (final child in item.children) {
           // only add the children when it's expanded
-          for (final child in item.children) {
-            if (assignParent) child.parent = item;
-            list.add(child);
-            if (child.expanded) {
-              list.addAll(child.children.build(parent: child));
-            }
+          child._visible = item.expanded;
+          if (assignParent) child._parent = item;
+          list.add(child);
+          if (child.expanded) {
+            list.addAll(child.children.build(parent: child));
           }
         }
       }
@@ -181,6 +231,11 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 /// icons for the parent items and file icons for the leaf items.
 ///
 /// ![TreeView with Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
+///
+/// See also:
+///
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
+///  * [Checkbox], used on multiple selection mode
 class TreeView extends StatefulWidget {
   /// Creates a tree view.
   ///
@@ -188,8 +243,8 @@ class TreeView extends StatefulWidget {
   const TreeView({
     Key? key,
     required this.items,
-    this.canDragItems = false,
     this.selectionMode = TreeViewSelectionMode.none,
+    this.onItemInvoked,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -198,15 +253,24 @@ class TreeView extends StatefulWidget {
   /// Must not be empty
   final List<TreeViewItem> items;
 
-  final bool canDragItems;
-
   /// The current selection mode.
   ///
   /// [TreeViewSelectionMode.none] is used by default
   final TreeViewSelectionMode selectionMode;
 
+  final ValueChanged<TreeViewItem>? onItemInvoked;
+
   @override
   _TreeViewState createState() => _TreeViewState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(EnumProperty('selectionMode', selectionMode,
+          defaultValue: TreeViewSelectionMode.none))
+      ..add(IterableProperty<TreeViewItem>('items', items));
+  }
 }
 
 class _TreeViewState extends State<TreeView> {
@@ -227,6 +291,12 @@ class _TreeViewState extends State<TreeView> {
   }
 
   @override
+  void dispose() {
+    items.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return Container(
@@ -238,7 +308,7 @@ class _TreeViewState extends State<TreeView> {
           final item = items[index];
 
           return _TreeViewItem(
-            key: ValueKey<TreeViewItem>(item),
+            key: item.key ?? ValueKey<TreeViewItem>(item),
             item: item,
             selectionMode: widget.selectionMode,
             onSelect: () {
@@ -277,30 +347,15 @@ class _TreeViewState extends State<TreeView> {
             },
             onExpandToggle: () {
               if (item.collapsable) {
-                late int lengthDifference;
                 setState(() {
                   item.expanded = !item.expanded;
-                  final newItems = widget.items.build();
-                  lengthDifference = items.length - newItems.length;
-                  items = newItems;
+                  items = widget.items.build();
                 });
-                // switch (widget.selectionMode) {
-                //   case TreeViewSelectionMode.single:
-                //     final current = widget.selectedItems.first;
-                //     if (lengthDifference.isNegative) {
-                //       widget.onSingleItemSelected?.call(
-                //         current + (-lengthDifference),
-                //       );
-                //     } else {
-                //       widget.onSingleItemSelected?.call(
-                //         current - lengthDifference,
-                //       );
-                //     }
-                //     break;
-                //   default:
-                //     break;
-                // }
               }
+            },
+            onInvoked: () {
+              item.onInvoked?.call();
+              widget.onItemInvoked?.call(item);
             },
           );
         }),
@@ -316,31 +371,40 @@ class _TreeViewItem extends StatelessWidget {
     required this.selectionMode,
     required this.onSelect,
     required this.onExpandToggle,
+    required this.onInvoked,
   }) : super(key: key);
 
   final TreeViewItem item;
   final TreeViewSelectionMode selectionMode;
   final VoidCallback onSelect;
   final VoidCallback onExpandToggle;
+  final VoidCallback onInvoked;
 
   @override
   Widget build(BuildContext context) {
+    if (!item._visible) return const SizedBox.shrink();
     final theme = FluentTheme.of(context);
     final selected = item.selected ?? false;
     return HoverButton(
       onPressed: selectionMode == TreeViewSelectionMode.none
-          ? null
+          ? onInvoked
           : selectionMode == TreeViewSelectionMode.single
-              ? onSelect
-              : () {},
+              ? () {
+                  onSelect();
+                  onInvoked();
+                }
+              : onInvoked,
+      autofocus: item.autofocus,
+      focusNode: item.focusNode,
+      semanticLabel: item.semanticLabel,
+      margin: const EdgeInsets.symmetric(
+        vertical: 2.0,
+        horizontal: 4.0,
+      ),
       builder: (context, states) {
         return Stack(
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 2.0,
-                horizontal: 4.0,
-              ),
               height:
                   selectionMode == TreeViewSelectionMode.multiple ? 28.0 : 26.0,
               padding: EdgeInsets.only(
@@ -349,7 +413,8 @@ class _TreeViewItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color: ButtonThemeData.uncheckedInputColor(
                   theme,
-                  selectionMode == TreeViewSelectionMode.multiple
+                  [TreeViewSelectionMode.multiple, TreeViewSelectionMode.none]
+                          .contains(selectionMode)
                       ? states
                       : selected && (states.isPressing || states.isNone)
                           ? {ButtonStates.hovering}
@@ -369,6 +434,7 @@ class _TreeViewItem extends StatelessWidget {
                         checked: item.selected,
                         onChanged: (value) {
                           onSelect();
+                          onInvoked();
                         },
                       ),
                     ),
@@ -410,9 +476,9 @@ class _TreeViewItem extends StatelessWidget {
             ),
             if (selected && selectionMode == TreeViewSelectionMode.single)
               Positioned(
-                top: 8.0,
-                bottom: 8.0,
-                left: 4.0,
+                top: 6.0,
+                bottom: 6.0,
+                left: 0.0,
                 child: Container(
                   width: 3.0,
                   decoration: BoxDecoration(

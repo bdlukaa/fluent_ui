@@ -281,11 +281,29 @@ class _OthersState extends State<Others> {
             ),
           ),
           const SizedBox(height: 20.0),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 380,
+          SizedBox(
+            height: 380.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 380,
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(items: items),
+                ),
+                Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 380,
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(
                         color: FluentTheme.of(context).inactiveColor),
@@ -293,12 +311,15 @@ class _OthersState extends State<Others> {
                   child: TreeView(
                     selectionMode: TreeViewSelectionMode.single,
                     items: items,
+                    onItemInvoked: (item) => debugPrint('$item'),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 380,
+                Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 380,
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(
                         color: FluentTheme.of(context).inactiveColor),
@@ -306,10 +327,11 @@ class _OthersState extends State<Others> {
                   child: TreeView(
                     selectionMode: TreeViewSelectionMode.multiple,
                     items: items,
+                    onItemInvoked: (item) => debugPrint('$item'),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
