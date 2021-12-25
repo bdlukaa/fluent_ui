@@ -3,10 +3,14 @@ Date format: DD/MM/YYYY
 ## [3.5.3] - [DD/MM/YYYY]
 
 - Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))
+- Fix `Tooltip.useMousePosition`
+- Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
 - Fix scroll buttons when there are too many tabs in `TabView` ([#92](https://github.com/bdlukaa/fluent_ui/issues/92))
 - Fix button style on tab in `TabView` ([#90](https://github.com/bdlukaa/fluent_ui/issues/90))
-- Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
 - Added *Close on middle click* on tabs in `TabView` ([#91](https://github.com/bdlukaa/fluent_ui/issues/91))
+- Added `newTabLabel`, `closeTabLabel`, `scrollTabBackward`, `scrollTabForward` to `FluentLocalizations`
+- Fix `TabView`'s text when it's too long. Now it's clipped when overflow and line doesn't break
+- Added `TabView.closeButtonVisibility`. Defaults to `CloseButtonVisibilityMode.always`
 
 ## [3.5.2] - [17/12/2021]
 

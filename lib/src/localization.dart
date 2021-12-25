@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 ///   * [DefaultFluentLocalizations], the default, English-only, implementation
 ///    of this interface.
 abstract class FluentLocalizations {
+  const FluentLocalizations._();
+
   /// Label for "close" buttons and menu items.
   String get closeButtonLabel;
 
@@ -55,6 +57,18 @@ abstract class FluentLocalizations {
 
   /// The label for the select all button on the text selection controls
   String get selectAllButtonLabel;
+
+  /// The label used by [TabView]'s new button
+  String get newTabLabel;
+
+  /// The label used by [TabView]'s close button
+  String get closeTabLabel;
+
+  /// The label used by [TabView]'s scroll backward button
+  String get scrollTabBackward;
+
+  /// The label used by [TabView]'s scroll forward button
+  String get scrollTabForward;
 
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
@@ -130,6 +144,18 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   @override
   String get selectAllButtonLabel => 'Select all';
+
+  @override
+  String get newTabLabel => 'Add new tab';
+
+  @override
+  String get closeTabLabel => 'Close tab (Ctrl+F4)';
+
+  @override
+  String get scrollTabBackward => 'Scroll tab list backward';
+
+  @override
+  String get scrollTabForward => 'Scroll tab list forward';
 
   /// Creates an object that provides US English resource values for the material
   /// library widgets.

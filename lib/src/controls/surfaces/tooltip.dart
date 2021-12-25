@@ -549,6 +549,9 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       if (_mouseIsConnected) {
         result = MouseRegion(
           onEnter: (_) => _handleMouseEnter(),
+          onHover: (event) {
+            mousePosition = event.position;
+          },
           onExit: (_) => _handleMouseExit(),
           child: result,
         );

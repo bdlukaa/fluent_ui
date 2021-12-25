@@ -63,7 +63,7 @@ class _OthersState extends State<Others> {
     tabs = List.generate(3, (index) {
       late Tab tab;
       tab = Tab(
-        text: Text('$index'),
+        text: Text('Document $index'),
         onClosed: () {
           _handleTabClosed(tab);
         },
@@ -240,7 +240,7 @@ class _OthersState extends State<Others> {
                 setState(() {
                   late Tab tab;
                   tab = Tab(
-                    text: Text('${tabs.length}'),
+                    text: Text('Document ${tabs.length}'),
                     onClosed: () {
                       _handleTabClosed(tab);
                     },
