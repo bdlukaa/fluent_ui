@@ -20,6 +20,32 @@ class _OthersState extends State<Others> {
 
   bool checked = false;
 
+  final items = [
+    TreeViewItem(
+      content: const Text('Work Documents'),
+      children: [
+        TreeViewItem(content: const Text('XYZ Functional Spec')),
+        TreeViewItem(content: const Text('Feature Schedule')),
+        TreeViewItem(content: const Text('Overall Project Plan')),
+        TreeViewItem(content: const Text('Feature Resources Allocation')),
+      ],
+    ),
+    TreeViewItem(
+      content: const Text('Personal Documents'),
+      children: [
+        TreeViewItem(
+          content: const Text('Home Remodel'),
+          children: [
+            TreeViewItem(content: const Text('Contractor Contact Info')),
+            TreeViewItem(content: const Text('Paint Color Scheme')),
+            TreeViewItem(content: const Text('Flooring weedgrain type')),
+            TreeViewItem(content: const Text('Kitchen cabinet style')),
+          ],
+        ),
+      ],
+    ),
+  ];
+
   @override
   void dispose() {
     flyoutController.dispose();
@@ -253,6 +279,37 @@ class _OthersState extends State<Others> {
                 ),
               ),
             ),
+          ),
+          const SizedBox(height: 20.0),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 380,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(
+                    selectionMode: TreeViewSelectionMode.single,
+                    items: items,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 380,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(
+                    selectionMode: TreeViewSelectionMode.multiple,
+                    items: items,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
