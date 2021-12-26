@@ -23,8 +23,12 @@ class IconButton extends BaseButton {
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final isSmall = SmallIconButton.of(context) != null;
     return ButtonStyle(
-      padding: ButtonState.all(const EdgeInsets.all(10.0)),
+      iconSize: ButtonState.all(isSmall ? 12.0 : 0.0),
+      padding: ButtonState.all(isSmall
+          ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
+          : const EdgeInsets.all(8.0)),
       backgroundColor: ButtonState.resolveWith((states) {
         return states.isDisabled
             ? ButtonThemeData.buttonColor(theme.brightness, states)
@@ -44,5 +48,21 @@ class IconButton extends BaseButton {
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return ButtonTheme.of(context).iconButtonStyle;
+  }
+}
+
+class SmallIconButton extends InheritedWidget {
+  const SmallIconButton({
+    Key? key,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static SmallIconButton? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SmallIconButton>();
+  }
+
+  @override
+  bool updateShouldNotify(SmallIconButton oldWidget) {
+    return true;
   }
 }

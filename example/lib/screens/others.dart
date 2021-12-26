@@ -20,6 +20,32 @@ class _OthersState extends State<Others> {
 
   bool checked = false;
 
+  final items = [
+    TreeViewItem(
+      content: const Text('Work Documents'),
+      children: [
+        TreeViewItem(content: const Text('XYZ Functional Spec')),
+        TreeViewItem(content: const Text('Feature Schedule')),
+        TreeViewItem(content: const Text('Overall Project Plan')),
+        TreeViewItem(content: const Text('Feature Resources Allocation')),
+      ],
+    ),
+    TreeViewItem(
+      content: const Text('Personal Documents'),
+      children: [
+        TreeViewItem(
+          content: const Text('Home Remodel'),
+          children: [
+            TreeViewItem(content: const Text('Contractor Contact Info')),
+            TreeViewItem(content: const Text('Paint Color Scheme')),
+            TreeViewItem(content: const Text('Flooring weedgrain type')),
+            TreeViewItem(content: const Text('Kitchen cabinet style')),
+          ],
+        ),
+      ],
+    ),
+  ];
+
   @override
   void dispose() {
     flyoutController.dispose();
@@ -37,7 +63,7 @@ class _OthersState extends State<Others> {
     tabs = List.generate(3, (index) {
       late Tab tab;
       tab = Tab(
-        text: Text('$index'),
+        text: Text('Document $index'),
         onClosed: () {
           _handleTabClosed(tab);
         },
@@ -189,12 +215,13 @@ class _OthersState extends State<Others> {
           Container(
             height: 400,
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: FluentTheme.of(context).accentColor.resolve(context),
               border: Border.all(
                   color: FluentTheme.of(context).accentColor, width: 1.0),
             ),
             child: TabView(
               currentIndex: currentIndex,
+              tabWidthBehavior: TabWidthBehavior.sizeToContent,
               onChanged: _handleTabChanged,
               onReorder: (oldIndex, newIndex) {
                 setState(() {
@@ -214,7 +241,7 @@ class _OthersState extends State<Others> {
                 setState(() {
                   late Tab tab;
                   tab = Tab(
-                    text: Text('${tabs.length}'),
+                    text: Text('Document ${tabs.length}'),
                     onClosed: () {
                       _handleTabClosed(tab);
                     },
@@ -252,6 +279,65 @@ class _OthersState extends State<Others> {
                   ]),
                 ),
               ),
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          SizedBox(
+            height: 403.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                InfoLabel(
+                  label: 'Simple',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(items: items),
+                  ),
+                ),
+                InfoLabel(
+                  label: 'Single Selection',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(
+                      selectionMode: TreeViewSelectionMode.single,
+                      items: items,
+                      onItemInvoked: (item) => debugPrint('$item'),
+                    ),
+                  ),
+                ),
+                InfoLabel(
+                  label: 'Multiple selection',
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 380,
+                      maxWidth: 350,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: FluentTheme.of(context).inactiveColor),
+                    ),
+                    child: TreeView(
+                      selectionMode: TreeViewSelectionMode.multiple,
+                      items: items,
+                      onItemInvoked: (item) => debugPrint('$item'),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

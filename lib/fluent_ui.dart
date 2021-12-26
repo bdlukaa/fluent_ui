@@ -23,6 +23,7 @@ export 'package:flutter/material.dart'
         kThemeAnimationDuration,
         TooltipVisibility,
         TooltipTriggerMode;
+export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';
 export 'src/icons.dart';
@@ -55,6 +56,7 @@ export 'src/controls/inputs/slider.dart';
 
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view.dart';
+export 'src/controls/navigation/tree_view.dart';
 
 export 'src/controls/surfaces/calendar/calendar_view.dart';
 export 'src/controls/surfaces/bottom_sheet.dart';

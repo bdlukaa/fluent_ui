@@ -79,6 +79,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Scrollbar](#scrollbar)
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
+  - [TreeView](#treeview)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
@@ -1458,6 +1459,53 @@ ComboBox(
 ```
 
 This will produce the same as the image above.
+
+## TreeView
+
+The `TreeView` control enables a hierarchical list with expanding and collapsing nodes that contain nested items. It can be used to illustrate a folder structure or nested relationships in your UI. [Learn More](https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view)
+
+The tree view uses a combination of indentation and icons to represent the nested relationship between parent nodes and child nodes. Collapsed nodes use a chevron pointing to the right, and expanded nodes use a chevron pointing down.
+
+![TreeView Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
+
+You can include an icon in the tree view item data template to represent nodes. For example, if you show a file system hierarchy, you could use folder icons for the parent notes and file icons for the leaf nodes.
+
+![TreeView Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
+
+Here's an example of how to create a tree view:
+
+```dart
+TreeView(
+  items: [
+    TreeViewItem(
+      content: const Text('Work Documents'),
+      children: [
+        TreeViewItem(content: const Text('XYZ Functional Spec')),
+        TreeViewItem(content: const Text('Feature Schedule')),
+        TreeViewItem(content: const Text('Overall Project Plan')),
+        TreeViewItem(content: const Text('Feature Resources Allocation')),
+      ],
+    ),
+    TreeViewItem(
+      content: const Text('Personal Documents'),
+      children: [
+        TreeViewItem(
+          content: const Text('Home Remodel'),
+          children: [
+            TreeViewItem(content: const Text('Contractor Contact Info')),
+            TreeViewItem(content: const Text('Paint Color Scheme')),
+            TreeViewItem(content: const Text('Flooring weedgrain type')),
+            TreeViewItem(content: const Text('Kitchen cabinet style')),
+          ],
+        ),
+      ],
+    ),
+  ],
+  onItemInvoked: (item) => debugPrint(item), // (optional)
+  // (optional). Can be TreeViewSelectionMode.single or TreeViewSelectionMode.multiple
+  selectionMode: TreeViewSelectionMode.none, 
+),
+```
 
 # Mobile Widgets
 

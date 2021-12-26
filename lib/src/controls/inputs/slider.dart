@@ -192,6 +192,7 @@ class _SliderState extends m.State<Slider> {
             label: widget.label,
             focusNode: _focusNode,
             autofocus: widget.autofocus,
+            mouseCursor: MouseCursor.defer,
           ),
         ),
       ),
@@ -200,7 +201,7 @@ class _SliderState extends m.State<Slider> {
       onShowFocusHighlight: (v) => setState(() => _showFocusHighlight = v),
       child: FocusBorder(
         focused: _showFocusHighlight && (_focusNode.hasPrimaryFocus),
-        useStackApproach: false,
+        useStackApproach: true,
         child: child,
       ),
     );

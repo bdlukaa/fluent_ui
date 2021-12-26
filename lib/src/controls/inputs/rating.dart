@@ -235,7 +235,7 @@ class _RatingBarState extends State<RatingBar> {
               _handleUpdate(d.localPosition.dx, size),
           child: FocusBorder(
             focused: widget.onChanged != null && _showFocusHighlight,
-            useStackApproach: false,
+            useStackApproach: true,
             child: TweenAnimationBuilder<double>(
               builder: (context, value, child) {
                 double v = value + 1;

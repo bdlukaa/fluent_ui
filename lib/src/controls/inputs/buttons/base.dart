@@ -91,10 +91,10 @@ class _BaseButtonState extends State<BaseButton> {
     }
 
     final Widget result = HoverButton(
-      onLongPress: widget.onLongPress,
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
       onPressed: widget.onPressed,
+      onLongPress: widget.onLongPress,
       builder: (context, states) {
         T? resolve<T>(
             ButtonState<T>? Function(ButtonStyle? style) getProperty) {
@@ -128,6 +128,7 @@ class _BaseButtonState extends State<BaseButton> {
               vertical: theme.visualDensity.vertical,
             ))
             .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
+        final double? iconSize = resolve<double?>((style) => style?.iconSize);
         Widget result = PhysicalModel(
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? Colors.black,
@@ -146,7 +147,10 @@ class _BaseButtonState extends State<BaseButton> {
             ),
             padding: padding,
             child: IconTheme.merge(
-              data: IconThemeData(color: resolvedForegroundColor, size: 14.0),
+              data: IconThemeData(
+                color: resolvedForegroundColor,
+                size: iconSize ?? 14.0,
+              ),
               child: DefaultTextStyle(
                 style: (resolvedTextStyle ?? const TextStyle(inherit: true))
                     .copyWith(color: resolvedForegroundColor),

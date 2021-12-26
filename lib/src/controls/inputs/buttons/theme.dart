@@ -14,6 +14,7 @@ class ButtonStyle with Diagnosticable {
     this.padding,
     this.border,
     this.shape,
+    this.iconSize,
   });
 
   final ButtonState<TextStyle?>? textStyle;
@@ -32,6 +33,8 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<OutlinedBorder?>? shape;
 
+  final ButtonState<double?>? iconSize;
+
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
     return ButtonStyle(
@@ -43,6 +46,7 @@ class ButtonStyle with Diagnosticable {
       padding: other.padding ?? padding,
       border: other.border ?? border,
       shape: other.shape ?? shape,
+      iconSize: other.iconSize ?? iconSize,
     );
   }
 
@@ -68,6 +72,12 @@ class ButtonStyle with Diagnosticable {
       shape: ButtonState.lerp(a?.shape, b?.shape, t, (a, b, t) {
         return ShapeBorder.lerp(a, b, t) as OutlinedBorder;
       }),
+      iconSize: ButtonState.lerp(
+        a?.iconSize,
+        b?.iconSize,
+        t,
+        lerpDouble,
+      ),
     );
   }
 }

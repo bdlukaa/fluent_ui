@@ -1,5 +1,28 @@
 Date format: DD/MM/YYYY
 
+## [3.6.0] - TabView Update - [25/12/2021]
+
+- Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))
+- Fix `Tooltip.useMousePosition`
+- Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
+- Fix scroll buttons when there are too many tabs in `TabView` ([#92](https://github.com/bdlukaa/fluent_ui/issues/92))
+- Fix button style on tab in `TabView` ([#90](https://github.com/bdlukaa/fluent_ui/issues/90))
+- Added *Close on middle click* on tabs in `TabView` ([#91](https://github.com/bdlukaa/fluent_ui/issues/91))
+- Added `newTabLabel`, `closeTabLabel`, `scrollTabBackward`, `scrollTabForward` to `FluentLocalizations`
+- Fix `TabView`'s text when it's too long. Now it's clipped when overflow and line doesn't break
+- Added `TabView.closeButtonVisibility`. Defaults to `CloseButtonVisibilityMode.always`
+- Updated selected tab paint
+- Added `TabView.tabWidthBehavior`. Defaults to `TabWidthBehavior.equal`
+- Added `TabView.header` and `TabView.footer`
+- `Slider`'s mouse cursor is now [MouseCursor.defer]
+- Added `SmallIconButton`, which makes an [IconButton] small if wrapped. It's used by `TextBox`
+- Added `ButtonStyle.iconSize`
+- **BREAKING** `AutoSuggestBox` updates:
+  - Added `FluentLocalizations.noResultsFoundLabel`. "No results found" is the default text
+  - Removed `itemBuilder`, `sorter`, `noResultsFound`, `textBoxBuilder`, `defaultNoResultsFound` and `defaultTextBoxBuilder`
+  - Added `onChanged`, `trailingIcon`, `clearButtonEnabled` and `placeholder`
+  - `controller` is now nullable. If null, an internal controller is creted
+
 ## [3.5.2] - [17/12/2021]
 
 - **BREAKING** Removed `ThemeData.inputMouseCursor`
