@@ -257,7 +257,7 @@ class ContentDialogThemeData {
   factory ContentDialogThemeData.standard(ThemeData style) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
-        color: style.scaffoldBackgroundColor,
+        color: style.dialogBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: kElevationToShadow[8],
       ),

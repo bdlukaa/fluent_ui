@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
@@ -53,6 +54,11 @@ void main() async {
       [TargetPlatform.windows, TargetPlatform.linux]
           .contains(defaultTargetPlatform)) {
     await flutter_acrylic.Window.initialize();
+    await flutter_acrylic.Window.setEffect(
+      effect: WindowEffect.mica,
+      dark: darkMode,
+    );
+    Window.hideWindowControls();
   }
 
   runApp(const MyApp());
@@ -85,6 +91,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {'/': (_) => const MyHomePage()},
           theme: ThemeData(
+            micaBackgroundColor: Colors.transparent,
             accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
                 ? darkMode

@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const EdgeInsets _kDefaultPadding = EdgeInsets.all(5.0);
+const EdgeInsets _kDefaultPadding = EdgeInsets.all(10.0);
 const double _kVerticalOffset = 20.0;
 const double _kContentWidth = 100.0;
 
@@ -91,7 +91,7 @@ class DropDownButton extends StatelessWidget {
       if (title != null) title!,
       Padding(
         padding: EdgeInsets.only(left: padding.left),
-        child: trailing ?? const Icon(FluentIcons.chevron_down, size: 12),
+        child: trailing ?? const Icon(FluentIcons.chevron_down, size: 8),
       ),
     ];
 

@@ -590,10 +590,12 @@ class _TextBoxState extends State<TextBox>
     final Color cursorColor = theme.inactiveColor;
     final Color disabledColor = theme.disabledColor;
     final Color backgroundColor = _effectiveFocusNode.hasFocus
-        ? theme.scaffoldBackgroundColor
+        ? theme.brightness.isLight
+            ? Colors.white
+            : const Color.fromRGBO(30, 30, 30, 0.7)
         : AccentColor('normal', const {
-            'normal': Colors.white,
-            'dark': Color(0xFF2d2d2d),
+            'normal': Color.fromRGBO(255, 255, 255, 0.7),
+            'dark': Color.fromRGBO(255, 255, 255, 0.0605),
           }).resolve(context);
 
     final TextStyle placeholderStyle = widget.placeholderStyle ??
@@ -686,7 +688,7 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: AnimatedContainer(
-          duration: theme.fasterAnimationDuration,
+          duration: const Duration(milliseconds: 0),
           curve: theme.animationCurve,
           decoration: BoxDecoration(
             borderRadius: radius,

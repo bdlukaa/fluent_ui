@@ -210,20 +210,20 @@ class ButtonThemeData with Diagnosticable {
     late Color color;
     if (brightness == Brightness.light) {
       if (states.isPressing) {
-        color = const Color(0xFFf2f2f2);
+        color = const Color.fromRGBO(249, 249, 249, 0.7);
       } else if (states.isHovering) {
-        color = const Color(0xFFF6F6F6);
+        color = const Color.fromRGBO(249, 249, 249, 0.8);
       } else {
-        color = Colors.white;
+        color = const Color.fromRGBO(255, 255, 255, 0.98);
       }
       return color;
     } else {
       if (states.isPressing) {
-        color = const Color(0xFF272727);
+        color = const Color.fromRGBO(255, 255, 255, 0.0837);
       } else if (states.isHovering) {
-        color = const Color(0xFF323232);
+        color = const Color.fromRGBO(255, 255, 255, 0.0837);
       } else {
-        color = const Color(0xFF2b2b2b);
+        color = const Color.fromRGBO(255, 255, 255, 0.0605);
       }
       return color;
     }

@@ -39,7 +39,7 @@ class Button extends BaseButton {
         if (states.isPressing) return 0.0;
         return 0.3;
       }),
-      shadowColor: ButtonState.all(theme.shadowColor),
+      shadowColor: ButtonState.all(const Color.fromRGBO(255, 255, 255, 0.04)),
       padding: ButtonState.all(const EdgeInsets.only(
         left: 11.0,
         top: 5.0,
@@ -60,12 +60,13 @@ class Button extends BaseButton {
       }),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;
-        return ButtonThemeData.buttonColor(theme.brightness, states).basedOnLuminance().toAccentColor()[
+        return theme.brightness.isLight ? Colors.black : Colors.white;
+        /*return ButtonThemeData.buttonColor(theme.brightness, states).basedOnLuminance().toAccentColor()[
             states.isPressing
                 ? theme.brightness.isLight
                     ? 'lighter'
                     : 'dark'
-                : 'normal'];
+                : 'normal'];*/
       }),
     );
   }

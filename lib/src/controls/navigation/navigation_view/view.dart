@@ -132,6 +132,7 @@ class NavigationViewState extends State<NavigationView> {
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
+    final ThemeData style = FluentTheme.of(context);
 
     Widget appBar = () {
       if (widget.appBar != null) {
@@ -336,7 +337,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor: theme.backgroundColor,
+                          backgroundColor: style.navViewPaneBackgroundColor,
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -431,7 +432,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: PrimaryScrollController(
                       controller: scrollController,
                       child: Mica(
-                        backgroundColor: theme.backgroundColor,
+                        backgroundColor: style.navViewPaneBackgroundColor,
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(

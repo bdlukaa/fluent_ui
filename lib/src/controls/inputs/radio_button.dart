@@ -125,7 +125,7 @@ class RadioButton extends StatelessWidget {
         if (content != null) {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
-            const SizedBox(width: 6.0),
+            const SizedBox(width: 10.0),
             content!,
           ]);
         }
@@ -244,8 +244,8 @@ class RadioButtonThemeData with Diagnosticable {
           color: states.isPressing
               ? backgroundColor
               : states.isHovering
-                  ? backgroundColor.withOpacity(0.8)
-                  : backgroundColor.withOpacity(0.0),
+                  ? style.inactiveColor.withOpacity(0.1)
+                  : null,
           border: Border.all(
             width: states.isPressing ? 4.5 : 1,
             color: !states.isDisabled

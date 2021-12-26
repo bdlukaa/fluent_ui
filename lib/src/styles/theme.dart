@@ -172,6 +172,8 @@ class ThemeData with Diagnosticable {
   final Color scaffoldBackgroundColor;
   final Color acrylicBackgroundColor;
   final Color micaBackgroundColor;
+  final Color dialogBackgroundColor;
+  final Color navViewPaneBackgroundColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -225,6 +227,8 @@ class ThemeData with Diagnosticable {
     required this.scaffoldBackgroundColor,
     required this.acrylicBackgroundColor,
     required this.micaBackgroundColor,
+    required this.dialogBackgroundColor,
+    required this.navViewPaneBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.chipTheme,
@@ -268,6 +272,8 @@ class ThemeData with Diagnosticable {
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
+    Color? dialogBackgroundColor,
+    Color? navViewPaneBackgroundColor,
     Color? shadowColor,
     Color? uncheckedColor,
     Color? checkedColor,
@@ -316,13 +322,20 @@ class ThemeData with Diagnosticable {
     disabledColor ??=
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
+    /*scaffoldBackgroundColor ??=
+        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);*/
+    scaffoldBackgroundColor ??= isLight
+        ? const Color.fromRGBO(255, 255, 255, 0.5)
+        : const Color.fromRGBO(58, 58, 58, 0.2);
     acrylicBackgroundColor ??= isLight
         ? const Color.fromARGB(204, 255, 255, 255)
         : const Color(0x7F1e1e1e);
     micaBackgroundColor ??=
         isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
+    dialogBackgroundColor ??=
+        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
+    navViewPaneBackgroundColor ??=
+        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)
         : const Color.fromRGBO(255, 255, 255, 0.786);
@@ -383,6 +396,8 @@ class ThemeData with Diagnosticable {
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor,
+      dialogBackgroundColor: dialogBackgroundColor,
+      navViewPaneBackgroundColor: navViewPaneBackgroundColor,
       shadowColor: shadowColor,
       uncheckedColor: uncheckedColor,
       checkedColor: checkedColor,
@@ -424,6 +439,10 @@ class ThemeData with Diagnosticable {
       disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
       scaffoldBackgroundColor:
           Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
+      dialogBackgroundColor:
+          Color.lerp(a.dialogBackgroundColor, b.dialogBackgroundColor, t)!,
+      navViewPaneBackgroundColor:
+          Color.lerp(a.dialogBackgroundColor, b.navViewPaneBackgroundColor, t)!,
       acrylicBackgroundColor:
           Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
       micaBackgroundColor:
@@ -487,6 +506,8 @@ class ThemeData with Diagnosticable {
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
+    Color? dialogBackgroundColor,
+    Color? navViewPaneBackgroundColor,
     Color? shadowColor,
     Color? uncheckedColor,
     Color? checkedColor,
@@ -536,6 +557,10 @@ class ThemeData with Diagnosticable {
       acrylicBackgroundColor:
           acrylicBackgroundColor ?? this.acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor ?? this.micaBackgroundColor,
+      dialogBackgroundColor:
+          dialogBackgroundColor ?? this.dialogBackgroundColor,
+      navViewPaneBackgroundColor:
+          navViewPaneBackgroundColor ?? this.navViewPaneBackgroundColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
