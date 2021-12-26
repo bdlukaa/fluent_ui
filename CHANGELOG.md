@@ -14,6 +14,14 @@ Date format: DD/MM/YYYY
 - Updated selected tab paint
 - Added `TabView.tabWidthBehavior`. Defaults to `TabWidthBehavior.equal`
 - Added `TabView.header` and `TabView.footer`
+- `Slider`'s mouse cursor is now [MouseCursor.defer]
+- Added `SmallIconButton`, which makes an [IconButton] small if wrapped. It's used by `TextBox`
+- Added `ButtonStyle.iconSize`
+- **BREAKING** `AutoSuggestBox` updates:
+  - Added `FluentLocalizations.noResultsFoundLabel`. "No results found" is the default text
+  - Removed `itemBuilder`, `sorter`, `noResultsFound`, `textBoxBuilder`, `defaultNoResultsFound` and `defaultTextBoxBuilder`
+  - Added `onChanged`, `trailingIcon`, `clearButtonEnabled` and `placeholder`
+  - `controller` is now nullable. If null, an internal controller is creted
 
 ## [3.5.2] - [17/12/2021]
 

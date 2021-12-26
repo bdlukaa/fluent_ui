@@ -10,12 +10,25 @@ class Forms extends StatefulWidget {
 }
 
 class _FormsState extends State<Forms> {
-  final autoSuggestBox = TextEditingController();
-
   final _clearController = TextEditingController();
   bool _showPassword = false;
 
-  final values = ['Blue', 'Green', 'Yellow', 'Red'];
+  static const values = <String>[
+    'Red',
+    'Yellow',
+    'Green',
+    'Cyan',
+    'Blue',
+    'Magenta',
+    'Orange',
+    'Violet',
+    'Pink',
+    'Brown',
+    'Purple',
+    'Gray',
+    'Black',
+    'White',
+  ];
   String? comboBoxValue;
 
   DateTime date = DateTime.now();
@@ -53,28 +66,16 @@ class _FormsState extends State<Forms> {
             const SizedBox(width: 10),
             Expanded(
               child: AutoSuggestBox<String>(
-                controller: autoSuggestBox,
                 items: values,
+                placeholder: 'Pick a color',
+                trailingIcon: IconButton(
+                  icon: const Icon(FluentIcons.search),
+                  onPressed: () {
+                    debugPrint('trailing button pressed');
+                  },
+                ),
                 onSelected: (text) {
                   print(text);
-                },
-                textBoxBuilder: (context, controller, focusNode, key) {
-                  return TextBox(
-                    key: key,
-                    controller: controller,
-                    focusNode: focusNode,
-                    suffixMode: OverlayVisibilityMode.editing,
-                    suffix: IconButton(
-                      icon: const Icon(FluentIcons.close),
-                      onPressed: () {
-                        controller.clear();
-                        focusNode.unfocus();
-                      },
-                    ),
-                    placeholder: 'Type a color',
-                    clipBehavior:
-                        focusNode.hasFocus ? Clip.none : Clip.antiAlias,
-                  );
                 },
               ),
             ),

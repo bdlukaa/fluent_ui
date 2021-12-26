@@ -413,7 +413,7 @@ class _TabViewState extends State<TabView> {
                               scrollController.backward();
                             }
                           : null,
-                      localizations.scrollTabBackward,
+                      localizations.scrollTabBackwardLabel,
                     ),
                   if (scrollable)
                     Expanded(child: listView)
@@ -430,7 +430,7 @@ class _TabViewState extends State<TabView> {
                               scrollController.forward();
                             }
                           : null,
-                      localizations.scrollTabForward,
+                      localizations.scrollTabForwardLabel,
                     ),
                   if (widget.showNewButton)
                     _buttonTabBuilder(

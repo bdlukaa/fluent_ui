@@ -65,10 +65,13 @@ abstract class FluentLocalizations {
   String get closeTabLabel;
 
   /// The label used by [TabView]'s scroll backward button
-  String get scrollTabBackward;
+  String get scrollTabBackwardLabel;
 
   /// The label used by [TabView]'s scroll forward button
-  String get scrollTabForward;
+  String get scrollTabForwardLabel;
+
+  /// The label used by [AutoSuggestBox] when the results can't be found
+  String get noResultsFoundLabel;
 
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
@@ -152,10 +155,13 @@ class DefaultFluentLocalizations implements FluentLocalizations {
   String get closeTabLabel => 'Close tab (Ctrl+F4)';
 
   @override
-  String get scrollTabBackward => 'Scroll tab list backward';
+  String get scrollTabBackwardLabel => 'Scroll tab list backward';
 
   @override
-  String get scrollTabForward => 'Scroll tab list forward';
+  String get scrollTabForwardLabel => 'Scroll tab list forward';
+
+  @override
+  String get noResultsFoundLabel => 'No results found';
 
   /// Creates an object that provides US English resource values for the material
   /// library widgets.

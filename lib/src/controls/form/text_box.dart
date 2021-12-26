@@ -762,16 +762,18 @@ class _TextBoxState extends State<TextBox>
       data: widget.iconButtonThemeData ?? const ButtonThemeData(),
       child: IconTheme.merge(
         data: const IconThemeData(size: 14),
-        child: () {
-          if (widget.header != null) {
-            return InfoLabel(
-              child: listener,
-              label: widget.header!,
-              labelStyle: widget.headerStyle,
-            );
-          }
-          return listener;
-        }(),
+        child: SmallIconButton(
+          child: () {
+            if (widget.header != null) {
+              return InfoLabel(
+                child: listener,
+                label: widget.header!,
+                labelStyle: widget.headerStyle,
+              );
+            }
+            return listener;
+          }(),
+        ),
       ),
     );
   }

@@ -192,6 +192,7 @@ class _SliderState extends m.State<Slider> {
             label: widget.label,
             focusNode: _focusNode,
             autofocus: widget.autofocus,
+            mouseCursor: MouseCursor.defer,
           ),
         ),
       ),
