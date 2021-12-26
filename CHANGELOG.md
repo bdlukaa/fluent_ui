@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.6.0] - TabView Update - [DD/MM/YYYY]
+## [3.6.0] - TabView Update - [25/12/2021]
 
 - Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))
 - Fix `Tooltip.useMousePosition`
