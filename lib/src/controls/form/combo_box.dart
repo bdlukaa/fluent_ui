@@ -329,10 +329,13 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                               constraints.maxHeight;
                       return Scrollbar(
                         isAlwaysShown: isScrollable,
-                        child: ListView(
-                          padding: _kListPadding,
-                          shrinkWrap: true,
-                          children: children,
+                        child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                          child: ListView(
+                            padding: _kListPadding,
+                            shrinkWrap: true,
+                            children: children,
+                          ),
                         ),
                       );
                     },
