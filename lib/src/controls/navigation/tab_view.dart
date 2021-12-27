@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
 const double _kTileHeight = 34.0;
 const double _kButtonWidth = 40.0;
@@ -254,7 +255,17 @@ class _TabViewState extends State<TabView> {
     );
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
-      constraints: BoxConstraints(maxWidth: preferredTabWidth),
+      constraints: BoxConstraints(
+        maxWidth: () {
+          switch (widget.tabWidthBehavior) {
+            case TabWidthBehavior.sizeToContent:
+              return double.infinity;
+            default:
+              return widget.maxTabWidth;
+          }
+        }(),
+        minWidth: _kMinTileWidth,
+      ),
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
       child: child,
@@ -355,10 +366,7 @@ class _TabViewState extends State<TabView> {
                 final double preferredTabWidth =
                     ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
                             widget.tabs.length)
-                        .clamp(
-                  0,
-                  widget.maxTabWidth,
-                );
+                        .clamp(_kMinTileWidth, widget.maxTabWidth);
 
                 final Widget listView = Listener(
                   onPointerSignal: widget.wheelScroll
@@ -645,6 +653,9 @@ class __TabState extends State<_Tab>
                       (widget.tabWidthBehavior == TabWidthBehavior.compact &&
                           widget.selected))
                     Flexible(
+                      fit: widget.tabWidthBehavior == TabWidthBehavior.equal
+                          ? FlexFit.tight
+                          : FlexFit.loose,
                       child: DefaultTextStyle(
                         style: (theme.typography.body ?? const TextStyle())
                             .copyWith(
@@ -663,24 +674,18 @@ class __TabState extends State<_Tab>
                           (widget.visibilityMode ==
                                   CloseButtonVisibilityMode.onHover &&
                               states.isHovering)))
-                    FocusTheme(
-                      data: const FocusThemeData(
-                        primaryBorder: BorderSide.none,
-                        secondaryBorder: BorderSide.none,
-                      ),
-                      child: Tooltip(
-                        message: localizations.closeTabLabel,
-                        child: IconButton(
-                          icon: Icon(widget.tab.closeIcon, size: 12.0),
-                          onPressed: widget.tab.onClosed,
-                          style: ButtonStyle(
-                            shape: ButtonState.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2),
-                            )),
-                            padding: ButtonState.all(
-                              const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 6),
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 2.0),
+                      child: FocusTheme(
+                        data: const FocusThemeData(
+                          primaryBorder: BorderSide.none,
+                          secondaryBorder: BorderSide.none,
+                        ),
+                        child: Tooltip(
+                          message: localizations.closeTabLabel,
+                          child: IconButton(
+                            icon: Icon(widget.tab.closeIcon),
+                            onPressed: widget.tab.onClosed,
                           ),
                         ),
                       ),
@@ -717,18 +722,7 @@ class __TabState extends State<_Tab>
           selected: widget.selected,
           focusable: true,
           focused: states.isFocused,
-          child: child,
-          // child: SizeTransition(
-          //   sizeFactor: Tween<double>(
-          //     begin: 0.8,
-          //     end: 1.0,
-          //   ).animate(CurvedAnimation(
-          //     curve: widget.animationCurve,
-          //     parent: _controller,
-          //   )),
-          //   axis: Axis.horizontal,
-          //   child: child,
-          // ),
+          child: SmallIconButton(child: child),
         );
       },
     );

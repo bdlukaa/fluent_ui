@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [3.6.1] - [27/12/2021]
+
+- Fixed missing padding before close button on `TabView` ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
+- Readded tab minimal size for `equal` and `sizeToContent` tab width behaviours ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
+- `TabView`'s close button now uses `SmallIconButton`
+
 ## [3.6.0] - TabView Update - [25/12/2021]
 
 - Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))
