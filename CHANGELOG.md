@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 - Fixed missing padding before close button on `TabView` ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
 - Readded tab minimal size for `equal` and `sizeToContent` tab width behaviours ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
 - `TabView`'s close button now uses `SmallIconButton`
+- If a tab is partially off the view, it's scrolled until it's visible
 - Fix `IconButton`'s icon size
 - Update `OutlinedButton`, `FilledButton` and `TextButton` styles
 

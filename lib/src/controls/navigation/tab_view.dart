@@ -214,6 +214,9 @@ class _TabViewState extends State<TabView> {
     if (widget.tabs.length != oldWidget.tabs.length) {
       scrollController.itemCount = widget.tabs.length;
     }
+    if (widget.currentIndex != oldWidget.currentIndex) {
+      scrollController.scrollToItem(widget.currentIndex, center: false);
+    }
   }
 
   @override
@@ -261,10 +264,10 @@ class _TabViewState extends State<TabView> {
             case TabWidthBehavior.sizeToContent:
               return double.infinity;
             default:
-              return widget.maxTabWidth;
+              return preferredTabWidth;
           }
         }(),
-        minWidth: _kMinTileWidth,
+        minWidth: preferredTabWidth,
       ),
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
