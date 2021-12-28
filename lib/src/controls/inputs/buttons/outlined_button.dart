@@ -1,5 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// An outlined button
+///
+/// {@macro fluent_ui.buttons.base}
+///
+/// See also:
+///
+///   * [FilledButton], a colored button
+///   * [TextButton], a borderless button with mainly text-based content
 class OutlinedButton extends BaseButton {
   const OutlinedButton({
     Key? key,
@@ -24,31 +32,32 @@ class OutlinedButton extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    Color _color(Set<ButtonStates> states) {
-      if (states.isDisabled) {
-        return theme.disabledColor;
-      } else if (states.isPressing) {
-        return theme.accentColor.resolveFromBrightness(theme.brightness);
-      } else if (states.isHovering) {
-        return theme.accentColor
-            .resolveFromBrightness(theme.brightness, level: 1);
-      } else {
-        return theme.accentColor;
-      }
-    }
-
     return ButtonStyle(
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 12.0,
-        vertical: 8.0,
+        vertical: 6.0,
       )),
       shape: ButtonState.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(2.0),
       )),
-      border: ButtonState.resolveWith((states) {
-        return BorderSide(color: _color(states));
+      border: ButtonState.all(BorderSide(color: theme.inactiveColor)),
+      foregroundColor: ButtonState.all(theme.inactiveColor),
+      backgroundColor: ButtonState.resolveWith((states) {
+        if (states.isDisabled) {
+          return theme.disabledColor.withOpacity(0.30);
+        } else if (states.isPressing) {
+          return theme.inactiveColor.withOpacity(0.25);
+        } else if (states.isHovering) {
+          return theme.inactiveColor.withOpacity(0.10);
+        } else {
+          return Colors.transparent;
+        }
       }),
-      foregroundColor: ButtonState.resolveWith(_color),
+      textStyle: ButtonState.all(const TextStyle(
+        fontSize: 13.0,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+      )),
     );
   }
 

@@ -25,7 +25,7 @@ class IconButton extends BaseButton {
     final theme = FluentTheme.of(context);
     final isSmall = SmallIconButton.of(context) != null;
     return ButtonStyle(
-      iconSize: ButtonState.all(isSmall ? 12.0 : 0.0),
+      iconSize: ButtonState.all(isSmall ? 12.0 : null),
       padding: ButtonState.all(isSmall
           ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
           : const EdgeInsets.all(8.0)),

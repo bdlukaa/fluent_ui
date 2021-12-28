@@ -258,32 +258,6 @@ class _InputsPageState extends State<InputsPage> {
               ]),
             ),
             spacer,
-            TextButton(
-              child: const Text('TEXT BUTTON'),
-              onPressed: disabled
-                  ? null
-                  : () {
-                      print('pressed text button');
-                    },
-            ),
-            spacer,
-            FilledButton(
-              child: const Text('FILLED BUTTON'),
-              onPressed: disabled
-                  ? null
-                  : () {
-                      print('pressed filled button');
-                    },
-            ),
-            spacer,
-            OutlinedButton(
-              child: const Text('OUTLINED BUTTON'),
-              onPressed: disabled
-                  ? null
-                  : () {
-                      print('pressed outlined button');
-                    },
-            ),
           ]),
         ),
       ),

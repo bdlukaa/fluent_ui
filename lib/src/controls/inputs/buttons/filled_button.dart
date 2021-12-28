@@ -1,6 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// A colored button.
+///
+/// {@macro fluent_ui.buttons.base}
+///
+/// See also:
+///
+///   * [OutlinedButton], an outlined button
+///   * [TextButton], a borderless button with mainly text-based content
 class FilledButton extends BaseButton {
+  /// Creates a filled button
   const FilledButton({
     Key? key,
     required Widget child,
@@ -29,6 +38,9 @@ class FilledButton extends BaseButton {
         horizontal: 12.0,
         vertical: 8.0,
       )),
+      shape: ButtonState.all(RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      )),
       backgroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
           switch (theme.brightness) {
@@ -38,10 +50,12 @@ class FilledButton extends BaseButton {
               return theme.accentColor.darkest;
           }
         } else if (states.isPressing) {
-          return theme.accentColor.resolveFromBrightness(theme.brightness);
+          return theme.accentColor.resolveFromBrightness(
+            theme.brightness,
+            level: 1,
+          );
         } else if (states.isHovering) {
-          return theme.accentColor
-              .resolveFromBrightness(theme.brightness, level: 1);
+          return theme.accentColor.resolveFromBrightness(theme.brightness);
         } else {
           return theme.accentColor;
         }
@@ -49,6 +63,11 @@ class FilledButton extends BaseButton {
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;
       }),
+      textStyle: ButtonState.all(const TextStyle(
+        fontSize: 13.0,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+      )),
     );
   }
 

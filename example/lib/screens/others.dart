@@ -156,20 +156,6 @@ class _OthersState extends State<Others> {
               ),
             ),
           ),
-          Wrap(children: [
-            const ListTile(
-              title: Text('ListTile Title'),
-              subtitle: Text('ListTile Subtitle'),
-            ),
-            TappableListTile(
-              leading: const CircleAvatar(),
-              title: const Text('TappableListTile Title'),
-              subtitle: const Text('TappableListTile Subtitle'),
-              onTap: () {
-                print('tapped tappable list tile');
-              },
-            ),
-          ]),
           Row(children: const [
             Padding(
               padding: EdgeInsets.all(6),
