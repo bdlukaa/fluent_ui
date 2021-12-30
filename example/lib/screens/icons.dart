@@ -78,25 +78,28 @@ class _IconsPageState extends State<IconsPage> {
                                 ),
                               ),
                             ),
-                            child: Tooltip(
-                              message:
-                                  "Internal code: FluentIcons.${e.key})\n(tap to copy to clipboard)",
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    e.value,
-                                    size: 40,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      snakeCasetoSentenceCase(e.key),
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.fade,
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: Tooltip(
+                                message:
+                                    "Internal code: FluentIcons.${e.key})\n(tap to copy to clipboard)",
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      e.value,
+                                      size: 40,
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        snakeCasetoSentenceCase(e.key),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ))
