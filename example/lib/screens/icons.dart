@@ -45,8 +45,8 @@ class _IconsPageState extends State<IconsPage> {
             ),
             const InfoBar(
               title: Text("Useful info:"),
-              content:
-                  Text("Use the upper right search box to filter the icons. You can also click on any icon to copy its name to the clipboard!"),
+              content: Text(
+                  "Use the upper right search box to filter the icons. You can also click on any icon to copy its name to the clipboard!"),
             ),
             Expanded(
               child: GridView.extent(
@@ -78,22 +78,26 @@ class _IconsPageState extends State<IconsPage> {
                                 ),
                               ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  e.value,
-                                  size: 40,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    e.key,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.fade,
+                            child: Tooltip(
+                              message:
+                                  "Internal code: FluentIcons.${e.key})\n(tap to copy to clipboard)",
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    e.value,
+                                    size: 40,
                                   ),
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      snakeCasetoSentenceCase(e.key),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ))
                       .toList()),
@@ -102,5 +106,10 @@ class _IconsPageState extends State<IconsPage> {
         ),
       ),
     );
+  }
+
+  static String snakeCasetoSentenceCase(String original) {
+    return "${original[0].toUpperCase()}${original.substring(1)}"
+        .replaceAll(RegExp(r'(_|-)+'), ' ');
   }
 }
