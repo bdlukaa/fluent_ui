@@ -1,3 +1,4 @@
+import 'package:example/screens/icons.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -225,6 +226,10 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Colors'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.icon_sets_flag),
+            title: const Text('Icons'),
+          ),
+          PaneItem(
             icon: const Icon(FluentIcons.plain_text),
             title: const Text('Typography'),
           ),
@@ -268,6 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const InputsPage(),
         const Forms(),
         ColorsPage(controller: colorsController),
+        const IconsPage(),
         const TypographyPage(),
         const Mobile(),
         const Others(),

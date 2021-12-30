@@ -179,7 +179,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             Padding(
               padding: const EdgeInsets.only(left: 2.0),
               child: IconButton(
-                icon: const Icon(FluentIcons.close),
+                icon: const Icon(FluentIcons.chrome_close),
                 onPressed: () {
                   controller.clear();
                   focusNode.unfocus();

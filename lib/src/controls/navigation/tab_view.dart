@@ -523,7 +523,7 @@ class Tab {
     Key? key,
     this.icon = const FlutterLogo(),
     required this.text,
-    this.closeIcon = FluentIcons.close,
+    this.closeIcon = FluentIcons.chrome_close,
     this.onClosed,
     this.semanticLabel,
   });
