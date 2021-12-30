@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## Unreleased
+
+- New FluentIcons gallery showcase in example project https://github.com/bdlukaa/fluent_ui/issues/123
+- Updated FluentIcons as per 30/12/2021
+
 ## [3.6.1] - [27/12/2021]
 
 - Fixed missing padding before close button on `TabView` ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
