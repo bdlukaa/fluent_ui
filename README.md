@@ -173,6 +173,10 @@ Inside your app, you use icons to represent an action, such as copying text or n
 Icon(FluentIcons.add),
 ```
 
+For a complete reference of current icons, please check the [online demo](https://bdlukaa.github.io/fluent_ui/) and click on "Icons".
+
+The online demo has a search box and also supports clipboard copy in order to find every icon as fast as possible.
+
 ![](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
 
 ## Colors
