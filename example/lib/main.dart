@@ -1,11 +1,10 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:example/screens/icons.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -16,7 +15,6 @@ import 'screens/mobile.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';
-
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';

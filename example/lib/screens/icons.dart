@@ -1,8 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'settings.dart';
-
 class IconsPage extends StatefulWidget {
   const IconsPage({Key? key}) : super(key: key);
 
