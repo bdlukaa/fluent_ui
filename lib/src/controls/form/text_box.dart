@@ -110,6 +110,7 @@ class TextBox extends StatefulWidget {
     this.header,
     this.headerStyle,
     this.iconButtonThemeData,
+    this.decoration,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -179,6 +180,8 @@ class TextBox extends StatefulWidget {
   final TextCapitalization textCapitalization;
 
   final TextStyle? style;
+
+  final BoxDecoration? decoration;
 
   final StrutStyle? strutStyle;
 
@@ -608,6 +611,15 @@ class _TextBoxState extends State<TextBox>
           fontWeight: FontWeight.w400,
         );
 
+    final BoxDecoration decoration = widget.decoration ?? BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: _effectiveFocusNode.hasFocus ? theme.accentColor : !enabled ? Colors.transparent : theme.brightness.isLight ? const Color.fromRGBO(0, 0, 0, 0.45) : const Color.fromRGBO(255, 255, 255, 0.54),
+          width: _effectiveFocusNode.hasFocus ? 2 : 0,
+        ),
+      ),
+    );
+
     final Color selectionColor = theme.accentColor.withOpacity(0.2);
 
     final Widget paddedEditable = Padding(
@@ -701,20 +713,7 @@ class _TextBoxState extends State<TextBox>
                     ? const Color.fromRGBO(249, 249, 249, 0.3)
                     : const Color.fromRGBO(255, 255, 255, 0.04),
           ),
-          foregroundDecoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: _effectiveFocusNode.hasFocus
-                    ? theme.accentColor
-                    : !enabled
-                        ? Colors.transparent
-                        : theme.brightness.isLight
-                            ? const Color.fromRGBO(0, 0, 0, 0.45)
-                            : const Color.fromRGBO(255, 255, 255, 0.54),
-                width: _effectiveFocusNode.hasFocus ? 2 : 0,
-              ),
-            ),
-          ),
+          foregroundDecoration: decoration,
           constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
           child: _selectionGestureDetectorBuilder.buildGestureDetector(
             behavior: HitTestBehavior.translucent,
