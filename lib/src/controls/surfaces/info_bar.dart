@@ -285,7 +285,7 @@ class InfoBarThemeData with Diagnosticable {
           boxShadow: kElevationToShadow[2],
         );
       },
-      closeIcon: FluentIcons.close,
+      closeIcon: FluentIcons.chrome_close,
       closeIconSize: 16.0,
       icon: (severity) {
         switch (severity) {
