@@ -1,9 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-
 class TextFormBox extends FormField<String> {
-
   TextFormBox({
     Key? key,
     this.prefix,
@@ -58,92 +56,93 @@ class TextFormBox extends FormField<String> {
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
-        (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-        "minLines can't be greater than maxLines",
+          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+          "minLines can't be greater than maxLines",
         ),
         assert(
-        !expands || (maxLines == null && minLines == null),
-        'minLines and maxLines must be null when expands is true.',
+          !expands || (maxLines == null && minLines == null),
+          'minLines and maxLines must be null when expands is true.',
         ),
-        assert(!obscureText || maxLines == 1, 'Obscured fields cannot be multiline.'),
+        assert(!obscureText || maxLines == 1,
+            'Obscured fields cannot be multiline.'),
         assert(maxLength == null || maxLength > 0),
         super(
-        key: key,
-        initialValue: controller?.text ?? initialValue ?? '',
-        onSaved: onSaved,
-        validator: validator,
-        autovalidateMode: autovalidateMode,
-        builder: (FormFieldState<String> field) {
-          final _TextFormBoxState state =
-          field as _TextFormBoxState;
+          key: key,
+          initialValue: controller?.text ?? initialValue ?? '',
+          onSaved: onSaved,
+          validator: validator,
+          autovalidateMode: autovalidateMode,
+          builder: (FormFieldState<String> field) {
+            final _TextFormBoxState state = field as _TextFormBoxState;
 
-          final BoxDecoration? decoration = field.errorText != null ? BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-            ),
-          ) : null;
+            final BoxDecoration? decoration = field.errorText != null
+                ? BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.red,
+                        width: 2,
+                      ),
+                    ),
+                  )
+                : null;
 
-          void onChangedHandler(String value) {
-            field.didChange(value);
-            if (onChanged != null) {
-              onChanged(value);
+            void onChangedHandler(String value) {
+              field.didChange(value);
+              if (onChanged != null) {
+                onChanged(value);
+              }
             }
-          }
 
-          return FormRow(
-            prefix: prefix,
-            padding: EdgeInsets.only(
-                bottom: (field.errorText == null) ? 16.0 : 0
-            ),
-            error: (field.errorText == null) ? null : Text(field.errorText!),
-            child: TextBox(
-              controller: state._effectiveController,
-              focusNode: focusNode,
-              keyboardType: keyboardType,
-              textInputAction: textInputAction,
-              style: style,
-              strutStyle: strutStyle,
-              textAlign: textAlign,
-              textAlignVertical: textAlignVertical,
-              textCapitalization: textCapitalization,
-              autofocus: autofocus,
-              toolbarOptions: toolbarOptions,
-              readOnly: readOnly,
-              showCursor: showCursor,
-              obscuringCharacter: obscuringCharacter,
-              obscureText: obscureText,
-              autocorrect: autocorrect,
-              smartDashesType: smartDashesType,
-              smartQuotesType: smartQuotesType,
-              enableSuggestions: enableSuggestions,
-              maxLines: maxLines,
-              minLines: minLines,
-              expands: expands,
-              maxLength: maxLength,
-              onChanged: onChangedHandler,
-              onTap: onTap,
-              onEditingComplete: onEditingComplete,
-              onSubmitted: onFieldSubmitted,
-              inputFormatters: inputFormatters,
-              enabled: enabled,
-              cursorWidth: cursorWidth,
-              cursorHeight: cursorHeight,
-              cursorColor: cursorColor,
-              scrollPadding: scrollPadding,
-              scrollPhysics: scrollPhysics,
-              keyboardAppearance: keyboardAppearance,
-              enableInteractiveSelection: enableInteractiveSelection,
-              autofillHints: autofillHints,
-              decoration: decoration,
-              placeholder: placeholder,
-              placeholderStyle: placeholderStyle,
-            ),
-          );
-        },
-      );
+            return FormRow(
+              prefix: prefix,
+              padding:
+                  EdgeInsets.only(bottom: (field.errorText == null) ? 16.0 : 0),
+              error: (field.errorText == null) ? null : Text(field.errorText!),
+              child: TextBox(
+                controller: state._effectiveController,
+                focusNode: focusNode,
+                keyboardType: keyboardType,
+                textInputAction: textInputAction,
+                style: style,
+                strutStyle: strutStyle,
+                textAlign: textAlign,
+                textAlignVertical: textAlignVertical,
+                textCapitalization: textCapitalization,
+                autofocus: autofocus,
+                toolbarOptions: toolbarOptions,
+                readOnly: readOnly,
+                showCursor: showCursor,
+                obscuringCharacter: obscuringCharacter,
+                obscureText: obscureText,
+                autocorrect: autocorrect,
+                smartDashesType: smartDashesType,
+                smartQuotesType: smartQuotesType,
+                enableSuggestions: enableSuggestions,
+                maxLines: maxLines,
+                minLines: minLines,
+                expands: expands,
+                maxLength: maxLength,
+                onChanged: onChangedHandler,
+                onTap: onTap,
+                onEditingComplete: onEditingComplete,
+                onSubmitted: onFieldSubmitted,
+                inputFormatters: inputFormatters,
+                enabled: enabled,
+                cursorWidth: cursorWidth,
+                cursorHeight: cursorHeight,
+                cursorColor: cursorColor,
+                scrollPadding: scrollPadding,
+                scrollPhysics: scrollPhysics,
+                keyboardAppearance: keyboardAppearance,
+                enableInteractiveSelection: enableInteractiveSelection,
+                autofillHints: autofillHints,
+                decoration: decoration,
+                placeholder: placeholder,
+                placeholderStyle: placeholderStyle,
+              ),
+            );
+          },
+        );
 
   final Widget? prefix;
 
@@ -162,8 +161,7 @@ class _TextFormBoxState extends FormFieldState<String> {
       widget.controller ?? _controller;
 
   @override
-  TextFormBox get widget =>
-      super.widget as TextFormBox;
+  TextFormBox get widget => super.widget as TextFormBox;
 
   @override
   void initState() {

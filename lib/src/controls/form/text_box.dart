@@ -611,14 +611,21 @@ class _TextBoxState extends State<TextBox>
           fontWeight: FontWeight.w400,
         );
 
-    final BoxDecoration decoration = widget.decoration ?? BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: _effectiveFocusNode.hasFocus ? theme.accentColor : !enabled ? Colors.transparent : theme.brightness.isLight ? const Color.fromRGBO(0, 0, 0, 0.45) : const Color.fromRGBO(255, 255, 255, 0.54),
-          width: _effectiveFocusNode.hasFocus ? 2 : 0,
-        ),
-      ),
-    );
+    final BoxDecoration decoration = widget.decoration ??
+        BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: _effectiveFocusNode.hasFocus
+                  ? theme.accentColor
+                  : !enabled
+                      ? Colors.transparent
+                      : theme.brightness.isLight
+                          ? const Color.fromRGBO(0, 0, 0, 0.45)
+                          : const Color.fromRGBO(255, 255, 255, 0.54),
+              width: _effectiveFocusNode.hasFocus ? 2 : 0,
+            ),
+          ),
+        );
 
     final Color selectionColor = theme.accentColor.withOpacity(0.2);
 

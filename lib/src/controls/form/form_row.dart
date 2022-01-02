@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 const EdgeInsetsGeometry _kDefaultPadding =
-EdgeInsetsDirectional.fromSTEB(20.0, 6.0, 6.0, 6.0);
+    EdgeInsetsDirectional.fromSTEB(20.0, 6.0, 6.0, 6.0);
 
 class FormRow extends StatelessWidget {
   const FormRow({
@@ -28,7 +28,6 @@ class FormRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: padding ?? _kDefaultPadding,
       child: Column(
