@@ -1,5 +1,20 @@
 Date format: DD/MM/YYYY
 
+## Unreleased
+
+- New FluentIcons gallery showcase in example project https://github.com/bdlukaa/fluent_ui/issues/123
+- Updated FluentIcons as per 30/12/2021
+- Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
+
+## [3.6.1] - [27/12/2021]
+
+- Fixed missing padding before close button on `TabView` ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
+- Readded tab minimal size for `equal` and `sizeToContent` tab width behaviours ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
+- `TabView`'s close button now uses `SmallIconButton`
+- If a tab is partially off the view, it's scrolled until it's visible
+- Fix `IconButton`'s icon size
+- Update `OutlinedButton`, `FilledButton` and `TextButton` styles
+
 ## [3.6.0] - TabView Update - [25/12/2021]
 
 - Implement `TreeView` ([#120](https://github.com/bdlukaa/fluent_ui/pull/120))

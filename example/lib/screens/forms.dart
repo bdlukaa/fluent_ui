@@ -87,7 +87,7 @@ class _FormsState extends State<Forms> {
             suffixMode: OverlayVisibilityMode.always,
             minHeight: 100,
             suffix: IconButton(
-              icon: const Icon(FluentIcons.close),
+              icon:  const Icon(FluentIcons.chrome_close),
               onPressed: () {
                 _clearController.clear();
               },

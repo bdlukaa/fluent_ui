@@ -106,7 +106,7 @@ class YesNoPickerControl extends StatelessWidget {
             margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: const Icon(FluentIcons.close),
+              child: const Icon(FluentIcons.chrome_close),
               onPressed: onCancel,
               style: style(),
             ),

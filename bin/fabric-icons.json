@@ -755,6 +755,10 @@
       "unicode": "EA41"
     },
     {
+      "name": "BooleanData",
+      "unicode": "E678"
+    },
+    {
       "name": "BorderAll",
       "unicode": "E5F4"
     },
@@ -1289,6 +1293,10 @@
     {
       "name": "CellPhone",
       "unicode": "E8EA"
+    },
+    {
+      "name": "CellSplitVertical",
+      "unicode": "E66C"
     },
     {
       "name": "Certificate",
@@ -2027,6 +2035,10 @@
       "unicode": "F334"
     },
     {
+      "name": "ConfirmEvent",
+      "unicode": "E680"
+    },
+    {
       "name": "ConnectContacts",
       "unicode": "EFD4"
     },
@@ -2065,6 +2077,10 @@
     {
       "name": "ContactInfo",
       "unicode": "E779"
+    },
+    {
+      "name": "ContactInfoMirrored",
+      "unicode": "EA4A"
     },
     {
       "name": "ContactLink",
@@ -2163,6 +2179,10 @@
       "unicode": "F67A"
     },
     {
+      "name": "CreditCardBill",
+      "unicode": "ECD6"
+    },
+    {
       "name": "Cricket",
       "unicode": "EB1E"
     },
@@ -2171,12 +2191,20 @@
       "unicode": "F5C9"
     },
     {
+      "name": "CRMLead",
+      "unicode": "EFD6"
+    },
+    {
       "name": "CRMProcesses",
       "unicode": "EFB1"
     },
     {
       "name": "CRMReport",
       "unicode": "EFFE"
+    },
+    {
+      "name": "CRMResourceOptimizationApp32",
+      "unicode": "F6EF"
     },
     {
       "name": "CRMServices",
@@ -2221,6 +2249,10 @@
     {
       "name": "Currency",
       "unicode": "EAF5"
+    },
+    {
+      "name": "CustomActivity",
+      "unicode": "EFF0"
     },
     {
       "name": "CustomEntity",
@@ -2287,12 +2319,24 @@
       "unicode": "EFC7"
     },
     {
+      "name": "DatabaseActivity",
+      "unicode": "E670"
+    },
+    {
       "name": "DatabaseBlock",
       "unicode": "E617"
     },
     {
+      "name": "DatabaseRefresh",
+      "unicode": "E67F"
+    },
+    {
       "name": "DatabaseSource",
       "unicode": "E30A"
+    },
+    {
+      "name": "DatabaseSwap",
+      "unicode": "E671"
     },
     {
       "name": "DatabaseSync",
@@ -2389,6 +2433,10 @@
     {
       "name": "DefaultRatio",
       "unicode": "F529"
+    },
+    {
+      "name": "DefaultSettings",
+      "unicode": "F648"
     },
     {
       "name": "DefectSolid",
@@ -2561,6 +2609,10 @@
     {
       "name": "DiffSideBySide",
       "unicode": "F30A"
+    },
+    {
+      "name": "Diploma",
+      "unicode": "F320"
     },
     {
       "name": "DisableUpdates",
@@ -2907,6 +2959,10 @@
       "unicode": "ED58"
     },
     {
+      "name": "EmployeeSelfService",
+      "unicode": "EE24"
+    },
+    {
       "name": "EmptyRecycleBin",
       "unicode": "EF88"
     },
@@ -3245,6 +3301,10 @@
     {
       "name": "Favicon",
       "unicode": "E737"
+    },
+    {
+      "name": "FavoriteBlock",
+      "unicode": "E67E"
     },
     {
       "name": "FavoriteList",
@@ -4439,6 +4499,10 @@
       "unicode": "EA80"
     },
     {
+      "name": "LightbulbSolid",
+      "unicode": "E681"
+    },
+    {
       "name": "LightningBolt",
       "unicode": "E945"
     },
@@ -5323,6 +5387,10 @@
       "unicode": "EA5C"
     },
     {
+      "name": "Opportunities",
+      "unicode": "F05F"
+    },
+    {
       "name": "OrderLock",
       "unicode": "E4CB"
     },
@@ -5591,12 +5659,24 @@
       "unicode": "E548"
     },
     {
+      "name": "PBIColumn",
+      "unicode": "E67A"
+    },
+    {
+      "name": "PBIConnectPoints",
+      "unicode": "E67B"
+    },
+    {
       "name": "PBIDirectQuery",
       "unicode": "E4E9"
     },
     {
       "name": "PBIDual",
       "unicode": "E4EA"
+    },
+    {
+      "name": "PBIGap",
+      "unicode": "E67C"
     },
     {
       "name": "PBIGoalEntry",
@@ -5629,6 +5709,10 @@
     {
       "name": "PBIReportTemplate",
       "unicode": "E5EC"
+    },
+    {
+      "name": "PBIZero",
+      "unicode": "E67D"
     },
     {
       "name": "PC1",
@@ -5841,6 +5925,10 @@
     {
       "name": "PlayerSettings",
       "unicode": "EF58"
+    },
+    {
+      "name": "PlaylistMusic",
+      "unicode": "E93F"
     },
     {
       "name": "PlayResume",
@@ -6129,6 +6217,10 @@
     {
       "name": "ProjectLogoInverse",
       "unicode": "EDD4"
+    },
+    {
+      "name": "ProjectManagement",
+      "unicode": "E9DE"
     },
     {
       "name": "PromotedDatabase",
@@ -6447,6 +6539,10 @@
       "unicode": "E8AF"
     },
     {
+      "name": "RemoteApplication",
+      "unicode": "F621"
+    },
+    {
       "name": "Remove",
       "unicode": "E738"
     },
@@ -6685,6 +6781,10 @@
     {
       "name": "Ribbon",
       "unicode": "E9D1"
+    },
+    {
+      "name": "Ribbon2",
+      "unicode": "F19B"
     },
     {
       "name": "RibbonSolid",
@@ -6957,6 +7057,10 @@
     {
       "name": "ServerProcesses",
       "unicode": "F1FE"
+    },
+    {
+      "name": "ServiceActivity",
+      "unicode": "EFF1"
     },
     {
       "name": "ServiceOff",
@@ -7611,6 +7715,10 @@
       "unicode": "EDD3"
     },
     {
+      "name": "SummaryChart",
+      "unicode": "E9FE"
+    },
+    {
       "name": "SunAdd",
       "unicode": "EF69"
     },
@@ -8079,6 +8187,14 @@
       "unicode": "EA05"
     },
     {
+      "name": "Title",
+      "unicode": "F23B"
+    },
+    {
+      "name": "TitleMirrored",
+      "unicode": "F23C"
+    },
+    {
       "name": "ToDoLogoBottom",
       "unicode": "F4B3"
     },
@@ -8173,6 +8289,10 @@
     {
       "name": "Translate",
       "unicode": "E7B2"
+    },
+    {
+      "name": "Transportation",
+      "unicode": "EBF1"
     },
     {
       "name": "Trending12",
@@ -8555,6 +8675,10 @@
       "unicode": "F609"
     },
     {
+      "name": "VideoAdd",
+      "unicode": "E430"
+    },
+    {
       "name": "VideoLightOff",
       "unicode": "EA74"
     },
@@ -8729,226 +8853,6 @@
     {
       "name": "Warning",
       "unicode": "E7BA"
-    },
-    {
-      "name": "Warning12",
-      "unicode": "F62F"
-    },
-    {
-      "name": "WarningSolid",
-      "unicode": "F736"
-    },
-    {
-      "name": "WavingHand",
-      "unicode": "F807"
-    },
-    {
-      "name": "WebAppBuilderFragment",
-      "unicode": "E314"
-    },
-    {
-      "name": "WebAppBuilderFragmentCreate",
-      "unicode": "E31B"
-    },
-    {
-      "name": "WebAppBuilderFragmentLock",
-      "unicode": "E4DD"
-    },
-    {
-      "name": "WebAppBuilderFragmentTest",
-      "unicode": "E4DE"
-    },
-    {
-      "name": "WebAppBuilderModule",
-      "unicode": "E313"
-    },
-    {
-      "name": "WebAppBuilderModuleLock",
-      "unicode": "E4DF"
-    },
-    {
-      "name": "WebAppBuilderModuleTest",
-      "unicode": "E4E0"
-    },
-    {
-      "name": "WebAppBuilderSlot",
-      "unicode": "E315"
-    },
-    {
-      "name": "Webcam2",
-      "unicode": "E960"
-    },
-    {
-      "name": "Webcam2Off",
-      "unicode": "E36D"
-    },
-    {
-      "name": "WebComponents",
-      "unicode": "EC8B"
-    },
-    {
-      "name": "WebEnvironment",
-      "unicode": "E3DB"
-    },
-    {
-      "name": "WebPublish",
-      "unicode": "F52F"
-    },
-    {
-      "name": "WebSearch",
-      "unicode": "F6FA"
-    },
-    {
-      "name": "Website",
-      "unicode": "EB41"
-    },
-    {
-      "name": "WebTemplate",
-      "unicode": "F6B2"
-    },
-    {
-      "name": "Weights",
-      "unicode": "EADB"
-    },
-    {
-      "name": "Wheelchair",
-      "unicode": "F31F"
-    },
-    {
-      "name": "WhiteBoardApp16",
-      "unicode": "F673"
-    },
-    {
-      "name": "WhiteBoardApp32",
-      "unicode": "F674"
-    },
-    {
-      "name": "WifiEthernet",
-      "unicode": "EE77"
-    },
-    {
-      "name": "WifiWarning4",
-      "unicode": "EB63"
-    },
-    {
-      "name": "WindDirection",
-      "unicode": "EBE6"
-    },
-    {
-      "name": "WindowEdit",
-      "unicode": "F50E"
-    },
-    {
-      "name": "WindowsLogo",
-      "unicode": "E782"
-    },
-    {
-      "name": "Wines",
-      "unicode": "EABF"
-    },
-    {
-      "name": "WipePhone",
-      "unicode": "ED8D"
-    },
-    {
-      "name": "WordDocument",
-      "unicode": "EF71"
-    },
-    {
-      "name": "WordLogo",
-      "unicode": "F1E3"
-    },
-    {
-      "name": "WordLogo16",
-      "unicode": "F391"
-    },
-    {
-      "name": "WordLogoInverse",
-      "unicode": "EC29"
-    },
-    {
-      "name": "WordLogoInverse16",
-      "unicode": "F390"
-    },
-    {
-      "name": "Work",
-      "unicode": "E821"
-    },
-    {
-      "name": "WorkFlow",
-      "unicode": "EA01"
-    },
-    {
-      "name": "WorkforceManagement",
-      "unicode": "EE0F"
-    },
-    {
-      "name": "WorkItem",
-      "unicode": "F314"
-    },
-    {
-      "name": "WorkItemAlert",
-      "unicode": "F78F"
-    },
-    {
-      "name": "WorkItemBar",
-      "unicode": "F35C"
-    },
-    {
-      "name": "WorkItemBarSolid",
-      "unicode": "F35D"
-    },
-    {
-      "name": "WorkItemBug",
-      "unicode": "F315"
-    },
-    {
-      "name": "World",
-      "unicode": "E909"
-    },
-    {
-      "name": "WorldClock",
-      "unicode": "E918"
-    },
-    {
-      "name": "XPowerY",
-      "unicode": "F7CA"
-    },
-    {
-      "name": "XRay",
-      "unicode": "E551"
-    },
-    {
-      "name": "YammerLogo",
-      "unicode": "ED19"
-    },
-    {
-      "name": "ZeroDayCalendar",
-      "unicode": "E547"
-    },
-    {
-      "name": "ZeroDayPatch",
-      "unicode": "E665"
-    },
-    {
-      "name": "ZipFolder",
-      "unicode": "F012"
-    },
-    {
-      "name": "Zoom",
-      "unicode": "E71E"
-    },
-    {
-      "name": "ZoomIn",
-      "unicode": "E8A3"
-    },
-    {
-      "name": "ZoomOut",
-      "unicode": "E71F"
-    },
-    {
-      "name": "ZoomToFit",
-      "unicode": "F649"
     }
   ]
 }

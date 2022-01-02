@@ -1,11 +1,10 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:example/screens/icons.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
-
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -16,7 +15,6 @@ import 'screens/mobile.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';
-
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -54,7 +52,7 @@ void main() async {
       [TargetPlatform.windows, TargetPlatform.linux]
           .contains(defaultTargetPlatform)) {
     await flutter_acrylic.Window.initialize();
-    Window.hideWindowControls();
+    flutter_acrylic.Window.hideWindowControls();
   }
 
   runApp(const MyApp());
@@ -87,7 +85,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {'/': (_) => const MyHomePage()},
           theme: ThemeData(
-            micaBackgroundColor: appTheme.acrylicEffect == WindowEffect.acrylic || appTheme.acrylicEffect == WindowEffect.mica ? Colors.transparent : null,
+            micaBackgroundColor: appTheme.acrylicEffect == flutter_acrylic.WindowEffect.acrylic || appTheme.acrylicEffect == flutter_acrylic.WindowEffect.mica ? Colors.transparent : null,
             accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
                 ? darkMode
@@ -228,6 +226,10 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Colors'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.icon_sets_flag),
+            title: const Text('Icons'),
+          ),
+          PaneItem(
             icon: const Icon(FluentIcons.plain_text),
             title: const Text('Typography'),
           ),
@@ -271,6 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const InputsPage(),
         const Forms(),
         ColorsPage(controller: colorsController),
+        const IconsPage(),
         const TypographyPage(),
         const Mobile(),
         const Others(),

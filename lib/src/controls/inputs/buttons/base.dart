@@ -3,6 +3,18 @@ import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// @{template fluent_ui.buttons.base}
+/// Buttons give people a way to trigger an action. They’re typically found in
+/// forms, dialog panels, and dialogs.
+/// @{end-template}
+///
+/// See also:
+///
+///   * <https://developer.microsoft.com/en-us/fluentui#/controls/android/button>
+///   * <https://developer.microsoft.com/en-us/fluentui#/controls/web/button>
+///   * [TextButton], a borderless button with mainly text-based content
+///   * [OutlinedButton], an outlined button
+///   * [FilledButton], a colored button
 abstract class BaseButton extends StatefulWidget {
   const BaseButton({
     Key? key,
@@ -33,8 +45,6 @@ abstract class BaseButton extends StatefulWidget {
   final VoidCallback? onLongPress;
 
   /// Customizes this button's appearance.
-  ///
-  /// Null by default.
   final ButtonStyle? style;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -44,6 +54,8 @@ abstract class BaseButton extends StatefulWidget {
   final bool autofocus;
 
   /// Typically the button's label.
+  ///
+  /// Usually a [Text] widget
   final Widget child;
 
   @protected
