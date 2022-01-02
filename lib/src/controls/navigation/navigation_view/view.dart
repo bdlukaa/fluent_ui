@@ -337,7 +337,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor: style.navViewPaneBackgroundColor,
+                          backgroundColor: theme.navViewPaneBackgroundColor ?? (style.brightness.isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727)),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -432,7 +432,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: PrimaryScrollController(
                       controller: scrollController,
                       child: Mica(
-                        backgroundColor: style.navViewPaneBackgroundColor,
+                        backgroundColor: theme.navViewPaneBackgroundColor,
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(

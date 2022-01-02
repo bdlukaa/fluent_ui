@@ -54,10 +54,6 @@ void main() async {
       [TargetPlatform.windows, TargetPlatform.linux]
           .contains(defaultTargetPlatform)) {
     await flutter_acrylic.Window.initialize();
-    await flutter_acrylic.Window.setEffect(
-      effect: WindowEffect.mica,
-      dark: darkMode,
-    );
     Window.hideWindowControls();
   }
 
@@ -91,7 +87,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {'/': (_) => const MyHomePage()},
           theme: ThemeData(
-            micaBackgroundColor: Colors.transparent,
+            micaBackgroundColor: appTheme.acrylicEffect == WindowEffect.acrylic || appTheme.acrylicEffect == WindowEffect.mica ? Colors.transparent : null,
             accentColor: appTheme.color,
             brightness: appTheme.mode == ThemeMode.system
                 ? darkMode

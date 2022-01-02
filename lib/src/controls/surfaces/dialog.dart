@@ -179,6 +179,7 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     required WidgetBuilder builder,
     required BuildContext context,
     bool barrierDismissible = false,
+    var test,
     Color? barrierColor,
     String? barrierLabel,
     Duration transitionDuration = const Duration(milliseconds: 250),
@@ -257,7 +258,7 @@ class ContentDialogThemeData {
   factory ContentDialogThemeData.standard(ThemeData style) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
-        color: style.dialogBackgroundColor,
+        color: style.brightness.isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727),
         borderRadius: BorderRadius.circular(12),
         boxShadow: kElevationToShadow[8],
       ),
@@ -265,7 +266,8 @@ class ContentDialogThemeData {
       titlePadding: const EdgeInsets.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
-        color: style.micaBackgroundColor,
+        //Доработать
+        color: style.brightness.isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
         boxShadow: kElevationToShadow[1],
       ),

@@ -687,9 +687,7 @@ class _TextBoxState extends State<TextBox>
             },
       child: IgnorePointer(
         ignoring: !enabled,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 0),
-          curve: theme.animationCurve,
+        child: Container(
           decoration: BoxDecoration(
             borderRadius: radius,
             border: Border.all(

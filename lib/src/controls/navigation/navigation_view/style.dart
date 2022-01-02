@@ -78,6 +78,7 @@ class NavigationPaneThemeData with Diagnosticable {
   /// The highlight color used on the tiles. If null, [ThemeData.accentColor]
   /// is used.
   final Color? highlightColor;
+  final Color? navViewPaneBackgroundColor;
 
   final EdgeInsets? labelPadding;
   final EdgeInsets? iconPadding;
@@ -90,6 +91,7 @@ class NavigationPaneThemeData with Diagnosticable {
 
   final Duration? animationDuration;
   final Curve? animationCurve;
+  
 
   const NavigationPaneThemeData({
     this.backgroundColor,
@@ -104,6 +106,7 @@ class NavigationPaneThemeData with Diagnosticable {
     this.animationCurve,
     this.selectedIconColor,
     this.unselectedIconColor,
+    this.navViewPaneBackgroundColor,
   });
 
   factory NavigationPaneThemeData.standard({
@@ -114,11 +117,13 @@ class NavigationPaneThemeData with Diagnosticable {
     required Color highlightColor,
     required Typography typography,
     required Color inactiveColor,
+    Color? navViewPaneBackgroundColor,
   }) {
     final disabledTextStyle = TextStyle(
       color: disabledColor,
       fontWeight: FontWeight.bold,
     );
+    
     return NavigationPaneThemeData(
       animationDuration: animationDuration,
       animationCurve: animationCurve,
@@ -133,6 +138,7 @@ class NavigationPaneThemeData with Diagnosticable {
       }),
       labelPadding: const EdgeInsets.only(right: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+      navViewPaneBackgroundColor: navViewPaneBackgroundColor,
     );
   }
 
@@ -160,6 +166,7 @@ class NavigationPaneThemeData with Diagnosticable {
           a?.selectedIconColor, b?.selectedIconColor, t, Color.lerp),
       unselectedIconColor: ButtonState.lerp(
           a?.unselectedIconColor, b?.unselectedIconColor, t, Color.lerp),
+      navViewPaneBackgroundColor: Color.lerp(a?.navViewPaneBackgroundColor, b?.navViewPaneBackgroundColor, t),
     );
   }
 
@@ -177,6 +184,7 @@ class NavigationPaneThemeData with Diagnosticable {
       animationDuration: style?.animationDuration ?? animationDuration,
       selectedIconColor: style?.selectedIconColor ?? selectedIconColor,
       unselectedIconColor: style?.unselectedIconColor ?? unselectedIconColor,
+      navViewPaneBackgroundColor: style?.navViewPaneBackgroundColor ?? navViewPaneBackgroundColor,
     );
   }
 
