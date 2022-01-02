@@ -1,10 +1,8 @@
 Date format: DD/MM/YYYY
 
-## Unreleased
+## [3.6.2] - [2/01/2022]
 
-- New FluentIcons gallery showcase in example project https://github.com/bdlukaa/fluent_ui/issues/123
-- Updated FluentIcons as per 30/12/2021
-- Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
+- Added TextFormBox witch integrates with the Form widget. TextFormBox has the ability to be validated and to show an error message.
 
 ## [3.6.1] - [27/12/2021]
 
