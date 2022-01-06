@@ -46,16 +46,18 @@ class _FormsState extends State<Forms> {
           right: PageHeader.horizontalPadding(context),
         ),
         children: [
-          InfoLabel(
-            label: 'Email',
-            child: TextFormBox(
-              placeholder: 'Type your email here :)',
-              autovalidateMode: AutovalidateMode.always,
-              validator: (text) {
-                if (text == null || text.isEmpty) return 'Provide an email';
-                if (!EmailValidator.validate(text)) return 'Email not valid';
-              },
-              textInputAction: TextInputAction.next,
+          TextFormBox(
+            header: 'Email',
+            placeholder: 'Type your email here :)',
+            autovalidateMode: AutovalidateMode.always,
+            validator: (text) {
+              if (text == null || text.isEmpty) return 'Provide an email';
+              if (!EmailValidator.validate(text)) return 'Email not valid';
+            },
+            textInputAction: TextInputAction.next,
+            prefix: const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Icon(FluentIcons.edit_mail),
             ),
           ),
           const SizedBox(height: 20),

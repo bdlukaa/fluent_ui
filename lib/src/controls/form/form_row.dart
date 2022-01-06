@@ -7,14 +7,11 @@ class FormRow extends StatelessWidget {
   const FormRow({
     Key? key,
     required this.child,
-    this.prefix,
     this.padding,
     this.helper,
     this.error,
     this.textStyle,
   }) : super(key: key);
-
-  final Widget? prefix;
 
   final EdgeInsetsGeometry? padding;
 
@@ -32,21 +29,9 @@ class FormRow extends StatelessWidget {
       padding: padding ?? _kDefaultPadding,
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              if (prefix != null)
-                DefaultTextStyle(
-                  style: textStyle!,
-                  child: prefix!,
-                ),
-              Flexible(
-                child: Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: child,
-                ),
-              ),
-            ],
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: child,
           ),
           if (helper != null)
             Align(

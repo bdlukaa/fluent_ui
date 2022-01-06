@@ -999,6 +999,17 @@ Which produces the following:
 
 ![TextBox Example Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/text-box-ex1.png)
 
+If you want to validate the text box, use a `TextFormBox`:
+
+```dart
+TextFormBox(
+  placeholder: 'Your email',
+  validator: (text) {
+    if (text == null || text.isEmpty) return 'Provide an email';
+  }
+),
+```
+
 ## Auto Suggest Box
 
 Use an AutoSuggestBox to provide a list of suggestions for a user to select from as they type. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box)
@@ -1621,6 +1632,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | -                         | ToggleButton     |
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
+| TextFormField             | TextFormBox      |
 | DropdownButton            | Combobox         |
 | PopupMenuButton           | DropDownButton   |
 | -                         | AutoSuggestBox   |

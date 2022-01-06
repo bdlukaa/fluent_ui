@@ -4,7 +4,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 class TextFormBox extends FormField<String> {
   TextFormBox({
     Key? key,
-    this.prefix,
     this.padding,
     this.controller,
     String? initialValue,
@@ -41,6 +40,7 @@ class TextFormBox extends FormField<String> {
     bool? enabled,
     double cursorWidth = 2.0,
     double? cursorHeight,
+    Radius cursorRadius = const Radius.circular(2.0),
     Color? cursorColor,
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
@@ -51,6 +51,14 @@ class TextFormBox extends FormField<String> {
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
     String? placeholder,
     TextStyle? placeholderStyle,
+    String? header,
+    TextStyle? headerStyle,
+    ScrollController? scrollController,
+    Clip clipBehavior = Clip.antiAlias,
+    Widget? prefix,
+    OverlayVisibilityMode prefixMode = OverlayVisibilityMode.always,
+    Widget? suffix,
+    OverlayVisibilityMode suffixMode = OverlayVisibilityMode.always,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -94,7 +102,6 @@ class TextFormBox extends FormField<String> {
             }
 
             return FormRow(
-              prefix: prefix,
               padding:
                   EdgeInsets.only(bottom: (field.errorText == null) ? 16.0 : 0),
               error: (field.errorText == null) ? null : Text(field.errorText!),
@@ -131,6 +138,7 @@ class TextFormBox extends FormField<String> {
                 cursorWidth: cursorWidth,
                 cursorHeight: cursorHeight,
                 cursorColor: cursorColor,
+                cursorRadius: cursorRadius,
                 scrollPadding: scrollPadding,
                 scrollPhysics: scrollPhysics,
                 keyboardAppearance: keyboardAppearance,
@@ -139,12 +147,18 @@ class TextFormBox extends FormField<String> {
                 decoration: decoration,
                 placeholder: placeholder,
                 placeholderStyle: placeholderStyle,
+                header: header,
+                headerStyle: headerStyle,
+                scrollController: scrollController,
+                clipBehavior: clipBehavior,
+                prefix: prefix,
+                prefixMode: prefixMode,
+                suffix: suffix,
+                suffixMode: suffixMode,
               ),
             );
           },
         );
-
-  final Widget? prefix;
 
   final EdgeInsetsGeometry? padding;
 
