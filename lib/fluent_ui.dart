@@ -22,7 +22,8 @@ export 'package:flutter/material.dart'
         ReorderableDragStartListener,
         kThemeAnimationDuration,
         TooltipVisibility,
-        TooltipTriggerMode;
+        TooltipTriggerMode,
+        TextInputAction;
 export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';

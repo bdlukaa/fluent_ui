@@ -2,6 +2,8 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+import 'package:email_validator/email_validator.dart';
+
 class Forms extends StatefulWidget {
   const Forms({Key? key}) : super(key: key);
 
@@ -44,9 +46,17 @@ class _FormsState extends State<Forms> {
           right: PageHeader.horizontalPadding(context),
         ),
         children: [
-          const TextBox(
-            header: 'Email',
-            placeholder: 'Type your email here :)',
+          InfoLabel(
+            label: 'Email',
+            child: TextFormBox(
+              placeholder: 'Type your email here :)',
+              autovalidateMode: AutovalidateMode.always,
+              validator: (text) {
+                if (text == null || text.isEmpty) return 'Provide an email';
+                if (!EmailValidator.validate(text)) return 'Email not valid';
+              },
+              textInputAction: TextInputAction.next,
+            ),
           ),
           const SizedBox(height: 20),
           Row(children: [
@@ -87,7 +97,7 @@ class _FormsState extends State<Forms> {
             suffixMode: OverlayVisibilityMode.always,
             minHeight: 100,
             suffix: IconButton(
-              icon:  const Icon(FluentIcons.chrome_close),
+              icon: const Icon(FluentIcons.chrome_close),
               onPressed: () {
                 _clearController.clear();
               },
