@@ -116,6 +116,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     final hasFocus = focusNode.hasFocus;
     if (!hasFocus) {
       _dismissOverlay();
+    } else {
+      _showOverlay();
     }
     setState(() {});
   }
@@ -160,6 +162,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     _entry = null;
   }
 
+  void _showOverlay() {
+    if (_entry == null && !(_entry?.mounted ?? false)) {
+      _insertOverlay();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -190,9 +197,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         suffixMode: OverlayVisibilityMode.always,
         onChanged: (text) {
           widget.onChanged?.call(text, TextChangedReason.userInput);
-          if (_entry == null && !(_entry?.mounted ?? false)) {
-            _insertOverlay();
-          }
+          _showOverlay();
         },
       ),
     );
