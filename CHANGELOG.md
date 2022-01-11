@@ -1,7 +1,7 @@
 Date format: DD/MM/YYYY
 
 ## Unreleased
-
+- AutoSuggestBox gets opened automatically when gets focus
 - Added TextFormBox witch integrates with the Form widget. TextFormBox has the ability to be validated and to show an error message.
 - New FluentIcons gallery showcase in example project https://github.com/bdlukaa/fluent_ui/issues/123
 - Updated FluentIcons as per 30/12/2021
