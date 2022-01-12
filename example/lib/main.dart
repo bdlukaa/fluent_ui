@@ -247,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-        autoSuggestBox: AutoSuggestBox<String>(
+        autoSuggestBox: AutoSuggestBox(
           controller: TextEditingController(),
           items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
         ),
