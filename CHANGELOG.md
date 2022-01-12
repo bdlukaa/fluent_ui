@@ -18,6 +18,7 @@ Date format: DD/MM/YYYY
 - New FluentIcons gallery showcase in example project ([#123](https://github.com/bdlukaa/fluent_ui/issues/123))
 - Updated FluentIcons as per 30/12/2021
 - **BREAKING** Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
+- Fixed rounded corners on the ComboBox widget
 
 ## [3.6.1] - [27/12/2021]
 
