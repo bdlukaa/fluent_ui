@@ -1,11 +1,23 @@
 Date format: DD/MM/YYYY
 
-## Unreleased
-- AutoSuggestBox gets opened automatically when gets focus
-- Added TextFormBox witch integrates with the Form widget. TextFormBox has the ability to be validated and to show an error message.
-- New FluentIcons gallery showcase in example project https://github.com/bdlukaa/fluent_ui/issues/123
+## [3.7.0] - Breaking changes - [12/01/2022]
+
+- AutoSuggestBox: ([#130](https://github.com/bdlukaa/fluent_ui/pull/130))
+  - It gets opened automatically when it gets focus
+  - When an item is tapped, the cursor is positioned correctly at the end of the text
+  - **BREAKING** Now it's not possible to assign a type to `AutoSuggestBox`:
+    Before:
+    ```dart
+    AutoSuggestBox<String>(...),
+    ```
+    Now:
+    ```dart
+    AutoSuggestBox(...),
+    ```
+- Added TextFormBox witch integrates with the Form widget. It has the ability to be validated and to show an error message.
+- New FluentIcons gallery showcase in example project ([#123](https://github.com/bdlukaa/fluent_ui/issues/123))
 - Updated FluentIcons as per 30/12/2021
-- Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
+- **BREAKING** Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
 
 ## [3.6.1] - [27/12/2021]
 

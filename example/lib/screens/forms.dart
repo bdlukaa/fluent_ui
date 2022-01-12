@@ -77,7 +77,7 @@ class _FormsState extends State<Forms> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: AutoSuggestBox<String>(
+              child: AutoSuggestBox(
                 items: values,
                 placeholder: 'Pick a color',
                 trailingIcon: IconButton(

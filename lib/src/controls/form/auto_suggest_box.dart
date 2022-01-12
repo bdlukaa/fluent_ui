@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
@@ -23,8 +22,8 @@ enum TextChangedReason {
 ///
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 ///   * [TextBox], which is used by this widget to enter user text input
-///   * [Overlay], which is used to show the popup
-class AutoSuggestBox<T> extends StatefulWidget {
+///   * [Overlay], which is used to show the suggestion popup
+class AutoSuggestBox extends StatefulWidget {
   /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
     Key? key,
@@ -35,10 +34,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.trailingIcon,
     this.clearButtonEnabled = true,
     this.placeholder,
+    this.placeholderStyle,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
-  final List<T> items;
+  final List<String> items;
 
   /// The controller used to have control over what to show on
   /// the [TextBox].
@@ -48,7 +48,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   final void Function(String text, TextChangedReason reason)? onChanged;
 
   /// Called when the user selected a value.
-  final ValueChanged<T>? onSelected;
+  final ValueChanged<String>? onSelected;
 
   /// A widget displayed in the end of the [TextBox]
   ///
@@ -60,20 +60,37 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// Defauls to true
   final bool clearButtonEnabled;
 
-  /// The placeholder
+  /// The text shown when the text box is empty
+  ///
+  /// See also:
+  ///
+  ///  * [TextBox.placeholder]
   final String? placeholder;
 
+  /// The style of [placeholder]
+  ///
+  /// See also:
+  ///
+  ///  * [TextBox.placeholderStyle]
+  final TextStyle? placeholderStyle;
+
   @override
-  _AutoSuggestBoxState<T> createState() => _AutoSuggestBoxState<T>();
+  _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<T>('items', items));
-    properties.add(ObjectFlagProperty<ValueChanged<T>?>(
+    properties.add(IterableProperty<String>('items', items));
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>(
       'onSelected',
       onSelected,
       ifNull: 'disabled',
+    ));
+    properties.add(FlagProperty(
+      'clearButtonEnabled',
+      value: clearButtonEnabled,
+      defaultValue: true,
+      ifFalse: 'clear button disabled',
     ));
   }
 
@@ -84,7 +101,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   }
 }
 
-class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
+class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   final FocusNode focusNode = FocusNode();
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
@@ -138,9 +155,12 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             child: _AutoSuggestBoxOverlay(
               controller: controller,
               items: widget.items,
-              onSelected: (item) {
+              onSelected: (String item) {
                 widget.onSelected?.call(item);
                 controller.text = item;
+                controller.selection = TextSelection.collapsed(
+                  offset: item.length,
+                );
                 widget.onChanged?.call(item, TextChangedReason.userInput);
               },
             ),
@@ -167,6 +187,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       _insertOverlay();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -179,6 +200,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         controller: controller,
         focusNode: focusNode,
         placeholder: widget.placeholder,
+        placeholderStyle: widget.placeholderStyle,
         clipBehavior: _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
         suffix: Row(children: [
           if (widget.trailingIcon != null) widget.trailingIcon!,
@@ -214,7 +236,7 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
 
   final List items;
   final TextEditingController controller;
-  final ValueChanged onSelected;
+  final ValueChanged<String> onSelected;
 
   @override
   Widget build(BuildContext context) {
