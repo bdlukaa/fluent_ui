@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 enum IconButtonMode {
-  TINY, SMALL, LARGE
+  tiny, small, large
 }
 
 class IconButton extends BaseButton {
