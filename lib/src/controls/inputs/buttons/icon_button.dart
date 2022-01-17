@@ -30,8 +30,8 @@ class IconButton extends BaseButton {
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final isIconSmall = iconButtonMode == IconButtonMode.TINY;
-    final isSmall = iconButtonMode != null ? iconButtonMode != IconButtonMode.LARGE : SmallIconButton.of(context) != null;
+    final isIconSmall = iconButtonMode == IconButtonMode.tiny;
+    final isSmall = iconButtonMode != null ? iconButtonMode != IconButtonMode.large: SmallIconButton.of(context) != null;
     return ButtonStyle(
       iconSize: ButtonState.all(isIconSmall ? 12.0 : null),
       padding: ButtonState.all(isSmall
