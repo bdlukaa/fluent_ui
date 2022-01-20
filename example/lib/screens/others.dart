@@ -47,8 +47,6 @@ class _OthersState extends State<Others> {
     ),
   ];
 
-  late List<TreeViewItem> lazy;
-
   @override
   void dispose() {
     flyoutController.dispose();
@@ -59,6 +57,7 @@ class _OthersState extends State<Others> {
   DateTime date = DateTime.now();
 
   late List<Tab> tabs;
+  late List<TreeViewItem> lazy;
 
   @override
   void initState() {
@@ -73,11 +72,11 @@ class _OthersState extends State<Others> {
       );
       return tab;
     });
-
     lazy = [
       TreeViewItem(
         content: const Text('Work Documents'),
         lazy: true,
+        children: [],
         onInvoked: (item) async {
           if (item.children.isNotEmpty) return;
           setState(() => item.loading = true);
@@ -94,7 +93,6 @@ class _OthersState extends State<Others> {
               ]);
           });
         },
-        children: [],
       ),
       TreeViewItem(
         content: const Text('Personal Documents'),
@@ -363,7 +361,7 @@ class _OthersState extends State<Others> {
                 ),
               ),
               InfoLabel(
-                label: 'Lazy View',
+                label: 'Lazy View - Load nodes only when opened',
                 child: Container(
                   constraints: const BoxConstraints(
                     minHeight: 380,

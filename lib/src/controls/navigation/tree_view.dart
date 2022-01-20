@@ -217,7 +217,9 @@ class TreeViewItem with Diagnosticable {
       ..add(FlagProperty('expanded',
           value: expanded, defaultValue: true, ifFalse: 'collapsed'))
       ..add(FlagProperty('selected',
-          value: selected, defaultValue: false, ifFalse: 'unselected'));
+          value: selected, defaultValue: false, ifFalse: 'unselected'))
+      ..add(FlagProperty('loading',
+          value: loading, defaultValue: false, ifFalse: 'not loading'));
   }
 }
 
@@ -399,9 +401,7 @@ class _TreeViewState extends State<TreeView> {
               }
             },
             onExpandToggle: () async {
-              print('invoking');
               await invokeItem(item);
-              print('invoked');
               if (item.collapsable) {
                 setState(() {
                   item.expanded = !item.expanded;
