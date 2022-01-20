@@ -3,6 +3,15 @@ import 'package:flutter/foundation.dart';
 
 const double _whiteSpace = 28.0;
 
+/// Default loading indicator used by [TreeView]
+const Widget kTreeViewLoadingIndicator = SizedBox(
+  height: 12.0,
+  width: 12.0,
+  child: ProgressRing(
+    strokeWidth: 3.0,
+  ),
+);
+
 enum TreeViewSelectionMode {
   /// Selection is disabled
   none,
@@ -75,7 +84,7 @@ class TreeViewItem with Diagnosticable {
   bool? selected;
 
   /// Called when this item is invoked
-  final VoidCallback? onInvoked;
+  final Future<void> Function(TreeViewItem item)? onInvoked;
 
   /// The background color of this item.
   ///
@@ -97,6 +106,17 @@ class TreeViewItem with Diagnosticable {
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
+  /// Whether the tree view item is loading
+  bool loading = false;
+
+  /// Widget to show when [loading]
+  ///
+  /// If null, [TreeView.loadingWidget] is used instead
+  final Widget? loadingWidget;
+
+  /// Whether this item children is loaded lazily
+  final bool lazy;
+
   /// Creates a tab view item
   TreeViewItem({
     this.key,
@@ -104,14 +124,21 @@ class TreeViewItem with Diagnosticable {
     required this.content,
     this.children = const [],
     this.collapsable = true,
-    this.expanded = true,
+    bool? expanded,
     this.selected = false,
     this.onInvoked,
     this.backgroundColor,
     this.autofocus = false,
     this.focusNode,
     this.semanticLabel,
-  });
+    this.loadingWidget,
+    this.lazy = false,
+  }) : expanded = expanded ?? children.isNotEmpty;
+
+  /// Whether this node is expandable
+  bool get isExpandable {
+    return lazy || children.isNotEmpty;
+  }
 
   /// Indicates how far from the root node this child node is.
   ///
@@ -263,6 +290,7 @@ class TreeView extends StatefulWidget {
     required this.items,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onItemInvoked,
+    this.loadingWidget = kTreeViewLoadingIndicator,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -277,7 +305,13 @@ class TreeView extends StatefulWidget {
   final TreeViewSelectionMode selectionMode;
 
   /// Called when an item is invoked
-  final ValueChanged<TreeViewItem>? onItemInvoked;
+  final Future<void> Function(TreeViewItem item)? onItemInvoked;
+
+  /// A widget to be shown when a node is loading. Only used if
+  /// [TreeViewItem.loadingWidget] is null.
+  ///
+  /// [kTreeViewLoadingIndicator] is used by default
+  final Widget loadingWidget;
 
   @override
   _TreeViewState createState() => _TreeViewState();
@@ -318,7 +352,7 @@ class _TreeViewState extends State<TreeView> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return Container(
+    return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,7 +398,10 @@ class _TreeViewState extends State<TreeView> {
                   break;
               }
             },
-            onExpandToggle: () {
+            onExpandToggle: () async {
+              print('invoking');
+              await invokeItem(item);
+              print('invoked');
               if (item.collapsable) {
                 setState(() {
                   item.expanded = !item.expanded;
@@ -372,14 +409,19 @@ class _TreeViewState extends State<TreeView> {
                 });
               }
             },
-            onInvoked: () {
-              item.onInvoked?.call();
-              widget.onItemInvoked?.call(item);
-            },
+            onInvoked: () => invokeItem(item),
+            loadingWidgetFallback: widget.loadingWidget,
           );
         }),
       ),
     );
+  }
+
+  Future<void> invokeItem(TreeViewItem item) async {
+    await Future.wait([
+      if (widget.onItemInvoked != null) widget.onItemInvoked!(item),
+      if (item.onInvoked != null) item.onInvoked!(item),
+    ]);
   }
 }
 
@@ -391,6 +433,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.onSelect,
     required this.onExpandToggle,
     required this.onInvoked,
+    required this.loadingWidgetFallback,
   }) : super(key: key);
 
   final TreeViewItem item;
@@ -398,6 +441,7 @@ class _TreeViewItem extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onExpandToggle;
   final VoidCallback onInvoked;
+  final Widget loadingWidgetFallback;
 
   @override
   Widget build(BuildContext context) {
@@ -460,18 +504,21 @@ class _TreeViewItem extends StatelessWidget {
                         },
                       ),
                     ),
-                  if (item.children.isNotEmpty)
-                    GestureDetector(
-                      behavior: HitTestBehavior.deferToChild,
-                      onTap: onExpandToggle,
-                      child: Icon(
-                        item.expanded
-                            ? FluentIcons.chevron_down
-                            : FluentIcons.chevron_right,
-                        size: 8.0,
-                        color: Colors.grey[80],
+                  if (item.isExpandable)
+                    if (item.loading)
+                      item.loadingWidget ?? loadingWidgetFallback
+                    else
+                      GestureDetector(
+                        behavior: HitTestBehavior.deferToChild,
+                        onTap: onExpandToggle,
+                        child: Icon(
+                          item.expanded
+                              ? FluentIcons.chevron_down
+                              : FluentIcons.chevron_right,
+                          size: 8.0,
+                          color: Colors.grey[80],
+                        ),
                       ),
-                    ),
                   if (item.leading != null)
                     Container(
                       margin: const EdgeInsets.only(left: 18.0),
