@@ -297,7 +297,8 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
     return FadeTransition(
       opacity: _fadeOpacity,
       child: Acrylic(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6.0))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6.0))),
         elevation: route.elevation.toDouble(),
         child: CustomPaint(
           painter: _ComboboxMenuPainter(

@@ -260,9 +260,8 @@ class CheckboxThemeData with Diagnosticable {
                     ? const Color.fromRGBO(0, 0, 0, 0.2169)
                     : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),
-          color: states.isHovering
-              ? style.inactiveColor.withOpacity(0.1)
-              : null,
+          color:
+              states.isHovering ? style.inactiveColor.withOpacity(0.1) : null,
           borderRadius: radius,
         ),
       ),
@@ -274,10 +273,10 @@ class CheckboxThemeData with Diagnosticable {
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
         return !states.isDisabled
-              ? style.checkedColor
-              : style.brightness.isLight
-                  ? Colors.white
-                  : const Color.fromRGBO(255, 255, 255, 0.5302);
+            ? style.checkedColor
+            : style.brightness.isLight
+                ? Colors.white
+                : const Color.fromRGBO(255, 255, 255, 0.5302);
       }),
       uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,

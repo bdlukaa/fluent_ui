@@ -1,8 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-enum IconButtonMode {
-  tiny, small, large
-}
+enum IconButtonMode { tiny, small, large }
 
 class IconButton extends BaseButton {
   const IconButton({
@@ -31,7 +29,9 @@ class IconButton extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final isIconSmall = iconButtonMode == IconButtonMode.tiny;
-    final isSmall = iconButtonMode != null ? iconButtonMode != IconButtonMode.large: SmallIconButton.of(context) != null;
+    final isSmall = iconButtonMode != null
+        ? iconButtonMode != IconButtonMode.large
+        : SmallIconButton.of(context) != null;
     return ButtonStyle(
       iconSize: ButtonState.all(isIconSmall ? 12.0 : null),
       padding: ButtonState.all(isSmall

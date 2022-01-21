@@ -43,22 +43,15 @@ void main(List<String> args) async {
   }
 
   // NEW Map of all glyphs (adds iteration capabilities)
-  dartFileBuffer.writeln(
-    "  static const Map<String,IconData> allIcons = {"
-  );
+  dartFileBuffer.writeln("  static const Map<String,IconData> allIcons = {");
   for (final Glyph glyph in glyphs) {
     dartFileBuffer.writeln(
       "    '${glyph.name}': ${glyph.name},",
     );
   }
-  dartFileBuffer.writeln(
-      "  };"
-  );
-
+  dartFileBuffer.writeln("  };");
 
   dartFileBuffer.writeln("}");
-
-
 
   await File("lib/src/icons.dart").writeAsString(dartFileBuffer.toString());
 }

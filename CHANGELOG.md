@@ -1,10 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [unreleased]
-
-- Implement lazy tree view ([#139](https://github.com/bdlukaa/fluent_ui/pull/139))
-
-## [3.7.0] - Breaking changes - [12/01/2022]
+## [3.7.0] - Breaking changes - [21/01/2022]
 
 - AutoSuggestBox: ([#130](https://github.com/bdlukaa/fluent_ui/pull/130))
   - It gets opened automatically when it gets focus
@@ -23,15 +19,13 @@ Date format: DD/MM/YYYY
 - Updated FluentIcons as per 30/12/2021
 - **BREAKING** Renamed `FluentIcons.close` to `FluentIcons.chrome_close`
 - Fixed rounded corners on the ComboBox widget
-
-## [3.6.1] - [27/12/2021]
-
 - Fixed missing padding before close button on `TabView` ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
 - Readded tab minimal size for `equal` and `sizeToContent` tab width behaviours ([#122](https://github.com/bdlukaa/fluent_ui/issues/122))
 - `TabView`'s close button now uses `SmallIconButton`
 - If a tab is partially off the view, it's scrolled until it's visible
 - Fix `IconButton`'s icon size
 - Update `OutlinedButton`, `FilledButton` and `TextButton` styles
+- Implement lazy tree view ([#139](https://github.com/bdlukaa/fluent_ui/pull/139))
 
 ## [3.6.0] - TabView Update - [25/12/2021]
 
