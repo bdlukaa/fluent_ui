@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [unreleased]
+
+- Implement lazy tree view ([#139](https://github.com/bdlukaa/fluent_ui/pull/139))
+
 ## [3.7.0] - Breaking changes - [12/01/2022]
 
 - AutoSuggestBox: ([#130](https://github.com/bdlukaa/fluent_ui/pull/130))

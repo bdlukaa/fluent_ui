@@ -23,6 +23,7 @@ class _OthersState extends State<Others> {
   final items = [
     TreeViewItem(
       content: const Text('Work Documents'),
+      lazy: true,
       children: [
         TreeViewItem(content: const Text('XYZ Functional Spec')),
         TreeViewItem(content: const Text('Feature Schedule')),
@@ -56,6 +57,7 @@ class _OthersState extends State<Others> {
   DateTime date = DateTime.now();
 
   late List<Tab> tabs;
+  late List<TreeViewItem> lazy;
 
   @override
   void initState() {
@@ -70,6 +72,44 @@ class _OthersState extends State<Others> {
       );
       return tab;
     });
+    lazy = [
+      TreeViewItem(
+        content: const Text('Work Documents'),
+        lazy: true,
+        children: [],
+        onInvoked: (item) async {
+          if (item.children.isNotEmpty) return;
+          setState(() => item.loading = true);
+          await Future.delayed(const Duration(seconds: 2));
+          setState(() {
+            item
+              ..loading = false
+              ..children.addAll([
+                TreeViewItem(content: const Text('XYZ Functional Spec')),
+                TreeViewItem(content: const Text('Feature Schedule')),
+                TreeViewItem(content: const Text('Overall Project Plan')),
+                TreeViewItem(
+                    content: const Text('Feature Resources Allocation')),
+              ]);
+          });
+        },
+      ),
+      TreeViewItem(
+        content: const Text('Personal Documents'),
+        lazy: true,
+        children: [
+          TreeViewItem(
+            content: const Text('Home Remodel'),
+            children: [
+              TreeViewItem(content: const Text('Contractor Contact Info')),
+              TreeViewItem(content: const Text('Paint Color Scheme')),
+              TreeViewItem(content: const Text('Flooring weedgrain type')),
+              TreeViewItem(content: const Text('Kitchen cabinet style')),
+            ],
+          ),
+        ],
+      ),
+    ];
   }
 
   @override
@@ -267,63 +307,77 @@ class _OthersState extends State<Others> {
             ),
           ),
           const SizedBox(height: 20.0),
-          SizedBox(
-            height: 403.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                InfoLabel(
-                  label: 'Simple',
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 380,
-                      maxWidth: 350,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: FluentTheme.of(context).inactiveColor),
-                    ),
-                    child: TreeView(items: items),
+          Wrap(
+            // scrollDirection: Axis.horizontal,
+            children: [
+              InfoLabel(
+                label: 'Simple',
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(items: items),
+                ),
+              ),
+              InfoLabel(
+                label: 'Single Selection',
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(
+                    selectionMode: TreeViewSelectionMode.single,
+                    items: items,
+                    onItemInvoked: (item) async => debugPrint('$item'),
                   ),
                 ),
-                InfoLabel(
-                  label: 'Single Selection',
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 380,
-                      maxWidth: 350,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: FluentTheme.of(context).inactiveColor),
-                    ),
-                    child: TreeView(
-                      selectionMode: TreeViewSelectionMode.single,
-                      items: items,
-                      onItemInvoked: (item) => debugPrint('$item'),
-                    ),
+              ),
+              InfoLabel(
+                label: 'Multiple selection',
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(
+                    selectionMode: TreeViewSelectionMode.multiple,
+                    items: items,
+                    onItemInvoked: (item) async => debugPrint('$item'),
                   ),
                 ),
-                InfoLabel(
-                  label: 'Multiple selection',
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 380,
-                      maxWidth: 350,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: FluentTheme.of(context).inactiveColor),
-                    ),
-                    child: TreeView(
-                      selectionMode: TreeViewSelectionMode.multiple,
-                      items: items,
-                      onItemInvoked: (item) => debugPrint('$item'),
-                    ),
+              ),
+              InfoLabel(
+                label: 'Lazy View - Load nodes only when opened',
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 380,
+                    maxWidth: 350,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: FluentTheme.of(context).inactiveColor),
+                  ),
+                  child: TreeView(
+                    items: lazy,
+                    onItemInvoked: (item) async => debugPrint('$item'),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

@@ -80,6 +80,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
   - [TreeView](#treeview)
+    - [Lazily load nodes](#lazily-load-nodes)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
@@ -1520,6 +1521,40 @@ TreeView(
   // (optional). Can be TreeViewSelectionMode.single or TreeViewSelectionMode.multiple
   selectionMode: TreeViewSelectionMode.none, 
 ),
+```
+
+### Lazily load nodes
+
+Load nodes as required by the user
+
+```dart
+late List<TreeViewItem> items;
+
+@override
+void initState() {
+  super.initState();
+  items = [
+    TreeViewItem(
+      content: const Text('Parent node'),
+      children: [], // REQUIRED. An initial list of children must be provided. It must be mutable
+      onInvoked: (item) async {
+        // If the node is already populated, return
+        if (item.children.isNotEmpty) return;
+        setState(() => item.loading = true);
+        // Fetch more nodes from an async source, such as an API or device storage
+        final List<TreeViewItem> nodes = await fetchNodes();
+        setState(() {
+          item.loading = false;
+          item.children.addAll(nodes);
+        });
+      }
+    )
+  ];
+}
+
+TreeView(
+  items: items,
+);
 ```
 
 # Mobile Widgets
