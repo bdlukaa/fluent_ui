@@ -23,7 +23,8 @@ export 'package:flutter/material.dart'
         kThemeAnimationDuration,
         TooltipVisibility,
         TooltipTriggerMode,
-        TextInputAction;
+        TextInputAction,
+        MaterialLocalizations;
 export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';

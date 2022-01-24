@@ -45,6 +45,6 @@ void main() {
     );
 
     // Default US "select all" text.
-    expect(find.text('Select all'), findsNWidgets);
+    expect(find.text('Select all'), findsNWidgets(2));
   });
 }
