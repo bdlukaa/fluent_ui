@@ -1,6 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+Widget wrapApp({required Widget child}) {
+  return FluentApp(home: child);
+}
+
 void main() {
   testWidgets('Can nest apps', (WidgetTester tester) async {
     await tester.pumpWidget(
