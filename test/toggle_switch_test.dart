@@ -38,4 +38,47 @@ void main() {
     await tester.pumpAndSettle();
     expect(toggleSwitchValue, false);
   });
+
+  testWidgets('ToggleSwitch can drag (LTR)', (WidgetTester tester) async {
+    bool value = false;
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Center(
+              child: ToggleSwitch(
+                checked: value,
+                onChanged: (bool newValue) {
+                  setState(() {
+                    value = newValue;
+                  });
+                },
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(value, isFalse);
+
+    await tester.drag(find.byType(ToggleSwitch), const Offset(-30.0, 0.0));
+
+    expect(value, isFalse);
+
+    await tester.drag(find.byType(ToggleSwitch), const Offset(30.0, 0.0));
+
+    expect(value, isTrue);
+
+    await tester.pump();
+    await tester.drag(find.byType(ToggleSwitch), const Offset(30.0, 0.0));
+
+    expect(value, isTrue);
+
+    await tester.pump();
+    await tester.drag(find.byType(ToggleSwitch), const Offset(-30.0, 0.0));
+
+    expect(value, isFalse);
+  });
 }

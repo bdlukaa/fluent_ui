@@ -31,7 +31,7 @@ void main() {
     expect(textScaleFactor, equals(1.0));
   });
 
-  testWidgets('Has default material and cupertino localizations',
+  testWidgets('Has default material and fluent localizations',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       FluentApp(
