@@ -1,0 +1,19 @@
+name: Flutter Analysis
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  package-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Flutter
+        uses: subosito/flutter-action@master
+        with:
+          channel: stable
+
+      - name: install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
