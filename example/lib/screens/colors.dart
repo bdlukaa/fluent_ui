@@ -192,32 +192,35 @@ class ColorBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColor = color.basedOnLuminance();
-    return GestureDetector(
-      onTap: () async {
-        await FlutterClipboard.copy(clipboard);
-        showCopiedSnackbar(context, clipboard);
-      },
-      child: Container(
-        height: 85,
-        width: 85,
-        padding: const EdgeInsets.all(6.0),
-        color: color,
-        child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text(
-            name,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
-          ),
-          const Spacer(),
-          if (variant != null)
+    return Tooltip(
+      message: '\n$clipboard\n(tap to copy to clipboard)\n',
+      child: GestureDetector(
+        onTap: () async {
+          await FlutterClipboard.copy(clipboard);
+          showCopiedSnackbar(context, clipboard);
+        },
+        child: Container(
+          height: 85,
+          width: 85,
+          padding: const EdgeInsets.all(6.0),
+          color: color,
+          child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
             Text(
-              variant!,
-              style: TextStyle(color: textColor),
+              name,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
             ),
-        ]),
+            const Spacer(),
+            if (variant != null)
+              Text(
+                variant!,
+                style: TextStyle(color: textColor),
+              ),
+          ]),
+        ),
       ),
     );
   }

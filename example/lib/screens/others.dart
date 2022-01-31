@@ -195,24 +195,32 @@ class _OthersState extends State<Others> {
               ),
             ),
           ),
-          Row(children: const [
-            Padding(
-              padding: EdgeInsets.all(6),
-              child: ProgressBar(value: 50),
+          InfoLabel(
+            label: 'Progress indicators',
+            child: Mica(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(children: const [
+                  Padding(
+                    padding: EdgeInsets.all(6),
+                    child: ProgressBar(value: 50),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ProgressRing(value: 85),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(6),
+                    child: ProgressBar(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ProgressRing(),
+                  ),
+                ]),
+              ),
             ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: ProgressRing(value: 85),
-            ),
-            Padding(
-              padding: EdgeInsets.all(6),
-              child: ProgressBar(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: ProgressRing(),
-            ),
-          ]),
+          ),
           InfoLabel(
             label: 'Reorderable list view',
             child: Mica(
@@ -256,70 +264,74 @@ class _OthersState extends State<Others> {
           //   ),
           // ]),
           const SizedBox(height: 10),
-          Container(
-            height: 400,
-            decoration: BoxDecoration(
-              color: FluentTheme.of(context).accentColor.resolve(context),
-              border: Border.all(
-                  color: FluentTheme.of(context).accentColor, width: 1.0),
-            ),
-            child: TabView(
-              currentIndex: currentIndex,
-              onChanged: _handleTabChanged,
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final Tab item = tabs.removeAt(oldIndex);
-                  tabs.insert(newIndex, item);
-                  if (currentIndex == newIndex) {
-                    currentIndex = oldIndex;
-                  } else if (currentIndex == oldIndex) {
-                    currentIndex = newIndex;
-                  }
-                });
-              },
-              onNewPressed: () {
-                setState(() {
-                  late Tab tab;
-                  tab = Tab(
-                    text: Text('Document ${tabs.length}'),
-                    onClosed: () {
-                      _handleTabClosed(tab);
-                    },
-                  );
-                  tabs.add(tab);
-                });
-              },
-              tabs: tabs,
-              bodies: List.generate(
-                tabs.length,
-                (index) => Container(
-                  color: Colors.accentColors[index.clamp(
-                    0,
-                    Colors.accentColors.length - 1,
-                  )],
-                  child: Stack(children: [
-                    const Positioned.fill(child: FlutterLogo()),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 250.0,
-                        height: 200.0,
-                        child: Acrylic(
-                          child: Center(
-                            child: Text(
-                              'A C R Y L I C',
-                              style:
-                                  FluentTheme.of(context).typography.titleLarge,
-                              textAlign: TextAlign.center,
+          InfoLabel(
+            label: 'TabView',
+            child: Container(
+              height: 400,
+              decoration: BoxDecoration(
+                color: FluentTheme.of(context).accentColor.resolve(context),
+                border: Border.all(
+                    color: FluentTheme.of(context).accentColor, width: 1.0),
+              ),
+              child: TabView(
+                currentIndex: currentIndex,
+                onChanged: _handleTabChanged,
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final Tab item = tabs.removeAt(oldIndex);
+                    tabs.insert(newIndex, item);
+                    if (currentIndex == newIndex) {
+                      currentIndex = oldIndex;
+                    } else if (currentIndex == oldIndex) {
+                      currentIndex = newIndex;
+                    }
+                  });
+                },
+                onNewPressed: () {
+                  setState(() {
+                    late Tab tab;
+                    tab = Tab(
+                      text: Text('Document ${tabs.length}'),
+                      onClosed: () {
+                        _handleTabClosed(tab);
+                      },
+                    );
+                    tabs.add(tab);
+                  });
+                },
+                tabs: tabs,
+                bodies: List.generate(
+                  tabs.length,
+                  (index) => Container(
+                    color: Colors.accentColors[index.clamp(
+                      0,
+                      Colors.accentColors.length - 1,
+                    )],
+                    child: Stack(children: [
+                      const Positioned.fill(child: FlutterLogo()),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 250.0,
+                          height: 200.0,
+                          child: Acrylic(
+                            child: Center(
+                              child: Text(
+                                'A C R Y L I C',
+                                style: FluentTheme.of(context)
+                                    .typography
+                                    .titleLarge,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ]),
+                  ),
                 ),
               ),
             ),
