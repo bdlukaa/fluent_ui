@@ -1,6 +1,31 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
+void showCopiedSnackbar(BuildContext context, String copiedText) {
+  showSnackbar(
+    context,
+    Snackbar(
+      content: RichText(
+        text: TextSpan(
+          text: 'Copied ',
+          style: TextStyle(color: FluentTheme.of(context).inactiveColor),
+          children: [
+            TextSpan(
+              text: copiedText,
+              style: TextStyle(
+                color: Colors.blue.resolveFromReverseBrightness(
+                  FluentTheme.of(context).brightness,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      extended: true,
+    ),
+  );
+}
+
 class IconsPage extends StatefulWidget {
   const IconsPage({Key? key}) : super(key: key);
 
@@ -78,24 +103,9 @@ class _IconsPageState extends State<IconsPage> {
                   .map((e) {
                 return HoverButton(
                   onPressed: () async {
-                    await FlutterClipboard.copy('FluentIcons.${e.key}');
-                    showSnackbar(
-                      context,
-                      Snackbar(
-                        content: RichText(
-                          text: TextSpan(
-                            text: 'Copied ',
-                            children: [
-                              TextSpan(
-                                text: 'FluentIcons.${e.key}',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ],
-                          ),
-                        ),
-                        extended: true,
-                      ),
-                    );
+                    final copyText = 'FluentIcons.${e.key}';
+                    await FlutterClipboard.copy(copyText);
+                    showCopiedSnackbar(context, copyText);
                   },
                   cursor: SystemMouseCursors.copy,
                   builder: (context, states) => Tooltip(
