@@ -1,6 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 
 /// Dialog controls are modal UI overlays that provide contextual
 /// app information. They block interactions with the app window
@@ -37,6 +38,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// ```
 ///
 /// ![ContentDialog example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)
+///
+/// See also:
+///
+///   * <showDialog>, used to show dialogs
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 class ContentDialog extends StatelessWidget {
   /// Creates a content dialog.
   const ContentDialog({
@@ -71,8 +77,9 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style =
-        ContentDialogThemeData.standard(FluentTheme.of(context)).merge(
+    final style = ContentDialogThemeData.standard(FluentTheme.of(
+      context,
+    )).merge(
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return Container(
@@ -144,6 +151,61 @@ class ContentDialog extends StatelessWidget {
   }
 }
 
+/// Displays a Material dialog above the current contents of the app, with
+/// Material entrance and exit animations, modal barrier color, and modal
+/// barrier behavior (dialog is dismissible with a tap on the barrier).
+///
+/// This function takes a `builder` which typically builds a [Dialog] widget.
+/// Content below the dialog is dimmed with a [ModalBarrier]. The widget
+/// returned by the `builder` does not share a context with the location that
+/// `showDialog` is originally called from. Use a [StatefulBuilder] or a
+/// custom [StatefulWidget] if the dialog needs to update dynamically.
+///
+/// The `context` argument is used to look up the [Navigator] and [Theme] for
+/// the dialog. It is only used when the method is called. Its corresponding
+/// widget can be safely removed from the tree before the dialog is closed.
+///
+/// The `barrierDismissible` argument is used to indicate whether tapping on the
+/// barrier will dismiss the dialog. It is `true` by default and can not be `null`.
+///
+/// The `barrierColor` argument is used to specify the color of the modal
+/// barrier that darkens everything below the dialog. If `null` the default color
+/// `Colors.black54` is used.
+///
+/// The `useSafeArea` argument is used to indicate if the dialog should only
+/// display in 'safe' areas of the screen not used by the operating system
+/// (see [SafeArea] for more details). It is `true` by default, which means
+/// the dialog will not overlap operating system areas. If it is set to `false`
+/// the dialog will only be constrained by the screen size. It can not be `null`.
+///
+/// The `useRootNavigator` argument is used to determine whether to push the
+/// dialog to the [Navigator] furthest from or nearest to the given `context`.
+/// By default, `useRootNavigator` is `true` and the dialog route created by
+/// this method is pushed to the root navigator. It can not be `null`.
+///
+/// The `routeSettings` argument is passed to [showGeneralDialog],
+/// see [RouteSettings] for details.
+///
+/// If the application has multiple [Navigator] objects, it may be necessary to
+/// call `Navigator.of(context, rootNavigator: true).pop(result)` to close the
+/// dialog rather than just `Navigator.pop(context, result)`.
+///
+/// Returns a [Future] that resolves to the value (if any) that was passed to
+/// [Navigator.pop] when the dialog was closed.
+///
+/// ### State Restoration in Dialogs
+///
+/// Using this method will not enable state restoration for the dialog. In order
+/// to enable state restoration for a dialog, use [Navigator.restorablePush]
+/// or [Navigator.restorablePushNamed] with [FluentDialogRoute].
+///
+/// For more information about state restoration, see [RestorationManager].
+///
+/// See also:
+///
+///  * [ContentDialog], for dialogs that have a row of buttons below a body.
+///  * [showGeneralDialog], which allows for customization of the dialog popup.
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 Future<T?> showDialog<T extends Object?>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -156,7 +218,17 @@ Future<T?> showDialog<T extends Object?>({
   Color? barrierColor,
   bool barrierDismissible = false,
 }) {
+  assert(debugCheckHasFluentLocalizations(context));
   barrierColor ??= Colors.black.withOpacity(0.54);
+
+  final CapturedThemes themes = InheritedTheme.capture(
+    from: context,
+    to: Navigator.of(
+      context,
+      rootNavigator: useRootNavigator,
+    ).context,
+  );
+
   return Navigator.of(
     context,
     rootNavigator: useRootNavigator,
@@ -171,13 +243,54 @@ Future<T?> showDialog<T extends Object?>({
     transitionDuration: transitionDuration ??
         FluentTheme.maybeOf(context)?.fastAnimationDuration ??
         const Duration(milliseconds: 300),
+    themes: themes,
   ));
 }
 
+/// A dialog route with Fluent entrance and exit animations.
+///
+/// It is used internally by [showDialog] or can be directly pushed
+/// onto the [Navigator] stack to enable state restoration. See
+/// [showDialog] for a state restoration app example.
+///
+/// This function takes a `builder` which typically builds a [Dialog] widget.
+/// Content below the dialog is dimmed with a [ModalBarrier]. The widget
+/// returned by the `builder` does not share a context with the location that
+/// `showDialog` is originally called from. Use a [StatefulBuilder] or a
+/// custom [StatefulWidget] if the dialog needs to update dynamically.
+///
+/// The `context` argument is used to look up
+/// [FluentLocalizations.modalBarrierDismissLabel], which provides the
+/// modal with a localized accessibility label that will be used for the
+/// modal's barrier. However, a custom `barrierLabel` can be passed in as well.
+///
+/// The `barrierDismissible` argument is used to indicate whether tapping on the
+/// barrier will dismiss the dialog. It is `true` by default and cannot be `null`.
+///
+/// The `barrierColor` argument is used to specify the color of the modal
+/// barrier that darkens everything below the dialog. If `null`, the default
+/// color `Colors.black54` is used.
+///
+/// The `useSafeArea` argument is used to indicate if the dialog should only
+/// display in 'safe' areas of the screen not used by the operating system
+/// (see [SafeArea] for more details). It is `true` by default, which means
+/// the dialog will not overlap operating system areas. If it is set to `false`
+/// the dialog will only be constrained by the screen size. It can not be `null`.
+///
+/// The `settings` argument define the settings for this route. See
+/// [RouteSettings] for details.
+///
+/// See also:
+///
+///  * [showDialog], which is a way to display a DialogRoute.
+///  * [showGeneralDialog], which allows for customization of the dialog popup.
 class FluentDialogRoute<T> extends RawDialogRoute<T> {
+  /// A dialog route with Material entrance and exit animations,
+  /// modal barrier color
   FluentDialogRoute({
     required WidgetBuilder builder,
     required BuildContext context,
+    CapturedThemes? themes,
     bool barrierDismissible = false,
     Color? barrierColor,
     String? barrierLabel,
@@ -186,8 +299,10 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     RouteSettings? settings,
   }) : super(
           pageBuilder: (BuildContext context, animation, secondaryAnimation) {
+            final pageChild = Builder(builder: builder);
+            final dialog = themes?.wrap(pageChild) ?? pageChild;
             return SafeArea(
-              child: Center(child: builder(context)),
+              child: Center(child: dialog),
             );
           },
           barrierDismissible: barrierDismissible,

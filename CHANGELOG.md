@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [unreleased] - Flutter Favorite - [03/02/2022]
+
+- Tests ([#142](https://github.com/bdlukaa/fluent_ui/pull/142))
+- Added Material Theme to Fluent Theme Builder ([#133](https://github.com/bdlukaa/fluent_ui/issues/133))
+- Add more customization options to PaneItem ([#111](https://github.com/bdlukaa/fluent_ui/issues/111), [#144](https://github.com/bdlukaa/fluent_ui/issues/144))
+
 ## [3.7.0] - Breaking changes - [21/01/2022]
 
 - AutoSuggestBox: ([#130](https://github.com/bdlukaa/fluent_ui/pull/130))

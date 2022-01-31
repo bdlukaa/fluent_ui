@@ -280,7 +280,7 @@ class FluentApp extends StatefulWidget {
   /// Widget build(BuildContext context) {
   ///   return FluentApp(
   ///     shortcuts: <LogicalKeySet, Intent>{
-  ///       ... WidgetsApp.defaultShortcuts,
+  ///       ...WidgetsApp.defaultShortcuts,
   ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
   ///     },
   ///     color: const Color(0xFFFF0000),
