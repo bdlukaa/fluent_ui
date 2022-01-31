@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Others extends StatefulWidget {
@@ -163,9 +161,10 @@ class _OthersState extends State<Others> {
                               message: 'This is a tooltip',
                               child: Button(
                                 child: const Text(
-                                    'Hover this button to see a tooltip'),
+                                  'Hover this button to see a tooltip',
+                                ),
                                 onPressed: () {
-                                  print('pressed button with tooltip');
+                                  debugPrint('pressed button with tooltip');
                                 },
                               ),
                             );
@@ -214,6 +213,25 @@ class _OthersState extends State<Others> {
               child: ProgressRing(),
             ),
           ]),
+          InfoLabel(
+            label: 'Reorderable list view',
+            child: Mica(
+              child: ReorderableListView(
+                shrinkWrap: true,
+                onReorder: (a, b) => debugPrint('reorder $a to $b'),
+                children: const [
+                  ListTile(
+                    key: ValueKey('a'),
+                    title: Text('This is an list tile'),
+                  ),
+                  ListTile(
+                    key: ValueKey('b'),
+                    title: Text('This is a second list tile'),
+                  ),
+                ],
+              ),
+            ),
+          ),
           // Row(children: [
           //   CalendarView(
           //     onDateChanged: _handleDateChanged,
