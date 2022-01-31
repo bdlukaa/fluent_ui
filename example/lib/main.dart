@@ -221,7 +221,9 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.color),
-            title: const Text('Colors'),
+            title: const Text(
+              'Colors',
+            ),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.icon_sets_flag),

@@ -46,7 +46,13 @@ class HoverButton extends StatefulWidget {
     this.autofocus = false,
   }) : super(key: key);
 
-  /// The cursor of this hover button. If null, [MouseCursor.defer] is used
+  /// {@template fluent_ui.controls.inputs.HoverButton.mouseCursor}
+  /// The cursor for a mouse pointer when it enters or is hovering over the
+  /// widget.
+  ///
+  /// The [mouseCursor] defaults to [MouseCursor.defer], deferring the choice of
+  /// cursor to the next region behind it in hit-test order.
+  /// {@endtemplate}
   final MouseCursor? cursor;
   final VoidCallback? onLongPress;
   final VoidCallback? onLongPressStart;
