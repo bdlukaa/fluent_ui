@@ -1,5 +1,10 @@
 name: Flutter Analysis
-on: [pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   package-analysis:
