@@ -41,7 +41,7 @@ import 'package:flutter/services.dart';
 ///
 /// See also:
 ///
-///   * <showDialog>, used to show dialogs
+///   * <showDialog>, used to display dialogs on top of the app content
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 class ContentDialog extends StatelessWidget {
   /// Creates a content dialog.
@@ -82,70 +82,73 @@ class ContentDialog extends StatelessWidget {
     )).merge(
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
-    return Container(
-      constraints: constraints,
-      decoration: style.decoration,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: style.padding ?? EdgeInsets.zero,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null)
-                  Padding(
-                    padding: style.titlePadding ?? EdgeInsets.zero,
-                    child: DefaultTextStyle(
-                      style: style.titleStyle ?? const TextStyle(),
-                      child: title!,
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: constraints,
+        decoration: style.decoration,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: style.padding ?? EdgeInsets.zero,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (title != null)
+                    Padding(
+                      padding: style.titlePadding ?? EdgeInsets.zero,
+                      child: DefaultTextStyle(
+                        style: style.titleStyle ?? const TextStyle(),
+                        child: title!,
+                      ),
                     ),
-                  ),
-                if (content != null)
-                  Padding(
-                    padding: style.bodyPadding ?? EdgeInsets.zero,
-                    child: DefaultTextStyle(
-                      style: style.bodyStyle ?? const TextStyle(),
-                      child: content!,
+                  if (content != null)
+                    Padding(
+                      padding: style.bodyPadding ?? EdgeInsets.zero,
+                      child: DefaultTextStyle(
+                        style: style.bodyStyle ?? const TextStyle(),
+                        child: content!,
+                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-          if (actions != null)
-            Container(
-              decoration: style.actionsDecoration,
-              padding: style.actionsPadding,
-              child: ButtonTheme.merge(
-                data: style.actionThemeData ?? const ButtonThemeData(),
-                child: () {
-                  if (actions!.length == 1) {
-                    return Align(
-                      alignment: Alignment.centerRight,
-                      child: actions!.first,
-                    );
-                  }
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: actions!.map((e) {
-                      final index = actions!.indexOf(e);
-                      return Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: index != (actions!.length - 1)
-                                ? style.actionsSpacing ?? 3
-                                : 0,
-                          ),
-                          child: e,
-                        ),
-                      );
-                    }).toList(),
-                  );
-                }(),
+                ],
               ),
             ),
-        ],
+            if (actions != null)
+              Container(
+                decoration: style.actionsDecoration,
+                padding: style.actionsPadding,
+                child: ButtonTheme.merge(
+                  data: style.actionThemeData ?? const ButtonThemeData(),
+                  child: () {
+                    if (actions!.length == 1) {
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: actions!.first,
+                      );
+                    }
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: actions!.map((e) {
+                        final index = actions!.indexOf(e);
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: index != (actions!.length - 1)
+                                  ? style.actionsSpacing ?? 3
+                                  : 0,
+                            ),
+                            child: e,
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -215,11 +218,10 @@ Future<T?> showDialog<T extends Object?>({
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
   String? barrierLabel,
-  Color? barrierColor,
+  Color? barrierColor = const Color(0x8A000000),
   bool barrierDismissible = false,
 }) {
   assert(debugCheckHasFluentLocalizations(context));
-  barrierColor ??= Colors.black.withOpacity(0.54);
 
   final CapturedThemes themes = InheritedTheme.capture(
     from: context,
@@ -292,7 +294,7 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     required BuildContext context,
     CapturedThemes? themes,
     bool barrierDismissible = false,
-    Color? barrierColor,
+    Color? barrierColor = const Color(0x8A000000),
     String? barrierLabel,
     Duration transitionDuration = const Duration(milliseconds: 250),
     RouteTransitionsBuilder? transitionBuilder = _defaultTransitionBuilder,
@@ -301,13 +303,12 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
           pageBuilder: (BuildContext context, animation, secondaryAnimation) {
             final pageChild = Builder(builder: builder);
             final dialog = themes?.wrap(pageChild) ?? pageChild;
-            return SafeArea(
-              child: Center(child: dialog),
-            );
+            return SafeArea(child: dialog);
           },
           barrierDismissible: barrierDismissible,
-          barrierLabel: barrierLabel ?? 'Dismiss',
-          barrierColor: barrierColor ?? Colors.black.withOpacity(0.54),
+          barrierLabel: barrierLabel ??
+              FluentLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: barrierColor,
           transitionDuration: transitionDuration,
           transitionBuilder: transitionBuilder,
           settings: settings,

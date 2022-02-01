@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
 
 const Widget spacer = SizedBox(height: 5.0);
 
@@ -199,7 +198,7 @@ class _InputsPageState extends State<InputsPage> {
               onPressed: disabled
                   ? null
                   : () {
-                      m.showDialog(
+                      showDialog(
                         context: context,
                         builder: (_) => ContentDialog(
                           title: const Text('Delete file permanently?'),
