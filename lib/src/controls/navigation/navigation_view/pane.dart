@@ -81,7 +81,7 @@ class NavigationPane with Diagnosticable {
     this.customPane,
     this.menuButton,
     this.scrollController,
-    this.indicatorBuilder = defaultNavigationIndicator,
+    this.indicatorBuilder = NavigationIndicator.sticky,
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -166,32 +166,6 @@ class NavigationPane with Diagnosticable {
 
   /// A function called when building the navigation indicator
   final NavigationIndicatorBuilder indicatorBuilder;
-
-  static Widget defaultNavigationIndicator({
-    required BuildContext context,
-    required NavigationPane pane,
-    Axis? axis,
-    required Widget child,
-  }) {
-    if (pane.selected == null) return child;
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneTheme.of(context);
-    axis ??= Axis.horizontal;
-
-    final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
-    final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
-
-    return StickyNavigationIndicator(
-      index: pane.selected!,
-      offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-      sizes: pane.effectiveItems.getPaneItemsSizes,
-      child: child,
-      color: theme.highlightColor,
-      curve: theme.animationCurve ?? Curves.linear,
-      axis: axis,
-      topPadding: EdgeInsets.only(left: left, right: right),
-    );
-  }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -402,7 +376,9 @@ class _TopNavigationPane extends StatelessWidget {
               if (pane.header != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 6.0),
+                    horizontal: 8.0,
+                    vertical: 6.0,
+                  ),
                   child: pane.header!,
                 ),
               // TODO: A listview shouldn't be used here. Instead, if there are
@@ -459,7 +435,7 @@ class _CompactNavigationPane extends StatelessWidget {
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
     if (item is PaneItemHeader) {
-      /// Item Header is not visible on compact pane
+      // Item Header is not visible on compact pane
       return const SizedBox();
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
@@ -494,6 +470,7 @@ class _CompactNavigationPane extends StatelessWidget {
       child: pane.indicatorBuilder(
         context: context,
         pane: pane,
+        axis: Axis.horizontal,
         child: Align(
           key: pane.paneKey,
           alignment: Alignment.topCenter,
@@ -665,6 +642,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
         child: widget.pane.indicatorBuilder(
           context: context,
           pane: widget.pane,
+          axis: Axis.horizontal,
           child: Column(key: widget.pane.paneKey, children: [
             Container(
               margin: widget.pane.autoSuggestBox != null

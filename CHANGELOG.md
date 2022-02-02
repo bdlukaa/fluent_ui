@@ -5,6 +5,73 @@ Date format: DD/MM/YYYY
 - Tests ([#142](https://github.com/bdlukaa/fluent_ui/pull/142))
 - Added Material Theme to Fluent Theme Builder ([#133](https://github.com/bdlukaa/fluent_ui/issues/133))
 - Add more customization options to PaneItem ([#111](https://github.com/bdlukaa/fluent_ui/issues/111), [#144](https://github.com/bdlukaa/fluent_ui/issues/144))
+- Properly add item key to `PaneItem` in top mode ([#143](https://github.com/bdlukaa/fluent_ui/issues/143))
+- Added the helper functions `NavigationIndicator.end` and `NavigationIndicator.sticky`
+- **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
+- **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
+
+  Before:
+  ```dart
+  pane: NavigationPane(
+    indicatorBuilder: ({
+      required BuildContext context,
+      /// The navigation pane corresponding to this indicator
+      required NavigationPane pane,
+      /// Corresponds to the current display mode. If top, Axis.vertical
+      /// is passed, otherwise Axis.vertical
+      Axis? axis,
+      /// Corresponds to the pane itself as a widget. The indicator is
+      /// rendered over the whole pane.
+      required Widget child,
+    }) {
+      if (pane.selected == null) return child;
+      assert(debugCheckHasFluentTheme(context));
+      final theme = NavigationPaneThemeData.of(context);
+
+      axis??= Axis.horizontal;
+
+      return EndNavigationIndicator(
+        index: pane.selected,
+        offsets: () => pane.effectiveItems.getPaneItemsOffsets  (pane.paneKey),
+        sizes: pane.effectiveItems.getPaneItemsSizes,
+        child: child,
+        color: theme.highlightColor,
+        curve: theme.animationCurve ?? Curves.linear,
+        axis: axis,
+      );
+    },
+  ),
+  ```
+
+  Now:
+  ```dart
+  pane: NavigationPane(
+    indicatorBuilder: ({
+      required BuildContext context,
+      /// The navigation pane corresponding to this indicator
+      required NavigationPane pane,
+      /// Corresponds to the current display mode. If top, Axis.vertical
+      /// is passed, otherwise Axis.vertical
+      required Axis axis,
+      /// Corresponds to the pane itself as a widget. The indicator is
+      /// rendered over the whole pane.
+      required Widget child,
+    }) {
+      if (pane.selected == null) return child;
+      assert(debugCheckHasFluentTheme(context));
+      final theme = NavigationPaneThemeData.of(context);
+
+      return EndNavigationIndicator(
+        index: pane.selected,
+        pane: pane,
+        child: child,
+        color: theme.highlightColor,
+        curve: theme.animationCurve ?? Curves.linear,
+        axis: axis,
+      );
+    },
+  ),
+  ```
 
 ## [3.7.0] - Breaking changes - [21/01/2022]
 

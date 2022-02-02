@@ -165,48 +165,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: ({
-          required BuildContext context,
-          required NavigationPane pane,
-          Axis? axis,
-          required Widget child,
-        }) {
-          if (pane.selected == null) return child;
-          axis ??= Axis.horizontal;
-          assert(debugCheckHasFluentTheme(context));
-          final theme = NavigationPaneTheme.of(context);
+        indicatorBuilder: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return EndNavigationIndicator(
-                index: pane.selected!,
-                offsets: () =>
-                    pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-                sizes: pane.effectiveItems.getPaneItemsSizes,
-                child: child,
-                color: theme.highlightColor,
-                curve: theme.animationCurve ?? Curves.linear,
-                axis: axis,
-              );
+              return NavigationIndicator.end;
             case NavigationIndicators.sticky:
-              return NavigationPane.defaultNavigationIndicator(
-                context: context,
-                axis: axis,
-                pane: pane,
-                child: child,
-              );
             default:
-              return NavigationIndicator(
-                index: pane.selected!,
-                offsets: () =>
-                    pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-                sizes: pane.effectiveItems.getPaneItemsSizes,
-                child: child,
-                color: theme.highlightColor,
-                curve: theme.animationCurve ?? Curves.linear,
-                axis: axis,
-              );
+              return NavigationIndicator.sticky;
           }
-        },
+        }(),
         items: [
           // It doesn't look good when resizing from compact to open
           // PaneItemHeader(header: Text('User Interaction')),
@@ -221,9 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.color),
-            title: const Text(
-              'Colors',
-            ),
+            title: const Text('Colors'),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.icon_sets_flag),

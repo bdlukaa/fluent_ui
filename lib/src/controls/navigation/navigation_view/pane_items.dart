@@ -279,7 +279,7 @@ class PaneItem extends NavigationPaneItem {
                     ),
                 ]);
               }
-              return Center(child: result);
+              return Center(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
           }

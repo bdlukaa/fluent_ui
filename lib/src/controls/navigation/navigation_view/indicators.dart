@@ -8,7 +8,7 @@ part of 'view.dart';
 typedef NavigationIndicatorBuilder = Widget Function({
   required BuildContext context,
   required NavigationPane pane,
-  Axis? axis,
+  required Axis axis,
   required Widget child,
 });
 
@@ -19,14 +19,59 @@ class NavigationIndicator extends StatefulWidget {
   /// to render the selected indicator.
   const NavigationIndicator({
     Key? key,
-    required this.offsets,
-    required this.sizes,
     required this.index,
     required this.child,
+    required this.pane,
     required this.axis,
     this.curve = Curves.linear,
     this.color,
   }) : super(key: key);
+
+  /// Creates a [StickyNavigationIndicator]
+  static Widget sticky({
+    required BuildContext context,
+    required NavigationPane pane,
+    required Axis axis,
+    required Widget child,
+  }) {
+    if (pane.selected == null) return child;
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneTheme.of(context);
+
+    final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
+    final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+
+    return StickyNavigationIndicator(
+      index: pane.selected!,
+      pane: pane,
+      child: child,
+      color: theme.highlightColor,
+      curve: theme.animationCurve ?? Curves.linear,
+      axis: axis,
+      topPadding: EdgeInsets.only(left: left, right: right),
+    );
+  }
+
+  /// Creates an [EndNavigationIndicator]
+  static Widget end({
+    required BuildContext context,
+    required NavigationPane pane,
+    required Axis axis,
+    required Widget child,
+  }) {
+    if (pane.selected == null) return child;
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneTheme.of(context);
+
+    return EndNavigationIndicator(
+      index: pane.selected!,
+      pane: pane,
+      child: child,
+      color: theme.highlightColor,
+      curve: theme.animationCurve ?? Curves.linear,
+      axis: axis,
+    );
+  }
 
   /// The [NavigationPane]. It can be open, compact, closed or top.
   final Widget child;
@@ -34,12 +79,8 @@ class NavigationIndicator extends StatefulWidget {
   /// The current selected index;
   final int index;
 
-  /// A function that tells the indicator the item offsets.
-  final List<Offset> Function() offsets;
-
-  /// A function that tells the indicator the item sizes. The sizes
-  /// must not be [Size.infinite]
-  final List<Size> Function() sizes;
+  /// The navigation pane
+  final NavigationPane pane;
 
   /// The axis corresponding to the current navigation pane. If it's
   /// a top pane, [Axis.vertical] will be provided, otherwise
@@ -81,9 +122,11 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      final _offsets = widget.offsets();
-      final _sizes = widget.sizes();
-      if (mounted && offsets != _offsets && _sizes != sizes) {
+      final _offsets = widget.pane.effectiveItems.getPaneItemsOffsets(
+        widget.pane.paneKey,
+      );
+      final _sizes = widget.pane.effectiveItems.getPaneItemsSizes();
+      if (mounted && (offsets != _offsets || _sizes != sizes)) {
         offsets = _offsets;
         sizes = _sizes;
       }
@@ -100,8 +143,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 class EndNavigationIndicator extends NavigationIndicator {
   const EndNavigationIndicator({
     Key? key,
-    required List<Offset> Function() offsets,
-    required List<Size> Function() sizes,
+    required NavigationPane pane,
     required int index,
     required Widget child,
     required Axis axis,
@@ -110,10 +152,9 @@ class EndNavigationIndicator extends NavigationIndicator {
   }) : super(
           key: key,
           axis: axis,
+          pane: pane,
           child: child,
           index: index,
-          offsets: offsets,
-          sizes: sizes,
           curve: curve,
           color: color,
         );
@@ -132,7 +173,7 @@ class _EndNavigationIndicatorState
       widget.child,
       ...List.generate(offsets!.length, (index) {
         if (widget.index != index) return const SizedBox.shrink();
-        final isTop = widget.axis != Axis.horizontal;
+        final isTop = widget.axis == Axis.vertical;
         final offset = offsets![index];
 
         final size = sizes![index];
@@ -144,12 +185,12 @@ class _EndNavigationIndicatorState
               horizontal: isTop ? 10.0 : 0.0,
             ),
             width: isTop ? size.width : 6.0,
-            height: isTop ? 4 : size.height,
+            height: isTop ? 6.0 : size.height,
             color: widget.color,
           ),
         );
 
-        // debugPrint('at $offset with $size');
+        debugPrint('at $offset with $size');
 
         if (isTop) {
           return Positioned(
@@ -185,8 +226,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
     Key? key,
-    required List<Offset> Function() offsets,
-    required List<Size> Function() sizes,
+    required NavigationPane pane,
     required int index,
     required Widget child,
     required Axis axis,
@@ -196,10 +236,9 @@ class StickyNavigationIndicator extends NavigationIndicator {
   }) : super(
           key: key,
           axis: axis,
+          pane: pane,
           child: child,
           index: index,
-          offsets: offsets,
-          sizes: sizes,
           curve: curve,
           color: color,
         );
@@ -428,7 +467,11 @@ class _StickyPainter extends CustomPainter {
   bool shouldRebuildSemantics(_StickyPainter oldDelegate) => false;
 }
 
-extension OffsetExtension on Offset {
+extension _OffsetExtension on Offset {
+  /// Gets the value based on [axis]
+  ///
+  /// If [Axis.horizontal], [dy] is going to be returned. Otherwise, [dx] is
+  /// returned.
   double fromAxis(Axis axis) {
     if (axis == Axis.horizontal) {
       return dy;
@@ -437,12 +480,3 @@ extension OffsetExtension on Offset {
     }
   }
 }
-
-// extension _size on Size {
-//   double fromAxis(Axis axis) {
-//     if (axis == Axis.horizontal)
-//       return height;
-//     else
-//       return width;
-//   }
-// }
