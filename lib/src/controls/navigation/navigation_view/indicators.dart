@@ -174,7 +174,6 @@ class _EndNavigationIndicatorState
     return Stack(clipBehavior: Clip.none, children: [
       widget.child,
       ...List.generate(offsets!.length, (index) {
-        if (widget.index != index) return const SizedBox.shrink();
         final isTop = widget.axis == Axis.vertical;
         final offset = offsets![index];
 
@@ -182,15 +181,21 @@ class _EndNavigationIndicatorState
 
         final indicator = IgnorePointer(
           child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                vertical: isTop ? 0.0 : 10.0,
-                horizontal: isTop ? 10.0 : 0.0,
+            alignment: isTop ? Alignment.bottomCenter : Alignment.centerRight,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 75),
+              reverseDuration: Duration.zero,
+              child: Container(
+                key: ValueKey<int>(widget.index),
+                margin: EdgeInsets.symmetric(
+                  vertical: isTop ? 0.0 : 0,
+                  horizontal: isTop ? 10.0 : 0.0,
+                ),
+                width: isTop ? 20.0 : 6.0,
+                height: isTop ? 4.5 : 20.0,
+                color:
+                    widget.index != index ? Colors.transparent : widget.color,
               ),
-              width: isTop ? 20.0 : 6.0,
-              height: isTop ? 4.5 : size.height,
-              color: widget.color,
             ),
           ),
         );
@@ -212,10 +217,7 @@ class _EndNavigationIndicatorState
           return Positioned(
             top: offset.dy,
             height: size.height,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 4.0),
-              child: indicator,
-            ),
+            child: indicator,
           );
         }
       }),

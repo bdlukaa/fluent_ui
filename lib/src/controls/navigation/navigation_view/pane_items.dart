@@ -72,7 +72,7 @@ class PaneItem extends NavigationPaneItem {
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
 
-  T? _getPropertyFromTitle<T>() {
+  T? _getPropertyFromTitle<T>([dynamic def]) {
     if (title is Text) {
       final title = this.title as Text;
       switch (T) {
@@ -82,7 +82,9 @@ class PaneItem extends NavigationPaneItem {
           return (title.textSpan ??
               TextSpan(
                 text: title.data ?? '',
-                style: _getPropertyFromTitle<TextStyle>(),
+                style: _getPropertyFromTitle<TextStyle>()
+                        ?.merge(def as TextStyle?) ??
+                    def as TextStyle?,
               )) as T?;
         case TextStyle:
           return title.style as T?;
@@ -99,9 +101,14 @@ class PaneItem extends NavigationPaneItem {
         case String:
           return title.text.toPlainText() as T?;
         case InlineSpan:
+          if (T is InlineSpan) {
+            final span = title.text;
+            span.style?.merge(def as TextStyle?);
+            return span as T;
+          }
           return title.text as T;
         case TextStyle:
-          return title.text.style as T?;
+          return (title.text.style as T?) ?? def as T?;
         case TextAlign:
           return title.textAlign as T?;
         case TextHeightBehavior:
@@ -158,30 +165,39 @@ class PaneItem extends NavigationPaneItem {
     final TextStyle baseStyle =
         _getPropertyFromTitle<TextStyle>() ?? const TextStyle();
 
+    final bool isTop = mode == PaneDisplayMode.top;
+    final bool isCompact = mode == PaneDisplayMode.compact;
+
     return HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
       cursor: mouseCursor,
       builder: (context, states) {
-        final textStyle = baseStyle.merge(
+        TextStyle textStyle = baseStyle.merge(
           selected
               ? theme.selectedTextStyle?.resolve(states)
               : theme.unselectedTextStyle?.resolve(states),
         );
+        if (isTop && states.isPressing) {
+          textStyle = textStyle.copyWith(
+            color: textStyle.color?.withOpacity(0.75),
+          );
+        }
         final textResult = titleText.isNotEmpty
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
-                child: Text(
-                  titleText,
-                  style: textStyle,
+                child: RichText(
+                  text: _getPropertyFromTitle<InlineSpan>(textStyle)!,
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  textAlign: _getPropertyFromTitle<TextAlign>(),
+                  textAlign:
+                      _getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
                   textHeightBehavior:
                       _getPropertyFromTitle<TextHeightBehavior>(),
-                  textWidthBasis: _getPropertyFromTitle<TextWidthBasis>(),
+                  textWidthBasis: _getPropertyFromTitle<TextWidthBasis>() ??
+                      TextWidthBasis.parent,
                 ),
               )
             : const SizedBox.shrink();
@@ -284,9 +300,6 @@ class PaneItem extends NavigationPaneItem {
               throw '$mode is not a supported type';
           }
         }
-
-        final bool isTop = mode == PaneDisplayMode.top;
-        final bool isCompact = mode == PaneDisplayMode.compact;
 
         return Semantics(
           label: titleText.isEmpty ? null : titleText,

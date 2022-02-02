@@ -400,10 +400,10 @@ class _TopNavigationPane extends StatelessWidget {
           ),
           if (pane.autoSuggestBox != null)
             Container(
-              margin: const EdgeInsets.only(left: 50.0),
+              margin: const EdgeInsets.only(left: 30.0),
               constraints: const BoxConstraints(
-                minWidth: 215.0,
-                maxWidth: _kOpenNavigationPanelWidth,
+                minWidth: 100.0,
+                maxWidth: 215.0,
               ),
               child: pane.autoSuggestBox!,
             ),

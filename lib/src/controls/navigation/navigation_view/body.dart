@@ -49,16 +49,23 @@ class NavigationBody extends StatefulWidget {
   /// Optional number of items to assume builder can create.
   final int? itemCount;
 
-  /// The current page index. It must be greater than 0 and less
-  /// than [children.length] or [itemCount].
+  /// The current page index.
   final int index;
 
   /// The transition builder.
   ///
-  /// It can be detect the display mode of the [NavigationView] above
-  /// it, if any, and change the transition accordingly. By default,
-  /// if the display mode is top, [EntrancePageTransition] is
-  /// used, otherwise [DrillInPageTransition] is used.
+  /// It can be detect the display mode of the parent [NavigationView], if any,
+  /// and change the transition accordingly. By default, if the display mode is
+  /// top, [EntrancePageTransition] is used, otherwise [DrillInPageTransition]
+  /// is used.
+  ///
+  /// ```dart
+  /// NavigationBody(
+  ///   transitionBuilder: (child, animation) {
+  ///     return DrillInPageTransition(child: child, animation: animation);
+  ///   },
+  /// ),
+  /// ```
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
   /// The curve used by the transition. [NavigationPaneThemeData.animationCurve]

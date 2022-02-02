@@ -11,7 +11,8 @@ Date format: DD/MM/YYYY
   - Added the helper functions `NavigationIndicator.end` and `NavigationIndicator.sticky`
   - Use `Curves.easeIn` for sticky navigation indicator by default
   - Use the correct accent color for navigation indicators by default
-  - `EntrancePageTransition` is now the correct page transition used when pane mode is top
+  - `EntrancePageTransition` is now the correct page transition used when display mode is top
+  - Apply correct press effect for `PaneItem` when display mode is top 
   - **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
   - **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
 
