@@ -1,12 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// Entrance is a combination of a slide up animation and a fade in
-/// animation for the incoming content. Use page refresh when the
-/// user is taken to the top of a navigational stack, such as navigating
-/// between tabs or left-nav items.
+/// Entrance is a combination of a slide up animation and a fade in animation
+/// for the incoming content. Use page refresh when the user is taken to the top
+/// of a navigational stack, such as navigating between tabs or left-nav items.
 ///
-/// This animation is used by default by [NavigationPanelBody]
+/// This animation is used by default by [NavigationBody] if display mode is top
 class EntrancePageTransition extends StatelessWidget {
   /// Creates an entrance page transition
   const EntrancePageTransition({
@@ -15,6 +14,7 @@ class EntrancePageTransition extends StatelessWidget {
     required this.animation,
     this.vertical = true,
     this.reverse = false,
+    this.startFrom = 0.25,
   }) : super(key: key);
 
   /// The widget to be animated
@@ -29,6 +29,11 @@ class EntrancePageTransition extends StatelessWidget {
   /// Whether the animation should be done from the left or from the right
   final bool reverse;
 
+  /// From where the animation will begin. By default, 0.25 is used.
+  ///
+  /// If [reverse] is true, `-startFrom` (negative) is used
+  final double startFrom;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -39,9 +44,9 @@ class EntrancePageTransition extends StatelessWidget {
       defaultValue: true,
     ));
     properties.add(FlagProperty(
-      'reverse',
+      vertical ? 'from top' : 'from left',
       value: reverse,
-      ifFalse: 'from right',
+      ifTrue: vertical ? 'from bottom' : 'from right',
       defaultValue: false,
     ));
     properties.add(PercentProperty(
@@ -53,15 +58,14 @@ class EntrancePageTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final value = animation.value + (reverse ? -startFrom : startFrom);
     return SlideTransition(
       child: FadeTransition(
         child: child,
         opacity: animation,
       ),
       position: Tween<Offset>(
-        begin: vertical
-            ? Offset(0, animation.value + (reverse ? -1 : 1))
-            : Offset(animation.value + (reverse ? -1 : 1), 0),
+        begin: vertical ? Offset(0, value) : Offset(value, 0),
         end: Offset.zero,
       ).animate(animation),
     );

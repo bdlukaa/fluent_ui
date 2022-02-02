@@ -57,7 +57,7 @@ class NavigationBody extends StatefulWidget {
   ///
   /// It can be detect the display mode of the [NavigationView] above
   /// it, if any, and change the transition accordingly. By default,
-  /// if the display mode is top, [HorizontalSlidePageTransition] is
+  /// if the display mode is top, [EntrancePageTransition] is
   /// used, otherwise [DrillInPageTransition] is used.
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
@@ -139,10 +139,10 @@ class _NavigationBodyState extends State<NavigationBody> {
               animation: animation,
             );
           } else {
-            return HorizontalSlidePageTransition(
+            return EntrancePageTransition(
               child: child,
               animation: animation,
-              fromLeft: previousIndex > widget.index,
+              vertical: true,
             );
           }
         },

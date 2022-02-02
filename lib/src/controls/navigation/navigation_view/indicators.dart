@@ -46,7 +46,7 @@ class NavigationIndicator extends StatefulWidget {
       pane: pane,
       child: child,
       color: theme.highlightColor,
-      curve: theme.animationCurve ?? Curves.linear,
+      curve: Curves.easeIn,
       axis: axis,
       topPadding: EdgeInsets.only(left: left, right: right),
     );
@@ -88,6 +88,8 @@ class NavigationIndicator extends StatefulWidget {
   final Axis axis;
 
   /// The curve used on the animation, if any
+  ///
+  /// For sticky navigation indicator, [Curves.easeIn] is recommended
   final Curve curve;
 
   /// The highlight color
@@ -179,18 +181,21 @@ class _EndNavigationIndicatorState
         final size = sizes![index];
 
         final indicator = IgnorePointer(
-          child: Container(
-            margin: EdgeInsets.symmetric(
-              vertical: isTop ? 0.0 : 10.0,
-              horizontal: isTop ? 10.0 : 0.0,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                vertical: isTop ? 0.0 : 10.0,
+                horizontal: isTop ? 10.0 : 0.0,
+              ),
+              width: isTop ? 20.0 : 6.0,
+              height: isTop ? 4.5 : size.height,
+              color: widget.color,
             ),
-            width: isTop ? size.width : 6.0,
-            height: isTop ? 6.0 : size.height,
-            color: widget.color,
           ),
         );
 
-        debugPrint('at $offset with $size');
+        // debugPrint('at $offset with $size');
 
         if (isTop) {
           return Positioned(
@@ -231,7 +236,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
     required Widget child,
     required Axis axis,
     this.topPadding = EdgeInsets.zero,
-    Curve curve = Curves.linear,
+    Curve curve = Curves.easeIn,
     Color? color,
   }) : super(
           key: key,
@@ -292,6 +297,7 @@ class _StickyNavigationIndicatorState
   }
 
   void update(int index) {
+    if (!mounted) return;
     if (index != newIndex) {
       oldIndex = newIndex;
       newIndex = index;
@@ -306,10 +312,11 @@ class _StickyNavigationIndicatorState
 
     final double hFactor = () {
       if (widget.axis == Axis.horizontal) {
-        return sizes![widget.index].height * 0.7;
+        return sizes![widget.index].height * 0.9;
       } else {
         // 6.0 of padding
-        return sizes![widget.index].width - widget.topPadding.horizontal - 6.0;
+        // return sizes![widget.index].width - widget.topPadding.horizontal - 6.0;
+        return 12.5;
       }
     }();
 
@@ -323,13 +330,21 @@ class _StickyNavigationIndicatorState
       p2Start = minOffsetAxis;
       p2End = maxOffsetAxis;
     } else {
-      p1Start = minOffsetAxis;
-      p1End = maxOffsetAxis;
+      double horizontalPadding(index) {
+        final w = sizes![index].width;
+        return (w / 2.5) - hFactor;
+      }
 
-      p2Start = minOffsetAxis + hFactor;
-      p2End = maxOffsetAxis + hFactor;
+      p1Start = minOffsetAxis + horizontalPadding(minIndex);
+      p1End = maxOffsetAxis + horizontalPadding(maxIndex);
+
+      p2Start = minOffsetAxis + horizontalPadding(minIndex) + hFactor;
+      p2End = maxOffsetAxis + horizontalPadding(maxIndex) + hFactor;
     }
 
+    /// Calculates the velocity the line will move according to a curve.
+    ///
+    /// By default, [Curves.easeIn] is used
     double calcVelocity(double p) {
       return widget.curve.transform(p) + 0.05;
     }
@@ -365,7 +380,7 @@ class _StickyNavigationIndicatorState
         return CustomPaint(
           foregroundPainter: _StickyPainter(
             y: widget.axis == Axis.horizontal
-                ? sizes!.first.height / 1.6
+                ? sizes!.first.height / 1.4
                 : sizes!.first.height - (indicatorPadding / 2),
             padding: widget.axis == Axis.horizontal
                 ? indicatorPadding
@@ -377,7 +392,7 @@ class _StickyNavigationIndicatorState
             p2Start: p2Start,
             p2End: p2End,
             color: widget.color ??
-                FluentTheme.maybeOf(context)?.accentColor ??
+                FluentTheme.maybeOf(context)?.accentColor.light ??
                 Colors.transparent,
             axis: widget.axis,
           ),

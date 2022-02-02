@@ -355,7 +355,10 @@ class ThemeData with Diagnosticable {
       animationDuration: fastAnimationDuration,
       backgroundColor: micaBackgroundColor,
       disabledColor: disabledColor,
-      highlightColor: accentColor,
+      highlightColor: accentColor.resolveFromReverseBrightness(
+        brightness,
+        level: brightness.isDark ? 2 : 0,
+      ),
       typography: typography,
       inactiveColor: inactiveColor,
     );

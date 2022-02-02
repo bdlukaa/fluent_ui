@@ -269,7 +269,7 @@ class PaneItem extends NavigationPaneItem {
                 ],
               );
               if (infoBadge != null) {
-                return Stack(clipBehavior: Clip.none, children: [
+                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
                   result,
                   if (infoBadge != null)
                     Positioned(

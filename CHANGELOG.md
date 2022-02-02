@@ -5,10 +5,15 @@ Date format: DD/MM/YYYY
 - Tests ([#142](https://github.com/bdlukaa/fluent_ui/pull/142))
 - Added Material Theme to Fluent Theme Builder ([#133](https://github.com/bdlukaa/fluent_ui/issues/133))
 - Add more customization options to PaneItem ([#111](https://github.com/bdlukaa/fluent_ui/issues/111), [#144](https://github.com/bdlukaa/fluent_ui/issues/144))
-- Properly add item key to `PaneItem` in top mode ([#143](https://github.com/bdlukaa/fluent_ui/issues/143))
-- Added the helper functions `NavigationIndicator.end` and `NavigationIndicator.sticky`
-- **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
-- **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
+- `NavigationView` updates **BREAKING**:
+  - Properly add item key to `PaneItem` in top mode ([#143](https://github.com/bdlukaa/fluent_ui/issues/143))
+  - Items bounds and positions are fetched when the item list is scrolled as well to prevent misalignment
+  - Added the helper functions `NavigationIndicator.end` and `NavigationIndicator.sticky`
+  - Use `Curves.easeIn` for sticky navigation indicator by default
+  - Use the correct accent color for navigation indicators by default
+  - `EntrancePageTransition` is now the correct page transition used when pane mode is top
+  - **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
+  - **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
 
   Before:
   ```dart

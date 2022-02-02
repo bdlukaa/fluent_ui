@@ -108,6 +108,9 @@ class NavigationViewState extends State<NavigationView> {
       debugLabel: '${widget.runtimeType} scroll controller',
       keepScrollOffset: true,
     );
+    scrollController.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
