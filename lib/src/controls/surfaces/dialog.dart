@@ -303,7 +303,23 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
           pageBuilder: (BuildContext context, animation, secondaryAnimation) {
             final pageChild = Builder(builder: builder);
             final dialog = themes?.wrap(pageChild) ?? pageChild;
-            return SafeArea(child: dialog);
+
+            /// TODO: CallbackShortcuts + FocusScope is the current workaround for
+            /// <https://github.com/flutter/flutter/issues/97581>, while it's not
+            /// fixed
+            return SafeArea(
+              child: CallbackShortcuts(
+                bindings: {
+                  const SingleActivator(LogicalKeyboardKey.escape): () {
+                    Navigator.of(context).maybePop();
+                  },
+                },
+                child: FocusScope(
+                  autofocus: true,
+                  child: dialog,
+                ),
+              ),
+            );
           },
           barrierDismissible: barrierDismissible,
           barrierLabel: barrierLabel ??
