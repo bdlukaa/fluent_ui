@@ -32,13 +32,17 @@ class _ComboboxMenuPainter extends CustomPainter {
     this.selectedIndex,
     required this.resize,
     required this.getSelectedItemOffset,
+    required Color backgroundColor,
+    required double elevation,
   })  : _painter = BoxDecoration(
           // If you add an image here, you must provide a real
           // configuration in the paint() function and you must provide some sort
           // of onChanged callback here.
           // color: color,
           borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(width: 0.5),
+          border: Border.all(width: 0.25),
+          color: backgroundColor,
+          boxShadow: kElevationToShadow[elevation],
         ).createBoxPainter(),
         super(repaint: resize);
 
@@ -158,64 +162,49 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final CurvedAnimation opacity;
-    final double unit = 0.5 / (widget.route.items.length + 1.5);
-    if (widget.itemIndex == widget.route.selectedIndex) {
-      opacity = CurvedAnimation(
-          parent: widget.route.animation!, curve: const Threshold(0.0));
-    } else {
-      final double start =
-          (0.5 + (widget.itemIndex + 1) * unit).clamp(0.0, 1.0);
-      final double end = (start + 1.5 * unit).clamp(0.0, 1.0);
-      opacity = CurvedAnimation(
-          parent: widget.route.animation!, curve: Interval(start, end));
-    }
-    Widget child = FadeTransition(
-      opacity: opacity,
-      child: HoverButton(
-        autofocus: widget.itemIndex == widget.route.selectedIndex,
-        builder: (context, states) {
-          final theme = FluentTheme.of(context);
-          return Padding(
-            padding: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
-            child: Stack(fit: StackFit.loose, children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: () {
-                    if (states.isFocused) {
-                      return ButtonThemeData.uncheckedInputColor(
-                        theme,
-                        {ButtonStates.hovering},
-                      );
-                    }
-                    return ButtonThemeData.uncheckedInputColor(theme, states);
-                  }(),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                padding: widget.padding,
-                child: widget.route.items[widget.itemIndex],
+    Widget child = HoverButton(
+      autofocus: widget.itemIndex == widget.route.selectedIndex,
+      builder: (context, states) {
+        final theme = FluentTheme.of(context);
+        return Padding(
+          padding: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+          child: Stack(fit: StackFit.loose, children: [
+            Container(
+              decoration: BoxDecoration(
+                color: () {
+                  if (states.isFocused) {
+                    return ButtonThemeData.uncheckedInputColor(
+                      theme,
+                      {ButtonStates.hovering},
+                    );
+                  }
+                  return ButtonThemeData.uncheckedInputColor(theme, states);
+                }(),
+                borderRadius: BorderRadius.circular(4.0),
               ),
-              if (states.isFocused)
-                AnimatedPositioned(
-                  duration: theme.fastAnimationDuration,
-                  curve: theme.animationCurve,
-                  top: states.isPressing ? 10.0 : 8.0,
-                  bottom: states.isPressing ? 10.0 : 8.0,
-                  child: Container(
-                    width: 3.0,
-                    decoration: BoxDecoration(
-                      color: theme.accentColor
-                          .resolveFromReverseBrightness(theme.brightness),
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
+              padding: widget.padding,
+              child: widget.route.items[widget.itemIndex],
+            ),
+            if (states.isFocused)
+              AnimatedPositioned(
+                duration: theme.fastAnimationDuration,
+                curve: theme.animationCurve,
+                top: states.isPressing ? 10.0 : 8.0,
+                bottom: states.isPressing ? 10.0 : 8.0,
+                child: Container(
+                  width: 3.0,
+                  decoration: BoxDecoration(
+                    color: theme.accentColor
+                        .resolveFromReverseBrightness(theme.brightness),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
-            ]),
-          );
-        },
-        onPressed: _handleOnTap,
-        onFocusChange: _handleFocusChange,
-      ),
+              ),
+          ]),
+        );
+      },
+      onPressed: _handleOnTap,
+      onFocusChange: _handleFocusChange,
     );
     if (kIsWeb) {
       // On the web, enter doesn't select things, *except* in a <select>
@@ -296,49 +285,45 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
 
     return FadeTransition(
       opacity: _fadeOpacity,
-      child: Acrylic(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(6.0))),
-        elevation: route.elevation.toDouble(),
-        child: CustomPaint(
-          painter: _ComboboxMenuPainter(
-            selectedIndex: route.selectedIndex,
-            resize: _resize,
-            // This offset is passed as a callback, not a value, because it must
-            // be retrieved at paint time (after layout), not at build time.
-            getSelectedItemOffset: () =>
-                route.getItemOffset(route.selectedIndex),
-          ),
-          child: Semantics(
-            scopesRoute: true,
-            namesRoute: true,
-            explicitChildNodes: true,
-            // label: localizations.popupMenuLabel,
-            child: DefaultTextStyle(
-              style: route.style,
-              child: ScrollConfiguration(
-                behavior: const _ComboboxScrollBehavior(),
-                child: PrimaryScrollController(
-                  controller: widget.route.scrollController!,
-                  child: LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      final double menuTotalHeight = widget.route.itemHeights
-                          .reduce(
-                              (double total, double height) => total + height);
-                      final bool isScrollable =
-                          _kListPadding.vertical + menuTotalHeight >
-                              constraints.maxHeight;
-                      return Scrollbar(
-                        isAlwaysShown: isScrollable,
-                        child: ListView(
-                          padding: _kListPadding,
-                          shrinkWrap: true,
-                          children: children,
-                        ),
-                      );
-                    },
-                  ),
+      child: CustomPaint(
+        painter: _ComboboxMenuPainter(
+          selectedIndex: route.selectedIndex,
+          resize: _resize,
+          // This offset is passed as a callback, not a value, because it must
+          // be retrieved at paint time (after layout), not at build time.
+          getSelectedItemOffset: () => route.getItemOffset(route.selectedIndex),
+          backgroundColor:
+              FluentTheme.of(context).acrylicBackgroundColor.withOpacity(1.0),
+          elevation: route.elevation.toDouble(),
+        ),
+        child: Semantics(
+          scopesRoute: true,
+          namesRoute: true,
+          explicitChildNodes: true,
+          // label: localizations.popupMenuLabel,
+          child: DefaultTextStyle(
+            style: route.style,
+            child: ScrollConfiguration(
+              behavior: const _ComboboxScrollBehavior(),
+              child: PrimaryScrollController(
+                controller: widget.route.scrollController!,
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final double menuTotalHeight = widget.route.itemHeights
+                        .reduce(
+                            (double total, double height) => total + height);
+                    final bool isScrollable =
+                        _kListPadding.vertical + menuTotalHeight >
+                            constraints.maxHeight;
+                    return Scrollbar(
+                      isAlwaysShown: isScrollable,
+                      child: ListView(
+                        padding: _kListPadding,
+                        shrinkWrap: true,
+                        children: children,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -749,7 +734,7 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
   final T? value;
 }
 
-/// A material design button for selecting from a list of items.
+/// A fluent design button for selecting from a list of items.
 ///
 /// A combobox button lets the user select from a number of items. The button
 /// shows the currently selected item as well as an arrow that opens a menu for
@@ -764,45 +749,6 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 /// combobox's value. It should also call [State.setState] to rebuild the
 /// combobox with the new value.
 ///
-/// {@tool dartpad --template=stateful_widget_scaffold_center}
-///
-/// This sample shows a `Combobox` with a large arrow icon,
-/// purple text style, and bold purple underline, whose value is one of "One",
-/// "Two", "Free", or "Four".
-///
-/// ![](https://flutter.github.io/assets-for-api-docs/assets/material/combobox_button.png)
-///
-/// ```dart
-/// String comboboxValue = 'One';
-///
-/// @override
-/// Widget build(BuildContext context) {
-///   return Combobox<String>(
-///     value: comboboxValue,
-///     icon: Icon(FluentIcons.chevron_down),
-///     iconSize: 24,
-///     elevation: 16,
-///     style: TextStyle(
-///       color: Colors.deepPurple
-///     ),
-///     onChanged: (String? newValue) {
-///       setState(() {
-///         comboboxValue = newValue!;
-///       });
-///     },
-///     items: <String>['One', 'Two', 'Free', 'Four']
-///       .map<ComboboxItem<String>>((String value) {
-///         return ComboboxItem<String>(
-///           value: value,
-///           child: Text(value),
-///         );
-///       })
-///       .toList(),
-///   );
-/// }
-/// ```
-/// {@end-tool}
-///
 /// If the [onChanged] callback is null or the list of [items] is null
 /// then the combobox button will be disabled, i.e. its arrow will be
 /// displayed in grey and it will not respond to input. A disabled button
@@ -815,8 +761,6 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 /// See also:
 ///
 ///  * [ComboboxItem], the class used to represent the [items].
-///  * [ElevatedButton], [TextButton], ordinary buttons that trigger a single action.
-///  * <https://material.io/design/components/menus.html#combobox-menu>
 class Combobox<T> extends StatefulWidget {
   /// Creates a combobox button.
   ///
