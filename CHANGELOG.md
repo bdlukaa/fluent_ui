@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [unreleased] - Flutter Favorite - [03/02/2022]
+## [3.8.0] - Flutter Favorite - [03/02/2022]
 
 - Tests ([#142](https://github.com/bdlukaa/fluent_ui/pull/142))
 - Added Material Theme to Fluent Theme Builder ([#133](https://github.com/bdlukaa/fluent_ui/issues/133))
