@@ -112,7 +112,7 @@ dependencies:
 
 You can see the example app [here](https://bdlukaa.github.io/fluent_ui//)
 
-Finally, run `dart pub get` to downlaod the package.
+Finally, run `dart pub get` to download the package.
 
 Projects using this library should use the stable channel of Flutter
 
