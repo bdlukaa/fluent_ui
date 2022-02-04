@@ -406,7 +406,8 @@ class _FluentAppState extends State<FluentApp> {
   Widget _builder(BuildContext context, Widget? child) {
     final themeData = theme(context);
     return m.Theme(
-      data: m.ThemeData(brightness: themeData.brightness),
+      data: themeData.materialTheme ??
+          m.ThemeData(brightness: themeData.brightness),
       child: AnimatedFluentTheme(
         curve: themeData.animationCurve,
         data: themeData,

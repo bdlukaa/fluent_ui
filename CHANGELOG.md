@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [unreleased] - TBD - [04/02/2022]
+
+- Ability to specify custom material theme ([#152](https://github.com/bdlukaa/fluent_ui/issues/152))
+
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 
 - Tests ([#142](https://github.com/bdlukaa/fluent_ui/pull/142))

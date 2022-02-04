@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
 
 class FluentTheme extends StatelessWidget {
@@ -204,6 +204,8 @@ class ThemeData with Diagnosticable {
 
   final ButtonThemeData buttonTheme;
 
+  final m.ThemeData? materialTheme;
+
   const ThemeData.raw({
     required this.typography,
     required this.accentColor,
@@ -245,6 +247,7 @@ class ThemeData with Diagnosticable {
     required this.snackbarTheme,
     required this.pillButtonBarTheme,
     required this.bottomSheetTheme,
+    required this.materialTheme,
   });
 
   static ThemeData light() {
@@ -297,6 +300,7 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    m.ThemeData? materialTheme,
   }) {
     brightness ??= Brightness.light;
 
@@ -411,6 +415,7 @@ class ThemeData with Diagnosticable {
       snackbarTheme: snackbarTheme,
       pillButtonBarTheme: pillButtonBarTheme,
       bottomSheetTheme: bottomSheetTheme,
+      materialTheme: materialTheme,
     );
   }
 
@@ -475,6 +480,7 @@ class ThemeData with Diagnosticable {
           a.pillButtonBarTheme, b.pillButtonBarTheme, t),
       bottomSheetTheme:
           BottomSheetThemeData.lerp(a.bottomSheetTheme, b.bottomSheetTheme, t),
+      materialTheme: t < 0.5 ? a.materialTheme : b.materialTheme,
     );
   }
 
@@ -519,6 +525,7 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    m.ThemeData? materialTheme,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
@@ -569,6 +576,7 @@ class ThemeData with Diagnosticable {
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
       snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
+      materialTheme: materialTheme ?? this.materialTheme,
     );
   }
 
