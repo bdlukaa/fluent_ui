@@ -5,8 +5,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
-// TODO: Add navigation arrows to scrollbar (Currently blocked by https://github.com/flutter/flutter/issues/80370)
-
 /// {@macro flutter.widgets.Scrollbar}
 class Scrollbar extends RawScrollbar {
   /// Creates a fluent-styled scrollbar that wraps the given [child].
@@ -15,19 +13,22 @@ class Scrollbar extends RawScrollbar {
   /// source of [ScrollNotification] notifications, typically a
   /// [Scrollable] widget.
   ///
-  /// The [child], [thickness], [thumbColor], [isAlwaysShown],
-  /// [fadeDuration], and [timeToFade] arguments must not be null.
+  /// The [child], [fadeDuration], and [timeToFade] arguments must not be null.
   const Scrollbar({
     Key? key,
     required Widget child,
     ScrollController? controller,
     bool isAlwaysShown = true,
     this.style,
+    Duration fadeDuration = const Duration(milliseconds: 300),
+    Duration timeToFade = const Duration(milliseconds: 600),
   }) : super(
           key: key,
           child: child,
           isAlwaysShown: isAlwaysShown,
           controller: controller,
+          timeToFade: timeToFade,
+          fadeDuration: fadeDuration,
         );
 
   /// The style applied to the scroll bar. If non-null, it's mescled
@@ -76,6 +77,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(ButtonStates state) {
+    // if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+    //   return _scrollbarTheme.backgroundColor ?? Colors.transparent;
+    // }
     return Colors.transparent;
   }
 
@@ -353,8 +357,8 @@ class ScrollbarThemeData with Diagnosticable {
       thickness: 2.0,
       hoveringThickness: 6.0,
       backgroundColor: brightness.isLight
-          ? const Color(0xFFe9e9e9)
-          : const Color(0xFF1b1b1b),
+          ? const Color(0xFFf9f9f9)
+          : const Color(0xFF2c2f2a),
       radius: const Radius.circular(100.0),
       hoveringRadius: const Radius.circular(100.0),
       crossAxisMargin: 4.0,

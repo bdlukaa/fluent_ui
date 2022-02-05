@@ -4,7 +4,9 @@ Date format: DD/MM/YYYY
 
 - Do not override material `Theme` on `FluentApp` ([#155](https://github.com/bdlukaa/fluent_ui/pull/154))
 - Slider thumb now doesn't change inner size if hovered while disabled
-- Same icon color for checked and interstate on `Checkbox`
+- Uniform foreground color on `Checkbox`
+- Updated `FilledButton` Style
+- `ToggleButton` and `FilledButton` now share the same style
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 

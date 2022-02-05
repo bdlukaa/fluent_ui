@@ -150,22 +150,14 @@ class ToggleButtonThemeData with Diagnosticable {
   });
 
   factory ToggleButtonThemeData.standard(ThemeData theme) {
-    final isDark = theme.brightness.isDark;
-    Color checkedColor(Set<ButtonStates> states) => states.isDisabled
-        ? ButtonThemeData.buttonColor(theme.brightness, states)
-        : states.isPressing
-            ? isDark
-                ? theme.accentColor.darker
-                : theme.accentColor.lighter
-            : states.isHovering
-                ? isDark
-                    ? theme.accentColor.dark
-                    : theme.accentColor.light
-                : theme.accentColor;
-
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(checkedColor),
+        backgroundColor: ButtonState.resolveWith(
+          (states) => FilledButton.backgroundColor(
+            theme,
+            states,
+          ),
+        ),
         shape: ButtonState.all(RoundedRectangleBorder(
           side: const BorderSide(
             color: Colors.transparent,
@@ -174,7 +166,10 @@ class ToggleButtonThemeData with Diagnosticable {
           borderRadius: BorderRadius.circular(4.0),
         )),
         foregroundColor: ButtonState.resolveWith(
-          (states) => checkedColor(states).basedOnLuminance(),
+          (states) => FilledButton.backgroundColor(
+            theme,
+            states,
+          ).basedOnLuminance(),
         ),
       ),
     );
