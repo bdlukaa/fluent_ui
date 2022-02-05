@@ -1,5 +1,7 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 Widget wrapApp({required Widget child}) {
   return FluentApp(home: child);
@@ -51,4 +53,31 @@ void main() {
     // Default US "select all" text.
     expect(find.text('Select all'), findsNWidgets(2));
   });
+
+  testWidgets(
+    'A parent material Theme is not overriden by FluentApp',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        m.Theme(
+          data: m.ThemeData.light(),
+          child: FluentApp(
+            theme: ThemeData.dark(),
+            home: Builder(
+              builder: (BuildContext context) {
+                return Column(
+                  children: <Widget>[
+                    Text('${m.Theme.of(context).brightness}'),
+                    Text('${FluentTheme.of(context).brightness}'),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Brightness.light'), findsOneWidget);
+      expect(find.text('Brightness.dark'), findsOneWidget);
+    },
+  );
 }
