@@ -472,46 +472,49 @@ class _TabViewState extends State<TabView> {
         widget.tabs[widget.currentIndex].onClosed?.call();
       }
 
-      return CallbackShortcuts(
-        bindings: {
-          const SingleActivator(LogicalKeyboardKey.f4, control: true):
-              _onClosePressed,
-          const SingleActivator(LogicalKeyboardKey.keyW, control: true):
-              _onClosePressed,
-          const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
-            widget.onNewPressed?.call();
-          },
-          ...Map.fromIterable(
-            List<int>.generate(9, (index) => index),
-            key: (i) {
-              final digits = [
-                LogicalKeyboardKey.digit1,
-                LogicalKeyboardKey.digit2,
-                LogicalKeyboardKey.digit3,
-                LogicalKeyboardKey.digit4,
-                LogicalKeyboardKey.digit5,
-                LogicalKeyboardKey.digit6,
-                LogicalKeyboardKey.digit7,
-                LogicalKeyboardKey.digit8,
-                LogicalKeyboardKey.digit9,
-              ];
-              return SingleActivator(digits[i], control: true);
+      return FocusScope(
+        autofocus: true,
+        child: CallbackShortcuts(
+          bindings: {
+            const SingleActivator(LogicalKeyboardKey.f4, control: true):
+                _onClosePressed,
+            const SingleActivator(LogicalKeyboardKey.keyW, control: true):
+                _onClosePressed,
+            const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
+              widget.onNewPressed?.call();
             },
-            value: (index) {
-              return () {
-                // If it's the last, move to the last tab
-                if (index == 8) {
-                  widget.onChanged?.call(widget.tabs.length - 1);
-                } else {
-                  if (widget.tabs.length - 1 >= index) {
-                    widget.onChanged?.call(index);
+            ...Map.fromIterable(
+              List<int>.generate(9, (index) => index),
+              key: (i) {
+                final digits = [
+                  LogicalKeyboardKey.digit1,
+                  LogicalKeyboardKey.digit2,
+                  LogicalKeyboardKey.digit3,
+                  LogicalKeyboardKey.digit4,
+                  LogicalKeyboardKey.digit5,
+                  LogicalKeyboardKey.digit6,
+                  LogicalKeyboardKey.digit7,
+                  LogicalKeyboardKey.digit8,
+                  LogicalKeyboardKey.digit9,
+                ];
+                return SingleActivator(digits[i], control: true);
+              },
+              value: (index) {
+                return () {
+                  // If it's the last, move to the last tab
+                  if (index == 8) {
+                    widget.onChanged?.call(widget.tabs.length - 1);
+                  } else {
+                    if (widget.tabs.length - 1 >= index) {
+                      widget.onChanged?.call(index);
+                    }
                   }
-                }
-              };
-            },
-          ),
-        },
-        child: tabBar,
+                };
+              },
+            ),
+          },
+          child: tabBar,
+        ),
       );
     }
     return tabBar;

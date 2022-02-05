@@ -94,7 +94,7 @@ class RatingBar extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('amount', amount));
+    properties.add(IntProperty('amount', amount, defaultValue: 5));
     properties.add(DoubleProperty('rating', rating));
     properties.add(
       DiagnosticsProperty<Duration>('animationDuration', animationDuration),
@@ -112,7 +112,7 @@ class RatingBar extends StatefulWidget {
       value: autofocus,
       ifFalse: 'manual focus',
     ));
-    properties.add(DoubleProperty('starSpacing', starSpacing));
+    properties.add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0));
   }
 }
 

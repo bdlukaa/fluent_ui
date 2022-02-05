@@ -303,10 +303,10 @@ class ThemeData with Diagnosticable {
     final bool isLight = brightness == Brightness.light;
 
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
-    fasterAnimationDuration ??= const Duration(milliseconds: 90);
-    fastAnimationDuration ??= const Duration(milliseconds: 150);
-    mediumAnimationDuration ??= const Duration(milliseconds: 300);
-    slowAnimationDuration ??= const Duration(milliseconds: 500);
+    fasterAnimationDuration ??= const Duration(milliseconds: 83);
+    fastAnimationDuration ??= const Duration(milliseconds: 167);
+    mediumAnimationDuration ??= const Duration(milliseconds: 250);
+    slowAnimationDuration ??= const Duration(milliseconds: 358);
     animationCurve ??= standartCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;

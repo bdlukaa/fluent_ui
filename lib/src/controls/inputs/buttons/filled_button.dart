@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 /// See also:
 ///
+///   * [Button], the default button
 ///   * [OutlinedButton], an outlined button
 ///   * [TextButton], a borderless button with mainly text-based content
 class FilledButton extends Button {
