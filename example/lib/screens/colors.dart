@@ -194,33 +194,43 @@ class ColorBlock extends StatelessWidget {
     final textColor = color.basedOnLuminance();
     return Tooltip(
       message: '\n$clipboard\n(tap to copy to clipboard)\n',
-      child: GestureDetector(
-        onTap: () async {
+      child: HoverButton(
+        onPressed: () async {
           await FlutterClipboard.copy(clipboard);
           showCopiedSnackbar(context, clipboard);
         },
-        child: Container(
-          height: 85,
-          width: 85,
-          padding: const EdgeInsets.all(6.0),
-          color: color,
-          child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Text(
-              name,
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+        builder: (context, states) {
+          return FocusBorder(
+            focused: states.isFocused,
+            useStackApproach: true,
+            renderOutside: false,
+            child: Container(
+              height: 85,
+              width: 85,
+              padding: const EdgeInsets.all(6.0),
+              color: color,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (variant != null)
+                    Text(
+                      variant!,
+                      style: TextStyle(color: textColor),
+                    ),
+                ],
               ),
             ),
-            const Spacer(),
-            if (variant != null)
-              Text(
-                variant!,
-                style: TextStyle(color: textColor),
-              ),
-          ]),
-        ),
+          );
+        },
       ),
     );
   }

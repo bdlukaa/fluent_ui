@@ -445,7 +445,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemHeader], used to label groups of items.
 class PaneItemAction extends PaneItem implements NavigationPaneItem {
   PaneItemAction({
-    required icon,
+    required Widget icon,
     required this.onTap,
     title,
     infoBadge,
@@ -459,8 +459,8 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
           autofocus: autofocus,
         );
 
-  /// The function who will be executed when the item is clicked
-  final Function() onTap;
+  /// The function that will be executed when the item is clicked
+  final VoidCallback onTap;
 
   @override
   Widget build(

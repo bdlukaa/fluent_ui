@@ -109,39 +109,44 @@ class _IconsPageState extends State<IconsPage> {
                     showCopiedSnackbar(context, copyText);
                   },
                   cursor: SystemMouseCursors.copy,
-                  builder: (context, states) => Tooltip(
-                    useMousePosition: false,
-                    message:
-                        '\nFluentIcons.${e.key}\n(tap to copy to clipboard)\n',
-                    child: RepaintBoundary(
-                      child: AnimatedContainer(
-                        duration:
-                            FluentTheme.of(context).fasterAnimationDuration,
-                        decoration: BoxDecoration(
-                          color: ButtonThemeData.uncheckedInputColor(
-                            FluentTheme.of(context),
-                            states,
-                          ),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: const EdgeInsets.all(6.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(e.value, size: 40),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                snakeCasetoSentenceCase(e.key),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.fade,
+                  builder: (context, states) {
+                    return FocusBorder(
+                      focused: states.isFocused,
+                      child: Tooltip(
+                        useMousePosition: false,
+                        message:
+                            '\nFluentIcons.${e.key}\n(tap to copy to clipboard)\n',
+                        child: RepaintBoundary(
+                          child: AnimatedContainer(
+                            duration:
+                                FluentTheme.of(context).fasterAnimationDuration,
+                            decoration: BoxDecoration(
+                              color: ButtonThemeData.uncheckedInputColor(
+                                FluentTheme.of(context),
+                                states,
                               ),
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
-                          ],
+                            padding: const EdgeInsets.all(6.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(e.value, size: 40),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    snakeCasetoSentenceCase(e.key),
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               }).toList(),
             ),
