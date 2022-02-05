@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/colors.dart';
@@ -115,12 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int index = 0;
 
-  final colorsController = ScrollController();
   final settingsController = ScrollController();
 
   @override
   void dispose() {
-    colorsController.dispose();
     settingsController.dispose();
     super.dispose();
   }
@@ -225,19 +223,17 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
           ),
-          PaneItemAction(
+          _LinkPaneItemAction(
             icon: const Icon(FluentIcons.open_source),
             title: const Text('Source code'),
-            onTap: () {
-              launch('https://github.com/bdlukaa/fluent_ui');
-            },
+            link: 'https://github.com/bdlukaa/fluent_ui',
           ),
         ],
       ),
       content: NavigationBody(index: index, children: [
         const InputsPage(),
         const Forms(),
-        ColorsPage(controller: colorsController),
+        const ColorsPage(),
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
@@ -295,5 +291,46 @@ class WindowButtons extends StatelessWidget {
         child: CloseWindowButton(colors: closeButtonColors),
       ),
     ]);
+  }
+}
+
+class _LinkPaneItemAction extends PaneItem {
+  _LinkPaneItemAction({
+    required Widget icon,
+    required this.link,
+    title,
+    infoBadge,
+    focusNode,
+    autofocus = false,
+  }) : super(
+          icon: icon,
+          title: title,
+          infoBadge: infoBadge,
+          focusNode: focusNode,
+          autofocus: autofocus,
+        );
+
+  final String link;
+
+  @override
+  Widget build(
+    BuildContext context,
+    bool selected,
+    VoidCallback? onPressed, {
+    PaneDisplayMode? displayMode,
+    bool showTextOnTop = true,
+    bool? autofocus,
+  }) {
+    return Link(
+      uri: Uri.parse(link),
+      builder: (context, followLink) => super.build(
+        context,
+        selected,
+        followLink,
+        displayMode: displayMode,
+        showTextOnTop: showTextOnTop,
+        autofocus: autofocus,
+      ),
+    );
   }
 }

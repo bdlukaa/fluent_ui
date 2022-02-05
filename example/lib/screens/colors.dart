@@ -15,9 +15,7 @@ const _primaryNames = [
 ];
 
 class ColorsPage extends StatelessWidget {
-  const ColorsPage({Key? key, this.controller}) : super(key: key);
-
-  final ScrollController? controller;
+  const ColorsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,126 +25,109 @@ class ColorsPage extends StatelessWidget {
         horizontalMargin: EdgeInsets.all(10),
       ),
     );
-    return ScaffoldPage(
+    return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Colors Showcase')),
-      content: ListView(
-        padding: EdgeInsets.only(
-          bottom: kPageDefaultVerticalPadding,
-          left: PageHeader.horizontalPadding(context),
-          right: PageHeader.horizontalPadding(context),
+      bottomBar: const InfoBar(
+        title: Text('Tip:'),
+        content: Text(
+          'You can click on any color to copy it to the clipboard!',
         ),
-        controller: controller,
-        addRepaintBoundaries: true,
-        children: [
-          Column(children: const [
-            Divider(
-              style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-            ),
-            InfoBar(
-              title: Text('Tip:'),
-              content: Text(
-                'You can click on any color to copy it to the clipboard!',
+      ),
+      children: [
+        const SizedBox(height: 14.0),
+        InfoLabel(
+          label: 'Primary Colors',
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: List.generate(Colors.accentColors.length, (index) {
+              final name = _primaryNames[index];
+              final color = Colors.accentColors[index];
+              return ColorBlock(
+                name: name,
+                color: color,
+                clipboard: 'Colors.${name.toLowerCase()}',
+              );
+            }),
+          ),
+        ),
+        divider,
+        InfoLabel(
+          label: 'Info Colors',
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              const ColorBlock(
+                name: 'Warning 1',
+                color: Colors.warningPrimaryColor,
+                clipboard: 'Colors.warningPrimaryColor',
               ),
-            ),
-            Divider(
-              style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-            ),
-          ]),
-          const SizedBox(height: 14.0),
-          InfoLabel(
-            label: 'Primary Colors',
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: List.generate(Colors.accentColors.length, (index) {
-                final name = _primaryNames[index];
-                final color = Colors.accentColors[index];
+              ColorBlock(
+                name: 'Warning 2',
+                color: Colors.warningSecondaryColor,
+                clipboard: 'Colors.warningSecondaryColor',
+              ),
+              const ColorBlock(
+                name: 'Error 1',
+                color: Colors.errorPrimaryColor,
+                clipboard: 'Colors.errorPrimaryColor',
+              ),
+              ColorBlock(
+                name: 'Error 2',
+                color: Colors.errorSecondaryColor,
+                clipboard: 'Colors.errorSecondaryColor',
+              ),
+              const ColorBlock(
+                name: 'Success 1',
+                color: Colors.successPrimaryColor,
+                clipboard: 'Colors.successPrimaryColor',
+              ),
+              ColorBlock(
+                name: 'Success 2',
+                color: Colors.successSecondaryColor,
+                clipboard: 'Colors.successSecondaryColor',
+              ),
+            ],
+          ),
+        ),
+        divider,
+        InfoLabel(
+          label: 'All Shades',
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: const [
+              ColorBlock(
+                name: 'Black',
+                color: Colors.black,
+                clipboard: 'Colors.black',
+              ),
+              ColorBlock(
+                name: 'White',
+                color: Colors.white,
+                clipboard: 'Colors.white',
+              ),
+            ]),
+            const SizedBox(height: 10),
+            Wrap(
+              children: List.generate(22, (index) {
+                final factor = (index + 1) * 10;
                 return ColorBlock(
-                  name: name,
-                  color: color,
-                  clipboard: 'Colors.${name.toLowerCase()}',
+                  name: 'Grey#$factor',
+                  color: Colors.grey[factor],
+                  clipboard: 'Colors.grey[$factor]',
                 );
               }),
             ),
-          ),
-          divider,
-          InfoLabel(
-            label: 'Info Colors',
-            child: Wrap(
-              spacing: 10,
+            const SizedBox(height: 10),
+            Wrap(
+              children: accent,
               runSpacing: 10,
-              children: [
-                const ColorBlock(
-                  name: 'Warning 1',
-                  color: Colors.warningPrimaryColor,
-                  clipboard: 'Colors.warningPrimaryColor',
-                ),
-                ColorBlock(
-                  name: 'Warning 2',
-                  color: Colors.warningSecondaryColor,
-                  clipboard: 'Colors.warningSecondaryColor',
-                ),
-                const ColorBlock(
-                  name: 'Error 1',
-                  color: Colors.errorPrimaryColor,
-                  clipboard: 'Colors.errorPrimaryColor',
-                ),
-                ColorBlock(
-                  name: 'Error 2',
-                  color: Colors.errorSecondaryColor,
-                  clipboard: 'Colors.errorSecondaryColor',
-                ),
-                const ColorBlock(
-                  name: 'Success 1',
-                  color: Colors.successPrimaryColor,
-                  clipboard: 'Colors.successPrimaryColor',
-                ),
-                ColorBlock(
-                  name: 'Success 2',
-                  color: Colors.successSecondaryColor,
-                  clipboard: 'Colors.successSecondaryColor',
-                ),
-              ],
+              spacing: 10,
             ),
-          ),
-          divider,
-          InfoLabel(
-            label: 'All Shades',
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: const [
-                ColorBlock(
-                  name: 'Black',
-                  color: Colors.black,
-                  clipboard: 'Colors.black',
-                ),
-                ColorBlock(
-                  name: 'White',
-                  color: Colors.white,
-                  clipboard: 'Colors.white',
-                ),
-              ]),
-              const SizedBox(height: 10),
-              Wrap(
-                children: List.generate(22, (index) {
-                  final factor = (index + 1) * 10;
-                  return ColorBlock(
-                    name: 'Grey#$factor',
-                    color: Colors.grey[factor],
-                    clipboard: 'Colors.grey[$factor]',
-                  );
-                }),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                children: accent,
-                runSpacing: 10,
-                spacing: 10,
-              ),
-            ]),
-          ),
-        ],
-      ),
+          ]),
+        ),
+      ],
     );
   }
 
@@ -194,33 +175,43 @@ class ColorBlock extends StatelessWidget {
     final textColor = color.basedOnLuminance();
     return Tooltip(
       message: '\n$clipboard\n(tap to copy to clipboard)\n',
-      child: GestureDetector(
-        onTap: () async {
+      child: HoverButton(
+        onPressed: () async {
           await FlutterClipboard.copy(clipboard);
           showCopiedSnackbar(context, clipboard);
         },
-        child: Container(
-          height: 85,
-          width: 85,
-          padding: const EdgeInsets.all(6.0),
-          color: color,
-          child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Text(
-              name,
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+        builder: (context, states) {
+          return FocusBorder(
+            focused: states.isFocused,
+            useStackApproach: true,
+            renderOutside: false,
+            child: Container(
+              height: 85,
+              width: 85,
+              padding: const EdgeInsets.all(6.0),
+              color: color,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (variant != null)
+                    Text(
+                      variant!,
+                      style: TextStyle(color: textColor),
+                    ),
+                ],
               ),
             ),
-            const Spacer(),
-            if (variant != null)
-              Text(
-                variant!,
-                style: TextStyle(color: textColor),
-              ),
-          ]),
-        ),
+          );
+        },
       ),
     );
   }

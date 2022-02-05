@@ -33,6 +33,7 @@ class Slider extends StatefulWidget {
     this.focusNode,
     this.vertical = false,
     this.autofocus = false,
+    this.mouseCursor = MouseCursor.defer,
   })  : assert(value >= min && value <= max),
         assert(divisions == null || divisions > 0),
         super(key: key);
@@ -42,8 +43,112 @@ class Slider extends StatefulWidget {
   /// The slider's thumb is drawn at a position that corresponds to this value.
   final double value;
 
+  /// Called during a drag when the user is selecting a new value for the slider
+  /// by dragging.
+  ///
+  /// The slider passes the new value to the callback but does not actually
+  /// change state until the parent widget rebuilds the slider with the new
+  /// value.
+  ///
+  /// If null, the slider will be displayed as disabled.
+  ///
+  /// The callback provided to onChanged should update the state of the parent
+  /// [StatefulWidget] using the [State.setState] method, so that the parent
+  /// gets rebuilt; for example:
+  ///
+  /// {@tool snippet}
+  ///
+  /// ```dart
+  /// Slider(
+  ///   value: _duelCommandment.toDouble(),
+  ///   min: 1.0,
+  ///   max: 10.0,
+  ///   divisions: 10,
+  ///   label: '$_duelCommandment',
+  ///   onChanged: (double newValue) {
+  ///     setState(() {
+  ///       _duelCommandment = newValue.round();
+  ///     });
+  ///   },
+  /// )
+  /// ```
+  /// {@end-tool}
+  ///
+  /// See also:
+  ///
+  ///  * [onChangeStart] for a callback that is called when the user starts
+  ///    changing the value.
+  ///  * [onChangeEnd] for a callback that is called when the user stops
+  ///    changing the value.
   final ValueChanged<double>? onChanged;
+
+  /// Called when the user starts selecting a new value for the slider.
+  ///
+  /// This callback shouldn't be used to update the slider [value] (use
+  /// [onChanged] for that), but rather to be notified when the user has started
+  /// selecting a new value by starting a drag or with a tap.
+  ///
+  /// The value passed will be the last [value] that the slider had before the
+  /// change began.
+  ///
+  /// {@tool snippet}
+  ///
+  /// ```dart
+  /// Slider(
+  ///   value: _duelCommandment.toDouble(),
+  ///   min: 1.0,
+  ///   max: 10.0,
+  ///   divisions: 10,
+  ///   label: '$_duelCommandment',
+  ///   onChanged: (double newValue) {
+  ///     setState(() {
+  ///       _duelCommandment = newValue.round();
+  ///     });
+  ///   },
+  ///   onChangeStart: (double startValue) {
+  ///     print('Started change at $startValue');
+  ///   },
+  /// )
+  /// ```
+  /// {@end-tool}
+  ///
+  /// See also:
+  ///
+  ///  * [onChangeEnd] for a callback that is called when the value change is
+  ///    complete.
   final ValueChanged<double>? onChangeStart;
+
+  /// Called when the user is done selecting a new value for the slider.
+  ///
+  /// This callback shouldn't be used to update the slider [value] (use
+  /// [onChanged] for that), but rather to know when the user has completed
+  /// selecting a new [value] by ending a drag or a click.
+  ///
+  /// {@tool snippet}
+  ///
+  /// ```dart
+  /// Slider(
+  ///   value: _duelCommandment.toDouble(),
+  ///   min: 1.0,
+  ///   max: 10.0,
+  ///   divisions: 10,
+  ///   label: '$_duelCommandment',
+  ///   onChanged: (double newValue) {
+  ///     setState(() {
+  ///       _duelCommandment = newValue.round();
+  ///     });
+  ///   },
+  ///   onChangeEnd: (double newValue) {
+  ///     print('Ended change on $newValue');
+  ///   },
+  /// )
+  /// ```
+  /// {@end-tool}
+  ///
+  /// See also:
+  ///
+  ///  * [onChangeStart] for a callback that is called when a value change
+  ///    begins.
   final ValueChanged<double>? onChangeEnd;
 
   /// The maximum value the user can select.
@@ -86,6 +191,9 @@ class Slider extends StatefulWidget {
   /// real-world value that is normally shown vertically
   /// (such as temperature).
   final bool vertical;
+
+  /// {@macro fluent_ui.controls.inputs.HoverButton.mouseCursor}
+  final MouseCursor mouseCursor;
 
   @override
   _SliderState createState() => _SliderState();
@@ -135,8 +243,9 @@ class _SliderState extends m.State<Slider> {
     assert(debugCheckHasFluentTheme(context));
     final style = SliderTheme.of(context).merge(widget.style);
     Widget child = HoverButton(
-      onPressed: () {},
+      onPressed: widget.onChanged == null ? null : () {},
       margin: style.margin ?? EdgeInsets.zero,
+      cursor: widget.mouseCursor,
       builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
         child: TweenAnimationBuilder<double>(

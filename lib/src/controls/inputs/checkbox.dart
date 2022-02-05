@@ -1,5 +1,3 @@
-// ignore_for_file: overridden_fields
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -117,7 +115,8 @@ class Checkbox extends StatelessWidget {
             size: 12,
             color: () {
               if (checked == null) {
-                return style.thirdstateIconColor?.resolve(state);
+                return style.thirdstateIconColor?.resolve(state) ??
+                    style.checkedIconColor?.resolve(state);
               } else if (checked!) {
                 return style.checkedIconColor?.resolve(state);
               } else {
@@ -150,12 +149,10 @@ class CheckboxTheme extends InheritedTheme {
   /// look like.
   const CheckboxTheme({
     Key? key,
-    required this.child,
+    required Widget child,
     required this.data,
   }) : super(key: key, child: child);
 
-  @override
-  final Widget child;
   final CheckboxThemeData data;
 
   /// Creates a button theme that controls how descendant [Checkbox]es should
@@ -273,7 +270,10 @@ class CheckboxThemeData with Diagnosticable {
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
         return !states.isDisabled
-            ? style.checkedColor
+            ? ButtonThemeData.checkedInputColor(
+                style,
+                states,
+              ).basedOnLuminance()
             : style.brightness.isLight
                 ? Colors.white
                 : const Color.fromRGBO(255, 255, 255, 0.5302);

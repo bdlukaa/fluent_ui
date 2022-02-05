@@ -22,18 +22,16 @@ class _InputsPageState extends State<InputsPage> {
 
   final FlyoutController controller = FlyoutController();
   final FlyoutController dpController = FlyoutController();
-  final ScrollController scrollController = ScrollController();
 
   @override
   void dispose() {
     controller.dispose();
-    scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
+    return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('Inputs showcase'),
         commandBar: ToggleSwitch(
@@ -42,145 +40,138 @@ class _InputsPageState extends State<InputsPage> {
           content: const Text('Disabled'),
         ),
       ),
-      content: SingleChildScrollView(
-        controller: scrollController,
-        padding: EdgeInsets.symmetric(
-          horizontal: PageHeader.horizontalPadding(context),
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Mica(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InfoLabel(
-                      label: 'Interactive Inputs',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            checked: value,
-                            onChanged: disabled
-                                ? null
-                                : (v) => setState(() => value = v ?? false),
-                            content: Text(
-                              'Checkbox ${value ? 'on ' : 'off'}',
-                              style: TextStyle(
-                                color: FluentTheme.of(context).inactiveColor,
-                              ),
+      children: [
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Mica(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InfoLabel(
+                    label: 'Interactive Inputs',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          checked: value,
+                          onChanged: disabled
+                              ? null
+                              : (v) => setState(() => value = v ?? false),
+                          content: Text(
+                            'Checkbox ${value ? 'on ' : 'off'}',
+                            style: TextStyle(
+                              color: FluentTheme.of(context).inactiveColor,
                             ),
                           ),
-                          ToggleSwitch(
-                            checked: value,
-                            onChanged: disabled
-                                ? null
-                                : (v) => setState(() => value = v),
-                            content: Text(
-                              'Switcher ${value ? 'on ' : 'off'}',
-                              style: TextStyle(
-                                color: FluentTheme.of(context).inactiveColor,
-                              ),
+                        ),
+                        ToggleSwitch(
+                          checked: value,
+                          onChanged: disabled
+                              ? null
+                              : (v) => setState(() => value = v),
+                          content: Text(
+                            'Switcher ${value ? 'on ' : 'off'}',
+                            style: TextStyle(
+                              color: FluentTheme.of(context).inactiveColor,
                             ),
                           ),
-                          RadioButton(
-                            checked: value,
-                            onChanged: disabled
-                                ? null
-                                : (v) => setState(() => value = v),
-                            content: Text(
-                              'Radio Button ${value ? 'on ' : 'off'}',
-                              style: TextStyle(
-                                color: FluentTheme.of(context).inactiveColor,
-                              ),
+                        ),
+                        RadioButton(
+                          checked: value,
+                          onChanged: disabled
+                              ? null
+                              : (v) => setState(() => value = v),
+                          content: Text(
+                            'Radio Button ${value ? 'on ' : 'off'}',
+                            style: TextStyle(
+                              color: FluentTheme.of(context).inactiveColor,
                             ),
                           ),
-                          spacer,
-                          ToggleButton(
-                            child: const Text('Toggle Button'),
-                            checked: value,
-                            onChanged: disabled
-                                ? null
-                                : (value) => setState(() => this.value = value),
-                          ),
-                        ],
-                      ),
+                        ),
+                        spacer,
+                        ToggleButton(
+                          child: const Text('Toggle Button'),
+                          checked: value,
+                          onChanged: disabled
+                              ? null
+                              : (value) => setState(() => this.value = value),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              _buildButtons(),
-              _buildSliders(),
-              Mica(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      DropDownButton(
-                        disabled: disabled,
-                        controller: dpController,
-                        contentWidth: 150,
-                        leading: const Icon(FluentIcons.align_left),
-                        title: const Text('Alignment'),
-                        items: [
-                          DropDownButtonItem(
-                            title: const Text('Left'),
-                            leading: const Icon(FluentIcons.align_left),
-                            onTap: () {},
-                          ),
-                          DropDownButtonItem(
-                            title: const Text('Center'),
-                            leading: const Icon(FluentIcons.align_center),
-                            onTap: () {},
-                          ),
-                          DropDownButtonItem(
-                            title: const Text('Right'),
-                            leading: const Icon(FluentIcons.align_right),
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Flyout(
-                          content: Padding(
-                            padding: const EdgeInsets.only(left: 27),
-                            child: FlyoutContent(
-                              padding: EdgeInsets.zero,
-                              child: ListView(shrinkWrap: true, children: [
-                                TappableListTile(
-                                    title: const Text('New'), onTap: () {}),
-                                TappableListTile(
-                                    title: const Text('Open'), onTap: () {}),
-                                TappableListTile(
-                                    title: const Text('Save'), onTap: () {}),
-                                TappableListTile(
-                                    title: const Text('Exit'), onTap: () {}),
-                              ]),
-                            ),
-                          ),
-                          verticalOffset: 20,
-                          contentWidth: 100,
-                          controller: controller,
-                          child: Button(
-                            child: const Text('File'),
-                            onPressed:
-                                disabled ? null : () => controller.open = true,
+            ),
+            _buildButtons(),
+            _buildSliders(),
+            Mica(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    DropDownButton(
+                      disabled: disabled,
+                      controller: dpController,
+                      contentWidth: 150,
+                      leading: const Icon(FluentIcons.align_left),
+                      title: const Text('Alignment'),
+                      items: [
+                        DropDownButtonItem(
+                          title: const Text('Left'),
+                          leading: const Icon(FluentIcons.align_left),
+                          onTap: () {},
+                        ),
+                        DropDownButtonItem(
+                          title: const Text('Center'),
+                          leading: const Icon(FluentIcons.align_center),
+                          onTap: () {},
+                        ),
+                        DropDownButtonItem(
+                          title: const Text('Right'),
+                          leading: const Icon(FluentIcons.align_right),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Flyout(
+                        content: Padding(
+                          padding: const EdgeInsets.only(left: 27),
+                          child: FlyoutContent(
+                            padding: EdgeInsets.zero,
+                            child: ListView(shrinkWrap: true, children: [
+                              TappableListTile(
+                                  title: const Text('New'), onTap: () {}),
+                              TappableListTile(
+                                  title: const Text('Open'), onTap: () {}),
+                              TappableListTile(
+                                  title: const Text('Save'), onTap: () {}),
+                              TappableListTile(
+                                  title: const Text('Exit'), onTap: () {}),
+                            ]),
                           ),
                         ),
+                        verticalOffset: 20,
+                        contentWidth: 100,
+                        controller: controller,
+                        child: Button(
+                          child: const Text('File'),
+                          onPressed:
+                              disabled ? null : () => controller.open = true,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
+      ],
     );
   }
 
@@ -212,7 +203,7 @@ class _InputsPageState extends State<InputsPage> {
                                 // Delete file here
                               },
                             ),
-                            Button(
+                            FilledButton(
                               child: const Text('Cancel'),
                               onPressed: () => Navigator.pop(context),
                             ),

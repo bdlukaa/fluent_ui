@@ -5,9 +5,11 @@ import 'package:flutter/rendering.dart';
 /// A button that can be on or off.
 ///
 /// See also:
-///   * [Checkbox](https://github.com/bdlukaa/fluent_ui#checkbox)
-///   * [ToggleSwitch](https://github.com/bdlukaa/fluent_ui#toggle-switches)
+///
+///   * [Checkbox], which is used to select or deselect action items
+///   * [ToggleSwitch], which use used to turn things on and off
 class ToggleButton extends StatelessWidget {
+  /// Creates a toggle button
   const ToggleButton({
     Key? key,
     required this.checked,
@@ -148,22 +150,14 @@ class ToggleButtonThemeData with Diagnosticable {
   });
 
   factory ToggleButtonThemeData.standard(ThemeData theme) {
-    bool isDark = theme.brightness == Brightness.dark;
-    Color checkedColor(Set<ButtonStates> states) => states.isDisabled
-        ? ButtonThemeData.buttonColor(theme.brightness, states)
-        : states.isPressing
-            ? isDark
-                ? theme.accentColor.darker
-                : theme.accentColor.lighter
-            : states.isHovering
-                ? isDark
-                    ? theme.accentColor.dark
-                    : theme.accentColor.light
-                : theme.accentColor;
-
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(checkedColor),
+        backgroundColor: ButtonState.resolveWith(
+          (states) => FilledButton.backgroundColor(
+            theme,
+            states,
+          ),
+        ),
         shape: ButtonState.all(RoundedRectangleBorder(
           side: const BorderSide(
             color: Colors.transparent,
@@ -171,6 +165,12 @@ class ToggleButtonThemeData with Diagnosticable {
           ),
           borderRadius: BorderRadius.circular(4.0),
         )),
+        foregroundColor: ButtonState.resolveWith(
+          (states) => FilledButton.backgroundColor(
+            theme,
+            states,
+          ).basedOnLuminance(),
+        ),
       ),
     );
   }
