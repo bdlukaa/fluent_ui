@@ -32,7 +32,7 @@ class _TypographyPageState extends State<TypographyPage> {
     color ??= typography.display!.color;
     typography = typography.apply(displayColor: color!);
     const Widget spacer = SizedBox(height: 4.0);
-    return ScaffoldPage(
+    return ScaffoldPage.withPadding(
       header: PageHeader(
         title: const Text('Typography showcase'),
         commandBar: SizedBox(
@@ -76,75 +76,67 @@ class _TypographyPageState extends State<TypographyPage> {
           ),
         ),
       ),
-      content: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: PageHeader.horizontalPadding(context),
+      content: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Divider(
+                style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Text('Display',
+                        style:
+                            typography.display?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Title Large',
+                        style: typography.titleLarge
+                            ?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Title',
+                        style: typography.title?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Subtitle',
+                        style:
+                            typography.subtitle?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Body Large',
+                        style:
+                            typography.bodyLarge?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Body Strong',
+                        style: typography.bodyStrong
+                            ?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Body',
+                        style: typography.body?.apply(fontSizeFactor: scale)),
+                    spacer,
+                    Text('Caption',
+                        style:
+                            typography.caption?.apply(fontSizeFactor: scale)),
+                    spacer,
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Divider(
-                  style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-                ),
-                Expanded(
-                  child: ListView(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Display',
-                          style:
-                              typography.display?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Title Large',
-                          style: typography.titleLarge
-                              ?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Title',
-                          style:
-                              typography.title?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Subtitle',
-                          style: typography.subtitle
-                              ?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Body Large',
-                          style: typography.bodyLarge
-                              ?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Body Strong',
-                          style: typography.bodyStrong
-                              ?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Body',
-                          style: typography.body?.apply(fontSizeFactor: scale)),
-                      spacer,
-                      Text('Caption',
-                          style:
-                              typography.caption?.apply(fontSizeFactor: scale)),
-                      spacer,
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        Semantics(
+          label: 'Scale',
+          child: Slider(
+            vertical: true,
+            value: scale,
+            onChanged: (v) => setState(() => scale = v),
+            label: scale.toStringAsFixed(2),
+            max: 2,
+            min: 0.5,
+            // style: SliderThemeData(useThumbBall: false),
           ),
-          Semantics(
-            label: 'Scale',
-            child: Slider(
-              vertical: true,
-              value: scale,
-              onChanged: (v) => setState(() => scale = v),
-              label: scale.toStringAsFixed(2),
-              max: 2,
-              min: 0.5,
-              // style: SliderThemeData(useThumbBall: false),
-            ),
-          ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 }

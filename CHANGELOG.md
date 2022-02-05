@@ -7,6 +7,7 @@ Date format: DD/MM/YYYY
 - Uniform foreground color on `Checkbox`
 - Updated `FilledButton` Style
 - `ToggleButton` and `FilledButton` now share the same style
+- `ScaffoldPage.scrollable` and `ScaffoldPage.withPadding`
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 

@@ -56,126 +56,117 @@ class Settings extends StatelessWidget {
 
     const spacer = SizedBox(height: 10.0);
     const biggerSpacer = SizedBox(height: 40.0);
-    return ScaffoldPage(
+    return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Settings')),
-      content: ListView(
-        padding: EdgeInsets.only(
-          bottom: kPageDefaultVerticalPadding,
-          left: PageHeader.horizontalPadding(context),
-          right: PageHeader.horizontalPadding(context),
+      scrollController: controller,
+      children: [
+        Text('Theme mode', style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        ...List.generate(ThemeMode.values.length, (index) {
+          final mode = ThemeMode.values[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: RadioButton(
+              checked: appTheme.mode == mode,
+              onChanged: (value) {
+                if (value) {
+                  appTheme.mode = mode;
+                }
+              },
+              content: Text('$mode'.replaceAll('ThemeMode.', '')),
+            ),
+          );
+        }),
+        biggerSpacer,
+        Text(
+          'Navigation Pane Display Mode',
+          style: FluentTheme.of(context).typography.subtitle,
         ),
-        controller: controller,
-        children: [
-          Text('Theme mode',
+        spacer,
+        ...List.generate(PaneDisplayMode.values.length, (index) {
+          final mode = PaneDisplayMode.values[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: RadioButton(
+              checked: appTheme.displayMode == mode,
+              onChanged: (value) {
+                if (value) appTheme.displayMode = mode;
+              },
+              content: Text(
+                mode.toString().replaceAll('PaneDisplayMode.', ''),
+              ),
+            ),
+          );
+        }),
+        biggerSpacer,
+        Text('Navigation Indicator',
+            style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        ...List.generate(NavigationIndicators.values.length, (index) {
+          final mode = NavigationIndicators.values[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: RadioButton(
+              checked: appTheme.indicator == mode,
+              onChanged: (value) {
+                if (value) appTheme.indicator = mode;
+              },
+              content: Text(
+                mode.toString().replaceAll('NavigationIndicators.', ''),
+              ),
+            ),
+          );
+        }),
+        biggerSpacer,
+        Text('Accent Color',
+            style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        Wrap(children: [
+          Tooltip(
+            style: tooltipThemeData,
+            child: _buildColorBlock(appTheme, systemAccentColor),
+            message: accentColorNames[0],
+          ),
+          ...List.generate(Colors.accentColors.length, (index) {
+            final color = Colors.accentColors[index];
+            return Tooltip(
+              style: tooltipThemeData,
+              message: accentColorNames[index + 1],
+              child: _buildColorBlock(appTheme, color),
+            );
+          }),
+        ]),
+        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
+          biggerSpacer,
+          Text('Window Transparency',
               style: FluentTheme.of(context).typography.subtitle),
           spacer,
-          ...List.generate(ThemeMode.values.length, (index) {
-            final mode = ThemeMode.values[index];
+          ...List.generate(flutter_acrylic.WindowEffect.values.length, (index) {
+            final mode = flutter_acrylic.WindowEffect.values[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: RadioButton(
-                checked: appTheme.mode == mode,
+                checked: appTheme.acrylicEffect == mode,
                 onChanged: (value) {
                   if (value) {
-                    appTheme.mode = mode;
+                    appTheme.acrylicEffect = mode;
+                    flutter_acrylic.Window.setEffect(
+                      effect: mode,
+                      color: FluentTheme.of(context)
+                          .acrylicBackgroundColor
+                          .withOpacity(0.2),
+                      dark: darkMode,
+                    );
                   }
                 },
-                content: Text('$mode'.replaceAll('ThemeMode.', '')),
-              ),
-            );
-          }),
-          biggerSpacer,
-          Text(
-            'Navigation Pane Display Mode',
-            style: FluentTheme.of(context).typography.subtitle,
-          ),
-          spacer,
-          ...List.generate(PaneDisplayMode.values.length, (index) {
-            final mode = PaneDisplayMode.values[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: RadioButton(
-                checked: appTheme.displayMode == mode,
-                onChanged: (value) {
-                  if (value) appTheme.displayMode = mode;
-                },
                 content: Text(
-                  mode.toString().replaceAll('PaneDisplayMode.', ''),
+                  mode.toString().replaceAll('AcrylicEffect.', ''),
                 ),
               ),
             );
           }),
-          biggerSpacer,
-          Text('Navigation Indicator',
-              style: FluentTheme.of(context).typography.subtitle),
-          spacer,
-          ...List.generate(NavigationIndicators.values.length, (index) {
-            final mode = NavigationIndicators.values[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: RadioButton(
-                checked: appTheme.indicator == mode,
-                onChanged: (value) {
-                  if (value) appTheme.indicator = mode;
-                },
-                content: Text(
-                  mode.toString().replaceAll('NavigationIndicators.', ''),
-                ),
-              ),
-            );
-          }),
-          biggerSpacer,
-          Text('Accent Color',
-              style: FluentTheme.of(context).typography.subtitle),
-          spacer,
-          Wrap(children: [
-            Tooltip(
-              style: tooltipThemeData,
-              child: _buildColorBlock(appTheme, systemAccentColor),
-              message: accentColorNames[0],
-            ),
-            ...List.generate(Colors.accentColors.length, (index) {
-              final color = Colors.accentColors[index];
-              return Tooltip(
-                style: tooltipThemeData,
-                message: accentColorNames[index + 1],
-                child: _buildColorBlock(appTheme, color),
-              );
-            }),
-          ]),
-          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
-            biggerSpacer,
-            Text('Window Transparency',
-                style: FluentTheme.of(context).typography.subtitle),
-            spacer,
-            ...List.generate(flutter_acrylic.WindowEffect.values.length,
-                (index) {
-              final mode = flutter_acrylic.WindowEffect.values[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: RadioButton(
-                  checked: appTheme.acrylicEffect == mode,
-                  onChanged: (value) {
-                    if (value) {
-                      appTheme.acrylicEffect = mode;
-                      flutter_acrylic.Window.setEffect(
-                        effect: mode,
-                        color: FluentTheme.of(context)
-                            .acrylicBackgroundColor
-                            .withOpacity(0.2),
-                        dark: darkMode,
-                      );
-                    }
-                  },
-                  content: Text(
-                    mode.toString().replaceAll('AcrylicEffect.', ''),
-                  ),
-                ),
-              );
-            }),
-          ],
         ],
-      ),
+      ],
     );
   }
 

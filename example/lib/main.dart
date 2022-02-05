@@ -115,12 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int index = 0;
 
-  final colorsController = ScrollController();
   final settingsController = ScrollController();
 
   @override
   void dispose() {
-    colorsController.dispose();
     settingsController.dispose();
     super.dispose();
   }
@@ -235,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
       content: NavigationBody(index: index, children: [
         const InputsPage(),
         const Forms(),
-        ColorsPage(controller: colorsController),
+        const ColorsPage(),
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
