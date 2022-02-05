@@ -140,7 +140,6 @@ class Typography with Diagnosticable {
     double fontSizeFactor = 1.0,
     double fontSizeDelta = 0.0,
     Color? displayColor,
-    Color? bodyColor,
     TextDecoration? decoration,
     Color? decorationColor,
     TextDecorationStyle? decorationStyle,
