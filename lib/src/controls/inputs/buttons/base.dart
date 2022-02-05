@@ -163,7 +163,9 @@ class _BaseButtonState extends State<BaseButton> {
                 color: resolvedForegroundColor,
                 size: iconSize ?? 14.0,
               ),
-              child: DefaultTextStyle(
+              child: AnimatedDefaultTextStyle(
+                duration: FluentTheme.of(context).fastAnimationDuration,
+                curve: FluentTheme.of(context).animationCurve,
                 style: (resolvedTextStyle ?? const TextStyle(inherit: true))
                     .copyWith(color: resolvedForegroundColor),
                 textAlign: TextAlign.center,

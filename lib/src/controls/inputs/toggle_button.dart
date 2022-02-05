@@ -5,9 +5,11 @@ import 'package:flutter/rendering.dart';
 /// A button that can be on or off.
 ///
 /// See also:
-///   * [Checkbox](https://github.com/bdlukaa/fluent_ui#checkbox)
-///   * [ToggleSwitch](https://github.com/bdlukaa/fluent_ui#toggle-switches)
+///
+///   * [Checkbox], which is used to select or deselect action items
+///   * [ToggleSwitch], which use used to turn things on and off
 class ToggleButton extends StatelessWidget {
+  /// Creates a toggle button
   const ToggleButton({
     Key? key,
     required this.checked,
@@ -148,7 +150,7 @@ class ToggleButtonThemeData with Diagnosticable {
   });
 
   factory ToggleButtonThemeData.standard(ThemeData theme) {
-    bool isDark = theme.brightness == Brightness.dark;
+    final isDark = theme.brightness.isDark;
     Color checkedColor(Set<ButtonStates> states) => states.isDisabled
         ? ButtonThemeData.buttonColor(theme.brightness, states)
         : states.isPressing
@@ -171,6 +173,9 @@ class ToggleButtonThemeData with Diagnosticable {
           ),
           borderRadius: BorderRadius.circular(4.0),
         )),
+        foregroundColor: ButtonState.resolveWith(
+          (states) => checkedColor(states).basedOnLuminance(),
+        ),
       ),
     );
   }
