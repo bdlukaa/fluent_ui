@@ -3,6 +3,7 @@ Date format: DD/MM/YYYY
 ## [unreleased]
 
 - Do not override material `Theme` on `FluentApp` ([#155](https://github.com/bdlukaa/fluent_ui/pull/154))
+- Slider thumb now doesn't change inner size if hovered while disabled
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 

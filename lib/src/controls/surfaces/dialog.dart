@@ -307,7 +307,6 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
             /// TODO: CallbackShortcuts + FocusScope is the current workaround for
             /// <https://github.com/flutter/flutter/issues/97581>, while it's not
             /// fixed
-            WidgetsApp.defaultShortcuts;
             return SafeArea(
               child: Actions(
                 actions: {
