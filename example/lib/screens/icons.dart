@@ -8,7 +8,7 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
       content: RichText(
         text: TextSpan(
           text: 'Copied ',
-          style: TextStyle(color: FluentTheme.of(context).inactiveColor),
+          style: const TextStyle(color: Colors.white),
           children: [
             TextSpan(
               text: copiedText,
@@ -16,6 +16,7 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
                 color: Colors.blue.resolveFromReverseBrightness(
                   FluentTheme.of(context).brightness,
                 ),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
