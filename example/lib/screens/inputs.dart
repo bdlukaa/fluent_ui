@@ -212,9 +212,11 @@ class _InputsPageState extends State<InputsPage> {
                                 // Delete file here
                               },
                             ),
-                            Button(
+                            ToggleButton(
+                              // autofocus: true,
+                              checked: true,
                               child: const Text('Cancel'),
-                              onPressed: () => Navigator.pop(context),
+                              onChanged: (_) => Navigator.pop(context),
                             ),
                           ],
                         ),

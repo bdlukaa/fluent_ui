@@ -307,16 +307,15 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
             /// TODO: CallbackShortcuts + FocusScope is the current workaround for
             /// <https://github.com/flutter/flutter/issues/97581>, while it's not
             /// fixed
+            WidgetsApp.defaultShortcuts;
             return SafeArea(
-              child: CallbackShortcuts(
-                bindings: {
-                  const SingleActivator(LogicalKeyboardKey.escape): () {
-                    Navigator.of(context).maybePop();
-                  },
+              child: Actions(
+                actions: {
+                  DismissIntent: _DismissAction(context),
                 },
                 child: FocusScope(
-                  autofocus: true,
                   child: dialog,
+                  autofocus: true,
                 ),
               ),
             );
@@ -352,6 +351,17 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
         child: child,
       ),
     );
+  }
+}
+
+class _DismissAction extends DismissAction {
+  _DismissAction(this.context);
+
+  final BuildContext context;
+
+  @override
+  void invoke(covariant DismissIntent intent) {
+    Navigator.of(context).pop();
   }
 }
 
