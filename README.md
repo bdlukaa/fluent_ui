@@ -675,6 +675,20 @@ The code above produces the following:
 
 You can also use some alternative buttons:
 
+### Filled Button
+
+This button is identical to the `Button`, but with accent color fill in background
+
+```dart
+FilledButton(
+  child: Text('FILLED BUTTON'),
+  onPressed: () {
+    print('pressed filled button');
+  },
+),
+```
+![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
+
 ### Icon Button
 
 This button is used to display an `Icon` as content. It's optmized to show icons.
@@ -688,18 +702,7 @@ IconButton(
 ),
 ```
 
-<!-- - `FilledButton`
-  ```dart
-  FilledButton(
-    child: Text('FILLED BUTTON'),
-    onPressed: () {
-      print('pressed filled button');
-    },
-  ),
-  ```
-  ![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
-
-- `OutlinedButton`
+### Outlined Button
 
   ```dart
   OutlinedButton(
@@ -709,21 +712,19 @@ IconButton(
     },
   ),
   ```
+![Outlined Button](https://user-images.githubusercontent.com/45696119/120252439-e339e700-c25a-11eb-9695-6d5c3c471166.png)
 
-  ![Outlined Button](https://user-images.githubusercontent.com/45696119/120252439-e339e700-c25a-11eb-9695-6d5c3c471166.png)
+### Text Button
 
-- `TextButton`
-
-  ```dart
-  TextButton(
-    child: Text('TEXT BUTTON'),
-    onPressed: () {
-      print('pressed text button');
-    },
-  ),
-  ```
-
-  ![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png) -->
+```dart
+TextButton(
+  child: Text('TEXT BUTTON'),
+  onPressed: () {
+    print('pressed text button');
+  },
+),
+```
+![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png)
 
 ## Split Button
 
