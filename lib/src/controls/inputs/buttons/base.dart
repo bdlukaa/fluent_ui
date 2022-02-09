@@ -117,8 +117,8 @@ class _BaseButtonState extends State<BaseButton> {
 
         final double? resolvedElevation =
             resolve<double?>((ButtonStyle? style) => style?.elevation);
-        final TextStyle? resolvedTextStyle =
-            resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle);
+        final TextStyle? resolvedTextStyle = theme.typography.body?.merge(
+            resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle));
         final Color? resolvedBackgroundColor =
             resolve<Color?>((ButtonStyle? style) => style?.backgroundColor);
         final Color? resolvedForegroundColor =
@@ -166,7 +166,7 @@ class _BaseButtonState extends State<BaseButton> {
               child: AnimatedDefaultTextStyle(
                 duration: FluentTheme.of(context).fastAnimationDuration,
                 curve: FluentTheme.of(context).animationCurve,
-                style: (resolvedTextStyle ?? const TextStyle(inherit: true))
+                style: (resolvedTextStyle ?? const TextStyle())
                     .copyWith(color: resolvedForegroundColor),
                 textAlign: TextAlign.center,
                 child: widget.child,

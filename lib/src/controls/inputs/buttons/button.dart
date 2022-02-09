@@ -7,7 +7,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// See also:
 ///
 ///   * [ToggleButton], a button that can be on and off.
-///   * [SplitButton], A button with two sides. One side initiates
+///   * [SplitButtonBar], A button with two sides. One side initiates
 ///     an action, and the other side opens a menu.
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons>
 class Button extends BaseButton {

@@ -8,6 +8,7 @@ Date format: DD/MM/YYYY
 - Updated `FilledButton` Style
 - `ToggleButton` and `FilledButton` now share the same style
 - `ScaffoldPage.scrollable` and `ScaffoldPage.withPadding`
+- Ensure we use `Typography.body` as the default text style on `BaseButton` ([#120](https://github.com/bdlukaa/fluent_ui/issues/160))
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 
