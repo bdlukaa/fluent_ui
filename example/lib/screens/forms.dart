@@ -47,6 +47,7 @@ class _FormsState extends State<Forms> {
           validator: (text) {
             if (text == null || text.isEmpty) return 'Provide an email';
             if (!EmailValidator.validate(text)) return 'Email not valid';
+            return null;
           },
           textInputAction: TextInputAction.next,
           prefix: const Padding(

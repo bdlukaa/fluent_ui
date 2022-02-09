@@ -142,6 +142,7 @@ class PaneItem extends NavigationPaneItem {
           return null;
       }
     }
+    return null;
   }
 
   /// Used to construct the pane items all around [NavigationView]. You can

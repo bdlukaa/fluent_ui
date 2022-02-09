@@ -44,6 +44,7 @@ class IconButton extends BaseButton {
       }),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) return theme.disabledColor;
+        return null;
       }),
       shape: ButtonState.all(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
