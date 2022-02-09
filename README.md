@@ -690,7 +690,6 @@ FilledButton(
   },
 ),
 ```
-![Filled Button](https://user-images.githubusercontent.com/45696119/120252437-e0d78d00-c25a-11eb-8122-56457c782fbd.png)
 
 ### Icon Button
 
@@ -715,7 +714,6 @@ IconButton(
     },
   ),
   ```
-![Outlined Button](https://user-images.githubusercontent.com/45696119/120252439-e339e700-c25a-11eb-9695-6d5c3c471166.png)
 
 ### Text Button
 
@@ -727,7 +725,6 @@ TextButton(
   },
 ),
 ```
-![Text Button](https://user-images.githubusercontent.com/45696119/120252431-de753300-c25a-11eb-8055-531abd25e5d3.png)
 
 ## Split Button
 
