@@ -153,7 +153,7 @@ extension BrightnessExtension on Brightness {
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
 }
 
-const standartCurve = Curves.easeInOut;
+const standardCurve = Curves.easeInOut;
 
 /// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable
@@ -307,7 +307,7 @@ class ThemeData with Diagnosticable {
     fastAnimationDuration ??= const Duration(milliseconds: 167);
     mediumAnimationDuration ??= const Duration(milliseconds: 250);
     slowAnimationDuration ??= const Duration(milliseconds: 358);
-    animationCurve ??= standartCurve;
+    animationCurve ??= standardCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;

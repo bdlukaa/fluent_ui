@@ -307,7 +307,7 @@ class PaneItem extends NavigationPaneItem {
           selected: selected,
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? standartCurve,
+            curve: theme.animationCurve ?? standardCurve,
             margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
             decoration: BoxDecoration(
               color: () {
