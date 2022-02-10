@@ -107,7 +107,6 @@ class DropDownButton extends StatefulWidget {
 class _DropDownButtonState extends State<DropDownButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  OverlayEntry? _entry;
 
   @override
   void initState() {
@@ -180,14 +179,20 @@ class _DropDownButtonState extends State<DropDownButton>
         placement: widget.placement,
       ),
     );
-    _entry = OverlayEntry(builder: (BuildContext context) => overlay);
-    // _isConcealed = false;
-    overlayState.insert(_entry!);
+    Navigator.of(context).push(FluentDialogRoute(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.transparent,
+      transitionDuration: Duration.zero,
+      builder: (context) {
+        return overlay;
+      },
+    ));
     _controller.forward();
   }
 
   void _removeEntry() {
-    _entry?.remove();
+    Navigator.maybeOf(context)?.pop();
     _controller.value = 0;
   }
 
@@ -289,26 +294,37 @@ class DropDownButtonItem {
       onPressed: onTap,
       builder: (context, states) {
         final theme = FluentTheme.of(context);
-        return Container(
-          decoration: BoxDecoration(
-            color: ButtonThemeData.uncheckedInputColor(theme, states),
-            borderRadius: BorderRadius.circular(4.0),
+        final radius = BorderRadius.circular(4.0);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: _kInnerPadding),
+          child: FocusBorder(
+            focused: states.isFocused,
+            renderOutside: true,
+            style: FocusThemeData(borderRadius: radius),
+            child: Container(
+              decoration: BoxDecoration(
+                color: ButtonThemeData.uncheckedInputColor(theme, states),
+                borderRadius: radius,
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                if (leading != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: leading!,
+                  ),
+                if (title != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: title!,
+                  ),
+                if (trailing != null) trailing!,
+              ]),
+            ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          margin: const EdgeInsets.only(bottom: _kInnerPadding),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (leading != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: leading!,
-              ),
-            if (title != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: title!,
-              ),
-            if (trailing != null) trailing!,
-          ]),
         );
       },
     );
@@ -341,23 +357,26 @@ class __DropdownMenuState extends State<_DropdownMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: _kInnerPadding,
-        left: _kInnerPadding,
-        right: _kInnerPadding,
-      ),
-      child: Column(
-        key: _key,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(widget.items.length, (index) {
-          final item = widget.items[index];
-          return SizedBox(
-            width: size?.width,
-            child: Builder(builder: item.build),
-          );
-        }),
+    return FocusScope(
+      autofocus: true,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: _kInnerPadding,
+          left: _kInnerPadding,
+          right: _kInnerPadding,
+        ),
+        child: Column(
+          key: _key,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(widget.items.length, (index) {
+            final item = widget.items[index];
+            return SizedBox(
+              width: size?.width,
+              child: Builder(builder: item.build),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -461,55 +480,43 @@ class _DropDownButtonOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: onClose,
-          ),
-        ),
-        Positioned.fill(
-          child: CustomSingleChildLayout(
-            key: menuKey,
-            delegate: _DropDownButtonPositionDelegate(
-              leftTarget: target[FlyoutPlacement.left]!,
-              centerTarget: target[FlyoutPlacement.center]!,
-              rightTarget: target[FlyoutPlacement.right]!,
-              verticalOffset: verticalOffset,
-              preferBelow: preferBelow,
-              placement: placement,
+    return CustomSingleChildLayout(
+      key: menuKey,
+      delegate: _DropDownButtonPositionDelegate(
+        leftTarget: target[FlyoutPlacement.left]!,
+        centerTarget: target[FlyoutPlacement.center]!,
+        rightTarget: target[FlyoutPlacement.right]!,
+        verticalOffset: verticalOffset,
+        preferBelow: preferBelow,
+        placement: placement,
+      ),
+      child: ClipRect(
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, -1),
+            end: Offset.zero,
+          ).animate(animation),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: height,
+              minWidth: width,
             ),
-            child: ClipRect(
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -1),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: height,
-                    minWidth: width,
-                  ),
-                  child: DefaultTextStyle(
-                    style: FluentTheme.of(context).typography.body!,
-                    child: Container(
-                      decoration: decoration,
-                      padding: padding,
-                      margin: margin,
-                      child: Center(
-                        widthFactor: 1.0,
-                        heightFactor: 1.0,
-                        child: child,
-                      ),
-                    ),
-                  ),
+            child: DefaultTextStyle(
+              style: FluentTheme.of(context).typography.body!,
+              child: Container(
+                decoration: decoration,
+                padding: padding,
+                margin: margin,
+                child: Center(
+                  widthFactor: 1.0,
+                  heightFactor: 1.0,
+                  child: child,
                 ),
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
