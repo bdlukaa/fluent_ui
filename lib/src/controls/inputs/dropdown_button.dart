@@ -32,6 +32,7 @@ class DropDownButton extends StatefulWidget {
     this.autofocus = false,
     this.buttonStyle,
     this.placement = FlyoutPlacement.center,
+    this.menuDecoration,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
@@ -76,6 +77,9 @@ class DropDownButton extends StatefulWidget {
   /// The placement of the overlay. Centered by default
   final FlyoutPlacement placement;
 
+  /// The menu decoration
+  final Decoration? menuDecoration;
+
   @override
   State<DropDownButton> createState() => _DropDownButtonState();
 
@@ -95,7 +99,8 @@ class DropDownButton extends StatefulWidget {
         defaultValue: false,
         ifFalse: 'do not close after click',
       ))
-      ..add(EnumProperty<FlyoutPlacement>('placement', placement));
+      ..add(EnumProperty<FlyoutPlacement>('placement', placement))
+      ..add(DiagnosticsProperty('menu decoration', menuDecoration));
   }
 }
 
@@ -150,12 +155,13 @@ class _DropDownButtonState extends State<DropDownButton>
         child: child,
         height: 50.0,
         width: 100.0,
-        decoration: BoxDecoration(
-          color: FluentTheme.of(context).micaBackgroundColor,
-          borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(width: 0.25),
-          boxShadow: kElevationToShadow[3],
-        ),
+        decoration: widget.menuDecoration ??
+            BoxDecoration(
+              color: FluentTheme.of(context).micaBackgroundColor,
+              borderRadius: BorderRadius.circular(6.0),
+              border: Border.all(width: 0.25),
+              boxShadow: kElevationToShadow[3],
+            ),
         animation: CurvedAnimation(
           parent: _controller,
           curve: Curves.easeOut,
