@@ -159,8 +159,11 @@ class _DropDownButtonState extends State<DropDownButton>
             BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
               borderRadius: BorderRadius.circular(6.0),
-              border: Border.all(width: 0.25),
-              boxShadow: kElevationToShadow[3],
+              border: Border.all(
+                width: 0.25,
+                color: FluentTheme.of(context).inactiveBackgroundColor,
+              ),
+              boxShadow: kElevationToShadow[4],
             ),
         animation: CurvedAnimation(
           parent: _controller,

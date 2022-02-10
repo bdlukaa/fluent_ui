@@ -313,20 +313,19 @@ class PaneItem extends NavigationPaneItem {
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
                     theme.tileColor ??
-                    ButtonState.resolveWith((states) {
-                      // By default, if it's top, do not show any color
-                      if (isTop) return Colors.transparent;
-                      return ButtonThemeData.uncheckedInputColor(
-                        FluentTheme.of(context),
-                        states,
-                      );
-                    });
+                    kDefaultTileColor(context, isTop);
                 final newStates = states.toSet()..remove(ButtonStates.disabled);
                 if (selected && selectedTileColor != null) {
                   return selectedTileColor!.resolve(newStates);
                 }
                 return tileColor.resolve(
-                  selected ? {ButtonStates.hovering} : newStates,
+                  selected
+                      ? {
+                          states.isHovering
+                              ? ButtonStates.pressing
+                              : ButtonStates.hovering,
+                        }
+                      : newStates,
                 );
               }(),
               borderRadius: BorderRadius.circular(4.0),

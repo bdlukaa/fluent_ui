@@ -1,5 +1,16 @@
 part of 'view.dart';
 
+ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
+  return ButtonState.resolveWith((states) {
+    // By default, if it's top, do not show any color
+    if (isTop) return Colors.transparent;
+    return ButtonThemeData.uncheckedInputColor(
+      FluentTheme.of(context),
+      states,
+    );
+  });
+}
+
 /// An inherited widget that defines the configuration for
 /// [NavigationPane]s in this widget's subtree.
 ///
