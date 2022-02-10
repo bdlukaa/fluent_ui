@@ -376,3 +376,10 @@ extension ColorExtension on Color {
     return this;
   }
 }
+
+class ColorConst extends Color {
+  const ColorConst.withOpacity(int value, double opacity)
+      : super(
+            ((((opacity * 0xff ~/ 1) & 0xff) << 24) | ((0x00ffffff & value))) &
+                0xFFFFFFFF);
+}

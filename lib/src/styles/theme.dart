@@ -35,7 +35,11 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: child,
+        child: AnimatedDefaultTextStyle(
+          style: data.typography.body!,
+          duration: kThemeAnimationDuration,
+          child: child,
+        ),
       ),
     );
   }

@@ -215,7 +215,7 @@ ThemeData(
 )
 ```
 
-To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (04/01/2021) Android, Web and Windows.
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 04/01/2021) Android, Web and Windows.
 
 ```dart
 import 'package:system_theme/system_theme.dart';
@@ -237,7 +237,7 @@ You can change the theme brightness to change the color of your app to
 
    ![Dark theme](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/color/dark-theme.svg)
 
-It defaults to the brightness of the device. (`MediaQuery.of(context).brightness`)
+It defaults to the brightness of the device. (`MediaQuery.of(context).platformBrightness`)
 
 ```dart
 ThemeData(

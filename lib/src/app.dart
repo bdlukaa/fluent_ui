@@ -434,7 +434,6 @@ class _FluentAppState extends State<FluentApp> {
   }
 
   Widget _buildApp(BuildContext context) {
-    final theme = this.theme(context);
     final fluentColor = widget.color ?? Colors.blue;
     if (_usesRouter) {
       return WidgetsApp.router(
@@ -460,7 +459,6 @@ class _FluentAppState extends State<FluentApp> {
         actions: widget.actions,
         restorationScopeId: widget.restorationScopeId,
         localizationsDelegates: _localizationsDelegates,
-        textStyle: theme.typography.body,
       );
     }
 
@@ -494,7 +492,6 @@ class _FluentAppState extends State<FluentApp> {
       pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
         return FluentPageRoute<T>(settings: settings, builder: builder);
       },
-      textStyle: theme.typography.body,
     );
   }
 }

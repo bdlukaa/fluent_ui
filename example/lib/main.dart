@@ -4,7 +4,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -18,8 +17,6 @@ import 'screens/typography.dart';
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
-
-late bool darkMode;
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -36,21 +33,7 @@ void main() async {
 
   setPathUrlStrategy();
 
-  // The platforms the plugin support (01/04/2021 - DD/MM/YYYY):
-  //   - Windows
-  //   - Web
-  //   - Android
-  if (defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      kIsWeb) {
-    darkMode = await SystemTheme.darkMode;
-    await SystemTheme.accentInstance.load();
-  } else {
-    darkMode = true;
-  }
-  if (!kIsWeb &&
-      [TargetPlatform.windows, TargetPlatform.linux]
-          .contains(defaultTargetPlatform)) {
+  if (isDesktop) {
     await flutter_acrylic.Window.initialize();
   }
 
@@ -83,15 +66,17 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {'/': (_) => const MyHomePage()},
+          color: appTheme.color,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: appTheme.color,
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
           theme: ThemeData(
             accentColor: appTheme.color,
-            brightness: appTheme.mode == ThemeMode.system
-                ? darkMode
-                    ? Brightness.dark
-                    : Brightness.light
-                : appTheme.mode == ThemeMode.dark
-                    ? Brightness.dark
-                    : Brightness.light,
             visualDensity: VisualDensity.standard,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen() ? 2.0 : 0.0,

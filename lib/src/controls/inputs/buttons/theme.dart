@@ -109,7 +109,7 @@ class ButtonTheme extends InheritedTheme {
     return Builder(builder: (BuildContext context) {
       return ButtonTheme(
         key: key,
-        data: _getInheritedButtonThemeData(context).merge(data),
+        data: _getInheritedButtonThemeData(context)?.merge(data) ?? data,
         child: child,
       );
     });
@@ -132,10 +132,10 @@ class ButtonTheme extends InheritedTheme {
         );
   }
 
-  static ButtonThemeData _getInheritedButtonThemeData(BuildContext context) {
+  static ButtonThemeData? _getInheritedButtonThemeData(BuildContext context) {
     final ButtonTheme? buttonTheme =
         context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
-    return buttonTheme?.data ?? FluentTheme.of(context).buttonTheme;
+    return buttonTheme?.data;
   }
 
   @override

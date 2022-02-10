@@ -5,7 +5,6 @@ import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
-import '../main.dart';
 
 const List<String> accentColorNames = [
   'System',
@@ -155,7 +154,7 @@ class Settings extends StatelessWidget {
                       color: FluentTheme.of(context)
                           .acrylicBackgroundColor
                           .withOpacity(0.2),
-                      dark: darkMode,
+                      dark: FluentTheme.of(context).brightness.isDark,
                     );
                   }
                 },
