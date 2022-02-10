@@ -5,6 +5,8 @@ import '../../../utils/popup.dart';
 
 export 'controller.dart';
 
+enum FlyoutPlacement { left, center, right }
+
 class Flyout extends StatefulWidget {
   const Flyout({
     Key? key,

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kVerticalOffset = 20.0;
 const double _kInnerPadding = 5.0;
@@ -11,11 +12,13 @@ const double _kInnerPadding = 5.0;
 /// ![DropDownButton Showcase](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
 ///
 /// See also:
+///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
 ///  content
 ///   * [Combobox], a list of items that a user can select from
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
-  /// Creates a dropdown button
+  /// Creates a dropdown button.
   const DropDownButton({
     Key? key,
     required this.items,
@@ -28,10 +31,13 @@ class DropDownButton extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.buttonStyle,
+    this.placement = FlyoutPlacement.center,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
-  /// Leading show a content at the left of this widget.
+  /// The content at the left of this widget.
+  ///
+  /// Usually an [Icon]
   final Widget? leading;
 
   /// Title show a content at the center of this widget.
@@ -41,7 +47,7 @@ class DropDownButton extends StatefulWidget {
 
   /// Trailing show a content at the right of this widget.
   ///
-  /// If trailing is null, an Icon chevron_down is displayed.
+  /// If null, a chevron_down is displayed.
   final Widget? trailing;
 
   /// The space between the button and the flyout.
@@ -67,8 +73,30 @@ class DropDownButton extends StatefulWidget {
   /// Customizes the button's appearance.
   final ButtonStyle? buttonStyle;
 
+  /// The placement of the overlay. Centered by default
+  final FlyoutPlacement placement;
+
   @override
   State<DropDownButton> createState() => _DropDownButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IterableProperty<DropDownButtonItem>('items', items))
+      ..add(DoubleProperty(
+        'verticalOffset',
+        verticalOffset,
+        defaultValue: _kVerticalOffset,
+      ))
+      ..add(FlagProperty(
+        'close after click',
+        value: closeAfterClick,
+        defaultValue: false,
+        ifFalse: 'do not close after click',
+      ))
+      ..add(EnumProperty<FlyoutPlacement>('placement', placement));
+  }
 }
 
 class _DropDownButtonState extends State<DropDownButton>
@@ -100,8 +128,16 @@ class _DropDownButtonState extends State<DropDownButton>
     )!;
 
     final RenderBox box = context.findRenderObject()! as RenderBox;
-    Offset target = box.localToGlobal(
+    Offset leftTarget = box.localToGlobal(
+      box.size.centerLeft(Offset.zero),
+      ancestor: overlayState.context.findRenderObject(),
+    );
+    Offset centerTarget = box.localToGlobal(
       box.size.center(Offset.zero),
+      ancestor: overlayState.context.findRenderObject(),
+    );
+    Offset rightTarget = box.localToGlobal(
+      box.size.centerRight(Offset.zero),
       ancestor: overlayState.context.findRenderObject(),
     );
 
@@ -114,8 +150,6 @@ class _DropDownButtonState extends State<DropDownButton>
         child: child,
         height: 50.0,
         width: 100.0,
-        // padding: padding,
-        // margin: margin,
         decoration: BoxDecoration(
           color: FluentTheme.of(context).micaBackgroundColor,
           borderRadius: BorderRadius.circular(6.0),
@@ -126,10 +160,15 @@ class _DropDownButtonState extends State<DropDownButton>
           parent: _controller,
           curve: Curves.easeOut,
         ),
-        target: target,
+        target: {
+          FlyoutPlacement.left: leftTarget,
+          FlyoutPlacement.center: centerTarget,
+          FlyoutPlacement.right: rightTarget,
+        },
         verticalOffset: widget.verticalOffset,
         preferBelow: true,
         onClose: _removeEntry,
+        placement: widget.placement,
       ),
     );
     _entry = OverlayEntry(builder: (BuildContext context) => overlay);
@@ -307,7 +346,7 @@ class __DropdownMenuState extends State<_DropdownMenu> {
           final item = widget.items[index];
           return SizedBox(
             width: size?.width,
-            child: Builder(builder: (context) => item.build(context)),
+            child: Builder(builder: item.build),
           );
         }),
       ),
@@ -322,14 +361,19 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
   ///
   /// The arguments must not be null.
   const _DropDownButtonPositionDelegate({
-    required this.target,
+    required this.centerTarget,
+    required this.leftTarget,
+    required this.rightTarget,
     required this.verticalOffset,
     required this.preferBelow,
+    required this.placement,
   });
 
   /// The offset of the target the menu is positioned near in the global
   /// coordinate system.
-  final Offset target;
+  final Offset centerTarget;
+  final Offset leftTarget;
+  final Offset rightTarget;
 
   /// The amount of vertical distance between the target and the displayed
   /// menu.
@@ -341,24 +385,34 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
   /// direction, the menu will be displayed in the opposite direction.
   final bool preferBelow;
 
+  final FlyoutPlacement placement;
+
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    return positionDependentBox(
+    final defaultOffset = positionDependentBox(
       size: size,
       childSize: childSize,
-      target: target,
+      target: centerTarget,
       verticalOffset: verticalOffset,
       preferBelow: preferBelow,
     );
+    switch (placement) {
+      case FlyoutPlacement.left:
+        return Offset(leftTarget.dx, defaultOffset.dy);
+      case FlyoutPlacement.right:
+        return Offset(rightTarget.dx - childSize.width, defaultOffset.dy);
+      default:
+        return defaultOffset;
+    }
   }
 
   @override
   bool shouldRelayout(_DropDownButtonPositionDelegate oldDelegate) {
-    return target != oldDelegate.target ||
+    return centerTarget != oldDelegate.centerTarget ||
         verticalOffset != oldDelegate.verticalOffset ||
         preferBelow != oldDelegate.preferBelow;
   }
@@ -379,6 +433,7 @@ class _DropDownButtonOverlay extends StatelessWidget {
     required this.preferBelow,
     required this.onClose,
     this.menuKey,
+    required this.placement,
   }) : super(key: key);
 
   final Widget child;
@@ -388,11 +443,12 @@ class _DropDownButtonOverlay extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final Animation<double> animation;
-  final Offset target;
+  final Map<FlyoutPlacement, Offset> target;
   final double verticalOffset;
   final bool preferBelow;
   final VoidCallback onClose;
   final Key? menuKey;
+  final FlyoutPlacement placement;
 
   @override
   Widget build(BuildContext context) {
@@ -408,9 +464,12 @@ class _DropDownButtonOverlay extends StatelessWidget {
           child: CustomSingleChildLayout(
             key: menuKey,
             delegate: _DropDownButtonPositionDelegate(
-              target: target,
+              leftTarget: target[FlyoutPlacement.left]!,
+              centerTarget: target[FlyoutPlacement.center]!,
+              rightTarget: target[FlyoutPlacement.right]!,
               verticalOffset: verticalOffset,
               preferBelow: preferBelow,
+              placement: placement,
             ),
             child: ClipRect(
               child: SlideTransition(
