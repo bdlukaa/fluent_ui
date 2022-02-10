@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [unreleased] - Fidelity - [10/02/2022]
+## [3.9.0] - Fidelity - [10/02/2022]
 
 - **BREAKING** Renamed `standartCurve` to `standardCurve`
 - **BREAKING** Completly rework `DropDownButton`
