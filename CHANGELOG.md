@@ -1,7 +1,12 @@
 Date format: DD/MM/YYYY
 
-## [unreleased]  - Fidelity
+## [unreleased] - Fidelity - [10/02/2022]
 
+- **BREAKING** Renamed `standartCurve` to `standardCurve`
+- **BREAKING** Completly rework `DropDownButton`
+- **BREAKING** Removed `CheckboxThemeData.thirdStateIcon`
+
+  Currently, there isn't a fluent icon that is close to the native icon. A local widget *`_ThirdStateDash`* is used
 - Do not override material `Theme` on `FluentApp` ([#155](https://github.com/bdlukaa/fluent_ui/pull/154))
 - Slider thumb now doesn't change inner size if hovered while disabled
 - Uniform foreground color on `Checkbox`
@@ -9,8 +14,6 @@ Date format: DD/MM/YYYY
 - `ToggleButton` and `FilledButton` now share the same style
 - `ScaffoldPage.scrollable` and `ScaffoldPage.withPadding`
 - Ensure we use `Typography.body` as the default text style on `BaseButton` ([#120](https://github.com/bdlukaa/fluent_ui/issues/160))
-- **BREAKING** Renamed `standartCurve` to `standardCurve`
-- **BREAKING** Completly rework `DropDownButton`
 - Update `ButtonThemeData.uncheckedInputColor`
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
