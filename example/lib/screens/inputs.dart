@@ -20,12 +20,8 @@ class _InputsPageState extends State<InputsPage> {
 
   double get max => 9;
 
-  final FlyoutController controller = FlyoutController();
-  final FlyoutController dpController = FlyoutController();
-
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 
@@ -107,68 +103,6 @@ class _InputsPageState extends State<InputsPage> {
             ),
             _buildButtons(),
             _buildSliders(),
-            Mica(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    DropDownButton(
-                      disabled: disabled,
-                      controller: dpController,
-                      contentWidth: 150,
-                      leading: const Icon(FluentIcons.align_left),
-                      title: const Text('Alignment'),
-                      items: [
-                        DropDownButtonItem(
-                          title: const Text('Left'),
-                          leading: const Icon(FluentIcons.align_left),
-                          onTap: () {},
-                        ),
-                        DropDownButtonItem(
-                          title: const Text('Center'),
-                          leading: const Icon(FluentIcons.align_center),
-                          onTap: () {},
-                        ),
-                        DropDownButtonItem(
-                          title: const Text('Right'),
-                          leading: const Icon(FluentIcons.align_right),
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Flyout(
-                        content: Padding(
-                          padding: const EdgeInsets.only(left: 27),
-                          child: FlyoutContent(
-                            padding: EdgeInsets.zero,
-                            child: ListView(shrinkWrap: true, children: [
-                              TappableListTile(
-                                  title: const Text('New'), onTap: () {}),
-                              TappableListTile(
-                                  title: const Text('Open'), onTap: () {}),
-                              TappableListTile(
-                                  title: const Text('Save'), onTap: () {}),
-                              TappableListTile(
-                                  title: const Text('Exit'), onTap: () {}),
-                            ]),
-                          ),
-                        ),
-                        verticalOffset: 20,
-                        contentWidth: 100,
-                        controller: controller,
-                        child: Button(
-                          child: const Text('File'),
-                          onPressed:
-                              disabled ? null : () => controller.open = true,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ],
@@ -247,6 +181,28 @@ class _InputsPageState extends State<InputsPage> {
                   onPressed: disabled ? null : () {},
                 ),
               ]),
+            ),
+            spacer,
+            DropDownButton(
+              disabled: disabled,
+              leading: const Icon(FluentIcons.mail),
+              items: [
+                DropDownButtonItem(
+                  title: const Text('Send'),
+                  leading: const Icon(FluentIcons.send),
+                  onTap: () => debugPrint('Send'),
+                ),
+                DropDownButtonItem(
+                  title: const Text('Reply'),
+                  leading: const Icon(FluentIcons.mail_reply),
+                  onTap: () => debugPrint('Reply'),
+                ),
+                DropDownButtonItem(
+                  title: const Text('Reply all'),
+                  leading: const Icon(FluentIcons.mail_reply_all),
+                  onTap: () => debugPrint('Reply all'),
+                ),
+              ],
             ),
             spacer,
           ]),

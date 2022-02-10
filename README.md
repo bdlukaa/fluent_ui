@@ -868,50 +868,35 @@ The code above produces the following:
 
 ## DropDown button
 
-A DropDownButton is a light dismiss container that contain buttons. 
-[Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button)
+A DropDownButton is a button that shows a chevron as a visual indicator that it has an  attached flyout that contains more options. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button)
 
-See also [Flyout](https://github.com/bdlukaa/fluent_ui#flyout) for more freedom.
+![DropDown Button](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
 
-### Example
+Here's an example of how to create a drop down button:
 
 ```dart
-final flyoutController = FlyoutController();
-
 DropDownButton(
-  controller: dpController,
-  contentWidth: 150,
   leading: const Icon(FluentIcons.align_left),
   title: const Text('Alignment'),
   items: [
     DropDownButtonItem(
       title: const Text('Left'),
       leading: const Icon(FluentIcons.align_left),
-      onTap: () {},
+      onTap: () => debugPrint('left'),
     ),
     DropDownButtonItem(
       title: const Text('Center'),
       leading: const Icon(FluentIcons.align_center),
-      onTap: () {},
+      onTap: () => debugPrint('center'),
     ),
     DropDownButtonItem(
       title: const Text('Right'),
       leading: const Icon(FluentIcons.align_right),
-      onTap: () {},
+      onTap: () => debugPrint('right'),
     ),
   ],
 );
-
-@override
-void dispose() {
-  flyoutController.dispose();
-  super.dispose();
-}
 ```
-
-### Screenshot
-
-![DropDownButton with light theme](https://user-images.githubusercontent.com/8223773/143767305-4de7f74f-e0e8-4509-9911-ec97c2926430.png)
 
 ## Slider
 

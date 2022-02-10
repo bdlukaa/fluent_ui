@@ -10,6 +10,7 @@ Date format: DD/MM/YYYY
 - `ScaffoldPage.scrollable` and `ScaffoldPage.withPadding`
 - Ensure we use `Typography.body` as the default text style on `BaseButton` ([#120](https://github.com/bdlukaa/fluent_ui/issues/160))
 - **BREAKING** Renamed `standartCurve` to `standardCurve`
+- **BREAKING** Completly rework `DropDownButton`
 
 ## [3.8.0] - Flutter Favorite - [03/02/2022]
 
