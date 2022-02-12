@@ -61,9 +61,7 @@ class _FormsState extends State<Forms> {
             child: TextBox(
               readOnly: true,
               placeholder: 'Read only text box',
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
+              highlightColor: Colors.magenta,
             ),
           ),
           const SizedBox(width: 10),

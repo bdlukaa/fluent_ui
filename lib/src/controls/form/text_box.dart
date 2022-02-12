@@ -112,6 +112,7 @@ class TextBox extends StatefulWidget {
     this.iconButtonThemeData,
     this.decoration,
     this.foregroundDecoration,
+    this.highlightColor,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -131,10 +132,17 @@ class TextBox extends StatefulWidget {
             'Obscured fields cannot be multiline.'),
         assert(maxLength == null || maxLength > 0),
         assert(
-            !identical(textInputAction, TextInputAction.newline) ||
-                maxLines == 1 ||
-                !identical(keyboardType, TextInputType.text),
-            'Use keyboardType TextInputType.multiline when using TextInputAction.newline on a multiline TextField.'),
+          !identical(textInputAction, TextInputAction.newline) ||
+              maxLines == 1 ||
+              !identical(keyboardType, TextInputType.text),
+          'Use keyboardType TextInputType.multiline when using TextInputAction.newline on a multiline TextField.',
+        ),
+        assert(
+          (highlightColor == null && foregroundDecoration == null) ||
+              (highlightColor == null && foregroundDecoration != null) ||
+              (highlightColor != null && foregroundDecoration == null),
+          'You can not provide both highlightColor and foregroundDecoration',
+        ),
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         toolbarOptions = toolbarOptions ??
@@ -184,6 +192,7 @@ class TextBox extends StatefulWidget {
 
   final BoxDecoration? decoration;
   final BoxDecoration? foregroundDecoration;
+  final Color? highlightColor;
 
   final StrutStyle? strutStyle;
 
@@ -620,7 +629,7 @@ class _TextBoxState extends State<TextBox>
       border: Border(
         bottom: BorderSide(
           color: _effectiveFocusNode.hasFocus
-              ? theme.accentColor
+              ? widget.highlightColor ?? theme.accentColor
               : !enabled
                   ? Colors.transparent
                   : theme.brightness.isLight
