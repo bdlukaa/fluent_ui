@@ -83,7 +83,7 @@ class TextFormBox extends FormField<String> {
           builder: (FormFieldState<String> field) {
             final _TextFormBoxState state = field as _TextFormBoxState;
 
-            final BoxDecoration? decoration = field.errorText != null
+            final BoxDecoration? fDecoration = field.errorText != null
                 ? BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -144,7 +144,7 @@ class TextFormBox extends FormField<String> {
                 keyboardAppearance: keyboardAppearance,
                 enableInteractiveSelection: enableInteractiveSelection,
                 autofillHints: autofillHints,
-                decoration: decoration,
+                foregroundDecoration: fDecoration,
                 placeholder: placeholder,
                 placeholderStyle: placeholderStyle,
                 header: header,

@@ -57,10 +57,13 @@ class _FormsState extends State<Forms> {
         ),
         const SizedBox(height: 20),
         Row(children: [
-          const Expanded(
+          Expanded(
             child: TextBox(
               readOnly: true,
               placeholder: 'Read only text box',
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
             ),
           ),
           const SizedBox(width: 10),

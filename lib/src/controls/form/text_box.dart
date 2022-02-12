@@ -111,6 +111,7 @@ class TextBox extends StatefulWidget {
     this.headerStyle,
     this.iconButtonThemeData,
     this.decoration,
+    this.foregroundDecoration,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -182,6 +183,7 @@ class TextBox extends StatefulWidget {
   final TextStyle? style;
 
   final BoxDecoration? decoration;
+  final BoxDecoration? foregroundDecoration;
 
   final StrutStyle? strutStyle;
 
@@ -576,6 +578,7 @@ class _TextBoxState extends State<TextBox>
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
+    final textDirection = Directionality.of(context);
     final TextEditingController controller = _effectiveController;
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -613,23 +616,33 @@ class _TextBoxState extends State<TextBox>
         )
         .merge(widget.placeholderStyle);
 
-    final BoxDecoration decoration = widget.decoration ??
-        BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: _effectiveFocusNode.hasFocus
-                  ? theme.accentColor
-                  : !enabled
-                      ? Colors.transparent
-                      : theme.brightness.isLight
-                          ? const Color.fromRGBO(0, 0, 0, 0.45)
-                          : const Color.fromRGBO(255, 255, 255, 0.54),
-              width: _effectiveFocusNode.hasFocus ? 2 : 0,
-            ),
-          ),
-        );
+    final BoxDecoration foregroundDecoration = BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: _effectiveFocusNode.hasFocus
+              ? theme.accentColor
+              : !enabled
+                  ? Colors.transparent
+                  : theme.brightness.isLight
+                      ? const Color.fromRGBO(0, 0, 0, 0.45)
+                      : const Color.fromRGBO(255, 255, 255, 0.54),
+          width: _effectiveFocusNode.hasFocus ? 2 : 0,
+        ),
+      ),
+    ).copyWith(
+      backgroundBlendMode: widget.foregroundDecoration?.backgroundBlendMode,
+      border: widget.foregroundDecoration?.border,
+      borderRadius: widget.foregroundDecoration?.borderRadius,
+      boxShadow: widget.foregroundDecoration?.boxShadow,
+      color: widget.foregroundDecoration?.color,
+      gradient: widget.foregroundDecoration?.gradient,
+      image: widget.foregroundDecoration?.image,
+      shape: widget.foregroundDecoration?.shape,
+    );
 
-    final Color selectionColor = theme.accentColor.withOpacity(0.2);
+    final Color selectionColor = theme.accentColor
+        .resolveFromReverseBrightness(theme.brightness)
+        .withOpacity(0.6);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -692,15 +705,18 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    final radius = BorderRadius.circular(4.0);
+    final BorderRadius radius =
+        widget.decoration?.borderRadius?.resolve(textDirection) ??
+            BorderRadius.circular(4.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
           ? null
           : () {
               if (!controller.selection.isValid) {
-                controller.selection =
-                    TextSelection.collapsed(offset: controller.text.length);
+                controller.selection = TextSelection.collapsed(
+                  offset: controller.text.length,
+                );
               }
               _requestKeyboard();
             },
@@ -712,17 +728,32 @@ class _TextBoxState extends State<TextBox>
           decoration: BoxDecoration(
             borderRadius: radius,
             border: Border.all(
-                width: 1,
-                color: theme.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.08)
-                    : const Color.fromRGBO(255, 255, 255, 0.07)),
+              width: 1,
+              color: theme.brightness.isLight
+                  ? const Color.fromRGBO(0, 0, 0, 0.08)
+                  : const Color.fromRGBO(255, 255, 255, 0.07),
+            ),
             color: enabled
                 ? backgroundColor
                 : theme.brightness.isLight
                     ? const Color.fromRGBO(249, 249, 249, 0.3)
                     : const Color.fromRGBO(255, 255, 255, 0.04),
+          ).copyWith(
+            backgroundBlendMode: widget.decoration?.backgroundBlendMode,
+            border: widget.decoration?.border,
+
+            /// This border radius can't be applied, otherwise the error "A borderRadius
+            /// can only be given for a uniform Border." will be thrown. Instead,
+            /// [radius] is already set to get the value from [widget.decoration?.borderRadius],
+            /// if any.
+            // borderRadius: widget.decoration?.borderRadius,
+            boxShadow: widget.decoration?.boxShadow,
+            color: widget.decoration?.color,
+            gradient: widget.decoration?.gradient,
+            image: widget.decoration?.image,
+            shape: widget.decoration?.shape,
           ),
-          foregroundDecoration: decoration,
+          foregroundDecoration: foregroundDecoration,
           constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
           child: _selectionGestureDetectorBuilder.buildGestureDetector(
             behavior: HitTestBehavior.translucent,
