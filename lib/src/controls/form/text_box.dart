@@ -584,9 +584,10 @@ class _TextBoxState extends State<TextBox>
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
     }
 
-    final TextStyle textStyle = TextStyle(
+    final defaultTextStyle = TextStyle(
       color: enabled ? theme.inactiveColor : theme.disabledColor,
     );
+    final TextStyle textStyle = defaultTextStyle.merge(widget.style);
 
     final Brightness keyboardAppearance =
         widget.keyboardAppearance ?? theme.brightness;
@@ -599,8 +600,8 @@ class _TextBoxState extends State<TextBox>
             'dark': Color(0xFF2d2d2d),
           }).resolve(context);
 
-    final TextStyle placeholderStyle = widget.placeholderStyle ??
-        textStyle.copyWith(
+    final TextStyle placeholderStyle = textStyle
+        .copyWith(
           color: !enabled
               ? theme.brightness.isLight
                   ? const Color.fromRGBO(0, 0, 0, 0.3614)
@@ -609,7 +610,8 @@ class _TextBoxState extends State<TextBox>
                   ? const Color.fromRGBO(0, 0, 0, 0.6063)
                   : const Color.fromRGBO(255, 255, 255, 0.786),
           fontWeight: FontWeight.w400,
-        );
+        )
+        .merge(widget.placeholderStyle);
 
     final BoxDecoration decoration = widget.decoration ??
         BoxDecoration(
