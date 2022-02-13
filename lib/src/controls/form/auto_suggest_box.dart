@@ -109,6 +109,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   late TextEditingController controller;
 
+  final FocusScopeNode overlayNode = FocusScopeNode();
+
   @override
   void initState() {
     super.initState();
@@ -153,6 +155,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           child: SizedBox(
             width: box.size.width,
             child: _AutoSuggestBoxOverlay(
+              node: overlayNode,
               controller: controller,
               items: widget.items,
               onSelected: (String item) {
@@ -162,6 +165,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                   offset: item.length,
                 );
                 widget.onChanged?.call(item, TextChangedReason.userInput);
+
+                // After selected, the overlay is dismissed and the text box is
+                // unfocused
+                _dismissOverlay();
+                focusNode.unfocus();
               },
             ),
           ),
@@ -195,34 +203,50 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
     return CompositedTransformTarget(
       link: _layerLink,
-      child: TextBox(
-        key: _textBoxKey,
-        controller: controller,
-        focusNode: focusNode,
-        placeholder: widget.placeholder,
-        placeholderStyle: widget.placeholderStyle,
-        clipBehavior: _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
-        suffix: Row(children: [
-          if (widget.trailingIcon != null) widget.trailingIcon!,
-          if (widget.clearButtonEnabled && controller.text.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: IconButton(
-                icon: const Icon(FluentIcons.chrome_close),
-                onPressed: () {
-                  controller.clear();
-                  focusNode.unfocus();
-                },
-              ),
-            ),
-        ]),
-        suffixMode: OverlayVisibilityMode.always,
-        onChanged: (text) {
-          widget.onChanged?.call(text, TextChangedReason.userInput);
-          _showOverlay();
+      child: Actions(
+        actions: {
+          DirectionalFocusIntent: _DirectionalFocusAction(),
         },
+        child: TextBox(
+          key: _textBoxKey,
+          controller: controller,
+          focusNode: focusNode,
+          placeholder: widget.placeholder,
+          placeholderStyle: widget.placeholderStyle,
+          clipBehavior:
+              _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
+          suffix: Row(children: [
+            if (widget.trailingIcon != null) widget.trailingIcon!,
+            if (widget.clearButtonEnabled && controller.text.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 2.0),
+                child: IconButton(
+                  icon: const Icon(FluentIcons.chrome_close),
+                  onPressed: () {
+                    controller.clear();
+                    focusNode.unfocus();
+                  },
+                ),
+              ),
+          ]),
+          suffixMode: OverlayVisibilityMode.always,
+          onChanged: (text) {
+            widget.onChanged?.call(text, TextChangedReason.userInput);
+            _showOverlay();
+          },
+        ),
       ),
     );
+  }
+}
+
+class _DirectionalFocusAction extends DirectionalFocusAction {
+  @override
+  void invoke(covariant DirectionalFocusIntent intent) {
+    // if (!intent.ignoreTextFields || !_isForTextField) {
+    //   primaryFocus!.focusInDirection(intent.direction);
+    // }
+    debugPrint(intent.direction.toString());
   }
 }
 
@@ -232,22 +256,22 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
     required this.items,
     required this.controller,
     required this.onSelected,
+    required this.node,
   }) : super(key: key);
 
   final List items;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
+  final FocusScopeNode node;
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     return FocusScope(
-      autofocus: true,
+      node: node,
       child: Container(
-        constraints: const BoxConstraints(
-          maxHeight: 385,
-        ),
+        constraints: const BoxConstraints(maxHeight: 380),
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
             borderRadius: const BorderRadius.vertical(
@@ -281,9 +305,7 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
                   final item = items[index];
                   return _AutoSuggestBoxOverlayTile(
                     text: '$item',
-                    onSelected: () {
-                      onSelected(item);
-                    },
+                    onSelected: () => onSelected(item),
                   );
                 }),
               );
@@ -314,6 +336,7 @@ class _AutoSuggestBoxOverlayTile extends StatefulWidget {
 class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
+  final node = FocusNode();
 
   @override
   void initState() {
@@ -328,6 +351,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
   @override
   void dispose() {
     controller.dispose();
+    node.dispose();
     super.dispose();
   }
 
@@ -335,12 +359,13 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return HoverButton(
+      focusNode: node,
       onPressed: widget.onSelected,
       margin: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
       builder: (context, states) => Stack(
         children: [
           Container(
-            height: 40.0,
+            height: 36.0,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6.0),
