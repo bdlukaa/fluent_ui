@@ -104,7 +104,7 @@ class TextBox extends StatefulWidget {
     this.inputFormatters,
     this.enabled,
     this.cursorWidth = 1.5,
-    this.cursorHeight /* = 28 */,
+    this.cursorHeight,
     this.cursorRadius = const Radius.circular(2.0),
     this.cursorColor,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,

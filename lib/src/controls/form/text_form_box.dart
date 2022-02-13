@@ -1,3 +1,6 @@
+import 'dart:ui' as ui;
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -34,7 +37,6 @@ class TextFormBox extends FormField<String> {
   /// Creates a text form box
   TextFormBox({
     Key? key,
-    this.padding,
     this.controller,
     String? initialValue,
     FocusNode? focusNode,
@@ -60,6 +62,8 @@ class TextFormBox extends FormField<String> {
     int? minLines,
     bool expands = false,
     int? maxLength,
+    double? minHeight,
+    EdgeInsetsGeometry padding = kTextBoxPadding,
     ValueChanged<String>? onChanged,
     GestureTapCallback? onTap,
     VoidCallback? onEditingComplete,
@@ -89,6 +93,11 @@ class TextFormBox extends FormField<String> {
     OverlayVisibilityMode prefixMode = OverlayVisibilityMode.always,
     Widget? suffix,
     OverlayVisibilityMode suffixMode = OverlayVisibilityMode.always,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    String? restorationId,
+    MaxLengthEnforcement? maxLengthEnforcement,
+    ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
+    ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -174,12 +183,17 @@ class TextFormBox extends FormField<String> {
                 suffix: suffix,
                 suffixMode: suffixMode,
                 highlightColor: (field.errorText == null) ? null : Colors.red,
+                dragStartBehavior: dragStartBehavior,
+                minHeight: minHeight,
+                padding: padding,
+                maxLengthEnforcement: maxLengthEnforcement,
+                restorationId: restorationId,
+                selectionHeightStyle: selectionHeightStyle,
+                selectionWidthStyle: selectionWidthStyle,
               ),
             );
           },
         );
-
-  final EdgeInsetsGeometry? padding;
 
   final TextEditingController? controller;
 
