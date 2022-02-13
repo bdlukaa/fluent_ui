@@ -97,7 +97,7 @@ class TextBox extends StatefulWidget {
     this.minHeight,
     this.expands = false,
     this.maxLength,
-    this.maxLengthEnforced = true,
+    this.maxLengthEnforcement,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
@@ -382,7 +382,15 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.services.lengthLimitingTextInputFormatter.maxLength}
   final int? maxLength;
 
-  final bool maxLengthEnforced;
+  /// Determines how the [maxLength] limit should be enforced.
+  ///
+  /// If [MaxLengthEnforcement.none] is set, additional input beyond [maxLength]
+  /// will not be enforced by the limit.
+  ///
+  /// {@macro flutter.services.textFormatter.effectiveMaxLengthEnforcement}
+  ///
+  /// {@macro flutter.services.textFormatter.maxLengthEnforcement}
+  final MaxLengthEnforcement? maxLengthEnforcement;
 
   /// {@macro flutter.widgets.editableText.onChanged}
   ///
@@ -517,8 +525,8 @@ class TextBox extends StatefulWidget {
       ..add(IntProperty('minLines', minLines, defaultValue: null))
       ..add(DiagnosticsProperty<bool>('expands', expands, defaultValue: false))
       ..add(IntProperty('maxLength', maxLength, defaultValue: null))
-      ..add(FlagProperty('maxLengthEnforced',
-          value: maxLengthEnforced, ifTrue: 'max length enforced'))
+      ..add(EnumProperty('maxLengthEnforcement', maxLengthEnforcement,
+          defaultValue: null))
       ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0))
       ..add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null))
       ..add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
@@ -561,6 +569,10 @@ class _TextBoxState extends State<TextBox>
   FocusNode? _focusNode;
   FocusNode get _effectiveFocusNode =>
       widget.focusNode ?? (_focusNode ??= FocusNode());
+
+  MaxLengthEnforcement get _effectiveMaxLengthEnforcement =>
+      widget.maxLengthEnforcement ??
+      LengthLimitingTextInputFormatter.getDefaultMaxLengthEnforcement();
 
   bool _showSelectionHandles = false;
 
@@ -796,8 +808,11 @@ class _TextBoxState extends State<TextBox>
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
     const Offset cursorOffset = Offset(0, -1);
-    if (widget.maxLength != null && widget.maxLengthEnforced) {
-      formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
+    if (widget.maxLength != null) {
+      formatters.add(LengthLimitingTextInputFormatter(
+        widget.maxLength,
+        maxLengthEnforcement: _effectiveMaxLengthEnforcement,
+      ));
     }
 
     final defaultTextStyle = TextStyle(
@@ -807,7 +822,7 @@ class _TextBoxState extends State<TextBox>
 
     final Brightness keyboardAppearance =
         widget.keyboardAppearance ?? theme.brightness;
-    final Color cursorColor = theme.inactiveColor;
+    final Color cursorColor = widget.cursorColor ?? theme.inactiveColor;
     final Color disabledColor = theme.disabledColor;
     final Color backgroundColor = _effectiveFocusNode.hasFocus
         ? theme.scaffoldBackgroundColor
