@@ -36,6 +36,20 @@ class _FormsState extends State<Forms> {
   DateTime date = DateTime.now();
 
   @override
+  void initState() {
+    super.initState();
+    _clearController.addListener(() {
+      if (_clearController.text.length == 1 && mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _clearController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Forms showcase')),
@@ -94,12 +108,14 @@ class _FormsState extends State<Forms> {
           controller: _clearController,
           suffixMode: OverlayVisibilityMode.always,
           minHeight: 100,
-          suffix: IconButton(
-            icon: const Icon(FluentIcons.chrome_close),
-            onPressed: () {
-              _clearController.clear();
-            },
-          ),
+          suffix: _clearController.text.isEmpty
+              ? null
+              : IconButton(
+                  icon: const Icon(FluentIcons.chrome_close),
+                  onPressed: () {
+                    _clearController.clear();
+                  },
+                ),
           placeholder: 'Text box with clear button',
         ),
         const SizedBox(height: 20),
