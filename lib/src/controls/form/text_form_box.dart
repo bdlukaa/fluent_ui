@@ -1,7 +1,37 @@
 import 'package:flutter/services.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// A [FormField] that contains a [TextBox].
+///
+/// This is a convenience widget that wraps a [TextBox] widget in a
+/// [FormField].
+///
+/// A [Form] ancestor is not required. The [Form] simply makes it easier to
+/// save, reset, or validate multiple fields at once. To use without a [Form],
+/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
+/// save or reset the form field.
+///
+/// When a [controller] is specified, its [TextEditingController.text]
+/// defines the [initialValue]. If this [FormField] is part of a scrolling
+/// container that lazily constructs its children, like a [ListView] or a
+/// [CustomScrollView], then a [controller] should be specified.
+/// The controller's lifetime should be managed by a stateful widget ancestor
+/// of the scrolling container.
+///
+/// If a [controller] is not specified, [initialValue] can be used to give
+/// the automatically generated controller an initial value.
+///
+/// Remember to call [TextEditingController.dispose] of the [TextEditingController]
+/// when it is no longer needed. This will ensure we discard any resources used
+/// by the object.
+///
+/// See also:
+///
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
+///   * [TextBox], which is the underlying text field without the [Form]
+///    integration.
 class TextFormBox extends FormField<String> {
+  /// Creates a text form box
   TextFormBox({
     Key? key,
     this.padding,
@@ -83,17 +113,6 @@ class TextFormBox extends FormField<String> {
           builder: (FormFieldState<String> field) {
             final _TextFormBoxState state = field as _TextFormBoxState;
 
-            final BoxDecoration? fDecoration = field.errorText != null
-                ? BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.red,
-                        width: 2,
-                      ),
-                    ),
-                  )
-                : null;
-
             void onChangedHandler(String value) {
               field.didChange(value);
               if (onChanged != null) {
@@ -144,7 +163,6 @@ class TextFormBox extends FormField<String> {
                 keyboardAppearance: keyboardAppearance,
                 enableInteractiveSelection: enableInteractiveSelection,
                 autofillHints: autofillHints,
-                foregroundDecoration: fDecoration,
                 placeholder: placeholder,
                 placeholderStyle: placeholderStyle,
                 header: header,
@@ -155,6 +173,7 @@ class TextFormBox extends FormField<String> {
                 prefixMode: prefixMode,
                 suffix: suffix,
                 suffixMode: suffixMode,
+                highlightColor: (field.errorText == null) ? null : Colors.red,
               ),
             );
           },

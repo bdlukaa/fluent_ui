@@ -47,7 +47,19 @@ class _TextBoxSelectionGestureDetectorBuilder
   }
 }
 
+/// The TextBox control lets a user type text into an app. It's typically used
+/// to capture a single line of text, but can be configured to capture multiple
+/// lines of text. The text displays on the screen in a simple, uniform,
+/// plaintext format.
+///
+/// ![TextBox Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/text-box-ex1.png)
+///
+/// See also:
+///
+///   * [AutoSuggestBox], it lets the user enter search terms or to show the
+/// user a list of suggestions to choose from as they type.
 class TextBox extends StatefulWidget {
+  /// Creates a text box
   const TextBox({
     Key? key,
     this.controller,
@@ -159,114 +171,306 @@ class TextBox extends StatefulWidget {
                   )),
         super(key: key);
 
+  /// Controls the text being edited.
+  ///
+  /// If null, this widget will create its own [TextEditingController].
   final TextEditingController? controller;
+
+  /// Defines the keyboard focus for this widget.
+  ///
+  /// The [focusNode] is a long-lived object that's typically managed by a
+  /// [StatefulWidget] parent. See [FocusNode] for more information.
+  ///
+  /// To give the keyboard focus to this widget, provide a [focusNode] and then
+  /// use the current [FocusScope] to request the focus:
+  ///
+  /// ```dart
+  /// FocusScope.of(context).requestFocus(myFocusNode);
+  /// ```
+  ///
+  /// This happens automatically when the widget is tapped.
+  ///
+  /// To be notified when the widget gains or loses the focus, add a listener
+  /// to the [focusNode]:
+  ///
+  /// ```dart
+  /// focusNode.addListener(() { print(myFocusNode.hasFocus); });
+  /// ```
+  ///
+  /// If null, this widget will create its own [FocusNode].
+  ///
+  /// ## Keyboard
+  ///
+  /// Requesting the focus will typically cause the keyboard to be shown
+  /// if it's not showing already.
+  ///
+  /// On Android, the user can hide the keyboard - without changing the focus -
+  /// with the system back button. They can restore the keyboard's visibility
+  /// by tapping on a text field.  The user might hide the keyboard and
+  /// switch to a physical keyboard, or they might just need to get it
+  /// out of the way for a moment, to expose something it's
+  /// obscuring. In this case requesting the focus again will not
+  /// cause the focus to change, and will not make the keyboard visible.
+  ///
+  /// This widget builds an [EditableText] and will ensure that the keyboard is
+  /// showing when it is tapped by calling [EditableTextState.requestKeyboard()].
   final FocusNode? focusNode;
 
+  /// Padding around the text entry area between the [prefix] and [suffix].
+  ///
+  /// Defaults to a padding of 6 pixels on the left and right and 8 pixels on
+  /// top and bottom.
   final EdgeInsetsGeometry padding;
 
+  /// {@macro flutter.material.Material.clipBehavior}
+  ///
+  /// Defaults to [Clip.antiAlias].
   final Clip clipBehavior;
 
+  /// A placeholder hint that appears on the first line of the text box when the
+  /// text entry is empty.
+  ///
+  /// Defaults to having no placeholder text.
   final String? placeholder;
+
+  /// The style to use for the placeholder text.
+  ///
+  /// The [placeholderStyle] is merged with the [style] [TextStyle] when applied
+  /// to the [placeholder] text. To avoid merging with [style], specify
+  /// [TextStyle.inherit] as false.
   final TextStyle? placeholderStyle;
 
+  /// The label above the text box
+  ///
+  /// ![TextBox with header](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/text-box-ex1.png)
+  ///
+  /// See also:
+  ///
+  ///   * [InfoLabel], which adds a text either above or by the side of its child
   final String? header;
+
+  /// The style used by [header].
   final TextStyle? headerStyle;
 
+  /// An optional [Widget] to display before the text box.
   final Widget? outsidePrefix;
+
+  /// An optional [Widget] to display before the text.
   final Widget? prefix;
+
+  /// Controls the visibility of the [prefix] widget based on the state of
+  /// text entry when the [prefix] argument is not null.
+  ///
+  /// Defaults to [OverlayVisibilityMode.always] and cannot be null.
+  ///
+  /// Has no effect when [prefix] is null.
   final OverlayVisibilityMode prefixMode;
+
+  /// Controls the visibility of the [outsidePrefix] widget based on the state of
+  /// text entry when the [outsidePrefix] argument is not null.
+  ///
+  /// Defaults to [OverlayVisibilityMode.always] and cannot be null.
+  ///
+  /// Has no effect when [outsidePrefix] is null.
   final OverlayVisibilityMode outsidePrefixMode;
 
+  /// An optional [Widget] to display after the text box.
   final Widget? outsideSuffix;
+
+  /// An optional [Widget] to display after the text.
   final Widget? suffix;
+
+  /// Controls the visibility of the [suffix] widget based on the state of
+  /// text entry when the [suffix] argument is not null.
+  ///
+  /// Defaults to [OverlayVisibilityMode.always] and cannot be null.
+  ///
+  /// Has no effect when [suffix] is null.
   final OverlayVisibilityMode suffixMode;
+
+  /// Controls the visibility of the [outsideSuffix] widget based on the state of
+  /// text entry when the [outsideSuffix] argument is not null.
+  ///
+  /// Defaults to [OverlayVisibilityMode.always] and cannot be null.
+  ///
+  /// Has no effect when [outsideSuffix] is null.
   final OverlayVisibilityMode outsideSuffixMode;
 
+  /// {@macro flutter.widgets.editableText.keyboardType}
   final TextInputType keyboardType;
 
+  /// The type of action button to use for the keyboard.
+  ///
+  /// Defaults to [TextInputAction.newline] if [keyboardType] is
+  /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
   final TextInputAction? textInputAction;
 
+  /// {@macro flutter.widgets.editableText.textCapitalization}
   final TextCapitalization textCapitalization;
 
+  /// The style to use for the text being edited.
   final TextStyle? style;
 
+  /// Controls the [BoxDecoration] of the box behind the text input.
   final BoxDecoration? decoration;
+
+  /// Controls the [BoxDecoration] of the box in front of the text input.
+  ///
+  /// If [highlightColor] is provided, this must not be provided
   final BoxDecoration? foregroundDecoration;
+
+  /// The highlight color of the text box.
+  ///
+  /// If [foregroundDecoration] is provided, this must not be provided.
   final Color? highlightColor;
 
+  /// {@macro flutter.widgets.editableText.strutStyle}
   final StrutStyle? strutStyle;
 
+  /// {@macro flutter.widgets.editableText.textAlign}
   final TextAlign textAlign;
 
+  /// Configuration of toolbar options.
+  ///
+  /// If not set, select all and paste will default to be enabled. Copy and cut
+  /// will be disabled if [obscureText] is true. If [readOnly] is true,
+  /// paste and cut will be disabled regardless.
   final ToolbarOptions toolbarOptions;
 
+  /// {@macro flutter.material.InputDecorator.textAlignVertical}
   final TextAlignVertical? textAlignVertical;
 
+  /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
 
-  final bool? showCursor;
-
+  /// {@macro flutter.widgets.editableText.autofocus}
   final bool autofocus;
 
+  /// {@macro flutter.widgets.editableText.obscuringCharacter}
   final String obscuringCharacter;
 
+  /// {@macro flutter.widgets.editableText.obscureText}
   final bool obscureText;
 
+  /// {@macro flutter.widgets.editableText.autocorrect}
   final bool autocorrect;
 
+  /// {@macro flutter.services.TextInputConfiguration.smartDashesType}
   final SmartDashesType smartDashesType;
 
+  /// {@macro flutter.services.TextInputConfiguration.smartQuotesType}
   final SmartQuotesType smartQuotesType;
 
+  /// {@macro flutter.services.TextInputConfiguration.enableSuggestions}
   final bool enableSuggestions;
 
+  /// {@macro flutter.widgets.editableText.maxLines}
+  ///  * [expands], which determines whether the field should fill the height of
+  ///    its parent.
   final int? maxLines;
+
+  /// {@macro flutter.widgets.editableText.minLines}
+  ///  * [expands], which determines whether the field should fill the height of
+  ///    its parent.
   final int? minLines;
+
   final double? minHeight;
 
+  /// {@macro flutter.widgets.editableText.expands}
   final bool expands;
 
+  /// {@macro flutter.services.lengthLimitingTextInputFormatter.maxLength}
   final int? maxLength;
 
   final bool maxLengthEnforced;
 
+  /// {@macro flutter.widgets.editableText.onChanged}
+  ///
+  /// See also:
+  ///
+  ///  * [inputFormatters], which are called before [onChanged]
+  ///    runs and can validate and change ("format") the input value.
+  ///  * [onEditingComplete], [onSubmitted]:
+  ///    which are more specialized input change notifications.
   final ValueChanged<String>? onChanged;
 
+  /// {@macro flutter.widgets.editableText.onEditingComplete}
   final VoidCallback? onEditingComplete;
 
+  /// {@macro flutter.widgets.editableText.onSubmitted}
+  ///
+  /// See also:
+  ///
+  ///  * [TextInputAction.next] and [TextInputAction.previous], which
+  ///    automatically shift the focus to the next/previous focusable item when
+  ///    the user is done editing.
   final ValueChanged<String>? onSubmitted;
 
+  /// {@macro flutter.widgets.editableText.inputFormatters}
   final List<TextInputFormatter>? inputFormatters;
 
   final bool? enabled;
 
+  /// {@macro flutter.widgets.editableText.cursorWidth}
   final double cursorWidth;
+
+  /// {@macro flutter.widgets.editableText.cursorHeight}
   final double? cursorHeight;
-  final Radius cursorRadius;
+
+  /// {@macro flutter.widgets.editableText.cursorRadius}
+  final Radius? cursorRadius;
+
+  /// The color of the cursor.
+  ///
+  /// The cursor indicates the current location of text insertion point in
+  /// the field.
   final Color? cursorColor;
 
+  /// {@macro flutter.widgets.editableText.showCursor}
+  final bool? showCursor;
+
+  /// Controls how tall the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxHeightStyle] for details on available styles.
   final ui.BoxHeightStyle selectionHeightStyle;
 
+  /// Controls how wide the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxWidthStyle] for details on available styles.
   final ui.BoxWidthStyle selectionWidthStyle;
 
+  /// The appearance of the keyboard.
+  ///
+  /// This setting is only honored on iOS devices.
+  ///
+  /// If unset, defaults to the brightness of [ThemeData.primaryColorBrightness].
   final Brightness? keyboardAppearance;
 
+  /// {@macro flutter.widgets.editableText.scrollPadding}
   final EdgeInsets scrollPadding;
 
+  /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
   final bool enableInteractiveSelection;
 
+  /// {@macro flutter.widgets.scrollable.dragStartBehavior}
   final DragStartBehavior dragStartBehavior;
 
-  final ScrollController? scrollController;
-
+  /// {@macro flutter.widgets.editableText.scrollPhysics}
   final ScrollPhysics? scrollPhysics;
 
+  /// {@macro flutter.widgets.editableText.scrollController}
+  final ScrollController? scrollController;
+
+  /// {@macro flutter.widgets.editableText.selectionEnabled}
   bool get selectionEnabled => enableInteractiveSelection;
 
   final GestureTapCallback? onTap;
 
+  /// {@macro flutter.widgets.editableText.autofillHints}
+  /// {@macro flutter.services.AutofillConfiguration.autofillHints}
   final Iterable<String>? autofillHints;
 
+  /// {@macro flutter.material.textfield.restorationId}
   final String? restorationId;
 
   final ButtonThemeData? iconButtonThemeData;
