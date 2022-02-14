@@ -515,7 +515,7 @@ You can use `NavigationBody.builder`
 ```dart
 NavigationView(
   ...,
-  content: NavigationBody(
+  content: NavigationBody.builder(
     index: _currentIndex,
     itemBuilder: (context, index) {
       return ...;
