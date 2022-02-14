@@ -42,7 +42,8 @@ class FormRow extends StatelessWidget {
               ),
             ),
           if (error != null)
-            Align(
+            Container(
+              margin: const EdgeInsets.only(top: 2.0),
               alignment: AlignmentDirectional.centerStart,
               child: DefaultTextStyle(
                 style: const TextStyle(

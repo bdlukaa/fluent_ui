@@ -17,7 +17,7 @@ class InfoLabel extends StatelessWidget {
   }) : super(key: key);
 
   /// The text of the label. It'll be styled acorrding to
-  /// [headerStyle]. If this is empty, a blank space will
+  /// [labelStyle]. If this is empty, a blank space will
   /// be rendered.
   final String label;
 

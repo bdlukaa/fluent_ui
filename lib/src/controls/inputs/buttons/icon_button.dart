@@ -28,12 +28,13 @@ class IconButton extends BaseButton {
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final isIconSmall = iconButtonMode == IconButtonMode.tiny;
+    final isIconSmall = SmallIconButton.of(context) != null ||
+        iconButtonMode == IconButtonMode.tiny;
     final isSmall = iconButtonMode != null
         ? iconButtonMode != IconButtonMode.large
         : SmallIconButton.of(context) != null;
     return ButtonStyle(
-      iconSize: ButtonState.all(isIconSmall ? 12.0 : null),
+      iconSize: ButtonState.all(isIconSmall ? 11.0 : null),
       padding: ButtonState.all(isSmall
           ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
           : const EdgeInsets.all(8.0)),

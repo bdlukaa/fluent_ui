@@ -1,5 +1,18 @@
 Date format: DD/MM/YYYY
 
+## [unreleased] - Input Update
+
+- `TextBox` updates: ([#179](https://github.com/bdlukaa/fluent_ui/pull/179))
+  - Correctly apply the `style` property
+  - Correctly apply `decoration` to the background
+  - Added `foregroundDecoration` and `highlightColor` property. They can not be specified at the same time
+  - **BREAKING** replaced `maxLengthEnforeced` with `maxLengthEnforcement`
+- Expose more propertied to `TextFormBox`
+- `AutoSuggestBox` updates:
+  - Improved fidelity of the suggestions overlay
+  - When a suggestion is picked, the overlay is automatically closed and the text box is unfocused
+  - Clear button now only shows when the text box is focused
+
 ## [3.9.0] - Fidelity - [10/02/2022]
 
 - **BREAKING** Renamed `standartCurve` to `standardCurve`
