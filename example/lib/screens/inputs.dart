@@ -163,8 +163,8 @@ class _InputsPageState extends State<InputsPage> {
                         color: disabled
                             ? FluentTheme.of(context).accentColor.darker
                             : FluentTheme.of(context).accentColor,
-                        borderRadius: const BorderRadius.horizontal(
-                          left: Radius.circular(4.0),
+                        borderRadius: const BorderRadiusDirectional.horizontal(
+                          start: Radius.circular(4.0),
                         ),
                       ),
                       height: 24,

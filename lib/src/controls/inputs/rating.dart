@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
@@ -36,6 +37,7 @@ class RatingBar extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.starSpacing = 0,
+    this.dragStartBehavior = DragStartBehavior.down,
   })  : assert(rating >= 0 && rating <= amount),
         assert(starSpacing >= 0),
         assert(amount > 0),
@@ -88,6 +90,9 @@ class RatingBar extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Determines the way that drag start behavior is handled.
+  final DragStartBehavior dragStartBehavior;
+
   @override
   _RatingBarState createState() => _RatingBarState();
 
@@ -113,6 +118,11 @@ class RatingBar extends StatefulWidget {
       ifFalse: 'manual focus',
     ));
     properties.add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0));
+    properties.add(EnumProperty(
+      'dragStartBehavior',
+      dragStartBehavior,
+      defaultValue: DragStartBehavior.down,
+    ));
   }
 }
 
@@ -229,6 +239,7 @@ class _RatingBarState extends State<RatingBar> {
           setState(() => _showFocusHighlight = v);
         },
         child: GestureDetector(
+          dragStartBehavior: widget.dragStartBehavior,
           onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
           onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx, size),
           onHorizontalDragUpdate: (d) =>
@@ -265,9 +276,6 @@ class _RatingBarState extends State<RatingBar> {
                       }
                       return icon;
                     });
-                    if (Directionality.of(context) == TextDirection.rtl) {
-                      return items.reversed.toList();
-                    }
                     return items;
                   }(),
                 );
