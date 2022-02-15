@@ -41,6 +41,13 @@ class AppTheme extends ChangeNotifier {
     _acrylicEffect = acrylicEffect;
     notifyListeners();
   }
+
+  TextDirection _textDirection = TextDirection.ltr;
+  TextDirection get textDirection => _textDirection;
+  set textDirection(TextDirection direction) {
+    _textDirection = direction;
+    notifyListeners();
+  }
 }
 
 AccentColor get systemAccentColor {

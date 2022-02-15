@@ -82,6 +82,12 @@ class MyApp extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
+          builder: (context, child) {
+            return Directionality(
+              textDirection: appTheme.textDirection,
+              child: child!,
+            );
+          },
         );
       },
     );
