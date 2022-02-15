@@ -135,6 +135,7 @@ class NavigationViewState extends State<NavigationView> {
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
+    final direction = Directionality.of(context);
 
     Widget appBar = () {
       if (widget.appBar != null) {
@@ -241,9 +242,9 @@ class NavigationViewState extends State<NavigationView> {
                         ? Colors.black
                         : const Color(0xffBCBCBC),
                   ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                  ),
+                  borderRadius: const BorderRadiusDirectional.only(
+                    topStart: Radius.circular(8.0),
+                  ).resolve(direction),
                 );
             final Widget content = ClipRect(
               child: pane.displayMode == PaneDisplayMode.minimal
@@ -291,15 +292,15 @@ class NavigationViewState extends State<NavigationView> {
                     _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
                 paneResult = Stack(children: [
-                  AnimatedPositioned(
+                  AnimatedPositionedDirectional(
                     duration: theme.animationDuration ?? Duration.zero,
                     curve: theme.animationCurve ?? Curves.linear,
                     top: widget.appBar?.height ?? 0.0,
-                    left: openedWithoutOverlay
+                    start: openedWithoutOverlay
                         ? openSize
                         : pane.size?.compactWidth ??
                             _kCompactNavigationPanelWidth,
-                    right: 0,
+                    end: 0,
                     bottom: 0,
                     child: content,
                   ),
@@ -425,10 +426,10 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                       ),
                     ),
-                  AnimatedPositioned(
+                  AnimatedPositionedDirectional(
                     duration: theme.animationDuration ?? Duration.zero,
                     curve: theme.animationCurve ?? Curves.linear,
-                    left: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
+                    start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
                     width: _kOpenNavigationPanelWidth,
                     height: MediaQuery.of(context).size.height,
                     child: PrimaryScrollController(
@@ -622,6 +623,7 @@ class _NavigationAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final direction = Directionality.of(context);
     final PaneDisplayMode displayMode = this.displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
@@ -642,7 +644,8 @@ class _NavigationAppBar extends StatelessWidget {
               ? EdgeInsets.zero
               : const EdgeInsets.only(left: 24.0),
           child: DefaultTextStyle(
-            style: FluentTheme.of(context).typography.caption!,
+            style:
+                FluentTheme.of(context).typography.caption ?? const TextStyle(),
             overflow: TextOverflow.clip,
             maxLines: 1,
             softWrap: false,
@@ -676,9 +679,10 @@ class _NavigationAppBar extends StatelessWidget {
                     : _kOpenNavigationPanelWidth;
         result = Stack(children: [
           if (appBar.actions != null)
-            Positioned(
-              left: width,
-              right: 0.0,
+            Positioned.directional(
+              textDirection: direction,
+              start: width,
+              end: 0.0,
               top: 0.0,
               bottom: 0.0,
               child: Align(

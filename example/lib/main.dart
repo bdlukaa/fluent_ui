@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (kIsWeb) return const Text(appTitle);
           return MoveWindow(
             child: const Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: Text(appTitle),
             ),
           );
