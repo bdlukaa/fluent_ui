@@ -155,7 +155,6 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
-    print(showTextOnTop);
     final PaneDisplayMode mode = displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.minimal;
