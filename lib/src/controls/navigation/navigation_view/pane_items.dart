@@ -155,6 +155,7 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
+    print(showTextOnTop);
     final PaneDisplayMode mode = displayMode ??
         _NavigationBody.maybeOf(context)?.displayMode ??
         PaneDisplayMode.minimal;
@@ -282,7 +283,7 @@ class PaneItem extends NavigationPaneItem {
                       child: Center(child: icon),
                     ),
                   ),
-                  textResult,
+                  if (showTextOnTop) textResult,
                 ],
               );
               if (infoBadge != null) {
@@ -296,6 +297,8 @@ class PaneItem extends NavigationPaneItem {
                     ),
                 ]);
               }
+              // return Container(
+              //     key: itemKey, child: result, color: Colors.orange);
               return Center(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
