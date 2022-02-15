@@ -3,6 +3,10 @@ import 'package:flutter/foundation.dart';
 
 const double _kVerticalOffset = 20.0;
 const double _kInnerPadding = 5.0;
+const Widget _kDefaultDropdownButtonTrailing = Icon(
+  FluentIcons.chevron_down,
+  size: 10,
+);
 
 /// A DropDownButton is a button that shows a chevron as a visual indicator that
 /// it has an attached flyout that contains more options. It has the same
@@ -203,7 +207,7 @@ class _DropDownButtonState extends State<DropDownButton>
     final buttonChildren = <Widget>[
       if (widget.leading != null)
         Padding(
-          padding: const EdgeInsets.only(right: 8.0),
+          padding: const EdgeInsetsDirectional.only(end: 8.0),
           child: IconTheme.merge(
             data: const IconThemeData(size: 20.0),
             child: widget.leading!,
@@ -211,12 +215,8 @@ class _DropDownButtonState extends State<DropDownButton>
         ),
       if (widget.title != null) widget.title!,
       Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: widget.trailing ??
-            const Icon(
-              FluentIcons.chevron_down,
-              size: 10,
-            ),
+        padding: const EdgeInsetsDirectional.only(end: 8.0),
+        child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
       ),
     ];
 
@@ -313,12 +313,12 @@ class DropDownButtonItem {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 if (leading != null)
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
+                    padding: const EdgeInsetsDirectional.only(end: 8.0),
                     child: leading!,
                   ),
                 if (title != null)
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
+                    padding: const EdgeInsetsDirectional.only(end: 8.0),
                     child: title!,
                   ),
                 if (trailing != null) trailing!,
