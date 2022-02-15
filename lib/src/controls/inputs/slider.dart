@@ -241,7 +241,9 @@ class _SliderState extends m.State<Slider> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     final style = SliderTheme.of(context).merge(widget.style);
+    final direction = Directionality.of(context);
     Widget child = HoverButton(
       onPressed: widget.onChanged == null ? null : () {},
       margin: style.margin ?? EdgeInsets.zero,
@@ -273,6 +275,7 @@ class _SliderState extends m.State<Slider> {
               valueIndicatorShape: _RectangularSliderValueIndicatorShape(
                 backgroundColor: style.labelBackgroundColor,
                 vertical: widget.vertical,
+                ltr: direction == TextDirection.ltr,
               ),
               trackHeight: 1.75,
               trackShape: _CustomTrackShape(),
@@ -316,7 +319,7 @@ class _SliderState extends m.State<Slider> {
     );
     if (widget.vertical) {
       return RotatedBox(
-        quarterTurns: 3,
+        quarterTurns: direction == TextDirection.ltr ? 3 : 5,
         child: child,
       );
     }
@@ -630,14 +633,19 @@ class SliderThemeData with Diagnosticable {
 class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
   final Color? backgroundColor;
   final bool vertical;
+  final bool ltr;
 
   /// Create a slider value indicator that resembles a rectangular tooltip.
   const _RectangularSliderValueIndicatorShape({
     this.backgroundColor,
     this.vertical = false,
+    this.ltr = false,
   });
 
-  get _pathPainter => _RectangularSliderValueIndicatorPathPainter(vertical);
+  get _pathPainter => _RectangularSliderValueIndicatorPathPainter(
+        vertical,
+        ltr,
+      );
 
   @override
   Size getPreferredSize(
@@ -684,7 +692,13 @@ class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
 class _RectangularSliderValueIndicatorPathPainter {
   final bool vertical;
 
-  const _RectangularSliderValueIndicatorPathPainter([this.vertical = false]);
+  /// Whether the current [Directionality] is [TextDirection.ltr]
+  final bool ltr;
+
+  const _RectangularSliderValueIndicatorPathPainter([
+    this.vertical = false,
+    this.ltr = false,
+  ]);
 
   static const double _triangleHeight = 8.0;
   static const double _labelPadding = 8.0;
@@ -796,18 +810,28 @@ class _RectangularSliderValueIndicatorPathPainter {
       const Radius.circular(_upperRectRadius),
     );
     trianglePath.addRRect(upperRRect);
-
     canvas.save();
     // Prepare the canvas for the base of the tooltip, which is relative to the
     // center of the thumb.
-    const verticalFactor = 20;
+    final double verticalFactor = ltr ? 20.0 : 10.0;
     canvas.translate(
-      center.dx + (vertical ? -verticalFactor : 0),
-      center.dy - _bottomTipYOffset + (vertical ? -verticalFactor : 0),
+      center.dx +
+          (vertical
+              ? ltr
+                  ? -verticalFactor
+                  : verticalFactor * 2
+              : 0),
+      center.dy -
+          _bottomTipYOffset +
+          (vertical
+              ? ltr
+                  ? -verticalFactor
+                  : -verticalFactor * 2
+              : 0),
     );
     canvas.scale(scale, scale);
     // Rotate the label if it's vertical
-    if (vertical) canvas.rotate(math.pi / 2);
+    if (vertical) canvas.rotate((ltr ? 1 : -1) * math.pi / 2);
     if (strokePaintColor != null) {
       final Paint strokePaint = Paint()
         ..color = strokePaintColor
