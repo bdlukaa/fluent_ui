@@ -12,6 +12,7 @@ Date format: DD/MM/YYYY
   - Improved fidelity of the suggestions overlay
   - When a suggestion is picked, the overlay is automatically closed and the text box is unfocused
   - Clear button now only shows when the text box is focused
+- Add directionality support ([#184](https://github.com/bdlukaa/fluent_ui/pull/184))
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 
