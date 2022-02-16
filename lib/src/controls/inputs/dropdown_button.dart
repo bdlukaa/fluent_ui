@@ -162,7 +162,6 @@ class _DropDownButtonState extends State<DropDownButton>
                 width: 0.25,
                 color: FluentTheme.of(context).inactiveBackgroundColor,
               ),
-              boxShadow: kElevationToShadow[4],
             ),
         animation: CurvedAnimation(
           parent: _controller,
