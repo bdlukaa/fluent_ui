@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -30,6 +31,8 @@ bool get isDesktop {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemTheme.accentInstance;
 
   setPathUrlStrategy();
 
