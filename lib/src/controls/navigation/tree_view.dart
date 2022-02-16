@@ -353,6 +353,7 @@ class _TreeViewState extends State<TreeView> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28.0),
@@ -448,6 +449,7 @@ class _TreeViewItem extends StatelessWidget {
     if (!item._visible) return const SizedBox.shrink();
     final theme = FluentTheme.of(context);
     final selected = item.selected ?? false;
+    final direction = Directionality.of(context);
     return HoverButton(
       onPressed: selectionMode == TreeViewSelectionMode.none
           ? onInvoked
@@ -470,8 +472,8 @@ class _TreeViewItem extends StatelessWidget {
             Container(
               height:
                   selectionMode == TreeViewSelectionMode.multiple ? 28.0 : 26.0,
-              padding: EdgeInsets.only(
-                left: 20.0 + item.depth * _whiteSpace,
+              padding: EdgeInsetsDirectional.only(
+                start: 20.0 + item.depth * _whiteSpace,
               ),
               decoration: BoxDecoration(
                 color: item.backgroundColor?.resolve(states) ??
@@ -495,7 +497,7 @@ class _TreeViewItem extends StatelessWidget {
                 children: [
                   if (selectionMode == TreeViewSelectionMode.multiple)
                     Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
+                      padding: const EdgeInsetsDirectional.only(end: 20.0),
                       child: Checkbox(
                         checked: item.selected,
                         onChanged: (value) {
@@ -514,14 +516,16 @@ class _TreeViewItem extends StatelessWidget {
                         child: Icon(
                           item.expanded
                               ? FluentIcons.chevron_down
-                              : FluentIcons.chevron_right,
+                              : direction == TextDirection.ltr
+                                  ? FluentIcons.chevron_right
+                                  : FluentIcons.chevron_left,
                           size: 8.0,
                           color: Colors.grey[80],
                         ),
                       ),
                   if (item.leading != null)
                     Container(
-                      margin: const EdgeInsets.only(left: 18.0),
+                      margin: const EdgeInsetsDirectional.only(start: 18.0),
                       width: 20.0,
                       child: IconTheme.merge(
                         data: const IconThemeData(size: 20.0),
@@ -529,7 +533,7 @@ class _TreeViewItem extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
+                    padding: const EdgeInsetsDirectional.only(start: 18.0),
                     child: DefaultTextStyle(
                       style: TextStyle(
                         fontSize: 12.0,
