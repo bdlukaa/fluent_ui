@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -30,6 +31,8 @@ bool get isDesktop {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemTheme.accentInstance;
 
   setPathUrlStrategy();
 
@@ -82,6 +85,12 @@ class MyApp extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
+          builder: (context, child) {
+            return Directionality(
+              textDirection: appTheme.textDirection,
+              child: child!,
+            );
+          },
         );
       },
     );
@@ -118,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (kIsWeb) return const Text(appTitle);
           return MoveWindow(
             child: const Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: Text(appTitle),
             ),
           );

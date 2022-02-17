@@ -30,7 +30,7 @@ class PillButtonBarItem {
 /// See also:
 ///
 ///   * [PillButtonBarItem], the item used by pill button bar
-///   * [PillButtonTheme], used to style the pill button bar
+///   * [PillButtonBarTheme], used to style the pill button bar
 class PillButtonBar extends StatelessWidget {
   /// Creates a pill button bar.
   ///
@@ -86,7 +86,7 @@ class PillButtonBar extends StatelessWidget {
         }),
       ),
     );
-    return Align(alignment: Alignment.topLeft, child: bar);
+    return Align(alignment: AlignmentDirectional.topStart, child: bar);
   }
 }
 

@@ -165,6 +165,30 @@ class Settings extends StatelessWidget {
             );
           }),
         ],
+        biggerSpacer,
+        Text('Text Direction',
+            style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        ...List.generate(TextDirection.values.length, (index) {
+          final direction = TextDirection.values[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: RadioButton(
+              checked: appTheme.textDirection == direction,
+              onChanged: (value) {
+                if (value) {
+                  appTheme.textDirection = direction;
+                }
+              },
+              content: Text(
+                '$direction'
+                    .replaceAll('TextDirection.', '')
+                    .replaceAll('rtl', 'Right to left')
+                    .replaceAll('ltr', 'Left to right'),
+              ),
+            ),
+          );
+        }).reversed,
       ],
     );
   }
