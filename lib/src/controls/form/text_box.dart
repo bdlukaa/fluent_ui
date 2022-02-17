@@ -7,7 +7,9 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter/services.dart';
 
-const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 6);
+import 'pickers/pickers.dart';
+
+const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 5);
 
 enum OverlayVisibilityMode {
   never,
@@ -956,6 +958,9 @@ class _TextBoxState extends State<TextBox>
           decoration: BoxDecoration(
             borderRadius: radius,
             border: Border.all(
+              style: _effectiveFocusNode.hasFocus
+                  ? BorderStyle.solid
+                  : BorderStyle.none,
               width: 1,
               color: theme.brightness.isLight
                   ? const Color.fromRGBO(0, 0, 0, 0.08)
@@ -1009,7 +1014,10 @@ class _TextBoxState extends State<TextBox>
         return ClipRRect(
           clipBehavior: widget.clipBehavior,
           borderRadius: radius,
-          child: child,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: kPickerHeight),
+            child: child,
+          ),
         );
       }(),
       builder: (context, text, child) {

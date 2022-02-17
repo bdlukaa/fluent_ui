@@ -14,6 +14,8 @@ Date format: DD/MM/YYYY
   - Clear button now only shows when the text box is focused
 - Add directionality support ([#184](https://github.com/bdlukaa/fluent_ui/pull/184))
 - Ensure `NavigationAppBar.actions` are rendered on the top of the other widgets ([#177](https://github.com/bdlukaa/fluent_ui/issues/177))
+- All Form widgets now have the same height by default
+- Only show one scrollbar on `ComboBox` overlay
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 
