@@ -134,8 +134,8 @@ class ContentDialog extends StatelessWidget {
                         final index = actions!.indexOf(e);
                         return Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(
-                              right: index != (actions!.length - 1)
+                            padding: EdgeInsetsDirectional.only(
+                              end: index != (actions!.length - 1)
                                   ? style.actionsSpacing ?? 3
                                   : 0,
                             ),
@@ -305,9 +305,7 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
             final dialog = themes?.wrap(pageChild) ?? pageChild;
             return SafeArea(
               child: Actions(
-                actions: {
-                  DismissIntent: _DismissAction(context),
-                },
+                actions: {DismissIntent: _DismissAction(context)},
                 child: FocusScope(
                   child: dialog,
                   autofocus: true,

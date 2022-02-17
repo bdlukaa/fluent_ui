@@ -65,7 +65,7 @@ class _FormsState extends State<Forms> {
           },
           textInputAction: TextInputAction.next,
           prefix: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
+            padding: EdgeInsetsDirectional.only(start: 8.0),
             child: Icon(FluentIcons.edit_mail),
           ),
         ),

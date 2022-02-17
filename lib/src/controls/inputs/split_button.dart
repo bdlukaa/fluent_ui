@@ -63,11 +63,11 @@ class SplitButtonBar extends StatelessWidget {
                     color: theme.disabledColor.withOpacity(0.75),
                     width: 0.1,
                   ),
-                  borderRadius: BorderRadius.horizontal(
-                    left: index == 0
+                  borderRadius: BorderRadiusDirectional.horizontal(
+                    start: index == 0
                         ? style.borderRadius?.topLeft ?? Radius.zero
                         : Radius.zero,
-                    right: index == buttons.length - 1
+                    end: index == buttons.length - 1
                         ? style.borderRadius?.topRight ?? Radius.zero
                         : Radius.zero,
                   ),
@@ -82,7 +82,7 @@ class SplitButtonBar extends StatelessWidget {
         );
         if (index == 0) return button;
         return Padding(
-          padding: EdgeInsets.only(left: style.interval ?? 0),
+          padding: EdgeInsetsDirectional.only(start: style.interval ?? 0),
           child: button,
         );
       }),

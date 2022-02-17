@@ -261,7 +261,7 @@ class PaneItem extends NavigationPaneItem {
                   Expanded(child: textResult),
                   if (infoBadge != null)
                     Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
+                      padding: const EdgeInsetsDirectional.only(end: 8.0),
                       child: infoBadge!,
                     ),
                 ]),
@@ -282,7 +282,7 @@ class PaneItem extends NavigationPaneItem {
                       child: Center(child: icon),
                     ),
                   ),
-                  textResult,
+                  if (showTextOnTop) textResult,
                 ],
               );
               if (infoBadge != null) {
@@ -296,6 +296,8 @@ class PaneItem extends NavigationPaneItem {
                     ),
                 ]);
               }
+              // return Container(
+              //     key: itemKey, child: result, color: Colors.orange);
               return Center(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';

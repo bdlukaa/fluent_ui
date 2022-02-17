@@ -334,8 +334,10 @@ class _TabViewState extends State<TabView> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    final TextDirection direction = Directionality.of(context);
     final ThemeData theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
@@ -414,35 +416,51 @@ class _TabViewState extends State<TabView> {
                 bool scrollable = preferredTabWidth * widget.tabs.length >
                     width - (widget.showNewButton ? _kButtonWidth : 0);
 
+                final bool showScrollButtons =
+                    widget.showScrollButtons && scrollable;
+                final backwardButton = _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_left_solid8, size: 10),
+                  !scrollController.canBackward
+                      ? () {
+                          if (direction == TextDirection.ltr) {
+                            scrollController.backward();
+                          } else {
+                            scrollController.forward();
+                          }
+                        }
+                      : null,
+                  localizations.scrollTabBackwardLabel,
+                );
+
+                final forwardButton = _buttonTabBuilder(
+                  context,
+                  const Icon(FluentIcons.caret_right_solid8, size: 10),
+                  !scrollController.canForward
+                      ? () {
+                          if (direction == TextDirection.ltr) {
+                            scrollController.forward();
+                          } else {
+                            scrollController.backward();
+                          }
+                        }
+                      : null,
+                  localizations.scrollTabForwardLabel,
+                );
+
                 return Row(children: [
-                  if (widget.showScrollButtons && scrollable)
-                    _buttonTabBuilder(
-                      context,
-                      const Icon(FluentIcons.caret_left_solid8, size: 10),
-                      !scrollController.canBackward
-                          ? () {
-                              scrollController.backward();
-                            }
-                          : null,
-                      localizations.scrollTabBackwardLabel,
-                    ),
+                  if (showScrollButtons)
+                    direction == TextDirection.ltr
+                        ? backwardButton
+                        : forwardButton,
                   if (scrollable)
                     Expanded(child: listView)
                   else
-                    Flexible(
-                      child: listView,
-                    ),
-                  if (widget.showScrollButtons && scrollable)
-                    _buttonTabBuilder(
-                      context,
-                      const Icon(FluentIcons.caret_right_solid8, size: 10),
-                      !scrollController.canForward
-                          ? () {
-                              scrollController.forward();
-                            }
-                          : null,
-                      localizations.scrollTabForwardLabel,
-                    ),
+                    Flexible(child: listView),
+                  if (showScrollButtons)
+                    direction == TextDirection.ltr
+                        ? forwardButton
+                        : backwardButton,
                   if (widget.showNewButton)
                     _buttonTabBuilder(
                       context,
@@ -522,14 +540,17 @@ class _TabViewState extends State<TabView> {
 }
 
 class Tab {
+  /// Creates a tab.
   const Tab({
-    Key? key,
+    this.key,
     this.icon = const FlutterLogo(),
     required this.text,
     this.closeIcon = FluentIcons.chrome_close,
     this.onClosed,
     this.semanticLabel,
   });
+
+  final Key? key;
 
   /// The leading icon of the tab. [FlutterLogo] is used by default
   final Widget? icon;
@@ -617,6 +638,7 @@ class __TabState extends State<_Tab>
       }
     }();
     return HoverButton(
+      key: widget.tab.key,
       semanticLabel: widget.tab.semanticLabel ?? text,
       focusNode: widget.focusNode,
       onPressed: widget.onPressed,

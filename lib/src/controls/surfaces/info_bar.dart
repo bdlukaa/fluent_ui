@@ -30,7 +30,7 @@ enum InfoBarSeverity {
 /// Since the InfoBar is inline with other UI content the option is there
 /// for the control to always be visible or dismissed by the user.
 ///
-/// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+/// ![InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
@@ -112,7 +112,7 @@ class InfoBar extends StatelessWidget {
         children: [
           if (icon != null)
             Padding(
-              padding: const EdgeInsets.only(right: 6.0),
+              padding: const EdgeInsetsDirectional.only(end: 6.0),
               child: Icon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
@@ -125,12 +125,12 @@ class InfoBar extends StatelessWidget {
                   title,
                   if (content != null)
                     Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
+                      padding: const EdgeInsetsDirectional.only(top: 6.0),
                       child: content,
                     ),
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
+                      padding: const EdgeInsetsDirectional.only(top: 6.0),
                       child: action,
                     ),
                 ],
@@ -151,7 +151,7 @@ class InfoBar extends StatelessWidget {
             ),
           if (closeIcon != null && onClose != null)
             Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsetsDirectional.only(start: 10.0),
               child: Tooltip(
                 message: localizations.closeButtonLabel,
                 child: IconButton(

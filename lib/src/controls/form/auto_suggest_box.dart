@@ -376,7 +376,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
                 states.isDisabled ? {ButtonStates.none} : states,
               ),
             ),
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: EntrancePageTransition(
               child: Text(
                 widget.text,
