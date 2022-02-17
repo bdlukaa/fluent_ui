@@ -122,7 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
       appBar: NavigationAppBar(
-        // height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
         title: () {
           if (kIsWeb) return const Text(appTitle);
           return MoveWindow(

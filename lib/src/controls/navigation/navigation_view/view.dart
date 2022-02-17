@@ -678,6 +678,11 @@ class _NavigationAppBar extends StatelessWidget {
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
         result = Stack(children: [
+          Row(children: [
+            leading,
+            if (additionalLeading != null) additionalLeading!,
+            Expanded(child: title),
+          ]),
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,
@@ -690,11 +695,6 @@ class _NavigationAppBar extends StatelessWidget {
                 child: appBar.actions!,
               ),
             ),
-          Row(children: [
-            leading,
-            if (additionalLeading != null) additionalLeading!,
-            Expanded(child: title),
-          ]),
         ]);
         break;
       default:
