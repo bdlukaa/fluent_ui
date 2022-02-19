@@ -166,7 +166,6 @@ class _DropDownButtonState extends State<DropDownButton>
                 width: 0.25,
                 color: FluentTheme.of(context).inactiveBackgroundColor,
               ),
-              boxShadow: kElevationToShadow[4],
             ),
         animation: CurvedAnimation(
           parent: _controller,
@@ -183,21 +182,22 @@ class _DropDownButtonState extends State<DropDownButton>
         placement: widget.placement,
       ),
     );
-    Navigator.of(context).push(FluentDialogRoute(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: Colors.transparent,
-      transitionDuration: Duration.zero,
-      builder: (context) {
-        return overlay;
-      },
-    ));
+    Navigator.of(context)
+        .push(FluentDialogRoute(
+          context: context,
+          barrierDismissible: true,
+          barrierColor: Colors.transparent,
+          transitionDuration: Duration.zero,
+          builder: (context) {
+            return overlay;
+          },
+        ))
+        .then((_) => _controller.value = 0);
     _controller.forward();
   }
 
   void _removeEntry() {
     Navigator.maybeOf(context)?.pop();
-    _controller.value = 0;
   }
 
   @override
@@ -215,7 +215,7 @@ class _DropDownButtonState extends State<DropDownButton>
         ),
       if (widget.title != null) widget.title!,
       Padding(
-        padding: const EdgeInsetsDirectional.only(end: 8.0),
+        padding: const EdgeInsetsDirectional.only(start: 8.0),
         child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
       ),
     ];
@@ -446,7 +446,7 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
   }
 }
 
-class _DropDownButtonOverlay extends StatelessWidget {
+class _DropDownButtonOverlay extends StatefulWidget {
   const _DropDownButtonOverlay({
     Key? key,
     required this.height,
@@ -479,38 +479,76 @@ class _DropDownButtonOverlay extends StatelessWidget {
   final FlyoutPlacement placement;
 
   @override
+  State<_DropDownButtonOverlay> createState() => _DropDownButtonOverlayState();
+}
+
+class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
+  @override
+  void initState() {
+    super.initState();
+    widget.animation.addStatusListener(_handleStatusChanged);
+  }
+
+  void _handleStatusChanged(AnimationStatus status) {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    widget.animation.removeStatusListener(_handleStatusChanged);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final direction = Directionality.maybeOf(context) ?? TextDirection.ltr;
+    final borderRadius = ((widget.decoration is BoxDecoration)
+            ? (widget.decoration as BoxDecoration)
+                .borderRadius
+                ?.resolve(direction)
+            : null) ??
+        BorderRadius.circular(6.0);
     return CustomSingleChildLayout(
-      key: menuKey,
+      key: widget.menuKey,
       delegate: _DropDownButtonPositionDelegate(
-        leftTarget: target[FlyoutPlacement.left]!,
-        centerTarget: target[FlyoutPlacement.center]!,
-        rightTarget: target[FlyoutPlacement.right]!,
-        verticalOffset: verticalOffset,
-        preferBelow: preferBelow,
-        placement: placement,
+        leftTarget: widget.target[FlyoutPlacement.left]!,
+        centerTarget: widget.target[FlyoutPlacement.center]!,
+        rightTarget: widget.target[FlyoutPlacement.right]!,
+        verticalOffset: widget.verticalOffset,
+        preferBelow: widget.preferBelow,
+        placement: widget.placement,
       ),
-      child: ClipRect(
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, -1),
-            end: Offset.zero,
-          ).animate(animation),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: height,
-              minWidth: width,
-            ),
-            child: DefaultTextStyle(
-              style: FluentTheme.of(context).typography.body!,
-              child: Container(
-                decoration: decoration,
-                padding: padding,
-                margin: margin,
-                child: Center(
-                  widthFactor: 1.0,
-                  heightFactor: 1.0,
-                  child: child,
+      child: PhysicalModel(
+        color: Colors.transparent,
+        borderRadius: borderRadius,
+        shadowColor: Colors.black,
+        elevation: widget.animation.isCompleted ? 4 : 0,
+        shape: ((widget.decoration is BoxDecoration)
+            ? (widget.decoration as BoxDecoration).shape
+            : BoxShape.rectangle),
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, -1),
+              end: Offset.zero,
+            ).animate(widget.animation),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: widget.height,
+                minWidth: widget.width,
+              ),
+              child: DefaultTextStyle(
+                style: FluentTheme.of(context).typography.body!,
+                child: Container(
+                  decoration: widget.decoration,
+                  padding: widget.padding,
+                  margin: widget.margin,
+                  child: Center(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: widget.child,
+                  ),
                 ),
               ),
             ),
