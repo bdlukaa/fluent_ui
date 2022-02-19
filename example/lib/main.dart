@@ -1,15 +1,17 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:example/screens/icons.dart';
+import 'package:window_manager/window_manager.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:system_theme/system_theme.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/colors.dart';
 import 'screens/forms.dart';
+import 'screens/icons.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
 import 'screens/others.dart';
@@ -32,26 +34,28 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemTheme.accentInstance;
+  if (kIsWeb ||
+      [TargetPlatform.windows, TargetPlatform.android]
+          .contains(defaultTargetPlatform)) {
+    SystemTheme.accentInstance;
+  }
 
   setPathUrlStrategy();
 
   if (isDesktop) {
     await flutter_acrylic.Window.initialize();
+    await WindowManager.instance.ensureInitialized();
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.setTitleBarStyle('hidden');
+      await windowManager.setSize(const Size(755, 545));
+      await windowManager.setMinimumSize(const Size(755, 545));
+      await windowManager.center();
+      await windowManager.show();
+      await windowManager.setSkipTaskbar(false);
+    });
   }
 
   runApp(const MyApp());
-
-  if (isDesktop) {
-    doWhenWindowReady(() {
-      final win = appWindow;
-      win.minSize = const Size(410, 540);
-      win.size = const Size(755, 545);
-      win.alignment = Alignment.center;
-      win.title = appTitle;
-      win.show();
-    });
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -124,8 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: NavigationAppBar(
         title: () {
           if (kIsWeb) return const Text(appTitle);
-          return MoveWindow(
-            child: const Align(
+          return const DragToMoveArea(
+            child: Align(
               alignment: AlignmentDirectional.centerStart,
               child: Text(appTitle),
             ),
@@ -133,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }(),
         actions: kIsWeb
             ? null
-            : MoveWindow(
+            : DragToMoveArea(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [Spacer(), WindowButtons()],
