@@ -184,17 +184,15 @@ class _DropDownButtonState extends State<DropDownButton>
     );
     Navigator.of(context)
         .push(FluentDialogRoute(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: Colors.transparent,
-      transitionDuration: Duration.zero,
-      builder: (context) {
-        return overlay;
-      },
-    ))
-        .then((value) {
-      _controller.value = 0;
-    });
+          context: context,
+          barrierDismissible: true,
+          barrierColor: Colors.transparent,
+          transitionDuration: Duration.zero,
+          builder: (context) {
+            return overlay;
+          },
+        ))
+        .then((_) => _controller.value = 0);
     _controller.forward();
   }
 
