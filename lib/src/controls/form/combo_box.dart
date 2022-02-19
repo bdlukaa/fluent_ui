@@ -80,7 +80,7 @@ class _ComboboxMenuPainter extends CustomPainter {
 
 // Do not use the platform-specific default scroll configuration.
 // Combobox menus should never overscroll or display an overscroll indicator.
-class _ComboboxScrollBehavior extends ScrollBehavior {
+class _ComboboxScrollBehavior extends FluentScrollBehavior {
   const _ComboboxScrollBehavior();
 
   @override
@@ -315,13 +315,10 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                     final bool isScrollable =
                         _kListPadding.vertical + menuTotalHeight >
                             constraints.maxHeight;
-                    return Scrollbar(
-                      isAlwaysShown: isScrollable,
-                      child: ListView(
-                        padding: _kListPadding,
-                        shrinkWrap: true,
-                        children: children,
-                      ),
+                    return ListView(
+                      padding: _kListPadding,
+                      shrinkWrap: true,
+                      children: children,
                     );
                   },
                 ),
