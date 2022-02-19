@@ -534,24 +534,4 @@ class FluentScrollBehavior extends ScrollBehavior {
         }
     }
   }
-
-  @override
-  Widget buildOverscrollIndicator(context, child, details) {
-    // When modifying this function, consider modifying the implementation in
-    // the base class as well.
-    switch (getPlatform(context)) {
-      case TargetPlatform.iOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.macOS:
-      case TargetPlatform.windows:
-        return child;
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-        return GlowingOverscrollIndicator(
-          child: child,
-          axisDirection: details.direction,
-          color: FluentTheme.of(context).accentColor,
-        );
-    }
-  }
 }

@@ -54,21 +54,48 @@ class _FormsState extends State<Forms> {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Forms showcase')),
       children: [
-        TextFormBox(
-          header: 'Email',
-          placeholder: 'Type your email here :)',
-          autovalidateMode: AutovalidateMode.always,
-          validator: (text) {
-            if (text == null || text.isEmpty) return 'Provide an email';
-            if (!EmailValidator.validate(text)) return 'Email not valid';
-            return null;
-          },
-          textInputAction: TextInputAction.next,
-          prefix: const Padding(
-            padding: EdgeInsetsDirectional.only(start: 8.0),
-            child: Icon(FluentIcons.edit_mail),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+            child: TextFormBox(
+              header: 'Email',
+              placeholder: 'Type your email here :)',
+              autovalidateMode: AutovalidateMode.always,
+              validator: (text) {
+                if (text == null || text.isEmpty) return 'Provide an email';
+                if (!EmailValidator.validate(text)) return 'Email not valid';
+                return null;
+              },
+              textInputAction: TextInputAction.next,
+              prefix: const Padding(
+                padding: EdgeInsetsDirectional.only(start: 8.0),
+                child: Icon(FluentIcons.edit_mail),
+              ),
+            ),
           ),
-        ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: InfoLabel(
+              label: 'Color',
+              child: Combobox<String>(
+                placeholder: const Text('Choose a color'),
+                isExpanded: true,
+                items: values
+                    .map((e) => ComboboxItem<String>(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                value: comboBoxValue,
+                onChanged: (value) {
+                  print(value);
+                  if (value != null) {
+                    setState(() => comboBoxValue = value);
+                  }
+                },
+              ),
+            ),
+          ),
+        ]),
         const SizedBox(height: 20),
         Row(children: [
           Expanded(

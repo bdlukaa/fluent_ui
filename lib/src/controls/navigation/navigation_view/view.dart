@@ -469,7 +469,10 @@ class NavigationViewState extends State<NavigationView> {
             }
           }
         } else {
-          paneResult = widget.content;
+          paneResult = Column(children: [
+            appBar,
+            Expanded(child: widget.content),
+          ]);
         }
         return paneResult;
       },
@@ -678,6 +681,11 @@ class _NavigationAppBar extends StatelessWidget {
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
         result = Stack(children: [
+          Row(children: [
+            leading,
+            if (additionalLeading != null) additionalLeading!,
+            Expanded(child: title),
+          ]),
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,
@@ -690,11 +698,6 @@ class _NavigationAppBar extends StatelessWidget {
                 child: appBar.actions!,
               ),
             ),
-          Row(children: [
-            leading,
-            if (additionalLeading != null) additionalLeading!,
-            Expanded(child: title),
-          ]),
         ]);
         break;
       default:
