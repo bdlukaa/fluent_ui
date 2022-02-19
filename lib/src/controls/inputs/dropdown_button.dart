@@ -215,7 +215,7 @@ class _DropDownButtonState extends State<DropDownButton>
         ),
       if (widget.title != null) widget.title!,
       Padding(
-        padding: const EdgeInsetsDirectional.only(end: 8.0),
+        padding: const EdgeInsetsDirectional.only(start: 8.0),
         child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
       ),
     ];
