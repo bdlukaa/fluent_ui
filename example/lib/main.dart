@@ -32,8 +32,6 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemTheme.accentInstance;
-
   setPathUrlStrategy();
 
   if (isDesktop) {
