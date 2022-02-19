@@ -32,7 +32,11 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemTheme.accentInstance;
+  if (kIsWeb ||
+      [TargetPlatform.windows, TargetPlatform.android]
+          .contains(defaultTargetPlatform)) {
+    SystemTheme.accentInstance;
+  }
 
   setPathUrlStrategy();
 
