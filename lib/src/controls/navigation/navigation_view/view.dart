@@ -469,7 +469,10 @@ class NavigationViewState extends State<NavigationView> {
             }
           }
         } else {
-          paneResult = widget.content;
+          paneResult = Column(children: [
+            appBar,
+            Expanded(child: widget.content),
+          ]);
         }
         return paneResult;
       },

@@ -13,6 +13,7 @@ Date format: DD/MM/YYYY
   - When a suggestion is picked, the overlay is automatically closed and the text box is unfocused
   - Clear button now only shows when the text box is focused
 - Add directionality support ([#184](https://github.com/bdlukaa/fluent_ui/pull/184))
+- Show app bar even if `NavigationPane` is not provided on `NavigationView` ([#187](https://github.com/bdlukaa/fluent_ui/issues/187))
 - Ensure `NavigationAppBar.actions` are rendered on the top of the other widgets ([#177](https://github.com/bdlukaa/fluent_ui/issues/177))
 - All Form widgets now have the same height by default
 - Only show one scrollbar on `ComboBox` overlay
