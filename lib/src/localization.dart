@@ -220,13 +220,13 @@ class DefaultFluentLocalizations implements FluentLocalizations {
   @override
   String get selectAllActionTooltip => 'Select all content';
 
-  /// Creates an object that provides US English resource values for the material
+  /// Creates an object that provides US English resource values for the fluent
   /// library widgets.
   ///
   /// The [locale] parameter is ignored.
   ///
   /// This method is typically used to create a [LocalizationsDelegate].
-  /// The [MaterialApp] does so by default.
+  /// The [FluentApp] does so by default.
   static Future<FluentLocalizations> load(Locale locale) {
     return SynchronousFuture<FluentLocalizations>(
         const DefaultFluentLocalizations());

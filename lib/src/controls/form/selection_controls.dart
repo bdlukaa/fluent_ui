@@ -15,7 +15,6 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     return Size.zero;
   }
 
-  /// Builder for the Material-style desktop copy/paste text selection toolbar.
   @override
   Widget buildToolbar(
     BuildContext context,
@@ -81,7 +80,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 }
 
-/// Text selection controls that loosely follows Material design conventions.
+/// Text selection controls that loosely follows Fluent design conventions.
 final TextSelectionControls fluentTextSelectionControls =
     _FluentTextSelectionControls();
 
@@ -254,7 +253,7 @@ class _FluentTextSelectionControlsToolbarState
   }
 }
 
-/// A Material-style desktop text selection toolbar.
+/// A Fluent-style desktop text selection toolbar.
 ///
 /// Typically displays buttons for text manipulation, e.g. copying and pasting
 /// text.
@@ -265,7 +264,7 @@ class _FluentTextSelectionControlsToolbarState
 /// See also:
 ///
 ///  * [_FluentTextSelectionControls.buildToolbar], where this is used by
-///    default to build a Material-style desktop toolbar.
+///    default to build a Fluent-style desktop toolbar.
 ///  * [TextSelectionToolbar], which is similar, but builds an Android-style
 ///    toolbar.
 class _FluentTextSelectionToolbar extends StatelessWidget {
@@ -281,11 +280,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   /// as possible.
   final Offset anchor;
 
-  /// {@macro flutter.material.TextSelectionToolbar.children}
-  ///
-  /// See also:
-  ///   * [FluentTextSelectionToolbarButton], which builds a default
-  ///     Material-style desktop text selection toolbar text button.
   final List<Widget> children;
 
   @override
@@ -335,7 +329,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-/// A [TextButton] for the Material desktop text selection toolbar.
+/// A [TextButton] for the Fluent desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
     Key? key,

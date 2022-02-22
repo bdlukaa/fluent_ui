@@ -86,6 +86,7 @@ export 'src/controls/form/pickers/date_picker.dart';
 export 'src/controls/form/pickers/time_picker.dart';
 export 'src/controls/form/text_form_box.dart';
 export 'src/controls/form/form_row.dart';
+export 'src/controls/form/selection_controls.dart';
 
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';
