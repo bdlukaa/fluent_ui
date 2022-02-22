@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
 
 const double _kToolbarScreenPadding = 8.0;
@@ -102,7 +101,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.lastSecondaryTapDownPosition,
   }) : super(key: key);
 
-  final ClipboardStatusNotifier? clipboardStatus;
+  final ClipboardStatusNotifier clipboardStatus;
   final List<TextSelectionPoint> endpoints;
   final Rect globalEditableRegion;
   final VoidCallback? handleCopy;
@@ -119,9 +118,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
 }
 
 class _FluentTextSelectionControlsToolbarState
-    extends State<_FluentTextSelectionControlsToolbar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ac;
+    extends State<_FluentTextSelectionControlsToolbar> {
   ClipboardStatusNotifier? _clipboardStatus;
 
   void _onChangedClipboardStatus() {
@@ -133,16 +130,11 @@ class _FluentTextSelectionControlsToolbarState
   @override
   void initState() {
     super.initState();
-    _ac = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-    );
     if (widget.handlePaste != null) {
-      _clipboardStatus = widget.clipboardStatus ?? ClipboardStatusNotifier();
+      _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
       _clipboardStatus!.update();
     }
-    _ac.forward();
   }
 
   @override
@@ -153,7 +145,7 @@ class _FluentTextSelectionControlsToolbarState
         _clipboardStatus!.removeListener(_onChangedClipboardStatus);
         _clipboardStatus!.dispose();
       }
-      _clipboardStatus = widget.clipboardStatus ?? ClipboardStatusNotifier();
+      _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
       if (widget.handlePaste != null) {
         _clipboardStatus!.update();
@@ -163,24 +155,28 @@ class _FluentTextSelectionControlsToolbarState
 
   @override
   void dispose() {
-    _ac.dispose();
     super.dispose();
     // When used in an Overlay, this can be disposed after its creator has
     // already disposed _clipboardStatus.
     if (_clipboardStatus != null && !_clipboardStatus!.disposed) {
       _clipboardStatus!.removeListener(_onChangedClipboardStatus);
-      if (widget.clipboardStatus == null) {
-        _clipboardStatus!.dispose();
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Don't render the menu until the state of the clipboard is known.
+    // If there are no buttons to be shown, don't render anything.
+    if (widget.handleCut == null &&
+        widget.handleCopy == null &&
+        widget.handlePaste == null &&
+        widget.handleSelectAll == null) {
+      return const SizedBox.shrink();
+    }
+    // If the paste button is desired, don't render anything until the state of
+    // the clipboard is known, since it's used to determine if paste is shown.
     if (widget.handlePaste != null &&
-        _clipboardStatus!.value == ClipboardStatus.unknown) {
-      return const SizedBox(width: 0.0, height: 0.0);
+        widget.clipboardStatus.value == ClipboardStatus.unknown) {
+      return const SizedBox.shrink();
     }
 
     assert(debugCheckHasMediaQuery(context));
@@ -216,7 +212,7 @@ class _FluentTextSelectionControlsToolbarState
       addToolbarButton(
         localizations.cutButtonLabel,
         FluentIcons.cut,
-        "Ctrl+X",
+        'Ctrl+X',
         widget.handleCut!,
       );
     }
@@ -224,7 +220,7 @@ class _FluentTextSelectionControlsToolbarState
       addToolbarButton(
         localizations.copyButtonLabel,
         FluentIcons.copy,
-        "Ctrl+C",
+        'Ctrl+C',
         widget.handleCopy!,
       );
     }
@@ -233,7 +229,7 @@ class _FluentTextSelectionControlsToolbarState
       addToolbarButton(
         localizations.pasteButtonLabel,
         FluentIcons.paste,
-        "Ctrl+V",
+        'Ctrl+V',
         widget.handlePaste!,
       );
     }
@@ -241,7 +237,7 @@ class _FluentTextSelectionControlsToolbarState
       addToolbarButton(
         localizations.selectAllButtonLabel,
         FluentIcons.select_all,
-        "Ctrl+A",
+        'Ctrl+A',
         widget.handleSelectAll!,
       );
     }
@@ -254,10 +250,6 @@ class _FluentTextSelectionControlsToolbarState
     return _FluentTextSelectionToolbar(
       anchor: widget.lastSecondaryTapDownPosition ?? midpointAnchor,
       children: items,
-      animation: CurvedAnimation(
-        parent: _ac.view,
-        curve: Curves.decelerate,
-      ),
     );
   }
 }
@@ -282,7 +274,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     Key? key,
     required this.anchor,
     required this.children,
-    required this.animation,
   })  : assert(children.length > 0),
         super(key: key);
 
@@ -297,8 +288,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   ///     Material-style desktop text selection toolbar text button.
   final List<Widget> children;
 
-  final Animation<double> animation;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
@@ -306,7 +295,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
 
     final double paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
     final Offset localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
-    final bool isDark = FluentTheme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -319,36 +307,24 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
           anchor: anchor - localAdjustment,
         ),
-        child: AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            return Acrylic(
-              shape: RoundedRectangleBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                side: BorderSide(
-                  width: 1,
-                  color: Colors.black.withOpacity(isDark ? 0.36 : 0.14),
-                ),
-              ),
-              elevation: 32.0,
-              tint: isDark ? const Color(0xFF2F2F2F) : const Color(0xFFEFEFEF),
-              child: Align(
-                alignment: Alignment.topLeft,
-                widthFactor: animation.value,
-                heightFactor: animation.value,
-                child: SizedBox(
-                  width: _kToolbarWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: children,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
+        child: Container(
+          decoration: BoxDecoration(
+            color: FluentTheme.of(context).micaBackgroundColor,
+            borderRadius: BorderRadius.circular(6.0),
+            border: Border.all(
+              width: 0.25,
+              color: FluentTheme.of(context).inactiveBackgroundColor,
+            ),
+            boxShadow: kElevationToShadow[4],
+          ),
+          padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+          child: SizedBox(
+            width: _kToolbarWidth,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+          ),
         ),
       ),
     );
@@ -379,62 +355,13 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = FluentTheme.of(context);
-    final Brightness acrylicBrightness =
-        m.ThemeData.estimateBrightnessForColor(theme.acrylicBackgroundColor);
-    final Color primary =
-        acrylicBrightness.isDark ? Colors.white : Colors.black;
-
-    return Button(
-      style: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(
-          (states) {
-            if (states.contains(ButtonStates.pressing)) {
-              return primary.withOpacity(0.2);
-            }
-            if (states.contains(ButtonStates.hovering) ||
-                states.contains(ButtonStates.focused)) {
-              return primary.withOpacity(0.1);
-            }
-            return Colors.transparent;
-          },
-        ),
-        padding: ButtonState.all(EdgeInsets.zero),
-      ),
-      onPressed: onPressed,
-      child: Container(
-        constraints: const BoxConstraints(
-          minWidth: kMinInteractiveDimension,
-          minHeight: 32,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: primary.withOpacity(1),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: _kToolbarButtonFontStyle.copyWith(
-                color: primary.withOpacity(1),
-              ),
-            ),
-            const Spacer(),
-            Text(
-              tooltip,
-              style: _kToolbarButtonFontStyle.copyWith(
-                color: primary.withOpacity(0.7),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SizedBox(
+      width: double.infinity,
+      child: DropDownButtonItem(
+        onTap: onPressed,
+        title: Text(text, style: _kToolbarButtonFontStyle),
+        leading: Icon(icon),
+      ).build(context),
     );
   }
 }

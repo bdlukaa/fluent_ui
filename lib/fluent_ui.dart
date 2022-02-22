@@ -24,7 +24,10 @@ export 'package:flutter/material.dart'
         TooltipVisibility,
         TooltipTriggerMode,
         TextInputAction,
-        MaterialLocalizations;
+        MaterialLocalizations,
+        TextSelectionTheme,
+        TextSelectionThemeData,
+        SelectableText;
 export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';
