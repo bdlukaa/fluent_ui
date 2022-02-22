@@ -340,7 +340,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor: theme.backgroundColor,
+                          backgroundColor: theme.backgroundColor?.withAlpha(255),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -435,7 +435,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: PrimaryScrollController(
                       controller: scrollController,
                       child: Mica(
-                        backgroundColor: theme.backgroundColor,
+                        backgroundColor: theme.backgroundColor?.withAlpha(255),
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
