@@ -46,18 +46,6 @@ abstract class FluentLocalizations {
   /// The dialog label
   String get dialogLabel;
 
-  /// The label for the cut button on the text selection controls
-  String get cutButtonLabel;
-
-  /// The label for the copy button on the text selection controls
-  String get copyButtonLabel;
-
-  /// The label for the paste button on the text selection controls
-  String get pasteButtonLabel;
-
-  /// The label for the select all button on the text selection controls
-  String get selectAllButtonLabel;
-
   /// The label used by [TabView]'s new button
   String get newTabLabel;
 
@@ -72,6 +60,42 @@ abstract class FluentLocalizations {
 
   /// The label used by [AutoSuggestBox] when the results can't be found
   String get noResultsFoundLabel;
+
+  /// The label for the cut action on the text selection controls
+  String get cutActionLabel;
+
+  /// The cut shortcut label used by text selection controls
+  String get cutShortcut;
+
+  /// The tooltip for the cut action on the text selection controls
+  String get cutActionTooltip;
+
+  /// The label for the copy action on the text selection controls
+  String get copyActionLabel;
+
+  /// The copy shortcut label used by text selection controls
+  String get copyShortcut;
+
+  /// The tooltip for the copy action on the text selection controls
+  String get copyActionTooltip;
+
+  /// The label for the paste button on the text selection controls
+  String get pasteActionLabel;
+
+  /// The paste shortcut label used by text selection controls
+  String get pasteShortcut;
+
+  /// The tooltip for the paste action on the text selection controls
+  String get pasteActionTooltip;
+
+  /// The label for the select all button on the text selection controls
+  String get selectAllActionLabel;
+
+  /// The select all shortcut label used by text selection controls
+  String get selectAllShortcut;
+
+  /// The tooltip for the select all action on the text selection controls
+  String get selectAllActionTooltip;
 
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
@@ -99,7 +123,7 @@ abstract class FluentLocalizations {
 /// See also:
 ///
 ///  * [FluentApp.localizationsDelegates], which automatically includes
-///    [DefaultFluentLocalizations.delegate] by default.
+///  * [DefaultFluentLocalizations.delegate] by default.
 class DefaultFluentLocalizations implements FluentLocalizations {
   const DefaultFluentLocalizations();
 
@@ -137,16 +161,16 @@ class DefaultFluentLocalizations implements FluentLocalizations {
   String get dialogLabel => 'Dialog';
 
   @override
-  String get cutButtonLabel => 'Cut';
+  String get cutActionLabel => 'Cut';
 
   @override
-  String get copyButtonLabel => 'Copy';
+  String get copyActionLabel => 'Copy';
 
   @override
-  String get pasteButtonLabel => 'Paste';
+  String get pasteActionLabel => 'Paste';
 
   @override
-  String get selectAllButtonLabel => 'Select all';
+  String get selectAllActionLabel => 'Select all';
 
   @override
   String get newTabLabel => 'Add new tab';
@@ -162,6 +186,39 @@ class DefaultFluentLocalizations implements FluentLocalizations {
 
   @override
   String get noResultsFoundLabel => 'No results found';
+
+  String get _ctrlCmd {
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
+      return 'Cmd';
+    }
+    return 'Ctrl';
+  }
+
+  @override
+  String get cutShortcut => '$_ctrlCmd+X';
+
+  @override
+  String get copyShortcut => '$_ctrlCmd+C';
+
+  @override
+  String get pasteShortcut => '$_ctrlCmd+V';
+
+  @override
+  String get selectAllShortcut => '$_ctrlCmd+A';
+
+  @override
+  String get copyActionTooltip => 'Copy the selected content to the clipboard';
+
+  @override
+  String get cutActionTooltip =>
+      'Remove the selected content and put it in the clipboard';
+
+  @override
+  String get pasteActionTooltip =>
+      'Inserts the contents of the clipboard at the current location';
+
+  @override
+  String get selectAllActionTooltip => 'Select all content';
 
   /// Creates an object that provides US English resource values for the material
   /// library widgets.

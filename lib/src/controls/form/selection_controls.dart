@@ -172,12 +172,6 @@ class _FluentTextSelectionControlsToolbarState
         widget.handleSelectAll == null) {
       return const SizedBox.shrink();
     }
-    // If the paste button is desired, don't render anything until the state of
-    // the clipboard is known, since it's used to determine if paste is shown.
-    if (widget.handlePaste != null &&
-        widget.clipboardStatus.value == ClipboardStatus.unknown) {
-      return const SizedBox.shrink();
-    }
 
     assert(debugCheckHasMediaQuery(context));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -212,38 +206,38 @@ class _FluentTextSelectionControlsToolbarState
 
     if (widget.handleCut != null) {
       addToolbarButton(
-        localizations.cutButtonLabel,
+        localizations.cutActionLabel,
         FluentIcons.cut,
-        'Ctrl+X',
-        '',
+        localizations.cutShortcut,
+        localizations.cutActionTooltip,
         widget.handleCut!,
       );
     }
     if (widget.handleCopy != null) {
       addToolbarButton(
-        localizations.copyButtonLabel,
+        localizations.copyActionLabel,
         FluentIcons.copy,
-        'Ctrl+C',
-        '',
+        localizations.copyShortcut,
+        localizations.copyActionTooltip,
         widget.handleCopy!,
       );
     }
     if (widget.handlePaste != null &&
         _clipboardStatus!.value == ClipboardStatus.pasteable) {
       addToolbarButton(
-        localizations.pasteButtonLabel,
+        localizations.pasteActionLabel,
         FluentIcons.paste,
-        'Ctrl+V',
-        '',
+        localizations.pasteShortcut,
+        localizations.pasteActionTooltip,
         widget.handlePaste!,
       );
     }
     if (widget.handleSelectAll != null) {
       addToolbarButton(
-        localizations.selectAllButtonLabel,
+        localizations.selectAllActionLabel,
         null,
-        'Ctrl+A',
-        '',
+        localizations.selectAllShortcut,
+        localizations.selectAllActionTooltip,
         widget.handleSelectAll!,
       );
     }
@@ -368,50 +362,49 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
             focused: states.isFocused,
             renderOutside: true,
             style: FocusThemeData(borderRadius: radius),
-            child: Container(
-              decoration: BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(theme, states),
-                borderRadius: radius,
-              ),
-              padding: const EdgeInsets.only(
-                top: 4.0,
-                bottom: 4.0,
-                left: 10.0,
-                right: 8.0,
-              ),
-              // padding: const EdgeInsets.symmetric(
-              //   horizontal: 8.0,
-              //   vertical: 4.0,
-              // ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: Icon(icon, size: 16.0),
+            child: Tooltip(
+              message: tooltip,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ButtonThemeData.uncheckedInputColor(theme, states),
+                  borderRadius: radius,
                 ),
-                Expanded(
-                  child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 4.0,
+                  bottom: 4.0,
+                  left: 10.0,
+                  right: 8.0,
+                ),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Padding(
                     padding: const EdgeInsetsDirectional.only(end: 10.0),
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                        inherit: false,
-                        fontSize: 14.0,
-                        letterSpacing: -0.15,
-                        color: theme.inactiveColor,
+                    child: Icon(icon, size: 16.0),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          inherit: false,
+                          fontSize: 14.0,
+                          letterSpacing: -0.15,
+                          color: theme.inactiveColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Text(
-                  shortcut,
-                  style: TextStyle(
-                    inherit: false,
-                    fontSize: 12.0,
-                    color: theme.borderInputColor,
-                    height: 0.7,
+                  Text(
+                    shortcut,
+                    style: TextStyle(
+                      inherit: false,
+                      fontSize: 12.0,
+                      color: theme.borderInputColor,
+                      height: 0.7,
+                    ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
           ),
         );
