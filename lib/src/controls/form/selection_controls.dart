@@ -196,13 +196,15 @@ class _FluentTextSelectionControlsToolbarState
 
     void addToolbarButton(
       String text,
-      IconData icon,
+      IconData? icon,
+      String shortcut,
       String tooltip,
       VoidCallback onPressed,
     ) {
       items.add(_FluentTextSelectionToolbarButton(
         onPressed: onPressed,
         icon: icon,
+        shortcut: shortcut,
         tooltip: tooltip,
         text: text,
       ));
@@ -213,6 +215,7 @@ class _FluentTextSelectionControlsToolbarState
         localizations.cutButtonLabel,
         FluentIcons.cut,
         'Ctrl+X',
+        '',
         widget.handleCut!,
       );
     }
@@ -221,6 +224,7 @@ class _FluentTextSelectionControlsToolbarState
         localizations.copyButtonLabel,
         FluentIcons.copy,
         'Ctrl+C',
+        '',
         widget.handleCopy!,
       );
     }
@@ -230,14 +234,16 @@ class _FluentTextSelectionControlsToolbarState
         localizations.pasteButtonLabel,
         FluentIcons.paste,
         'Ctrl+V',
+        '',
         widget.handlePaste!,
       );
     }
     if (widget.handleSelectAll != null) {
       addToolbarButton(
         localizations.selectAllButtonLabel,
-        FluentIcons.select_all,
+        null,
         'Ctrl+A',
+        '',
         widget.handleSelectAll!,
       );
     }
@@ -331,13 +337,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-const TextStyle _kToolbarButtonFontStyle = TextStyle(
-  inherit: false,
-  fontSize: 14.0,
-  letterSpacing: -0.15,
-  fontWeight: FontWeight.w400,
-);
-
 /// A [TextButton] for the Material desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
@@ -345,23 +344,78 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
     required this.onPressed,
     required this.text,
     required this.icon,
+    required this.shortcut,
     required this.tooltip,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final String shortcut;
   final String tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DropDownButtonItem(
-        onTap: onPressed,
-        title: Text(text, style: _kToolbarButtonFontStyle),
-        leading: Icon(icon),
-      ).build(context),
+    return HoverButton(
+      key: key,
+      onPressed: onPressed,
+      builder: (context, states) {
+        final theme = FluentTheme.of(context);
+        final radius = BorderRadius.circular(4.0);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: FocusBorder(
+            focused: states.isFocused,
+            renderOutside: true,
+            style: FocusThemeData(borderRadius: radius),
+            child: Container(
+              decoration: BoxDecoration(
+                color: ButtonThemeData.uncheckedInputColor(theme, states),
+                borderRadius: radius,
+              ),
+              padding: const EdgeInsets.only(
+                top: 4.0,
+                bottom: 4.0,
+                left: 10.0,
+                right: 8.0,
+              ),
+              // padding: const EdgeInsets.symmetric(
+              //   horizontal: 8.0,
+              //   vertical: 4.0,
+              // ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 10.0),
+                  child: Icon(icon, size: 16.0),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 10.0),
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                        inherit: false,
+                        fontSize: 14.0,
+                        letterSpacing: -0.15,
+                        color: theme.inactiveColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  shortcut,
+                  style: TextStyle(
+                    inherit: false,
+                    fontSize: 12.0,
+                    color: theme.borderInputColor,
+                    height: 0.7,
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        );
+      },
     );
   }
 }
