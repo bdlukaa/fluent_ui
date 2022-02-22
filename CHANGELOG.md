@@ -18,6 +18,7 @@ Date format: DD/MM/YYYY
 - Ensure `NavigationAppBar.actions` are rendered on the top of the other widgets ([#177](https://github.com/bdlukaa/fluent_ui/issues/177))
 - All Form widgets now have the same height by default
 - Only show one scrollbar on `ComboBox` overlay
+- Fix opened pane opacity
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 
