@@ -307,22 +307,26 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
           anchor: anchor - localAdjustment,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: FluentTheme.of(context).micaBackgroundColor,
-            borderRadius: BorderRadius.circular(6.0),
-            border: Border.all(
-              width: 0.25,
-              color: FluentTheme.of(context).inactiveBackgroundColor,
+        child: PhysicalModel(
+          elevation: 4.0,
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(6.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: FluentTheme.of(context).micaBackgroundColor,
+              borderRadius: BorderRadius.circular(6.0),
+              border: Border.all(
+                width: 0.25,
+                color: FluentTheme.of(context).inactiveBackgroundColor,
+              ),
             ),
-            boxShadow: kElevationToShadow[4],
-          ),
-          padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-          child: SizedBox(
-            width: _kToolbarWidth,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: children,
+            padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+            child: SizedBox(
+              width: _kToolbarWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
+              ),
             ),
           ),
         ),

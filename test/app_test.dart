@@ -42,7 +42,7 @@ void main() {
             return Column(
               children: <Widget>[
                 Text(MaterialLocalizations.of(context).selectAllButtonLabel),
-                Text(FluentLocalizations.of(context).selectAllButtonLabel),
+                Text(FluentLocalizations.of(context).selectAllActionLabel),
               ],
             );
           },
