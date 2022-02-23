@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -13,8 +14,8 @@ enum TextChangedReason {
 
 // TODO: Navigate through items using keyboard (https://github.com/bdlukaa/fluent_ui/issues/19)
 
-/// An AutoSuggestBox provides a list of suggestions for a user to select
-/// from as they type.
+/// An AutoSuggestBox provides a list of suggestions for a user to select from
+/// as they type.
 ///
 /// ![AutoSuggestBox Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-autosuggest-expanded-01.png)
 ///
@@ -31,10 +32,24 @@ class AutoSuggestBox extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.leadingIcon,
     this.trailingIcon,
     this.clearButtonEnabled = true,
     this.placeholder,
     this.placeholderStyle,
+    this.style,
+    this.decoration,
+    this.foregroundDecoration,
+    this.highlightColor,
+    this.cursorColor,
+    this.cursorHeight,
+    this.cursorRadius,
+    this.cursorWidth = 1.5,
+    this.showCursor,
+    this.keyboardAppearance,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
+    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -50,7 +65,12 @@ class AutoSuggestBox extends StatefulWidget {
   /// Called when the user selected a value.
   final ValueChanged<String>? onSelected;
 
-  /// A widget displayed in the end of the [TextBox]
+  /// A widget displayed at the start of the text box
+  ///
+  /// Usually an [IconButton] or [Icon]
+  final Widget? leadingIcon;
+
+  /// A widget displayed at the end of the text box
   ///
   /// Usually an [IconButton] or [Icon]
   final Widget? trailingIcon;
@@ -73,6 +93,60 @@ class AutoSuggestBox extends StatefulWidget {
   ///
   ///  * [TextBox.placeholderStyle]
   final TextStyle? placeholderStyle;
+
+  /// The style to use for the text being edited.
+  final TextStyle? style;
+
+  /// Controls the [BoxDecoration] of the box behind the text input.
+  final BoxDecoration? decoration;
+
+  /// Controls the [BoxDecoration] of the box in front of the text input.
+  ///
+  /// If [highlightColor] is provided, this must not be provided
+  final BoxDecoration? foregroundDecoration;
+
+  /// The highlight color of the text box.
+  ///
+  /// If [foregroundDecoration] is provided, this must not be provided.
+  final Color? highlightColor;
+
+  /// {@macro flutter.widgets.editableText.cursorWidth}
+  final double cursorWidth;
+
+  /// {@macro flutter.widgets.editableText.cursorHeight}
+  final double? cursorHeight;
+
+  /// {@macro flutter.widgets.editableText.cursorRadius}
+  final Radius? cursorRadius;
+
+  /// The color of the cursor.
+  ///
+  /// The cursor indicates the current location of text insertion point in
+  /// the field.
+  final Color? cursorColor;
+
+  /// {@macro flutter.widgets.editableText.showCursor}
+  final bool? showCursor;
+
+  /// Controls how tall the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxHeightStyle] for details on available styles.
+  final ui.BoxHeightStyle selectionHeightStyle;
+
+  /// Controls how wide the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxWidthStyle] for details on available styles.
+  final ui.BoxWidthStyle selectionWidthStyle;
+
+  /// The appearance of the keyboard.
+  ///
+  /// This setting is only honored on iOS devices.
+  ///
+  /// If unset, defaults to the brightness of [ThemeData.primaryColorBrightness].
+  final Brightness? keyboardAppearance;
+
+  /// {@macro flutter.widgets.editableText.scrollPadding}
+  final EdgeInsets scrollPadding;
 
   @override
   _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
@@ -154,23 +228,26 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           offset: Offset(0, box.size.height + 0.8),
           child: SizedBox(
             width: box.size.width,
-            child: _AutoSuggestBoxOverlay(
-              node: overlayNode,
-              controller: controller,
-              items: widget.items,
-              onSelected: (String item) {
-                widget.onSelected?.call(item);
-                controller.text = item;
-                controller.selection = TextSelection.collapsed(
-                  offset: item.length,
-                );
-                widget.onChanged?.call(item, TextChangedReason.userInput);
+            child: FluentTheme(
+              data: FluentTheme.of(context),
+              child: _AutoSuggestBoxOverlay(
+                node: overlayNode,
+                controller: controller,
+                items: widget.items,
+                onSelected: (String item) {
+                  widget.onSelected?.call(item);
+                  controller.text = item;
+                  controller.selection = TextSelection.collapsed(
+                    offset: item.length,
+                  );
+                  widget.onChanged?.call(item, TextChangedReason.userInput);
 
-                // After selected, the overlay is dismissed and the text box is
-                // unfocused
-                _dismissOverlay();
-                focusNode.unfocus();
-              },
+                  // After selected, the overlay is dismissed and the text box is
+                  // unfocused
+                  _dismissOverlay();
+                  focusNode.unfocus();
+                },
+              ),
             ),
           ),
         ),
@@ -215,13 +292,14 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           placeholderStyle: widget.placeholderStyle,
           clipBehavior:
               _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
+          prefix: widget.leadingIcon,
           suffix: Row(children: [
             if (widget.trailingIcon != null) widget.trailingIcon!,
             if (widget.clearButtonEnabled &&
                 controller.text.isNotEmpty &&
                 focusNode.hasFocus)
               Padding(
-                padding: const EdgeInsets.only(left: 2.0),
+                padding: const EdgeInsetsDirectional.only(start: 2.0),
                 child: IconButton(
                   icon: const Icon(FluentIcons.chrome_close),
                   onPressed: () {
@@ -236,6 +314,18 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             widget.onChanged?.call(text, TextChangedReason.userInput);
             _showOverlay();
           },
+          style: widget.style,
+          decoration: widget.decoration,
+          foregroundDecoration: widget.foregroundDecoration,
+          highlightColor: widget.highlightColor,
+          cursorColor: widget.cursorColor,
+          cursorHeight: widget.cursorHeight,
+          cursorRadius: widget.cursorRadius,
+          cursorWidth: widget.cursorWidth,
+          showCursor: widget.showCursor,
+          scrollPadding: widget.scrollPadding,
+          selectionHeightStyle: widget.selectionHeightStyle,
+          selectionWidthStyle: widget.selectionWidthStyle,
         ),
       ),
     );
@@ -275,22 +365,34 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
       child: Container(
         constraints: const BoxConstraints(maxHeight: 380),
         decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.vertical(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(4.0),
-            ),
-            side: BorderSide(
-              color: theme.scaffoldBackgroundColor,
-              width: 0.8,
             ),
           ),
           color: theme.menuColor,
+          shadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: const Offset(-1, 1),
+              blurRadius: 2.0,
+              spreadRadius: 3.0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: const Offset(1, 1),
+              blurRadius: 2.0,
+              spreadRadius: 3.0,
+            ),
+          ],
         ),
         child: ValueListenableBuilder<TextEditingValue>(
           valueListenable: controller,
           builder: (context, value, _) {
-            final items =
-                AutoSuggestBox.defaultItemSorter(value.text, this.items);
+            final items = AutoSuggestBox.defaultItemSorter(
+              value.text,
+              this.items,
+            );
             late Widget result;
             if (items.isEmpty) {
               result = Padding(
@@ -370,7 +472,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
             height: 36.0,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.0),
+              borderRadius: BorderRadius.circular(4.0),
               color: ButtonThemeData.uncheckedInputColor(
                 theme,
                 states.isDisabled ? {ButtonStates.none} : states,
