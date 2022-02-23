@@ -160,7 +160,7 @@ class _DropDownButtonState extends State<DropDownButton>
         width: 100.0,
         decoration: widget.menuDecoration ??
             BoxDecoration(
-              color: FluentTheme.of(context).micaBackgroundColor,
+              color: FluentTheme.of(context).menuColor,
               borderRadius: BorderRadius.circular(6.0),
               border: Border.all(
                 width: 0.25,

@@ -284,7 +284,7 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
               width: 0.8,
             ),
           ),
-          color: theme.micaBackgroundColor,
+          color: theme.menuColor,
         ),
         child: ValueListenableBuilder<TextEditingValue>(
           valueListenable: controller,
