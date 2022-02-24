@@ -414,6 +414,7 @@ class _FluentAppState extends State<FluentApp> {
               selectionColor: themeData.accentColor
                   .resolveFromBrightness(themeData.brightness)
                   .withOpacity(0.8),
+              cursorColor: themeData.inactiveColor,
             ),
           ),
       child: AnimatedFluentTheme(
