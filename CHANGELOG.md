@@ -19,6 +19,7 @@ Date format: DD/MM/YYYY
 - All Form widgets now have the same height by default
 - Only show one scrollbar on `ComboBox` overlay
 - Fix opened pane opacity
+- Update fluent text controls and added support for `SelectableText` ([#196](https://github.com/bdlukaa/fluent_ui/pull/196))
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 
