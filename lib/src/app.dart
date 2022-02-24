@@ -407,7 +407,11 @@ class _FluentAppState extends State<FluentApp> {
     final themeData = theme(context);
     final mTheme = context.findAncestorWidgetOfExactType<m.Theme>();
     return m.AnimatedTheme(
-      data: mTheme?.data ?? m.ThemeData(brightness: themeData.brightness),
+      data: mTheme?.data ??
+          m.ThemeData(
+            brightness: themeData.brightness,
+            canvasColor: themeData.cardColor,
+          ),
       child: AnimatedFluentTheme(
         curve: themeData.animationCurve,
         data: themeData,

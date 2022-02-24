@@ -62,6 +62,7 @@ export 'src/controls/navigation/tree_view.dart';
 
 export 'src/controls/surfaces/calendar/calendar_view.dart';
 export 'src/controls/surfaces/bottom_sheet.dart';
+export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/expander.dart';
 export 'src/controls/surfaces/flyout/flyout.dart';

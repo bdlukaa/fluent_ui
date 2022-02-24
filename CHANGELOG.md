@@ -21,6 +21,7 @@ Date format: DD/MM/YYYY
 - Fix opened pane opacity
 - Added `menuColor` for theme, which is now used by dropdown button, auto suggest box, tooltip and content dialog
 - Updated `AutoSuggestBox` style and expose more customization properties ([#174](https://github.com/bdlukaa/fluent_ui/issues/174))
+- Added `Card` and `cardColor` for theme
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 
