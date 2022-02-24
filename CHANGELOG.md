@@ -22,6 +22,7 @@ Date format: DD/MM/YYYY
 - Added `menuColor` for theme, which is now used by dropdown button, auto suggest box, tooltip and content dialog
 - Updated `AutoSuggestBox` style and expose more customization properties ([#174](https://github.com/bdlukaa/fluent_ui/issues/174))
 - Added `Card` and `cardColor` for theme
+- Update fluent text controls and added support for `SelectableText` ([#196](https://github.com/bdlukaa/fluent_ui/pull/196))
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 

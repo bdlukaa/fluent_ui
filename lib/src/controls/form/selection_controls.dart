@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
 
 const double _kToolbarScreenPadding = 8.0;
@@ -16,7 +15,6 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     return Size.zero;
   }
 
-  /// Builder for the Material-style desktop copy/paste text selection toolbar.
   @override
   Widget buildToolbar(
     BuildContext context,
@@ -82,7 +80,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 }
 
-/// Text selection controls that loosely follows Material design conventions.
+/// Text selection controls that loosely follows Fluent design conventions.
 final TextSelectionControls fluentTextSelectionControls =
     _FluentTextSelectionControls();
 
@@ -102,7 +100,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.lastSecondaryTapDownPosition,
   }) : super(key: key);
 
-  final ClipboardStatusNotifier? clipboardStatus;
+  final ClipboardStatusNotifier clipboardStatus;
   final List<TextSelectionPoint> endpoints;
   final Rect globalEditableRegion;
   final VoidCallback? handleCopy;
@@ -119,9 +117,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
 }
 
 class _FluentTextSelectionControlsToolbarState
-    extends State<_FluentTextSelectionControlsToolbar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ac;
+    extends State<_FluentTextSelectionControlsToolbar> {
   ClipboardStatusNotifier? _clipboardStatus;
 
   void _onChangedClipboardStatus() {
@@ -133,16 +129,11 @@ class _FluentTextSelectionControlsToolbarState
   @override
   void initState() {
     super.initState();
-    _ac = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-    );
     if (widget.handlePaste != null) {
-      _clipboardStatus = widget.clipboardStatus ?? ClipboardStatusNotifier();
+      _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
       _clipboardStatus!.update();
     }
-    _ac.forward();
   }
 
   @override
@@ -153,7 +144,7 @@ class _FluentTextSelectionControlsToolbarState
         _clipboardStatus!.removeListener(_onChangedClipboardStatus);
         _clipboardStatus!.dispose();
       }
-      _clipboardStatus = widget.clipboardStatus ?? ClipboardStatusNotifier();
+      _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
       if (widget.handlePaste != null) {
         _clipboardStatus!.update();
@@ -163,24 +154,22 @@ class _FluentTextSelectionControlsToolbarState
 
   @override
   void dispose() {
-    _ac.dispose();
     super.dispose();
     // When used in an Overlay, this can be disposed after its creator has
     // already disposed _clipboardStatus.
     if (_clipboardStatus != null && !_clipboardStatus!.disposed) {
       _clipboardStatus!.removeListener(_onChangedClipboardStatus);
-      if (widget.clipboardStatus == null) {
-        _clipboardStatus!.dispose();
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Don't render the menu until the state of the clipboard is known.
-    if (widget.handlePaste != null &&
-        _clipboardStatus!.value == ClipboardStatus.unknown) {
-      return const SizedBox(width: 0.0, height: 0.0);
+    // If there are no buttons to be shown, don't render anything.
+    if (widget.handleCut == null &&
+        widget.handleCopy == null &&
+        widget.handlePaste == null &&
+        widget.handleSelectAll == null) {
+      return const SizedBox.shrink();
     }
 
     assert(debugCheckHasMediaQuery(context));
@@ -200,13 +189,15 @@ class _FluentTextSelectionControlsToolbarState
 
     void addToolbarButton(
       String text,
-      IconData icon,
+      IconData? icon,
+      String shortcut,
       String tooltip,
       VoidCallback onPressed,
     ) {
       items.add(_FluentTextSelectionToolbarButton(
         onPressed: onPressed,
         icon: icon,
+        shortcut: shortcut,
         tooltip: tooltip,
         text: text,
       ));
@@ -214,34 +205,38 @@ class _FluentTextSelectionControlsToolbarState
 
     if (widget.handleCut != null) {
       addToolbarButton(
-        localizations.cutButtonLabel,
+        localizations.cutActionLabel,
         FluentIcons.cut,
-        "Ctrl+X",
+        localizations.cutShortcut,
+        localizations.cutActionTooltip,
         widget.handleCut!,
       );
     }
     if (widget.handleCopy != null) {
       addToolbarButton(
-        localizations.copyButtonLabel,
+        localizations.copyActionLabel,
         FluentIcons.copy,
-        "Ctrl+C",
+        localizations.copyShortcut,
+        localizations.copyActionTooltip,
         widget.handleCopy!,
       );
     }
     if (widget.handlePaste != null &&
         _clipboardStatus!.value == ClipboardStatus.pasteable) {
       addToolbarButton(
-        localizations.pasteButtonLabel,
+        localizations.pasteActionLabel,
         FluentIcons.paste,
-        "Ctrl+V",
+        localizations.pasteShortcut,
+        localizations.pasteActionTooltip,
         widget.handlePaste!,
       );
     }
     if (widget.handleSelectAll != null) {
       addToolbarButton(
-        localizations.selectAllButtonLabel,
-        FluentIcons.select_all,
-        "Ctrl+A",
+        localizations.selectAllActionLabel,
+        null,
+        localizations.selectAllShortcut,
+        localizations.selectAllActionTooltip,
         widget.handleSelectAll!,
       );
     }
@@ -254,15 +249,11 @@ class _FluentTextSelectionControlsToolbarState
     return _FluentTextSelectionToolbar(
       anchor: widget.lastSecondaryTapDownPosition ?? midpointAnchor,
       children: items,
-      animation: CurvedAnimation(
-        parent: _ac.view,
-        curve: Curves.decelerate,
-      ),
     );
   }
 }
 
-/// A Material-style desktop text selection toolbar.
+/// A Fluent-style desktop text selection toolbar.
 ///
 /// Typically displays buttons for text manipulation, e.g. copying and pasting
 /// text.
@@ -273,7 +264,7 @@ class _FluentTextSelectionControlsToolbarState
 /// See also:
 ///
 ///  * [_FluentTextSelectionControls.buildToolbar], where this is used by
-///    default to build a Material-style desktop toolbar.
+///    default to build a Fluent-style desktop toolbar.
 ///  * [TextSelectionToolbar], which is similar, but builds an Android-style
 ///    toolbar.
 class _FluentTextSelectionToolbar extends StatelessWidget {
@@ -282,7 +273,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     Key? key,
     required this.anchor,
     required this.children,
-    required this.animation,
   })  : assert(children.length > 0),
         super(key: key);
 
@@ -290,14 +280,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   /// as possible.
   final Offset anchor;
 
-  /// {@macro flutter.material.TextSelectionToolbar.children}
-  ///
-  /// See also:
-  ///   * [FluentTextSelectionToolbarButton], which builds a default
-  ///     Material-style desktop text selection toolbar text button.
   final List<Widget> children;
-
-  final Animation<double> animation;
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +289,6 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
 
     final double paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
     final Offset localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
-    final bool isDark = FluentTheme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -319,122 +301,112 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
           anchor: anchor - localAdjustment,
         ),
-        child: AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            return Acrylic(
-              shape: RoundedRectangleBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                side: BorderSide(
-                  width: 1,
-                  color: Colors.black.withOpacity(isDark ? 0.36 : 0.14),
-                ),
+        child: PhysicalModel(
+          elevation: 4.0,
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(6.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: FluentTheme.of(context).micaBackgroundColor,
+              borderRadius: BorderRadius.circular(6.0),
+              border: Border.all(
+                width: 0.25,
+                color: FluentTheme.of(context).inactiveBackgroundColor,
               ),
-              elevation: 32.0,
-              tint: isDark ? const Color(0xFF2F2F2F) : const Color(0xFFEFEFEF),
-              child: Align(
-                alignment: Alignment.topLeft,
-                widthFactor: animation.value,
-                heightFactor: animation.value,
-                child: SizedBox(
-                  width: _kToolbarWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: children,
-                    ),
-                  ),
-                ),
+            ),
+            padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+            child: SizedBox(
+              width: _kToolbarWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-const TextStyle _kToolbarButtonFontStyle = TextStyle(
-  inherit: false,
-  fontSize: 14.0,
-  letterSpacing: -0.15,
-  fontWeight: FontWeight.w400,
-);
-
-/// A [TextButton] for the Material desktop text selection toolbar.
+/// A [TextButton] for the Fluent desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
     Key? key,
     required this.onPressed,
     required this.text,
     required this.icon,
+    required this.shortcut,
     required this.tooltip,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final String shortcut;
   final String tooltip;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = FluentTheme.of(context);
-    final Brightness acrylicBrightness =
-        m.ThemeData.estimateBrightnessForColor(theme.acrylicBackgroundColor);
-    final Color primary =
-        acrylicBrightness.isDark ? Colors.white : Colors.black;
-
-    return Button(
-      style: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(
-          (states) {
-            if (states.contains(ButtonStates.pressing)) {
-              return primary.withOpacity(0.2);
-            }
-            if (states.contains(ButtonStates.hovering) ||
-                states.contains(ButtonStates.focused)) {
-              return primary.withOpacity(0.1);
-            }
-            return Colors.transparent;
-          },
-        ),
-        padding: ButtonState.all(EdgeInsets.zero),
-      ),
+    return HoverButton(
+      key: key,
       onPressed: onPressed,
-      child: Container(
-        constraints: const BoxConstraints(
-          minWidth: kMinInteractiveDimension,
-          minHeight: 32,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: primary.withOpacity(1),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: _kToolbarButtonFontStyle.copyWith(
-                color: primary.withOpacity(1),
+      builder: (context, states) {
+        final theme = FluentTheme.of(context);
+        final radius = BorderRadius.circular(4.0);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: FocusBorder(
+            focused: states.isFocused,
+            renderOutside: true,
+            style: FocusThemeData(borderRadius: radius),
+            child: Tooltip(
+              message: tooltip,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ButtonThemeData.uncheckedInputColor(theme, states),
+                  borderRadius: radius,
+                ),
+                padding: const EdgeInsets.only(
+                  top: 4.0,
+                  bottom: 4.0,
+                  left: 10.0,
+                  right: 8.0,
+                ),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 10.0),
+                    child: Icon(icon, size: 16.0),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          inherit: false,
+                          fontSize: 14.0,
+                          letterSpacing: -0.15,
+                          color: theme.inactiveColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    shortcut,
+                    style: TextStyle(
+                      inherit: false,
+                      fontSize: 12.0,
+                      color: theme.borderInputColor,
+                      height: 0.7,
+                    ),
+                  ),
+                ]),
               ),
             ),
-            const Spacer(),
-            Text(
-              tooltip,
-              style: _kToolbarButtonFontStyle.copyWith(
-                color: primary.withOpacity(0.7),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

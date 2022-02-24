@@ -411,6 +411,12 @@ class _FluentAppState extends State<FluentApp> {
           m.ThemeData(
             brightness: themeData.brightness,
             canvasColor: themeData.cardColor,
+            textSelectionTheme: TextSelectionThemeData(
+              selectionColor: themeData.accentColor
+                  .resolveFromBrightness(themeData.brightness)
+                  .withOpacity(0.8),
+              cursorColor: themeData.inactiveColor,
+            ),
           ),
       child: AnimatedFluentTheme(
         curve: themeData.animationCurve,
