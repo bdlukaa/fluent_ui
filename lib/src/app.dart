@@ -410,6 +410,7 @@ class _FluentAppState extends State<FluentApp> {
       data: mTheme?.data ??
           m.ThemeData(
             brightness: themeData.brightness,
+            canvasColor: themeData.cardColor,
             textSelectionTheme: TextSelectionThemeData(
               selectionColor: themeData.accentColor
                   .resolveFromBrightness(themeData.brightness)

@@ -292,8 +292,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
           // This offset is passed as a callback, not a value, because it must
           // be retrieved at paint time (after layout), not at build time.
           getSelectedItemOffset: () => route.getItemOffset(route.selectedIndex),
-          backgroundColor:
-              FluentTheme.of(context).acrylicBackgroundColor.withOpacity(1.0),
+          backgroundColor: FluentTheme.of(context).menuColor,
           elevation: route.elevation.toDouble(),
         ),
         child: Semantics(
@@ -309,12 +308,12 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                 controller: widget.route.scrollController!,
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    final double menuTotalHeight = widget.route.itemHeights
-                        .reduce(
-                            (double total, double height) => total + height);
-                    final bool isScrollable =
-                        _kListPadding.vertical + menuTotalHeight >
-                            constraints.maxHeight;
+                    // final double menuTotalHeight = widget.route.itemHeights
+                    //     .reduce(
+                    //         (double total, double height) => total + height);
+                    // final bool isScrollable =
+                    //     _kListPadding.vertical + menuTotalHeight >
+                    //         constraints.maxHeight;
                     return ListView(
                       padding: _kListPadding,
                       shrinkWrap: true,

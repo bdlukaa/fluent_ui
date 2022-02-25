@@ -392,9 +392,9 @@ class ContentDialogThemeData {
   factory ContentDialogThemeData.standard(ThemeData style) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
-        color: style.scaffoldBackgroundColor,
+        color: style.menuColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: kElevationToShadow[8],
+        boxShadow: kElevationToShadow[6],
       ),
       padding: const EdgeInsets.all(20),
       titlePadding: const EdgeInsets.only(bottom: 12),

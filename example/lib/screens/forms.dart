@@ -167,55 +167,28 @@ class _FormsState extends State<Forms> {
           ),
         ),
         const SizedBox(height: 20),
-        Mica(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(runSpacing: 8, children: [
-              SizedBox(
-                width: 200,
-                child: InfoLabel(
-                  label: 'Colors',
-                  child: Combobox<String>(
-                    placeholder: const Text('Choose a color'),
-                    isExpanded: true,
-                    items: values
-                        .map((e) => ComboboxItem<String>(
-                              value: e,
-                              child: Text(e),
-                            ))
-                        .toList(),
-                    value: comboBoxValue,
-                    onChanged: (value) {
-                      print(value);
-                      if (value != null) {
-                        setState(() => comboBoxValue = value);
-                      }
-                    },
-                  ),
-                ),
+        Card(
+          child: Wrap(runSpacing: 8, children: [
+            SizedBox(
+              width: 295,
+              child: DatePicker(
+                // popupHeight: kOneLineTileHeight * 6,
+                header: 'Date of birth',
+                selected: date,
+                onChanged: (v) => setState(() => date = v),
               ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 295,
-                child: DatePicker(
-                  // popupHeight: kOneLineTileHeight * 6,
-                  header: 'Date of birth',
-                  selected: date,
-                  onChanged: (v) => setState(() => date = v),
-                ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 240,
+              child: TimePicker(
+                // popupHeight: kOneLineTileHeight * 5,
+                header: 'Arrival time',
+                selected: date,
+                onChanged: (v) => setState(() => date = v),
               ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 240,
-                child: TimePicker(
-                  // popupHeight: kOneLineTileHeight * 5,
-                  header: 'Arrival time',
-                  selected: date,
-                  onChanged: (v) => setState(() => date = v),
-                ),
-              ),
-            ]),
-          ),
+            ),
+          ]),
         ),
         const SizedBox(height: 20),
         InfoLabel(

@@ -11,7 +11,7 @@ const kPickerDiameterRatio = 100.0;
 const kPopupHeight = kOneLineTileHeight * 10;
 
 Color kPickerBackgroundColor(BuildContext context) =>
-    FluentTheme.of(context).acrylicBackgroundColor;
+    FluentTheme.of(context).menuColor;
 
 ShapeBorder kPickerShape(BuildContext context) => RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(4.0),
