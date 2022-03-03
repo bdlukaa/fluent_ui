@@ -36,6 +36,7 @@ class FilledButton extends Button {
     return ButtonStyle(backgroundColor: ButtonState.resolveWith((states) {
       return backgroundColor(theme, states);
     }), foregroundColor: ButtonState.resolveWith((states) {
+      if (states.isDisabled) return theme.disabledColor;
       return backgroundColor(theme, states).basedOnLuminance();
     }));
   }
