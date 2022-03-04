@@ -71,6 +71,7 @@ class FluentApp extends StatefulWidget {
     this.themeMode,
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
+    this.useInheritedMediaQuery = false,
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
@@ -105,6 +106,7 @@ class FluentApp extends StatefulWidget {
     this.actions,
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
+    this.useInheritedMediaQuery = false,
   })  : assert(routeInformationParser != null && routerDelegate != null,
             'The routeInformationParser and routerDelegate cannot be null.'),
         assert(supportedLocales.isNotEmpty),
@@ -344,6 +346,14 @@ class FluentApp extends StatefulWidget {
 
   static bool debugAllowBannerOverride = true;
 
+  /// {@template flutter.widgets.widgetsApp.useInheritedMediaQuery}
+  /// If true, an inherited MediaQuery will be used. If one is not available,
+  /// or this is false, one will be built from the window.
+  ///
+  /// Cannot be null, defaults to false.
+  /// {@endtemplate}
+  final bool useInheritedMediaQuery;
+
   @override
   _FluentAppState createState() => _FluentAppState();
 }
@@ -469,6 +479,7 @@ class _FluentAppState extends State<FluentApp> {
         actions: widget.actions,
         restorationScopeId: widget.restorationScopeId,
         localizationsDelegates: _localizationsDelegates,
+        useInheritedMediaQuery: widget.useInheritedMediaQuery
       );
     }
 
@@ -499,6 +510,7 @@ class _FluentAppState extends State<FluentApp> {
       actions: widget.actions,
       restorationScopeId: widget.restorationScopeId,
       localizationsDelegates: _localizationsDelegates,
+      useInheritedMediaQuery: widget.useInheritedMediaQuery,
       pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
         return FluentPageRoute<T>(settings: settings, builder: builder);
       },
