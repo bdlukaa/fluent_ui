@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## Unreleased 
+
+- Add `useInheritedMediaQuery` property to `FluentApp`
+
 ## [3.9.1] - Input Update - [25/02/2022]
 
 - `TextBox` updates: ([#179](https://github.com/bdlukaa/fluent_ui/pull/179))
