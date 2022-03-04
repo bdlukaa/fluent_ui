@@ -206,7 +206,27 @@ class _FormsState extends State<Forms> {
           ),
         ),
         const SizedBox(height: 20),
+        InfoLabel(
+          label: 'Number Box',
+          child: Mica(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: SizedBox(width: 300, child:  NumberBox(
+                value: num,
+                onChanged: (v){
+                  setState(() {
+                    num = v;
+                    print('Num set to: $v');
+                  });
+                },
+              ),),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
 }
+
+int? num = 1;
