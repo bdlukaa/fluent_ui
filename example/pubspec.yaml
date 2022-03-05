@@ -15,8 +15,7 @@ dependencies:
     path: ../
   provider: ^6.0.1
   system_theme: ^1.0.1
-  bitsdojo_window: ^0.1.1+1
-  window_manager: ^0.1.6
+  window_manager: ^0.1.9
   flutter_acrylic: ^1.0.0+1
   url_strategy: ^0.2.0
   url_launcher: ^6.0.15

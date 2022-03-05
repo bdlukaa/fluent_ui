@@ -1,4 +1,3 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:system_theme/system_theme.dart';
@@ -51,6 +50,7 @@ void main() async {
       await windowManager.setMinimumSize(const Size(755, 545));
       await windowManager.center();
       await windowManager.show();
+      await windowManager.setPreventClose(true);
       await windowManager.setSkipTaskbar(false);
     });
   }
@@ -108,7 +108,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WindowListener {
   bool value = false;
 
   int index = 0;
@@ -116,7 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
   final settingsController = ScrollController();
 
   @override
+  void initState() {
+    windowManager.addListener(this);
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    windowManager.removeListener(this);
     settingsController.dispose();
     super.dispose();
   }
@@ -239,6 +246,37 @@ class _MyHomePageState extends State<MyHomePage> {
       ]),
     );
   }
+
+  @override
+  void onWindowClose() async {
+    bool _isPreventClose = await windowManager.isPreventClose();
+    if (_isPreventClose) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return ContentDialog(
+            title: Text('Confirm close'),
+            content: Text('Are you sure you want to close this window?'),
+            actions: [
+              FilledButton(
+                child: Text('Yes'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  windowManager.destroy();
+                },
+              ),
+              Button(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
 
 class WindowButtons extends StatelessWidget {
@@ -246,48 +284,11 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    assert(debugCheckHasFluentLocalizations(context));
-    final ThemeData theme = FluentTheme.of(context);
-    final buttonColors = WindowButtonColors(
-      iconNormal: theme.inactiveColor,
-      iconMouseDown: theme.inactiveColor,
-      iconMouseOver: theme.inactiveColor,
-      mouseOver: ButtonThemeData.buttonColor(
-          theme.brightness, {ButtonStates.hovering}),
-      mouseDown: ButtonThemeData.buttonColor(
-          theme.brightness, {ButtonStates.pressing}),
+    return const SizedBox(
+      width: 138,
+      height: 50,
+      child: WindowCaption(),
     );
-    final closeButtonColors = WindowButtonColors(
-      mouseOver: Colors.red,
-      mouseDown: Colors.red.dark,
-      iconNormal: theme.inactiveColor,
-      iconMouseOver: Colors.red.basedOnLuminance(),
-      iconMouseDown: Colors.red.dark.basedOnLuminance(),
-    );
-    return Row(children: [
-      Tooltip(
-        message: FluentLocalizations.of(context).minimizeWindowTooltip,
-        child: MinimizeWindowButton(colors: buttonColors),
-      ),
-      Tooltip(
-        message: FluentLocalizations.of(context).restoreWindowTooltip,
-        child: WindowButton(
-          colors: buttonColors,
-          iconBuilder: (context) {
-            if (appWindow.isMaximized) {
-              return RestoreIcon(color: context.iconColor);
-            }
-            return MaximizeIcon(color: context.iconColor);
-          },
-          onPressed: appWindow.maximizeOrRestore,
-        ),
-      ),
-      Tooltip(
-        message: FluentLocalizations.of(context).closeWindowTooltip,
-        child: CloseWindowButton(colors: closeButtonColors),
-      ),
-    ]);
   }
 }
 
