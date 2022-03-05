@@ -346,12 +346,7 @@ class FluentApp extends StatefulWidget {
 
   static bool debugAllowBannerOverride = true;
 
-  /// {@template flutter.widgets.widgetsApp.useInheritedMediaQuery}
-  /// If true, an inherited MediaQuery will be used. If one is not available,
-  /// or this is false, one will be built from the window.
-  ///
-  /// Cannot be null, defaults to false.
-  /// {@endtemplate}
+  /// {@macro flutter.widgets.widgetsApp.useInheritedMediaQuery}
   final bool useInheritedMediaQuery;
 
   @override
