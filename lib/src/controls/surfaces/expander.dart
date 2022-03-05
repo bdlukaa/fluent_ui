@@ -105,8 +105,7 @@ class Expander extends StatefulWidget {
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
 
-  /// The content color of the header. If null, [ThemeData.acrylicBackgroundColor]
-  /// is used
+  /// The content color of the header
   final Color? contentBackgroundColor;
 
   @override

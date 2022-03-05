@@ -258,13 +258,13 @@ class ButtonThemeData with Diagnosticable {
   static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
     if (style.brightness == Brightness.light) {
       if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return Colors.black.withOpacity(0.05);
-      if (states.isHovering) return Colors.black.withOpacity(0.1);
+      if (states.isPressing) return const Color(0xFF221D08).withOpacity(0.155);
+      if (states.isHovering) return const Color(0xFF221D08).withOpacity(0.055);
       return Colors.transparent;
     } else {
       if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return Colors.white.withOpacity(0.080);
-      if (states.isHovering) return Colors.white.withOpacity(0.120);
+      if (states.isPressing) return const Color(0xFFFFF3E8).withOpacity(0.080);
+      if (states.isHovering) return const Color(0xFFFFF3E8).withOpacity(0.12);
       return Colors.transparent;
     }
   }

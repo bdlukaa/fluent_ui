@@ -78,7 +78,7 @@ class NavigationPaneTheme extends InheritedTheme {
 /// The theme data used by [NavigationView]. The default theme
 /// data used is [NavigationPaneThemeData.standard].
 class NavigationPaneThemeData with Diagnosticable {
-  /// The pane background color. If null, [ThemeData.acrylicBackgroundColor]
+  /// The pane background color. If null, [ThemeData.micaBackgroundColor]
   /// is used.
   final Color? backgroundColor;
 

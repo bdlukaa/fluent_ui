@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [unreleased] - Input Update
+## [3.9.1] - Input Update - [25/02/2022]
 
 - `TextBox` updates: ([#179](https://github.com/bdlukaa/fluent_ui/pull/179))
   - Correctly apply the `style` property
@@ -9,7 +9,7 @@ Date format: DD/MM/YYYY
   - **BREAKING** replaced `maxLengthEnforeced` with `maxLengthEnforcement`
 - Expose more propertied to `TextFormBox`
 - `AutoSuggestBox` updates:
-  - Improved fidelity of the suggestions overlay
+  - Improved fidelity of the suggestions overlay expose more customization properties ([#174](https://github.com/bdlukaa/fluent_ui/issues/174))
   - When a suggestion is picked, the overlay is automatically closed and the text box is unfocused
   - Clear button now only shows when the text box is focused
 - Add directionality support ([#184](https://github.com/bdlukaa/fluent_ui/pull/184))
@@ -19,6 +19,9 @@ Date format: DD/MM/YYYY
 - All Form widgets now have the same height by default
 - Only show one scrollbar on `ComboBox` overlay
 - Fix opened pane opacity
+- Added `menuColor` for theme, which is now used by dropdown button, auto suggest box, tooltip and content dialog
+- Added `Card` and `cardColor` for theme
+- Update fluent text controls and added support for `SelectableText` ([#196](https://github.com/bdlukaa/fluent_ui/pull/196))
 
 ## [3.9.0] - Fidelity - [10/02/2022]
 

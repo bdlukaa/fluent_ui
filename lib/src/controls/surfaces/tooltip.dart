@@ -496,25 +496,14 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
-    if (theme.brightness == Brightness.dark) {
-      defaultTextStyle = theme.typography.body!.copyWith(
-        color: Colors.black,
-        fontSize: _getDefaultFontSize(),
-      );
-      defaultDecoration = BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-      );
-    } else {
-      defaultTextStyle = theme.typography.body!.copyWith(
-        color: Colors.white,
-        fontSize: _getDefaultFontSize(),
-      );
-      defaultDecoration = BoxDecoration(
-        color: Colors.grey[150].withOpacity(0.9),
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-      );
-    }
+    defaultTextStyle = theme.typography.body!.copyWith(
+      color: theme.brightness == Brightness.dark ? Colors.black : Colors.white,
+      fontSize: _getDefaultFontSize(),
+    );
+    defaultDecoration = BoxDecoration(
+      color: theme.menuColor,
+      borderRadius: const BorderRadius.all(Radius.circular(4)),
+    );
 
     height = tooltipTheme.height ?? _getDefaultTooltipHeight();
     padding = tooltipTheme.padding ?? _getDefaultPadding();
