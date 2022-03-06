@@ -20,14 +20,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
+      - name: Check formatting
+        run: flutter format --set-exit-if-changed .
 
       - name: Run analysis
         run: flutter analyze
 
-      - name: Check formatting
-        run: flutter format --set-exit-if-changed .
-
       - name: Verify package health
         run: flutter pub publish --dry-run
+
+      - name: Run tests
+        run: flutter test
