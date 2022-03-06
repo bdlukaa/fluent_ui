@@ -23,6 +23,9 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Run analysis
+        run: flutter analyze
+
       - name: Check formatting
         run: flutter format --set-exit-if-changed .
 
