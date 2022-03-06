@@ -38,7 +38,7 @@ void main(List<String> args) async {
   final StringBuffer dartFileBuffer = StringBuffer(fileHeader);
   for (final Glyph glyph in glyphs) {
     dartFileBuffer.writeln(
-      "  static const IconData ${glyph.name} = IconData(0x${glyph.codepoint}, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui',);",
+      "  static const IconData ${glyph.name} = IconData(0x${glyph.codepoint}, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui',);\n",
     );
   }
 
