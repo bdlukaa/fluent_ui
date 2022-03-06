@@ -45,7 +45,8 @@ void main() async {
     await flutter_acrylic.Window.initialize();
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle('hidden');
+      await windowManager.setTitleBarStyle('hidden',
+          windowButtonVisibility: false);
       await windowManager.setSize(const Size(755, 545));
       await windowManager.setMinimumSize(const Size(755, 545));
       await windowManager.center();
@@ -284,10 +285,15 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    final ThemeData theme = FluentTheme.of(context);
+
+    return SizedBox(
       width: 138,
       height: 50,
-      child: WindowCaption(),
+      child: WindowCaption(
+        brightness: theme.brightness,
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }
