@@ -12,7 +12,7 @@ class NumberBox extends StatefulWidget {
     Key? key,
     required this.value,
     required this.onChanged,
-    this.spinButtonPlacementMode = SpinButtonPlacementMode.inline,
+    this.spinButtonPlacementMode = SpinButtonPlacementMode.compact,
     this.smallChange = 1,
     this.largeChange = 10,
   }) : super(key: key);
@@ -31,37 +31,63 @@ class NumberBox extends StatefulWidget {
 class _NumberBoxState extends State<NumberBox> {
   final controller = TextEditingController();
   final focus = FocusNode();
-  final flyoutController = FlyoutController();
   bool clearBox = false;
 
   @override
   void initState() {
     controller.text = widget.value?.toString() ?? "";
-    flyoutController.addListener(() {
-      print('FLYOUTCONTROLLER EVENT: ${flyoutController.open}');
-    });
     focus.addListener(() {
-      /*setState(() {
-        clearBox = focus.hasFocus;
-      });*/
-      if (focus.hasFocus && !flyoutController.open) {
-        setState(() {
-          flyoutController.open = true;
-        });
-      }
-
-      if (controller.text.isEmpty) {
-        _updateValue(null, false);
-      } else {
-        _updateValue(int.tryParse(controller.text) ?? widget.value, false);
+      if(focus.hasFocus && widget.spinButtonPlacementMode == SpinButtonPlacementMode.compact) {
+        _createNewEntry(_NumberBoxMenu());
+      }else{
+        // _removeEntry();
       }
     });
     super.initState();
   }
 
+  void _createNewEntry(Widget child) {
+    final OverlayState overlayState =
+        Overlay.of(context, debugRequiredFor: widget)!;
+    final RenderBox box = context.findRenderObject()! as RenderBox;
+    Offset leftTarget = box.localToGlobal(
+      box.size.centerLeft(Offset.zero),
+      ancestor: overlayState.context.findRenderObject(),
+    );
+    Offset centerTarget = box.localToGlobal(
+      box.size.center(Offset.zero),
+      ancestor: overlayState.context.findRenderObject(),
+    );
+    Offset rightTarget = box.localToGlobal(
+      box.size.centerRight(Offset.zero),
+      ancestor: overlayState.context.findRenderObject(),
+    );
+
+    final Widget overlay = _NumberBoxOverlay(
+      child: child,
+      target: {
+        FlyoutPlacement.left: leftTarget,
+        FlyoutPlacement.center: centerTarget,
+        FlyoutPlacement.right: rightTarget,
+      },
+      onClose: _removeEntry,
+    );
+
+    Navigator.of(context).push(FluentDialogRoute(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.transparent,
+      transitionDuration: Duration.zero,
+      builder: (_) => overlay,
+    ));
+  }
+
+  void _removeEntry(){
+    Navigator.maybeOf(context)?.pop();
+  }
+
   @override
   void dispose() {
-    flyoutController.dispose();
     controller.dispose();
     focus.dispose();
     super.dispose();
@@ -69,70 +95,7 @@ class _NumberBoxState extends State<NumberBox> {
 
   @override
   Widget build(BuildContext context) {
-    /*if (int.tryParse(controller.text) != widget.value) {
-      controller.text = widget.value.toString();
-    }*/
     Row? suffix;
-
-    if (widget.spinButtonPlacementMode == SpinButtonPlacementMode.compact) {
-      suffix = Row(
-        children: [
-          _clearIcon(focus, () {
-            _updateValue(null, true);
-          }),
-          const Icon(FluentIcons.chevron_unfold10, size: 12),
-          Flyout(
-            verticalOffset: -50,
-            child: const SizedBox.shrink(),
-            contentWidth: 60,
-            controller: flyoutController,
-            content: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: PhysicalModel(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                shadowColor: Colors.black,
-                elevation: 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: FluentTheme.of(context).menuColor,
-                      border: Border.all(
-                        width: 0.25,
-                        color: FluentTheme.of(context).inactiveBackgroundColor,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            FluentIcons.chevron_up,
-                            size: 16,
-                          ),
-                          onPressed: _incrementSmall,
-                          iconButtonMode: IconButtonMode.large,
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            FluentIcons.chevron_down,
-                            size: 16,
-                          ),
-                          onPressed: _decrementSmall,
-                          iconButtonMode: IconButtonMode.large,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
 
     if (widget.spinButtonPlacementMode == SpinButtonPlacementMode.inline) {
       suffix = Row(children: [
@@ -244,5 +207,161 @@ class _NumberBoxState extends State<NumberBox> {
     if (bt) {
       focus.requestFocus();
     }
+  }
+}
+
+class _NumberBoxMenu extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => __NumberBoxMenuState();
+}
+
+class __NumberBoxMenuState extends State<_NumberBoxMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: PhysicalModel(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        shadowColor: Colors.black,
+        elevation: 4,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 100,
+            width: 50,
+            decoration: BoxDecoration(
+              color: FluentTheme.of(context).menuColor,
+              border: Border.all(
+                width: 0.25,
+                color: FluentTheme.of(context).inactiveBackgroundColor,
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    FluentIcons.chevron_up,
+                    size: 16,
+                  ),
+                  onPressed: () {
+                    print('Increment small');
+                  },
+                  iconButtonMode: IconButtonMode.large,
+                ),
+                IconButton(
+                  icon: const Icon(
+                    FluentIcons.chevron_down,
+                    size: 16,
+                  ),
+                  onPressed: () {
+                    print('Decrement small');
+                  },
+                  iconButtonMode: IconButtonMode.large,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NumberBoxOverlay extends StatefulWidget {
+  const _NumberBoxOverlay({
+    Key? key,
+    required this.target,
+    required this.child,
+    required this.onClose,
+  }) : super(key: key);
+
+  final Widget child;
+  final Map<FlyoutPlacement, Offset> target;
+  final VoidCallback onClose;
+
+  @override
+  State<StatefulWidget> createState() => __NumberBoxOverlayState();
+}
+
+class __NumberBoxOverlayState extends State<_NumberBoxOverlay> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomSingleChildLayout(
+      delegate: _NumberBoxPositionDelegate(
+        leftTarget: widget.target[FlyoutPlacement.left]!,
+        centerTarget: widget.target[FlyoutPlacement.center]!,
+        rightTarget: widget.target[FlyoutPlacement.right]!,
+        verticalOffset: 20,
+        preferBelow: false,
+        placement: FlyoutPlacement.right,
+      ),
+      child: widget.child,
+    );
+  }
+}
+
+/// A delegate for computing the layout of a menu to be displayed above or
+/// bellow a target specified in the global coordinate system.
+class _NumberBoxPositionDelegate extends SingleChildLayoutDelegate {
+  /// Creates a delegate for computing the layout of a menu.
+  ///
+  /// The arguments must not be null.
+  const _NumberBoxPositionDelegate({
+    required this.centerTarget,
+    required this.leftTarget,
+    required this.rightTarget,
+    required this.verticalOffset,
+    required this.preferBelow,
+    required this.placement,
+  });
+
+  /// The offset of the target the menu is positioned near in the global
+  /// coordinate system.
+  final Offset centerTarget;
+  final Offset leftTarget;
+  final Offset rightTarget;
+
+  /// The amount of vertical distance between the target and the displayed
+  /// menu.
+  final double verticalOffset;
+
+  /// Whether the menu is displayed below its widget by default.
+  ///
+  /// If there is insufficient space to display the menu in the preferred
+  /// direction, the menu will be displayed in the opposite direction.
+  final bool preferBelow;
+
+  final FlyoutPlacement placement;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      constraints.loosen();
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final defaultOffset = positionDependentBox(
+      size: size,
+      childSize: childSize,
+      target: centerTarget,
+      verticalOffset: verticalOffset,
+      preferBelow: preferBelow,
+    );
+    switch (placement) {
+      case FlyoutPlacement.left:
+        return Offset(leftTarget.dx, defaultOffset.dy);
+      case FlyoutPlacement.right:
+        return Offset(rightTarget.dx - childSize.width, defaultOffset.dy);
+      default:
+        return defaultOffset;
+    }
+  }
+
+  @override
+  bool shouldRelayout(_NumberBoxPositionDelegate oldDelegate) {
+    return centerTarget != oldDelegate.centerTarget ||
+        verticalOffset != oldDelegate.verticalOffset ||
+        preferBelow != oldDelegate.preferBelow;
   }
 }
