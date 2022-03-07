@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// An application that uses fluent design.
 ///
@@ -58,7 +59,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.supportedLocales = defaultSupportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -72,7 +73,8 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })  : routeInformationProvider = null,
+  })
+      : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
@@ -107,8 +109,9 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })  : assert(routeInformationParser != null && routerDelegate != null,
-            'The routeInformationParser and routerDelegate cannot be null.'),
+  })
+      : assert(routeInformationParser != null && routerDelegate != null,
+  'The routeInformationParser and routerDelegate cannot be null.'),
         assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
         backButtonDispatcher =
@@ -372,8 +375,8 @@ class _FluentAppState extends State<FluentApp> {
       yield* widget.localizationsDelegates!;
     }
     yield DefaultFluentLocalizations.delegate;
-    yield m.DefaultMaterialLocalizations.delegate;
-    yield DefaultWidgetsLocalizations.delegate;
+    yield GlobalMaterialLocalizations.delegate;
+    yield GlobalWidgetsLocalizations.delegate;
   }
 
   bool get _usesRouter => widget.routerDelegate != null;
@@ -428,21 +431,21 @@ class _FluentAppState extends State<FluentApp> {
         data: themeData,
         child: widget.builder != null
             ? Builder(
-                builder: (BuildContext context) {
-                  // Why are we surrounding a builder with a builder?
-                  //
-                  // The widget.builder may contain code that invokes
-                  // Theme.of(), which should return the theme we selected
-                  // above in AnimatedTheme. However, if we invoke
-                  // widget.builder() directly as the child of AnimatedTheme
-                  // then there is no Context separating them, and the
-                  // widget.builder() will not find the theme. Therefore, we
-                  // surround widget.builder with yet another builder so that
-                  // a context separates them and Theme.of() correctly
-                  // resolves to the theme we passed to AnimatedTheme.
-                  return widget.builder!(context, child);
-                },
-              )
+          builder: (BuildContext context) {
+            // Why are we surrounding a builder with a builder?
+            //
+            // The widget.builder may contain code that invokes
+            // Theme.of(), which should return the theme we selected
+            // above in AnimatedTheme. However, if we invoke
+            // widget.builder() directly as the child of AnimatedTheme
+            // then there is no Context separating them, and the
+            // widget.builder() will not find the theme. Therefore, we
+            // surround widget.builder with yet another builder so that
+            // a context separates them and Theme.of() correctly
+            // resolves to the theme we passed to AnimatedTheme.
+            return widget.builder!(context, child);
+          },
+        )
             : child ?? const SizedBox.shrink(),
       ),
     );
