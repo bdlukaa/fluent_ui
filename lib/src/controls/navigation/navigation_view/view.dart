@@ -340,7 +340,8 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor: theme.backgroundColor?.withAlpha(255),
+                          backgroundColor:
+                              theme.backgroundColor?.withAlpha(255),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
