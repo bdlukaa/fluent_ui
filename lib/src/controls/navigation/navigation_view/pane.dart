@@ -632,6 +632,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     }
 
     return SizeTransition(
+      axisAlignment: -1,
       axis: Axis.horizontal,
       sizeFactor: Tween<double>(begin: 0, end: 1.0).animate(controller),
       child: AnimatedContainer(
