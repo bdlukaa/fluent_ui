@@ -1,9 +1,11 @@
 Date format: DD/MM/YYYY
 
-## Unreleased 
+## [3.9.2]
 
-- NEW: Widgets translated into multiple languages: Arabic, Bengali, English, Spanish, French, Hindi, Indonesian, Portuguese, Russian and Simplified Chinese
-- Add `useInheritedMediaQuery` property to `FluentApp`
+- Improves `icons.dart` formatting and its generation.
+- Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+- NEW: Widgets translated into multiple languages: [#216](https://github.com/bdlukaa/fluent_ui/pull/216)
+- Add `useInheritedMediaQuery` property to `FluentApp` [#211](https://github.com/bdlukaa/fluent_ui/pull/211)
 
 ## [3.9.1] - Input Update - [25/02/2022]
 

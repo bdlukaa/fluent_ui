@@ -36,13 +36,20 @@ class FilledButton extends Button {
     return ButtonStyle(backgroundColor: ButtonState.resolveWith((states) {
       return backgroundColor(theme, states);
     }), foregroundColor: ButtonState.resolveWith((states) {
+      if (states.isDisabled) {
+        return theme.brightness.isDark ? theme.disabledColor : Colors.white;
+      }
       return backgroundColor(theme, states).basedOnLuminance();
     }));
   }
 
   static Color backgroundColor(ThemeData theme, Set<ButtonStates> states) {
     if (states.isDisabled) {
-      return ButtonThemeData.buttonColor(theme.brightness, states);
+      if (theme.brightness.isDark) {
+        return const Color(0xFF434343);
+      } else {
+        return const Color(0xFFBFBFBF);
+      }
     } else if (states.isPressing) {
       if (theme.brightness.isDark) {
         return theme.accentColor.darker;
