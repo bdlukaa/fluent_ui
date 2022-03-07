@@ -6,9 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 part 'body.dart';
+
 part 'indicators.dart';
+
 part 'pane_items.dart';
+
 part 'pane.dart';
+
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -340,7 +344,8 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor: theme.backgroundColor?.withAlpha(255),
+                          backgroundColor:
+                              theme.backgroundColor?.withAlpha(255),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
