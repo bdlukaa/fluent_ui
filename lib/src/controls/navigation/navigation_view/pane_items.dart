@@ -219,7 +219,7 @@ class PaneItem extends NavigationPaneItem {
                           textStyle.color,
                       size: 16.0,
                     ),
-                    child: Center(child: () {
+                    child: Align(alignment: Alignment.centerLeft, child: () {
                       if (infoBadge != null) {
                         return Stack(
                           alignment: Alignment.center,
