@@ -474,7 +474,7 @@ class _FluentAppState extends State<FluentApp> {
         actions: widget.actions,
         restorationScopeId: widget.restorationScopeId,
         localizationsDelegates: _localizationsDelegates,
-        useInheritedMediaQuery: widget.useInheritedMediaQuery
+        useInheritedMediaQuery: widget.useInheritedMediaQuery,
       );
     }
 

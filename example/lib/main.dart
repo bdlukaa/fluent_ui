@@ -1,12 +1,11 @@
-import 'package:window_manager/window_manager.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
-import 'package:system_theme/system_theme.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'screens/colors.dart';
 import 'screens/forms.dart';
@@ -256,18 +255,18 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         context: context,
         builder: (_) {
           return ContentDialog(
-            title: Text('Confirm close'),
-            content: Text('Are you sure you want to close this window?'),
+            title: const Text('Confirm close'),
+            content: const Text('Are you sure you want to close this window?'),
             actions: [
               FilledButton(
-                child: Text('Yes'),
+                child: const Text('Yes'),
                 onPressed: () {
                   Navigator.pop(context);
                   windowManager.destroy();
                 },
               ),
               Button(
-                child: Text('No'),
+                child: const Text('No'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
