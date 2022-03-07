@@ -139,6 +139,11 @@ class _InputsPageState extends State<InputsPage> {
                   },
           ),
           spacer,
+          FilledButton(
+            child: const Text('Filled Button'),
+            onPressed: disabled ? null : () => print('pressed filled button'),
+          ),
+          spacer,
           IconButton(
             icon: const Icon(FluentIcons.add),
             onPressed: disabled ? null : () => print('pressed icon button'),
