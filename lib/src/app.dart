@@ -73,8 +73,7 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })
-      : routeInformationProvider = null,
+  })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
@@ -109,9 +108,8 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })
-      : assert(routeInformationParser != null && routerDelegate != null,
-  'The routeInformationParser and routerDelegate cannot be null.'),
+  })  : assert(routeInformationParser != null && routerDelegate != null,
+            'The routeInformationParser and routerDelegate cannot be null.'),
         assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
         backButtonDispatcher =
@@ -431,21 +429,21 @@ class _FluentAppState extends State<FluentApp> {
         data: themeData,
         child: widget.builder != null
             ? Builder(
-          builder: (BuildContext context) {
-            // Why are we surrounding a builder with a builder?
-            //
-            // The widget.builder may contain code that invokes
-            // Theme.of(), which should return the theme we selected
-            // above in AnimatedTheme. However, if we invoke
-            // widget.builder() directly as the child of AnimatedTheme
-            // then there is no Context separating them, and the
-            // widget.builder() will not find the theme. Therefore, we
-            // surround widget.builder with yet another builder so that
-            // a context separates them and Theme.of() correctly
-            // resolves to the theme we passed to AnimatedTheme.
-            return widget.builder!(context, child);
-          },
-        )
+                builder: (BuildContext context) {
+                  // Why are we surrounding a builder with a builder?
+                  //
+                  // The widget.builder may contain code that invokes
+                  // Theme.of(), which should return the theme we selected
+                  // above in AnimatedTheme. However, if we invoke
+                  // widget.builder() directly as the child of AnimatedTheme
+                  // then there is no Context separating them, and the
+                  // widget.builder() will not find the theme. Therefore, we
+                  // surround widget.builder with yet another builder so that
+                  // a context separates them and Theme.of() correctly
+                  // resolves to the theme we passed to AnimatedTheme.
+                  return widget.builder!(context, child);
+                },
+              )
             : child ?? const SizedBox.shrink(),
       ),
     );
@@ -455,30 +453,29 @@ class _FluentAppState extends State<FluentApp> {
     final fluentColor = widget.color ?? Colors.blue;
     if (_usesRouter) {
       return WidgetsApp.router(
-        key: GlobalObjectKey(this),
-        routeInformationProvider: widget.routeInformationProvider,
-        routeInformationParser: widget.routeInformationParser!,
-        routerDelegate: widget.routerDelegate!,
-        backButtonDispatcher: widget.backButtonDispatcher,
-        builder: _builder,
-        title: widget.title,
-        onGenerateTitle: widget.onGenerateTitle,
-        color: fluentColor,
-        locale: widget.locale,
-        localeResolutionCallback: widget.localeResolutionCallback,
-        localeListResolutionCallback: widget.localeListResolutionCallback,
-        supportedLocales: widget.supportedLocales,
-        showPerformanceOverlay: widget.showPerformanceOverlay,
-        checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
-        checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
-        showSemanticsDebugger: widget.showSemanticsDebugger,
-        debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
-        shortcuts: widget.shortcuts,
-        actions: widget.actions,
-        restorationScopeId: widget.restorationScopeId,
-        localizationsDelegates: _localizationsDelegates,
-        useInheritedMediaQuery: widget.useInheritedMediaQuery
-      );
+          key: GlobalObjectKey(this),
+          routeInformationProvider: widget.routeInformationProvider,
+          routeInformationParser: widget.routeInformationParser!,
+          routerDelegate: widget.routerDelegate!,
+          backButtonDispatcher: widget.backButtonDispatcher,
+          builder: _builder,
+          title: widget.title,
+          onGenerateTitle: widget.onGenerateTitle,
+          color: fluentColor,
+          locale: widget.locale,
+          localeResolutionCallback: widget.localeResolutionCallback,
+          localeListResolutionCallback: widget.localeListResolutionCallback,
+          supportedLocales: widget.supportedLocales,
+          showPerformanceOverlay: widget.showPerformanceOverlay,
+          checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
+          checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
+          showSemanticsDebugger: widget.showSemanticsDebugger,
+          debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
+          shortcuts: widget.shortcuts,
+          actions: widget.actions,
+          restorationScopeId: widget.restorationScopeId,
+          localizationsDelegates: _localizationsDelegates,
+          useInheritedMediaQuery: widget.useInheritedMediaQuery);
     }
 
     return WidgetsApp(
