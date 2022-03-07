@@ -459,7 +459,7 @@ class _CompactNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = EdgeInsets.only(bottom: 6.0);
+    const EdgeInsetsGeometry topPadding = EdgeInsets.only(bottom: 8.0);
     final bool showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
@@ -632,6 +632,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     }
 
     return SizeTransition(
+      axisAlignment: -1,
       axis: Axis.horizontal,
       sizeFactor: Tween<double>(begin: 0, end: 1.0).animate(controller),
       child: AnimatedContainer(
