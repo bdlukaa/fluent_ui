@@ -219,23 +219,25 @@ class PaneItem extends NavigationPaneItem {
                           textStyle.color,
                       size: 16.0,
                     ),
-                    child: Align(alignment: Alignment.centerLeft, child: () {
-                      if (infoBadge != null) {
-                        return Stack(
-                          alignment: Alignment.center,
-                          clipBehavior: Clip.none,
-                          children: [
-                            icon,
-                            Positioned(
-                              right: -8,
-                              top: -8,
-                              child: infoBadge!,
-                            ),
-                          ],
-                        );
-                      }
-                      return icon;
-                    }()),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: () {
+                          if (infoBadge != null) {
+                            return Stack(
+                              alignment: Alignment.center,
+                              clipBehavior: Clip.none,
+                              children: [
+                                icon,
+                                Positioned(
+                                  right: -8,
+                                  top: -8,
+                                  child: infoBadge!,
+                                ),
+                              ],
+                            );
+                          }
+                          return icon;
+                        }()),
                   ),
                 ),
               );
