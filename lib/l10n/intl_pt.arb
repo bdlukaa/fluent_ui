@@ -10,7 +10,7 @@
   "minimizeWindowTooltip": "Minimizar",
   "restoreWindowTooltip": "Restaurar",
   "closeWindowTooltip": "Fechar",
-  "dialogLabel": "Diálogo",
+  "dialogLabel": "Caixa de diálogo",
   "cutActionLabel": "Cortar",
   "copyActionLabel": "Copiar",
   "pasteActionLabel": "Colar",
