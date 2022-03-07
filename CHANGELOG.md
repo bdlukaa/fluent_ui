@@ -2,6 +2,7 @@ Date format: DD/MM/YYYY
 
 ## Unreleased 
 
+- NEW: Widgets translated into multiple languages: Arabic, Bengali, English, Spanish, French, Hindi, Indonesian, Portuguese, Russian and Simplified Chinese
 - Add `useInheritedMediaQuery` property to `FluentApp`
 
 ## [3.9.1] - Input Update - [25/02/2022]
