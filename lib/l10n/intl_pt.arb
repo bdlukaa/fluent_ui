@@ -23,5 +23,5 @@
   "copyActionTooltip": "Copiar conteúdo selecionado para a área de transferência",
   "cutActionTooltip": "Recortar o conteúdo selecionado e colocá-lo na área de transferência",
   "pasteActionTooltip": "Colar o conteúdo da área de transferência na posição atual",
-  "selectAllActionTooltip": "Selecionar todo o conteúdo"
+  "selectAllActionTooltip": "Selecionar tudo"
 }
