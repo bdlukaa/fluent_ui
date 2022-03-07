@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Clique para pesquisar"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("Fechar"),
         "closeNavigationTooltip":
-            MessageLookupByLibrary.simpleMessage("Fechar navegador"),
+            MessageLookupByLibrary.simpleMessage("Fechar navegação"),
         "closeTabLabelSuffix":
             MessageLookupByLibrary.simpleMessage("Fechar guia"),
         "closeWindowTooltip": MessageLookupByLibrary.simpleMessage("Fechar"),
@@ -37,7 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Cortar"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Recortar o conteúdo selecionado e colocá-lo na área de transferência"),
-        "dialogLabel": MessageLookupByLibrary.simpleMessage("Diálogo"),
+        "dialogLabel": MessageLookupByLibrary.simpleMessage("Caixa de diálogo"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Minimizar"),
         "modalBarrierDismissLabel":
@@ -47,7 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("Nenhum resultado encontrado"),
         "openNavigationTooltip":
-            MessageLookupByLibrary.simpleMessage("Abrir navegador"),
+            MessageLookupByLibrary.simpleMessage("Abrir navegação"),
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Colar"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Colar o conteúdo da área de transferência na posição atual"),
@@ -61,6 +61,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Selecionar tudo"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Selecionar todo o conteúdo")
+            MessageLookupByLibrary.simpleMessage("Selecionar tudo")
       };
 }

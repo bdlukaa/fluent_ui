@@ -27,40 +27,39 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Нажмите для поиска"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "closeNavigationTooltip":
-            MessageLookupByLibrary.simpleMessage("Закрыть навигацию"),
+            MessageLookupByLibrary.simpleMessage("Закрыть панель навигации"),
         "closeTabLabelSuffix":
             MessageLookupByLibrary.simpleMessage("Закрыть вкладку"),
         "closeWindowTooltip": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "copyActionLabel": MessageLookupByLibrary.simpleMessage("Копировать"),
-        "copyActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Скопировать выбранный контент в буфер обмена"),
+        "copyActionTooltip":
+            MessageLookupByLibrary.simpleMessage("Скопировать в буфер обмена"),
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Вырезать"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Удалить выделенный контент и поместить его в буфер обмена"),
+            "Вырезать и поместить в буфер обмена"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("Диалог"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Свернуть"),
         "modalBarrierDismissLabel":
-            MessageLookupByLibrary.simpleMessage("Отклонить"),
-        "newTabLabel":
-            MessageLookupByLibrary.simpleMessage("Добавить новую вкладку"),
+            MessageLookupByLibrary.simpleMessage("Отмена"),
+        "newTabLabel": MessageLookupByLibrary.simpleMessage("Новая вкладка"),
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("Результаты не найдены"),
         "openNavigationTooltip":
-            MessageLookupByLibrary.simpleMessage("Открыть навигацию"),
+            MessageLookupByLibrary.simpleMessage("Открыть панель навигации"),
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Вставить"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Вставляет содержимое буфера обмена в текущее место"),
+            "Вставить содержимое буфера обмена"),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Восстановить"),
-        "scrollTabBackwardLabel": MessageLookupByLibrary.simpleMessage(
-            "Прокрутить список вкладок назад"),
-        "scrollTabForwardLabel": MessageLookupByLibrary.simpleMessage(
-            "Прокрутить список вкладок вперед"),
+        "scrollTabBackwardLabel":
+            MessageLookupByLibrary.simpleMessage("Прокрутить назад"),
+        "scrollTabForwardLabel":
+            MessageLookupByLibrary.simpleMessage("Прокрутить вперед"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("Поиск"),
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Выбрать все"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Выбрать все содержимое")
+            MessageLookupByLibrary.simpleMessage("Выбрать все")
       };
 }
