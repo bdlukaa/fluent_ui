@@ -54,7 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Restaurer"),
         "scrollTabBackwardLabel":
-            MessageLookupByLibrary.simpleMessage("Défilement vers l\'arrière"),
+            MessageLookupByLibrary.simpleMessage("Défiler vers l\'arrière"),
         "scrollTabForwardLabel":
             MessageLookupByLibrary.simpleMessage("Défiler vers l\'avant"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("Rechercher"),
