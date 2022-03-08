@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [3.9.2]
+
+- Improves `icons.dart` formatting and its generation.
+- Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+
 ## [3.9.1] - Input Update - [25/02/2022]
 
 - `TextBox` updates: ([#179](https://github.com/bdlukaa/fluent_ui/pull/179))
