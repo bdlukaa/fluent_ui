@@ -89,6 +89,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
+- [Localization](#localization)
 - [Contribution](#contribution)
   - [Acknowledgements](#acknowledgements)
 
@@ -1680,6 +1681,20 @@ The list of equivalents between this library and `flutter/material.dart`
 | Snackbar                  | Snackbar         |
 | -                         | PillButtonBar    |
 | ExpansionPanel            | Expander         |
+
+## Localization
+
+FluentUI widgets currently supports out-of-the-box an wide number of languages, including: 
+
+- English
+- French
+- German
+- Hindi
+- Portuguese
+- Russian
+- Spanish
+
+If you want to contribute with new localizations please create your own `lib/l10n/*.arb` file and [make a new pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
 
 ## Contribution
 

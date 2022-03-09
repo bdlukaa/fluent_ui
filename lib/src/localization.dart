@@ -125,6 +125,9 @@ abstract class FluentLocalizations {
 // NOTE: This should be INTO DefaultFluentLocalizations as an static member but,
 // for some strange reason, doing so results in a very strange compile error.
 // This has been the only way to get it working without errors.
+
+// I tried to replace this with S.delegate.supportedLocales, but doing this
+// din't let me set the default value in FluentApp.supportedLocales
 const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('de'),
   Locale('en'),
@@ -146,6 +149,10 @@ class DefaultFluentLocalizations extends S implements FluentLocalizations {
 
   DefaultFluentLocalizations._defaultFluentLocalizations(this.locale) {
     S.load(locale);
+  }
+
+  static bool supports(Locale locale) {
+    return S.delegate.supportedLocales.contains(locale);
   }
 
   // Special cases - Those that include operating system dependent messages
@@ -202,7 +209,8 @@ class _FluentLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return defaultSupportedLocales.contains(locale);
+    return DefaultFluentLocalizations.supports(locale);
+    // defaultSupportedLocales.contains(locale);
   }
 
   @override

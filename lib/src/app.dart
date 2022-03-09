@@ -97,7 +97,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.supportedLocales = defaultSupportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
