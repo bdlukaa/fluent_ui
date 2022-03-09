@@ -33,10 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "closeWindowTooltip": MessageLookupByLibrary.simpleMessage("Fermer"),
         "copyActionLabel": MessageLookupByLibrary.simpleMessage("Copier"),
         "copyActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Copier le contenu sélectionné dans le presse-papiers"),
+            "Copier le contenu sélectionné dans le presse-papier"),
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Couper"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Couper le contenu sélectionné et le mettre dans le presse-papiers"),
+            "Couper le contenu sélectionné et le mettre dans le presse-papier"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("Dialogue"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Réduire"),
@@ -50,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ouvrir le navigateur"),
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Coller"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Coller le contenu du presse-papiers à la position actuelle"),
+            "Coller le contenu du presse-papier à la position actuelle"),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Restaurer"),
         "scrollTabBackwardLabel":

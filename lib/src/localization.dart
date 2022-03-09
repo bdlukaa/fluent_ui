@@ -126,16 +126,12 @@ abstract class FluentLocalizations {
 // for some strange reason, doing so results in a very strange compile error.
 // This has been the only way to get it working without errors.
 const List<Locale> defaultSupportedLocales = <Locale>[
-  Locale('ar'),
-  Locale('bn'),
+  Locale('de'),
   Locale('en'),
   Locale('es'),
   Locale('fr'),
-  Locale('hi'),
-  Locale('id'),
   Locale('pt'),
   Locale('ru'),
-  Locale('zh'),
 ];
 
 /// Strings for the fluent widgets.
