@@ -1701,7 +1701,7 @@ Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if
 
 All contributions are welcome :)
 
-### Notes about contributing a new localization
+### Localization
 
 In [PR#216](https://github.com/bdlukaa/fluent_ui/pull/216) we added support for new localizations in FluentUI Widgets.
 
