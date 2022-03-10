@@ -136,6 +136,7 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('hi'),
   Locale('pt'),
   Locale('ru'),
+  Locale('zh'),
 ];
 
 /// Strings for the fluent widgets.
