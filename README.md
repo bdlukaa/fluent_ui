@@ -89,8 +89,9 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
-- [Localization](#localization)
+- [Localization](#Localization)
 - [Contribution](#contribution)
+  -[Contributing new localizations](#contributing-new-localizations) 
   - [Acknowledgements](#acknowledgements)
 
 ## Motivation
@@ -1701,11 +1702,11 @@ Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if
 
 All contributions are welcome :)
 
-### Localization
+### Contributing new localizations
 
 In [PR#216](https://github.com/bdlukaa/fluent_ui/pull/216) we added support for new localizations in FluentUI Widgets.
 
-If you want to contribute with new localizations please follow this steps:
+If you want to contribute adding new localizations please follow this steps:
 
 - [Fork the repo](https://github.com/bdlukaa/fluent_ui/fork)
 - Copy `lib/l10n/intl_en.arb` file into `lib/l10n` folder with a new language code, following [this list of ISO 859-1 codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
