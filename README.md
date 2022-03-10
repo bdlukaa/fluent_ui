@@ -1692,15 +1692,29 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Hindi
 - Portuguese
 - Russian
+- Simplified Chinese
 - Spanish
-
-If you want to contribute with new localizations please create your own `lib/l10n/*.arb` file and [make a new pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
 
 ## Contribution
 
 Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if you find a problem or [make pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
 
 All contributions are welcome :)
+
+### Notes about contributing a new localization
+
+In [PR#216](https://github.com/bdlukaa/fluent_ui/pull/216) we added support for new localizations in FluentUI Widgets.
+
+If you want to contribute with new localizations please follow this steps:
+
+- [Fork the repo](https://github.com/bdlukaa/fluent_ui/fork)
+- Copy `lib/l10n/intl_en.arb` file into `lib/l10n` folder with a new language code, following [this list of ISO 859-1 codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
+- Update the contents in the newly created file. Specially, please update the `@locale` value with the corresponding ISO code.
+- Then update the `localization.dart:defaultSupportedLocales` list, adding an entry for each new locale
+- If your IDE doesn't have any of the `intl` plugins ([Intl plugin for Android Studio/IntelliJ](https://plugins.jetbrains.com/plugin/13666-flutter-intl) / [Flutter Intl for VSCode](https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) ) please run your project and code generation will take place. 
+- When you're done, [make a new pull request](https://github.com/bdlukaa/fluent_ui/pulls)
+
+More about [Localization in the Flutter Official Documentation](https://docs.flutter.dev/development/accessibility-and-localization/internationalization)
 
 ### Acknowledgements
 
