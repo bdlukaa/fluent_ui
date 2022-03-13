@@ -1475,6 +1475,8 @@ You can include an icon in the tree view item data template to represent nodes. 
 
 ![TreeView Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
 
+Each `TreeViewItem` can optionally take a `value` allowing you to store an arbitrary identifier with each item. This can be used in conjunction with `onSelectionChanged` to easily identify which items were selected without having to deconstruct the content widget.
+
 Here's an example of how to create a tree view:
 
 ```dart

@@ -54,6 +54,12 @@ class TreeViewItem with Diagnosticable {
   /// Usually a [Text]
   final Widget content;
 
+  /// An optional/arbitrary value associated with the item.
+  ///
+  /// For example, a primary key of the row of data that this
+  /// item is associated with.
+  final dynamic value;
+
   /// The children of this item.
   final List<TreeViewItem> children;
 
@@ -122,6 +128,7 @@ class TreeViewItem with Diagnosticable {
     this.key,
     this.leading,
     required this.content,
+    this.value,
     this.children = const [],
     this.collapsable = true,
     bool? expanded,
@@ -295,6 +302,7 @@ class TreeView extends StatefulWidget {
     Key? key,
     required this.items,
     this.selectionMode = TreeViewSelectionMode.none,
+    this.onSelectionChanged,
     this.onItemInvoked,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
@@ -317,6 +325,14 @@ class TreeView extends StatefulWidget {
 
   /// Called when an item is invoked
   final Future<void> Function(TreeViewItem item)? onItemInvoked;
+
+  /// Called when the selection changes. The items that are currently
+  /// selected will be passed to the callback. This could be empty
+  /// if nothing is now selected. If [TreeView.selectionMode] is
+  /// [TreeViewSelectionMode.single] then it will contain exactly
+  /// zero or one items.
+  final Future<void> Function(Iterable<TreeViewItem> selectedItems)?
+      onSelectionChanged;
 
   /// A widget to be shown when a node is loading. Only used if
   /// [TreeViewItem.loadingWidget] is null.
@@ -409,7 +425,8 @@ class _TreeViewState extends State<TreeView> {
             key: item.key ?? ValueKey<TreeViewItem>(item),
             item: item,
             selectionMode: widget.selectionMode,
-            onSelect: () {
+            onSelect: () async {
+              var onSelectionChanged = widget.onSelectionChanged;
               switch (widget.selectionMode) {
                 case TreeViewSelectionMode.single:
                   setState(() {
@@ -418,6 +435,9 @@ class _TreeViewState extends State<TreeView> {
                     }
                     item.selected = true;
                   });
+                  if (onSelectionChanged != null) {
+                    await onSelectionChanged([item]);
+                  }
                   break;
                 case TreeViewSelectionMode.multiple:
                   setState(() {
@@ -438,6 +458,11 @@ class _TreeViewState extends State<TreeView> {
                         ..executeForAllParents((p) => p?.updateSelected());
                     }
                   });
+                  if (onSelectionChanged != null) {
+                    var selectedItems =
+                        items.where((item) => item.selected ?? false);
+                    await onSelectionChanged(selectedItems);
+                  }
                   break;
                 default:
                   break;
