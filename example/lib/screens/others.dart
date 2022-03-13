@@ -377,7 +377,11 @@ class _OthersState extends State<Others> {
                   border:
                       Border.all(color: FluentTheme.of(context).inactiveColor),
                 ),
-                child: TreeView(items: items, shrinkWrap: false),
+                child: TreeView(
+                  // make a deep copy of the item list, to keep UI state separate
+                  items: items.map((i) => TreeViewItem.from(i)).toList(),
+                  shrinkWrap: false,
+                ),
               ),
             ),
             InfoLabel(
@@ -395,7 +399,8 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
                   shrinkWrap: false,
-                  items: items,
+                  // make a deep copy of the item list, to keep UI state separate
+                  items: items.map((i) => TreeViewItem.from(i)).toList(),
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
                   onSelectionChanged: (selectedItems) async => debugPrint(
@@ -418,7 +423,8 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
                   shrinkWrap: false,
-                  items: items,
+                  // make a deep copy of the item list, to keep UI state separate
+                  items: items.map((i) => TreeViewItem.from(i)).toList(),
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
                   onSelectionChanged: (selectedItems) async => debugPrint(

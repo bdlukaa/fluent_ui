@@ -142,6 +142,29 @@ class TreeViewItem with Diagnosticable {
     this.lazy = false,
   }) : expanded = expanded ?? children.isNotEmpty;
 
+  /// Deep copy constructor that can be used to copy an item and all of
+  /// its child items. Useful if you want to have multiple trees with the
+  /// same items, but with different UX states (e.g., selection, visibility,
+  /// etc.).
+  TreeViewItem.from(TreeViewItem source)
+      : this(
+          key: source.key,
+          leading: source.leading,
+          content: source.content,
+          value: source.value,
+          children: source.children.map((i) => TreeViewItem.from(i)).toList(),
+          collapsable: source.collapsable,
+          expanded: source.expanded,
+          selected: source.selected,
+          onInvoked: source.onInvoked,
+          backgroundColor: source.backgroundColor,
+          autofocus: source.autofocus,
+          focusNode: source.focusNode,
+          semanticLabel: source.semanticLabel,
+          loadingWidget: source.loadingWidget,
+          lazy: source.lazy,
+        );
+
   /// Whether this node is expandable
   bool get isExpandable {
     return lazy || children.isNotEmpty;
