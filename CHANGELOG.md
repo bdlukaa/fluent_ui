@@ -4,6 +4,8 @@ Date format: DD/MM/YYYY
 
 - Improves `icons.dart` formatting and its generation.
 - Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+- TreeView now implemented with ListView and optionally allows vertical scrolling
+- TreeViewItem supports custom value and TreeView supports onSelectionChanged callback
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
