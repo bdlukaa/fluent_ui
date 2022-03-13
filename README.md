@@ -83,6 +83,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
   - [TreeView](#treeview)
+    - [Scrollable tree view](#scrollable-tree-view)
     - [Lazily load nodes](#lazily-load-nodes)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
@@ -1508,6 +1509,12 @@ TreeView(
   selectionMode: TreeViewSelectionMode.none, 
 ),
 ```
+
+### Scrollable tree view
+
+Vertical scrolling can be enabled for a tree view by setting the `shrinkWrap` property to false.
+If you have many items, consider setting `itemExtent`, `cacheExtent`, and/or `usePrototypeItem`
+for much better performance.
 
 ### Lazily load nodes
 

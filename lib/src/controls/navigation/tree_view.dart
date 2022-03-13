@@ -232,16 +232,20 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     if (isNotEmpty) {
       final List<TreeViewItem> list = [];
       for (final item in [...this]) {
-        list.add(item);
         if (assignParent) item._parent = parent;
         if (parent != null) {
           item._visible = parent._visible;
         }
+        if (item._visible) {
+          list.add(item);
+        }
         for (final child in item.children) {
-          // only add the children when it's expanded
-          child._visible = item.expanded;
+          // only add the children when it's expanded and visible
+          child._visible = item.expanded && item._visible;
           if (assignParent) child._parent = item;
-          list.add(child);
+          if (child._visible) {
+            list.add(child);
+          }
           if (child.expanded) {
             list.addAll(child.children.build(parent: child));
           }
@@ -293,6 +297,11 @@ class TreeView extends StatefulWidget {
     this.selectionMode = TreeViewSelectionMode.none,
     this.onItemInvoked,
     this.loadingWidget = kTreeViewLoadingIndicator,
+    this.shrinkWrap = true,
+    this.cacheExtent,
+    this.itemExtent,
+    this.addRepaintBoundaries = true,
+    this.usePrototypeItem = false,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -314,6 +323,25 @@ class TreeView extends StatefulWidget {
   ///
   /// [kTreeViewLoadingIndicator] is used by default
   final Widget loadingWidget;
+
+  /// Same meaning as [ListView.shrinkWrap]
+  final bool shrinkWrap;
+
+  /// Same meaning as [ListView.cacheExtent]
+  final double? cacheExtent;
+
+  /// Same meaning as [ListView.itemExtent]
+  final double? itemExtent;
+
+  /// Same meaning as [ListView.addRepaintBoundaries]
+  final bool addRepaintBoundaries;
+
+  /// Whether or not to give the internal [ListView] a prototypeItem
+  /// based on the first item in the tree view. Set this to true
+  /// to allow the ListView to more efficiently calculate the maximum
+  /// scrolling extent, and it will force the vertical size of each
+  /// item to be the same size as the first item in the tree view.
+  final bool usePrototypeItem;
 
   @override
   _TreeViewState createState() => _TreeViewState();
@@ -357,10 +385,24 @@ class _TreeViewState extends State<TreeView> {
     assert(debugCheckHasFluentTheme(context));
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(items.length, (index) {
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: widget.shrinkWrap,
+        cacheExtent: widget.cacheExtent,
+        itemExtent: widget.itemExtent,
+        addRepaintBoundaries: widget.addRepaintBoundaries,
+        prototypeItem: widget.usePrototypeItem && items.isNotEmpty
+            ? _TreeViewItem(
+                item: items.first,
+                selectionMode: widget.selectionMode,
+                onInvoked: () {},
+                onSelect: () {},
+                onExpandToggle: () {},
+                loadingWidgetFallback: widget.loadingWidget,
+              )
+            : null,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
           final item = items[index];
 
           return _TreeViewItem(
@@ -413,7 +455,7 @@ class _TreeViewState extends State<TreeView> {
             onInvoked: () => invokeItem(item),
             loadingWidgetFallback: widget.loadingWidget,
           );
-        }),
+        },
       ),
     );
   }

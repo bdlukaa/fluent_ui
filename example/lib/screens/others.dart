@@ -39,6 +39,17 @@ class _OthersState extends State<Others> {
             TreeViewItem(content: const Text('Kitchen cabinet style')),
           ],
         ),
+        TreeViewItem(
+          content: const Text('Tax Documents'),
+          children: [
+            TreeViewItem(content: const Text('2017')),
+            TreeViewItem(content: const Text('2018')),
+            TreeViewItem(content: const Text('2019')),
+            TreeViewItem(content: const Text('2020')),
+            TreeViewItem(content: const Text('2021')),
+            TreeViewItem(content: const Text('Current Year')),
+          ],
+        ),
       ],
     ),
   ];
@@ -327,24 +338,26 @@ class _OthersState extends State<Others> {
           // scrollDirection: Axis.horizontal,
           children: [
             InfoLabel(
-              label: 'Simple',
+              label: 'Simple and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
                   border:
                       Border.all(color: FluentTheme.of(context).inactiveColor),
                 ),
-                child: TreeView(items: items),
+                child: TreeView(items: items, shrinkWrap: false),
               ),
             ),
             InfoLabel(
-              label: 'Single Selection',
+              label: 'Single Selection and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
@@ -353,16 +366,18 @@ class _OthersState extends State<Others> {
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
+                  shrinkWrap: false,
                   items: items,
                   onItemInvoked: (item) async => debugPrint('$item'),
                 ),
               ),
             ),
             InfoLabel(
-              label: 'Multiple selection',
+              label: 'Multiple Selection and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
@@ -371,6 +386,7 @@ class _OthersState extends State<Others> {
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
+                  shrinkWrap: false,
                   items: items,
                   onItemInvoked: (item) async => debugPrint('$item'),
                 ),
