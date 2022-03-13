@@ -71,9 +71,15 @@ class _OthersState extends State<Others> {
           value: 'tax_docs',
           children: [
             TreeViewItem(content: const Text('2017'), value: "tax_2017"),
-            TreeViewItem(content: const Text('2018'), value: "tax_2018"),
-            TreeViewItem(content: const Text('2019'), value: "tax_2019"),
-            TreeViewItem(content: const Text('2020'), value: "tax_2020"),
+            TreeViewItem(
+              content: const Text('Middle Years'),
+              value: 'tax_middle_years',
+              children: [
+                TreeViewItem(content: const Text('2018'), value: "tax_2018"),
+                TreeViewItem(content: const Text('2019'), value: "tax_2019"),
+                TreeViewItem(content: const Text('2020'), value: "tax_2020"),
+              ],
+            ),
             TreeViewItem(content: const Text('2021'), value: "tax_2021"),
             TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
           ],

@@ -70,6 +70,9 @@ class TreeViewItem with Diagnosticable {
 
   TreeViewItem? _parent;
 
+  /// Whether the item has any siblings (including itself) that are expandable
+  bool _anyExpandableSiblings;
+
   /// [TreeViewItem] that owns the [children] collection that this node is part
   /// of.
   ///
@@ -140,7 +143,8 @@ class TreeViewItem with Diagnosticable {
     this.semanticLabel,
     this.loadingWidget,
     this.lazy = false,
-  }) : expanded = expanded ?? children.isNotEmpty;
+  })  : expanded = expanded ?? children.isNotEmpty,
+        _anyExpandableSiblings = false;
 
   /// Deep copy constructor that can be used to copy an item and all of
   /// its child items. Useful if you want to have multiple trees with the
@@ -219,7 +223,7 @@ class TreeViewItem with Diagnosticable {
     bool hasFalse = false;
     bool hasTrue = false;
 
-    for (final child in children.build(assignParent: false)) {
+    for (final child in children.build(assignInternalProperties: false)) {
       if (child.selected == null) {
         hasNull = true;
       } else if (child.selected == false) {
@@ -255,24 +259,36 @@ class TreeViewItem with Diagnosticable {
 
 extension TreeViewItemCollection on List<TreeViewItem> {
   /// Adds the [TreeViewItem.parent] property to the [TreeViewItem]s
+  /// and calculates other internal properties.
   List<TreeViewItem> build({
     TreeViewItem? parent,
-    bool assignParent = true,
+    bool assignInternalProperties = true,
   }) {
     if (isNotEmpty) {
       final List<TreeViewItem> list = [];
+      var anyExpandableSiblings =
+          assignInternalProperties ? any((i) => i.isExpandable) : null;
       for (final item in [...this]) {
-        if (assignParent) item._parent = parent;
+        if (assignInternalProperties) {
+          item._parent = parent;
+          item._anyExpandableSiblings = anyExpandableSiblings!;
+        }
         if (parent != null) {
           item._visible = parent._visible;
         }
         if (item._visible) {
           list.add(item);
         }
+        var itemAnyExpandableSiblings = assignInternalProperties
+            ? item.children.any((i) => i.isExpandable)
+            : null;
         for (final child in item.children) {
           // only add the children when it's expanded and visible
           child._visible = item.expanded && item._visible;
-          if (assignParent) child._parent = item;
+          if (assignInternalProperties) {
+            child._parent = item;
+            child._anyExpandableSiblings = itemAnyExpandableSiblings!;
+          }
           if (child._visible) {
             list.add(child);
           }
@@ -563,7 +579,7 @@ class _TreeViewItem extends StatelessWidget {
               height:
                   selectionMode == TreeViewSelectionMode.multiple ? 28.0 : 26.0,
               padding: EdgeInsetsDirectional.only(
-                start: 20.0 + item.depth * _whiteSpace,
+                start: 12.0 + item.depth * _whiteSpace,
               ),
               decoration: BoxDecoration(
                 color: item.backgroundColor?.resolve(states) ??
@@ -612,7 +628,13 @@ class _TreeViewItem extends StatelessWidget {
                           size: 8.0,
                           color: Colors.grey[80],
                         ),
-                      ),
+                      )
+                  else if (item._anyExpandableSiblings)
+                    // if some child items are expandable and others are not,
+                    // make sure that they line up vertically the same for the
+                    // same depth
+                    const Padding(
+                        padding: EdgeInsetsDirectional.only(start: 8.0)),
                   if (item.leading != null)
                     Container(
                       margin: const EdgeInsetsDirectional.only(start: 18.0),
@@ -623,7 +645,7 @@ class _TreeViewItem extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 18.0),
+                    padding: const EdgeInsetsDirectional.only(start: 10.0),
                     child: DefaultTextStyle(
                       style: TextStyle(
                         fontSize: 12.0,
