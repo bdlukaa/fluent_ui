@@ -59,7 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tabliste vorwärts scrollen"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("Suchen"),
         "selectAllActionLabel":
-            MessageLookupByLibrary.simpleMessage("Alle auswählen"),
+            MessageLookupByLibrary.simpleMessage("Alles auswählen"),
         "selectAllActionTooltip":
             MessageLookupByLibrary.simpleMessage("Alle Inhalte auswählen")
       };
