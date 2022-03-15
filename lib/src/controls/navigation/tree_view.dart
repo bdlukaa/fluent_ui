@@ -311,6 +311,13 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }
 }
 
+/// A callback that receives a notification that the selection state of
+/// a TreeView has changed.
+///
+/// Used by [TreeView.onSelectionChanged]
+typedef TreeViewSelectionChangedCallback = Future<void> Function(
+    Iterable<TreeViewItem> selectedItems)?;
+
 /// The `TreeView` control enables a hierarchical list with expanding and
 /// collapsing nodes that contain nested items. It can be used to illustrate a
 /// folder structure or nested relationships in your UI.
@@ -370,8 +377,7 @@ class TreeView extends StatefulWidget {
   /// if nothing is now selected. If [TreeView.selectionMode] is
   /// [TreeViewSelectionMode.single] then it will contain exactly
   /// zero or one items.
-  final Future<void> Function(Iterable<TreeViewItem> selectedItems)?
-      onSelectionChanged;
+  final TreeViewSelectionChangedCallback onSelectionChanged;
 
   /// A widget to be shown when a node is loading. Only used if
   /// [TreeViewItem.loadingWidget] is null.
@@ -379,16 +385,24 @@ class TreeView extends StatefulWidget {
   /// [kTreeViewLoadingIndicator] is used by default
   final Widget loadingWidget;
 
-  /// Same meaning as [ListView.shrinkWrap]
+  /// {@macro flutter.widgets.scroll_view.shrinkWrap}
   final bool shrinkWrap;
 
-  /// Same meaning as [ListView.cacheExtent]
+  /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
   final double? cacheExtent;
 
-  /// Same meaning as [ListView.itemExtent]
+  /// {@macro flutter.widgets.list_view.itemExtent}
   final double? itemExtent;
 
-  /// Same meaning as [ListView.addRepaintBoundaries]
+  /// Whether to wrap each child in a [RepaintBoundary].
+  ///
+  /// Typically, children in a scrolling container are wrapped in repaint
+  /// boundaries so that they do not need to be repainted as the list scrolls.
+  /// If the children are easy to repaint (e.g., solid color blocks or a short
+  /// snippet of text), it might be more efficient to not add a repaint boundary
+  /// and simply repaint the children during scrolling.
+  ///
+  /// Defaults to true.
   final bool addRepaintBoundaries;
 
   /// Whether or not to give the internal [ListView] a prototypeItem
@@ -645,7 +659,7 @@ class _TreeViewItem extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 10.0),
+                    padding: const EdgeInsetsDirectional.only(start: 18.0),
                     child: DefaultTextStyle(
                       style: TextStyle(
                         fontSize: 12.0,

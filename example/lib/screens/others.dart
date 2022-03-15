@@ -87,6 +87,9 @@ class _OthersState extends State<Others> {
       ],
     ),
   ];
+  late List<TreeViewItem> treeViewItemsSimple;
+  late List<TreeViewItem> treeViewItemsSingleSelection;
+  late List<TreeViewItem> treeViewItemsMultipleSelection;
 
   @override
   void dispose() {
@@ -112,6 +115,14 @@ class _OthersState extends State<Others> {
       );
       return tab;
     });
+    // make a deep copy of the example TreeView item list for each separate
+    // TreeView widget that we have, so that UX state like what is currently
+    // selected is kept separate between the different widgets.
+    treeViewItemsSimple = items.map((i) => TreeViewItem.from(i)).toList();
+    treeViewItemsSingleSelection =
+        items.map((i) => TreeViewItem.from(i)).toList();
+    treeViewItemsMultipleSelection =
+        items.map((i) => TreeViewItem.from(i)).toList();
     lazy = [
       TreeViewItem(
         content: const Text('Work Documents'),
@@ -384,8 +395,7 @@ class _OthersState extends State<Others> {
                       Border.all(color: FluentTheme.of(context).inactiveColor),
                 ),
                 child: TreeView(
-                  // make a deep copy of the item list, to keep UI state separate
-                  items: items.map((i) => TreeViewItem.from(i)).toList(),
+                  items: treeViewItemsSimple,
                   shrinkWrap: false,
                 ),
               ),
@@ -405,8 +415,7 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
                   shrinkWrap: false,
-                  // make a deep copy of the item list, to keep UI state separate
-                  items: items.map((i) => TreeViewItem.from(i)).toList(),
+                  items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
                   onSelectionChanged: (selectedItems) async => debugPrint(
@@ -429,8 +438,7 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
                   shrinkWrap: false,
-                  // make a deep copy of the item list, to keep UI state separate
-                  items: items.map((i) => TreeViewItem.from(i)).toList(),
+                  items: treeViewItemsMultipleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
                   onSelectionChanged: (selectedItems) async => debugPrint(
