@@ -266,7 +266,7 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }) {
     if (isNotEmpty) {
       final List<TreeViewItem> list = [];
-      var anyExpandableSiblings =
+      final anyExpandableSiblings =
           assignInternalProperties ? any((i) => i.isExpandable) : null;
       for (final item in [...this]) {
         if (assignInternalProperties) {
@@ -279,7 +279,7 @@ extension TreeViewItemCollection on List<TreeViewItem> {
         if (item._visible) {
           list.add(item);
         }
-        var itemAnyExpandableSiblings = assignInternalProperties
+        final itemAnyExpandableSiblings = assignInternalProperties
             ? item.children.any((i) => i.isExpandable)
             : null;
         for (final child in item.children) {
@@ -479,7 +479,7 @@ class _TreeViewState extends State<TreeView> {
             item: item,
             selectionMode: widget.selectionMode,
             onSelect: () async {
-              var onSelectionChanged = widget.onSelectionChanged;
+              final onSelectionChanged = widget.onSelectionChanged;
               switch (widget.selectionMode) {
                 case TreeViewSelectionMode.single:
                   setState(() {
@@ -512,7 +512,7 @@ class _TreeViewState extends State<TreeView> {
                     }
                   });
                   if (onSelectionChanged != null) {
-                    var selectedItems =
+                    final selectedItems =
                         items.where((item) => item.selected ?? false);
                     await onSelectionChanged(selectedItems);
                   }
