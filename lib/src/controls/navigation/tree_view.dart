@@ -309,6 +309,14 @@ extension TreeViewItemCollection on List<TreeViewItem> {
       child.children.executeForAll(callback);
     }
   }
+
+  Iterable<TreeViewItem> whereForAll(bool Function(TreeViewItem element) t) {
+    var result = where(t);
+    for (final child in this) {
+      result = result.followedBy(child.children.whereForAll(t));
+    }
+    return result;
+  }
 }
 
 /// A callback that receives a notification that the selection state of
@@ -512,8 +520,8 @@ class _TreeViewState extends State<TreeView> {
                     }
                   });
                   if (onSelectionChanged != null) {
-                    final selectedItems =
-                        items.where((item) => item.selected ?? false);
+                    final selectedItems = widget.items
+                        .whereForAll((item) => item.selected ?? false);
                     await onSelectionChanged(selectedItems);
                   }
                   break;
