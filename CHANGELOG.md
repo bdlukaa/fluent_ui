@@ -4,6 +4,8 @@ Date format: DD/MM/YYYY
 
 - Improves `icons.dart` formatting and its generation.
 - Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+- NEW: Widgets translated into multiple languages: [#216](https://github.com/bdlukaa/fluent_ui/pull/216)
+- Add `useInheritedMediaQuery` property to `FluentApp` [#211](https://github.com/bdlukaa/fluent_ui/pull/211)
 - TreeView now implemented with ListView and optionally allows vertical scrolling ([#255](https://github.com/bdlukaa/fluent_ui/pull/225))
 - TreeViewItem now has custom primary key (`value` field)
 - Added `onSelectionChanged` callback to `TreeView`
