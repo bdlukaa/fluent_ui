@@ -83,6 +83,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
   - [TreeView](#treeview)
+    - [Scrollable tree view](#scrollable-tree-view)
     - [Lazily load nodes](#lazily-load-nodes)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
@@ -1476,6 +1477,8 @@ You can include an icon in the tree view item data template to represent nodes. 
 
 ![TreeView Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
 
+Each `TreeViewItem` can optionally take a `value` allowing you to store an arbitrary identifier with each item. This can be used in conjunction with `onSelectionChanged` to easily identify which items were selected without having to deconstruct the content widget.
+
 Here's an example of how to create a tree view:
 
 ```dart
@@ -1510,6 +1513,12 @@ TreeView(
   selectionMode: TreeViewSelectionMode.none, 
 ),
 ```
+
+### Scrollable tree view
+
+Vertical scrolling can be enabled for a tree view by setting the `shrinkWrap` property to false.
+If you have many items, consider setting `itemExtent`, `cacheExtent`, and/or `usePrototypeItem`
+for much better performance.
 
 ### Lazily load nodes
 

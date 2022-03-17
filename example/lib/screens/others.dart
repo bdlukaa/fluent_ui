@@ -19,29 +19,77 @@ class _OthersState extends State<Others> {
   final items = [
     TreeViewItem(
       content: const Text('Work Documents'),
+      value: 'work_docs',
       lazy: true,
       children: [
-        TreeViewItem(content: const Text('XYZ Functional Spec')),
-        TreeViewItem(content: const Text('Feature Schedule')),
-        TreeViewItem(content: const Text('Overall Project Plan')),
-        TreeViewItem(content: const Text('Feature Resources Allocation')),
+        TreeViewItem(
+          content: const Text('XYZ Functional Spec'),
+          value: 'xyz_functional_spec',
+        ),
+        TreeViewItem(
+          content: const Text('Feature Schedule'),
+          value: 'feature_schedule',
+        ),
+        TreeViewItem(
+          content: const Text('Overall Project Plan'),
+          value: 'overall_project_plan',
+        ),
+        TreeViewItem(
+          content: const Text('Feature Resources Allocation'),
+          value: 'feature_resources_alloc',
+        ),
       ],
     ),
     TreeViewItem(
       content: const Text('Personal Documents'),
+      value: 'personal_docs',
       children: [
         TreeViewItem(
           content: const Text('Home Remodel'),
+          value: 'home_remodel',
           children: [
-            TreeViewItem(content: const Text('Contractor Contact Info')),
-            TreeViewItem(content: const Text('Paint Color Scheme')),
-            TreeViewItem(content: const Text('Flooring weedgrain type')),
-            TreeViewItem(content: const Text('Kitchen cabinet style')),
+            TreeViewItem(
+              content: const Text('Contractor Contact Info'),
+              value: 'contr_cont_inf',
+            ),
+            TreeViewItem(
+              content: const Text('Paint Color Scheme'),
+              value: 'paint_color_scheme',
+            ),
+            TreeViewItem(
+              content: const Text('Flooring weedgrain type'),
+              value: 'flooring_weedgrain_type',
+            ),
+            TreeViewItem(
+              content: const Text('Kitchen cabinet style'),
+              value: 'kitch_cabinet_style',
+            ),
+          ],
+        ),
+        TreeViewItem(
+          content: const Text('Tax Documents'),
+          value: 'tax_docs',
+          children: [
+            TreeViewItem(content: const Text('2017'), value: "tax_2017"),
+            TreeViewItem(
+              content: const Text('Middle Years'),
+              value: 'tax_middle_years',
+              children: [
+                TreeViewItem(content: const Text('2018'), value: "tax_2018"),
+                TreeViewItem(content: const Text('2019'), value: "tax_2019"),
+                TreeViewItem(content: const Text('2020'), value: "tax_2020"),
+              ],
+            ),
+            TreeViewItem(content: const Text('2021'), value: "tax_2021"),
+            TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
           ],
         ),
       ],
     ),
   ];
+  late List<TreeViewItem> treeViewItemsSimple;
+  late List<TreeViewItem> treeViewItemsSingleSelection;
+  late List<TreeViewItem> treeViewItemsMultipleSelection;
 
   @override
   void dispose() {
@@ -67,6 +115,14 @@ class _OthersState extends State<Others> {
       );
       return tab;
     });
+    // make a deep copy of the example TreeView item list for each separate
+    // TreeView widget that we have, so that UX state like what is currently
+    // selected is kept separate between the different widgets.
+    treeViewItemsSimple = items.map((i) => TreeViewItem.from(i)).toList();
+    treeViewItemsSingleSelection =
+        items.map((i) => TreeViewItem.from(i)).toList();
+    treeViewItemsMultipleSelection =
+        items.map((i) => TreeViewItem.from(i)).toList();
     lazy = [
       TreeViewItem(
         content: const Text('Work Documents'),
@@ -327,24 +383,29 @@ class _OthersState extends State<Others> {
           // scrollDirection: Axis.horizontal,
           children: [
             InfoLabel(
-              label: 'Simple',
+              label: 'Simple and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
                   border:
                       Border.all(color: FluentTheme.of(context).inactiveColor),
                 ),
-                child: TreeView(items: items),
+                child: TreeView(
+                  items: treeViewItemsSimple,
+                  shrinkWrap: false,
+                ),
               ),
             ),
             InfoLabel(
-              label: 'Single Selection',
+              label: 'Single Selection and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
@@ -353,16 +414,21 @@ class _OthersState extends State<Others> {
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
-                  items: items,
-                  onItemInvoked: (item) async => debugPrint('$item'),
+                  shrinkWrap: false,
+                  items: treeViewItemsSingleSelection,
+                  onItemInvoked: (item) async =>
+                      debugPrint('onItemInvoked: $item'),
+                  onSelectionChanged: (selectedItems) async => debugPrint(
+                      'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
                 ),
               ),
             ),
             InfoLabel(
-              label: 'Multiple selection',
+              label: 'Multiple Selection and Scrollable',
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 380,
+                  maxHeight: 380,
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
@@ -371,8 +437,12 @@ class _OthersState extends State<Others> {
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
-                  items: items,
-                  onItemInvoked: (item) async => debugPrint('$item'),
+                  shrinkWrap: false,
+                  items: treeViewItemsMultipleSelection,
+                  onItemInvoked: (item) async =>
+                      debugPrint('onItemInvoked: $item'),
+                  onSelectionChanged: (selectedItems) async => debugPrint(
+                      'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
                 ),
               ),
             ),
@@ -389,7 +459,8 @@ class _OthersState extends State<Others> {
                 ),
                 child: TreeView(
                   items: lazy,
-                  onItemInvoked: (item) async => debugPrint('$item'),
+                  onItemInvoked: (item) async =>
+                      debugPrint('onItemInvoked: $item'),
                 ),
               ),
             ),
