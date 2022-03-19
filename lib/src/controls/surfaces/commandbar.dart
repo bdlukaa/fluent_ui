@@ -76,13 +76,22 @@ class CommandBar extends StatelessWidget {
     late Widget w;
     switch (overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
-        w = HorizontalScrollView(child: Row(children: children));
+        w = HorizontalScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: children,
+          ),
+        );
         break;
       case CommandBarOverflowBehavior.noWrap:
-        w = Row(children: children);
+        w = Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: children,
+        );
         break;
       case CommandBarOverflowBehavior.wrap:
         w = Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: children,
         );
         break;
@@ -90,7 +99,10 @@ class CommandBar extends StatelessWidget {
         w = SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
-          child: Row(children: children),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: children,
+          ),
         );
         break;
     }
@@ -158,6 +170,48 @@ class CommandBarButton extends StatelessWidget {
             ],
             if (label != null) label!,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Separators for grouping command bar items. Set the color property to
+/// [Colors.transparent] to render the separator as space. Uses a [Divider]
+/// under the hood, consequently uses the closest [DividerThemeData].
+///
+/// See also:
+///   * [CommandBar], which is a collection of [CommandBarItem]s.
+///   * [CommandBarButton], an item for a button with an icon and/or label.
+class CommandBarSeparator extends StatelessWidget {
+  /// Creates a command bar item separator.
+  const CommandBarSeparator({
+    Key? key,
+    this.color,
+    this.thickness,
+  }) : super(key: key);
+
+  /// Override the color used by the [Divider].
+  final Color? color;
+
+  /// Override the separator thickness.
+  final double? thickness;
+
+  @override
+  Widget build(BuildContext context) {
+    return CommandBarItem(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 28),
+        child: Divider(
+          direction: Axis.vertical,
+          style: DividerThemeData(
+            thickness: thickness,
+            decoration: color != null ? BoxDecoration(color: color) : null,
+            verticalMargin: const EdgeInsets.symmetric(
+              vertical: 0.0,
+              horizontal: 0.0,
+            ),
+          ),
         ),
       ),
     );

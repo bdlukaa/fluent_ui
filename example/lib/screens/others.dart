@@ -545,6 +545,7 @@ class _OthersState extends State<Others> {
             overflowBehavior: CommandBarOverflowBehavior.wrap,
             children: [
               ...simpleCommandBarItems,
+              const CommandBarSeparator(),
               ...moreCommandBarItems,
             ],
           ),
@@ -559,6 +560,7 @@ class _OthersState extends State<Others> {
                 overflowBehavior: CommandBarOverflowBehavior.clip,
                 children: [
                   ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
                   ...moreCommandBarItems,
                 ],
               ),
@@ -577,6 +579,7 @@ class _OthersState extends State<Others> {
                     overflowBehavior: CommandBarOverflowBehavior.scrolling,
                     children: [
                       ...simpleCommandBarItems,
+                      const CommandBarSeparator(),
                       ...moreCommandBarItems,
                     ],
                   ),
@@ -606,6 +609,7 @@ class _OthersState extends State<Others> {
                     overflowBehavior: CommandBarOverflowBehavior.wrap,
                     children: [
                       ...simpleCommandBarItems,
+                      const CommandBarSeparator(),
                       ...moreCommandBarItems,
                     ],
                   ),
