@@ -5,21 +5,21 @@ import 'package:fluent_ui/fluent_ui.dart';
 class CommandBarCard extends StatelessWidget {
   final Widget child;
   final double elevation;
-  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry margin;
   final EdgeInsets padding;
 
   const CommandBarCard({
     Key? key,
     required this.child,
-    this.margin,
+    this.margin = const EdgeInsets.all(0),
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
     this.elevation = 2.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin,
+    return Padding(
+      padding: margin,
       child: Card(
         padding: padding,
         elevation: elevation,
@@ -29,17 +29,18 @@ class CommandBarCard extends StatelessWidget {
   }
 }
 
-/// The type of wrapping used for the items inside of the CommandBar.
-///
-///   * [CommandBarOverflowBehavior.scrolling] will cause items to scroll horizontally.
-///   * [CommandBarOverflowBehavior.noWrap] will expand the size of the CommandBar based
-///      on the size of the contained items.
-///   * [CommandBarOverflowBehavior.wrap] will wrap items onto additional lines as needed.
-///   * [CommandBarOverflowBehavior.clip] will keep items on one line and clip as needed.
+/// How horizontal overflow is handled for the items inside of a CommandBar.
 enum CommandBarOverflowBehavior {
+  /// Will cause items to scroll horizontally.
   scrolling,
+
+  /// Will expand the size of the CommandBar based on the size of the contained items.
   noWrap,
+
+  /// Will wrap items onto additional lines as needed.
   wrap,
+
+  /// Will keep items on one line and clip as needed.
   clip,
   // TODO: Implement support for an overflow button and dynamically overflowing items into the "SecondaryCommands" flyout
 }
@@ -50,8 +51,8 @@ enum CommandBarOverflowBehavior {
 /// A command bar is composed of a series of [CommandBarItem]s, which each could
 /// be a [CommandBarButton] or a custom [CommandBarItem].
 ///
-/// If there is not enough horizontal space to display all items, the wrapping
-/// behavior is determined by [wrapType].
+/// If there is not enough horizontal space to display all items, the overflow
+/// behavior is determined by [overflowBehavior].
 ///
 /// ![CommandBar example](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
 ///
@@ -60,27 +61,22 @@ enum CommandBarOverflowBehavior {
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar>
 class CommandBar extends StatelessWidget {
   final List<Widget> children;
-  final CommandBarOverflowBehavior wrapType;
+  final CommandBarOverflowBehavior overflowBehavior;
   final bool _isExpanded;
-  final ScrollController? parentVerticalScrollController;
 
-  const CommandBar(
-      {Key? key,
-      required this.children,
-      this.wrapType = CommandBarOverflowBehavior.scrolling,
-      this.parentVerticalScrollController})
-      : _isExpanded = !(wrapType == CommandBarOverflowBehavior.noWrap),
+  const CommandBar({
+    Key? key,
+    required this.children,
+    this.overflowBehavior = CommandBarOverflowBehavior.scrolling,
+  })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     late Widget w;
-    switch (wrapType) {
+    switch (overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
-        w = HorizontalScrollView(
-          child: Row(children: children),
-          parentVerticalScrollController: parentVerticalScrollController,
-        );
+        w = HorizontalScrollView(child: Row(children: children));
         break;
       case CommandBarOverflowBehavior.noWrap:
         w = Row(children: children);
@@ -123,30 +119,24 @@ class CommandBarItem extends StatelessWidget {
 }
 
 /// Buttons are the most common control to put within a [CommandBar].
-/// They are composed of an (optional) icon and an optional
+/// They are composed of an (optional) icon and an (optional) label.
 class CommandBarButton extends StatelessWidget {
-  final IconData? icon;
-  final Color? iconColor;
-  final String? iconSemanticLabel;
-  final TextDirection? iconTextDirection;
+  final Widget? icon;
   final Widget? label;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final FocusNode? focusNode;
   final bool autofocus;
 
-  const CommandBarButton(
-      {Key? key,
-      this.icon,
-      this.iconColor,
-      this.iconSemanticLabel,
-      this.iconTextDirection,
-      required this.onPressed,
-      this.onLongPress,
-      this.focusNode,
-      this.autofocus = false,
-      this.label})
-      : super(key: key);
+  const CommandBarButton({
+    Key? key,
+    this.icon,
+    required this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.label,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -160,12 +150,9 @@ class CommandBarButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(
-                icon,
-                size: 16,
-                color: iconColor,
-                semanticLabel: iconSemanticLabel,
-                textDirection: iconTextDirection,
+              IconTheme(
+                data: IconTheme.of(context).copyWith(size: 16),
+                child: icon!,
               ),
               if (label != null) const SizedBox(width: 10),
             ],

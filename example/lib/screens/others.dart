@@ -13,7 +13,6 @@ class _OthersState extends State<Others> {
   int currentIndex = 0;
 
   final flyoutController = FlyoutController();
-  final scrollController = ScrollController();
 
   bool checked = false;
 
@@ -21,7 +20,7 @@ class _OthersState extends State<Others> {
     Tooltip(
       message: "Create something new!",
       child: CommandBarButton(
-        icon: FluentIcons.add,
+        icon: const Icon(FluentIcons.add),
         label: const Text('New'),
         onPressed: () {},
       ),
@@ -29,18 +28,18 @@ class _OthersState extends State<Others> {
     Tooltip(
       message: "Delete what is currently selected",
       child: CommandBarButton(
-        icon: FluentIcons.delete,
+        icon: const Icon(FluentIcons.delete),
         label: const Text('Delete'),
         onPressed: () {},
       ),
     ),
     CommandBarButton(
-      icon: FluentIcons.archive,
+      icon: const Icon(FluentIcons.archive),
       label: const Text('Archive'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.move,
+      icon: const Icon(FluentIcons.move),
       label: const Text('Move'),
       onPressed: () {},
     ),
@@ -48,32 +47,32 @@ class _OthersState extends State<Others> {
 
   final moreCommandBarItems = <Widget>[
     CommandBarButton(
-      icon: FluentIcons.reply,
+      icon: const Icon(FluentIcons.reply),
       label: const Text('Reply'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.reply_all,
+      icon: const Icon(FluentIcons.reply_all),
       label: const Text('Reply All'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.forward,
+      icon: const Icon(FluentIcons.forward),
       label: const Text('Forward'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.search,
+      icon: const Icon(FluentIcons.search),
       label: const Text('Search'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.pin,
+      icon: const Icon(FluentIcons.pin),
       label: const Text('Pin'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.unpin,
+      icon: const Icon(FluentIcons.unpin),
       label: const Text('Unpin'),
       onPressed: () {},
     ),
@@ -157,7 +156,6 @@ class _OthersState extends State<Others> {
   @override
   void dispose() {
     flyoutController.dispose();
-    scrollController.dispose();
     super.dispose();
   }
 
@@ -230,7 +228,6 @@ class _OthersState extends State<Others> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      scrollController: scrollController,
       header: const PageHeader(title: Text('Others')),
       children: [
         const SizedBox(height: 10.0),
@@ -462,7 +459,6 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   items: treeViewItemsSimple,
                   shrinkWrap: false,
-                  scrollPrimary: false,
                 ),
               ),
             ),
@@ -481,7 +477,6 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
                   shrinkWrap: false,
-                  scrollPrimary: false,
                   items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
@@ -505,7 +500,6 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
                   shrinkWrap: false,
-                  scrollPrimary: false,
                   items: treeViewItemsMultipleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
@@ -538,7 +532,7 @@ class _OthersState extends State<Others> {
         InfoLabel(
           label: 'Simple command bar (no wrapping)',
           child: CommandBar(
-            wrapType: CommandBarOverflowBehavior.noWrap,
+            overflowBehavior: CommandBarOverflowBehavior.noWrap,
             children: [
               ...simpleCommandBarItems,
             ],
@@ -548,7 +542,7 @@ class _OthersState extends State<Others> {
         InfoLabel(
           label: 'Command bar with many items (wrapping)',
           child: CommandBar(
-            wrapType: CommandBarOverflowBehavior.wrap,
+            overflowBehavior: CommandBarOverflowBehavior.wrap,
             children: [
               ...simpleCommandBarItems,
               ...moreCommandBarItems,
@@ -562,7 +556,7 @@ class _OthersState extends State<Others> {
             constraints: const BoxConstraints(maxWidth: 230),
             child: CommandBarCard(
               child: CommandBar(
-                wrapType: CommandBarOverflowBehavior.clip,
+                overflowBehavior: CommandBarOverflowBehavior.clip,
                 children: [
                   ...simpleCommandBarItems,
                   ...moreCommandBarItems,
@@ -580,8 +574,7 @@ class _OthersState extends State<Others> {
               children: [
                 Expanded(
                   child: CommandBar(
-                    wrapType: CommandBarOverflowBehavior.scrolling,
-                    parentVerticalScrollController: scrollController,
+                    overflowBehavior: CommandBarOverflowBehavior.scrolling,
                     children: [
                       ...simpleCommandBarItems,
                       ...moreCommandBarItems,
@@ -590,10 +583,10 @@ class _OthersState extends State<Others> {
                 ),
                 // Right-aligned button(s)
                 CommandBar(
-                  wrapType: CommandBarOverflowBehavior.noWrap,
+                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
                   children: [
                     CommandBarButton(
-                      icon: FluentIcons.refresh,
+                      icon: const Icon(FluentIcons.refresh),
                       onPressed: () {},
                     ),
                   ],
@@ -610,8 +603,7 @@ class _OthersState extends State<Others> {
               children: [
                 Expanded(
                   child: CommandBar(
-                    wrapType: CommandBarOverflowBehavior.wrap,
-                    parentVerticalScrollController: scrollController,
+                    overflowBehavior: CommandBarOverflowBehavior.wrap,
                     children: [
                       ...simpleCommandBarItems,
                       ...moreCommandBarItems,
@@ -620,14 +612,14 @@ class _OthersState extends State<Others> {
                 ),
                 // Right-aligned button(s)
                 CommandBar(
-                  wrapType: CommandBarOverflowBehavior.noWrap,
+                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
                   children: [
                     CommandBarButton(
-                      icon: FluentIcons.refresh,
+                      icon: const Icon(FluentIcons.refresh),
                       onPressed: () {},
                     ),
                     CommandBarButton(
-                      icon: FluentIcons.more,
+                      icon: const Icon(FluentIcons.more),
                       onPressed: () {},
                     ),
                   ],

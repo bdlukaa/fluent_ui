@@ -13,19 +13,11 @@ class HorizontalScrollView extends StatefulWidget {
   /// unless the user has a trackpad.
   final bool mouseWheelScrolls;
 
-  /// If this widget is contained in another widget that can scroll vertically,
-  /// when a mouse wheel event is received it will also trigger a vertical
-  /// scroll. Specify the scroll controller for this parent widget that
-  /// controls the vertical scrolling and it will offset the vertical scroll
-  /// on a mouse wheel event, so that it does not vertically scroll at all.
-  final ScrollController? parentVerticalScrollController;
-
   const HorizontalScrollView({
     Key? key,
     required this.child,
     this.scrollPhysics,
     this.mouseWheelScrolls = true,
-    this.parentVerticalScrollController,
   }) : super(key: key);
 
   @override
@@ -52,20 +44,24 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
     return Listener(
       onPointerSignal: widget.mouseWheelScrolls
           ? (event) {
+              // Do not capture any other type of mouse pointer signals
               if (event is PointerScrollEvent) {
-                _controller.animateTo(_controller.offset + event.scrollDelta.dy,
-                    duration: const Duration(milliseconds: 100),
-                    curve: Curves.ease);
-                if (widget.parentVerticalScrollController != null &&
-                    widget
-                        .parentVerticalScrollController!.positions.isNotEmpty) {
-                  widget.parentVerticalScrollController!.jumpTo(widget
-                          .parentVerticalScrollController!
-                          .positions
-                          .last
-                          .pixels -
-                      event.scrollDelta.dy);
-                }
+                // Make sure we capture this pointer scroll event so that
+                // any scrollable widgets higher up in the hierarchy do not
+                // handle the event also.
+                GestureBinding.instance!.pointerSignalResolver.register(event,
+                    (event) {
+                  if (event is PointerScrollEvent) {
+                    // Use animateTo for a smoother behavior when there are
+                    // attempts to scroll beyond the boundaries (it will not
+                    // jump beyond the boundaries and then "rebound" like jumpTo
+                    // would do if used here).
+                    _controller.animateTo(
+                        _controller.offset + event.scrollDelta.dy,
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.ease);
+                  }
+                });
               }
             }
           : null,

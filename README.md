@@ -1571,20 +1571,20 @@ Here is an example of a simple command bar:
 
 ```dart
 CommandBar(
-  wrapType: CommandBarOverflowBehavior.scrolling,
+  overflowBehavior: CommandBarOverflowBehavior.scrolling,
   children: [
     CommandBarButton(
-      icon: FluentIcons.add,
+      icon: const Icon(FluentIcons.add),
       label: const Text('Add'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.edit,
+      icon: const Icon(FluentIcons.edit),
       label: const Text('Edit'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: FluentIcons.more,
+      icon: const Icon(FluentIcons.more),
       onPressed: () {},
     ),
   ],
