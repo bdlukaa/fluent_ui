@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// A card with appropriate margins, padding, and elevation for it to
 /// contain one or more [CommandBar]s.
@@ -29,7 +30,8 @@ class CommandBarCard extends StatelessWidget {
   }
 }
 
-/// How horizontal overflow is handled for the items inside of a CommandBar.
+/// How horizontal overflow is handled for the items on the primary area
+/// of a CommandBar.
 enum CommandBarOverflowBehavior {
   /// Will cause items to scroll horizontally.
   scrolling,
@@ -42,8 +44,17 @@ enum CommandBarOverflowBehavior {
 
   /// Will keep items on one line and clip as needed.
   clip,
-  // TODO: Implement support for an overflow button and dynamically overflowing items into the "SecondaryCommands" flyout
+
+  /// Will dynamically move overflowing items into the "secondary area"
+  /// (shown as a flyout menu when the overflow item is activated).
+  dynamicOverflow,
 }
+
+/// Signature of function that will build a [CommandBarItem] with some
+/// functionality to trigger an action (e.g., a clickable button), and
+/// it will call the given callback when the action is triggered.
+typedef CommandBarActionItemBuilder = CommandBarItem Function(
+    VoidCallback onPressed);
 
 /// Command bars provide quick access to common tasks. This could be
 /// application-level or page-level commands.
@@ -60,39 +71,107 @@ enum CommandBarOverflowBehavior {
 ///
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar>
 class CommandBar extends StatelessWidget {
-  final List<Widget> children;
+  /// The [CommandBarItem]s that should appear on the primary area.
+  final List<CommandBarItem> primaryItems;
+
+  /// If non-empty, a "overflow item" will appear on the primary area
+  /// (as built by [overflowItemBuilder], or it will be a "more" button
+  /// if [overflowItemBuilder] is null), and when activated, will show a
+  /// flyout containing this list of secondary items.
+  final List<CommandBarItem> secondaryItems;
+
+  /// Allows customization of the "overflow item" that will appear on the
+  /// primary area of the command bar if there are any items in the
+  /// [secondaryItems] (including any items that are dynamically considered
+  /// to be there if [overflowBehavior] is [CommandBarOverflowBehavior.dynamic].)
+  final CommandBarActionItemBuilder? overflowItemBuilder;
+
+  /// Determines what should happen when the items are too wide for the
+  /// primary command bar area. See [CommandBarOverflowBehavior].
   final CommandBarOverflowBehavior overflowBehavior;
+
+  /// If the width of this widget is less then the indicated amount,
+  /// items in the primary area will be rendered using
+  /// [CommandBarItemDisplayMode.inPrimaryCompact]. If this is null
+  /// or the width of this widget is wider, then the items will be rendered
+  /// using [CommandBarItemDisplayMode.inPrimary].
+  final double? compactBreakpointWidth;
+
   final bool _isExpanded;
 
   const CommandBar({
     Key? key,
-    required this.children,
-    this.overflowBehavior = CommandBarOverflowBehavior.scrolling,
+    required this.primaryItems,
+    this.secondaryItems = const [],
+    this.overflowItemBuilder,
+    this.overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow,
+    this.compactBreakpointWidth,
   })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
         super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildForPrimaryMode(
+      BuildContext context, CommandBarItemDisplayMode primaryMode) {
+    final builtItems =
+        primaryItems.map((item) => item.build(context, primaryMode));
+    Widget? overflowWidget;
+    if (secondaryItems.isNotEmpty ||
+        overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
+      void showSecondaryCallback() {
+        // TODO: implement secondary commands flyout!
+        print("TODO - show secondary commands flyout!");
+      }
+
+      late CommandBarItem overflowItem;
+      if (overflowItemBuilder != null) {
+        overflowItem = overflowItemBuilder!(showSecondaryCallback);
+      } else {
+        overflowItem = CommandBarButton(
+          onPressed: showSecondaryCallback,
+          icon: const Icon(FluentIcons.more),
+        );
+      }
+      overflowWidget = overflowItem.build(context, primaryMode);
+    }
+
     late Widget w;
     switch (overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
         w = HorizontalScrollView(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
+            children: [
+              ...builtItems,
+              if (overflowWidget != null) overflowWidget,
+            ],
           ),
         );
         break;
       case CommandBarOverflowBehavior.noWrap:
         w = Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: children,
+          children: [
+            ...builtItems,
+            if (overflowWidget != null) overflowWidget,
+          ],
         );
         break;
       case CommandBarOverflowBehavior.wrap:
         w = Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
-          children: children,
+          children: [
+            ...builtItems,
+            if (overflowWidget != null) overflowWidget,
+          ],
+        );
+        break;
+      case CommandBarOverflowBehavior.dynamicOverflow:
+        // TODO: implement dynamicOverflow behavior instead of wrap
+        w = Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            ...builtItems,
+            if (overflowWidget != null) overflowWidget,
+          ],
         );
         break;
       case CommandBarOverflowBehavior.clip:
@@ -101,7 +180,10 @@ class CommandBar extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
+            children: [
+              ...builtItems,
+              if (overflowWidget != null) overflowWidget,
+            ],
           ),
         );
         break;
@@ -111,15 +193,104 @@ class CommandBar extends StatelessWidget {
     }
     return w;
   }
+
+  @override
+  Widget build(BuildContext context) {
+    if (compactBreakpointWidth == null) {
+      return _buildForPrimaryMode(context, CommandBarItemDisplayMode.inPrimary);
+    } else {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > compactBreakpointWidth!) {
+            return _buildForPrimaryMode(
+                context, CommandBarItemDisplayMode.inPrimary);
+          } else {
+            return _buildForPrimaryMode(
+                context, CommandBarItemDisplayMode.inPrimaryCompact);
+          }
+        },
+      );
+    }
+  }
 }
+
+/// When a [CommandBarItem] is being built, indicates the visual context
+/// in which the item is being built.
+enum CommandBarItemDisplayMode {
+  /// The item is displayed in the horizontal area (primary command area)
+  /// of the command bar.
+  ///
+  /// The item should be rendered by wrapping content in a
+  /// [CommandBarItemInPrimary] widget.
+  inPrimary,
+
+  /// The item is displayed in the horizontal area (primary command area)
+  /// of the command bar, but it is requested that the item take up less
+  /// horizontal space so that more items may fit without overflow.
+  ///
+  /// The item should be rendered by wrapping content in a
+  /// [CommandBarItemInPrimary] widget.
+  inPrimaryCompact,
+
+  /// The item is displayed within the secondary command area (within a
+  /// Flyout as a drop down of the "more" button).
+  ///
+  /// Normally you would want to render an item in this visual context as a
+  /// [TappableListTile].
+  inSecondary,
+}
+
+/// Signature of function that can customize the widget returned by
+/// a CommandBarItem built in the given display mode. Can be useful to
+/// wrap the widget in a [Tooltip] etc.
+typedef CommandBarItemWidgetBuilder = Widget Function(
+    BuildContext context, CommandBarItemDisplayMode displayMode, Widget w);
 
 /// An individual control displayed within a [CommandBar]. This widget ensures
 /// that the child widget has the proper margin so the item has the proper
 /// minimum height and width expected of a control within a [CommandBar].
-class CommandBarItem extends StatelessWidget {
+abstract class CommandBarItem with Diagnosticable {
+  final Key? key;
+
+  /// Specify to allow customization of the built widget for a given
+  /// display mode. For example, to wrap a widget in a [Tooltip].
+  final CommandBarItemWidgetBuilder? widgetBuilder;
+  const CommandBarItem({
+    required this.key,
+    required this.widgetBuilder,
+  });
+
+  /// Builds the final widget for this display mode for this item.
+  /// This applies the widgetBuilder callback to the internally built
+  /// widget before returning.
+  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
+    var w = buildWidget(context, displayMode);
+    if (widgetBuilder != null) {
+      w = widgetBuilder!(context, displayMode, w);
+    }
+    return w;
+  }
+
+  /// Sub-classes implement this to build the widget that is
+  /// appropriate for the given display mode.
+  @protected
+  Widget buildWidget(
+      BuildContext context, CommandBarItemDisplayMode displayMode);
+
+  @override
+  @mustCallSuper
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+  }
+}
+
+/// A widget to help render items that will appear on the primary
+/// (horizontal) area of a command bar.
+class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
-  const CommandBarItem({Key? key, required this.child}) : super(key: key);
+  const CommandBarItemInPrimary({Key? key, required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +303,18 @@ class CommandBarItem extends StatelessWidget {
 
 /// Buttons are the most common control to put within a [CommandBar].
 /// They are composed of an (optional) icon and an (optional) label.
-class CommandBarButton extends StatelessWidget {
+class CommandBarButton extends CommandBarItem {
+  /// The icon to show in the button (primary area) or menu (secondary area)
   final Widget? icon;
+
+  /// The label to show in the button (primary area) or menu (secondary area)
   final Widget? label;
+
+  /// The sub-title to use if this item is shown in the secondary menu
+  final Widget? subtitle;
+
+  /// The trailing widget to use if this item is shown in the secondary menu
+  final Widget? trailing;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final FocusNode? focusNode;
@@ -142,37 +322,60 @@ class CommandBarButton extends StatelessWidget {
 
   const CommandBarButton({
     Key? key,
+    CommandBarItemWidgetBuilder? widgetBuilder,
     this.icon,
+    this.label,
+    this.subtitle,
+    this.trailing,
     required this.onPressed,
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
-    this.label,
-  }) : super(key: key);
+  }) : super(key: key, widgetBuilder: widgetBuilder);
 
   @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      icon: CommandBarItem(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              IconTheme(
-                data: IconTheme.of(context).copyWith(size: 16),
-                child: icon!,
-              ),
-              if (label != null) const SizedBox(width: 10),
-            ],
-            if (label != null) label!,
-          ],
-        ),
-      ),
-    );
+  Widget buildWidget(
+      BuildContext context, CommandBarItemDisplayMode displayMode) {
+    switch (displayMode) {
+      case CommandBarItemDisplayMode.inPrimary:
+      case CommandBarItemDisplayMode.inPrimaryCompact:
+        final showIcon = (icon != null);
+        final showLabel = (label != null &&
+            (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon));
+        return IconButton(
+          key: key,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          icon: CommandBarItemInPrimary(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showIcon)
+                  IconTheme(
+                    data: IconTheme.of(context).copyWith(size: 16),
+                    child: icon!,
+                  ),
+                if (showIcon && showLabel) const SizedBox(width: 10),
+                if (showLabel) label!,
+              ],
+            ),
+          ),
+        );
+      case CommandBarItemDisplayMode.inSecondary:
+        return TappableListTile(
+          key: key,
+          onTap: onPressed,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          leading: (icon != null)
+              ? IconTheme(
+                  data: IconTheme.of(context).copyWith(size: 16), child: icon!)
+              : null,
+          title: label,
+        );
+    }
   }
 }
 
@@ -183,13 +386,14 @@ class CommandBarButton extends StatelessWidget {
 /// See also:
 ///   * [CommandBar], which is a collection of [CommandBarItem]s.
 ///   * [CommandBarButton], an item for a button with an icon and/or label.
-class CommandBarSeparator extends StatelessWidget {
+class CommandBarSeparator extends CommandBarItem {
   /// Creates a command bar item separator.
   const CommandBarSeparator({
     Key? key,
+    CommandBarItemWidgetBuilder? widgetBuilder,
     this.color,
     this.thickness,
-  }) : super(key: key);
+  }) : super(key: key, widgetBuilder: widgetBuilder);
 
   /// Override the color used by the [Divider].
   final Color? color;
@@ -198,22 +402,39 @@ class CommandBarSeparator extends StatelessWidget {
   final double? thickness;
 
   @override
-  Widget build(BuildContext context) {
-    return CommandBarItem(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 28),
-        child: Divider(
-          direction: Axis.vertical,
+  Widget buildWidget(
+      BuildContext context, CommandBarItemDisplayMode displayMode) {
+    switch (displayMode) {
+      case CommandBarItemDisplayMode.inPrimary:
+      case CommandBarItemDisplayMode.inPrimaryCompact:
+        return CommandBarItemInPrimary(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 28),
+            child: Divider(
+              direction: Axis.vertical,
+              style: DividerThemeData(
+                thickness: thickness,
+                decoration: color != null ? BoxDecoration(color: color) : null,
+                verticalMargin: const EdgeInsets.symmetric(
+                  vertical: 0.0,
+                  horizontal: 0.0,
+                ),
+              ),
+            ),
+          ),
+        );
+      case CommandBarItemDisplayMode.inSecondary:
+        return Divider(
+          direction: Axis.horizontal,
           style: DividerThemeData(
             thickness: thickness,
             decoration: color != null ? BoxDecoration(color: color) : null,
-            verticalMargin: const EdgeInsets.symmetric(
+            horizontalMargin: const EdgeInsets.symmetric(
               vertical: 0.0,
               horizontal: 0.0,
             ),
           ),
-        ),
-      ),
-    );
+        );
+    }
   }
 }

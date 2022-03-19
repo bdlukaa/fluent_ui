@@ -16,21 +16,23 @@ class _OthersState extends State<Others> {
 
   bool checked = false;
 
-  final simpleCommandBarItems = <Widget>[
-    Tooltip(
-      message: "Create something new!",
-      child: CommandBarButton(
-        icon: const Icon(FluentIcons.add),
-        label: const Text('New'),
-        onPressed: () {},
+  final simpleCommandBarItems = <CommandBarItem>[
+    CommandBarButton(
+      icon: const Icon(FluentIcons.add),
+      label: const Text('New'),
+      onPressed: () {},
+      widgetBuilder: (context, mode, w) => Tooltip(
+        message: "Create something new!",
+        child: w,
       ),
     ),
-    Tooltip(
-      message: "Delete what is currently selected",
-      child: CommandBarButton(
-        icon: const Icon(FluentIcons.delete),
-        label: const Text('Delete'),
-        onPressed: () {},
+    CommandBarButton(
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Delete'),
+      onPressed: () {},
+      widgetBuilder: (context, mode, w) => Tooltip(
+        message: "Delete what is currently selected!",
+        child: w,
       ),
     ),
     CommandBarButton(
@@ -45,7 +47,7 @@ class _OthersState extends State<Others> {
     ),
   ];
 
-  final moreCommandBarItems = <Widget>[
+  final moreCommandBarItems = <CommandBarItem>[
     CommandBarButton(
       icon: const Icon(FluentIcons.reply),
       label: const Text('Reply'),
@@ -533,17 +535,18 @@ class _OthersState extends State<Others> {
           label: 'Simple command bar (no wrapping)',
           child: CommandBar(
             overflowBehavior: CommandBarOverflowBehavior.noWrap,
-            children: [
+            primaryItems: [
               ...simpleCommandBarItems,
             ],
           ),
         ),
         const SizedBox(height: 20.0),
         InfoLabel(
-          label: 'Command bar with many items (wrapping)',
+          label: 'Command bar with many items (wrapping, auto-compact < 600px)',
           child: CommandBar(
             overflowBehavior: CommandBarOverflowBehavior.wrap,
-            children: [
+            compactBreakpointWidth: 600,
+            primaryItems: [
               ...simpleCommandBarItems,
               const CommandBarSeparator(),
               ...moreCommandBarItems,
@@ -558,7 +561,7 @@ class _OthersState extends State<Others> {
             child: CommandBarCard(
               child: CommandBar(
                 overflowBehavior: CommandBarOverflowBehavior.clip,
-                children: [
+                primaryItems: [
                   ...simpleCommandBarItems,
                   const CommandBarSeparator(),
                   ...moreCommandBarItems,
@@ -577,7 +580,7 @@ class _OthersState extends State<Others> {
                 Expanded(
                   child: CommandBar(
                     overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                    children: [
+                    primaryItems: [
                       ...simpleCommandBarItems,
                       const CommandBarSeparator(),
                       ...moreCommandBarItems,
@@ -587,7 +590,7 @@ class _OthersState extends State<Others> {
                 // Right-aligned button(s)
                 CommandBar(
                   overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  children: [
+                  primaryItems: [
                     CommandBarButton(
                       icon: const Icon(FluentIcons.refresh),
                       onPressed: () {},
@@ -607,7 +610,7 @@ class _OthersState extends State<Others> {
                 Expanded(
                   child: CommandBar(
                     overflowBehavior: CommandBarOverflowBehavior.wrap,
-                    children: [
+                    primaryItems: [
                       ...simpleCommandBarItems,
                       const CommandBarSeparator(),
                       ...moreCommandBarItems,
@@ -617,7 +620,7 @@ class _OthersState extends State<Others> {
                 // Right-aligned button(s)
                 CommandBar(
                   overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  children: [
+                  primaryItems: [
                     CommandBarButton(
                       icon: const Icon(FluentIcons.refresh),
                       onPressed: () {},
