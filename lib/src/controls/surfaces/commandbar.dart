@@ -70,7 +70,7 @@ typedef CommandBarActionItemBuilder = CommandBarItem Function(
 /// See also:
 ///
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar>
-class CommandBar extends StatelessWidget {
+class CommandBar extends StatefulWidget {
   /// The [CommandBarItem]s that should appear on the primary area.
   final List<CommandBarItem> primaryItems;
 
@@ -97,6 +97,9 @@ class CommandBar extends StatelessWidget {
   /// using [CommandBarItemDisplayMode.inPrimary].
   final double? compactBreakpointWidth;
 
+  /// The width of the flyout menu used to display secondary commands.
+  final double flyoutWidth;
+
   final bool _isExpanded;
 
   const CommandBar({
@@ -106,35 +109,74 @@ class CommandBar extends StatelessWidget {
     this.overflowItemBuilder,
     this.overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow,
     this.compactBreakpointWidth,
+    this.flyoutWidth = 250,
   })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
         super(key: key);
+
+  @override
+  _CommandBarState createState() => _CommandBarState();
+}
+
+class _CommandBarState extends State<CommandBar> {
+  final FlyoutController secondaryFlyoutController = FlyoutController();
+  List<int> dynamicallyHiddenPrimaryItems = [];
+
+  @override
+  void dispose() {
+    secondaryFlyoutController.dispose();
+    super.dispose();
+  }
 
   Widget _buildForPrimaryMode(
       BuildContext context, CommandBarItemDisplayMode primaryMode) {
     final builtItems =
-        primaryItems.map((item) => item.build(context, primaryMode));
+        widget.primaryItems.map((item) => item.build(context, primaryMode));
     Widget? overflowWidget;
-    if (secondaryItems.isNotEmpty ||
-        overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
-      void showSecondaryCallback() {
-        // TODO: implement secondary commands flyout!
-        print("TODO - show secondary commands flyout!");
+    if (widget.secondaryItems.isNotEmpty ||
+        widget.overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
+      void showSecondaryMenu() {
+        secondaryFlyoutController.open = true;
       }
 
       late CommandBarItem overflowItem;
-      if (overflowItemBuilder != null) {
-        overflowItem = overflowItemBuilder!(showSecondaryCallback);
+      if (widget.overflowItemBuilder != null) {
+        overflowItem = widget.overflowItemBuilder!(showSecondaryMenu);
       } else {
         overflowItem = CommandBarButton(
-          onPressed: showSecondaryCallback,
+          onPressed: showSecondaryMenu,
           icon: const Icon(FluentIcons.more),
         );
       }
-      overflowWidget = overflowItem.build(context, primaryMode);
+
+      var allSecondaryItems = [
+        ...dynamicallyHiddenPrimaryItems
+            .map((index) => widget.primaryItems[index]),
+        ...widget.secondaryItems,
+      ];
+      // It's useless if the first item is a separator
+      if (allSecondaryItems.isNotEmpty &&
+          allSecondaryItems.first is CommandBarSeparator) {
+        allSecondaryItems.removeAt(0);
+      }
+      overflowWidget = Flyout(
+        child: overflowItem.build(context, primaryMode),
+        content: FlyoutContent(
+          padding: EdgeInsets.zero,
+          child: ListView(
+            shrinkWrap: true,
+            children: allSecondaryItems
+                .map((item) =>
+                    item.build(context, CommandBarItemDisplayMode.inSecondary))
+                .toList(),
+          ),
+        ),
+        contentWidth: widget.flyoutWidth,
+        controller: secondaryFlyoutController,
+      );
     }
 
     late Widget w;
-    switch (overflowBehavior) {
+    switch (widget.overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
         w = HorizontalScrollView(
           child: Row(
@@ -188,7 +230,7 @@ class CommandBar extends StatelessWidget {
         );
         break;
     }
-    if (_isExpanded) {
+    if (widget._isExpanded) {
       w = Row(children: [Expanded(child: w)]);
     }
     return w;
@@ -196,12 +238,12 @@ class CommandBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (compactBreakpointWidth == null) {
+    if (widget.compactBreakpointWidth == null) {
       return _buildForPrimaryMode(context, CommandBarItemDisplayMode.inPrimary);
     } else {
       return LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth > compactBreakpointWidth!) {
+          if (constraints.maxWidth > widget.compactBreakpointWidth!) {
             return _buildForPrimaryMode(
                 context, CommandBarItemDisplayMode.inPrimary);
           } else {

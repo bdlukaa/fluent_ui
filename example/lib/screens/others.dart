@@ -572,6 +572,15 @@ class _OthersState extends State<Others> {
         ),
         const SizedBox(height: 20.0),
         InfoLabel(
+          label: 'Command bar with secondary items (wrapping)',
+          child: CommandBar(
+            overflowBehavior: CommandBarOverflowBehavior.wrap,
+            primaryItems: simpleCommandBarItems,
+            secondaryItems: moreCommandBarItems,
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
           label:
               'Carded complex command bar with many items (horizontal scrolling)',
           child: CommandBarCard(
