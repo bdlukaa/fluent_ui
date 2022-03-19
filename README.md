@@ -85,6 +85,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [TreeView](#treeview)
     - [Scrollable tree view](#scrollable-tree-view)
     - [Lazily load nodes](#lazily-load-nodes)
+  - [CommandBar](#commandbar)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
@@ -1553,6 +1554,44 @@ TreeView(
   items: items,
 );
 ```
+
+## CommandBar
+
+A `CommandBar` control provides quick access to common tasks. This could be application-level or page-level commands. [Learn More](https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar)
+
+![CommandBar Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
+
+The `CommandBar` is composed of a number of `CommandBarItem` widgets, which could be `CommandBarButton` or any custom widget (e.g., a "split button" widget).
+
+A `CommandBarCard` can be used to create a raised card around a `CommandBar`. While this is not officially part of the Fluent design language, the concept is commonly used in the Office desktop apps for the app-level command bar.
+
+Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including wrapping, clipping, scrolling, and no wrapping (will overflow).
+
+Here is an example of a simple command bar:
+
+```dart
+CommandBar(
+  wrapType: CommandBarOverflowBehavior.scrolling,
+  children: [
+    CommandBarButton(
+      icon: FluentIcons.add,
+      label: const Text('Add'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.edit,
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.more,
+      onPressed: () {},
+    ),
+  ],
+),
+```
+
+**Help Wanted**: The current implementation does not implement the open/closed state, nor does it implement the secondary commands "more" button with dynamic overflow of items into the secondary commands menu.
 
 # Mobile Widgets
 

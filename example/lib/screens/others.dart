@@ -13,8 +13,71 @@ class _OthersState extends State<Others> {
   int currentIndex = 0;
 
   final flyoutController = FlyoutController();
+  final scrollController = ScrollController();
 
   bool checked = false;
+
+  final simpleCommandBarItems = <Widget>[
+    Tooltip(
+      message: "Create something new!",
+      child: CommandBarButton(
+        icon: FluentIcons.add,
+        label: const Text('New'),
+        onPressed: () {},
+      ),
+    ),
+    Tooltip(
+      message: "Delete what is currently selected",
+      child: CommandBarButton(
+        icon: FluentIcons.delete,
+        label: const Text('Delete'),
+        onPressed: () {},
+      ),
+    ),
+    CommandBarButton(
+      icon: FluentIcons.archive,
+      label: const Text('Archive'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.move,
+      label: const Text('Move'),
+      onPressed: () {},
+    ),
+  ];
+
+  final moreCommandBarItems = <Widget>[
+    CommandBarButton(
+      icon: FluentIcons.reply,
+      label: const Text('Reply'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.reply_all,
+      label: const Text('Reply All'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.forward,
+      label: const Text('Forward'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.search,
+      label: const Text('Search'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.pin,
+      label: const Text('Pin'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: FluentIcons.unpin,
+      label: const Text('Unpin'),
+      onPressed: () {},
+    ),
+  ];
 
   final items = [
     TreeViewItem(
@@ -94,6 +157,7 @@ class _OthersState extends State<Others> {
   @override
   void dispose() {
     flyoutController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -166,6 +230,7 @@ class _OthersState extends State<Others> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
+      scrollController: scrollController,
       header: const PageHeader(title: Text('Others')),
       children: [
         const SizedBox(height: 10.0),
@@ -397,6 +462,7 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   items: treeViewItemsSimple,
                   shrinkWrap: false,
+                  scrollPrimary: false,
                 ),
               ),
             ),
@@ -415,6 +481,7 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
                   shrinkWrap: false,
+                  scrollPrimary: false,
                   items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
@@ -438,6 +505,7 @@ class _OthersState extends State<Others> {
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
                   shrinkWrap: false,
+                  scrollPrimary: false,
                   items: treeViewItemsMultipleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
@@ -465,6 +533,108 @@ class _OthersState extends State<Others> {
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
+          label: 'Simple command bar (no wrapping)',
+          child: CommandBar(
+            wrapType: CommandBarOverflowBehavior.noWrap,
+            children: [
+              ...simpleCommandBarItems,
+            ],
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
+          label: 'Command bar with many items (wrapping)',
+          child: CommandBar(
+            wrapType: CommandBarOverflowBehavior.wrap,
+            children: [
+              ...simpleCommandBarItems,
+              ...moreCommandBarItems,
+            ],
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
+          label: 'Command bar with many items (clipped)',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 230),
+            child: CommandBarCard(
+              child: CommandBar(
+                wrapType: CommandBarOverflowBehavior.clip,
+                children: [
+                  ...simpleCommandBarItems,
+                  ...moreCommandBarItems,
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
+          label:
+              'Carded complex command bar with many items (horizontal scrolling)',
+          child: CommandBarCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: CommandBar(
+                    wrapType: CommandBarOverflowBehavior.scrolling,
+                    parentVerticalScrollController: scrollController,
+                    children: [
+                      ...simpleCommandBarItems,
+                      ...moreCommandBarItems,
+                    ],
+                  ),
+                ),
+                // Right-aligned button(s)
+                CommandBar(
+                  wrapType: CommandBarOverflowBehavior.noWrap,
+                  children: [
+                    CommandBarButton(
+                      icon: FluentIcons.refresh,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        InfoLabel(
+          label: 'Carded complex command bar with many items (wrapping)',
+          child: CommandBarCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: CommandBar(
+                    wrapType: CommandBarOverflowBehavior.wrap,
+                    parentVerticalScrollController: scrollController,
+                    children: [
+                      ...simpleCommandBarItems,
+                      ...moreCommandBarItems,
+                    ],
+                  ),
+                ),
+                // Right-aligned button(s)
+                CommandBar(
+                  wrapType: CommandBarOverflowBehavior.noWrap,
+                  children: [
+                    CommandBarButton(
+                      icon: FluentIcons.refresh,
+                      onPressed: () {},
+                    ),
+                    CommandBarButton(
+                      icon: FluentIcons.more,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
