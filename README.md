@@ -23,6 +23,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 
 ### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
 
+![Example Showcase](images/example-showcase.png)
+
 ### Content
 
 - [Motivation](#motivation)
@@ -92,7 +94,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Localization](#Localization)
 - [Contribution](#contribution)
-  -[Contributing new localizations](#contributing-new-localizations) 
+  - [Contributing new localizations](#contributing-new-localizations) 
   - [Acknowledgements](#acknowledgements)
 
 ## Motivation
