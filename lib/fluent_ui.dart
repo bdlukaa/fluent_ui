@@ -90,6 +90,8 @@ export 'src/controls/form/text_form_box.dart';
 export 'src/controls/form/form_row.dart';
 export 'src/controls/form/selection_controls.dart';
 
+export 'src/layout/dynamic_overflow.dart';
+
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';
 export 'src/styles/color.dart' hide ColorConst;
