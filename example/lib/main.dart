@@ -12,6 +12,7 @@ import 'screens/forms.dart';
 import 'screens/icons.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
+import 'screens/commandbars.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';
@@ -205,6 +206,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             title: const Text('Mobile'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.toolbox),
+            title: const Text('Command bars'),
+          ),
+          PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
@@ -241,6 +246,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
+        const CommandBars(),
         const Others(),
         Settings(controller: settingsController),
       ]),
