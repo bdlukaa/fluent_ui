@@ -83,7 +83,8 @@ class CommandBar extends StatefulWidget {
   /// Allows customization of the "overflow item" that will appear on the
   /// primary area of the command bar if there are any items in the
   /// [secondaryItems] (including any items that are dynamically considered
-  /// to be there if [overflowBehavior] is [CommandBarOverflowBehavior.dynamic].)
+  /// to be there if [overflowBehavior] is
+  /// [CommandBarOverflowBehavior.dynamicOverflow].)
   final CommandBarActionItemBuilder? overflowItemBuilder;
 
   /// Determines what should happen when the items are too wide for the
@@ -97,6 +98,18 @@ class CommandBar extends StatefulWidget {
   /// using [CommandBarItemDisplayMode.inPrimary].
   final double? compactBreakpointWidth;
 
+  /// The alignment of the items within the command bar across the main axis
+  final MainAxisAlignment mainAxisAlignment;
+
+  /// The alignment of the items within the command bar across the cross axis
+  final CrossAxisAlignment crossAxisAlignment;
+
+  /// The alignment of the overflow item (if displayed) between the end of
+  /// the visible primary items and the end of the boundaries of this widget.
+  /// Only relevant if [overflowBehavior] is
+  /// [CommandBarOverflowBehavior.dynamicOverflow].
+  final MainAxisAlignment overflowItemAlignment;
+
   /// The width of the flyout menu used to display secondary commands.
   final double flyoutWidth;
 
@@ -109,6 +122,9 @@ class CommandBar extends StatefulWidget {
     this.overflowItemBuilder,
     this.overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow,
     this.compactBreakpointWidth,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.overflowItemAlignment = MainAxisAlignment.end,
     this.flyoutWidth = 250,
   })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
         super(key: key);
@@ -125,6 +141,40 @@ class _CommandBarState extends State<CommandBar> {
   void dispose() {
     secondaryFlyoutController.dispose();
     super.dispose();
+  }
+
+  WrapAlignment _getWrapAlignment() {
+    switch (widget.mainAxisAlignment) {
+      case MainAxisAlignment.start:
+        return WrapAlignment.start;
+      case MainAxisAlignment.end:
+        return WrapAlignment.end;
+      case MainAxisAlignment.center:
+        return WrapAlignment.center;
+      case MainAxisAlignment.spaceBetween:
+        return WrapAlignment.spaceBetween;
+      case MainAxisAlignment.spaceAround:
+        return WrapAlignment.spaceAround;
+      case MainAxisAlignment.spaceEvenly:
+        return WrapAlignment.spaceEvenly;
+    }
+  }
+
+  WrapCrossAlignment _getWrapCrossAlignment() {
+    switch (widget.crossAxisAlignment) {
+      case CrossAxisAlignment.start:
+        return WrapCrossAlignment.start;
+      case CrossAxisAlignment.end:
+        return WrapCrossAlignment.end;
+      case CrossAxisAlignment.center:
+        return WrapCrossAlignment.center;
+      case CrossAxisAlignment.stretch:
+        throw UnsupportedError(
+            "CommandBar does not support CrossAxisAlignment.stretch");
+      case CrossAxisAlignment.baseline:
+        throw UnsupportedError(
+            "CommandBar does not support CrossAxisAlignment.baseline");
+    }
   }
 
   Widget _buildForPrimaryMode(
@@ -180,7 +230,8 @@ class _CommandBarState extends State<CommandBar> {
       case CommandBarOverflowBehavior.scrolling:
         w = HorizontalScrollView(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: widget.mainAxisAlignment,
+            crossAxisAlignment: widget.crossAxisAlignment,
             children: [
               ...builtItems,
               if (overflowWidget != null) overflowWidget,
@@ -190,7 +241,8 @@ class _CommandBarState extends State<CommandBar> {
         break;
       case CommandBarOverflowBehavior.noWrap:
         w = Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: widget.mainAxisAlignment,
+          crossAxisAlignment: widget.crossAxisAlignment,
           children: [
             ...builtItems,
             if (overflowWidget != null) overflowWidget,
@@ -199,7 +251,8 @@ class _CommandBarState extends State<CommandBar> {
         break;
       case CommandBarOverflowBehavior.wrap:
         w = Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: _getWrapAlignment(),
+          crossAxisAlignment: _getWrapCrossAlignment(),
           children: [
             ...builtItems,
             if (overflowWidget != null) overflowWidget,
@@ -207,13 +260,29 @@ class _CommandBarState extends State<CommandBar> {
         );
         break;
       case CommandBarOverflowBehavior.dynamicOverflow:
-        // TODO: implement dynamicOverflow behavior instead of wrap
-        w = Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            ...builtItems,
-            if (overflowWidget != null) overflowWidget,
-          ],
+        assert(overflowWidget != null);
+        w = DynamicOverflow(
+          alignment: widget.mainAxisAlignment,
+          crossAxisAlignment: widget.crossAxisAlignment,
+          children: builtItems.toList(),
+          alwaysDisplayOverflowWidget: widget.secondaryItems.isNotEmpty,
+          overflowWidget: overflowWidget!,
+          overflowWidgetAlignment: widget.overflowItemAlignment,
+          overflowChangedCallback: (hiddenItems) {
+            setState(() {
+              // indexes should always be valid
+              assert(() {
+                for (var i = 0; i < hiddenItems.length; i++) {
+                  if (hiddenItems[i] < 0 ||
+                      hiddenItems[i] >= widget.primaryItems.length) {
+                    return false;
+                  }
+                }
+                return true;
+              }());
+              dynamicallyHiddenPrimaryItems = hiddenItems;
+            });
+          },
         );
         break;
       case CommandBarOverflowBehavior.clip:
@@ -221,7 +290,8 @@ class _CommandBarState extends State<CommandBar> {
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: widget.mainAxisAlignment,
+            crossAxisAlignment: widget.crossAxisAlignment,
             children: [
               ...builtItems,
               if (overflowWidget != null) overflowWidget,

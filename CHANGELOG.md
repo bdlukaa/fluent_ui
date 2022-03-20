@@ -9,7 +9,8 @@ Date format: DD/MM/YYYY
 - TreeView now implemented with ListView and optionally allows vertical scrolling ([#255](https://github.com/bdlukaa/fluent_ui/pull/225))
 - TreeViewItem now has custom primary key (`value` field)
 - Added `onSelectionChanged` callback to `TreeView`
-- Implement basic `CommandBar` ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
+- Implement `CommandBar` with dynamic overflow ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
+- Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
 - Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
 
 ## [3.9.1] - Input Update - [25/02/2022]

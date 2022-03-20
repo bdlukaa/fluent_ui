@@ -1561,18 +1561,31 @@ A `CommandBar` control provides quick access to common tasks. This could be appl
 
 ![CommandBar Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
 
-The `CommandBar` is composed of a number of `CommandBarItem` widgets, which could be `CommandBarButton` or any custom widget (e.g., a "split button" widget).
+The `CommandBar` is composed of a number of `CommandBarItem` objects, which could be `CommandBarButton`, a `CommandBarSeparator`, or any custom object (e.g., a "split button" object). Sub-class `CommandBarItem` to create your own custom items.
+
+Each `CommandBarItem` widget knows how to render itself in three different modes:
+- `CommandBarItemDisplayMode.inPrimary`: Displayed horizontally in primary area
+- `CommandBarItemDisplayMode.inPrimaryCompact`: More compact horizontal display (e.g., only the icon is displayed for `CommandBarButton`)
+- `CommandBarItemDisplayMode.inSecondary`: Displayed within flyout menu `ListView`
+
+The "primary area" of the command bar displays items horizontally. The "secondary area" of the command bar is a flyout menu accessed via an "overflow widget" (by default, a "more" button). You can specify items that should be displayed for each area. The overflow widget will only be displayed if there are items in the secondary area (including any items that dynamically overflowed into the secondary area, if dynamic overflow is enabled).
+
+Whether or not the "compact" mode is selected for items displayed in the primary area is determined by an optional width breakpoint. If set, if the width of the widget is less than the breakpoint, it will render each primary `CommandBarItem` using the compact mode.
+
+Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including dynamic overflow (putting primary items into the secondary area on overflow), wrapping, clipping, scrolling, and no wrapping (will overflow).
+
+The horizontal and vertical alignment can also be customized via the `mainAxisAlignment` and `crossAxisAlignment` properties.
 
 A `CommandBarCard` can be used to create a raised card around a `CommandBar`. While this is not officially part of the Fluent design language, the concept is commonly used in the Office desktop apps for the app-level command bar.
 
-Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including wrapping, clipping, scrolling, and no wrapping (will overflow).
-
-Here is an example of a simple command bar:
+Here is an example of a right-aligned command bar that has additional items in the secondary area:
 
 ```dart
 CommandBar(
-  overflowBehavior: CommandBarOverflowBehavior.scrolling,
-  children: [
+  mainAxisAlignment: MainAxisAlignment.end,
+  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+  compactBreakpointWidth: 768,
+  primaryItems: [
     CommandBarButton(
       icon: const Icon(FluentIcons.add),
       label: const Text('Add'),
@@ -1584,14 +1597,27 @@ CommandBar(
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.more),
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+  ],
+  secondaryItems: [
+    CommandBarButton(
+      icon: const Icon(FluentIcons.archive),
+      label: const Text('Archive'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.move),
+      label: const Text('Move'),
       onPressed: () {},
     ),
   ],
 ),
 ```
 
-**Help Wanted**: The current implementation does not implement the open/closed state, nor does it implement the secondary commands "more" button with dynamic overflow of items into the secondary commands menu.
+More complex examples, including command bars with items that align to each side of a carded bar, are in the example app.
 
 # Mobile Widgets
 
