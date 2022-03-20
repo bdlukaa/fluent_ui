@@ -9,6 +9,7 @@ Date format: DD/MM/YYYY
 - TreeView now implemented with ListView and optionally allows vertical scrolling ([#255](https://github.com/bdlukaa/fluent_ui/pull/225))
 - TreeViewItem now has custom primary key (`value` field)
 - Added `onSelectionChanged` callback to `TreeView`
+- Account for enabled on pressing states ([#233](https://github.com/bdlukaa/fluent_ui/pull/233))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
