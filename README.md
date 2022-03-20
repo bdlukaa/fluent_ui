@@ -90,6 +90,8 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
+- [Layout Widgets](#layout-widgets)
+  - [DynamicOverflow](#dynamicoverflow)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Localization](#Localization)
 - [Contribution](#contribution)
@@ -1714,7 +1716,17 @@ showSnackbar(
 
 ---
 
-### Equivalents with the material library
+# Layout Widgets
+
+Widgets that help to layout other widgets.
+
+## DynamicOverflow
+
+`DynamicOverflow` widget is similar to the `Wrap` widget, but only lays out children widgets in a single run, and if there is not room to display them all, it will hide widgets that don't fit, and display the "overflow widget" at the end. Optionally, the "overflow widget" can be displayed all the time. Displaying the overflow widget will take precedence over any children widgets.
+
+This is used to implement the dynamic overflow mode for `CommandBar`, but could be useful on its own. It supports both horizontal and vertical layout modes, and various main axis and cross axis alignments.
+
+# Equivalents with the material library
 
 The list of equivalents between this library and `flutter/material.dart`
 
