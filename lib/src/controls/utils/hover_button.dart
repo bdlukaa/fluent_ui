@@ -169,27 +169,31 @@ class _HoverButtonState extends State<HoverButton> {
   Widget build(BuildContext context) {
     Widget w = GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: widget.onPressed,
+      onTap: enabled ? widget.onPressed : null,
       onTapDown: (_) {
+        if (!enabled) return;
         if (mounted) setState(() => _pressing = true);
         widget.onTapDown?.call();
       },
       onTapUp: (_) async {
-        widget.onTapUp?.call();
         if (!enabled) return;
+        widget.onTapUp?.call();
         await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) setState(() => _pressing = false);
       },
       onTapCancel: () {
+        if (!enabled) return;
         widget.onTapCancel?.call();
         if (mounted) setState(() => _pressing = false);
       },
-      onLongPress: widget.onLongPress,
+      onLongPress: enabled ? widget.onLongPress : null,
       onLongPressStart: (_) {
+        if (!enabled) return;
         widget.onLongPressStart?.call();
         if (mounted) setState(() => _pressing = true);
       },
       onLongPressEnd: (_) {
+        if (!enabled) return;
         widget.onLongPressEnd?.call();
         if (mounted) setState(() => _pressing = false);
       },
