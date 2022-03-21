@@ -360,6 +360,8 @@ class TreeView extends StatefulWidget {
     this.onItemInvoked,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
+    this.scrollPrimary,
+    this.scrollController,
     this.cacheExtent,
     this.itemExtent,
     this.addRepaintBoundaries = true,
@@ -395,6 +397,12 @@ class TreeView extends StatefulWidget {
 
   /// {@macro flutter.widgets.scroll_view.shrinkWrap}
   final bool shrinkWrap;
+
+  /// {@macro flutter.widgets.scroll_view.primary}
+  final bool? scrollPrimary;
+
+  /// {@macro flutter.widgets.scroll_view.controller}
+  final ScrollController? scrollController;
 
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
   final double? cacheExtent;
@@ -464,6 +472,11 @@ class _TreeViewState extends State<TreeView> {
       constraints: const BoxConstraints(minHeight: 28.0),
       child: ListView.builder(
         scrollDirection: Axis.vertical,
+        // If shrinkWrap is true, then we default to not using the primary
+        // scroll controller (should not normally need any controller in
+        // this case).
+        primary: widget.scrollPrimary ?? (widget.shrinkWrap ? false : null),
+        controller: widget.scrollController,
         shrinkWrap: widget.shrinkWrap,
         cacheExtent: widget.cacheExtent,
         itemExtent: widget.itemExtent,

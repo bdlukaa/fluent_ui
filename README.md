@@ -87,10 +87,13 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [TreeView](#treeview)
     - [Scrollable tree view](#scrollable-tree-view)
     - [Lazily load nodes](#lazily-load-nodes)
+  - [CommandBar](#commandbar)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
+- [Layout Widgets](#layout-widgets)
+  - [DynamicOverflow](#dynamicoverflow)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Localization](#Localization)
 - [Contribution](#contribution)
@@ -1556,6 +1559,86 @@ TreeView(
 );
 ```
 
+## CommandBar
+
+A `CommandBar` control provides quick access to common tasks. This could be application-level or page-level commands. [Learn More](https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar)
+
+![CommandBar Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
+
+The `CommandBar` is composed of a number of `CommandBarItem` objects, which could be `CommandBarButton`, a `CommandBarSeparator`, or any custom object (e.g., a "split button" object). Sub-class `CommandBarItem` to create your own custom items.
+
+Each `CommandBarItem` widget knows how to render itself in three different modes:
+- `CommandBarItemDisplayMode.inPrimary`: Displayed horizontally in primary area
+- `CommandBarItemDisplayMode.inPrimaryCompact`: More compact horizontal display (e.g., only the icon is displayed for `CommandBarButton`)
+- `CommandBarItemDisplayMode.inSecondary`: Displayed within flyout menu `ListView`
+
+The "primary area" of the command bar displays items horizontally. The "secondary area" of the command bar is a flyout menu accessed via an "overflow widget" (by default, a "more" button). You can specify items that should be displayed for each area. The overflow widget will only be displayed if there are items in the secondary area (including any items that dynamically overflowed into the secondary area, if dynamic overflow is enabled).
+
+Whether or not the "compact" mode is selected for items displayed in the primary area is determined by an optional width breakpoint. If set, if the width of the widget is less than the breakpoint, it will render each primary `CommandBarItem` using the compact mode.
+
+Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including dynamic overflow (putting primary items into the secondary area on overflow), wrapping, clipping, scrolling, and no wrapping (will overflow).
+
+The horizontal and vertical alignment can also be customized via the `mainAxisAlignment` and `crossAxisAlignment` properties. The main axis alignment respects current directionality.
+
+A `CommandBarCard` can be used to create a raised card around a `CommandBar`. While this is not officially part of the Fluent design language, the concept is commonly used in the Office desktop apps for the app-level command bar.
+
+Here is an example of a right-aligned command bar that has additional items in the secondary area:
+
+```dart
+CommandBar(
+  mainAxisAlignment: MainAxisAlignment.end,
+  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+  compactBreakpointWidth: 768,
+  primaryItems: [
+    CommandBarButton(
+      icon: const Icon(FluentIcons.add),
+      label: const Text('Add'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.edit),
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+  ],
+  secondaryItems: [
+    CommandBarButton(
+      icon: const Icon(FluentIcons.archive),
+      label: const Text('Archive'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.move),
+      label: const Text('Move'),
+      onPressed: () {},
+    ),
+  ],
+),
+```
+
+To put a tooltip on any other kind of `CommandBarItem` (or otherwise wrap it in another widget), use `CommandBarBuilderItem`:
+
+```dart
+CommandBarBuilderItem(
+  builder: (context, mode, w) => Tooltip(
+    message: "Create something new!",
+    child: w,
+  ),
+  wrappedItem: CommandBarButton(
+    icon: const Icon(FluentIcons.add),
+    label: const Text('Add'),
+    onPressed: () {},
+  ),
+),
+```
+
+More complex examples, including command bars with items that align to each side of a carded bar, are in the example app.
+
 # Mobile Widgets
 
 Widgets with focus on mobile. Based on the official documentation and source code for [iOS](https://developer.microsoft.com/pt-br/fluentui#/controls/ios) and [Android](https://developer.microsoft.com/pt-br/fluentui#/controls/android). Most of the widgets above can adapt to small screens, and will fit on all your devices.
@@ -1651,7 +1734,17 @@ showSnackbar(
 
 ---
 
-### Equivalents with the material library
+# Layout Widgets
+
+Widgets that help to layout other widgets.
+
+## DynamicOverflow
+
+`DynamicOverflow` widget is similar to the `Wrap` widget, but only lays out children widgets in a single run, and if there is not room to display them all, it will hide widgets that don't fit, and display the "overflow widget" at the end. Optionally, the "overflow widget" can be displayed all the time. Displaying the overflow widget will take precedence over any children widgets.
+
+This is used to implement the dynamic overflow mode for `CommandBar`, but could be useful on its own. It supports both horizontal and vertical layout modes, and various main axis and cross axis alignments.
+
+# Equivalents with the material library
 
 The list of equivalents between this library and `flutter/material.dart`
 
