@@ -170,10 +170,10 @@ class _CommandBarState extends State<CommandBar> {
         return WrapCrossAlignment.center;
       case CrossAxisAlignment.stretch:
         throw UnsupportedError(
-            "CommandBar does not support CrossAxisAlignment.stretch");
+            'CommandBar does not support CrossAxisAlignment.stretch');
       case CrossAxisAlignment.baseline:
         throw UnsupportedError(
-            "CommandBar does not support CrossAxisAlignment.baseline");
+            'CommandBar does not support CrossAxisAlignment.baseline');
     }
   }
 
@@ -352,52 +352,54 @@ enum CommandBarItemDisplayMode {
   inSecondary,
 }
 
+/// An individual control displayed within a [CommandBar]. Sub-class this
+/// to build a new type of widget that appears inside of a command bar.
+/// It knows how to build an appropriate widget for the given
+/// [CommandBarItemDisplayMode] during build time.
+abstract class CommandBarItem with Diagnosticable {
+  final Key? key;
+
+  const CommandBarItem({required this.key});
+
+  /// Builds the final widget for this display mode for this item.
+  /// Sub-classes implement this to build the widget that is appropriate
+  /// for the given display mode.
+  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode);
+}
+
 /// Signature of function that can customize the widget returned by
 /// a CommandBarItem built in the given display mode. Can be useful to
 /// wrap the widget in a [Tooltip] etc.
 typedef CommandBarItemWidgetBuilder = Widget Function(
     BuildContext context, CommandBarItemDisplayMode displayMode, Widget w);
 
-/// An individual control displayed within a [CommandBar]. This widget ensures
-/// that the child widget has the proper margin so the item has the proper
-/// minimum height and width expected of a control within a [CommandBar].
-abstract class CommandBarItem with Diagnosticable {
-  final Key? key;
+class CommandBarBuilderItem extends CommandBarItem {
+  /// Function that is called with the built widget of the wrappedItem for
+  /// a given display mode before it is returned. For example, to wrap a
+  /// widget in a [Tooltip].
+  final CommandBarItemWidgetBuilder builder;
+  final CommandBarItem wrappedItem;
 
-  /// Specify to allow customization of the built widget for a given
-  /// display mode. For example, to wrap a widget in a [Tooltip].
-  final CommandBarItemWidgetBuilder? widgetBuilder;
-  const CommandBarItem({
-    required this.key,
-    required this.widgetBuilder,
-  });
-
-  /// Builds the final widget for this display mode for this item.
-  /// This applies the widgetBuilder callback to the internally built
-  /// widget before returning.
-  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
-    var w = buildWidget(context, displayMode);
-    if (widgetBuilder != null) {
-      w = widgetBuilder!(context, displayMode, w);
-    }
-    return w;
-  }
-
-  /// Sub-classes implement this to build the widget that is
-  /// appropriate for the given display mode.
-  @protected
-  Widget buildWidget(
-      BuildContext context, CommandBarItemDisplayMode displayMode);
+  CommandBarBuilderItem({
+    Key? key,
+    required this.builder,
+    required this.wrappedItem,
+  }) : super(key: key);
 
   @override
-  @mustCallSuper
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
+  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
+    // First, build the widget for the wrappedItem in the given displayMode,
+    // as it is always passed to the callback
+    Widget w = wrappedItem.build(context, displayMode);
+    return builder(context, displayMode, w);
   }
 }
 
 /// A widget to help render items that will appear on the primary
-/// (horizontal) area of a command bar.
+/// (horizontal) area of a command bar. This widget ensures that
+/// the child widget has the proper margin so the item has the proper
+/// minimum height and width expected of a control within the
+/// primary command area of a [CommandBar].
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
@@ -434,7 +436,6 @@ class CommandBarButton extends CommandBarItem {
 
   const CommandBarButton({
     Key? key,
-    CommandBarItemWidgetBuilder? widgetBuilder,
     this.icon,
     this.label,
     this.subtitle,
@@ -443,11 +444,10 @@ class CommandBarButton extends CommandBarItem {
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key, widgetBuilder: widgetBuilder);
+  }) : super(key: key);
 
   @override
-  Widget buildWidget(
-      BuildContext context, CommandBarItemDisplayMode displayMode) {
+  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:
@@ -502,10 +502,9 @@ class CommandBarSeparator extends CommandBarItem {
   /// Creates a command bar item separator.
   const CommandBarSeparator({
     Key? key,
-    CommandBarItemWidgetBuilder? widgetBuilder,
     this.color,
     this.thickness,
-  }) : super(key: key, widgetBuilder: widgetBuilder);
+  }) : super(key: key);
 
   /// Override the color used by the [Divider].
   final Color? color;
@@ -514,8 +513,7 @@ class CommandBarSeparator extends CommandBarItem {
   final double? thickness;
 
   @override
-  Widget buildWidget(
-      BuildContext context, CommandBarItemDisplayMode displayMode) {
+  Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:

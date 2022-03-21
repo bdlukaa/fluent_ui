@@ -9,22 +9,26 @@ class CommandBars extends StatefulWidget {
 
 class _CommandBarsState extends State<CommandBars> {
   final simpleCommandBarItems = <CommandBarItem>[
-    CommandBarButton(
-      icon: const Icon(FluentIcons.add),
-      label: const Text('New'),
-      onPressed: () {},
-      widgetBuilder: (context, mode, w) => Tooltip(
+    CommandBarBuilderItem(
+      builder: (context, mode, w) => Tooltip(
         message: "Create something new!",
         child: w,
       ),
+      wrappedItem: CommandBarButton(
+        icon: const Icon(FluentIcons.add),
+        label: const Text('New'),
+        onPressed: () {},
+      ),
     ),
-    CommandBarButton(
-      icon: const Icon(FluentIcons.delete),
-      label: const Text('Delete'),
-      onPressed: () {},
-      widgetBuilder: (context, mode, w) => Tooltip(
+    CommandBarBuilderItem(
+      builder: (context, mode, w) => Tooltip(
         message: "Delete what is currently selected!",
         child: w,
+      ),
+      wrappedItem: CommandBarButton(
+        icon: const Icon(FluentIcons.delete),
+        label: const Text('Delete'),
+        onPressed: () {},
       ),
     ),
     CommandBarButton(
@@ -179,7 +183,7 @@ class _CommandBarsState extends State<CommandBars> {
         const SizedBox(height: 20.0),
         InfoLabel(
           label:
-              'Right-aligned command bar with many items (dynamic overflow, auto-compact < 900px)',
+              'End-aligned command bar with many items (dynamic overflow, auto-compact < 900px)',
           child: CommandBar(
             mainAxisAlignment: MainAxisAlignment.end,
             overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
@@ -196,7 +200,7 @@ class _CommandBarsState extends State<CommandBars> {
         const SizedBox(height: 20.0),
         InfoLabel(
           label:
-              'Right-aligned command bar with permanent secondary items (dynamic overflow)',
+              'End-aligned command bar with permanent secondary items (dynamic overflow)',
           child: CommandBar(
             mainAxisAlignment: MainAxisAlignment.end,
             overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
@@ -234,7 +238,7 @@ class _CommandBarsState extends State<CommandBars> {
                     ],
                   ),
                 ),
-                // Right-aligned button(s)
+                // End-aligned button(s)
                 CommandBar(
                   overflowBehavior: CommandBarOverflowBehavior.noWrap,
                   primaryItems: [
@@ -268,7 +272,7 @@ class _CommandBarsState extends State<CommandBars> {
                     secondaryItems: evenMoreCommandBarItems,
                   ),
                 ),
-                // Right-aligned button(s)
+                // End-aligned button(s)
                 CommandBar(
                   overflowBehavior: CommandBarOverflowBehavior.noWrap,
                   primaryItems: [

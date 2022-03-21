@@ -1576,7 +1576,7 @@ Whether or not the "compact" mode is selected for items displayed in the primary
 
 Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including dynamic overflow (putting primary items into the secondary area on overflow), wrapping, clipping, scrolling, and no wrapping (will overflow).
 
-The horizontal and vertical alignment can also be customized via the `mainAxisAlignment` and `crossAxisAlignment` properties.
+The horizontal and vertical alignment can also be customized via the `mainAxisAlignment` and `crossAxisAlignment` properties. The main axis alignment respects current directionality.
 
 A `CommandBarCard` can be used to create a raised card around a `CommandBar`. While this is not officially part of the Fluent design language, the concept is commonly used in the Office desktop apps for the app-level command bar.
 
@@ -1616,6 +1616,22 @@ CommandBar(
       onPressed: () {},
     ),
   ],
+),
+```
+
+To put a tooltip on any other kind of `CommandBarItem` (or otherwise wrap it in another widget), use `CommandBarBuilderItem`:
+
+```dart
+CommandBarBuilderItem(
+  builder: (context, mode, w) => Tooltip(
+    message: "Create something new!",
+    child: w,
+  ),
+  wrappedItem: CommandBarButton(
+    icon: const Icon(FluentIcons.add),
+    label: const Text('Add'),
+    onPressed: () {},
+  ),
 ),
 ```
 
