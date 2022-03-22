@@ -149,12 +149,13 @@ class _CommandBarsState extends State<CommandBars> {
         ),
         const SizedBox(height: 20.0),
         InfoLabel(
-          label: 'Carded command bar with many items (clipped)',
+          label: 'Carded compact command bar with many items (clipped)',
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 230),
             child: CommandBarCard(
               child: CommandBar(
                 overflowBehavior: CommandBarOverflowBehavior.clip,
+                isCompact: true,
                 primaryItems: [
                   ...simpleCommandBarItems,
                   const CommandBarSeparator(),
