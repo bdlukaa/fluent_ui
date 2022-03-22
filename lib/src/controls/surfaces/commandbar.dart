@@ -93,12 +93,12 @@ class CommandBar extends StatefulWidget {
 
   /// If the width of this widget is less then the indicated amount,
   /// items in the primary area will be rendered using
-  /// [CommandBarItemDisplayMode.inPrimaryCompact]. If this is null
+  /// [CommandBarItemDisplayMode.inPrimaryCompact]. If this is `null`
   /// or the width of this widget is wider, then the items will be rendered
   /// using [CommandBarItemDisplayMode.inPrimary].
   final double? compactBreakpointWidth;
 
-  /// If [compactBreakpointWidth] is null, then specifies whether or not
+  /// If [compactBreakpointWidth] is `null`, then specifies whether or not
   /// primary items should be displayed in compact mode
   /// ([CommandBarItemDisplayMode.inPrimaryCompact]) or normal mode
   /// [CommandBarItemDisplayMode.inPrimary].
@@ -109,7 +109,7 @@ class CommandBar extends StatefulWidget {
   /// height is also calculated), and you want to specify whether or not
   /// the primary items should be compact or not.
   ///
-  /// If [compactBreakpointWidth] is not null this field is ignored.
+  /// If [compactBreakpointWidth] is not `null` this field is ignored.
   final bool? isCompact;
 
   /// The alignment of the items within the command bar across the main axis
@@ -324,7 +324,7 @@ class _CommandBarState extends State<CommandBar> {
   @override
   Widget build(BuildContext context) {
     if (widget.compactBreakpointWidth == null) {
-      var displayMode = (widget.isCompact ?? false)
+      final displayMode = (widget.isCompact ?? false)
           ? CommandBarItemDisplayMode.inPrimaryCompact
           : CommandBarItemDisplayMode.inPrimary;
       return _buildForPrimaryMode(context, displayMode);
