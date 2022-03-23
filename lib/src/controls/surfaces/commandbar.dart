@@ -93,10 +93,24 @@ class CommandBar extends StatefulWidget {
 
   /// If the width of this widget is less then the indicated amount,
   /// items in the primary area will be rendered using
-  /// [CommandBarItemDisplayMode.inPrimaryCompact]. If this is null
+  /// [CommandBarItemDisplayMode.inPrimaryCompact]. If this is `null`
   /// or the width of this widget is wider, then the items will be rendered
   /// using [CommandBarItemDisplayMode.inPrimary].
   final double? compactBreakpointWidth;
+
+  /// If [compactBreakpointWidth] is `null`, then specifies whether or not
+  /// primary items should be displayed in compact mode
+  /// ([CommandBarItemDisplayMode.inPrimaryCompact]) or normal mode
+  /// [CommandBarItemDisplayMode.inPrimary].
+  ///
+  /// This can be useful if the CommandBar is used in a setting where
+  /// [compactBreakpointWidth] cannot be used (i.e. because using
+  /// [LayoutBuilder] cannot be used in a context where the intrinsic
+  /// height is also calculated), and you want to specify whether or not
+  /// the primary items should be compact or not.
+  ///
+  /// If [compactBreakpointWidth] is not `null` this field is ignored.
+  final bool? isCompact;
 
   /// The alignment of the items within the command bar across the main axis
   final MainAxisAlignment mainAxisAlignment;
@@ -122,6 +136,7 @@ class CommandBar extends StatefulWidget {
     this.overflowItemBuilder,
     this.overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow,
     this.compactBreakpointWidth,
+    this.isCompact,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.overflowItemAlignment = MainAxisAlignment.end,
@@ -309,7 +324,10 @@ class _CommandBarState extends State<CommandBar> {
   @override
   Widget build(BuildContext context) {
     if (widget.compactBreakpointWidth == null) {
-      return _buildForPrimaryMode(context, CommandBarItemDisplayMode.inPrimary);
+      final displayMode = (widget.isCompact ?? false)
+          ? CommandBarItemDisplayMode.inPrimaryCompact
+          : CommandBarItemDisplayMode.inPrimary;
+      return _buildForPrimaryMode(context, displayMode);
     } else {
       return LayoutBuilder(
         builder: (context, constraints) {
