@@ -20,6 +20,15 @@ const List<String> accentColorNames = [
   'Green',
 ];
 
+bool get kIsWindowEffectsSupported {
+  return !kIsWeb &&
+      [
+        TargetPlatform.windows,
+        TargetPlatform.linux,
+        TargetPlatform.macOS,
+      ].contains(defaultTargetPlatform);
+}
+
 const _LinuxWindowEffects = [
   WindowEffect.disabled,
   WindowEffect.transparent,
@@ -27,6 +36,7 @@ const _LinuxWindowEffects = [
 
 const _WindowsWindowEffects = [
   WindowEffect.disabled,
+  WindowEffect.solid,
   WindowEffect.transparent,
   WindowEffect.aero,
   WindowEffect.acrylic,
@@ -51,7 +61,7 @@ const _MacosWindowEffects = [
   WindowEffect.underPageBackground,
 ];
 
-List<WindowEffect> get currentWindowEffect {
+List<WindowEffect> get currentWindowEffects {
   if (kIsWeb) return [];
 
   if (defaultTargetPlatform == TargetPlatform.windows) {
@@ -118,6 +128,11 @@ class Settings extends StatelessWidget {
               onChanged: (value) {
                 if (value) {
                   appTheme.mode = mode;
+
+                  if (kIsWindowEffectsSupported) {
+                    // some window effects require on [dark] to look good. If
+                    appTheme.setEffect(appTheme.windowEffect, context);
+                  }
                 }
               },
               content: Text('$mode'.replaceAll('ThemeMode.', '')),
@@ -183,29 +198,23 @@ class Settings extends StatelessWidget {
             );
           }),
         ]),
-        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
+        if (kIsWindowEffectsSupported) ...[
           biggerSpacer,
           Text(
             'Window Transparency (${defaultTargetPlatform.toString().replaceAll('TargetPlatform.', '')})',
             style: FluentTheme.of(context).typography.subtitle,
           ),
           spacer,
-          ...List.generate(currentWindowEffect.length, (index) {
-            final mode = currentWindowEffect[index];
+          ...List.generate(currentWindowEffects.length, (index) {
+            final mode = currentWindowEffects[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: RadioButton(
-                checked: appTheme.acrylicEffect == mode,
+                checked: appTheme.windowEffect == mode,
                 onChanged: (value) {
                   if (value) {
-                    appTheme.acrylicEffect = mode;
-                    Window.setEffect(
-                      effect: mode,
-                      color: FluentTheme.of(context)
-                          .acrylicBackgroundColor
-                          .withOpacity(0.2),
-                      dark: FluentTheme.of(context).brightness.isDark,
-                    );
+                    appTheme.windowEffect = mode;
+                    appTheme.setEffect(mode, context);
                   }
                 },
                 content: Text(
