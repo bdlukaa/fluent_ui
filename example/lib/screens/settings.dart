@@ -84,33 +84,6 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final appTheme = context.watch<AppTheme>();
-    final tooltipThemeData = TooltipThemeData(decoration: () {
-      const radius = BorderRadius.zero;
-      final shadow = [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          offset: const Offset(1, 1),
-          blurRadius: 10.0,
-        ),
-      ];
-      final border = Border.all(color: Colors.grey[100], width: 0.5);
-      if (FluentTheme.of(context).brightness == Brightness.light) {
-        return BoxDecoration(
-          color: Colors.white,
-          borderRadius: radius,
-          border: border,
-          boxShadow: shadow,
-        );
-      } else {
-        return BoxDecoration(
-          color: Colors.grey,
-          borderRadius: radius,
-          border: border,
-          boxShadow: shadow,
-        );
-      }
-    }());
-
     const spacer = SizedBox(height: 10.0);
     const biggerSpacer = SizedBox(height: 40.0);
     return ScaffoldPage.scrollable(
@@ -185,14 +158,12 @@ class Settings extends StatelessWidget {
         spacer,
         Wrap(children: [
           Tooltip(
-            style: tooltipThemeData,
             child: _buildColorBlock(appTheme, systemAccentColor),
             message: accentColorNames[0],
           ),
           ...List.generate(Colors.accentColors.length, (index) {
             final color = Colors.accentColors[index];
             return Tooltip(
-              style: tooltipThemeData,
               message: accentColorNames[index + 1],
               child: _buildColorBlock(appTheme, color),
             );
@@ -259,11 +230,20 @@ class Settings extends StatelessWidget {
         onPressed: () {
           appTheme.color = color;
         },
-        style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
+        style: ButtonStyle(
+          padding: ButtonState.all(EdgeInsets.zero),
+          backgroundColor: ButtonState.resolveWith((states) {
+            if (states.isPressing) {
+              return color.light;
+            } else if (states.isHovering) {
+              return color.lighter;
+            }
+            return color;
+          }),
+        ),
         child: Container(
           height: 40,
           width: 40,
-          color: color,
           alignment: Alignment.center,
           child: appTheme.color == color
               ? Icon(
