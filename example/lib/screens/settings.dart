@@ -1,7 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
@@ -18,6 +20,51 @@ const List<String> accentColorNames = [
   'Green',
 ];
 
+const _LinuxWindowEffects = [
+  WindowEffect.disabled,
+  WindowEffect.transparent,
+];
+
+const _WindowsWindowEffects = [
+  WindowEffect.disabled,
+  WindowEffect.transparent,
+  WindowEffect.aero,
+  WindowEffect.acrylic,
+  WindowEffect.mica,
+  WindowEffect.tabbed,
+];
+
+const _MacosWindowEffects = [
+  WindowEffect.titlebar,
+  WindowEffect.selection,
+  WindowEffect.menu,
+  WindowEffect.popover,
+  WindowEffect.sidebar,
+  WindowEffect.headerView,
+  WindowEffect.sheet,
+  WindowEffect.windowBackground,
+  WindowEffect.hudWindow,
+  WindowEffect.fullScreenUI,
+  WindowEffect.toolTip,
+  WindowEffect.contentBackground,
+  WindowEffect.underWindowBackground,
+  WindowEffect.underPageBackground,
+];
+
+List<WindowEffect> get currentWindowEffect {
+  if (kIsWeb) return [];
+
+  if (defaultTargetPlatform == TargetPlatform.windows) {
+    return _WindowsWindowEffects;
+  } else if (defaultTargetPlatform == TargetPlatform.linux) {
+    return _LinuxWindowEffects;
+  } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+    return _MacosWindowEffects;
+  }
+
+  return [];
+}
+
 class Settings extends StatelessWidget {
   const Settings({Key? key, this.controller}) : super(key: key);
 
@@ -25,6 +72,7 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasMediaQuery(context));
     final appTheme = context.watch<AppTheme>();
     final tooltipThemeData = TooltipThemeData(decoration: () {
       const radius = BorderRadius.zero;
@@ -137,11 +185,13 @@ class Settings extends StatelessWidget {
         ]),
         if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
           biggerSpacer,
-          Text('Window Transparency',
-              style: FluentTheme.of(context).typography.subtitle),
+          Text(
+            'Window Transparency (${defaultTargetPlatform.toString().replaceAll('TargetPlatform.', '')})',
+            style: FluentTheme.of(context).typography.subtitle,
+          ),
           spacer,
-          ...List.generate(flutter_acrylic.WindowEffect.values.length, (index) {
-            final mode = flutter_acrylic.WindowEffect.values[index];
+          ...List.generate(currentWindowEffect.length, (index) {
+            final mode = currentWindowEffect[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: RadioButton(
@@ -149,7 +199,7 @@ class Settings extends StatelessWidget {
                 onChanged: (value) {
                   if (value) {
                     appTheme.acrylicEffect = mode;
-                    flutter_acrylic.Window.setEffect(
+                    Window.setEffect(
                       effect: mode,
                       color: FluentTheme.of(context)
                           .acrylicBackgroundColor
@@ -159,7 +209,7 @@ class Settings extends StatelessWidget {
                   }
                 },
                 content: Text(
-                  mode.toString().replaceAll('AcrylicEffect.', ''),
+                  mode.toString().replaceAll('WindowEffect.', ''),
                 ),
               ),
             );
