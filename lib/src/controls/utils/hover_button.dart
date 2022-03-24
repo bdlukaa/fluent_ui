@@ -222,7 +222,7 @@ class _HoverButtonState extends State<HoverButton> {
         label: widget.semanticLabel,
         button: true,
         enabled: enabled,
-        focusable: enabled,
+        focusable: enabled && node.canRequestFocus,
         focused: node.hasFocus,
         child: w,
       ),

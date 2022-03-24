@@ -293,11 +293,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           clipBehavior:
               _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
           prefix: widget.leadingIcon,
-          suffix: Row(children: [
+          suffix: Row(mainAxisSize: MainAxisSize.min, children: [
             if (widget.trailingIcon != null) widget.trailingIcon!,
-            if (widget.clearButtonEnabled &&
-                controller.text.isNotEmpty &&
-                focusNode.hasFocus)
+            if (widget.clearButtonEnabled && controller.text.isNotEmpty)
               Padding(
                 padding: const EdgeInsetsDirectional.only(start: 2.0),
                 child: IconButton(
