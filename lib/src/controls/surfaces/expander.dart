@@ -66,7 +66,7 @@ class Expander extends StatefulWidget {
   /// of a parent Expander as shown here.
   ///
   /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
-  final Widget content;
+  final Widget? content;
 
   /// The icon of the toggle button.
   final Widget? icon;
@@ -198,6 +198,52 @@ class ExpanderState extends State<Expander>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     theme = FluentTheme.of(context);
+    if (widget.content == null) {
+      return Container(
+        height: widget.headerHeight,
+        decoration: BoxDecoration(
+          color: backgroundColor(theme, {ButtonStates.none}),
+          border: Border.all(
+            width: borderSize,
+            color: borderColor(theme, {ButtonStates.none}),
+          ),
+          borderRadius: BorderRadius.vertical(
+            top: const Radius.circular(4.0),
+            bottom: Radius.circular(open ? 0.0 : 4.0),
+          ),
+        ),
+        padding: const EdgeInsetsDirectional.only(start: 16.0),
+        alignment: AlignmentDirectional.centerStart,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          if (widget.leading != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 10.0),
+              child: widget.leading!,
+            ),
+          Expanded(child: widget.header),
+          if (widget.trailing != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 20.0),
+              child: widget.trailing!,
+            ),
+          Container(
+            margin: EdgeInsetsDirectional.only(
+              start: widget.trailing != null ? 8.0 : 20.0,
+              end: 8.0,
+              top: 8.0,
+              bottom: 8.0,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            decoration: BoxDecoration(
+              color: ButtonThemeData.uncheckedInputColor(
+                  theme, {ButtonStates.none}),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            alignment: Alignment.center,
+          ),
+        ]),
+      );
+    }
     final children = [
       HoverButton(
         onPressed: _handlePressed,
