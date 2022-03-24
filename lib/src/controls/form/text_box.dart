@@ -27,9 +27,14 @@ class _TextBoxSelectionGestureDetectorBuilder
 
   @override
   void onSingleTapUp(TapUpDetails details) {
+    editableText.hideToolbar();
+    // Because TextSelectionGestureDetector listens to taps that happen on
+    // widgets in front of it, tapping the clear button will also trigger
+    // this handler. If the clear button widget recognizes the up event,
+    // then do not handle it.
     if (_state._clearGlobalKey.currentContext != null) {
       final RenderBox renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject() as RenderBox;
+          .findRenderObject()! as RenderBox;
       final Offset localOffset =
           renderBox.globalToLocal(details.globalPosition);
       if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
@@ -38,7 +43,7 @@ class _TextBoxSelectionGestureDetectorBuilder
     }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
-    if (_state.widget.onTap != null) _state.widget.onTap!();
+    _state.widget.onTap?.call();
   }
 
   @override
@@ -125,6 +130,7 @@ class TextBox extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
+    this.clearGlobalKey,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -483,6 +489,8 @@ class TextBox extends StatefulWidget {
 
   final ButtonThemeData? iconButtonThemeData;
 
+  final GlobalKey? clearGlobalKey;
+
   @override
   _TextBoxState createState() => _TextBoxState();
 
@@ -560,7 +568,9 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate {
-  final GlobalKey _clearGlobalKey = GlobalKey();
+  final _localClearGlobalKey = GlobalKey();
+  GlobalKey get _clearGlobalKey =>
+      widget.clearGlobalKey ?? _localClearGlobalKey;
 
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
