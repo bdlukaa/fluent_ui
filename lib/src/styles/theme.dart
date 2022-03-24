@@ -326,8 +326,7 @@ class ThemeData with Diagnosticable {
     disabledColor ??=
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
+    scaffoldBackgroundColor ??= Colors.white.withOpacity(0.025);
     acrylicBackgroundColor ??= isLight
         ? const Color.fromARGB(204, 255, 255, 255)
         : const Color(0x7F1e1e1e);

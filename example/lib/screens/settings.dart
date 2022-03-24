@@ -45,6 +45,7 @@ const _WindowsWindowEffects = [
 ];
 
 const _MacosWindowEffects = [
+  WindowEffect.disabled,
   WindowEffect.titlebar,
   WindowEffect.selection,
   WindowEffect.menu,
@@ -103,7 +104,7 @@ class Settings extends StatelessWidget {
                   appTheme.mode = mode;
 
                   if (kIsWindowEffectsSupported) {
-                    // some window effects require on [dark] to look good. If
+                    // some window effects require on [dark] to look good.
                     appTheme.setEffect(appTheme.windowEffect, context);
                   }
                 }
