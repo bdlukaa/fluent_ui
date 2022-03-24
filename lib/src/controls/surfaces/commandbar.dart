@@ -225,7 +225,7 @@ class _CommandBarState extends State<CommandBar> {
       overflowWidget = Flyout(
         child: overflowItem.build(context, primaryMode),
         content: FlyoutContent(
-          padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: allSecondaryItems
@@ -493,13 +493,16 @@ class CommandBarButton extends CommandBarItem {
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
-        return FlyoutListTile(
-          key: key,
-          onPressed: onPressed,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          icon: icon,
-          text: label ?? const SizedBox.shrink(),
+        return Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: FlyoutListTile(
+            key: key,
+            onPressed: onPressed,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            icon: icon,
+            text: label ?? const SizedBox.shrink(),
+          ),
         );
     }
   }
