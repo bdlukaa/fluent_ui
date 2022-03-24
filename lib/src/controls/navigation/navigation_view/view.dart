@@ -136,6 +136,7 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
 
+    final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
@@ -255,13 +256,20 @@ class NavigationViewState extends State<NavigationView> {
                   ? widget.content
                   : DecoratedBox(
                       position: DecorationPosition.foreground,
-                      decoration: ShapeDecoration(
-                        shape: contentShape,
-                      ),
+                      decoration: ShapeDecoration(shape: contentShape),
                       child: ClipPath(
                         clipBehavior: widget.clipBehavior,
                         clipper: ShapeBorderClipper(shape: contentShape),
-                        child: widget.content,
+                        child: ColoredBox(
+                          color: (brightness.isDark
+                                  ? Colors.black
+                                  : const Color(0xFFF7F7F7))
+                              .withAlpha(
+                            // theme.backgroundColor?.alpha ?? 255,
+                            0,
+                          ),
+                          child: widget.content,
+                        ),
                       ),
                     ),
             );
