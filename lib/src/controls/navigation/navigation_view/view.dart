@@ -142,6 +142,17 @@ class NavigationViewState extends State<NavigationView> {
     final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
     final direction = Directionality.of(context);
 
+    Color? _overlayBackgroundColor() {
+      if (theme.backgroundColor?.alpha == 0) {
+        if (brightness.isDark) {
+          return const Color(0xFF202020);
+        } else {
+          return const Color(0xFFf7f7f7);
+        }
+      }
+      return theme.backgroundColor;
+    }
+
     Widget appBar = () {
       if (widget.appBar != null) {
         final minimalLeading = PaneItem(
@@ -265,7 +276,6 @@ class NavigationViewState extends State<NavigationView> {
                                   ? Colors.black
                                   : const Color(0xFFF7F7F7))
                               .withAlpha(
-                            // theme.backgroundColor?.alpha ?? 255,
                             0,
                           ),
                           child: widget.content,
@@ -352,8 +362,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor:
-                              theme.backgroundColor?.withAlpha(255),
+                          backgroundColor: _overlayBackgroundColor(),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -448,7 +457,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: PrimaryScrollController(
                       controller: scrollController,
                       child: Mica(
-                        backgroundColor: theme.backgroundColor?.withAlpha(255),
+                        backgroundColor: _overlayBackgroundColor(),
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
