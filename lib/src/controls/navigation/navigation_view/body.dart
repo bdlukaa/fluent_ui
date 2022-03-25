@@ -183,9 +183,14 @@ class _NavigationBody extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<_NavigationBody>();
   }
 
+  static _NavigationBody of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_NavigationBody>()!;
+  }
+
   @override
   bool updateShouldNotify(_NavigationBody oldWidget) {
     return oldWidget.displayMode != displayMode ||
-        oldWidget.minimalPaneOpen != minimalPaneOpen;
+        oldWidget.minimalPaneOpen != minimalPaneOpen ||
+        oldWidget.pane != pane;
   }
 }

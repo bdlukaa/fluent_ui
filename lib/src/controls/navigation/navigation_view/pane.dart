@@ -224,6 +224,45 @@ class NavigationPane with Diagnosticable {
       ),
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is NavigationPane &&
+        other.key == key &&
+        other.displayMode == displayMode &&
+        other.customPane == customPane &&
+        other.menuButton == menuButton &&
+        other.size == size &&
+        other.header == header &&
+        listEquals(other.items, items) &&
+        listEquals(other.footerItems, footerItems) &&
+        other.autoSuggestBox == autoSuggestBox &&
+        other.autoSuggestBoxReplacement == autoSuggestBoxReplacement &&
+        other.selected == selected &&
+        other.onChanged == onChanged &&
+        other.scrollController == scrollController &&
+        other.indicatorBuilder == indicatorBuilder;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^
+        displayMode.hashCode ^
+        customPane.hashCode ^
+        menuButton.hashCode ^
+        size.hashCode ^
+        header.hashCode ^
+        items.hashCode ^
+        footerItems.hashCode ^
+        autoSuggestBox.hashCode ^
+        autoSuggestBoxReplacement.hashCode ^
+        selected.hashCode ^
+        onChanged.hashCode ^
+        scrollController.hashCode ^
+        indicatorBuilder.hashCode;
+  }
 }
 
 /// Configure the size of the pane in its various mode.

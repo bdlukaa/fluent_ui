@@ -361,7 +361,7 @@ class PaneItem extends NavigationPaneItem {
     if (maybeBody?.pane != null) {
       return Stack(children: [
         button,
-        maybeBody!.pane!.indicatorBuilder ?? NavigationIndicator.sticky(),
+        maybeBody?.pane?.indicatorBuilder ?? const StickyNavigationIndicator(),
       ]);
     }
 
