@@ -163,11 +163,11 @@ class FlyoutListTile extends StatelessWidget {
             color: ButtonThemeData.uncheckedInputColor(theme, states),
             borderRadius: radius,
           ),
-          padding: const EdgeInsets.only(
+          padding: const EdgeInsetsDirectional.only(
             top: 4.0,
             bottom: 4.0,
-            left: 10.0,
-            right: 8.0,
+            start: 10.0,
+            end: 8.0,
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             if (icon != null)
