@@ -271,15 +271,7 @@ class NavigationViewState extends State<NavigationView> {
                       child: ClipPath(
                         clipBehavior: widget.clipBehavior,
                         clipper: ShapeBorderClipper(shape: contentShape),
-                        child: ColoredBox(
-                          color: (brightness.isDark
-                                  ? Colors.black
-                                  : const Color(0xFFF7F7F7))
-                              .withAlpha(
-                            0,
-                          ),
-                          child: widget.content,
-                        ),
+                        child: widget.content,
                       ),
                     ),
             );
