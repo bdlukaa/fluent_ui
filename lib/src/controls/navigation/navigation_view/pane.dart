@@ -364,54 +364,48 @@ class _TopNavigationPane extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     Widget topBar = SizedBox(
       height: pane.size?.topHeight ?? kOneLineTileHeight,
-      child: pane.indicatorBuilder(
-        context: context,
-        pane: pane,
-        axis: Axis.vertical,
-        child: Row(key: pane.paneKey, children: [
-          Expanded(
-            child: Row(children: [
-              if (appBar != null)
-                NavigationAppBar.buildLeading(context, appBar!),
-              if (pane.header != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 6.0,
-                  ),
-                  child: pane.header!,
+      child: Row(key: pane.paneKey, children: [
+        Expanded(
+          child: Row(children: [
+            if (appBar != null) NavigationAppBar.buildLeading(context, appBar!),
+            if (pane.header != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 6.0,
                 ),
-              // TODO: A listview shouldn't be used here. Instead, if there are
-              // more items than space, show a dropdown button with the other
-              // items
-              Expanded(
-                child: SingleChildScrollView(
-                  key: listKey,
-                  primary: true,
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: pane.items.map((item) {
-                      return _buildItem(context, item);
-                    }).toList(),
-                  ),
+                child: pane.header!,
+              ),
+            // TODO: A listview shouldn't be used here. Instead, if there are
+            // more items than space, show a dropdown button with the other
+            // items
+            Expanded(
+              child: SingleChildScrollView(
+                key: listKey,
+                primary: true,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: pane.items.map((item) {
+                    return _buildItem(context, item);
+                  }).toList(),
                 ),
               ),
-            ]),
-          ),
-          if (pane.autoSuggestBox != null)
-            Container(
-              margin: const EdgeInsets.only(left: 30.0),
-              constraints: const BoxConstraints(
-                minWidth: 100.0,
-                maxWidth: 215.0,
-              ),
-              child: pane.autoSuggestBox!,
             ),
-          ...pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }),
-        ]),
-      ),
+          ]),
+        ),
+        if (pane.autoSuggestBox != null)
+          Container(
+            margin: const EdgeInsets.only(left: 30.0),
+            constraints: const BoxConstraints(
+              minWidth: 100.0,
+              maxWidth: 215.0,
+            ),
+            child: pane.autoSuggestBox!,
+          ),
+        ...pane.footerItems.map((item) {
+          return _buildItem(context, item);
+        }),
+      ]),
     );
     return topBar;
   }
@@ -467,61 +461,55 @@ class _CompactNavigationPane extends StatelessWidget {
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
-      child: pane.indicatorBuilder(
-        context: context,
-        pane: pane,
-        axis: Axis.horizontal,
-        child: Align(
-          key: pane.paneKey,
-          alignment: Alignment.topCenter,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            () {
-              if (pane.menuButton != null) return pane.menuButton!;
-              if (onToggle != null) {
-                return NavigationPane.buildMenuButton(
-                  context,
-                  Text(FluentLocalizations.of(context).openNavigationTooltip),
-                  pane,
-                  onPressed: () {
-                    onToggle?.call();
-                  },
-                  padding: showReplacement ? EdgeInsets.zero : topPadding,
-                );
-              }
-              return const SizedBox.shrink();
-            }(),
-            if (showReplacement)
-              Padding(
-                padding: topPadding,
-                child: PaneItem(
-                  title: Text(FluentLocalizations.of(context).clickToSearch),
-                  icon: pane.autoSuggestBoxReplacement!,
-                ).build(
-                  context,
-                  false,
-                  () {
-                    onToggle?.call();
-                  },
-                ),
-              ),
-            Expanded(
-              child: Scrollbar(
-                key: scrollbarKey,
-                controller: pane.scrollController,
-                isAlwaysShown: false,
-                child: ListView(key: listKey, primary: true, children: [
-                  ...pane.items.map((item) {
-                    return _buildItem(context, item);
-                  }),
-                ]),
+      child: Align(
+        key: pane.paneKey,
+        alignment: Alignment.topCenter,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          () {
+            if (pane.menuButton != null) return pane.menuButton!;
+            if (onToggle != null) {
+              return NavigationPane.buildMenuButton(
+                context,
+                Text(FluentLocalizations.of(context).openNavigationTooltip),
+                pane,
+                onPressed: () {
+                  onToggle?.call();
+                },
+                padding: showReplacement ? EdgeInsets.zero : topPadding,
+              );
+            }
+            return const SizedBox.shrink();
+          }(),
+          if (showReplacement)
+            Padding(
+              padding: topPadding,
+              child: PaneItem(
+                title: Text(FluentLocalizations.of(context).clickToSearch),
+                icon: pane.autoSuggestBoxReplacement!,
+              ).build(
+                context,
+                false,
+                () {
+                  onToggle?.call();
+                },
               ),
             ),
-            ...pane.footerItems.map((item) {
-              return _buildItem(context, item);
-            }),
-          ]),
-        ),
+          Expanded(
+            child: Scrollbar(
+              key: scrollbarKey,
+              controller: pane.scrollController,
+              isAlwaysShown: false,
+              child: ListView(key: listKey, primary: true, children: [
+                ...pane.items.map((item) {
+                  return _buildItem(context, item);
+                }),
+              ]),
+            ),
+          ),
+          ...pane.footerItems.map((item) {
+            return _buildItem(context, item);
+          }),
+        ]),
       ),
     );
   }
@@ -640,59 +628,54 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
         duration: Duration.zero,
         curve: Curves.linear,
         width: paneWidth,
-        child: widget.pane.indicatorBuilder(
-          context: context,
-          pane: widget.pane,
-          axis: Axis.horizontal,
-          child: Column(key: widget.pane.paneKey, children: [
-            Container(
-              margin: widget.pane.autoSuggestBox != null
-                  ? EdgeInsets.zero
-                  : topPadding,
-              height: kOneLineTileHeight,
-              child: () {
-                if (widget.pane.header != null) {
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        child: widget.pane.header!,
-                        alignment: Alignment.centerLeft,
-                      ),
+        child: Column(key: widget.pane.paneKey, children: [
+          Container(
+            margin: widget.pane.autoSuggestBox != null
+                ? EdgeInsets.zero
+                : topPadding,
+            height: kOneLineTileHeight,
+            child: () {
+              if (widget.pane.header != null) {
+                return Row(children: [
+                  menuButton,
+                  Expanded(
+                    child: Align(
+                      child: widget.pane.header!,
+                      alignment: Alignment.centerLeft,
                     ),
-                  ]);
-                } else {
-                  return menuButton;
-                }
-              }(),
+                  ),
+                ]);
+              } else {
+                return menuButton;
+              }
+            }(),
+          ),
+          if (widget.pane.autoSuggestBox != null)
+            Container(
+              padding: theme.iconPadding ?? EdgeInsets.zero,
+              height: 41.0,
+              alignment: Alignment.center,
+              margin: topPadding,
+              child: widget.pane.autoSuggestBox!,
             ),
-            if (widget.pane.autoSuggestBox != null)
-              Container(
-                padding: theme.iconPadding ?? EdgeInsets.zero,
-                height: 41.0,
-                alignment: Alignment.center,
-                margin: topPadding,
-                child: widget.pane.autoSuggestBox!,
-              ),
-            Expanded(
-              child: Scrollbar(
-                key: widget.scrollbarKey,
-                controller: widget.pane.scrollController,
-                isAlwaysShown: false,
-                child: ListView(key: widget.listKey, primary: true, children: [
-                  ...widget.pane.items.map((item) {
-                    return _OpenNavigationPane.buildItem(
-                        context, widget.pane, item, widget.onItemSelected);
-                  }),
-                ]),
-              ),
+          Expanded(
+            child: Scrollbar(
+              key: widget.scrollbarKey,
+              controller: widget.pane.scrollController,
+              isAlwaysShown: false,
+              child: ListView(key: widget.listKey, primary: true, children: [
+                ...widget.pane.items.map((item) {
+                  return _OpenNavigationPane.buildItem(
+                      context, widget.pane, item, widget.onItemSelected);
+                }),
+              ]),
             ),
-            ...widget.pane.footerItems.map((item) {
-              return _OpenNavigationPane.buildItem(
-                  context, widget.pane, item, widget.onItemSelected);
-            }),
-          ]),
-        ),
+          ),
+          ...widget.pane.footerItems.map((item) {
+            return _OpenNavigationPane.buildItem(
+                context, widget.pane, item, widget.onItemSelected);
+          }),
+        ]),
       ),
     );
   }
