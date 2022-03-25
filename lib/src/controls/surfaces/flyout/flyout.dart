@@ -82,7 +82,7 @@ class FlyoutContent extends StatelessWidget {
     required this.child,
     this.color,
     this.shape,
-    this.padding = const EdgeInsets.all(12.0),
+    this.padding = const EdgeInsets.all(8.0),
     this.shadowColor,
     this.elevation = 8,
   }) : super(key: key);
@@ -100,25 +100,128 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
-    return Acrylic(
+    return PhysicalModel(
       elevation: elevation,
-      tintAlpha: 1.0,
-      tint: color ?? theme.acrylicBackgroundColor,
-      shape: shape ??
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(
-              color: theme.inactiveBackgroundColor,
-              width: 0.9,
-            ),
+      color: Colors.transparent,
+      shadowColor: Colors.black,
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.menuColor,
+          borderRadius: BorderRadius.circular(6.0),
+          border: Border.all(
+            width: 0.25,
+            color: theme.inactiveBackgroundColor,
           ),
-      child: Padding(
+        ),
         padding: padding,
         child: DefaultTextStyle(
           style: theme.typography.body ?? const TextStyle(),
           child: child,
         ),
       ),
+    );
+  }
+}
+
+/// A tile that is used inside of [FlyoutContent]
+class FlyoutListTile extends StatelessWidget {
+  /// Creates a flyout list tile.
+  const FlyoutListTile({
+    Key? key,
+    this.onPressed,
+    this.tooltip,
+    this.icon,
+    required this.text,
+    this.trailing,
+    this.focusNode,
+    this.autofocus = false,
+  }) : super(key: key);
+
+  final VoidCallback? onPressed;
+
+  final String? tooltip;
+  final Widget? icon;
+  final Widget text;
+  final Widget? trailing;
+
+  final FocusNode? focusNode;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return HoverButton(
+      key: key,
+      onPressed: onPressed,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      builder: (context, states) {
+        final theme = FluentTheme.of(context);
+        final radius = BorderRadius.circular(4.0);
+
+        Widget content = Container(
+          decoration: BoxDecoration(
+            color: ButtonThemeData.uncheckedInputColor(theme, states),
+            borderRadius: radius,
+          ),
+          padding: const EdgeInsetsDirectional.only(
+            top: 4.0,
+            bottom: 4.0,
+            start: 10.0,
+            end: 8.0,
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 10.0),
+                child: IconTheme.merge(
+                  data: const IconThemeData(size: 16.0),
+                  child: icon!,
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(end: 10.0),
+                child: DefaultTextStyle(
+                  child: text,
+                  style: TextStyle(
+                    inherit: false,
+                    fontSize: 14.0,
+                    letterSpacing: -0.15,
+                    color: theme.inactiveColor,
+                  ),
+                ),
+              ),
+            ),
+            if (trailing != null)
+              DefaultTextStyle(
+                child: trailing!,
+                style: TextStyle(
+                  inherit: false,
+                  fontSize: 12.0,
+                  color: theme.borderInputColor,
+                  height: 0.7,
+                ),
+              ),
+          ]),
+        );
+
+        if (tooltip != null) {
+          content = Tooltip(
+            message: tooltip,
+            child: content,
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: FocusBorder(
+            focused: states.isFocused,
+            renderOutside: true,
+            style: FocusThemeData(borderRadius: radius),
+            child: content,
+          ),
+        );
+      },
     );
   }
 }

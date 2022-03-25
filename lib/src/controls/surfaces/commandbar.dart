@@ -184,11 +184,10 @@ class _CommandBarState extends State<CommandBar> {
       case CrossAxisAlignment.center:
         return WrapCrossAlignment.center;
       case CrossAxisAlignment.stretch:
-        throw UnsupportedError(
-            'CommandBar does not support CrossAxisAlignment.stretch');
       case CrossAxisAlignment.baseline:
         throw UnsupportedError(
-            'CommandBar does not support CrossAxisAlignment.baseline');
+          'CommandBar does not support ${widget.crossAxisAlignment}',
+        );
     }
   }
 
@@ -226,7 +225,7 @@ class _CommandBarState extends State<CommandBar> {
       overflowWidget = Flyout(
         child: overflowItem.build(context, primaryMode),
         content: FlyoutContent(
-          padding: EdgeInsets.zero,
+          padding: const EdgeInsets.only(top: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: allSecondaryItems
@@ -494,16 +493,16 @@ class CommandBarButton extends CommandBarItem {
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
-        return TappableListTile(
-          key: key,
-          onTap: onPressed,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          leading: (icon != null)
-              ? IconTheme(
-                  data: IconTheme.of(context).copyWith(size: 16), child: icon!)
-              : null,
-          title: label,
+        return Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: FlyoutListTile(
+            key: key,
+            onPressed: onPressed,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            icon: icon,
+            text: label ?? const SizedBox.shrink(),
+          ),
         );
     }
   }
@@ -557,10 +556,7 @@ class CommandBarSeparator extends CommandBarItem {
           style: DividerThemeData(
             thickness: thickness,
             decoration: color != null ? BoxDecoration(color: color) : null,
-            horizontalMargin: const EdgeInsets.symmetric(
-              vertical: 0.0,
-              horizontal: 0.0,
-            ),
+            horizontalMargin: const EdgeInsets.only(bottom: 5.0),
           ),
         );
     }
