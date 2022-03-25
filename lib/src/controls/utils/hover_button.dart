@@ -44,6 +44,7 @@ class HoverButton extends StatefulWidget {
     this.onHorizontalDragEnd,
     this.onFocusChange,
     this.autofocus = false,
+    this.actionsEnabled = true,
   }) : super(key: key);
 
   /// {@template fluent_ui.controls.inputs.HoverButton.mouseCursor}
@@ -93,6 +94,8 @@ class HoverButton extends StatefulWidget {
   final bool autofocus;
 
   final ValueChanged<bool>? onFocusChange;
+
+  final bool actionsEnabled;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
@@ -207,7 +210,7 @@ class _HoverButtonState extends State<HoverButton> {
       focusNode: node,
       autofocus: widget.autofocus,
       enabled: enabled,
-      actions: _actionMap,
+      actions: widget.actionsEnabled ? _actionMap : {},
       onFocusChange: widget.onFocusChange,
       onShowFocusHighlight: (v) {
         if (mounted) setState(() => _shouldShowFocus = v);
@@ -222,7 +225,7 @@ class _HoverButtonState extends State<HoverButton> {
         label: widget.semanticLabel,
         button: true,
         enabled: enabled,
-        focusable: enabled,
+        focusable: enabled && node.canRequestFocus,
         focused: node.hasFocus,
         child: w,
       ),

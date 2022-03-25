@@ -27,9 +27,14 @@ class _TextBoxSelectionGestureDetectorBuilder
 
   @override
   void onSingleTapUp(TapUpDetails details) {
+    editableText.hideToolbar();
+    // Because TextSelectionGestureDetector listens to taps that happen on
+    // widgets in front of it, tapping the clear button will also trigger
+    // this handler. If the clear button widget recognizes the up event,
+    // then do not handle it.
     if (_state._clearGlobalKey.currentContext != null) {
       final RenderBox renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject() as RenderBox;
+          .findRenderObject()! as RenderBox;
       final Offset localOffset =
           renderBox.globalToLocal(details.globalPosition);
       if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
@@ -38,7 +43,7 @@ class _TextBoxSelectionGestureDetectorBuilder
     }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
-    if (_state.widget.onTap != null) _state.widget.onTap!();
+    _state.widget.onTap?.call();
   }
 
   @override
@@ -125,6 +130,7 @@ class TextBox extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
+    this.clearGlobalKey,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -483,6 +489,8 @@ class TextBox extends StatefulWidget {
 
   final ButtonThemeData? iconButtonThemeData;
 
+  final GlobalKey? clearGlobalKey;
+
   @override
   _TextBoxState createState() => _TextBoxState();
 
@@ -560,7 +568,9 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate {
-  final GlobalKey _clearGlobalKey = GlobalKey();
+  final _localClearGlobalKey = GlobalKey();
+  GlobalKey get _clearGlobalKey =>
+      widget.clearGlobalKey ?? _localClearGlobalKey;
 
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
@@ -824,12 +834,6 @@ class _TextBoxState extends State<TextBox>
         widget.keyboardAppearance ?? theme.brightness;
     final Color cursorColor = widget.cursorColor ?? theme.inactiveColor;
     final Color disabledColor = theme.disabledColor;
-    final Color backgroundColor = _effectiveFocusNode.hasFocus
-        ? theme.scaffoldBackgroundColor
-        : AccentColor('normal', const {
-            'normal': Colors.white,
-            'dark': Color(0xFF2d2d2d),
-          }).resolve(context);
 
     final TextStyle placeholderStyle = textStyle
         .copyWith(
@@ -950,55 +954,59 @@ class _TextBoxState extends State<TextBox>
             },
       child: IgnorePointer(
         ignoring: !enabled,
-        child: AnimatedContainer(
-          duration: theme.fasterAnimationDuration,
-          curve: theme.animationCurve,
-          decoration: BoxDecoration(
-            borderRadius: radius,
-            border: Border.all(
-              style: _effectiveFocusNode.hasFocus
-                  ? BorderStyle.solid
-                  : BorderStyle.none,
-              width: 1,
-              color: theme.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.08)
-                  : const Color.fromRGBO(255, 255, 255, 0.07),
-            ),
-            color: enabled
-                ? backgroundColor
-                : theme.brightness.isLight
-                    ? const Color.fromRGBO(249, 249, 249, 0.3)
-                    : const Color.fromRGBO(255, 255, 255, 0.04),
-          ).copyWith(
-            backgroundBlendMode: widget.decoration?.backgroundBlendMode,
-            border: widget.decoration?.border,
+        child: HoverButton(
+          actionsEnabled: false,
+          onPressed: enabled ? () {} : null,
+          builder: (context, states) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: radius,
+                border: Border.all(
+                  style: _effectiveFocusNode.hasFocus
+                      ? BorderStyle.solid
+                      : BorderStyle.none,
+                  width: 1,
+                  color: theme.brightness.isLight
+                      ? const Color.fromRGBO(0, 0, 0, 0.08)
+                      : const Color.fromRGBO(255, 255, 255, 0.07),
+                ),
+                color: _backgroundColor(states),
+              ).copyWith(
+                backgroundBlendMode: widget.decoration?.backgroundBlendMode,
+                border: widget.decoration?.border,
 
-            /// This border radius can't be applied, otherwise the error "A borderRadius
-            /// can only be given for a uniform Border." will be thrown. Instead,
-            /// [radius] is already set to get the value from [widget.decoration?.borderRadius],
-            /// if any.
-            // borderRadius: widget.decoration?.borderRadius,
-            boxShadow: widget.decoration?.boxShadow,
-            color: widget.decoration?.color,
-            gradient: widget.decoration?.gradient,
-            image: widget.decoration?.image,
-            shape: widget.decoration?.shape,
-          ),
-          foregroundDecoration: foregroundDecoration,
-          constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
-          child: _selectionGestureDetectorBuilder.buildGestureDetector(
-            behavior: HitTestBehavior.translucent,
-            child: Align(
-              alignment: Alignment(-1.0, _textAlignVertical.y),
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: _addTextDependentAttachments(
-                paddedEditable,
-                textStyle,
-                placeholderStyle,
+                /// This border radius can't be applied, otherwise the error "A borderRadius
+                /// can only be given for a uniform Border." will be thrown. Instead,
+                /// [radius] is already set to get the value from [widget.decoration?.borderRadius],
+                /// if any.
+                // borderRadius: widget.decoration?.borderRadius,
+                boxShadow: widget.decoration?.boxShadow,
+                color: widget.decoration?.color,
+                gradient: widget.decoration?.gradient,
+                image: widget.decoration?.image,
+                shape: widget.decoration?.shape,
               ),
-            ),
-          ),
+              constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
+              child: AnimatedContainer(
+                duration: theme.fasterAnimationDuration,
+                curve: theme.animationCurve,
+                foregroundDecoration: foregroundDecoration,
+                child: _selectionGestureDetectorBuilder.buildGestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: Align(
+                    alignment: Alignment(-1.0, _textAlignVertical.y),
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: _addTextDependentAttachments(
+                      paddedEditable,
+                      textStyle,
+                      placeholderStyle,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -1049,5 +1057,31 @@ class _TextBoxState extends State<TextBox>
         ),
       ),
     );
+  }
+
+  Color _backgroundColor(Set<ButtonStates> states) {
+    final brightness = FluentTheme.of(context).brightness;
+
+    if (brightness.isDark) {
+      if (!enabled) {
+        return const Color.fromRGBO(255, 255, 255, 0.04);
+      } else if (states.isPressing || states.isFocused) {
+        return const Color(0xFF1f1f1f);
+      } else if (states.isHovering) {
+        return const Color(0xFF323232);
+      } else {
+        return const Color(0xFF2d2d2d);
+      }
+    } else {
+      if (!enabled) {
+        return const Color.fromRGBO(249, 249, 249, 0.3);
+      } else if (states.isPressing || states.isFocused) {
+        return const Color(0xFFffffff);
+      } else if (states.isHovering) {
+        return const Color(0xFFfbfbfb);
+      } else {
+        return const Color(0xFFf6f6f6);
+      }
+    }
   }
 }
