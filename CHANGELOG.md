@@ -1,8 +1,18 @@
 Date format: DD/MM/YYYY
 
-## Unreleased 
+## [3.9.2]
 
-- Add `useInheritedMediaQuery` property to `FluentApp`
+- Improves `icons.dart` formatting and its generation.
+- Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+- NEW: Widgets translated into multiple languages: [#216](https://github.com/bdlukaa/fluent_ui/pull/216)
+- Add `useInheritedMediaQuery` property to `FluentApp` [#211](https://github.com/bdlukaa/fluent_ui/pull/211)
+- TreeView now implemented with ListView and optionally allows vertical scrolling ([#255](https://github.com/bdlukaa/fluent_ui/pull/225))
+- TreeViewItem now has custom primary key (`value` field)
+- Added `onSelectionChanged` callback to `TreeView`
+- Account for enabled on pressing states ([#233](https://github.com/bdlukaa/fluent_ui/pull/233))
+- Implement `CommandBar` with dynamic overflow ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
+- Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
+- Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
