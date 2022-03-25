@@ -1,17 +1,5 @@
 part of 'view.dart';
 
-/// Creates a navigation indicator from a function.
-///
-/// [pane] is the current NavigationPane used
-///
-/// [axis], if null, defaults to [Axis.horinzontal]
-typedef NavigationIndicatorBuilder = Widget Function({
-  required BuildContext context,
-  required NavigationPane pane,
-  required Axis axis,
-  required Widget child,
-});
-
 /// A indicator used by [NavigationPane] to render the selected
 /// indicator.
 class NavigationIndicator extends StatefulWidget {
@@ -22,34 +10,35 @@ class NavigationIndicator extends StatefulWidget {
     required this.index,
     required this.child,
     required this.pane,
-    required this.axis,
     this.curve = Curves.linear,
     this.color,
   }) : super(key: key);
 
   /// Creates a [StickyNavigationIndicator]
-  static Widget sticky({
-    required BuildContext context,
-    required NavigationPane pane,
-    required Axis axis,
-    required Widget child,
-  }) {
-    if (pane.selected == null) return child;
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneTheme.of(context);
+  static Widget sticky({Widget child = const SizedBox.shrink()}) {
+    return Builder(builder: (context) {
+      final body = _NavigationBody.maybeOf(context);
 
-    final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
-    final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+      if (body?.pane == null) return child;
 
-    return StickyNavigationIndicator(
-      index: pane.selected!,
-      pane: pane,
-      child: child,
-      color: theme.highlightColor,
-      curve: Curves.easeIn,
-      axis: axis,
-      topPadding: EdgeInsets.only(left: left, right: right),
-    );
+      final pane = body!.pane!;
+
+      if (pane.selected == null) return child;
+      assert(debugCheckHasFluentTheme(context));
+      final theme = NavigationPaneTheme.of(context);
+
+      final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
+      final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+
+      return StickyNavigationIndicator(
+        index: pane.selected!,
+        pane: pane,
+        child: child,
+        color: theme.highlightColor,
+        curve: Curves.easeIn,
+        topPadding: EdgeInsets.only(left: left, right: right),
+      );
+    });
   }
 
   /// Creates an [EndNavigationIndicator]
@@ -69,7 +58,6 @@ class NavigationIndicator extends StatefulWidget {
       child: child,
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
-      axis: axis,
     );
   }
 
@@ -81,11 +69,6 @@ class NavigationIndicator extends StatefulWidget {
 
   /// The navigation pane
   final NavigationPane pane;
-
-  /// The axis corresponding to the current navigation pane. If it's
-  /// a top pane, [Axis.vertical] will be provided, otherwise
-  /// [Axis.horizontal].
-  final Axis axis;
 
   /// The curve used on the animation, if any
   ///
@@ -99,7 +82,6 @@ class NavigationIndicator extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('index', index));
-    properties.add(EnumProperty('axis', axis));
     properties
         .add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear));
     properties.add(ColorProperty('highlight color', color));
@@ -135,6 +117,13 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     });
   }
 
+  Axis get axis {
+    if (_NavigationBody.maybeOf(context)?.displayMode == PaneDisplayMode.top) {
+      return Axis.vertical;
+    }
+    return Axis.horizontal;
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.child;
@@ -148,12 +137,10 @@ class EndNavigationIndicator extends NavigationIndicator {
     required NavigationPane pane,
     required int index,
     required Widget child,
-    required Axis axis,
     Curve curve = Curves.easeInOut,
     Color? color,
   }) : super(
           key: key,
-          axis: axis,
           pane: pane,
           child: child,
           index: index,
@@ -174,7 +161,7 @@ class _EndNavigationIndicatorState
     return Stack(clipBehavior: Clip.none, children: [
       widget.child,
       ...List.generate(offsets!.length, (index) {
-        final isTop = widget.axis == Axis.vertical;
+        final isTop = axis == Axis.vertical;
         final offset = offsets![index];
 
         final size = sizes![index];
@@ -236,13 +223,11 @@ class StickyNavigationIndicator extends NavigationIndicator {
     required NavigationPane pane,
     required int index,
     required Widget child,
-    required Axis axis,
     this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.easeIn,
     Color? color,
   }) : super(
           key: key,
-          axis: axis,
           pane: pane,
           child: child,
           index: index,
@@ -313,7 +298,7 @@ class _StickyNavigationIndicatorState
     fetch();
 
     final double hFactor = () {
-      if (widget.axis == Axis.horizontal) {
+      if (axis == Axis.horizontal) {
         return sizes![widget.index].height * 0.9;
       } else {
         // 6.0 of padding
@@ -322,10 +307,10 @@ class _StickyNavigationIndicatorState
       }
     }();
 
-    final minOffsetAxis = offsets![minIndex].fromAxis(widget.axis);
-    final maxOffsetAxis = offsets![maxIndex].fromAxis(widget.axis);
+    final minOffsetAxis = offsets![minIndex].fromAxis(axis);
+    final maxOffsetAxis = offsets![maxIndex].fromAxis(axis);
 
-    if (widget.axis == Axis.horizontal) {
+    if (axis == Axis.horizontal) {
       p1Start = minOffsetAxis - (hFactor / 2);
       p1End = maxOffsetAxis - (hFactor / 2);
 
@@ -381,10 +366,10 @@ class _StickyNavigationIndicatorState
         update(widget.index);
         return CustomPaint(
           foregroundPainter: _StickyPainter(
-            y: widget.axis == Axis.horizontal
+            y: axis == Axis.horizontal
                 ? sizes!.first.height / 1.4
                 : sizes!.first.height - (indicatorPadding / 2),
-            padding: widget.axis == Axis.horizontal
+            padding: axis == Axis.horizontal
                 ? indicatorPadding
                 : widget.topPadding.left + 4.0,
             p1: p1,
@@ -396,7 +381,7 @@ class _StickyNavigationIndicatorState
             color: widget.color ??
                 FluentTheme.maybeOf(context)?.accentColor.light ??
                 Colors.transparent,
-            axis: widget.axis,
+            axis: axis,
           ),
           child: child,
         );

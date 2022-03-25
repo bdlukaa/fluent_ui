@@ -171,10 +171,13 @@ class _NavigationBody extends InheritedWidget {
     required Widget child,
     required this.displayMode,
     required this.minimalPaneOpen,
+    this.pane,
   }) : super(key: key, child: child);
 
   final PaneDisplayMode? displayMode;
   final bool minimalPaneOpen;
+
+  final NavigationPane? pane;
 
   static _NavigationBody? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_NavigationBody>();

@@ -81,7 +81,7 @@ class NavigationPane with Diagnosticable {
     this.customPane,
     this.menuButton,
     this.scrollController,
-    this.indicatorBuilder = NavigationIndicator.sticky,
+    this.indicatorBuilder,
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -165,7 +165,7 @@ class NavigationPane with Diagnosticable {
   final ScrollController? scrollController;
 
   /// A function called when building the navigation indicator
-  final NavigationIndicatorBuilder indicatorBuilder;
+  final Widget? indicatorBuilder;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -351,6 +351,7 @@ class _TopNavigationPane extends StatelessWidget {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
         },
         showTextOnTop: !pane.footerItems.contains(item),
+        displayMode: PaneDisplayMode.top,
       );
     } else {
       throw UnsupportedError(

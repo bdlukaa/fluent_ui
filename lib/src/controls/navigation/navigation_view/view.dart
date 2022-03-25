@@ -497,6 +497,7 @@ class NavigationViewState extends State<NavigationView> {
             ? PaneDisplayMode.open
             : widget.pane?.displayMode,
         minimalPaneOpen: _minimalPaneOpen,
+        pane: widget.pane,
         child: paneResult,
       ),
     );

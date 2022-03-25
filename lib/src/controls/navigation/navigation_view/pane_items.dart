@@ -155,9 +155,9 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
-    final PaneDisplayMode mode = displayMode ??
-        _NavigationBody.maybeOf(context)?.displayMode ??
-        PaneDisplayMode.minimal;
+    final maybeBody = _NavigationBody.maybeOf(context);
+    final PaneDisplayMode mode =
+        displayMode ?? maybeBody?.displayMode ?? PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
@@ -169,7 +169,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
-    return HoverButton(
+    final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
@@ -357,6 +357,15 @@ class PaneItem extends NavigationPaneItem {
         );
       },
     );
+
+    if (maybeBody?.pane != null) {
+      return Stack(children: [
+        button,
+        maybeBody!.pane!.indicatorBuilder ?? NavigationIndicator.sticky(),
+      ]);
+    }
+
+    return button;
   }
 }
 
