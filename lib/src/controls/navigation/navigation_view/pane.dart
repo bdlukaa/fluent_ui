@@ -81,7 +81,7 @@ class NavigationPane with Diagnosticable {
     this.customPane,
     this.menuButton,
     this.scrollController,
-    this.indicatorBuilder,
+    this.indicator = const StickyNavigationIndicator(),
   }) : assert(selected == null || selected >= 0);
 
   final Key? key;
@@ -165,7 +165,7 @@ class NavigationPane with Diagnosticable {
   final ScrollController? scrollController;
 
   /// A function called when building the navigation indicator
-  final Widget? indicatorBuilder;
+  final Widget? indicator;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -243,7 +243,7 @@ class NavigationPane with Diagnosticable {
         other.selected == selected &&
         other.onChanged == onChanged &&
         other.scrollController == scrollController &&
-        other.indicatorBuilder == indicatorBuilder;
+        other.indicator == indicator;
   }
 
   @override
@@ -261,7 +261,7 @@ class NavigationPane with Diagnosticable {
         selected.hashCode ^
         onChanged.hashCode ^
         scrollController.hashCode ^
-        indicatorBuilder.hashCode;
+        indicator.hashCode;
   }
 }
 
@@ -391,7 +391,6 @@ class _TopNavigationPane extends StatelessWidget {
         },
         showTextOnTop: !pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
-        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(
@@ -482,7 +481,6 @@ class _CompactNavigationPane extends StatelessWidget {
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
         },
-        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(
@@ -598,7 +596,6 @@ class _OpenNavigationPane extends StatefulWidget {
           onChanged?.call();
         },
         autofocus: autofocus,
-        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(

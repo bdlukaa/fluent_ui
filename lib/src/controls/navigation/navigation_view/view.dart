@@ -103,6 +103,8 @@ class NavigationViewState extends State<NavigationView> {
   bool _minimalPaneOpen = false;
   bool _compactOverlayOpen = false;
 
+  int oldIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -120,6 +122,10 @@ class NavigationViewState extends State<NavigationView> {
     super.didUpdateWidget(oldWidget);
     if (widget.pane?.scrollController != scrollController) {
       scrollController = widget.pane?.scrollController ?? scrollController;
+    }
+
+    if (oldWidget.pane?.selected != widget.pane?.selected) {
+      oldIndex = oldWidget.pane?.selected ?? 0;
     }
   }
 
@@ -233,7 +239,7 @@ class NavigationViewState extends State<NavigationView> {
                 selected: pane.selected,
                 menuButton: pane.menuButton,
                 scrollController: pane.scrollController,
-                indicatorBuilder: pane.indicatorBuilder,
+                indicator: pane.indicator,
               ),
             );
           } else {
@@ -490,12 +496,13 @@ class NavigationViewState extends State<NavigationView> {
     );
     return Mica(
       backgroundColor: theme.backgroundColor,
-      child: _NavigationBody(
+      child: InheritedNavigationView(
         displayMode: _compactOverlayOpen
             ? PaneDisplayMode.open
             : widget.pane?.displayMode,
         minimalPaneOpen: _minimalPaneOpen,
         pane: widget.pane,
+        oldIndex: oldIndex,
         child: paneResult,
       ),
     );
@@ -640,7 +647,7 @@ class _NavigationAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final direction = Directionality.of(context);
     final PaneDisplayMode displayMode = this.displayMode ??
-        _NavigationBody.maybeOf(context)?.displayMode ??
+        InheritedNavigationView.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
     final leading = NavigationAppBar.buildLeading(
       context,
@@ -685,7 +692,7 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
         final isMinimalPaneOpen =
-            _NavigationBody.maybeOf(context)?.minimalPaneOpen ?? false;
+            InheritedNavigationView.maybeOf(context)?.minimalPaneOpen ?? false;
         final double width =
             displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
                 ? 0.0

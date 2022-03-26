@@ -58,7 +58,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   NavigationPane get pane {
-    return _NavigationBody.of(context).pane!;
+    return InheritedNavigationView.of(context).pane!;
   }
 
   int get index {
@@ -66,14 +66,23 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   bool get isSelected {
-    return pane.isSelected(pane.effectiveItems[index]);
+    return pane.isSelected(pane.effectiveItems[itemIndex]);
   }
 
   Axis get axis {
-    if (_NavigationBody.maybeOf(context)?.displayMode == PaneDisplayMode.top) {
+    if (InheritedNavigationView.maybeOf(context)?.displayMode ==
+        PaneDisplayMode.top) {
       return Axis.vertical;
     }
     return Axis.horizontal;
+  }
+
+  int get itemIndex {
+    return InheritedNavigationView.maybeOf(context)?.itemIndex ?? -1;
+  }
+
+  int get oldIndex {
+    return InheritedNavigationView.maybeOf(context)?.oldIndex ?? 0;
   }
 
   @override
@@ -157,18 +166,15 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
     Key? key,
-    required this.indexValue,
     this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.easeIn,
     Color? color,
   }) : super(key: key, curve: curve, color: color);
 
-  final int indexValue;
-
   /// The padding applied to the indicator if [axis] is [Axis.vertical]
   final EdgeInsets topPadding;
 
-  static const Duration duration = Duration(seconds: 1);
+  static const Duration duration = Duration(milliseconds: 500);
 
   @override
   _StickyNavigationIndicatorState createState() =>
@@ -177,30 +183,39 @@ class StickyNavigationIndicator extends NavigationIndicator {
 
 class _StickyNavigationIndicatorState
     extends NavigationIndicatorState<StickyNavigationIndicator>
-    with SingleTickerProviderStateMixin {
-  late AnimationController controller;
-
-  NavigationPane? _pane;
-  int oldIndex = -1;
+    with TickerProviderStateMixin {
+  late AnimationController upController;
+  late AnimationController downController;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
+    upController = AnimationController(
       vsync: this,
       duration: StickyNavigationIndicator.duration,
-    );
+      value: 1.0,
+    )..addListener(_updateListener);
+    downController = AnimationController(
+      vsync: this,
+      duration: StickyNavigationIndicator.duration,
+      value: 1.0,
+    )..addListener(_updateListener);
   }
+
+  void _updateListener() => setState(() {});
+
+  Animation<double>? upAnimation;
+  Animation<double>? downAnimation;
 
   @override
   void dispose() {
-    controller.dispose();
+    upController.dispose();
+    downController.dispose();
     super.dispose();
   }
 
   bool get isShowing =>
-      !widget.indexValue.isNegative &&
-      (widget.indexValue == oldIndex || widget.indexValue == index);
+      !itemIndex.isNegative && (itemIndex == oldIndex || itemIndex == index);
 
   bool get isAbove => oldIndex < index;
   bool get isBelow => oldIndex > index;
@@ -209,36 +224,47 @@ class _StickyNavigationIndicatorState
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_pane == null) {
-      _pane = pane;
-    } else if (_pane!.selected == pane.selected) {
-      return;
-    }
+    downController.value = 1.0;
+    upController.value = 1.0;
 
-    if (oldIndex == -1 || widget.indexValue != index) {
-      oldIndex = index;
-    }
+    animate();
+  }
+
+  void animate() async {
+    // await Future.delayed(StickyNavigationIndicator.duration);
+
+    if (!mounted) return;
 
     if (isShowing) {
       if (isBelow) {
         if (isSelected) {
-          controller.forward(
-            from: 0.0,
+          downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+            CurvedAnimation(
+              curve: Interval(0.5, 1.0, curve: widget.curve),
+              parent: downController,
+            ),
           );
+          downController.forward(from: 0.0);
         } else {
-          controller.reverse(
-            from: 1.0,
+          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+            CurvedAnimation(curve: widget.curve, parent: upController),
           );
+          upController.reverse(from: 1.0);
         }
       } else if (isAbove) {
         if (isSelected) {
-          controller.forward(
-            from: 0.0,
+          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+            CurvedAnimation(
+              curve: Interval(0.5, 1.0, curve: widget.curve),
+              parent: upController,
+            ),
           );
+          upController.forward(from: 0.0);
         } else {
-          controller.reverse(
-            from: 1.0,
+          downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+            CurvedAnimation(curve: widget.curve, parent: downController),
           );
+          downController.reverse(from: 1.0);
         }
       }
     }
@@ -254,30 +280,35 @@ class _StickyNavigationIndicatorState
     final theme = NavigationPaneTheme.of(context);
 
     return SizedBox(
-      height: sizes![widget.indexValue].height,
-      child: AnimatedBuilder(
-        animation: CurvedAnimation(
-          parent: controller,
-          curve: widget.curve,
-        ),
-        child: Container(
-          width: 2.5,
-          decoration: BoxDecoration(
-            color: widget.color ?? theme.highlightColor,
-            borderRadius: BorderRadius.circular(100),
-          ),
-        ),
-        builder: (context, child) {
+      height: sizes![itemIndex].height,
+      child: IgnorePointer(
+        child: Builder(builder: (context) {
+          final child = Container(
+            width: 2.5,
+            decoration: BoxDecoration(
+              color: widget.color ?? theme.highlightColor,
+              borderRadius: BorderRadius.circular(100),
+            ),
+          );
+          if (!isSelected) {
+            if (upController.status == AnimationStatus.dismissed ||
+                downController.status == AnimationStatus.dismissed) {
+              return const SizedBox.shrink();
+            }
+          } else {
+            if (upAnimation?.value == 0.0 || downAnimation?.value == 0.0) {
+              return const SizedBox.shrink();
+            }
+          }
           return Padding(
             padding: EdgeInsets.only(
-              left: offsets![widget.indexValue].dx,
-              top: 10.0 * (isAbove ? controller.value : 1.0),
-              bottom: 10.0 * (isBelow ? controller.value : 1.0),
+              left: offsets![itemIndex].dx,
+              top: 10.0 * (upAnimation?.value ?? 1.0),
+              bottom: 10.0 * (downAnimation?.value ?? 1.0),
             ),
-            // child: Text('$oldIndex - ${widget.indexValue}'),
             child: child,
           );
-        },
+        }),
       ),
     );
   }

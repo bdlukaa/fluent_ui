@@ -154,9 +154,8 @@ class PaneItem extends NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
-    int index = -1,
   }) {
-    final maybeBody = _NavigationBody.maybeOf(context);
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode =
         displayMode ?? maybeBody?.displayMode ?? PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
@@ -359,11 +358,16 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
-    if (maybeBody?.pane != null) {
+    if (maybeBody?.pane?.indicator != null) {
+      final index = maybeBody!.pane!.effectiveIndexOf(this);
+      if (index == -1) return button;
+
       return Stack(children: [
         button,
-        maybeBody?.pane?.indicatorBuilder ??
-            StickyNavigationIndicator(indexValue: index),
+        InheritedNavigationView.merge(
+          itemIndex: index,
+          child: maybeBody.pane!.indicator!,
+        ),
       ]);
     }
 

@@ -471,7 +471,7 @@ You can customize the selected indicator. By default `StickyNavigationIndicator`
 
 ```dart
 pane: NavigationPane(
-  indicatorBuilder: ({
+  indicator: ({
     required BuildContext context,
     /// The navigation pane corresponding to this indicator
     required NavigationPane pane,
