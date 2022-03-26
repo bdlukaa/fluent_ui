@@ -112,31 +112,7 @@ class _InputsPageState extends State<InputsPage> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Button(
             child: const Text('Show Dialog'),
-            onPressed: disabled
-                ? null
-                : () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => ContentDialog(
-                        title: const Text('Delete file permanently?'),
-                        content: const Text(
-                          'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
-                        ),
-                        actions: [
-                          Button(
-                            child: const Text('Delete'),
-                            onPressed: () {
-                              // Delete file here
-                            },
-                          ),
-                          FilledButton(
-                            child: const Text('Cancel'),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+            onPressed: disabled ? null : _showDialog,
           ),
           spacer,
           FilledButton(
@@ -251,6 +227,30 @@ class _InputsPageState extends State<InputsPage> {
             ),
           ]),
         ]),
+      ),
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => ContentDialog(
+        title: const Text('Delete file permanently?'),
+        content: const Text(
+          'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+        ),
+        actions: [
+          Button(
+            child: const Text('Delete'),
+            onPressed: () {
+              // Delete file here
+            },
+          ),
+          FilledButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
       ),
     );
   }
