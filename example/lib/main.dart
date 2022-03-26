@@ -176,15 +176,15 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ),
         displayMode: appTheme.displayMode,
-        // indicator: () {
-        //   switch (appTheme.indicator) {
-        //     case NavigationIndicators.end:
-        //       return NavigationIndicator.end;
-        //     case NavigationIndicators.sticky:
-        //     default:
-        //       return NavigationIndicator.sticky;
-        //   }
-        // }(),
+        indicator: () {
+          switch (appTheme.indicator) {
+            case NavigationIndicators.end:
+              return const EndNavigationIndicator();
+            case NavigationIndicators.sticky:
+            default:
+              return const StickyNavigationIndicator();
+          }
+        }(),
         items: [
           // It doesn't look good when resizing from compact to open
           // PaneItemHeader(header: Text('User Interaction')),

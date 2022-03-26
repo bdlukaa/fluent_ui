@@ -33,7 +33,6 @@ class NavigationIndicator extends StatefulWidget {
 
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   List<Offset>? offsets;
-  List<Size>? sizes;
 
   @override
   void initState() {
@@ -49,10 +48,8 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
       final _offsets = pane.effectiveItems.getPaneItemsOffsets(
         pane.paneKey,
       );
-      final _sizes = pane.effectiveItems.getPaneItemsSizes();
-      if (mounted && (offsets != _offsets || _sizes != sizes)) {
+      if (mounted && (offsets != _offsets)) {
         offsets = _offsets;
-        sizes = _sizes;
       }
     });
   }
@@ -107,57 +104,39 @@ class _EndNavigationIndicatorState
     extends NavigationIndicatorState<EndNavigationIndicator> {
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || sizes == null) const SizedBox.shrink();
-    fetch();
-    return Stack(clipBehavior: Clip.none, children: [
-      ...List.generate(offsets!.length, (index) {
-        final isTop = axis == Axis.vertical;
-        final offset = offsets![index];
+    final isTop = axis == Axis.vertical;
 
-        final size = sizes![index];
+    final theme = NavigationPaneTheme.of(context);
 
-        final indicator = IgnorePointer(
-          child: Align(
-            alignment: isTop ? Alignment.bottomCenter : Alignment.centerRight,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 75),
-              reverseDuration: Duration.zero,
-              child: Container(
-                key: ValueKey<int>(this.index),
-                margin: EdgeInsets.symmetric(
-                  vertical: isTop ? 0.0 : 0,
-                  horizontal: isTop ? 10.0 : 0.0,
-                ),
-                width: isTop ? 20.0 : 6.0,
-                height: isTop ? 4.5 : 20.0,
-                color: this.index != index ? Colors.transparent : widget.color,
-              ),
+    final indicator = IgnorePointer(
+      child: Align(
+        alignment: isTop
+            ? AlignmentDirectional.bottomCenter
+            : AlignmentDirectional.centerStart,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 75),
+          reverseDuration: Duration.zero,
+          child: Container(
+            key: ValueKey<int>(itemIndex),
+            margin: EdgeInsets.symmetric(
+              vertical: isTop ? 0.0 : 10.0,
+              horizontal: isTop ? 10.0 : 0.0,
             ),
+            width: isTop ? 20.0 : 6.0,
+            height: isTop ? 4.5 : double.infinity,
+            color: itemIndex != index
+                ? Colors.transparent
+                : widget.color ?? theme.highlightColor,
           ),
-        );
+        ),
+      ),
+    );
 
-        // debugPrint('at $offset with $size');
-
-        if (isTop) {
-          return Positioned(
-            top: offset.dy,
-            left: offset.dx,
-            width: size.width,
-            height: size.height,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: indicator,
-            ),
-          );
-        } else {
-          return Positioned(
-            top: offset.dy,
-            height: size.height,
-            child: indicator,
-          );
-        }
-      }),
-    ]);
+    if (isTop) {
+      return indicator;
+    } else {
+      return indicator;
+    }
   }
 }
 
@@ -272,7 +251,7 @@ class _StickyNavigationIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || sizes == null || !isShowing) {
+    if (offsets == null || !isShowing) {
       return const SizedBox.shrink();
     }
     assert(debugCheckHasFluentTheme(context));
@@ -280,14 +259,17 @@ class _StickyNavigationIndicatorState
     final theme = NavigationPaneTheme.of(context);
 
     return SizedBox(
-      height: sizes![itemIndex].height,
+      height: double.infinity,
       child: IgnorePointer(
         child: Builder(builder: (context) {
-          final child = Container(
-            width: 2.5,
-            decoration: BoxDecoration(
-              color: widget.color ?? theme.highlightColor,
-              borderRadius: BorderRadius.circular(100),
+          final child = Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Container(
+              width: 2.5,
+              decoration: BoxDecoration(
+                color: widget.color ?? theme.highlightColor,
+                borderRadius: BorderRadius.circular(100),
+              ),
             ),
           );
           if (!isSelected) {
@@ -311,19 +293,5 @@ class _StickyNavigationIndicatorState
         }),
       ),
     );
-  }
-}
-
-extension _OffsetExtension on Offset {
-  /// Gets the value based on [axis]
-  ///
-  /// If [Axis.horizontal], [dy] is going to be returned. Otherwise, [dx] is
-  /// returned.
-  double fromAxis(Axis axis) {
-    if (axis == Axis.horizontal) {
-      return dy;
-    } else {
-      return dx;
-    }
   }
 }

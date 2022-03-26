@@ -312,7 +312,7 @@ class PaneItem extends NavigationPaneItem {
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standardCurve,
-            margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
@@ -358,20 +358,27 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
-    if (maybeBody?.pane?.indicator != null) {
-      final index = maybeBody!.pane!.effectiveIndexOf(this);
-      if (index == -1) return button;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: () {
+        if (maybeBody?.pane?.indicator != null) {
+          final index = maybeBody!.pane!.effectiveIndexOf(this);
+          if (index == -1) return button;
 
-      return Stack(children: [
-        button,
-        InheritedNavigationView.merge(
-          itemIndex: index,
-          child: maybeBody.pane!.indicator!,
-        ),
-      ]);
-    }
+          return Stack(children: [
+            button,
+            Positioned.fill(
+              child: InheritedNavigationView.merge(
+                itemIndex: index,
+                child: maybeBody.pane!.indicator!,
+              ),
+            ),
+          ]);
+        }
 
-    return button;
+        return button;
+      }(),
+    );
   }
 }
 
