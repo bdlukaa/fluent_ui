@@ -337,6 +337,7 @@ class _LinkPaneItemAction extends PaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int index = -1,
   }) {
     return Link(
       uri: Uri.parse(link),
@@ -347,6 +348,7 @@ class _LinkPaneItemAction extends PaneItem {
         displayMode: displayMode,
         showTextOnTop: showTextOnTop,
         autofocus: autofocus,
+        index: index,
       ),
     );
   }

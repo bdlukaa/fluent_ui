@@ -154,6 +154,7 @@ class PaneItem extends NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int index = -1,
   }) {
     final maybeBody = _NavigationBody.maybeOf(context);
     final PaneDisplayMode mode =
@@ -361,7 +362,8 @@ class PaneItem extends NavigationPaneItem {
     if (maybeBody?.pane != null) {
       return Stack(children: [
         button,
-        maybeBody?.pane?.indicatorBuilder ?? const StickyNavigationIndicator(),
+        maybeBody?.pane?.indicatorBuilder ??
+            StickyNavigationIndicator(indexValue: index),
       ]);
     }
 
@@ -483,6 +485,7 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int index = -1,
   }) {
     return super.build(
       context,

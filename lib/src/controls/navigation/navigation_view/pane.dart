@@ -391,6 +391,7 @@ class _TopNavigationPane extends StatelessWidget {
         },
         showTextOnTop: !pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
+        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(
@@ -481,6 +482,7 @@ class _CompactNavigationPane extends StatelessWidget {
         () {
           pane.onChanged?.call(pane.effectiveIndexOf(item));
         },
+        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(
@@ -596,6 +598,7 @@ class _OpenNavigationPane extends StatefulWidget {
           onChanged?.call();
         },
         autofocus: autofocus,
+        index: pane.effectiveIndexOf(item),
       );
     } else {
       throw UnsupportedError(

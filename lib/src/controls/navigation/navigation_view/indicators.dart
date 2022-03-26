@@ -65,6 +65,10 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return pane.selected ?? 0;
   }
 
+  bool get isSelected {
+    return pane.isSelected(pane.effectiveItems[index]);
+  }
+
   Axis get axis {
     if (_NavigationBody.maybeOf(context)?.displayMode == PaneDisplayMode.top) {
       return Axis.vertical;
@@ -149,24 +153,22 @@ class _EndNavigationIndicatorState
 }
 
 /// A sticky navigation indicator.
-///
-/// Made by [@raitonubero](https://github.com/raitonoberu). Make
-/// sure to [check him out](https://gist.github.com/raitonoberu/af76d9b5813b7879e8db940bafa0f325).
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
     Key? key,
+    required this.indexValue,
     this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.easeIn,
     Color? color,
-  }) : super(
-          key: key,
-          curve: curve,
-          color: color,
-        );
+  }) : super(key: key, curve: curve, color: color);
+
+  final int indexValue;
 
   /// The padding applied to the indicator if [axis] is [Axis.vertical]
   final EdgeInsets topPadding;
+
+  static const Duration duration = Duration(seconds: 1);
 
   @override
   _StickyNavigationIndicatorState createState() =>
@@ -178,15 +180,15 @@ class _StickyNavigationIndicatorState
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
-  late int oldIndex;
-  late int newIndex;
+  NavigationPane? _pane;
+  int oldIndex = -1;
 
   @override
   void initState() {
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1),
+      duration: StickyNavigationIndicator.duration,
     );
   }
 
@@ -196,10 +198,88 @@ class _StickyNavigationIndicatorState
     super.dispose();
   }
 
+  bool get isShowing =>
+      !widget.indexValue.isNegative &&
+      (widget.indexValue == oldIndex || widget.indexValue == index);
+
+  bool get isAbove => oldIndex < index;
+  bool get isBelow => oldIndex > index;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_pane == null) {
+      _pane = pane;
+    } else if (_pane!.selected == pane.selected) {
+      return;
+    }
+
+    if (oldIndex == -1 || widget.indexValue != index) {
+      oldIndex = index;
+    }
+
+    if (isShowing) {
+      if (isBelow) {
+        if (isSelected) {
+          controller.forward(
+            from: 0.0,
+          );
+        } else {
+          controller.reverse(
+            from: 1.0,
+          );
+        }
+      } else if (isAbove) {
+        if (isSelected) {
+          controller.forward(
+            from: 0.0,
+          );
+        } else {
+          controller.reverse(
+            from: 1.0,
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || sizes == null) return const SizedBox.shrink();
-    return const SizedBox.shrink();
+    if (offsets == null || sizes == null || !isShowing) {
+      return const SizedBox.shrink();
+    }
+    assert(debugCheckHasFluentTheme(context));
+
+    final theme = NavigationPaneTheme.of(context);
+
+    return SizedBox(
+      height: sizes![widget.indexValue].height,
+      child: AnimatedBuilder(
+        animation: CurvedAnimation(
+          parent: controller,
+          curve: widget.curve,
+        ),
+        child: Container(
+          width: 2.5,
+          decoration: BoxDecoration(
+            color: widget.color ?? theme.highlightColor,
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+        builder: (context, child) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: offsets![widget.indexValue].dx,
+              top: 10.0 * (isAbove ? controller.value : 1.0),
+              bottom: 10.0 * (isBelow ? controller.value : 1.0),
+            ),
+            // child: Text('$oldIndex - ${widget.indexValue}'),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 }
 
