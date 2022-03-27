@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.9.2]
+## [3.10.0] - Indicators and Command Bar
 
 - Improves `icons.dart` formatting and its generation.
 - Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
@@ -15,6 +15,45 @@ Date format: DD/MM/YYYY
 - Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
 - Content no longer loses state when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
+- **BREAKING** Update indicators ([#248](https://github.com/bdlukaa/fluent_ui/pull/248)):
+  - Added `InheritedNavigationView`
+  - Updated sticky indicator to match the latest Win 11 UI ([#173](https://github.com/bdlukaa/fluent_ui/issues/173))
+  - **BREAKING** Renamed `NavigationPane.indicatorBuilder` to `NavigationPane.indicator`
+  - **BREAKING** Indicators are no longer built with functions
+    Before:
+    ```dart
+    indicatorBuilder: ({
+      required BuildContext context,
+      required NavigationPane pane,
+      required Axis axis,
+      required Widget child,
+    }) {
+      if (pane.selected == null) return child;
+      assert(debugCheckHasFluentTheme(context));
+      final theme = NavigationPaneTheme.of(context);
+
+      final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
+      final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+
+      return StickyNavigationIndicator(
+        index: pane.selected!,
+        pane: pane,
+        child: child,
+        color: theme.highlightColor,
+        curve: Curves.easeIn,
+        axis: axis,
+        topPadding: EdgeInsets.only(left: left, right: right),
+      );
+    }
+    ```
+
+    Now:
+
+    ```dart
+    indicator: StickyNavigationIndicator(
+      color: Colors.blue.lighter, // optional
+    ),
+    ```
 
 ## [3.9.1] - Input Update - [25/02/2022]
 

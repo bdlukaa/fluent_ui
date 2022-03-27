@@ -145,13 +145,9 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
     Key? key,
-    this.topPadding = EdgeInsets.zero,
     Curve curve = Curves.easeIn,
     Color? color,
   }) : super(key: key, curve: curve, color: color);
-
-  /// The padding applied to the indicator if [axis] is [Axis.vertical]
-  final EdgeInsets topPadding;
 
   static const Duration duration = Duration(milliseconds: 500);
 
