@@ -116,8 +116,8 @@ class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late ThemeData theme;
 
-  late bool _open;
-  bool get open => _open;
+  bool? _open;
+  bool get open => _open ?? false;
   set open(bool value) {
     if (_open != value) _handlePressed();
   }
@@ -127,11 +127,20 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _open = widget.initiallyExpanded;
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 150),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    theme = FluentTheme.of(context);
+    if (_open == null) {
+      _open = !widget.initiallyExpanded;
+      open = widget.initiallyExpanded;
+    }
   }
 
   void _handlePressed() {
@@ -197,7 +206,6 @@ class ExpanderState extends State<Expander>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    theme = FluentTheme.of(context);
     final children = [
       HoverButton(
         onPressed: _handlePressed,
