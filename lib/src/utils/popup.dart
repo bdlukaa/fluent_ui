@@ -37,7 +37,6 @@ class PopUpState<T> extends State<PopUp<T>> {
     );
     final Rect itemRect = target & itemBox.size;
     _dropdownRoute = _PopUpRoute<T>(
-      width: widget.contentWidth,
       target: target,
       contentHeight: widget.contentHeight,
       content: widget.content(context),
@@ -151,7 +150,6 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     required this.textDirection,
     required this.target,
     required this.verticalOffset,
-    this.width,
   });
 
   final Rect buttonRect;
@@ -159,19 +157,18 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
   final TextDirection? textDirection;
   final Offset target;
   final double verticalOffset;
-  final double? width;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    final double maxHeight = constraints.maxHeight;
-    final double width =
-        this.width ?? math.min(constraints.maxWidth, buttonRect.width);
-    return BoxConstraints(
-      minWidth: width,
-      maxWidth: width,
-      minHeight: 0.0,
-      maxHeight: maxHeight,
-    );
+    return constraints.loosen();
+    // final double maxHeight = constraints.maxHeight;
+    // final double width = math.min(constraints.maxWidth, buttonRect.width);
+    // return BoxConstraints(
+    //   minWidth: width,
+    //   maxWidth: width,
+    //   minHeight: 0.0,
+    //   maxHeight: maxHeight,
+    // );
   }
 
   @override
@@ -201,7 +198,6 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     required this.capturedThemes,
     required this.transitionAnimationDuration,
     this.barrierLabel,
-    this.width,
     required this.verticalOffset,
     this.acrylicDisabled = false,
   });
@@ -213,7 +209,6 @@ class _PopUpRoute<T> extends PopupRoute<T> {
   final int elevation;
   final CapturedThemes capturedThemes;
   final Offset target;
-  final double? width;
   final double verticalOffset;
 
   final Duration transitionAnimationDuration;
@@ -240,7 +235,6 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         content: content,
         buttonRect: buttonRect,
         elevation: elevation,
-        width: width,
         capturedThemes: capturedThemes,
         verticalOffset: verticalOffset,
       );
@@ -268,7 +262,6 @@ class _PopUpRoutePage<T> extends StatelessWidget {
     required this.capturedThemes,
     required this.verticalOffset,
     this.style,
-    this.width,
   }) : super(key: key);
 
   final _PopUpRoute<T> route;
@@ -279,7 +272,6 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   final int elevation;
   final CapturedThemes capturedThemes;
   final TextStyle? style;
-  final double? width;
   final double verticalOffset;
 
   @override
@@ -308,7 +300,6 @@ class _PopUpRoutePage<T> extends StatelessWidget {
               route: route,
               textDirection: textDirection,
               verticalOffset: verticalOffset,
-              width: width,
             ),
             child: capturedThemes.wrap(menu),
           );

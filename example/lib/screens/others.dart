@@ -216,7 +216,7 @@ class _OthersState extends State<Others> {
                         if (index == 3) {
                           return Flyout(
                             controller: flyoutController,
-                            contentWidth: 450,
+                            // contentWidth: 450,
                             content: const FlyoutContent(
                               child: Text(
                                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
@@ -224,7 +224,7 @@ class _OthersState extends State<Others> {
                             child: Button(
                               child: const Text('Open flyout'),
                               onPressed: () {
-                                flyoutController.open = true;
+                                flyoutController.open();
                               },
                             ),
                           );

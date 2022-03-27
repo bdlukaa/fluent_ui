@@ -199,7 +199,7 @@ class _CommandBarState extends State<CommandBar> {
     if (widget.secondaryItems.isNotEmpty ||
         widget.overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
       void showSecondaryMenu() {
-        secondaryFlyoutController.open = true;
+        secondaryFlyoutController.open();
       }
 
       late CommandBarItem overflowItem;
@@ -234,7 +234,7 @@ class _CommandBarState extends State<CommandBar> {
                 .toList(),
           ),
         ),
-        contentWidth: widget.flyoutWidth,
+        // contentWidth: widget.flyoutWidth,
         controller: secondaryFlyoutController,
       );
     }

@@ -12,7 +12,6 @@ class Flyout extends StatefulWidget {
     Key? key,
     required this.child,
     required this.content,
-    required this.contentWidth,
     required this.controller,
     this.verticalOffset = 24,
   }) : super(key: key);
@@ -20,7 +19,6 @@ class Flyout extends StatefulWidget {
   final Widget child;
 
   final Widget content;
-  final double contentWidth;
   final FlyoutController controller;
   final double verticalOffset;
 
@@ -30,11 +28,13 @@ class Flyout extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('contentWidth', contentWidth));
-    properties.add(DiagnosticsProperty<FlyoutController>(
-      'controller',
-      controller,
-    ));
+    properties
+      ..add(DiagnosticsProperty<FlyoutController>('controller', controller))
+      ..add(DoubleProperty(
+        'verticalOffset',
+        verticalOffset,
+        defaultValue: 24.0,
+      ));
   }
 }
 
@@ -48,11 +48,10 @@ class _FlyoutState extends State<Flyout> {
   }
 
   void _handleStateChanged() {
-    final open = widget.controller.open;
     final isOpen = popupKey.currentState?.isOpen ?? false;
-    if (!isOpen && open) {
+    if (!isOpen && widget.controller.isOpen) {
       popupKey.currentState?.openPopup();
-    } else if (isOpen && !open) {
+    } else if (isOpen && widget.controller.isClosed) {
       Navigator.pop(context);
     }
   }
@@ -70,7 +69,6 @@ class _FlyoutState extends State<Flyout> {
       key: popupKey,
       child: widget.child,
       content: (context) => widget.content,
-      contentWidth: widget.contentWidth,
       verticalOffset: widget.verticalOffset,
     );
   }
