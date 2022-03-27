@@ -1,5 +1,7 @@
 part of 'view.dart';
 
+const kIndicatorAnimationDuration = Duration(milliseconds: 500);
+
 /// A indicator used by [NavigationPane] to render the selected
 /// indicator.
 class NavigationIndicator extends StatefulWidget {
@@ -9,12 +11,18 @@ class NavigationIndicator extends StatefulWidget {
     Key? key,
     this.curve = Curves.linear,
     this.color,
+    this.duration = kIndicatorAnimationDuration,
   }) : super(key: key);
 
   /// The curve used on the animation, if any
   ///
   /// For sticky navigation indicator, [Curves.easeIn] is recommended
   final Curve curve;
+
+  /// The duration used on the animation, if any
+  ///
+  /// 500 milliseconds is used by default
+  final Duration duration;
 
   /// The highlight color
   final Color? color;
@@ -92,9 +100,12 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 class EndNavigationIndicator extends NavigationIndicator {
   const EndNavigationIndicator({
     Key? key,
-    Curve curve = Curves.easeInOut,
     Color? color,
-  }) : super(key: key, curve: curve, color: color);
+    this.unselectedColor = Colors.transparent,
+  }) : super(key: key, color: color);
+
+  /// The color of the indicator when the item is not selected
+  final Color unselectedColor;
 
   @override
   _EndNavigationIndicatorState createState() => _EndNavigationIndicatorState();
@@ -104,11 +115,12 @@ class _EndNavigationIndicatorState
     extends NavigationIndicatorState<EndNavigationIndicator> {
   @override
   Widget build(BuildContext context) {
-    final isTop = axis == Axis.vertical;
+    assert(debugCheckHasFluentTheme(context));
 
+    final bool isTop = axis == Axis.vertical;
     final theme = NavigationPaneTheme.of(context);
 
-    final indicator = IgnorePointer(
+    return IgnorePointer(
       child: Align(
         alignment: isTop
             ? AlignmentDirectional.bottomCenter
@@ -125,18 +137,12 @@ class _EndNavigationIndicatorState
             width: isTop ? 20.0 : 6.0,
             height: isTop ? 4.5 : double.infinity,
             color: itemIndex != index
-                ? Colors.transparent
+                ? widget.unselectedColor
                 : widget.color ?? theme.highlightColor,
           ),
         ),
       ),
     );
-
-    if (isTop) {
-      return indicator;
-    } else {
-      return indicator;
-    }
   }
 }
 
@@ -147,9 +153,8 @@ class StickyNavigationIndicator extends NavigationIndicator {
     Key? key,
     Curve curve = Curves.easeIn,
     Color? color,
-  }) : super(key: key, curve: curve, color: color);
-
-  static const Duration duration = Duration(milliseconds: 500);
+    Duration duration = kIndicatorAnimationDuration,
+  }) : super(key: key, curve: curve, color: color, duration: duration);
 
   @override
   _StickyNavigationIndicatorState createState() =>
@@ -167,12 +172,12 @@ class _StickyNavigationIndicatorState
     super.initState();
     upController = AnimationController(
       vsync: this,
-      duration: StickyNavigationIndicator.duration,
+      duration: widget.duration,
       value: 1.0,
     )..addListener(_updateListener);
     downController = AnimationController(
       vsync: this,
-      duration: StickyNavigationIndicator.duration,
+      duration: widget.duration,
       value: 1.0,
     )..addListener(_updateListener);
   }
@@ -189,6 +194,14 @@ class _StickyNavigationIndicatorState
     upController.dispose();
     downController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(StickyNavigationIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duration != oldWidget.duration) {
+      upController.duration = downController.duration = widget.duration;
+    }
   }
 
   bool get isShowing {
