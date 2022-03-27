@@ -96,6 +96,7 @@ class NavigationViewState extends State<NavigationView> {
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
   final _scrollbarKey = GlobalKey();
+  final _contentKey = GlobalKey();
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
@@ -139,12 +140,24 @@ class NavigationViewState extends State<NavigationView> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
 
     final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
     final direction = Directionality.of(context);
+
+    Color? _overlayBackgroundColor() {
+      if (theme.backgroundColor?.alpha == 0) {
+        if (brightness.isDark) {
+          return const Color(0xFF202020);
+        } else {
+          return const Color(0xFFf7f7f7);
+        }
+      }
+      return theme.backgroundColor;
+    }
 
     Widget appBar = () {
       if (widget.appBar != null) {
@@ -256,6 +269,7 @@ class NavigationViewState extends State<NavigationView> {
                   ).resolve(direction),
                 );
             final Widget content = ClipRect(
+              key: _contentKey,
               child: pane.displayMode == PaneDisplayMode.minimal
                   ? widget.content
                   : DecoratedBox(
@@ -264,16 +278,7 @@ class NavigationViewState extends State<NavigationView> {
                       child: ClipPath(
                         clipBehavior: widget.clipBehavior,
                         clipper: ShapeBorderClipper(shape: contentShape),
-                        child: ColoredBox(
-                          color: (brightness.isDark
-                                  ? Colors.black
-                                  : const Color(0xFFF7F7F7))
-                              .withAlpha(
-                            // theme.backgroundColor?.alpha ?? 255,
-                            0,
-                          ),
-                          child: widget.content,
-                        ),
+                        child: widget.content,
                       ),
                     ),
             );
@@ -356,8 +361,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
-                          backgroundColor:
-                              theme.backgroundColor?.withAlpha(255),
+                          backgroundColor: _overlayBackgroundColor(),
                           elevation: 10.0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -452,7 +456,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: PrimaryScrollController(
                       controller: scrollController,
                       child: Mica(
-                        backgroundColor: theme.backgroundColor?.withAlpha(255),
+                        backgroundColor: _overlayBackgroundColor(),
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
