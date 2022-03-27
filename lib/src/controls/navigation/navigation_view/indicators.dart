@@ -186,6 +186,8 @@ class _StickyNavigationIndicatorState
   Animation<double>? upAnimation;
   Animation<double>? downAnimation;
 
+  int _old = 0;
+
   @override
   void dispose() {
     upController.dispose();
@@ -193,8 +195,13 @@ class _StickyNavigationIndicatorState
     super.dispose();
   }
 
-  bool get isShowing =>
-      !itemIndex.isNegative && (itemIndex == oldIndex || itemIndex == index);
+  bool get isShowing {
+    if (itemIndex.isNegative) return false;
+    if (itemIndex == oldIndex && _old != oldIndex) {
+      return true;
+    }
+    return itemIndex == index;
+  }
 
   bool get isAbove => oldIndex < index;
   bool get isBelow => oldIndex > index;
@@ -210,11 +217,9 @@ class _StickyNavigationIndicatorState
   }
 
   void animate() async {
-    // await Future.delayed(StickyNavigationIndicator.duration);
-
     if (!mounted) return;
 
-    if (isShowing) {
+    if (isShowing && _old != oldIndex) {
       if (isBelow) {
         if (isSelected) {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
@@ -223,12 +228,12 @@ class _StickyNavigationIndicatorState
               parent: downController,
             ),
           );
-          downController.forward(from: 0.0);
+          await downController.forward(from: 0.0);
         } else {
           upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: upController),
           );
-          upController.reverse(from: 1.0);
+          await upController.reverse(from: 1.0);
         }
       } else if (isAbove) {
         if (isSelected) {
@@ -238,15 +243,17 @@ class _StickyNavigationIndicatorState
               parent: upController,
             ),
           );
-          upController.forward(from: 0.0);
+          await upController.forward(from: 0.0);
         } else {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: downController),
           );
-          downController.reverse(from: 1.0);
+          await downController.reverse(from: 1.0);
         }
       }
     }
+
+    _old = oldIndex;
   }
 
   @override

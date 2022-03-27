@@ -156,8 +156,10 @@ class PaneItem extends NavigationPaneItem {
     bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
-    final PaneDisplayMode mode =
-        displayMode ?? maybeBody?.displayMode ?? PaneDisplayMode.minimal;
+    final PaneDisplayMode mode = displayMode ??
+        maybeBody?.displayMode ??
+        maybeBody?.pane?.displayMode ??
+        PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
