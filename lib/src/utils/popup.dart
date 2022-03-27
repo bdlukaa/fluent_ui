@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
@@ -10,14 +8,12 @@ class PopUp<T> extends StatefulWidget {
     required this.child,
     required this.content,
     this.contentHeight = 0,
-    this.contentWidth,
     this.verticalOffset = 0,
   }) : super(key: key);
 
   final Widget child;
   final WidgetBuilder content;
   final double contentHeight;
-  final double? contentWidth;
   final double verticalOffset;
 
   @override

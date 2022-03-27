@@ -124,9 +124,6 @@ class CommandBar extends StatefulWidget {
   /// [CommandBarOverflowBehavior.dynamicOverflow].
   final MainAxisAlignment overflowItemAlignment;
 
-  /// The width of the flyout menu used to display secondary commands.
-  final double flyoutWidth;
-
   final bool _isExpanded;
 
   const CommandBar({
@@ -140,7 +137,6 @@ class CommandBar extends StatefulWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.overflowItemAlignment = MainAxisAlignment.end,
-    this.flyoutWidth = 250,
   })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
         super(key: key);
 
@@ -224,17 +220,19 @@ class _CommandBarState extends State<CommandBar> {
       }
       overflowWidget = Flyout(
         child: overflowItem.build(context, primaryMode),
-        content: FlyoutContent(
+        content: (context) => FlyoutContent(
+          constraints: const BoxConstraints(maxWidth: 250.0),
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: allSecondaryItems
-                .map((item) =>
-                    item.build(context, CommandBarItemDisplayMode.inSecondary))
+                .map((item) => item.build(
+                      context,
+                      CommandBarItemDisplayMode.inSecondary,
+                    ))
                 .toList(),
           ),
         ),
-        // contentWidth: widget.flyoutWidth,
         controller: secondaryFlyoutController,
       );
     }
