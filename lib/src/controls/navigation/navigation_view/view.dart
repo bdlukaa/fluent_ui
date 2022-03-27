@@ -98,6 +98,7 @@ class NavigationViewState extends State<NavigationView> {
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
   final _scrollbarKey = GlobalKey();
+  final _contentKey = GlobalKey();
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
@@ -135,6 +136,7 @@ class NavigationViewState extends State<NavigationView> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
 
     final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
@@ -263,6 +265,7 @@ class NavigationViewState extends State<NavigationView> {
                   ).resolve(direction),
                 );
             final Widget content = ClipRect(
+              key: _contentKey,
               child: pane.displayMode == PaneDisplayMode.minimal
                   ? widget.content
                   : DecoratedBox(
