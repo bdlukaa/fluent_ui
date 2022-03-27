@@ -5,11 +5,60 @@ import '../../../utils/popup.dart';
 
 export 'controller.dart';
 
-enum FlyoutPlacement { left, center, right }
+/// How the flyout will be placed relatively to the child
+enum FlyoutPlacement {
+  /// The flyout will be placed on the start point of the child.
+  ///
+  /// If the current directionality it's left-to-right, it's left. Otherwise,
+  /// it's right
+  start,
 
-enum FlyoutOpenMode { none, hover, press, longPress }
+  /// The flyout will be placed on the center of the child.
+  center,
 
+  /// The flyout will be placed on the end point of the child.
+  ///
+  /// If the current directionality it's left-to-right, it's right. Otherwise,
+  /// it's left
+  end,
+
+  /// The flyout will be streched and positioned on the whole app window. A
+  /// [Align] can be used to align the flyout to a certain place of the
+  /// window.
+  full,
+}
+
+/// How the flyout will be opened by the end-user
+enum FlyoutOpenMode {
+  /// The flyout will not be opened automatically
+  none,
+
+  /// The flyout will opened when the user hover the child
+  hover,
+
+  /// The flyout will opened when the user press the child
+  press,
+
+  /// The flyout will be opened when the user long-press the child
+  longPress,
+}
+
+/// A flyout is a light dismiss container that can show arbitrary UI as its
+/// content. Flyouts can contain other flyouts or context menus to create a
+/// nested experience.
+///
+/// ![Context Menu Showcase](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/contextmenu_rs2_icons.png)
+///
+/// See also:
+///
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/flyouts>
+///  * [FlyoutContent]
+///  * [PopUp], which is used by this under the hood to perform the flyout
+///    positioning
+///  * [Tooltip], which is a short description linked to a widget in form of an
+///    overlay
 class Flyout extends StatefulWidget {
+  /// Creates a flyout.
   const Flyout({
     Key? key,
     required this.child,
@@ -20,14 +69,32 @@ class Flyout extends StatefulWidget {
     this.openMode = FlyoutOpenMode.none,
   }) : super(key: key);
 
+  /// The child that will be attached to the flyout.
+  ///
+  /// Usually a [FlyoutContent]
   final Widget child;
 
+  /// The content that will be displayed on the route
   final WidgetBuilder content;
+
+  /// Holds the state of the flyout. Can be useful to open or close the flyout
+  /// programatically.
+  ///
+  /// Call `controller.dispose` to clean up resources when no longer necessary
   final FlyoutController? controller;
+
+  /// The vertical gap between the [child] and the displayed flyout.
   final double verticalOffset;
 
+  /// How the flyout will be placed relatively to the [child].
+  ///
+  /// Defaults to center
   final FlyoutPlacement placement;
 
+  /// How the flyout will be opened by the end-user without needing to use a
+  /// controller.
+  ///
+  /// Defaults to none
   final FlyoutOpenMode openMode;
 
   @override
@@ -117,8 +184,8 @@ class _FlyoutState extends State<Flyout> {
         return popup;
       case FlyoutOpenMode.hover:
         return MouseRegion(
+          opaque: false,
           onEnter: (event) => controller.open(),
-          onExit: (event) => controller.close(),
           child: popup,
         );
       case FlyoutOpenMode.press:
@@ -137,26 +204,48 @@ class _FlyoutState extends State<Flyout> {
   }
 }
 
+/// The content of the flyout.
+///
+/// See also:
+///
+///   * [Flyout]
+///   * [FlyoutListTile]
 class FlyoutContent extends StatelessWidget {
+  /// Creates a flyout content
   const FlyoutContent({
     Key? key,
     required this.child,
     this.color,
     this.shape,
     this.padding = const EdgeInsets.all(8.0),
-    this.shadowColor,
+    this.shadowColor = Colors.black,
     this.elevation = 8,
     this.constraints,
+    this.margin = const EdgeInsets.symmetric(horizontal: 10.0),
   }) : super(key: key);
 
   final Widget child;
 
+  /// The background color of the box.
   final Color? color;
+
+  /// The shape to fill the [color] of the box.
   final ShapeBorder? shape;
+
+  /// Empty space to inscribe around the [child]
   final EdgeInsetsGeometry padding;
 
-  final Color? shadowColor;
+  /// The shadow color.
+  final Color shadowColor;
+
+  /// The z-coordinate relative to the box at which to place this physical
+  /// object.
   final double elevation;
+
+  /// The amount of space by which to inset the box.
+  final EdgeInsets margin;
+
+  /// Additional constraints to apply to the child.
 
   final BoxConstraints? constraints;
 
@@ -164,24 +253,30 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
-    return PhysicalModel(
-      elevation: elevation,
-      color: Colors.transparent,
-      shadowColor: Colors.black,
-      child: Container(
-        constraints: constraints,
-        decoration: BoxDecoration(
-          color: theme.menuColor,
-          borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(
-            width: 0.25,
-            color: theme.inactiveBackgroundColor,
+    return Padding(
+      padding: margin,
+      child: PhysicalModel(
+        elevation: elevation,
+        color: Colors.transparent,
+        shadowColor: shadowColor,
+        child: Container(
+          constraints: constraints,
+          decoration: ShapeDecoration(
+            color: color ?? theme.menuColor,
+            shape: shape ??
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6.0),
+                  side: BorderSide(
+                    width: 0.25,
+                    color: theme.inactiveBackgroundColor,
+                  ),
+                ),
           ),
-        ),
-        padding: padding,
-        child: DefaultTextStyle(
-          style: theme.typography.body ?? const TextStyle(),
-          child: child,
+          padding: padding,
+          child: DefaultTextStyle(
+            style: theme.typography.body ?? const TextStyle(),
+            child: child,
+          ),
         ),
       ),
     );
@@ -200,17 +295,35 @@ class FlyoutListTile extends StatelessWidget {
     this.trailing,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
 
+  /// The tile tooltip text
   final String? tooltip;
+
+  /// The leading widget.
+  ///
+  /// Usually an [Icon]
   final Widget? icon;
+
+  /// The title widget.
+  ///
+  /// Usually a [Text]
   final Widget text;
+
+  /// The leading widget.
   final Widget? trailing;
 
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
+
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +333,7 @@ class FlyoutListTile extends StatelessWidget {
       onPressed: onPressed,
       focusNode: focusNode,
       autofocus: autofocus,
+      semanticLabel: semanticLabel,
       builder: (context, states) {
         final theme = FluentTheme.of(context);
         final radius = BorderRadius.circular(4.0);
