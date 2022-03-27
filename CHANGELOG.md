@@ -14,6 +14,7 @@ Date format: DD/MM/YYYY
 - Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
 - Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
+- Content no longer loses state when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
