@@ -218,10 +218,6 @@ class _StickyNavigationIndicatorState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    downController.value = 1.0;
-    upController.value = 1.0;
-
     animate();
   }
 
@@ -274,20 +270,25 @@ class _StickyNavigationIndicatorState
 
     final theme = NavigationPaneTheme.of(context);
 
+    final isHorizontal = axis == Axis.horizontal;
+
     return SizedBox(
       height: double.infinity,
       child: IgnorePointer(
         child: Builder(builder: (context) {
-          final child = Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Container(
-              width: 2.5,
-              decoration: BoxDecoration(
-                color: widget.color ?? theme.highlightColor,
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
+          final decoration = BoxDecoration(
+            color: widget.color ?? theme.highlightColor,
+            borderRadius: BorderRadius.circular(100),
           );
+          final child = isHorizontal
+              ? Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Container(width: 2.5, decoration: decoration),
+                )
+              : Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(height: 2.5, decoration: decoration),
+                );
           if (!isSelected) {
             if (upController.status == AnimationStatus.dismissed ||
                 downController.status == AnimationStatus.dismissed) {
@@ -299,11 +300,16 @@ class _StickyNavigationIndicatorState
             }
           }
           return Padding(
-            padding: EdgeInsets.only(
-              left: offsets![itemIndex].dx,
-              top: 10.0 * (upAnimation?.value ?? 1.0),
-              bottom: 10.0 * (downAnimation?.value ?? 1.0),
-            ),
+            padding: isHorizontal
+                ? EdgeInsets.only(
+                    left: offsets![itemIndex].dx,
+                    top: 10.0 * (upAnimation?.value ?? 1.0),
+                    bottom: 10.0 * (downAnimation?.value ?? 1.0),
+                  )
+                : EdgeInsetsDirectional.only(
+                    start: 12.0 * (upAnimation?.value ?? 1.0),
+                    end: 12.0 * (downAnimation?.value ?? 1.0),
+                  ),
             child: child,
           );
         }),
