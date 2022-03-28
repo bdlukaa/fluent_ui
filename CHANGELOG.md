@@ -54,6 +54,7 @@ Date format: DD/MM/YYYY
       color: Colors.blue.lighter, // optional
     ),
     ```
+- `initiallyExpanded` property on `Expander` works properly ([#252](https://github.com/bdlukaa/fluent_ui/pull/252))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 

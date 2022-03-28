@@ -114,10 +114,10 @@ class Expander extends StatefulWidget {
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
-  late ThemeData theme;
+  late ThemeData _theme;
 
-  late bool _open;
-  bool get open => _open;
+  bool? _open;
+  bool get open => _open ?? false;
   set open(bool value) {
     if (_open != value) _handlePressed();
   }
@@ -127,26 +127,35 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _open = widget.initiallyExpanded;
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 150),
     );
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _theme = FluentTheme.of(context);
+    if (_open == null) {
+      _open = !widget.initiallyExpanded;
+      open = widget.initiallyExpanded;
+    }
+  }
+
   void _handlePressed() {
     if (open) {
       _controller.animateTo(
         0.0,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _open = false;
     } else {
       _controller.animateTo(
         1.0,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _open = true;
     }
@@ -197,7 +206,6 @@ class ExpanderState extends State<Expander>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    theme = FluentTheme.of(context);
     final children = [
       HoverButton(
         onPressed: _handlePressed,
@@ -207,10 +215,10 @@ class ExpanderState extends State<Expander>
             height: widget.headerHeight,
             decoration: BoxDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
-                  backgroundColor(theme, states),
+                  backgroundColor(_theme, states),
               border: Border.all(
                 width: borderSize,
-                color: borderColor(theme, states),
+                color: borderColor(_theme, states),
               ),
               borderRadius: BorderRadius.vertical(
                 top: const Radius.circular(4.0),
@@ -240,7 +248,7 @@ class ExpanderState extends State<Expander>
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(theme, states),
+                  color: ButtonThemeData.uncheckedInputColor(_theme, states),
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 alignment: Alignment.center,
@@ -268,10 +276,10 @@ class ExpanderState extends State<Expander>
           decoration: BoxDecoration(
             border: Border.all(
               width: borderSize,
-              color: borderColor(theme, {ButtonStates.none}),
+              color: borderColor(_theme, {ButtonStates.none}),
             ),
             color: widget.contentBackgroundColor ??
-                backgroundColor(theme, {ButtonStates.none}),
+                backgroundColor(_theme, {ButtonStates.none}),
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
