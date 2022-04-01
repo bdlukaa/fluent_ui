@@ -65,6 +65,7 @@ class Flyout extends StatefulWidget {
     required this.content,
     this.controller,
     this.verticalOffset = 24,
+    this.horizontalOffset = 10.0,
     this.placement = FlyoutPlacement.center,
     this.openMode = FlyoutOpenMode.none,
   }) : super(key: key);
@@ -85,6 +86,9 @@ class Flyout extends StatefulWidget {
 
   /// The vertical gap between the [child] and the displayed flyout.
   final double verticalOffset;
+
+  /// The horizontal gap between the [child] and the displayed flyout.
+  final double horizontalOffset;
 
   /// How the flyout will be placed relatively to the [child].
   ///
@@ -177,6 +181,8 @@ class _FlyoutState extends State<Flyout> {
       child: widget.child,
       content: widget.content,
       verticalOffset: widget.verticalOffset,
+      horizontalOffset: widget.horizontalOffset,
+      placement: widget.placement,
     );
 
     switch (widget.openMode) {
@@ -221,7 +227,6 @@ class FlyoutContent extends StatelessWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8,
     this.constraints,
-    this.margin = const EdgeInsets.symmetric(horizontal: 10.0),
   }) : super(key: key);
 
   final Widget child;
@@ -242,9 +247,6 @@ class FlyoutContent extends StatelessWidget {
   /// object.
   final double elevation;
 
-  /// The amount of space by which to inset the box.
-  final EdgeInsets margin;
-
   /// Additional constraints to apply to the child.
 
   final BoxConstraints? constraints;
@@ -253,30 +255,27 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
-    return Padding(
-      padding: margin,
-      child: PhysicalModel(
-        elevation: elevation,
-        color: Colors.transparent,
-        shadowColor: shadowColor,
-        child: Container(
-          constraints: constraints,
-          decoration: ShapeDecoration(
-            color: color ?? theme.menuColor,
-            shape: shape ??
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                  side: BorderSide(
-                    width: 0.25,
-                    color: theme.inactiveBackgroundColor,
-                  ),
+    return PhysicalModel(
+      elevation: elevation,
+      color: Colors.transparent,
+      shadowColor: shadowColor,
+      child: Container(
+        constraints: constraints,
+        decoration: ShapeDecoration(
+          color: color ?? theme.menuColor,
+          shape: shape ??
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.0),
+                side: BorderSide(
+                  width: 0.25,
+                  color: theme.inactiveBackgroundColor,
                 ),
-          ),
-          padding: padding,
-          child: DefaultTextStyle(
-            style: theme.typography.body ?? const TextStyle(),
-            child: child,
-          ),
+              ),
+        ),
+        padding: padding,
+        child: DefaultTextStyle(
+          style: theme.typography.body ?? const TextStyle(),
+          child: child,
         ),
       ),
     );
