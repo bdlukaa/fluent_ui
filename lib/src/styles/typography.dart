@@ -54,34 +54,38 @@ class Typography with Diagnosticable {
     this.caption,
   });
 
-  /// The default typography.
+  /// The default typography according to a brightness or color.
   ///
-  /// If [color] is null, [Colors.black] is used if [brightness] is dark,
-  /// otherwise [Colors.white] is used
+  /// If [color] is null, [Colors.black] is used if [brightness] is light,
+  /// otherwise [Colors.white] is used. If it's not null, [color] will be used.
   factory Typography.fromBrightness({
     Brightness? brightness,
     Color? color,
   }) {
-    assert(brightness != null || color != null);
+    assert(
+      brightness != null || color != null,
+      'Either brightness or color must be provided',
+    );
+    // If color is null, brightness will not be null
     color ??= brightness == Brightness.light ? Colors.black : Colors.white;
     return Typography.raw(
       display: TextStyle(
-        fontSize: 42,
+        fontSize: 68,
         color: color,
         fontWeight: FontWeight.w600,
       ),
       titleLarge: TextStyle(
-        fontSize: 34,
+        fontSize: 40,
         color: color,
         fontWeight: FontWeight.w500,
       ),
       title: TextStyle(
-        fontSize: 22,
+        fontSize: 28,
         color: color,
         fontWeight: FontWeight.w600,
       ),
       subtitle: TextStyle(
-        fontSize: 28,
+        fontSize: 20,
         color: color,
         fontWeight: FontWeight.w500,
       ),
