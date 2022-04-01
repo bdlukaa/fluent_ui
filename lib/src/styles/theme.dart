@@ -341,7 +341,7 @@ class ThemeData with Diagnosticable {
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= isLight ? const Color(0xFFf3f3f3) : const Color(0xFF2e2e2e);
-    typography = Typography.standard(brightness: brightness)
+    typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
     focusTheme = FocusThemeData.standard(
