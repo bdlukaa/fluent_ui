@@ -16,6 +16,11 @@ Date format: DD/MM/YYYY
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
 - Content no longer loses state when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
 - `initiallyExpanded` property on `Expander` works properly ([#252](https://github.com/bdlukaa/fluent_ui/pull/252))
+- **BREAKING** Updated typography ([#261](https://github.com/bdlukaa/fluent_ui/pull/261)):
+  - Renamed `Typography.standart` to `Typography.fromBrightness`
+  - Renamed `Typography` constructor to `Typography.raw`
+  - Default color for dark mode is now `const Color(0xE4000000)`
+  - Updated default font sizes for `display`, `titleLarge`, `title` and `subtitle`
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
