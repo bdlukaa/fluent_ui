@@ -318,11 +318,11 @@ This is especially helpful in 10-foot scenarios where the user might not be payi
 
 ### Enabling it
 
-Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `ThemeData`:
+Reveal Focus is off by default. To enable it, change the `focusTheme` in your app `ThemeData`:
 
 ```dart
 theme: ThemeData(
-  focusTheme: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: 4.0,
   ),
 ),
@@ -334,7 +334,7 @@ To enable it in a 10 foot screen, use the method `is10footScreen`:
 import 'dart:ui' as ui;
 
 theme: ThemeData(
-  focusStyle: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
   ),
 ),
@@ -568,16 +568,7 @@ SizedBox(
     tabs: List.generate(tabs, (index) {
       return Tab(
         text: Text('Tab $index'),
-        closeIcon: Tooltip(
-          message: 'Close tab',
-          child: IconButton(
-            icon: Icon(FluentIcons.close),
-            onPressed: () {
-              setState(() => tabs--);
-              if (currentIndex > tabs - 1) currentIndex--;
-            },
-          ),
-        ),
+        closeIcon: FluentIcons.chrome_close,
       );
     }),
     bodies: List.generate(
