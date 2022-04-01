@@ -221,7 +221,9 @@ class _StickyNavigationIndicatorState
   }
 
   void animate() async {
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     if (isShowing && _old != oldIndex) {
       if (isBelow) {
@@ -265,12 +267,14 @@ class _StickyNavigationIndicatorState
     if (offsets == null || !isShowing) {
       return const SizedBox.shrink();
     }
+
+    // Ensure it is only kept alive after if it's showing and after the offets
+    // are fetched
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
 
-    final theme = NavigationPaneTheme.of(context);
-
-    final isHorizontal = axis == Axis.horizontal;
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
+    final bool isHorizontal = axis == Axis.horizontal;
 
     return SizedBox(
       height: double.infinity,
