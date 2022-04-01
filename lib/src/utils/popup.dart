@@ -212,7 +212,9 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
         return Offset(placementOffset.dx, defaultOffset.dy);
       case FlyoutPlacement.end:
         return Offset(placementOffset.dx - childSize.width, defaultOffset.dy);
-      default:
+      case FlyoutPlacement.full:
+        return Offset.zero;
+      case FlyoutPlacement.center:
         return defaultOffset;
     }
   }
