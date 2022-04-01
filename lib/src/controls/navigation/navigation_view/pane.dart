@@ -447,14 +447,9 @@ class _TopNavigationPane extends StatelessWidget {
             ),
             child: pane.autoSuggestBox!,
           ),
-        ListView(
-          primary: false,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }).toList(),
-        ),
+        ...pane.footerItems.map((item) {
+          return _buildItem(context, item);
+        }).toList(),
       ]),
     );
     return topBar;

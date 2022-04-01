@@ -153,7 +153,21 @@ class StickyNavigationIndicator extends NavigationIndicator {
     Curve curve = Curves.easeIn,
     Color? color,
     Duration duration = kIndicatorAnimationDuration,
+    this.topPadding = 12.0,
+    this.leftPadding = 10.0,
   }) : super(curve: curve, color: color, duration: duration);
+
+  /// The padding used on both horizontal sides of the indicator when the
+  /// current display mode is top.
+  ///
+  /// Defaults to 12.0
+  final double topPadding;
+
+  /// The padding used on both vertical sides of the indicator when the current
+  /// display mode is not top.
+  ///
+  /// Defaults to 10.0
+  final double leftPadding;
 
   @override
   _StickyNavigationIndicatorState createState() =>
@@ -307,12 +321,12 @@ class _StickyNavigationIndicatorState
             padding: isHorizontal
                 ? EdgeInsets.only(
                     left: offsets![itemIndex].dx,
-                    top: 10.0 * (upAnimation?.value ?? 1.0),
-                    bottom: 10.0 * (downAnimation?.value ?? 1.0),
+                    top: widget.leftPadding * (upAnimation?.value ?? 1.0),
+                    bottom: widget.leftPadding * (downAnimation?.value ?? 1.0),
                   )
                 : EdgeInsetsDirectional.only(
-                    start: 12.0 * (upAnimation?.value ?? 1.0),
-                    end: 12.0 * (downAnimation?.value ?? 1.0),
+                    start: widget.topPadding * (upAnimation?.value ?? 1.0),
+                    end: widget.topPadding * (downAnimation?.value ?? 1.0),
                   ),
             child: child,
           );
