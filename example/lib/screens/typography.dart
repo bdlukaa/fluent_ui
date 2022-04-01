@@ -54,11 +54,11 @@ class _TypographyPageState extends State<TypographyPage> {
                 ),
                 ComboboxItem(
                   child: Row(children: [
-                    buildColorBox(Colors.black),
+                    buildColorBox(const Color(0xE4000000)),
                     const SizedBox(width: 10.0),
                     const Text('Black'),
                   ]),
-                  value: Colors.black,
+                  value: const Color(0xE4000000),
                 ),
                 ...List.generate(Colors.accentColors.length, (index) {
                   final color = Colors.accentColors[index];

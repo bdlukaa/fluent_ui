@@ -294,17 +294,16 @@ ThemeData(
 
 ### Font
 
-You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system.
+You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI Variable**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#font)
 
-![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/segoe-sample.svg)
+![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/segoe-sample.svg)
 
-[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#font)
 
 ### Type ramp
 
-The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. All sizes are in effective pixels. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp)
 
-![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-ramp.png)
+![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/text-block-type-ramp.svg)
 
 ## Reveal Focus
 
@@ -318,11 +317,11 @@ This is especially helpful in 10-foot scenarios where the user might not be payi
 
 ### Enabling it
 
-Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `ThemeData`:
+Reveal Focus is off by default. To enable it, change the `focusTheme` in your app `ThemeData`:
 
 ```dart
 theme: ThemeData(
-  focusTheme: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: 4.0,
   ),
 ),
@@ -334,7 +333,7 @@ To enable it in a 10 foot screen, use the method `is10footScreen`:
 import 'dart:ui' as ui;
 
 theme: ThemeData(
-  focusStyle: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
   ),
 ),
@@ -489,13 +488,12 @@ pane: NavigationPane(
     axis??= Axis.horizontal;
 
     return EndNavigationIndicator(
-      index: pane.selected,
-      offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-      sizes: pane.effectiveItems.getPaneItemsSizes,
+      pane: pane,
+      index: pane.selected!,
       child: child,
+      axis: axis,
       color: theme.highlightColor,
       curve: theme.animationCurve ?? Curves.linear,
-      axis: axis,
     );
   },
 )
@@ -594,16 +592,7 @@ SizedBox(
     tabs: List.generate(tabs, (index) {
       return Tab(
         text: Text('Tab $index'),
-        closeIcon: Tooltip(
-          message: 'Close tab',
-          child: IconButton(
-            icon: Icon(FluentIcons.close),
-            onPressed: () {
-              setState(() => tabs--);
-              if (currentIndex > tabs - 1) currentIndex--;
-            },
-          ),
-        ),
+        closeIcon: FluentIcons.chrome_close,
       );
     }),
     bodies: List.generate(

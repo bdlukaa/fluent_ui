@@ -22,7 +22,12 @@ Date format: DD/MM/YYYY
   - Added `Flyout.openMode` which takes a `FlyoutOpenMode`
   - `Flyout.controller` is no longer required. If not provided, a local controller is created to handle the `Flyout.openMode` settings
   - **Breaking** `FlyoutController.open` is now a function
-  - Adedd `FlyoutController.isOpen`, `FlyoutController.isClosed`, `FlyoutController.close()`, `FlyoutController.open()` and `FlyoutController.toggle()`
+  - Added `FlyoutController.isOpen`, `FlyoutController.isClosed`, `FlyoutController.close()`, `FlyoutController.open()` and `FlyoutController.toggle()`
+- **BREAKING** Updated typography ([#261](https://github.com/bdlukaa/fluent_ui/pull/261)):
+  - Renamed `Typography.standart` to `Typography.fromBrightness`
+  - Renamed `Typography` constructor to `Typography.raw`
+  - Default color for dark mode is now `const Color(0xE4000000)`
+  - Updated default font sizes for `display`, `titleLarge`, `title` and `subtitle`
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
