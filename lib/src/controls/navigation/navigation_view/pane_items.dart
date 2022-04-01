@@ -360,19 +360,26 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
+    final int? index = () {
+      if (maybeBody?.pane?.indicator != null) {
+        return maybeBody!.pane!.effectiveIndexOf(this);
+      }
+    }();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: () {
-        if (maybeBody?.pane?.indicator != null) {
-          final index = maybeBody!.pane!.effectiveIndexOf(this);
-          if (index == -1) return button;
-
+        // If there is an indicator and the item is an effective item
+        if (maybeBody?.pane?.indicator != null && index != -1) {
           return Stack(children: [
             button,
             Positioned.fill(
               child: InheritedNavigationView.merge(
                 itemIndex: index,
-                child: maybeBody.pane!.indicator!,
+                child: KeyedSubtree(
+                  key: index != null ? ValueKey<int>(index) : null,
+                  child: maybeBody!.pane!.indicator!,
+                ),
               ),
             ),
           ]);

@@ -97,6 +97,7 @@ class NavigationViewState extends State<NavigationView> {
   final _listKey = GlobalKey();
   final _scrollbarKey = GlobalKey();
   final _contentKey = GlobalKey();
+  final _overlayKey = GlobalKey();
 
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
@@ -344,6 +345,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: () {
                       if (openedWithoutOverlay) {
                         return Mica(
+                          key: _overlayKey,
                           backgroundColor: theme.backgroundColor,
                           child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 1.0),
@@ -361,6 +363,7 @@ class NavigationViewState extends State<NavigationView> {
                         );
                       } else if (_compactOverlayOpen) {
                         return Mica(
+                          key: _overlayKey,
                           backgroundColor: _overlayBackgroundColor(),
                           elevation: 10.0,
                           child: Container(
@@ -388,6 +391,7 @@ class NavigationViewState extends State<NavigationView> {
                         return Padding(
                           padding: appBarPadding,
                           child: Mica(
+                            key: _overlayKey,
                             backgroundColor: theme.backgroundColor,
                             child: _CompactNavigationPane(
                               pane: pane,
@@ -448,6 +452,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   AnimatedPositionedDirectional(
+                    key: _overlayKey,
                     duration: theme.animationDuration ?? Duration.zero,
                     curve: theme.animationCurve ?? Curves.linear,
                     start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,

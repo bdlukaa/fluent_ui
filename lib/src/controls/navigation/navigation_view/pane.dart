@@ -182,6 +182,11 @@ class NavigationPane with Diagnosticable {
     ));
   }
 
+  void _changeTo(NavigationPaneItem item) {
+    final index = effectiveIndexOf(item);
+    if (selected != index) onChanged?.call(index);
+  }
+
   /// A list of all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
     return items + footerItems;
@@ -387,7 +392,7 @@ class _TopNavigationPane extends StatelessWidget {
         context,
         selected,
         () {
-          pane.onChanged?.call(pane.effectiveIndexOf(item));
+          pane._changeTo(item);
         },
         showTextOnTop: !pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
@@ -442,9 +447,14 @@ class _TopNavigationPane extends StatelessWidget {
             ),
             child: pane.autoSuggestBox!,
           ),
-        ...pane.footerItems.map((item) {
-          return _buildItem(context, item);
-        }),
+        ListView(
+          primary: false,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: pane.footerItems.map((item) {
+            return _buildItem(context, item);
+          }).toList(),
+        ),
       ]),
     );
     return topBar;
@@ -479,7 +489,7 @@ class _CompactNavigationPane extends StatelessWidget {
         context,
         selected,
         () {
-          pane.onChanged?.call(pane.effectiveIndexOf(item));
+          pane._changeTo(item);
         },
       );
     } else {
@@ -539,16 +549,23 @@ class _CompactNavigationPane extends StatelessWidget {
               key: scrollbarKey,
               controller: pane.scrollController,
               isAlwaysShown: false,
-              child: ListView(key: listKey, primary: true, children: [
-                ...pane.items.map((item) {
+              child: ListView(
+                key: listKey,
+                primary: true,
+                children: pane.items.map((item) {
                   return _buildItem(context, item);
-                }),
-              ]),
+                }).toList(),
+              ),
             ),
           ),
-          ...pane.footerItems.map((item) {
-            return _buildItem(context, item);
-          }),
+          ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            primary: false,
+            children: pane.footerItems.map((item) {
+              return _buildItem(context, item);
+            }).toList(),
+          ),
         ]),
       ),
     );
@@ -592,7 +609,7 @@ class _OpenNavigationPane extends StatefulWidget {
         context,
         selected,
         () {
-          pane.onChanged?.call(pane.effectiveIndexOf(item));
+          pane._changeTo(item);
           onChanged?.call();
         },
         autofocus: autofocus,
@@ -703,18 +720,33 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               key: widget.scrollbarKey,
               controller: widget.pane.scrollController,
               isAlwaysShown: false,
-              child: ListView(key: widget.listKey, primary: true, children: [
-                ...widget.pane.items.map((item) {
+              child: ListView(
+                key: widget.listKey,
+                primary: true,
+                children: widget.pane.items.map((item) {
                   return _OpenNavigationPane.buildItem(
-                      context, widget.pane, item, widget.onItemSelected);
-                }),
-              ]),
+                    context,
+                    widget.pane,
+                    item,
+                    widget.onItemSelected,
+                  );
+                }).toList(),
+              ),
             ),
           ),
-          ...widget.pane.footerItems.map((item) {
-            return _OpenNavigationPane.buildItem(
-                context, widget.pane, item, widget.onItemSelected);
-          }),
+          ListView(
+            primary: false,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: widget.pane.footerItems.map((item) {
+              return _OpenNavigationPane.buildItem(
+                context,
+                widget.pane,
+                item,
+                widget.onItemSelected,
+              );
+            }).toList(),
+          ),
         ]),
       ),
     );

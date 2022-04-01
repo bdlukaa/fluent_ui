@@ -163,7 +163,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
 
 class _StickyNavigationIndicatorState
     extends NavigationIndicatorState<StickyNavigationIndicator>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late AnimationController upController;
   late AnimationController downController;
 
@@ -266,6 +266,7 @@ class _StickyNavigationIndicatorState
     if (offsets == null || !isShowing) {
       return const SizedBox.shrink();
     }
+    super.build(context);
     assert(debugCheckHasFluentTheme(context));
 
     final theme = NavigationPaneTheme.of(context);
@@ -316,4 +317,7 @@ class _StickyNavigationIndicatorState
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
