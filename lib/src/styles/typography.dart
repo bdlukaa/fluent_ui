@@ -67,7 +67,8 @@ class Typography with Diagnosticable {
       'Either brightness or color must be provided',
     );
     // If color is null, brightness will not be null
-    color ??= brightness == Brightness.light ? Colors.black : Colors.white;
+    color ??=
+        brightness == Brightness.light ? const Color(0xE4000000) : Colors.white;
     return Typography.raw(
       display: TextStyle(
         fontSize: 68,

@@ -294,17 +294,16 @@ ThemeData(
 
 ### Font
 
-You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system.
+You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI Variable**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#font)
 
-![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/segoe-sample.svg)
+![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/segoe-sample.svg)
 
-[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#font)
 
 ### Type ramp
 
-The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. All sizes are in effective pixels. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp)
 
-![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-ramp.png)
+![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/text-block-type-ramp.svg)
 
 ## Reveal Focus
 
