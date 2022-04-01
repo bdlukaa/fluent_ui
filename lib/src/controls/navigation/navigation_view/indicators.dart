@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 part of 'view.dart';
 
 const kIndicatorAnimationDuration = Duration(milliseconds: 500);
@@ -8,11 +10,10 @@ class NavigationIndicator extends StatefulWidget {
   /// Creates a navigation indicator used by [NavigationPane]
   /// to render the selected indicator.
   const NavigationIndicator({
-    Key? key,
     this.curve = Curves.linear,
     this.color,
     this.duration = kIndicatorAnimationDuration,
-  }) : super(key: key);
+  }) : super();
 
   /// The curve used on the animation, if any
   ///
@@ -99,10 +100,9 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 /// The end navigation indicator
 class EndNavigationIndicator extends NavigationIndicator {
   const EndNavigationIndicator({
-    Key? key,
     Color? color,
     this.unselectedColor = Colors.transparent,
-  }) : super(key: key, color: color);
+  }) : super(color: color);
 
   /// The color of the indicator when the item is not selected
   final Color unselectedColor;
@@ -150,11 +150,10 @@ class _EndNavigationIndicatorState
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
-    Key? key,
     Curve curve = Curves.easeIn,
     Color? color,
     Duration duration = kIndicatorAnimationDuration,
-  }) : super(key: key, curve: curve, color: color, duration: duration);
+  }) : super(curve: curve, color: color, duration: duration);
 
   @override
   _StickyNavigationIndicatorState createState() =>
