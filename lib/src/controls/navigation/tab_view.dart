@@ -256,18 +256,19 @@ class _TabViewState extends State<TabView> {
         divider(index),
       ]),
     );
+    final minWidth = () {
+      switch (widget.tabWidthBehavior) {
+        case TabWidthBehavior.sizeToContent:
+          return null;
+        default:
+          return preferredTabWidth;
+      }
+    }();
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
       constraints: BoxConstraints(
-        maxWidth: () {
-          switch (widget.tabWidthBehavior) {
-            case TabWidthBehavior.sizeToContent:
-              return double.infinity;
-            default:
-              return preferredTabWidth;
-          }
-        }(),
-        minWidth: preferredTabWidth,
+        maxWidth: minWidth ?? double.infinity,
+        minWidth: minWidth ?? 0.0,
       ),
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
