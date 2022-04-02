@@ -1186,41 +1186,30 @@ void close() {
 
 A flyout is a light dismiss container that can show arbitrary UI as its content. Flyouts can contain other flyouts or context menus to create a nested experience.
 
-### Example
+![Flyout Opened Above Button 3](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/flyout-smoke.png)
 
 ```dart
 final flyoutController = FlyoutController();
 
 Flyout(
   controller: flyoutController,
-  contentWidth: 450,
-  content: FlyoutContent(
-    child: Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+  content: const FlyoutContent(
+    constraints: BoxConstraints(maxWidth: 100),
+    child: Text('The Flyout for Button 3 has LightDismissOverlayMode enabled'),
   ),
   child: Button(
-    child: Text('Open flyout'),
-    onPressed: () {
-      flyoutController.open = true;
-    },
+    child: Text('Button 3'),
+    onPressed: flyoutController.open,
   ),
 );
 
 @override
 void dispose() {
+  // Dispose the controller to free up resources
   flyoutController.dispose();
   super.dispose();
 }
 ```
-
-The code above produces the following:
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-wrapping-text.png)
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-nested.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-smoke.png)
 
 ## Acrylic
 

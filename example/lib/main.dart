@@ -8,6 +8,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'screens/colors.dart';
+import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
 import 'screens/inputs.dart';
@@ -218,6 +219,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             title: const Text('Command bars'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.pop_expand),
+            title: const Text('Popups, Flyouts and Context Menus'),
+          ),
+          PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
@@ -255,6 +260,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const TypographyPage(),
         const Mobile(),
         const CommandBars(),
+        const FlyoutShowcase(),
         const Others(),
         Settings(controller: settingsController),
       ]),

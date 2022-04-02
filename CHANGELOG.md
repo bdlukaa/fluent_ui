@@ -16,6 +16,14 @@ Date format: DD/MM/YYYY
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
 - Content no longer loses state when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
 - `initiallyExpanded` property on `Expander` works properly ([#252](https://github.com/bdlukaa/fluent_ui/pull/252))
+- **BREAKING** Flyout changes:
+  - Removed `Flyout.contentWidth` and added `FlyoutContent.constraints`. Now the content will be automatically sized and layed out according to the placement
+  - Added `Flyout.placement` which takes a `FlyoutPlacement`
+  - Added `Flyout.openMode` which takes a `FlyoutOpenMode`
+  - `Flyout.controller` is no longer required. If not provided, a local controller is created to handle the `Flyout.openMode` settings
+  - **Breaking** `FlyoutController.open` is now a function
+  - Added `FlyoutController.isOpen`, `FlyoutController.isClosed`, `FlyoutController.close()`, `FlyoutController.open()` and `FlyoutController.toggle()`
+  - **Breaking** Removed `Popup.contentHeight`
 - **BREAKING** Updated typography ([#261](https://github.com/bdlukaa/fluent_ui/pull/261)):
   - Renamed `Typography.standart` to `Typography.fromBrightness`
   - Renamed `Typography` constructor to `Typography.raw`
