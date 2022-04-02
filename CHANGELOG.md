@@ -1,20 +1,29 @@
 Date format: DD/MM/YYYY
 
-## [3.10.0] - Indicators and Command Bar
+## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
 
-- Improves `icons.dart` formatting and its generation.
-- Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
-- NEW: Widgets translated into multiple languages: [#216](https://github.com/bdlukaa/fluent_ui/pull/216)
-- Add `useInheritedMediaQuery` property to `FluentApp` [#211](https://github.com/bdlukaa/fluent_ui/pull/211)
-- TreeView now implemented with ListView and optionally allows vertical scrolling ([#255](https://github.com/bdlukaa/fluent_ui/pull/225))
-- TreeViewItem now has custom primary key (`value` field)
-- Added `onSelectionChanged` callback to `TreeView`
+- Improves `icons.dart` formatting and its generation ([#215](https://github.com/bdlukaa/fluent_ui/pull/215))
+- Use correct color on `FilledButton` when disabled ([209](https://github.com/bdlukaa/fluent_ui/pull/209))
+- Built-in support for new languages ([#216](https://github.com/bdlukaa/fluent_ui/pull/216)):
+  - English
+  - Spanish (reviewed by [@henry2man](https://github.com/henry2man))
+  - French (reviewed by [@WinXaito](https://github.com/WinXaito))
+  - Brazilian Portuguese (reviewed by [@bdlukaa](https://github.com/bdlukaa))
+  - Russian (reviewed by [@raitonoberu](https://github.com/raitonoberu))
+  - German (reviewed by [@larsb24](https://github.com/larsb24))
+  - Hindi (reviewed by [@alexmercerind](https://github.com/alexmercerind))
+  - Simplified Chinese (reviewed by [@zacksleo](https://github.com/zacksleo))
+- Add `useInheritedMediaQuery` property to `FluentApp` ([#211](https://github.com/bdlukaa/fluent_ui/pull/211))
+- `TreeView` updates ([#255](https://github.com/bdlukaa/fluent_ui/pull/225)):
+  - Optional vertical scrolling by setting `shrinkWrap` to `false`
+  - TreeViewItem now has a custom primary key (`value` field)
+  - Added `onSelectionChanged` callback, called when the selection is changed
 - Account for enabled on pressing states ([#233](https://github.com/bdlukaa/fluent_ui/pull/233))
-- Implement `CommandBar` with dynamic overflow ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
-- Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
-- Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
+- Implement `CommandBar` ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
+  - Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
+  - Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
-- Content no longer loses state when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
+- Content state is no longer lost when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
 - **BREAKING** Update indicators ([#248](https://github.com/bdlukaa/fluent_ui/pull/248)):
   - Added `InheritedNavigationView`
   - Updated sticky indicator to match the latest Win 11 UI ([#173](https://github.com/bdlukaa/fluent_ui/issues/173))
@@ -48,7 +57,6 @@ Date format: DD/MM/YYYY
     ```
 
     Now:
-
     ```dart
     indicator: StickyNavigationIndicator(
       color: Colors.blue.lighter, // optional
@@ -68,7 +76,7 @@ Date format: DD/MM/YYYY
   - Renamed `Typography` constructor to `Typography.raw`
   - Default color for dark mode is now `const Color(0xE4000000)`
   - Updated default font sizes for `display`, `titleLarge`, `title` and `subtitle`
-- Fix `TabWidthBehavior.sizeToContent` ([#218](https://github.com/bdlukaa/fluent_ui/issues/218))
+- `TabWidthBehavior.sizeToContent` now works properly ([#218](https://github.com/bdlukaa/fluent_ui/issues/218))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
