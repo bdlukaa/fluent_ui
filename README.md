@@ -117,6 +117,13 @@ Add the package to your dependencies:
 
 ```yaml
 dependencies:
+  fluent_ui: ^3.10.0
+```
+
+OR:
+
+```yaml
+dependencies:
   fluent_ui:
     git: https://github.com/bdlukaa/fluent_ui.git
 ```
@@ -1779,6 +1786,8 @@ More about [Localization in the Flutter Official Documentation](https://docs.flu
 Irrespective of order, thanks to all the people below for contributing with the project. It means a lot to me :)
 
 - [@HrX03](https://github.com/HrX03) for the `Acrylic`, `FluentIcons` generator and `_FluentTextSelectionControls` implementation.
-- [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`
+- [@raitonubero](https://github.com/raitonoberu) `ProgressBar` and `ProgressRing` implementation
 - [@alexmercerind](https://github.com/alexmercerind) for the [flutter_acrylic](https://github.com/alexmercerind/flutter_acrylic) plugin, used on the example app
 - [@leanflutter](https://github.com/leanflutter) for the [window_manager](https://github.com/leanflutter/window_manager) plugin, used on the example app.
+- [@henry2man](https://github.com/henry2man) for the [localization support](https://github.com/bdlukaa/fluent_ui/pull/216)
+- [@klondikedragon](https://github.com/klondikedragon) for [`CommandBar` implementation](https://github.com/bdlukaa/fluent_ui/pull/232)
