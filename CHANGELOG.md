@@ -68,6 +68,7 @@ Date format: DD/MM/YYYY
   - Renamed `Typography` constructor to `Typography.raw`
   - Default color for dark mode is now `const Color(0xE4000000)`
   - Updated default font sizes for `display`, `titleLarge`, `title` and `subtitle`
+- Fix `TabWidthBehavior.sizeToContent` ([#218](https://github.com/bdlukaa/fluent_ui/issues/218))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 
