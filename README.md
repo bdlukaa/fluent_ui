@@ -470,32 +470,7 @@ You can customize the selected indicator. By default `StickyNavigationIndicator`
 
 ```dart
 pane: NavigationPane(
-  indicatorBuilder: ({
-    required BuildContext context,
-    /// The navigation pane corresponding to this indicator
-    required NavigationPane pane,
-    /// Corresponds to the current display mode. If top, Axis.vertical
-    /// is passed, otherwise Axis.vertical
-    Axis? axis,
-    /// Corresponds to the pane itself as a widget. The indicator is
-    /// rendered over the whole pane.
-    required Widget child,
-  }) {
-    if (pane.selected == null) return child;
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
-
-    axis??= Axis.horizontal;
-
-    return EndNavigationIndicator(
-      pane: pane,
-      index: pane.selected!,
-      child: child,
-      axis: axis,
-      color: theme.highlightColor,
-      curve: theme.animationCurve ?? Curves.linear,
-    );
-  },
+  indicator: const EndNavigationIndicator(),
 )
 ```
 

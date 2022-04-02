@@ -155,8 +155,10 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode = displayMode ??
-        _NavigationBody.maybeOf(context)?.displayMode ??
+        maybeBody?.displayMode ??
+        maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
 
@@ -169,7 +171,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
-    return HoverButton(
+    final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
@@ -312,7 +314,7 @@ class PaneItem extends NavigationPaneItem {
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standardCurve,
-            margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
@@ -356,6 +358,35 @@ class PaneItem extends NavigationPaneItem {
           ),
         );
       },
+    );
+
+    final int? index = () {
+      if (maybeBody?.pane?.indicator != null) {
+        return maybeBody!.pane!.effectiveIndexOf(this);
+      }
+    }();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: () {
+        // If there is an indicator and the item is an effective item
+        if (maybeBody?.pane?.indicator != null && index != -1) {
+          return Stack(children: [
+            button,
+            Positioned.fill(
+              child: InheritedNavigationView.merge(
+                itemIndex: index,
+                child: KeyedSubtree(
+                  key: index != null ? ValueKey<int>(index) : null,
+                  child: maybeBody!.pane!.indicator!,
+                ),
+              ),
+            ),
+          ]);
+        }
+
+        return button;
+      }(),
     );
   }
 }
@@ -474,6 +505,7 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int index = -1,
   }) {
     return super.build(
       context,

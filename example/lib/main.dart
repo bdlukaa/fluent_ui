@@ -73,8 +73,7 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {'/': (_) => const MyHomePage()},
+          home: const MyHomePage(),
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -124,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   int index = 0;
 
   final settingsController = ScrollController();
+  final viewKey = GlobalKey();
 
   @override
   void initState() {
@@ -142,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
+      key: viewKey,
       appBar: NavigationAppBar(
         title: () {
           if (kIsWeb) return const Text(appTitle);
@@ -177,13 +178,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: () {
+        indicator: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return NavigationIndicator.end;
+              return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
             default:
-              return NavigationIndicator.sticky;
+              return const StickyNavigationIndicator();
           }
         }(),
         items: [
