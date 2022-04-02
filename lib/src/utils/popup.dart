@@ -8,7 +8,6 @@ class PopUp<T> extends StatefulWidget {
     Key? key,
     required this.child,
     required this.content,
-    this.contentHeight = 0,
     this.verticalOffset = 0,
     this.horizontalOffset = 0,
     this.placement = FlyoutPlacement.center,
@@ -16,7 +15,6 @@ class PopUp<T> extends StatefulWidget {
 
   final Widget child;
   final WidgetBuilder content;
-  final double contentHeight;
   final double verticalOffset;
   final double horizontalOffset;
 
@@ -46,8 +44,11 @@ class PopUpState<T> extends State<PopUp<T>> {
       ancestor: navigator.context.findRenderObject(),
     );
 
-    final usedTarget = () {
-      final directionality = Directionality.of(context);
+    assert(m.debugCheckHasDirectionality(context));
+    final directionality = Directionality.of(context);
+
+    // The target according to the current directionality
+    final Offset directionalityTarget = () {
       switch (widget.placement) {
         case FlyoutPlacement.start:
           if (directionality == TextDirection.ltr) {
@@ -67,12 +68,30 @@ class PopUpState<T> extends State<PopUp<T>> {
       }
     }();
 
-    final Rect itemRect = usedTarget & itemBox.size;
+    // The placement according to the current directionality
+    final FlyoutPlacement directionalityPlacement = () {
+      switch (widget.placement) {
+        case FlyoutPlacement.start:
+          if (directionality == TextDirection.rtl) {
+            return FlyoutPlacement.end;
+          }
+          continue next;
+        case FlyoutPlacement.end:
+          if (directionality == TextDirection.rtl) {
+            return FlyoutPlacement.start;
+          }
+          continue next;
+        next:
+        default:
+          return widget.placement;
+      }
+    }();
+
+    final Rect itemRect = directionalityTarget & itemBox.size;
     _dropdownRoute = _PopUpRoute<T>(
       target: centerTarget,
-      placementOffset: usedTarget,
-      placement: widget.placement,
-      contentHeight: widget.contentHeight,
+      placementOffset: directionalityTarget,
+      placement: directionalityPlacement,
       content: widget.content(context),
       buttonRect: itemRect,
       elevation: 4,
@@ -240,7 +259,6 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 class _PopUpRoute<T> extends PopupRoute<T> {
   _PopUpRoute({
     required this.content,
-    required this.contentHeight,
     required this.buttonRect,
     required this.target,
     required this.placementOffset,
@@ -256,7 +274,6 @@ class _PopUpRoute<T> extends PopupRoute<T> {
 
   final bool acrylicDisabled;
   final Widget content;
-  final double contentHeight;
   final Rect buttonRect;
   final int elevation;
   final CapturedThemes capturedThemes;

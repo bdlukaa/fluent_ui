@@ -249,7 +249,6 @@ class _DatePickerState extends State<DatePicker> {
       },
     );
     picker = PopUp(
-      contentHeight: widget.popupHeight,
       key: popupKey,
       child: picker,
       content: (context) => _DatePickerContentPopUp(

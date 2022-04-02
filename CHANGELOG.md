@@ -23,6 +23,7 @@ Date format: DD/MM/YYYY
   - `Flyout.controller` is no longer required. If not provided, a local controller is created to handle the `Flyout.openMode` settings
   - **Breaking** `FlyoutController.open` is now a function
   - Added `FlyoutController.isOpen`, `FlyoutController.isClosed`, `FlyoutController.close()`, `FlyoutController.open()` and `FlyoutController.toggle()`
+  - **Breaking** Removed `Popup.contentHeight`
 - **BREAKING** Updated typography ([#261](https://github.com/bdlukaa/fluent_ui/pull/261)):
   - Renamed `Typography.standart` to `Typography.fromBrightness`
   - Renamed `Typography` constructor to `Typography.raw`
