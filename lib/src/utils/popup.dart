@@ -47,13 +47,22 @@ class PopUpState<T> extends State<PopUp<T>> {
     );
 
     final usedTarget = () {
+      final directionality = Directionality.of(context);
       switch (widget.placement) {
         case FlyoutPlacement.start:
-          return leftTarget;
+          if (directionality == TextDirection.ltr) {
+            return leftTarget;
+          } else {
+            return rightTarget;
+          }
         case FlyoutPlacement.end:
-          return rightTarget;
+          if (directionality == TextDirection.ltr) {
+            return rightTarget;
+          } else {
+            return leftTarget;
+          }
         case FlyoutPlacement.center:
-        default:
+        case FlyoutPlacement.full:
           return centerTarget;
       }
     }();
@@ -100,6 +109,7 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   @override
   Widget build(BuildContext context) {
+    assert(m.debugCheckHasDirectionality(context));
     return widget.child;
   }
 }
