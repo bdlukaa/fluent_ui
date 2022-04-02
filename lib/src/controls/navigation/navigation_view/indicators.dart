@@ -88,7 +88,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get oldIndex {
-    return InheritedNavigationView.maybeOf(context)?.oldIndex ?? 0;
+    return InheritedNavigationView.maybeOf(context)?.oldIndex ?? -1;
   }
 
   @override
@@ -200,7 +200,7 @@ class _StickyNavigationIndicatorState
   Animation<double>? upAnimation;
   Animation<double>? downAnimation;
 
-  int _old = 0;
+  int _old = -1;
 
   @override
   void dispose() {
