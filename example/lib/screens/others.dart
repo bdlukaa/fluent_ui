@@ -321,6 +321,7 @@ class _OthersState extends State<Others> {
             child: TabView(
               currentIndex: currentIndex,
               onChanged: _handleTabChanged,
+              tabWidthBehavior: TabWidthBehavior.sizeToContent,
               onReorder: (oldIndex, newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) {
