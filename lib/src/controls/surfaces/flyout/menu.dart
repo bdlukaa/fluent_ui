@@ -102,7 +102,9 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final size = ContentSizeInfo.of(context).size;
+    return Container(
+      width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
       child: FlyoutListTile(
         icon: leading ??
@@ -122,9 +124,14 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
-      style: DividerThemeData(
-        horizontalMargin: EdgeInsets.zero,
+    final size = ContentSizeInfo.of(context).size;
+    return SizedBox(
+      width: size.width,
+      child: const Padding(
+        padding: EdgeInsets.only(bottom: 5.0),
+        child: Divider(
+          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        ),
       ),
     );
   }

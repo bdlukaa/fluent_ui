@@ -175,7 +175,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.start,
           content: (context) {
             return const FlyoutContent(
@@ -185,7 +185,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.blue,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at start'),
+            child: const Text('Press to show a flyout at start'),
           ),
         ),
       ),
@@ -198,7 +198,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.center,
           content: (context) {
             return const FlyoutContent(
@@ -208,7 +208,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.teal,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at center'),
+            child: const Text('Press to show a flyout at center'),
           ),
         ),
       ),
@@ -221,7 +221,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.end,
           content: (context) {
             return const FlyoutContent(
@@ -231,7 +231,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.green,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at end'),
+            child: const Text('Press to show a flyout at end'),
           ),
         ),
       ),
@@ -244,7 +244,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.full,
           content: (context) {
             return const Align(
@@ -260,7 +260,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
             color: Colors.yellow,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: const Text(
-              'Hover to show a flyout at custom position',
+              'Press to show a flyout at custom position',
               style: TextStyle(color: Colors.black),
             ),
           ),

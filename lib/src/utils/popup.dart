@@ -44,7 +44,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       ancestor: navigator.context.findRenderObject(),
     );
 
-    assert(m.debugCheckHasDirectionality(context));
+    assert(debugCheckHasDirectionality(context));
     final directionality = Directionality.of(context);
 
     // The target according to the current directionality
@@ -92,7 +92,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       target: centerTarget,
       placementOffset: directionalityTarget,
       placement: directionalityPlacement,
-      content: widget.content(context),
+      content: _PopupContentManager(content: widget.content),
       buttonRect: itemRect,
       elevation: 4,
       capturedThemes: InheritedTheme.capture(
@@ -128,7 +128,7 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   @override
   Widget build(BuildContext context) {
-    assert(m.debugCheckHasDirectionality(context));
+    assert(debugCheckHasDirectionality(context));
     return widget.child;
   }
 }
@@ -391,5 +391,64 @@ class _PopUpRoutePage<T> extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _PopupContentManager extends StatefulWidget {
+  const _PopupContentManager({
+    Key? key,
+    required this.content,
+  }) : super(key: key);
+
+  final WidgetBuilder content;
+
+  @override
+  State<_PopupContentManager> createState() => __PopupContentManagerState();
+}
+
+class __PopupContentManagerState extends State<_PopupContentManager> {
+  final GlobalKey key = GlobalKey();
+
+  Size size = Size.zero;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      final context = key.currentContext;
+      if (context == null) return;
+      final RenderBox box = context.findRenderObject() as RenderBox;
+      setState(() => size = box.size);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: ContentSizeInfo(
+        size: size,
+        child: widget.content(context),
+      ),
+    );
+  }
+}
+
+class ContentSizeInfo extends InheritedWidget {
+  const ContentSizeInfo({
+    Key? key,
+    required Widget child,
+    required this.size,
+  }) : super(key: key, child: child);
+
+  final Size size;
+
+  static ContentSizeInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>()!;
+  }
+
+  @override
+  bool updateShouldNotify(ContentSizeInfo oldWidget) {
+    return oldWidget.size != size;
   }
 }
