@@ -35,45 +35,11 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           _flyoutAtEnd(),
           _flyoutAtCustomPosition(),
         ]),
-        const PageHeader(title: Text('Menu Flyouts')),
-        Flyout(
-          content: (context) {
-            return MenuFlyout(
-              items: [
-                MenuFlyoutItem(
-                  leading: const Icon(FluentIcons.share),
-                  text: const Text('Share'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  leading: const Icon(FluentIcons.copy),
-                  text: const Text('Copy'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  leading: const Icon(FluentIcons.delete),
-                  text: const Text('Delete'),
-                  onPressed: () {},
-                ),
-                const MenuFlyoutSeparator(),
-                MenuFlyoutItem(
-                  text: const Text('Rename'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  text: const Text('Select'),
-                  onPressed: () {},
-                ),
-              ],
-            );
-          },
-          openMode: FlyoutOpenMode.press,
-          child: Container(
-            color: Colors.orange,
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Click to show flyout'),
-          ),
-        ),
+        const PageHeader(title: Text('Menu Flyouts'), padding: 0.0),
+        Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+          _menuFlyout(),
+          _menuFlyoutWithSubItem(),
+        ]),
       ],
     );
   }
@@ -267,5 +233,94 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
         ),
       ),
     ]);
+  }
+
+  Widget _menuFlyout() {
+    return Flyout(
+      content: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.share),
+              text: const Text('Share'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.copy),
+              text: const Text('Copy'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.delete),
+              text: const Text('Delete'),
+              onPressed: () {},
+            ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              text: const Text('Rename'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Select'),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+      openMode: FlyoutOpenMode.press,
+      child: Container(
+        color: Colors.orange,
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: const Text('Click to show flyout'),
+      ),
+    );
+  }
+
+  Widget _menuFlyoutWithSubItem() {
+    return Flyout(
+      placement: FlyoutPlacement.end,
+      content: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('New'),
+              items: [
+                MenuFlyoutItem(
+                  text: const Text('Plain Text Document'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  text: const Text('Rich Text Document'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  text: const Text('Other formats...'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            MenuFlyoutItem(
+              text: const Text('Open'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Save'),
+              onPressed: () {},
+            ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              text: const Text('Exit'),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+      openMode: FlyoutOpenMode.press,
+      child: Container(
+        color: Colors.orange,
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: const Text('Click to show flyout with subitem'),
+      ),
+    );
   }
 }

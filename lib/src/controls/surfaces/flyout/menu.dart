@@ -91,11 +91,13 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
     Key? key,
     this.leading,
     required this.text,
+    this.trailing,
     required this.onPressed,
   }) : super(key: key);
 
   final Widget? leading;
   final Widget text;
+  final Widget? trailing;
   final VoidCallback? onPressed;
 
   bool _useIconPlaceholder = false;
@@ -113,6 +115,10 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
               return null;
             }(),
         text: text,
+        trailing: IconTheme.merge(
+          data: const IconThemeData(size: 12.0),
+          child: trailing ?? const SizedBox.shrink(),
+        ),
         onPressed: onPressed,
       ),
     );
@@ -132,6 +138,47 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
         child: Divider(
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),
+      ),
+    );
+  }
+}
+
+class MenuFlyoutSubItem extends MenuFlyoutItem {
+  MenuFlyoutSubItem({
+    Key? key,
+    Widget? leading,
+    required Widget text,
+    Widget? trailing = const Icon(FluentIcons.chevron_right),
+    required this.items,
+    this.openMode = FlyoutOpenMode.press,
+  }) : super(
+          key: key,
+          leading: leading,
+          text: text,
+          trailing: trailing,
+          onPressed: () {},
+        );
+
+  final List<MenuFlyoutItemInterface> items;
+
+  final FlyoutOpenMode openMode;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flyout(
+      openMode: openMode,
+      content: (context) {
+        return MenuFlyout(
+          items: items,
+        );
+      },
+      child: IgnorePointer(
+        child: MenuFlyoutItem(
+          onPressed: () {},
+          text: text,
+          leading: leading,
+          trailing: trailing,
+        ).build(context),
       ),
     );
   }
