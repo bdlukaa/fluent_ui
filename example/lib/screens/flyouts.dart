@@ -35,6 +35,45 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           _flyoutAtEnd(),
           _flyoutAtCustomPosition(),
         ]),
+        const PageHeader(title: Text('Menu Flyouts')),
+        Flyout(
+          content: (context) {
+            return MenuFlyout(
+              items: [
+                MenuFlyoutItem(
+                  leading: const Icon(FluentIcons.share),
+                  text: const Text('Share'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  leading: const Icon(FluentIcons.copy),
+                  text: const Text('Copy'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  leading: const Icon(FluentIcons.delete),
+                  text: const Text('Delete'),
+                  onPressed: () {},
+                ),
+                const MenuFlyoutSeparator(),
+                MenuFlyoutItem(
+                  text: const Text('Rename'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  text: const Text('Select'),
+                  onPressed: () {},
+                ),
+              ],
+            );
+          },
+          openMode: FlyoutOpenMode.press,
+          child: Container(
+            color: Colors.orange,
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: const Text('Click to show flyout'),
+          ),
+        ),
       ],
     );
   }

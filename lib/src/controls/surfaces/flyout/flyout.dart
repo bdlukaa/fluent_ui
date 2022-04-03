@@ -5,6 +5,9 @@ import '../../../utils/popup.dart';
 
 export 'controller.dart';
 
+part 'content.dart';
+part 'menu.dart';
+
 /// How the flyout will be placed relatively to the child
 enum FlyoutPlacement {
   /// The flyout will be placed on the start point of the child.
@@ -71,17 +74,20 @@ class Flyout extends StatefulWidget {
   }) : super(key: key);
 
   /// The child that will be attached to the flyout.
-  ///
-  /// Usually a [FlyoutContent]
   final Widget child;
 
-  /// The content that will be displayed on the route
+  /// The content that will be displayed on the flyout.
+  ///
+  /// Usually a [FlyoutContent] is used
   final WidgetBuilder content;
 
   /// Holds the state of the flyout. Can be useful to open or close the flyout
   /// programatically.
   ///
-  /// Call `controller.dispose` to clean up resources when no longer necessary
+  /// Call `controller.dispose()` to clean up resources when no longer necessary
+  ///
+  /// See also:
+  ///   * [openMode], which can open the flyout on hover, press and long press
   final FlyoutController? controller;
 
   /// The vertical gap between the [child] and the displayed flyout.
@@ -92,7 +98,7 @@ class Flyout extends StatefulWidget {
 
   /// How the flyout will be placed relatively to the [child].
   ///
-  /// Defaults to center
+  /// Defaults to [FlyoutPlacement.center]
   final FlyoutPlacement placement;
 
   /// How the flyout will be opened by the end-user without needing to use a
@@ -207,197 +213,5 @@ class _FlyoutState extends State<Flyout> {
           child: popup,
         );
     }
-  }
-}
-
-/// The content of the flyout.
-///
-/// See also:
-///
-///   * [Flyout]
-///   * [FlyoutListTile]
-class FlyoutContent extends StatelessWidget {
-  /// Creates a flyout content
-  const FlyoutContent({
-    Key? key,
-    required this.child,
-    this.color,
-    this.shape,
-    this.padding = const EdgeInsets.all(8.0),
-    this.shadowColor = Colors.black,
-    this.elevation = 8,
-    this.constraints,
-  }) : super(key: key);
-
-  final Widget child;
-
-  /// The background color of the box.
-  final Color? color;
-
-  /// The shape to fill the [color] of the box.
-  final ShapeBorder? shape;
-
-  /// Empty space to inscribe around the [child]
-  final EdgeInsetsGeometry padding;
-
-  /// The shadow color.
-  final Color shadowColor;
-
-  /// The z-coordinate relative to the box at which to place this physical
-  /// object.
-  final double elevation;
-
-  /// Additional constraints to apply to the child.
-
-  final BoxConstraints? constraints;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
-    return PhysicalModel(
-      elevation: elevation,
-      color: Colors.transparent,
-      shadowColor: shadowColor,
-      child: Container(
-        constraints: constraints,
-        decoration: ShapeDecoration(
-          color: color ?? theme.menuColor,
-          shape: shape ??
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6.0),
-                side: BorderSide(
-                  width: 0.25,
-                  color: theme.inactiveBackgroundColor,
-                ),
-              ),
-        ),
-        padding: padding,
-        child: DefaultTextStyle(
-          style: theme.typography.body ?? const TextStyle(),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-/// A tile that is used inside of [FlyoutContent]
-class FlyoutListTile extends StatelessWidget {
-  /// Creates a flyout list tile.
-  const FlyoutListTile({
-    Key? key,
-    this.onPressed,
-    this.tooltip,
-    this.icon,
-    required this.text,
-    this.trailing,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticLabel,
-  }) : super(key: key);
-
-  final VoidCallback? onPressed;
-
-  /// The tile tooltip text
-  final String? tooltip;
-
-  /// The leading widget.
-  ///
-  /// Usually an [Icon]
-  final Widget? icon;
-
-  /// The title widget.
-  ///
-  /// Usually a [Text]
-  final Widget text;
-
-  /// The leading widget.
-  final Widget? trailing;
-
-  /// {@macro flutter.widgets.Focus.focusNode}
-  final FocusNode? focusNode;
-
-  /// {@macro flutter.widgets.Focus.autofocus}
-  final bool autofocus;
-
-  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
-  final String? semanticLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    return HoverButton(
-      key: key,
-      onPressed: onPressed,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      semanticLabel: semanticLabel,
-      builder: (context, states) {
-        final theme = FluentTheme.of(context);
-        final radius = BorderRadius.circular(4.0);
-
-        Widget content = Container(
-          decoration: BoxDecoration(
-            color: ButtonThemeData.uncheckedInputColor(theme, states),
-            borderRadius: radius,
-          ),
-          padding: const EdgeInsetsDirectional.only(
-            top: 4.0,
-            bottom: 4.0,
-            start: 10.0,
-            end: 8.0,
-          ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (icon != null)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end: 10.0),
-                child: IconTheme.merge(
-                  data: const IconThemeData(size: 16.0),
-                  child: icon!,
-                ),
-              ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 10.0),
-                child: DefaultTextStyle(
-                  child: text,
-                  style: TextStyle(
-                    inherit: false,
-                    fontSize: 14.0,
-                    letterSpacing: -0.15,
-                    color: theme.inactiveColor,
-                  ),
-                ),
-              ),
-            ),
-            if (trailing != null)
-              DefaultTextStyle(
-                child: trailing!,
-                style: TextStyle(
-                  inherit: false,
-                  fontSize: 12.0,
-                  color: theme.borderInputColor,
-                  height: 0.7,
-                ),
-              ),
-          ]),
-        );
-
-        if (tooltip != null) {
-          content = Tooltip(message: tooltip, child: content);
-        }
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: FocusBorder(
-            focused: states.isFocused,
-            renderOutside: true,
-            style: FocusThemeData(borderRadius: radius),
-            child: content,
-          ),
-        );
-      },
-    );
   }
 }
