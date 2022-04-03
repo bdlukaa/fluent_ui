@@ -8,6 +8,19 @@ export 'controller.dart';
 part 'content.dart';
 part 'menu.dart';
 
+/// Where the flyout will be placed vertically relativelly the child
+enum FlyoutPosition {
+  /// The flyout will be above the child, if there is enough space available
+  above,
+
+  /// The flyout will be below the child, if there is enough space available
+  below,
+
+  /// The flyout will be by the side of the child, if there is enough space
+  /// available
+  side,
+}
+
 /// How the flyout will be placed relatively to the child
 enum FlyoutPlacement {
   /// The flyout will be placed on the start point of the child.
@@ -71,6 +84,7 @@ class Flyout extends StatefulWidget {
     this.horizontalOffset = 10.0,
     this.placement = FlyoutPlacement.center,
     this.openMode = FlyoutOpenMode.none,
+    this.position = FlyoutPosition.above,
   }) : super(key: key);
 
   /// The child that will be attached to the flyout.
@@ -96,7 +110,7 @@ class Flyout extends StatefulWidget {
   /// The horizontal gap between the [child] and the displayed flyout.
   final double horizontalOffset;
 
-  /// How the flyout will be placed relatively to the [child].
+  /// How the flyout will be placed horizontally relatively to the [child].
   ///
   /// Defaults to [FlyoutPlacement.center]
   final FlyoutPlacement placement;
@@ -106,6 +120,11 @@ class Flyout extends StatefulWidget {
   ///
   /// Defaults to none
   final FlyoutOpenMode openMode;
+
+  /// Where the flyout will be placed vertically relatively to the child
+  ///
+  /// Defaults to [FlyoutPosition.above]
+  final FlyoutPosition position;
 
   @override
   _FlyoutState createState() => _FlyoutState();
@@ -189,6 +208,7 @@ class _FlyoutState extends State<Flyout> {
       verticalOffset: widget.verticalOffset,
       horizontalOffset: widget.horizontalOffset,
       placement: widget.placement,
+      position: widget.position,
     );
 
     switch (widget.openMode) {

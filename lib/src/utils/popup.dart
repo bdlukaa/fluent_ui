@@ -11,6 +11,7 @@ class PopUp<T> extends StatefulWidget {
     this.verticalOffset = 0,
     this.horizontalOffset = 0,
     this.placement = FlyoutPlacement.center,
+    this.position = FlyoutPosition.above,
   }) : super(key: key);
 
   final Widget child;
@@ -19,6 +20,7 @@ class PopUp<T> extends StatefulWidget {
   final double horizontalOffset;
 
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   PopUpState<T> createState() => PopUpState<T>();
@@ -92,6 +94,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       target: centerTarget,
       placementOffset: directionalityTarget,
       placement: directionalityPlacement,
+      position: widget.position,
       content: _PopupContentManager(content: widget.content),
       buttonRect: itemRect,
       elevation: 4,
@@ -210,6 +213,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     required this.horizontalOffset,
     required this.placementOffset,
     required this.placement,
+    required this.position,
   });
 
   final Rect buttonRect;
@@ -220,6 +224,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
   final double horizontalOffset;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -228,14 +233,29 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    final defaultOffset = positionDependentBox(
-      size: size,
-      childSize: childSize,
-      target: target,
-      verticalOffset: verticalOffset,
-      preferBelow: false,
-      margin: horizontalOffset,
-    );
+    final defaultOffset = position == FlyoutPosition.side
+        ? horizontalPositionDependentBox(
+            size: size,
+            childSize: childSize,
+            target: target,
+            verticalOffset: verticalOffset,
+            margin: horizontalOffset,
+            preferLeft: placement == FlyoutPlacement.end,
+          )
+        : positionDependentBox(
+            size: size,
+            childSize: childSize,
+            target: target,
+            verticalOffset: verticalOffset,
+            preferBelow: position == FlyoutPosition.below,
+            margin: horizontalOffset,
+          );
+    if (position == FlyoutPosition.side) {
+      return Offset(
+        defaultOffset.dx,
+        defaultOffset.dy,
+      );
+    }
     switch (placement) {
       case FlyoutPlacement.start:
         return Offset(placementOffset.dx, defaultOffset.dy);
@@ -270,6 +290,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     required this.verticalOffset,
     required this.horizontalOffset,
     this.acrylicDisabled = false,
+    required this.position,
   });
 
   final bool acrylicDisabled;
@@ -285,6 +306,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
   final Offset target;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   Duration get transitionDuration => transitionAnimationDuration;
@@ -313,6 +335,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         capturedThemes: capturedThemes,
         verticalOffset: verticalOffset,
         horizontalOffset: horizontalOffset,
+        position: position,
       );
       if (acrylicDisabled) return DisableAcrylic(child: page);
       return page;
@@ -341,6 +364,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
     required this.target,
     required this.placement,
     required this.placementOffset,
+    required this.position,
   }) : super(key: key);
 
   final _PopUpRoute<T> route;
@@ -355,6 +379,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   final Offset target;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   Widget build(BuildContext context) {
@@ -379,6 +404,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
             delegate: _PopUpMenuRouteLayout<T>(
               target: target,
               placement: placement,
+              position: position,
               placementOffset: placementOffset,
               buttonRect: buttonRect,
               route: route,

@@ -167,6 +167,10 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   Widget build(BuildContext context) {
     return Flyout(
       openMode: openMode,
+      position: FlyoutPosition.side,
+      placement: FlyoutPlacement.end,
+      verticalOffset: 40.0,
+      horizontalOffset: 0.0,
       content: (context) {
         return MenuFlyout(
           items: items,
