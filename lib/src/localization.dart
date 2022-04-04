@@ -134,6 +134,7 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('es'),
   Locale('fr'),
   Locale('hi'),
+  Locale('ko'),
   Locale('pt'),
   Locale('ru'),
   Locale('zh'),
@@ -196,16 +197,13 @@ class DefaultFluentLocalizations extends S implements FluentLocalizations {
   /// This method is typically used to create a [LocalizationsDelegate].
   /// The [FluentApp] does so by default.
   static Future<FluentLocalizations> load(Locale locale) {
-    return SynchronousFuture<FluentLocalizations>(
-        DefaultFluentLocalizations._defaultFluentLocalizations(locale));
+    return SynchronousFuture<FluentLocalizations>(DefaultFluentLocalizations._defaultFluentLocalizations(locale));
   }
 
-  static const LocalizationsDelegate<FluentLocalizations> delegate =
-      _FluentLocalizationsDelegate();
+  static const LocalizationsDelegate<FluentLocalizations> delegate = _FluentLocalizationsDelegate();
 }
 
-class _FluentLocalizationsDelegate
-    extends LocalizationsDelegate<FluentLocalizations> {
+class _FluentLocalizationsDelegate extends LocalizationsDelegate<FluentLocalizations> {
   const _FluentLocalizationsDelegate();
 
   @override
