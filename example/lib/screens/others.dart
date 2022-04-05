@@ -35,7 +35,10 @@ class _OthersState extends State<Others> {
           value: 'overall_project_plan',
         ),
         TreeViewItem(
-          content: const Text('Feature Resources Allocation'),
+          content: const Text(
+            'Feature Resources Allocation (this text should not overflow)',
+            overflow: TextOverflow.ellipsis,
+          ),
           value: 'feature_resources_alloc',
         ),
       ],
