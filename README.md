@@ -1760,6 +1760,7 @@ The list of equivalents between this library and `flutter/material.dart`
 
 FluentUI widgets currently supports out-of-the-box an wide number of languages, including: 
 
+- Arabic
 - English
 - French
 - German
