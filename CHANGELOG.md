@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.x.x]
+
+- Fix overflow behavior for `TreeViewItem` ([#270](https://github.com/bdlukaa/fluent_ui/pull/270))
+
 ## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
 
 - Improves `icons.dart` formatting and its generation ([#215](https://github.com/bdlukaa/fluent_ui/pull/215))
