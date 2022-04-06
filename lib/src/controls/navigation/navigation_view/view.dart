@@ -218,14 +218,16 @@ class NavigationViewState extends State<NavigationView> {
 
       if (displayMode == PaneDisplayMode.auto) {
         /// For more info on the adaptive behavior, see
-        /// https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/navigationview#adaptive-behavior
+        /// https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#adaptive-behavior
         ///
         ///  DD/MM/YYYY
-        /// (23/05/2021)
+        /// (06/04/2022)
         ///
-        /// When PaneDisplayMode is set to its default value of Auto, the adaptive behavior is to show:
+        /// When PaneDisplayMode is set to its default value of Auto, the
+        /// adaptive behavior is to show:
         /// - An expanded left pane on large window widths (1008px or greater).
-        /// - A left, icon-only, nav pane (compact) on medium window widths (641px to 1007px).
+        /// - A left, icon-only, nav pane (compact) on medium window widths
+        /// (641px to 1007px).
         /// - Only a menu button (minimal) on small window widths (640px or less).
         double width = consts.biggest.width;
         if (width.isInfinite) width = MediaQuery.of(context).size.width;
