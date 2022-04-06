@@ -99,6 +99,8 @@ class NavigationViewState extends State<NavigationView> {
   final _contentKey = GlobalKey();
   final _overlayKey = GlobalKey();
 
+  final Map<int, GlobalKey> _itemKeys = {};
+
   /// The overlay entry used for minimal pane
   OverlayEntry? minimalOverlayEntry;
 
@@ -117,6 +119,8 @@ class NavigationViewState extends State<NavigationView> {
     scrollController.addListener(() {
       if (mounted) setState(() {});
     });
+
+    generateKeys();
   }
 
   @override
@@ -129,6 +133,27 @@ class NavigationViewState extends State<NavigationView> {
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       oldIndex = oldWidget.pane?.selected ?? 0;
     }
+
+    if (oldWidget.pane?.effectiveItems.length !=
+        widget.pane?.effectiveItems.length) {
+      if (widget.pane?.effectiveItems.length != null) {
+        generateKeys();
+      }
+    }
+  }
+
+  void generateKeys() {
+    _itemKeys
+      ..clear()
+      ..addAll(
+        Map.fromIterables(
+          List.generate(widget.pane!.effectiveItems.length, (i) => i),
+          List.generate(
+            widget.pane!.effectiveItems.length,
+            (_) => GlobalKey(),
+          ),
+        ),
+      );
   }
 
   @override
@@ -512,7 +537,10 @@ class NavigationViewState extends State<NavigationView> {
         minimalPaneOpen: _minimalPaneOpen,
         pane: widget.pane,
         oldIndex: oldIndex,
-        child: paneResult,
+        child: _PaneItemKeys(
+          keys: _itemKeys,
+          child: paneResult,
+        ),
       ),
     );
   }
