@@ -23,9 +23,12 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
 
 ### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
 
+![Example Showcase](images/example-showcase.png)
+
 ### Content
 
 - [Motivation](#motivation)
+- [Sponsors](#sponsors)
 - [Installation](#installation)
   - [Badge](#badge)
 - [Style](#style)
@@ -83,13 +86,19 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
   - [List Tile](#list-tile)
   - [Info Header](#info-header)
   - [TreeView](#treeview)
+    - [Scrollable tree view](#scrollable-tree-view)
     - [Lazily load nodes](#lazily-load-nodes)
+  - [CommandBar](#commandbar)
 - [Mobile Widgets](#mobile-widgets)
   - [Chip](#chip)
   - [Pill Button Bar](#pill-button-bar)
   - [Snackbar](#snackbar)
+- [Layout Widgets](#layout-widgets)
+  - [DynamicOverflow](#dynamicoverflow)
 - [Equivalents with the material library](#equivalents-with-the-material-library)
+- [Localization](#Localization)
 - [Contribution](#contribution)
+  - [Contributing new localizations](#contributing-new-localizations) 
   - [Acknowledgements](#acknowledgements)
 
 ## Motivation
@@ -103,9 +112,24 @@ See also:
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
+## Sponsors
+
+Want to be a sponsor? Become one [here](https://patreon.com/bdlukaa)
+
+These are our really cool sponsors!
+
+<a href="https://github.com/phorcys420"><img src="https://github.com/phorcys420.png" width="50px" alt="phorcys420" /></a>&nbsp;&nbsp;
+
 ## Installation
 
 Add the package to your dependencies:
+
+```yaml
+dependencies:
+  fluent_ui: ^3.10.0
+```
+
+OR:
 
 ```yaml
 dependencies:
@@ -286,17 +310,16 @@ ThemeData(
 
 ### Font
 
-You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system.
+You should use one font throughout your app's UI, and we recommend sticking with the default font for Windows apps, **Segoe UI Variable**. It's designed to maintain optimal legibility across sizes and pixel densities and offers a clean, light, and open aesthetic that complements the content of the system. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#font)
 
-![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/segoe-sample.svg)
+![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/segoe-sample.svg)
 
-[Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#font)
 
 ### Type ramp
 
-The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. All sizes are in effective pixels. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp)
 
-![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-ramp.png)
+![Windows Type Ramp](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/text-block-type-ramp.svg)
 
 ## Reveal Focus
 
@@ -310,11 +333,11 @@ This is especially helpful in 10-foot scenarios where the user might not be payi
 
 ### Enabling it
 
-Reveal Focus is off by default. To enable it, change the `focusStyle` in your app `ThemeData`:
+Reveal Focus is off by default. To enable it, change the `focusTheme` in your app `ThemeData`:
 
 ```dart
 theme: ThemeData(
-  focusTheme: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: 4.0,
   ),
 ),
@@ -326,7 +349,7 @@ To enable it in a 10 foot screen, use the method `is10footScreen`:
 import 'dart:ui' as ui;
 
 theme: ThemeData(
-  focusStyle: FocusStyle(
+  focusTheme: FocusThemeData(
     glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
   ),
 ),
@@ -463,33 +486,7 @@ You can customize the selected indicator. By default `StickyNavigationIndicator`
 
 ```dart
 pane: NavigationPane(
-  indicatorBuilder: ({
-    required BuildContext context,
-    /// The navigation pane corresponding to this indicator
-    required NavigationPane pane,
-    /// Corresponds to the current display mode. If top, Axis.vertical
-    /// is passed, otherwise Axis.vertical
-    Axis? axis,
-    /// Corresponds to the pane itself as a widget. The indicator is
-    /// rendered over the whole pane.
-    required Widget child,
-  }) {
-    if (pane.selected == null) return child;
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneThemeData.of(context);
-
-    axis??= Axis.horizontal;
-
-    return EndNavigationIndicator(
-      index: pane.selected,
-      offsets: () => pane.effectiveItems.getPaneItemsOffsets(pane.paneKey),
-      sizes: pane.effectiveItems.getPaneItemsSizes,
-      child: child,
-      color: theme.highlightColor,
-      curve: theme.animationCurve ?? Curves.linear,
-      axis: axis,
-    );
-  },
+  indicator: const EndNavigationIndicator(),
 )
 ```
 
@@ -586,16 +583,7 @@ SizedBox(
     tabs: List.generate(tabs, (index) {
       return Tab(
         text: Text('Tab $index'),
-        closeIcon: Tooltip(
-          message: 'Close tab',
-          child: IconButton(
-            icon: Icon(FluentIcons.close),
-            onPressed: () {
-              setState(() => tabs--);
-              if (currentIndex > tabs - 1) currentIndex--;
-            },
-          ),
-        ),
+        closeIcon: FluentIcons.chrome_close,
       );
     }),
     bodies: List.generate(
@@ -1189,41 +1177,30 @@ void close() {
 
 A flyout is a light dismiss container that can show arbitrary UI as its content. Flyouts can contain other flyouts or context menus to create a nested experience.
 
-### Example
+![Flyout Opened Above Button 3](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/flyout-smoke.png)
 
 ```dart
 final flyoutController = FlyoutController();
 
 Flyout(
   controller: flyoutController,
-  contentWidth: 450,
-  content: FlyoutContent(
-    child: Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+  content: const FlyoutContent(
+    constraints: BoxConstraints(maxWidth: 100),
+    child: Text('The Flyout for Button 3 has LightDismissOverlayMode enabled'),
   ),
   child: Button(
-    child: Text('Open flyout'),
-    onPressed: () {
-      flyoutController.open = true;
-    },
+    child: Text('Button 3'),
+    onPressed: flyoutController.open,
   ),
 );
 
 @override
 void dispose() {
+  // Dispose the controller to free up resources
   flyoutController.dispose();
   super.dispose();
 }
 ```
-
-The code above produces the following:
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-wrapping-text.png)
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-nested.png)\
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/flyout-smoke.png)
 
 ## Acrylic
 
@@ -1474,6 +1451,8 @@ You can include an icon in the tree view item data template to represent nodes. 
 
 ![TreeView Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
 
+Each `TreeViewItem` can optionally take a `value` allowing you to store an arbitrary identifier with each item. This can be used in conjunction with `onSelectionChanged` to easily identify which items were selected without having to deconstruct the content widget.
+
 Here's an example of how to create a tree view:
 
 ```dart
@@ -1509,6 +1488,12 @@ TreeView(
 ),
 ```
 
+### Scrollable tree view
+
+Vertical scrolling can be enabled for a tree view by setting the `shrinkWrap` property to false.
+If you have many items, consider setting `itemExtent`, `cacheExtent`, and/or `usePrototypeItem`
+for much better performance.
+
 ### Lazily load nodes
 
 Load nodes as required by the user
@@ -1542,6 +1527,86 @@ TreeView(
   items: items,
 );
 ```
+
+## CommandBar
+
+A `CommandBar` control provides quick access to common tasks. This could be application-level or page-level commands. [Learn More](https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar)
+
+![CommandBar Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
+
+The `CommandBar` is composed of a number of `CommandBarItem` objects, which could be `CommandBarButton`, a `CommandBarSeparator`, or any custom object (e.g., a "split button" object). Sub-class `CommandBarItem` to create your own custom items.
+
+Each `CommandBarItem` widget knows how to render itself in three different modes:
+- `CommandBarItemDisplayMode.inPrimary`: Displayed horizontally in primary area
+- `CommandBarItemDisplayMode.inPrimaryCompact`: More compact horizontal display (e.g., only the icon is displayed for `CommandBarButton`)
+- `CommandBarItemDisplayMode.inSecondary`: Displayed within flyout menu `ListView`
+
+The "primary area" of the command bar displays items horizontally. The "secondary area" of the command bar is a flyout menu accessed via an "overflow widget" (by default, a "more" button). You can specify items that should be displayed for each area. The overflow widget will only be displayed if there are items in the secondary area (including any items that dynamically overflowed into the secondary area, if dynamic overflow is enabled).
+
+Whether or not the "compact" mode is selected for items displayed in the primary area is determined by an optional width breakpoint. If set, if the width of the widget is less than the breakpoint, it will render each primary `CommandBarItem` using the compact mode.
+
+Different behaviors can be selected when the width of the `CommandBarItem` widgets exceeds the constraints, as determined by the specified `CommandBarOverflowBehavior`, including dynamic overflow (putting primary items into the secondary area on overflow), wrapping, clipping, scrolling, and no wrapping (will overflow).
+
+The horizontal and vertical alignment can also be customized via the `mainAxisAlignment` and `crossAxisAlignment` properties. The main axis alignment respects current directionality.
+
+A `CommandBarCard` can be used to create a raised card around a `CommandBar`. While this is not officially part of the Fluent design language, the concept is commonly used in the Office desktop apps for the app-level command bar.
+
+Here is an example of a right-aligned command bar that has additional items in the secondary area:
+
+```dart
+CommandBar(
+  mainAxisAlignment: MainAxisAlignment.end,
+  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+  compactBreakpointWidth: 768,
+  primaryItems: [
+    CommandBarButton(
+      icon: const Icon(FluentIcons.add),
+      label: const Text('Add'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.edit),
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Edit'),
+      onPressed: () {},
+    ),
+  ],
+  secondaryItems: [
+    CommandBarButton(
+      icon: const Icon(FluentIcons.archive),
+      label: const Text('Archive'),
+      onPressed: () {},
+    ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.move),
+      label: const Text('Move'),
+      onPressed: () {},
+    ),
+  ],
+),
+```
+
+To put a tooltip on any other kind of `CommandBarItem` (or otherwise wrap it in another widget), use `CommandBarBuilderItem`:
+
+```dart
+CommandBarBuilderItem(
+  builder: (context, mode, w) => Tooltip(
+    message: "Create something new!",
+    child: w,
+  ),
+  wrappedItem: CommandBarButton(
+    icon: const Icon(FluentIcons.add),
+    label: const Text('Add'),
+    onPressed: () {},
+  ),
+),
+```
+
+More complex examples, including command bars with items that align to each side of a carded bar, are in the example app.
 
 # Mobile Widgets
 
@@ -1638,7 +1703,17 @@ showSnackbar(
 
 ---
 
-### Equivalents with the material library
+# Layout Widgets
+
+Widgets that help to layout other widgets.
+
+## DynamicOverflow
+
+`DynamicOverflow` widget is similar to the `Wrap` widget, but only lays out children widgets in a single run, and if there is not room to display them all, it will hide widgets that don't fit, and display the "overflow widget" at the end. Optionally, the "overflow widget" can be displayed all the time. Displaying the overflow widget will take precedence over any children widgets.
+
+This is used to implement the dynamic overflow mode for `CommandBar`, but could be useful on its own. It supports both horizontal and vertical layout modes, and various main axis and cross axis alignments.
+
+# Equivalents with the material library
 
 The list of equivalents between this library and `flutter/material.dart`
 
@@ -1681,17 +1756,48 @@ The list of equivalents between this library and `flutter/material.dart`
 | -                         | PillButtonBar    |
 | ExpansionPanel            | Expander         |
 
+## Localization
+
+FluentUI widgets currently supports out-of-the-box an wide number of languages, including: 
+
+- Arabic
+- English
+- French
+- German
+- Hindi
+- Portuguese
+- Russian
+- Simplified Chinese
+- Spanish
+
 ## Contribution
 
 Feel free to [file an issue](https://github.com/bdlukaa/fluent_ui/issues/new) if you find a problem or [make pull requests](https://github.com/bdlukaa/fluent_ui/pulls).
 
 All contributions are welcome :)
 
+### Contributing new localizations
+
+In [PR#216](https://github.com/bdlukaa/fluent_ui/pull/216) we added support for new localizations in FluentUI Widgets.
+
+If you want to contribute adding new localizations please follow this steps:
+
+- [Fork the repo](https://github.com/bdlukaa/fluent_ui/fork)
+- Copy `lib/l10n/intl_en.arb` file into `lib/l10n` folder with a new language code, following [this list of ISO 859-1 codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
+- Update the contents in the newly created file. Specially, please update the `@locale` value with the corresponding ISO code.
+- Then update the `localization.dart:defaultSupportedLocales` list, adding an entry for each new locale
+- If your IDE doesn't have any of the `intl` plugins ([Intl plugin for Android Studio/IntelliJ](https://plugins.jetbrains.com/plugin/13666-flutter-intl) / [Flutter Intl for VSCode](https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) ) please run your project and code generation will take place. 
+- When you're done, [make a new pull request](https://github.com/bdlukaa/fluent_ui/pulls)
+
+More about [Localization in the Flutter Official Documentation](https://docs.flutter.dev/development/accessibility-and-localization/internationalization)
+
 ### Acknowledgements
 
 Irrespective of order, thanks to all the people below for contributing with the project. It means a lot to me :)
 
 - [@HrX03](https://github.com/HrX03) for the `Acrylic`, `FluentIcons` generator and `_FluentTextSelectionControls` implementation.
-- [@raitonubero](https://github.com/raitonoberu) for `StickyNavigationIndicator`, `ProgressBar` and `ProgressRing`
+- [@raitonubero](https://github.com/raitonoberu) `ProgressBar` and `ProgressRing` implementation
 - [@alexmercerind](https://github.com/alexmercerind) for the [flutter_acrylic](https://github.com/alexmercerind/flutter_acrylic) plugin, used on the example app
 - [@leanflutter](https://github.com/leanflutter) for the [window_manager](https://github.com/leanflutter/window_manager) plugin, used on the example app.
+- [@henry2man](https://github.com/henry2man) for the [localization support](https://github.com/bdlukaa/fluent_ui/pull/216)
+- [@klondikedragon](https://github.com/klondikedragon) for [`CommandBar` implementation](https://github.com/bdlukaa/fluent_ui/pull/232)

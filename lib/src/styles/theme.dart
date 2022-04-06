@@ -326,8 +326,7 @@ class ThemeData with Diagnosticable {
     disabledColor ??=
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? const Color(0xFFf9f9f9) : const Color(0xFF272727);
+    scaffoldBackgroundColor ??= Colors.white.withOpacity(0.025);
     acrylicBackgroundColor ??= isLight
         ? const Color.fromARGB(204, 255, 255, 255)
         : const Color(0x7F1e1e1e);
@@ -342,7 +341,7 @@ class ThemeData with Diagnosticable {
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= isLight ? const Color(0xFFf3f3f3) : const Color(0xFF2e2e2e);
-    typography = Typography.standard(brightness: brightness)
+    typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
     focusTheme = FocusThemeData.standard(

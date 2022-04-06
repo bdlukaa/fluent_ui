@@ -8,10 +8,12 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'screens/colors.dart';
+import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
+import 'screens/commandbars.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';
@@ -71,8 +73,7 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {'/': (_) => const MyHomePage()},
+          home: const MyHomePage(),
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -92,7 +93,15 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return Directionality(
               textDirection: appTheme.textDirection,
-              child: child!,
+              child: NavigationPaneTheme(
+                data: NavigationPaneThemeData(
+                  backgroundColor: appTheme.windowEffect !=
+                          flutter_acrylic.WindowEffect.disabled
+                      ? Colors.transparent
+                      : null,
+                ),
+                child: child!,
+              ),
             );
           },
         );
@@ -114,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   int index = 0;
 
   final settingsController = ScrollController();
+  final viewKey = GlobalKey();
 
   @override
   void initState() {
@@ -132,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
+      key: viewKey,
       appBar: NavigationAppBar(
         title: () {
           if (kIsWeb) return const Text(appTitle);
@@ -167,13 +178,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: () {
+        indicator: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return NavigationIndicator.end;
+              return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
             default:
-              return NavigationIndicator.sticky;
+              return const StickyNavigationIndicator();
           }
         }(),
         items: [
@@ -203,6 +214,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           PaneItem(
             icon: const Icon(FluentIcons.cell_phone),
             title: const Text('Mobile'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.toolbox),
+            title: const Text('Command bars'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.pop_expand),
+            title: const Text('Popups, Flyouts and Context Menus'),
           ),
           PaneItem(
             icon: Icon(
@@ -241,6 +260,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
+        const CommandBars(),
+        const FlyoutShowcase(),
         const Others(),
         Settings(controller: settingsController),
       ]),

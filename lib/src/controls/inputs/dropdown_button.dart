@@ -40,7 +40,7 @@ class DropDownButton extends StatefulWidget {
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
-  /// The content at the left of this widget.
+  /// The content at the start of this widget.
   ///
   /// Usually an [Icon]
   final Widget? leading;
@@ -172,9 +172,9 @@ class _DropDownButtonState extends State<DropDownButton>
           curve: Curves.easeOut,
         ),
         target: {
-          FlyoutPlacement.left: leftTarget,
+          FlyoutPlacement.start: leftTarget,
           FlyoutPlacement.center: centerTarget,
-          FlyoutPlacement.right: rightTarget,
+          FlyoutPlacement.end: rightTarget,
         },
         verticalOffset: widget.verticalOffset,
         preferBelow: true,
@@ -272,7 +272,7 @@ class DropDownButtonItem {
   /// Controls how one widget replaces another widget in the tree.
   final Key? key;
 
-  /// Show a content at the left of this button.
+  /// Show a content at the start of this button.
   ///
   /// Usually an [Icon]
   final Widget? leading;
@@ -429,9 +429,9 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
       preferBelow: preferBelow,
     );
     switch (placement) {
-      case FlyoutPlacement.left:
+      case FlyoutPlacement.start:
         return Offset(leftTarget.dx, defaultOffset.dy);
-      case FlyoutPlacement.right:
+      case FlyoutPlacement.end:
         return Offset(rightTarget.dx - childSize.width, defaultOffset.dy);
       default:
         return defaultOffset;
@@ -511,9 +511,9 @@ class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
     return CustomSingleChildLayout(
       key: widget.menuKey,
       delegate: _DropDownButtonPositionDelegate(
-        leftTarget: widget.target[FlyoutPlacement.left]!,
+        leftTarget: widget.target[FlyoutPlacement.start]!,
         centerTarget: widget.target[FlyoutPlacement.center]!,
-        rightTarget: widget.target[FlyoutPlacement.right]!,
+        rightTarget: widget.target[FlyoutPlacement.end]!,
         verticalOffset: widget.verticalOffset,
         preferBelow: widget.preferBelow,
         placement: widget.placement,

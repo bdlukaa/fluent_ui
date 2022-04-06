@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// An application that uses fluent design.
 ///
@@ -58,7 +59,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.supportedLocales = defaultSupportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -96,7 +97,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.supportedLocales = defaultSupportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -372,8 +373,8 @@ class _FluentAppState extends State<FluentApp> {
       yield* widget.localizationsDelegates!;
     }
     yield DefaultFluentLocalizations.delegate;
-    yield m.DefaultMaterialLocalizations.delegate;
-    yield DefaultWidgetsLocalizations.delegate;
+    yield GlobalMaterialLocalizations.delegate;
+    yield GlobalWidgetsLocalizations.delegate;
   }
 
   bool get _usesRouter => widget.routerDelegate != null;

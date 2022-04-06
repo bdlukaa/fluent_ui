@@ -1,9 +1,86 @@
 Date format: DD/MM/YYYY
 
-## [3.9.2]
+## [3.x.x]
 
-- Improves `icons.dart` formatting and its generation.
-- Fix: [#207](https://github.com/bdlukaa/fluent_ui/pull/207) FilledButton disabled foreground
+- Fix overflow behavior for `TreeViewItem` ([#270](https://github.com/bdlukaa/fluent_ui/pull/270))
+
+## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
+
+- Improves `icons.dart` formatting and its generation ([#215](https://github.com/bdlukaa/fluent_ui/pull/215))
+- Use correct color on `FilledButton` when disabled ([209](https://github.com/bdlukaa/fluent_ui/pull/209))
+- Built-in support for new languages ([#216](https://github.com/bdlukaa/fluent_ui/pull/216)):
+  - English
+  - Spanish (reviewed by [@henry2man](https://github.com/henry2man))
+  - French (reviewed by [@WinXaito](https://github.com/WinXaito))
+  - Brazilian Portuguese (reviewed by [@bdlukaa](https://github.com/bdlukaa))
+  - Russian (reviewed by [@raitonoberu](https://github.com/raitonoberu))
+  - German (reviewed by [@larsb24](https://github.com/larsb24))
+  - Hindi (reviewed by [@alexmercerind](https://github.com/alexmercerind))
+  - Simplified Chinese (reviewed by [@zacksleo](https://github.com/zacksleo))
+- Add `useInheritedMediaQuery` property to `FluentApp` ([#211](https://github.com/bdlukaa/fluent_ui/pull/211))
+- `TreeView` updates ([#255](https://github.com/bdlukaa/fluent_ui/pull/225)):
+  - Optional vertical scrolling by setting `shrinkWrap` to `false`
+  - TreeViewItem now has a custom primary key (`value` field)
+  - Added `onSelectionChanged` callback, called when the selection is changed
+- Account for enabled on pressing states ([#233](https://github.com/bdlukaa/fluent_ui/pull/233))
+- Implement `CommandBar` ([#232](https://github.com/bdlukaa/fluent_ui/pull/232))
+  - Add `DynamicOverflow` layout widget, for one-run horizontal or vertical layout with an overflow widget
+  - Add `HorizontalScrollView` helper widget, with mouse wheel horizontal scrolling
+- Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
+- Content state is no longer lost when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
+- **BREAKING** Update indicators ([#248](https://github.com/bdlukaa/fluent_ui/pull/248)):
+  - Added `InheritedNavigationView`
+  - Updated sticky indicator to match the latest Win 11 UI ([#173](https://github.com/bdlukaa/fluent_ui/issues/173))
+  - **BREAKING** Renamed `NavigationPane.indicatorBuilder` to `NavigationPane.indicator`
+  - **BREAKING** Indicators are no longer built with functions
+    Before:
+    ```dart
+    indicatorBuilder: ({
+      required BuildContext context,
+      required NavigationPane pane,
+      required Axis axis,
+      required Widget child,
+    }) {
+      if (pane.selected == null) return child;
+      assert(debugCheckHasFluentTheme(context));
+      final theme = NavigationPaneTheme.of(context);
+
+      final left = theme.iconPadding?.left ?? theme.labelPadding?.left ?? 0;
+      final right = theme.labelPadding?.right ?? theme.iconPadding?.right ?? 0;
+
+      return StickyNavigationIndicator(
+        index: pane.selected!,
+        pane: pane,
+        child: child,
+        color: theme.highlightColor,
+        curve: Curves.easeIn,
+        axis: axis,
+        topPadding: EdgeInsets.only(left: left, right: right),
+      );
+    }
+    ```
+
+    Now:
+    ```dart
+    indicator: StickyNavigationIndicator(
+      color: Colors.blue.lighter, // optional
+    ),
+    ```
+- `initiallyExpanded` property on `Expander` works properly ([#252](https://github.com/bdlukaa/fluent_ui/pull/252))
+- **BREAKING** Flyout changes:
+  - Removed `Flyout.contentWidth` and added `FlyoutContent.constraints`. Now the content will be automatically sized and layed out according to the placement
+  - Added `Flyout.placement` which takes a `FlyoutPlacement`
+  - Added `Flyout.openMode` which takes a `FlyoutOpenMode`
+  - `Flyout.controller` is no longer required. If not provided, a local controller is created to handle the `Flyout.openMode` settings
+  - **Breaking** `FlyoutController.open` is now a function
+  - Added `FlyoutController.isOpen`, `FlyoutController.isClosed`, `FlyoutController.close()`, `FlyoutController.open()` and `FlyoutController.toggle()`
+  - **Breaking** Removed `Popup.contentHeight`
+- **BREAKING** Updated typography ([#261](https://github.com/bdlukaa/fluent_ui/pull/261)):
+  - Renamed `Typography.standart` to `Typography.fromBrightness`
+  - Renamed `Typography` constructor to `Typography.raw`
+  - Default color for dark mode is now `const Color(0xE4000000)`
+  - Updated default font sizes for `display`, `titleLarge`, `title` and `subtitle`
+- `TabWidthBehavior.sizeToContent` now works properly ([#218](https://github.com/bdlukaa/fluent_ui/issues/218))
 
 ## [3.9.1] - Input Update - [25/02/2022]
 

@@ -43,7 +43,7 @@ class Typography with Diagnosticable {
   final TextStyle? caption;
 
   /// Creates a new [Typography]. To create the default typography, use [Typography.defaultTypography]
-  const Typography({
+  const Typography.raw({
     this.display,
     this.titleLarge,
     this.title,
@@ -54,33 +54,39 @@ class Typography with Diagnosticable {
     this.caption,
   });
 
-  /// The default typography.
+  /// The default typography according to a brightness or color.
   ///
-  /// If [color] is null, uses [Colors.black] if [brightness] is [Brightness.dark], otherwise uses [Colors.white]
-  factory Typography.standard({
+  /// If [color] is null, [Colors.black] is used if [brightness] is light,
+  /// otherwise [Colors.white] is used. If it's not null, [color] will be used.
+  factory Typography.fromBrightness({
     Brightness? brightness,
     Color? color,
   }) {
-    assert(brightness != null || color != null);
-    color ??= brightness == Brightness.light ? Colors.black : Colors.white;
-    return Typography(
+    assert(
+      brightness != null || color != null,
+      'Either brightness or color must be provided',
+    );
+    // If color is null, brightness will not be null
+    color ??=
+        brightness == Brightness.light ? const Color(0xE4000000) : Colors.white;
+    return Typography.raw(
       display: TextStyle(
-        fontSize: 42,
+        fontSize: 68,
         color: color,
         fontWeight: FontWeight.w600,
       ),
       titleLarge: TextStyle(
-        fontSize: 34,
+        fontSize: 40,
         color: color,
         fontWeight: FontWeight.w500,
       ),
       title: TextStyle(
-        fontSize: 22,
+        fontSize: 28,
         color: color,
         fontWeight: FontWeight.w600,
       ),
       subtitle: TextStyle(
-        fontSize: 28,
+        fontSize: 20,
         color: color,
         fontWeight: FontWeight.w500,
       ),
@@ -108,7 +114,7 @@ class Typography with Diagnosticable {
   }
 
   static Typography lerp(Typography? a, Typography? b, double t) {
-    return Typography(
+    return Typography.raw(
       display: TextStyle.lerp(a?.display, b?.display, t),
       titleLarge: TextStyle.lerp(a?.titleLarge, b?.titleLarge, t),
       title: TextStyle.lerp(a?.title, b?.title, t),
@@ -123,7 +129,7 @@ class Typography with Diagnosticable {
   /// Copy this with a new [typography]
   Typography merge(Typography? typography) {
     if (typography == null) return this;
-    return Typography(
+    return Typography.raw(
       display: typography.display ?? display,
       titleLarge: typography.titleLarge ?? titleLarge,
       title: typography.title ?? title,
@@ -144,7 +150,7 @@ class Typography with Diagnosticable {
     Color? decorationColor,
     TextDecorationStyle? decorationStyle,
   }) {
-    return Typography(
+    return Typography.raw(
       display: display?.apply(
         color: displayColor,
         decoration: decoration,
