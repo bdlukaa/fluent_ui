@@ -240,6 +240,7 @@ class InheritedNavigationView extends InheritedWidget {
   }
 }
 
+/// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
 class _PaneItemKeys extends InheritedWidget {
   const _PaneItemKeys({
     Key? key,
