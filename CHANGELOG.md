@@ -3,7 +3,7 @@ Date format: DD/MM/YYYY
 ## [3.x.x]
 
 - Fix overflow behavior for `TreeViewItem` ([#270](https://github.com/bdlukaa/fluent_ui/pull/270))
-- Do not animate sticky indicators when parent is updated
+- Do not animate sticky indicators when parent is updated ([#273](https://github.com/bdlukaa/fluent_ui/pull/273))
 
 ## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
 
