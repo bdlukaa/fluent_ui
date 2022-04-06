@@ -44,13 +44,17 @@ enum PaneDisplayMode {
   /// ![Minimal Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png)
   minimal,
 
-  /// Let the [NavigationPane] decide what display mode should be used
-  /// based on the width. This is used by default on [NavigationPanel].
-  /// In Auto mode, the [NavigationPane] adapts between [minimal] when
-  /// the window is narrow, to [compact], and then [open] as the window
-  /// gets wider.
+  /// Let the [NavigationPane] decide what display mode should be used based on
+  /// the width. This is used by default on [NavigationPane]. In Auto mode, the
+  /// [NavigationPane] adapts between [minimal] when the window is narrow, to
+  /// [compact], and then [open] as the window gets wider.
   ///
-  /// ![Automatic Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)
+  /// - An expanded left pane on large window widths (1008px or greater).
+  /// - A left, icon-only, nav pane (LeftCompact) on medium window widths
+  /// (641px to 1007px).
+  /// - Only a menu button (LeftMinimal) on small window widths (640px or less).
+  ///
+  /// ![Automatic Display Mode](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/adaptive-behavior-minimal.png)
   auto,
 }
 
