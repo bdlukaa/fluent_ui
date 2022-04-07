@@ -366,6 +366,12 @@ class PaneItem extends NavigationPaneItem {
       }
     }();
 
+    final GlobalKey? key = () {
+      if (index != null && !index.isNegative) {
+        return _PaneItemKeys.of(index, context);
+      }
+    }();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: () {
@@ -377,7 +383,7 @@ class PaneItem extends NavigationPaneItem {
               child: InheritedNavigationView.merge(
                 itemIndex: index,
                 child: KeyedSubtree(
-                  key: index != null ? ValueKey<int>(index) : null,
+                  key: index != null ? key : null,
                   child: maybeBody!.pane!.indicator!,
                 ),
               ),
