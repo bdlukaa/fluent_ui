@@ -251,10 +251,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             margin: horizontalOffset,
           );
     if (position == FlyoutPosition.side) {
-      return Offset(
-        defaultOffset.dx,
-        defaultOffset.dy,
-      );
+      return Offset(defaultOffset.dx, defaultOffset.dy);
     }
     switch (placement) {
       case FlyoutPlacement.start:
@@ -289,11 +286,9 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     this.barrierLabel,
     required this.verticalOffset,
     required this.horizontalOffset,
-    this.acrylicDisabled = false,
     required this.position,
   });
 
-  final bool acrylicDisabled;
   final Widget content;
   final Rect buttonRect;
   final int elevation;
@@ -337,7 +332,6 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         horizontalOffset: horizontalOffset,
         position: position,
       );
-      if (acrylicDisabled) return DisableAcrylic(child: page);
       return page;
     });
   }
@@ -452,7 +446,7 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: key,
-      child: ContentSizeInfo(
+      child: PopupContentSizeInfo(
         size: size,
         child: widget.content(context),
       ),
@@ -460,8 +454,8 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
   }
 }
 
-class ContentSizeInfo extends InheritedWidget {
-  const ContentSizeInfo({
+class PopupContentSizeInfo extends InheritedWidget {
+  const PopupContentSizeInfo({
     Key? key,
     required Widget child,
     required this.size,
@@ -469,12 +463,12 @@ class ContentSizeInfo extends InheritedWidget {
 
   final Size size;
 
-  static ContentSizeInfo of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>()!;
+  static PopupContentSizeInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>()!;
   }
 
   @override
-  bool updateShouldNotify(ContentSizeInfo oldWidget) {
+  bool updateShouldNotify(PopupContentSizeInfo oldWidget) {
     return oldWidget.size != size;
   }
 }

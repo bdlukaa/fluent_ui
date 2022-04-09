@@ -91,7 +91,7 @@ Offset horizontalPositionDependentBox({
   double verticalOffset = 0.0,
   double margin = 10.0,
 }) {
-  // VERTICAL DIRECTION
+  // Horizontal DIRECTION
   final bool fitsLeft =
       target.dx + verticalOffset + childSize.width <= size.width - margin;
   final bool fitsRight = target.dx - verticalOffset - childSize.width >= margin;
@@ -103,7 +103,7 @@ Offset horizontalPositionDependentBox({
   } else {
     x = math.max(target.dx - verticalOffset - childSize.width, margin);
   }
-  // HORIZONTAL DIRECTION
+  // Vertical DIRECTION
   double y;
   if (size.height - margin * 2.0 < childSize.height) {
     y = (size.height - childSize.height) / 2.0;

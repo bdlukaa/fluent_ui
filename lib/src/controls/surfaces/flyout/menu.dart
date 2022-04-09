@@ -46,7 +46,7 @@ class MenuFlyout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasLeading = () {
+    final bool hasLeading = () {
       try {
         items.whereType<MenuFlyoutItem>().firstWhere((i) => i.leading != null);
         return true;
@@ -79,9 +79,7 @@ class MenuFlyout extends StatelessWidget {
 abstract class MenuFlyoutItemInterface {
   final Key? key;
 
-  const MenuFlyoutItemInterface({
-    this.key,
-  });
+  const MenuFlyoutItemInterface({this.key});
 
   Widget build(BuildContext context);
 }
@@ -106,7 +104,7 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = PopupContentSizeInfo.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
@@ -133,7 +131,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = PopupContentSizeInfo.of(context).size;
     return SizedBox(
       width: size.width,
       child: const Padding(

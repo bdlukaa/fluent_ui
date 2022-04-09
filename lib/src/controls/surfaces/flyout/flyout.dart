@@ -10,7 +10,7 @@ export 'controller.dart';
 part 'content.dart';
 part 'menu.dart';
 
-const kDefaultLongHoverDuration = Duration(milliseconds: 600);
+const kDefaultLongHoverDuration = Duration(milliseconds: 400);
 
 /// Where the flyout will be placed vertically relativelly the child
 enum FlyoutPosition {
@@ -146,6 +146,7 @@ class Flyout extends StatefulWidget {
 
   /// Called when the flyout is closed, either by [controller] or by the user
   final VoidCallback? onClose;
+
   @override
   _FlyoutState createState() => _FlyoutState();
 
@@ -196,18 +197,15 @@ class _FlyoutState extends State<Flyout> {
   @override
   void initState() {
     super.initState();
-
     controller = widget.controller ?? FlyoutController();
-
     controller.addListener(_handleStateChanged);
   }
 
   @override
   void didUpdateWidget(covariant Flyout oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (oldWidget.controller == null && widget.controller != null) {
-      // Dispose the current controller
+      // Dispose the current controller, which was created locally
       controller.dispose();
 
       // Assign to the new controller
@@ -217,6 +215,7 @@ class _FlyoutState extends State<Flyout> {
   }
 
   void _handleStateChanged() {
+    if (!mounted) return;
     final isOpen = popupKey.currentState?.isOpen ?? false;
     if (!isOpen && controller.isOpen) {
       popupKey.currentState?.openPopup().then((value) {
