@@ -1,9 +1,14 @@
 Date format: DD/MM/YYYY
 
-## [3.10.1]
+## [3.10.2] - [09/04/2022]
+
+- `NavigationView` without pane no longer throws error ([#276](https://github.com/bdlukaa/fluent_ui/issues/276))
+
+## [3.10.1] - [06/04/2022]
 
 - Fix overflow behavior for `TreeViewItem` ([#270](https://github.com/bdlukaa/fluent_ui/pull/270))
 - Do not animate sticky indicators when parent is updated ([#273](https://github.com/bdlukaa/fluent_ui/pull/273))
+- Add Arabic(ar) localization ([#268](https://github.com/bdlukaa/fluent_ui/pull/268))
 
 ## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
 

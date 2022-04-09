@@ -143,6 +143,7 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   void generateKeys() {
+    if (widget.pane == null) return;
     _itemKeys
       ..clear()
       ..addAll(
