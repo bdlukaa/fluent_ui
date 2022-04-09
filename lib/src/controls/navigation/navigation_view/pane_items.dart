@@ -394,6 +394,9 @@ class PaneItem extends NavigationPaneItem {
       }(),
     );
   }
+
+  // Widget buildMenuItem() {}
+
 }
 
 /// Separators for grouping navigation items. Set the color property to
@@ -483,7 +486,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
-class PaneItemAction extends PaneItem implements NavigationPaneItem {
+class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
     required this.onTap,
@@ -523,9 +526,9 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
   }
 }
 
-extension ItemsExtension on List<NavigationPaneItem> {
+extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
+  List<Offset> _getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;
@@ -538,16 +541,6 @@ extension ItemsExtension on List<NavigationPaneItem> {
       final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
       final position = paneBox.globalToLocal(globalPosition);
       return position;
-    }).toList();
-  }
-
-  /// Get all the item sizes in this list
-  List<Size> getPaneItemsSizes() {
-    return map((e) {
-      final context = e.itemKey.currentContext;
-      if (context == null) return Size.zero;
-      final box = context.findRenderObject()! as RenderBox;
-      return box.size;
     }).toList();
   }
 }

@@ -460,6 +460,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                     showTextOnTop: false,
                     displayMode: PaneDisplayMode.top,
                   ),
+                  placement: FlyoutPlacement.end,
                   content: (context) => FlyoutContent(
                     constraints: const BoxConstraints(maxWidth: 250.0),
                     padding: const EdgeInsets.only(top: 8.0),
@@ -468,6 +469,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                       children: dynamicallyHiddenPrimaryItems.map((i) {
                         // final item = widget.pane.items[i];
                         // return _buildItem(context, item);
+                        // TODO: build menu item
                         return const Text('item');
                       }).toList(),
                     ),
