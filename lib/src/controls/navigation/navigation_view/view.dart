@@ -272,9 +272,11 @@ class NavigationViewState extends State<NavigationView> {
                       ? Colors.black
                       : const Color(0xffBCBCBC),
                 ),
-                borderRadius: const BorderRadiusDirectional.only(
-                  topStart: Radius.circular(8.0),
-                ).resolve(direction),
+                borderRadius: displayMode == PaneDisplayMode.top
+                    ? BorderRadius.zero
+                    : const BorderRadiusDirectional.only(
+                        topStart: Radius.circular(8.0),
+                      ).resolve(direction),
               );
           final Widget content = ClipRect(
             key: _contentKey,
