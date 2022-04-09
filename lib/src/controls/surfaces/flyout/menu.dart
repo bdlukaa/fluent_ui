@@ -93,12 +93,14 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
     required this.text,
     this.trailing,
     required this.onPressed,
+    this.selected = false,
   }) : super(key: key);
 
   final Widget? leading;
   final Widget text;
   final Widget? trailing;
   final VoidCallback? onPressed;
+  final bool selected;
 
   bool _useIconPlaceholder = false;
 
@@ -109,6 +111,7 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
       child: FlyoutListTile(
+        selected: selected,
         icon: leading ??
             () {
               if (_useIconPlaceholder) return const Icon(null);
@@ -150,7 +153,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     required Widget text,
     Widget? trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
-    this.openMode = FlyoutOpenMode.press,
+    this.openMode = FlyoutOpenMode.longHover,
   }) : super(
           key: key,
           leading: leading,
@@ -163,27 +166,32 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 
   final FlyoutOpenMode openMode;
 
+  bool _open = false;
+
   @override
   Widget build(BuildContext context) {
-    return Flyout(
-      openMode: openMode,
-      position: FlyoutPosition.side,
-      placement: FlyoutPlacement.end,
-      verticalOffset: 40.0,
-      horizontalOffset: 0.0,
-      content: (context) {
-        return MenuFlyout(
-          items: items,
-        );
-      },
-      child: IgnorePointer(
+    return StatefulBuilder(builder: (context, setState) {
+      return Flyout(
+        openMode: openMode,
+        position: FlyoutPosition.side,
+        placement: FlyoutPlacement.end,
+        verticalOffset: 40.0,
+        horizontalOffset: 0.0,
+        content: (context) {
+          return MenuFlyout(
+            items: items,
+          );
+        },
+        onOpen: () => setState(() => _open = true),
+        onClose: () => setState(() => _open = false),
         child: MenuFlyoutItem(
           onPressed: () {},
           text: text,
           leading: leading,
           trailing: trailing,
+          selected: _open,
         ).build(context),
-      ),
-    );
+      );
+    });
   }
 }

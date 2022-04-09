@@ -91,6 +91,7 @@ class FlyoutListTile extends StatelessWidget {
     this.autofocus = false,
     this.semanticLabel,
     this.margin = const EdgeInsets.only(bottom: 5.0),
+    this.selected = false,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
@@ -122,6 +123,8 @@ class FlyoutListTile extends StatelessWidget {
 
   final EdgeInsetsGeometry margin;
 
+  final bool selected;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -134,6 +137,10 @@ class FlyoutListTile extends StatelessWidget {
       builder: (context, states) {
         final theme = FluentTheme.of(context);
         final radius = BorderRadius.circular(4.0);
+
+        if (selected) {
+          states = {ButtonStates.hovering};
+        }
 
         Widget content = Container(
           decoration: BoxDecoration(

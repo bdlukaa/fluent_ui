@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,6 +9,8 @@ export 'controller.dart';
 
 part 'content.dart';
 part 'menu.dart';
+
+const kDefaultLongHoverDuration = Duration(milliseconds: 600);
 
 /// Where the flyout will be placed vertically relativelly the child
 enum FlyoutPosition {
@@ -52,6 +56,9 @@ enum FlyoutOpenMode {
   /// The flyout will opened when the user hover the child
   hover,
 
+  /// The flyout will be opened when the user long hover the child
+  longHover,
+
   /// The flyout will opened when the user press the child
   press,
 
@@ -85,6 +92,9 @@ class Flyout extends StatefulWidget {
     this.placement = FlyoutPlacement.center,
     this.openMode = FlyoutOpenMode.none,
     this.position = FlyoutPosition.above,
+    this.longHoverDuration = kDefaultLongHoverDuration,
+    this.onOpen,
+    this.onClose,
   }) : super(key: key);
 
   /// The child that will be attached to the flyout.
@@ -121,11 +131,21 @@ class Flyout extends StatefulWidget {
   /// Defaults to none
   final FlyoutOpenMode openMode;
 
+  /// The duration of the hover if [openMode] is [FlyoutOpenMode.longHover].
+  ///
+  /// 800 milliseconds are used by default
+  final Duration longHoverDuration;
+
   /// Where the flyout will be placed vertically relatively to the child
   ///
   /// Defaults to [FlyoutPosition.above]
   final FlyoutPosition position;
 
+  /// Called when the flyout is opened, either by [controller] or [openMode]
+  final VoidCallback? onOpen;
+
+  /// Called when the flyout is closed, either by [controller] or by the user
+  final VoidCallback? onClose;
   @override
   _FlyoutState createState() => _FlyoutState();
 
@@ -135,9 +155,14 @@ class Flyout extends StatefulWidget {
     properties
       ..add(DiagnosticsProperty<FlyoutController>('controller', controller))
       ..add(DoubleProperty(
-        'verticalOffset',
+        'vertical offset',
         verticalOffset,
         defaultValue: 24.0,
+      ))
+      ..add(DoubleProperty(
+        'horizontal offset',
+        horizontalOffset,
+        defaultValue: 10.0,
       ))
       ..add(EnumProperty<FlyoutPlacement>(
         'placement',
@@ -148,6 +173,16 @@ class Flyout extends StatefulWidget {
         'open mode',
         openMode,
         defaultValue: FlyoutOpenMode.none,
+      ))
+      ..add(EnumProperty<FlyoutPosition>(
+        'position',
+        position,
+        defaultValue: FlyoutPosition.above,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'long hover duration',
+        longHoverDuration,
+        defaultValue: kDefaultLongHoverDuration,
       ));
   }
 }
@@ -156,6 +191,7 @@ class _FlyoutState extends State<Flyout> {
   final popupKey = GlobalKey<PopUpState>();
 
   late FlyoutController controller;
+  Timer? longHoverTimer;
 
   @override
   void initState() {
@@ -183,9 +219,13 @@ class _FlyoutState extends State<Flyout> {
   void _handleStateChanged() {
     final isOpen = popupKey.currentState?.isOpen ?? false;
     if (!isOpen && controller.isOpen) {
-      popupKey.currentState?.openPopup();
+      popupKey.currentState?.openPopup().then((value) {
+        widget.onClose?.call();
+      });
+      widget.onOpen?.call();
     } else if (isOpen && controller.isClosed) {
       Navigator.pop(context);
+      widget.onClose?.call();
     }
   }
 
@@ -196,6 +236,8 @@ class _FlyoutState extends State<Flyout> {
     if (widget.controller == null) {
       controller.dispose();
     }
+    longHoverTimer?.cancel();
+    longHoverTimer = null;
     super.dispose();
   }
 
@@ -218,6 +260,17 @@ class _FlyoutState extends State<Flyout> {
         return MouseRegion(
           opaque: false,
           onEnter: (event) => controller.open(),
+          child: popup,
+        );
+      case FlyoutOpenMode.longHover:
+        return MouseRegion(
+          opaque: true,
+          onEnter: (event) {
+            longHoverTimer = Timer(widget.longHoverDuration, controller.open);
+          },
+          onExit: (event) {
+            if (longHoverTimer?.isActive ?? false) longHoverTimer?.cancel();
+          },
           child: popup,
         );
       case FlyoutOpenMode.press:
