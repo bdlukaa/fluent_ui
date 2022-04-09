@@ -376,13 +376,11 @@ class _TopNavigationPane extends StatelessWidget {
   _TopNavigationPane({
     required this.pane,
     this.listKey,
-    this.scrollbarKey,
     this.appBar,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final NavigationAppBar? appBar;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -465,14 +463,12 @@ class _CompactNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
-    this.scrollbarKey,
     this.onToggle,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -544,17 +540,12 @@ class _CompactNavigationPane extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: Scrollbar(
-              key: scrollbarKey,
-              controller: pane.scrollController,
-              isAlwaysShown: false,
-              child: ListView(
-                key: listKey,
-                primary: true,
-                children: pane.items.map((item) {
-                  return _buildItem(context, item);
-                }).toList(),
-              ),
+            child: ListView(
+              key: listKey,
+              primary: true,
+              children: pane.items.map((item) {
+                return _buildItem(context, item);
+              }).toList(),
             ),
           ),
           ListView(
@@ -577,7 +568,6 @@ class _OpenNavigationPane extends StatefulWidget {
     required this.theme,
     this.paneKey,
     this.listKey,
-    this.scrollbarKey,
     this.onToggle,
     this.onItemSelected,
   }) : super(key: pane.key);
@@ -585,7 +575,6 @@ class _OpenNavigationPane extends StatefulWidget {
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
 
@@ -715,22 +704,17 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               child: widget.pane.autoSuggestBox!,
             ),
           Expanded(
-            child: Scrollbar(
-              key: widget.scrollbarKey,
-              controller: widget.pane.scrollController,
-              isAlwaysShown: false,
-              child: ListView(
-                key: widget.listKey,
-                primary: true,
-                children: widget.pane.items.map((item) {
-                  return _OpenNavigationPane.buildItem(
-                    context,
-                    widget.pane,
-                    item,
-                    widget.onItemSelected,
-                  );
-                }).toList(),
-              ),
+            child: ListView(
+              key: widget.listKey,
+              primary: true,
+              children: widget.pane.items.map((item) {
+                return _OpenNavigationPane.buildItem(
+                  context,
+                  widget.pane,
+                  item,
+                  widget.onItemSelected,
+                );
+              }).toList(),
             ),
           ),
           ListView(
