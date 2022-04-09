@@ -272,6 +272,7 @@ class PaneItem extends NavigationPaneItem {
               );
             case PaneDisplayMode.top:
               final result = Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -300,9 +301,7 @@ class PaneItem extends NavigationPaneItem {
                     ),
                 ]);
               }
-              // return Container(
-              //     key: itemKey, child: result, color: Colors.orange);
-              return Center(key: itemKey, child: result);
+              return KeyedSubtree(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
           }

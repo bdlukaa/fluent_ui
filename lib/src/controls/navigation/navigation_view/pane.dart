@@ -372,7 +372,7 @@ abstract class NavigationPaneWidget {
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
-class _TopNavigationPane extends StatelessWidget {
+class _TopNavigationPane extends StatefulWidget {
   _TopNavigationPane({
     required this.pane,
     this.listKey,
@@ -385,20 +385,28 @@ class _TopNavigationPane extends StatelessWidget {
   final GlobalKey? scrollbarKey;
   final NavigationAppBar? appBar;
 
+  @override
+  State<_TopNavigationPane> createState() => _TopNavigationPaneState();
+}
+
+class _TopNavigationPaneState extends State<_TopNavigationPane> {
+  final overflowController = FlyoutController();
+  List<int> dynamicallyHiddenPrimaryItems = [];
+
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     if (item is PaneItemHeader) {
       return item.build(context);
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.vertical);
     } else if (item is PaneItem) {
-      final selected = pane.isSelected(item);
+      final selected = widget.pane.isSelected(item);
       return item.build(
         context,
         selected,
         () {
-          pane._changeTo(item);
+          widget.pane._changeTo(item);
         },
-        showTextOnTop: !pane.footerItems.contains(item),
+        showTextOnTop: !widget.pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
       );
     } else {
@@ -409,54 +417,96 @@ class _TopNavigationPane extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    overflowController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    Widget topBar = SizedBox(
-      height: pane.size?.topHeight ?? kOneLineTileHeight,
-      child: Row(key: pane.paneKey, children: [
+    final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
+    return SizedBox(
+      key: widget.pane.paneKey,
+      height: height,
+      child: Row(children: [
         Expanded(
           child: Row(children: [
-            if (appBar != null) NavigationAppBar.buildLeading(context, appBar!),
-            if (pane.header != null)
+            if (widget.appBar != null)
+              NavigationAppBar.buildLeading(context, widget.appBar!),
+            if (widget.pane.header != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                   vertical: 6.0,
                 ),
-                child: pane.header!,
+                child: widget.pane.header!,
               ),
-            // TODO: A listview shouldn't be used here. Instead, if there are
-            // more items than space, show a dropdown button with the other
-            // items
             Expanded(
-              child: SingleChildScrollView(
-                key: listKey,
-                primary: true,
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: pane.items.map((item) {
-                    return _buildItem(context, item);
-                  }).toList(),
+              child: DynamicOverflow(
+                children: widget.pane.items.map((item) {
+                  return SizedBox(
+                    height: height,
+                    child: _buildItem(context, item),
+                  );
+                }).toList(),
+                overflowWidgetAlignment: MainAxisAlignment.start,
+                overflowWidget: Flyout(
+                  controller: overflowController,
+                  child: PaneItem(icon: const Icon(FluentIcons.more)).build(
+                    context,
+                    false,
+                    overflowController.open,
+                    showTextOnTop: false,
+                    displayMode: PaneDisplayMode.top,
+                  ),
+                  content: (context) => FlyoutContent(
+                    constraints: const BoxConstraints(maxWidth: 250.0),
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: dynamicallyHiddenPrimaryItems.map((i) {
+                        // final item = widget.pane.items[i];
+                        // return _buildItem(context, item);
+                        return const Text('item');
+                      }).toList(),
+                    ),
+                  ),
+                  // controller: secondaryFlyoutController,
                 ),
+                overflowChangedCallback: (hiddenItems) {
+                  setState(() {
+                    // indexes should always be valid
+                    assert(() {
+                      for (var i = 0; i < hiddenItems.length; i++) {
+                        if (hiddenItems[i] < 0 ||
+                            hiddenItems[i] >= widget.pane.items.length) {
+                          return false;
+                        }
+                      }
+                      return true;
+                    }());
+                    dynamicallyHiddenPrimaryItems = hiddenItems;
+                  });
+                },
               ),
             ),
           ]),
         ),
-        if (pane.autoSuggestBox != null)
+        if (widget.pane.autoSuggestBox != null)
           Container(
             margin: const EdgeInsets.only(left: 30.0),
             constraints: const BoxConstraints(
               minWidth: 100.0,
               maxWidth: 215.0,
             ),
-            child: pane.autoSuggestBox!,
+            child: widget.pane.autoSuggestBox!,
           ),
-        ...pane.footerItems.map((item) {
+        ...widget.pane.footerItems.map((item) {
           return _buildItem(context, item);
         }).toList(),
       ]),
     );
-    return topBar;
   }
 }
 
