@@ -98,6 +98,7 @@ class ScaffoldPage extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final parentView = InheritedNavigationView.maybeOf(context);
     return Column(children: [
       Expanded(
         child: Container(

@@ -84,7 +84,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get itemIndex {
-    return InheritedNavigationView.maybeOf(context)?.itemIndex ?? -1;
+    return InheritedNavigationView.maybeOf(context)?.currentItemIndex ?? -1;
   }
 
   int get oldIndex {
