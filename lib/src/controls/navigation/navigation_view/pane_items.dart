@@ -381,7 +381,7 @@ class PaneItem extends NavigationPaneItem {
             button,
             Positioned.fill(
               child: InheritedNavigationView.merge(
-                itemIndex: index,
+                currentItemIndex: index,
                 child: KeyedSubtree(
                   key: index != null ? key : null,
                   child: maybeBody!.pane!.indicator!,

@@ -205,14 +205,13 @@ class InheritedNavigationView extends InheritedWidget {
   }
 
   static InheritedNavigationView of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>()!;
+    return maybeOf(context)!;
   }
 
   static Widget merge({
     Key? key,
     required Widget child,
-    int? itemIndex,
+    int? currentItemIndex,
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
@@ -225,7 +224,7 @@ class InheritedNavigationView extends InheritedWidget {
         child: child,
         displayMode: displayMode ?? current?.displayMode,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
-        currentItemIndex: itemIndex ?? current?.currentItemIndex ?? -1,
+        currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
         oldIndex: oldIndex ?? current?.oldIndex ?? 0,
       );
