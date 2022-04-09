@@ -486,6 +486,10 @@ class _TabViewState extends State<TabView> {
       if (widget.bodies.isNotEmpty)
         Expanded(child: widget.bodies[widget.currentIndex]),
     ]);
+    tabBar = ScrollConfiguration(
+      behavior: const _TabViewScrollBehavior(),
+      child: tabBar,
+    );
     if (widget.shortcutsEnabled) {
       void _onClosePressed() {
         widget.tabs[widget.currentIndex].onClosed?.call();
@@ -792,4 +796,13 @@ class _TabPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_TabPainter oldDelegate) => false;
+}
+
+class _TabViewScrollBehavior extends ScrollBehavior {
+  const _TabViewScrollBehavior();
+
+  @override
+  Widget buildScrollbar(context, child, details) {
+    return child;
+  }
 }
