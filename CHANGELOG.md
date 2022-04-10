@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.10.3]
+
+- Do not use duplicated `Scrollbar`s ([#279](https://github.com/bdlukaa/fluent_ui/pull/279/))
+
 ## [3.10.2] - [09/04/2022]
 
 - `NavigationView` without pane no longer throws error ([#276](https://github.com/bdlukaa/fluent_ui/issues/276))
