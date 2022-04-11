@@ -322,12 +322,19 @@ class NavigationPaneSize {
   /// maxWidth must be greater or equal than minWidth.
   final double? openMaxWidth;
 
+  /// The height of the header in NavigationPane.
+  ///
+  /// Only used when NavigationPane mode is open.
+  /// If the value is null, [_kOneLineTileHeight] is used.
+  final double? headerHeight;
+
   const NavigationPaneSize({
     this.topHeight,
     this.compactWidth,
     this.openWidth,
     this.openMinWidth,
     this.openMaxWidth,
+    this.headerHeight,
   }) : assert(
           openMinWidth == null ||
               openMaxWidth == null ||
@@ -678,7 +685,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
             margin: widget.pane.autoSuggestBox != null
                 ? EdgeInsets.zero
                 : topPadding,
-            height: kOneLineTileHeight,
+            height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
             child: () {
               if (widget.pane.header != null) {
                 return Row(children: [
