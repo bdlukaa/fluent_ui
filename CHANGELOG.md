@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.10.4]
+
+- Allow custom height on `NavigationPane` header. ([#260](https://github.com/bdlukaa/fluent_ui/pull/260/)) 
+
 ## [3.10.3]
 
 - Do not use duplicated `Scrollbar`s ([#279](https://github.com/bdlukaa/fluent_ui/pull/279/))
