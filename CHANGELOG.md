@@ -5,7 +5,7 @@ Date format: DD/MM/YYYY
 - Do not use duplicated `Scrollbar`s ([#279](https://github.com/bdlukaa/fluent_ui/pull/279/))
 - Allow custom height on `NavigationPane` header. ([#260](https://github.com/bdlukaa/fluent_ui/pull/260/))
 - Allow to define the minimal tab width ([#282](https://github.com/bdlukaa/fluent_ui/pull/282/))
-- Allow applying custom leading Widget to NavigationPane([#286](https://github.com/bdlukaa/fluent_ui/pull/286/))
+- Allow applying custom leading Widget to NavigationPane([#286](https://github.com/bdlukaa/fluent_ui/pull/287/))
 
 ## [3.10.2] - [09/04/2022]
 
