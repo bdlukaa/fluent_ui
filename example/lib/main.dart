@@ -60,16 +60,13 @@ void main() async {
   runApp(const MyApp());
 }
 
-
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-
-    create: (_) => AppTheme(),
+      create: (_) => AppTheme(),
       builder: (context, _) {
         final appTheme = context.watch<AppTheme>();
         return FluentApp(

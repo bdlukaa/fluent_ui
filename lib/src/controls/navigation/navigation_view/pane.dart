@@ -425,7 +425,7 @@ class _TopNavigationPane extends StatelessWidget {
       child: Row(key: pane.paneKey, children: [
         Expanded(
           child: Row(children: [
-            if(pane.leading != null)
+            if (pane.leading != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
