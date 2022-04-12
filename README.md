@@ -48,7 +48,7 @@ Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written 
     - [App Bar](#app-bar)
     - [Navigation Pane](#navigation-pane)
     - [Navigation Body](#navigation-body)
-    - [InfoBadge](#info-badge)
+    - [Info Label](#info-label)
   - [Tab View](#tab-view)
   - [Bottom Navigation](#bottom-navigation)
 - [Inputs](#inputs)
