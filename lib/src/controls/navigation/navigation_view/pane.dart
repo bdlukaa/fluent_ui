@@ -85,6 +85,7 @@ class NavigationPane with Diagnosticable {
     this.customPane,
     this.menuButton,
     this.scrollController,
+    this.leading,
     this.indicator = const StickyNavigationIndicator(),
   }) : assert(selected == null || selected >= 0);
 
@@ -167,6 +168,9 @@ class NavigationPane with Diagnosticable {
   /// the scrolling and keep the state of the scroll when the
   /// display mode is toggled.
   final ScrollController? scrollController;
+
+  /// The leading Widget for the Pane
+  final Widget? leading;
 
   /// A function called when building the navigation indicator
   final Widget? indicator;
@@ -421,7 +425,14 @@ class _TopNavigationPane extends StatelessWidget {
       child: Row(key: pane.paneKey, children: [
         Expanded(
           child: Row(children: [
-            if (appBar != null) NavigationAppBar.buildLeading(context, appBar!),
+            if (pane.leading != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 6.0,
+                ),
+                child: pane.leading!,
+              ),
             if (pane.header != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
