@@ -1,11 +1,10 @@
 import 'dart:math' as math;
 import 'dart:ui' show window;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 import 'pickers/pickers.dart';
 

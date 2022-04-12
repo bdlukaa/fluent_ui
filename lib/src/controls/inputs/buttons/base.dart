@@ -1,7 +1,6 @@
 // import 'package:flutter/material.dart' as m;
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// {@template fluent_ui.buttons.base}
 /// Buttons give people a way to trigger an action. They’re typically found in

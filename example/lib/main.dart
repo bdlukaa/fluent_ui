@@ -8,12 +8,12 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'screens/colors.dart';
+import 'screens/commandbars.dart';
 import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
-import 'screens/commandbars.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';

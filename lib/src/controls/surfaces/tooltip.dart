@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
 /// A tooltip is a short description that is linked to another

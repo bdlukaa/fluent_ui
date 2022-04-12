@@ -1,8 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// A Split Button has two parts that can be invoked separately.
 /// One part behaves like a standard button and invokes an immediate action.

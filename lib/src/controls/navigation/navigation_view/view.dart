@@ -1,16 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 part 'body.dart';
-
 part 'indicators.dart';
-
-part 'pane_items.dart';
-
 part 'pane.dart';
-
+part 'pane_items.dart';
 part 'style.dart';
 
 /// The default size used by the app top bar.

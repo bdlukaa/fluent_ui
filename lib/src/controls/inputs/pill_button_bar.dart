@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kMinHeight = 28.0;
 const double _kMaxHeight = 46.0;

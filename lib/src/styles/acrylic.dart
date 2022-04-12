@@ -2,10 +2,9 @@ import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 import 'dart:ui' as ui show Image;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 const double kBlurAmount = 30.0;
 

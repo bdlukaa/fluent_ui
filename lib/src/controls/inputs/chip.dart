@@ -1,7 +1,6 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 
 const double _kChipSpacing = 6.0;

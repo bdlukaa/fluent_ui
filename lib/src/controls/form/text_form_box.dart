@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 
 /// A [FormField] that contains a [TextBox].
 ///

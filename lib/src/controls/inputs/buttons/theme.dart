@@ -1,8 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class ButtonStyle with Diagnosticable {
   const ButtonStyle({

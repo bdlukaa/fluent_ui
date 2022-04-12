@@ -1,8 +1,7 @@
 // ignore_for_file: avoid_print
 
-import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:email_validator/email_validator.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class Forms extends StatefulWidget {
   const Forms({Key? key}) : super(key: key);
