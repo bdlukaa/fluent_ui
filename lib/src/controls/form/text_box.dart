@@ -955,7 +955,7 @@ class _TextBoxState extends State<TextBox>
       child: IgnorePointer(
         ignoring: !enabled,
         child: HoverButton(
-          actionsEnabled: false,
+          focusEnabled: false,
           onPressed: enabled ? () {} : null,
           builder: (context, states) {
             return Container(
