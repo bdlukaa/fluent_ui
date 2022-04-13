@@ -56,8 +56,8 @@ class _FormsState extends State<Forms> {
       children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Expanded(
-            child: SizedBox(
-              height: 200,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 200),
               child: TextFormBox(
                 expands: true,
                 minLines: null,

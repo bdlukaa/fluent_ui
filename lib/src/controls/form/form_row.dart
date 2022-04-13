@@ -31,32 +31,29 @@ class FormRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Flexible(child: child),
-          if (helper != null)
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: DefaultTextStyle(
-                style: textStyle!,
-                child: helper!,
-              ),
+      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        Flexible(child: child),
+        if (helper != null)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DefaultTextStyle(
+              style: textStyle!,
+              child: helper!,
             ),
-          if (error != null)
-            Container(
-              margin: const EdgeInsets.only(top: 2.0),
-              alignment: AlignmentDirectional.centerStart,
-              child: DefaultTextStyle(
-                style: const TextStyle(
-                  color: Colors.warningPrimaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-                child: error!,
+          ),
+        if (error != null)
+          Container(
+            margin: const EdgeInsets.only(top: 2.0),
+            alignment: AlignmentDirectional.centerStart,
+            child: DefaultTextStyle(
+              style: const TextStyle(
+                color: Colors.warningPrimaryColor,
+                fontWeight: FontWeight.w500,
               ),
+              child: error!,
             ),
-        ],
-      ),
+          ),
+      ]),
     );
   }
 }
