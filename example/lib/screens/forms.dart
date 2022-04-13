@@ -56,19 +56,25 @@ class _FormsState extends State<Forms> {
       children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Expanded(
-            child: TextFormBox(
-              header: 'Email',
-              placeholder: 'Type your email here :)',
-              autovalidateMode: AutovalidateMode.always,
-              validator: (text) {
-                if (text == null || text.isEmpty) return 'Provide an email';
-                if (!EmailValidator.validate(text)) return 'Email not valid';
-                return null;
-              },
-              textInputAction: TextInputAction.next,
-              prefix: const Padding(
-                padding: EdgeInsetsDirectional.only(start: 8.0),
-                child: Icon(FluentIcons.edit_mail),
+            child: SizedBox(
+              height: 200,
+              child: TextFormBox(
+                expands: true,
+                minLines: null,
+                maxLines: null,
+                header: 'Email',
+                placeholder: 'Type your email here :)',
+                autovalidateMode: AutovalidateMode.always,
+                validator: (text) {
+                  if (text == null || text.isEmpty) return 'Provide an email';
+                  if (!EmailValidator.validate(text)) return 'Email not valid';
+                  return null;
+                },
+                textInputAction: TextInputAction.next,
+                prefix: const Padding(
+                  padding: EdgeInsetsDirectional.only(start: 8.0),
+                  child: Icon(FluentIcons.edit_mail),
+                ),
               ),
             ),
           ),
@@ -130,20 +136,24 @@ class _FormsState extends State<Forms> {
           ),
         ]),
         const SizedBox(height: 20),
-        TextBox(
-          maxLines: null,
-          controller: _clearController,
-          suffixMode: OverlayVisibilityMode.always,
-          minHeight: 100,
-          suffix: _clearController.text.isEmpty
-              ? null
-              : IconButton(
-                  icon: const Icon(FluentIcons.chrome_close),
-                  onPressed: () {
-                    _clearController.clear();
-                  },
-                ),
-          placeholder: 'Text box with clear button',
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 200),
+          child: TextFormBox(
+            maxLines: null,
+            controller: _clearController,
+            suffixMode: OverlayVisibilityMode.always,
+            minHeight: 100,
+            expands: true,
+            suffix: _clearController.text.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(FluentIcons.chrome_close),
+                    onPressed: () {
+                      _clearController.clear();
+                    },
+                  ),
+            placeholder: 'Text box with clear button',
+          ),
         ),
         const SizedBox(height: 20),
         TextBox(

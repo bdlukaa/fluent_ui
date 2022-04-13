@@ -1,19 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const EdgeInsetsGeometry _kDefaultPadding =
-    EdgeInsetsDirectional.fromSTEB(20.0, 6.0, 6.0, 6.0);
+const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
+  20.0,
+  6.0,
+  6.0,
+  6.0,
+);
 
 class FormRow extends StatelessWidget {
   const FormRow({
     Key? key,
     required this.child,
-    this.padding,
+    this.padding = _kDefaultPadding,
     this.helper,
     this.error,
     this.textStyle,
   }) : super(key: key);
 
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry padding;
 
   final TextStyle? textStyle;
 
@@ -26,13 +30,11 @@ class FormRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? _kDefaultPadding,
+      padding: padding,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: child,
-          ),
+          Flexible(child: child),
           if (helper != null)
             Align(
               alignment: AlignmentDirectional.centerStart,
