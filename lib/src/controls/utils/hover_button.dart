@@ -45,6 +45,7 @@ class HoverButton extends StatefulWidget {
     this.onFocusChange,
     this.autofocus = false,
     this.actionsEnabled = true,
+    this.focusEnabled = true,
   }) : super(key: key);
 
   /// {@template fluent_ui.controls.inputs.HoverButton.mouseCursor}
@@ -95,7 +96,14 @@ class HoverButton extends StatefulWidget {
 
   final ValueChanged<bool>? onFocusChange;
 
+  /// Whether actions and shortcuts are enabled
   final bool actionsEnabled;
+
+  /// Whether the focus is enabled.
+  ///
+  /// If disabled, actions and shortcurts will not work, regardless of what is
+  /// set on [actionsEnabled].
+  final bool focusEnabled;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
@@ -205,21 +213,33 @@ class _HoverButtonState extends State<HoverButton> {
       onHorizontalDragEnd: widget.onHorizontalDragEnd,
       child: widget.builder(context, states),
     );
-    w = FocusableActionDetector(
-      mouseCursor: widget.cursor ?? MouseCursor.defer,
-      focusNode: node,
-      autofocus: widget.autofocus,
-      enabled: enabled,
-      actions: widget.actionsEnabled ? _actionMap : {},
-      onFocusChange: widget.onFocusChange,
-      onShowFocusHighlight: (v) {
-        if (mounted) setState(() => _shouldShowFocus = v);
-      },
-      onShowHoverHighlight: (v) {
-        if (mounted) setState(() => _hovering = v);
-      },
-      child: w,
-    );
+    if (widget.focusEnabled) {
+      w = FocusableActionDetector(
+        mouseCursor: widget.cursor ?? MouseCursor.defer,
+        focusNode: node,
+        autofocus: widget.autofocus,
+        enabled: enabled,
+        actions: widget.actionsEnabled ? _actionMap : {},
+        onFocusChange: widget.onFocusChange,
+        onShowFocusHighlight: (v) {
+          if (mounted) setState(() => _shouldShowFocus = v);
+        },
+        onShowHoverHighlight: (v) {
+          if (mounted) setState(() => _hovering = v);
+        },
+        child: w,
+      );
+    } else {
+      w = MouseRegion(
+        onEnter: (e) {
+          if (mounted) setState(() => _hovering = true);
+        },
+        onExit: (e) {
+          if (mounted) setState(() => _hovering = false);
+        },
+        child: w,
+      );
+    }
     w = MergeSemantics(
       child: Semantics(
         label: widget.semanticLabel,
