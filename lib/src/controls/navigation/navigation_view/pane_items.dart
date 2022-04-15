@@ -170,6 +170,8 @@ class PaneItem extends NavigationPaneItem {
 
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
+    final bool isTopOverflowMenuOpen =
+        PopupContentSizeInfo.maybeOf(context) != null;
 
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
@@ -182,7 +184,7 @@ class PaneItem extends NavigationPaneItem {
               ? theme.selectedTextStyle?.resolve(states)
               : theme.unselectedTextStyle?.resolve(states),
         );
-        if (isTop && states.isPressing) {
+        if (isTop && !isTopOverflowMenuOpen && states.isPressing) {
           textStyle = textStyle.copyWith(
             color: textStyle.color?.withOpacity(0.75),
           );
@@ -271,7 +273,7 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              final result = Row(
+              Widget result = Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
@@ -287,21 +289,36 @@ class PaneItem extends NavigationPaneItem {
                       child: Center(child: icon),
                     ),
                   ),
-                  if (showTextOnTop) textResult,
+                  if (isTopOverflowMenuOpen) ...[
+                    Expanded(child: textResult),
+                    if (infoBadge != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 8.0),
+                        child: infoBadge!,
+                      ),
+                  ] else if (showTextOnTop)
+                    textResult,
                 ],
               );
-              if (infoBadge != null) {
-                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
-                  result,
-                  if (infoBadge != null)
-                    Positioned(
-                      right: -8,
-                      top: -8,
-                      child: infoBadge!,
-                    ),
-                ]);
+              if (infoBadge != null && !isTopOverflowMenuOpen) {
+                result = Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    result,
+                    if (infoBadge != null)
+                      Positioned(
+                        right: -8,
+                        top: -8,
+                        child: infoBadge!,
+                      ),
+                  ],
+                );
               }
-              return KeyedSubtree(key: itemKey, child: result);
+              return SizedBox(
+                height: isTopOverflowMenuOpen ? 36.0 : null,
+                key: itemKey,
+                child: result,
+              );
             default:
               throw '$mode is not a supported type';
           }
@@ -313,12 +330,17 @@ class PaneItem extends NavigationPaneItem {
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standardCurve,
-            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
+            margin: isTopOverflowMenuOpen
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
                     theme.tileColor ??
-                    kDefaultTileColor(context, isTop);
+                    kDefaultTileColor(
+                      context,
+                      isTopOverflowMenuOpen ? false : isTop,
+                    );
                 final newStates = states.toSet()..remove(ButtonStates.disabled);
                 if (selected && selectedTileColor != null) {
                   return selectedTileColor!.resolve(newStates);
@@ -333,13 +355,17 @@ class PaneItem extends NavigationPaneItem {
                       : newStates,
                 );
               }(),
-              borderRadius: BorderRadius.circular(4.0),
+              borderRadius: isTopOverflowMenuOpen
+                  ? BorderRadius.zero
+                  : BorderRadius.circular(4.0),
             ),
             child: FocusBorder(
               child: () {
-                final showTooltip = ((isTop && !showTextOnTop) || isCompact) &&
-                    titleText.isNotEmpty &&
-                    !states.isDisabled;
+                final showTooltip =
+                    ((isTop && !showTextOnTop && !isTopOverflowMenuOpen) ||
+                            isCompact) &&
+                        titleText.isNotEmpty &&
+                        !states.isDisabled;
 
                 if (showTooltip) {
                   return Tooltip(

@@ -467,6 +467,10 @@ class PopupContentSizeInfo extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>()!;
   }
 
+  static PopupContentSizeInfo? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>();
+  }
+
   @override
   bool updateShouldNotify(PopupContentSizeInfo oldWidget) {
     return oldWidget.size != size;

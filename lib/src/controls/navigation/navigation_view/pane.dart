@@ -477,15 +477,15 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                   ),
                   placement: FlyoutPlacement.end,
                   content: (context) => FlyoutContent(
-                    constraints: const BoxConstraints(maxWidth: 250.0),
+                    constraints: const BoxConstraints(maxWidth: 210.0),
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ListView(
                       shrinkWrap: true,
                       children: dynamicallyHiddenPrimaryItems.map((i) {
-                        // final item = widget.pane.items[i];
-                        // return _buildItem(context, item);
-                        // TODO: build menu item
-                        return const Text('item');
+                        final item = widget.pane.items[i];
+                        return Builder(builder: (context) {
+                          return _buildItem(context, item);
+                        });
                       }).toList(),
                     ),
                   ),

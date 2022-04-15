@@ -224,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
           PaneItem(
             icon: const Icon(FluentIcons.pop_expand),
-            title: const Text('Popups, Flyouts and Context Menus'),
+            title: const Text('Flyouts'),
           ),
           PaneItem(
             icon: Icon(
