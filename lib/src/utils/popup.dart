@@ -11,6 +11,7 @@ class PopUp<T> extends StatefulWidget {
     this.verticalOffset = 0,
     this.horizontalOffset = 0,
     this.placement = FlyoutPlacement.center,
+    this.position = FlyoutPosition.above,
   }) : super(key: key);
 
   final Widget child;
@@ -19,6 +20,7 @@ class PopUp<T> extends StatefulWidget {
   final double horizontalOffset;
 
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   PopUpState<T> createState() => PopUpState<T>();
@@ -44,7 +46,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       ancestor: navigator.context.findRenderObject(),
     );
 
-    assert(m.debugCheckHasDirectionality(context));
+    assert(debugCheckHasDirectionality(context));
     final directionality = Directionality.of(context);
 
     // The target according to the current directionality
@@ -92,7 +94,8 @@ class PopUpState<T> extends State<PopUp<T>> {
       target: centerTarget,
       placementOffset: directionalityTarget,
       placement: directionalityPlacement,
-      content: widget.content(context),
+      position: widget.position,
+      content: _PopupContentManager(content: widget.content),
       buttonRect: itemRect,
       elevation: 4,
       capturedThemes: InheritedTheme.capture(
@@ -128,7 +131,7 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   @override
   Widget build(BuildContext context) {
-    assert(m.debugCheckHasDirectionality(context));
+    assert(debugCheckHasDirectionality(context));
     return widget.child;
   }
 }
@@ -210,6 +213,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     required this.horizontalOffset,
     required this.placementOffset,
     required this.placement,
+    required this.position,
   });
 
   final Rect buttonRect;
@@ -220,6 +224,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
   final double horizontalOffset;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -228,14 +233,26 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    final defaultOffset = positionDependentBox(
-      size: size,
-      childSize: childSize,
-      target: target,
-      verticalOffset: verticalOffset,
-      preferBelow: false,
-      margin: horizontalOffset,
-    );
+    final defaultOffset = position == FlyoutPosition.side
+        ? horizontalPositionDependentBox(
+            size: size,
+            childSize: childSize,
+            target: target,
+            verticalOffset: verticalOffset,
+            margin: horizontalOffset,
+            preferLeft: placement == FlyoutPlacement.end,
+          )
+        : positionDependentBox(
+            size: size,
+            childSize: childSize,
+            target: target,
+            verticalOffset: verticalOffset,
+            preferBelow: position == FlyoutPosition.below,
+            margin: horizontalOffset,
+          );
+    if (position == FlyoutPosition.side) {
+      return Offset(defaultOffset.dx, defaultOffset.dy);
+    }
     switch (placement) {
       case FlyoutPlacement.start:
         return Offset(placementOffset.dx, defaultOffset.dy);
@@ -269,10 +286,9 @@ class _PopUpRoute<T> extends PopupRoute<T> {
     this.barrierLabel,
     required this.verticalOffset,
     required this.horizontalOffset,
-    this.acrylicDisabled = false,
+    required this.position,
   });
 
-  final bool acrylicDisabled;
   final Widget content;
   final Rect buttonRect;
   final int elevation;
@@ -285,6 +301,7 @@ class _PopUpRoute<T> extends PopupRoute<T> {
   final Offset target;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   Duration get transitionDuration => transitionAnimationDuration;
@@ -313,8 +330,8 @@ class _PopUpRoute<T> extends PopupRoute<T> {
         capturedThemes: capturedThemes,
         verticalOffset: verticalOffset,
         horizontalOffset: horizontalOffset,
+        position: position,
       );
-      if (acrylicDisabled) return DisableAcrylic(child: page);
       return page;
     });
   }
@@ -341,6 +358,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
     required this.target,
     required this.placement,
     required this.placementOffset,
+    required this.position,
   }) : super(key: key);
 
   final _PopUpRoute<T> route;
@@ -355,6 +373,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   final Offset target;
   final Offset placementOffset;
   final FlyoutPlacement placement;
+  final FlyoutPosition position;
 
   @override
   Widget build(BuildContext context) {
@@ -379,6 +398,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
             delegate: _PopUpMenuRouteLayout<T>(
               target: target,
               placement: placement,
+              position: position,
               placementOffset: placementOffset,
               buttonRect: buttonRect,
               route: route,
@@ -391,5 +411,64 @@ class _PopUpRoutePage<T> extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _PopupContentManager extends StatefulWidget {
+  const _PopupContentManager({
+    Key? key,
+    required this.content,
+  }) : super(key: key);
+
+  final WidgetBuilder content;
+
+  @override
+  State<_PopupContentManager> createState() => __PopupContentManagerState();
+}
+
+class __PopupContentManagerState extends State<_PopupContentManager> {
+  final GlobalKey key = GlobalKey();
+
+  Size size = Size.zero;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      final context = key.currentContext;
+      if (context == null) return;
+      final RenderBox box = context.findRenderObject() as RenderBox;
+      setState(() => size = box.size);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: PopupContentSizeInfo(
+        size: size,
+        child: widget.content(context),
+      ),
+    );
+  }
+}
+
+class PopupContentSizeInfo extends InheritedWidget {
+  const PopupContentSizeInfo({
+    Key? key,
+    required Widget child,
+    required this.size,
+  }) : super(key: key, child: child);
+
+  final Size size;
+
+  static PopupContentSizeInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>()!;
+  }
+
+  @override
+  bool updateShouldNotify(PopupContentSizeInfo oldWidget) {
+    return oldWidget.size != size;
   }
 }

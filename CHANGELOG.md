@@ -1,5 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Implemented `MenuFlyout` ([#266](https://github.com/bdlukaa/fluent_ui/pull/266))
+  - Implemented `FlyoutPosition`, which controls where the flyout will be opened according to the child. It can be `above`, `below` or `side`
+  - `FlyoutOpenMode.longHover`, which makes possible to open the flyout when the user performs a long hover
+  - Added `Flyout.onOpen` and `Flyout.onClose`. Some convenience callbacks that are called when the flyout is opened or closed, respectively
+  - Implement `PopupContentSizeInfo`, which provides the information about the content size
+  - Implemented `MenuFlyoutItem`, `MenuFlyoutSeparator` and `MenuFlyoutSubItem`. They are used inside `MenuFlyout` to render the menu items
+  - `horizontalPositionDependentBox` is now globally available for use as a top function
+
 ## [3.10.3] - [15/04/2022]
 
 - Do not use duplicated `Scrollbar`s ([#279](https://github.com/bdlukaa/fluent_ui/pull/279/))

@@ -35,6 +35,11 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           _flyoutAtEnd(),
           _flyoutAtCustomPosition(),
         ]),
+        const PageHeader(title: Text('Menu Flyouts'), padding: 0.0),
+        Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+          _menuFlyout(),
+          _menuFlyoutWithSubItem(),
+        ]),
       ],
     );
   }
@@ -136,7 +141,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.start,
           content: (context) {
             return const FlyoutContent(
@@ -146,7 +151,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.blue,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at start'),
+            child: const Text('Press to show a flyout at start'),
           ),
         ),
       ),
@@ -159,7 +164,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.center,
           content: (context) {
             return const FlyoutContent(
@@ -169,7 +174,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.teal,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at center'),
+            child: const Text('Press to show a flyout at center'),
           ),
         ),
       ),
@@ -182,7 +187,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.end,
           content: (context) {
             return const FlyoutContent(
@@ -192,7 +197,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
           child: Container(
             color: Colors.green,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: const Text('Hover to show a flyout at end'),
+            child: const Text('Press to show a flyout at end'),
           ),
         ),
       ),
@@ -205,7 +210,7 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
       Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Flyout(
-          openMode: FlyoutOpenMode.hover,
+          openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.full,
           content: (context) {
             return const Align(
@@ -221,12 +226,101 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
             color: Colors.yellow,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: const Text(
-              'Hover to show a flyout at custom position',
+              'Press to show a flyout at custom position',
               style: TextStyle(color: Colors.black),
             ),
           ),
         ),
       ),
     ]);
+  }
+
+  Widget _menuFlyout() {
+    return Flyout(
+      content: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.share),
+              text: const Text('Share'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.copy),
+              text: const Text('Copy'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.delete),
+              text: const Text('Delete'),
+              onPressed: () {},
+            ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              text: const Text('Rename'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Select'),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+      openMode: FlyoutOpenMode.press,
+      child: Container(
+        color: Colors.orange,
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: const Text('Click to show flyout'),
+      ),
+    );
+  }
+
+  Widget _menuFlyoutWithSubItem() {
+    return Flyout(
+      placement: FlyoutPlacement.end,
+      content: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('New'),
+              items: [
+                MenuFlyoutItem(
+                  text: const Text('Plain Text Document'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  text: const Text('Rich Text Document'),
+                  onPressed: () {},
+                ),
+                MenuFlyoutItem(
+                  text: const Text('Other formats...'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            MenuFlyoutItem(
+              text: const Text('Open'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Save'),
+              onPressed: () {},
+            ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              text: const Text('Exit'),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+      openMode: FlyoutOpenMode.press,
+      child: Container(
+        color: Colors.orange,
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: const Text('Click to show flyout with subitem'),
+      ),
+    );
   }
 }
