@@ -679,16 +679,18 @@ class _TreeViewItem extends StatelessWidget {
                         child: item.leading!,
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 18.0),
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: theme.typography.body!.color!.withOpacity(
-                          states.isPressing ? 0.7 : 1.0,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 18.0),
+                      child: DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: theme.typography.body!.color!.withOpacity(
+                            states.isPressing ? 0.7 : 1.0,
+                          ),
                         ),
+                        child: item.content,
                       ),
-                      child: item.content,
                     ),
                   ),
                 ],

@@ -1,5 +1,24 @@
 Date format: DD/MM/YYYY
 
+## [3.10.3] - [15/04/2022]
+
+- Do not use duplicated `Scrollbar`s ([#279](https://github.com/bdlukaa/fluent_ui/pull/279/))
+- Allow custom height on `NavigationPane` header. ([#260](https://github.com/bdlukaa/fluent_ui/pull/260/))
+- Allow to define the minimal tab width ([#282](https://github.com/bdlukaa/fluent_ui/pull/282/))
+- Allow applying custom leading Widget to NavigationPane ([#288](https://github.com/bdlukaa/fluent_ui/pull/288/))
+- `TextFormBox.expands` now works properly ([#291]](https://github.com/bdlukaa/fluent_ui/pull/291))
+- Focus on `TextBox` is no longer duplicated ([#290](https://github.com/bdlukaa/fluent_ui/pull/290))
+
+## [3.10.2] - [09/04/2022]
+
+- `NavigationView` without pane no longer throws error ([#276](https://github.com/bdlukaa/fluent_ui/issues/276))
+
+## [3.10.1] - [06/04/2022]
+
+- Fix overflow behavior for `TreeViewItem` ([#270](https://github.com/bdlukaa/fluent_ui/pull/270))
+- Do not animate sticky indicators when parent is updated ([#273](https://github.com/bdlukaa/fluent_ui/pull/273))
+- Add Arabic(ar) localization ([#268](https://github.com/bdlukaa/fluent_ui/pull/268))
+
 ## [3.10.0] - Localization, Indicators, CommandBar and Flyouts - [02/04/2022]
 
 - Improves `icons.dart` formatting and its generation ([#215](https://github.com/bdlukaa/fluent_ui/pull/215))

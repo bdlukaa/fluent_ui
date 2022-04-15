@@ -44,13 +44,17 @@ enum PaneDisplayMode {
   /// ![Minimal Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png)
   minimal,
 
-  /// Let the [NavigationPane] decide what display mode should be used
-  /// based on the width. This is used by default on [NavigationPanel].
-  /// In Auto mode, the [NavigationPane] adapts between [minimal] when
-  /// the window is narrow, to [compact], and then [open] as the window
-  /// gets wider.
+  /// Let the [NavigationPane] decide what display mode should be used based on
+  /// the width. This is used by default on [NavigationPane]. In Auto mode, the
+  /// [NavigationPane] adapts between [minimal] when the window is narrow, to
+  /// [compact], and then [open] as the window gets wider.
   ///
-  /// ![Automatic Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)
+  /// - An expanded left pane on large window widths (1008px or greater).
+  /// - A left, icon-only, nav pane (LeftCompact) on medium window widths
+  /// (641px to 1007px).
+  /// - Only a menu button (LeftMinimal) on small window widths (640px or less).
+  ///
+  /// ![Automatic Display Mode](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/adaptive-behavior-minimal.png)
   auto,
 }
 
@@ -81,6 +85,7 @@ class NavigationPane with Diagnosticable {
     this.customPane,
     this.menuButton,
     this.scrollController,
+    this.leading,
     this.indicator = const StickyNavigationIndicator(),
   }) : assert(selected == null || selected >= 0);
 
@@ -163,6 +168,9 @@ class NavigationPane with Diagnosticable {
   /// the scrolling and keep the state of the scroll when the
   /// display mode is toggled.
   final ScrollController? scrollController;
+
+  /// The leading Widget for the Pane
+  final Widget? leading;
 
   /// A function called when building the navigation indicator
   final Widget? indicator;
@@ -318,12 +326,19 @@ class NavigationPaneSize {
   /// maxWidth must be greater or equal than minWidth.
   final double? openMaxWidth;
 
+  /// The height of the header in NavigationPane.
+  ///
+  /// Only used when NavigationPane mode is open.
+  /// If the value is null, [_kOneLineTileHeight] is used.
+  final double? headerHeight;
+
   const NavigationPaneSize({
     this.topHeight,
     this.compactWidth,
     this.openWidth,
     this.openMinWidth,
     this.openMaxWidth,
+    this.headerHeight,
   }) : assert(
           openMinWidth == null ||
               openMaxWidth == null ||
@@ -372,13 +387,11 @@ class _TopNavigationPane extends StatelessWidget {
   _TopNavigationPane({
     required this.pane,
     this.listKey,
-    this.scrollbarKey,
     this.appBar,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final NavigationAppBar? appBar;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -412,7 +425,14 @@ class _TopNavigationPane extends StatelessWidget {
       child: Row(key: pane.paneKey, children: [
         Expanded(
           child: Row(children: [
-            if (appBar != null) NavigationAppBar.buildLeading(context, appBar!),
+            if (pane.leading != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 6.0,
+                ),
+                child: pane.leading!,
+              ),
             if (pane.header != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -461,14 +481,12 @@ class _CompactNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
-    this.scrollbarKey,
     this.onToggle,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -540,17 +558,12 @@ class _CompactNavigationPane extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: Scrollbar(
-              key: scrollbarKey,
-              controller: pane.scrollController,
-              isAlwaysShown: false,
-              child: ListView(
-                key: listKey,
-                primary: true,
-                children: pane.items.map((item) {
-                  return _buildItem(context, item);
-                }).toList(),
-              ),
+            child: ListView(
+              key: listKey,
+              primary: true,
+              children: pane.items.map((item) {
+                return _buildItem(context, item);
+              }).toList(),
             ),
           ),
           ListView(
@@ -573,7 +586,6 @@ class _OpenNavigationPane extends StatefulWidget {
     required this.theme,
     this.paneKey,
     this.listKey,
-    this.scrollbarKey,
     this.onToggle,
     this.onItemSelected,
   }) : super(key: pane.key);
@@ -581,7 +593,6 @@ class _OpenNavigationPane extends StatefulWidget {
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
-  final GlobalKey? scrollbarKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
 
@@ -685,7 +696,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
             margin: widget.pane.autoSuggestBox != null
                 ? EdgeInsets.zero
                 : topPadding,
-            height: kOneLineTileHeight,
+            height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
             child: () {
               if (widget.pane.header != null) {
                 return Row(children: [
@@ -711,22 +722,17 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               child: widget.pane.autoSuggestBox!,
             ),
           Expanded(
-            child: Scrollbar(
-              key: widget.scrollbarKey,
-              controller: widget.pane.scrollController,
-              isAlwaysShown: false,
-              child: ListView(
-                key: widget.listKey,
-                primary: true,
-                children: widget.pane.items.map((item) {
-                  return _OpenNavigationPane.buildItem(
-                    context,
-                    widget.pane,
-                    item,
-                    widget.onItemSelected,
-                  );
-                }).toList(),
-              ),
+            child: ListView(
+              key: widget.listKey,
+              primary: true,
+              children: widget.pane.items.map((item) {
+                return _OpenNavigationPane.buildItem(
+                  context,
+                  widget.pane,
+                  item,
+                  widget.onItemSelected,
+                );
+              }).toList(),
             ),
           ),
           ListView(
