@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/foundation.dart';
@@ -817,7 +816,7 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
   @override
   Offset getPositionForChild(Size size, Size childSize) {
     if (horizontal) {
-      return _horizontalPositionDependentBox(
+      return horizontalPositionDependentBox(
         size: size,
         childSize: childSize,
         target: target,
@@ -840,46 +839,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
     return target != oldDelegate.target ||
         verticalOffset != oldDelegate.verticalOffset ||
         preferBelow != oldDelegate.preferBelow;
-  }
-
-  static Offset _horizontalPositionDependentBox({
-    required Size size,
-    required Size childSize,
-    required Offset target,
-    required bool preferLeft,
-    double verticalOffset = 0.0,
-    double margin = 10.0,
-  }) {
-    // VERTICAL DIRECTION
-    final bool fitsLeft =
-        target.dx + verticalOffset + childSize.width <= size.width - margin;
-    final bool fitsRight =
-        target.dx - verticalOffset - childSize.width >= margin;
-    final bool tooltipLeft =
-        preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
-    double x;
-    if (tooltipLeft) {
-      x = math.min(target.dx + verticalOffset, size.width - margin);
-    } else {
-      x = math.max(target.dx - verticalOffset - childSize.width, margin);
-    }
-    // HORIZONTAL DIRECTION
-    double y;
-    if (size.height - margin * 2.0 < childSize.height) {
-      y = (size.height - childSize.height) / 2.0;
-    } else {
-      final double normalizedTargetY =
-          target.dy.clamp(margin, size.height - margin);
-      final double edge = margin + childSize.height / 2.0;
-      if (normalizedTargetY < edge) {
-        y = margin;
-      } else if (normalizedTargetY > size.height - edge) {
-        y = size.height - margin - childSize.height;
-      } else {
-        y = normalizedTargetY - childSize.height / 2.0;
-      }
-    }
-    return Offset(x, y);
   }
 }
 

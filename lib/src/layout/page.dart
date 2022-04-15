@@ -128,6 +128,7 @@ class PageHeader extends StatelessWidget {
     this.leading,
     this.title,
     this.commandBar,
+    this.padding,
   }) : super(key: key);
 
   /// The widget displayed before [title]. If null, some widget
@@ -145,6 +146,8 @@ class PageHeader extends StatelessWidget {
   /// A bar with a list of actions an user can take
   final Widget? commandBar;
 
+  final double? padding;
+
   static double horizontalPadding(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final screenWidth = MediaQuery.of(context).size.width;
@@ -158,7 +161,7 @@ class PageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final leading = this.leading;
-    final horizontalPadding = PageHeader.horizontalPadding(context);
+    final horizontalPadding = padding ?? PageHeader.horizontalPadding(context);
     return Padding(
       padding: EdgeInsets.only(
         bottom: 18.0,

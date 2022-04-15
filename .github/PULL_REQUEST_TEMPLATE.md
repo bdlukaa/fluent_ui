@@ -5,5 +5,5 @@
 <!-- Mark all that applyes -->
 
 - [ ] I have updated `CHANGELOG.md` with my changes <!-- REQUIRED --> 
-- [ ] I have run "optimize/organize imports" on all changed files
+- [ ] I have run "dart format ." on the project <!-- REQUIRED --> 
 - [ ] I have added/updated relevant documentation

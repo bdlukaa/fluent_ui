@@ -64,6 +64,7 @@ class TabView extends StatefulWidget {
     this.showScrollButtons = true,
     this.wheelScroll = false,
     this.scrollController,
+    this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
     this.closeButtonVisibility = CloseButtonVisibilityMode.always,
     this.tabWidthBehavior = TabWidthBehavior.equal,
@@ -106,6 +107,11 @@ class TabView extends StatefulWidget {
   /// Called when the tabs are reordered. If null,
   /// reordering is disabled. It's disabled by default.
   final ReorderCallback? onReorder;
+
+  /// The min width a tab can have. Must not be negative.
+  ///
+  /// Default to 80 logical pixels
+  final double minTabWidth;
 
   /// The max width a tab can have. Must not be negative.
   ///
@@ -372,7 +378,7 @@ class _TabViewState extends State<TabView> {
                 final double preferredTabWidth =
                     ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
                             widget.tabs.length)
-                        .clamp(_kMinTileWidth, widget.maxTabWidth);
+                        .clamp(widget.minTabWidth, widget.maxTabWidth);
 
                 final Widget listView = Listener(
                   onPointerSignal: widget.wheelScroll
@@ -486,6 +492,10 @@ class _TabViewState extends State<TabView> {
       if (widget.bodies.isNotEmpty)
         Expanded(child: widget.bodies[widget.currentIndex]),
     ]);
+    tabBar = ScrollConfiguration(
+      behavior: const _TabViewScrollBehavior(),
+      child: tabBar,
+    );
     if (widget.shortcutsEnabled) {
       void _onClosePressed() {
         widget.tabs[widget.currentIndex].onClosed?.call();
@@ -792,4 +802,13 @@ class _TabPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_TabPainter oldDelegate) => false;
+}
+
+class _TabViewScrollBehavior extends ScrollBehavior {
+  const _TabViewScrollBehavior();
+
+  @override
+  Widget buildScrollbar(context, child, details) {
+    return child;
+  }
 }

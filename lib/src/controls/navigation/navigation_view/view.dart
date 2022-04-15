@@ -95,7 +95,6 @@ class NavigationViewState extends State<NavigationView> {
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
-  final _scrollbarKey = GlobalKey();
   final _contentKey = GlobalKey();
   final _overlayKey = GlobalKey();
 
@@ -143,6 +142,7 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   void generateKeys() {
+    if (widget.pane == null) return;
     _itemKeys
       ..clear()
       ..addAll(
@@ -299,12 +299,10 @@ class NavigationViewState extends State<NavigationView> {
             case PaneDisplayMode.top:
               paneResult = Column(children: [
                 appBar,
-                PrimaryScrollController(
-                  controller: scrollController,
+                PaneScrollConfiguration(
                   child: _TopNavigationPane(
                     pane: pane,
                     listKey: _listKey,
-                    scrollbarKey: _scrollbarKey,
                     appBar: widget.appBar,
                   ),
                 ),
@@ -349,8 +347,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   ),
-                PrimaryScrollController(
-                  controller: scrollController,
+                PaneScrollConfiguration(
                   child: () {
                     if (openedWithoutOverlay) {
                       return Mica(
@@ -364,7 +361,6 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
-                            scrollbarKey: _scrollbarKey,
                             onToggle: toggleCompactOpenMode,
                             onItemSelected: toggleCompactOpenMode,
                           ),
@@ -390,7 +386,6 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
-                            scrollbarKey: _scrollbarKey,
                             onToggle: toggleCompactOpenMode,
                             onItemSelected: toggleCompactOpenMode,
                           ),
@@ -406,7 +401,6 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
-                            scrollbarKey: _scrollbarKey,
                             onToggle: toggleCompactOpenMode,
                           ),
                         ),
@@ -422,14 +416,12 @@ class NavigationViewState extends State<NavigationView> {
                 appBar,
                 Expanded(
                   child: Row(children: [
-                    PrimaryScrollController(
-                      controller: scrollController,
+                    PaneScrollConfiguration(
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
                         paneKey: _panelKey,
                         listKey: _listKey,
-                        scrollbarKey: _scrollbarKey,
                       ),
                     ),
                     Expanded(child: content),
@@ -467,8 +459,7 @@ class NavigationViewState extends State<NavigationView> {
                   start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
                   width: _kOpenNavigationPanelWidth,
                   height: MediaQuery.of(context).size.height,
-                  child: PrimaryScrollController(
-                    controller: scrollController,
+                  child: PaneScrollConfiguration(
                     child: Mica(
                       backgroundColor: _overlayBackgroundColor(),
                       elevation: 10.0,
@@ -487,7 +478,6 @@ class NavigationViewState extends State<NavigationView> {
                           pane: pane,
                           paneKey: _panelKey,
                           listKey: _listKey,
-                          scrollbarKey: _scrollbarKey,
                           onItemSelected: () {
                             setState(() => _minimalPaneOpen = false);
                           },
@@ -523,6 +513,17 @@ class NavigationViewState extends State<NavigationView> {
         ),
       );
     });
+  }
+
+  // ignore: non_constant_identifier_names
+  Widget PaneScrollConfiguration({required Widget child}) {
+    return PrimaryScrollController(
+      controller: scrollController,
+      child: ScrollConfiguration(
+        behavior: const _NavigationViewScrollBehavior(),
+        child: child,
+      ),
+    );
   }
 }
 
@@ -743,6 +744,24 @@ class _NavigationAppBar extends StatelessWidget {
       color: appBar.backgroundColor,
       height: appBar.height,
       child: result,
+    );
+  }
+}
+
+class _NavigationViewScrollBehavior extends ScrollBehavior {
+  const _NavigationViewScrollBehavior({
+    this.scrollbarKey,
+  });
+
+  final Key? scrollbarKey;
+
+  @override
+  Widget buildScrollbar(context, child, details) {
+    return Scrollbar(
+      key: scrollbarKey,
+      controller: PrimaryScrollController.of(context),
+      isAlwaysShown: false,
+      child: child,
     );
   }
 }
