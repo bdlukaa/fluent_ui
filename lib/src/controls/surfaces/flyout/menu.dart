@@ -60,18 +60,20 @@ class MenuFlyout extends StatelessWidget {
       elevation: elevation,
       shadowColor: shadowColor,
       shape: shape,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: items.map<Widget>((item) {
-          if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
-          return KeyedSubtree(
-            key: item.key,
-            child: item.build(context),
-          );
-        }).toList(),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: items.map<Widget>((item) {
+            if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
+            return KeyedSubtree(
+              key: item.key,
+              child: item.build(context),
+            );
+          }).toList(),
+        ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
     );
   }
 }

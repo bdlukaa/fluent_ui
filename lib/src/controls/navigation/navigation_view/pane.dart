@@ -456,90 +456,78 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       key: widget.pane.paneKey,
       height: height,
       child: Row(children: [
+        if (widget.pane.leading != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 6.0,
+            ),
+            child: widget.pane.leading!,
+          ),
+        if (widget.pane.header != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 6.0,
+            ),
+            child: widget.pane.header!,
+          ),
         Expanded(
-          child: Row(children: [
-            if (widget.pane.leading != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 6.0,
-                ),
-                child: widget.pane.leading!,
+          child: DynamicOverflow(
+            children: widget.pane.items.map((item) {
+              return SizedBox(
+                height: height,
+                child: _buildItem(context, item),
+              );
+            }).toList(),
+            overflowWidgetAlignment: MainAxisAlignment.start,
+            overflowWidget: Flyout(
+              controller: overflowController,
+              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
+                context,
+                false,
+                overflowController.open,
+                showTextOnTop: false,
+                displayMode: PaneDisplayMode.top,
               ),
-            if (widget.pane.header != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 6.0,
-                ),
-                child: widget.pane.header!,
-              ),
-            Expanded(
-              child: DynamicOverflow(
-                children: widget.pane.items.map((item) {
-                  return SizedBox(
-                    height: height,
-                    child: _buildItem(context, item),
-                  );
+              placement: FlyoutPlacement.end,
+              content: (context) => MenuFlyout(
+                items: dynamicallyHiddenPrimaryItems.map((i) {
+                  final item = widget.pane.items[i];
+                  return buildMenuPaneItem(context, item);
                 }).toList(),
-                overflowWidgetAlignment: MainAxisAlignment.start,
-                overflowWidget: Flyout(
-                  controller: overflowController,
-                  child: PaneItem(icon: const Icon(FluentIcons.more)).build(
-                    context,
-                    false,
-                    overflowController.open,
-                    showTextOnTop: false,
-                    displayMode: PaneDisplayMode.top,
-                  ),
-                  placement: FlyoutPlacement.end,
-                  content: (context) => MenuFlyout(
-                    items: dynamicallyHiddenPrimaryItems.map((i) {
-                      final item = widget.pane.items[i];
-                      return buildMenuPaneItem(context, item);
-                    }).toList(),
-                  ),
-                  // content: (context) => FlyoutContent(
-                  //   constraints: const BoxConstraints(maxWidth: 210.0),
-                  //   padding: const EdgeInsets.only(top: 8.0),
-                  //   child: ListView(
-                  //     shrinkWrap: true,
-                  //   ),
-                  // ),
-                  // controller: secondaryFlyoutController,
-                ),
-                overflowChangedCallback: (hiddenItems) {
-                  setState(() {
-                    // indexes should always be valid
-                    assert(() {
-                      for (var i = 0; i < hiddenItems.length; i++) {
-                        if (hiddenItems[i] < 0 ||
-                            hiddenItems[i] >= widget.pane.items.length) {
-                          return false;
-                        }
-                      }
-                      return true;
-                    }());
-
-                    // if there is a non-hidden item and if the selected item is hidden
-                    if (!hiddenItems.contains(0) &&
-                        hiddenItems.contains(widget.pane.selected)) {
-                      hiddenItems
-                        // we add the first item outside of the overflow to the overflow list
-                        ..insert(
-                          0,
-                          hiddenItems.first - 1,
-                        )
-                        // and remove the selected item index
-                        ..remove(widget.pane.selected);
-                    }
-
-                    dynamicallyHiddenPrimaryItems = hiddenItems;
-                  });
-                },
               ),
             ),
-          ]),
+            overflowChangedCallback: (hiddenItems) {
+              setState(() {
+                // indexes should always be valid
+                assert(() {
+                  for (var i = 0; i < hiddenItems.length; i++) {
+                    if (hiddenItems[i] < 0 ||
+                        hiddenItems[i] >= widget.pane.items.length) {
+                      return false;
+                    }
+                  }
+                  return true;
+                }());
+
+                // if there is a non-hidden item and if the selected item is hidden
+                if (!hiddenItems.contains(0) &&
+                    hiddenItems.contains(widget.pane.selected)) {
+                  hiddenItems
+                    // we add the first item outside of the overflow to the overflow list
+                    ..insert(
+                      0,
+                      hiddenItems.first - 1,
+                    )
+                    // and remove the selected item index
+                    ..remove(widget.pane.selected);
+                }
+
+                dynamicallyHiddenPrimaryItems = hiddenItems;
+              });
+            },
+          ),
         ),
         if (widget.pane.autoSuggestBox != null)
           Container(
