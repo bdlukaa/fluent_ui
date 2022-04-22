@@ -400,7 +400,7 @@ class _TopNavigationPane extends StatefulWidget {
 
 class _TopNavigationPaneState extends State<_TopNavigationPane> {
   final overflowController = FlyoutController();
-  List<int> dynamicallyHiddenPrimaryItems = [];
+  List<int> hiddenPaneItems = [];
   late final List<NavigationPaneItem> _localItemHold;
 
   @override
@@ -442,9 +442,38 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
 
   @override
   void didUpdateWidget(covariant _TopNavigationPane oldWidget) {
-    _localItemHold
-      ..clear()
-      ..addAll(widget.pane.effectiveItems);
+    // update the items
+    {
+      bool isDifferent = false;
+      for (final item in oldWidget.pane.items) {
+        if (!_localItemHold.contains(item)) {
+          isDifferent = true;
+          break;
+        }
+      }
+      if (isDifferent) {
+        _localItemHold
+          ..clear()
+          ..addAll(widget.pane.effectiveItems);
+      }
+    }
+
+    // if the selected item changed
+    if (widget.pane.selected != oldWidget.pane.selected) {
+      // if there is a non-hidden item and if the selected item is hidden
+      if (!hiddenPaneItems.contains(0) &&
+          hiddenPaneItems.contains(widget.pane.selected)) {
+        hiddenPaneItems
+          // we add the first item outside of the overflow to the overflow list
+          ..insert(
+            0,
+            hiddenPaneItems.first - 1,
+          )
+          // and remove the selected item index
+          ..remove(widget.pane.selected);
+      }
+    }
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -474,6 +503,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         Expanded(
           child: DynamicOverflow(
+            ensureVisible: [
+              if (widget.pane.selected != null) widget.pane.selected!,
+            ],
             children: widget.pane.items.map((item) {
               return SizedBox(
                 height: height,
@@ -492,7 +524,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
               ),
               placement: FlyoutPlacement.end,
               content: (context) => MenuFlyout(
-                items: dynamicallyHiddenPrimaryItems.map((i) {
+                items: hiddenPaneItems.map((i) {
                   final item = widget.pane.items[i];
                   return buildMenuPaneItem(context, item);
                 }).toList(),
@@ -524,7 +556,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                     ..remove(widget.pane.selected);
                 }
 
-                dynamicallyHiddenPrimaryItems = hiddenItems;
+                hiddenPaneItems = hiddenItems;
               });
             },
           ),
