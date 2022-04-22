@@ -401,6 +401,17 @@ class _TopNavigationPane extends StatefulWidget {
 class _TopNavigationPaneState extends State<_TopNavigationPane> {
   final overflowController = FlyoutController();
   List<int> dynamicallyHiddenPrimaryItems = [];
+  late final List<NavigationPaneItem> _localItemHold;
+
+  @override
+  void initState() {
+    super.initState();
+    _localItemHold = widget.pane.effectiveItems;
+  }
+
+  void _onPressed(PaneItem item) {
+    widget.pane._changeTo(item);
+  }
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     if (item is PaneItemHeader) {
@@ -412,9 +423,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       return item.build(
         context,
         selected,
-        () {
-          widget.pane._changeTo(item);
-        },
+        () => _onPressed(item),
         showTextOnTop: !widget.pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
       );
@@ -429,6 +438,14 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   void dispose() {
     overflowController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant _TopNavigationPane oldWidget) {
+    _localItemHold
+      ..clear()
+      ..addAll(widget.pane.effectiveItems);
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -476,19 +493,19 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                     displayMode: PaneDisplayMode.top,
                   ),
                   placement: FlyoutPlacement.end,
-                  content: (context) => FlyoutContent(
-                    constraints: const BoxConstraints(maxWidth: 210.0),
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: dynamicallyHiddenPrimaryItems.map((i) {
-                        final item = widget.pane.items[i];
-                        return Builder(builder: (context) {
-                          return _buildItem(context, item);
-                        });
-                      }).toList(),
-                    ),
+                  content: (context) => MenuFlyout(
+                    items: dynamicallyHiddenPrimaryItems.map((i) {
+                      final item = widget.pane.items[i];
+                      return buildMenuPaneItem(context, item);
+                    }).toList(),
                   ),
+                  // content: (context) => FlyoutContent(
+                  //   constraints: const BoxConstraints(maxWidth: 210.0),
+                  //   padding: const EdgeInsets.only(top: 8.0),
+                  //   child: ListView(
+                  //     shrinkWrap: true,
+                  //   ),
+                  // ),
                   // controller: secondaryFlyoutController,
                 ),
                 overflowChangedCallback: (hiddenItems) {
@@ -503,6 +520,20 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                       }
                       return true;
                     }());
+
+                    // if there is a non-hidden item and if the selected item is hidden
+                    if (!hiddenItems.contains(0) &&
+                        hiddenItems.contains(widget.pane.selected)) {
+                      hiddenItems
+                        // we add the first item outside of the overflow to the overflow list
+                        ..insert(
+                          0,
+                          hiddenItems.first - 1,
+                        )
+                        // and remove the selected item index
+                        ..remove(widget.pane.selected);
+                    }
+
                     dynamicallyHiddenPrimaryItems = hiddenItems;
                   });
                 },
@@ -523,6 +554,92 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           return _buildItem(context, item);
         }).toList(),
       ]),
+    );
+  }
+
+  MenuFlyoutItemInterface buildMenuPaneItem(
+      BuildContext context, NavigationPaneItem item) {
+    if (item is PaneItemSeparator) {
+      return const MenuFlyoutSeparator();
+    } else if (item is PaneItem) {
+      return _MenuFlyoutPaneItem(
+        item: item,
+        onPressed: () => _onPressed(item),
+      );
+    } else {
+      throw UnsupportedError('${item.runtimeType} is not supported');
+    }
+  }
+}
+
+class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
+  _MenuFlyoutPaneItem({
+    Key? key,
+    required this.item,
+    required this.onPressed,
+    this.selected = false,
+  }) : super(key: key);
+
+  final PaneItem item;
+  final VoidCallback? onPressed;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = PopupContentSizeInfo.of(context).size;
+    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
+
+    final String titleText = item._getPropertyFromTitle<String>() ?? '';
+    final TextStyle baseStyle =
+        item._getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+
+    final textResult = titleText.isNotEmpty
+        ? Padding(
+            padding: theme.labelPadding ?? EdgeInsets.zero,
+            child: RichText(
+              text: item._getPropertyFromTitle<InlineSpan>(baseStyle)!,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              textAlign:
+                  item._getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
+              textHeightBehavior:
+                  item._getPropertyFromTitle<TextHeightBehavior>(),
+              textWidthBasis: item._getPropertyFromTitle<TextWidthBasis>() ??
+                  TextWidthBasis.parent,
+            ),
+          )
+        : const SizedBox.shrink();
+
+    return HoverButton(
+      onPressed: onPressed,
+      builder: (context, states) {
+        return Container(
+          width: size.isEmpty ? null : size.width,
+          padding: MenuFlyout.itemsPadding,
+          height: 36.0,
+          color: ButtonThemeData.uncheckedInputColor(
+            FluentTheme.of(context),
+            states,
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Padding(
+              padding: theme.iconPadding ?? EdgeInsets.zero,
+              child: IconTheme.merge(
+                data: IconThemeData(
+                  color: (selected
+                          ? theme.selectedIconColor?.resolve(states)
+                          : theme.unselectedIconColor?.resolve(states)) ??
+                      baseStyle.color,
+                  size: 16.0,
+                ),
+                child: Center(child: item.icon),
+              ),
+            ),
+            Flexible(child: textResult),
+          ]),
+        );
+      },
     );
   }
 }

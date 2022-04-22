@@ -170,8 +170,6 @@ class PaneItem extends NavigationPaneItem {
 
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
-    final bool isTopOverflowMenuOpen =
-        PopupContentSizeInfo.maybeOf(context) != null;
 
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
@@ -184,7 +182,7 @@ class PaneItem extends NavigationPaneItem {
               ? theme.selectedTextStyle?.resolve(states)
               : theme.unselectedTextStyle?.resolve(states),
         );
-        if (isTop && !isTopOverflowMenuOpen && states.isPressing) {
+        if (isTop && states.isPressing) {
           textStyle = textStyle.copyWith(
             color: textStyle.color?.withOpacity(0.75),
           );
@@ -289,19 +287,12 @@ class PaneItem extends NavigationPaneItem {
                       child: Center(child: icon),
                     ),
                   ),
-                  if (isTopOverflowMenuOpen) ...[
-                    Expanded(child: textResult),
-                    if (infoBadge != null)
-                      Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 8.0),
-                        child: infoBadge!,
-                      ),
-                  ] else if (showTextOnTop)
-                    textResult,
+                  if (showTextOnTop) textResult,
                 ],
               );
-              if (infoBadge != null && !isTopOverflowMenuOpen) {
-                result = Stack(
+              if (infoBadge != null) {
+                return Stack(
+                  key: itemKey,
                   clipBehavior: Clip.none,
                   children: [
                     result,
@@ -314,11 +305,7 @@ class PaneItem extends NavigationPaneItem {
                   ],
                 );
               }
-              return SizedBox(
-                height: isTopOverflowMenuOpen ? 36.0 : null,
-                key: itemKey,
-                child: result,
-              );
+              return KeyedSubtree(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
           }
@@ -330,16 +317,14 @@ class PaneItem extends NavigationPaneItem {
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standardCurve,
-            margin: isTopOverflowMenuOpen
-                ? EdgeInsets.zero
-                : const EdgeInsets.only(right: 6.0, left: 6.0),
+            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
                     theme.tileColor ??
                     kDefaultTileColor(
                       context,
-                      isTopOverflowMenuOpen ? false : isTop,
+                      isTop,
                     );
                 final newStates = states.toSet()..remove(ButtonStates.disabled);
                 if (selected && selectedTileColor != null) {
@@ -355,17 +340,13 @@ class PaneItem extends NavigationPaneItem {
                       : newStates,
                 );
               }(),
-              borderRadius: isTopOverflowMenuOpen
-                  ? BorderRadius.zero
-                  : BorderRadius.circular(4.0),
+              borderRadius: BorderRadius.circular(4.0),
             ),
             child: FocusBorder(
               child: () {
-                final showTooltip =
-                    ((isTop && !showTextOnTop && !isTopOverflowMenuOpen) ||
-                            isCompact) &&
-                        titleText.isNotEmpty &&
-                        !states.isDisabled;
+                final showTooltip = ((isTop && !showTextOnTop) || isCompact) &&
+                    titleText.isNotEmpty &&
+                    !states.isDisabled;
 
                 if (showTooltip) {
                   return Tooltip(
