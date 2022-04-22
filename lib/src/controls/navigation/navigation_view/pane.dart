@@ -503,9 +503,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         Expanded(
           child: DynamicOverflow(
-            ensureVisible: [
-              if (widget.pane.selected != null) widget.pane.selected!,
-            ],
+            // ensureVisible: [
+            //   if (widget.pane.selected != null) widget.pane.selected!,
+            // ],
             children: widget.pane.items.map((item) {
               return SizedBox(
                 height: height,
