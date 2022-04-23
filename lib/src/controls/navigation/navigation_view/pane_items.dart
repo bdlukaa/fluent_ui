@@ -401,9 +401,6 @@ class PaneItem extends NavigationPaneItem {
       }(),
     );
   }
-
-  // Widget buildMenuItem() {}
-
 }
 
 /// Separators for grouping navigation items. Set the color property to
