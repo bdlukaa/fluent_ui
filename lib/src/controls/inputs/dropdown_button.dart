@@ -7,6 +7,11 @@ const Widget _kDefaultDropdownButtonTrailing = Icon(
   size: 10,
 );
 
+typedef DropDownButtonBuilder = Widget Function(
+  BuildContext context,
+  VoidCallback? onOpen,
+);
+
 /// A DropDownButton is a button that shows a chevron as a visual indicator that
 /// it has an attached flyout that contains more options. It has the same
 /// behavior as a standard Button control with a flyout; only the appearance is
@@ -24,6 +29,7 @@ class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
   const DropDownButton({
     Key? key,
+    this.buttonBuilder,
     required this.items,
     this.leading,
     this.title,
@@ -39,6 +45,12 @@ class DropDownButton extends StatefulWidget {
     this.menuColor,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
+
+  /// A builder for the button. If null, a [Button] with [leading], [title] and
+  /// [trailing] is used.
+  ///
+  /// If [disabled] is true, [DropDownButtonBuilder.onOpen] will be null
+  final DropDownButtonBuilder? buttonBuilder;
 
   /// The content at the start of this widget.
   ///
@@ -147,18 +159,24 @@ class _DropDownButtonState extends State<DropDownButton> {
       position: FlyoutPosition.below,
       controller: flyoutController,
       verticalOffset: widget.verticalOffset,
-      child: Button(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: buttonChildren,
-        ),
-        onPressed: widget.disabled ? null : flyoutController.open,
-        autofocus: widget.autofocus,
-        focusNode: widget.focusNode,
-        style: widget.buttonStyle,
-      ),
+      child: Builder(builder: (context) {
+        return widget.buttonBuilder?.call(
+              context,
+              widget.disabled ? null : flyoutController.open,
+            ) ??
+            Button(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: buttonChildren,
+              ),
+              onPressed: widget.disabled ? null : flyoutController.open,
+              autofocus: widget.autofocus,
+              focusNode: widget.focusNode,
+              style: widget.buttonStyle,
+            );
+      }),
       content: (context) {
         return MenuFlyout(
           color: widget.menuColor,
