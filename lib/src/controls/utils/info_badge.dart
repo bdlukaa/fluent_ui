@@ -40,7 +40,12 @@ class InfoBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final color = this.color ?? FluentTheme.of(context).accentColor;
+    final theme = FluentTheme.of(context);
+    final color = this.color ??
+        theme.accentColor.resolveFromReverseBrightness(
+          theme.brightness,
+          level: 1,
+        );
 
     return Container(
       constraints: source == null
@@ -57,10 +62,10 @@ class InfoBadge extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(100),
       ),
-      alignment: Alignment.center,
       child: source == null
           ? null
           : DefaultTextStyle(
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: foregroundColor ?? color.basedOnLuminance(),
                 fontSize: 11.0,

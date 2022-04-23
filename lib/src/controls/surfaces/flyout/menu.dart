@@ -20,6 +20,7 @@ class MenuFlyout extends StatelessWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints,
+    this.padding = const EdgeInsets.symmetric(vertical: 8.0),
   }) : super(key: key);
 
   final List<MenuFlyoutItemInterface> items;
@@ -39,6 +40,9 @@ class MenuFlyout extends StatelessWidget {
 
   /// Additional constraints to apply to the child.
   final BoxConstraints? constraints;
+
+  /// The padding applied the [items], with correct handling when scrollable
+  final EdgeInsetsGeometry? padding;
 
   static const EdgeInsetsGeometry itemsPadding = EdgeInsets.symmetric(
     horizontal: 8.0,
@@ -60,8 +64,9 @@ class MenuFlyout extends StatelessWidget {
       elevation: elevation,
       shadowColor: shadowColor,
       shape: shape,
+      padding: EdgeInsets.zero,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: padding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
