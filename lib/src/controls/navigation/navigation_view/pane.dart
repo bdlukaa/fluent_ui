@@ -87,7 +87,10 @@ class NavigationPane with Diagnosticable {
     this.scrollController,
     this.leading,
     this.indicator = const StickyNavigationIndicator(),
-  }) : assert(selected == null || selected >= 0);
+  }) : assert(
+          selected == null || !selected.isNegative,
+          'The selected index must not be negative',
+        );
 
   final Key? key;
 
@@ -192,7 +195,7 @@ class NavigationPane with Diagnosticable {
 
   void _changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
-    if (selected != index) onChanged?.call(index);
+    if (selected != index && !index.isNegative) onChanged?.call(index);
   }
 
   /// A list of all of the items displayed on this pane.
@@ -208,6 +211,12 @@ class NavigationPane with Diagnosticable {
   /// Check if the provided [item] is selected on not.
   bool isSelected(NavigationPaneItem item) {
     return effectiveIndexOf(item) == selected;
+  }
+
+  /// Get the current selected item
+  PaneItem get selectedItem {
+    assert(selected != null, 'There is no item selected');
+    return effectiveItems[selected!] as PaneItem;
   }
 
   /// Get the effective index of the navigation pane.
@@ -401,12 +410,18 @@ class _TopNavigationPane extends StatefulWidget {
 class _TopNavigationPaneState extends State<_TopNavigationPane> {
   final overflowController = FlyoutController();
   List<int> hiddenPaneItems = [];
-  late final List<NavigationPaneItem> _localItemHold;
+  late List<int> _localItemHold;
+  void generateLocalItemHold() {
+    _localItemHold = List.generate(
+      widget.pane.items.length,
+      (index) => index,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _localItemHold = widget.pane.effectiveItems;
+    generateLocalItemHold();
   }
 
   void _onPressed(PaneItem item) {
@@ -424,12 +439,13 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         context,
         selected,
         () => _onPressed(item),
+        // only show the text if the item is not in the footer
         showTextOnTop: !widget.pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
       );
     } else {
       throw UnsupportedError(
-        '${item.runtimeType} is not a supported pane item type.',
+        '${item.runtimeType} is not a supported navigation pane item type.',
       );
     }
   }
@@ -443,19 +459,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   @override
   void didUpdateWidget(covariant _TopNavigationPane oldWidget) {
     // update the items
-    {
-      bool isDifferent = false;
-      for (final item in oldWidget.pane.items) {
-        if (!_localItemHold.contains(item)) {
-          isDifferent = true;
-          break;
-        }
-      }
-      if (isDifferent) {
-        _localItemHold
-          ..clear()
-          ..addAll(widget.pane.effectiveItems);
-      }
+    if (oldWidget.pane.items.length != widget.pane.items.length) {
+      generateLocalItemHold();
     }
 
     // if the selected item changed
@@ -463,14 +468,23 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       // if there is a non-hidden item and if the selected item is hidden
       if (!hiddenPaneItems.contains(0) &&
           hiddenPaneItems.contains(widget.pane.selected)) {
-        hiddenPaneItems
-          // we add the first item outside of the overflow to the overflow list
-          ..insert(
-            0,
-            hiddenPaneItems.first - 1,
-          )
-          // and remove the selected item index
-          ..remove(widget.pane.selected);
+        generateLocalItemHold();
+        final selectedItem = widget.pane.items.indexOf(
+          widget.pane.selectedItem,
+        );
+
+        int item = hiddenPaneItems.first - 1;
+        while (widget.pane.items[item] is! PaneItem) {
+          item--;
+          if (item.isNegative) {
+            item++;
+            break;
+          }
+        }
+
+        _localItemHold
+          ..remove(selectedItem)
+          ..insert(item, selectedItem);
       }
     }
 
@@ -506,7 +520,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
             // ensureVisible: [
             //   if (widget.pane.selected != null) widget.pane.selected!,
             // ],
-            children: widget.pane.items.map((item) {
+            children: _localItemHold.map((index) {
+              final item = widget.pane.items[index];
               return SizedBox(
                 height: height,
                 child: _buildItem(context, item),
@@ -524,7 +539,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
               ),
               placement: FlyoutPlacement.end,
               content: (context) => MenuFlyout(
-                items: hiddenPaneItems.map((i) {
+                items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
                   final item = widget.pane.items[i];
                   return buildMenuPaneItem(context, item);
                 }).toList(),
@@ -542,19 +557,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                   }
                   return true;
                 }());
-
-                // if there is a non-hidden item and if the selected item is hidden
-                if (!hiddenItems.contains(0) &&
-                    hiddenItems.contains(widget.pane.selected)) {
-                  hiddenItems
-                    // we add the first item outside of the overflow to the overflow list
-                    ..insert(
-                      0,
-                      hiddenItems.first - 1,
-                    )
-                    // and remove the selected item index
-                    ..remove(widget.pane.selected);
-                }
 
                 hiddenPaneItems = hiddenItems;
               });
