@@ -10,6 +10,7 @@ Date format: DD/MM/YYYY
   - Implemented `MenuFlyoutItem`, `MenuFlyoutSeparator` and `MenuFlyoutSubItem`. They are used inside `MenuFlyout` to render the menu items
   - `horizontalPositionDependentBox` is now globally available for use as a top function
 - Implemented overflow popup on `NavigationView` for top mode ([#https://github.com/bdlukaa/fluent_ui/pull/277])
+- `InfoBadge` now is correctly positioned on top mode ([#296](https://github.com/bdlukaa/fluent_ui/pull/296))
 
 ## [3.10.3] - [15/04/2022]
 
