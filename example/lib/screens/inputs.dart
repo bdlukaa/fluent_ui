@@ -199,6 +199,66 @@ class _InputsPageState extends State<InputsPage> {
                 leading: const Icon(FluentIcons.mail_reply_all),
                 onTap: () => debugPrint('Reply all'),
               ),
+              DropDownButtonItem(
+                title: const Text('Send'),
+                leading: const Icon(FluentIcons.send),
+                onTap: () => debugPrint('Send'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply'),
+                leading: const Icon(FluentIcons.mail_reply),
+                onTap: () => debugPrint('Reply'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply all'),
+                leading: const Icon(FluentIcons.mail_reply_all),
+                onTap: () => debugPrint('Reply all'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Send'),
+                leading: const Icon(FluentIcons.send),
+                onTap: () => debugPrint('Send'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply'),
+                leading: const Icon(FluentIcons.mail_reply),
+                onTap: () => debugPrint('Reply'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply all'),
+                leading: const Icon(FluentIcons.mail_reply_all),
+                onTap: () => debugPrint('Reply all'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Send'),
+                leading: const Icon(FluentIcons.send),
+                onTap: () => debugPrint('Send'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply'),
+                leading: const Icon(FluentIcons.mail_reply),
+                onTap: () => debugPrint('Reply'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply all'),
+                leading: const Icon(FluentIcons.mail_reply_all),
+                onTap: () => debugPrint('Reply all'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Send'),
+                leading: const Icon(FluentIcons.send),
+                onTap: () => debugPrint('Send'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply'),
+                leading: const Icon(FluentIcons.mail_reply),
+                onTap: () => debugPrint('Reply'),
+              ),
+              DropDownButtonItem(
+                title: const Text('Reply all'),
+                leading: const Icon(FluentIcons.mail_reply_all),
+                onTap: () => debugPrint('Reply all'),
+              ),
             ],
           ),
           spacer,
