@@ -662,7 +662,11 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
                 child: Center(child: item.icon),
               ),
             ),
-            Flexible(child: textResult),
+            Flexible(
+              fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+              child: textResult,
+            ),
+            if (item.infoBadge != null) item.infoBadge!,
           ]),
         );
       },
