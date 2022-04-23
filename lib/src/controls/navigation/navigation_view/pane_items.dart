@@ -271,7 +271,8 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              final result = Row(
+              Widget result = Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -290,19 +291,21 @@ class PaneItem extends NavigationPaneItem {
                 ],
               );
               if (infoBadge != null) {
-                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
-                  result,
-                  if (infoBadge != null)
-                    Positioned(
-                      right: -8,
-                      top: -8,
-                      child: infoBadge!,
-                    ),
-                ]);
+                return Stack(
+                  key: itemKey,
+                  clipBehavior: Clip.none,
+                  children: [
+                    result,
+                    if (infoBadge != null)
+                      Positioned(
+                        right: -8,
+                        top: -8,
+                        child: infoBadge!,
+                      ),
+                  ],
+                );
               }
-              // return Container(
-              //     key: itemKey, child: result, color: Colors.orange);
-              return Center(key: itemKey, child: result);
+              return KeyedSubtree(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
           }
@@ -319,7 +322,10 @@ class PaneItem extends NavigationPaneItem {
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
                     theme.tileColor ??
-                    kDefaultTileColor(context, isTop);
+                    kDefaultTileColor(
+                      context,
+                      isTop,
+                    );
                 final newStates = states.toSet()..remove(ButtonStates.disabled);
                 if (selected && selectedTileColor != null) {
                   return selectedTileColor!.resolve(newStates);
@@ -381,7 +387,7 @@ class PaneItem extends NavigationPaneItem {
             button,
             Positioned.fill(
               child: InheritedNavigationView.merge(
-                itemIndex: index,
+                currentItemIndex: index,
                 child: KeyedSubtree(
                   key: index != null ? key : null,
                   child: maybeBody!.pane!.indicator!,
@@ -484,7 +490,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
-class PaneItemAction extends PaneItem implements NavigationPaneItem {
+class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
     required this.onTap,
@@ -524,9 +530,9 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
   }
 }
 
-extension ItemsExtension on List<NavigationPaneItem> {
+extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
+  List<Offset> _getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;
@@ -539,16 +545,6 @@ extension ItemsExtension on List<NavigationPaneItem> {
       final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
       final position = paneBox.globalToLocal(globalPosition);
       return position;
-    }).toList();
-  }
-
-  /// Get all the item sizes in this list
-  List<Size> getPaneItemsSizes() {
-    return map((e) {
-      final context = e.itemKey.currentContext;
-      if (context == null) return Size.zero;
-      final box = context.findRenderObject()! as RenderBox;
-      return box.size;
     }).toList();
   }
 }

@@ -40,8 +40,7 @@ class _IconsPageState extends State<IconsPage> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final padding = PageHeader.horizontalPadding(context);
-    return ScaffoldPage(
+    return ScaffoldPage.withPadding(
       header: PageHeader(
         title: const Text('Fluent Icons Gallery showcase'),
         commandBar: SizedBox(
@@ -68,11 +67,7 @@ class _IconsPageState extends State<IconsPage> {
         maxCrossAxisExtent: 150,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        padding: EdgeInsets.only(
-          top: kPageDefaultVerticalPadding,
-          right: padding,
-          left: padding,
-        ),
+        padding: const EdgeInsets.only(top: kPageDefaultVerticalPadding),
         children: FluentIcons.allIcons.entries
             .where((icon) =>
                 filterText.isEmpty ||

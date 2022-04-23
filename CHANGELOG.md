@@ -9,6 +9,7 @@ Date format: DD/MM/YYYY
   - Implement `PopupContentSizeInfo`, which provides the information about the content size
   - Implemented `MenuFlyoutItem`, `MenuFlyoutSeparator` and `MenuFlyoutSubItem`. They are used inside `MenuFlyout` to render the menu items
   - `horizontalPositionDependentBox` is now globally available for use as a top function
+- Implemented overflow popup on `NavigationView` for top mode ([#https://github.com/bdlukaa/fluent_ui/pull/277])
 
 ## [3.10.3] - [15/04/2022]
 

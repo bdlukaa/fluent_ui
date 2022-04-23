@@ -54,7 +54,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      final _offsets = pane.effectiveItems.getPaneItemsOffsets(
+      final _offsets = pane.effectiveItems._getPaneItemsOffsets(
         pane.paneKey,
       );
       if (mounted && (offsets != _offsets)) {
@@ -84,7 +84,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get itemIndex {
-    return InheritedNavigationView.maybeOf(context)?.itemIndex ?? -1;
+    return InheritedNavigationView.maybeOf(context)?.currentItemIndex ?? -1;
   }
 
   int get oldIndex {

@@ -147,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
+        automaticallyImplyLeading: false,
         title: () {
           if (kIsWeb) return const Text(appTitle);
           return const DragToMoveArea(
@@ -175,9 +176,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         header: Container(
           height: kOneLineTileHeight,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: const FlutterLogo(
-            style: FlutterLogoStyle.horizontal,
-            size: 100,
+          child: FlutterLogo(
+            style: appTheme.displayMode == PaneDisplayMode.top
+                ? FlutterLogoStyle.markOnly
+                : FlutterLogoStyle.horizontal,
+            size: appTheme.displayMode == PaneDisplayMode.top ? 24 : 100.0,
           ),
         ),
         displayMode: appTheme.displayMode,
@@ -224,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
           PaneItem(
             icon: const Icon(FluentIcons.pop_expand),
-            title: const Text('Popups, Flyouts and Context Menus'),
+            title: const Text('Flyouts'),
           ),
           PaneItem(
             icon: Icon(

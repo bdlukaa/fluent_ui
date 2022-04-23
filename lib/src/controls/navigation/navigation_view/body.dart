@@ -163,13 +163,13 @@ class _NavigationBodyState extends State<NavigationBody> {
   }
 }
 
-/// A widget that tells what's the the current state of the parent
-/// [NavigationView]
+/// A widget that tells what's the the current state of a parent
+/// [NavigationView], if any.
 ///
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-///  * [NavigationBody], which is used to display the content
+///  * [NavigationBody], which is used to display the content on the view
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
@@ -179,24 +179,25 @@ class InheritedNavigationView extends InheritedWidget {
     this.minimalPaneOpen = false,
     this.pane,
     this.oldIndex = 0,
-    this.itemIndex = -1,
+    this.currentItemIndex = -1,
   }) : super(key: key, child: child);
 
-  /// The current pane display mode.
+  /// The current pane display mode according to the current state.
   final PaneDisplayMode? displayMode;
 
   /// Whether the minimal pane is open or not
   final bool minimalPaneOpen;
 
-  /// The current navigation pane
+  /// The current navigation pane, if any
   final NavigationPane? pane;
 
-  /// The old index
+  /// The old index selected index. Usually used by [NavigationIndicator]s to
+  /// display the animation from the old item to the new one.
   final int oldIndex;
 
   /// Used by [NavigationIndicator] to know what's the current index of the
   /// item
-  final int itemIndex;
+  final int currentItemIndex;
 
   static InheritedNavigationView? maybeOf(BuildContext context) {
     return context
@@ -204,14 +205,13 @@ class InheritedNavigationView extends InheritedWidget {
   }
 
   static InheritedNavigationView of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>()!;
+    return maybeOf(context)!;
   }
 
   static Widget merge({
     Key? key,
     required Widget child,
-    int? itemIndex,
+    int? currentItemIndex,
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
@@ -224,7 +224,7 @@ class InheritedNavigationView extends InheritedWidget {
         child: child,
         displayMode: displayMode ?? current?.displayMode,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
-        itemIndex: itemIndex ?? current?.itemIndex ?? -1,
+        currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
         oldIndex: oldIndex ?? current?.oldIndex ?? 0,
       );
@@ -236,7 +236,8 @@ class InheritedNavigationView extends InheritedWidget {
     return oldWidget.displayMode != displayMode ||
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
-        oldWidget.itemIndex != oldWidget.itemIndex;
+        oldWidget.oldIndex != oldIndex ||
+        oldWidget.currentItemIndex != oldWidget.currentItemIndex;
   }
 }
 
@@ -250,6 +251,7 @@ class _PaneItemKeys extends InheritedWidget {
 
   final Map<int, GlobalKey> keys;
 
+  /// Gets the item global key based on the index
   static GlobalKey of(int index, BuildContext context) {
     final reference =
         context.dependOnInheritedWidgetOfExactType<_PaneItemKeys>()!;

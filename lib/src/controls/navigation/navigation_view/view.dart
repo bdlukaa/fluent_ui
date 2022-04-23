@@ -3,6 +3,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../../utils/popup.dart';
+
 part 'body.dart';
 
 part 'indicators.dart';
@@ -272,9 +274,11 @@ class NavigationViewState extends State<NavigationView> {
                       ? Colors.black
                       : const Color(0xffBCBCBC),
                 ),
-                borderRadius: const BorderRadiusDirectional.only(
-                  topStart: Radius.circular(8.0),
-                ).resolve(direction),
+                borderRadius: displayMode == PaneDisplayMode.top
+                    ? BorderRadius.zero
+                    : const BorderRadiusDirectional.only(
+                        topStart: Radius.circular(8.0),
+                      ).resolve(direction),
               );
           final Widget content = ClipRect(
             key: _contentKey,
