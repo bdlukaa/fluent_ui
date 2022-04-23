@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 20.0;
+const double _kVerticalOffset = 8.0;
 const double _kInnerPadding = 5.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
@@ -111,6 +111,8 @@ class DropDownButton extends StatefulWidget {
 class _DropDownButtonState extends State<DropDownButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  final flyoutController = FlyoutController();
+  final buttonKey = GlobalKey();
 
   @override
   void initState() {
@@ -120,84 +122,23 @@ class _DropDownButtonState extends State<DropDownButton>
       // reverseDuration: _fadeOutDuration,
       vsync: this,
     );
-    // Listen to see when a mouse is added.
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    flyoutController.dispose();
     super.dispose();
   }
 
-  void _createNewEntry(Widget child) {
-    final OverlayState overlayState = Overlay.of(
-      context,
-      debugRequiredFor: widget,
-    )!;
-
-    final RenderBox box = context.findRenderObject()! as RenderBox;
-    Offset leftTarget = box.localToGlobal(
-      box.size.centerLeft(Offset.zero),
-      ancestor: overlayState.context.findRenderObject(),
-    );
-    Offset centerTarget = box.localToGlobal(
-      box.size.center(Offset.zero),
-      ancestor: overlayState.context.findRenderObject(),
-    );
-    Offset rightTarget = box.localToGlobal(
-      box.size.centerRight(Offset.zero),
-      ancestor: overlayState.context.findRenderObject(),
-    );
-
-    // We create this widget outside of the overlay entry's builder to prevent
-    // updated values from happening to leak into the overlay when the overlay
-    // rebuilds.
-    final Widget overlay = Directionality(
-      textDirection: Directionality.of(context),
-      child: _DropDownButtonOverlay(
-        child: child,
-        height: 50.0,
-        width: 100.0,
-        decoration: widget.menuDecoration ??
-            BoxDecoration(
-              color: FluentTheme.of(context).menuColor,
-              borderRadius: BorderRadius.circular(6.0),
-              border: Border.all(
-                width: 0.25,
-                color: FluentTheme.of(context).inactiveBackgroundColor,
-              ),
-            ),
-        animation: CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeOut,
-        ),
-        target: {
-          FlyoutPlacement.start: leftTarget,
-          FlyoutPlacement.center: centerTarget,
-          FlyoutPlacement.end: rightTarget,
-        },
-        verticalOffset: widget.verticalOffset,
-        preferBelow: true,
-        onClose: _removeEntry,
-        placement: widget.placement,
-      ),
-    );
-    Navigator.of(context)
-        .push(FluentDialogRoute(
-          context: context,
-          barrierDismissible: true,
-          barrierColor: Colors.transparent,
-          transitionDuration: Duration.zero,
-          builder: (context) {
-            return overlay;
-          },
-        ))
-        .then((_) => _controller.value = 0);
-    _controller.forward();
+  Offset get buttonOffset {
+    final renderBox = context.findRenderObject() as RenderBox;
+    return renderBox.localToGlobal(Offset.zero);
   }
 
-  void _removeEntry() {
-    Navigator.maybeOf(context)?.pop();
+  Size get buttonSize {
+    final renderBox = context.findRenderObject() as RenderBox;
+    return renderBox.size;
   }
 
   @override
@@ -220,37 +161,55 @@ class _DropDownButtonState extends State<DropDownButton>
       ),
     ];
 
-    return Button(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: buttonChildren,
+    return Flyout(
+      placement: FlyoutPlacement.full,
+      position: FlyoutPosition.below,
+      controller: flyoutController,
+      verticalOffset: 0,
+      child: Button(
+        key: buttonKey,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: buttonChildren,
+        ),
+        onPressed: widget.disabled
+            ? null
+            : () {
+                flyoutController.open();
+              },
+        autofocus: widget.autofocus,
+        focusNode: widget.focusNode,
+        style: widget.buttonStyle,
       ),
-      onPressed: widget.disabled
-          ? null
-          : () {
-              _createNewEntry(_DropdownMenu(
-                items: widget.items.map((item) {
-                  if (widget.closeAfterClick) {
-                    return DropDownButtonItem(
-                      onTap: () {
-                        item.onTap();
-                        _removeEntry();
-                      },
-                      key: item.key,
-                      leading: item.leading,
-                      title: item.title,
-                      trailing: item.trailing,
-                    );
-                  }
-                  return item;
-                }).toList(),
-              ));
-            },
-      autofocus: widget.autofocus,
-      focusNode: widget.focusNode,
-      style: widget.buttonStyle,
+      content: (context) {
+        final offset = buttonOffset;
+        return Padding(
+          padding: EdgeInsets.only(
+            top: offset.dy + buttonSize.height + widget.verticalOffset,
+            left: offset.dx,
+            bottom: 10.0,
+          ),
+          child: _DropdownMenu(
+            items: widget.items.map((item) {
+              if (widget.closeAfterClick) {
+                return DropDownButtonItem(
+                  onTap: () {
+                    item.onTap();
+                    flyoutController.close();
+                  },
+                  key: item.key,
+                  leading: item.leading,
+                  title: item.title,
+                  trailing: item.trailing,
+                );
+              }
+              return item;
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 }
@@ -357,25 +316,30 @@ class __DropdownMenuState extends State<_DropdownMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return FocusScope(
-      autofocus: true,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: _kInnerPadding,
-          left: _kInnerPadding,
-          right: _kInnerPadding,
-        ),
-        child: Column(
-          key: _key,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(widget.items.length, (index) {
-            final item = widget.items[index];
-            return SizedBox(
-              width: size?.width,
-              child: Builder(builder: item.build),
-            );
-          }),
+    return FlyoutContent(
+      padding: const EdgeInsets.only(
+        top: _kInnerPadding,
+        left: _kInnerPadding,
+        right: _kInnerPadding,
+      ),
+      child: FocusScope(
+        autofocus: true,
+        child: ScrollConfiguration(
+          behavior: const _DropdownScrollBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              key: _key,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(widget.items.length, (index) {
+                final item = widget.items[index];
+                return SizedBox(
+                  width: size?.width,
+                  child: Builder(builder: item.build),
+                );
+              }),
+            ),
+          ),
         ),
       ),
     );
@@ -557,4 +521,22 @@ class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
       ),
     );
   }
+}
+
+// Do not use the platform-specific default scroll configuration.
+// DropDown menus should never overscroll or display an overscroll indicator.
+class _DropdownScrollBehavior extends FluentScrollBehavior {
+  const _DropdownScrollBehavior();
+
+  @override
+  TargetPlatform getPlatform(BuildContext context) => defaultTargetPlatform;
+
+  @override
+  Widget buildViewportChrome(
+          BuildContext context, Widget child, AxisDirection axisDirection) =>
+      child;
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const ClampingScrollPhysics();
 }
