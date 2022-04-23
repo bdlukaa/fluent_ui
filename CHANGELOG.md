@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [3.11.0] - Menu Flyouts - [23/04/2022]
 
 - Implemented `MenuFlyout` ([#266](https://github.com/bdlukaa/fluent_ui/pull/266))
   - Implemented `FlyoutPosition`, which controls where the flyout will be opened according to the child. It can be `above`, `below` or `side`

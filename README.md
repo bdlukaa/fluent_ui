@@ -536,11 +536,13 @@ NavigationBody(
 
 ### Info Badge
 
-Badging is a non-intrusive and intuitive way to display notifications or bring focus to an area within an app - whether that be for notifications, indicating new content, or showing an alert. An InfoBadge is a small piece of UI that can be added into an app and customized to display a number, icon, or a simple dot. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/info-badge)
+Badging is a non-intrusive and intuitive way to display notifications or bring focus to an area within an app - whether that be for notifications, indicating new content, or showing an alert. An `InfoBadge` is a small piece of UI that can be added into an app and customized to display a number, icon, or a simple dot. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/info-badge)
 
 ![InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/infobadge-example-1.png)
 
-Here's an example of how to add a info badge to a `PaneItem`:
+InfoBadge is built into `NavigationView`, but can also be placed as a standalone widget, allowing you to place InfoBadge into any control or piece of UI of your choosing. When you use an `InfoBadge` somewhere other than `NavigationView`, you are responsible for programmatically determining when to show and dismiss the `InfoBadge`, and where to place the `InfoBadge`.
+
+Here's an example of how to add an info badge to a `PaneItem`:
 
 ```dart
 NavigationView(
@@ -560,6 +562,8 @@ NavigationView(
   ...
 )
 ```
+
+Which produces the folllowing effects in the display modes:
 
 | Open | Compact | Top |
 | ---- | ------- | --- |
