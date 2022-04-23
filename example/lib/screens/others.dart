@@ -35,7 +35,10 @@ class _OthersState extends State<Others> {
           value: 'overall_project_plan',
         ),
         TreeViewItem(
-          content: const Text('Feature Resources Allocation'),
+          content: const Text(
+            'Feature Resources Allocation (this text should not overflow)',
+            overflow: TextOverflow.ellipsis,
+          ),
           value: 'feature_resources_alloc',
         ),
       ],
@@ -216,15 +219,17 @@ class _OthersState extends State<Others> {
                         if (index == 3) {
                           return Flyout(
                             controller: flyoutController,
-                            contentWidth: 450,
-                            content: const FlyoutContent(
-                              child: Text(
-                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                            content: (context) => const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: FlyoutContent(
+                                child: Text(
+                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                              ),
                             ),
                             child: Button(
                               child: const Text('Open flyout'),
                               onPressed: () {
-                                flyoutController.open = true;
+                                flyoutController.open();
                               },
                             ),
                           );
@@ -319,6 +324,7 @@ class _OthersState extends State<Others> {
             child: TabView(
               currentIndex: currentIndex,
               onChanged: _handleTabChanged,
+              tabWidthBehavior: TabWidthBehavior.sizeToContent,
               onReorder: (oldIndex, newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) {

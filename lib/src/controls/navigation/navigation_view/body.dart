@@ -116,7 +116,7 @@ class _NavigationBodyState extends State<NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final _body = _NavigationBody.maybeOf(context);
+    final _body = InheritedNavigationView.maybeOf(context);
     final theme = FluentTheme.of(context);
     final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
     return Container(
@@ -163,26 +163,103 @@ class _NavigationBodyState extends State<NavigationBody> {
   }
 }
 
-/// A widget that tells [NavigationBody] what's the panel display
-/// mode of the parent [NavigationView], if any.
-class _NavigationBody extends InheritedWidget {
-  const _NavigationBody({
+/// A widget that tells what's the the current state of a parent
+/// [NavigationView], if any.
+///
+/// See also:
+///
+///  * [NavigationView], which provides the information for this
+///  * [NavigationBody], which is used to display the content on the view
+class InheritedNavigationView extends InheritedWidget {
+  /// Creates an inherited navigation view.
+  const InheritedNavigationView({
     Key? key,
     required Widget child,
     required this.displayMode,
-    required this.minimalPaneOpen,
+    this.minimalPaneOpen = false,
+    this.pane,
+    this.oldIndex = 0,
+    this.currentItemIndex = -1,
   }) : super(key: key, child: child);
 
+  /// The current pane display mode according to the current state.
   final PaneDisplayMode? displayMode;
+
+  /// Whether the minimal pane is open or not
   final bool minimalPaneOpen;
 
-  static _NavigationBody? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_NavigationBody>();
+  /// The current navigation pane, if any
+  final NavigationPane? pane;
+
+  /// The old index selected index. Usually used by [NavigationIndicator]s to
+  /// display the animation from the old item to the new one.
+  final int oldIndex;
+
+  /// Used by [NavigationIndicator] to know what's the current index of the
+  /// item
+  final int currentItemIndex;
+
+  static InheritedNavigationView? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>();
+  }
+
+  static InheritedNavigationView of(BuildContext context) {
+    return maybeOf(context)!;
+  }
+
+  static Widget merge({
+    Key? key,
+    required Widget child,
+    int? currentItemIndex,
+    NavigationPane? pane,
+    PaneDisplayMode? displayMode,
+    bool? minimalPaneOpen,
+    int? oldIndex,
+  }) {
+    return Builder(builder: (context) {
+      final current = InheritedNavigationView.maybeOf(context);
+      return InheritedNavigationView(
+        key: key,
+        child: child,
+        displayMode: displayMode ?? current?.displayMode,
+        minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
+        currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
+        pane: pane ?? current?.pane,
+        oldIndex: oldIndex ?? current?.oldIndex ?? 0,
+      );
+    });
   }
 
   @override
-  bool updateShouldNotify(_NavigationBody oldWidget) {
+  bool updateShouldNotify(InheritedNavigationView oldWidget) {
     return oldWidget.displayMode != displayMode ||
-        oldWidget.minimalPaneOpen != minimalPaneOpen;
+        oldWidget.minimalPaneOpen != minimalPaneOpen ||
+        oldWidget.pane != pane ||
+        oldWidget.oldIndex != oldIndex ||
+        oldWidget.currentItemIndex != oldWidget.currentItemIndex;
+  }
+}
+
+/// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
+class _PaneItemKeys extends InheritedWidget {
+  const _PaneItemKeys({
+    Key? key,
+    required Widget child,
+    required this.keys,
+  }) : super(key: key, child: child);
+
+  final Map<int, GlobalKey> keys;
+
+  /// Gets the item global key based on the index
+  static GlobalKey of(int index, BuildContext context) {
+    final reference =
+        context.dependOnInheritedWidgetOfExactType<_PaneItemKeys>()!;
+    return reference.keys[index]!;
+  }
+
+  @override
+  bool updateShouldNotify(_PaneItemKeys oldWidget) {
+    return keys != oldWidget.keys;
   }
 }

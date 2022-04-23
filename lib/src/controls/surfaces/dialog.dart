@@ -91,28 +91,33 @@ class ContentDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: style.padding ?? EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (title != null)
-                    Padding(
-                      padding: style.titlePadding ?? EdgeInsets.zero,
-                      child: DefaultTextStyle(
-                        style: style.titleStyle ?? const TextStyle(),
-                        child: title!,
+            Flexible(
+              child: Padding(
+                padding: style.padding ?? EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      Padding(
+                        padding: style.titlePadding ?? EdgeInsets.zero,
+                        child: DefaultTextStyle(
+                          style: style.titleStyle ?? const TextStyle(),
+                          child: title!,
+                        ),
                       ),
-                    ),
-                  if (content != null)
-                    Padding(
-                      padding: style.bodyPadding ?? EdgeInsets.zero,
-                      child: DefaultTextStyle(
-                        style: style.bodyStyle ?? const TextStyle(),
-                        child: content!,
+                    if (content != null)
+                      Flexible(
+                        child: Padding(
+                          padding: style.bodyPadding ?? EdgeInsets.zero,
+                          child: DefaultTextStyle(
+                            style: style.bodyStyle ?? const TextStyle(),
+                            child: content!,
+                          ),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
             if (actions != null)

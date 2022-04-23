@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 enum NavigationIndicators { sticky, end }
 
@@ -34,12 +34,24 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  flutter_acrylic.WindowEffect _acrylicEffect =
-      flutter_acrylic.WindowEffect.disabled;
-  flutter_acrylic.WindowEffect get acrylicEffect => _acrylicEffect;
-  set acrylicEffect(flutter_acrylic.WindowEffect acrylicEffect) {
-    _acrylicEffect = acrylicEffect;
+  WindowEffect _windowEffect = WindowEffect.disabled;
+  WindowEffect get windowEffect => _windowEffect;
+  set windowEffect(WindowEffect windowEffect) {
+    _windowEffect = windowEffect;
     notifyListeners();
+  }
+
+  void setEffect(WindowEffect effect, BuildContext context) {
+    Window.setEffect(
+      effect: effect,
+      color: [
+        WindowEffect.solid,
+        WindowEffect.acrylic,
+      ].contains(effect)
+          ? FluentTheme.of(context).micaBackgroundColor.withOpacity(0.05)
+          : Colors.transparent,
+      dark: FluentTheme.of(context).brightness.isDark,
+    );
   }
 
   TextDirection _textDirection = TextDirection.ltr;
@@ -55,13 +67,13 @@ AccentColor get systemAccentColor {
       defaultTargetPlatform == TargetPlatform.android ||
       kIsWeb) {
     return AccentColor('normal', {
-      'darkest': SystemTheme.accentInstance.darkest,
-      'darker': SystemTheme.accentInstance.darker,
-      'dark': SystemTheme.accentInstance.dark,
-      'normal': SystemTheme.accentInstance.accent,
-      'light': SystemTheme.accentInstance.light,
-      'lighter': SystemTheme.accentInstance.lighter,
-      'lightest': SystemTheme.accentInstance.lightest,
+      'darkest': SystemTheme.accentColor.darkest,
+      'darker': SystemTheme.accentColor.darker,
+      'dark': SystemTheme.accentColor.dark,
+      'normal': SystemTheme.accentColor.accent,
+      'light': SystemTheme.accentColor.light,
+      'lighter': SystemTheme.accentColor.lighter,
+      'lightest': SystemTheme.accentColor.lightest,
     });
   }
   return Colors.blue;

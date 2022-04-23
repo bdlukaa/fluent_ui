@@ -54,7 +54,7 @@ class InfoLabel extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 4.0),
             child: labelWidget,
           ),
-        if (child != null) child!,
+        if (child != null) Flexible(child: child!),
         if (!isHeader)
           Padding(
             padding: const EdgeInsets.only(left: 4.0),

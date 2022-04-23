@@ -44,6 +44,8 @@ class HoverButton extends StatefulWidget {
     this.onHorizontalDragEnd,
     this.onFocusChange,
     this.autofocus = false,
+    this.actionsEnabled = true,
+    this.focusEnabled = true,
   }) : super(key: key);
 
   /// {@template fluent_ui.controls.inputs.HoverButton.mouseCursor}
@@ -93,6 +95,15 @@ class HoverButton extends StatefulWidget {
   final bool autofocus;
 
   final ValueChanged<bool>? onFocusChange;
+
+  /// Whether actions and shortcuts are enabled
+  final bool actionsEnabled;
+
+  /// Whether the focus is enabled.
+  ///
+  /// If disabled, actions and shortcurts will not work, regardless of what is
+  /// set on [actionsEnabled].
+  final bool focusEnabled;
 
   @override
   _HoverButtonState createState() => _HoverButtonState();
@@ -169,27 +180,31 @@ class _HoverButtonState extends State<HoverButton> {
   Widget build(BuildContext context) {
     Widget w = GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: widget.onPressed,
+      onTap: enabled ? widget.onPressed : null,
       onTapDown: (_) {
+        if (!enabled) return;
         if (mounted) setState(() => _pressing = true);
         widget.onTapDown?.call();
       },
       onTapUp: (_) async {
-        widget.onTapUp?.call();
         if (!enabled) return;
+        widget.onTapUp?.call();
         await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) setState(() => _pressing = false);
       },
       onTapCancel: () {
+        if (!enabled) return;
         widget.onTapCancel?.call();
         if (mounted) setState(() => _pressing = false);
       },
-      onLongPress: widget.onLongPress,
+      onLongPress: enabled ? widget.onLongPress : null,
       onLongPressStart: (_) {
+        if (!enabled) return;
         widget.onLongPressStart?.call();
         if (mounted) setState(() => _pressing = true);
       },
       onLongPressEnd: (_) {
+        if (!enabled) return;
         widget.onLongPressEnd?.call();
         if (mounted) setState(() => _pressing = false);
       },
@@ -198,27 +213,39 @@ class _HoverButtonState extends State<HoverButton> {
       onHorizontalDragEnd: widget.onHorizontalDragEnd,
       child: widget.builder(context, states),
     );
-    w = FocusableActionDetector(
-      mouseCursor: widget.cursor ?? MouseCursor.defer,
-      focusNode: node,
-      autofocus: widget.autofocus,
-      enabled: enabled,
-      actions: _actionMap,
-      onFocusChange: widget.onFocusChange,
-      onShowFocusHighlight: (v) {
-        if (mounted) setState(() => _shouldShowFocus = v);
-      },
-      onShowHoverHighlight: (v) {
-        if (mounted) setState(() => _hovering = v);
-      },
-      child: w,
-    );
+    if (widget.focusEnabled) {
+      w = FocusableActionDetector(
+        mouseCursor: widget.cursor ?? MouseCursor.defer,
+        focusNode: node,
+        autofocus: widget.autofocus,
+        enabled: enabled,
+        actions: widget.actionsEnabled ? _actionMap : {},
+        onFocusChange: widget.onFocusChange,
+        onShowFocusHighlight: (v) {
+          if (mounted) setState(() => _shouldShowFocus = v);
+        },
+        onShowHoverHighlight: (v) {
+          if (mounted) setState(() => _hovering = v);
+        },
+        child: w,
+      );
+    } else {
+      w = MouseRegion(
+        onEnter: (e) {
+          if (mounted) setState(() => _hovering = true);
+        },
+        onExit: (e) {
+          if (mounted) setState(() => _hovering = false);
+        },
+        child: w,
+      );
+    }
     w = MergeSemantics(
       child: Semantics(
         label: widget.semanticLabel,
         button: true,
         enabled: enabled,
-        focusable: enabled,
+        focusable: enabled && node.canRequestFocus,
         focused: node.hasFocus,
         child: w,
       ),

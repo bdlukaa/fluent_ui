@@ -8,10 +8,12 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'screens/colors.dart';
+import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
+import 'screens/commandbars.dart';
 import 'screens/others.dart';
 import 'screens/settings.dart';
 import 'screens/typography.dart';
@@ -32,10 +34,11 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // if it's on the web, windows or android, load the accent color
   if (kIsWeb ||
       [TargetPlatform.windows, TargetPlatform.android]
           .contains(defaultTargetPlatform)) {
-    SystemTheme.accentInstance;
+    SystemTheme.accentColor.load();
   }
 
   setPathUrlStrategy();
@@ -44,8 +47,10 @@ void main() async {
     await flutter_acrylic.Window.initialize();
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle('hidden',
-          windowButtonVisibility: false);
+      await windowManager.setTitleBarStyle(
+        TitleBarStyle.hidden,
+        windowButtonVisibility: false,
+      );
       await windowManager.setSize(const Size(755, 545));
       await windowManager.setMinimumSize(const Size(755, 545));
       await windowManager.center();
@@ -71,8 +76,7 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {'/': (_) => const MyHomePage()},
+          home: const MyHomePage(),
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -92,7 +96,15 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return Directionality(
               textDirection: appTheme.textDirection,
-              child: child!,
+              child: NavigationPaneTheme(
+                data: NavigationPaneThemeData(
+                  backgroundColor: appTheme.windowEffect !=
+                          flutter_acrylic.WindowEffect.disabled
+                      ? Colors.transparent
+                      : null,
+                ),
+                child: child!,
+              ),
             );
           },
         );
@@ -114,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   int index = 0;
 
   final settingsController = ScrollController();
+  final viewKey = GlobalKey();
 
   @override
   void initState() {
@@ -132,7 +145,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
+      key: viewKey,
       appBar: NavigationAppBar(
+        automaticallyImplyLeading: false,
         title: () {
           if (kIsWeb) return const Text(appTitle);
           return const DragToMoveArea(
@@ -161,19 +176,21 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         header: Container(
           height: kOneLineTileHeight,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: const FlutterLogo(
-            style: FlutterLogoStyle.horizontal,
-            size: 100,
+          child: FlutterLogo(
+            style: appTheme.displayMode == PaneDisplayMode.top
+                ? FlutterLogoStyle.markOnly
+                : FlutterLogoStyle.horizontal,
+            size: appTheme.displayMode == PaneDisplayMode.top ? 24 : 100.0,
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: () {
+        indicator: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return NavigationIndicator.end;
+              return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
             default:
-              return NavigationIndicator.sticky;
+              return const StickyNavigationIndicator();
           }
         }(),
         items: [
@@ -203,6 +220,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           PaneItem(
             icon: const Icon(FluentIcons.cell_phone),
             title: const Text('Mobile'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.toolbox),
+            title: const Text('Command bars'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.pop_expand),
+            title: const Text('Flyouts'),
           ),
           PaneItem(
             icon: Icon(
@@ -241,6 +266,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
+        const CommandBars(),
+        const FlyoutShowcase(),
         const Others(),
         Settings(controller: settingsController),
       ]),

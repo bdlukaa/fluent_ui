@@ -214,7 +214,6 @@ class _TimePickerState extends State<TimePicker> {
     picker = PopUp(
       key: popupKey,
       child: picker,
-      contentHeight: widget.popupHeight,
       content: (context) => _TimePickerContentPopup(
         height: widget.popupHeight,
         onCancel: widget.onCancel ?? () {},

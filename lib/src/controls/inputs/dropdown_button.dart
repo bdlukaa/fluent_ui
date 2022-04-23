@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kVerticalOffset = 20.0;
 const double _kInnerPadding = 5.0;
@@ -41,7 +40,7 @@ class DropDownButton extends StatefulWidget {
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
-  /// The content at the left of this widget.
+  /// The content at the start of this widget.
   ///
   /// Usually an [Icon]
   final Widget? leading;
@@ -130,59 +129,57 @@ class _DropDownButtonState extends State<DropDownButton>
     super.dispose();
   }
 
-  void _pushMenu(Widget child) {
-    final NavigatorState navigatorState = Navigator.of(context);
+  void _createNewEntry(Widget child) {
+    final OverlayState overlayState = Overlay.of(
+      context,
+      debugRequiredFor: widget,
+    )!;
 
     final RenderBox box = context.findRenderObject()! as RenderBox;
     Offset leftTarget = box.localToGlobal(
       box.size.centerLeft(Offset.zero),
-      ancestor: navigatorState.context.findRenderObject(),
+      ancestor: overlayState.context.findRenderObject(),
     );
     Offset centerTarget = box.localToGlobal(
       box.size.center(Offset.zero),
-      ancestor: navigatorState.context.findRenderObject(),
+      ancestor: overlayState.context.findRenderObject(),
     );
     Offset rightTarget = box.localToGlobal(
       box.size.centerRight(Offset.zero),
-      ancestor: navigatorState.context.findRenderObject(),
+      ancestor: overlayState.context.findRenderObject(),
     );
-
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
 
     // We create this widget outside of the overlay entry's builder to prevent
     // updated values from happening to leak into the overlay when the overlay
     // rebuilds.
-    final Widget route = SizedBox.fromSize(
-      size: mediaQuery.size,
-      child: Directionality(
-        textDirection: Directionality.of(context),
-        child: _DropDownButtonOverlay(
-          child: child,
-          height: 50.0,
-          width: 100.0,
-          decoration: widget.menuDecoration ??
-              BoxDecoration(
-                color: FluentTheme.of(context).menuColor,
-                borderRadius: BorderRadius.circular(6.0),
-                border: Border.all(
-                  width: 0.25,
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                ),
+    final Widget overlay = Directionality(
+      textDirection: Directionality.of(context),
+      child: _DropDownButtonOverlay(
+        child: child,
+        height: 50.0,
+        width: 100.0,
+        decoration: widget.menuDecoration ??
+            BoxDecoration(
+              color: FluentTheme.of(context).menuColor,
+              borderRadius: BorderRadius.circular(6.0),
+              border: Border.all(
+                width: 0.25,
+                color: FluentTheme.of(context).inactiveBackgroundColor,
               ),
-          animation: CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeOut,
-          ),
-          target: {
-            FlyoutPlacement.left: leftTarget,
-            FlyoutPlacement.center: centerTarget,
-            FlyoutPlacement.right: rightTarget,
-          },
-          verticalOffset: widget.verticalOffset,
-          preferBelow: true,
-          onClose: _removeEntry,
-          placement: widget.placement,
+            ),
+        animation: CurvedAnimation(
+          parent: _controller,
+          curve: Curves.easeOut,
         ),
+        target: {
+          FlyoutPlacement.start: leftTarget,
+          FlyoutPlacement.center: centerTarget,
+          FlyoutPlacement.end: rightTarget,
+        },
+        verticalOffset: widget.verticalOffset,
+        preferBelow: true,
+        onClose: _removeEntry,
+        placement: widget.placement,
       ),
     );
     Navigator.of(context)
@@ -192,7 +189,7 @@ class _DropDownButtonState extends State<DropDownButton>
           barrierColor: Colors.transparent,
           transitionDuration: Duration.zero,
           builder: (context) {
-            return route;
+            return overlay;
           },
         ))
         .then((_) => _controller.value = 0);
@@ -233,25 +230,23 @@ class _DropDownButtonState extends State<DropDownButton>
       onPressed: widget.disabled
           ? null
           : () {
-              _pushMenu(
-                _DropdownMenu(
-                  items: widget.items.map((item) {
-                    if (widget.closeAfterClick) {
-                      return DropDownButtonItem(
-                        onTap: () {
-                          item.onTap();
-                          _removeEntry();
-                        },
-                        key: item.key,
-                        leading: item.leading,
-                        title: item.title,
-                        trailing: item.trailing,
-                      );
-                    }
-                    return item;
-                  }).toList(),
-                ),
-              );
+              _createNewEntry(_DropdownMenu(
+                items: widget.items.map((item) {
+                  if (widget.closeAfterClick) {
+                    return DropDownButtonItem(
+                      onTap: () {
+                        item.onTap();
+                        _removeEntry();
+                      },
+                      key: item.key,
+                      leading: item.leading,
+                      title: item.title,
+                      trailing: item.trailing,
+                    );
+                  }
+                  return item;
+                }).toList(),
+              ));
             },
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
@@ -277,7 +272,7 @@ class DropDownButtonItem {
   /// Controls how one widget replaces another widget in the tree.
   final Key? key;
 
-  /// Show a content at the left of this button.
+  /// Show a content at the start of this button.
   ///
   /// Usually an [Icon]
   final Widget? leading;
@@ -364,28 +359,23 @@ class __DropdownMenuState extends State<_DropdownMenu> {
   Widget build(BuildContext context) {
     return FocusScope(
       autofocus: true,
-      child: ScrollConfiguration(
-        behavior: const _DropdownScrollBehavior(),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: _kInnerPadding,
-              left: _kInnerPadding,
-              right: _kInnerPadding,
-            ),
-            child: Column(
-              key: _key,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(widget.items.length, (index) {
-                final item = widget.items[index];
-                return SizedBox(
-                  width: size?.width,
-                  child: Builder(builder: item.build),
-                );
-              }),
-            ),
-          ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: _kInnerPadding,
+          left: _kInnerPadding,
+          right: _kInnerPadding,
+        ),
+        child: Column(
+          key: _key,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(widget.items.length, (index) {
+            final item = widget.items[index];
+            return SizedBox(
+              width: size?.width,
+              child: Builder(builder: item.build),
+            );
+          }),
         ),
       ),
     );
@@ -439,9 +429,9 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
       preferBelow: preferBelow,
     );
     switch (placement) {
-      case FlyoutPlacement.left:
+      case FlyoutPlacement.start:
         return Offset(leftTarget.dx, defaultOffset.dy);
-      case FlyoutPlacement.right:
+      case FlyoutPlacement.end:
         return Offset(rightTarget.dx - childSize.width, defaultOffset.dy);
       default:
         return defaultOffset;
@@ -453,29 +443,6 @@ class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
     return centerTarget != oldDelegate.centerTarget ||
         verticalOffset != oldDelegate.verticalOffset ||
         preferBelow != oldDelegate.preferBelow;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is _DropDownButtonPositionDelegate &&
-        other.centerTarget == centerTarget &&
-        other.leftTarget == leftTarget &&
-        other.rightTarget == rightTarget &&
-        other.verticalOffset == verticalOffset &&
-        other.preferBelow == preferBelow &&
-        other.placement == placement;
-  }
-
-  @override
-  int get hashCode {
-    return centerTarget.hashCode ^
-        leftTarget.hashCode ^
-        rightTarget.hashCode ^
-        verticalOffset.hashCode ^
-        preferBelow.hashCode ^
-        placement.hashCode;
   }
 }
 
@@ -544,9 +511,9 @@ class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
     return CustomSingleChildLayout(
       key: widget.menuKey,
       delegate: _DropDownButtonPositionDelegate(
-        leftTarget: widget.target[FlyoutPlacement.left]!,
+        leftTarget: widget.target[FlyoutPlacement.start]!,
         centerTarget: widget.target[FlyoutPlacement.center]!,
-        rightTarget: widget.target[FlyoutPlacement.right]!,
+        rightTarget: widget.target[FlyoutPlacement.end]!,
         verticalOffset: widget.verticalOffset,
         preferBelow: widget.preferBelow,
         placement: widget.placement,
@@ -590,22 +557,4 @@ class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
       ),
     );
   }
-}
-
-// Do not use the platform-specific default scroll configuration.
-// Combobox menus should never overscroll or display an overscroll indicator.
-class _DropdownScrollBehavior extends FluentScrollBehavior {
-  const _DropdownScrollBehavior();
-
-  @override
-  TargetPlatform getPlatform(BuildContext context) => defaultTargetPlatform;
-
-  @override
-  Widget buildViewportChrome(
-          BuildContext context, Widget child, AxisDirection axisDirection) =>
-      child;
-
-  @override
-  ScrollPhysics getScrollPhysics(BuildContext context) =>
-      const ClampingScrollPhysics();
 }

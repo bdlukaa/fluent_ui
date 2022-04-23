@@ -182,8 +182,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   final GlobalKey _textBoxKey = GlobalKey();
 
   late TextEditingController controller;
-
   final FocusScopeNode overlayNode = FocusScopeNode();
+
+  final clearGlobalKey = GlobalKey();
 
   @override
   void initState() {
@@ -293,14 +294,14 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           clipBehavior:
               _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
           prefix: widget.leadingIcon,
-          suffix: Row(children: [
+          clearGlobalKey: clearGlobalKey,
+          suffix: Row(mainAxisSize: MainAxisSize.min, children: [
             if (widget.trailingIcon != null) widget.trailingIcon!,
-            if (widget.clearButtonEnabled &&
-                controller.text.isNotEmpty &&
-                focusNode.hasFocus)
+            if (widget.clearButtonEnabled && controller.text.isNotEmpty)
               Padding(
                 padding: const EdgeInsetsDirectional.only(start: 2.0),
                 child: IconButton(
+                  key: clearGlobalKey,
                   icon: const Icon(FluentIcons.chrome_close),
                   onPressed: () {
                     controller.clear();

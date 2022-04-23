@@ -155,10 +155,17 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
   }) {
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode = displayMode ??
-        _NavigationBody.maybeOf(context)?.displayMode ??
+        maybeBody?.displayMode ??
+        maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
+
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
+
+    final direction = Directionality.of(context);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final String titleText = _getPropertyFromTitle<String>() ?? '';
@@ -169,7 +176,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
-    return HoverButton(
+    final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
@@ -269,7 +276,8 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              final result = Row(
+              Widget result = Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -288,19 +296,22 @@ class PaneItem extends NavigationPaneItem {
                 ],
               );
               if (infoBadge != null) {
-                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
-                  result,
-                  if (infoBadge != null)
-                    Positioned(
-                      right: -8,
-                      top: -8,
-                      child: infoBadge!,
-                    ),
-                ]);
+                return Stack(
+                  key: itemKey,
+                  clipBehavior: Clip.none,
+                  children: [
+                    result,
+                    if (infoBadge != null)
+                      Positioned.directional(
+                        textDirection: direction,
+                        end: -3,
+                        top: 3,
+                        child: infoBadge!,
+                      ),
+                  ],
+                );
               }
-              // return Container(
-              //     key: itemKey, child: result, color: Colors.orange);
-              return Center(key: itemKey, child: result);
+              return KeyedSubtree(key: itemKey, child: result);
             default:
               throw '$mode is not a supported type';
           }
@@ -312,12 +323,15 @@ class PaneItem extends NavigationPaneItem {
           child: AnimatedContainer(
             duration: theme.animationDuration ?? Duration.zero,
             curve: theme.animationCurve ?? standardCurve,
-            margin: const EdgeInsets.only(right: 6.0, left: 6.0, bottom: 4.0),
+            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
                     theme.tileColor ??
-                    kDefaultTileColor(context, isTop);
+                    kDefaultTileColor(
+                      context,
+                      isTop,
+                    );
                 final newStates = states.toSet()..remove(ButtonStates.disabled);
                 if (selected && selectedTileColor != null) {
                   return selectedTileColor!.resolve(newStates);
@@ -356,6 +370,41 @@ class PaneItem extends NavigationPaneItem {
           ),
         );
       },
+    );
+
+    final int? index = () {
+      if (maybeBody?.pane?.indicator != null) {
+        return maybeBody!.pane!.effectiveIndexOf(this);
+      }
+    }();
+
+    final GlobalKey? key = () {
+      if (index != null && !index.isNegative) {
+        return _PaneItemKeys.of(index, context);
+      }
+    }();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: () {
+        // If there is an indicator and the item is an effective item
+        if (maybeBody?.pane?.indicator != null && index != -1) {
+          return Stack(children: [
+            button,
+            Positioned.fill(
+              child: InheritedNavigationView.merge(
+                currentItemIndex: index,
+                child: KeyedSubtree(
+                  key: index != null ? key : null,
+                  child: maybeBody!.pane!.indicator!,
+                ),
+              ),
+            ),
+          ]);
+        }
+
+        return button;
+      }(),
     );
   }
 }
@@ -447,7 +496,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
-class PaneItemAction extends PaneItem implements NavigationPaneItem {
+class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
     required this.onTap,
@@ -474,6 +523,7 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int index = -1,
   }) {
     return super.build(
       context,
@@ -486,9 +536,9 @@ class PaneItemAction extends PaneItem implements NavigationPaneItem {
   }
 }
 
-extension ItemsExtension on List<NavigationPaneItem> {
+extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
+  List<Offset> _getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;
@@ -501,16 +551,6 @@ extension ItemsExtension on List<NavigationPaneItem> {
       final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
       final position = paneBox.globalToLocal(globalPosition);
       return position;
-    }).toList();
-  }
-
-  /// Get all the item sizes in this list
-  List<Size> getPaneItemsSizes() {
-    return map((e) {
-      final context = e.itemKey.currentContext;
-      if (context == null) return Size.zero;
-      final box = context.findRenderObject()! as RenderBox;
-      return box.size;
     }).toList();
   }
 }
