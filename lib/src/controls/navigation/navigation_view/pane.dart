@@ -465,13 +465,17 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
 
     // if the selected item changed
     if (widget.pane.selected != oldWidget.pane.selected) {
-      // if there is a non-hidden item and if the selected item is hidden
-      if (!hiddenPaneItems.contains(0) &&
-          hiddenPaneItems.contains(widget.pane.selected)) {
+      final selectedItem = widget.pane.items.indexOf(
+        widget.pane.selectedItem,
+      );
+
+      // if the selected item is part of the middle items and
+      // if there is a non-hidden item
+      // and if the selected item is hidden
+      if (!selectedItem.isNegative &&
+          !hiddenPaneItems.contains(0) &&
+          hiddenPaneItems.contains(_localItemHold.indexOf(selectedItem))) {
         generateLocalItemHold();
-        final selectedItem = widget.pane.items.indexOf(
-          widget.pane.selectedItem,
-        );
 
         int item = hiddenPaneItems.first - 1;
         while (widget.pane.items[item] is! PaneItem) {
@@ -485,6 +489,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         _localItemHold
           ..remove(selectedItem)
           ..insert(item, selectedItem);
+        // print(
+        //   's$selectedItem to$item - i$_localItemHold - h$hiddenPaneItems',
+        // );
       }
     }
 
@@ -517,9 +524,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         Expanded(
           child: DynamicOverflow(
-            // ensureVisible: [
-            //   if (widget.pane.selected != null) widget.pane.selected!,
-            // ],
             children: _localItemHold.map((index) {
               final item = widget.pane.items[index];
               return SizedBox(
