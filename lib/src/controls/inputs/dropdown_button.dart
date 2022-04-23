@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 8.0;
+const double _kVerticalOffset = 20.0;
 const double _kInnerPadding = 5.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
@@ -61,7 +61,7 @@ class DropDownButton extends StatefulWidget {
   final double verticalOffset;
 
   /// The items in the flyout. Must not be empty
-  final List<DropDownButtonItem> items;
+  final List<MenuFlyoutItem> items;
 
   /// Whether the flyout will be closed after an item is tapped
   final bool closeAfterClick;
@@ -91,7 +91,7 @@ class DropDownButton extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<DropDownButtonItem>('items', items))
+      ..add(IterableProperty<MenuFlyoutItemInterface>('items', items))
       ..add(DoubleProperty(
         'verticalOffset',
         verticalOffset,
@@ -108,25 +108,11 @@ class DropDownButton extends StatefulWidget {
   }
 }
 
-class _DropDownButtonState extends State<DropDownButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _DropDownButtonState extends State<DropDownButton> {
   final flyoutController = FlyoutController();
-  final buttonKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 87),
-      // reverseDuration: _fadeOutDuration,
-      vsync: this,
-    );
-  }
 
   @override
   void dispose() {
-    _controller.dispose();
     flyoutController.dispose();
     super.dispose();
   }
@@ -144,6 +130,7 @@ class _DropDownButtonState extends State<DropDownButton>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
 
     final buttonChildren = <Widget>[
       if (widget.leading != null)
@@ -162,53 +149,57 @@ class _DropDownButtonState extends State<DropDownButton>
     ];
 
     return Flyout(
-      placement: FlyoutPlacement.full,
+      placement: FlyoutPlacement.center,
       position: FlyoutPosition.below,
       controller: flyoutController,
-      verticalOffset: 0,
+      verticalOffset: widget.verticalOffset,
       child: Button(
-        key: buttonKey,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: buttonChildren,
         ),
-        onPressed: widget.disabled
-            ? null
-            : () {
-                flyoutController.open();
-              },
+        onPressed: widget.disabled ? null : flyoutController.open,
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
         style: widget.buttonStyle,
       ),
       content: (context) {
-        final offset = buttonOffset;
-        return Padding(
-          padding: EdgeInsets.only(
-            top: offset.dy + buttonSize.height + widget.verticalOffset,
-            left: offset.dx,
-            bottom: 10.0,
-          ),
-          child: _DropdownMenu(
-            items: widget.items.map((item) {
-              if (widget.closeAfterClick) {
-                return DropDownButtonItem(
-                  onTap: () {
-                    item.onTap();
-                    flyoutController.close();
-                  },
-                  key: item.key,
-                  leading: item.leading,
-                  title: item.title,
-                  trailing: item.trailing,
-                );
-              }
-              return item;
-            }).toList(),
-          ),
+        return MenuFlyout(
+          items: widget.items,
         );
+        // final offset = buttonOffset;
+        // return Padding(
+        //   padding: EdgeInsets.only(
+        //     // The y is:
+        //     // the button offset + the button height + the vertical distance
+        //     // specified by the developer
+        //     top: offset.dy + buttonSize.height + widget.verticalOffset,
+        //     // The x is:
+        //     // the button x offset - (button width / 3), which will center the
+        //     // menu
+        //     left: offset.dx - buttonSize.width / 3,
+        //     bottom: 10.0,
+        //   ),
+        //   child: _DropdownMenu(
+        //     items: widget.items.map((item) {
+        //       if (widget.closeAfterClick) {
+        //         return DropDownButtonItem(
+        //           onTap: () {
+        //             item.onTap();
+        //             flyoutController.close();
+        //           },
+        //           key: item.key,
+        //           leading: item.leading,
+        //           title: item.title,
+        //           trailing: item.trailing,
+        //         );
+        //       }
+        //       return item;
+        //     }).toList(),
+        //   ),
+        // );
       },
     );
   }
@@ -270,11 +261,11 @@ class DropDownButtonItem {
                 vertical: 4.0,
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                if (leading != null)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 8.0),
-                    child: leading!,
-                  ),
+                // if (leading != null)
+                //   Padding(
+                //     padding: const EdgeInsetsDirectional.only(end: 8.0),
+                //     child: leading!,
+                //   ),
                 if (title != null)
                   Padding(
                     padding: const EdgeInsetsDirectional.only(end: 8.0),
@@ -317,16 +308,17 @@ class __DropdownMenuState extends State<_DropdownMenu> {
   @override
   Widget build(BuildContext context) {
     return FlyoutContent(
-      padding: const EdgeInsets.only(
-        top: _kInnerPadding,
-        left: _kInnerPadding,
-        right: _kInnerPadding,
-      ),
+      padding: EdgeInsets.zero,
       child: FocusScope(
         autofocus: true,
         child: ScrollConfiguration(
           behavior: const _DropdownScrollBehavior(),
           child: SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              top: _kInnerPadding,
+              left: _kInnerPadding,
+              right: _kInnerPadding,
+            ),
             child: Column(
               key: _key,
               crossAxisAlignment: CrossAxisAlignment.start,

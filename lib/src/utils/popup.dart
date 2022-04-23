@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
@@ -214,6 +216,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     required this.placementOffset,
     required this.placement,
     required this.position,
+    required this.screenSize,
   });
 
   final Rect buttonRect;
@@ -225,10 +228,16 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
   final Offset placementOffset;
   final FlyoutPlacement placement;
   final FlyoutPosition position;
+  final Size screenSize;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
+    print(buttonRect.height);
+    return BoxConstraints(
+      maxWidth: constraints.maxWidth,
+      maxHeight:
+          screenSize.height - target.dy - verticalOffset - buttonRect.height,
+    );
   }
 
   @override
@@ -270,6 +279,37 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     return oldDelegate.target == target ||
         oldDelegate.placementOffset == placementOffset ||
         buttonRect != oldDelegate.buttonRect;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is _PopUpMenuRouteLayout<T> &&
+        other.buttonRect == buttonRect &&
+        other.route == route &&
+        other.textDirection == textDirection &&
+        other.target == target &&
+        other.verticalOffset == verticalOffset &&
+        other.horizontalOffset == horizontalOffset &&
+        other.placementOffset == placementOffset &&
+        other.placement == placement &&
+        other.position == position &&
+        other.screenSize == screenSize;
+  }
+
+  @override
+  int get hashCode {
+    return buttonRect.hashCode ^
+        route.hashCode ^
+        textDirection.hashCode ^
+        target.hashCode ^
+        verticalOffset.hashCode ^
+        horizontalOffset.hashCode ^
+        placementOffset.hashCode ^
+        placement.hashCode ^
+        position.hashCode ^
+        screenSize.hashCode;
   }
 }
 
@@ -394,19 +434,25 @@ class _PopUpRoutePage<T> extends StatelessWidget {
       removeRight: true,
       child: Builder(
         builder: (BuildContext context) {
-          return CustomSingleChildLayout(
-            delegate: _PopUpMenuRouteLayout<T>(
-              target: target,
-              placement: placement,
-              position: position,
-              placementOffset: placementOffset,
-              buttonRect: buttonRect,
-              route: route,
-              textDirection: textDirection,
-              verticalOffset: verticalOffset,
-              horizontalOffset: horizontalOffset,
+          final mediaQuery = MediaQuery.of(context);
+          return SizedBox(
+            height: mediaQuery.size.height,
+            width: mediaQuery.size.width,
+            child: CustomSingleChildLayout(
+              delegate: _PopUpMenuRouteLayout<T>(
+                target: target,
+                placement: placement,
+                position: position,
+                placementOffset: placementOffset,
+                buttonRect: buttonRect,
+                route: route,
+                textDirection: textDirection,
+                verticalOffset: verticalOffset,
+                horizontalOffset: horizontalOffset,
+                screenSize: mediaQuery.size,
+              ),
+              child: capturedThemes.wrap(menu),
             ),
-            child: capturedThemes.wrap(menu),
           );
         },
       ),

@@ -160,80 +160,95 @@ class _InputsPageState extends State<InputsPage> {
             disabled: disabled,
             leading: const Icon(FluentIcons.mail),
             items: [
-              DropDownButtonItem(
-                title: const Text('Send'),
+              MenuFlyoutItem(
+                text: const Text('Send'),
                 leading: const Icon(FluentIcons.send),
-                onTap: () => debugPrint('Send'),
+                onPressed: () => debugPrint('Send'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply'),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
                 leading: const Icon(FluentIcons.mail_reply),
-                onTap: () => debugPrint('Reply'),
+                onPressed: () => debugPrint('Reply'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply all'),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
                 leading: const Icon(FluentIcons.mail_reply_all),
-                onTap: () => debugPrint('Reply all'),
+                onPressed: () => debugPrint('Reply all'),
               ),
-              DropDownButtonItem(
-                title: const Text('Send'),
+              MenuFlyoutItem(
+                text: const Text('Send'),
                 leading: const Icon(FluentIcons.send),
-                onTap: () => debugPrint('Send'),
+                onPressed: () => debugPrint('Send'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply'),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
                 leading: const Icon(FluentIcons.mail_reply),
-                onTap: () => debugPrint('Reply'),
+                onPressed: () => debugPrint('Reply'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply all'),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
                 leading: const Icon(FluentIcons.mail_reply_all),
-                onTap: () => debugPrint('Reply all'),
+                onPressed: () => debugPrint('Reply all'),
               ),
-              DropDownButtonItem(
-                title: const Text('Send'),
+              MenuFlyoutItem(
+                text: const Text('Send'),
                 leading: const Icon(FluentIcons.send),
-                onTap: () => debugPrint('Send'),
+                onPressed: () => debugPrint('Send'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply'),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
                 leading: const Icon(FluentIcons.mail_reply),
-                onTap: () => debugPrint('Reply'),
+                onPressed: () => debugPrint('Reply'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply all'),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
                 leading: const Icon(FluentIcons.mail_reply_all),
-                onTap: () => debugPrint('Reply all'),
+                onPressed: () => debugPrint('Reply all'),
               ),
-              DropDownButtonItem(
-                title: const Text('Send'),
+              MenuFlyoutItem(
+                text: const Text('Send'),
                 leading: const Icon(FluentIcons.send),
-                onTap: () => debugPrint('Send'),
+                onPressed: () => debugPrint('Send'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply'),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
                 leading: const Icon(FluentIcons.mail_reply),
-                onTap: () => debugPrint('Reply'),
+                onPressed: () => debugPrint('Reply'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply all'),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
                 leading: const Icon(FluentIcons.mail_reply_all),
-                onTap: () => debugPrint('Reply all'),
+                onPressed: () => debugPrint('Reply all'),
               ),
-              DropDownButtonItem(
-                title: const Text('Send'),
+              MenuFlyoutItem(
+                text: const Text('Send'),
                 leading: const Icon(FluentIcons.send),
-                onTap: () => debugPrint('Send'),
+                onPressed: () => debugPrint('Send'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply'),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
                 leading: const Icon(FluentIcons.mail_reply),
-                onTap: () => debugPrint('Reply'),
+                onPressed: () => debugPrint('Reply'),
               ),
-              DropDownButtonItem(
-                title: const Text('Reply all'),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
                 leading: const Icon(FluentIcons.mail_reply_all),
-                onTap: () => debugPrint('Reply all'),
+                onPressed: () => debugPrint('Reply all'),
+              ),
+              MenuFlyoutItem(
+                text: const Text('Send'),
+                leading: const Icon(FluentIcons.send),
+                onPressed: () => debugPrint('Send'),
+              ),
+              MenuFlyoutItem(
+                text: const Text('Reply'),
+                leading: const Icon(FluentIcons.mail_reply),
+                onPressed: () => debugPrint('Reply'),
+              ),
+              MenuFlyoutItem(
+                text: const Text('Reply all'),
+                leading: const Icon(FluentIcons.mail_reply_all),
+                onPressed: () => debugPrint('Reply all'),
               ),
             ],
           ),
