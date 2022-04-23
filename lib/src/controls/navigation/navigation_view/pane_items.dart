@@ -162,6 +162,11 @@ class PaneItem extends NavigationPaneItem {
         PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
 
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
+
+    final direction = Directionality.of(context);
+
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final String titleText = _getPropertyFromTitle<String>() ?? '';
 
@@ -297,9 +302,10 @@ class PaneItem extends NavigationPaneItem {
                   children: [
                     result,
                     if (infoBadge != null)
-                      Positioned(
-                        right: -8,
-                        top: -8,
+                      Positioned.directional(
+                        textDirection: direction,
+                        end: -3,
+                        top: 3,
                         child: infoBadge!,
                       ),
                   ],
