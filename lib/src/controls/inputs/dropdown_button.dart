@@ -17,7 +17,7 @@ const Widget _kDefaultDropdownButtonTrailing = Icon(
 /// See also:
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
-///  content
+///  content. Used to back this button
 ///   * [Combobox], a list of items that a user can select from
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
@@ -35,7 +35,8 @@ class DropDownButton extends StatefulWidget {
     this.autofocus = false,
     this.buttonStyle,
     this.placement = FlyoutPlacement.center,
-    this.menuDecoration,
+    this.menuShape,
+    this.menuColor,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
@@ -80,8 +81,11 @@ class DropDownButton extends StatefulWidget {
   /// The placement of the overlay. Centered by default
   final FlyoutPlacement placement;
 
-  /// The menu decoration
-  final Decoration? menuDecoration;
+  /// The menu shape
+  final ShapeBorder? menuShape;
+
+  /// The menu color. If null, [ThemeData.menuColor] is used
+  final Color? menuColor;
 
   @override
   State<DropDownButton> createState() => _DropDownButtonState();
@@ -103,7 +107,8 @@ class DropDownButton extends StatefulWidget {
         ifFalse: 'do not close after click',
       ))
       ..add(EnumProperty<FlyoutPlacement>('placement', placement))
-      ..add(DiagnosticsProperty('menu decoration', menuDecoration));
+      ..add(DiagnosticsProperty<ShapeBorder>('menu shape', menuShape))
+      ..add(ColorProperty('menu color', menuColor));
   }
 }
 
@@ -114,16 +119,6 @@ class _DropDownButtonState extends State<DropDownButton> {
   void dispose() {
     flyoutController.dispose();
     super.dispose();
-  }
-
-  Offset get buttonOffset {
-    final renderBox = context.findRenderObject() as RenderBox;
-    return renderBox.localToGlobal(Offset.zero);
-  }
-
-  Size get buttonSize {
-    final renderBox = context.findRenderObject() as RenderBox;
-    return renderBox.size;
   }
 
   @override
@@ -148,7 +143,7 @@ class _DropDownButtonState extends State<DropDownButton> {
     ];
 
     return Flyout(
-      placement: FlyoutPlacement.center,
+      placement: widget.placement,
       position: FlyoutPosition.below,
       controller: flyoutController,
       verticalOffset: widget.verticalOffset,
@@ -166,6 +161,8 @@ class _DropDownButtonState extends State<DropDownButton> {
       ),
       content: (context) {
         return MenuFlyout(
+          color: widget.menuColor,
+          shape: widget.menuShape,
           items: widget.items.map((item) {
             if (widget.closeAfterClick) {
               return MenuFlyoutItem(
@@ -183,183 +180,6 @@ class _DropDownButtonState extends State<DropDownButton> {
           }).toList(),
         );
       },
-    );
-  }
-}
-
-/// A delegate for computing the layout of a menu to be displayed above or
-/// bellow a target specified in the global coordinate system.
-class _DropDownButtonPositionDelegate extends SingleChildLayoutDelegate {
-  /// Creates a delegate for computing the layout of a menu.
-  ///
-  /// The arguments must not be null.
-  const _DropDownButtonPositionDelegate({
-    required this.centerTarget,
-    required this.leftTarget,
-    required this.rightTarget,
-    required this.verticalOffset,
-    required this.preferBelow,
-    required this.placement,
-  });
-
-  /// The offset of the target the menu is positioned near in the global
-  /// coordinate system.
-  final Offset centerTarget;
-  final Offset leftTarget;
-  final Offset rightTarget;
-
-  /// The amount of vertical distance between the target and the displayed
-  /// menu.
-  final double verticalOffset;
-
-  /// Whether the menu is displayed below its widget by default.
-  ///
-  /// If there is insufficient space to display the menu in the preferred
-  /// direction, the menu will be displayed in the opposite direction.
-  final bool preferBelow;
-
-  final FlyoutPlacement placement;
-
-  @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      constraints.loosen();
-
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    final defaultOffset = positionDependentBox(
-      size: size,
-      childSize: childSize,
-      target: centerTarget,
-      verticalOffset: verticalOffset,
-      preferBelow: preferBelow,
-    );
-    switch (placement) {
-      case FlyoutPlacement.start:
-        return Offset(leftTarget.dx, defaultOffset.dy);
-      case FlyoutPlacement.end:
-        return Offset(rightTarget.dx - childSize.width, defaultOffset.dy);
-      default:
-        return defaultOffset;
-    }
-  }
-
-  @override
-  bool shouldRelayout(_DropDownButtonPositionDelegate oldDelegate) {
-    return centerTarget != oldDelegate.centerTarget ||
-        verticalOffset != oldDelegate.verticalOffset ||
-        preferBelow != oldDelegate.preferBelow;
-  }
-}
-
-class _DropDownButtonOverlay extends StatefulWidget {
-  const _DropDownButtonOverlay({
-    Key? key,
-    required this.height,
-    required this.width,
-    required this.child,
-    this.padding,
-    this.margin,
-    this.decoration,
-    required this.animation,
-    required this.target,
-    required this.verticalOffset,
-    required this.preferBelow,
-    required this.onClose,
-    this.menuKey,
-    required this.placement,
-  }) : super(key: key);
-
-  final Widget child;
-  final double height;
-  final double width;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final Decoration? decoration;
-  final Animation<double> animation;
-  final Map<FlyoutPlacement, Offset> target;
-  final double verticalOffset;
-  final bool preferBelow;
-  final VoidCallback onClose;
-  final Key? menuKey;
-  final FlyoutPlacement placement;
-
-  @override
-  State<_DropDownButtonOverlay> createState() => _DropDownButtonOverlayState();
-}
-
-class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
-  @override
-  void initState() {
-    super.initState();
-    widget.animation.addStatusListener(_handleStatusChanged);
-  }
-
-  void _handleStatusChanged(AnimationStatus status) {
-    if (mounted) setState(() {});
-  }
-
-  @override
-  void dispose() {
-    widget.animation.removeStatusListener(_handleStatusChanged);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final direction = Directionality.maybeOf(context) ?? TextDirection.ltr;
-    final borderRadius = ((widget.decoration is BoxDecoration)
-            ? (widget.decoration as BoxDecoration)
-                .borderRadius
-                ?.resolve(direction)
-            : null) ??
-        BorderRadius.circular(6.0);
-    return CustomSingleChildLayout(
-      key: widget.menuKey,
-      delegate: _DropDownButtonPositionDelegate(
-        leftTarget: widget.target[FlyoutPlacement.start]!,
-        centerTarget: widget.target[FlyoutPlacement.center]!,
-        rightTarget: widget.target[FlyoutPlacement.end]!,
-        verticalOffset: widget.verticalOffset,
-        preferBelow: widget.preferBelow,
-        placement: widget.placement,
-      ),
-      child: PhysicalModel(
-        color: Colors.transparent,
-        borderRadius: borderRadius,
-        shadowColor: Colors.black,
-        elevation: widget.animation.isCompleted ? 4 : 0,
-        shape: ((widget.decoration is BoxDecoration)
-            ? (widget.decoration as BoxDecoration).shape
-            : BoxShape.rectangle),
-        child: ClipRRect(
-          borderRadius: borderRadius,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, -1),
-              end: Offset.zero,
-            ).animate(widget.animation),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: widget.height,
-                minWidth: widget.width,
-              ),
-              child: DefaultTextStyle(
-                style: FluentTheme.of(context).typography.body!,
-                child: Container(
-                  decoration: widget.decoration,
-                  padding: widget.padding,
-                  margin: widget.margin,
-                  child: Center(
-                    widthFactor: 1.0,
-                    heightFactor: 1.0,
-                    child: widget.child,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
