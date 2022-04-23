@@ -65,22 +65,43 @@ class MenuFlyout extends StatelessWidget {
       shadowColor: shadowColor,
       shape: shape,
       padding: EdgeInsets.zero,
-      child: SingleChildScrollView(
-        padding: padding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: items.map<Widget>((item) {
-            if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
-            return KeyedSubtree(
-              key: item.key,
-              child: item.build(context),
-            );
-          }).toList(),
+      child: ScrollConfiguration(
+        behavior: const _MenuScrollBehavior(),
+        child: SingleChildScrollView(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: items.map<Widget>((item) {
+              if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
+              return KeyedSubtree(
+                key: item.key,
+                child: item.build(context),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
   }
+}
+
+// Do not use the platform-specific default scroll configuration.
+// Menus should never overscroll or display an overscroll indicator.
+class _MenuScrollBehavior extends FluentScrollBehavior {
+  const _MenuScrollBehavior();
+
+  @override
+  TargetPlatform getPlatform(BuildContext context) => defaultTargetPlatform;
+
+  @override
+  Widget buildViewportChrome(
+          BuildContext context, Widget child, AxisDirection axisDirection) =>
+      child;
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const ClampingScrollPhysics();
 }
 
 abstract class MenuFlyoutItemInterface {

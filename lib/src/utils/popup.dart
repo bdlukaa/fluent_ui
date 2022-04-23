@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
@@ -232,11 +230,13 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    print(buttonRect.height);
     return BoxConstraints(
       maxWidth: constraints.maxWidth,
-      maxHeight:
-          screenSize.height - target.dy - verticalOffset - buttonRect.height,
+      maxHeight: screenSize.height -
+          target.dy -
+          verticalOffset -
+          buttonRect.height -
+          10,
     );
   }
 

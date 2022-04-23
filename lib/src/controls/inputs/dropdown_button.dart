@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 const double _kVerticalOffset = 20.0;
-const double _kInnerPadding = 5.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
   size: 10,
@@ -167,173 +166,23 @@ class _DropDownButtonState extends State<DropDownButton> {
       ),
       content: (context) {
         return MenuFlyout(
-          items: widget.items,
-        );
-        // final offset = buttonOffset;
-        // return Padding(
-        //   padding: EdgeInsets.only(
-        //     // The y is:
-        //     // the button offset + the button height + the vertical distance
-        //     // specified by the developer
-        //     top: offset.dy + buttonSize.height + widget.verticalOffset,
-        //     // The x is:
-        //     // the button x offset - (button width / 3), which will center the
-        //     // menu
-        //     left: offset.dx - buttonSize.width / 3,
-        //     bottom: 10.0,
-        //   ),
-        //   child: _DropdownMenu(
-        //     items: widget.items.map((item) {
-        //       if (widget.closeAfterClick) {
-        //         return DropDownButtonItem(
-        //           onTap: () {
-        //             item.onTap();
-        //             flyoutController.close();
-        //           },
-        //           key: item.key,
-        //           leading: item.leading,
-        //           title: item.title,
-        //           trailing: item.trailing,
-        //         );
-        //       }
-        //       return item;
-        //     }).toList(),
-        //   ),
-        // );
-      },
-    );
-  }
-}
-
-/// An item used by [DropDownButton].
-class DropDownButtonItem {
-  /// Creates a drop down button item
-  const DropDownButtonItem({
-    this.key,
-    required this.onTap,
-    this.leading,
-    this.title,
-    this.trailing,
-  }) : assert(
-          leading != null || title != null || trailing != null,
-          'You must provide at least one property: leading, title or trailing',
-        );
-
-  /// Controls how one widget replaces another widget in the tree.
-  final Key? key;
-
-  /// Show a content at the start of this button.
-  ///
-  /// Usually an [Icon]
-  final Widget? leading;
-
-  /// Show a content at the center of this button.
-  ///
-  /// Usually a [Text]
-  final Widget? title;
-
-  /// Show a content at the right of this widget.
-  final Widget? trailing;
-
-  /// When the button is clicked, onTap is executed.
-  final VoidCallback onTap;
-
-  Widget build(BuildContext context) {
-    return HoverButton(
-      key: key,
-      onPressed: onTap,
-      builder: (context, states) {
-        final theme = FluentTheme.of(context);
-        final radius = BorderRadius.circular(4.0);
-        return Padding(
-          padding: const EdgeInsets.only(bottom: _kInnerPadding),
-          child: FocusBorder(
-            focused: states.isFocused,
-            renderOutside: true,
-            style: FocusThemeData(borderRadius: radius),
-            child: Container(
-              decoration: BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(theme, states),
-                borderRadius: radius,
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 4.0,
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                // if (leading != null)
-                //   Padding(
-                //     padding: const EdgeInsetsDirectional.only(end: 8.0),
-                //     child: leading!,
-                //   ),
-                if (title != null)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 8.0),
-                    child: title!,
-                  ),
-                if (trailing != null) trailing!,
-              ]),
-            ),
-          ),
+          items: widget.items.map((item) {
+            if (widget.closeAfterClick) {
+              return MenuFlyoutItem(
+                onPressed: () {
+                  item.onPressed?.call();
+                  flyoutController.close();
+                },
+                key: item.key,
+                leading: item.leading,
+                text: item.text,
+                trailing: item.trailing,
+              );
+            }
+            return item;
+          }).toList(),
         );
       },
-    );
-  }
-}
-
-class _DropdownMenu extends StatefulWidget {
-  const _DropdownMenu({Key? key, required this.items}) : super(key: key);
-
-  final List<DropDownButtonItem> items;
-
-  @override
-  State<_DropdownMenu> createState() => __DropdownMenuState();
-}
-
-class __DropdownMenuState extends State<_DropdownMenu> {
-  final _key = GlobalKey();
-  Size? size;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      final context = _key.currentContext;
-      if (context == null) return;
-      final box = context.findRenderObject() as RenderBox;
-      setState(() => size = box.size);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FlyoutContent(
-      padding: EdgeInsets.zero,
-      child: FocusScope(
-        autofocus: true,
-        child: ScrollConfiguration(
-          behavior: const _DropdownScrollBehavior(),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              top: _kInnerPadding,
-              left: _kInnerPadding,
-              right: _kInnerPadding,
-            ),
-            child: Column(
-              key: _key,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(widget.items.length, (index) {
-                final item = widget.items[index];
-                return SizedBox(
-                  width: size?.width,
-                  child: Builder(builder: item.build),
-                );
-              }),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -513,22 +362,4 @@ class _DropDownButtonOverlayState extends State<_DropDownButtonOverlay> {
       ),
     );
   }
-}
-
-// Do not use the platform-specific default scroll configuration.
-// DropDown menus should never overscroll or display an overscroll indicator.
-class _DropdownScrollBehavior extends FluentScrollBehavior {
-  const _DropdownScrollBehavior();
-
-  @override
-  TargetPlatform getPlatform(BuildContext context) => defaultTargetPlatform;
-
-  @override
-  Widget buildViewportChrome(
-          BuildContext context, Widget child, AxisDirection axisDirection) =>
-      child;
-
-  @override
-  ScrollPhysics getScrollPhysics(BuildContext context) =>
-      const ClampingScrollPhysics();
 }
