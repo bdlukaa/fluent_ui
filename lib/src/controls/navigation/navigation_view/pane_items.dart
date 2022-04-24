@@ -425,6 +425,30 @@ class PaneItem extends NavigationPaneItem {
       }(),
     );
   }
+
+  PaneItem copyWith({
+    Widget? title,
+    Widget? icon,
+    Widget? infoBadge,
+    Widget? trailing,
+    FocusNode? focusNode,
+    bool? autofocus,
+    MouseCursor? mouseCursor,
+    ButtonState<Color?>? tileColor,
+    ButtonState<Color?>? selectedTileColor,
+  }) {
+    return PaneItem(
+      title: title ?? this.title,
+      icon: icon ?? this.icon,
+      infoBadge: infoBadge ?? this.infoBadge,
+      trailing: trailing ?? this.trailing,
+      focusNode: focusNode ?? this.focusNode,
+      autofocus: autofocus ?? this.autofocus,
+      mouseCursor: mouseCursor ?? this.mouseCursor,
+      tileColor: tileColor ?? this.tileColor,
+      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
+    );
+  }
 }
 
 /// Separators for grouping navigation items. Set the color property to
@@ -591,15 +615,10 @@ class PaneItemExpander extends PaneItem {
     return StatefulBuilder(builder: (context, setState) {
       assert(debugCheckHasFluentTheme(context));
       final theme = FluentTheme.of(context);
-      final item = PaneItem(
-        icon: icon,
-        autofocus: autofocus ?? this.autofocus,
-        focusNode: focusNode,
-        infoBadge: infoBadge,
-        mouseCursor: mouseCursor,
-        selectedTileColor: selectedTileColor,
-        tileColor: tileColor,
-        title: title,
+      // the item is this item with changes on the trailing widget: the padding
+      // and rotation animation
+      final item = copyWith(
+        autofocus: autofocus,
         trailing: GestureDetector(
           onTap: () {
             setState(() => _open = !_open);
@@ -608,7 +627,7 @@ class PaneItemExpander extends PaneItem {
             padding: const EdgeInsetsDirectional.only(end: 14.0),
             child: AnimatedRotation(
               turns: _open ? 0.5 : 0,
-              duration: theme.slowAnimationDuration,
+              duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,
               child: trailing!,
             ),
@@ -630,41 +649,43 @@ class PaneItemExpander extends PaneItem {
       }
       return Column(mainAxisSize: MainAxisSize.min, children: [
         item,
-        if (_open)
-          ...items.map((item) {
-            if (item is PaneItem) {
-              final i = PaneItem(
-                icon: Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 28.0),
-                  child: item.icon,
+        AnimatedSize(
+          duration: theme.fastAnimationDuration,
+          curve: Curves.easeIn,
+          child: !_open
+              ? const SizedBox(width: double.infinity)
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: items.map((item) {
+                    if (item is PaneItem) {
+                      final i = item.copyWith(
+                        icon: Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 28.0,
+                          ),
+                          child: item.icon,
+                        ),
+                      );
+                      return i.build(context, false, () {
+                        debugPrint(item.toString());
+                      });
+                    } else if (item is PaneItemHeader) {
+                      return item.build(context);
+                    } else if (item is PaneItemSeparator) {
+                      return item.build(
+                        context,
+                        displayMode == PaneDisplayMode.top
+                            ? Axis.vertical
+                            : Axis.horizontal,
+                      );
+                    } else {
+                      throw UnsupportedError(
+                        '${item.runtimeType} is not a supported item type',
+                      );
+                    }
+                  }).toList(),
                 ),
-                autofocus: item.autofocus,
-                focusNode: item.focusNode,
-                infoBadge: item.infoBadge,
-                mouseCursor: item.mouseCursor,
-                selectedTileColor: item.selectedTileColor,
-                tileColor: item.tileColor,
-                title: item.title,
-                trailing: item.trailing,
-              );
-              return i.build(context, false, () {
-                print(item);
-              });
-            } else if (item is PaneItemHeader) {
-              return item.build(context);
-            } else if (item is PaneItemSeparator) {
-              return item.build(
-                context,
-                displayMode == PaneDisplayMode.top
-                    ? Axis.vertical
-                    : Axis.horizontal,
-              );
-            } else {
-              throw UnsupportedError(
-                '${item.runtimeType} is not a supported item type',
-              );
-            }
-          }),
+        ),
       ]);
     });
   }
