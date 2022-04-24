@@ -279,6 +279,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
       content: NavigationBody(index: index, children: [
         const Text('EXPANDER HOME'),
+        const Text('EXPANDER 1'),
+        const Text('EXPANDER 2'),
+        const Text('EXPANDER 3'),
         const InputsPage(),
         const Forms(),
         const ColorsPage(),
@@ -368,7 +371,6 @@ class _LinkPaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool? autofocus,
   }) {
     return Link(
       uri: Uri.parse(link),
@@ -378,7 +380,6 @@ class _LinkPaneItemAction extends PaneItem {
         followLink,
         displayMode: displayMode,
         showTextOnTop: showTextOnTop,
-        autofocus: autofocus,
       ),
     );
   }

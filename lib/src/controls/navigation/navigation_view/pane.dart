@@ -195,14 +195,45 @@ class NavigationPane with Diagnosticable {
 
   void _changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
+    print(item);
     if (selected != index && !index.isNegative) onChanged?.call(index);
   }
 
   /// A list of all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
-    return items + footerItems;
+    final List<NavigationPaneItem> all = items + footerItems;
+
+    {
+      final expandItems = LinkedList<_PaneItemExpanderItem>();
+      for (final parent in all) {
+        // We get all the [PaneItemExpander]s inside [all] items
+        if (parent is PaneItemExpander) {
+          // Them, we add them and their parent and siblings info to the
+          // [expandItems]
+          expandItems.addAll(parent.items.map(
+            (expandItem) => _PaneItemExpanderItem(
+              parent,
+              expandItem,
+              parent.items,
+            ),
+          ));
+        }
+      }
+
+      // Now, we add them, in their respective position
+      for (final entry in expandItems) {
+        final parentIndex = all.indexOf(entry.parent);
+        all.insert(
+          parentIndex + 1 + entry.siblings.indexOf(entry.expanderItem),
+          entry.expanderItem,
+        );
+      }
+    }
+
+    return all;
   }
 
+  /// All the [PaneItem]s inside [allItems]
   List<NavigationPaneItem> get effectiveItems {
     return (allItems
       ..removeWhere((i) => i is! PaneItem || i is PaneItemAction));
@@ -215,7 +246,7 @@ class NavigationPane with Diagnosticable {
 
   /// Get the current selected item
   PaneItem get selectedItem {
-    assert(selected != null, 'There is no item selected');
+    assert(selected == null, 'There is no item selected');
     return effectiveItems[selected!] as PaneItem;
   }
 
@@ -801,12 +832,25 @@ class _OpenNavigationPane extends StatefulWidget {
     NavigationPane pane,
     NavigationPaneItem item, [
     VoidCallback? onChanged,
-    bool autofocus = false,
   ]) {
     if (item is PaneItemHeader) {
       return item.build(context);
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
+    } else if (item is PaneItemExpander) {
+      final selected = pane.isSelected(item);
+      return item.build(
+        context,
+        selected,
+        () {
+          pane._changeTo(item);
+          onChanged?.call();
+        },
+        onItemPressed: (item) {
+          pane._changeTo(item);
+          onChanged?.call();
+        },
+      );
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
       return item.build(
@@ -816,7 +860,6 @@ class _OpenNavigationPane extends StatefulWidget {
           pane._changeTo(item);
           onChanged?.call();
         },
-        autofocus: autofocus,
       );
     } else {
       throw UnsupportedError(

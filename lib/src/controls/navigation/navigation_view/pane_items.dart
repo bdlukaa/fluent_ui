@@ -160,7 +160,6 @@ class PaneItem extends NavigationPaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode = displayMode ??
@@ -184,7 +183,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = mode == PaneDisplayMode.compact;
 
     final button = HoverButton(
-      autofocus: autofocus ?? this.autofocus,
+      autofocus: autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
       cursor: mouseCursor,
@@ -564,8 +563,6 @@ class PaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool? autofocus,
-    int index = -1,
   }) {
     return super.build(
       context,
@@ -573,7 +570,6 @@ class PaneItemAction extends PaneItem {
       onTap,
       displayMode: displayMode,
       showTextOnTop: showTextOnTop,
-      autofocus: autofocus,
     );
   }
 }
@@ -597,10 +593,7 @@ class PaneItemExpander extends PaneItem {
         );
 
   final List<NavigationPaneItem> items;
-
-  bool _open = false;
-
-  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 10.0);
+  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
 
   @override
   Widget build(
@@ -609,85 +602,161 @@ class PaneItemExpander extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
-    bool? autofocus,
-    int index = -1,
+    ValueChanged<PaneItem>? onItemPressed,
   }) {
-    return StatefulBuilder(builder: (context, setState) {
-      assert(debugCheckHasFluentTheme(context));
-      final theme = FluentTheme.of(context);
-      // the item is this item with changes on the trailing widget: the padding
-      // and rotation animation
-      final item = copyWith(
-        autofocus: autofocus,
-        trailing: GestureDetector(
-          onTap: () {
-            setState(() => _open = !_open);
-          },
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(end: 14.0),
-            child: AnimatedRotation(
-              turns: _open ? 0.5 : 0,
-              duration: theme.fastAnimationDuration,
-              curve: Curves.easeIn,
-              child: trailing!,
+    return _PaneItemExpander(
+      item: this,
+      items: items,
+      displayMode: displayMode,
+      showTextOnTop: showTextOnTop,
+      selected: selected,
+      onPressed: onPressed,
+      onItemPressed: onItemPressed,
+    );
+  }
+}
+
+class _PaneItemExpander extends StatefulWidget {
+  const _PaneItemExpander({
+    Key? key,
+    required this.item,
+    required this.items,
+    required this.displayMode,
+    required this.showTextOnTop,
+    required this.selected,
+    required this.onPressed,
+    required this.onItemPressed,
+  }) : super(key: key);
+
+  final PaneItem item;
+  final List<NavigationPaneItem> items;
+  final PaneDisplayMode? displayMode;
+  final bool showTextOnTop;
+  final bool selected;
+  final VoidCallback? onPressed;
+  final ValueChanged<PaneItem>? onItemPressed;
+
+  @override
+  State<_PaneItemExpander> createState() => __PaneItemExpanderState();
+}
+
+class __PaneItemExpanderState extends State<_PaneItemExpander>
+    with SingleTickerProviderStateMixin {
+  bool _open = false;
+  late AnimationController controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 100),
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void toggleOpen() {
+    setState(() => _open = !_open);
+    if (_open) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final body = InheritedNavigationView.maybeOf(context)!;
+    // the item is this item with changes on the trailing widget: the padding
+    // and rotation animation
+    final Widget item = widget.item
+        .copyWith(
+      trailing: GestureDetector(
+        onTap: toggleOpen,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.only(end: 14.0),
+          child: AnimatedBuilder(
+            animation: controller,
+            builder: (context, child) => RotationTransition(
+              turns: controller.drive(Tween<double>(
+                begin: _open ? 0 : 1.0,
+                end: _open ? 0.5 : 0.5,
+              )),
+              child: child,
             ),
+            child: widget.item.trailing!,
           ),
         ),
-      ).build(
-        context,
-        selected,
-        () {
-          onPressed?.call();
-          setState(() => _open = !_open);
-        },
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        autofocus: autofocus,
-      );
-      if (items.isEmpty) {
-        return item;
-      }
-      return Column(mainAxisSize: MainAxisSize.min, children: [
-        item,
-        AnimatedSize(
-          duration: theme.fastAnimationDuration,
-          curve: Curves.easeIn,
-          child: !_open
-              ? const SizedBox(width: double.infinity)
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: items.map((item) {
-                    if (item is PaneItem) {
-                      final i = item.copyWith(
-                        icon: Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            start: 28.0,
-                          ),
-                          child: item.icon,
+      ),
+    )
+        .build(
+      context,
+      widget.selected,
+      () {
+        widget.onPressed?.call();
+        toggleOpen();
+      },
+      displayMode: widget.displayMode,
+      showTextOnTop: widget.showTextOnTop,
+    );
+    if (widget.items.isEmpty) {
+      return item;
+    }
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      item,
+      AnimatedSize(
+        duration: theme.fastAnimationDuration,
+        curve: Curves.easeIn,
+        child: !_open
+            ? const SizedBox(width: double.infinity)
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.items.map((item) {
+                  if (item is PaneItem) {
+                    final i = item.copyWith(
+                      icon: Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          start: 28.0,
                         ),
-                      );
-                      return i.build(context, false, () {
-                        debugPrint(item.toString());
-                      });
-                    } else if (item is PaneItemHeader) {
-                      return item.build(context);
-                    } else if (item is PaneItemSeparator) {
-                      return item.build(
-                        context,
-                        displayMode == PaneDisplayMode.top
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      );
-                    } else {
-                      throw UnsupportedError(
-                        '${item.runtimeType} is not a supported item type',
-                      );
-                    }
-                  }).toList(),
-                ),
-        ),
-      ]);
-    });
+                        child: item.icon,
+                      ),
+                    );
+                    return i.build(
+                      context,
+                      body.pane!.isSelected(item),
+                      () => widget.onItemPressed?.call(item),
+                    );
+                  } else if (item is PaneItemHeader) {
+                    return item.build(context);
+                  } else if (item is PaneItemSeparator) {
+                    return item.build(
+                      context,
+                      widget.displayMode == PaneDisplayMode.top
+                          ? Axis.vertical
+                          : Axis.horizontal,
+                    );
+                  } else {
+                    throw UnsupportedError(
+                      '${item.runtimeType} is not a supported item type',
+                    );
+                  }
+                }).toList(),
+              ),
+      ),
+    ]);
+  }
+}
+
+class _PaneItemExpanderItem extends LinkedListEntry<_PaneItemExpanderItem> {
+  final PaneItem parent;
+  final NavigationPaneItem expanderItem;
+  final List<NavigationPaneItem> siblings;
+  _PaneItemExpanderItem(this.parent, this.expanderItem, this.siblings);
+
+  @override
+  String toString() {
+    return '$parent : $expanderItem : $siblings';
   }
 }
 
