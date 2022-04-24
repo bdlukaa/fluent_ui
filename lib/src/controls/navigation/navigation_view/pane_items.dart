@@ -24,6 +24,7 @@ class PaneItem extends NavigationPaneItem {
   PaneItem({
     required this.icon,
     this.title,
+    this.trailing,
     this.infoBadge,
     this.focusNode,
     this.autofocus = false,
@@ -53,7 +54,13 @@ class PaneItem extends NavigationPaneItem {
   final Widget icon;
 
   /// The info badge used by this item
-  final InfoBadge? infoBadge;
+  final Widget? infoBadge;
+
+  /// The trailing widget used by this item. If the current display mode is
+  /// compact, this is not disaplayed
+  ///
+  /// Usually an [Icon] widget
+  final Widget? trailing;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -227,24 +234,25 @@ class PaneItem extends NavigationPaneItem {
                       size: 16.0,
                     ),
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: () {
-                          if (infoBadge != null) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              clipBehavior: Clip.none,
-                              children: [
-                                icon,
-                                Positioned(
-                                  right: -8,
-                                  top: -8,
-                                  child: infoBadge!,
-                                ),
-                              ],
-                            );
-                          }
-                          return icon;
-                        }()),
+                      alignment: Alignment.centerLeft,
+                      child: () {
+                        if (infoBadge != null) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              icon,
+                              Positioned(
+                                right: -8,
+                                top: -8,
+                                child: infoBadge!,
+                              ),
+                            ],
+                          );
+                        }
+                        return icon;
+                      }(),
+                    ),
                   ),
                 ),
               );
@@ -273,6 +281,11 @@ class PaneItem extends NavigationPaneItem {
                       padding: const EdgeInsetsDirectional.only(end: 8.0),
                       child: infoBadge!,
                     ),
+                  if (trailing != null)
+                    IconTheme.merge(
+                      data: const IconThemeData(size: 16.0),
+                      child: trailing!,
+                    ),
                 ]),
               );
             case PaneDisplayMode.top:
@@ -293,6 +306,11 @@ class PaneItem extends NavigationPaneItem {
                     ),
                   ),
                   if (showTextOnTop) textResult,
+                  if (trailing != null)
+                    IconTheme.merge(
+                      data: const IconThemeData(size: 16.0),
+                      child: trailing!,
+                    ),
                 ],
               );
               if (infoBadge != null) {
@@ -484,12 +502,12 @@ class PaneItemHeader extends NavigationPaneItem {
 
 /// The item used by [NavigationView] to display the tiles.
 ///
-/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
-/// used as a tooltip. On the other display modes, [icon] and [title] are
-/// displayed in a [Row].
+/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is used
+/// as a tooltip. On the other display modes, [icon] and [title] are displayed
+/// in a [Row].
 ///
-/// The difference with [PaneItem] is that the item is not linked
-/// to a page but to an action passed in parameter (callback)
+/// The difference with [PaneItem] is that the item is not linked to a page but
+/// to an action passed in parameter (callback)
 ///
 /// See also:
 ///
@@ -500,10 +518,10 @@ class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
     required this.onTap,
-    title,
-    infoBadge,
-    focusNode,
-    autofocus = false,
+    Widget? title,
+    Widget? infoBadge,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) : super(
           icon: icon,
           title: title,
@@ -536,9 +554,127 @@ class PaneItemAction extends PaneItem {
   }
 }
 
+class PaneItemExpander extends PaneItem {
+  PaneItemExpander({
+    required Widget icon,
+    required this.items,
+    Widget? title,
+    Widget? infoBadge,
+    Widget trailing = kDefaultTrailing,
+    FocusNode? focusNode,
+    bool autofocus = false,
+  }) : super(
+          icon: icon,
+          title: title,
+          infoBadge: infoBadge,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          trailing: trailing,
+        );
+
+  final List<NavigationPaneItem> items;
+
+  bool _open = false;
+
+  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 10.0);
+
+  @override
+  Widget build(
+    BuildContext context,
+    bool selected,
+    VoidCallback? onPressed, {
+    PaneDisplayMode? displayMode,
+    bool showTextOnTop = true,
+    bool? autofocus,
+    int index = -1,
+  }) {
+    return StatefulBuilder(builder: (context, setState) {
+      assert(debugCheckHasFluentTheme(context));
+      final theme = FluentTheme.of(context);
+      final item = PaneItem(
+        icon: icon,
+        autofocus: autofocus ?? this.autofocus,
+        focusNode: focusNode,
+        infoBadge: infoBadge,
+        mouseCursor: mouseCursor,
+        selectedTileColor: selectedTileColor,
+        tileColor: tileColor,
+        title: title,
+        trailing: GestureDetector(
+          onTap: () {
+            setState(() => _open = !_open);
+          },
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(end: 14.0),
+            child: AnimatedRotation(
+              turns: _open ? 0.5 : 0,
+              duration: theme.slowAnimationDuration,
+              curve: Curves.easeIn,
+              child: trailing!,
+            ),
+          ),
+        ),
+      ).build(
+        context,
+        selected,
+        () {
+          onPressed?.call();
+          setState(() => _open = !_open);
+        },
+        displayMode: displayMode,
+        showTextOnTop: showTextOnTop,
+        autofocus: autofocus,
+      );
+      if (items.isEmpty) {
+        return item;
+      }
+      return Column(mainAxisSize: MainAxisSize.min, children: [
+        item,
+        if (_open)
+          ...items.map((item) {
+            if (item is PaneItem) {
+              final i = PaneItem(
+                icon: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 28.0),
+                  child: item.icon,
+                ),
+                autofocus: item.autofocus,
+                focusNode: item.focusNode,
+                infoBadge: item.infoBadge,
+                mouseCursor: item.mouseCursor,
+                selectedTileColor: item.selectedTileColor,
+                tileColor: item.tileColor,
+                title: item.title,
+                trailing: item.trailing,
+              );
+              return i.build(context, false, () {
+                print(item);
+              });
+            } else if (item is PaneItemHeader) {
+              return item.build(context);
+            } else if (item is PaneItemSeparator) {
+              return item.build(
+                context,
+                displayMode == PaneDisplayMode.top
+                    ? Axis.vertical
+                    : Axis.horizontal,
+              );
+            } else {
+              throw UnsupportedError(
+                '${item.runtimeType} is not a supported item type',
+              );
+            }
+          }),
+      ]);
+    });
+  }
+}
+
 extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> _getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
+  List<Offset> _getPaneItemsOffsets(
+    GlobalKey<State<StatefulWidget>> paneKey,
+  ) {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;

@@ -194,6 +194,24 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           }
         }(),
         items: [
+          PaneItemExpander(
+            icon: const Icon(FluentIcons.expand_all),
+            title: const Text('Expand Item'),
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.accept),
+                title: const Text('Item 1'),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.document_reply),
+                title: const Text('Item 2'),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.edit_mail),
+                title: const Text('Item 3'),
+              ),
+            ],
+          ),
           // It doesn't look good when resizing from compact to open
           // PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
@@ -260,6 +278,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ],
       ),
       content: NavigationBody(index: index, children: [
+        const Text('EXPANDER HOME'),
         const InputsPage(),
         const Forms(),
         const ColorsPage(),
