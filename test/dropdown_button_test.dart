@@ -8,8 +8,8 @@ void main() {
     await tester.pumpWidget(wrapApp(
       child: DropDownButton(
         items: [
-          DropDownButtonItem(title: const Text('one'), onTap: () {}),
-          DropDownButtonItem(title: const Text('two'), onTap: () {}),
+          MenuFlyoutItem(text: const Text('one'), onPressed: () {}),
+          MenuFlyoutItem(text: const Text('two'), onPressed: () {}),
         ],
         leading: const Icon(FluentIcons.number),
         title: const Text('Numbers'),

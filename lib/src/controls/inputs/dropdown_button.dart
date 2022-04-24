@@ -12,7 +12,7 @@ typedef DropDownButtonBuilder = Widget Function(
   VoidCallback? onOpen,
 );
 
-/// A DropDownButton is a button that shows a chevron as a visual indicator that
+/// A `DropDownButton` is a button that shows a chevron as a visual indicator that
 /// it has an attached flyout that contains more options. It has the same
 /// behavior as a standard Button control with a flyout; only the appearance is
 /// different.
@@ -75,7 +75,9 @@ class DropDownButton extends StatefulWidget {
   /// The items in the flyout. Must not be empty
   final List<MenuFlyoutItem> items;
 
-  /// Whether the flyout will be closed after an item is tapped
+  /// Whether the flyout will be closed after an item is tapped.
+  ///
+  /// Defaults to `true`
   final bool closeAfterClick;
 
   /// If `true`, the button won't be clickable.
@@ -88,9 +90,12 @@ class DropDownButton extends StatefulWidget {
   final bool autofocus;
 
   /// Customizes the button's appearance.
+  @Deprecated('buttonStyle was deprecated in 3.11.1. Use buttonBuilder instead')
   final ButtonStyle? buttonStyle;
 
-  /// The placement of the overlay. Centered by default
+  /// The placement of the flyout.
+  ///
+  /// [FlyoutPlacement.center] is used by default
   final FlyoutPlacement placement;
 
   /// The menu shape
@@ -174,6 +179,7 @@ class _DropDownButtonState extends State<DropDownButton> {
               onPressed: widget.disabled ? null : flyoutController.open,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
+              // ignore: deprecated_member_use_from_same_package
               style: widget.buttonStyle,
             );
       }),
@@ -200,4 +206,27 @@ class _DropDownButtonState extends State<DropDownButton> {
       },
     );
   }
+}
+
+/// An item used by [DropDownButton].
+@Deprecated('DropDownButtonItem is deprecated. Use MenuFlyoutItem instead')
+class DropDownButtonItem extends MenuFlyoutItem {
+  /// Creates a drop down button item
+  DropDownButtonItem({
+    Key? key,
+    required VoidCallback? onTap,
+    Widget? leading,
+    Widget? title,
+    Widget? trailing,
+  })  : assert(
+          leading != null || title != null || trailing != null,
+          'You must provide at least one property: leading, title or trailing',
+        ),
+        super(
+          key: key,
+          leading: leading,
+          text: title ?? const SizedBox.shrink(),
+          trailing: trailing,
+          onPressed: onTap,
+        );
 }
