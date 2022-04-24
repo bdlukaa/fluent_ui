@@ -195,7 +195,6 @@ class NavigationPane with Diagnosticable {
 
   void _changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
-    print(item);
     if (selected != index && !index.isNegative) onChanged?.call(index);
   }
 
@@ -246,7 +245,7 @@ class NavigationPane with Diagnosticable {
 
   /// Get the current selected item
   PaneItem get selectedItem {
-    assert(selected == null, 'There is no item selected');
+    assert(selected != null, 'There is no item selected');
     return effectiveItems[selected!] as PaneItem;
   }
 
@@ -464,6 +463,17 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       return item.build(context);
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.vertical);
+    } else if (item is PaneItemExpander) {
+      final selected = widget.pane.isSelected(item);
+      return item.build(
+        context,
+        selected,
+        () => _onPressed(item),
+        onItemPressed: (item) => _onPressed(item),
+        // only show the text if the item is not in the footer
+        showTextOnTop: !widget.pane.footerItems.contains(item),
+        displayMode: PaneDisplayMode.top,
+      );
     } else if (item is PaneItem) {
       final selected = widget.pane.isSelected(item);
       return item.build(
@@ -725,6 +735,18 @@ class _CompactNavigationPane extends StatelessWidget {
       return const SizedBox();
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.horizontal);
+    } else if (item is PaneItemExpander) {
+      final selected = pane.isSelected(item);
+      return item.build(
+        context,
+        selected,
+        () {
+          pane._changeTo(item);
+        },
+        onItemPressed: (item) {
+          pane._changeTo(item);
+        },
+      );
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
       return item.build(

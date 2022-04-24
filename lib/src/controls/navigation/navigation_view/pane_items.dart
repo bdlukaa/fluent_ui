@@ -583,7 +583,11 @@ class PaneItemExpander extends PaneItem {
     Widget trailing = kDefaultTrailing,
     FocusNode? focusNode,
     bool autofocus = false,
-  }) : super(
+  })  : assert(
+          items.any((item) => item is PaneItemExpander) == false,
+          'There can not be nested PaneItemExpanders',
+        ),
+        super(
           icon: icon,
           title: title,
           infoBadge: infoBadge,
@@ -642,6 +646,11 @@ class _PaneItemExpander extends StatefulWidget {
 
 class __PaneItemExpanderState extends State<_PaneItemExpander>
     with SingleTickerProviderStateMixin {
+  final flyoutController = FlyoutController();
+  bool get useFlyout {
+    return widget.displayMode != PaneDisplayMode.open;
+  }
+
   bool _open = false;
   late AnimationController controller = AnimationController(
     vsync: this,
@@ -651,15 +660,20 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void dispose() {
     controller.dispose();
+    flyoutController.dispose();
     super.dispose();
   }
 
   void toggleOpen() {
     setState(() => _open = !_open);
-    if (_open) {
-      controller.forward();
+    if (useFlyout) {
+      flyoutController.open();
     } else {
-      controller.reverse();
+      if (_open) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
     }
   }
 
@@ -703,48 +717,86 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     if (widget.items.isEmpty) {
       return item;
     }
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      item,
-      AnimatedSize(
-        duration: theme.fastAnimationDuration,
-        curve: Curves.easeIn,
-        child: !_open
-            ? const SizedBox(width: double.infinity)
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: widget.items.map((item) {
-                  if (item is PaneItem) {
-                    final i = item.copyWith(
-                      icon: Padding(
-                        padding: const EdgeInsetsDirectional.only(
-                          start: 28.0,
-                        ),
-                        child: item.icon,
-                      ),
-                    );
-                    return i.build(
-                      context,
-                      body.pane!.isSelected(item),
-                      () => widget.onItemPressed?.call(item),
-                    );
-                  } else if (item is PaneItemHeader) {
-                    return item.build(context);
-                  } else if (item is PaneItemSeparator) {
-                    return item.build(
-                      context,
-                      widget.displayMode == PaneDisplayMode.top
-                          ? Axis.vertical
-                          : Axis.horizontal,
-                    );
-                  } else {
-                    throw UnsupportedError(
-                      '${item.runtimeType} is not a supported item type',
-                    );
-                  }
-                }).toList(),
-              ),
-      ),
-    ]);
+    switch (widget.displayMode) {
+      case PaneDisplayMode.open:
+        return Column(mainAxisSize: MainAxisSize.min, children: [
+          item,
+          AnimatedSize(
+            duration: theme.fastAnimationDuration,
+            curve: Curves.easeIn,
+            child: !_open
+                ? const SizedBox(width: double.infinity)
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.items.map((item) {
+                      if (item is PaneItem) {
+                        final i = item.copyWith(
+                          icon: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 28.0,
+                            ),
+                            child: item.icon,
+                          ),
+                        );
+                        return i.build(
+                          context,
+                          body.pane!.isSelected(item),
+                          () => widget.onItemPressed?.call(item),
+                          displayMode: widget.displayMode,
+                          showTextOnTop: widget.showTextOnTop,
+                        );
+                      } else if (item is PaneItemHeader) {
+                        return item.build(context);
+                      } else if (item is PaneItemSeparator) {
+                        return item.build(
+                          context,
+                          widget.displayMode == PaneDisplayMode.top
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                        );
+                      } else {
+                        throw UnsupportedError(
+                          '${item.runtimeType} is not a supported item type',
+                        );
+                      }
+                    }).toList(),
+                  ),
+          ),
+        ]);
+      case PaneDisplayMode.compact:
+        return Flyout(
+          controller: flyoutController,
+          position: FlyoutPosition.side,
+          placement: FlyoutPlacement.end,
+          onOpen: () {
+            print('opened');
+          },
+          content: (context) {
+            return MenuFlyout(
+              items: widget.items.map<MenuFlyoutItemInterface>((item) {
+                if (item is PaneItem) {
+                  return MenuFlyoutItem(
+                    leading: item.icon,
+                    text: item.title ?? const SizedBox.shrink(),
+                    trailing: item.infoBadge,
+                    onPressed: () => widget.onItemPressed?.call(item),
+                    selected: body.pane!.isSelected(item),
+                  );
+                } else if (item is PaneItemSeparator) {
+                  return const MenuFlyoutSeparator();
+                } else {
+                  throw UnsupportedError(
+                    '${item.runtimeType} is not a supported item type',
+                  );
+                }
+              }).toList(),
+            );
+          },
+          child: item,
+        );
+      default:
+        return item;
+    }
   }
 }
 
