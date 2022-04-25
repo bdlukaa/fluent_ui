@@ -1,5 +1,27 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Reworked `DropDownButton` ([#297](https://github.com/bdlukaa/fluent_ui/pull/297)):
+  - `DropDownButton` now uses `Flyout` and `MenuFlyout` to display the menu
+  - Added scrolling features and style to `MenuFlyout`
+  - `MenuFlyout` content height is now properly calculated (Fixes [#210](https://github.com/bdlukaa/fluent_ui/issues/210))
+  - `DropDownButtonItem` is deprecated. `MenuFlyoutItem` should be used instead
+  - Added `DropDownButton.buttonBuilder`, which is able to style the button as you wish. `DropDownButton.buttonStyle` is now deprecated
+  ```dart
+  DropDownButton(
+    items: [...],
+    // onOpen should be called to open the flyout. If onOpen is null, it means the button
+    // should be disabled
+    buttonBuilder: (context, onOpen) {
+      return Button(
+        ...,
+        onPressed: onOpen,
+      );
+    }
+  )
+  ```
+
 ## [3.11.0] - Menu Flyouts - [23/04/2022]
 
 - Implemented `MenuFlyout` ([#266](https://github.com/bdlukaa/fluent_ui/pull/266))
@@ -9,7 +31,7 @@ Date format: DD/MM/YYYY
   - Implement `PopupContentSizeInfo`, which provides the information about the content size
   - Implemented `MenuFlyoutItem`, `MenuFlyoutSeparator` and `MenuFlyoutSubItem`. They are used inside `MenuFlyout` to render the menu items
   - `horizontalPositionDependentBox` is now globally available for use as a top function
-- Implemented overflow popup on `NavigationView` for top mode ([#https://github.com/bdlukaa/fluent_ui/pull/277])
+- Implemented overflow popup on `NavigationView` for top mode ([#277](https://github.com/bdlukaa/fluent_ui/pull/277))
 - `InfoBadge` now is correctly positioned on top mode ([#296](https://github.com/bdlukaa/fluent_ui/pull/296))
 
 ## [3.10.3] - [15/04/2022]
