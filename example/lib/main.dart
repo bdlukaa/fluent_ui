@@ -371,6 +371,7 @@ class _LinkPaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    int? itemIndex,
   }) {
     return Link(
       uri: Uri.parse(link),

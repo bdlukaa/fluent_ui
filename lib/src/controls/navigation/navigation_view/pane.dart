@@ -233,9 +233,9 @@ class NavigationPane with Diagnosticable {
   }
 
   /// All the [PaneItem]s inside [allItems]
-  List<NavigationPaneItem> get effectiveItems {
-    return (allItems
-      ..removeWhere((i) => i is! PaneItem || i is PaneItemAction));
+  List<PaneItem> get effectiveItems {
+    return (allItems..removeWhere((i) => i is! PaneItem || i is PaneItemAction))
+        .cast<PaneItem>();
   }
 
   /// Check if the provided [item] is selected on not.
@@ -246,11 +246,12 @@ class NavigationPane with Diagnosticable {
   /// Get the current selected item
   PaneItem get selectedItem {
     assert(selected != null, 'There is no item selected');
-    return effectiveItems[selected!] as PaneItem;
+    return effectiveItems[selected!];
   }
 
   /// Get the effective index of the navigation pane.
   int effectiveIndexOf(NavigationPaneItem item) {
+    if (item is! PaneItem) return -1;
     return effectiveItems.indexOf(item);
   }
 
@@ -530,7 +531,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         _localItemHold
           ..remove(selectedItem)
           ..insert(item, selectedItem);
-        // print(
+        // debugPrint(
         //   's$selectedItem to$item - i$_localItemHold - h$hiddenPaneItems',
         // );
       }

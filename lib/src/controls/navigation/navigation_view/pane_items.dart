@@ -1,7 +1,7 @@
 part of 'view.dart';
 
 class NavigationPaneItem with Diagnosticable {
-  final GlobalKey itemKey = GlobalKey();
+  GlobalKey itemKey = GlobalKey();
 
   NavigationPaneItem();
 }
@@ -160,6 +160,7 @@ class PaneItem extends NavigationPaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    int? itemIndex,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode = displayMode ??
@@ -390,6 +391,7 @@ class PaneItem extends NavigationPaneItem {
     );
 
     final int? index = () {
+      if (itemIndex != null) return itemIndex;
       if (maybeBody?.pane?.indicator != null) {
         return maybeBody!.pane!.effectiveIndexOf(this);
       }
@@ -446,7 +448,7 @@ class PaneItem extends NavigationPaneItem {
       mouseCursor: mouseCursor ?? this.mouseCursor,
       tileColor: tileColor ?? this.tileColor,
       selectedTileColor: selectedTileColor ?? this.selectedTileColor,
-    );
+    )..itemKey = itemKey;
   }
 }
 
@@ -563,6 +565,7 @@ class PaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    int? itemIndex,
   }) {
     return super.build(
       context,
@@ -607,6 +610,7 @@ class PaneItemExpander extends PaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     ValueChanged<PaneItem>? onItemPressed,
+    int? itemIndex,
   }) {
     return _PaneItemExpander(
       item: this,
@@ -639,6 +643,8 @@ class _PaneItemExpander extends StatefulWidget {
   final bool selected;
   final VoidCallback? onPressed;
   final ValueChanged<PaneItem>? onItemPressed;
+
+  static const leadingPadding = EdgeInsetsDirectional.only(start: 28.0);
 
   @override
   State<_PaneItemExpander> createState() => __PaneItemExpanderState();
@@ -681,6 +687,18 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.maybeOf(context)!;
+
+    // Indexes
+    // Ensure, if the child item is not visible, this is shown as the selected
+    // item
+    int realIndex = body.pane!.effectiveIndexOf(widget.item);
+    final childrenIndexes = body.pane!.effectiveItems.where((item) {
+      return widget.items.contains(item);
+    }).map((item) => body.pane!.effectiveIndexOf(item));
+    if (childrenIndexes.contains(body.pane!.selected!) && !_open) {
+      realIndex = body.pane!.selected!;
+    }
+
     // the item is this item with changes on the trailing widget: the padding
     // and rotation animation
     final Widget item = widget.item
@@ -712,6 +730,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
       },
       displayMode: widget.displayMode,
       showTextOnTop: widget.showTextOnTop,
+      itemIndex: realIndex,
     );
     if (widget.items.isEmpty) {
       return item;
@@ -733,9 +752,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                       if (item is PaneItem) {
                         final i = item.copyWith(
                           icon: Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 28.0,
-                            ),
+                            padding: _PaneItemExpander.leadingPadding,
                             child: item.icon,
                           ),
                         );
@@ -745,6 +762,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           () => widget.onItemPressed?.call(item),
                           displayMode: widget.displayMode,
                           showTextOnTop: widget.showTextOnTop,
+                          itemIndex: body.pane!.effectiveIndexOf(item),
                         );
                       } else if (item is PaneItemHeader) {
                         return item.build(context);
