@@ -128,6 +128,8 @@ class FlyoutListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
     return HoverButton(
       key: key,
       onPressed: onPressed,
@@ -137,10 +139,6 @@ class FlyoutListTile extends StatelessWidget {
       builder: (context, states) {
         final theme = FluentTheme.of(context);
         final radius = BorderRadius.circular(4.0);
-
-        if (selected) {
-          states = {ButtonStates.hovering};
-        }
 
         Widget content = Container(
           decoration: BoxDecoration(
@@ -154,6 +152,11 @@ class FlyoutListTile extends StatelessWidget {
             end: 8.0,
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
+            if (selected)
+              Container(
+                width: 4.0,
+                color: theme.accentColor,
+              ),
             if (icon != null)
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 10.0),

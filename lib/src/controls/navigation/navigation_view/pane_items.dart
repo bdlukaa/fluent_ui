@@ -667,13 +667,12 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen() {
     setState(() => _open = !_open);
     if (useFlyout) {
-      flyoutController.open();
+      flyoutController.toggle();
+    }
+    if (_open) {
+      controller.forward();
     } else {
-      if (_open) {
-        controller.forward();
-      } else {
-        controller.reverse();
-      }
+      controller.reverse();
     }
   }
 
@@ -717,8 +716,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     if (widget.items.isEmpty) {
       return item;
     }
-    switch (widget.displayMode) {
+    final displayMode = body.displayMode ?? widget.displayMode;
+    switch (displayMode) {
       case PaneDisplayMode.open:
+      case PaneDisplayMode.minimal:
         return Column(mainAxisSize: MainAxisSize.min, children: [
           item,
           AnimatedSize(
@@ -764,13 +765,16 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           ),
         ]);
       case PaneDisplayMode.compact:
+      case PaneDisplayMode.top:
         return Flyout(
           controller: flyoutController,
-          position: FlyoutPosition.side,
-          placement: FlyoutPlacement.end,
-          onOpen: () {
-            print('opened');
-          },
+          position: displayMode == PaneDisplayMode.compact
+              ? FlyoutPosition.side
+              : FlyoutPosition.below,
+          placement: displayMode == PaneDisplayMode.compact
+              ? FlyoutPlacement.end
+              : FlyoutPlacement.center,
+          onClose: toggleOpen,
           content: (context) {
             return MenuFlyout(
               items: widget.items.map<MenuFlyoutItemInterface>((item) {
@@ -779,7 +783,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                     leading: item.icon,
                     text: item.title ?? const SizedBox.shrink(),
                     trailing: item.infoBadge,
-                    onPressed: () => widget.onItemPressed?.call(item),
+                    onPressed: () {
+                      widget.onItemPressed?.call(item);
+                      Navigator.pop(context);
+                    },
                     selected: body.pane!.isSelected(item),
                   );
                 } else if (item is PaneItemSeparator) {
