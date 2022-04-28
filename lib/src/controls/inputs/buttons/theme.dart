@@ -80,6 +80,30 @@ class ButtonStyle with Diagnosticable {
       ),
     );
   }
+
+  ButtonStyle copyWith({
+    ButtonState<TextStyle?>? textStyle,
+    ButtonState<Color?>? backgroundColor,
+    ButtonState<Color?>? foregroundColor,
+    ButtonState<Color?>? shadowColor,
+    ButtonState<double?>? elevation,
+    ButtonState<EdgeInsetsGeometry?>? padding,
+    ButtonState<BorderSide?>? border,
+    ButtonState<OutlinedBorder?>? shape,
+    ButtonState<double?>? iconSize,
+  }) {
+    return ButtonStyle(
+      textStyle: textStyle ?? this.textStyle,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      foregroundColor: foregroundColor ?? this.foregroundColor,
+      shadowColor: shadowColor ?? this.shadowColor,
+      elevation: elevation ?? this.elevation,
+      padding: padding ?? this.padding,
+      border: border ?? this.border,
+      shape: shape ?? this.shape,
+      iconSize: iconSize ?? this.iconSize,
+    );
+  }
 }
 
 /// An inherited widget that defines the configuration for

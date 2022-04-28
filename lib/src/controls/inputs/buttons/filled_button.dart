@@ -32,8 +32,15 @@ class FilledButton extends Button {
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final buttonTheme = ButtonTheme.of(context);
+    return buttonTheme.filledButtonStyle;
+  }
+
+  @override
+  ButtonStyle defaultStyleOf(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return ButtonStyle(backgroundColor: ButtonState.resolveWith((states) {
+
+    final def = ButtonStyle(backgroundColor: ButtonState.resolveWith((states) {
       return backgroundColor(theme, states);
     }), foregroundColor: ButtonState.resolveWith((states) {
       if (states.isDisabled) {
@@ -41,6 +48,8 @@ class FilledButton extends Button {
       }
       return backgroundColor(theme, states).basedOnLuminance();
     }));
+
+    return super.defaultStyleOf(context).merge(def) ?? def;
   }
 
   static Color backgroundColor(ThemeData theme, Set<ButtonStates> states) {
