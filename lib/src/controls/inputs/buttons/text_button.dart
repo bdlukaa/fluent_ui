@@ -64,6 +64,6 @@ class TextButton extends BaseButton {
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ButtonTheme.of(context).outlinedButtonStyle;
+    return ButtonTheme.of(context).textButtonStyle;
   }
 }

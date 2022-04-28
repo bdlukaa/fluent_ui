@@ -21,6 +21,7 @@ Date format: DD/MM/YYYY
     }
   )
   ```
+- `TextButton` now uses `textButtonStyle` instead of `outlinedButtonStyle`
 
 ## [3.11.0] - Menu Flyouts - [23/04/2022]
 
