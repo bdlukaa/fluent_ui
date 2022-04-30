@@ -159,11 +159,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }(),
         actions: kIsWeb
             ? null
-            : DragToMoveArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [Spacer(), WindowButtons()],
-                ),
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [Spacer(), WindowButtons()],
               ),
       ),
       pane: NavigationPane(
