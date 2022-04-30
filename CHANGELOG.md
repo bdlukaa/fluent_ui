@@ -22,6 +22,7 @@ Date format: DD/MM/YYYY
   )
   ```
 - `TextButton` now uses `textButtonStyle` instead of `outlinedButtonStyle`
+- Add `TextFormBox.decoration` ([#312](https://github.com/bdlukaa/fluent_ui/pull/312))
 
 ## [3.11.0] - Menu Flyouts - [23/04/2022]
 

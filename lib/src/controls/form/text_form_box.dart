@@ -98,6 +98,7 @@ class TextFormBox extends FormField<String> {
     MaxLengthEnforcement? maxLengthEnforcement,
     ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
+    BoxDecoration? decoration,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -190,6 +191,7 @@ class TextFormBox extends FormField<String> {
                 restorationId: restorationId,
                 selectionHeightStyle: selectionHeightStyle,
                 selectionWidthStyle: selectionWidthStyle,
+                decoration: decoration,
               ),
             );
           },
