@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [3.11.1] - [30/04/2022]
 
 - Reworked `DropDownButton` ([#297](https://github.com/bdlukaa/fluent_ui/pull/297)):
   - `DropDownButton` now uses `Flyout` and `MenuFlyout` to display the menu
