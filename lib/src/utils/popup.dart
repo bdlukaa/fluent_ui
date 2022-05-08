@@ -232,11 +232,8 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     return BoxConstraints(
       maxWidth: constraints.maxWidth,
-      maxHeight: screenSize.height -
-          target.dy -
-          verticalOffset -
-          buttonRect.height -
-          10,
+      maxHeight:
+          screenSize.height - target.dy - verticalOffset - buttonRect.height,
     );
   }
 

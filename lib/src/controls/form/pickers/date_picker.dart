@@ -348,7 +348,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         child: Column(children: [
           Expanded(
             child: Stack(children: [
-              kHighlightTile(),
+              PickerHighlightTile(),
               Row(children: [
                 if (widget.showMonth)
                   Expanded(

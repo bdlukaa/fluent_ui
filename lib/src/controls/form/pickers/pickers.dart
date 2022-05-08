@@ -13,20 +13,24 @@ const kPopupHeight = kOneLineTileHeight * 10;
 Color kPickerBackgroundColor(BuildContext context) =>
     FluentTheme.of(context).menuColor;
 
-ShapeBorder kPickerShape(BuildContext context) => RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(4.0),
-      side: BorderSide(
-        color: FluentTheme.of(context).scaffoldBackgroundColor,
-        width: 0.6,
-      ),
-    );
+ShapeBorder kPickerShape(BuildContext context) {
+  return RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(4.0),
+    side: BorderSide(
+      color: FluentTheme.of(context).scaffoldBackgroundColor,
+      width: 0.6,
+    ),
+  );
+}
 
 TextStyle? kPickerPopupTextStyle(BuildContext context) {
   return FluentTheme.of(context).typography.body?.copyWith(fontSize: 16);
 }
 
 Decoration kPickerDecorationBuilder(
-    BuildContext context, Set<ButtonStates> states) {
+  BuildContext context,
+  Set<ButtonStates> states,
+) {
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
   return BoxDecoration(
@@ -35,12 +39,14 @@ Decoration kPickerDecorationBuilder(
   );
 }
 
-Widget kHighlightTile() {
+// ignore: non_constant_identifier_names
+Widget PickerHighlightTile() {
   return Builder(builder: (context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final highlightTileColor =
-        theme.accentColor.resolveFromBrightness(theme.brightness);
+    final highlightTileColor = theme.accentColor.resolveFromReverseBrightness(
+      theme.brightness,
+    );
     return Positioned(
       top: 0,
       bottom: 0,
@@ -75,17 +81,15 @@ class YesNoPickerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    ButtonStyle style() {
-      return ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(
-          (states) => ButtonThemeData.uncheckedInputColor(
-            FluentTheme.of(context),
-            states,
-          ),
+    ButtonStyle buttonStyle = ButtonStyle(
+      backgroundColor: ButtonState.resolveWith(
+        (states) => ButtonThemeData.uncheckedInputColor(
+          FluentTheme.of(context),
+          states,
         ),
-        border: ButtonState.all(BorderSide.none),
-      );
-    }
+      ),
+      border: ButtonState.all(BorderSide.none),
+    );
 
     return FocusTheme(
       data: const FocusThemeData(renderOutside: false),
@@ -97,7 +101,7 @@ class YesNoPickerControl extends StatelessWidget {
             child: Button(
               child: const Icon(FluentIcons.check_mark),
               onPressed: onChanged,
-              style: style(),
+              style: buttonStyle,
             ),
           ),
         ),
@@ -108,7 +112,7 @@ class YesNoPickerControl extends StatelessWidget {
             child: Button(
               child: const Icon(FluentIcons.chrome_close),
               onPressed: onCancel,
-              style: style(),
+              style: buttonStyle,
             ),
           ),
         ),
@@ -141,6 +145,13 @@ class PickerNavigatorIndicator extends StatelessWidget {
             padding: ButtonState.all(const EdgeInsets.all(2.0)),
             backgroundColor: ButtonState.all(kPickerBackgroundColor(context)),
             border: ButtonState.all(BorderSide.none),
+            iconSize: ButtonState.resolveWith((states) {
+              if (states.isPressing) {
+                return 8.0;
+              } else {
+                return 10.0;
+              }
+            }),
           )),
           child: FocusTheme(
             data: const FocusThemeData(renderOutside: false),
@@ -154,7 +165,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   height: kOneLineTileHeight,
                   child: Button(
                     child: const Center(
-                      child: Icon(FluentIcons.chevron_up, size: 12),
+                      child: Icon(FluentIcons.caret_up_solid8),
                     ),
                     onPressed: onBackward,
                   ),
@@ -167,7 +178,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   height: kOneLineTileHeight,
                   child: Button(
                     child: const Center(
-                      child: Icon(FluentIcons.chevron_down, size: 12),
+                      child: Icon(FluentIcons.caret_down_solid8),
                     ),
                     onPressed: onForward,
                   ),
@@ -206,6 +217,74 @@ void navigateSides(
       to,
       duration: duration,
       curve: curve,
+    );
+  }
+}
+
+class Picker extends StatefulWidget {
+  const Picker({
+    Key? key,
+    required this.child,
+    required this.pickerContent,
+    required this.pickerHeight,
+  }) : super(key: key);
+
+  final Widget Function(BuildContext context, Future<void> Function() open)
+      child;
+  final WidgetBuilder pickerContent;
+  final double pickerHeight;
+
+  @override
+  State<Picker> createState() => _PickerState();
+}
+
+class _PickerState extends State<Picker> {
+  final GlobalKey _childKey = GlobalKey();
+
+  Future<void> open() {
+    assert(
+      _childKey.currentContext != null,
+      'The child must have been built at least once',
+    );
+    final box = _childKey.currentContext!.findRenderObject() as RenderBox;
+    final childOffset = box.localToGlobal(Offset.zero);
+
+    final navigator = Navigator.of(context);
+    return navigator.push(PageRouteBuilder(
+      barrierColor: Colors.transparent,
+      opaque: false,
+      barrierDismissible: true,
+      fullscreenDialog: true,
+      pageBuilder: (context, primary, __) {
+        return Stack(children: [
+          Positioned(
+            left: childOffset.dx,
+            top: childOffset.dy - (widget.pickerHeight / 2),
+            child: FadeTransition(
+              opacity: primary,
+              // sizeFactor: primary,
+              // axisAlignment: -1.0,
+              child: Container(
+                height: widget.pickerHeight,
+                width: box.size.width,
+                decoration: ShapeDecoration(
+                  color: kPickerBackgroundColor(context),
+                  shape: kPickerShape(context),
+                ),
+                child: widget.pickerContent(context),
+              ),
+            ),
+          ),
+        ]);
+      },
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: _childKey,
+      child: widget.child(context, open),
     );
   }
 }

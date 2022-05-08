@@ -750,7 +750,7 @@ class _NavigationAppBar extends StatelessWidget {
   }
 }
 
-class _NavigationViewScrollBehavior extends ScrollBehavior {
+class _NavigationViewScrollBehavior extends FluentScrollBehavior {
   const _NavigationViewScrollBehavior({
     this.scrollbarKey,
   });
