@@ -762,7 +762,7 @@ class _NavigationViewScrollBehavior extends ScrollBehavior {
     return Scrollbar(
       key: scrollbarKey,
       controller: PrimaryScrollController.of(context),
-      isAlwaysShown: false,
+      thumbVisibility: false,
       child: child,
     );
   }
