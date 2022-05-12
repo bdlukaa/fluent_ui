@@ -49,7 +49,7 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
                 // Make sure we capture this pointer scroll event so that
                 // any scrollable widgets higher up in the hierarchy do not
                 // handle the event also.
-                GestureBinding.instance!.pointerSignalResolver.register(event,
+                GestureBinding.instance.pointerSignalResolver.register(event,
                     (event) {
                   if (event is PointerScrollEvent) {
                     // Use animateTo for a smoother behavior when there are

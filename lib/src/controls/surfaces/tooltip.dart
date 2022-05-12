@@ -186,18 +186,18 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     super.initState();
     _isConcealed = false;
     _forceRemoval = false;
-    _mouseIsConnected = RendererBinding.instance!.mouseTracker.mouseIsConnected;
+    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
     _controller = AnimationController(
       duration: _fadeInDuration,
       reverseDuration: _fadeOutDuration,
       vsync: this,
     )..addStatusListener(_handleStatusChanged);
     // Listen to see when a mouse is added.
-    RendererBinding.instance!.mouseTracker
+    RendererBinding.instance.mouseTracker
         .addListener(_handleMouseTrackerChange);
     // Listen to global pointer events so that we can hide a tooltip immediately
     // if some other control is clicked on.
-    GestureBinding.instance!.pointerRouter.addGlobalRoute(_handlePointerEvent);
+    GestureBinding.instance.pointerRouter.addGlobalRoute(_handlePointerEvent);
   }
 
   @override
@@ -246,7 +246,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       return;
     }
     final bool mouseIsConnected =
-        RendererBinding.instance!.mouseTracker.mouseIsConnected;
+        RendererBinding.instance.mouseTracker.mouseIsConnected;
     if (mouseIsConnected != _mouseIsConnected) {
       setState(() {
         _mouseIsConnected = mouseIsConnected;
@@ -459,9 +459,9 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    GestureBinding.instance!.pointerRouter
+    GestureBinding.instance.pointerRouter
         .removeGlobalRoute(_handlePointerEvent);
-    RendererBinding.instance!.mouseTracker
+    RendererBinding.instance.mouseTracker
         .removeListener(_handleMouseTrackerChange);
     _removeEntry();
     _controller.dispose();
