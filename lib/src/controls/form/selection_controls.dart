@@ -20,10 +20,10 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     BuildContext context,
     Rect globalEditableRegion,
     double textLineHeight,
-    Offset selectionMidpoint,
+    Offset position,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
-    ClipboardStatusNotifier clipboardStatus,
+    ClipboardStatusNotifier? clipboardStatus,
     Offset? lastSecondaryTapDownPosition,
   ) {
     return _FluentTextSelectionControlsToolbar(
@@ -38,7 +38,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
       handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
       handleSelectAll:
           canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
-      selectionMidpoint: selectionMidpoint,
+      // selectionMidpoint: selectionMidpoint,
       lastSecondaryTapDownPosition: lastSecondaryTapDownPosition,
       textLineHeight: textLineHeight,
     );
@@ -88,19 +88,19 @@ final TextSelectionControls fluentTextSelectionControls =
 class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   const _FluentTextSelectionControlsToolbar({
     Key? key,
-    required this.clipboardStatus,
+    this.clipboardStatus,
     required this.endpoints,
     required this.globalEditableRegion,
     required this.handleCopy,
     required this.handleCut,
     required this.handlePaste,
     required this.handleSelectAll,
-    required this.selectionMidpoint,
+    // required this.selectionMidpoint,
     required this.textLineHeight,
     required this.lastSecondaryTapDownPosition,
   }) : super(key: key);
 
-  final ClipboardStatusNotifier clipboardStatus;
+  final ClipboardStatusNotifier? clipboardStatus;
   final List<TextSelectionPoint> endpoints;
   final Rect globalEditableRegion;
   final VoidCallback? handleCopy;
@@ -108,7 +108,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   final VoidCallback? handlePaste;
   final VoidCallback? handleSelectAll;
   final Offset? lastSecondaryTapDownPosition;
-  final Offset selectionMidpoint;
+  // final Offset selectionMidpoint;
   final double textLineHeight;
 
   @override
@@ -173,15 +173,15 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     assert(debugCheckHasMediaQuery(context));
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    // final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final Offset midpointAnchor = Offset(
-      (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
-        mediaQuery.padding.left,
-        mediaQuery.size.width - mediaQuery.padding.right,
-      ),
-      widget.selectionMidpoint.dy - widget.globalEditableRegion.top,
-    );
+    // final Offset midpointAnchor = Offset(
+    //   (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
+    //     mediaQuery.padding.left,
+    //     mediaQuery.size.width - mediaQuery.padding.right,
+    //   ),
+    //   widget.selectionMidpoint.dy - widget.globalEditableRegion.top,
+    // );
 
     assert(debugCheckHasFluentLocalizations(context));
     final FluentLocalizations localizations = FluentLocalizations.of(context);
@@ -247,7 +247,7 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     return _FluentTextSelectionToolbar(
-      anchor: widget.lastSecondaryTapDownPosition ?? midpointAnchor,
+      anchor: widget.lastSecondaryTapDownPosition,
       children: items,
     );
   }
@@ -271,14 +271,14 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   /// Creates an instance of _FluentTextSelectionToolbar.
   const _FluentTextSelectionToolbar({
     Key? key,
-    required this.anchor,
+    this.anchor,
     required this.children,
   })  : assert(children.length > 0),
         super(key: key);
 
   /// The point at which the toolbar will attempt to position itself as closely
   /// as possible.
-  final Offset anchor;
+  final Offset? anchor;
 
   final List<Widget> children;
 
@@ -299,7 +299,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
       ),
       child: CustomSingleChildLayout(
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
-          anchor: anchor - localAdjustment,
+          anchor: anchor! - localAdjustment,
         ),
         child: PhysicalModel(
           elevation: 4.0,
