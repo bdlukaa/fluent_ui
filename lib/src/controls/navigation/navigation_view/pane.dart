@@ -603,12 +603,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     Key? key,
     required this.item,
     required this.onPressed,
-    this.selected = false,
   }) : super(key: key);
 
   final PaneItem item;
   final VoidCallback? onPressed;
-  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -653,9 +651,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
               padding: theme.iconPadding ?? EdgeInsets.zero,
               child: IconTheme.merge(
                 data: IconThemeData(
-                  color: (selected
-                          ? theme.selectedIconColor?.resolve(states)
-                          : theme.unselectedIconColor?.resolve(states)) ??
+                  color: theme.unselectedIconColor?.resolve(states) ??
                       baseStyle.color,
                   size: 16.0,
                 ),
