@@ -655,20 +655,18 @@ class _NavigationAppBar extends StatelessWidget {
   const _NavigationAppBar({
     Key? key,
     required this.appBar,
-    this.displayMode,
     this.additionalLeading,
   }) : super(key: key);
 
   final NavigationAppBar appBar;
-  final PaneDisplayMode? displayMode;
   final Widget? additionalLeading;
 
   @override
   Widget build(BuildContext context) {
     final direction = Directionality.of(context);
-    final PaneDisplayMode displayMode = this.displayMode ??
+    final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
-        PaneDisplayMode.top;
+            PaneDisplayMode.top;
     final leading = NavigationAppBar.buildLeading(
       context,
       appBar,
@@ -751,18 +749,12 @@ class _NavigationAppBar extends StatelessWidget {
 }
 
 class _NavigationViewScrollBehavior extends ScrollBehavior {
-  const _NavigationViewScrollBehavior({
-    this.scrollbarKey,
-  });
-
-  final Key? scrollbarKey;
-
+  const _NavigationViewScrollBehavior();
   @override
   Widget buildScrollbar(context, child, details) {
     return Scrollbar(
-      key: scrollbarKey,
       controller: PrimaryScrollController.of(context),
-      isAlwaysShown: false,
+      thumbVisibility: false,
       child: child,
     );
   }

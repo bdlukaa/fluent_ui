@@ -585,7 +585,6 @@ class _Tab extends StatefulWidget {
     Key? key,
     this.onPressed,
     required this.selected,
-    this.focusNode,
     this.reorderIndex,
     this.animationDuration = Duration.zero,
     this.animationCurve = Curves.linear,
@@ -596,7 +595,6 @@ class _Tab extends StatefulWidget {
   final Tab tab;
   final bool selected;
   final VoidCallback? onPressed;
-  final FocusNode? focusNode;
   final int? reorderIndex;
   final Duration animationDuration;
   final Curve animationCurve;
@@ -650,7 +648,6 @@ class __TabState extends State<_Tab>
     return HoverButton(
       key: widget.tab.key,
       semanticLabel: widget.tab.semanticLabel ?? text,
-      focusNode: widget.focusNode,
       onPressed: widget.onPressed,
       builder: (context, states) {
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;

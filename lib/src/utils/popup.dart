@@ -479,7 +479,7 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final context = key.currentContext;
       if (context == null) return;
       final RenderBox box = context.findRenderObject() as RenderBox;
