@@ -219,7 +219,6 @@ class _CommandBarState extends State<CommandBar> {
         allSecondaryItems.removeAt(0);
       }
       overflowWidget = Flyout(
-        child: overflowItem.build(context, primaryMode),
         content: (context) => FlyoutContent(
           constraints: const BoxConstraints(maxWidth: 250.0),
           padding: const EdgeInsets.only(top: 8.0),
@@ -234,6 +233,7 @@ class _CommandBarState extends State<CommandBar> {
           ),
         ),
         controller: secondaryFlyoutController,
+        child: overflowItem.build(context, primaryMode),
       );
     }
 
@@ -276,7 +276,6 @@ class _CommandBarState extends State<CommandBar> {
         w = DynamicOverflow(
           alignment: widget.mainAxisAlignment,
           crossAxisAlignment: widget.crossAxisAlignment,
-          children: builtItems.toList(),
           alwaysDisplayOverflowWidget: widget.secondaryItems.isNotEmpty,
           overflowWidget: overflowWidget!,
           overflowWidgetAlignment: widget.overflowItemAlignment,
@@ -295,6 +294,7 @@ class _CommandBarState extends State<CommandBar> {
               dynamicallyHiddenPrimaryItems = hiddenItems;
             });
           },
+          children: builtItems.toList(),
         );
         break;
       case CommandBarOverflowBehavior.clip:

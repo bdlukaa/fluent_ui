@@ -524,29 +524,22 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         Expanded(
           child: DynamicOverflow(
-            children: _localItemHold.map((index) {
-              final item = widget.pane.items[index];
-              return SizedBox(
-                height: height,
-                child: _buildItem(context, item),
-              );
-            }).toList(),
             overflowWidgetAlignment: MainAxisAlignment.start,
             overflowWidget: Flyout(
               controller: overflowController,
-              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
-                context,
-                false,
-                overflowController.open,
-                showTextOnTop: false,
-                displayMode: PaneDisplayMode.top,
-              ),
               placement: FlyoutPlacement.end,
               content: (context) => MenuFlyout(
                 items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
                   final item = widget.pane.items[i];
                   return buildMenuPaneItem(context, item);
                 }).toList(),
+              ),
+              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
+                context,
+                false,
+                overflowController.open,
+                showTextOnTop: false,
+                displayMode: PaneDisplayMode.top,
               ),
             ),
             overflowChangedCallback: (hiddenItems) {
@@ -565,6 +558,13 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 hiddenPaneItems = hiddenItems;
               });
             },
+            children: _localItemHold.map((index) {
+              final item = widget.pane.items[index];
+              return SizedBox(
+                height: height,
+                child: _buildItem(context, item),
+              );
+            }).toList(),
           ),
         ),
         if (widget.pane.autoSuggestBox != null)
@@ -897,8 +897,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                   menuButton,
                   Expanded(
                     child: Align(
-                      child: widget.pane.header!,
                       alignment: Alignment.centerLeft,
+                      child: widget.pane.header!,
                     ),
                   ),
                 ]);

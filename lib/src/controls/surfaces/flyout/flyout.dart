@@ -244,12 +244,12 @@ class _FlyoutState extends State<Flyout> {
   Widget build(BuildContext context) {
     final popup = PopUp(
       key: popupKey,
-      child: widget.child,
       content: widget.content,
       verticalOffset: widget.verticalOffset,
       horizontalOffset: widget.horizontalOffset,
       placement: widget.placement,
       position: widget.position,
+      child: widget.child,
     );
 
     switch (widget.openMode) {

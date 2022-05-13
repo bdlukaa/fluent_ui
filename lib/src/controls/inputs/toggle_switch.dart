@@ -167,11 +167,11 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           ]);
         }
         return Semantics(
-          child: FocusBorder(
-            child: child,
-            focused: states.isFocused,
-          ),
           checked: widget.checked,
+          child: FocusBorder(
+            focused: states.isFocused,
+            child: child,
+          ),
         );
       },
     );

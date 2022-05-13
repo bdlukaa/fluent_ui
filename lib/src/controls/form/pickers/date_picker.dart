@@ -515,6 +515,22 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         },
                         child: ListWheelScrollView(
                           controller: widget.yearController,
+                          itemExtent: kOneLineTileHeight,
+                          diameterRatio: kPickerDiameterRatio,
+                          physics: const FixedExtentScrollPhysics(),
+                          onSelectedItemChanged: (index) {
+                            widget.handleDateChanged(DateTime(
+                              widget.startYear + index + 1,
+                              widget.date.month,
+                              widget.date.day,
+                              widget.date.hour,
+                              widget.date.minute,
+                              widget.date.second,
+                              widget.date.millisecond,
+                              widget.date.microsecond,
+                            ));
+                            setState(() {});
+                          },
                           children: List.generate(years, (index) {
                             // index++;
                             final realYear = widget.startYear + index + 1;
@@ -532,22 +548,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                               ),
                             );
                           }),
-                          itemExtent: kOneLineTileHeight,
-                          diameterRatio: kPickerDiameterRatio,
-                          physics: const FixedExtentScrollPhysics(),
-                          onSelectedItemChanged: (index) {
-                            widget.handleDateChanged(DateTime(
-                              widget.startYear + index + 1,
-                              widget.date.month,
-                              widget.date.day,
-                              widget.date.hour,
-                              widget.date.minute,
-                              widget.date.second,
-                              widget.date.millisecond,
-                              widget.date.microsecond,
-                            ));
-                            setState(() {});
-                          },
                         ),
                       );
                     }(),

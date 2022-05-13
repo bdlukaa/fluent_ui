@@ -466,9 +466,9 @@ class _RingPainter extends CustomPainter {
           d2 -= 360;
         }
         if ((d1 - d2).abs() >= 180) {
-          final _speed1 = speed1;
+          final newSpeed1 = speed1;
           speed1 = speed2;
-          speed2 = _speed1;
+          speed2 = newSpeed1;
         }
         // update the values changed above
         onUpdate([d1, d2, speed1, speed2]);

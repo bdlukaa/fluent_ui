@@ -95,9 +95,9 @@ class YesNoPickerControl extends StatelessWidget {
             margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: const Icon(FluentIcons.check_mark),
               onPressed: onChanged,
               style: style(),
+              child: const Icon(FluentIcons.check_mark),
             ),
           ),
         ),
@@ -106,9 +106,9 @@ class YesNoPickerControl extends StatelessWidget {
             margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: const Icon(FluentIcons.chrome_close),
               onPressed: onCancel,
               style: style(),
+              child: const Icon(FluentIcons.chrome_close),
             ),
           ),
         ),
@@ -153,10 +153,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
+                    onPressed: onBackward,
                     child: const Center(
                       child: Icon(FluentIcons.chevron_up, size: 12),
                     ),
-                    onPressed: onBackward,
                   ),
                 ),
               if (show)
@@ -166,10 +166,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
+                    onPressed: onForward,
                     child: const Center(
                       child: Icon(FluentIcons.chevron_down, size: 12),
                     ),
-                    onPressed: onForward,
                   ),
                 ),
             ]),
