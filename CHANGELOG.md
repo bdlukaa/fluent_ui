@@ -1,5 +1,8 @@
 Date format: DD/MM/YYYY
 
+## [3.11.2] - [13/05/2022]
+- Fixed ClipboardStatusNotifier parameter in selection_controls.dart to reflect Flutter 3 changes. ([#327](https://github.com/bdlukaa/fluent_ui/issues/327))
+
 ## [3.11.1] - [30/04/2022]
 
 - Reworked `DropDownButton` ([#297](https://github.com/bdlukaa/fluent_ui/pull/297)):
