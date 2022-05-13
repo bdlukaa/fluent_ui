@@ -60,14 +60,14 @@ class EntrancePageTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = animation.value + (reverse ? -startFrom : startFrom);
     return SlideTransition(
-      child: FadeTransition(
-        child: child,
-        opacity: animation,
-      ),
       position: Tween<Offset>(
         begin: vertical ? Offset(0, value) : Offset(value, 0),
         end: Offset.zero,
       ).animate(animation),
+      child: FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
     );
   }
 }
@@ -103,8 +103,8 @@ class DrillInPageTransition extends StatelessWidget {
     return FadeTransition(
       opacity: animation,
       child: ScaleTransition(
-        child: child,
         scale: Tween<double>(begin: 0.88, end: 1.0).animate(animation),
+        child: child,
       ),
     );
   }

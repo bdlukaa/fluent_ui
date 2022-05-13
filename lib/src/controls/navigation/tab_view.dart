@@ -240,7 +240,7 @@ class _TabViewState extends State<TabView> {
     double preferredTabWidth,
   ) {
     final Tab tab = widget.tabs[index];
-    final _tab = _Tab(
+    final tabWidget = _Tab(
       tab,
       key: ValueKey<int>(index),
       reorderIndex: widget.isReorderEnabled ? index : null,
@@ -256,9 +256,9 @@ class _TabViewState extends State<TabView> {
       onTertiaryTapUp: (_) => tab.onClosed?.call(),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         if (widget.tabWidthBehavior == TabWidthBehavior.equal)
-          Expanded(child: _tab)
+          Expanded(child: tabWidget)
         else
-          Flexible(child: _tab),
+          Flexible(child: tabWidget),
         divider(index),
       ]),
     );
@@ -730,8 +730,8 @@ class __TabState extends State<_Tab>
             );
             if (widget.reorderIndex != null) {
               return ReorderableDragStartListener(
-                child: result,
                 index: widget.reorderIndex!,
+                child: result,
               );
             }
             return result;
@@ -740,8 +740,8 @@ class __TabState extends State<_Tab>
         if (text != null) {
           child = Tooltip(
             message: text,
-            child: child,
             style: const TooltipThemeData(preferBelow: true),
+            child: child,
           );
         }
         if (widget.selected) {

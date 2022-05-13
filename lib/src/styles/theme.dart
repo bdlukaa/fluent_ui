@@ -60,7 +60,7 @@ class _FluentTheme extends InheritedTheme {
 
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return _FluentTheme(child: child, data: data);
+    return _FluentTheme(data: data, child: child);
   }
 }
 
@@ -137,8 +137,8 @@ class _AnimatedFluentThemeState
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
-      child: widget.child,
       data: _data!.evaluate(animation),
+      child: widget.child,
     );
   }
 

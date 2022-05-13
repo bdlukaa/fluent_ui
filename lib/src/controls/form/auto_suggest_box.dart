@@ -481,10 +481,6 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
             ),
             alignment: AlignmentDirectional.centerStart,
             child: EntrancePageTransition(
-              child: Text(
-                widget.text,
-                style: theme.typography.body,
-              ),
               animation: Tween<double>(
                 begin: 0.75,
                 end: 1.0,
@@ -493,6 +489,10 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
                 curve: Curves.easeOut,
               )),
               vertical: true,
+              child: Text(
+                widget.text,
+                style: theme.typography.body,
+              ),
             ),
           ),
           if (states.isFocused)

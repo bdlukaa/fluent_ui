@@ -68,9 +68,9 @@ class ToggleButton extends StatelessWidget {
     return Button(
       autofocus: autofocus,
       focusNode: focusNode,
-      child: Semantics(child: child, selected: checked),
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       style: checked ? theme.checkedButtonStyle : theme.uncheckedButtonStyle,
+      child: Semantics(selected: checked, child: child),
     );
   }
 }

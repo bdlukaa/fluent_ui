@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [3.12.0] - Flutter 3.0 - [13/05/2022]
+
+- Add support for Flutter 3.0 (Fixes [#186](https://github.com/bdlukaa/fluent_ui/issues/186), [#327](https://github.com/bdlukaa/fluent_ui/issues/327))
+
 ## [3.11.1] - [30/04/2022]
 
 - Reworked `DropDownButton` ([#297](https://github.com/bdlukaa/fluent_ui/pull/297)):

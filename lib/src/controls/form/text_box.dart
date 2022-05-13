@@ -1047,9 +1047,9 @@ class _TextBoxState extends State<TextBox>
           child: () {
             if (widget.header != null) {
               return InfoLabel(
-                child: listener,
                 label: widget.header!,
                 labelStyle: widget.headerStyle,
+                child: listener,
               );
             }
             return listener;

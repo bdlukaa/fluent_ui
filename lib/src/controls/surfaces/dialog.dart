@@ -312,8 +312,8 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
               child: Actions(
                 actions: {DismissIntent: _DismissAction(context)},
                 child: FocusScope(
-                  child: dialog,
                   autofocus: true,
+                  child: dialog,
                 ),
               ),
             );

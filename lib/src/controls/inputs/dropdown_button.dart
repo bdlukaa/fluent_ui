@@ -170,17 +170,17 @@ class _DropDownButtonState extends State<DropDownButton> {
               widget.disabled ? null : flyoutController.open,
             ) ??
             Button(
+              onPressed: widget.disabled ? null : flyoutController.open,
+              autofocus: widget.autofocus,
+              focusNode: widget.focusNode,
+              // ignore: deprecated_member_use_from_same_package
+              style: widget.buttonStyle,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: buttonChildren,
               ),
-              onPressed: widget.disabled ? null : flyoutController.open,
-              autofocus: widget.autofocus,
-              focusNode: widget.focusNode,
-              // ignore: deprecated_member_use_from_same_package
-              style: widget.buttonStyle,
             );
       }),
       content: (context) {

@@ -90,8 +90,8 @@ class InfoBar extends StatelessWidget {
       if (this.content == null) return null;
       return DefaultTextStyle(
         style: FluentTheme.of(context).typography.body ?? const TextStyle(),
-        child: this.content!,
         softWrap: true,
+        child: this.content!,
       );
     }();
     final action = () {

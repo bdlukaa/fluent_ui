@@ -54,11 +54,11 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final _offsets = pane.effectiveItems._getPaneItemsOffsets(
+      final localOffsets = pane.effectiveItems._getPaneItemsOffsets(
         pane.paneKey,
       );
-      if (mounted && (offsets != _offsets)) {
-        offsets = _offsets;
+      if (mounted && (offsets != localOffsets)) {
+        offsets = localOffsets;
       }
     });
   }
