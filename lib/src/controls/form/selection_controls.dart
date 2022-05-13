@@ -23,7 +23,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     Offset selectionMidpoint,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
-    ClipboardStatusNotifier clipboardStatus,
+    ClipboardStatusNotifier? clipboardStatus,
     Offset? lastSecondaryTapDownPosition,
   ) {
     return _FluentTextSelectionControlsToolbar(
@@ -100,7 +100,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.lastSecondaryTapDownPosition,
   }) : super(key: key);
 
-  final ClipboardStatusNotifier clipboardStatus;
+  final ClipboardStatusNotifier? clipboardStatus;
   final List<TextSelectionPoint> endpoints;
   final Rect globalEditableRegion;
   final VoidCallback? handleCopy;
