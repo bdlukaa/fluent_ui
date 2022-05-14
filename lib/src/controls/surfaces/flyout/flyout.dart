@@ -64,10 +64,9 @@ enum FlyoutOpenMode {
 
   /// The flyout will be opened when the user long-press the child
   longPress,
-  
+
   /// The flyout will opened when the user secondary press the child
   secondaryPress,
-
 }
 
 /// A flyout is a light dismiss container that can show arbitrary UI as its
