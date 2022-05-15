@@ -1773,6 +1773,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Russian
 - Simplified Chinese
 - Spanish
+- Italian
 
 ## Contribution
 
