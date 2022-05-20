@@ -5,7 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 /// An application that uses fluent design.
 ///
 /// A convenience widget that wraps a number of widgets that are commonly
-/// required for fluent design applications.
+/// required for fluent design applications. It builds upon a [WidgetsApp] by
+/// adding fluent-design specific functionality, such as [AnimatedFluentTheme].
 ///
 /// The [FluentApp] configures the top-level [Navigator] to search for routes
 /// in the following order:
@@ -29,6 +30,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 ///
 /// If [home], [routes], [onGenerateRoute], and [onUnknownRoute] are all null,
 /// and [builder] is not null, then no [Navigator] is created.
+///
+/// See also:
+///
+///  * [NavigationView], to provide fluent app-wide navigation
+///  * [Navigator], which is used to manage the app's stack of pages.
+///  * [WidgetsApp], which defines the basic app elements but does not depend on
+/// the fluent library.
 class FluentApp extends StatefulWidget {
   /// Creates a FluentApp.
   ///
