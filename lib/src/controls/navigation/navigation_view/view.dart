@@ -187,34 +187,6 @@ class NavigationViewState extends State<NavigationView> {
       return theme.backgroundColor;
     }
 
-    Widget appBar = () {
-      if (widget.appBar != null) {
-        final minimalLeading = PaneItem(
-          title: Text(!_minimalPaneOpen
-              ? localizations.openNavigationTooltip
-              : localizations.closeNavigationTooltip),
-          icon: const Icon(FluentIcons.global_nav_button),
-        ).build(
-          context,
-          false,
-          () async {
-            setState(() => _minimalPaneOpen = !_minimalPaneOpen);
-          },
-          displayMode: PaneDisplayMode.compact,
-        );
-        return _NavigationAppBar(
-          appBar: widget.appBar!,
-          additionalLeading: widget.pane?.displayMode == PaneDisplayMode.minimal
-              ? minimalLeading
-              : null,
-        );
-      }
-      return LayoutBuilder(
-        builder: (context, constraints) =>
-            SizedBox(width: constraints.maxWidth, height: 0),
-      );
-    }();
-
     return LayoutBuilder(builder: (context, consts) {
       var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
 
@@ -247,6 +219,37 @@ class NavigationViewState extends State<NavigationView> {
       }
 
       assert(displayMode != PaneDisplayMode.auto);
+
+      Widget appBar = () {
+        if (widget.appBar != null) {
+          final minimalLeading = PaneItem(
+            title: Text(
+              !_minimalPaneOpen
+                  ? localizations.openNavigationTooltip
+                  : localizations.closeNavigationTooltip,
+            ),
+            icon: const Icon(FluentIcons.global_nav_button),
+          ).build(
+            context,
+            false,
+            () async {
+              setState(() => _minimalPaneOpen = !_minimalPaneOpen);
+            },
+            displayMode: PaneDisplayMode.compact,
+          );
+          return _NavigationAppBar(
+            appBar: widget.appBar!,
+            additionalLeading:
+                displayMode == PaneDisplayMode.minimal ? minimalLeading : null,
+          );
+        }
+        return LayoutBuilder(
+          builder: (context, constraints) => SizedBox(
+            width: constraints.maxWidth,
+            height: 0,
+          ),
+        );
+      }();
 
       late Widget paneResult;
       if (widget.pane != null) {
@@ -598,56 +601,54 @@ class NavigationAppBar with Diagnosticable {
     ));
   }
 
-  static Widget buildLeading(
-    BuildContext context,
-    NavigationAppBar appBar, [
-    bool imply = true,
-  ]) {
-    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-    final bool canPop = parentRoute?.canPop ?? false;
-    late Widget widget;
-    if (appBar.leading != null) {
-      widget = Padding(
-        padding: const EdgeInsets.only(left: 12.0),
-        child: appBar.leading,
-      );
-    } else if (appBar.automaticallyImplyLeading && imply) {
-      assert(debugCheckHasFluentLocalizations(context));
-      assert(debugCheckHasFluentTheme(context));
-      final localizations = FluentLocalizations.of(context);
-      final onPressed = canPop ? () => Navigator.maybePop(context) : null;
-      widget = NavigationPaneTheme(
-        data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-          unselectedIconColor: ButtonState.resolveWith((states) {
-            if (states.isDisabled) {
-              return ButtonThemeData.buttonColor(
-                FluentTheme.of(context).brightness,
+  Widget _buildLeading([bool imply = true]) {
+    return Builder(builder: (context) {
+      final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+      final bool canPop = parentRoute?.canPop ?? false;
+      late Widget widget;
+      if (leading != null) {
+        widget = Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: leading,
+        );
+      } else if (automaticallyImplyLeading && imply) {
+        assert(debugCheckHasFluentLocalizations(context));
+        assert(debugCheckHasFluentTheme(context));
+        final localizations = FluentLocalizations.of(context);
+        final onPressed = canPop ? () => Navigator.maybePop(context) : null;
+        widget = NavigationPaneTheme(
+          data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
+            unselectedIconColor: ButtonState.resolveWith((states) {
+              if (states.isDisabled) {
+                return ButtonThemeData.buttonColor(
+                  FluentTheme.of(context).brightness,
+                  states,
+                );
+              }
+              return ButtonThemeData.uncheckedInputColor(
+                FluentTheme.of(context),
                 states,
-              );
-            }
-            return ButtonThemeData.uncheckedInputColor(
-              FluentTheme.of(context),
-              states,
-            ).basedOnLuminance();
-          }),
-        )),
-        child: Builder(
-          builder: (context) => PaneItem(
-            icon: const Icon(FluentIcons.back, size: 14.0),
-            title: Text(localizations.backButtonTooltip),
-          ).build(
-            context,
-            false,
-            onPressed,
-            displayMode: PaneDisplayMode.compact,
+              ).basedOnLuminance();
+            }),
+          )),
+          child: Builder(
+            builder: (context) => PaneItem(
+              icon: const Icon(FluentIcons.back, size: 14.0),
+              title: Text(localizations.backButtonTooltip),
+            ).build(
+              context,
+              false,
+              onPressed,
+              displayMode: PaneDisplayMode.compact,
+            ),
           ),
-        ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
-    widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
-    return widget;
+        );
+      } else {
+        return const SizedBox.shrink();
+      }
+      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+      return widget;
+    });
   }
 }
 
@@ -655,7 +656,7 @@ class _NavigationAppBar extends StatelessWidget {
   const _NavigationAppBar({
     Key? key,
     required this.appBar,
-    this.additionalLeading,
+    required this.additionalLeading,
   }) : super(key: key);
 
   final NavigationAppBar appBar;
@@ -667,11 +668,7 @@ class _NavigationAppBar extends StatelessWidget {
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
             PaneDisplayMode.top;
-    final leading = NavigationAppBar.buildLeading(
-      context,
-      appBar,
-      displayMode != PaneDisplayMode.top,
-    );
+    final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
         assert(debugCheckHasFluentTheme(context));

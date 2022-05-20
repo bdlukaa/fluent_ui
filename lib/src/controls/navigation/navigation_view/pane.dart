@@ -102,8 +102,9 @@ class NavigationPane with Diagnosticable {
 
   final NavigationPaneWidget? customPane;
 
-  /// The menu button used by this pane. If null and [onDisplayModeRequested]
-  /// is null
+  /// The menu button used by this pane.
+  ///
+  /// If null, [buildMenuButton] is used
   final Widget? menuButton;
 
   /// The size of the pane in its various mode.
