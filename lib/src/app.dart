@@ -282,9 +282,9 @@ class FluentApp extends StatefulWidget {
   /// ```dart
   /// Widget build(BuildContext context) {
   ///   return FluentApp(
-  ///     shortcuts: <LogicalKeySet, Intent>{
-  ///       ...WidgetsApp.defaultShortcuts,
-  ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+  ///     shortcuts: <ShortcutActivator, Intent>{
+  ///       ... WidgetsApp.defaultShortcuts,
+  ///       const SingleActivator(LogicalKeyboardKey.select): const ActivateIntent(),
   ///     },
   ///     color: const Color(0xFFFF0000),
   ///     builder: (BuildContext context, Widget? child) {
@@ -295,7 +295,7 @@ class FluentApp extends StatefulWidget {
   /// ```
   /// {@end-tool}
   /// {@macro flutter.widgets.widgetsApp.shortcuts.seeAlso}
-  final Map<LogicalKeySet, Intent>? shortcuts;
+  final Map<ShortcutActivator, Intent>? shortcuts;
 
   /// {@macro flutter.widgets.widgetsApp.actions}
   /// {@tool snippet}
@@ -340,12 +340,6 @@ class FluentApp extends StatefulWidget {
   ///  * [ScrollConfiguration], which controls how [Scrollable] widgets behave
   ///    in a subtree.
   final ScrollBehavior scrollBehavior;
-
-  static bool showPerformanceOverlayOverride = false;
-
-  static bool debugShowWidgetInspectorOverride = false;
-
-  static bool debugAllowBannerOverride = true;
 
   /// {@macro flutter.widgets.widgetsApp.useInheritedMediaQuery}
   final bool useInheritedMediaQuery;
