@@ -661,7 +661,7 @@ class TooltipThemeData with Diagnosticable {
   ///
   /// Once the pointer leaves the widget, the tooltip will immediately disappear.
   ///
-  /// Defaults to 0 milliseconds (tooltips are shown immediately upon hover).
+  /// Defaults to 1 second.
   final Duration? waitDuration;
 
   /// The length of time that the tooltip will be shown after a long press is released.
