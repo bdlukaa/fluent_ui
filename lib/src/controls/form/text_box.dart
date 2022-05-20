@@ -68,6 +68,7 @@ class TextBox extends StatefulWidget {
   const TextBox({
     Key? key,
     this.controller,
+    this.initialValue,
     this.focusNode,
     this.padding = kTextBoxPadding,
     this.clipBehavior = Clip.antiAlias,
@@ -186,6 +187,9 @@ class TextBox extends StatefulWidget {
   ///
   /// If null, this widget will create its own [TextEditingController].
   final TextEditingController? controller;
+
+  /// An optional value to initialize the form field to, or null otherwise.
+  final String? initialValue;
 
   /// Defines the keyboard focus for this widget.
   ///
@@ -632,7 +636,11 @@ class _TextBoxState extends State<TextBox>
     _selectionGestureDetectorBuilder =
         _TextBoxSelectionGestureDetectorBuilder(state: this);
     if (widget.controller == null) {
-      _createLocalController();
+      _createLocalController(
+        widget.initialValue == null
+            ? null
+            : TextEditingValue(text: widget.initialValue!),
+      );
     }
     _effectiveFocusNode.addListener(_handleFocusChanged);
   }
