@@ -885,41 +885,58 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
         duration: Duration.zero,
         curve: Curves.linear,
         width: paneWidth,
-        child: Column(key: widget.pane.paneKey, children: [
-          Container(
-            margin: widget.pane.autoSuggestBox != null
-                ? EdgeInsets.zero
-                : topPadding,
-            height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
-            child: () {
-              if (widget.pane.header != null) {
-                return Row(children: [
-                  menuButton,
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: widget.pane.header!,
-                    ),
-                  ),
-                ]);
-              } else {
-                return menuButton;
-              }
-            }(),
-          ),
-          if (widget.pane.autoSuggestBox != null)
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          key: widget.pane.paneKey,
+          children: [
             Container(
-              padding: theme.iconPadding ?? EdgeInsets.zero,
-              height: 41.0,
-              alignment: Alignment.center,
-              margin: topPadding,
-              child: widget.pane.autoSuggestBox!,
+              margin: widget.pane.autoSuggestBox != null
+                  ? EdgeInsets.zero
+                  : topPadding,
+              height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
+              child: () {
+                if (widget.pane.header != null) {
+                  return Row(children: [
+                    menuButton,
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: widget.pane.header!,
+                      ),
+                    ),
+                  ]);
+                } else {
+                  return menuButton;
+                }
+              }(),
             ),
-          Expanded(
-            child: ListView(
-              key: widget.listKey,
-              primary: true,
-              children: widget.pane.items.map((item) {
+            if (widget.pane.autoSuggestBox != null)
+              Container(
+                padding: theme.iconPadding ?? EdgeInsets.zero,
+                height: 41.0,
+                alignment: Alignment.center,
+                margin: topPadding,
+                child: widget.pane.autoSuggestBox!,
+              ),
+            Expanded(
+              child: ListView(
+                key: widget.listKey,
+                primary: true,
+                children: widget.pane.items.map((item) {
+                  return _OpenNavigationPane.buildItem(
+                    context,
+                    widget.pane,
+                    item,
+                    widget.onItemSelected,
+                  );
+                }).toList(),
+              ),
+            ),
+            ListView(
+              primary: false,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: widget.pane.footerItems.map((item) {
                 return _OpenNavigationPane.buildItem(
                   context,
                   widget.pane,
@@ -928,21 +945,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 );
               }).toList(),
             ),
-          ),
-          ListView(
-            primary: false,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: widget.pane.footerItems.map((item) {
-              return _OpenNavigationPane.buildItem(
-                context,
-                widget.pane,
-                item,
-                widget.onItemSelected,
-              );
-            }).toList(),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
