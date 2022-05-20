@@ -137,8 +137,7 @@ class TextFormBox extends FormField<String> {
             }
 
             return FormRow(
-              padding:
-                  EdgeInsets.only(bottom: (field.errorText == null) ? 16.0 : 0),
+              padding: EdgeInsets.zero,
               error: (field.errorText == null) ? null : Text(field.errorText!),
               child: UnmanagedRestorationScope(
                 bucket: field.bucket,

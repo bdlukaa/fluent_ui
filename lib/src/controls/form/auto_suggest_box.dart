@@ -223,6 +223,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
 
+  Size _boxSize = Size.zero;
+
   @override
   void initState() {
     super.initState();
@@ -230,6 +232,18 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     controller.addListener(() {
       if (!mounted) return;
       if (controller.text.length < 2) setState(() {});
+
+      // Update the overlay when the text box size has changed
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+
+        if (_boxSize != box.size) {
+          _dismissOverlay();
+          setState(() {});
+          _showOverlay();
+          _boxSize = box.size;
+        }
+      });
     });
     focusNode.addListener(_handleFocusChanged);
   }
@@ -352,8 +366,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 focusNode: focusNode,
                 placeholder: widget.placeholder,
                 placeholderStyle: widget.placeholderStyle,
-                clipBehavior:
-                    _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 prefix: widget.leadingIcon,
                 suffix: suffix,
                 suffixMode: OverlayVisibilityMode.always,
@@ -378,8 +391,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 focusNode: focusNode,
                 placeholder: widget.placeholder,
                 placeholderStyle: widget.placeholderStyle,
-                clipBehavior:
-                    _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 prefix: widget.leadingIcon,
                 suffix: suffix,
                 suffixMode: OverlayVisibilityMode.always,
