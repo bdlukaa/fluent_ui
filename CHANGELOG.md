@@ -1,5 +1,29 @@
 Date format: DD/MM/YYYY
 
+## [3.x.0]
+
+- Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
+- **BREAKING** `Map<ShortcutActivator, Intent>?` is now the typed used on `FluentApp.shortcuts` ([#351](https://github.com/bdlukaa/fluent_ui/pull/351))
+- `TextBox` review ([#352](https://github.com/bdlukaa/fluent_ui/pull/352)):
+  - Added `.initialValue`, `.selectionControls`, `.mouseCursor`, `.textDirection`, `.scribbleEnabled` and `.enableIMEPersonalizedLearning` to `TextBox`
+  - Added `AutoFillClient` to `TextBox`
+  - Added `UnmanagedRestorationScope` to `TextFormBox`
+- Added `AutoSuggestBox.form`, that uses `TextFormBox` instead of `TextBox` ([#353](https://github.com/bdlukaa/fluent_ui/pull/353))
+- Do not overflow when text is too long on `Chip` ([#322](https://github.com/bdlukaa/fluent_ui/issues/322))
+- Add RTL support for `Chip`
+- `Card` updates:
+  - Updated card's background colors
+  - **BREAKING** Removed `Card.elevation`
+  - Added `Card.margin`, which is the margin around the card
+- `InfoBar` updates:
+  - Added `InfoBar.isIconVisible`
+  - Updated its design to follow the new Win UI 3 guidelines
+- Updated `Combobox` and `Button` designs
+
+## [3.12.0] - Flutter 3.0 - [13/05/2022]
+
+- Add support for Flutter 3.0 (Fixes [#186](https://github.com/bdlukaa/fluent_ui/issues/186), [#327](https://github.com/bdlukaa/fluent_ui/issues/327))
+
 ## [3.11.1] - [30/04/2022]
 
 - Reworked `DropDownButton` ([#297](https://github.com/bdlukaa/fluent_ui/pull/297)):

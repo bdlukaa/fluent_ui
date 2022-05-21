@@ -174,7 +174,7 @@ class _BaseButtonState extends State<BaseButton> {
             ),
           ),
         );
-        return FocusBorder(child: result, focused: states.isFocused);
+        return FocusBorder(focused: states.isFocused, child: result);
       },
     );
 

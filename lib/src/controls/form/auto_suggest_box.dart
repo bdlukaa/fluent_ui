@@ -21,9 +21,10 @@ enum TextChangedReason {
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
-///   * [TextBox], which is used by this widget to enter user text input
-///   * [Overlay], which is used to show the suggestion popup
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
+///  * [TextBox], which is used by this widget to enter user text input
+///  * [TextFormBox], which is used by this widget by Form
+///  * [Overlay], which is used to show the suggestion popup
 class AutoSuggestBox extends StatefulWidget {
   /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
@@ -50,6 +51,36 @@ class AutoSuggestBox extends StatefulWidget {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+  })  : autovalidateMode = AutovalidateMode.disabled,
+        validator = null,
+        super(key: key);
+
+  const AutoSuggestBox.form({
+    Key? key,
+    required this.items,
+    this.controller,
+    this.onChanged,
+    this.onSelected,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.clearButtonEnabled = true,
+    this.placeholder,
+    this.placeholderStyle,
+    this.style,
+    this.decoration,
+    this.foregroundDecoration,
+    this.highlightColor,
+    this.cursorColor,
+    this.cursorHeight,
+    this.cursorRadius,
+    this.cursorWidth = 1.5,
+    this.showCursor,
+    this.keyboardAppearance,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
+    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.validator,
+    this.autovalidateMode = AutovalidateMode.disabled,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -148,6 +179,14 @@ class AutoSuggestBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.scrollPadding}
   final EdgeInsets scrollPadding;
 
+  /// An optional method that validates an input. Returns an error string to
+  /// display if the input is invalid, or null otherwise.
+  final FormFieldValidator<String>? validator;
+
+  /// Used to enable/disable this form field auto validation and update its
+  /// error text.
+  final AutovalidateMode autovalidateMode;
+
   @override
   _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
 
@@ -184,7 +223,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
 
-  final clearGlobalKey = GlobalKey();
+  Size _boxSize = Size.zero;
 
   @override
   void initState() {
@@ -193,6 +232,18 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     controller.addListener(() {
       if (!mounted) return;
       if (controller.text.length < 2) setState(() {});
+
+      // Update the overlay when the text box size has changed
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+
+        if (_boxSize != box.size) {
+          _dismissOverlay();
+          setState(() {});
+          _showOverlay();
+          _boxSize = box.size;
+        }
+      });
     });
     focusNode.addListener(_handleFocusChanged);
   }
@@ -274,10 +325,33 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     }
   }
 
+  void _onChanged(String text) {
+    widget.onChanged?.call(text, TextChangedReason.userInput);
+    _showOverlay();
+  }
+
+  /// Whether a [TextFormBox] is used instead of a [TextBox]
+  bool get useForm => widget.validator != null;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+
+    final suffix = Row(mainAxisSize: MainAxisSize.min, children: [
+      if (widget.trailingIcon != null) widget.trailingIcon!,
+      if (widget.clearButtonEnabled && controller.text.isNotEmpty)
+        Padding(
+          padding: const EdgeInsetsDirectional.only(start: 2.0),
+          child: IconButton(
+            icon: const Icon(FluentIcons.chrome_close),
+            onPressed: () {
+              controller.clear();
+              focusNode.unfocus();
+            },
+          ),
+        ),
+    ]);
 
     return CompositedTransformTarget(
       link: _layerLink,
@@ -285,49 +359,56 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
         actions: {
           DirectionalFocusIntent: _DirectionalFocusAction(),
         },
-        child: TextBox(
-          key: _textBoxKey,
-          controller: controller,
-          focusNode: focusNode,
-          placeholder: widget.placeholder,
-          placeholderStyle: widget.placeholderStyle,
-          clipBehavior:
-              _entry != null ? Clip.none : Clip.antiAliasWithSaveLayer,
-          prefix: widget.leadingIcon,
-          clearGlobalKey: clearGlobalKey,
-          suffix: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (widget.trailingIcon != null) widget.trailingIcon!,
-            if (widget.clearButtonEnabled && controller.text.isNotEmpty)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(start: 2.0),
-                child: IconButton(
-                  key: clearGlobalKey,
-                  icon: const Icon(FluentIcons.chrome_close),
-                  onPressed: () {
-                    controller.clear();
-                    focusNode.unfocus();
-                  },
-                ),
+        child: useForm
+            ? TextFormBox(
+                key: _textBoxKey,
+                controller: controller,
+                focusNode: focusNode,
+                placeholder: widget.placeholder,
+                placeholderStyle: widget.placeholderStyle,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                prefix: widget.leadingIcon,
+                suffix: suffix,
+                suffixMode: OverlayVisibilityMode.always,
+                onChanged: _onChanged,
+                style: widget.style,
+                decoration: widget.decoration,
+                highlightColor: widget.highlightColor,
+                cursorColor: widget.cursorColor,
+                cursorHeight: widget.cursorHeight,
+                cursorRadius: widget.cursorRadius ?? const Radius.circular(2.0),
+                cursorWidth: widget.cursorWidth,
+                showCursor: widget.showCursor,
+                scrollPadding: widget.scrollPadding,
+                selectionHeightStyle: widget.selectionHeightStyle,
+                selectionWidthStyle: widget.selectionWidthStyle,
+                validator: widget.validator,
+                autovalidateMode: widget.autovalidateMode,
+              )
+            : TextBox(
+                key: _textBoxKey,
+                controller: controller,
+                focusNode: focusNode,
+                placeholder: widget.placeholder,
+                placeholderStyle: widget.placeholderStyle,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                prefix: widget.leadingIcon,
+                suffix: suffix,
+                suffixMode: OverlayVisibilityMode.always,
+                onChanged: _onChanged,
+                style: widget.style,
+                decoration: widget.decoration,
+                foregroundDecoration: widget.foregroundDecoration,
+                highlightColor: widget.highlightColor,
+                cursorColor: widget.cursorColor,
+                cursorHeight: widget.cursorHeight,
+                cursorRadius: widget.cursorRadius,
+                cursorWidth: widget.cursorWidth,
+                showCursor: widget.showCursor,
+                scrollPadding: widget.scrollPadding,
+                selectionHeightStyle: widget.selectionHeightStyle,
+                selectionWidthStyle: widget.selectionWidthStyle,
               ),
-          ]),
-          suffixMode: OverlayVisibilityMode.always,
-          onChanged: (text) {
-            widget.onChanged?.call(text, TextChangedReason.userInput);
-            _showOverlay();
-          },
-          style: widget.style,
-          decoration: widget.decoration,
-          foregroundDecoration: widget.foregroundDecoration,
-          highlightColor: widget.highlightColor,
-          cursorColor: widget.cursorColor,
-          cursorHeight: widget.cursorHeight,
-          cursorRadius: widget.cursorRadius,
-          cursorWidth: widget.cursorWidth,
-          showCursor: widget.showCursor,
-          scrollPadding: widget.scrollPadding,
-          selectionHeightStyle: widget.selectionHeightStyle,
-          selectionWidthStyle: widget.selectionWidthStyle,
-        ),
       ),
     );
   }
@@ -481,10 +562,6 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
             ),
             alignment: AlignmentDirectional.centerStart,
             child: EntrancePageTransition(
-              child: Text(
-                widget.text,
-                style: theme.typography.body,
-              ),
               animation: Tween<double>(
                 begin: 0.75,
                 end: 1.0,
@@ -493,6 +570,10 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
                 curve: Curves.easeOut,
               )),
               vertical: true,
+              child: Text(
+                widget.text,
+                style: theme.typography.body,
+              ),
             ),
           ),
           if (states.isFocused)

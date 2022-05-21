@@ -11,6 +11,7 @@ import 'screens/colors.dart';
 import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
+import 'screens/info_bars.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
 import 'screens/commandbars.dart';
@@ -52,7 +53,7 @@ void main() async {
         windowButtonVisibility: false,
       );
       await windowManager.setSize(const Size(755, 545));
-      await windowManager.setMinimumSize(const Size(755, 545));
+      await windowManager.setMinimumSize(const Size(350, 600));
       await windowManager.center();
       await windowManager.show();
       await windowManager.setPreventClose(true);
@@ -168,8 +169,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         selected: index,
         onChanged: (i) => setState(() => index = i),
         size: const NavigationPaneSize(
-          openMinWidth: 250,
-          openMaxWidth: 320,
+          openMinWidth: 250.0,
+          openMaxWidth: 320.0,
         ),
         header: Container(
           height: kOneLineTileHeight,
@@ -228,6 +229,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             title: const Text('Flyouts'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.info),
+            title: const Text('InfoBar'),
+          ),
+          PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
@@ -266,6 +271,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const Mobile(),
         const CommandBars(),
         const FlyoutShowcase(),
+        const InfoBars(),
         const Others(),
         Settings(controller: settingsController),
       ]),

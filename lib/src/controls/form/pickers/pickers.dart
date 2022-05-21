@@ -36,6 +36,10 @@ Decoration kPickerDecorationBuilder(
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
     color: ButtonThemeData.buttonColor(theme.brightness, states),
+    border: Border.all(
+      width: 0.15,
+      color: theme.inactiveColor.withOpacity(0.2),
+    ),
   );
 }
 
@@ -99,9 +103,9 @@ class YesNoPickerControl extends StatelessWidget {
             margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: const Icon(FluentIcons.check_mark),
               onPressed: onChanged,
               style: buttonStyle,
+              child: const Icon(FluentIcons.check_mark),
             ),
           ),
         ),
@@ -110,9 +114,9 @@ class YesNoPickerControl extends StatelessWidget {
             margin: const EdgeInsets.all(4.0),
             height: kOneLineTileHeight / 1.2,
             child: Button(
-              child: const Icon(FluentIcons.chrome_close),
               onPressed: onCancel,
               style: buttonStyle,
+              child: const Icon(FluentIcons.chrome_close),
             ),
           ),
         ),
@@ -164,10 +168,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
+                    onPressed: onBackward,
                     child: const Center(
                       child: Icon(FluentIcons.caret_up_solid8),
                     ),
-                    onPressed: onBackward,
                   ),
                 ),
               if (show)
@@ -177,10 +181,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   right: 0,
                   height: kOneLineTileHeight,
                   child: Button(
+                    onPressed: onForward,
                     child: const Center(
                       child: Icon(FluentIcons.caret_down_solid8),
                     ),
-                    onPressed: onForward,
                   ),
                 ),
             ]),

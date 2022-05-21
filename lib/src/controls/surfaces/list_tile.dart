@@ -91,17 +91,17 @@ class ListTile extends StatelessWidget {
             children: [
               if (title != null)
                 DefaultTextStyle(
-                  child: title!,
                   style: (style.typography.body ?? const TextStyle()).copyWith(
                     fontSize: 16,
                   ),
                   overflow: TextOverflow.clip,
+                  child: title!,
                 ),
               if (subtitle != null)
                 DefaultTextStyle(
-                  child: subtitle!,
                   style: style.typography.caption ?? const TextStyle(),
                   overflow: TextOverflow.clip,
+                  child: subtitle!,
                 ),
             ],
           ),
@@ -167,9 +167,9 @@ class TappableListTile extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
-        final Color _tileColor = () {
-          if (tileColor != null) {
-            return tileColor!.resolve(states);
+        final Color tileColor = () {
+          if (this.tileColor != null) {
+            return this.tileColor!.resolve(states);
           } else if (states.isFocused) {
             return style.accentColor.resolve(context);
           }
@@ -182,7 +182,7 @@ class TappableListTile extends StatelessWidget {
           subtitle: subtitle,
           trailing: trailing,
           isThreeLine: isThreeLine,
-          tileColor: _tileColor,
+          tileColor: tileColor,
           shape: shape?.resolve(states),
         );
       },

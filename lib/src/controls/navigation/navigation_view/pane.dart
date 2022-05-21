@@ -102,8 +102,9 @@ class NavigationPane with Diagnosticable {
 
   final NavigationPaneWidget? customPane;
 
-  /// The menu button used by this pane. If null and [onDisplayModeRequested]
-  /// is null
+  /// The menu button used by this pane.
+  ///
+  /// If null, [buildMenuButton] is used
   final Widget? menuButton;
 
   /// The size of the pane in its various mode.
@@ -524,29 +525,22 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         Expanded(
           child: DynamicOverflow(
-            children: _localItemHold.map((index) {
-              final item = widget.pane.items[index];
-              return SizedBox(
-                height: height,
-                child: _buildItem(context, item),
-              );
-            }).toList(),
             overflowWidgetAlignment: MainAxisAlignment.start,
             overflowWidget: Flyout(
               controller: overflowController,
-              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
-                context,
-                false,
-                overflowController.open,
-                showTextOnTop: false,
-                displayMode: PaneDisplayMode.top,
-              ),
               placement: FlyoutPlacement.end,
               content: (context) => MenuFlyout(
                 items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
                   final item = widget.pane.items[i];
                   return buildMenuPaneItem(context, item);
                 }).toList(),
+              ),
+              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
+                context,
+                false,
+                overflowController.open,
+                showTextOnTop: false,
+                displayMode: PaneDisplayMode.top,
               ),
             ),
             overflowChangedCallback: (hiddenItems) {
@@ -565,6 +559,13 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 hiddenPaneItems = hiddenItems;
               });
             },
+            children: _localItemHold.map((index) {
+              final item = widget.pane.items[index];
+              return SizedBox(
+                height: height,
+                child: _buildItem(context, item),
+              );
+            }).toList(),
           ),
         ),
         if (widget.pane.autoSuggestBox != null)
@@ -603,12 +604,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     Key? key,
     required this.item,
     required this.onPressed,
-    this.selected = false,
   }) : super(key: key);
 
   final PaneItem item;
   final VoidCallback? onPressed;
-  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -653,9 +652,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
               padding: theme.iconPadding ?? EdgeInsets.zero,
               child: IconTheme.merge(
                 data: IconThemeData(
-                  color: (selected
-                          ? theme.selectedIconColor?.resolve(states)
-                          : theme.unselectedIconColor?.resolve(states)) ??
+                  color: theme.unselectedIconColor?.resolve(states) ??
                       baseStyle.color,
                   size: 16.0,
                 ),
@@ -889,41 +886,58 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
         duration: Duration.zero,
         curve: Curves.linear,
         width: paneWidth,
-        child: Column(key: widget.pane.paneKey, children: [
-          Container(
-            margin: widget.pane.autoSuggestBox != null
-                ? EdgeInsets.zero
-                : topPadding,
-            height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
-            child: () {
-              if (widget.pane.header != null) {
-                return Row(children: [
-                  menuButton,
-                  Expanded(
-                    child: Align(
-                      child: widget.pane.header!,
-                      alignment: Alignment.centerLeft,
-                    ),
-                  ),
-                ]);
-              } else {
-                return menuButton;
-              }
-            }(),
-          ),
-          if (widget.pane.autoSuggestBox != null)
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          key: widget.pane.paneKey,
+          children: [
             Container(
-              padding: theme.iconPadding ?? EdgeInsets.zero,
-              height: 41.0,
-              alignment: Alignment.center,
-              margin: topPadding,
-              child: widget.pane.autoSuggestBox!,
+              margin: widget.pane.autoSuggestBox != null
+                  ? EdgeInsets.zero
+                  : topPadding,
+              height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
+              child: () {
+                if (widget.pane.header != null) {
+                  return Row(children: [
+                    menuButton,
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: widget.pane.header!,
+                      ),
+                    ),
+                  ]);
+                } else {
+                  return menuButton;
+                }
+              }(),
             ),
-          Expanded(
-            child: ListView(
-              key: widget.listKey,
-              primary: true,
-              children: widget.pane.items.map((item) {
+            if (widget.pane.autoSuggestBox != null)
+              Container(
+                padding: theme.iconPadding ?? EdgeInsets.zero,
+                height: 41.0,
+                alignment: Alignment.center,
+                margin: topPadding,
+                child: widget.pane.autoSuggestBox!,
+              ),
+            Expanded(
+              child: ListView(
+                key: widget.listKey,
+                primary: true,
+                children: widget.pane.items.map((item) {
+                  return _OpenNavigationPane.buildItem(
+                    context,
+                    widget.pane,
+                    item,
+                    widget.onItemSelected,
+                  );
+                }).toList(),
+              ),
+            ),
+            ListView(
+              primary: false,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: widget.pane.footerItems.map((item) {
                 return _OpenNavigationPane.buildItem(
                   context,
                   widget.pane,
@@ -932,21 +946,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 );
               }).toList(),
             ),
-          ),
-          ListView(
-            primary: false,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: widget.pane.footerItems.map((item) {
-              return _OpenNavigationPane.buildItem(
-                context,
-                widget.pane,
-                item,
-                widget.onItemSelected,
-              );
-            }).toList(),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

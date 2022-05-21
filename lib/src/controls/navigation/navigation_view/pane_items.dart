@@ -349,6 +349,8 @@ class PaneItem extends NavigationPaneItem {
               borderRadius: BorderRadius.circular(4.0),
             ),
             child: FocusBorder(
+              focused: states.isFocused,
+              renderOutside: false,
               child: () {
                 final showTooltip = ((isTop && !showTextOnTop) || isCompact) &&
                     titleText.isNotEmpty &&
@@ -364,8 +366,6 @@ class PaneItem extends NavigationPaneItem {
 
                 return result();
               }(),
-              focused: states.isFocused,
-              renderOutside: false,
             ),
           ),
         );
@@ -472,11 +472,11 @@ class PaneItemHeader extends NavigationPaneItem {
       padding: theme.iconPadding ?? EdgeInsets.zero,
       child: DefaultTextStyle(
         style: theme.itemHeaderTextStyle ?? const TextStyle(),
-        child: header,
         softWrap: false,
         maxLines: 1,
         overflow: TextOverflow.fade,
         textAlign: TextAlign.left,
+        child: header,
       ),
     );
   }

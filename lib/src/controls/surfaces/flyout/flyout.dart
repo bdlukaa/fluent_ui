@@ -64,6 +64,9 @@ enum FlyoutOpenMode {
 
   /// The flyout will be opened when the user long-press the child
   longPress,
+
+  /// The flyout will opened when the user secondary press the child
+  secondaryPress,
 }
 
 /// A flyout is a light dismiss container that can show arbitrary UI as its
@@ -244,12 +247,12 @@ class _FlyoutState extends State<Flyout> {
   Widget build(BuildContext context) {
     final popup = PopUp(
       key: popupKey,
-      child: widget.child,
       content: widget.content,
       verticalOffset: widget.verticalOffset,
       horizontalOffset: widget.horizontalOffset,
       placement: widget.placement,
       position: widget.position,
+      child: widget.child,
     );
 
     switch (widget.openMode) {
@@ -282,6 +285,12 @@ class _FlyoutState extends State<Flyout> {
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onLongPress: controller.open,
+          child: popup,
+        );
+      case FlyoutOpenMode.secondaryPress:
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onSecondaryTap: controller.open,
           child: popup,
         );
     }

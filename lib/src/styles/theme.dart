@@ -60,7 +60,7 @@ class _FluentTheme extends InheritedTheme {
 
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return _FluentTheme(child: child, data: data);
+    return _FluentTheme(data: data, child: child);
   }
 }
 
@@ -137,8 +137,8 @@ class _AnimatedFluentThemeState
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
-      child: widget.child,
       data: _data!.evaluate(animation),
+      child: widget.child,
     );
   }
 
@@ -327,7 +327,7 @@ class ThemeData with Diagnosticable {
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??=
-        isLight ? Colors.white : Colors.white.withOpacity(0.025);
+        isLight ? const Color(0xFFf9f9f9) : Colors.white.withOpacity(0.025);
     acrylicBackgroundColor ??= isLight
         ? const Color.fromARGB(204, 255, 255, 255)
         : const Color(0x7F1e1e1e);
@@ -341,7 +341,7 @@ class ThemeData with Diagnosticable {
         ? const Color.fromRGBO(0, 0, 0, 0.4458)
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
-    cardColor ??= isLight ? const Color(0xFFf3f3f3) : const Color(0xFF2e2e2e);
+    cardColor ??= isLight ? const Color(0xFFfdfdfd) : const Color(0xFF323232);
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);

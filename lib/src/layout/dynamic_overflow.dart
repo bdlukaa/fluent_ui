@@ -612,7 +612,7 @@ class RenderDynamicOverflow extends RenderBox
       if (overflowChangedCallback != null) {
         // This will likely trigger setState in a parent widget,
         // so schedule to happen at the end of the frame...
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           overflowChangedCallback!(hiddenChildren);
         });
       }

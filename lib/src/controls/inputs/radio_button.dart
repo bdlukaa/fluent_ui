@@ -126,13 +126,16 @@ class RadioButton extends StatelessWidget {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
             const SizedBox(width: 6.0),
-            content!,
+            Flexible(child: content!),
           ]);
         }
         return Semantics(
           label: semanticLabel,
           selected: checked,
-          child: FocusBorder(focused: state.isFocused, child: child),
+          child: FocusBorder(
+            focused: state.isFocused,
+            child: child,
+          ),
         );
       },
     );

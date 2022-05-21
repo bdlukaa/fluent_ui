@@ -68,6 +68,7 @@ class TextBox extends StatefulWidget {
   const TextBox({
     Key? key,
     this.controller,
+    this.initialValue,
     this.focusNode,
     this.padding = kTextBoxPadding,
     this.clipBehavior = Clip.antiAlias,
@@ -88,6 +89,7 @@ class TextBox extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.textAlignVertical,
     this.readOnly = false,
+    this.textDirection,
     ToolbarOptions? toolbarOptions,
     this.showCursor,
     this.autofocus = false,
@@ -131,6 +133,10 @@ class TextBox extends StatefulWidget {
     this.foregroundDecoration,
     this.highlightColor,
     this.clearGlobalKey,
+    this.selectionControls,
+    this.mouseCursor,
+    this.scribbleEnabled = true,
+    this.enableIMEPersonalizedLearning = true,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -181,6 +187,9 @@ class TextBox extends StatefulWidget {
   ///
   /// If null, this widget will create its own [TextEditingController].
   final TextEditingController? controller;
+
+  /// An optional value to initialize the form field to, or null otherwise.
+  final String? initialValue;
 
   /// Defines the keyboard focus for this widget.
   ///
@@ -324,6 +333,9 @@ class TextBox extends StatefulWidget {
   ///
   /// If [highlightColor] is provided, this must not be provided
   final BoxDecoration? foregroundDecoration;
+
+  /// {@macro flutter.widgets.editableText.textDirection}
+  final TextDirection? textDirection;
 
   /// The highlight color of the text box.
   ///
@@ -491,6 +503,24 @@ class TextBox extends StatefulWidget {
 
   final GlobalKey? clearGlobalKey;
 
+  /// {@macro flutter.widgets.editableText.scribbleEnabled}
+  final bool scribbleEnabled;
+
+  /// {@macro flutter.services.TextInputConfiguration.enableIMEPersonalizedLearning}
+  final bool enableIMEPersonalizedLearning;
+
+  /// {@macro flutter.widgets.editableText.selectionControls}
+  final TextSelectionControls? selectionControls;
+
+  /// The cursor for a mouse pointer when it enters or is hovering over the
+  /// widget.
+  ///
+  /// The [mouseCursor] is the only property of [TextBox] that controls the
+  /// appearance of the mouse pointer. All other properties related to "cursor"
+  /// stand for the text cursor, which is usually a blinking vertical line at
+  /// the editing position.
+  final MouseCursor? mouseCursor;
+
   @override
   _TextBoxState createState() => _TextBoxState();
 
@@ -567,7 +597,7 @@ class TextBox extends StatefulWidget {
 
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
-    implements TextSelectionGestureDetectorBuilderDelegate {
+    implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
   final _localClearGlobalKey = GlobalKey();
   GlobalKey get _clearGlobalKey =>
       widget.clearGlobalKey ?? _localClearGlobalKey;
@@ -606,7 +636,11 @@ class _TextBoxState extends State<TextBox>
     _selectionGestureDetectorBuilder =
         _TextBoxSelectionGestureDetectorBuilder(state: this);
     if (widget.controller == null) {
-      _createLocalController();
+      _createLocalController(
+        widget.initialValue == null
+            ? null
+            : TextEditingValue(text: widget.initialValue!),
+      );
     }
     _effectiveFocusNode.addListener(_handleFocusChanged);
   }
@@ -671,10 +705,10 @@ class _TextBoxState extends State<TextBox>
     super.dispose();
   }
 
-  EditableTextState? get _editableText => editableTextKey.currentState;
+  EditableTextState get _editableText => editableTextKey.currentState!;
 
   void _requestKeyboard() {
-    _editableText?.requestKeyboard();
+    _editableText.requestKeyboard();
   }
 
   bool _shouldShowSelectionHandles(SelectionChangedCause? cause) {
@@ -694,7 +728,7 @@ class _TextBoxState extends State<TextBox>
   void _handleSelectionChanged(
       TextSelection selection, SelectionChangedCause? cause) {
     if (cause == SelectionChangedCause.longPress) {
-      _editableText?.bringIntoView(selection.base);
+      _editableText.bringIntoView(selection.base);
     }
     final bool willShowSelectionHandles = _shouldShowSelectionHandles(cause);
     if (willShowSelectionHandles != _showSelectionHandles) {
@@ -808,6 +842,30 @@ class _TextBoxState extends State<TextBox>
   }
 
   @override
+  void autofill(TextEditingValue newEditingValue) =>
+      _editableText.autofill(newEditingValue);
+
+  @override
+  String get autofillId => _editableText.autofillId;
+
+  @override
+  TextInputConfiguration get textInputConfiguration {
+    final List<String>? autofillHints =
+        widget.autofillHints?.toList(growable: false);
+    final AutofillConfiguration autofillConfiguration = autofillHints != null
+        ? AutofillConfiguration(
+            uniqueIdentifier: autofillId,
+            autofillHints: autofillHints,
+            currentEditingValue: _effectiveController.value,
+            hintText: widget.placeholder,
+          )
+        : AutofillConfiguration.disabled;
+
+    return _editableText.textInputConfiguration
+        .copyWith(autofillConfiguration: autofillConfiguration);
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasDirectionality(context));
@@ -918,7 +976,7 @@ class _TextBoxState extends State<TextBox>
             cursorColor: cursorColor,
             cursorOpacityAnimates: true,
             cursorOffset: cursorOffset,
-            paintCursorAboveText: false,
+            paintCursorAboveText: true,
             autocorrectionTextRectColor: selectionColor,
             backgroundCursorColor: disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
@@ -931,7 +989,14 @@ class _TextBoxState extends State<TextBox>
             enableInteractiveSelection: widget.enableInteractiveSelection,
             autofillHints: widget.autofillHints,
             restorationId: 'editable',
-            selectionControls: fluentTextSelectionControls,
+            selectionControls:
+                widget.selectionControls ?? fluentTextSelectionControls,
+            enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+            scribbleEnabled: widget.scribbleEnabled,
+            mouseCursor: widget.mouseCursor,
+            textDirection: widget.textDirection,
+            clipBehavior: widget.clipBehavior,
+            autofillClient: this,
           ),
         ),
       ),
@@ -1047,9 +1112,9 @@ class _TextBoxState extends State<TextBox>
           child: () {
             if (widget.header != null) {
               return InfoLabel(
-                child: listener,
                 label: widget.header!,
                 labelStyle: widget.headerStyle,
+                child: listener,
               );
             }
             return listener;

@@ -89,8 +89,8 @@ class Chip extends StatelessWidget {
             minWidth: 24,
           ),
           decoration: decoration?.resolve(states),
-          padding: EdgeInsets.only(
-            left: spacing + visualDensity.horizontal,
+          padding: EdgeInsetsDirectional.only(
+            start: spacing + visualDensity.horizontal,
             top: spacing,
             bottom: spacing,
           ),
@@ -105,16 +105,20 @@ class Chip extends StatelessWidget {
                   curve: FluentTheme.of(context).animationCurve,
                   opacity: isEnabled || _type == _ChipType.selected ? 1.0 : 0.6,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                        right: spacing + visualDensity.horizontal),
+                    padding: EdgeInsetsDirectional.only(
+                      end: spacing + visualDensity.horizontal,
+                    ),
                     child: image,
                   ),
                 ),
               if (text != null)
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: spacing + visualDensity.horizontal),
-                  child: text,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      end: spacing + visualDensity.horizontal,
+                    ),
+                    child: text,
+                  ),
                 ),
             ]),
           ),

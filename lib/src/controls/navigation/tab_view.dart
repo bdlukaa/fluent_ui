@@ -240,7 +240,7 @@ class _TabViewState extends State<TabView> {
     double preferredTabWidth,
   ) {
     final Tab tab = widget.tabs[index];
-    final _tab = _Tab(
+    final tabWidget = _Tab(
       tab,
       key: ValueKey<int>(index),
       reorderIndex: widget.isReorderEnabled ? index : null,
@@ -256,9 +256,9 @@ class _TabViewState extends State<TabView> {
       onTertiaryTapUp: (_) => tab.onClosed?.call(),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         if (widget.tabWidthBehavior == TabWidthBehavior.equal)
-          Expanded(child: _tab)
+          Expanded(child: tabWidget)
         else
-          Flexible(child: _tab),
+          Flexible(child: tabWidget),
         divider(index),
       ]),
     );
@@ -585,7 +585,6 @@ class _Tab extends StatefulWidget {
     Key? key,
     this.onPressed,
     required this.selected,
-    this.focusNode,
     this.reorderIndex,
     this.animationDuration = Duration.zero,
     this.animationCurve = Curves.linear,
@@ -596,7 +595,6 @@ class _Tab extends StatefulWidget {
   final Tab tab;
   final bool selected;
   final VoidCallback? onPressed;
-  final FocusNode? focusNode;
   final int? reorderIndex;
   final Duration animationDuration;
   final Curve animationCurve;
@@ -650,7 +648,6 @@ class __TabState extends State<_Tab>
     return HoverButton(
       key: widget.tab.key,
       semanticLabel: widget.tab.semanticLabel ?? text,
-      focusNode: widget.focusNode,
       onPressed: widget.onPressed,
       builder: (context, states) {
         final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
@@ -733,8 +730,8 @@ class __TabState extends State<_Tab>
             );
             if (widget.reorderIndex != null) {
               return ReorderableDragStartListener(
-                child: result,
                 index: widget.reorderIndex!,
+                child: result,
               );
             }
             return result;
@@ -743,8 +740,8 @@ class __TabState extends State<_Tab>
         if (text != null) {
           child = Tooltip(
             message: text,
-            child: child,
             style: const TooltipThemeData(preferBelow: true),
+            child: child,
           );
         }
         if (widget.selected) {

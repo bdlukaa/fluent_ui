@@ -116,7 +116,7 @@ class _NavigationBodyState extends State<NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final _body = InheritedNavigationView.maybeOf(context);
+    final body = InheritedNavigationView.maybeOf(context);
     final theme = FluentTheme.of(context);
     final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
     return Container(
@@ -135,21 +135,21 @@ class _NavigationBodyState extends State<NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
           bool useDrillTransition = true;
-          if (_body != null && _body.displayMode != null) {
-            if (_body.displayMode! == PaneDisplayMode.top) {
+          if (body != null && body.displayMode != null) {
+            if (body.displayMode! == PaneDisplayMode.top) {
               useDrillTransition = false;
             }
           }
           if (useDrillTransition) {
             return DrillInPageTransition(
-              child: child,
               animation: animation,
+              child: child,
             );
           } else {
             return EntrancePageTransition(
-              child: child,
               animation: animation,
               vertical: true,
+              child: child,
             );
           }
         },
@@ -221,12 +221,12 @@ class InheritedNavigationView extends InheritedWidget {
       final current = InheritedNavigationView.maybeOf(context);
       return InheritedNavigationView(
         key: key,
-        child: child,
         displayMode: displayMode ?? current?.displayMode,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
         oldIndex: oldIndex ?? current?.oldIndex ?? 0,
+        child: child,
       );
     });
   }

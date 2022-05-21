@@ -133,11 +133,15 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('de'),
   Locale('en'),
   Locale('es'),
+  Locale('fa'),
   Locale('fr'),
   Locale('hi'),
+  Locale('it'),
+  Locale('nl'),
   Locale('pt'),
   Locale('ru'),
   Locale('zh'),
+  Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
 ];
 
 /// Strings for the fluent widgets.
@@ -212,7 +216,6 @@ class _FluentLocalizationsDelegate
   @override
   bool isSupported(Locale locale) {
     return DefaultFluentLocalizations.supports(locale);
-    // defaultSupportedLocales.contains(locale);
   }
 
   @override
@@ -224,5 +227,5 @@ class _FluentLocalizationsDelegate
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
 
   @override
-  String toString() => DefaultFluentLocalizations.delegate.toString();
+  String toString() => 'DefaultMaterialLocalizations.delegate(en_US)';
 }

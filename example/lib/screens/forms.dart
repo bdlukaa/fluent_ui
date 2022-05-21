@@ -97,7 +97,7 @@ class _FormsState extends State<Forms> {
           ),
         ]),
         const SizedBox(height: 20),
-        Row(children: [
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Expanded(
             child: TextBox(
               readOnly: true,
@@ -114,7 +114,13 @@ class _FormsState extends State<Forms> {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: AutoSuggestBox(
+            child: AutoSuggestBox.form(
+              autovalidateMode: AutovalidateMode.always,
+              validator: (t) {
+                if (t == null || t.isEmpty) return 'emtpy';
+
+                return null;
+              },
               items: values,
               placeholder: 'Pick a color',
               trailingIcon: IconButton(
