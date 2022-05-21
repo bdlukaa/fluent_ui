@@ -9,6 +9,8 @@ Date format: DD/MM/YYYY
   - Added `AutoFillClient` to `TextBox`
   - Added `UnmanagedRestorationScope` to `TextFormBox`
 - Added `AutoSuggestBox.form`, that uses `TextFormBox` instead of `TextBox` ([#353](https://github.com/bdlukaa/fluent_ui/pull/353))
+- Do not overflow when text is too long on `Chip` ([#322](https://github.com/bdlukaa/fluent_ui/issues/322))
+- Add RTL support for `Chip`
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 
