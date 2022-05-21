@@ -18,7 +18,7 @@ ShapeBorder kPickerShape(BuildContext context) {
   return RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(4.0),
     side: BorderSide(
-      color: FluentTheme.of(context).scaffoldBackgroundColor,
+      color: FluentTheme.of(context).inactiveBackgroundColor,
       width: 0.6,
     ),
   );
@@ -272,10 +272,28 @@ class _PickerState extends State<Picker> {
       barrierDismissible: true,
       fullscreenDialog: true,
       pageBuilder: (context, primary, __) {
+        final screenHeight = MediaQuery.of(context).size.height;
+
+        // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
+        // value from the Win UI 3 Gallery
+        final centeredOffset = widget.pickerHeight * 0.41;
+        // the popup menu y is the [button y] - [y of highlight tile]
+        double y = childOffset.dy - centeredOffset;
+
+        // if the popup menu [y] + picker height overlaps the screen height, make
+        // it to the bottom of the screen
+        if (y + widget.pickerHeight > screenHeight) {
+          y = screenHeight - widget.pickerHeight;
+          // if the popup menu [y] is off screen on the top, make it to the top of
+          // the screen
+        } else if (y < 0) {
+          y = 0;
+        }
+
         return Stack(children: [
           Positioned(
             left: childOffset.dx,
-            top: childOffset.dy - (widget.pickerHeight * 0.41),
+            top: y,
             height: widget.pickerHeight,
             width: box.size.width,
             child: FadeTransition(
