@@ -125,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   int index = 0;
 
-  final settingsController = ScrollController();
   final viewKey = GlobalKey();
 
   @override
@@ -137,7 +136,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   void dispose() {
     windowManager.removeListener(this);
-    settingsController.dispose();
     super.dispose();
   }
 
@@ -257,17 +255,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ],
       ),
-      content: NavigationBody(index: index, children: [
-        const InputsPage(),
-        const Forms(),
-        const ColorsPage(),
-        const IconsPage(),
-        const TypographyPage(),
-        const Mobile(),
-        const CommandBars(),
-        const FlyoutShowcase(),
-        const Others(),
-        Settings(controller: settingsController),
+      content: NavigationBody(index: index, children: const [
+        InputsPage(),
+        Forms(),
+        ColorsPage(),
+        IconsPage(),
+        TypographyPage(),
+        Mobile(),
+        CommandBars(),
+        FlyoutShowcase(),
+        Others(),
+        Settings(),
       ]),
     );
   }

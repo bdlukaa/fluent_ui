@@ -77,9 +77,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(ButtonStates state) {
-    // if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
-    //   return _scrollbarTheme.backgroundColor ?? Colors.transparent;
-    // }
+    if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+      return _scrollbarTheme.backgroundColor ?? Colors.transparent;
+    }
     return Colors.transparent;
   }
 
@@ -108,6 +108,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
             animation.value,
           ) ??
           Colors.transparent
+      ..trackRadius = const Radius.circular(6.0)
       ..textDirection = Directionality.of(context)
       ..thickness = Tween<double>(
         begin: _scrollbarTheme.thickness ?? 2.0,
@@ -117,7 +118,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
           ? _scrollbarTheme.hoveringRadius
           : _scrollbarTheme.radius
       ..crossAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.crossAxisMargin ?? 2.0,
+        begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
         end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..mainAxisMargin = Tween<double>(
@@ -125,7 +126,10 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
-      ..padding = MediaQuery.of(context).padding;
+      ..padding = MediaQuery.of(context).padding +
+          EdgeInsets.symmetric(
+            vertical: _scrollbarTheme.padding ?? 4.0,
+          );
   }
 
   @override
@@ -326,6 +330,9 @@ class ScrollbarThemeData with Diagnosticable {
   /// The curve used during the animation. Defaults to [ThemeData.animationCurve]
   final Curve? animationCurve;
 
+  /// The padding around the scrollbar thumb
+  final double? padding;
+
   const ScrollbarThemeData({
     this.thickness,
     this.hoveringThickness,
@@ -343,22 +350,23 @@ class ScrollbarThemeData with Diagnosticable {
     this.hoveringTrackBorderColor,
     this.animationDuration,
     this.animationCurve,
+    this.padding,
   });
 
   factory ScrollbarThemeData.standard(ThemeData style) {
     final brightness = style.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
-          ? const Color(0xFF8c8c8c)
-          : const Color(0xFF767676),
+          ? const Color(0xFFc5c5c5)
+          : const Color(0xFF9d9d9d),
       scrollbarPressingColor: brightness.isLight
           ? const Color(0xFF5d5d5d)
           : const Color(0xFFa4a4a4),
       thickness: 2.0,
       hoveringThickness: 6.0,
       backgroundColor: brightness.isLight
-          ? const Color(0xFFf9f9f9)
-          : const Color(0xFF2c2f2a),
+          ? const Color(0xFFfafafa)
+          : const Color(0xFF292929),
       radius: const Radius.circular(100.0),
       hoveringRadius: const Radius.circular(100.0),
       crossAxisMargin: 4.0,
@@ -370,6 +378,7 @@ class ScrollbarThemeData with Diagnosticable {
       hoveringTrackBorderColor: Colors.transparent,
       animationDuration: style.fasterAnimationDuration,
       animationCurve: Curves.linear,
+      padding: 8.0,
     );
   }
 
@@ -398,6 +407,7 @@ class ScrollbarThemeData with Diagnosticable {
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
+      padding: lerpDouble(a?.padding, b?.padding, t),
     );
   }
 
@@ -424,6 +434,7 @@ class ScrollbarThemeData with Diagnosticable {
       trackBorderColor: style.trackBorderColor ?? trackBorderColor,
       animationCurve: style.animationCurve ?? animationCurve,
       animationDuration: style.animationDuration ?? animationDuration,
+      padding: style.padding ?? padding,
     );
   }
 
@@ -484,5 +495,6 @@ class ScrollbarThemeData with Diagnosticable {
       animationCurve,
       defaultValue: Curves.linear,
     ));
+    properties.add(DoubleProperty('padding', padding, defaultValue: 8));
   }
 }

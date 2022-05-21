@@ -77,9 +77,7 @@ List<WindowEffect> get currentWindowEffects {
 }
 
 class Settings extends StatelessWidget {
-  const Settings({Key? key, this.controller}) : super(key: key);
-
-  final ScrollController? controller;
+  const Settings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,6 @@ class Settings extends StatelessWidget {
     const biggerSpacer = SizedBox(height: 40.0);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Settings')),
-      scrollController: controller,
       children: [
         Text('Theme mode', style: FluentTheme.of(context).typography.subtitle),
         spacer,
