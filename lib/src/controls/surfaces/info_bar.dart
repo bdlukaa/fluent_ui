@@ -118,7 +118,6 @@ class InfoBar extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 48.0),
       decoration: style.decoration?.call(severity),
       padding: style.padding ?? const EdgeInsets.all(10),
-      alignment: Alignment.centerLeft,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment:
@@ -276,8 +275,8 @@ class InfoBarThemeData with Diagnosticable {
     final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(
-        top: 16.0,
-        bottom: 18.0,
+        top: 14.0,
+        bottom: 14.0,
         start: 14.0,
         end: 8.0,
       ),
@@ -310,7 +309,7 @@ class InfoBarThemeData with Diagnosticable {
         );
       },
       closeIcon: FluentIcons.chrome_close,
-      closeIconSize: 16.0,
+      closeIconSize: 12.0,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:

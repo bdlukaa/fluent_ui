@@ -121,3 +121,20 @@ Offset horizontalPositionDependentBox({
   }
   return Offset(x, y);
 }
+
+extension DecorationExtension on Decoration {
+  /// Gets the border radius of this decoration, if reacheable
+  BorderRadiusGeometry? getBorderRadius() {
+    if (this is BoxDecoration) {
+      return (this as BoxDecoration).borderRadius;
+    } else if (this is ShapeDecoration) {
+      final shape = (this as ShapeDecoration).shape;
+      if (shape is RoundedRectangleBorder) {
+        return shape.borderRadius;
+      } else if (shape is CircleBorder) {
+        return BorderRadius.circular(100);
+      }
+    }
+    return null;
+  }
+}
