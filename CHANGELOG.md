@@ -18,6 +18,7 @@ Date format: DD/MM/YYYY
 - `InfoBar` updates:
   - Added `InfoBar.isIconVisible`
   - Updated its design to follow the new Win UI 3 guidelines
+- Updated `Combobox` and `Button` designs
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 

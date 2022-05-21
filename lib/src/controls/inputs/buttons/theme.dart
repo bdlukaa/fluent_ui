@@ -240,7 +240,11 @@ class ButtonThemeData with Diagnosticable {
   // Values eyeballed from Windows 10
   // Used when the state is not recieving any user
   // interaction or is disabled
-  static Color buttonColor(Brightness brightness, Set<ButtonStates> states) {
+  static Color buttonColor(
+    Brightness brightness,
+    Set<ButtonStates> states, {
+    Color? lightDefaultColor,
+  }) {
     late Color color;
     if (brightness == Brightness.light) {
       if (states.isPressing) {
@@ -248,7 +252,7 @@ class ButtonThemeData with Diagnosticable {
       } else if (states.isHovering) {
         color = const Color(0xFFF6F6F6);
       } else {
-        color = Colors.white;
+        color = const Color(0xFFfbfbfb);
       }
       return color;
     } else {

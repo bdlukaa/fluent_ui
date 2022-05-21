@@ -59,17 +59,22 @@ class _InfoBarsState extends State<InfoBars> {
                 onChanged: (v) => setState(() => _firstOpen = v!),
                 content: const Text('Is open'),
               ),
-              Combobox<InfoBarSeverity>(
-                items: InfoBarSeverity.values
-                    .map(
-                      (severity) => ComboboxItem(
-                        child: Text(severity.name),
-                        value: severity,
-                      ),
-                    )
-                    .toList(),
-                value: severity,
-                onChanged: (v) => setState(() => severity = v ?? severity),
+              Container(
+                margin: const EdgeInsets.only(top: 10.0),
+                width: 150.0,
+                child: Combobox<InfoBarSeverity>(
+                  isExpanded: true,
+                  items: InfoBarSeverity.values
+                      .map(
+                        (severity) => ComboboxItem(
+                          child: Text(severity.name),
+                          value: severity,
+                        ),
+                      )
+                      .toList(),
+                  value: severity,
+                  onChanged: (v) => setState(() => severity = v ?? severity),
+                ),
               ),
             ],
           ),
