@@ -11,6 +11,7 @@ import 'screens/colors.dart';
 import 'screens/flyouts.dart';
 import 'screens/forms.dart';
 import 'screens/icons.dart';
+import 'screens/info_bars.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
 import 'screens/commandbars.dart';
@@ -228,6 +229,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             title: const Text('Flyouts'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.info),
+            title: const Text('InfoBar'),
+          ),
+          PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
@@ -266,6 +271,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         const Mobile(),
         const CommandBars(),
         const FlyoutShowcase(),
+        const InfoBars(),
         const Others(),
         Settings(controller: settingsController),
       ]),

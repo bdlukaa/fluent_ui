@@ -15,6 +15,9 @@ Date format: DD/MM/YYYY
   - Updated card's background colors
   - **BREAKING** Removed `Card.elevation`
   - Added `Card.margin`, which is the margin around the card
+- `InfoBar` updates:
+  - Added `InfoBar.isIconVisible`
+  - Updated its design to follow the new Win UI 3 guidelines
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 
