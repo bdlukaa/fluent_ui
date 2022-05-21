@@ -161,7 +161,7 @@ class FocusThemeData with Diagnosticable {
     required Color glowColor,
   }) {
     return FocusThemeData(
-      borderRadius: BorderRadius.zero,
+      borderRadius: BorderRadius.circular(6.0),
       primaryBorder: BorderSide(width: 2, color: primaryBorderColor),
       secondaryBorder: BorderSide(width: 1, color: secondaryBorderColor),
       glowColor: glowColor,
