@@ -26,12 +26,18 @@ TextStyle? kPickerPopupTextStyle(BuildContext context) {
 }
 
 Decoration kPickerDecorationBuilder(
-    BuildContext context, Set<ButtonStates> states) {
+  BuildContext context,
+  Set<ButtonStates> states,
+) {
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
     color: ButtonThemeData.buttonColor(theme.brightness, states),
+    border: Border.all(
+      width: 0.15,
+      color: theme.inactiveColor.withOpacity(0.2),
+    ),
   );
 }
 

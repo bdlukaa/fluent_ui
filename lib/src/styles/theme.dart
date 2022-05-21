@@ -341,7 +341,7 @@ class ThemeData with Diagnosticable {
         ? const Color.fromRGBO(0, 0, 0, 0.4458)
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
-    cardColor ??= isLight ? const Color(0xFFf3f3f3) : const Color(0xFF2e2e2e);
+    cardColor ??= isLight ? const Color(0xFFfdfdfd) : const Color(0xFF323232);
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);

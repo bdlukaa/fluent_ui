@@ -141,6 +141,8 @@ class Checkbox extends StatelessWidget {
         return Semantics(
           checked: checked,
           child: FocusBorder(
+            useStackApproach: true,
+            renderOutside: true,
             focused: state.isFocused,
             child: child,
           ),

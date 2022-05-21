@@ -1041,7 +1041,7 @@ class Combobox<T> extends StatefulWidget {
   _ComboboxState<T> createState() => _ComboboxState<T>();
 }
 
-class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
+class _ComboboxState<T> extends State<Combobox<T>> {
   int? _selectedIndex;
   _ComboboxRoute<T>? _comboboxRoute;
   Orientation? _lastOrientation;
@@ -1049,7 +1049,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
   bool _hasPrimaryFocus = false;
   late Map<Type, Action<Intent>> _actionMap;
-  late FocusHighlightMode _focusHighlightMode;
 
   // Only used if needed to create _internalNode.
   FocusNode _createFocusNode() {
@@ -1072,17 +1071,11 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       ),
     };
     focusNode!.addListener(_handleFocusChanged);
-    final FocusManager focusManager = WidgetsBinding.instance.focusManager;
-    _focusHighlightMode = focusManager.highlightMode;
-    focusManager.addHighlightModeListener(_handleFocusHighlightModeChange);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _removeComboboxRoute();
-    WidgetsBinding.instance.focusManager
-        .removeHighlightModeListener(_handleFocusHighlightModeChange);
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     super.dispose();
@@ -1100,15 +1093,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
         _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
       });
     }
-  }
-
-  void _handleFocusHighlightModeChange(FocusHighlightMode mode) {
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _focusHighlightMode = mode;
-    });
   }
 
   @override
@@ -1245,15 +1229,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
     return result;
   }
 
-  bool get _showHighlight {
-    switch (_focusHighlightMode) {
-      case FocusHighlightMode.touch:
-        return false;
-      case FocusHighlightMode.traditional:
-        return _hasPrimaryFocus;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final Orientation newOrientation = _getOrientation(context);
@@ -1345,23 +1320,12 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       button: true,
       child: Actions(
         actions: _actionMap,
-        child: HoverButton(
-          focusNode: focusNode,
-          autofocus: widget.autofocus,
+        child: Button(
           onPressed: _enabled ? _handleTap : null,
-          builder: (context, states) {
-            return Container(
-              decoration: kPickerDecorationBuilder(context, () {
-                if (_showHighlight) {
-                  return {ButtonStates.focused};
-                } else if (states.isFocused) {
-                  return <ButtonStates>{};
-                }
-                return states;
-              }()),
-              child: result,
-            );
-          },
+          autofocus: widget.autofocus,
+          focusNode: focusNode,
+          style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
+          child: result,
         ),
       ),
     );

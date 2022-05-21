@@ -42,9 +42,12 @@ class InfoBar extends StatelessWidget {
     this.style,
     this.isLong = false,
     this.onClose,
+    this.isIconVisible = true,
   }) : super(key: key);
 
-  /// The severity of this InfoBar. Defaults to [InfoBarSeverity.info]
+  /// The severity of this InfoBar.
+  ///
+  /// Defaults to [InfoBarSeverity.info]
   final InfoBarSeverity severity;
 
   /// The style applied to this info bar. If non-null, it's
@@ -55,14 +58,20 @@ class InfoBar extends StatelessWidget {
   final Widget? content;
   final Widget? action;
 
-  /// Called when the close button is pressed. If this is null,
-  /// there will be no close button
-  final void Function()? onClose;
+  /// Called when the close button is pressed.
+  ///
+  /// If null, this InfoBar will not be closable
+  final VoidCallback? onClose;
 
   /// If `true`, the info bar will be treated as long.
   ///
   /// ![Long InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
   final bool isLong;
+
+  /// Whether the leading icon is visible
+  ///
+  /// Defaults to true
+  final bool isIconVisible;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -78,18 +87,22 @@ class InfoBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final style = InfoBarTheme.of(context).merge(this.style);
-    final icon = style.icon?.call(severity);
+    final icon = isIconVisible ? style.icon?.call(severity) : null;
     final closeIcon = style.closeIcon;
-    final title = DefaultTextStyle(
-      style: FluentTheme.of(context).typography.bodyStrong ?? const TextStyle(),
-      child: this.title,
+    final title = Padding(
+      padding: const EdgeInsetsDirectional.only(end: 6.0),
+      child: DefaultTextStyle(
+        style: theme.typography.bodyStrong ?? const TextStyle(),
+        child: this.title,
+      ),
     );
     final content = () {
       if (this.content == null) return null;
       return DefaultTextStyle(
-        style: FluentTheme.of(context).typography.body ?? const TextStyle(),
+        style: theme.typography.body ?? const TextStyle(),
         softWrap: true,
         child: this.content!,
       );
@@ -102,9 +115,9 @@ class InfoBar extends StatelessWidget {
       );
     }();
     return Container(
+      constraints: const BoxConstraints(minHeight: 48.0),
       decoration: style.decoration?.call(severity),
       padding: style.padding ?? const EdgeInsets.all(10),
-      alignment: Alignment.centerLeft,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment:
@@ -112,12 +125,11 @@ class InfoBar extends StatelessWidget {
         children: [
           if (icon != null)
             Padding(
-              padding: const EdgeInsetsDirectional.only(end: 6.0),
+              padding: const EdgeInsetsDirectional.only(end: 14.0),
               child: Icon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
             Flexible(
-              fit: FlexFit.loose,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +142,7 @@ class InfoBar extends StatelessWidget {
                     ),
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 6.0),
+                      padding: const EdgeInsetsDirectional.only(top: 12.0),
                       child: action,
                     ),
                 ],
@@ -138,14 +150,17 @@ class InfoBar extends StatelessWidget {
             )
           else
             Flexible(
-              fit: FlexFit.loose,
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 6,
                 children: [
                   title,
                   if (content != null) content,
-                  if (action != null) action,
+                  if (action != null)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 16.0),
+                      child: action,
+                    ),
                 ],
               ),
             ),
@@ -259,7 +274,12 @@ class InfoBarThemeData with Diagnosticable {
   factory InfoBarThemeData.standard(ThemeData style) {
     final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsetsDirectional.only(
+        top: 14.0,
+        bottom: 14.0,
+        start: 14.0,
+        end: 8.0,
+      ),
       decoration: (severity) {
         late Color color;
         switch (severity) {
@@ -282,11 +302,14 @@ class InfoBarThemeData with Diagnosticable {
         return BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4.0),
-          boxShadow: kElevationToShadow[2],
+          border: Border.all(
+            width: 0.15,
+            color: style.inactiveColor.withOpacity(0.2),
+          ),
         );
       },
       closeIcon: FluentIcons.chrome_close,
-      closeIconSize: 16.0,
+      closeIconSize: 12.0,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
