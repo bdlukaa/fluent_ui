@@ -22,9 +22,9 @@ class CommandBarCard extends StatelessWidget {
     return Padding(
       padding: margin,
       child: Card(
-        child: child,
         padding: padding,
         backgroundColor: backgroundColor,
+        child: child,
       ),
     );
   }

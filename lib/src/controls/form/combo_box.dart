@@ -1321,11 +1321,11 @@ class _ComboboxState<T> extends State<Combobox<T>> {
       child: Actions(
         actions: _actionMap,
         child: Button(
-          child: result,
           onPressed: _enabled ? _handleTap : null,
           autofocus: widget.autofocus,
           focusNode: focusNode,
           style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
+          child: result,
         ),
       ),
     );
