@@ -4,27 +4,27 @@ import 'package:flutter/foundation.dart';
 /// A card with appropriate margins, padding, and elevation for it to
 /// contain one or more [CommandBar]s.
 class CommandBarCard extends StatelessWidget {
-  final Widget child;
-  final double elevation;
-  final EdgeInsetsGeometry margin;
-  final EdgeInsets padding;
-
   const CommandBarCard({
     Key? key,
     required this.child,
-    this.margin = const EdgeInsets.all(0),
+    this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
-    this.elevation = 2.0,
+    this.backgroundColor,
   }) : super(key: key);
+
+  final Widget child;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsets padding;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: margin,
       child: Card(
-        padding: padding,
-        elevation: elevation,
         child: child,
+        padding: padding,
+        backgroundColor: backgroundColor,
       ),
     );
   }
