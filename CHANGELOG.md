@@ -19,6 +19,7 @@ Date format: DD/MM/YYYY
   - Added `InfoBar.isIconVisible`
   - Updated its design to follow the new Win UI 3 guidelines
 - Updated `Combobox` and `Button` designs
+- Use `trackColor` and add inner `padding` for Scrollbar ([#356](https://github.com/bdlukaa/fluent_ui/pull/356))
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 
