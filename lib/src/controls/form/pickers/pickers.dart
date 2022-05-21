@@ -8,7 +8,8 @@ const kPickerContentPadding = EdgeInsets.symmetric(
 const kPickerHeight = 32.0;
 const kPickerDiameterRatio = 100.0;
 
-const kPopupHeight = kOneLineTileHeight * 10;
+/// The default popup height
+const double kPopupHeight = kOneLineTileHeight * 10;
 
 Color kPickerBackgroundColor(BuildContext context) =>
     FluentTheme.of(context).menuColor;
@@ -86,6 +87,7 @@ class YesNoPickerControl extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
 
     ButtonStyle buttonStyle = ButtonStyle(
+      elevation: ButtonState.all(0.0),
       backgroundColor: ButtonState.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
           FluentTheme.of(context),
@@ -141,14 +143,18 @@ class PickerNavigatorIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return HoverButton(
+      focusEnabled: false,
       onPressed: () {},
       builder: (context, state) {
         final show = state.isHovering || state.isPressing || state.isFocused;
         return ButtonTheme.merge(
           data: ButtonThemeData.all(ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.all(2.0)),
+            padding: ButtonState.all(const EdgeInsets.symmetric(
+              vertical: 10.0,
+            )),
             backgroundColor: ButtonState.all(kPickerBackgroundColor(context)),
             border: ButtonState.all(BorderSide.none),
+            elevation: ButtonState.all(0.0),
             iconSize: ButtonState.resolveWith((states) {
               if (states.isPressing) {
                 return 8.0;
@@ -161,7 +167,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
             data: const FocusThemeData(renderOutside: false),
             child: Stack(children: [
               child,
-              if (show)
+              if (show) ...[
                 Positioned(
                   top: 0,
                   left: 0,
@@ -170,11 +176,13 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   child: Button(
                     onPressed: onBackward,
                     child: const Center(
-                      child: Icon(FluentIcons.caret_up_solid8),
+                      child: Icon(
+                        FluentIcons.caret_up_solid8,
+                        color: Color(0xFFcfcfcf),
+                      ),
                     ),
                   ),
                 ),
-              if (show)
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -183,10 +191,14 @@ class PickerNavigatorIndicator extends StatelessWidget {
                   child: Button(
                     onPressed: onForward,
                     child: const Center(
-                      child: Icon(FluentIcons.caret_down_solid8),
+                      child: Icon(
+                        FluentIcons.caret_down_solid8,
+                        color: Color(0xFFcfcfcf),
+                      ),
                     ),
                   ),
                 ),
+              ],
             ]),
           ),
         );
@@ -263,11 +275,11 @@ class _PickerState extends State<Picker> {
         return Stack(children: [
           Positioned(
             left: childOffset.dx,
-            top: childOffset.dy - (widget.pickerHeight / 2),
+            top: childOffset.dy - (widget.pickerHeight * 0.41),
+            height: widget.pickerHeight,
+            width: box.size.width,
             child: FadeTransition(
               opacity: primary,
-              // sizeFactor: primary,
-              // axisAlignment: -1.0,
               child: Container(
                 height: widget.pickerHeight,
                 width: box.size.width,

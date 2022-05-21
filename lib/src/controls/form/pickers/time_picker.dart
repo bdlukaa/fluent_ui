@@ -147,7 +147,6 @@ class _TimePickerState extends State<TimePicker> {
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
         return _TimePickerContentPopup(
-          height: widget.popupHeight,
           onCancel: widget.onCancel ?? () {},
           onChanged: () => widget.onChanged?.call(time),
           amText: widget.amText,
@@ -251,7 +250,6 @@ class _TimePickerContentPopup extends StatefulWidget {
     required this.minuteController,
     required this.amPmController,
     required this.use24Format,
-    required this.height,
     required this.minuteIncrement,
   }) : super(key: key);
 
@@ -267,7 +265,6 @@ class _TimePickerContentPopup extends StatefulWidget {
   final ValueChanged<DateTime> handleDateChanged;
 
   final bool use24Format;
-  final double height;
   final double minuteIncrement;
 
   @override
