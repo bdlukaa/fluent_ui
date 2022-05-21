@@ -216,7 +216,6 @@ class _FluentLocalizationsDelegate
   @override
   bool isSupported(Locale locale) {
     return DefaultFluentLocalizations.supports(locale);
-    // defaultSupportedLocales.contains(locale);
   }
 
   @override
@@ -228,5 +227,5 @@ class _FluentLocalizationsDelegate
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
 
   @override
-  String toString() => DefaultFluentLocalizations.delegate.toString();
+  String toString() => 'DefaultMaterialLocalizations.delegate(en_US)';
 }
