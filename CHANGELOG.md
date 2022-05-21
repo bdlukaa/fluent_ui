@@ -8,6 +8,7 @@ Date format: DD/MM/YYYY
   - Added `.initialValue`, `.selectionControls`, `.mouseCursor`, `.textDirection`, `.scribbleEnabled` and `.enableIMEPersonalizedLearning` to `TextBox`
   - Added `AutoFillClient` to `TextBox`
   - Added `UnmanagedRestorationScope` to `TextFormBox`
+- Added `AutoSuggestBox.form`, that uses `TextFormBox` instead of `TextBox` ([#353](https://github.com/bdlukaa/fluent_ui/pull/353))
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 

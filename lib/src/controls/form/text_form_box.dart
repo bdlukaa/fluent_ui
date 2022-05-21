@@ -102,6 +102,8 @@ class TextFormBox extends FormField<String> {
     bool enableIMEPersonalizedLearning = true,
     MouseCursor? mouseCursor,
     bool scribbleEnabled = true,
+    Color? highlightColor,
+    Color? errorHighlightColor,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -135,8 +137,7 @@ class TextFormBox extends FormField<String> {
             }
 
             return FormRow(
-              padding:
-                  EdgeInsets.only(bottom: (field.errorText == null) ? 16.0 : 0),
+              padding: EdgeInsets.zero,
               error: (field.errorText == null) ? null : Text(field.errorText!),
               child: UnmanagedRestorationScope(
                 bucket: field.bucket,
@@ -189,7 +190,9 @@ class TextFormBox extends FormField<String> {
                   prefixMode: prefixMode,
                   suffix: suffix,
                   suffixMode: suffixMode,
-                  highlightColor: (field.errorText == null) ? null : Colors.red,
+                  highlightColor: (field.errorText == null)
+                      ? highlightColor
+                      : errorHighlightColor ?? Colors.red,
                   dragStartBehavior: dragStartBehavior,
                   minHeight: minHeight,
                   padding: padding,
