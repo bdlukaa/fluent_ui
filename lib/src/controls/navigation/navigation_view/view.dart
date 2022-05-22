@@ -620,10 +620,7 @@ class NavigationAppBar with Diagnosticable {
           data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
             unselectedIconColor: ButtonState.resolveWith((states) {
               if (states.isDisabled) {
-                return ButtonThemeData.buttonColor(
-                  FluentTheme.of(context).brightness,
-                  states,
-                );
+                return ButtonThemeData.buttonColor(context, states);
               }
               return ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),

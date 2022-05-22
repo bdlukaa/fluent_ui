@@ -321,6 +321,9 @@ class ThemeData with Diagnosticable {
     fastAnimationDuration ??= const Duration(milliseconds: 167);
     mediumAnimationDuration ??= const Duration(milliseconds: 250);
     slowAnimationDuration ??= const Duration(milliseconds: 358);
+    resources ??= isLight
+        ? const ResourceDictionary.light()
+        : const ResourceDictionary.dark();
     animationCurve ??= standardCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
@@ -386,9 +389,7 @@ class ThemeData with Diagnosticable {
     bottomNavigationTheme ??= const BottomNavigationThemeData();
     snackbarTheme ??= const SnackbarThemeData();
     bottomSheetTheme ??= const BottomSheetThemeData();
-    resources ??= isLight
-        ? const ResourceDictionary.light()
-        : const ResourceDictionary.dark();
+
     return ThemeData.raw(
       brightness: brightness,
       visualDensity: visualDensity,

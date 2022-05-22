@@ -44,28 +44,24 @@ class Button extends BaseButton {
         left: 11.0,
         top: 5.0,
         right: 11.0,
-        bottom: 6.0,
+        bottom: 5.0,
       )),
-      shape: ButtonState.all(RoundedRectangleBorder(
-        side: BorderSide(
-          color: theme.brightness.isLight
-              ? const Color.fromRGBO(0, 0, 0, 0.09)
-              : const Color.fromRGBO(255, 255, 255, 0.05),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(4.0),
-      )),
+      shape: ButtonState.resolveWith((states) {
+        return RoundedRectangleBorder(
+          side: BorderSide(
+            color: states.isPressing
+                ? theme.resources.controlStrokeColorSecondary
+                : theme.resources.controlStrokeColorDefault,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(4.0),
+        );
+      }),
       backgroundColor: ButtonState.resolveWith((states) {
-        return ButtonThemeData.buttonColor(theme.brightness, states);
+        return ButtonThemeData.buttonColor(context, states);
       }),
       foregroundColor: ButtonState.resolveWith((states) {
-        if (states.isDisabled) return theme.disabledColor;
-        return ButtonThemeData.buttonColor(theme.brightness, states).basedOnLuminance().toAccentColor()[
-            states.isPressing
-                ? theme.brightness.isLight
-                    ? 'lighter'
-                    : 'dark'
-                : 'normal'];
+        return ButtonThemeData.buttonForegroundColor(context, states);
       }),
     );
   }

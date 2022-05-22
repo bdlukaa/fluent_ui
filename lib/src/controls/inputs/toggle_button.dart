@@ -166,10 +166,10 @@ class ToggleButtonThemeData with Diagnosticable {
           borderRadius: BorderRadius.circular(4.0),
         )),
         foregroundColor: ButtonState.resolveWith(
-          (states) => FilledButton.backgroundColor(
+          (states) => FilledButton.foregroundColor(
             theme,
             states,
-          ).basedOnLuminance(),
+          ),
         ),
       ),
     );

@@ -40,7 +40,7 @@ class IconButton extends BaseButton {
           : const EdgeInsets.all(8.0)),
       backgroundColor: ButtonState.resolveWith((states) {
         return states.isDisabled
-            ? ButtonThemeData.buttonColor(theme.brightness, states)
+            ? ButtonThemeData.buttonColor(context, states)
             : ButtonThemeData.uncheckedInputColor(theme, states);
       }),
       foregroundColor: ButtonState.resolveWith((states) {
