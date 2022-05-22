@@ -1,18 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../utils/popup.dart';
 
 part 'body.dart';
-
 part 'indicators.dart';
-
-part 'pane_items.dart';
-
 part 'pane.dart';
-
+part 'pane_items.dart';
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -425,6 +420,7 @@ class NavigationViewState extends State<NavigationView> {
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
+                        shouldDrawHeaderSpaceIfEmpty: false,
                         paneKey: _panelKey,
                         listKey: _listKey,
                       ),
@@ -481,6 +477,7 @@ class NavigationViewState extends State<NavigationView> {
                         child: _OpenNavigationPane(
                           theme: theme,
                           pane: pane,
+                          shouldDrawHeaderSpaceIfEmpty: false,
                           paneKey: _panelKey,
                           listKey: _listKey,
                           onItemSelected: () {

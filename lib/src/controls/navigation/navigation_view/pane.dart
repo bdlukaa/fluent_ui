@@ -779,6 +779,7 @@ class _OpenNavigationPane extends StatefulWidget {
   _OpenNavigationPane({
     required this.pane,
     required this.theme,
+    this.shouldDrawHeaderSpaceIfEmpty = true,
     this.paneKey,
     this.listKey,
     this.onToggle,
@@ -786,6 +787,7 @@ class _OpenNavigationPane extends StatefulWidget {
   }) : super(key: pane.key);
 
   final NavigationPane pane;
+  final bool shouldDrawHeaderSpaceIfEmpty;
   final Key? paneKey;
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
@@ -877,6 +879,11 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       paneWidth = widget.pane.size!.openMinWidth!;
     }
 
+    double paneHeaderHeight = widget.pane.size?.headerHeight ?? kOneLineTileHeight;
+    if (widget.pane.header == null && !widget.shouldDrawHeaderSpaceIfEmpty) {
+      paneHeaderHeight = 0.0;
+    }
+
     return SizeTransition(
       axisAlignment: -1,
       axis: Axis.horizontal,
@@ -894,7 +901,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               margin: widget.pane.autoSuggestBox != null
                   ? EdgeInsets.zero
                   : topPadding,
-              height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
+              height: paneHeaderHeight,
               child: () {
                 if (widget.pane.header != null) {
                   return Row(children: [
