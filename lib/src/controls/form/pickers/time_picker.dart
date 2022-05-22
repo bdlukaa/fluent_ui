@@ -4,16 +4,16 @@ import 'package:flutter/foundation.dart';
 
 import 'pickers.dart';
 
-/// The time picker gives you a standardized way to let users pick a time
-/// value using touch, mouse, or keyboard input. Use a time picker to let
-/// a user pick a single time value.
+/// The time picker gives you a standardized way to let users pick a time value
+/// using touch, mouse, or keyboard input.
 ///
-/// ![TimePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_timepicker_expand.png)7
+/// ![TimePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
 ///
 /// See also:
 ///
-/// - [TimePicker Documentation](https://pub.dev/packages/fluent_ui#time-picker)
-/// - [DatePicker](https://pub.dev/packages/fluent_ui#date-picker)
+///  * [DatePicker], which gives you a standardized way to let users pick a
+///    localized date value
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/time-picker>
 class TimePicker extends StatefulWidget {
   /// Creates a time picker.
   const TimePicker({
@@ -458,7 +458,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                         widget.date.year,
                         widget.date.month,
                         widget.date.day,
-                        _hour,
+                        hour,
                         widget.date.minute,
                         widget.date.second,
                         widget.date.millisecond,

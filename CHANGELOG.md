@@ -21,7 +21,7 @@ Date format: DD/MM/YYYY
 - Updated `Combobox` and `Button` designs
 - Reviewed `DatePicker` and `TimePicker` ([#357](https://github.com/bdlukaa/fluent_ui/pull/357))
   - Correctly apply dimensions and positions to both pickers
-  - Update UI
+  - Update the picker popup style and behavior
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 

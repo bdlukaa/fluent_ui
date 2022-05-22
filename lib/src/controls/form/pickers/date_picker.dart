@@ -12,16 +12,15 @@ import 'pickers.dart';
 // https://github.com/flutter/flutter/issues/38803
 
 /// The date picker gives you a standardized way to let users pick a localized
-/// date value using touch, mouse, or keyboard input. Use a date picker to let
-/// a user pick a known date, such as a date of birth, where the context of the
-/// calendar is not important.
+/// date value using touch, mouse, or keyboard input.
 ///
-/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_datepicker_expand.png)
+/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
 ///
 /// See also:
 ///
-/// - [DatePicker Documentation](https://pub.dev/packages/fluent_ui#date-picker)
-/// - [TimePicker](https://pub.dev/packages/fluent_ui#time-picker)
+///  * [TimePicker], which gives you a standardized way to let users pick a time
+///    value
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/date-picker>
 class DatePicker extends StatefulWidget {
   /// Creates a date picker.
   const DatePicker({
@@ -502,7 +501,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         years,
                       );
                     },
-                    itemExtent: kOneLineTileHeight,
+                    child: ListWheelScrollView(
+                      controller: widget.yearController,
+                      itemExtent: kOneLineTileHeight,
                       diameterRatio: kPickerDiameterRatio,
                       physics: const FixedExtentScrollPhysics(),
                       onSelectedItemChanged: (index) {
@@ -518,8 +519,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         ));
                         setState(() {});
                       },
-                    child: ListWheelScrollView(
-                      controller: widget.yearController,
                       children: List.generate(years, (index) {
                         // index++;
                         final realYear = widget.startYear + index + 1;

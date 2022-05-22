@@ -746,7 +746,7 @@ class _NavigationAppBar extends StatelessWidget {
 }
 
 class _NavigationViewScrollBehavior extends FluentScrollBehavior {
-  const _NavigationViewScrollBehavior({});
+  const _NavigationViewScrollBehavior();
 
   @override
   Widget buildScrollbar(context, child, details) {
