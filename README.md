@@ -1366,6 +1366,7 @@ final _controller = ScrollController();
 Scrollbar(
   controller: _controller,
   child: ListView.builder(
+    controller: _controller,
     /// You can add a padding to the view to avoid having the scrollbar over the UI elements
     padding: EdgeInsets.only(right: 16.0),
     itemCount: 100,
