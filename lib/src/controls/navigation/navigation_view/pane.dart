@@ -112,6 +112,9 @@ class NavigationPane with Diagnosticable {
 
   /// The header of the pane.
   ///
+  /// If null, the space it should have taken will be removed from
+  /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.open] only).
+  ///
   /// Usually a [Text] or an [Image].
   ///
   /// ![Top Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-top.png)
@@ -879,7 +882,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       paneWidth = widget.pane.size!.openMinWidth!;
     }
 
-    double paneHeaderHeight = widget.pane.size?.headerHeight ?? kOneLineTileHeight;
+    double paneHeaderHeight =
+        widget.pane.size?.headerHeight ?? kOneLineTileHeight;
     if (widget.pane.header == null && !widget.shouldDrawHeaderSpaceIfEmpty) {
       paneHeaderHeight = 0.0;
     }
