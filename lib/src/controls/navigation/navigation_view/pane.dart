@@ -87,6 +87,7 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
+    this.position = PanePosition.left,
     this.customPane,
     this.menuButton,
     this.scrollController,
@@ -100,6 +101,12 @@ class NavigationPane with Diagnosticable {
   final Key? key;
 
   final GlobalKey paneKey = GlobalKey();
+
+  /// The navigation pane position, that can be displayed on the
+  /// left side or right side.
+  ///
+  /// Works only with [PaneDisplayMode.open], [PaneDisplayMode.compact]
+  final PanePosition position;
 
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.

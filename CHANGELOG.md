@@ -2,7 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [3.x.0]
 
-- Added support for NavigationPane right side via property `NavigationView.panePosition`. Works only with `PaneDisplayMode.open`, `PaneDisplayMode.compact`.
+- Added support for NavigationPane right side via property `NavigationPane.position`. Works only with `PaneDisplayMode.open`, `PaneDisplayMode.compact`.
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
 - **BREAKING** `Map<ShortcutActivator, Intent>?` is now the typed used on `FluentApp.shortcuts` ([#351](https://github.com/bdlukaa/fluent_ui/pull/351))
 - `TextBox` review ([#352](https://github.com/bdlukaa/fluent_ui/pull/352)):

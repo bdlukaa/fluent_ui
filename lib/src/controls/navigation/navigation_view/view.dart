@@ -35,7 +35,6 @@ class NavigationView extends StatefulWidget {
     Key? key,
     this.appBar,
     this.pane,
-    this.panePosition = PanePosition.left,
     this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
@@ -49,12 +48,6 @@ class NavigationView extends StatefulWidget {
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above [content].
   final NavigationPane? pane;
-
-  /// The navigation pane position, that can be displayed on the
-  /// left side or right side.
-  ///
-  /// Works only with [PaneDisplayMode.open], [PaneDisplayMode.compact]
-  final PanePosition panePosition;
 
   /// The content of the pane.
   ///
@@ -336,7 +329,7 @@ class NavigationViewState extends State<NavigationView> {
                   : pane.size?.compactWidth ?? kCompactNavigationPanelWidth;
               AlignmentDirectional stackAlignment;
 
-              switch (widget.panePosition) {
+              switch (pane.position) {
                 case PanePosition.left:
                   contentStartPosition = compactWidth;
                   stackAlignment = AlignmentDirectional.topStart;
@@ -450,7 +443,7 @@ class NavigationViewState extends State<NavigationView> {
                 ),
               );
 
-              switch (widget.panePosition) {
+              switch (pane.position) {
                 case PanePosition.left:
                   paneResult = Column(
                     children: [
