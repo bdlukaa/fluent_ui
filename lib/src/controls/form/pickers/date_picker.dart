@@ -23,6 +23,7 @@ import 'pickers.dart';
 /// - [DatePicker Documentation](https://pub.dev/packages/fluent_ui#date-picker)
 /// - [TimePicker](https://pub.dev/packages/fluent_ui#time-picker)
 class DatePicker extends StatefulWidget {
+  /// Creates a date picker.
   const DatePicker({
     Key? key,
     required this.selected,
@@ -166,8 +167,6 @@ class _DatePickerState extends State<DatePicker> {
   void handleDateChanged(DateTime newDate) {
     if (mounted) setState(() => date = newDate);
   }
-
-  Size? size;
 
   @override
   Widget build(BuildContext context) {
@@ -503,6 +502,22 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         years,
                       );
                     },
+                    itemExtent: kOneLineTileHeight,
+                      diameterRatio: kPickerDiameterRatio,
+                      physics: const FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (index) {
+                        widget.handleDateChanged(DateTime(
+                          widget.startYear + index + 1,
+                          widget.date.month,
+                          widget.date.day,
+                          widget.date.hour,
+                          widget.date.minute,
+                          widget.date.second,
+                          widget.date.millisecond,
+                          widget.date.microsecond,
+                        ));
+                        setState(() {});
+                      },
                     child: ListWheelScrollView(
                       controller: widget.yearController,
                       children: List.generate(years, (index) {
@@ -520,22 +535,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           ),
                         );
                       }),
-                      itemExtent: kOneLineTileHeight,
-                      diameterRatio: kPickerDiameterRatio,
-                      physics: const FixedExtentScrollPhysics(),
-                      onSelectedItemChanged: (index) {
-                        widget.handleDateChanged(DateTime(
-                          widget.startYear + index + 1,
-                          widget.date.month,
-                          widget.date.day,
-                          widget.date.hour,
-                          widget.date.minute,
-                          widget.date.second,
-                          widget.date.millisecond,
-                          widget.date.microsecond,
-                        ));
-                        setState(() {});
-                      },
                     ),
                   );
                 }(),

@@ -15,6 +15,7 @@ import 'pickers.dart';
 /// - [TimePicker Documentation](https://pub.dev/packages/fluent_ui#time-picker)
 /// - [DatePicker](https://pub.dev/packages/fluent_ui#date-picker)
 class TimePicker extends StatefulWidget {
+  /// Creates a time picker.
   const TimePicker({
     Key? key,
     required this.selected,
@@ -330,15 +331,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (index) {
-                    int _hour = index + 1;
+                    int hour = index + 1;
                     if (!widget.use24Format && !isAm) {
-                      _hour += 12;
+                      hour += 12;
                     }
                     widget.handleDateChanged(DateTime(
                       widget.date.year,
                       widget.date.month,
                       widget.date.day,
-                      _hour,
+                      hour,
                       widget.date.minute,
                       widget.date.second,
                       widget.date.millisecond,
@@ -442,15 +443,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     ],
                     onSelectedItemChanged: (index) {
                       setState(() {});
-                      int _hour = widget.date.hour;
+                      int hour = widget.date.hour;
                       final isAm = index == 0;
                       if (!widget.use24Format) {
                         // If it was previously am and now it's pm
                         if (!isAm) {
-                          _hour += 12;
+                          hour += 12;
                           // If it was previously pm and now it's am
                         } else if (isAm) {
-                          _hour -= 12;
+                          hour -= 12;
                         }
                       }
                       widget.handleDateChanged(DateTime(
