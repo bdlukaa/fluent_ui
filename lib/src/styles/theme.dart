@@ -210,6 +210,8 @@ class ThemeData with Diagnosticable {
 
   final ButtonThemeData buttonTheme;
 
+  final ResourceDictionary resources;
+
   const ThemeData.raw({
     required this.typography,
     required this.accentColor,
@@ -253,6 +255,7 @@ class ThemeData with Diagnosticable {
     required this.bottomSheetTheme,
     required this.menuColor,
     required this.cardColor,
+    required this.resources,
   });
 
   static ThemeData light() {
@@ -307,6 +310,7 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
 
@@ -382,6 +386,9 @@ class ThemeData with Diagnosticable {
     bottomNavigationTheme ??= const BottomNavigationThemeData();
     snackbarTheme ??= const SnackbarThemeData();
     bottomSheetTheme ??= const BottomSheetThemeData();
+    resources ??= isLight
+        ? const ResourceDictionary.light()
+        : const ResourceDictionary.dark();
     return ThemeData.raw(
       brightness: brightness,
       visualDensity: visualDensity,
@@ -425,6 +432,7 @@ class ThemeData with Diagnosticable {
       bottomSheetTheme: bottomSheetTheme,
       menuColor: menuColor,
       cardColor: cardColor,
+      resources: resources,
     );
   }
 
@@ -432,6 +440,7 @@ class ThemeData with Diagnosticable {
     return ThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
+      resources: ResourceDictionary.lerp(a.resources, b.resources, t),
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
       typography: Typography.lerp(a.typography, b.typography, t),
       activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
@@ -537,6 +546,7 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
@@ -589,6 +599,7 @@ class ThemeData with Diagnosticable {
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
       snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
+      resources: resources ?? this.resources,
     );
   }
 

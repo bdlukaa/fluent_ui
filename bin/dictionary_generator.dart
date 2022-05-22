@@ -15,14 +15,8 @@ import 'package:flutter/widgets.dart' show Color;
 
 """;
 
-const String defaultHeader = '''
-class DefaultResourceDirectionary {
-  const DefaultResourceDirectionary._();
-''';
-
-const String lightHeader = '''
-class LightResourceDirectionary {
-  const LightResourceDirectionary._();
+const String header = '''
+class ResourceDictionary {
 ''';
 
 void main(List<String> args) async {
@@ -34,7 +28,8 @@ void main(List<String> args) async {
   final StringBuffer dartFileBuffer = StringBuffer(fileHeader);
 
   // Generates
-  void generateFor(String dictionary) {
+  void generateFor(String dictionary, String constructor) {
+    dartFileBuffer.writeln('\n  const ResourceDictionary.$constructor({');
     for (final resourceLine in dictionary.split('\n')) {
       if (resourceLine.trim().isEmpty) continue;
       final resourceName = () {
@@ -57,19 +52,67 @@ void main(List<String> args) async {
       }
 
       dartFileBuffer.writeln(
-        '  static const Color ${resourceName.lowercaseFirst()} = Color(0x$resourceHex);',
+        '    this.${resourceName.lowercaseFirst()} = const Color(0x$resourceHex),',
       );
     }
+    dartFileBuffer.writeln("  });");
   }
 
+  // generates abstract dictionary
+  dartFileBuffer.writeln(header);
+  for (final resourceLine in defaultResourceDirectionary.split('\n')) {
+    if (resourceLine.trim().isEmpty) continue;
+    final resourceName = () {
+      final split = resourceLine.trim().split('"');
+      return split[1];
+    }();
+
+    dartFileBuffer.writeln(
+      '  final Color ${resourceName.lowercaseFirst()};',
+    );
+  }
+
+  dartFileBuffer.writeln('\n  const ResourceDictionary.raw({');
+  for (final resourceLine in defaultResourceDirectionary.split('\n')) {
+    if (resourceLine.trim().isEmpty) continue;
+    final resourceName = () {
+      final split = resourceLine.trim().split('"');
+      return split[1];
+    }()
+        .lowercaseFirst();
+
+    dartFileBuffer.writeln(
+      '    required this.$resourceName,',
+    );
+  }
+
+  dartFileBuffer.writeln("  });");
+
   // generate default dictionary
-  dartFileBuffer.writeln(defaultHeader);
-  generateFor(defaultResourceDirectionary);
-  dartFileBuffer.writeln("}");
+  generateFor(defaultResourceDirectionary, 'dark');
 
   // generate light resource dictionary
-  dartFileBuffer.writeln(lightHeader);
-  generateFor(lightResourceDictionary);
+  generateFor(lightResourceDictionary, 'light');
+
+  // generate lerp method
+  dartFileBuffer.writeln(
+      '\n  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t) {');
+  dartFileBuffer.writeln('    return ResourceDictionary.raw(');
+  for (final resourceLine in defaultResourceDirectionary.split('\n')) {
+    if (resourceLine.trim().isEmpty) continue;
+    final resourceName = () {
+      final split = resourceLine.trim().split('"');
+      return split[1];
+    }()
+        .lowercaseFirst();
+
+    dartFileBuffer.writeln(
+      '      $resourceName: Color.lerp(a.$resourceName, b.$resourceName, t)!,',
+    );
+  }
+  dartFileBuffer.writeln('    );');
+  dartFileBuffer.writeln('  }');
+
   dartFileBuffer.writeln("}");
 
   final outputFile = File("lib/src/styles/color_resources.dart");
