@@ -39,6 +39,7 @@ class DatePicker extends StatefulWidget {
     this.popupHeight = kPopupHeight,
     this.focusNode,
     this.autofocus = false,
+    this.locale,
   }) : super(key: key);
 
   /// The current date.
@@ -82,6 +83,11 @@ class DatePicker extends StatefulWidget {
 
   /// The height of the popup. Defaults to [kPopupHeight]
   final double popupHeight;
+
+  /// The locale used to format the month name.
+  ///
+  /// If null, the system locale will be used.
+  final Locale? locale;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -184,6 +190,7 @@ class _DatePickerState extends State<DatePicker> {
           showYear: widget.showYear,
           startYear: startYear,
           yearController: _yearController!,
+          locale: widget.locale,
         );
       },
       pickerHeight: widget.popupHeight,
@@ -210,6 +217,9 @@ class _DatePickerState extends State<DatePicker> {
               thickness: 0.6,
             ),
           );
+
+          final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
+
           return AnimatedContainer(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
@@ -223,7 +233,11 @@ class _DatePickerState extends State<DatePicker> {
                     // MONTH
                     return Padding(
                       padding: widget.contentPadding,
-                      child: Text(DateFormat.MMMM().format(widget.selected)),
+                      child: Text(
+                        DateFormat.MMMM('$locale')
+                            .format(widget.selected)
+                            .uppercaseFirst(),
+                      ),
                     );
                   }(),
                 ),
@@ -287,6 +301,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.yearController,
     required this.startYear,
     required this.endYear,
+    required this.locale,
   }) : super(key: key);
 
   final bool showMonth;
@@ -300,6 +315,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
   final FixedExtentScrollController yearController;
   final int startYear;
   final int endYear;
+  final Locale? locale;
 
   @override
   __DatePickerContentPopUpState createState() =>
@@ -346,25 +362,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               Expanded(
                 flex: 2,
                 child: () {
-                  final items = List.generate(
-                    12,
-                    (month) {
-                      month++;
-                      final text = DateFormat.MMMM().format(
-                        DateTime(1, month),
-                      );
-                      return ListTile(
-                        title: Text(
-                          text,
-                          style: kPickerPopupTextStyle(context)?.copyWith(
-                            color: month == localDate.month
-                                ? highlightTileColor.basedOnLuminance()
-                                : null,
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  final locale =
+                      widget.locale ?? Localizations.maybeLocaleOf(context);
+                  final formatter = DateFormat.MMMM(locale.toString());
                   // MONTH
                   return PickerNavigatorIndicator(
                     onBackward: () {
@@ -389,7 +389,22 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                       diameterRatio: kPickerDiameterRatio,
                       physics: const FixedExtentScrollPhysics(),
                       childDelegate: ListWheelChildLoopingListDelegate(
-                        children: items,
+                        children: List.generate(12, (month) {
+                          month++;
+                          final text = formatter
+                              .format(DateTime(1, month))
+                              .uppercaseFirst();
+                          return ListTile(
+                            title: Text(
+                              text,
+                              style: kPickerPopupTextStyle(context)?.copyWith(
+                                color: month == localDate.month
+                                    ? highlightTileColor.basedOnLuminance()
+                                    : null,
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                       onSelectedItemChanged: (index) {
                         final month = index + 1;
@@ -407,7 +422,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           localDate.millisecond,
                           localDate.microsecond,
                         ));
-                        setState(() {});
                       },
                     ),
                   );
@@ -474,7 +488,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           localDate.millisecond,
                           localDate.microsecond,
                         ));
-                        setState(() {});
                       },
                     ),
                   );
@@ -520,7 +533,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           localDate.millisecond,
                           localDate.microsecond,
                         ));
-                        setState(() {});
                       },
                       children: List.generate(years, (index) {
                         // index++;

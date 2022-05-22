@@ -60,6 +60,13 @@ class AppTheme extends ChangeNotifier {
     _textDirection = direction;
     notifyListeners();
   }
+
+  Locale? _locale;
+  Locale? get locale => _locale;
+  set locale(Locale? locale) {
+    _locale = locale;
+    notifyListeners();
+  }
 }
 
 AccentColor get systemAccentColor {
