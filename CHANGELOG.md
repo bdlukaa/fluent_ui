@@ -19,6 +19,7 @@ Date format: DD/MM/YYYY
   - Added `InfoBar.isIconVisible`
   - Updated its design to follow the new Win UI 3 guidelines
 - Updated `Combobox` and `Button` designs
+- Updated `NavigationPane` behaviour. Now, if the header is null, the space it should have taken will be removed from the pane (display mode affected: minimal, open only) ([#359](https://github.com/bdlukaa/fluent_ui/pull/359))
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 
