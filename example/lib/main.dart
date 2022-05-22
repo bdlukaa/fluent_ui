@@ -148,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
       key: viewKey,
-      panePosition: appTheme.panePosition,
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
         title: () {
@@ -168,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               ),
       ),
       pane: NavigationPane(
+        position: appTheme.panePosition,
         selected: index,
         onChanged: (i) => setState(() => index = i),
         size: const NavigationPaneSize(
