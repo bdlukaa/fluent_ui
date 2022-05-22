@@ -1,7 +1,7 @@
 part of 'view.dart';
 
-const double _kCompactNavigationPanelWidth = 50.0;
-const double _kOpenNavigationPanelWidth = 320.0;
+const double kCompactNavigationPanelWidth = 50.0;
+const double kOpenNavigationPanelWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -194,7 +194,7 @@ class NavigationPane with Diagnosticable {
     ));
   }
 
-  void _changeTo(NavigationPaneItem item) {
+  void changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
     if (selected != index && !index.isNegative) onChanged?.call(index);
   }
@@ -234,7 +234,7 @@ class NavigationPane with Diagnosticable {
   }) {
     if (pane.menuButton != null) return pane.menuButton!;
     return Container(
-      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? kCompactNavigationPanelWidth,
       margin: padding,
       child: PaneItem(
         title: itemTitle,
@@ -314,12 +314,12 @@ class NavigationPaneSize {
 
   /// The width of the pane when he is in compact mode.
   ///
-  /// If the value is null, [_kCompactNavigationPanelWidth] is used.
+  /// If the value is null, [kCompactNavigationPanelWidth] is used.
   final double? compactWidth;
 
   /// The width of the pane when he is open.
   ///
-  /// If the value is null, [_kOpenNavigationPanelWidth] is used.
+  /// If the value is null, [kOpenNavigationPanelWidth] is used.
   /// The width can be based on MediaQuery and used
   /// with [minWidth] and [maxWidth].
   final double? openWidth;
@@ -365,6 +365,7 @@ class NavigationPaneWidgetData {
     required this.paneKey,
     required this.listKey,
     required this.pane,
+    required this.overlayKey,
   });
 
   final Widget content;
@@ -372,6 +373,7 @@ class NavigationPaneWidgetData {
   final ScrollController scrollController;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final GlobalKey? overlayKey;
   final NavigationPane pane;
 }
 
@@ -393,8 +395,8 @@ abstract class NavigationPaneWidget {
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
-class _TopNavigationPane extends StatefulWidget {
-  _TopNavigationPane({
+class TopNavigationPane extends StatefulWidget {
+  TopNavigationPane({
     required this.pane,
     this.listKey,
     this.appBar,
@@ -405,10 +407,10 @@ class _TopNavigationPane extends StatefulWidget {
   final NavigationAppBar? appBar;
 
   @override
-  State<_TopNavigationPane> createState() => _TopNavigationPaneState();
+  State<TopNavigationPane> createState() => _TopNavigationPaneState();
 }
 
-class _TopNavigationPaneState extends State<_TopNavigationPane> {
+class _TopNavigationPaneState extends State<TopNavigationPane> {
   final overflowController = FlyoutController();
   List<int> hiddenPaneItems = [];
   late List<int> _localItemHold;
@@ -426,7 +428,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   void _onPressed(PaneItem item) {
-    widget.pane._changeTo(item);
+    widget.pane.changeTo(item);
   }
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -458,7 +460,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   @override
-  void didUpdateWidget(covariant _TopNavigationPane oldWidget) {
+  void didUpdateWidget(covariant TopNavigationPane oldWidget) {
     // update the items
     if (oldWidget.pane.items.length != widget.pane.items.length) {
       generateLocalItemHold();
@@ -589,7 +591,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     if (item is PaneItemSeparator) {
       return const MenuFlyoutSeparator();
     } else if (item is PaneItem) {
-      return _MenuFlyoutPaneItem(
+      return MenuFlyoutPaneItem(
         item: item,
         onPressed: () => _onPressed(item),
       );
@@ -599,8 +601,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 }
 
-class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
-  _MenuFlyoutPaneItem({
+class MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
+  MenuFlyoutPaneItem({
     Key? key,
     required this.item,
     required this.onPressed,
@@ -614,23 +616,23 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     final size = PopupContentSizeInfo.of(context).size;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
-    final String titleText = item._getPropertyFromTitle<String>() ?? '';
+    final String titleText = item.getPropertyFromTitle<String>() ?? '';
     final TextStyle baseStyle =
-        item._getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        item.getPropertyFromTitle<TextStyle>() ?? const TextStyle();
 
     final textResult = titleText.isNotEmpty
         ? Padding(
             padding: theme.labelPadding ?? EdgeInsets.zero,
             child: RichText(
-              text: item._getPropertyFromTitle<InlineSpan>(baseStyle)!,
+              text: item.getPropertyFromTitle<InlineSpan>(baseStyle)!,
               maxLines: 1,
               overflow: TextOverflow.fade,
               softWrap: false,
               textAlign:
-                  item._getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
+                  item.getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
               textHeightBehavior:
-                  item._getPropertyFromTitle<TextHeightBehavior>(),
-              textWidthBasis: item._getPropertyFromTitle<TextWidthBasis>() ??
+                  item.getPropertyFromTitle<TextHeightBehavior>(),
+              textWidthBasis: item.getPropertyFromTitle<TextWidthBasis>() ??
                   TextWidthBasis.parent,
             ),
           )
@@ -671,8 +673,8 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
   }
 }
 
-class _CompactNavigationPane extends StatelessWidget {
-  _CompactNavigationPane({
+class CompactNavigationPane extends StatelessWidget {
+  CompactNavigationPane({
     required this.pane,
     this.paneKey,
     this.listKey,
@@ -697,7 +699,7 @@ class _CompactNavigationPane extends StatelessWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
         },
       );
     } else {
@@ -718,7 +720,7 @@ class _CompactNavigationPane extends StatelessWidget {
       key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? kCompactNavigationPanelWidth,
       child: Align(
         key: pane.paneKey,
         alignment: Alignment.topCenter,
@@ -775,8 +777,8 @@ class _CompactNavigationPane extends StatelessWidget {
   }
 }
 
-class _OpenNavigationPane extends StatefulWidget {
-  _OpenNavigationPane({
+class OpenNavigationPane extends StatefulWidget {
+  OpenNavigationPane({
     required this.pane,
     required this.theme,
     this.paneKey,
@@ -810,7 +812,7 @@ class _OpenNavigationPane extends StatefulWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
           onChanged?.call();
         },
         autofocus: autofocus,
@@ -823,10 +825,10 @@ class _OpenNavigationPane extends StatefulWidget {
   }
 
   @override
-  State<_OpenNavigationPane> createState() => _OpenNavigationPaneState();
+  State<OpenNavigationPane> createState() => _OpenNavigationPaneState();
 }
 
-class _OpenNavigationPaneState extends State<_OpenNavigationPane>
+class _OpenNavigationPaneState extends State<OpenNavigationPane>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
@@ -866,8 +868,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       }
       return const SizedBox.shrink();
     }();
-    double paneWidth =
-        widget.pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+    double paneWidth = widget.pane.size?.openWidth ?? kOpenNavigationPanelWidth;
     if (widget.pane.size?.openMaxWidth != null &&
         paneWidth > widget.pane.size!.openMaxWidth!) {
       paneWidth = widget.pane.size!.openMaxWidth!;
@@ -924,7 +925,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 key: widget.listKey,
                 primary: true,
                 children: widget.pane.items.map((item) {
-                  return _OpenNavigationPane.buildItem(
+                  return OpenNavigationPane.buildItem(
                     context,
                     widget.pane,
                     item,
@@ -938,7 +939,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: widget.pane.footerItems.map((item) {
-                return _OpenNavigationPane.buildItem(
+                return OpenNavigationPane.buildItem(
                   context,
                   widget.pane,
                   item,

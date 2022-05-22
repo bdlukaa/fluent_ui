@@ -1,18 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../utils/popup.dart';
 
 part 'body.dart';
-
 part 'indicators.dart';
-
-part 'pane_items.dart';
-
 part 'pane.dart';
-
+part 'pane_items.dart';
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -263,6 +258,7 @@ class NavigationViewState extends State<NavigationView> {
                 content: ClipRect(child: widget.content),
                 listKey: _listKey,
                 paneKey: _panelKey,
+                overlayKey: _overlayKey,
                 scrollController: scrollController,
                 pane: pane,
               ),
@@ -305,7 +301,8 @@ class NavigationViewState extends State<NavigationView> {
               paneResult = Column(children: [
                 appBar,
                 PaneScrollConfiguration(
-                  child: _TopNavigationPane(
+                  scrollController: scrollController,
+                  child: TopNavigationPane(
                     pane: pane,
                     listKey: _listKey,
                     appBar: widget.appBar,
@@ -320,7 +317,7 @@ class NavigationViewState extends State<NavigationView> {
               }
 
               final openSize =
-                  pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+                  pane.size?.openWidth ?? kOpenNavigationPanelWidth;
 
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
@@ -332,8 +329,7 @@ class NavigationViewState extends State<NavigationView> {
                   top: widget.appBar?.height ?? 0.0,
                   start: openedWithoutOverlay
                       ? openSize
-                      : pane.size?.compactWidth ??
-                          _kCompactNavigationPanelWidth,
+                      : pane.size?.compactWidth ?? kCompactNavigationPanelWidth,
                   end: 0,
                   bottom: 0,
                   child: content,
@@ -353,6 +349,7 @@ class NavigationViewState extends State<NavigationView> {
                     ),
                   ),
                 PaneScrollConfiguration(
+                  scrollController: scrollController,
                   child: () {
                     if (openedWithoutOverlay) {
                       return Mica(
@@ -361,7 +358,7 @@ class NavigationViewState extends State<NavigationView> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 1.0),
                           padding: appBarPadding,
-                          child: _OpenNavigationPane(
+                          child: OpenNavigationPane(
                             theme: theme,
                             pane: pane,
                             paneKey: _panelKey,
@@ -386,7 +383,7 @@ class NavigationViewState extends State<NavigationView> {
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 1.0),
                           padding: appBarPadding,
-                          child: _OpenNavigationPane(
+                          child: OpenNavigationPane(
                             theme: theme,
                             pane: pane,
                             paneKey: _panelKey,
@@ -402,7 +399,7 @@ class NavigationViewState extends State<NavigationView> {
                         child: Mica(
                           key: _overlayKey,
                           backgroundColor: theme.backgroundColor,
-                          child: _CompactNavigationPane(
+                          child: CompactNavigationPane(
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
@@ -422,7 +419,8 @@ class NavigationViewState extends State<NavigationView> {
                 Expanded(
                   child: Row(children: [
                     PaneScrollConfiguration(
-                      child: _OpenNavigationPane(
+                      scrollController: scrollController,
+                      child: OpenNavigationPane(
                         theme: theme,
                         pane: pane,
                         paneKey: _panelKey,
@@ -461,10 +459,11 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
-                  width: _kOpenNavigationPanelWidth,
+                  start: _minimalPaneOpen ? 0.0 : -kOpenNavigationPanelWidth,
+                  width: kOpenNavigationPanelWidth,
                   height: MediaQuery.of(context).size.height,
                   child: PaneScrollConfiguration(
+                    scrollController: scrollController,
                     child: Mica(
                       backgroundColor: _overlayBackgroundColor(),
                       elevation: 10.0,
@@ -478,7 +477,7 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                         margin: const EdgeInsets.symmetric(vertical: 1.0),
                         padding: appBarPadding,
-                        child: _OpenNavigationPane(
+                        child: OpenNavigationPane(
                           theme: theme,
                           pane: pane,
                           paneKey: _panelKey,
@@ -519,13 +518,22 @@ class NavigationViewState extends State<NavigationView> {
       );
     });
   }
+}
 
-  // ignore: non_constant_identifier_names
-  Widget PaneScrollConfiguration({required Widget child}) {
+class PaneScrollConfiguration extends StatelessWidget {
+  const PaneScrollConfiguration({
+    required this.scrollController,
+    required this.child,
+    final Key? key,
+  }) : super(key: key);
+  final ScrollController scrollController;
+  final Widget child;
+  @override
+  Widget build(final BuildContext context) {
     return PrimaryScrollController(
       controller: scrollController,
       child: ScrollConfiguration(
-        behavior: const _NavigationViewScrollBehavior(),
+        behavior: const NavigationViewScrollBehavior(),
         child: child,
       ),
     );
@@ -646,7 +654,7 @@ class NavigationAppBar with Diagnosticable {
       } else {
         return const SizedBox.shrink();
       }
-      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+      widget = SizedBox(width: kCompactNavigationPanelWidth, child: widget);
       return widget;
     });
   }
@@ -712,8 +720,8 @@ class _NavigationAppBar extends StatelessWidget {
             displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
                 ? 0.0
                 : displayMode == PaneDisplayMode.compact
-                    ? _kCompactNavigationPanelWidth
-                    : _kOpenNavigationPanelWidth;
+                    ? kCompactNavigationPanelWidth
+                    : kOpenNavigationPanelWidth;
         result = Stack(children: [
           Row(children: [
             leading,
@@ -745,8 +753,8 @@ class _NavigationAppBar extends StatelessWidget {
   }
 }
 
-class _NavigationViewScrollBehavior extends FluentScrollBehavior {
-  const _NavigationViewScrollBehavior();
+class NavigationViewScrollBehavior extends FluentScrollBehavior {
+  const NavigationViewScrollBehavior();
 
   @override
   Widget buildScrollbar(context, child, details) {
