@@ -704,9 +704,12 @@ class _NavigationAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final direction = Directionality.of(context);
+    final inheritedNavigationView = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode displayMode =
-        InheritedNavigationView.maybeOf(context)?.displayMode ??
-            PaneDisplayMode.top;
+        inheritedNavigationView?.displayMode ?? PaneDisplayMode.top;
+    final PanePosition panePosition =
+        inheritedNavigationView?.pane?.position ?? PanePosition.left;
+
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
@@ -748,11 +751,20 @@ class _NavigationAppBar extends StatelessWidget {
         final isMinimalPaneOpen =
             InheritedNavigationView.maybeOf(context)?.minimalPaneOpen ?? false;
         final double width =
-            displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
+            (displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen)
                 ? 0.0
                 : displayMode == PaneDisplayMode.compact
                     ? _kCompactNavigationPanelWidth
                     : _kOpenNavigationPanelWidth;
+        double start = 0.0;
+        double end = 0.0;
+        if ((displayMode == PaneDisplayMode.compact ||
+                displayMode == PaneDisplayMode.open) &&
+            panePosition == PanePosition.right) {
+          end = width;
+        } else {
+          start = width;
+        }
         result = Stack(children: [
           Row(children: [
             leading,
@@ -762,8 +774,8 @@ class _NavigationAppBar extends StatelessWidget {
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,
-              start: width,
-              end: 0.0,
+              start: start,
+              end: end,
               top: 0.0,
               bottom: 0.0,
               child: Align(
