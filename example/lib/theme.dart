@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:system_theme/system_theme.dart';
 
 enum NavigationIndicators { sticky, end }
 
@@ -24,6 +24,13 @@ class AppTheme extends ChangeNotifier {
   PaneDisplayMode get displayMode => _displayMode;
   set displayMode(PaneDisplayMode displayMode) {
     _displayMode = displayMode;
+    notifyListeners();
+  }
+
+  PanePosition _panePosition = PanePosition.left;
+  PanePosition get panePosition => _panePosition;
+  set panePosition(PanePosition panePosition) {
+    _panePosition = panePosition;
     notifyListeners();
   }
 

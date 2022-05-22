@@ -58,6 +58,11 @@ enum PaneDisplayMode {
   auto,
 }
 
+enum PanePosition {
+  left,
+  right,
+}
+
 /// The pane used by [NavigationView].
 ///
 /// The [NavigationView] doesn't perform any navigation tasks automatically.

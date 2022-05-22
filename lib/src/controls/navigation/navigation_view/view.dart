@@ -35,6 +35,7 @@ class NavigationView extends StatefulWidget {
     Key? key,
     this.appBar,
     this.pane,
+    this.panePosition = PanePosition.left,
     this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
@@ -48,6 +49,12 @@ class NavigationView extends StatefulWidget {
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above [content].
   final NavigationPane? pane;
+
+  /// The navigation pane position, that can be displayed on the
+  /// left side or right side.
+  ///
+  /// Works only with [PaneDisplayMode.open], [PaneDisplayMode.compact]
+  final PanePosition panePosition;
 
   /// The content of the pane.
   ///
@@ -322,115 +329,160 @@ class NavigationViewState extends State<NavigationView> {
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
-              paneResult = Stack(children: [
-                AnimatedPositionedDirectional(
-                  duration: theme.animationDuration ?? Duration.zero,
-                  curve: theme.animationCurve ?? Curves.linear,
-                  top: widget.appBar?.height ?? 0.0,
-                  start: openedWithoutOverlay
-                      ? openSize
-                      : pane.size?.compactWidth ?? kCompactNavigationPanelWidth,
-                  end: 0,
-                  bottom: 0,
-                  child: content,
-                ),
-                // If the overlay is open, add a gesture detector above the
-                // content to close if the user click outside the overlay
-                if (_compactOverlayOpen)
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: toggleCompactOpenMode,
-                      child: AbsorbPointer(
-                        child: Semantics(
-                          label: localizations.modalBarrierDismissLabel,
-                          child: const SizedBox.expand(),
+              double contentStartPosition = 0;
+              double contentEndPosition = 0;
+              final compactWidth = openedWithoutOverlay
+                  ? openSize
+                  : pane.size?.compactWidth ?? kCompactNavigationPanelWidth;
+              AlignmentDirectional stackAlignment;
+
+              switch (widget.panePosition) {
+                case PanePosition.left:
+                  contentStartPosition = compactWidth;
+                  stackAlignment = AlignmentDirectional.topStart;
+                  break;
+                case PanePosition.right:
+                  contentEndPosition = compactWidth;
+                  stackAlignment = AlignmentDirectional.topEnd;
+                  break;
+              }
+
+              paneResult = Stack(
+                alignment: stackAlignment,
+                children: [
+                  AnimatedPositionedDirectional(
+                    duration: theme.animationDuration ?? Duration.zero,
+                    curve: theme.animationCurve ?? Curves.linear,
+                    top: widget.appBar?.height ?? 0.0,
+                    start: contentStartPosition,
+                    end: contentEndPosition,
+                    bottom: 0,
+                    child: content,
+                  ),
+                  // If the overlay is open, add a gesture detector above the
+                  // content to close if the user click outside the overlay
+                  if (_compactOverlayOpen)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: toggleCompactOpenMode,
+                        child: AbsorbPointer(
+                          child: Semantics(
+                            label: localizations.modalBarrierDismissLabel,
+                            child: const SizedBox.expand(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                PaneScrollConfiguration(
-                  scrollController: scrollController,
-                  child: () {
-                    if (openedWithoutOverlay) {
-                      return Mica(
-                        key: _overlayKey,
-                        backgroundColor: theme.backgroundColor,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                            onItemSelected: toggleCompactOpenMode,
-                          ),
-                        ),
-                      );
-                    } else if (_compactOverlayOpen) {
-                      return Mica(
-                        key: _overlayKey,
-                        backgroundColor: _overlayBackgroundColor(),
-                        elevation: 10.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color(0xFF6c6c6c),
-                              width: 0.15,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                            onItemSelected: toggleCompactOpenMode,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: appBarPadding,
-                        child: Mica(
+                  PaneScrollConfiguration(
+                    scrollController: scrollController,
+                    child: () {
+                      if (openedWithoutOverlay) {
+                        return Mica(
                           key: _overlayKey,
                           backgroundColor: theme.backgroundColor,
-                          child: CompactNavigationPane(
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            padding: appBarPadding,
+                            child: OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onToggle: toggleCompactOpenMode,
+                              onItemSelected: toggleCompactOpenMode,
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  }(),
-                ),
-                appBar,
-              ]);
+                        );
+                      } else if (_compactOverlayOpen) {
+                        return Mica(
+                          key: _overlayKey,
+                          backgroundColor: _overlayBackgroundColor(),
+                          elevation: 10.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFF6c6c6c),
+                                width: 0.15,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            padding: appBarPadding,
+                            child: OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onToggle: toggleCompactOpenMode,
+                              onItemSelected: toggleCompactOpenMode,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: appBarPadding,
+                          child: Mica(
+                            key: _overlayKey,
+                            backgroundColor: theme.backgroundColor,
+                            child: CompactNavigationPane(
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onToggle: toggleCompactOpenMode,
+                            ),
+                          ),
+                        );
+                      }
+                    }(),
+                  ),
+                  appBar,
+                ],
+              );
               break;
             case PaneDisplayMode.open:
-              paneResult = Column(children: [
-                appBar,
-                Expanded(
-                  child: Row(children: [
-                    PaneScrollConfiguration(
-                      scrollController: scrollController,
-                      child: OpenNavigationPane(
-                        theme: theme,
-                        pane: pane,
-                        paneKey: _panelKey,
-                        listKey: _listKey,
-                      ),
-                    ),
-                    Expanded(child: content),
-                  ]),
+              final paneWidget = PaneScrollConfiguration(
+                scrollController: scrollController,
+                child: OpenNavigationPane(
+                  theme: theme,
+                  pane: pane,
+                  paneKey: _panelKey,
+                  listKey: _listKey,
                 ),
-              ]);
+              );
+
+              switch (widget.panePosition) {
+                case PanePosition.left:
+                  paneResult = Column(
+                    children: [
+                      appBar,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            paneWidget,
+                            Expanded(child: content),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                  break;
+                case PanePosition.right:
+                  paneResult = Column(
+                    children: [
+                      appBar,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(child: content),
+                            paneWidget,
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                  break;
+              }
+
               break;
             case PaneDisplayMode.minimal:
               paneResult = Stack(children: [
