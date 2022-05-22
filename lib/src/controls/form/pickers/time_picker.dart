@@ -149,10 +149,9 @@ class _TimePickerState extends State<TimePicker> {
       pickerContent: (context) {
         return _TimePickerContentPopup(
           onCancel: widget.onCancel ?? () {},
-          onChanged: () => widget.onChanged?.call(time),
+          onChanged: (time) => widget.onChanged?.call(time),
           amText: widget.amText,
           pmText: widget.pmText,
-          handleDateChanged: handleDateChanged,
           date: widget.selected ?? DateTime.now(),
           amPmController: _amPmController,
           hourController: _hourController,
@@ -246,7 +245,6 @@ class _TimePickerContentPopup extends StatefulWidget {
     required this.onCancel,
     required this.amText,
     required this.pmText,
-    required this.handleDateChanged,
     required this.hourController,
     required this.minuteController,
     required this.amPmController,
@@ -258,12 +256,11 @@ class _TimePickerContentPopup extends StatefulWidget {
   final FixedExtentScrollController minuteController;
   final FixedExtentScrollController amPmController;
 
-  final VoidCallback onChanged;
+  final ValueChanged<DateTime> onChanged;
   final VoidCallback onCancel;
   final DateTime date;
   final String amText;
   final String pmText;
-  final ValueChanged<DateTime> handleDateChanged;
 
   final bool use24Format;
   final double minuteIncrement;
@@ -275,6 +272,12 @@ class _TimePickerContentPopup extends StatefulWidget {
 
 class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   bool get isAm => widget.amPmController.selectedItem == 0;
+
+  late DateTime localDate = widget.date;
+
+  void handleDateChanged(DateTime time) {
+    localDate = time;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -335,15 +338,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     if (!widget.use24Format && !isAm) {
                       hour += 12;
                     }
-                    widget.handleDateChanged(DateTime(
-                      widget.date.year,
-                      widget.date.month,
-                      widget.date.day,
+                    handleDateChanged(DateTime(
+                      localDate.year,
+                      localDate.month,
+                      localDate.day,
                       hour,
-                      widget.date.minute,
-                      widget.date.second,
-                      widget.date.millisecond,
-                      widget.date.microsecond,
+                      localDate.minute,
+                      localDate.second,
+                      localDate.millisecond,
+                      localDate.microsecond,
                     ));
                   },
                 ),
@@ -387,15 +390,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (index) {
-                    widget.handleDateChanged(DateTime(
-                      widget.date.year,
-                      widget.date.month,
-                      widget.date.day,
-                      widget.date.hour,
+                    handleDateChanged(DateTime(
+                      localDate.year,
+                      localDate.month,
+                      localDate.day,
+                      localDate.hour,
                       index,
-                      widget.date.second,
-                      widget.date.millisecond,
-                      widget.date.microsecond,
+                      localDate.second,
+                      localDate.millisecond,
+                      localDate.microsecond,
                     ));
                   },
                 ),
@@ -443,7 +446,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     ],
                     onSelectedItemChanged: (index) {
                       setState(() {});
-                      int hour = widget.date.hour;
+                      int hour = localDate.hour;
                       final isAm = index == 0;
                       if (!widget.use24Format) {
                         // If it was previously am and now it's pm
@@ -454,15 +457,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                           hour -= 12;
                         }
                       }
-                      widget.handleDateChanged(DateTime(
-                        widget.date.year,
-                        widget.date.month,
-                        widget.date.day,
+                      handleDateChanged(DateTime(
+                        localDate.year,
+                        localDate.month,
+                        localDate.day,
                         hour,
-                        widget.date.minute,
-                        widget.date.second,
-                        widget.date.millisecond,
-                        widget.date.microsecond,
+                        localDate.minute,
+                        localDate.second,
+                        localDate.millisecond,
+                        localDate.microsecond,
                       ));
                     },
                   ),
@@ -481,7 +484,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
       YesNoPickerControl(
         onChanged: () {
           Navigator.pop(context);
-          widget.onChanged();
+          widget.onChanged(localDate);
         },
         onCancel: () {
           Navigator.pop(context);

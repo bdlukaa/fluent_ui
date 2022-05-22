@@ -176,10 +176,9 @@ class _DatePickerState extends State<DatePicker> {
           date: date,
           dayController: _dayController!,
           endYear: endYear,
-          handleDateChanged: handleDateChanged,
           monthController: _monthController!,
           onCancel: () => widget.onCancel?.call(),
-          onChanged: () => widget.onChanged?.call(date),
+          onChanged: (date) => widget.onChanged?.call(date),
           showDay: widget.showDay,
           showMonth: widget.showMonth,
           showYear: widget.showYear,
@@ -281,7 +280,6 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.showDay,
     required this.showYear,
     required this.date,
-    required this.handleDateChanged,
     required this.onChanged,
     required this.onCancel,
     required this.monthController,
@@ -295,8 +293,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
   final bool showDay;
   final bool showYear;
   final DateTime date;
-  final ValueChanged<DateTime> handleDateChanged;
-  final VoidCallback onChanged;
+  final ValueChanged<DateTime> onChanged;
   final VoidCallback onCancel;
   final FixedExtentScrollController monthController;
   final FixedExtentScrollController dayController;
@@ -317,6 +314,12 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       start: DateTime(year, month),
       end: DateTime(year, month + 1),
     ).duration.inDays;
+  }
+
+  late DateTime localDate = widget.date;
+
+  void handleDateChanged(DateTime time) {
+    localDate = time;
   }
 
   @override
@@ -354,7 +357,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         title: Text(
                           text,
                           style: kPickerPopupTextStyle(context)?.copyWith(
-                            color: month == widget.date.month
+                            color: month == localDate.month
                                 ? highlightTileColor.basedOnLuminance()
                                 : null,
                           ),
@@ -391,18 +394,18 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                       onSelectedItemChanged: (index) {
                         final month = index + 1;
                         final daysInMonth =
-                            _getDaysInMonth(month, widget.date.year);
-                        int day = widget.date.day;
+                            _getDaysInMonth(month, localDate.year);
+                        int day = localDate.day;
                         if (day > daysInMonth) day = daysInMonth;
-                        widget.handleDateChanged(DateTime(
-                          widget.date.year,
+                        handleDateChanged(DateTime(
+                          localDate.year,
                           month,
                           day,
-                          widget.date.hour,
-                          widget.date.minute,
-                          widget.date.second,
-                          widget.date.millisecond,
-                          widget.date.microsecond,
+                          localDate.hour,
+                          localDate.minute,
+                          localDate.second,
+                          localDate.millisecond,
+                          localDate.microsecond,
                         ));
                         setState(() {});
                       },
@@ -416,7 +419,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 child: () {
                   // DAY
                   final daysInMonth =
-                      _getDaysInMonth(widget.date.month, widget.date.year);
+                      _getDaysInMonth(localDate.month, localDate.year);
                   return PickerNavigatorIndicator(
                     onBackward: () {
                       navigateSides(
@@ -450,7 +453,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                                   '$day',
                                   style:
                                       kPickerPopupTextStyle(context)?.copyWith(
-                                    color: day == widget.date.day
+                                    color: day == localDate.day
                                         ? highlightTileColor.basedOnLuminance()
                                         : null,
                                   ),
@@ -461,15 +464,15 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         ),
                       ),
                       onSelectedItemChanged: (index) {
-                        widget.handleDateChanged(DateTime(
-                          widget.date.year,
-                          widget.date.month,
+                        handleDateChanged(DateTime(
+                          localDate.year,
+                          localDate.month,
                           index + 1,
-                          widget.date.hour,
-                          widget.date.minute,
-                          widget.date.second,
-                          widget.date.millisecond,
-                          widget.date.microsecond,
+                          localDate.hour,
+                          localDate.minute,
+                          localDate.second,
+                          localDate.millisecond,
+                          localDate.microsecond,
                         ));
                         setState(() {});
                       },
@@ -507,15 +510,15 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                       diameterRatio: kPickerDiameterRatio,
                       physics: const FixedExtentScrollPhysics(),
                       onSelectedItemChanged: (index) {
-                        widget.handleDateChanged(DateTime(
+                        handleDateChanged(DateTime(
                           widget.startYear + index + 1,
-                          widget.date.month,
-                          widget.date.day,
-                          widget.date.hour,
-                          widget.date.minute,
-                          widget.date.second,
-                          widget.date.millisecond,
-                          widget.date.microsecond,
+                          localDate.month,
+                          localDate.day,
+                          localDate.hour,
+                          localDate.minute,
+                          localDate.second,
+                          localDate.millisecond,
+                          localDate.microsecond,
                         ));
                         setState(() {});
                       },
@@ -527,7 +530,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                             child: Text(
                               '$realYear',
                               style: kPickerPopupTextStyle(context)?.copyWith(
-                                  color: realYear == widget.date.year
+                                  color: realYear == localDate.year
                                       ? highlightTileColor.basedOnLuminance()
                                       : null),
                             ),
@@ -551,7 +554,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       YesNoPickerControl(
         onChanged: () {
           Navigator.pop(context);
-          widget.onChanged();
+          widget.onChanged(localDate);
         },
         onCancel: () {
           Navigator.pop(context);
