@@ -237,6 +237,7 @@ class _DatePickerState extends State<DatePicker> {
                         DateFormat.MMMM('$locale')
                             .format(widget.selected)
                             .uppercaseFirst(),
+                        locale: locale,
                       ),
                     );
                   }(),
@@ -402,6 +403,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                                     ? highlightTileColor.basedOnLuminance()
                                     : null,
                               ),
+                              locale: locale,
                             ),
                           );
                         }),
