@@ -2,6 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [3.x.0]
 
+- Added support for NavigationPane right side via property `NavigationView.panePosition`. Works only with `PaneDisplayMode.open`, `PaneDisplayMode.compact`.
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
 - **BREAKING** `Map<ShortcutActivator, Intent>?` is now the typed used on `FluentApp.shortcuts` ([#351](https://github.com/bdlukaa/fluent_ui/pull/351))
 - `TextBox` review ([#352](https://github.com/bdlukaa/fluent_ui/pull/352)):
@@ -107,11 +108,13 @@ Date format: DD/MM/YYYY
 - Long `content` widget no longer overflow in `ContentDialog` ([#242](https://github.com/bdlukaa/fluent_ui/issues/242))
 - Content state is no longer lost when the pane display mode is changed ([#250](https://github.com/bdlukaa/fluent_ui/pull/250))
 - **BREAKING** Update indicators ([#248](https://github.com/bdlukaa/fluent_ui/pull/248)):
+
   - Added `InheritedNavigationView`
   - Updated sticky indicator to match the latest Win 11 UI ([#173](https://github.com/bdlukaa/fluent_ui/issues/173))
   - **BREAKING** Renamed `NavigationPane.indicatorBuilder` to `NavigationPane.indicator`
   - **BREAKING** Indicators are no longer built with functions
     Before:
+
     ```dart
     indicatorBuilder: ({
       required BuildContext context,
@@ -139,11 +142,13 @@ Date format: DD/MM/YYYY
     ```
 
     Now:
+
     ```dart
     indicator: StickyNavigationIndicator(
       color: Colors.blue.lighter, // optional
     ),
     ```
+
 - `initiallyExpanded` property on `Expander` works properly ([#252](https://github.com/bdlukaa/fluent_ui/pull/252))
 - **BREAKING** Flyout changes:
   - Removed `Flyout.contentWidth` and added `FlyoutContent.constraints`. Now the content will be automatically sized and layed out according to the placement
@@ -189,7 +194,8 @@ Date format: DD/MM/YYYY
 - **BREAKING** Completly rework `DropDownButton`
 - **BREAKING** Removed `CheckboxThemeData.thirdStateIcon`
 
-  Currently, there isn't a fluent icon that is close to the native icon. A local widget *`_ThirdStateDash`* is used
+  Currently, there isn't a fluent icon that is close to the native icon. A local widget _`_ThirdStateDash`_ is used
+
 - Do not override material `Theme` on `FluentApp` ([#155](https://github.com/bdlukaa/fluent_ui/pull/154))
 - Slider thumb now doesn't change inner size if hovered while disabled
 - Uniform foreground color on `Checkbox`
@@ -205,17 +211,19 @@ Date format: DD/MM/YYYY
 - Added Material Theme to Fluent Theme Builder ([#133](https://github.com/bdlukaa/fluent_ui/issues/133))
 - Add more customization options to PaneItem ([#111](https://github.com/bdlukaa/fluent_ui/issues/111), [#144](https://github.com/bdlukaa/fluent_ui/issues/144))
 - `NavigationView` updates **BREAKING**:
+
   - Properly add item key to `PaneItem` in top mode ([#143](https://github.com/bdlukaa/fluent_ui/issues/143))
   - Items bounds and positions are fetched when the item list is scrolled as well to prevent misalignment
   - Added the helper functions `NavigationIndicator.end` and `NavigationIndicator.sticky`
   - Use `Curves.easeIn` for sticky navigation indicator by default
   - Use the correct accent color for navigation indicators by default
   - `EntrancePageTransition` is now the correct page transition used when display mode is top
-  - Apply correct press effect for `PaneItem` when display mode is top 
+  - Apply correct press effect for `PaneItem` when display mode is top
   - **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
   - **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
 
   Before:
+
   ```dart
   pane: NavigationPane(
     indicatorBuilder: ({
@@ -249,6 +257,7 @@ Date format: DD/MM/YYYY
   ```
 
   Now:
+
   ```dart
   pane: NavigationPane(
     indicatorBuilder: ({
@@ -312,7 +321,7 @@ Date format: DD/MM/YYYY
 - Fix `Slider` and `RatingBar` ([#116](https://github.com/bdlukaa/fluent_ui/issues/116))
 - Fix scroll buttons when there are too many tabs in `TabView` ([#92](https://github.com/bdlukaa/fluent_ui/issues/92))
 - Fix button style on tab in `TabView` ([#90](https://github.com/bdlukaa/fluent_ui/issues/90))
-- Added *Close on middle click* on tabs in `TabView` ([#91](https://github.com/bdlukaa/fluent_ui/issues/91))
+- Added _Close on middle click_ on tabs in `TabView` ([#91](https://github.com/bdlukaa/fluent_ui/issues/91))
 - Added `newTabLabel`, `closeTabLabel`, `scrollTabBackward`, `scrollTabForward` to `FluentLocalizations`
 - Fix `TabView`'s text when it's too long. Now it's clipped when overflow and line doesn't break
 - Added `TabView.closeButtonVisibility`. Defaults to `CloseButtonVisibilityMode.always`
@@ -349,7 +358,7 @@ Date format: DD/MM/YYYY
 - **BREAKING** Minimal Flutter version is now 2.8
 - `NavigationAppBar.backgroundColor` is now applied correctly. ([#100](https://github.com/bdlukaa/fluent_ui/issues/100))
 - ComboBox's Popup Acrylic can now be disabled if wrapped in a `DisableAcrylic` ([#105](https://github.com/bdlukaa/fluent_ui/issues/105))
-- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99)) 
+- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99))
 - Implement `PaneItemAction` for `NavigationPane` ([#104](https://github.com/bdlukaa/fluent_ui/issues/104))
 
 ## [3.4.1] - [08/11/2021]
@@ -374,7 +383,7 @@ Date format: DD/MM/YYYY
 
 - Back button now isn't forced when using top navigation mode ([#74](https://github.com/bdlukaa/fluent_ui/issues/74))
 - `PilButtonBar` now accept 2 items ([#66](https://github.com/bdlukaa/fluent_ui/issues/66))
-- Added builder variant to `NavigationBody`. 
+- Added builder variant to `NavigationBody`.
 - Fixed content bug when `AppBar` was not supplied too `NavigationView`
 
 ## [3.2.0] - Flutter 2.5.0 - [15/09/2021]

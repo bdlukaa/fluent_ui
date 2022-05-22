@@ -1,9 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:fluent_ui/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:provider/provider.dart';
 
@@ -87,7 +86,9 @@ class Settings extends StatelessWidget {
     assert(debugCheckHasMediaQuery(context));
     final appTheme = context.watch<AppTheme>();
     const spacer = SizedBox(height: 10.0);
+    const horizontalSpacer = SizedBox(width: 40.0);
     const biggerSpacer = SizedBox(height: 40.0);
+    const biggerHorizontalSpacer = SizedBox(width: 40.0);
 
     final supportedLocales = const AppLocalizationDelegate().supportedLocales;
     final currentLocale =
@@ -121,25 +122,71 @@ class Settings extends StatelessWidget {
         }),
         biggerSpacer,
         Text(
-          'Navigation Pane Display Mode',
+          'Navigation Pane ',
           style: FluentTheme.of(context).typography.subtitle,
         ),
         spacer,
-        ...List.generate(PaneDisplayMode.values.length, (index) {
-          final mode = PaneDisplayMode.values[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: RadioButton(
-              checked: appTheme.displayMode == mode,
-              onChanged: (value) {
-                if (value) appTheme.displayMode = mode;
-              },
-              content: Text(
-                mode.toString().replaceAll('PaneDisplayMode.', ''),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Display Mode',
+                  style: FluentTheme.of(context).typography.bodyStrong,
+                ),
+                spacer,
+                ...PaneDisplayMode.values.map((mode) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: RadioButton(
+                      checked: appTheme.displayMode == mode,
+                      onChanged: (value) {
+                        if (value) appTheme.displayMode = mode;
+                      },
+                      content: Text(
+                        mode.name,
+                      ),
+                    ),
+                  );
+                })
+              ],
+            ),
+            horizontalSpacer,
+            Visibility(
+              visible: appTheme.displayMode == PaneDisplayMode.auto ||
+                  appTheme.displayMode == PaneDisplayMode.compact ||
+                  appTheme.displayMode == PaneDisplayMode.open,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Side Position',
+                    style: FluentTheme.of(context).typography.bodyStrong,
+                  ),
+                  spacer,
+                  ...PanePosition.values.map((position) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: RadioButton(
+                        checked: appTheme.panePosition == position,
+                        onChanged: (value) {
+                          if (value) appTheme.panePosition = position;
+                        },
+                        content: Text(
+                          position.name,
+                        ),
+                      ),
+                    );
+                  })
+                ],
               ),
             ),
-          );
-        }),
+          ],
+        ),
         biggerSpacer,
         Text('Navigation Indicator',
             style: FluentTheme.of(context).typography.subtitle),
