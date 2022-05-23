@@ -88,7 +88,6 @@ class Settings extends StatelessWidget {
     const spacer = SizedBox(height: 10.0);
     const horizontalSpacer = SizedBox(width: 40.0);
     const biggerSpacer = SizedBox(height: 40.0);
-    const biggerHorizontalSpacer = SizedBox(width: 40.0);
 
     final supportedLocales = const AppLocalizationDelegate().supportedLocales;
     final currentLocale =
