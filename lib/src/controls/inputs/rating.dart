@@ -36,7 +36,7 @@ class RatingBar extends StatefulWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-    this.starSpacing = 8,
+    this.starSpacing = 0,
     this.dragStartBehavior = DragStartBehavior.down,
   })  : assert(rating >= 0 && rating <= amount),
         assert(starSpacing >= 0),

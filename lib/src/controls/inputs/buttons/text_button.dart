@@ -18,6 +18,7 @@ class TextButton extends BaseButton {
     FocusNode? focusNode,
     bool autofocus = false,
     ButtonStyle? style,
+    bool focusable = true,
   }) : super(
           key: key,
           child: child,
@@ -26,6 +27,7 @@ class TextButton extends BaseButton {
           onLongPress: onLongPress,
           onPressed: onPressed,
           style: style,
+          focusable: focusable,
         );
 
   @override

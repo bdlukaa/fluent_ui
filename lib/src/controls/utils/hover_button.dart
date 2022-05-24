@@ -231,6 +231,8 @@ class _HoverButtonState extends State<HoverButton> {
       );
     } else {
       w = MouseRegion(
+        cursor: widget.cursor ?? MouseCursor.defer,
+        opaque: true,
         onEnter: (e) {
           if (mounted) setState(() => _hovering = true);
         },

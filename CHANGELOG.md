@@ -40,6 +40,8 @@ Date format: DD/MM/YYYY
       ),
       ```
   - (navigation) Updated `NavigationView`, `PaneItem` and `ScaffoldPage`
+    - Updated `TabView` and its tabs styles. A `FocusBorder` is now used to display the focus highlight of the tabs
+    - All combinations of `BorderRadius` can now be used on `FocusBorder`
   - (surfaces) Updated `Card`, `ContentDialog`, `InfoBar`, `Expander`, `Flyout` and `Divider``
     - Added `InfoBar.isIconVisible`
   - (indicators) Updated `ProgressBar`, `ProgressRing` and `InfoBadge`

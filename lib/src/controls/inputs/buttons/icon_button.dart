@@ -12,6 +12,7 @@ class IconButton extends BaseButton {
     bool autofocus = false,
     ButtonStyle? style,
     this.iconButtonMode,
+    bool focusable = true,
   }) : super(
           key: key,
           child: icon,
@@ -20,6 +21,7 @@ class IconButton extends BaseButton {
           onLongPress: onLongPress,
           onPressed: onPressed,
           style: style,
+          focusable: focusable,
         );
 
   final IconButtonMode? iconButtonMode;
