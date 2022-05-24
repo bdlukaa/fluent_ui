@@ -233,67 +233,53 @@ class ButtonThemeData with Diagnosticable {
 
   /// Defines the default color used by [Button]s using the current brightness
   /// and state.
-  ///
-  /// The color used for none and disabled are the same. Only the button
-  /// content color should be changed. This can be done using the function
-  /// [Color.basedOnLuminance] to define the contrast color.
-  // Values eyeballed from Windows 10
-  // Used when the state is not recieving any user
-  // interaction or is disabled
-  static Color buttonColor(
-    Brightness brightness,
-    Set<ButtonStates> states, {
-    Color? lightDefaultColor,
-  }) {
-    late Color color;
-    if (brightness == Brightness.light) {
-      if (states.isPressing) {
-        color = const Color(0xFFf2f2f2);
-      } else if (states.isHovering) {
-        color = const Color(0xFFF6F6F6);
-      } else {
-        color = const Color(0xFFfbfbfb);
-      }
-      return color;
-    } else {
-      if (states.isPressing) {
-        color = const Color(0xFF272727);
-      } else if (states.isHovering) {
-        color = const Color(0xFF323232);
-      } else {
-        color = const Color(0xFF2b2b2b);
-      }
-      return color;
+  static Color buttonColor(BuildContext context, Set<ButtonStates> states) {
+    final res = FluentTheme.of(context).resources;
+    if (states.isPressing) {
+      return res.controlFillColorTertiary;
+    } else if (states.isHovering) {
+      return res.controlFillColorSecondary;
+    } else if (states.isDisabled) {
+      return res.controlFillColorDisabled;
     }
+    return res.controlFillColorDefault;
+  }
+
+  /// Defines the default foregournd color used by [Button]s using the current brightness
+  /// and state.
+  static Color buttonForegroundColor(
+    BuildContext context,
+    Set<ButtonStates> states,
+  ) {
+    final res = FluentTheme.of(context).resources;
+    if (states.isPressing) {
+      return res.textFillColorTertiary;
+    } else if (states.isHovering) {
+      return res.textFillColorSecondary;
+    } else if (states.isDisabled) {
+      return res.textFillColorDisabled;
+    }
+    return res.textFillColorPrimary;
   }
 
   /// Defines the default color used for inputs when checked, such as checkbox,
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
   static Color checkedInputColor(ThemeData theme, Set<ButtonStates> states) {
-    final bool isDark = theme.brightness == Brightness.dark;
-    return states.isPressing
-        ? isDark
-            ? theme.accentColor.darker
-            : theme.accentColor.lighter
-        : states.isHovering
-            ? isDark
-                ? theme.accentColor.dark
-                : theme.accentColor.light
-            : theme.accentColor;
+    return FilledButton.backgroundColor(theme, states);
   }
 
-  static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFF221D08).withOpacity(0.155);
-      if (states.isHovering) return const Color(0xFF221D08).withOpacity(0.055);
-      return Colors.transparent;
-    } else {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFFFFF3E8).withOpacity(0.080);
-      if (states.isHovering) return const Color(0xFFFFF3E8).withOpacity(0.12);
-      return Colors.transparent;
-    }
+  static Color uncheckedInputColor(
+    ThemeData style,
+    Set<ButtonStates> states, {
+    bool transparentWhenNone = false,
+  }) {
+    final res = style.resources;
+    if (states.isDisabled) return res.controlAltFillColorDisabled;
+    if (states.isPressing) return res.controlAltFillColorQuarternary;
+    if (states.isHovering) return res.controlAltFillColorTertiary;
+    return transparentWhenNone
+        ? res.controlAltFillColorTransparent
+        : res.controlAltFillColorSecondary;
   }
 }

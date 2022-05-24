@@ -24,6 +24,7 @@ abstract class BaseButton extends StatefulWidget {
     required this.focusNode,
     required this.autofocus,
     required this.child,
+    required this.focusable,
   }) : super(key: key);
 
   /// Called when the button is tapped or otherwise activated.
@@ -57,6 +58,8 @@ abstract class BaseButton extends StatefulWidget {
   ///
   /// Usually a [Text] widget
   final Widget child;
+
+  final bool focusable;
 
   @protected
   ButtonStyle defaultStyleOf(BuildContext context);
@@ -107,6 +110,7 @@ class _BaseButtonState extends State<BaseButton> {
       focusNode: widget.focusNode,
       onPressed: widget.onPressed,
       onLongPress: widget.onLongPress,
+      focusEnabled: widget.focusable,
       builder: (context, states) {
         T? resolve<T>(
             ButtonState<T>? Function(ButtonStyle? style) getProperty) {

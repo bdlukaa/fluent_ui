@@ -228,17 +228,6 @@ class ChipThemeData with Diagnosticable {
             : states.isFocused || states.isHovering
                 ? const Color(0xFF383838)
                 : const Color(0xFF212121);
-    Color selectedColor(Set<ButtonStates> states) =>
-        states.isFocused || states.isPressing || states.isHovering
-            ? style.accentColor.resolveFromBrightness(
-                style.brightness,
-                level: states.isPressing
-                    ? 2
-                    : states.isFocused
-                        ? 0
-                        : 1,
-              )
-            : style.accentColor;
     return ChipThemeData(
       spacing: _kChipSpacing,
       decoration: ButtonState.resolveWith((states) {
@@ -257,11 +246,11 @@ class ChipThemeData with Diagnosticable {
       selectedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: selectedColor(states),
+          color: ButtonThemeData.checkedInputColor(style, states),
         );
       }),
       selectedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: selectedColor(states).basedOnLuminance());
+        return TextStyle(color: FilledButton.foregroundColor(style, states));
       }),
     );
   }

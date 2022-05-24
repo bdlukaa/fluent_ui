@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [3.x.0]
+## [next]
 
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
 - **BREAKING** `Map<ShortcutActivator, Intent>?` is now the typed used on `FluentApp.shortcuts` ([#351](https://github.com/bdlukaa/fluent_ui/pull/351))
@@ -15,13 +15,37 @@ Date format: DD/MM/YYYY
   - Updated card's background colors
   - **BREAKING** Removed `Card.elevation`
   - Added `Card.margin`, which is the margin around the card
-- `InfoBar` updates:
-  - Added `InfoBar.isIconVisible`
-  - Updated its design to follow the new Win UI 3 guidelines
 - Updated `Combobox` and `Button` designs
 - Reviewed `DatePicker` and `TimePicker` ([#357](https://github.com/bdlukaa/fluent_ui/pull/357))
   - Correctly apply dimensions and positions to both pickers
   - Update the picker popup style and behavior
+- Colors Update ([#368](https://github.com/bdlukaa/fluent_ui/pull/368)):
+  - Added `ResourceDictionary`, which provides default colors to be used on components
+  - (forms) Updated `Combobox` style. It now uses `Acrylic` on the combobox popup menu 
+  - (buttons) Updated `Button`, `FilledButton`, `IconButton` and `TextButton` styles
+  - (toggleable inputs) Updated `Checkbox`, `Chip`, `RadioButton`, `RatingBar`, `ToggleButton` and `ToggleSwitch`
+    - **BREAKING** Updated `Slider`:
+      - `SliderThemeData.thumbColor`, `SliderThemeData.activeColor` and `SliderThemeData.inactiveColor` now are of type `ButtonState<Color?>?`, which handles the button color on different states. `SliderThemeData.disabledThumbColor`, `SliderThemeData.disabledActiveColor` and `SliderThemeData.disabledInactiveColor` were removed
+      - Before:
+      ```dart
+      SliderThemeData(
+        thumbColor: Colors.green,
+      ),
+      ```
+      - Now:
+      ```dart
+      SliderThemeData(
+        // Apply Colors.green for all button states. Instead you can use ButtonState.resolveWith to use different values according to the current state
+        thumbColor: ButtonState.all(Colors.green),
+      ),
+      ```
+  - (navigation) Updated `NavigationView`, `PaneItem` and `ScaffoldPage`
+    - Updated `TabView` and its tabs styles. A `FocusBorder` is now used to display the focus highlight of the tabs
+    - All combinations of `BorderRadius` can now be used on `FocusBorder`
+  - (surfaces) Updated `Card`, `ContentDialog`, `InfoBar`, `Expander`, `Flyout` and `Divider``
+    - Added `InfoBar.isIconVisible`
+  - (indicators) Updated `ProgressBar`, `ProgressRing` and `InfoBadge`
+  - (other) Added helper methods for `AccentColor`: `AccentColor.defaultBrushFor`, `AccentColor.secondaryBrushFor` and `AccentColor.tertiaryBrushFor`
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 

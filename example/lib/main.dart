@@ -159,12 +159,24 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           );
         }(),
-        actions: kIsWeb
-            ? null
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [Spacer(), WindowButtons()],
-              ),
+        actions: Row(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Spacer(),
+            ToggleSwitch(
+              content: const Text('Dark Mode'),
+              checked: FluentTheme.of(context).brightness.isDark,
+              onChanged: (v) {
+                if (v) {
+                  appTheme.mode = ThemeMode.dark;
+                } else {
+                  appTheme.mode = ThemeMode.light;
+                }
+              },
+            ),
+            if (!kIsWeb) const WindowButtons(),
+          ],
+        ),
       ),
       pane: NavigationPane(
         selected: index,

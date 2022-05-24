@@ -36,7 +36,7 @@ Decoration kPickerDecorationBuilder(
   final theme = FluentTheme.of(context);
   return BoxDecoration(
     borderRadius: BorderRadius.circular(4.0),
-    color: ButtonThemeData.buttonColor(theme.brightness, states),
+    color: ButtonThemeData.buttonColor(context, states),
     border: Border.all(
       width: 0.15,
       color: theme.inactiveColor.withOpacity(0.2),

@@ -272,7 +272,6 @@ class InfoBarThemeData with Diagnosticable {
   });
 
   factory InfoBarThemeData.standard(ThemeData style) {
-    final isDark = style.brightness == Brightness.dark;
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(
         top: 14.0,
@@ -284,32 +283,28 @@ class InfoBarThemeData with Diagnosticable {
         late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
-            color = isDark ? const Color(0xFF272727) : const Color(0xFFf4f4f4);
+            color = style.resources.systemFillColorAttentionBackground;
             break;
           case InfoBarSeverity.warning:
-            color = Colors.warningSecondaryColor
-                .resolveFromBrightness(style.brightness);
+            color = style.resources.systemFillColorCautionBackground;
             break;
           case InfoBarSeverity.success:
-            color = Colors.successSecondaryColor
-                .resolveFromBrightness(style.brightness);
+            color = style.resources.systemFillColorSuccessBackground;
             break;
           case InfoBarSeverity.error:
-            color = Colors.errorSecondaryColor
-                .resolveFromBrightness(style.brightness);
+            color = style.resources.systemFillColorCriticalBackground;
             break;
         }
         return BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4.0),
           border: Border.all(
-            width: 0.15,
-            color: style.inactiveColor.withOpacity(0.2),
+            width: 1.0,
+            color: style.resources.cardStrokeColorDefault,
           ),
         );
       },
       closeIcon: FluentIcons.chrome_close,
-      closeIconSize: 12.0,
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
@@ -325,18 +320,20 @@ class InfoBarThemeData with Diagnosticable {
       iconColor: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return style.accentColor
-                .resolveFromReverseBrightness(style.brightness);
+            return style.accentColor.defaultBrushFor(style.brightness);
           case InfoBarSeverity.warning:
-            return isDark ? Colors.yellow : Colors.warningPrimaryColor;
+            return style.resources.systemFillColorCaution;
           case InfoBarSeverity.success:
-            return Colors.successPrimaryColor;
+            return style.resources.systemFillColorSuccess;
           case InfoBarSeverity.error:
-            return isDark ? Colors.red : Colors.errorPrimaryColor;
+            return style.resources.systemFillColorCritical;
         }
       },
       actionStyle: ButtonStyle(
         padding: ButtonState.all(const EdgeInsets.all(6)),
+      ),
+      closeButtonStyle: ButtonStyle(
+        iconSize: ButtonState.all(16.0),
       ),
     );
   }

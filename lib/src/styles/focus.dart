@@ -195,13 +195,13 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
-  BoxDecoration buildPrimaryDecoration(bool focused) {
-    return BoxDecoration(
-      borderRadius: borderRadius,
-      border: Border.fromBorderSide(
-        !focused ? BorderSide.none : primaryBorder ?? BorderSide.none,
+  Decoration buildPrimaryDecoration(bool focused) {
+    return ShapeDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        side: !focused ? BorderSide.none : primaryBorder ?? BorderSide.none,
       ),
-      boxShadow: focused && glowFactor != 0 && glowColor != null
+      shadows: focused && glowFactor != 0 && glowColor != null
           ? [
               BoxShadow(
                 offset: const Offset(1, 1),
@@ -232,11 +232,11 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
-  BoxDecoration buildSecondaryDecoration(bool focused) {
-    return BoxDecoration(
-      borderRadius: borderRadius,
-      border: Border.fromBorderSide(
-        !focused ? BorderSide.none : secondaryBorder ?? BorderSide.none,
+  Decoration buildSecondaryDecoration(bool focused) {
+    return ShapeDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        side: !focused ? BorderSide.none : secondaryBorder ?? BorderSide.none,
       ),
     );
   }
