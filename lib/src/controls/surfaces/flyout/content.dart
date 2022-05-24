@@ -144,7 +144,11 @@ class FlyoutListTile extends StatelessWidget {
 
         Widget content = Container(
           decoration: BoxDecoration(
-            color: ButtonThemeData.uncheckedInputColor(theme, states),
+            color: ButtonThemeData.uncheckedInputColor(
+              theme,
+              states,
+              transparentWhenNone: true,
+            ),
             borderRadius: radius,
           ),
           padding: const EdgeInsetsDirectional.only(
