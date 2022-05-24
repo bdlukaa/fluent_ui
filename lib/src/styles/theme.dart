@@ -330,13 +330,11 @@ class ThemeData with Diagnosticable {
     inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
-    disabledColor ??=
-        isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
+    disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??= resources.layerFillColorDefault;
-    acrylicBackgroundColor ??= isLight
-        ? const Color.fromARGB(204, 255, 255, 255)
-        : const Color(0x7F1e1e1e);
+    acrylicBackgroundColor ??=
+        isLight ? const Color(0xFFfcfcfc) : const Color(0xFF2c2c2c);
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)

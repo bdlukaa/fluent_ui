@@ -269,11 +269,17 @@ class ButtonThemeData with Diagnosticable {
     return FilledButton.backgroundColor(theme, states);
   }
 
-  static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
+  static Color uncheckedInputColor(
+    ThemeData style,
+    Set<ButtonStates> states, {
+    bool transparentWhenNone = false,
+  }) {
     final res = style.resources;
     if (states.isDisabled) return res.controlAltFillColorDisabled;
     if (states.isPressing) return res.controlAltFillColorQuarternary;
     if (states.isHovering) return res.controlAltFillColorTertiary;
-    return res.controlAltFillColorSecondary;
+    return transparentWhenNone
+        ? res.controlAltFillColorTransparent
+        : res.controlAltFillColorSecondary;
   }
 }

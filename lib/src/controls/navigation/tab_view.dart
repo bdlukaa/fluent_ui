@@ -305,13 +305,13 @@ class _TabViewState extends State<TabView> {
               }
             }),
             backgroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled) return Colors.transparent;
+              if (states.isDisabled || states.isNone) return Colors.transparent;
               return ButtonThemeData.uncheckedInputColor(
                   FluentTheme.of(context), states);
             }),
-            padding: ButtonState.all(
-              const EdgeInsets.symmetric(horizontal: 10),
-            ),
+            padding: ButtonState.all(const EdgeInsets.symmetric(
+              horizontal: 10,
+            )),
           ),
         ),
       ),
