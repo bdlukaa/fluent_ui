@@ -651,7 +651,6 @@ class __TabState extends State<_Tab>
       semanticLabel: widget.tab.semanticLabel ?? text,
       onPressed: widget.onPressed,
       builder: (context, states) {
-        final primaryBorder = FluentTheme.of(context).focusTheme.primaryBorder;
         final foregroundColor = ButtonState.resolveWith((states) {
           if (widget.selected) {
             return res.textFillColorPrimary;

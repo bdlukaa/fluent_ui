@@ -91,6 +91,7 @@ class _IconsPageState extends State<IconsPage> {
             builder: (context, states) {
               return FocusBorder(
                 focused: states.isFocused,
+                renderOutside: false,
                 child: Tooltip(
                   useMousePosition: false,
                   message:

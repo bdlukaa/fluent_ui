@@ -368,9 +368,7 @@ class _OthersState extends State<Others> {
                             child: Center(
                               child: Text(
                                 'A C R Y L I C',
-                                style: FluentTheme.of(context)
-                                    .typography
-                                    .titleLarge,
+                                style: theme.typography.titleLarge,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -397,8 +395,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   items: treeViewItemsSimple,
@@ -415,8 +412,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
@@ -438,8 +434,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
@@ -460,8 +455,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   items: lazy,
