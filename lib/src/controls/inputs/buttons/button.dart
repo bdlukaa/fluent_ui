@@ -35,10 +35,10 @@ class Button extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
     return ButtonStyle(
-      elevation: ButtonState.resolveWith((states) {
-        if (states.isPressing) return 0.0;
-        return 0.3;
-      }),
+      // elevation: ButtonState.resolveWith((states) {
+      //   if (states.isPressing) return 0.0;
+      //   return 0.3;
+      // }),
       shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(const EdgeInsets.only(
         left: 11.0,
@@ -49,10 +49,10 @@ class Button extends BaseButton {
       shape: ButtonState.resolveWith((states) {
         return RoundedRectangleBorder(
           side: BorderSide(
-            color: states.isPressing
-                ? theme.resources.controlStrokeColorSecondary
-                : theme.resources.controlStrokeColorDefault,
-            width: 1,
+            color: states.isPressing || states.isDisabled
+                ? theme.resources.controlStrokeColorDefault
+                : theme.resources.controlStrokeColorSecondary,
+            width: 0.33,
           ),
           borderRadius: BorderRadius.circular(4.0),
         );

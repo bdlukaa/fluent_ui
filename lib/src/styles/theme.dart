@@ -333,13 +333,11 @@ class ThemeData with Diagnosticable {
     disabledColor ??=
         isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? const Color(0xFFf9f9f9) : Colors.white.withOpacity(0.025);
+    scaffoldBackgroundColor ??= resources.layerFillColorDefault;
     acrylicBackgroundColor ??= isLight
         ? const Color.fromARGB(204, 255, 255, 255)
         : const Color(0x7F1e1e1e);
-    micaBackgroundColor ??=
-        isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
+    micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)
         : const Color.fromRGBO(255, 255, 255, 0.786);
@@ -348,7 +346,7 @@ class ThemeData with Diagnosticable {
         ? const Color.fromRGBO(0, 0, 0, 0.4458)
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
-    cardColor ??= isLight ? const Color(0xFFfdfdfd) : const Color(0xFF323232);
+    cardColor ??= resources.cardBackgroundFillColorDefault;
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
@@ -370,14 +368,11 @@ class ThemeData with Diagnosticable {
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
     navigationPaneTheme ??= NavigationPaneThemeData.standard(
+      resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
       backgroundColor: micaBackgroundColor,
-      disabledColor: disabledColor,
-      highlightColor: accentColor.resolveFromReverseBrightness(
-        brightness,
-        level: brightness.isDark ? 2 : 0,
-      ),
+      highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
       inactiveColor: inactiveColor,
     );

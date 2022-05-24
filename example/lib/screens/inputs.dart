@@ -193,7 +193,10 @@ class _InputsPageState extends State<InputsPage> {
               fit: FlexFit.loose,
               child: Column(children: [
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 10.0,
+                  ),
                   width: 200,
                   child: Slider(
                     max: max,

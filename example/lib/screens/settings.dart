@@ -111,6 +111,7 @@ class Settings extends StatelessWidget {
 
                   if (kIsWindowEffectsSupported) {
                     // some window effects require on [dark] to look good.
+                    // appTheme.setEffect(WindowEffect.disabled, context);
                     appTheme.setEffect(appTheme.windowEffect, context);
                   }
                 }
