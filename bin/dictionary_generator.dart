@@ -11,14 +11,32 @@ const String fileHeader = """
 
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/widgets.dart' show Color;
+import 'package:flutter/widgets.dart' show Color, ColorProperty;
+import 'package:flutter/foundation.dart';
 
 """;
 
 const String header = '''
-class ResourceDictionary {
+/// A dictionary of colors used by all the components.
+/// 
+/// Use `ResourceDictionary.dark` or `ResourceDictionary.light` to get colors
+/// adapted to dark and light mode, respectively
+/// 
+/// See also:
+/// 
+///   * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml>
+class ResourceDictionary with Diagnosticable {
 ''';
 
+/// How to generate the resources:
+/// - Go on `https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml`
+/// - Copy the colors under <Default> and paste them on [defaultResourceDirectionary]
+/// - Copy the colors under <Light> and paste them on [lightResourceDictionary]
+/// - Run the generator with `dart bin/dictionary_generator.dart.dart` while being
+///   on the `lib/` directory as PWD
+/// - Enjoy
+///
+/// This only support the <Color> tag
 void main(List<String> args) async {
   if (Directory.current.path.split(pathSeparator).last == "bin") {
     print("Run the generator from the lib/ folder");
@@ -29,7 +47,8 @@ void main(List<String> args) async {
 
   // Generates
   void generateFor(String dictionary, String constructor) {
-    dartFileBuffer.writeln('\n  const ResourceDictionary.$constructor({');
+    dartFileBuffer.writeln('\n  // Colors adapted for $constructor mode');
+    dartFileBuffer.writeln('  const ResourceDictionary.$constructor({');
     for (final resourceLine in dictionary.split('\n')) {
       if (resourceLine.trim().isEmpty) continue;
       final resourceName = () {
@@ -96,7 +115,7 @@ void main(List<String> args) async {
 
   // generate lerp method
   dartFileBuffer.writeln(
-      '\n  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t) {');
+      '\n  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t,) {');
   dartFileBuffer.writeln('    return ResourceDictionary.raw(');
   for (final resourceLine in defaultResourceDirectionary.split('\n')) {
     if (resourceLine.trim().isEmpty) continue;
@@ -107,20 +126,42 @@ void main(List<String> args) async {
         .lowercaseFirst();
 
     dartFileBuffer.writeln(
-      '      $resourceName: Color.lerp(a.$resourceName, b.$resourceName, t)!,',
+      '      $resourceName: Color.lerp(a.$resourceName, b.$resourceName, t,)!,',
     );
   }
   dartFileBuffer.writeln('    );');
   dartFileBuffer.writeln('  }');
 
+  // generate debugFillProperties method
+
+  dartFileBuffer.writeln(
+      '\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {');
+  dartFileBuffer.writeln('    super.debugFillProperties(properties);');
+  dartFileBuffer.writeln('properties');
+  for (final resourceLine in defaultResourceDirectionary.split('\n')) {
+    if (resourceLine.trim().isEmpty) continue;
+    final resourceName = () {
+      final split = resourceLine.trim().split('"');
+      return split[1];
+    }()
+        .lowercaseFirst();
+
+    dartFileBuffer.writeln(
+      '    ..add(ColorProperty(\'${resourceName.lowercaseFirst()}\', $resourceName))',
+    );
+  }
+  dartFileBuffer.writeln(';');
+  dartFileBuffer.writeln('  }');
+
   dartFileBuffer.writeln("}");
 
   final outputFile = File("lib/src/styles/color_resources.dart");
-  // final formatProcess = await Process.start(
-  //   'flutter',
-  //   ['format', outputFile.path],
-  // );
-  // stdout.addStream(formatProcess.stdout);
+  final formatProcess = await Process.start(
+    'flutter',
+    ['format', outputFile.path],
+    runInShell: true,
+  );
+  stdout.addStream(formatProcess.stdout);
   await outputFile.writeAsString(dartFileBuffer.toString());
 }
 

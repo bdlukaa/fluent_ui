@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             const Spacer(),
             ToggleSwitch(
               content: const Text('Dark Mode'),
-              checked: appTheme.mode == ThemeMode.dark,
+              checked: FluentTheme.of(context).brightness.isDark,
               onChanged: (v) {
                 if (v) {
                   appTheme.mode = ThemeMode.dark;

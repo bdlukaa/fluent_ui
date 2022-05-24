@@ -56,6 +56,7 @@ void main(List<String> args) async {
   final formatProcess = await Process.start(
     'flutter',
     ['format', outputFile.path],
+    runInShell: true,
   );
   stdout.addStream(formatProcess.stdout);
   await outputFile.writeAsString(dartFileBuffer.toString());

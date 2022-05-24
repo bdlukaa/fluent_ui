@@ -3,10 +3,10 @@
 
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/widgets.dart' show Color;
+import 'package:flutter/widgets.dart' show Color, ColorProperty;
+import 'package:flutter/foundation.dart';
 
-class ResourceDictionary {
-
+class ResourceDictionary with Diagnosticable {
   final Color textFillColorPrimary;
   final Color textFillColorSecondary;
   final Color textFillColorTertiary;
@@ -333,87 +333,548 @@ class ResourceDictionary {
     this.systemFillColorSolidNeutralBackground = const Color(0xFFf3f3f3),
   });
 
-  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t) {
+  static ResourceDictionary lerp(
+    ResourceDictionary a,
+    ResourceDictionary b,
+    double t,
+  ) {
     return ResourceDictionary.raw(
-      textFillColorPrimary: Color.lerp(a.textFillColorPrimary, b.textFillColorPrimary, t)!,
-      textFillColorSecondary: Color.lerp(a.textFillColorSecondary, b.textFillColorSecondary, t)!,
-      textFillColorTertiary: Color.lerp(a.textFillColorTertiary, b.textFillColorTertiary, t)!,
-      textFillColorDisabled: Color.lerp(a.textFillColorDisabled, b.textFillColorDisabled, t)!,
-      textFillColorInverse: Color.lerp(a.textFillColorInverse, b.textFillColorInverse, t)!,
-      accentTextFillColorDisabled: Color.lerp(a.accentTextFillColorDisabled, b.accentTextFillColorDisabled, t)!,
-      textOnAccentFillColorSelectedText: Color.lerp(a.textOnAccentFillColorSelectedText, b.textOnAccentFillColorSelectedText, t)!,
-      textOnAccentFillColorPrimary: Color.lerp(a.textOnAccentFillColorPrimary, b.textOnAccentFillColorPrimary, t)!,
-      textOnAccentFillColorSecondary: Color.lerp(a.textOnAccentFillColorSecondary, b.textOnAccentFillColorSecondary, t)!,
-      textOnAccentFillColorDisabled: Color.lerp(a.textOnAccentFillColorDisabled, b.textOnAccentFillColorDisabled, t)!,
-      controlFillColorDefault: Color.lerp(a.controlFillColorDefault, b.controlFillColorDefault, t)!,
-      controlFillColorSecondary: Color.lerp(a.controlFillColorSecondary, b.controlFillColorSecondary, t)!,
-      controlFillColorTertiary: Color.lerp(a.controlFillColorTertiary, b.controlFillColorTertiary, t)!,
-      controlFillColorDisabled: Color.lerp(a.controlFillColorDisabled, b.controlFillColorDisabled, t)!,
-      controlFillColorTransparent: Color.lerp(a.controlFillColorTransparent, b.controlFillColorTransparent, t)!,
-      controlFillColorInputActive: Color.lerp(a.controlFillColorInputActive, b.controlFillColorInputActive, t)!,
-      controlStrongFillColorDefault: Color.lerp(a.controlStrongFillColorDefault, b.controlStrongFillColorDefault, t)!,
-      controlStrongFillColorDisabled: Color.lerp(a.controlStrongFillColorDisabled, b.controlStrongFillColorDisabled, t)!,
-      controlSolidFillColorDefault: Color.lerp(a.controlSolidFillColorDefault, b.controlSolidFillColorDefault, t)!,
-      subtleFillColorTransparent: Color.lerp(a.subtleFillColorTransparent, b.subtleFillColorTransparent, t)!,
-      subtleFillColorSecondary: Color.lerp(a.subtleFillColorSecondary, b.subtleFillColorSecondary, t)!,
-      subtleFillColorTertiary: Color.lerp(a.subtleFillColorTertiary, b.subtleFillColorTertiary, t)!,
-      subtleFillColorDisabled: Color.lerp(a.subtleFillColorDisabled, b.subtleFillColorDisabled, t)!,
-      controlAltFillColorTransparent: Color.lerp(a.controlAltFillColorTransparent, b.controlAltFillColorTransparent, t)!,
-      controlAltFillColorSecondary: Color.lerp(a.controlAltFillColorSecondary, b.controlAltFillColorSecondary, t)!,
-      controlAltFillColorTertiary: Color.lerp(a.controlAltFillColorTertiary, b.controlAltFillColorTertiary, t)!,
-      controlAltFillColorQuarternary: Color.lerp(a.controlAltFillColorQuarternary, b.controlAltFillColorQuarternary, t)!,
-      controlAltFillColorDisabled: Color.lerp(a.controlAltFillColorDisabled, b.controlAltFillColorDisabled, t)!,
-      controlOnImageFillColorDefault: Color.lerp(a.controlOnImageFillColorDefault, b.controlOnImageFillColorDefault, t)!,
-      controlOnImageFillColorSecondary: Color.lerp(a.controlOnImageFillColorSecondary, b.controlOnImageFillColorSecondary, t)!,
-      controlOnImageFillColorTertiary: Color.lerp(a.controlOnImageFillColorTertiary, b.controlOnImageFillColorTertiary, t)!,
-      controlOnImageFillColorDisabled: Color.lerp(a.controlOnImageFillColorDisabled, b.controlOnImageFillColorDisabled, t)!,
-      accentFillColorDisabled: Color.lerp(a.accentFillColorDisabled, b.accentFillColorDisabled, t)!,
-      controlStrokeColorDefault: Color.lerp(a.controlStrokeColorDefault, b.controlStrokeColorDefault, t)!,
-      controlStrokeColorSecondary: Color.lerp(a.controlStrokeColorSecondary, b.controlStrokeColorSecondary, t)!,
-      controlStrokeColorOnAccentDefault: Color.lerp(a.controlStrokeColorOnAccentDefault, b.controlStrokeColorOnAccentDefault, t)!,
-      controlStrokeColorOnAccentSecondary: Color.lerp(a.controlStrokeColorOnAccentSecondary, b.controlStrokeColorOnAccentSecondary, t)!,
-      controlStrokeColorOnAccentTertiary: Color.lerp(a.controlStrokeColorOnAccentTertiary, b.controlStrokeColorOnAccentTertiary, t)!,
-      controlStrokeColorOnAccentDisabled: Color.lerp(a.controlStrokeColorOnAccentDisabled, b.controlStrokeColorOnAccentDisabled, t)!,
-      controlStrokeColorForStrongFillWhenOnImage: Color.lerp(a.controlStrokeColorForStrongFillWhenOnImage, b.controlStrokeColorForStrongFillWhenOnImage, t)!,
-      cardStrokeColorDefault: Color.lerp(a.cardStrokeColorDefault, b.cardStrokeColorDefault, t)!,
-      cardStrokeColorDefaultSolid: Color.lerp(a.cardStrokeColorDefaultSolid, b.cardStrokeColorDefaultSolid, t)!,
-      controlStrongStrokeColorDefault: Color.lerp(a.controlStrongStrokeColorDefault, b.controlStrongStrokeColorDefault, t)!,
-      controlStrongStrokeColorDisabled: Color.lerp(a.controlStrongStrokeColorDisabled, b.controlStrongStrokeColorDisabled, t)!,
-      surfaceStrokeColorDefault: Color.lerp(a.surfaceStrokeColorDefault, b.surfaceStrokeColorDefault, t)!,
-      surfaceStrokeColorFlyout: Color.lerp(a.surfaceStrokeColorFlyout, b.surfaceStrokeColorFlyout, t)!,
-      surfaceStrokeColorInverse: Color.lerp(a.surfaceStrokeColorInverse, b.surfaceStrokeColorInverse, t)!,
-      dividerStrokeColorDefault: Color.lerp(a.dividerStrokeColorDefault, b.dividerStrokeColorDefault, t)!,
-      focusStrokeColorOuter: Color.lerp(a.focusStrokeColorOuter, b.focusStrokeColorOuter, t)!,
-      focusStrokeColorInner: Color.lerp(a.focusStrokeColorInner, b.focusStrokeColorInner, t)!,
-      cardBackgroundFillColorDefault: Color.lerp(a.cardBackgroundFillColorDefault, b.cardBackgroundFillColorDefault, t)!,
-      cardBackgroundFillColorSecondary: Color.lerp(a.cardBackgroundFillColorSecondary, b.cardBackgroundFillColorSecondary, t)!,
-      smokeFillColorDefault: Color.lerp(a.smokeFillColorDefault, b.smokeFillColorDefault, t)!,
-      layerFillColorDefault: Color.lerp(a.layerFillColorDefault, b.layerFillColorDefault, t)!,
-      layerFillColorAlt: Color.lerp(a.layerFillColorAlt, b.layerFillColorAlt, t)!,
-      layerOnAcrylicFillColorDefault: Color.lerp(a.layerOnAcrylicFillColorDefault, b.layerOnAcrylicFillColorDefault, t)!,
-      layerOnAccentAcrylicFillColorDefault: Color.lerp(a.layerOnAccentAcrylicFillColorDefault, b.layerOnAccentAcrylicFillColorDefault, t)!,
-      layerOnMicaBaseAltFillColorDefault: Color.lerp(a.layerOnMicaBaseAltFillColorDefault, b.layerOnMicaBaseAltFillColorDefault, t)!,
-      layerOnMicaBaseAltFillColorSecondary: Color.lerp(a.layerOnMicaBaseAltFillColorSecondary, b.layerOnMicaBaseAltFillColorSecondary, t)!,
-      layerOnMicaBaseAltFillColorTertiary: Color.lerp(a.layerOnMicaBaseAltFillColorTertiary, b.layerOnMicaBaseAltFillColorTertiary, t)!,
-      layerOnMicaBaseAltFillColorTransparent: Color.lerp(a.layerOnMicaBaseAltFillColorTransparent, b.layerOnMicaBaseAltFillColorTransparent, t)!,
-      solidBackgroundFillColorBase: Color.lerp(a.solidBackgroundFillColorBase, b.solidBackgroundFillColorBase, t)!,
-      solidBackgroundFillColorSecondary: Color.lerp(a.solidBackgroundFillColorSecondary, b.solidBackgroundFillColorSecondary, t)!,
-      solidBackgroundFillColorTertiary: Color.lerp(a.solidBackgroundFillColorTertiary, b.solidBackgroundFillColorTertiary, t)!,
-      solidBackgroundFillColorQuarternary: Color.lerp(a.solidBackgroundFillColorQuarternary, b.solidBackgroundFillColorQuarternary, t)!,
-      solidBackgroundFillColorTransparent: Color.lerp(a.solidBackgroundFillColorTransparent, b.solidBackgroundFillColorTransparent, t)!,
-      solidBackgroundFillColorBaseAlt: Color.lerp(a.solidBackgroundFillColorBaseAlt, b.solidBackgroundFillColorBaseAlt, t)!,
-      systemFillColorSuccess: Color.lerp(a.systemFillColorSuccess, b.systemFillColorSuccess, t)!,
-      systemFillColorCaution: Color.lerp(a.systemFillColorCaution, b.systemFillColorCaution, t)!,
-      systemFillColorCritical: Color.lerp(a.systemFillColorCritical, b.systemFillColorCritical, t)!,
-      systemFillColorNeutral: Color.lerp(a.systemFillColorNeutral, b.systemFillColorNeutral, t)!,
-      systemFillColorSolidNeutral: Color.lerp(a.systemFillColorSolidNeutral, b.systemFillColorSolidNeutral, t)!,
-      systemFillColorAttentionBackground: Color.lerp(a.systemFillColorAttentionBackground, b.systemFillColorAttentionBackground, t)!,
-      systemFillColorSuccessBackground: Color.lerp(a.systemFillColorSuccessBackground, b.systemFillColorSuccessBackground, t)!,
-      systemFillColorCautionBackground: Color.lerp(a.systemFillColorCautionBackground, b.systemFillColorCautionBackground, t)!,
-      systemFillColorCriticalBackground: Color.lerp(a.systemFillColorCriticalBackground, b.systemFillColorCriticalBackground, t)!,
-      systemFillColorNeutralBackground: Color.lerp(a.systemFillColorNeutralBackground, b.systemFillColorNeutralBackground, t)!,
-      systemFillColorSolidAttentionBackground: Color.lerp(a.systemFillColorSolidAttentionBackground, b.systemFillColorSolidAttentionBackground, t)!,
-      systemFillColorSolidNeutralBackground: Color.lerp(a.systemFillColorSolidNeutralBackground, b.systemFillColorSolidNeutralBackground, t)!,
+      textFillColorPrimary: Color.lerp(
+        a.textFillColorPrimary,
+        b.textFillColorPrimary,
+        t,
+      )!,
+      textFillColorSecondary: Color.lerp(
+        a.textFillColorSecondary,
+        b.textFillColorSecondary,
+        t,
+      )!,
+      textFillColorTertiary: Color.lerp(
+        a.textFillColorTertiary,
+        b.textFillColorTertiary,
+        t,
+      )!,
+      textFillColorDisabled: Color.lerp(
+        a.textFillColorDisabled,
+        b.textFillColorDisabled,
+        t,
+      )!,
+      textFillColorInverse: Color.lerp(
+        a.textFillColorInverse,
+        b.textFillColorInverse,
+        t,
+      )!,
+      accentTextFillColorDisabled: Color.lerp(
+        a.accentTextFillColorDisabled,
+        b.accentTextFillColorDisabled,
+        t,
+      )!,
+      textOnAccentFillColorSelectedText: Color.lerp(
+        a.textOnAccentFillColorSelectedText,
+        b.textOnAccentFillColorSelectedText,
+        t,
+      )!,
+      textOnAccentFillColorPrimary: Color.lerp(
+        a.textOnAccentFillColorPrimary,
+        b.textOnAccentFillColorPrimary,
+        t,
+      )!,
+      textOnAccentFillColorSecondary: Color.lerp(
+        a.textOnAccentFillColorSecondary,
+        b.textOnAccentFillColorSecondary,
+        t,
+      )!,
+      textOnAccentFillColorDisabled: Color.lerp(
+        a.textOnAccentFillColorDisabled,
+        b.textOnAccentFillColorDisabled,
+        t,
+      )!,
+      controlFillColorDefault: Color.lerp(
+        a.controlFillColorDefault,
+        b.controlFillColorDefault,
+        t,
+      )!,
+      controlFillColorSecondary: Color.lerp(
+        a.controlFillColorSecondary,
+        b.controlFillColorSecondary,
+        t,
+      )!,
+      controlFillColorTertiary: Color.lerp(
+        a.controlFillColorTertiary,
+        b.controlFillColorTertiary,
+        t,
+      )!,
+      controlFillColorDisabled: Color.lerp(
+        a.controlFillColorDisabled,
+        b.controlFillColorDisabled,
+        t,
+      )!,
+      controlFillColorTransparent: Color.lerp(
+        a.controlFillColorTransparent,
+        b.controlFillColorTransparent,
+        t,
+      )!,
+      controlFillColorInputActive: Color.lerp(
+        a.controlFillColorInputActive,
+        b.controlFillColorInputActive,
+        t,
+      )!,
+      controlStrongFillColorDefault: Color.lerp(
+        a.controlStrongFillColorDefault,
+        b.controlStrongFillColorDefault,
+        t,
+      )!,
+      controlStrongFillColorDisabled: Color.lerp(
+        a.controlStrongFillColorDisabled,
+        b.controlStrongFillColorDisabled,
+        t,
+      )!,
+      controlSolidFillColorDefault: Color.lerp(
+        a.controlSolidFillColorDefault,
+        b.controlSolidFillColorDefault,
+        t,
+      )!,
+      subtleFillColorTransparent: Color.lerp(
+        a.subtleFillColorTransparent,
+        b.subtleFillColorTransparent,
+        t,
+      )!,
+      subtleFillColorSecondary: Color.lerp(
+        a.subtleFillColorSecondary,
+        b.subtleFillColorSecondary,
+        t,
+      )!,
+      subtleFillColorTertiary: Color.lerp(
+        a.subtleFillColorTertiary,
+        b.subtleFillColorTertiary,
+        t,
+      )!,
+      subtleFillColorDisabled: Color.lerp(
+        a.subtleFillColorDisabled,
+        b.subtleFillColorDisabled,
+        t,
+      )!,
+      controlAltFillColorTransparent: Color.lerp(
+        a.controlAltFillColorTransparent,
+        b.controlAltFillColorTransparent,
+        t,
+      )!,
+      controlAltFillColorSecondary: Color.lerp(
+        a.controlAltFillColorSecondary,
+        b.controlAltFillColorSecondary,
+        t,
+      )!,
+      controlAltFillColorTertiary: Color.lerp(
+        a.controlAltFillColorTertiary,
+        b.controlAltFillColorTertiary,
+        t,
+      )!,
+      controlAltFillColorQuarternary: Color.lerp(
+        a.controlAltFillColorQuarternary,
+        b.controlAltFillColorQuarternary,
+        t,
+      )!,
+      controlAltFillColorDisabled: Color.lerp(
+        a.controlAltFillColorDisabled,
+        b.controlAltFillColorDisabled,
+        t,
+      )!,
+      controlOnImageFillColorDefault: Color.lerp(
+        a.controlOnImageFillColorDefault,
+        b.controlOnImageFillColorDefault,
+        t,
+      )!,
+      controlOnImageFillColorSecondary: Color.lerp(
+        a.controlOnImageFillColorSecondary,
+        b.controlOnImageFillColorSecondary,
+        t,
+      )!,
+      controlOnImageFillColorTertiary: Color.lerp(
+        a.controlOnImageFillColorTertiary,
+        b.controlOnImageFillColorTertiary,
+        t,
+      )!,
+      controlOnImageFillColorDisabled: Color.lerp(
+        a.controlOnImageFillColorDisabled,
+        b.controlOnImageFillColorDisabled,
+        t,
+      )!,
+      accentFillColorDisabled: Color.lerp(
+        a.accentFillColorDisabled,
+        b.accentFillColorDisabled,
+        t,
+      )!,
+      controlStrokeColorDefault: Color.lerp(
+        a.controlStrokeColorDefault,
+        b.controlStrokeColorDefault,
+        t,
+      )!,
+      controlStrokeColorSecondary: Color.lerp(
+        a.controlStrokeColorSecondary,
+        b.controlStrokeColorSecondary,
+        t,
+      )!,
+      controlStrokeColorOnAccentDefault: Color.lerp(
+        a.controlStrokeColorOnAccentDefault,
+        b.controlStrokeColorOnAccentDefault,
+        t,
+      )!,
+      controlStrokeColorOnAccentSecondary: Color.lerp(
+        a.controlStrokeColorOnAccentSecondary,
+        b.controlStrokeColorOnAccentSecondary,
+        t,
+      )!,
+      controlStrokeColorOnAccentTertiary: Color.lerp(
+        a.controlStrokeColorOnAccentTertiary,
+        b.controlStrokeColorOnAccentTertiary,
+        t,
+      )!,
+      controlStrokeColorOnAccentDisabled: Color.lerp(
+        a.controlStrokeColorOnAccentDisabled,
+        b.controlStrokeColorOnAccentDisabled,
+        t,
+      )!,
+      controlStrokeColorForStrongFillWhenOnImage: Color.lerp(
+        a.controlStrokeColorForStrongFillWhenOnImage,
+        b.controlStrokeColorForStrongFillWhenOnImage,
+        t,
+      )!,
+      cardStrokeColorDefault: Color.lerp(
+        a.cardStrokeColorDefault,
+        b.cardStrokeColorDefault,
+        t,
+      )!,
+      cardStrokeColorDefaultSolid: Color.lerp(
+        a.cardStrokeColorDefaultSolid,
+        b.cardStrokeColorDefaultSolid,
+        t,
+      )!,
+      controlStrongStrokeColorDefault: Color.lerp(
+        a.controlStrongStrokeColorDefault,
+        b.controlStrongStrokeColorDefault,
+        t,
+      )!,
+      controlStrongStrokeColorDisabled: Color.lerp(
+        a.controlStrongStrokeColorDisabled,
+        b.controlStrongStrokeColorDisabled,
+        t,
+      )!,
+      surfaceStrokeColorDefault: Color.lerp(
+        a.surfaceStrokeColorDefault,
+        b.surfaceStrokeColorDefault,
+        t,
+      )!,
+      surfaceStrokeColorFlyout: Color.lerp(
+        a.surfaceStrokeColorFlyout,
+        b.surfaceStrokeColorFlyout,
+        t,
+      )!,
+      surfaceStrokeColorInverse: Color.lerp(
+        a.surfaceStrokeColorInverse,
+        b.surfaceStrokeColorInverse,
+        t,
+      )!,
+      dividerStrokeColorDefault: Color.lerp(
+        a.dividerStrokeColorDefault,
+        b.dividerStrokeColorDefault,
+        t,
+      )!,
+      focusStrokeColorOuter: Color.lerp(
+        a.focusStrokeColorOuter,
+        b.focusStrokeColorOuter,
+        t,
+      )!,
+      focusStrokeColorInner: Color.lerp(
+        a.focusStrokeColorInner,
+        b.focusStrokeColorInner,
+        t,
+      )!,
+      cardBackgroundFillColorDefault: Color.lerp(
+        a.cardBackgroundFillColorDefault,
+        b.cardBackgroundFillColorDefault,
+        t,
+      )!,
+      cardBackgroundFillColorSecondary: Color.lerp(
+        a.cardBackgroundFillColorSecondary,
+        b.cardBackgroundFillColorSecondary,
+        t,
+      )!,
+      smokeFillColorDefault: Color.lerp(
+        a.smokeFillColorDefault,
+        b.smokeFillColorDefault,
+        t,
+      )!,
+      layerFillColorDefault: Color.lerp(
+        a.layerFillColorDefault,
+        b.layerFillColorDefault,
+        t,
+      )!,
+      layerFillColorAlt: Color.lerp(
+        a.layerFillColorAlt,
+        b.layerFillColorAlt,
+        t,
+      )!,
+      layerOnAcrylicFillColorDefault: Color.lerp(
+        a.layerOnAcrylicFillColorDefault,
+        b.layerOnAcrylicFillColorDefault,
+        t,
+      )!,
+      layerOnAccentAcrylicFillColorDefault: Color.lerp(
+        a.layerOnAccentAcrylicFillColorDefault,
+        b.layerOnAccentAcrylicFillColorDefault,
+        t,
+      )!,
+      layerOnMicaBaseAltFillColorDefault: Color.lerp(
+        a.layerOnMicaBaseAltFillColorDefault,
+        b.layerOnMicaBaseAltFillColorDefault,
+        t,
+      )!,
+      layerOnMicaBaseAltFillColorSecondary: Color.lerp(
+        a.layerOnMicaBaseAltFillColorSecondary,
+        b.layerOnMicaBaseAltFillColorSecondary,
+        t,
+      )!,
+      layerOnMicaBaseAltFillColorTertiary: Color.lerp(
+        a.layerOnMicaBaseAltFillColorTertiary,
+        b.layerOnMicaBaseAltFillColorTertiary,
+        t,
+      )!,
+      layerOnMicaBaseAltFillColorTransparent: Color.lerp(
+        a.layerOnMicaBaseAltFillColorTransparent,
+        b.layerOnMicaBaseAltFillColorTransparent,
+        t,
+      )!,
+      solidBackgroundFillColorBase: Color.lerp(
+        a.solidBackgroundFillColorBase,
+        b.solidBackgroundFillColorBase,
+        t,
+      )!,
+      solidBackgroundFillColorSecondary: Color.lerp(
+        a.solidBackgroundFillColorSecondary,
+        b.solidBackgroundFillColorSecondary,
+        t,
+      )!,
+      solidBackgroundFillColorTertiary: Color.lerp(
+        a.solidBackgroundFillColorTertiary,
+        b.solidBackgroundFillColorTertiary,
+        t,
+      )!,
+      solidBackgroundFillColorQuarternary: Color.lerp(
+        a.solidBackgroundFillColorQuarternary,
+        b.solidBackgroundFillColorQuarternary,
+        t,
+      )!,
+      solidBackgroundFillColorTransparent: Color.lerp(
+        a.solidBackgroundFillColorTransparent,
+        b.solidBackgroundFillColorTransparent,
+        t,
+      )!,
+      solidBackgroundFillColorBaseAlt: Color.lerp(
+        a.solidBackgroundFillColorBaseAlt,
+        b.solidBackgroundFillColorBaseAlt,
+        t,
+      )!,
+      systemFillColorSuccess: Color.lerp(
+        a.systemFillColorSuccess,
+        b.systemFillColorSuccess,
+        t,
+      )!,
+      systemFillColorCaution: Color.lerp(
+        a.systemFillColorCaution,
+        b.systemFillColorCaution,
+        t,
+      )!,
+      systemFillColorCritical: Color.lerp(
+        a.systemFillColorCritical,
+        b.systemFillColorCritical,
+        t,
+      )!,
+      systemFillColorNeutral: Color.lerp(
+        a.systemFillColorNeutral,
+        b.systemFillColorNeutral,
+        t,
+      )!,
+      systemFillColorSolidNeutral: Color.lerp(
+        a.systemFillColorSolidNeutral,
+        b.systemFillColorSolidNeutral,
+        t,
+      )!,
+      systemFillColorAttentionBackground: Color.lerp(
+        a.systemFillColorAttentionBackground,
+        b.systemFillColorAttentionBackground,
+        t,
+      )!,
+      systemFillColorSuccessBackground: Color.lerp(
+        a.systemFillColorSuccessBackground,
+        b.systemFillColorSuccessBackground,
+        t,
+      )!,
+      systemFillColorCautionBackground: Color.lerp(
+        a.systemFillColorCautionBackground,
+        b.systemFillColorCautionBackground,
+        t,
+      )!,
+      systemFillColorCriticalBackground: Color.lerp(
+        a.systemFillColorCriticalBackground,
+        b.systemFillColorCriticalBackground,
+        t,
+      )!,
+      systemFillColorNeutralBackground: Color.lerp(
+        a.systemFillColorNeutralBackground,
+        b.systemFillColorNeutralBackground,
+        t,
+      )!,
+      systemFillColorSolidAttentionBackground: Color.lerp(
+        a.systemFillColorSolidAttentionBackground,
+        b.systemFillColorSolidAttentionBackground,
+        t,
+      )!,
+      systemFillColorSolidNeutralBackground: Color.lerp(
+        a.systemFillColorSolidNeutralBackground,
+        b.systemFillColorSolidNeutralBackground,
+        t,
+      )!,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ColorProperty('textFillColorPrimary', textFillColorPrimary))
+      ..add(ColorProperty('textFillColorSecondary', textFillColorSecondary))
+      ..add(ColorProperty('textFillColorTertiary', textFillColorTertiary))
+      ..add(ColorProperty('textFillColorDisabled', textFillColorDisabled))
+      ..add(ColorProperty('textFillColorInverse', textFillColorInverse))
+      ..add(ColorProperty(
+          'accentTextFillColorDisabled', accentTextFillColorDisabled))
+      ..add(ColorProperty('textOnAccentFillColorSelectedText',
+          textOnAccentFillColorSelectedText))
+      ..add(ColorProperty(
+          'textOnAccentFillColorPrimary', textOnAccentFillColorPrimary))
+      ..add(ColorProperty(
+          'textOnAccentFillColorSecondary', textOnAccentFillColorSecondary))
+      ..add(ColorProperty(
+          'textOnAccentFillColorDisabled', textOnAccentFillColorDisabled))
+      ..add(ColorProperty('controlFillColorDefault', controlFillColorDefault))
+      ..add(
+          ColorProperty('controlFillColorSecondary', controlFillColorSecondary))
+      ..add(ColorProperty('controlFillColorTertiary', controlFillColorTertiary))
+      ..add(ColorProperty('controlFillColorDisabled', controlFillColorDisabled))
+      ..add(ColorProperty(
+          'controlFillColorTransparent', controlFillColorTransparent))
+      ..add(ColorProperty(
+          'controlFillColorInputActive', controlFillColorInputActive))
+      ..add(ColorProperty(
+          'controlStrongFillColorDefault', controlStrongFillColorDefault))
+      ..add(ColorProperty(
+          'controlStrongFillColorDisabled', controlStrongFillColorDisabled))
+      ..add(ColorProperty(
+          'controlSolidFillColorDefault', controlSolidFillColorDefault))
+      ..add(ColorProperty(
+          'subtleFillColorTransparent', subtleFillColorTransparent))
+      ..add(ColorProperty('subtleFillColorSecondary', subtleFillColorSecondary))
+      ..add(ColorProperty('subtleFillColorTertiary', subtleFillColorTertiary))
+      ..add(ColorProperty('subtleFillColorDisabled', subtleFillColorDisabled))
+      ..add(ColorProperty(
+          'controlAltFillColorTransparent', controlAltFillColorTransparent))
+      ..add(ColorProperty(
+          'controlAltFillColorSecondary', controlAltFillColorSecondary))
+      ..add(ColorProperty(
+          'controlAltFillColorTertiary', controlAltFillColorTertiary))
+      ..add(ColorProperty(
+          'controlAltFillColorQuarternary', controlAltFillColorQuarternary))
+      ..add(ColorProperty(
+          'controlAltFillColorDisabled', controlAltFillColorDisabled))
+      ..add(ColorProperty(
+          'controlOnImageFillColorDefault', controlOnImageFillColorDefault))
+      ..add(ColorProperty(
+          'controlOnImageFillColorSecondary', controlOnImageFillColorSecondary))
+      ..add(ColorProperty(
+          'controlOnImageFillColorTertiary', controlOnImageFillColorTertiary))
+      ..add(ColorProperty(
+          'controlOnImageFillColorDisabled', controlOnImageFillColorDisabled))
+      ..add(ColorProperty('accentFillColorDisabled', accentFillColorDisabled))
+      ..add(
+          ColorProperty('controlStrokeColorDefault', controlStrokeColorDefault))
+      ..add(ColorProperty(
+          'controlStrokeColorSecondary', controlStrokeColorSecondary))
+      ..add(ColorProperty('controlStrokeColorOnAccentDefault',
+          controlStrokeColorOnAccentDefault))
+      ..add(ColorProperty('controlStrokeColorOnAccentSecondary',
+          controlStrokeColorOnAccentSecondary))
+      ..add(ColorProperty('controlStrokeColorOnAccentTertiary',
+          controlStrokeColorOnAccentTertiary))
+      ..add(ColorProperty('controlStrokeColorOnAccentDisabled',
+          controlStrokeColorOnAccentDisabled))
+      ..add(ColorProperty('controlStrokeColorForStrongFillWhenOnImage',
+          controlStrokeColorForStrongFillWhenOnImage))
+      ..add(ColorProperty('cardStrokeColorDefault', cardStrokeColorDefault))
+      ..add(ColorProperty(
+          'cardStrokeColorDefaultSolid', cardStrokeColorDefaultSolid))
+      ..add(ColorProperty(
+          'controlStrongStrokeColorDefault', controlStrongStrokeColorDefault))
+      ..add(ColorProperty(
+          'controlStrongStrokeColorDisabled', controlStrongStrokeColorDisabled))
+      ..add(
+          ColorProperty('surfaceStrokeColorDefault', surfaceStrokeColorDefault))
+      ..add(ColorProperty('surfaceStrokeColorFlyout', surfaceStrokeColorFlyout))
+      ..add(
+          ColorProperty('surfaceStrokeColorInverse', surfaceStrokeColorInverse))
+      ..add(
+          ColorProperty('dividerStrokeColorDefault', dividerStrokeColorDefault))
+      ..add(ColorProperty('focusStrokeColorOuter', focusStrokeColorOuter))
+      ..add(ColorProperty('focusStrokeColorInner', focusStrokeColorInner))
+      ..add(ColorProperty(
+          'cardBackgroundFillColorDefault', cardBackgroundFillColorDefault))
+      ..add(ColorProperty(
+          'cardBackgroundFillColorSecondary', cardBackgroundFillColorSecondary))
+      ..add(ColorProperty('smokeFillColorDefault', smokeFillColorDefault))
+      ..add(ColorProperty('layerFillColorDefault', layerFillColorDefault))
+      ..add(ColorProperty('layerFillColorAlt', layerFillColorAlt))
+      ..add(ColorProperty(
+          'layerOnAcrylicFillColorDefault', layerOnAcrylicFillColorDefault))
+      ..add(ColorProperty('layerOnAccentAcrylicFillColorDefault',
+          layerOnAccentAcrylicFillColorDefault))
+      ..add(ColorProperty('layerOnMicaBaseAltFillColorDefault',
+          layerOnMicaBaseAltFillColorDefault))
+      ..add(ColorProperty('layerOnMicaBaseAltFillColorSecondary',
+          layerOnMicaBaseAltFillColorSecondary))
+      ..add(ColorProperty('layerOnMicaBaseAltFillColorTertiary',
+          layerOnMicaBaseAltFillColorTertiary))
+      ..add(ColorProperty('layerOnMicaBaseAltFillColorTransparent',
+          layerOnMicaBaseAltFillColorTransparent))
+      ..add(ColorProperty(
+          'solidBackgroundFillColorBase', solidBackgroundFillColorBase))
+      ..add(ColorProperty('solidBackgroundFillColorSecondary',
+          solidBackgroundFillColorSecondary))
+      ..add(ColorProperty(
+          'solidBackgroundFillColorTertiary', solidBackgroundFillColorTertiary))
+      ..add(ColorProperty('solidBackgroundFillColorQuarternary',
+          solidBackgroundFillColorQuarternary))
+      ..add(ColorProperty('solidBackgroundFillColorTransparent',
+          solidBackgroundFillColorTransparent))
+      ..add(ColorProperty(
+          'solidBackgroundFillColorBaseAlt', solidBackgroundFillColorBaseAlt))
+      ..add(ColorProperty('systemFillColorSuccess', systemFillColorSuccess))
+      ..add(ColorProperty('systemFillColorCaution', systemFillColorCaution))
+      ..add(ColorProperty('systemFillColorCritical', systemFillColorCritical))
+      ..add(ColorProperty('systemFillColorNeutral', systemFillColorNeutral))
+      ..add(ColorProperty(
+          'systemFillColorSolidNeutral', systemFillColorSolidNeutral))
+      ..add(ColorProperty('systemFillColorAttentionBackground',
+          systemFillColorAttentionBackground))
+      ..add(ColorProperty(
+          'systemFillColorSuccessBackground', systemFillColorSuccessBackground))
+      ..add(ColorProperty(
+          'systemFillColorCautionBackground', systemFillColorCautionBackground))
+      ..add(ColorProperty('systemFillColorCriticalBackground',
+          systemFillColorCriticalBackground))
+      ..add(ColorProperty(
+          'systemFillColorNeutralBackground', systemFillColorNeutralBackground))
+      ..add(ColorProperty('systemFillColorSolidAttentionBackground',
+          systemFillColorSolidAttentionBackground))
+      ..add(ColorProperty('systemFillColorSolidNeutralBackground',
+          systemFillColorSolidNeutralBackground));
   }
 }
