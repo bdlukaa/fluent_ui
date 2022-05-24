@@ -153,7 +153,7 @@ class ToggleButtonThemeData with Diagnosticable {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
         backgroundColor: ButtonState.resolveWith(
-          (states) => FilledButton.backgroundColor(
+          (states) => ButtonThemeData.checkedInputColor(
             theme,
             states,
           ),

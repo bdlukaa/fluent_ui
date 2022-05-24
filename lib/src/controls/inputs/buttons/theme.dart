@@ -266,29 +266,14 @@ class ButtonThemeData with Diagnosticable {
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
   static Color checkedInputColor(ThemeData theme, Set<ButtonStates> states) {
-    final bool isDark = theme.brightness == Brightness.dark;
-    return states.isPressing
-        ? isDark
-            ? theme.accentColor.darker
-            : theme.accentColor.lighter
-        : states.isHovering
-            ? isDark
-                ? theme.accentColor.dark
-                : theme.accentColor.light
-            : theme.accentColor;
+    return FilledButton.backgroundColor(theme, states);
   }
 
   static Color uncheckedInputColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFF221D08).withOpacity(0.155);
-      if (states.isHovering) return const Color(0xFF221D08).withOpacity(0.055);
-      return Colors.transparent;
-    } else {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFFFFF3E8).withOpacity(0.080);
-      if (states.isHovering) return const Color(0xFFFFF3E8).withOpacity(0.12);
-      return Colors.transparent;
-    }
+    final res = style.resources;
+    if (states.isDisabled) return res.controlAltFillColorDisabled;
+    if (states.isPressing) return res.controlAltFillColorQuarternary;
+    if (states.isHovering) return res.controlAltFillColorTertiary;
+    return res.controlAltFillColorSecondary;
   }
 }

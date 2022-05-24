@@ -56,23 +56,11 @@ class FilledButton extends Button {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
     } else if (states.isPressing) {
-      if (theme.brightness.isDark) {
-        return theme.accentColor.lighter.withOpacity(0.8);
-      } else {
-        return theme.accentColor.dark.withOpacity(0.8);
-      }
+      return theme.accentColor.tertiaryBrushFor(theme.brightness);
     } else if (states.isHovering) {
-      if (theme.brightness.isDark) {
-        return theme.accentColor.lighter.withOpacity(0.9);
-      } else {
-        return theme.accentColor.dark.withOpacity(0.9);
-      }
+      return theme.accentColor.secondaryBrushFor(theme.brightness);
     } else {
-      if (theme.brightness.isDark) {
-        return theme.accentColor.lighter;
-      } else {
-        return theme.accentColor.dark;
-      }
+      return theme.accentColor.defaultBrushFor(theme.brightness);
     }
   }
 

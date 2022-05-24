@@ -220,11 +220,7 @@ class RadioButtonThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: !states.isDisabled
-                ? style.accentColor.light
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: ButtonThemeData.checkedInputColor(style, states),
             width: !states.isDisabled
                 ? states.isHovering && !states.isPressing
                     ? 3.4
