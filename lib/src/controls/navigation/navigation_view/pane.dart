@@ -885,7 +885,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     double paneHeaderHeight =
         widget.pane.size?.headerHeight ?? kOneLineTileHeight;
     if (widget.pane.header == null && !widget.shouldDrawHeaderSpaceIfEmpty) {
-      paneHeaderHeight = 0.0;
+      paneHeaderHeight = -1.0;
     }
 
     return SizeTransition(
@@ -901,27 +901,28 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           crossAxisAlignment: CrossAxisAlignment.start,
           key: widget.pane.paneKey,
           children: [
-            Container(
-              margin: widget.pane.autoSuggestBox != null
-                  ? EdgeInsets.zero
-                  : topPadding,
-              height: paneHeaderHeight,
-              child: () {
-                if (widget.pane.header != null) {
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: widget.pane.header!,
+            if (paneHeaderHeight >= 0)
+              Container(
+                margin: widget.pane.autoSuggestBox != null
+                    ? EdgeInsets.zero
+                    : topPadding,
+                height: paneHeaderHeight,
+                child: () {
+                  if (widget.pane.header != null) {
+                    return Row(children: [
+                      menuButton,
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: widget.pane.header!,
+                        ),
                       ),
-                    ),
-                  ]);
-                } else {
-                  return menuButton;
-                }
-              }(),
-            ),
+                    ]);
+                  } else {
+                    return menuButton;
+                  }
+                }(),
+              ),
             if (widget.pane.autoSuggestBox != null)
               Container(
                 padding: theme.iconPadding ?? EdgeInsets.zero,
