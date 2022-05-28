@@ -347,7 +347,7 @@ class _TabViewState extends State<TabView> {
     final TextDirection direction = Directionality.of(context);
     final ThemeData theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
-
+    final isMacOS = TargetPlatform.macOS == defaultTargetPlatform;
     final headerFooterTextStyle =
         (theme.typography.bodyLarge ?? const TextStyle());
 
@@ -500,15 +500,22 @@ class _TabViewState extends State<TabView> {
         widget.tabs[widget.currentIndex].onClosed?.call();
       }
 
+      bool ctrl = true;
+      bool meta = false;
+      if (isMacOS) {
+        ctrl = false;
+        meta = true;
+      }
       return FocusScope(
         autofocus: true,
         child: CallbackShortcuts(
           bindings: {
-            const SingleActivator(LogicalKeyboardKey.f4, control: true):
+            SingleActivator(LogicalKeyboardKey.f4, control: ctrl, meta: meta):
                 _onClosePressed,
-            const SingleActivator(LogicalKeyboardKey.keyW, control: true):
+            SingleActivator(LogicalKeyboardKey.keyW, control: ctrl, meta: meta):
                 _onClosePressed,
-            const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
+            SingleActivator(LogicalKeyboardKey.keyT, control: ctrl, meta: meta):
+                () {
               widget.onNewPressed?.call();
             },
             ...Map.fromIterable(
@@ -525,7 +532,7 @@ class _TabViewState extends State<TabView> {
                   LogicalKeyboardKey.digit8,
                   LogicalKeyboardKey.digit9,
                 ];
-                return SingleActivator(digits[i], control: true);
+                return SingleActivator(digits[i], control: ctrl, meta: meta);
               },
               value: (index) {
                 return () {
