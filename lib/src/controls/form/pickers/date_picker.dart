@@ -336,13 +336,17 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
   late DateTime localDate = widget.date;
 
   void handleDateChanged(DateTime time) {
-    localDate = time;
+    if (localDate == time) {
+      return;
+    }
+    setState(() {
+      localDate = time;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
@@ -350,9 +354,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         horizontalMargin: EdgeInsets.zero,
       ),
     );
-
-    final highlightTileColor =
-        theme.accentColor.resolveFromBrightness(theme.brightness);
 
     return Column(children: [
       Expanded(
@@ -398,10 +399,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           return ListTile(
                             title: Text(
                               text,
-                              style: kPickerPopupTextStyle(context)?.copyWith(
-                                color: month == localDate.month
-                                    ? highlightTileColor.basedOnLuminance()
-                                    : null,
+                              style: kPickerPopupTextStyle(
+                                context,
+                                month == localDate.month,
                               ),
                               locale: locale,
                             ),
@@ -467,11 +467,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                               title: Center(
                                 child: Text(
                                   '$day',
-                                  style:
-                                      kPickerPopupTextStyle(context)?.copyWith(
-                                    color: day == localDate.day
-                                        ? highlightTileColor.basedOnLuminance()
-                                        : null,
+                                  style: kPickerPopupTextStyle(
+                                    context,
+                                    day == localDate.day,
                                   ),
                                 ),
                               ),
@@ -543,10 +541,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           title: Center(
                             child: Text(
                               '$realYear',
-                              style: kPickerPopupTextStyle(context)?.copyWith(
-                                  color: realYear == localDate.year
-                                      ? highlightTileColor.basedOnLuminance()
-                                      : null),
+                              style: kPickerPopupTextStyle(
+                                context,
+                                realYear == localDate.year,
+                              ),
                             ),
                           ),
                         );
@@ -567,12 +565,12 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       ),
       YesNoPickerControl(
         onChanged: () {
-          Navigator.pop(context);
           widget.onChanged(localDate);
+          Navigator.pop(context);
         },
         onCancel: () {
-          Navigator.pop(context);
           widget.onCancel();
+          Navigator.pop(context);
         },
       ),
     ]);

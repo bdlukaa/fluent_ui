@@ -53,7 +53,7 @@ class TimePicker extends StatefulWidget {
   final String pmText;
 
   final double popupHeight;
-  final double minuteIncrement;
+  final int minuteIncrement;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
@@ -139,7 +139,7 @@ class _TimePickerState extends State<TimePicker> {
     _amPmController = FixedExtentScrollController(initialItem: _isPm ? 1 : 0);
   }
 
-  bool get _isPm => time.hour > 12;
+  bool get _isPm => time.hour >= 12;
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +263,7 @@ class _TimePickerContentPopup extends StatefulWidget {
   final String pmText;
 
   final bool use24Format;
-  final double minuteIncrement;
+  final int minuteIncrement;
 
   @override
   __TimePickerContentPopupState createState() =>
@@ -276,7 +276,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   late DateTime localDate = widget.date;
 
   void handleDateChanged(DateTime time) {
-    localDate = time;
+    setState(() => localDate = time);
   }
 
   @override
@@ -320,14 +320,26 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   childDelegate: ListWheelChildLoopingListDelegate(
                     children: List.generate(
                       hoursAmount,
-                      (index) => ListTile(
-                        title: Center(
-                          child: Text(
-                            '${index + 1}',
-                            style: kPickerPopupTextStyle(context),
+                      (index) {
+                        final hour = index + 1;
+                        final realHour = () {
+                          if (!widget.use24Format && localDate.hour > 12) {
+                            return hour + 12;
+                          }
+                          return hour;
+                        }();
+                        return ListTile(
+                          title: Center(
+                            child: Text(
+                              '$hour',
+                              style: kPickerPopupTextStyle(
+                                context,
+                                localDate.hour == realHour,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                   itemExtent: kOneLineTileHeight,
@@ -374,28 +386,35 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 child: ListWheelScrollView.useDelegate(
                   controller: widget.minuteController,
                   childDelegate: ListWheelChildLoopingListDelegate(
-                    children:
-                        List.generate(60 ~/ widget.minuteIncrement, (index) {
-                      return ListTile(
-                        title: Center(
-                          child: Text(
-                            '${(index * widget.minuteIncrement).toInt()}',
-                            style: kPickerPopupTextStyle(context),
+                    children: List.generate(
+                      60 ~/ widget.minuteIncrement,
+                      (index) {
+                        final int minute = index * widget.minuteIncrement;
+                        return ListTile(
+                          title: Center(
+                            child: Text(
+                              '$minute',
+                              style: kPickerPopupTextStyle(
+                                context,
+                                minute == localDate.minute,
+                              ),
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   ),
                   itemExtent: kOneLineTileHeight,
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (index) {
+                    final int minute = index * widget.minuteIncrement;
                     handleDateChanged(DateTime(
                       localDate.year,
                       localDate.month,
                       localDate.day,
                       localDate.hour,
-                      index,
+                      minute,
                       localDate.second,
                       localDate.millisecond,
                       localDate.microsecond,
@@ -431,7 +450,10 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                         title: Center(
                           child: Text(
                             widget.amText,
-                            style: kPickerPopupTextStyle(context),
+                            style: kPickerPopupTextStyle(
+                              context,
+                              localDate.hour < 12,
+                            ),
                           ),
                         ),
                       ),
@@ -439,7 +461,10 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                         title: Center(
                           child: Text(
                             widget.pmText,
-                            style: kPickerPopupTextStyle(context),
+                            style: kPickerPopupTextStyle(
+                              context,
+                              localDate.hour >= 12,
+                            ),
                           ),
                         ),
                       ),

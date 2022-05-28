@@ -18,14 +18,20 @@ ShapeBorder kPickerShape(BuildContext context) {
   return RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(4.0),
     side: BorderSide(
-      color: FluentTheme.of(context).inactiveBackgroundColor,
+      color: FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
       width: 0.6,
     ),
   );
 }
 
-TextStyle? kPickerPopupTextStyle(BuildContext context) {
-  return FluentTheme.of(context).typography.body?.copyWith(fontSize: 16);
+TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
+  final theme = FluentTheme.of(context);
+  return theme.typography.body?.copyWith(
+    fontSize: 16,
+    color: isSelected
+        ? theme.resources.textOnAccentFillColorPrimary
+        : theme.resources.textFillColorPrimary,
+  );
 }
 
 Decoration kPickerDecorationBuilder(
@@ -49,7 +55,7 @@ Widget PickerHighlightTile() {
   return Builder(builder: (context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final highlightTileColor = theme.accentColor.resolveFromReverseBrightness(
+    final highlightTileColor = theme.accentColor.defaultBrushFor(
       theme.brightness,
     );
     return Positioned(
@@ -266,6 +272,7 @@ class _PickerState extends State<Picker> {
     final childOffset = box.localToGlobal(Offset.zero);
 
     final navigator = Navigator.of(context);
+    final isAcrylicDisabled = DisableAcrylic.of(context) != null;
     return navigator.push(PageRouteBuilder(
       barrierColor: Colors.transparent,
       opaque: false,
@@ -290,7 +297,7 @@ class _PickerState extends State<Picker> {
           y = 0;
         }
 
-        return Stack(children: [
+        final view = Stack(children: [
           Positioned(
             left: childOffset.dx,
             top: y,
@@ -310,6 +317,8 @@ class _PickerState extends State<Picker> {
             ),
           ),
         ]);
+        if (isAcrylicDisabled) return DisableAcrylic(child: view);
+        return view;
       },
     ));
   }
