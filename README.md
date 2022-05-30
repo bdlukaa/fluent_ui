@@ -872,20 +872,20 @@ DropDownButton(
   leading: const Icon(FluentIcons.align_left),
   title: const Text('Alignment'),
   items: [
-    DropDownButtonItem(
-      title: const Text('Left'),
+    MenuFlyoutItem(
+      text: const Text('Left'),
       leading: const Icon(FluentIcons.align_left),
-      onTap: () => debugPrint('left'),
+      onPressed: () => debugPrint('left'),
     ),
-    DropDownButtonItem(
-      title: const Text('Center'),
+    MenuFlyoutItem(
+      text: const Text('Center'),
       leading: const Icon(FluentIcons.align_center),
-      onTap: () => debugPrint('center'),
+      onPressed: () => debugPrint('center'),
     ),
-    DropDownButtonItem(
-      title: const Text('Right'),
+    MenuFlyoutItem(
+      text: const Text('Right'),
       leading: const Icon(FluentIcons.align_right),
-      onTap: () => debugPrint('right'),
+      onPressed: () => debugPrint('right'),
     ),
   ],
 );
