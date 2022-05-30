@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
-const double _kTileHeight = 34.0;
+const double _kTileHeight = 30.0;
 const double _kButtonWidth = 40.0;
 
 enum CloseButtonVisibilityMode {
@@ -708,17 +708,17 @@ class __TabState extends State<_Tab>
                       children: [
                         if (widget.tab.icon != null)
                           Padding(
-                            padding: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.only(right: 8,left: 4),
                             child: widget.tab.icon!,
                           ),
                         if (widget.tabWidthBehavior !=
-                                TabWidthBehavior.compact ||
+                            TabWidthBehavior.compact ||
                             (widget.tabWidthBehavior ==
-                                    TabWidthBehavior.compact &&
+                                TabWidthBehavior.compact &&
                                 widget.selected))
                           Flexible(
                             fit: widget.tabWidthBehavior ==
-                                    TabWidthBehavior.equal
+                                TabWidthBehavior.equal
                                 ? FlexFit.tight
                                 : FlexFit.loose,
                             child: DefaultTextStyle.merge(
@@ -730,9 +730,9 @@ class __TabState extends State<_Tab>
                           ),
                         if (widget.tab.closeIcon != null &&
                             (widget.visibilityMode ==
-                                    CloseButtonVisibilityMode.always ||
+                                CloseButtonVisibilityMode.always ||
                                 (widget.visibilityMode ==
-                                        CloseButtonVisibilityMode.onHover &&
+                                    CloseButtonVisibilityMode.onHover &&
                                     states.isHovering)))
                           Padding(
                             padding: const EdgeInsets.only(left: 2.0),
