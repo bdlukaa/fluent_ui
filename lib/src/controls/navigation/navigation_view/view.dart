@@ -420,7 +420,6 @@ class NavigationViewState extends State<NavigationView> {
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
-                        shouldDrawHeaderSpaceIfEmpty: false,
                         paneKey: _panelKey,
                         listKey: _listKey,
                       ),
@@ -477,7 +476,6 @@ class NavigationViewState extends State<NavigationView> {
                         child: _OpenNavigationPane(
                           theme: theme,
                           pane: pane,
-                          shouldDrawHeaderSpaceIfEmpty: false,
                           paneKey: _panelKey,
                           listKey: _listKey,
                           onItemSelected: () {

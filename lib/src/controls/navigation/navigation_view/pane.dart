@@ -782,7 +782,6 @@ class _OpenNavigationPane extends StatefulWidget {
   _OpenNavigationPane({
     required this.pane,
     required this.theme,
-    this.shouldDrawHeaderSpaceIfEmpty = true,
     this.paneKey,
     this.listKey,
     this.onToggle,
@@ -790,7 +789,6 @@ class _OpenNavigationPane extends StatefulWidget {
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final bool shouldDrawHeaderSpaceIfEmpty;
   final Key? paneKey;
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
@@ -869,7 +867,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           },
         );
       }
-      return const SizedBox.shrink();
+      return null;
     }();
     double paneWidth =
         widget.pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
@@ -884,7 +882,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
 
     double paneHeaderHeight =
         widget.pane.size?.headerHeight ?? kOneLineTileHeight;
-    if (widget.pane.header == null && !widget.shouldDrawHeaderSpaceIfEmpty) {
+    if (widget.pane.header == null && menuButton == null) {
       paneHeaderHeight = -1.0;
     }
 
@@ -910,7 +908,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 child: () {
                   if (widget.pane.header != null) {
                     return Row(children: [
-                      menuButton,
+                      menuButton ?? const SizedBox.shrink(),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -919,7 +917,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                       ),
                     ]);
                   } else {
-                    return menuButton;
+                    return menuButton ?? const SizedBox.shrink();
                   }
                 }(),
               ),
