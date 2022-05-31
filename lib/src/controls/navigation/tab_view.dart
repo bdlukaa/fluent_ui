@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:window_manager/window_manager.dart';
 
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
@@ -359,137 +360,152 @@ class _TabViewState extends State<TabView> {
           padding: const EdgeInsets.only(left: 8),
           height: _kTileHeight,
           width: double.infinity,
-          child: Row(
-            children: [
-              if (widget.header != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: DefaultTextStyle(
-                    style: headerFooterTextStyle,
-                    child: widget.header!,
+          child: GestureDetector(
+            child: Row(
+              children: [
+                if (widget.header != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: DefaultTextStyle(
+                      style: headerFooterTextStyle,
+                      child: widget.header!,
+                    ),
                   ),
-                ),
-              Expanded(
-                child: LayoutBuilder(builder: (context, consts) {
-                  final width = consts.biggest.width;
-                  assert(
+                Expanded(
+                  child: LayoutBuilder(builder: (context, consts) {
+                    final width = consts.biggest.width;
+                    assert(
                     width.isFinite,
                     'You can only create a TabView in a box with defined width',
-                  );
+                    );
 
-                  final double preferredTabWidth =
-                      ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
-                              widget.tabs.length)
-                          .clamp(widget.minTabWidth, widget.maxTabWidth);
+                    final double preferredTabWidth =
+                    ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
+                        widget.tabs.length)
+                        .clamp(widget.minTabWidth, widget.maxTabWidth);
 
-                  final Widget listView = Listener(
-                    onPointerSignal: widget.wheelScroll
-                        ? (PointerSignalEvent e) {
-                            if (e is PointerScrollEvent) {
-                              if (e.scrollDelta.dy > 0) {
-                                scrollController.forward(
-                                  align: false,
-                                  animate: false,
-                                );
-                              } else {
-                                scrollController.backward(
-                                  align: false,
-                                  animate: false,
-                                );
-                              }
-                            }
+                    final Widget listView = Listener(
+                      onPointerSignal: widget.wheelScroll
+                          ? (PointerSignalEvent e) {
+                        if (e is PointerScrollEvent) {
+                          if (e.scrollDelta.dy > 0) {
+                            scrollController.forward(
+                              align: false,
+                              animate: false,
+                            );
+                          } else {
+                            scrollController.backward(
+                              align: false,
+                              animate: false,
+                            );
                           }
-                        : null,
-                    child: ReorderableListView.builder(
-                      buildDefaultDragHandles: false,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      scrollController: scrollController,
-                      onReorder: (i, ii) {
-                        widget.onReorder?.call(i, ii);
-                      },
-                      itemCount: widget.tabs.length,
-                      proxyDecorator: (child, index, animation) {
-                        return child;
-                      },
-                      itemBuilder: (context, index) {
-                        return _tabBuilder(
-                          context,
-                          index,
-                          preferredTabWidth,
-                        );
-                      },
-                    ),
-                  );
-
-                  bool scrollable = preferredTabWidth * widget.tabs.length >
-                      width - (widget.showNewButton ? _kButtonWidth : 0);
-
-                  final bool showScrollButtons =
-                      widget.showScrollButtons && scrollable;
-                  final backwardButton = _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_left_solid8, size: 10),
-                    !scrollController.canBackward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.backward();
-                            } else {
-                              scrollController.forward();
-                            }
-                          }
-                        : null,
-                    localizations.scrollTabBackwardLabel,
-                  );
-
-                  final forwardButton = _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_right_solid8, size: 10),
-                    !scrollController.canForward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.forward();
-                            } else {
-                              scrollController.backward();
-                            }
-                          }
-                        : null,
-                    localizations.scrollTabForwardLabel,
-                  );
-
-                  return Row(children: [
-                    if (showScrollButtons)
-                      direction == TextDirection.ltr
-                          ? backwardButton
-                          : forwardButton,
-                    if (scrollable)
-                      Expanded(child: listView)
-                    else
-                      Flexible(child: listView),
-                    if (showScrollButtons)
-                      direction == TextDirection.ltr
-                          ? forwardButton
-                          : backwardButton,
-                    if (widget.showNewButton)
-                      _buttonTabBuilder(
-                        context,
-                        Icon(widget.addIconData, size: 16.0),
-                        widget.onNewPressed!,
-                        localizations.newTabLabel,
+                        }
+                      }
+                          : null,
+                      child: ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        scrollController: scrollController,
+                        onReorder: (i, ii) {
+                          widget.onReorder?.call(i, ii);
+                        },
+                        itemCount: widget.tabs.length,
+                        proxyDecorator: (child, index, animation) {
+                          return child;
+                        },
+                        itemBuilder: (context, index) {
+                          return _tabBuilder(
+                            context,
+                            index,
+                            preferredTabWidth,
+                          );
+                        },
                       ),
-                  ]);
-                }),
-              ),
-              if (widget.footer != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: DefaultTextStyle(
-                    style: headerFooterTextStyle,
-                    child: widget.footer!,
-                  ),
+                    );
+
+                    bool scrollable = preferredTabWidth * widget.tabs.length >
+                        width - (widget.showNewButton ? _kButtonWidth : 0);
+
+                    final bool showScrollButtons =
+                        widget.showScrollButtons && scrollable;
+                    final backwardButton = _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_left_solid8, size: 10),
+                      !scrollController.canBackward
+                          ? () {
+                        if (direction == TextDirection.ltr) {
+                          scrollController.backward();
+                        } else {
+                          scrollController.forward();
+                        }
+                      }
+                          : null,
+                      localizations.scrollTabBackwardLabel,
+                    );
+
+                    final forwardButton = _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_right_solid8, size: 10),
+                      !scrollController.canForward
+                          ? () {
+                        if (direction == TextDirection.ltr) {
+                          scrollController.forward();
+                        } else {
+                          scrollController.backward();
+                        }
+                      }
+                          : null,
+                      localizations.scrollTabForwardLabel,
+                    );
+
+                    return Row(children: [
+                      if (showScrollButtons)
+                        direction == TextDirection.ltr
+                            ? backwardButton
+                            : forwardButton,
+                      if (scrollable)
+                        Expanded(child: listView)
+                      else
+                        Flexible(child: listView),
+                      if (showScrollButtons)
+                        direction == TextDirection.ltr
+                            ? forwardButton
+                            : backwardButton,
+                      if (widget.showNewButton)
+                        _buttonTabBuilder(
+                          context,
+                          Icon(widget.addIconData, size: 16.0),
+                          widget.onNewPressed!,
+                          localizations.newTabLabel,
+                        ),
+                    ]);
+                  }),
                 ),
-            ],
-          ),
+                if (widget.footer != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: DefaultTextStyle(
+                      style: headerFooterTextStyle,
+                      child: widget.footer!,
+                    ),
+                  ),
+              ],
+            ),
+              behavior: HitTestBehavior.translucent,
+              onPanStart: (details) {
+                windowManager.startDragging();
+              },
+              onDoubleTap: () async {
+                bool isMaximized = await windowManager.isMaximized();
+                if (!isMaximized) {
+                  windowManager.maximize();
+                } else {
+                  windowManager.unmaximize();
+                }
+              }
+            ),
+          // child: ,
         ),
       ),
       if (widget.bodies.isNotEmpty)
@@ -776,7 +792,7 @@ class __TabState extends State<_Tab>
         if (widget.selected) {
           child = CustomPaint(
             willChange: false,
-            painter: _TabPainter(res.solidBackgroundFillColorTertiary),
+            painter: _TabPainter(res.solidBackgroundFillColorQuarternary),
             child: child,
           );
         }
