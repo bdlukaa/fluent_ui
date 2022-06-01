@@ -184,6 +184,12 @@ class DefaultFluentLocalizations extends S implements FluentLocalizations {
     return '${super.closeTabLabelSuffix} ($_ctrlCmd+$_closeTabCmd)';
   }
 
+  // Close tab => <Message> (<shortcut>)
+  @override
+  String get newTabLabel {
+    return '${super.newTabLabel} ($_ctrlCmd+$_closeTabCmd)';
+  }
+
   @override
   String get cutShortcut => '$_ctrlCmd+X';
 

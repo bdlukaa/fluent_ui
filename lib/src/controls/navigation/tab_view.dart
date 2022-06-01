@@ -361,137 +361,137 @@ class _TabViewState extends State<TabView> {
           height: _kTileHeight,
           width: double.infinity,
           child: GestureDetector(
-            child: Row(
-              children: [
-                if (widget.header != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12.0),
-                    child: DefaultTextStyle(
-                      style: headerFooterTextStyle,
-                      child: widget.header!,
-                    ),
-                  ),
-                Expanded(
-                  child: LayoutBuilder(builder: (context, consts) {
-                    final width = consts.biggest.width;
-                    assert(
-                    width.isFinite,
-                    'You can only create a TabView in a box with defined width',
-                    );
-
-                    final double preferredTabWidth =
-                    ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
-                        widget.tabs.length)
-                        .clamp(widget.minTabWidth, widget.maxTabWidth);
-
-                    final Widget listView = Listener(
-                      onPointerSignal: widget.wheelScroll
-                          ? (PointerSignalEvent e) {
-                        if (e is PointerScrollEvent) {
-                          if (e.scrollDelta.dy > 0) {
-                            scrollController.forward(
-                              align: false,
-                              animate: false,
-                            );
-                          } else {
-                            scrollController.backward(
-                              align: false,
-                              animate: false,
-                            );
-                          }
-                        }
-                      }
-                          : null,
-                      child: ReorderableListView.builder(
-                        buildDefaultDragHandles: false,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        scrollController: scrollController,
-                        onReorder: (i, ii) {
-                          widget.onReorder?.call(i, ii);
-                        },
-                        itemCount: widget.tabs.length,
-                        proxyDecorator: (child, index, animation) {
-                          return child;
-                        },
-                        itemBuilder: (context, index) {
-                          return _tabBuilder(
-                            context,
-                            index,
-                            preferredTabWidth,
-                          );
-                        },
+              child: Row(
+                children: [
+                  if (widget.header != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: DefaultTextStyle(
+                        style: headerFooterTextStyle,
+                        child: widget.header!,
                       ),
-                    );
-
-                    bool scrollable = preferredTabWidth * widget.tabs.length >
-                        width - (widget.showNewButton ? _kButtonWidth : 0);
-
-                    final bool showScrollButtons =
-                        widget.showScrollButtons && scrollable;
-                    final backwardButton = _buttonTabBuilder(
-                      context,
-                      const Icon(FluentIcons.caret_left_solid8, size: 10),
-                      !scrollController.canBackward
-                          ? () {
-                        if (direction == TextDirection.ltr) {
-                          scrollController.backward();
-                        } else {
-                          scrollController.forward();
-                        }
-                      }
-                          : null,
-                      localizations.scrollTabBackwardLabel,
-                    );
-
-                    final forwardButton = _buttonTabBuilder(
-                      context,
-                      const Icon(FluentIcons.caret_right_solid8, size: 10),
-                      !scrollController.canForward
-                          ? () {
-                        if (direction == TextDirection.ltr) {
-                          scrollController.forward();
-                        } else {
-                          scrollController.backward();
-                        }
-                      }
-                          : null,
-                      localizations.scrollTabForwardLabel,
-                    );
-
-                    return Row(children: [
-                      if (showScrollButtons)
-                        direction == TextDirection.ltr
-                            ? backwardButton
-                            : forwardButton,
-                      if (scrollable)
-                        Expanded(child: listView)
-                      else
-                        Flexible(child: listView),
-                      if (showScrollButtons)
-                        direction == TextDirection.ltr
-                            ? forwardButton
-                            : backwardButton,
-                      if (widget.showNewButton)
-                        _buttonTabBuilder(
-                          context,
-                          Icon(widget.addIconData, size: 16.0),
-                          widget.onNewPressed!,
-                          localizations.newTabLabel,
-                        ),
-                    ]);
-                  }),
-                ),
-                if (widget.footer != null)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: DefaultTextStyle(
-                      style: headerFooterTextStyle,
-                      child: widget.footer!,
                     ),
+                  Expanded(
+                    child: LayoutBuilder(builder: (context, consts) {
+                      final width = consts.biggest.width;
+                      assert(
+                        width.isFinite,
+                        'You can only create a TabView in a box with defined width',
+                      );
+
+                      final double preferredTabWidth = ((width -
+                                  (widget.showNewButton ? _kButtonWidth : 0)) /
+                              widget.tabs.length)
+                          .clamp(widget.minTabWidth, widget.maxTabWidth);
+
+                      final Widget listView = Listener(
+                        onPointerSignal: widget.wheelScroll
+                            ? (PointerSignalEvent e) {
+                                if (e is PointerScrollEvent) {
+                                  if (e.scrollDelta.dy > 0) {
+                                    scrollController.forward(
+                                      align: false,
+                                      animate: false,
+                                    );
+                                  } else {
+                                    scrollController.backward(
+                                      align: false,
+                                      animate: false,
+                                    );
+                                  }
+                                }
+                              }
+                            : null,
+                        child: ReorderableListView.builder(
+                          buildDefaultDragHandles: false,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          scrollController: scrollController,
+                          onReorder: (i, ii) {
+                            widget.onReorder?.call(i, ii);
+                          },
+                          itemCount: widget.tabs.length,
+                          proxyDecorator: (child, index, animation) {
+                            return child;
+                          },
+                          itemBuilder: (context, index) {
+                            return _tabBuilder(
+                              context,
+                              index,
+                              preferredTabWidth,
+                            );
+                          },
+                        ),
+                      );
+
+                      bool scrollable = preferredTabWidth * widget.tabs.length >
+                          width - (widget.showNewButton ? _kButtonWidth : 0);
+
+                      final bool showScrollButtons =
+                          widget.showScrollButtons && scrollable;
+                      final backwardButton = _buttonTabBuilder(
+                        context,
+                        const Icon(FluentIcons.caret_left_solid8, size: 10),
+                        !scrollController.canBackward
+                            ? () {
+                                if (direction == TextDirection.ltr) {
+                                  scrollController.backward();
+                                } else {
+                                  scrollController.forward();
+                                }
+                              }
+                            : null,
+                        localizations.scrollTabBackwardLabel,
+                      );
+
+                      final forwardButton = _buttonTabBuilder(
+                        context,
+                        const Icon(FluentIcons.caret_right_solid8, size: 10),
+                        !scrollController.canForward
+                            ? () {
+                                if (direction == TextDirection.ltr) {
+                                  scrollController.forward();
+                                } else {
+                                  scrollController.backward();
+                                }
+                              }
+                            : null,
+                        localizations.scrollTabForwardLabel,
+                      );
+
+                      return Row(children: [
+                        if (showScrollButtons)
+                          direction == TextDirection.ltr
+                              ? backwardButton
+                              : forwardButton,
+                        if (scrollable)
+                          Expanded(child: listView)
+                        else
+                          Flexible(child: listView),
+                        if (showScrollButtons)
+                          direction == TextDirection.ltr
+                              ? forwardButton
+                              : backwardButton,
+                        if (widget.showNewButton)
+                          _buttonTabBuilder(
+                            context,
+                            Icon(widget.addIconData, size: 16.0),
+                            widget.onNewPressed!,
+                            localizations.newTabLabel,
+                          ),
+                      ]);
+                    }),
                   ),
-              ],
-            ),
+                  if (widget.footer != null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: DefaultTextStyle(
+                        style: headerFooterTextStyle,
+                        child: widget.footer!,
+                      ),
+                    ),
+                ],
+              ),
               behavior: HitTestBehavior.translucent,
               onPanStart: (details) {
                 windowManager.startDragging();
@@ -503,13 +503,16 @@ class _TabViewState extends State<TabView> {
                 } else {
                   windowManager.unmaximize();
                 }
-              }
-            ),
+              }),
           // child: ,
         ),
       ),
       if (widget.bodies.isNotEmpty)
-        Expanded(child: widget.bodies[widget.currentIndex]),
+        Expanded(
+            child: Focus(
+          autofocus: true,
+          child: widget.bodies[widget.currentIndex],
+        )),
     ]);
     if (widget.shortcutsEnabled) {
       void _onClosePressed() {
@@ -724,17 +727,17 @@ class __TabState extends State<_Tab>
                       children: [
                         if (widget.tab.icon != null)
                           Padding(
-                            padding: const EdgeInsets.only(right: 8,left: 4),
+                            padding: const EdgeInsets.only(right: 8, left: 4),
                             child: widget.tab.icon!,
                           ),
                         if (widget.tabWidthBehavior !=
-                            TabWidthBehavior.compact ||
+                                TabWidthBehavior.compact ||
                             (widget.tabWidthBehavior ==
-                                TabWidthBehavior.compact &&
+                                    TabWidthBehavior.compact &&
                                 widget.selected))
                           Flexible(
                             fit: widget.tabWidthBehavior ==
-                                TabWidthBehavior.equal
+                                    TabWidthBehavior.equal
                                 ? FlexFit.tight
                                 : FlexFit.loose,
                             child: DefaultTextStyle.merge(
@@ -746,9 +749,9 @@ class __TabState extends State<_Tab>
                           ),
                         if (widget.tab.closeIcon != null &&
                             (widget.visibilityMode ==
-                                CloseButtonVisibilityMode.always ||
+                                    CloseButtonVisibilityMode.always ||
                                 (widget.visibilityMode ==
-                                    CloseButtonVisibilityMode.onHover &&
+                                        CloseButtonVisibilityMode.onHover &&
                                     states.isHovering)))
                           Padding(
                             padding: const EdgeInsets.only(left: 2.0),
