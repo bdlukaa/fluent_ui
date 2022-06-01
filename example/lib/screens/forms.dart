@@ -179,13 +179,10 @@ class _FormsState extends State<Forms> {
         const SizedBox(height: 20),
         Card(
           child: Wrap(runSpacing: 8.0, spacing: 8.0, children: [
-            SizedBox(
-              width: 295,
-              child: DatePicker(
-                header: 'Date of birth',
-                selected: date,
-                onChanged: (v) => setState(() => date = v),
-              ),
+            DatePicker(
+              header: 'Date of birth',
+              selected: date,
+              onChanged: (v) => setState(() => date = v),
             ),
             SizedBox(
               width: 240,

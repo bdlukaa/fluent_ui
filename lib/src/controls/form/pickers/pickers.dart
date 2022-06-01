@@ -327,7 +327,13 @@ class _PickerState extends State<Picker> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: _childKey,
-      child: widget.child(context, open),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: 296.0,
+          maxWidth: 456.0,
+        ),
+        child: widget.child(context, open),
+      ),
     );
   }
 }

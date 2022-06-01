@@ -225,7 +225,7 @@ class _DatePickerState extends State<DatePicker> {
             curve: FluentTheme.of(context).animationCurve,
             height: kPickerHeight,
             decoration: kPickerDecorationBuilder(context, state),
-            child: Row(children: [
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (widget.showMonth)
                 Expanded(
                   flex: 2,

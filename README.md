@@ -1277,7 +1277,7 @@ DateTime date = DateTime.now();
 SizedBox(
   width: 295,
   child: DatePicker(
-    header: 'Date of birth',
+    header: 'Pick a date',
     selected: date,
     onChanged: (v) => setState(() => date = v),
   ),
