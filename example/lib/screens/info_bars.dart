@@ -35,49 +35,47 @@ class _InfoBarsState extends State<InfoBars> {
           style: FluentTheme.of(context).typography.subtitle,
         ),
         const SizedBox(height: 10.0),
-        Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (_firstOpen)
-                InfoBar(
-                  title: const Text('Title'),
-                  content: const Text(
-                    'Essential app message for your users to be informed of, '
-                    'acknowledge, or take action on.',
-                  ),
-                  severity: severity,
-                  isLong: true,
-                  onClose: () => setState(() => _firstOpen = false),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_firstOpen)
+              InfoBar(
+                title: const Text('Title'),
+                content: const Text(
+                  'Essential app message for your users to be informed of, '
+                  'acknowledge, or take action on.',
                 ),
-              const SizedBox(height: 10.0),
-              const Divider(),
-              const SizedBox(height: 10.0),
-              Checkbox(
-                checked: _firstOpen,
-                onChanged: (v) => setState(() => _firstOpen = v!),
-                content: const Text('Is open'),
+                severity: severity,
+                isLong: true,
+                onClose: () => setState(() => _firstOpen = false),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 10.0),
-                width: 150.0,
-                child: Combobox<InfoBarSeverity>(
-                  isExpanded: true,
-                  items: InfoBarSeverity.values
-                      .map(
-                        (severity) => ComboboxItem(
-                          child: Text(severity.name),
-                          value: severity,
-                        ),
-                      )
-                      .toList(),
-                  value: severity,
-                  onChanged: (v) => setState(() => severity = v ?? severity),
-                ),
+            const SizedBox(height: 10.0),
+            const Divider(),
+            const SizedBox(height: 10.0),
+            Checkbox(
+              checked: _firstOpen,
+              onChanged: (v) => setState(() => _firstOpen = v!),
+              content: const Text('Is open'),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10.0),
+              width: 150.0,
+              child: Combobox<InfoBarSeverity>(
+                isExpanded: true,
+                items: InfoBarSeverity.values
+                    .map(
+                      (severity) => ComboboxItem(
+                        child: Text(severity.name),
+                        value: severity,
+                      ),
+                    )
+                    .toList(),
+                value: severity,
+                onChanged: (v) => setState(() => severity = v ?? severity),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         const SizedBox(height: 10.0),
         Text(
@@ -85,61 +83,59 @@ class _InfoBarsState extends State<InfoBars> {
           style: FluentTheme.of(context).typography.subtitle,
         ),
         const SizedBox(height: 10.0),
-        Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (_secondOpen)
-                InfoBar(
-                  title: const Text('Title'),
-                  content: Text(
-                    _isLong
-                        ? 'Essential app message for your users to be informed '
-                            'of, acknowledge, or take action on. Lorem Ipsum is '
-                            'simply dummy text of the printing and typesetting '
-                            'industry. Lorem Ipsum has been the industry\'s '
-                            'standard dummy text ever since the 1500s, when an '
-                            'unknown printer took a galley of type and scrambled '
-                            'it to make a type specimen book.'
-                        : 'A short essential message',
-                  ),
-                  severity: severity,
-                  isLong: _isLong,
-                  onClose: () => setState(() => _secondOpen = false),
-                  action: _hasActionButton
-                      ? Button(
-                          child: const Text('Action'),
-                          onPressed: () {},
-                        )
-                      : null,
-                  isIconVisible: _isIconVisible,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_secondOpen)
+              InfoBar(
+                title: const Text('Title'),
+                content: Text(
+                  _isLong
+                      ? 'Essential app message for your users to be informed '
+                          'of, acknowledge, or take action on. Lorem Ipsum is '
+                          'simply dummy text of the printing and typesetting '
+                          'industry. Lorem Ipsum has been the industry\'s '
+                          'standard dummy text ever since the 1500s, when an '
+                          'unknown printer took a galley of type and scrambled '
+                          'it to make a type specimen book.'
+                      : 'A short essential message',
                 ),
-              const SizedBox(height: 10.0),
-              const Divider(),
-              const SizedBox(height: 10.0),
-              Checkbox(
-                checked: _secondOpen,
-                onChanged: (v) => setState(() => _secondOpen = v!),
-                content: const Text('Is open'),
+                severity: severity,
+                isLong: _isLong,
+                onClose: () => setState(() => _secondOpen = false),
+                action: _hasActionButton
+                    ? Button(
+                        child: const Text('Action'),
+                        onPressed: () {},
+                      )
+                    : null,
+                isIconVisible: _isIconVisible,
               ),
-              Checkbox(
-                checked: _isLong,
-                onChanged: (v) => setState(() => _isLong = v!),
-                content: const Text('Is long'),
-              ),
-              Checkbox(
-                checked: _hasActionButton,
-                onChanged: (v) => setState(() => _hasActionButton = v!),
-                content: const Text('Has action button'),
-              ),
-              Checkbox(
-                checked: _isIconVisible,
-                onChanged: (v) => setState(() => _isIconVisible = v!),
-                content: const Text('Is icon visible'),
-              ),
-            ],
-          ),
+            const SizedBox(height: 10.0),
+            const Divider(),
+            const SizedBox(height: 10.0),
+            Checkbox(
+              checked: _secondOpen,
+              onChanged: (v) => setState(() => _secondOpen = v!),
+              content: const Text('Is open'),
+            ),
+            Checkbox(
+              checked: _isLong,
+              onChanged: (v) => setState(() => _isLong = v!),
+              content: const Text('Is long'),
+            ),
+            Checkbox(
+              checked: _hasActionButton,
+              onChanged: (v) => setState(() => _hasActionButton = v!),
+              content: const Text('Has action button'),
+            ),
+            Checkbox(
+              checked: _isIconVisible,
+              onChanged: (v) => setState(() => _isIconVisible = v!),
+              content: const Text('Is icon visible'),
+            ),
+          ],
         ),
       ],
     );

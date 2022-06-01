@@ -60,13 +60,20 @@ class AppTheme extends ChangeNotifier {
     _textDirection = direction;
     notifyListeners();
   }
+
+  Locale? _locale;
+  Locale? get locale => _locale;
+  set locale(Locale? locale) {
+    _locale = locale;
+    notifyListeners();
+  }
 }
 
 AccentColor get systemAccentColor {
-  if (defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      kIsWeb) {
-    return AccentColor('normal', {
+  if ((defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.android) &&
+      !kIsWeb) {
+    return AccentColor.swatch({
       'darkest': SystemTheme.accentColor.darkest,
       'darker': SystemTheme.accentColor.darker,
       'dark': SystemTheme.accentColor.dark,

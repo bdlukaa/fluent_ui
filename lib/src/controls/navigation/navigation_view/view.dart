@@ -172,7 +172,7 @@ class NavigationViewState extends State<NavigationView> {
     final direction = Directionality.of(context);
 
     Color? _overlayBackgroundColor() {
-      if (theme.backgroundColor?.alpha == 0) {
+      if (theme.backgroundColor == null) {
         if (brightness.isDark) {
           return const Color(0xFF202020);
         } else {
@@ -267,10 +267,8 @@ class NavigationViewState extends State<NavigationView> {
           final contentShape = widget.contentShape ??
               RoundedRectangleBorder(
                 side: BorderSide(
-                  width: 0.3,
-                  color: FluentTheme.of(context).brightness.isDark
-                      ? Colors.black
-                      : const Color(0xffBCBCBC),
+                  color:
+                      FluentTheme.of(context).resources.cardStrokeColorDefault,
                 ),
                 borderRadius: displayMode == PaneDisplayMode.top
                     ? BorderRadius.zero
@@ -367,36 +365,38 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                       );
                     } else if (_compactOverlayOpen) {
-                      return Mica(
-                        key: _overlayKey,
-                        backgroundColor: _overlayBackgroundColor(),
-                        elevation: 10.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color(0xFF6c6c6c),
-                              width: 0.15,
+                      return ColoredBox(
+                        color: Colors.black,
+                        child: Mica(
+                          key: _overlayKey,
+                          backgroundColor: _overlayBackgroundColor(),
+                          elevation: 10.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFF6c6c6c),
+                                width: 0.15,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                            onItemSelected: toggleCompactOpenMode,
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            padding: appBarPadding,
+                            child: _OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onToggle: toggleCompactOpenMode,
+                              onItemSelected: toggleCompactOpenMode,
+                            ),
                           ),
                         ),
                       );
                     } else {
                       return Padding(
                         padding: appBarPadding,
-                        child: Mica(
+                        child: KeyedSubtree(
                           key: _overlayKey,
-                          backgroundColor: theme.backgroundColor,
                           child: _CompactNavigationPane(
                             pane: pane,
                             paneKey: _panelKey,
@@ -460,27 +460,30 @@ class NavigationViewState extends State<NavigationView> {
                   width: _kOpenNavigationPanelWidth,
                   height: MediaQuery.of(context).size.height,
                   child: PaneScrollConfiguration(
-                    child: Mica(
-                      backgroundColor: _overlayBackgroundColor(),
-                      elevation: 10.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF6c6c6c),
-                            width: 0.15,
+                    child: ColoredBox(
+                      color: Colors.black,
+                      child: Mica(
+                        backgroundColor: _overlayBackgroundColor(),
+                        elevation: 10.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF6c6c6c),
+                              width: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 1.0),
-                        padding: appBarPadding,
-                        child: _OpenNavigationPane(
-                          theme: theme,
-                          pane: pane,
-                          paneKey: _panelKey,
-                          listKey: _listKey,
-                          onItemSelected: () {
-                            setState(() => _minimalPaneOpen = false);
-                          },
+                          margin: const EdgeInsets.symmetric(vertical: 1.0),
+                          padding: appBarPadding,
+                          child: _OpenNavigationPane(
+                            theme: theme,
+                            pane: pane,
+                            paneKey: _panelKey,
+                            listKey: _listKey,
+                            onItemSelected: () {
+                              setState(() => _minimalPaneOpen = false);
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -615,10 +618,7 @@ class NavigationAppBar with Diagnosticable {
           data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
             unselectedIconColor: ButtonState.resolveWith((states) {
               if (states.isDisabled) {
-                return ButtonThemeData.buttonColor(
-                  FluentTheme.of(context).brightness,
-                  states,
-                );
+                return ButtonThemeData.buttonColor(context, states);
               }
               return ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),
@@ -740,8 +740,9 @@ class _NavigationAppBar extends StatelessWidget {
   }
 }
 
-class _NavigationViewScrollBehavior extends ScrollBehavior {
+class _NavigationViewScrollBehavior extends FluentScrollBehavior {
   const _NavigationViewScrollBehavior();
+
   @override
   Widget buildScrollbar(context, child, details) {
     return Scrollbar(

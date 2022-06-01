@@ -178,23 +178,26 @@ class _FormsState extends State<Forms> {
         ),
         const SizedBox(height: 20),
         Card(
-          child: Wrap(runSpacing: 8, children: [
+          child: Wrap(runSpacing: 8.0, spacing: 8.0, children: [
+            DatePicker(
+              header: 'Date of birth',
+              selected: date,
+              onChanged: (v) => setState(() => date = v),
+            ),
             SizedBox(
-              width: 295,
-              child: DatePicker(
-                // popupHeight: kOneLineTileHeight * 6,
-                header: 'Date of birth',
+              width: 240,
+              child: TimePicker(
+                header: 'Arrival time',
                 selected: date,
                 onChanged: (v) => setState(() => date = v),
               ),
             ),
-            const SizedBox(width: 12),
             SizedBox(
               width: 240,
               child: TimePicker(
-                // popupHeight: kOneLineTileHeight * 5,
                 header: 'Arrival time',
                 selected: date,
+                hourFormat: HourFormat.HH,
                 onChanged: (v) => setState(() => date = v),
               ),
             ),

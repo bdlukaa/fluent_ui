@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:fluent_ui/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -87,6 +88,11 @@ class Settings extends StatelessWidget {
     final appTheme = context.watch<AppTheme>();
     const spacer = SizedBox(height: 10.0);
     const biggerSpacer = SizedBox(height: 40.0);
+
+    final supportedLocales = const AppLocalizationDelegate().supportedLocales;
+    final currentLocale =
+        appTheme.locale ?? Localizations.maybeLocaleOf(context);
+
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Settings')),
       scrollController: controller,
@@ -105,6 +111,7 @@ class Settings extends StatelessWidget {
 
                   if (kIsWindowEffectsSupported) {
                     // some window effects require on [dark] to look good.
+                    // appTheme.setEffect(WindowEffect.disabled, context);
                     appTheme.setEffect(appTheme.windowEffect, context);
                   }
                 }
@@ -220,6 +227,31 @@ class Settings extends StatelessWidget {
             ),
           );
         }).reversed,
+        Text('Locale', style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        Wrap(
+          spacing: 15.0,
+          runSpacing: 10.0,
+          children: List.generate(
+            supportedLocales.length,
+            (index) {
+              final locale = supportedLocales[index];
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: RadioButton(
+                  checked: currentLocale == locale,
+                  onChanged: (value) {
+                    if (value) {
+                      appTheme.locale = locale;
+                    }
+                  },
+                  content: Text('$locale'),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }

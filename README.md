@@ -19,7 +19,7 @@
   </p>
 </div>
 
-Unofficial implementation of Fluent UI for [Flutter](flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
+Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
 
 ### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
 
@@ -872,20 +872,20 @@ DropDownButton(
   leading: const Icon(FluentIcons.align_left),
   title: const Text('Alignment'),
   items: [
-    DropDownButtonItem(
-      title: const Text('Left'),
+    MenuFlyoutItem(
+      text: const Text('Left'),
       leading: const Icon(FluentIcons.align_left),
-      onTap: () => debugPrint('left'),
+      onPressed: () => debugPrint('left'),
     ),
-    DropDownButtonItem(
-      title: const Text('Center'),
+    MenuFlyoutItem(
+      text: const Text('Center'),
       leading: const Icon(FluentIcons.align_center),
-      onTap: () => debugPrint('center'),
+      onPressed: () => debugPrint('center'),
     ),
-    DropDownButtonItem(
-      title: const Text('Right'),
+    MenuFlyoutItem(
+      text: const Text('Right'),
       leading: const Icon(FluentIcons.align_right),
-      onTap: () => debugPrint('right'),
+      onPressed: () => debugPrint('right'),
     ),
   ],
 );
@@ -1277,7 +1277,7 @@ DateTime date = DateTime.now();
 SizedBox(
   width: 295,
   child: DatePicker(
-    header: 'Date of birth',
+    header: 'Pick a date',
     selected: date,
     onChanged: (v) => setState(() => date = v),
   ),
@@ -1366,6 +1366,7 @@ final _controller = ScrollController();
 Scrollbar(
   controller: _controller,
   child: ListView.builder(
+    controller: _controller,
     /// You can add a padding to the view to avoid having the scrollbar over the UI elements
     padding: EdgeInsets.only(right: 16.0),
     itemCount: 100,
@@ -1771,6 +1772,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - German
 - Hindi
 - Italian
+- Malay
 - Portuguese
 - Russian
 - Simplified Chinese

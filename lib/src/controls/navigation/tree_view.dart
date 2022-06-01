@@ -630,6 +630,7 @@ class _TreeViewItem extends StatelessWidget {
                               : selected && states.isHovering
                                   ? {ButtonStates.pressing}
                                   : states,
+                      transparentWhenNone: true,
                     ),
                 borderRadius: BorderRadius.circular(6.0),
               ),

@@ -168,6 +168,7 @@ class _OthersState extends State<Others> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Others')),
       children: [
@@ -314,71 +315,68 @@ class _OthersState extends State<Others> {
         const SizedBox(height: 10),
         InfoLabel(
           label: 'TabView',
-          child: Container(
-            height: 400,
-            decoration: BoxDecoration(
-              color: FluentTheme.of(context).accentColor.resolve(context),
-              border: Border.all(
-                  color: FluentTheme.of(context).accentColor, width: 1.0),
-            ),
-            child: TabView(
-              currentIndex: currentIndex,
-              onChanged: _handleTabChanged,
-              tabWidthBehavior: TabWidthBehavior.sizeToContent,
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final Tab item = tabs.removeAt(oldIndex);
-                  tabs.insert(newIndex, item);
-                  if (currentIndex == newIndex) {
-                    currentIndex = oldIndex;
-                  } else if (currentIndex == oldIndex) {
-                    currentIndex = newIndex;
-                  }
-                });
-              },
-              onNewPressed: () {
-                setState(() {
-                  late Tab tab;
-                  tab = Tab(
-                    text: Text('Document ${tabs.length}'),
-                    onClosed: () {
-                      _handleTabClosed(tab);
-                    },
-                  );
-                  tabs.add(tab);
-                });
-              },
-              tabs: tabs,
-              bodies: List.generate(
-                tabs.length,
-                (index) => Container(
-                  color: Colors.accentColors[index.clamp(
-                    0,
-                    Colors.accentColors.length - 1,
-                  )],
-                  child: Stack(children: [
-                    const Positioned.fill(child: FlutterLogo()),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 250.0,
-                        height: 200.0,
-                        child: Acrylic(
-                          child: Center(
-                            child: Text(
-                              'A C R Y L I C',
-                              style:
-                                  FluentTheme.of(context).typography.titleLarge,
-                              textAlign: TextAlign.center,
+          child: Card(
+            margin: EdgeInsets.zero,
+            child: SizedBox(
+              height: 400,
+              child: TabView(
+                currentIndex: currentIndex,
+                onChanged: _handleTabChanged,
+                tabWidthBehavior: TabWidthBehavior.sizeToContent,
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final Tab item = tabs.removeAt(oldIndex);
+                    tabs.insert(newIndex, item);
+                    if (currentIndex == newIndex) {
+                      currentIndex = oldIndex;
+                    } else if (currentIndex == oldIndex) {
+                      currentIndex = newIndex;
+                    }
+                  });
+                },
+                onNewPressed: () {
+                  setState(() {
+                    late Tab tab;
+                    tab = Tab(
+                      text: Text('Document ${tabs.length}'),
+                      onClosed: () {
+                        _handleTabClosed(tab);
+                      },
+                    );
+                    tabs.add(tab);
+                  });
+                },
+                tabs: tabs,
+                bodies: List.generate(
+                  tabs.length,
+                  (index) => Container(
+                    color: Colors.accentColors[index.clamp(
+                      0,
+                      Colors.accentColors.length - 1,
+                    )],
+                    child: Stack(children: [
+                      const Positioned.fill(child: FlutterLogo()),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 250.0,
+                          height: 200.0,
+                          child: Acrylic(
+                            child: Center(
+                              child: Text(
+                                'A C R Y L I C',
+                                style: theme.typography.titleLarge,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ]),
+                  ),
                 ),
               ),
             ),
@@ -397,8 +395,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   items: treeViewItemsSimple,
@@ -415,8 +412,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.single,
@@ -438,8 +434,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   selectionMode: TreeViewSelectionMode.multiple,
@@ -460,8 +455,7 @@ class _OthersState extends State<Others> {
                   maxWidth: 350,
                 ),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: FluentTheme.of(context).inactiveColor),
+                  border: Border.all(color: theme.inactiveColor),
                 ),
                 child: TreeView(
                   items: lazy,

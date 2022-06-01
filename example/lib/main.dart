@@ -35,10 +35,12 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // if it's on the web, windows or android, load the accent color
-  if (kIsWeb ||
-      [TargetPlatform.windows, TargetPlatform.android]
-          .contains(defaultTargetPlatform)) {
+  // if it's not on the web, windows or android, load the accent color
+  if (!kIsWeb &&
+      [
+        TargetPlatform.windows,
+        TargetPlatform.android,
+      ].contains(defaultTargetPlatform)) {
     SystemTheme.accentColor.load();
   }
 
@@ -94,6 +96,7 @@ class MyApp extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
+          locale: appTheme.locale,
           builder: (context, child) {
             return Directionality(
               textDirection: appTheme.textDirection,
@@ -158,12 +161,24 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           );
         }(),
-        actions: kIsWeb
-            ? null
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [Spacer(), WindowButtons()],
-              ),
+        actions: Row(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Spacer(),
+            ToggleSwitch(
+              content: const Text('Dark Mode'),
+              checked: FluentTheme.of(context).brightness.isDark,
+              onChanged: (v) {
+                if (v) {
+                  appTheme.mode = ThemeMode.dark;
+                } else {
+                  appTheme.mode = ThemeMode.light;
+                }
+              },
+            ),
+            if (!kIsWeb) const WindowButtons(),
+          ],
+        ),
       ),
       pane: NavigationPane(
         selected: index,

@@ -21,6 +21,7 @@ const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.symmetric(vertical: 8.0);
 const double kMinInteractiveDimension = 48.0;
+final kComboboxRadius = BorderRadius.circular(4.0);
 
 /// A builder to customize combobox buttons.
 ///
@@ -32,17 +33,15 @@ class _ComboboxMenuPainter extends CustomPainter {
     this.selectedIndex,
     required this.resize,
     required this.getSelectedItemOffset,
-    required Color backgroundColor,
-    required double elevation,
+    Color borderColor = Colors.black,
   })  : _painter = BoxDecoration(
           // If you add an image here, you must provide a real
           // configuration in the paint() function and you must provide some sort
           // of onChanged callback here.
           // color: color,
-          borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(width: 0.25),
-          color: backgroundColor,
-          boxShadow: kElevationToShadow[elevation],
+          borderRadius: kComboboxRadius,
+          border: Border.all(width: 1.0, color: borderColor),
+          // color: backgroundColor,
         ).createBoxPainter(),
         super(repaint: resize);
 
@@ -172,6 +171,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
             Container(
               decoration: BoxDecoration(
                 color: () {
+                  if (states.isNone) return Colors.transparent;
                   if (states.isFocused) {
                     return ButtonThemeData.uncheckedInputColor(
                       theme,
@@ -194,8 +194,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
                 child: Container(
                   width: 3.0,
                   decoration: BoxDecoration(
-                    color: theme.accentColor
-                        .resolveFromReverseBrightness(theme.brightness),
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
                     borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
@@ -292,8 +291,9 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
           // This offset is passed as a callback, not a value, because it must
           // be retrieved at paint time (after layout), not at build time.
           getSelectedItemOffset: () => route.getItemOffset(route.selectedIndex),
-          backgroundColor: FluentTheme.of(context).menuColor,
-          elevation: route.elevation.toDouble(),
+          // elevation: route.elevation.toDouble(),
+          borderColor:
+              FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
         ),
         child: Semantics(
           scopesRoute: true,
@@ -632,7 +632,14 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
               route: route,
               textDirection: textDirection,
             ),
-            child: capturedThemes.wrap(menu),
+            child: capturedThemes.wrap(Acrylic(
+              tintAlpha: 1.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: kComboboxRadius,
+              ),
+              elevation: route.elevation.toDouble(),
+              child: menu,
+            )),
           );
         },
       ),
@@ -1161,7 +1168,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
             ancestor: navigator.context.findRenderObject()) &
         itemBox.size;
     _comboboxRoute = _ComboboxRoute<T>(
-      acrylicEnabled: DisableAcrylic.of(context) != null,
+      acrylicEnabled: DisableAcrylic.of(context) == null,
       items: menuItems,
       buttonRect: menuMargin.resolve(textDirection).inflateRect(itemRect),
       padding: _kMenuItemPadding.resolve(textDirection),
