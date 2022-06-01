@@ -112,6 +112,9 @@ class NavigationPane with Diagnosticable {
 
   /// The header of the pane.
   ///
+  /// If null, the space it should have taken will be removed from
+  /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.open] only).
+  ///
   /// Usually a [Text] or an [Image].
   ///
   /// ![Top Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-top.png)
@@ -864,7 +867,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           },
         );
       }
-      return const SizedBox.shrink();
+      return null;
     }();
     double paneWidth =
         widget.pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
@@ -875,6 +878,12 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     if (widget.pane.size?.openMinWidth != null &&
         paneWidth < widget.pane.size!.openMinWidth!) {
       paneWidth = widget.pane.size!.openMinWidth!;
+    }
+
+    double paneHeaderHeight =
+        widget.pane.size?.headerHeight ?? kOneLineTileHeight;
+    if (widget.pane.header == null && menuButton == null) {
+      paneHeaderHeight = -1.0;
     }
 
     return SizeTransition(
@@ -890,27 +899,28 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           crossAxisAlignment: CrossAxisAlignment.start,
           key: widget.pane.paneKey,
           children: [
-            Container(
-              margin: widget.pane.autoSuggestBox != null
-                  ? EdgeInsets.zero
-                  : topPadding,
-              height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
-              child: () {
-                if (widget.pane.header != null) {
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: widget.pane.header!,
+            if (paneHeaderHeight >= 0)
+              Container(
+                margin: widget.pane.autoSuggestBox != null
+                    ? EdgeInsets.zero
+                    : topPadding,
+                height: paneHeaderHeight,
+                child: () {
+                  if (widget.pane.header != null) {
+                    return Row(children: [
+                      menuButton ?? const SizedBox.shrink(),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: widget.pane.header!,
+                        ),
                       ),
-                    ),
-                  ]);
-                } else {
-                  return menuButton;
-                }
-              }(),
-            ),
+                    ]);
+                  } else {
+                    return menuButton ?? const SizedBox.shrink();
+                  }
+                }(),
+              ),
             if (widget.pane.autoSuggestBox != null)
               Container(
                 padding: theme.iconPadding ?? EdgeInsets.zero,

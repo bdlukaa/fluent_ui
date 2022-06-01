@@ -16,6 +16,7 @@ Date format: DD/MM/YYYY
   - **BREAKING** Removed `Card.elevation`
   - Added `Card.margin`, which is the margin around the card
 - Updated `Combobox` and `Button` designs
+- Updated `NavigationPane` behaviour. Now, if the header is null, the space it should have taken will be removed from the pane (display mode affected: minimal, open only) ([#359](https://github.com/bdlukaa/fluent_ui/pull/359))
 - Reviewed `DatePicker` and `TimePicker` ([#357](https://github.com/bdlukaa/fluent_ui/pull/357))
   - Correctly apply dimensions and positions to both pickers
   - Update the picker popup style and behavior
