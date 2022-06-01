@@ -1772,6 +1772,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - German
 - Hindi
 - Italian
+- Malay
 - Portuguese
 - Russian
 - Simplified Chinese
