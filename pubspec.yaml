@@ -31,7 +31,7 @@ flutter:
   fonts:
     - family: FluentIcons
       fonts:
-        - asset: fonts/FluentIcons.ttf
+        - asset: fonts/FluentIcons.ttf 
 
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the package. Default: false
