@@ -1773,11 +1773,11 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Hindi
 - Italian
 - Malay
+- Polish
 - Portuguese
 - Russian
 - Simplified Chinese
 - Spanish
-- Polish
 
 ## Contribution
 
