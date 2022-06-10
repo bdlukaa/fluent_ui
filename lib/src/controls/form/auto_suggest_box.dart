@@ -459,7 +459,7 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
               bottom: Radius.circular(4.0),
             ),
           ),
-          color: theme.menuColor,
+          color: theme.resources.cardBackgroundFillColorDefault,
           shadows: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
