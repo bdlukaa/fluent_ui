@@ -993,54 +993,25 @@ TextFormBox(
 
 Use an AutoSuggestBox to provide a list of suggestions for a user to select from as they type. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/auto-suggest-box)
 
-### Example
+![AutoSuggestBox example](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-autosuggest-expanded-01.png)
+
+Here's an example of how to create an AutoSuggestBox
 
 ```dart
-final autoSuggestBox = TextEditingController();
-
-AutoSuggestBox<String>(
-  controller: autoSuggestBox,
+AutoSuggestBox(
+  placeholder: 'Select a cat breed',
   items: [
-    'Blue',
-    'Green',
-    'Red',
-    'Yellow',
-    'Grey',
+    'Chatilly-Tifanny',
+    'Chartreux',
+    'Chausie',
+    'Munchkin',
+    'York Chocolate',
   ],
-  onSelected: (text) {
-    print(text);
-  },
-  textBoxBuilder: (context, controller, focusNode, key) {
-    const BorderSide _kDefaultRoundedBorderSide = BorderSide(
-      style: BorderStyle.solid,
-      width: 0.8,
-    );
-    return TextBox(
-      key: key,
-      controller: controller,
-      focusNode: focusNode,
-      suffixMode: OverlayVisibilityMode.editing,
-      suffix: IconButton(
-        icon: Icon(FluentIcons.close),
-        onPressed: () {
-          controller.clear();
-          focusNode.unfocus();
-        },
-      ),
-      placeholder: 'Type a color',
-    );
+  onSelected: (breed) {
+    print(breed);
   },
 )
 ```
-
-The code above produces the following:
-
-![Auto suggest box example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_expanded01.png)
-
-### Screenshots
-
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/control-examples/auto-suggest-box-groove.png)
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_autosuggest_noresults.png)
 
 ## Combo Box
 
