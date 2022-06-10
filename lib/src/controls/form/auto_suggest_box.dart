@@ -292,7 +292,10 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                   controller.selection = TextSelection.collapsed(
                     offset: item.length,
                   );
-                  widget.onChanged?.call(item, TextChangedReason.userInput);
+                  widget.onChanged?.call(
+                    item,
+                    TextChangedReason.suggestionChosen,
+                  );
 
                   // After selected, the overlay is dismissed and the text box is
                   // unfocused
