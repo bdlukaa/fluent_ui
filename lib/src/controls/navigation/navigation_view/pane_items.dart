@@ -72,7 +72,7 @@ class PaneItem extends NavigationPaneItem {
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
 
-  T? _getPropertyFromTitle<T>([dynamic def]) {
+  T? getPropertyFromTitle<T>([dynamic def]) {
     if (title is Text) {
       final title = this.title as Text;
       switch (T) {
@@ -82,7 +82,7 @@ class PaneItem extends NavigationPaneItem {
           return (title.textSpan ??
               TextSpan(
                 text: title.data ?? '',
-                style: _getPropertyFromTitle<TextStyle>()
+                style: getPropertyFromTitle<TextStyle>()
                         ?.merge(def as TextStyle?) ??
                     def as TextStyle?,
               )) as T?;
@@ -125,7 +125,7 @@ class PaneItem extends NavigationPaneItem {
         case InlineSpan:
           return TextSpan(
             text: String.fromCharCode(title.icon!.codePoint),
-            style: _getPropertyFromTitle<TextStyle>(),
+            style: getPropertyFromTitle<TextStyle>(),
           ) as T?;
         case TextStyle:
           return TextStyle(
@@ -168,10 +168,10 @@ class PaneItem extends NavigationPaneItem {
     final direction = Directionality.of(context);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final String titleText = _getPropertyFromTitle<String>() ?? '';
+    final String titleText = getPropertyFromTitle<String>() ?? '';
 
     final TextStyle baseStyle =
-        _getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        getPropertyFromTitle<TextStyle>() ?? const TextStyle();
 
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
@@ -196,15 +196,15 @@ class PaneItem extends NavigationPaneItem {
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
                 child: RichText(
-                  text: _getPropertyFromTitle<InlineSpan>(textStyle)!,
+                  text: getPropertyFromTitle<InlineSpan>(textStyle)!,
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   textAlign:
-                      _getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
+                      getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
                   textHeightBehavior:
-                      _getPropertyFromTitle<TextHeightBehavior>(),
-                  textWidthBasis: _getPropertyFromTitle<TextWidthBasis>() ??
+                      getPropertyFromTitle<TextHeightBehavior>(),
+                  textWidthBasis: getPropertyFromTitle<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
@@ -358,7 +358,7 @@ class PaneItem extends NavigationPaneItem {
 
                 if (showTooltip) {
                   return Tooltip(
-                    richMessage: _getPropertyFromTitle<InlineSpan>(),
+                    richMessage: getPropertyFromTitle<InlineSpan>(),
                     style: TooltipThemeData(textStyle: baseStyle),
                     child: result(),
                   );

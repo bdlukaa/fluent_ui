@@ -263,15 +263,17 @@ class NavigationViewState extends State<NavigationView> {
         final pane = widget.pane!;
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
-            return pane.customPane!.build(
-              context,
-              NavigationPaneWidgetData(
-                appBar: appBar,
-                content: ClipRect(child: widget.content),
-                listKey: _listKey,
-                paneKey: _panelKey,
-                scrollController: scrollController,
-                pane: pane,
+            return PaneScrollConfiguration(
+              child: pane.customPane!.build(
+                context,
+                NavigationPaneWidgetData(
+                  appBar: appBar,
+                  content: ClipRect(child: widget.content),
+                  listKey: _listKey,
+                  paneKey: _panelKey,
+                  scrollController: scrollController,
+                  pane: pane,
+                ),
               ),
             );
           });
@@ -324,8 +326,7 @@ class NavigationViewState extends State<NavigationView> {
                 setState(() => _compactOverlayOpen = !_compactOverlayOpen);
               }
 
-              final openSize =
-                  pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+              final openSize = pane.size?.openWidth ?? kOpenNavigationPaneWidth;
 
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
@@ -337,8 +338,7 @@ class NavigationViewState extends State<NavigationView> {
                   top: widget.appBar?.height ?? 0.0,
                   start: openedWithoutOverlay
                       ? openSize
-                      : pane.size?.compactWidth ??
-                          _kCompactNavigationPanelWidth,
+                      : pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
                   end: 0,
                   bottom: 0,
                   child: content,
@@ -468,8 +468,8 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
-                  width: _kOpenNavigationPanelWidth,
+                  start: _minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
+                  width: kOpenNavigationPaneWidth,
                   height: MediaQuery.of(context).size.height,
                   child: PaneScrollConfiguration(
                     child: ColoredBox(
@@ -535,7 +535,7 @@ class NavigationViewState extends State<NavigationView> {
     return PrimaryScrollController(
       controller: scrollController,
       child: ScrollConfiguration(
-        behavior: const _NavigationViewScrollBehavior(),
+        behavior: const NavigationViewScrollBehavior(),
         child: child,
       ),
     );
@@ -653,7 +653,7 @@ class NavigationAppBar with Diagnosticable {
       } else {
         return const SizedBox.shrink();
       }
-      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+      widget = SizedBox(width: kCompactNavigationPaneWidth, child: widget);
       return widget;
     });
   }
@@ -719,8 +719,8 @@ class _NavigationAppBar extends StatelessWidget {
             displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
                 ? 0.0
                 : displayMode == PaneDisplayMode.compact
-                    ? _kCompactNavigationPanelWidth
-                    : _kOpenNavigationPanelWidth;
+                    ? kCompactNavigationPaneWidth
+                    : kOpenNavigationPaneWidth;
         result = Stack(children: [
           Row(children: [
             leading,
@@ -752,8 +752,12 @@ class _NavigationAppBar extends StatelessWidget {
   }
 }
 
-class _NavigationViewScrollBehavior extends FluentScrollBehavior {
-  const _NavigationViewScrollBehavior();
+/// The [ScrollBehavior] used on [NavigationView]
+///
+/// It generates a [Scrollbar] using the global scroll controller provided by
+/// [NavigationView]
+class NavigationViewScrollBehavior extends FluentScrollBehavior {
+  const NavigationViewScrollBehavior();
 
   @override
   Widget buildScrollbar(context, child, details) {
