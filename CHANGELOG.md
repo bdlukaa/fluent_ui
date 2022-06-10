@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [4.0.0-pre.0] - [07/06/2022]
 
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
 - **BREAKING** `Map<ShortcutActivator, Intent>?` is now the typed used on `FluentApp.shortcuts` ([#351](https://github.com/bdlukaa/fluent_ui/pull/351))
