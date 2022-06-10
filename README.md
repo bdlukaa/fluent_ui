@@ -1743,11 +1743,13 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - German
 - Hindi
 - Italian
+- Korean
 - Malay
 - Polish
 - Portuguese
 - Russian
 - Simplified Chinese
+- Traditional Chinese
 - Spanish
 
 ## Contribution
