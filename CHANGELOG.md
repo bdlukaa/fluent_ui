@@ -24,6 +24,9 @@ Date format: DD/MM/YYYY
   final PaneDisplayMode currentDisplayMode = key.currentState.displayMode;
   ```
 - The app bar action no longer overflow when minimal pane/compact overlay is open ([#361](https://github.com/bdlukaa/fluent_ui/issues/361))
+- Update `AutoSuggestBox`:
+  - It now uses `Acrylic`, but it can be disabled using `DisableAcrylic`
+  - `TextChangedReason.suggestionChoosen` is now called properly
 
 ## [4.0.0-pre.0] - [07/06/2022]
 

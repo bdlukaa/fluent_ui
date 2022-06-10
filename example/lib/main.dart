@@ -7,6 +7,7 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'screens/auto_suggest_box.dart';
 import 'screens/colors.dart';
 import 'screens/flyouts.dart';
 import 'screens/forms.dart';
@@ -220,6 +221,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.page_list),
+            title: const Text('AutoSuggestBox'),
+          ),
+          PaneItem(
             icon: const Icon(FluentIcons.color),
             title: const Text('Colors'),
           ),
@@ -280,6 +285,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       content: NavigationBody(index: index, children: [
         const InputsPage(),
         const Forms(),
+        const AutoSuggestBoxes(),
         const ColorsPage(),
         const IconsPage(),
         const TypographyPage(),
