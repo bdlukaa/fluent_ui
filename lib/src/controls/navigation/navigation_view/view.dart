@@ -357,6 +357,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   ),
+                // appBar,
                 PaneScrollConfiguration(
                   child: () {
                     if (openedWithoutOverlay) {
@@ -377,30 +378,27 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                       );
                     } else if (_compactOverlayOpen) {
-                      return ColoredBox(
-                        color: Colors.black,
-                        child: Mica(
-                          key: _overlayKey,
-                          backgroundColor: _overlayBackgroundColor(),
-                          elevation: 10.0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFF6c6c6c),
-                                width: 0.15,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
+                      return Mica(
+                        key: _overlayKey,
+                        backgroundColor: _overlayBackgroundColor(),
+                        elevation: 10.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF6c6c6c),
+                              width: 0.15,
                             ),
-                            margin: const EdgeInsets.symmetric(vertical: 1.0),
-                            padding: appBarPadding,
-                            child: _OpenNavigationPane(
-                              theme: theme,
-                              pane: pane,
-                              paneKey: _panelKey,
-                              listKey: _listKey,
-                              onToggle: toggleCompactOpenMode,
-                              onItemSelected: toggleCompactOpenMode,
-                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 1.0),
+                          padding: appBarPadding,
+                          child: _OpenNavigationPane(
+                            theme: theme,
+                            pane: pane,
+                            paneKey: _panelKey,
+                            listKey: _listKey,
+                            onToggle: toggleCompactOpenMode,
+                            onItemSelected: toggleCompactOpenMode,
                           ),
                         ),
                       );
@@ -671,6 +669,11 @@ class _NavigationAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
+
+    final theme = NavigationPaneTheme.of(context);
+
     final direction = Directionality.of(context);
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
@@ -683,10 +686,7 @@ class _NavigationAppBar extends StatelessWidget {
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
-          padding: [PaneDisplayMode.minimal, PaneDisplayMode.open]
-                  .contains(displayMode)
-              ? EdgeInsets.zero
-              : const EdgeInsets.only(left: 24.0),
+          padding: const EdgeInsetsDirectional.only(start: 16.0),
           child: DefaultTextStyle(
             style:
                 FluentTheme.of(context).typography.caption ?? const TextStyle(),
@@ -715,22 +715,16 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.compact:
         final isMinimalPaneOpen =
             InheritedNavigationView.maybeOf(context)?.minimalPaneOpen ?? false;
-        final double width =
-            displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
-                ? 0.0
-                : displayMode == PaneDisplayMode.compact
-                    ? kCompactNavigationPaneWidth
-                    : kOpenNavigationPaneWidth;
         result = Stack(children: [
-          Row(children: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
             leading,
             if (additionalLeading != null) additionalLeading!,
-            Expanded(child: title),
+            Flexible(child: title),
           ]),
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,
-              start: width,
+              start: 0,
               end: 0.0,
               top: 0.0,
               bottom: 0.0,
