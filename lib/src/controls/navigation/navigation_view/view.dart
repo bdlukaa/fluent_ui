@@ -711,8 +711,6 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
-        final isMinimalPaneOpen =
-            InheritedNavigationView.maybeOf(context)?.minimalPaneOpen ?? false;
         result = Stack(children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
             leading,
