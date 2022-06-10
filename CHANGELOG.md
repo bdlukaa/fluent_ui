@@ -53,6 +53,7 @@ Date format: DD/MM/YYYY
     - Added `InfoBar.isIconVisible`
   - (indicators) Updated `ProgressBar`, `ProgressRing` and `InfoBadge`
   - (other) Added helper methods for `AccentColor`: `AccentColor.defaultBrushFor`, `AccentColor.secondaryBrushFor` and `AccentColor.tertiaryBrushFor`
+  - Polish translation added
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 
