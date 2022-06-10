@@ -1,5 +1,30 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Exposed private properties that makes it easier to create custom panes for `NavigationView` ([#365](https://github.com/bdlukaa/fluent_ui/issues/365)):
+  - `kCompactNavigationPaneWidth`
+  - `kOpenNavigationPaneWidth`
+  - `NavigationPane.changeTo`
+  - `PaneItem.getPropertyFromTitle`
+- `PaneScrollConfiguration` is now applied to custom pane on `NavigationView`
+- Added `NavigationViewState.displayMode`. It results in the current display mode used by the view, including the automatic display mode ([#360](https://github.com/bdlukaa/fluent_ui/issues/360)):
+  ```dart
+  // Define the key
+  final key = GlobalKey<NavigationViewState>();
+
+  NavigationView(
+    // pass the key to the view
+    key: key,
+    ...,
+  )
+
+  // Get the current display mode. Note that, in order to find out the automatic display mode,
+  // the widget must have been built at least once
+  final PaneDisplayMode currentDisplayMode = key.currentState.displayMode;
+  ```
+- The app bar action no longer overflow when minimal pane/compact overlay is open ([#361](https://github.com/bdlukaa/fluent_ui/issues/361))
+
 ## [4.0.0-pre.0] - [07/06/2022]
 
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))

@@ -672,8 +672,6 @@ class _NavigationAppBar extends StatelessWidget {
     assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasDirectionality(context));
 
-    final theme = NavigationPaneTheme.of(context);
-
     final direction = Directionality.of(context);
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
