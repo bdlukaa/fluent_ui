@@ -272,7 +272,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
       final context = _textBoxKey.currentContext;
       if (context == null) return const SizedBox.shrink();
       final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
-      final child = Positioned(
+      Widget child = Positioned(
         width: box.size.width,
         child: CompositedTransformFollower(
           link: _layerLink,
@@ -304,6 +304,10 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           ),
         ),
       );
+
+      if (DisableAcrylic.of(context) != null) {
+        child = DisableAcrylic(child: child);
+      }
 
       return child;
     });
@@ -468,36 +472,39 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
             ),
           ],
         ),
-        child: ValueListenableBuilder<TextEditingValue>(
-          valueListenable: controller,
-          builder: (context, value, _) {
-            final items = AutoSuggestBox.defaultItemSorter(
-              value.text,
-              this.items,
-            );
-            late Widget result;
-            if (items.isEmpty) {
-              result = Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: _AutoSuggestBoxOverlayTile(
-                    text: localizations.noResultsFoundLabel),
+        child: Acrylic(
+          child: ValueListenableBuilder<TextEditingValue>(
+            valueListenable: controller,
+            builder: (context, value, _) {
+              final items = AutoSuggestBox.defaultItemSorter(
+                value.text,
+                this.items,
               );
-            } else {
-              result = ListView(
-                key: ValueKey<int>(items.length),
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 4.0),
-                children: List.generate(items.length, (index) {
-                  final item = items[index];
-                  return _AutoSuggestBoxOverlayTile(
-                    text: '$item',
-                    onSelected: () => onSelected(item),
-                  );
-                }),
-              );
-            }
-            return result;
-          },
+              late Widget result;
+              if (items.isEmpty) {
+                result = Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: _AutoSuggestBoxOverlayTile(
+                    text: localizations.noResultsFoundLabel,
+                  ),
+                );
+              } else {
+                result = ListView(
+                  key: ValueKey<int>(items.length),
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  children: List.generate(items.length, (index) {
+                    final item = items[index];
+                    return _AutoSuggestBoxOverlayTile(
+                      text: '$item',
+                      onSelected: () => onSelected(item),
+                    );
+                  }),
+                );
+              }
+              return result;
+            },
+          ),
         ),
       ),
     );
@@ -558,6 +565,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
               color: ButtonThemeData.uncheckedInputColor(
                 theme,
                 states.isDisabled ? {ButtonStates.none} : states,
+                transparentWhenNone: true,
               ),
             ),
             alignment: AlignmentDirectional.centerStart,
