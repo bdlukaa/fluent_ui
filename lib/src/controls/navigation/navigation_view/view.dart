@@ -19,9 +19,10 @@ const double _kDefaultAppBarHeight = 50.0;
 /// for your app. It adapts to a variety of screen sizes and
 /// supports both top and left navigation styles.
 ///
-/// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
+/// ![NavigationView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
 ///
 /// See also:
+///
 ///   * [NavigationBody], a widget that implement fluent
 ///     transitions into [NavigationView]
 ///   * [NavigationPane], the pane used by [NavigationView],
@@ -104,6 +105,18 @@ class NavigationViewState extends State<NavigationView> {
   bool _compactOverlayOpen = false;
 
   int oldIndex = 0;
+
+  PaneDisplayMode? _autoDisplayMode;
+
+  /// Gets the current display mode. If it's automatic, it'll adapt to the other
+  /// display modes according to the current available space.
+  PaneDisplayMode get displayMode {
+    if (widget.pane?.displayMode == PaneDisplayMode.auto) {
+      return _autoDisplayMode ?? PaneDisplayMode.minimal;
+    }
+
+    return widget.pane?.displayMode ?? PaneDisplayMode.minimal;
+  }
 
   @override
   void initState() {
@@ -201,16 +214,15 @@ class NavigationViewState extends State<NavigationView> {
         double width = consts.biggest.width;
         if (width.isInfinite) width = MediaQuery.of(context).size.width;
 
-        late PaneDisplayMode autoDisplayMode;
         if (width <= 640) {
-          autoDisplayMode = PaneDisplayMode.minimal;
+          _autoDisplayMode = PaneDisplayMode.minimal;
         } else if (width >= 1008) {
-          autoDisplayMode = PaneDisplayMode.open;
+          _autoDisplayMode = PaneDisplayMode.open;
         } else if (width > 640) {
-          autoDisplayMode = PaneDisplayMode.compact;
+          _autoDisplayMode = PaneDisplayMode.compact;
         }
 
-        displayMode = autoDisplayMode;
+        displayMode = _autoDisplayMode!;
       }
 
       assert(displayMode != PaneDisplayMode.auto);
