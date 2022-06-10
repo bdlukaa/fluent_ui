@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Update `AutoSuggestBox`:
+  - It now uses `Acrylic`, but it can be disabled using `DisableAcrylic`
+  - `TextChangedReason.suggestionChoosen` is now called properly
+
 ## [4.0.0-pre.0] - [07/06/2022]
 
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
