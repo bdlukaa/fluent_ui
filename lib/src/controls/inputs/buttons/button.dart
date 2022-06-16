@@ -20,6 +20,7 @@ class Button extends BaseButton {
     FocusNode? focusNode,
     bool autofocus = false,
     ButtonStyle? style,
+    bool focusable = true,
   }) : super(
           key: key,
           child: child,
@@ -28,6 +29,7 @@ class Button extends BaseButton {
           onLongPress: onLongPress,
           onPressed: onPressed,
           style: style,
+          focusable: focusable,
         );
 
   @override
@@ -35,37 +37,33 @@ class Button extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final ThemeData theme = FluentTheme.of(context);
     return ButtonStyle(
-      elevation: ButtonState.resolveWith((states) {
-        if (states.isPressing) return 0.0;
-        return 0.3;
-      }),
+      // elevation: ButtonState.resolveWith((states) {
+      //   if (states.isPressing) return 0.0;
+      //   return 0.3;
+      // }),
       shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(const EdgeInsets.only(
         left: 11.0,
         top: 5.0,
         right: 11.0,
-        bottom: 6.0,
+        bottom: 5.0,
       )),
-      shape: ButtonState.all(RoundedRectangleBorder(
-        side: BorderSide(
-          color: theme.brightness.isLight
-              ? const Color.fromRGBO(0, 0, 0, 0.09)
-              : const Color.fromRGBO(255, 255, 255, 0.05),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(4.0),
-      )),
+      shape: ButtonState.resolveWith((states) {
+        return RoundedRectangleBorder(
+          side: BorderSide(
+            color: states.isPressing || states.isDisabled
+                ? theme.resources.controlStrokeColorDefault
+                : theme.resources.controlStrokeColorSecondary,
+            width: 0.33,
+          ),
+          borderRadius: BorderRadius.circular(4.0),
+        );
+      }),
       backgroundColor: ButtonState.resolveWith((states) {
-        return ButtonThemeData.buttonColor(theme.brightness, states);
+        return ButtonThemeData.buttonColor(context, states);
       }),
       foregroundColor: ButtonState.resolveWith((states) {
-        if (states.isDisabled) return theme.disabledColor;
-        return ButtonThemeData.buttonColor(theme.brightness, states).basedOnLuminance().toAccentColor()[
-            states.isPressing
-                ? theme.brightness.isLight
-                    ? 'lighter'
-                    : 'dark'
-                : 'normal'];
+        return ButtonThemeData.buttonForegroundColor(context, states);
       }),
     );
   }

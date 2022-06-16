@@ -4,10 +4,18 @@ ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
   return ButtonState.resolveWith((states) {
     // By default, if it's top, do not show any color
     if (isTop) return Colors.transparent;
-    return ButtonThemeData.uncheckedInputColor(
-      FluentTheme.of(context),
-      states,
-    );
+    final res = FluentTheme.of(context).resources;
+    if (states.isPressing) {
+      return res.subtleFillColorTertiary;
+    } else if (states.isHovering) {
+      return res.subtleFillColorSecondary;
+    } else {
+      return res.subtleFillColorTransparent;
+    }
+    // return ButtonThemeData.uncheckedInputColor(
+    //   FluentTheme.of(context),
+    //   states,
+    // );
   });
 }
 
@@ -118,7 +126,7 @@ class NavigationPaneThemeData with Diagnosticable {
   });
 
   factory NavigationPaneThemeData.standard({
-    required Color disabledColor,
+    required ResourceDictionary resources,
     required Duration animationDuration,
     required Curve animationCurve,
     required Color backgroundColor,
@@ -126,21 +134,29 @@ class NavigationPaneThemeData with Diagnosticable {
     required Typography typography,
     required Color inactiveColor,
   }) {
-    final disabledTextStyle = TextStyle(
-      color: disabledColor,
-      fontWeight: FontWeight.bold,
-    );
     return NavigationPaneThemeData(
       animationDuration: animationDuration,
       animationCurve: animationCurve,
-      backgroundColor: backgroundColor,
+      backgroundColor: resources.solidBackgroundFillColorBase,
       highlightColor: highlightColor,
       itemHeaderTextStyle: typography.bodyStrong,
       selectedTextStyle: ButtonState.resolveWith((states) {
-        return states.isDisabled ? disabledTextStyle : typography.body;
+        return typography.body?.copyWith(
+          color: states.isPressing
+              ? resources.textFillColorSecondary
+              : states.isDisabled
+                  ? resources.textFillColorDisabled
+                  : resources.textFillColorPrimary,
+        );
       }),
       unselectedTextStyle: ButtonState.resolveWith((states) {
-        return states.isDisabled ? disabledTextStyle : typography.body!;
+        return typography.body?.copyWith(
+          color: states.isPressing
+              ? resources.textFillColorSecondary
+              : states.isDisabled
+                  ? resources.textFillColorDisabled
+                  : resources.textFillColorPrimary,
+        );
       }),
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),

@@ -1,18 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../utils/popup.dart';
 
 part 'body.dart';
-
 part 'indicators.dart';
-
-part 'pane_items.dart';
-
 part 'pane.dart';
-
+part 'pane_items.dart';
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -24,9 +19,10 @@ const double _kDefaultAppBarHeight = 50.0;
 /// for your app. It adapts to a variety of screen sizes and
 /// supports both top and left navigation styles.
 ///
-/// ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
+/// ![NavigationView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
 ///
 /// See also:
+///
 ///   * [NavigationBody], a widget that implement fluent
 ///     transitions into [NavigationView]
 ///   * [NavigationPane], the pane used by [NavigationView],
@@ -110,6 +106,18 @@ class NavigationViewState extends State<NavigationView> {
 
   int oldIndex = 0;
 
+  PaneDisplayMode? _autoDisplayMode;
+
+  /// Gets the current display mode. If it's automatic, it'll adapt to the other
+  /// display modes according to the current available space.
+  PaneDisplayMode get displayMode {
+    if (widget.pane?.displayMode == PaneDisplayMode.auto) {
+      return _autoDisplayMode ?? PaneDisplayMode.minimal;
+    }
+
+    return widget.pane?.displayMode ?? PaneDisplayMode.minimal;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -177,7 +185,7 @@ class NavigationViewState extends State<NavigationView> {
     final direction = Directionality.of(context);
 
     Color? _overlayBackgroundColor() {
-      if (theme.backgroundColor?.alpha == 0) {
+      if (theme.backgroundColor == null) {
         if (brightness.isDark) {
           return const Color(0xFF202020);
         } else {
@@ -206,16 +214,15 @@ class NavigationViewState extends State<NavigationView> {
         double width = consts.biggest.width;
         if (width.isInfinite) width = MediaQuery.of(context).size.width;
 
-        late PaneDisplayMode autoDisplayMode;
         if (width <= 640) {
-          autoDisplayMode = PaneDisplayMode.minimal;
+          _autoDisplayMode = PaneDisplayMode.minimal;
         } else if (width >= 1008) {
-          autoDisplayMode = PaneDisplayMode.open;
+          _autoDisplayMode = PaneDisplayMode.open;
         } else if (width > 640) {
-          autoDisplayMode = PaneDisplayMode.compact;
+          _autoDisplayMode = PaneDisplayMode.compact;
         }
 
-        displayMode = autoDisplayMode;
+        displayMode = _autoDisplayMode!;
       }
 
       assert(displayMode != PaneDisplayMode.auto);
@@ -256,15 +263,17 @@ class NavigationViewState extends State<NavigationView> {
         final pane = widget.pane!;
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
-            return pane.customPane!.build(
-              context,
-              NavigationPaneWidgetData(
-                appBar: appBar,
-                content: ClipRect(child: widget.content),
-                listKey: _listKey,
-                paneKey: _panelKey,
-                scrollController: scrollController,
-                pane: pane,
+            return PaneScrollConfiguration(
+              child: pane.customPane!.build(
+                context,
+                NavigationPaneWidgetData(
+                  appBar: appBar,
+                  content: ClipRect(child: widget.content),
+                  listKey: _listKey,
+                  paneKey: _panelKey,
+                  scrollController: scrollController,
+                  pane: pane,
+                ),
               ),
             );
           });
@@ -272,10 +281,8 @@ class NavigationViewState extends State<NavigationView> {
           final contentShape = widget.contentShape ??
               RoundedRectangleBorder(
                 side: BorderSide(
-                  width: 0.3,
-                  color: FluentTheme.of(context).brightness.isDark
-                      ? Colors.black
-                      : const Color(0xffBCBCBC),
+                  color:
+                      FluentTheme.of(context).resources.cardStrokeColorDefault,
                 ),
                 borderRadius: displayMode == PaneDisplayMode.top
                     ? BorderRadius.zero
@@ -319,8 +326,7 @@ class NavigationViewState extends State<NavigationView> {
                 setState(() => _compactOverlayOpen = !_compactOverlayOpen);
               }
 
-              final openSize =
-                  pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+              final openSize = pane.size?.openWidth ?? kOpenNavigationPaneWidth;
 
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
@@ -332,8 +338,7 @@ class NavigationViewState extends State<NavigationView> {
                   top: widget.appBar?.height ?? 0.0,
                   start: openedWithoutOverlay
                       ? openSize
-                      : pane.size?.compactWidth ??
-                          _kCompactNavigationPanelWidth,
+                      : pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
                   end: 0,
                   bottom: 0,
                   child: content,
@@ -352,6 +357,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   ),
+                // appBar,
                 PaneScrollConfiguration(
                   child: () {
                     if (openedWithoutOverlay) {
@@ -399,9 +405,8 @@ class NavigationViewState extends State<NavigationView> {
                     } else {
                       return Padding(
                         padding: appBarPadding,
-                        child: Mica(
+                        child: KeyedSubtree(
                           key: _overlayKey,
-                          backgroundColor: theme.backgroundColor,
                           child: _CompactNavigationPane(
                             pane: pane,
                             paneKey: _panelKey,
@@ -461,31 +466,34 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: _minimalPaneOpen ? 0.0 : -_kOpenNavigationPanelWidth,
-                  width: _kOpenNavigationPanelWidth,
+                  start: _minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
+                  width: kOpenNavigationPaneWidth,
                   height: MediaQuery.of(context).size.height,
                   child: PaneScrollConfiguration(
-                    child: Mica(
-                      backgroundColor: _overlayBackgroundColor(),
-                      elevation: 10.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF6c6c6c),
-                            width: 0.15,
+                    child: ColoredBox(
+                      color: Colors.black,
+                      child: Mica(
+                        backgroundColor: _overlayBackgroundColor(),
+                        elevation: 10.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF6c6c6c),
+                              width: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 1.0),
-                        padding: appBarPadding,
-                        child: _OpenNavigationPane(
-                          theme: theme,
-                          pane: pane,
-                          paneKey: _panelKey,
-                          listKey: _listKey,
-                          onItemSelected: () {
-                            setState(() => _minimalPaneOpen = false);
-                          },
+                          margin: const EdgeInsets.symmetric(vertical: 1.0),
+                          padding: appBarPadding,
+                          child: _OpenNavigationPane(
+                            theme: theme,
+                            pane: pane,
+                            paneKey: _panelKey,
+                            listKey: _listKey,
+                            onItemSelected: () {
+                              setState(() => _minimalPaneOpen = false);
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -525,7 +533,7 @@ class NavigationViewState extends State<NavigationView> {
     return PrimaryScrollController(
       controller: scrollController,
       child: ScrollConfiguration(
-        behavior: const _NavigationViewScrollBehavior(),
+        behavior: const NavigationViewScrollBehavior(),
         child: child,
       ),
     );
@@ -620,10 +628,7 @@ class NavigationAppBar with Diagnosticable {
           data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
             unselectedIconColor: ButtonState.resolveWith((states) {
               if (states.isDisabled) {
-                return ButtonThemeData.buttonColor(
-                  FluentTheme.of(context).brightness,
-                  states,
-                );
+                return ButtonThemeData.buttonColor(context, states);
               }
               return ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),
@@ -646,7 +651,7 @@ class NavigationAppBar with Diagnosticable {
       } else {
         return const SizedBox.shrink();
       }
-      widget = SizedBox(width: _kCompactNavigationPanelWidth, child: widget);
+      widget = SizedBox(width: kCompactNavigationPaneWidth, child: widget);
       return widget;
     });
   }
@@ -664,6 +669,9 @@ class _NavigationAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
+
     final direction = Directionality.of(context);
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
@@ -676,10 +684,7 @@ class _NavigationAppBar extends StatelessWidget {
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
-          padding: [PaneDisplayMode.minimal, PaneDisplayMode.open]
-                  .contains(displayMode)
-              ? EdgeInsets.zero
-              : const EdgeInsets.only(left: 24.0),
+          padding: const EdgeInsetsDirectional.only(start: 16.0),
           child: DefaultTextStyle(
             style:
                 FluentTheme.of(context).typography.caption ?? const TextStyle(),
@@ -706,24 +711,16 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
-        final isMinimalPaneOpen =
-            InheritedNavigationView.maybeOf(context)?.minimalPaneOpen ?? false;
-        final double width =
-            displayMode == PaneDisplayMode.minimal && !isMinimalPaneOpen
-                ? 0.0
-                : displayMode == PaneDisplayMode.compact
-                    ? _kCompactNavigationPanelWidth
-                    : _kOpenNavigationPanelWidth;
         result = Stack(children: [
-          Row(children: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
             leading,
             if (additionalLeading != null) additionalLeading!,
-            Expanded(child: title),
+            Flexible(child: title),
           ]),
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,
-              start: width,
+              start: 0,
               end: 0.0,
               top: 0.0,
               bottom: 0.0,
@@ -745,8 +742,13 @@ class _NavigationAppBar extends StatelessWidget {
   }
 }
 
-class _NavigationViewScrollBehavior extends ScrollBehavior {
-  const _NavigationViewScrollBehavior();
+/// The [ScrollBehavior] used on [NavigationView]
+///
+/// It generates a [Scrollbar] using the global scroll controller provided by
+/// [NavigationView]
+class NavigationViewScrollBehavior extends FluentScrollBehavior {
+  const NavigationViewScrollBehavior();
+
   @override
   Widget buildScrollbar(context, child, details) {
     return Scrollbar(

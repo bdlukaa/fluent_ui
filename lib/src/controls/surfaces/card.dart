@@ -41,8 +41,7 @@ class Card extends StatelessWidget {
         color: backgroundColor ?? theme.cardColor,
         borderRadius: borderRadius,
         border: Border.all(
-          width: 0.15,
-          color: theme.inactiveColor.withOpacity(0.25),
+          color: theme.resources.cardStrokeColorDefault,
         ),
       ),
       padding: padding,

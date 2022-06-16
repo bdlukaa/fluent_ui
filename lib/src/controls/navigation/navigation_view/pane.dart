@@ -1,7 +1,10 @@
 part of 'view.dart';
 
-const double _kCompactNavigationPanelWidth = 50.0;
-const double _kOpenNavigationPanelWidth = 320.0;
+/// The width of the Compact Navigation Pane
+const double kCompactNavigationPaneWidth = 50.0;
+
+/// The width of the Open Navigation Pane
+const double kOpenNavigationPaneWidth = 320.0;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -100,6 +103,7 @@ class NavigationPane with Diagnosticable {
   /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
 
+  /// Creates a Custom pane that will be used
   final NavigationPaneWidget? customPane;
 
   /// The menu button used by this pane.
@@ -111,6 +115,9 @@ class NavigationPane with Diagnosticable {
   final NavigationPaneSize? size;
 
   /// The header of the pane.
+  ///
+  /// If null, the space it should have taken will be removed from
+  /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.open] only).
   ///
   /// Usually a [Text] or an [Image].
   ///
@@ -194,7 +201,8 @@ class NavigationPane with Diagnosticable {
     ));
   }
 
-  void _changeTo(NavigationPaneItem item) {
+  /// Changes the selected item to [item].
+  void changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
     if (selected != index && !index.isNegative) onChanged?.call(index);
   }
@@ -234,7 +242,7 @@ class NavigationPane with Diagnosticable {
   }) {
     if (pane.menuButton != null) return pane.menuButton!;
     return Container(
-      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
       margin: padding,
       child: PaneItem(
         title: itemTitle,
@@ -370,8 +378,8 @@ class NavigationPaneWidgetData {
   final Widget content;
   final Widget appBar;
   final ScrollController scrollController;
-  final Key? paneKey;
-  final GlobalKey? listKey;
+  final Key paneKey;
+  final GlobalKey listKey;
   final NavigationPane pane;
 }
 
@@ -426,7 +434,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   void _onPressed(PaneItem item) {
-    widget.pane._changeTo(item);
+    widget.pane.changeTo(item);
   }
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
@@ -614,23 +622,23 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     final size = PopupContentSizeInfo.of(context).size;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
-    final String titleText = item._getPropertyFromTitle<String>() ?? '';
+    final String titleText = item.getPropertyFromTitle<String>() ?? '';
     final TextStyle baseStyle =
-        item._getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        item.getPropertyFromTitle<TextStyle>() ?? const TextStyle();
 
     final textResult = titleText.isNotEmpty
         ? Padding(
             padding: theme.labelPadding ?? EdgeInsets.zero,
             child: RichText(
-              text: item._getPropertyFromTitle<InlineSpan>(baseStyle)!,
+              text: item.getPropertyFromTitle<InlineSpan>(baseStyle)!,
               maxLines: 1,
               overflow: TextOverflow.fade,
               softWrap: false,
               textAlign:
-                  item._getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
+                  item.getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
               textHeightBehavior:
-                  item._getPropertyFromTitle<TextHeightBehavior>(),
-              textWidthBasis: item._getPropertyFromTitle<TextWidthBasis>() ??
+                  item.getPropertyFromTitle<TextHeightBehavior>(),
+              textWidthBasis: item.getPropertyFromTitle<TextWidthBasis>() ??
                   TextWidthBasis.parent,
             ),
           )
@@ -697,7 +705,7 @@ class _CompactNavigationPane extends StatelessWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
         },
       );
     } else {
@@ -718,7 +726,7 @@ class _CompactNavigationPane extends StatelessWidget {
       key: paneKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      width: pane.size?.compactWidth ?? _kCompactNavigationPanelWidth,
+      width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
       child: Align(
         key: pane.paneKey,
         alignment: Alignment.topCenter,
@@ -810,7 +818,7 @@ class _OpenNavigationPane extends StatefulWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
           onChanged?.call();
         },
         autofocus: autofocus,
@@ -864,10 +872,9 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           },
         );
       }
-      return const SizedBox.shrink();
+      return null;
     }();
-    double paneWidth =
-        widget.pane.size?.openWidth ?? _kOpenNavigationPanelWidth;
+    double paneWidth = widget.pane.size?.openWidth ?? kOpenNavigationPaneWidth;
     if (widget.pane.size?.openMaxWidth != null &&
         paneWidth > widget.pane.size!.openMaxWidth!) {
       paneWidth = widget.pane.size!.openMaxWidth!;
@@ -875,6 +882,12 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     if (widget.pane.size?.openMinWidth != null &&
         paneWidth < widget.pane.size!.openMinWidth!) {
       paneWidth = widget.pane.size!.openMinWidth!;
+    }
+
+    double paneHeaderHeight =
+        widget.pane.size?.headerHeight ?? kOneLineTileHeight;
+    if (widget.pane.header == null && menuButton == null) {
+      paneHeaderHeight = -1.0;
     }
 
     return SizeTransition(
@@ -890,27 +903,28 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           crossAxisAlignment: CrossAxisAlignment.start,
           key: widget.pane.paneKey,
           children: [
-            Container(
-              margin: widget.pane.autoSuggestBox != null
-                  ? EdgeInsets.zero
-                  : topPadding,
-              height: widget.pane.size?.headerHeight ?? kOneLineTileHeight,
-              child: () {
-                if (widget.pane.header != null) {
-                  return Row(children: [
-                    menuButton,
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: widget.pane.header!,
+            if (paneHeaderHeight >= 0)
+              Container(
+                margin: widget.pane.autoSuggestBox != null
+                    ? EdgeInsets.zero
+                    : topPadding,
+                height: paneHeaderHeight,
+                child: () {
+                  if (widget.pane.header != null) {
+                    return Row(children: [
+                      menuButton ?? const SizedBox.shrink(),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: widget.pane.header!,
+                        ),
                       ),
-                    ),
-                  ]);
-                } else {
-                  return menuButton;
-                }
-              }(),
-            ),
+                    ]);
+                  } else {
+                    return menuButton ?? const SizedBox.shrink();
+                  }
+                }(),
+              ),
             if (widget.pane.autoSuggestBox != null)
               Container(
                 padding: theme.iconPadding ?? EdgeInsets.zero,

@@ -94,6 +94,7 @@ export 'src/layout/dynamic_overflow.dart';
 
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';
+export 'src/styles/color_resources.dart';
 export 'src/styles/color.dart' hide ColorConst;
 export 'src/styles/mica.dart';
 export 'src/styles/theme.dart';

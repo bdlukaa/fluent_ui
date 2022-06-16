@@ -7,6 +7,7 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'screens/auto_suggest_box.dart';
 import 'screens/colors.dart';
 import 'screens/flyouts.dart';
 import 'screens/forms.dart';
@@ -35,10 +36,12 @@ bool get isDesktop {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // if it's on the web, windows or android, load the accent color
-  if (kIsWeb ||
-      [TargetPlatform.windows, TargetPlatform.android]
-          .contains(defaultTargetPlatform)) {
+  // if it's not on the web, windows or android, load the accent color
+  if (!kIsWeb &&
+      [
+        TargetPlatform.windows,
+        TargetPlatform.android,
+      ].contains(defaultTargetPlatform)) {
     SystemTheme.accentColor.load();
   }
 
@@ -94,6 +97,7 @@ class MyApp extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
+          locale: appTheme.locale,
           builder: (context, child) {
             return Directionality(
               textDirection: appTheme.textDirection,
@@ -156,12 +160,24 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           );
         }(),
-        actions: kIsWeb
-            ? null
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [Spacer(), WindowButtons()],
-              ),
+        actions: Row(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Spacer(),
+            ToggleSwitch(
+              content: const Text('Dark Mode'),
+              checked: FluentTheme.of(context).brightness.isDark,
+              onChanged: (v) {
+                if (v) {
+                  appTheme.mode = ThemeMode.dark;
+                } else {
+                  appTheme.mode = ThemeMode.light;
+                }
+              },
+            ),
+            if (!kIsWeb) const WindowButtons(),
+          ],
+        ),
       ),
       pane: NavigationPane(
         selected: index,
@@ -202,6 +218,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             title: const Text('Forms'),
           ),
           PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.page_list),
+            title: const Text('AutoSuggestBox'),
+          ),
           PaneItem(
             icon: const Icon(FluentIcons.color),
             title: const Text('Colors'),
@@ -263,6 +283,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       content: NavigationBody(index: index, children: const [
         InputsPage(),
         Forms(),
+        AutoSuggestBoxes(),
         ColorsPage(),
         IconsPage(),
         TypographyPage(),
