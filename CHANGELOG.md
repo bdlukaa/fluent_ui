@@ -27,6 +27,9 @@ Date format: DD/MM/YYYY
 - Update `AutoSuggestBox`:
   - It now uses `Acrylic`, but it can be disabled using `DisableAcrylic`
   - `TextChangedReason.suggestionChoosen` is now called properly
+- Updated `TextBox`:
+  - `TextBox` colors were updated to match the Win 11 design.
+  - Fluent Text Selection Control now make use of `Acrylic`. Its items were also updated
 
 ## [4.0.0-pre.0] - [07/06/2022]
 
