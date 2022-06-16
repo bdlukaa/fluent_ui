@@ -883,28 +883,28 @@ class _TextBoxState extends State<TextBox>
       ));
     }
 
+    final Color disabledColor = theme.resources.textFillColorDisabled;
     final defaultTextStyle = TextStyle(
-      color: enabled ? theme.inactiveColor : theme.disabledColor,
+      color: enabled ? theme.resources.textFillColorPrimary : disabledColor,
     );
     final TextStyle textStyle = defaultTextStyle.merge(widget.style);
 
     final Brightness keyboardAppearance =
         widget.keyboardAppearance ?? theme.brightness;
     final Color cursorColor = widget.cursorColor ?? theme.inactiveColor;
-    final Color disabledColor = theme.disabledColor;
 
-    final TextStyle placeholderStyle = textStyle
-        .copyWith(
-          color: !enabled
-              ? theme.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.3614)
-                  : const Color.fromRGBO(255, 255, 255, 0.3628)
-              : theme.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.6063)
-                  : const Color.fromRGBO(255, 255, 255, 0.786),
-          fontWeight: FontWeight.w400,
-        )
-        .merge(widget.placeholderStyle);
+    TextStyle placeholderStyle(Set<ButtonStates> states) {
+      return textStyle
+          .copyWith(
+            color: !enabled
+                ? disabledColor
+                : (states.isPressing || states.isFocused)
+                    ? theme.resources.textFillColorTertiary
+                    : theme.resources.textFillColorSecondary,
+            fontWeight: FontWeight.w400,
+          )
+          .merge(widget.placeholderStyle);
+    }
 
     final BoxDecoration foregroundDecoration = BoxDecoration(
       border: Border(
@@ -1027,13 +1027,8 @@ class _TextBoxState extends State<TextBox>
               decoration: BoxDecoration(
                 borderRadius: radius,
                 border: Border.all(
-                  style: _effectiveFocusNode.hasFocus
-                      ? BorderStyle.solid
-                      : BorderStyle.none,
                   width: 1,
-                  color: theme.brightness.isLight
-                      ? const Color.fromRGBO(0, 0, 0, 0.08)
-                      : const Color.fromRGBO(255, 255, 255, 0.07),
+                  color: theme.resources.controlStrokeColorDefault,
                 ),
                 color: _backgroundColor(states),
               ).copyWith(
@@ -1065,7 +1060,7 @@ class _TextBoxState extends State<TextBox>
                     child: _addTextDependentAttachments(
                       paddedEditable,
                       textStyle,
-                      placeholderStyle,
+                      placeholderStyle(states),
                     ),
                   ),
                 ),
@@ -1125,28 +1120,16 @@ class _TextBoxState extends State<TextBox>
   }
 
   Color _backgroundColor(Set<ButtonStates> states) {
-    final brightness = FluentTheme.of(context).brightness;
+    final res = FluentTheme.of(context).resources;
 
-    if (brightness.isDark) {
-      if (!enabled) {
-        return const Color.fromRGBO(255, 255, 255, 0.04);
-      } else if (states.isPressing || states.isFocused) {
-        return const Color(0xFF1f1f1f);
-      } else if (states.isHovering) {
-        return const Color(0xFF323232);
-      } else {
-        return const Color(0xFF2d2d2d);
-      }
+    if (!enabled) {
+      return res.controlFillColorDisabled;
+    } else if (states.isPressing || states.isFocused) {
+      return res.controlFillColorInputActive;
+    } else if (states.isHovering) {
+      return res.controlFillColorSecondary;
     } else {
-      if (!enabled) {
-        return const Color.fromRGBO(249, 249, 249, 0.3);
-      } else if (states.isPressing || states.isFocused) {
-        return const Color(0xFFffffff);
-      } else if (states.isHovering) {
-        return const Color(0xFFfbfbfb);
-      } else {
-        return const Color(0xFFf6f6f6);
-      }
+      return res.controlFillColorDefault;
     }
   }
 }
