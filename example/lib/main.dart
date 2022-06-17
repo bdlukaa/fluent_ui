@@ -8,22 +8,9 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/auto_suggest_box.dart';
-import 'screens/colors.dart';
-import 'screens/flyouts.dart';
-import 'screens/forms.dart';
-import 'screens/icons.dart';
-import 'screens/info_bars.dart';
-import 'screens/inputs.dart';
 import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
-import 'screens/inputs/checkbox.dart';
-import 'screens/inputs/radio_button.dart';
-import 'screens/mobile.dart';
-import 'screens/commandbars.dart';
-import 'screens/others.dart';
-import 'screens/settings.dart';
-import 'screens/typography.dart';
+import 'screens/inputs/slider.dart';
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -151,10 +138,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       icon: const Icon(FluentIcons.checkbox_composite),
       title: const Text('Checkbox'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.radio_btn_on),
-      title: const Text('RadioButton'),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.slider),
@@ -411,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           // inputs
           ButtonPage(),
           CheckboxPage(),
-          RadioButtonPage(),
+          SliderPage(),
         ].transform(context),
         ...List.generate(25, (index) => const SizedBox.shrink()),
         // const InputsPage(),

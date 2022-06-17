@@ -11,6 +11,8 @@ class ButtonPage extends ScrollablePage {
     'toggle_state': false,
     'toggle_disabled': false,
     'split_button_disabled': false,
+    'radio_button_disabled': false,
+    'radio_button_selected': -1,
   };
 
   @override
@@ -197,6 +199,48 @@ class ButtonPage extends ScrollablePage {
             ),
           ],
         ),
+      ),
+      subtitle(content: const Text('RadioButton')),
+      const Text(
+        'A control that allows a user to select a single option from a group of options',
+      ),
+      Card(
+        child: Row(children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(
+              3,
+              (index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index == 2 ? 0.0 : 14.0),
+                  child: RadioButton(
+                    checked: state['radio_button_selected'] == index,
+                    onChanged: state['radio_button_disabled']
+                        ? null
+                        : (v) {
+                            if (v) {
+                              setState(() {
+                                state['radio_button_selected'] = index;
+                              });
+                            }
+                          },
+                    content: Text('RadioButton ${index + 1}'),
+                  ),
+                );
+              },
+            ),
+          ),
+          const Spacer(),
+          ToggleSwitch(
+            checked: state['radio_button_disabled'],
+            onChanged: (v) {
+              setState(() {
+                state['radio_button_disabled'] = v;
+              });
+            },
+            content: const Text('Disabled'),
+          )
+        ]),
       ),
     ];
   }
