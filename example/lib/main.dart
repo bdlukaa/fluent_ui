@@ -17,6 +17,8 @@ import 'screens/info_bars.dart';
 import 'screens/inputs.dart';
 import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
+import 'screens/inputs/checkbox.dart';
+import 'screens/inputs/radio_button.dart';
 import 'screens/mobile.dart';
 import 'screens/commandbars.dart';
 import 'screens/others.dart';
@@ -136,9 +138,160 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   final settingsController = ScrollController();
   final viewKey = GlobalKey();
 
+  final searchFocusNode = FocusNode();
+  final searchController = TextEditingController();
+  void resetSearch() => searchController.clear();
+  String get searchValue => searchController.text;
+  final List<NavigationPaneItem> originalItems = [
+    PaneItemHeader(header: const Text('Inputs')),
+    PaneItem(
+      icon: const Icon(FluentIcons.button_control),
+      title: const Text('Button'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.checkbox_composite),
+      title: const Text('Checkbox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.radio_btn_on),
+      title: const Text('RadioButton'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.slider),
+      title: const Text('Slider'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.toggle_left),
+      title: const Text('ToggleSwitch'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Form'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.text_field),
+      title: const Text('TextBox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.page_list),
+      title: const Text('AutoSuggestBox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.combobox),
+      title: const Text('Combobox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.time_picker),
+      title: const Text('TimePicker'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.date_time),
+      title: const Text('DatePicker'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Navigation'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.navigation_flipper),
+      title: const Text('NavigationView'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.table_header_row),
+      title: const Text('TabView'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.bulleted_tree_list),
+      title: const Text('TreeView'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Surfaces'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.un_set_color),
+      title: const Text('Acrylic'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.checkbox_fill),
+      title: const Text('Card'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.customize_toolbar),
+      title: const Text('CommandBar'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.expand_all),
+      title: const Text('Expander'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.info_solid),
+      title: const Text('InfoBar'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.progress_ring_dots),
+      title: const Text('Progress Indicators'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.hint_text),
+      title: const Text('Tooltip'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.pop_expand),
+      title: const Text('Flyout'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.split),
+      title: const Text('Divider'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Theming'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.color_solid),
+      title: const Text('Colors'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.font_color_a),
+      title: const Text('Typography'),
+    ),
+  ];
+  late List<NavigationPaneItem> items = originalItems;
+
   @override
   void initState() {
     windowManager.addListener(this);
+    searchController.addListener(() {
+      setState(() {
+        if (searchValue.isEmpty) {
+          items = originalItems;
+        } else {
+          items = originalItems
+              .whereType<PaneItem>()
+              .where((item) {
+                assert(item.title is Text);
+                final text = (item.title as Text).data!;
+                return text.toLowerCase().contains(searchValue.toLowerCase());
+              })
+              .toList()
+              .cast<NavigationPaneItem>();
+        }
+      });
+      searchFocusNode.requestFocus();
+    });
     super.initState();
   }
 
@@ -146,6 +299,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   void dispose() {
     windowManager.removeListener(this);
     settingsController.dispose();
+    searchController.dispose();
+    searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -185,8 +340,28 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ),
       ),
       pane: NavigationPane(
-        selected: index,
-        onChanged: (i) => setState(() => index = i),
+        selected: () {
+          // if not searching, return the current index
+          if (searchValue.isEmpty) return index;
+
+          final indexOnScreen = items.indexOf(
+            originalItems.whereType<PaneItem>().elementAt(index),
+          );
+          if (indexOnScreen.isNegative) return null;
+          return indexOnScreen;
+        }(),
+        onChanged: (i) {
+          // If searching, the values will have different indexes
+          if (searchValue.isNotEmpty) {
+            final equivalentIndex = originalItems
+                .whereType<PaneItem>()
+                .toList()
+                .indexOf(items[i] as PaneItem);
+            i = equivalentIndex;
+          }
+          resetSearch();
+          setState(() => index = i);
+        },
         size: const NavigationPaneSize(
           openMinWidth: 250.0,
           openMaxWidth: 320.0,
@@ -211,136 +386,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        items: [
-          PaneItemHeader(header: const Text('Inputs')),
-          PaneItem(
-            icon: const Icon(FluentIcons.button_control),
-            title: const Text('Button'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.checkbox_composite),
-            title: const Text('Checkbox'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.radio_btn_on),
-            title: const Text('RadioButton'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.slider),
-            title: const Text('Slider'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.toggle_left),
-            title: const Text('ToggleSwitch'),
-          ),
-          PaneItemHeader(
-            header: const Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Text('Form'),
-            ),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.text_field),
-            title: const Text('TextBox'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.page_list),
-            title: const Text('AutoSuggestBox'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.combobox),
-            title: const Text('Combobox'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.time_picker),
-            title: const Text('TimePicker'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.date_time),
-            title: const Text('DatePicker'),
-          ),
-          PaneItemHeader(
-            header: const Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Text('Navigation'),
-            ),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.navigation_flipper),
-            title: const Text('NavigationView'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.table_header_row),
-            title: const Text('TabView'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.bulleted_tree_list),
-            title: const Text('TreeView'),
-          ),
-          PaneItemHeader(
-            header: const Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Text('Surfaces'),
-            ),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.un_set_color),
-            title: const Text('Acrylic'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.checkbox_fill),
-            title: const Text('Card'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.customize_toolbar),
-            title: const Text('CommandBar'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.comment_urgent),
-            title: const Text('ContentDialog'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.expand_all),
-            title: const Text('Expander'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.info_solid),
-            title: const Text('InfoBar'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.progress_ring_dots),
-            title: const Text('Progress Indicators'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.hint_text),
-            title: const Text('Tooltip'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.pop_expand),
-            title: const Text('Flyout'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.split),
-            title: const Text('Divider'),
-          ),
-          PaneItemHeader(
-            header: const Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Text('Theming'),
-            ),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.color_solid),
-            title: const Text('Colors'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.font_color_a),
-            title: const Text('Typography'),
-          ),
-        ],
-        autoSuggestBox: AutoSuggestBox(
-          controller: TextEditingController(),
-          items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+        items: items,
+        autoSuggestBox: TextBox(
+          controller: searchController,
+          placeholder: 'Search here',
+          focusNode: searchFocusNode,
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: [
@@ -358,8 +408,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
       content: NavigationBody(index: index, children: [
         ...[
+          // inputs
           ButtonPage(),
           CheckboxPage(),
+          RadioButtonPage(),
         ].transform(context),
         ...List.generate(25, (index) => const SizedBox.shrink()),
         // const InputsPage(),

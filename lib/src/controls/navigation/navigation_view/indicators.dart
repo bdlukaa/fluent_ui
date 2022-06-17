@@ -68,7 +68,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get index {
-    return pane.selected ?? 0;
+    return pane.selected ?? -1;
   }
 
   bool get isSelected {
@@ -115,6 +115,7 @@ class _EndNavigationIndicatorState
     extends NavigationIndicatorState<EndNavigationIndicator> {
   @override
   Widget build(BuildContext context) {
+    if (index.isNegative) return const SizedBox.shrink();
     assert(debugCheckHasFluentTheme(context));
 
     final bool isTop = axis == Axis.vertical;
@@ -278,7 +279,7 @@ class _StickyNavigationIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || !isShowing) {
+    if (offsets == null || !isShowing || index.isNegative) {
       return const SizedBox.shrink();
     }
 
