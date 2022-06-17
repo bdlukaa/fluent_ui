@@ -16,6 +16,7 @@ import 'screens/icons.dart';
 import 'screens/info_bars.dart';
 import 'screens/inputs.dart';
 import 'screens/inputs/button.dart';
+import 'screens/inputs/checkbox.dart';
 import 'screens/mobile.dart';
 import 'screens/commandbars.dart';
 import 'screens/others.dart';
@@ -358,6 +359,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       content: NavigationBody(index: index, children: [
         ...[
           ButtonPage(),
+          CheckboxPage(),
         ].transform(context),
         ...List.generate(25, (index) => const SizedBox.shrink()),
         // const InputsPage(),

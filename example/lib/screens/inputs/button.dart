@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -6,6 +8,9 @@ class ButtonPage extends ScrollablePage {
     'simple_disabled': false,
     'filled_disabled': false,
     'icon_disabled': false,
+    'toggle_state': false,
+    'toggle_disabled': false,
+    'split_button_disabled': false,
   };
 
   @override
@@ -80,6 +85,118 @@ class ButtonPage extends ScrollablePage {
             content: const Text('Disabled'),
           ),
         ]),
+      ),
+      subtitle(content: const Text('A simple ToggleButton with text content')),
+      const Text(
+        'A ToggleButton looks like a Button, but works like a CheckBox. It typically has two states, checked (on) or unchecked (off).',
+      ),
+      Card(
+        child: Row(children: [
+          ToggleButton(
+            child: const Text('Toggle Button'),
+            checked: state['toggle_state'],
+            onChanged: state['toggle_disabled']
+                ? null
+                : (v) {
+                    setState(() {
+                      state['toggle_state'] = v;
+                    });
+                  },
+          ),
+          const Spacer(),
+          ToggleSwitch(
+            checked: state['toggle_disabled'],
+            onChanged: (v) {
+              setState(() {
+                state['toggle_disabled'] = v;
+              });
+            },
+            content: const Text('Disabled'),
+          ),
+        ]),
+      ),
+      subtitle(content: const Text('DropDownButton')),
+      const Text(
+        'A control that drops down a flyout of choices from which one can be chosen',
+      ),
+      Card(
+        child: Row(children: [
+          DropDownButton(
+            title: Text('Email'),
+            items: [
+              MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+              MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+              MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
+            ],
+          ),
+          SizedBox(width: 10.0),
+          DropDownButton(
+            title: Icon(FluentIcons.edit_mail, size: 22.0),
+            items: [
+              MenuFlyoutItem(
+                leading: Icon(FluentIcons.send),
+                text: const Text('Send'),
+                onPressed: () {},
+              ),
+              MenuFlyoutItem(
+                leading: Icon(FluentIcons.reply),
+                text: const Text('Reply'),
+                onPressed: () {},
+              ),
+              MenuFlyoutItem(
+                leading: Icon(FluentIcons.reply_all),
+                text: const Text('Reply all'),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ]),
+      ),
+      subtitle(content: const Text('SplitButton')),
+      Card(
+        child: Row(
+          children: [
+            SplitButtonBar(
+              buttons: [
+                Button(
+                  child: SizedBox(
+                    // height: splitButtonHeight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: state['split_button_disabled']
+                            ? FluentTheme.of(context).accentColor.darker
+                            : FluentTheme.of(context).accentColor,
+                        borderRadius: const BorderRadiusDirectional.horizontal(
+                          start: Radius.circular(4.0),
+                        ),
+                      ),
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
+                  onPressed: state['split_button_disabled'] ? null : () {},
+                ),
+                IconButton(
+                  icon: const SizedBox(
+                    // height: splitButtonHeight,
+                    child: Icon(FluentIcons.chevron_down, size: 10.0),
+                  ),
+                  onPressed: state['split_button_disabled'] ? null : () {},
+                ),
+              ],
+            ),
+            const Spacer(),
+            ToggleSwitch(
+              checked: state['split_button_disabled'],
+              onChanged: (v) {
+                setState(() {
+                  state['split_button_disabled'] = v;
+                });
+              },
+              content: const Text('Disabled'),
+            ),
+          ],
+        ),
       ),
     ];
   }

@@ -32,7 +32,7 @@ abstract class ScrollablePage extends Page {
   Widget subtitle({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(top: 14.0),
+        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
         child: DefaultTextStyle(
           style: FluentTheme.of(context).typography.subtitle!,
           child: content,
