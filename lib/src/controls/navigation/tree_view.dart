@@ -505,7 +505,9 @@ class _TreeViewState extends State<TreeView> {
             item: item,
             selectionMode: widget.selectionMode,
             onRightClick: (details) {
-              if (widget.onRightClick != null) widget.onRightClick!(item,details.globalPosition);
+              if (widget.onRightClick != null) {
+                widget.onRightClick!(item, details.globalPosition);
+              }
             },
             onSelect: () async {
               final onSelectionChanged = widget.onSelectionChanged;

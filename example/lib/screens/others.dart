@@ -16,7 +16,6 @@ class _OthersState extends State<Others> {
 
   bool checked = false;
 
-
   final items = [
     TreeViewItem(
       content: const Text('Work Documents'),
@@ -422,7 +421,7 @@ class _OthersState extends State<Others> {
                   items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
-                  onRightClick: (item,offset) async {
+                  onRightClick: (item, offset) async {
                     debugPrint('onRightClick: $item');
                     showMenu(
                         context: context,

@@ -12,7 +12,6 @@ Future<T?> showMenu<T>({
   double verticalOffset = 0,
   double horizontalOffset = 0,
 }) {
-
   final NavigatorState navigator = Navigator.of(context);
 
   assert(debugCheckHasDirectionality(context));
