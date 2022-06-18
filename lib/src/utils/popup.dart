@@ -3,6 +3,42 @@ import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+Future<T?> showMenu<T>({
+  required BuildContext context,
+  required WidgetBuilder content,
+  required Offset offset,
+  FlyoutPlacement placement = FlyoutPlacement.start,
+  FlyoutPosition position = FlyoutPosition.below,
+  double verticalOffset = 0,
+  double horizontalOffset = 0,
+}) {
+
+  final NavigatorState navigator = Navigator.of(context);
+
+  assert(debugCheckHasDirectionality(context));
+
+  final Rect itemRect = offset & const Size(0, 0);
+
+  return navigator.push(_PopUpRoute<T>(
+    target: offset,
+    placementOffset: offset,
+    placement: placement,
+    position: position,
+    content: _PopupContentManager(content: content),
+    buttonRect: itemRect,
+    elevation: 4,
+    capturedThemes: InheritedTheme.capture(
+      from: context,
+      to: navigator.context,
+    ),
+    transitionAnimationDuration:
+        FluentTheme.of(context).mediumAnimationDuration,
+    verticalOffset: verticalOffset,
+    horizontalOffset: horizontalOffset,
+    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
+  ));
+}
+
 class PopUp<T> extends StatefulWidget {
   const PopUp({
     Key? key,

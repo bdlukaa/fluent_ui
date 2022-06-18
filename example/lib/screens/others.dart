@@ -16,6 +16,7 @@ class _OthersState extends State<Others> {
 
   bool checked = false;
 
+
   final items = [
     TreeViewItem(
       content: const Text('Work Documents'),
@@ -108,6 +109,7 @@ class _OthersState extends State<Others> {
   @override
   void initState() {
     super.initState();
+
     tabs = List.generate(3, (index) {
       late Tab tab;
       tab = Tab(
@@ -420,6 +422,48 @@ class _OthersState extends State<Others> {
                   items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
+                  onRightClick: (item,offset) async {
+                    debugPrint('onRightClick: $item');
+                    showMenu(
+                        context: context,
+                        offset: offset,
+                        content: (context) {
+                          return MenuFlyout(
+                            items: [
+                              MenuFlyoutSubItem(
+                                text: const Text('New'),
+                                items: [
+                                  MenuFlyoutItem(
+                                    text: const Text('Plain Text Document'),
+                                    onPressed: () {},
+                                  ),
+                                  MenuFlyoutItem(
+                                    text: const Text('Rich Text Document'),
+                                    onPressed: () {},
+                                  ),
+                                  MenuFlyoutItem(
+                                    text: const Text('Other formats...'),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
+                              MenuFlyoutItem(
+                                text: const Text('Open'),
+                                onPressed: () {},
+                              ),
+                              MenuFlyoutItem(
+                                text: const Text('Save'),
+                                onPressed: () {},
+                              ),
+                              const MenuFlyoutSeparator(),
+                              MenuFlyoutItem(
+                                text: const Text('Exit'),
+                                onPressed: () {},
+                              ),
+                            ],
+                          );
+                        });
+                  },
                   onSelectionChanged: (selectedItems) async => debugPrint(
                       'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
                 ),
