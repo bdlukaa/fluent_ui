@@ -6,9 +6,7 @@ import '../settings.dart';
 class AcrylicPage extends ScrollablePage {
   @override
   Widget buildHeader(BuildContext context) {
-    return const PageHeader(
-      title: Text('Acrylic'),
-    );
+    return const PageHeader(title: Text('Acrylic'));
   }
 
   double tintOpacity = 0.8;

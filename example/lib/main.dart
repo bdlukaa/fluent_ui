@@ -22,6 +22,12 @@ import 'screens/navigation/tree_view.dart';
 import 'screens/settings.dart';
 import 'screens/surface/acrylic.dart';
 import 'screens/surface/commandbars.dart';
+import 'screens/surface/content_dialog.dart';
+import 'screens/surface/expander.dart';
+import 'screens/surface/flyouts.dart';
+import 'screens/surface/info_bars.dart';
+import 'screens/surface/progress_indicators.dart';
+import 'screens/surface/tooltip.dart';
 import 'screens/theming/colors.dart';
 import 'screens/theming/icons.dart';
 import 'screens/theming/typography.dart';
@@ -216,10 +222,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Acrylic'),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.checkbox_fill),
-      title: const Text('Card'),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.customize_toolbar),
       title: const Text('CommandBar'),
     ),
@@ -246,10 +248,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       icon: const Icon(FluentIcons.pop_expand),
       title: const Text('Flyout'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.split),
-      title: const Text('Divider'),
     ),
     PaneItemHeader(
       header: const Padding(
@@ -426,15 +424,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           TreeViewPage(),
           // surfaces
           AcrylicPage(),
-          EmptyPage(),
           CommandBarsPage(),
-          EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
+          ContentDialogPage(),
+          ExpanderPage(),
+          InfoBarPage(),
+          ProgressIndicatorsPage(),
+          TooltipPage(),
+          const FlyoutPage().toPage(),
           // theming
           const ColorsPage().toPage(),
           const TypographyPage().toPage(),
