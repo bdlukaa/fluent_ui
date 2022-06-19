@@ -57,7 +57,6 @@ class CheckboxPage extends ScrollablePage {
                 ? null
                 : (v) {
                     setState(() {
-                      print(v);
                       state['second_state'] = v == true
                           ? true
                           : v == false

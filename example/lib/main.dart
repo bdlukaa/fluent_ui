@@ -11,6 +11,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
 import 'screens/inputs/slider.dart';
+import 'screens/inputs/toggle_switch.dart';
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -395,6 +396,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ButtonPage(),
           CheckboxPage(),
           SliderPage(),
+          ToggleSwitchPage(),
         ].transform(context),
         ...List.generate(25, (index) => const SizedBox.shrink()),
         // const InputsPage(),

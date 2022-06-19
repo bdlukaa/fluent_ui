@@ -27,7 +27,7 @@ class SliderPage extends ScrollablePage {
     return [
       const Text(
           'Use a Slider when you want your users to be able to set defined, contiguous values (such as volume or brightness) or a range of discrete values (such as screen resolution settings).'),
-      subtitle(content: const Text('A simple slider')),
+      subtitle(content: const Text('A simple Slider')),
       Card(
         child: Row(children: [
           Slider(
