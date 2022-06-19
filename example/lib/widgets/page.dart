@@ -42,6 +42,13 @@ abstract class ScrollablePage extends Page {
   }
 }
 
+class EmptyPage extends Page {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
 extension PageExtension on List<Page> {
   List<Widget> transform(BuildContext context) {
     return map((page) {
