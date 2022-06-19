@@ -358,7 +358,7 @@ class TreeView extends StatefulWidget {
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
-    this.onRightClick,
+    this.onSecondaryTap,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
     this.scrollPrimary,
@@ -383,8 +383,8 @@ class TreeView extends StatefulWidget {
   /// Called when an item is invoked
   final Future<void> Function(TreeViewItem item)? onItemInvoked;
 
-  /// right click
-  final Future<void> Function(TreeViewItem item, Offset offset)? onRightClick;
+  ///  A tap with a secondary button has occurred.
+  final Future<void> Function(TreeViewItem item, Offset offset)? onSecondaryTap;
 
   /// Called when the selection changes. The items that are currently
   /// selected will be passed to the callback. This could be empty
@@ -491,7 +491,7 @@ class _TreeViewState extends State<TreeView> {
                 selectionMode: widget.selectionMode,
                 onInvoked: () {},
                 onSelect: () {},
-                onRightClick: (details) {},
+                onSecondaryTap: (details) {},
                 onExpandToggle: () {},
                 loadingWidgetFallback: widget.loadingWidget,
               )
@@ -504,9 +504,9 @@ class _TreeViewState extends State<TreeView> {
             key: item.key ?? ValueKey<TreeViewItem>(item),
             item: item,
             selectionMode: widget.selectionMode,
-            onRightClick: (details) {
-              if (widget.onRightClick != null) {
-                widget.onRightClick!(item, details.globalPosition);
+            onSecondaryTap: (details) {
+              if (widget.onSecondaryTap != null) {
+                widget.onSecondaryTap!(item, details.globalPosition);
               }
             },
             onSelect: () async {
@@ -583,7 +583,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.item,
     required this.selectionMode,
     required this.onSelect,
-    required this.onRightClick,
+    required this.onSecondaryTap,
     required this.onExpandToggle,
     required this.onInvoked,
     required this.loadingWidgetFallback,
@@ -592,7 +592,7 @@ class _TreeViewItem extends StatelessWidget {
   final TreeViewItem item;
   final TreeViewSelectionMode selectionMode;
   final VoidCallback onSelect;
-  final GestureTapDownCallback onRightClick;
+  final GestureTapDownCallback onSecondaryTap;
   final VoidCallback onExpandToggle;
   final VoidCallback onInvoked;
   final Widget loadingWidgetFallback;
@@ -604,137 +604,137 @@ class _TreeViewItem extends StatelessWidget {
     final selected = item.selected ?? false;
     final direction = Directionality.of(context);
     return GestureDetector(
-        onSecondaryTapDown: (details) {
-          if (selectionMode == TreeViewSelectionMode.single) {
-            onRightClick(details);
-            onSelect();
-            onInvoked();
-          }
-        },
-        child: HoverButton(
-          onPressed: selectionMode == TreeViewSelectionMode.none
-              ? onInvoked
-              : selectionMode == TreeViewSelectionMode.single
-                  ? () {
-                      onSelect();
-                      onInvoked();
-                    }
-                  : onInvoked,
-          autofocus: item.autofocus,
-          focusNode: item.focusNode,
-          semanticLabel: item.semanticLabel,
-          margin: const EdgeInsets.symmetric(
-            vertical: 2.0,
-            horizontal: 4.0,
-          ),
-          builder: (context, states) {
-            return Stack(
-              children: [
-                Container(
-                  height: selectionMode == TreeViewSelectionMode.multiple
-                      ? 28.0
-                      : 26.0,
-                  padding: EdgeInsetsDirectional.only(
-                    start: 12.0 + item.depth * _whiteSpace,
-                  ),
-                  decoration: BoxDecoration(
-                    color: item.backgroundColor?.resolve(states) ??
-                        ButtonThemeData.uncheckedInputColor(
-                          theme,
-                          [
-                            TreeViewSelectionMode.multiple,
-                            TreeViewSelectionMode.none
-                          ].contains(selectionMode)
-                              ? states
-                              : selected && (states.isPressing || states.isNone)
-                                  ? {ButtonStates.hovering}
-                                  : selected && states.isHovering
-                                      ? {ButtonStates.pressing}
-                                      : states,
-                          transparentWhenNone: true,
-                        ),
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (selectionMode == TreeViewSelectionMode.multiple)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 20.0),
-                          child: Checkbox(
-                            checked: item.selected,
-                            onChanged: (value) {
-                              onSelect();
-                              onInvoked();
-                            },
-                          ),
-                        ),
-                      if (item.isExpandable)
-                        if (item.loading)
-                          item.loadingWidget ?? loadingWidgetFallback
-                        else
-                          GestureDetector(
-                            behavior: HitTestBehavior.deferToChild,
-                            onTap: onExpandToggle,
-                            child: Icon(
-                              item.expanded
-                                  ? FluentIcons.chevron_down
-                                  : direction == TextDirection.ltr
-                                      ? FluentIcons.chevron_right
-                                      : FluentIcons.chevron_left,
-                              size: 8.0,
-                              color: Colors.grey[80],
-                            ),
-                          )
-                      else if (item._anyExpandableSiblings)
-                        // if some child items are expandable and others are not,
-                        // make sure that they line up vertically the same for the
-                        // same depth
-                        const Padding(
-                            padding: EdgeInsetsDirectional.only(start: 8.0)),
-                      if (item.leading != null)
-                        Container(
-                          margin: const EdgeInsetsDirectional.only(start: 18.0),
-                          width: 20.0,
-                          child: IconTheme.merge(
-                            data: const IconThemeData(size: 20.0),
-                            child: item.leading!,
-                          ),
-                        ),
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.only(start: 18.0),
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: theme.typography.body!.color!.withOpacity(
-                                states.isPressing ? 0.7 : 1.0,
-                              ),
-                            ),
-                            child: item.content,
-                          ),
+      onSecondaryTapDown: (details) {
+        if (selectionMode == TreeViewSelectionMode.single) {
+          onSecondaryTap(details);
+          onSelect();
+          onInvoked();
+        }
+      },
+      child: HoverButton(
+        onPressed: selectionMode == TreeViewSelectionMode.none
+            ? onInvoked
+            : selectionMode == TreeViewSelectionMode.single
+                ? () {
+                    onSelect();
+                    onInvoked();
+                  }
+                : onInvoked,
+        autofocus: item.autofocus,
+        focusNode: item.focusNode,
+        semanticLabel: item.semanticLabel,
+        margin: const EdgeInsets.symmetric(
+          vertical: 2.0,
+          horizontal: 4.0,
+        ),
+        builder: (context, states) {
+          return Stack(
+            children: [
+              Container(
+                height: selectionMode == TreeViewSelectionMode.multiple
+                    ? 28.0
+                    : 26.0,
+                padding: EdgeInsetsDirectional.only(
+                  start: 12.0 + item.depth * _whiteSpace,
+                ),
+                decoration: BoxDecoration(
+                  color: item.backgroundColor?.resolve(states) ??
+                      ButtonThemeData.uncheckedInputColor(
+                        theme,
+                        [
+                          TreeViewSelectionMode.multiple,
+                          TreeViewSelectionMode.none
+                        ].contains(selectionMode)
+                            ? states
+                            : selected && (states.isPressing || states.isNone)
+                                ? {ButtonStates.hovering}
+                                : selected && states.isHovering
+                                    ? {ButtonStates.pressing}
+                                    : states,
+                        transparentWhenNone: true,
+                      ),
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (selectionMode == TreeViewSelectionMode.multiple)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 20.0),
+                        child: Checkbox(
+                          checked: item.selected,
+                          onChanged: (value) {
+                            onSelect();
+                            onInvoked();
+                          },
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                if (selected && selectionMode == TreeViewSelectionMode.single)
-                  Positioned(
-                    top: 6.0,
-                    bottom: 6.0,
-                    left: 0.0,
-                    child: Container(
-                      width: 3.0,
-                      decoration: BoxDecoration(
-                        color: theme.accentColor,
-                        borderRadius: BorderRadius.circular(4.0),
+                    if (item.isExpandable)
+                      if (item.loading)
+                        item.loadingWidget ?? loadingWidgetFallback
+                      else
+                        GestureDetector(
+                          behavior: HitTestBehavior.deferToChild,
+                          onTap: onExpandToggle,
+                          child: Icon(
+                            item.expanded
+                                ? FluentIcons.chevron_down
+                                : direction == TextDirection.ltr
+                                    ? FluentIcons.chevron_right
+                                    : FluentIcons.chevron_left,
+                            size: 8.0,
+                            color: Colors.grey[80],
+                          ),
+                        )
+                    else if (item._anyExpandableSiblings)
+                      // if some child items are expandable and others are not,
+                      // make sure that they line up vertically the same for the
+                      // same depth
+                      const Padding(
+                          padding: EdgeInsetsDirectional.only(start: 8.0)),
+                    if (item.leading != null)
+                      Container(
+                        margin: const EdgeInsetsDirectional.only(start: 18.0),
+                        width: 20.0,
+                        child: IconTheme.merge(
+                          data: const IconThemeData(size: 20.0),
+                          child: item.leading!,
+                        ),
+                      ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 18.0),
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: theme.typography.body!.color!.withOpacity(
+                              states.isPressing ? 0.7 : 1.0,
+                            ),
+                          ),
+                          child: item.content,
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+              if (selected && selectionMode == TreeViewSelectionMode.single)
+                Positioned(
+                  top: 6.0,
+                  bottom: 6.0,
+                  left: 0.0,
+                  child: Container(
+                    width: 3.0,
+                    decoration: BoxDecoration(
+                      color: theme.accentColor,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
                   ),
-              ],
-            );
-          },
-        ));
+                ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

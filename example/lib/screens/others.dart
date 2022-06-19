@@ -421,12 +421,12 @@ class _OthersState extends State<Others> {
                   items: treeViewItemsSingleSelection,
                   onItemInvoked: (item) async =>
                       debugPrint('onItemInvoked: $item'),
-                  onRightClick: (item, offset) async {
-                    debugPrint('onRightClick: $item');
+                  onSecondaryTap: (item, offset) async {
+                    debugPrint('onSecondaryTap: $item');
                     showMenu(
                         context: context,
                         offset: offset,
-                        content: (context) {
+                        builder: (context) {
                           return MenuFlyout(
                             items: [
                               MenuFlyoutSubItem(

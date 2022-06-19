@@ -5,7 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 Future<T?> showMenu<T>({
   required BuildContext context,
-  required WidgetBuilder content,
+  required WidgetBuilder builder,
   required Offset offset,
   FlyoutPlacement placement = FlyoutPlacement.start,
   FlyoutPosition position = FlyoutPosition.below,
@@ -23,7 +23,7 @@ Future<T?> showMenu<T>({
     placementOffset: offset,
     placement: placement,
     position: position,
-    content: _PopupContentManager(content: content),
+    content: _PopupContentManager(content: builder),
     buttonRect: itemRect,
     elevation: 4,
     capturedThemes: InheritedTheme.capture(
