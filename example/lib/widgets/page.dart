@@ -43,9 +43,13 @@ abstract class ScrollablePage extends Page {
 }
 
 class EmptyPage extends Page {
+  final Widget? child;
+
+  EmptyPage([this.child]);
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.shrink();
+    return child ?? const SizedBox.shrink();
   }
 }
 
@@ -59,5 +63,11 @@ extension PageExtension on List<Page> {
         },
       );
     }).toList();
+  }
+}
+
+extension WidgetPageExtension on Widget {
+  Page toPage() {
+    return EmptyPage(this);
   }
 }

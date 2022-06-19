@@ -19,6 +19,12 @@ import 'screens/inputs/slider.dart';
 import 'screens/inputs/toggle_switch.dart';
 import 'screens/navigation/tab_view.dart';
 import 'screens/navigation/tree_view.dart';
+import 'screens/settings.dart';
+import 'screens/surface/acrylic.dart';
+import 'screens/surface/commandbars.dart';
+import 'screens/theming/colors.dart';
+import 'screens/theming/icons.dart';
+import 'screens/theming/typography.dart';
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -259,6 +265,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.font_color_a),
       title: const Text('Typography'),
     ),
+    PaneItem(
+      icon: const Icon(FluentIcons.icon_sets_flag),
+      title: const Text('Icons'),
+    ),
   ];
   late List<NavigationPaneItem> items = originalItems;
 
@@ -415,9 +425,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           TabViewPage(),
           TreeViewPage(),
           // surfaces
+          AcrylicPage(),
           EmptyPage(),
-          EmptyPage(),
-          EmptyPage(),
+          CommandBarsPage(),
           EmptyPage(),
           EmptyPage(),
           EmptyPage(),
@@ -426,10 +436,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           EmptyPage(),
           EmptyPage(),
           // theming
-          EmptyPage(),
-          EmptyPage(),
+          const ColorsPage().toPage(),
+          const TypographyPage().toPage(),
+          const IconsPage().toPage(),
           // others
-          EmptyPage()
+          const Settings().toPage(),
         ].transform(context),
         // const InputsPage(),
         // const Forms(),
