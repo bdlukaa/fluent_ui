@@ -8,6 +8,11 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'screens/forms/auto_suggest_box.dart';
+import 'screens/forms/combobox.dart';
+import 'screens/forms/date_picker.dart';
+import 'screens/forms/text_box.dart';
+import 'screens/forms/time_picker.dart';
 import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
 import 'screens/inputs/slider.dart';
@@ -397,6 +402,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           CheckboxPage(),
           SliderPage(),
           ToggleSwitchPage(),
+          // forms
+          TextBoxPage(),
+          AutoSuggestBoxPage(),
+          ComboboxPage(),
+          TimePickerPage(),
+          DatePickerPage(),
         ].transform(context),
         ...List.generate(25, (index) => const SizedBox.shrink()),
         // const InputsPage(),
