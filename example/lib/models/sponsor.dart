@@ -1,3 +1,4 @@
+/// Current sponsors of the project <3
 const sponsors = [
   Sponsor(
     username: 'h3x4d3c1m4l',

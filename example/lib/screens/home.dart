@@ -3,6 +3,7 @@ import 'package:url_launcher/link.dart';
 
 import '../models/sponsor.dart';
 import '../widgets/page.dart';
+import '../widgets/sponsor.dart';
 
 class HomePage extends ScrollablePage {
   @override
@@ -132,34 +133,30 @@ class HomePage extends ScrollablePage {
         ]),
       ),
       const SizedBox(height: 22.0),
-      HoverButton(
-        cursor: SystemMouseCursors.click,
-        onPressed: () {
-          // TODO: navigate to changelog
-        },
-        builder: (context, states) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'What\'s new on 4.0.0',
-                style: theme.typography.body
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              Text('June 21, 2022', style: theme.typography.caption),
-              Text(
-                'A native look-and-feel out of the box',
-                style: theme.typography.bodyLarge,
-              ),
-            ],
-          );
-        },
+      IconButton(
+        onPressed: () {},
+        icon: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'What\'s new on 4.0.0',
+              style:
+                  theme.typography.body?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text('June 21, 2022', style: theme.typography.caption),
+            Text(
+              'A native look-and-feel out of the box',
+              style: theme.typography.bodyLarge,
+            ),
+          ],
+        ),
       ),
       const SizedBox(height: 22.0),
-      Text(
-        'SPONSORS',
-        style: theme.typography.body?.copyWith(fontWeight: FontWeight.bold),
-      ),
+      Row(children: [
+        Text('SPONSORS', style: theme.typography.bodyStrong),
+        const SizedBox(width: 4.0),
+        const Icon(FluentIcons.heart_fill, size: 16.0),
+      ]),
       const SizedBox(height: 4.0),
       Wrap(
         spacing: 10.0,
@@ -181,7 +178,10 @@ class HomePage extends ScrollablePage {
           }),
           IconButton(
             onPressed: () {
-              // TODO: show Sponsors dialog with the benefits of each tier
+              showDialog(
+                context: context,
+                builder: (context) => const SponsorDialog(),
+              );
             },
             icon: Column(children: [
               SizedBox(

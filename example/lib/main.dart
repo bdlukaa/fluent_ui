@@ -1,5 +1,5 @@
 import 'package:example/widgets/page.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
@@ -93,7 +93,6 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          home: const MyHomePage(),
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -125,6 +124,8 @@ class MyApp extends StatelessWidget {
               ),
             );
           },
+          initialRoute: '/',
+          routes: {'/': (context) => const MyHomePage()},
         );
       },
     );
@@ -277,6 +278,40 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   ];
   late List<NavigationPaneItem> items = originalItems;
 
+  final content = <Page>[
+    HomePage(),
+    // inputs
+    ButtonPage(),
+    CheckboxPage(),
+    SliderPage(),
+    ToggleSwitchPage(),
+    // forms
+    TextBoxPage(),
+    AutoSuggestBoxPage(),
+    ComboboxPage(),
+    TimePickerPage(),
+    DatePickerPage(),
+    // navigation
+    EmptyPage(),
+    TabViewPage(),
+    TreeViewPage(),
+    // surfaces
+    AcrylicPage(),
+    CommandBarsPage(),
+    ContentDialogPage(),
+    ExpanderPage(),
+    InfoBarPage(),
+    ProgressIndicatorsPage(),
+    TooltipPage(),
+    const FlyoutPage().toPage(),
+    // theming
+    const ColorsPage().toPage(),
+    const TypographyPage().toPage(),
+    const IconsPage().toPage(),
+    // others
+    const Settings().toPage(),
+  ];
+
   @override
   void initState() {
     windowManager.addListener(this);
@@ -412,41 +447,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ],
       ),
-      content: NavigationBody(index: index, children: [
-        ...[
-          HomePage(),
-          // inputs
-          ButtonPage(),
-          CheckboxPage(),
-          SliderPage(),
-          ToggleSwitchPage(),
-          // forms
-          TextBoxPage(),
-          AutoSuggestBoxPage(),
-          ComboboxPage(),
-          TimePickerPage(),
-          DatePickerPage(),
-          // navigation
-          EmptyPage(),
-          TabViewPage(),
-          TreeViewPage(),
-          // surfaces
-          AcrylicPage(),
-          CommandBarsPage(),
-          ContentDialogPage(),
-          ExpanderPage(),
-          InfoBarPage(),
-          ProgressIndicatorsPage(),
-          TooltipPage(),
-          const FlyoutPage().toPage(),
-          // theming
-          const ColorsPage().toPage(),
-          const TypographyPage().toPage(),
-          const IconsPage().toPage(),
-          // others
-          const Settings().toPage(),
-        ].transform(context),
-      ]),
+      content:
+          NavigationBody(index: index, children: content.transform(context)),
     );
   }
 
