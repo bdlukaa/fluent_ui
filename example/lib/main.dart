@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:example/widgets/page.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:provider/provider.dart';
@@ -7,18 +8,30 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/auto_suggest_box.dart';
-import 'screens/colors.dart';
-import 'screens/flyouts.dart';
-import 'screens/forms.dart';
-import 'screens/icons.dart';
-import 'screens/info_bars.dart';
-import 'screens/inputs.dart';
-import 'screens/mobile.dart';
-import 'screens/commandbars.dart';
-import 'screens/others.dart';
+import 'screens/forms/auto_suggest_box.dart';
+import 'screens/forms/combobox.dart';
+import 'screens/forms/date_picker.dart';
+import 'screens/forms/text_box.dart';
+import 'screens/forms/time_picker.dart';
+import 'screens/home.dart';
+import 'screens/inputs/button.dart';
+import 'screens/inputs/checkbox.dart';
+import 'screens/inputs/slider.dart';
+import 'screens/inputs/toggle_switch.dart';
+import 'screens/navigation/tab_view.dart';
+import 'screens/navigation/tree_view.dart';
 import 'screens/settings.dart';
-import 'screens/typography.dart';
+import 'screens/surface/acrylic.dart';
+import 'screens/surface/commandbars.dart';
+import 'screens/surface/content_dialog.dart';
+import 'screens/surface/expander.dart';
+import 'screens/surface/flyouts.dart';
+import 'screens/surface/info_bars.dart';
+import 'screens/surface/progress_indicators.dart';
+import 'screens/surface/tooltip.dart';
+import 'screens/theming/colors.dart';
+import 'screens/theming/icons.dart';
+import 'screens/theming/typography.dart';
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -80,7 +93,6 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          home: const MyHomePage(),
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -112,6 +124,8 @@ class MyApp extends StatelessWidget {
               ),
             );
           },
+          initialRoute: '/',
+          routes: {'/': (context) => const MyHomePage()},
         );
       },
     );
@@ -133,9 +147,191 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   final settingsController = ScrollController();
   final viewKey = GlobalKey();
 
+  final key = GlobalKey();
+  final searchFocusNode = FocusNode();
+  final searchController = TextEditingController();
+  void resetSearch() => searchController.clear();
+  String get searchValue => searchController.text;
+  final List<NavigationPaneItem> originalItems = [
+    PaneItem(
+      icon: const Icon(FluentIcons.home),
+      title: const Text('Home'),
+    ),
+    PaneItemSeparator(),
+    PaneItemHeader(header: const Text('Inputs')),
+    PaneItem(
+      icon: const Icon(FluentIcons.button_control),
+      title: const Text('Button'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.checkbox_composite),
+      title: const Text('Checkbox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.slider),
+      title: const Text('Slider'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.toggle_left),
+      title: const Text('ToggleSwitch'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Form'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.text_field),
+      title: const Text('TextBox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.page_list),
+      title: const Text('AutoSuggestBox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.combobox),
+      title: const Text('Combobox'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.time_picker),
+      title: const Text('TimePicker'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.date_time),
+      title: const Text('DatePicker'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Navigation'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.navigation_flipper),
+      title: const Text('NavigationView'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.table_header_row),
+      title: const Text('TabView'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.bulleted_tree_list),
+      title: const Text('TreeView'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Surfaces'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.un_set_color),
+      title: const Text('Acrylic'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.customize_toolbar),
+      title: const Text('CommandBar'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.expand_all),
+      title: const Text('Expander'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.info_solid),
+      title: const Text('InfoBar'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.progress_ring_dots),
+      title: const Text('Progress Indicators'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.hint_text),
+      title: const Text('Tooltip'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.pop_expand),
+      title: const Text('Flyout'),
+    ),
+    PaneItemHeader(
+      header: const Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Text('Theming'),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.color_solid),
+      title: const Text('Colors'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.font_color_a),
+      title: const Text('Typography'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.icon_sets_flag),
+      title: const Text('Icons'),
+    ),
+  ];
+  late List<NavigationPaneItem> items = originalItems;
+
+  final content = <Page>[
+    HomePage(),
+    // inputs
+    ButtonPage(),
+    CheckboxPage(),
+    SliderPage(),
+    ToggleSwitchPage(),
+    // forms
+    TextBoxPage(),
+    AutoSuggestBoxPage(),
+    ComboboxPage(),
+    TimePickerPage(),
+    DatePickerPage(),
+    // navigation
+    EmptyPage(),
+    TabViewPage(),
+    TreeViewPage(),
+    // surfaces
+    AcrylicPage(),
+    CommandBarsPage(),
+    ContentDialogPage(),
+    ExpanderPage(),
+    InfoBarPage(),
+    ProgressIndicatorsPage(),
+    TooltipPage(),
+    const FlyoutPage().toPage(),
+    // theming
+    const ColorsPage().toPage(),
+    const TypographyPage().toPage(),
+    const IconsPage().toPage(),
+    // others
+    const Settings().toPage(),
+  ];
+
   @override
   void initState() {
     windowManager.addListener(this);
+    searchController.addListener(() {
+      setState(() {
+        if (searchValue.isEmpty) {
+          items = originalItems;
+        } else {
+          items = originalItems
+              .whereType<PaneItem>()
+              .where((item) {
+                assert(item.title is Text);
+                final text = (item.title as Text).data!;
+                return text.toLowerCase().contains(searchValue.toLowerCase());
+              })
+              .toList()
+              .cast<NavigationPaneItem>();
+        }
+      });
+    });
     super.initState();
   }
 
@@ -143,6 +339,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   void dispose() {
     windowManager.removeListener(this);
     settingsController.dispose();
+    searchController.dispose();
+    searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -182,8 +380,28 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ),
       ),
       pane: NavigationPane(
-        selected: index,
-        onChanged: (i) => setState(() => index = i),
+        selected: () {
+          // if not searching, return the current index
+          if (searchValue.isEmpty) return index;
+
+          final indexOnScreen = items.indexOf(
+            originalItems.whereType<PaneItem>().elementAt(index),
+          );
+          if (indexOnScreen.isNegative) return null;
+          return indexOnScreen;
+        }(),
+        onChanged: (i) {
+          // If searching, the values will have different indexes
+          if (searchValue.isNotEmpty) {
+            final equivalentIndex = originalItems
+                .whereType<PaneItem>()
+                .toList()
+                .indexOf(items[i] as PaneItem);
+            i = equivalentIndex;
+          }
+          resetSearch();
+          setState(() => index = i);
+        },
         size: const NavigationPaneSize(
           openMinWidth: 250.0,
           openMaxWidth: 320.0,
@@ -208,65 +426,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        items: [
-          // It doesn't look good when resizing from compact to open
-          // PaneItemHeader(header: Text('User Interaction')),
-          PaneItem(
-            icon: const Icon(FluentIcons.checkbox_composite),
-            title: const Text('Inputs'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.text_field),
-            title: const Text('Forms'),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.page_list),
-            title: const Text('AutoSuggestBox'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.color),
-            title: const Text('Colors'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.icon_sets_flag),
-            title: const Text('Icons'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.plain_text),
-            title: const Text('Typography'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.cell_phone),
-            title: const Text('Mobile'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.toolbox),
-            title: const Text('Command bars'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.pop_expand),
-            title: const Text('Flyouts'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.info),
-            title: const Text('InfoBar'),
-          ),
-          PaneItem(
-            icon: Icon(
-              appTheme.displayMode == PaneDisplayMode.top
-                  ? FluentIcons.more
-                  : FluentIcons.more_vertical,
-            ),
-            title: const Text('Others'),
-            infoBadge: const InfoBadge(
-              source: Text('9'),
-            ),
-          ),
-        ],
-        autoSuggestBox: AutoSuggestBox(
-          controller: TextEditingController(),
-          items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+        items: items,
+        autoSuggestBox: TextBox(
+          key: key,
+          controller: searchController,
+          placeholder: 'Search',
+          focusNode: searchFocusNode,
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: [
@@ -282,20 +447,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ],
       ),
-      content: NavigationBody(index: index, children: [
-        const InputsPage(),
-        const Forms(),
-        const AutoSuggestBoxes(),
-        const ColorsPage(),
-        const IconsPage(),
-        const TypographyPage(),
-        const Mobile(),
-        const CommandBars(),
-        const FlyoutShowcase(),
-        const InfoBars(),
-        const Others(),
-        Settings(controller: settingsController),
-      ]),
+      content: NavigationBody(
+        index: index,
+        children: content.transform(context),
+      ),
     );
   }
 
