@@ -13,6 +13,7 @@ import 'screens/forms/combobox.dart';
 import 'screens/forms/date_picker.dart';
 import 'screens/forms/text_box.dart';
 import 'screens/forms/time_picker.dart';
+import 'screens/home.dart';
 import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
 import 'screens/inputs/slider.dart';
@@ -145,11 +146,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   final settingsController = ScrollController();
   final viewKey = GlobalKey();
 
+  final key = GlobalKey();
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
   void resetSearch() => searchController.clear();
   String get searchValue => searchController.text;
   final List<NavigationPaneItem> originalItems = [
+    PaneItem(
+      icon: const Icon(FluentIcons.home),
+      title: const Text('Home'),
+    ),
+    PaneItemSeparator(),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
       icon: const Icon(FluentIcons.button_control),
@@ -289,7 +296,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               .cast<NavigationPaneItem>();
         }
       });
-      searchFocusNode.requestFocus();
     });
     super.initState();
   }
@@ -387,8 +393,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }(),
         items: items,
         autoSuggestBox: TextBox(
+          key: key,
           controller: searchController,
-          placeholder: 'Search here',
+          placeholder: 'Search',
           focusNode: searchFocusNode,
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
@@ -407,6 +414,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
       content: NavigationBody(index: index, children: [
         ...[
+          HomePage(),
           // inputs
           ButtonPage(),
           CheckboxPage(),
@@ -438,18 +446,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           // others
           const Settings().toPage(),
         ].transform(context),
-        // const InputsPage(),
-        // const Forms(),
-        // const AutoSuggestBoxes(),
-        // const ColorsPage(),
-        // const IconsPage(),
-        // const TypographyPage(),
-        // const Mobile(),
-        // const CommandBars(),
-        // const FlyoutShowcase(),
-        // const InfoBars(),
-        // const Others(),
-        // Settings(controller: settingsController),
       ]),
     );
   }
