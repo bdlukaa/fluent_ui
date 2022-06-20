@@ -1,29 +1,39 @@
-<div>
-  <h1 align="center">fluent_ui</h1>
-  <p align="center" >
-    <a title="Discord" href="https://discord.gg/674gpDQUVq">
-      <img src="https://img.shields.io/discord/809528329337962516?label=discord&logo=discord" />
+<div align="center">
+  <h1>fluent_ui</h1>
+  <div>
+    <a title="pub.dev" href="https://pub.dartlang.org/packages/fluent_ui" >
+      <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=flat-square&include_prereleases&color=dc143c" />
     </a>
-    <a title="Pub" href="https://pub.dartlang.org/packages/fluent_ui" >
-      <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=popout&include_prereleases" />
+    <a title="GitHub License" href="https://github.com/bdlukaa/fluent_ui/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui?style=flat-square&color=f12253" />
     </a>
     <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7">
     </a>
-    <a title="Github License">
-      <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui" />
+    <a title="Discord" href="https://discord.gg/674gpDQUVq">
+      <img src="https://img.shields.io/discord/809528329337962516?style=flat-square&label=discord&color=7289da&logo=discord&logoColor=white" />
     </a>
-  </p>
-  <p align="center">
-  Design beautiful native windows apps using Flutter
+  </div>
+  <div>
+    <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
+      <img src="https://img.shields.io/badge/web-example---?style=flat-square&color=e88d0c" />
+    </a>
+  </div>
+  <br/>
+  <p>
+  Design beautiful native Windows apps using <a href="https://flutter.dev">Flutter</a>
   </p>
 </div>
 
 Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
 
-### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
+<div align="center">
+  <a href="https://bdlukaa.github.io/fluent_ui">
+    <img src="images/example-showcase.png" />
+  </a>
+</div>
 
-![Example Showcase](images/example-showcase.png)
+---
 
 ### Content
 
@@ -148,7 +158,9 @@ Projects using this library should use the stable channel of Flutter
 Are you using this library on your app? You can use a badge to tell others:
 
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-  <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+  <img
+    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
+  >
 </a>
 
 Add the following code to your `README.md` or to your website:
@@ -156,8 +168,8 @@ Add the following code to your `README.md` or to your website:
 ```html
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
-    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7"
-  />
+    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
+  >
 </a>
 ```
 
