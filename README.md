@@ -144,7 +144,7 @@ dependencies:
   fluent_ui: ^3.10.0
 ```
 
-OR:
+<p align="center">OR</p>
 
 ```yaml
 dependencies:
