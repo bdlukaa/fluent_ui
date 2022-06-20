@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
 import '../models/sponsor.dart';
+import '../widgets/changelog.dart';
 import '../widgets/page.dart';
 import '../widgets/sponsor.dart';
 
@@ -134,7 +135,9 @@ class HomePage extends ScrollablePage {
       ),
       const SizedBox(height: 22.0),
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(context: context, builder: (context) => const Changelog());
+        },
         icon: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -190,7 +193,10 @@ class HomePage extends ScrollablePage {
                 child: ShaderMask(
                   shaderCallback: (rect) {
                     return LinearGradient(
-                      colors: Colors.accentColors,
+                      colors: [
+                        Colors.white.withOpacity(0.8),
+                        ...Colors.accentColors,
+                      ],
                     ).createShader(rect);
                   },
                   blendMode: BlendMode.srcATop,

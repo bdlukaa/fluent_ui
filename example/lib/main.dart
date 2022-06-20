@@ -447,8 +447,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
         ],
       ),
-      content:
-          NavigationBody(index: index, children: content.transform(context)),
+      content: NavigationBody(
+        index: index,
+        children: content.transform(context),
+      ),
     );
   }
 
