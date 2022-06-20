@@ -23,9 +23,11 @@
   <p>
   Design beautiful native Windows apps using <a href="https://flutter.dev">Flutter</a>
   </p>
-</div>
 
-Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
+  <p>
+  Unofficial implementation of Fluent UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
+  </p>
+</div>
 
 <div align="center">
   <a href="https://bdlukaa.github.io/fluent_ui">
