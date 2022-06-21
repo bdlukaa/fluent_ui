@@ -120,14 +120,9 @@ See [this](https://github.com/flutter/flutter/issues/46481) for more info on the
 
 See also:
 
-- [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material) (built-in)
-- [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino) (built-in)
-- [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui) ([pub](https://pub.dev/packages/macos_ui)) ([demo](https://groovinchip.github.io/macos_ui))
-- [Stockholm (MacOS-like) UI for Flutter](https://github.com/serverpod/stockholm) ([pub](https://pub.dev/packages/stockholm)) ([demo](https://serverpod.dev/stockholm))
-- 🚧 [Yaru (Ubuntu) UI for Flutter](https://github.com/ubuntu/yaru.dart) ([pub](https://pub.dev/packages/yaru))
-- 🚧 [Zenit UI for Flutter](https://github.com/dahliaOS/zenit_ui) ([demo](https://dahliaos.github.io/zenit_ui))
-
-The 🚧 emoji means the project is currently Work-In-Progress (WIP)
+- [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
+- [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
+- [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
 ## Sponsors
 
