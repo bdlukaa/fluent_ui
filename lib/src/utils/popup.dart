@@ -3,6 +3,53 @@ import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// Show the context menu at the offset
+///
+/// ```dart
+// GestureDetector(
+//   onSecondaryTapDown: (detail) {
+//     showMenu(
+//         context: context,
+//         offset: detail.globalPosition,
+//         builder: (context) {
+//           return MenuFlyout(
+///             items: [
+///               MenuFlyoutSubItem(
+///                 text: const Text('New'),
+///                 items: [
+///                   MenuFlyoutItem(
+///                     text: const Text('Plain Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Rich Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Other formats...'),
+///                     onPressed: () {},
+///                   ),
+///                 ],
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Open'),
+///                 onPressed: () {},
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Save'),
+///                 onPressed: () {},
+///               ),
+///               const MenuFlyoutSeparator(),
+///               MenuFlyoutItem(
+///                 text: const Text('Exit'),
+///                 onPressed: () {},
+///               ),
+///             ],
+///           );
+///         });
+///   },
+/// ),
+/// ```
 Future<T?> showMenu<T>({
   required BuildContext context,
   required WidgetBuilder builder,
