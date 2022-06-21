@@ -36,6 +36,11 @@ class CommandBarsPage extends ScrollablePage {
       label: const Text('Move'),
       onPressed: () {},
     ),
+    const CommandBarButton(
+      icon: Icon(FluentIcons.cancel),
+      label: Text('Disabled'),
+      onPressed: null,
+    ),
   ];
 
   final moreCommandBarItems = <CommandBarItem>[
