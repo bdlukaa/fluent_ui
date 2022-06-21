@@ -119,7 +119,10 @@ class HomePage extends ScrollablePage {
             child: ShaderMask(
               shaderCallback: (rect) {
                 return LinearGradient(
-                  colors: Colors.accentColors,
+                  colors: [
+                    Colors.white,
+                    ...Colors.accentColors,
+                  ],
                 ).createShader(rect);
               },
               blendMode: BlendMode.srcATop,

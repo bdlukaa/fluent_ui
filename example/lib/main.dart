@@ -352,7 +352,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
         title: () {
-          if (kIsWeb) return const Text(appTitle);
+          if (kIsWeb) {
+            return const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(appTitle),
+            );
+          }
           return const DragToMoveArea(
             child: Align(
               alignment: AlignmentDirectional.centerStart,
