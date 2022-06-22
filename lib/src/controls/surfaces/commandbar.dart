@@ -386,7 +386,10 @@ abstract class CommandBarItem with Diagnosticable {
 /// a CommandBarItem built in the given display mode. Can be useful to
 /// wrap the widget in a [Tooltip] etc.
 typedef CommandBarItemWidgetBuilder = Widget Function(
-    BuildContext context, CommandBarItemDisplayMode displayMode, Widget w);
+  BuildContext context,
+  CommandBarItemDisplayMode displayMode,
+  Widget child,
+);
 
 class CommandBarBuilderItem extends CommandBarItem {
   /// Function that is called with the built widget of the wrappedItem for
@@ -395,7 +398,7 @@ class CommandBarBuilderItem extends CommandBarItem {
   final CommandBarItemWidgetBuilder builder;
   final CommandBarItem wrappedItem;
 
-  CommandBarBuilderItem({
+  const CommandBarBuilderItem({
     Key? key,
     required this.builder,
     required this.wrappedItem,
@@ -418,8 +421,10 @@ class CommandBarBuilderItem extends CommandBarItem {
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
-  const CommandBarItemInPrimary({Key? key, required this.child})
-      : super(key: key);
+  const CommandBarItemInPrimary({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -475,19 +480,27 @@ class CommandBarButton extends CommandBarItem {
           onLongPress: onLongPress,
           focusNode: focusNode,
           autofocus: autofocus,
-          icon: CommandBarItemInPrimary(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (showIcon)
-                  IconTheme(
-                    data: IconTheme.of(context).copyWith(size: 16),
-                    child: icon!,
-                  ),
-                if (showIcon && showLabel) const SizedBox(width: 10),
-                if (showLabel) label!,
-              ],
-            ),
+          style: ButtonStyle(
+            backgroundColor: ButtonState.resolveWith((states) {
+              final theme = FluentTheme.of(context);
+              return ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              );
+            }),
+          ),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showIcon)
+                IconTheme.merge(
+                  data: const IconThemeData(size: 16),
+                  child: icon!,
+                ),
+              if (showIcon && showLabel) const SizedBox(width: 10),
+              if (showLabel) label!,
+            ],
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
