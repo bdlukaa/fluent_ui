@@ -41,14 +41,18 @@ class IconButton extends BaseButton {
           ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
           : const EdgeInsets.all(8.0)),
       backgroundColor: ButtonState.resolveWith((states) {
-        return states.isNone
-            ? Colors.transparent
-            : states.isDisabled
-                ? ButtonThemeData.buttonColor(context, states)
-                : ButtonThemeData.uncheckedInputColor(theme, states);
+        if (states.isDisabled) {
+          return ButtonThemeData.buttonColor(context, states);
+        } else {
+          return ButtonThemeData.uncheckedInputColor(
+            theme,
+            states,
+            transparentWhenNone: true,
+          );
+        }
       }),
       foregroundColor: ButtonState.resolveWith((states) {
-        if (states.isDisabled) return theme.disabledColor;
+        if (states.isDisabled) return theme.resources.textFillColorDisabled;
         return null;
       }),
       shape: ButtonState.all(RoundedRectangleBorder(
