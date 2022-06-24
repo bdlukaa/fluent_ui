@@ -1,29 +1,41 @@
-<div>
-  <h1 align="center">fluent_ui</h1>
-  <p align="center" >
-    <a title="Discord" href="https://discord.gg/674gpDQUVq">
-      <img src="https://img.shields.io/discord/809528329337962516?label=discord&logo=discord" />
+<div align="center">
+  <h1>fluent_ui</h1>
+  <div>
+    <a title="pub.dev" href="https://pub.dartlang.org/packages/fluent_ui" >
+      <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=flat-square&include_prereleases&color=dc143c" />
     </a>
-    <a title="Pub" href="https://pub.dartlang.org/packages/fluent_ui" >
-      <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=popout&include_prereleases" />
+    <a title="GitHub License" href="https://github.com/bdlukaa/fluent_ui/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui?style=flat-square&color=f12253" />
     </a>
     <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7">
     </a>
-    <a title="Github License">
-      <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui" />
+    <a title="Discord" href="https://discord.gg/674gpDQUVq">
+      <img src="https://img.shields.io/discord/809528329337962516?style=flat-square&label=discord&color=7289da&logo=discord&logoColor=white" />
     </a>
+  </div>
+  <div>
+    <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
+      <img src="https://img.shields.io/badge/web-example---?style=flat-square&color=e88d0c" />
+    </a>
+  </div>
+  <br/>
+  <p>
+  Design beautiful native Windows apps using <a href="https://flutter.dev">Flutter</a>
   </p>
-  <p align="center">
-  Design beautiful native windows apps using Flutter
+
+  <p>
+  Unofficial implementation of Fluent UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
   </p>
 </div>
 
-Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's written based on the [official documentation](https://docs.microsoft.com/en-us/windows/uwp/design/)
+<div align="center">
+  <a href="https://bdlukaa.github.io/fluent_ui">
+    <img src="images/example-showcase.png" />
+  </a>
+</div>
 
-### You can check the web version of it [here](https://bdlukaa.github.io/fluent_ui/)
-
-![Example Showcase](images/example-showcase.png)
+---
 
 ### Content
 
@@ -62,7 +74,7 @@ Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's 
   - [Checkbox](#checkbox)
   - [Toggle Switch](#toggle-switch)
   - [Radio Buttons](#radio-buttons)
-  - [DropDown Button](#dropdown-button) 
+  - [DropDown Button](#dropdown-button)
   - [Slider](#slider)
     - [Choosing between vertical and horizontal sliders](#choosing-between-vertical-and-horizontal-sliders)
 - [Forms](#forms)
@@ -98,7 +110,7 @@ Unofficial implementation of Fluent UI for [Flutter](https://flutter.dev). It's 
 - [Equivalents with the material library](#equivalents-with-the-material-library)
 - [Localization](#Localization)
 - [Contribution](#contribution)
-  - [Contributing new localizations](#contributing-new-localizations) 
+  - [Contributing new localizations](#contributing-new-localizations)
   - [Acknowledgements](#acknowledgements)
 
 ## Motivation
@@ -129,7 +141,7 @@ dependencies:
   fluent_ui: ^3.10.0
 ```
 
-OR:
+<p align="center">OR</p>
 
 ```yaml
 dependencies:
@@ -148,7 +160,9 @@ Projects using this library should use the stable channel of Flutter
 Are you using this library on your app? You can use a badge to tell others:
 
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-  <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7">
+  <img
+    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
+  >
 </a>
 
 Add the following code to your `README.md` or to your website:
@@ -156,8 +170,8 @@ Add the following code to your `README.md` or to your website:
 ```html
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
-    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7"
-  />
+    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
+  >
 </a>
 ```
 
@@ -205,7 +219,7 @@ For a complete reference of current icons, please check the [online demo](https:
 
 The online demo has a search box and also supports clipboard copy in order to find every icon as fast as possible.
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
+![Icons in navigation bar](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/icons/inside-icons.png)
 
 ## Colors
 
@@ -314,7 +328,6 @@ You should use one font throughout your app's UI, and we recommend sticking with
 
 ![Font Segoe UI Showcase](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/segoe-sample.svg)
 
-
 ### Type ramp
 
 The Windows type ramp establishes crucial relationships between the type styles on a page, helping users read content easily. All sizes are in effective pixels. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp)
@@ -401,7 +414,7 @@ It's recommended to widely use page transitions on `NavigationView`, that can be
 
 This library gives you the following implementations to navigate between your pages:
 
-#### Entrance
+### Entrance
 
 Entrance is a combination of a slide up animation and a fade in animation for the incoming content. Use entrance when the user is taken to the top of a navigational stack, such as navigating between tabs or left-nav items.
 
@@ -411,7 +424,7 @@ Avaiable with the widget `EntrancePageTransition`, it produces the following eff
 
 ![Entrance Page Transition Preview](https://docs.microsoft.com/en-us/windows/uwp/design/motion/images/page-refresh.gif)
 
-#### Drill In
+### Drill In
 
 Use drill when users navigate deeper into an app, such as displaying more information after selecting an item.
 
@@ -421,7 +434,7 @@ Avaiable with the widget `DrillInPageTransition`, it produces the following effe
 
 ![Drill Page Transition Preview](https://docs.microsoft.com/en-us/windows/uwp/design/motion/images/drill.gif)
 
-#### Horizontal
+### Horizontal
 
 It's avaiable with the widget `HorizontalSlidePageTransition`.
 
@@ -474,13 +487,13 @@ NavigationView(
 
 You can change the `displayMode` to make it fit the screen.
 
-| Name    | Screenshot                                                                                                        | Info                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Top     | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-top.png)         | The pane is positioned above the content. We recommend top navigation when: <br>- You have 5 or fewer top-level navigation categories that are equally important, and any additional top-level navigation categories that end up in the dropdown overflow menu are considered less important.</br> - You need to show all navigation options on screen. - You want more space for your app content. <br>- Icons cannot clearly describe your app's navigation categories.</br> |
-| Open    | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)        | The pane is expanded and positioned to the left of the content. We recommend _open_ navigation when: <br>- You have 5-10 equally important top-level navigation categories.</br>- You want navigation categories to be very prominent, with less space for other app content.                                                                                                                                                                                                  |
-| Compact | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftcompact.png) | The pane shows only icons until opened and is positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                                                           |
-| Minimal | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png) | Only the menu button is shown until the pane is opened. When opened, it's positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                               |
-| Auto    | ![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)        | By default, `displayMode` is set to `auto`. In Auto mode, the NavigationView adapts between `minimal` when the window is narrow, to `compact`, and then `open` as the window gets wider.                                                                                                                                                                                                                                                                                       |
+| Name    | Screenshot                                                                                                                               | Info                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Top     | ![PaneDisplayMode.top](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-top.png)             | The pane is positioned above the content. We recommend top navigation when: <br/>- You have 5 or fewer top-level navigation categories that are equally important, and any additional top-level navigation categories that end up in the dropdown overflow menu are considered less important. <br/> - You need to show all navigation options on screen. <br/> - You want more space for your app content. <br/> - Icons cannot clearly describe your app's navigation categories. |
+| Open    | ![PaneDisplayMode.open](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)           | The pane is expanded and positioned to the left of the content. We recommend _open_ navigation when: <br/> - You have 5-10 equally important top-level navigation categories. <br/> - You want navigation categories to be very prominent, with less space for other app content.                                                                                                                                                                                                   |
+| Compact | ![PaneDisplayMode.compact](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftcompact.png) | The pane shows only icons until opened and is positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                                                                |
+| Minimal | ![PaneDisplayMode.minimal](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-leftminimal.png) | Only the menu button is shown until the pane is opened. When opened, it's positioned to the left of the content.                                                                                                                                                                                                                                                                                                                                                                    |
+| Auto    | ![PaneDisplayMode.auto](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-auto.png)           | By default, `displayMode` is set to `auto`. In Auto mode, the NavigationView adapts between `minimal` when the window is narrow, to `compact`, and then `open` as the window gets wider.                                                                                                                                                                                                                                                                                            |
 
 You can customize the selected indicator. By default `StickyNavigationIndicator` is used, but you can also use the old windows indicator:
 
@@ -792,7 +805,7 @@ Checkbox(
 )
 ```
 
-#### Handling its states
+### Handling its states
 
 | State         | Property  | Value    |
 | ------------- | --------- | -------- |
@@ -802,7 +815,7 @@ Checkbox(
 | enabled       | onChanged | non-null |
 | disabled      | onChanged | `null`   |
 
-![](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
+![Checkbox states](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
 
 ## Toggle Switch
 
@@ -820,7 +833,7 @@ ToggleSwitch(
 )
 ```
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
+![Toggle Switch states](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 
 ## Radio Buttons
 
@@ -950,7 +963,7 @@ RatingBar(
 
 You can set `amount` to change the amount of stars. The `rating` must be less than the stars and more than 0. You can also change the `icon`, its size and color. You can make the bar read only by setting `onChanged` to `null`.
 
-![](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+![Rating Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
 
 # Forms
 
@@ -1117,7 +1130,7 @@ Expander lets you show or hide less important content that's related to a piece 
 
 Both the `header` and `content` areas can contain any content, from simple text to complex UI layouts. For example, you can use the control to show additional options for an item.
 
-![](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+![Expander](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
 
 Use an Expander when some primary content should always be visible, but related secondary content may be hidden until needed. This UI is commonly used when display space is limited and when information or options can be grouped together. Hiding the secondary content until it's needed can also help to focus the user on the most important parts of your app.
 
@@ -1513,6 +1526,7 @@ A `CommandBar` control provides quick access to common tasks. This could be appl
 The `CommandBar` is composed of a number of `CommandBarItem` objects, which could be `CommandBarButton`, a `CommandBarSeparator`, or any custom object (e.g., a "split button" object). Sub-class `CommandBarItem` to create your own custom items.
 
 Each `CommandBarItem` widget knows how to render itself in three different modes:
+
 - `CommandBarItemDisplayMode.inPrimary`: Displayed horizontally in primary area
 - `CommandBarItemDisplayMode.inPrimaryCompact`: More compact horizontal display (e.g., only the icon is displayed for `CommandBarButton`)
 - `CommandBarItemDisplayMode.inSecondary`: Displayed within flyout menu `ListView`
@@ -1734,7 +1748,7 @@ The list of equivalents between this library and `flutter/material.dart`
 
 ## Localization
 
-FluentUI widgets currently supports out-of-the-box an wide number of languages, including: 
+FluentUI widgets currently supports out-of-the-box an wide number of languages, including:
 
 - Arabic
 - English
@@ -1768,7 +1782,7 @@ If you want to contribute adding new localizations please follow this steps:
 - Copy `lib/l10n/intl_en.arb` file into `lib/l10n` folder with a new language code, following [this list of ISO 859-1 codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
 - Update the contents in the newly created file. Specially, please update the `@locale` value with the corresponding ISO code.
 - Then update the `localization.dart:defaultSupportedLocales` list, adding an entry for each new locale
-- If your IDE doesn't have any of the `intl` plugins ([Intl plugin for Android Studio/IntelliJ](https://plugins.jetbrains.com/plugin/13666-flutter-intl) / [Flutter Intl for VSCode](https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) ) please run your project and code generation will take place. 
+- If your IDE doesn't have any of the `intl` plugins ([Intl plugin for Android Studio/IntelliJ](https://plugins.jetbrains.com/plugin/13666-flutter-intl) / [Flutter Intl for VSCode](https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) ) please run your project and code generation will take place.
 - When you're done, [make a new pull request](https://github.com/bdlukaa/fluent_ui/pulls)
 
 More about [Localization in the Flutter Official Documentation](https://docs.flutter.dev/development/accessibility-and-localization/internationalization)
