@@ -3,9 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class TimePickerPage extends ScrollablePage {
   PageState state = {
-    'simple_time': DateTime.now(),
-    'arrival_time': DateTime.now(),
-    '24_time': DateTime.now(),
+    'simple_time': null,
+    'arrival_time': null,
+    '24_time': null,
   };
 
   @override
@@ -27,7 +27,7 @@ class TimePickerPage extends ScrollablePage {
             width: 240.0,
             child: TimePicker(
               selected: state['simple_time'],
-              onChanged: (time) => setState(() => state['simple_tile'] = time),
+              onChanged: (time) => setState(() => state['simple_time'] = time),
             ),
           ),
         ),

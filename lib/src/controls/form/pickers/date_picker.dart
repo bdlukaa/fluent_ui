@@ -43,7 +43,7 @@ class DatePicker extends StatefulWidget {
   }) : super(key: key);
 
   /// The current date.
-  final DateTime selected;
+  final DateTime? selected;
 
   /// Whenever the current date is changed. If this is null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
@@ -95,6 +95,7 @@ class DatePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
+    final selected = this.selected ?? DateTime.now();
     properties
       ..add(DiagnosticsProperty('selected', selected,
           ifNull: '${DateTime.now()}'))
@@ -121,8 +122,9 @@ class _DatePickerState extends State<DatePicker> {
   FixedExtentScrollController? _dayController;
   FixedExtentScrollController? _yearController;
 
-  int get startYear => (widget.startYear ?? DateTime.now().year - 100).toInt();
-  int get endYear => (widget.endYear ?? DateTime.now().year + 25).toInt();
+  int get startYear =>
+      ((widget.startYear ?? DateTime.now().year) - 100).toInt();
+  int get endYear => ((widget.endYear ?? DateTime.now().year) + 25).toInt();
 
   int get currentYear {
     return List.generate(endYear - startYear, (index) {
@@ -133,7 +135,7 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    date = widget.selected;
+    date = widget.selected ?? DateTime.now();
     initControllers();
   }
 
@@ -162,7 +164,7 @@ class _DatePickerState extends State<DatePicker> {
   void didUpdateWidget(DatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selected != date) {
-      date = widget.selected;
+      date = widget.selected ?? DateTime.now();
       _monthController?.jumpToItem(date.month - 1);
       _dayController?.jumpToItem(date.day - 1);
       _yearController?.jumpToItem(currentYear - startYear - 1);
@@ -175,7 +177,9 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     Widget picker = Picker(
       pickerContent: (context) {
         return _DatePickerContentPopUp(
@@ -219,60 +223,74 @@ class _DatePickerState extends State<DatePicker> {
           );
 
           final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
+          final localizations = FluentLocalizations.of(context);
 
           return AnimatedContainer(
-            duration: FluentTheme.of(context).fastAnimationDuration,
-            curve: FluentTheme.of(context).animationCurve,
+            duration: theme.fastAnimationDuration,
+            curve: theme.animationCurve,
             height: kPickerHeight,
             decoration: kPickerDecorationBuilder(context, state),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              if (widget.showMonth)
-                Expanded(
-                  flex: 2,
-                  child: () {
-                    // MONTH
-                    return Padding(
-                      padding: widget.contentPadding,
-                      child: Text(
-                        DateFormat.MMMM('$locale')
-                            .format(widget.selected)
-                            .uppercaseFirst(),
-                        locale: locale,
-                      ),
-                    );
-                  }(),
-                ),
-              if (widget.showDay) ...[
-                divider,
-                Expanded(
-                  child: () {
-                    // DAY
-                    return Padding(
-                      padding: widget.contentPadding,
-                      child: Text(
-                        '${widget.selected.day}',
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  }(),
-                ),
-              ],
-              if (widget.showYear) ...[
-                divider,
-                Expanded(
-                  child: () {
-                    // YEAR
-                    return Padding(
-                      padding: widget.contentPadding,
-                      child: Text(
-                        '${widget.selected.year}',
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  }(),
-                ),
-              ],
-            ]),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: widget.selected == null
+                    ? theme.resources.textFillColorSecondary
+                    : null,
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                if (widget.showMonth)
+                  Expanded(
+                    flex: 2,
+                    child: () {
+                      // MONTH
+                      return Padding(
+                        padding: widget.contentPadding,
+                        child: Text(
+                          widget.selected == null
+                              ? localizations.month
+                              : DateFormat.MMMM('$locale')
+                                  .format(widget.selected!)
+                                  .uppercaseFirst(),
+                          locale: locale,
+                        ),
+                      );
+                    }(),
+                  ),
+                if (widget.showDay) ...[
+                  divider,
+                  Expanded(
+                    child: () {
+                      // DAY
+                      return Padding(
+                        padding: widget.contentPadding,
+                        child: Text(
+                          widget.selected == null
+                              ? localizations.day
+                              : '${widget.selected!.day}',
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }(),
+                  ),
+                ],
+                if (widget.showYear) ...[
+                  divider,
+                  Expanded(
+                    child: () {
+                      // YEAR
+                      return Padding(
+                        padding: widget.contentPadding,
+                        child: Text(
+                          widget.selected == null
+                              ? localizations.year
+                              : '${widget.selected!.year}',
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }(),
+                  ),
+                ],
+              ]),
+            ),
           );
         },
       ),
@@ -339,9 +357,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     if (localDate == time) {
       return;
     }
-    setState(() {
-      localDate = time;
-    });
+    // setState(() {
+    localDate = time;
+    // });
   }
 
   @override
