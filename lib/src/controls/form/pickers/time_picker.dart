@@ -24,7 +24,7 @@ class TimePicker extends StatefulWidget {
     this.header,
     this.headerStyle,
     this.contentPadding = kPickerContentPadding,
-    this.popupHeight = kPopupHeight,
+    this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
     this.hourFormat = HourFormat.h,
@@ -301,17 +301,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             Expanded(
               child: PickerNavigatorIndicator(
                 onBackward: () {
-                  navigateSides(
+                  widget.hourController.navigateSides(
                     context,
-                    widget.hourController,
                     false,
                     hoursAmount,
                   );
                 },
                 onForward: () {
-                  navigateSides(
+                  widget.hourController.navigateSides(
                     context,
-                    widget.hourController,
                     true,
                     hoursAmount,
                   );
@@ -369,17 +367,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             Expanded(
               child: PickerNavigatorIndicator(
                 onBackward: () {
-                  navigateSides(
+                  widget.minuteController.navigateSides(
                     context,
-                    widget.minuteController,
                     false,
                     60,
                   );
                 },
                 onForward: () {
-                  navigateSides(
+                  widget.minuteController.navigateSides(
                     context,
-                    widget.minuteController,
                     true,
                     60,
                   );

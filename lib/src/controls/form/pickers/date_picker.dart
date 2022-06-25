@@ -36,7 +36,7 @@ class DatePicker extends StatefulWidget {
     this.startYear,
     this.endYear,
     this.contentPadding = kPickerContentPadding,
-    this.popupHeight = kPopupHeight,
+    this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
     this.locale,
@@ -357,9 +357,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     if (localDate == time) {
       return;
     }
-    // setState(() {
-    localDate = time;
-    // });
+    setState(() {
+      localDate = time;
+    });
   }
 
   @override
@@ -388,17 +388,15 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   // MONTH
                   return PickerNavigatorIndicator(
                     onBackward: () {
-                      navigateSides(
+                      widget.monthController.navigateSides(
                         context,
-                        widget.monthController,
                         false,
                         12,
                       );
                     },
                     onForward: () {
-                      navigateSides(
+                      widget.monthController.navigateSides(
                         context,
-                        widget.monthController,
                         true,
                         12,
                       );
@@ -456,17 +454,15 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                       _getDaysInMonth(localDate.month, localDate.year);
                   return PickerNavigatorIndicator(
                     onBackward: () {
-                      navigateSides(
+                      widget.dayController.navigateSides(
                         context,
-                        widget.dayController,
                         false,
                         daysInMonth,
                       );
                     },
                     onForward: () {
-                      navigateSides(
+                      widget.dayController.navigateSides(
                         context,
-                        widget.dayController,
                         true,
                         daysInMonth,
                       );
@@ -520,17 +516,15 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   // YEAR
                   return PickerNavigatorIndicator(
                     onBackward: () {
-                      navigateSides(
+                      widget.yearController.navigateSides(
                         context,
-                        widget.yearController,
                         false,
                         years,
                       );
                     },
                     onForward: () {
-                      navigateSides(
+                      widget.yearController.navigateSides(
                         context,
-                        widget.yearController,
                         true,
                         years,
                       );
