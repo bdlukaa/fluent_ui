@@ -43,7 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hour": MessageLookupByLibrary.simpleMessage("hora"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Minimizar"),
-        "minute": MessageLookupByLibrary.simpleMessage("minuta"),
+        "minute": MessageLookupByLibrary.simpleMessage("minuto"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("Cancelar"),
         "month": MessageLookupByLibrary.simpleMessage("mês"),

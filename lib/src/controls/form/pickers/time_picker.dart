@@ -21,29 +21,59 @@ class TimePicker extends StatefulWidget {
     required this.selected,
     this.onChanged,
     this.onCancel,
+    this.hourFormat = HourFormat.h,
     this.header,
     this.headerStyle,
     this.contentPadding = kPickerContentPadding,
     this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
-    this.hourFormat = HourFormat.h,
     this.minuteIncrement = 1,
   }) : super(key: key);
 
+  /// The current date selected date.
+  ///
+  /// If null, no date is going to be shown.
   final DateTime? selected;
+
+  /// Whenever the current selected date is changed by the user.
+  ///
+  /// If null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
+
+  /// Whenever the user cancels the date change.
   final VoidCallback? onCancel;
+
+  /// The clock system to use
   final HourFormat hourFormat;
 
+  /// The content of the header
   final String? header;
+
+  /// The style of the [header]
   final TextStyle? headerStyle;
 
+  /// The padding of the picker fields. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// The height of the popup.
+  ///
+  /// Defaults to [kPickerPopupHeight]
   final double popupHeight;
+
+  /// The value that indicates the time increments shown in the minute picker.
+  /// For example, 15 specifies that the TimePicker minute control displays
+  /// only the choices 00, 15, 30, 45.
+  ///
+  /// ![15 minute increment preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/date-time/time-picker-minute-increment.png)
+  ///
+  /// Defaults to 1
   final int minuteIncrement;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
@@ -54,13 +84,28 @@ class TimePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DateTime>('selected', selected));
-    properties.add(EnumProperty<HourFormat>('hourFormat', hourFormat));
-    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
-    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
-    properties.add(DoubleProperty('popupHeight', popupHeight));
+    properties
+      ..add(DiagnosticsProperty<DateTime>('selected', selected))
+      ..add(EnumProperty<HourFormat>(
+        'hourFormat',
+        hourFormat,
+        defaultValue: HourFormat.h,
+      ))
+      ..add(DiagnosticsProperty(
+        'contentPadding',
+        contentPadding,
+        defaultValue: kPickerContentPadding,
+      ))
+      ..add(ObjectFlagProperty.has('focusNode', focusNode))
+      ..add(FlagProperty(
+        'autofocus',
+        value: autofocus,
+        ifFalse: 'manual focus',
+        defaultValue: false,
+      ))
+      ..add(DoubleProperty('popupHeight', popupHeight,
+          defaultValue: kPickerPopupHeight))
+      ..add(IntProperty('minuteIncrement', minuteIncrement, defaultValue: 1));
   }
 }
 
@@ -112,6 +157,9 @@ class _TimePickerState extends State<TimePicker> {
   }
 
   void initControllers() {
+    if (widget.selected == null && mounted) {
+      setState(() => time = DateTime.now());
+    }
     _hourController = FixedExtentScrollController(
       initialItem: () {
         int hour = time.hour - 1;
@@ -153,11 +201,11 @@ class _TimePickerState extends State<TimePicker> {
         focusNode: widget.focusNode,
         autofocus: widget.autofocus,
         onPressed: () async {
-          await open();
           _hourController.dispose();
           _minuteController.dispose();
           _amPmController.dispose();
           initControllers();
+          await open();
         },
         builder: (context, state) {
           const divider = Divider(
@@ -165,7 +213,6 @@ class _TimePickerState extends State<TimePicker> {
             style: DividerThemeData(
               verticalMargin: EdgeInsets.zero,
               horizontalMargin: EdgeInsets.zero,
-              thickness: 0.6,
             ),
           );
           return AnimatedContainer(

@@ -42,46 +42,71 @@ class DatePicker extends StatefulWidget {
     this.locale,
   }) : super(key: key);
 
-  /// The current date.
+  /// The current date selected date.
+  ///
+  /// If null, no date is going to be shown.
   final DateTime? selected;
 
-  /// Whenever the current date is changed. If this is null, the picker is considered disabled
+  /// Whenever the current selected date is changed by the user.
+  ///
+  /// If null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
 
-  /// Whenever the user cancels when changing the date.
+  /// Whenever the user cancels the date change.
   final VoidCallback? onCancel;
 
-  /// The header of the picker
+  /// The content of the header
   final String? header;
 
   /// The style of the [header]
   final TextStyle? headerStyle;
 
-  /// Whenever to show the month property
+  /// Whenever to show the month field
+  ///
+  /// See also:
+  ///
+  ///  * [showDay]
+  ///  * [showYear]
   final bool showMonth;
 
-  /// Whenever to show the day property
+  /// Whenever to show the day field
+  ///
+  /// See also:
+  ///
+  ///  * [showMonth]
+  ///  * [showYear]
   final bool showDay;
 
-  /// Whenever to show the year property
+  /// Whenever to show the year field
+  ///
+  /// See also:
+  ///
+  ///  * [showDay]
+  ///  * [showMonth]
   final bool showYear;
 
-  /// The year to start counting from. If `null`, defaults to [date]'s year `- 100`
+  /// The year to start counting from.
+  ///
+  /// If null, defaults to [selected]'s year `- 100`
   final int? startYear;
 
-  /// The year to end the counting. If `null`, defaults to [date]'s year `+ 25`
+  /// The year to end the counting.
+  ///
+  /// If null, defaults to [selected]'s year `+ 25`
   final int? endYear;
 
-  /// The padding of the picker. Defaults to [kPickerContentPadding]
+  /// The padding of the picker fields. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
 
-  /// The focus node of the picker.
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whenever `autofocus` is enabled or not
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  /// The height of the popup. Defaults to [kPopupHeight]
+  /// The height of the popup.
+  ///
+  /// Defaults to [kPickerPopupHeight]
   final double popupHeight;
 
   /// The locale used to format the month name.
@@ -140,6 +165,9 @@ class _DatePickerState extends State<DatePicker> {
   }
 
   void initControllers() {
+    if (widget.selected == null && mounted) {
+      setState(() => date = DateTime.now());
+    }
     _monthController = FixedExtentScrollController(
       initialItem: date.month - 1,
     );
@@ -202,7 +230,6 @@ class _DatePickerState extends State<DatePicker> {
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
         onPressed: () async {
-          open();
           _monthController?.dispose();
           _monthController = null;
           _dayController?.dispose();
@@ -210,6 +237,7 @@ class _DatePickerState extends State<DatePicker> {
           _yearController?.dispose();
           _yearController = null;
           initControllers();
+          await open();
         },
         builder: (context, state) {
           if (state.isDisabled) state = <ButtonStates>{};
@@ -218,7 +246,6 @@ class _DatePickerState extends State<DatePicker> {
             style: DividerThemeData(
               verticalMargin: EdgeInsets.zero,
               horizontalMargin: EdgeInsets.zero,
-              thickness: 0.6,
             ),
           );
 
@@ -236,6 +263,7 @@ class _DatePickerState extends State<DatePicker> {
                     ? theme.resources.textFillColorSecondary
                     : null,
               ),
+              maxLines: 1,
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 if (widget.showMonth)
                   Expanded(

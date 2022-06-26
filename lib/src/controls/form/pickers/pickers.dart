@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const kPickerContentPadding = EdgeInsets.symmetric(
-  horizontal: 8.0,
-  vertical: 4.0,
+/// The padding used on the content of [DatePicker] and [TimePicker]
+const kPickerContentPadding = EdgeInsetsDirectional.only(
+  start: 8.0,
+  top: 4.0,
+  bottom: 4.0,
 );
 
 const kPickerHeight = 32.0;
@@ -336,7 +338,7 @@ class _PickerState extends State<Picker> {
     return KeyedSubtree(
       key: _childKey,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 296.0, maxWidth: 456.0),
+        constraints: const BoxConstraints(maxWidth: 296),
         child: widget.child(context, open),
       ),
     );

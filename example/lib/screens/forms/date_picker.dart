@@ -2,10 +2,8 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class DatePickerPage extends ScrollablePage {
-  PageState state = {
-    'simple_time': null,
-    'hidden_time': null,
-  };
+  DateTime? simpleTime;
+  DateTime? hiddenTime;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -20,29 +18,20 @@ class DatePickerPage extends ScrollablePage {
       ),
       subtitle(content: const Text('A simple DatePicker with a header')),
       Card(
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 240.0,
-            child: DatePicker(
-              header: 'Pick a date',
-              selected: state['simple_time'],
-              onChanged: (time) => setState(() => state['simple_time'] = time),
-            ),
-          ),
+        child: DatePicker(
+          header: 'Pick a date',
+          selected: simpleTime,
+          onChanged: (time) => setState(() => simpleTime = time),
         ),
       ),
       subtitle(content: const Text('A DatePicker with year hidden')),
       Card(
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 240.0,
-            child: DatePicker(
-              selected: state['hidden_time'],
-              onChanged: (v) => setState(() => state['hidden_time'] = v),
-              showYear: false,
-            ),
+          child: DatePicker(
+            selected: hiddenTime,
+            onChanged: (v) => setState(() => hiddenTime = v),
+            showYear: false,
           ),
         ),
       ),

@@ -2,11 +2,9 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TimePickerPage extends ScrollablePage {
-  PageState state = {
-    'simple_time': null,
-    'arrival_time': null,
-    '24_time': null,
-  };
+  DateTime? simpleTime;
+  DateTime? arrivalTime;
+  DateTime? hhTime;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -23,12 +21,9 @@ class TimePickerPage extends ScrollablePage {
       Card(
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 240.0,
-            child: TimePicker(
-              selected: state['simple_time'],
-              onChanged: (time) => setState(() => state['simple_time'] = time),
-            ),
+          child: TimePicker(
+            selected: simpleTime,
+            onChanged: (time) => setState(() => simpleTime = time),
           ),
         ),
       ),
@@ -40,14 +35,11 @@ class TimePickerPage extends ScrollablePage {
       Card(
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 240.0,
-            child: TimePicker(
-              header: 'Arrival time',
-              selected: state['arrival_time'],
-              onChanged: (time) => setState(() => state['arrival_time'] = time),
-              minuteIncrement: 15,
-            ),
+          child: TimePicker(
+            header: 'Arrival time',
+            selected: arrivalTime,
+            onChanged: (time) => setState(() => arrivalTime = time),
+            minuteIncrement: 15,
           ),
         ),
       ),
@@ -59,14 +51,11 @@ class TimePickerPage extends ScrollablePage {
       Card(
         child: Align(
           alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 240.0,
-            child: TimePicker(
-              header: '24 hour clock',
-              selected: state['24_time'],
-              onChanged: (v) => setState(() => state['24_time'] = v),
-              hourFormat: HourFormat.HH,
-            ),
+          child: TimePicker(
+            header: '24 hour clock',
+            selected: hhTime,
+            onChanged: (v) => setState(() => hhTime = v),
+            hourFormat: HourFormat.HH,
           ),
         ),
       ),
