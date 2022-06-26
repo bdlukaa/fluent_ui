@@ -30,6 +30,11 @@ Date format: DD/MM/YYYY
 - Updated `TextBox`:
   - `TextBox` colors were updated to match the Win 11 design.
   - Fluent Text Selection Control now make use of `Acrylic`. Its items were also updated
+- Updated pickers ([#406](https://github.com/bdlukaa/fluent_ui/pull/406)):
+  - If `selected` is null, a placeholder text is shown ([#306](https://github.com/bdlukaa/fluent_ui/issues/306))
+  - Added new localizations:
+    - `hour`, `minute`, `AM`, `PM`
+    - `month`, `day`, `year`
 
 ## [4.0.0-pre.0] - [07/06/2022]
 

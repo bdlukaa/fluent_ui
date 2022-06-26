@@ -1258,13 +1258,10 @@ Here's an example of how to create a basic date picker:
 ```dart
 DateTime date = DateTime.now();
 
-SizedBox(
-  width: 295,
-  child: DatePicker(
-    header: 'Pick a date',
-    selected: date,
-    onChanged: (v) => setState(() => date = v),
-  ),
+DatePicker(
+  header: 'Pick a date',
+  selected: date,
+  onChanged: (v) => setState(() => date = v),
 );
 ```
 
@@ -1283,13 +1280,10 @@ Here's an example of how to create a basic time picker:
 ```dart
 DateTime date = DateTime.now();
 
-SizedBox(
-  width: 240,
-  child: TimePicker(
-    header: 'Arrival time',
-    selected: date,
-    onChanged: (v) => setState(() => date = v),
-  ),
+TimePicker(
+  header: 'Arrival time',
+  selected: date,
+  onChanged: (v) => setState(() => date = v),
 ),
 ```
 
