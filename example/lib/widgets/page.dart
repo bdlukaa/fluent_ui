@@ -5,6 +5,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 typedef PageState = Map<String, dynamic>;
 
 abstract class Page {
+  Page() {
+    _pageIndex++;
+  }
+
   final StreamController _controller = StreamController.broadcast();
   Stream get stateStream => _controller.stream;
 
@@ -16,16 +20,26 @@ abstract class Page {
   }
 }
 
+int _pageIndex = -1;
+
 abstract class ScrollablePage extends Page {
+  ScrollablePage() : super();
+
+  final scrollController = ScrollController();
   Widget buildHeader(BuildContext context) => const SizedBox.shrink();
+
+  Widget buildBottomBar(BuildContext context) => const SizedBox.shrink();
 
   List<Widget> buildScrollable(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
+      key: PageStorageKey(_pageIndex),
+      scrollController: scrollController,
       header: buildHeader(context),
       children: buildScrollable(context),
+      bottomBar: buildBottomBar(context),
     );
   }
 
