@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef ShapeBuilder = ShapeBorder Function(bool open);
+
 /// The expander direction
 enum ExpanderDirection {
   /// Whether the [Expander] expands down
@@ -43,6 +45,7 @@ class Expander extends StatefulWidget {
     this.headerHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
+    this.headerShape,
   }) : super(key: key);
 
   /// The leading widget.
@@ -107,6 +110,8 @@ class Expander extends StatefulWidget {
 
   /// The content color of the header
   final Color? contentBackgroundColor;
+
+  final ShapeBuilder? headerShape;
 
   @override
   ExpanderState createState() => ExpanderState();
@@ -185,16 +190,25 @@ class ExpanderState extends State<Expander>
           return AnimatedContainer(
             duration: expanderAnimationDuration,
             height: widget.headerHeight,
-            decoration: BoxDecoration(
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.vertical(
+            //     top: const Radius.circular(4.0),
+            //     bottom: Radius.circular(open ? 0.0 : 4.0),
+            //   ),
+            // ),
+            decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
-              border: Border.all(
-                color: theme.resources.cardStrokeColorDefault,
-              ),
-              borderRadius: BorderRadius.vertical(
-                top: const Radius.circular(4.0),
-                bottom: Radius.circular(open ? 0.0 : 4.0),
-              ),
+              shape: widget.headerShape?.call(open) ??
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(4.0),
+                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                    ),
+                  ),
             ),
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
