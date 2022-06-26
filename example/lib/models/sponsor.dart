@@ -1,6 +1,11 @@
 /// Current sponsors of the project <3
 const sponsors = [
   Sponsor(
+    username: 'bariccattion',
+    imageUrl: 'https://avatars.githubusercontent.com/u/19714408?v=4',
+    name: 'Rafael Gongora Bariccatti',
+  ),
+  Sponsor(
     username: 'h3x4d3c1m4l',
     imageUrl: 'https://avatars.githubusercontent.com/u/2611894?v=4',
     name: 'Sander in \'t Hout',
