@@ -1,10 +1,9 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class AutoSuggestBoxPage extends ScrollablePage {
-  PageState state = {
-    'selected_cat': null,
-  };
+  String? selectedCat;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -18,7 +17,7 @@ class AutoSuggestBoxPage extends ScrollablePage {
         'A text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.',
       ),
       subtitle(content: const Text('A basic AutoSuggestBox')),
-      Card(
+      CardHighlight(
         child: Row(
           children: [
             SizedBox(
@@ -26,18 +25,36 @@ class AutoSuggestBoxPage extends ScrollablePage {
               child: AutoSuggestBox(
                 items: _cats,
                 onSelected: (item) {
-                  setState(() => state['selected_cat'] = item);
+                  setState(() => selectedCat = item);
                 },
               ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text(state['selected_cat'] ?? ''),
+                child: Text(selectedCat ?? ''),
               ),
             ),
           ],
         ),
+        codeSnippet: '''
+String? selectedCat;
+
+AutoSuggestBox(
+  items: _cats,
+  onSelected: (item) {
+    setState(() => selected = item);
+  },
+),
+
+const _cats = <String>[
+  'Abyssinian',
+  'Aegean',
+  'American Bobtail',
+  'American Curl',
+  ...
+];
+''',
       ),
     ];
   }
