@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_highlighter/themes/github.dart';
@@ -5,12 +7,15 @@ import 'package:flutter_highlighter/themes/github.dart';
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
     Key? key,
+    this.backgroundColor,
     required this.child,
     required this.codeSnippet,
   }) : super(key: key);
 
   final Widget child;
   final String codeSnippet;
+
+  final Color? backgroundColor;
 
   @override
   State<CardHighlight> createState() => _CardHighlightState();
@@ -19,16 +24,19 @@ class CardHighlight extends StatefulWidget {
 class _CardHighlightState extends State<CardHighlight> {
   bool isOpen = false;
 
+  final key = Random().nextInt(1000);
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return Column(children: [
       Card(
+        backgroundColor: widget.backgroundColor,
         child: widget.child,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4.0)),
       ),
       Expander(
-        key: PageStorageKey(widget.codeSnippet.hashCode),
+        key: PageStorageKey(key),
         headerShape: (open) => const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
         ),
