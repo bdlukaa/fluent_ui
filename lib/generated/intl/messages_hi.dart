@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("AM"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("वापस"),
         "clickToSearch":
             MessageLookupByLibrary.simpleMessage("खोजने के लिए क्लिक करें"),
@@ -37,11 +38,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("कट"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "सिलेक्टेड कंटेंट यहाँ से हटा कर क्लिपबोर्ड पर कॉपी करें"),
+        "day": MessageLookupByLibrary.simpleMessage("दिन"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("डायलॉग"),
+        "hour": MessageLookupByLibrary.simpleMessage("घंटा"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("मिनीमाइज करें"),
+        "minute": MessageLookupByLibrary.simpleMessage("मिनट"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("हटाएँ"),
+        "month": MessageLookupByLibrary.simpleMessage("महीना"),
         "newTabLabel": MessageLookupByLibrary.simpleMessage("नया टैब ऐड करें"),
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("कोई रिजल्ट नहीं मिला"),
@@ -50,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("पेस्ट"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "क्लिपबोर्ड का कंटेंट इस लोकेशन पर पेस्ट करें"),
+        "pm": MessageLookupByLibrary.simpleMessage("PM"),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("वापिस लाएं"),
         "scrollTabBackwardLabel":
@@ -60,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("सब-कुछ सेलेक्ट करें"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("सारा कंटेंट सेलेक्ट करें")
+            MessageLookupByLibrary.simpleMessage("सारा कंटेंट सेलेक्ट करें"),
+        "year": MessageLookupByLibrary.simpleMessage("साल")
       };
 }
