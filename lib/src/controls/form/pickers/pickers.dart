@@ -17,7 +17,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
   return theme.typography.body?.copyWith(
-    fontSize: 16,
+    // fontSize: 16,
     color: isSelected
         ? theme.resources.textOnAccentFillColorPrimary
         : theme.resources.textFillColorPrimary,

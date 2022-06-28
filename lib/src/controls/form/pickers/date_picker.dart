@@ -252,6 +252,57 @@ class _DatePickerState extends State<DatePicker> {
           final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
           final localizations = FluentLocalizations.of(context);
 
+          final monthWidget = Expanded(
+            flex: 2,
+            child: Padding(
+              padding: widget.contentPadding,
+              child: Text(
+                widget.selected == null
+                    ? localizations.month
+                    : DateFormat.MMMM('$locale')
+                        .format(widget.selected!)
+                        .uppercaseFirst(),
+                locale: locale,
+              ),
+            ),
+          );
+
+          final dayWidget = [
+            divider,
+            Expanded(
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.day
+                      : DateFormat.d().format(DateTime(
+                          0,
+                          0,
+                          widget.selected!.day,
+                        )),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ];
+
+          final showYear = [
+            divider,
+            Expanded(
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.year
+                      : DateFormat.y().format(DateTime(
+                          widget.selected!.year,
+                        )),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ];
+
           return AnimatedContainer(
             duration: theme.fastAnimationDuration,
             curve: theme.animationCurve,
@@ -265,58 +316,9 @@ class _DatePickerState extends State<DatePicker> {
               ),
               maxLines: 1,
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                if (widget.showMonth)
-                  Expanded(
-                    flex: 2,
-                    child: () {
-                      // MONTH
-                      return Padding(
-                        padding: widget.contentPadding,
-                        child: Text(
-                          widget.selected == null
-                              ? localizations.month
-                              : DateFormat.MMMM('$locale')
-                                  .format(widget.selected!)
-                                  .uppercaseFirst(),
-                          locale: locale,
-                        ),
-                      );
-                    }(),
-                  ),
-                if (widget.showDay) ...[
-                  divider,
-                  Expanded(
-                    child: () {
-                      // DAY
-                      return Padding(
-                        padding: widget.contentPadding,
-                        child: Text(
-                          widget.selected == null
-                              ? localizations.day
-                              : '${widget.selected!.day}',
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }(),
-                  ),
-                ],
-                if (widget.showYear) ...[
-                  divider,
-                  Expanded(
-                    child: () {
-                      // YEAR
-                      return Padding(
-                        padding: widget.contentPadding,
-                        child: Text(
-                          widget.selected == null
-                              ? localizations.year
-                              : '${widget.selected!.year}',
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }(),
-                  ),
-                ],
+                if (widget.showMonth) monthWidget,
+                if (widget.showDay) ...dayWidget,
+                if (widget.showYear) ...showYear,
               ]),
             ),
           );
@@ -401,6 +403,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       ),
     );
 
+    final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
+
     return Column(children: [
       Expanded(
         child: Stack(children: [
@@ -410,8 +414,6 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               Expanded(
                 flex: 2,
                 child: () {
-                  final locale =
-                      widget.locale ?? Localizations.maybeLocaleOf(context);
                   final formatter = DateFormat.MMMM(locale.toString());
                   // MONTH
                   return PickerNavigatorIndicator(
@@ -480,6 +482,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   // DAY
                   final daysInMonth =
                       _getDaysInMonth(localDate.month, localDate.year);
+                  final formatter = DateFormat.d(locale.toString());
                   return PickerNavigatorIndicator(
                     onBackward: () {
                       widget.dayController.navigateSides(
@@ -508,7 +511,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                             return ListTile(
                               title: Center(
                                 child: Text(
-                                  '$day',
+                                  formatter.format(DateTime(0, 0, day)),
                                   style: kPickerPopupTextStyle(
                                     context,
                                     day == localDate.day,
@@ -541,6 +544,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               Expanded(
                 child: () {
                   final years = widget.endYear - widget.startYear;
+                  final formatter = DateFormat.y(locale.toString());
                   // YEAR
                   return PickerNavigatorIndicator(
                     onBackward: () {
@@ -580,7 +584,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         return ListTile(
                           title: Center(
                             child: Text(
-                              '$realYear',
+                              formatter.format(DateTime(realYear)),
                               style: kPickerPopupTextStyle(
                                 context,
                                 realYear == localDate.year,

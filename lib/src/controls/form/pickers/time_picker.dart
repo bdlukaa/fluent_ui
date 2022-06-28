@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 import 'pickers.dart';
 
@@ -215,6 +216,7 @@ class _TimePickerState extends State<TimePicker> {
               horizontalMargin: EdgeInsets.zero,
             ),
           );
+          DateFormat.H();
           return AnimatedContainer(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
@@ -233,11 +235,20 @@ class _TimePickerState extends State<TimePicker> {
                     child: Text(
                       () {
                         if (widget.selected == null) return localizations.hour;
+                        late int finalHour;
                         int hour = time.hour;
                         if (!widget.use24Format && hour > 12) {
-                          return '${hour - 12}';
+                          finalHour = hour - 12;
+                        } else {
+                          finalHour = hour;
                         }
-                        return '$hour';
+
+                        return DateFormat.H().format(DateTime(
+                          0, // year
+                          0, // month
+                          0, // day
+                          finalHour,
+                        ));
                       }(),
                       textAlign: TextAlign.center,
                     ),
@@ -250,7 +261,13 @@ class _TimePickerState extends State<TimePicker> {
                     child: Text(
                       widget.selected == null
                           ? localizations.minute
-                          : '${time.minute}',
+                          : DateFormat.m().format(DateTime(
+                              0, // year
+                              0, // month
+                              0, // day
+                              0, // hour,
+                              time.minute,
+                            )),
                       textAlign: TextAlign.center,
                     ),
                   ),
