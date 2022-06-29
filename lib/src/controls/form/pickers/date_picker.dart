@@ -6,6 +6,14 @@ import 'package:intl/intl.dart';
 
 import 'pickers.dart';
 
+enum DatePickerField {
+  month,
+
+  day,
+
+  year,
+}
+
 // There is a known issue with clicking in the popup and select the date.
 // The current workaround is very hacky and doesn't work very well with the
 // current implementation. TODO: Fix clicking on ListWheelScrollView
@@ -40,6 +48,7 @@ class DatePicker extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.locale,
+    this.fieldOrder,
   }) : super(key: key);
 
   /// The current date selected date.
@@ -113,6 +122,14 @@ class DatePicker extends StatefulWidget {
   ///
   /// If null, the system locale will be used.
   final Locale? locale;
+
+  /// The order of the fields.
+  ///
+  /// If null, the order is based on the current locale.
+  ///
+  /// See also:
+  ///  * [getDateOrderFromLocale]
+  final List<DatePickerField>? fieldOrder;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -252,23 +269,40 @@ class _DatePickerState extends State<DatePicker> {
           final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
           final localizations = FluentLocalizations.of(context);
 
-          final monthWidget = Expanded(
-            flex: 2,
-            child: Padding(
-              padding: widget.contentPadding,
-              child: Text(
-                widget.selected == null
-                    ? localizations.month
-                    : DateFormat.MMMM('$locale')
-                        .format(widget.selected!)
-                        .uppercaseFirst(),
-                locale: locale,
-              ),
-            ),
+          final fieldOrder =
+              widget.fieldOrder ?? getDateOrderFromLocale(locale);
+          assert(fieldOrder.isNotEmpty);
+          assert(
+            fieldOrder.where((f) => f == DatePickerField.month).length == 1,
+            'There can be only one month field',
+          );
+          assert(
+            fieldOrder.where((f) => f == DatePickerField.day).length == 1,
+            'There can be only one day field',
+          );
+          assert(
+            fieldOrder.where((f) => f == DatePickerField.year).length == 1,
+            'There can be only one year field',
           );
 
+          final monthWidgets = [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.month
+                      : DateFormat(DateFormat.STANDALONE_MONTH, '$locale')
+                          .format(widget.selected!)
+                          .uppercaseFirst(),
+                  locale: locale,
+                ),
+              ),
+            )
+          ];
+
           final dayWidget = [
-            divider,
             Expanded(
               child: Padding(
                 padding: widget.contentPadding,
@@ -286,8 +320,7 @@ class _DatePickerState extends State<DatePicker> {
             ),
           ];
 
-          final showYear = [
-            divider,
+          final yearWidgets = [
             Expanded(
               child: Padding(
                 padding: widget.contentPadding,
@@ -303,6 +336,14 @@ class _DatePickerState extends State<DatePicker> {
             ),
           ];
 
+          final fields = <DatePickerField, List<Widget>>{
+            if (widget.showYear) DatePickerField.year: yearWidgets,
+            if (widget.showMonth) DatePickerField.month: monthWidgets,
+            if (widget.showDay) DatePickerField.day: dayWidget,
+          };
+
+          final fieldMap = fieldOrder.map((e) => fields[e]);
+
           return AnimatedContainer(
             duration: theme.fastAnimationDuration,
             curve: theme.animationCurve,
@@ -315,11 +356,20 @@ class _DatePickerState extends State<DatePicker> {
                     : null,
               ),
               maxLines: 1,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                if (widget.showMonth) monthWidget,
-                if (widget.showDay) ...dayWidget,
-                if (widget.showYear) ...showYear,
-              ]),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...fieldMap.elementAt(0) ?? [],
+                  if (fieldMap.elementAt(1) != null) ...[
+                    divider,
+                    ...fieldMap.elementAt(1)!,
+                  ],
+                  if (fieldMap.elementAt(2) != null) ...[
+                    divider,
+                    ...fieldMap.elementAt(2)!,
+                  ],
+                ],
+              ),
             ),
           );
         },
@@ -619,4 +669,40 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       ),
     ]);
   }
+}
+
+/// Get the date order based on the current locale.
+///
+///
+/// ![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Date_format_by_country_NEW.svg/700px-Date_format_by_country_NEW.svg.png)
+///
+/// DMY is mostly used around the globe, so that's the returned
+///
+/// See also:
+///
+///  * <https://en.wikipedia.org/wiki/Date_format_by_country>
+List<DatePickerField> getDateOrderFromLocale(Locale? locale) {
+  final dmy = [
+    DatePickerField.day,
+    DatePickerField.month,
+    DatePickerField.year,
+  ];
+  final ymd = [
+    DatePickerField.year,
+    DatePickerField.month,
+    DatePickerField.day,
+  ];
+  final mdy = [
+    DatePickerField.month,
+    DatePickerField.day,
+    DatePickerField.year,
+  ];
+
+  if (locale?.countryCode?.toLowerCase() == 'us') return mdy;
+
+  final lang = locale?.languageCode;
+
+  if (['zh', 'ko', 'jp'].contains(lang)) return ymd;
+
+  return dmy;
 }
