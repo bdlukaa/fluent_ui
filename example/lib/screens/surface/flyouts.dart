@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class FlyoutPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _FlyoutShowcaseState extends State<FlyoutPage> {
         ),
         Text('A button with a Flyout', style: typography.subtitle),
         const SizedBox(height: 10.0),
-        Card(
+        CardHighlight(
           child: Align(
             alignment: Alignment.centerLeft,
             child: Flyout(
@@ -60,6 +61,38 @@ class _FlyoutShowcaseState extends State<FlyoutPage> {
               ),
             ),
           ),
+          codeSnippet:
+              '''// define the controller. It'll be responsible to open/close the flyout programatically
+FlyoutController buttonController = FlyoutController();
+
+Flyout(
+  controller: buttonController,
+  // [content] is the content of the flyout popup, opened when the user presses
+  // the button
+  content: (context) {
+    return FlyoutContent(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'All items will be removed. Do you want to continue?',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12.0),
+          Button(
+            child: const Text('Yes, empty my cart'),
+            onPressed: buttonController.close,
+          ),
+        ],
+      ),
+    );
+  },
+  child: Button(
+    child: const Text('Empty cart'),
+    onPressed: buttonController.open,
+  )
+)''',
         ),
         const SizedBox(height: 20.0),
         DefaultTextStyle(

@@ -1,11 +1,10 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class ComboboxPage extends ScrollablePage {
-  PageState state = {
-    'selected_color': 'Green',
-    'disabled': false,
-  };
+  String? selectedColor = 'Green';
+  bool disabled = false;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -30,7 +29,7 @@ class ComboboxPage extends ScrollablePage {
           'A Combobox with items defined inline and its width set',
         ),
       ),
-      Card(
+      CardHighlight(
         child: Row(children: [
           Expanded(
             child:
@@ -38,20 +37,17 @@ class ComboboxPage extends ScrollablePage {
               SizedBox(
                 width: 200,
                 child: Combobox<String>(
-                  value: state['selected_color'],
+                  value: selectedColor,
                   items: colors.entries.map((e) {
                     return ComboboxItem(
                       child: Text(e.key),
                       value: e.key,
-                      onTap: () => setState(
-                        () => state['selected_color'] = e.key,
-                      ),
                     );
                   }).toList(),
-                  onChanged: state['disabled']
+                  onChanged: disabled
                       ? null
                       : (color) {
-                          setState(() => state['selected_color'] = color);
+                          setState(() => selectedColor = color);
                         },
                 ),
               ),
@@ -59,18 +55,32 @@ class ComboboxPage extends ScrollablePage {
                 margin: const EdgeInsets.only(top: 8.0),
                 height: 30,
                 width: 100,
-                color: colors[state['selected_color']],
+                color: colors[selectedColor],
               ),
             ]),
           ),
           ToggleSwitch(
-            checked: state['disabled'],
+            checked: disabled,
             onChanged: (v) {
-              setState(() => state['disabled'] = v);
+              setState(() => disabled = v);
             },
             content: const Text('Disabled'),
           ),
         ]),
+        codeSnippet: '''
+// Green by default
+Color selectedColor = 'Green';
+
+Combobox<String>(
+  value: selectedColor,
+  items: colors.entries.map((e) {
+    return ComboboxItem(
+      child: Text(e.key),
+      value: e.key,
+    );
+  }).toList(),
+  onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
+)''',
       ),
     ];
   }

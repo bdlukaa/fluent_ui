@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
@@ -32,8 +33,8 @@ class InfoBarPage extends ScrollablePage {
           'A closable InfoBar with options to change its severity',
         ),
       ),
-      Mica(
-        elevation: 4,
+      CardHighlight(
+        backgroundColor: FluentTheme.of(context).micaBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -79,14 +80,23 @@ class InfoBarPage extends ScrollablePage {
             ],
           ),
         ),
+        codeSnippet: '''InfoBar(
+  title: const Text('Title'),
+  content: const Text(
+    'Essential app message for your users to be informed of, '
+    'acknowledge, or take action on.',
+  ),
+  severity: $severity,
+  isLong: true,
+)''',
       ),
       subtitle(
         content: const Text(
           'A closable InfoBar with a long and short message and action button',
         ),
       ),
-      Mica(
-        elevation: 4,
+      CardHighlight(
+        backgroundColor: FluentTheme.of(context).micaBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -144,6 +154,24 @@ class InfoBarPage extends ScrollablePage {
             ],
           ),
         ),
+        codeSnippet: '''InfoBar(
+  title: const Text('Title'),
+  content: Text(
+    ${_isLong ? '"Essential app message for your users to be informed '
+                'of, acknowledge, or take action on. Lorem Ipsum is '
+                'simply dummy text of the printing and typesetting '
+                'industry. Lorem Ipsum has been the industry\'s '
+                'standard dummy text ever since the 1500s, when an '
+                'unknown printer took a galley of type and scrambled '
+                'it to make a type specimen book."' : '"A short essential message"'}
+  ),
+  severity: $severity,
+  isLong: true,
+  ${_hasActionButton ? '''action: Button(
+    child: const Text('Action'),
+    onPressed: () {},
+  )''' : null}
+)''',
       ),
     ];
   }

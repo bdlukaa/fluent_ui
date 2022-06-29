@@ -1,5 +1,6 @@
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:example/widgets/card_highlight.dart';
 
 class ToggleSwitchPage extends ScrollablePage {
   PageState state = <String, dynamic>{
@@ -29,30 +30,42 @@ class ToggleSwitchPage extends ScrollablePage {
         'Use ToggleSwitch controls to present users with exactly two mutually exclusive options (like on/off), where choosing an option results in an immediate commit. A toggle switch should have a single label',
       ),
       subtitle(content: const Text('A simple ToggleSwitch')),
-      Card(
-        child: ToggleSwitch(
-          checked: state['first_value'],
-          onChanged: isDisabled
-              ? null
-              : (v) {
-                  setState(() => state['first_value'] = v);
-                },
-          content: Text(state['first_value'] ? 'On' : 'Off'),
+      CardHighlight(
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: ToggleSwitch(
+            checked: state['first_value'],
+            onChanged: isDisabled
+                ? null
+                : (v) {
+                    setState(() => state['first_value'] = v);
+                  },
+            content: Text(state['first_value'] ? 'On' : 'Off'),
+          ),
         ),
+        codeSnippet: '''bool checked = false;
+
+ToggleSwitch(
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+)''',
       ),
       subtitle(
         content: const Text('A ToggleSwitch with custom header and content'),
       ),
-      Card(
+      CardHighlight(
         child: Row(children: [
-          ToggleSwitch(
-            checked: state['second_value'],
-            onChanged: isDisabled
-                ? null
-                : (v) {
-                    setState(() => state['second_value'] = v);
-                  },
-            content: Text(state['second_value'] ? 'Working' : 'Do work'),
+          InfoLabel(
+            label: 'Header',
+            child: ToggleSwitch(
+              checked: state['second_value'],
+              onChanged: isDisabled
+                  ? null
+                  : (v) {
+                      setState(() => state['second_value'] = v);
+                    },
+              content: Text(state['second_value'] ? 'Working' : 'Do work'),
+            ),
           ),
           if (state['second_value'])
             const Padding(
@@ -60,6 +73,13 @@ class ToggleSwitchPage extends ScrollablePage {
               child: ProgressRing(),
             )
         ]),
+        codeSnippet: '''bool checked = false;
+
+ToggleSwitch(
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  content: Text(checked ? 'Working' : 'Do work'),
+)''',
       ),
     ];
   }

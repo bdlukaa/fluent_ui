@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -28,7 +29,7 @@ class SliderPage extends ScrollablePage {
       const Text(
           'Use a Slider when you want your users to be able to set defined, contiguous values (such as volume or brightness) or a range of discrete values (such as screen resolution settings).'),
       subtitle(content: const Text('A simple Slider')),
-      Card(
+      CardHighlight(
         child: Row(children: [
           Slider(
             label: '${state['first_value'].toInt()}',
@@ -42,9 +43,17 @@ class SliderPage extends ScrollablePage {
           const Spacer(),
           Text('Output:\n${state['first_value'].toInt()}'),
         ]),
+        codeSnippet: '''double value = 0;
+
+Slider(
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
       ),
       subtitle(content: const Text('A vertical slider')),
-      Card(
+      CardHighlight(
         child: Row(children: [
           Slider(
             vertical: true,
@@ -59,6 +68,15 @@ class SliderPage extends ScrollablePage {
           const Spacer(),
           Text('Output:\n${state['vertical_value'].toInt()}'),
         ]),
+        codeSnippet: '''double value = 0;
+
+Slider(
+  vertical: true,
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
       ),
     ];
   }
