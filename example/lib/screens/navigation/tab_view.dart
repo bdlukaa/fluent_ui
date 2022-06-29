@@ -13,17 +13,25 @@ class TabViewPage extends ScrollablePage {
     return const PageHeader(title: Text('TabView'));
   }
 
+  Tab generateTab(int index) {
+    late Tab tab;
+    tab = Tab(
+      text: Text('Document $index'),
+      semanticLabel: 'Document #$index',
+      onClosed: () {
+        setState(() {
+          final currentIndex = tabs!.indexOf(tab);
+          tabs!.remove(tab);
+          bodies!.removeAt(currentIndex);
+        });
+      },
+    );
+    return tab;
+  }
+
   @override
   List<Widget> buildScrollable(BuildContext context) {
-    tabs ??= List.generate(3, (index) {
-      late Tab tab;
-      tab = Tab(
-        text: Text('Document $index'),
-        semanticLabel: 'Document #$index',
-        onClosed: () => tabs!.remove(tab),
-      );
-      return tab;
-    });
+    tabs ??= List.generate(3, generateTab);
     bodies ??= List.generate(3, (index) {
       return Container(
         color:
@@ -47,15 +55,10 @@ class TabViewPage extends ScrollablePage {
             onChanged: (index) => setState(() => currentIndex = index),
             onNewPressed: () {
               setState(() {
-                late Tab tab;
                 final index = tabs!.length + 1;
-                tab = Tab(
-                  text: Text('Document $index'),
-                  semanticLabel: 'Document #$index',
-                  onClosed: () => tabs!.remove(tab),
-                );
+                final tab = generateTab(index);
                 tabs!.add(tab);
-                bodies!.add(Container(
+                bodies!.add(ColoredBox(
                   color: Colors.accentColors[
                       Random().nextInt(Colors.accentColors.length)],
                 ));
