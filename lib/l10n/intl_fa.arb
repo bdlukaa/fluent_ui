@@ -23,5 +23,12 @@
   "copyActionTooltip": "کپی کردن محتوای انتخاب شده در بریده‌دان",
   "cutActionTooltip": "برداشتن محتوای انتخاب شده و قراردادن آن در بریده‌دان",
   "pasteActionTooltip": "درج کردن محتوای بریده‌دان در موقعیت فعلی",
-  "selectAllActionTooltip": "انتخاب تمام محتوا"
+  "selectAllActionTooltip": "انتخاب تمام محتوا",
+  "hour": "ساعت",
+  "minute": "دقیقه",
+  "am": "ق.ظ.",
+  "pm": "ب.ظ.",
+  "month": "ماه",
+  "day": "روز",
+  "year": "سال"
 }

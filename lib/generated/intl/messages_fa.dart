@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("ق.ظ."),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("برگشت"),
         "clickToSearch":
             MessageLookupByLibrary.simpleMessage("برای جستجو کلیک کنید"),
@@ -36,11 +37,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("بریدن"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "برداشتن محتوای انتخاب شده و قراردادن آن در بریده‌دان"),
+        "day": MessageLookupByLibrary.simpleMessage("روز"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("دیالوگ"),
+        "hour": MessageLookupByLibrary.simpleMessage("ساعت"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("کوچک کردن"),
+        "minute": MessageLookupByLibrary.simpleMessage("دقیقه"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("رد کردن"),
+        "month": MessageLookupByLibrary.simpleMessage("ماه"),
         "newTabLabel": MessageLookupByLibrary.simpleMessage("ایجاد تب جدید"),
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("نتیجه‌ای یافت نشد"),
@@ -49,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("چسباندن"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "درج کردن محتوای بریده‌دان در موقعیت فعلی"),
+        "pm": MessageLookupByLibrary.simpleMessage("ب.ظ."),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("برگرداندن"),
         "scrollTabBackwardLabel":
@@ -59,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("انتخاب همه"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("انتخاب تمام محتوا")
+            MessageLookupByLibrary.simpleMessage("انتخاب تمام محتوا"),
+        "year": MessageLookupByLibrary.simpleMessage("سال")
       };
 }

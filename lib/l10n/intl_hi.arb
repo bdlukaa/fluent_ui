@@ -23,5 +23,12 @@
   "copyActionTooltip": "सेलेक्टेड कंटेंट क्लिपबोर्ड पर कॉपी करें",
   "cutActionTooltip": "सिलेक्टेड कंटेंट यहाँ से हटा कर क्लिपबोर्ड पर कॉपी करें",
   "pasteActionTooltip": "क्लिपबोर्ड का कंटेंट इस लोकेशन पर पेस्ट करें",
-  "selectAllActionTooltip": "सारा कंटेंट सेलेक्ट करें"
+  "selectAllActionTooltip": "सारा कंटेंट सेलेक्ट करें",
+  "hour": "घंटा",
+  "minute": "मिनट",
+  "am": "AM",
+  "pm": "PM",
+  "month": "महीना",
+  "day": "दिन",
+  "year": "साल"
 }

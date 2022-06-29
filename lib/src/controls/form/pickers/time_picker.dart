@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 import 'pickers.dart';
 
@@ -21,38 +22,59 @@ class TimePicker extends StatefulWidget {
     required this.selected,
     this.onChanged,
     this.onCancel,
+    this.hourFormat = HourFormat.h,
     this.header,
     this.headerStyle,
     this.contentPadding = kPickerContentPadding,
-    this.popupHeight = kPopupHeight,
+    this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
-    this.hourFormat = HourFormat.h,
-    this.hourPlaceholder = 'hour',
-    this.minutePlaceholder = 'minute',
-    this.amText = 'AM',
-    this.pmText = 'PM',
     this.minuteIncrement = 1,
   }) : super(key: key);
 
+  /// The current date selected date.
+  ///
+  /// If null, no date is going to be shown.
   final DateTime? selected;
+
+  /// Whenever the current selected date is changed by the user.
+  ///
+  /// If null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
+
+  /// Whenever the user cancels the date change.
   final VoidCallback? onCancel;
+
+  /// The clock system to use
   final HourFormat hourFormat;
 
+  /// The content of the header
   final String? header;
+
+  /// The style of the [header]
   final TextStyle? headerStyle;
 
+  /// The padding of the picker fields. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  final String hourPlaceholder;
-  final String minutePlaceholder;
-  final String amText;
-  final String pmText;
-
+  /// The height of the popup.
+  ///
+  /// Defaults to [kPickerPopupHeight]
   final double popupHeight;
+
+  /// The value that indicates the time increments shown in the minute picker.
+  /// For example, 15 specifies that the TimePicker minute control displays
+  /// only the choices 00, 15, 30, 45.
+  ///
+  /// ![15 minute increment preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/date-time/time-picker-minute-increment.png)
+  ///
+  /// Defaults to 1
   final int minuteIncrement;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
@@ -63,17 +85,28 @@ class TimePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DateTime>('selected', selected));
-    properties.add(EnumProperty<HourFormat>('hourFormat', hourFormat));
-    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
-    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
-    properties.add(StringProperty('hourPlaceholder', hourPlaceholder));
-    properties.add(StringProperty('minutePlaceholder', minutePlaceholder));
-    properties.add(StringProperty('amText', amText));
-    properties.add(StringProperty('pmText', pmText));
-    properties.add(DoubleProperty('popupHeight', popupHeight));
+    properties
+      ..add(DiagnosticsProperty<DateTime>('selected', selected))
+      ..add(EnumProperty<HourFormat>(
+        'hourFormat',
+        hourFormat,
+        defaultValue: HourFormat.h,
+      ))
+      ..add(DiagnosticsProperty(
+        'contentPadding',
+        contentPadding,
+        defaultValue: kPickerContentPadding,
+      ))
+      ..add(ObjectFlagProperty.has('focusNode', focusNode))
+      ..add(FlagProperty(
+        'autofocus',
+        value: autofocus,
+        ifFalse: 'manual focus',
+        defaultValue: false,
+      ))
+      ..add(DoubleProperty('popupHeight', popupHeight,
+          defaultValue: kPickerPopupHeight))
+      ..add(IntProperty('minuteIncrement', minuteIncrement, defaultValue: 1));
   }
 }
 
@@ -125,6 +158,9 @@ class _TimePickerState extends State<TimePicker> {
   }
 
   void initControllers() {
+    if (widget.selected == null && mounted) {
+      setState(() => time = DateTime.now());
+    }
     _hourController = FixedExtentScrollController(
       initialItem: () {
         int hour = time.hour - 1;
@@ -144,14 +180,16 @@ class _TimePickerState extends State<TimePicker> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+
+    final localizations = FluentLocalizations.of(context);
+
     Widget picker = Picker(
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
         return _TimePickerContentPopup(
           onCancel: widget.onCancel ?? () {},
           onChanged: (time) => widget.onChanged?.call(time),
-          amText: widget.amText,
-          pmText: widget.pmText,
           date: widget.selected ?? DateTime.now(),
           amPmController: _amPmController,
           hourController: _hourController,
@@ -164,11 +202,11 @@ class _TimePickerState extends State<TimePicker> {
         focusNode: widget.focusNode,
         autofocus: widget.autofocus,
         onPressed: () async {
-          await open();
           _hourController.dispose();
           _minuteController.dispose();
           _amPmController.dispose();
           initControllers();
+          await open();
         },
         builder: (context, state) {
           const divider = Divider(
@@ -176,52 +214,80 @@ class _TimePickerState extends State<TimePicker> {
             style: DividerThemeData(
               verticalMargin: EdgeInsets.zero,
               horizontalMargin: EdgeInsets.zero,
-              thickness: 0.6,
             ),
           );
+          DateFormat.H();
           return AnimatedContainer(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             height: kPickerHeight,
             decoration: kPickerDecorationBuilder(context, state),
-            child: Row(key: _buttonKey, children: [
-              Expanded(
-                child: Padding(
-                  padding: widget.contentPadding,
-                  child: Text(
-                    () {
-                      int hour = time.hour;
-                      if (!widget.use24Format && hour > 12) {
-                        return '${hour - 12}';
-                      }
-                      return '$hour';
-                    }(),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: widget.selected == null
+                    ? FluentTheme.of(context).resources.textFillColorSecondary
+                    : null,
               ),
-              divider,
-              Expanded(
-                child: Padding(
-                  padding: widget.contentPadding,
-                  child: Text('${time.minute}', textAlign: TextAlign.center),
-                ),
-              ),
-              divider,
-              if (!widget.use24Format)
+              child: Row(key: _buttonKey, children: [
                 Expanded(
                   child: Padding(
                     padding: widget.contentPadding,
                     child: Text(
                       () {
-                        if (_isPm) return widget.pmText;
-                        return widget.amText;
+                        if (widget.selected == null) return localizations.hour;
+                        late int finalHour;
+                        int hour = time.hour;
+                        if (!widget.use24Format && hour > 12) {
+                          finalHour = hour - 12;
+                        } else {
+                          finalHour = hour;
+                        }
+
+                        return DateFormat.H().format(DateTime(
+                          0, // year
+                          0, // month
+                          0, // day
+                          finalHour,
+                        ));
                       }(),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ),
-            ]),
+                divider,
+                Expanded(
+                  child: Padding(
+                    padding: widget.contentPadding,
+                    child: Text(
+                      widget.selected == null
+                          ? localizations.minute
+                          : DateFormat.m().format(DateTime(
+                              0, // year
+                              0, // month
+                              0, // day
+                              0, // hour,
+                              time.minute,
+                            )),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                divider,
+                if (!widget.use24Format)
+                  Expanded(
+                    child: Padding(
+                      padding: widget.contentPadding,
+                      child: Text(
+                        () {
+                          if (_isPm) return localizations.pm;
+                          return localizations.am;
+                        }(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ]),
+            ),
           );
         },
       ),
@@ -243,8 +309,6 @@ class _TimePickerContentPopup extends StatefulWidget {
     required this.date,
     required this.onChanged,
     required this.onCancel,
-    required this.amText,
-    required this.pmText,
     required this.hourController,
     required this.minuteController,
     required this.amPmController,
@@ -259,8 +323,6 @@ class _TimePickerContentPopup extends StatefulWidget {
   final ValueChanged<DateTime> onChanged;
   final VoidCallback onCancel;
   final DateTime date;
-  final String amText;
-  final String pmText;
 
   final bool use24Format;
   final int minuteIncrement;
@@ -282,6 +344,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+    final localizations = FluentLocalizations.of(context);
+
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
@@ -300,17 +365,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             Expanded(
               child: PickerNavigatorIndicator(
                 onBackward: () {
-                  navigateSides(
+                  widget.hourController.navigateSides(
                     context,
-                    widget.hourController,
                     false,
                     hoursAmount,
                   );
                 },
                 onForward: () {
-                  navigateSides(
+                  widget.hourController.navigateSides(
                     context,
-                    widget.hourController,
                     true,
                     hoursAmount,
                   );
@@ -368,17 +431,15 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
             Expanded(
               child: PickerNavigatorIndicator(
                 onBackward: () {
-                  navigateSides(
+                  widget.minuteController.navigateSides(
                     context,
-                    widget.minuteController,
                     false,
                     60,
                   );
                 },
                 onForward: () {
-                  navigateSides(
+                  widget.minuteController.navigateSides(
                     context,
-                    widget.minuteController,
                     true,
                     60,
                   );
@@ -449,7 +510,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                       ListTile(
                         title: Center(
                           child: Text(
-                            widget.amText,
+                            localizations.am,
                             style: kPickerPopupTextStyle(
                               context,
                               localDate.hour < 12,
@@ -460,7 +521,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                       ListTile(
                         title: Center(
                           child: Text(
-                            widget.pmText,
+                            localizations.pm,
                             style: kPickerPopupTextStyle(
                               context,
                               localDate.hour >= 12,

@@ -1,33 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-const kPickerContentPadding = EdgeInsets.symmetric(
-  horizontal: 8.0,
-  vertical: 4.0,
+/// The padding used on the content of [DatePicker] and [TimePicker]
+const kPickerContentPadding = EdgeInsetsDirectional.only(
+  start: 8.0,
+  top: 4.0,
+  bottom: 4.0,
 );
 
 const kPickerHeight = 32.0;
 const kPickerDiameterRatio = 100.0;
 
 /// The default popup height
-const double kPopupHeight = kOneLineTileHeight * 10;
-
-Color kPickerBackgroundColor(BuildContext context) =>
-    FluentTheme.of(context).menuColor;
-
-ShapeBorder kPickerShape(BuildContext context) {
-  return RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(4.0),
-    side: BorderSide(
-      color: FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
-      width: 0.6,
-    ),
-  );
-}
+const double kPickerPopupHeight = kOneLineTileHeight * 10;
 
 TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
+  assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
   return theme.typography.body?.copyWith(
-    fontSize: 16,
+    // fontSize: 16,
     color: isSelected
         ? theme.resources.textOnAccentFillColorPrimary
         : theme.resources.textFillColorPrimary,
@@ -58,11 +48,7 @@ Widget PickerHighlightTile() {
     final highlightTileColor = theme.accentColor.defaultBrushFor(
       theme.brightness,
     );
-    return Positioned(
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
+    return Positioned.fill(
       child: Container(
         alignment: Alignment.center,
         height: kOneLineTileHeight,
@@ -78,7 +64,18 @@ Widget PickerHighlightTile() {
   });
 }
 
+/// A widget used by [TimePicker] and [DateTime] to accept or deny the changes
+/// made in the pickers.
+///
+/// See also:
+///
+///  * [TimePicker]
+///  * [DatePicker]
 class YesNoPickerControl extends StatelessWidget {
+  /// Creates a control with two choices:
+  ///
+  /// - continue
+  /// - cancel
   const YesNoPickerControl({
     Key? key,
     required this.onChanged,
@@ -158,7 +155,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
             padding: ButtonState.all(const EdgeInsets.symmetric(
               vertical: 10.0,
             )),
-            backgroundColor: ButtonState.all(kPickerBackgroundColor(context)),
+            backgroundColor: ButtonState.all(FluentTheme.of(context).menuColor),
             border: ButtonState.all(BorderSide.none),
             elevation: ButtonState.all(0.0),
             iconSize: ButtonState.resolveWith((states) {
@@ -213,37 +210,40 @@ class PickerNavigatorIndicator extends StatelessWidget {
   }
 }
 
-void navigateSides(
-  BuildContext context,
-  FixedExtentScrollController controller,
-  bool forward,
-  int amount,
-) {
-  assert(debugCheckHasFluentTheme(context));
-  final duration = FluentTheme.of(context).fasterAnimationDuration;
-  final curve = FluentTheme.of(context).animationCurve;
-  if (forward) {
-    final currentItem = controller.selectedItem;
-    int to = currentItem + 1;
-    if (currentItem == amount - 1) to = 0;
-    controller.animateToItem(
-      to,
-      duration: duration,
-      curve: curve,
-    );
-  } else {
-    final currentItem = controller.selectedItem;
-    int to = currentItem - 1;
-    if (currentItem == 0) to = amount - 1;
-    controller.animateToItem(
-      to,
-      duration: duration,
-      curve: curve,
-    );
+extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
+  Future<void> navigateSides(BuildContext context, bool forward, int amount) {
+    assert(debugCheckHasFluentTheme(context));
+    final duration = FluentTheme.of(context).fasterAnimationDuration;
+    final curve = FluentTheme.of(context).animationCurve;
+    if (forward) {
+      final currentItem = selectedItem;
+      int to = currentItem + 1;
+      if (currentItem == amount - 1) to = 0;
+      return animateToItem(
+        to,
+        duration: duration,
+        curve: curve,
+      );
+    } else {
+      final currentItem = selectedItem;
+      int to = currentItem - 1;
+      if (currentItem == 0) to = amount - 1;
+      return animateToItem(
+        to,
+        duration: duration,
+        curve: curve,
+      );
+    }
   }
 }
 
+typedef PickerBuilder = Widget Function(
+  BuildContext context,
+  Future<void> Function() open,
+);
+
 class Picker extends StatefulWidget {
+  /// Creates a picker flyout
   const Picker({
     Key? key,
     required this.child,
@@ -251,8 +251,7 @@ class Picker extends StatefulWidget {
     required this.pickerHeight,
   }) : super(key: key);
 
-  final Widget Function(BuildContext context, Future<void> Function() open)
-      child;
+  final PickerBuilder child;
   final WidgetBuilder pickerContent;
   final double pickerHeight;
 
@@ -279,6 +278,9 @@ class _PickerState extends State<Picker> {
       barrierDismissible: true,
       fullscreenDialog: true,
       pageBuilder: (context, primary, __) {
+        assert(debugCheckHasMediaQuery(context));
+        assert(debugCheckHasFluentTheme(context));
+
         final screenHeight = MediaQuery.of(context).size.height;
 
         // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
@@ -297,6 +299,8 @@ class _PickerState extends State<Picker> {
           y = 0;
         }
 
+        final theme = FluentTheme.of(context);
+
         final view = Stack(children: [
           Positioned(
             left: childOffset.dx,
@@ -309,8 +313,14 @@ class _PickerState extends State<Picker> {
                 height: widget.pickerHeight,
                 width: box.size.width,
                 decoration: ShapeDecoration(
-                  color: kPickerBackgroundColor(context),
-                  shape: kPickerShape(context),
+                  color: theme.menuColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    side: BorderSide(
+                      color: theme.resources.surfaceStrokeColorFlyout,
+                      width: 0.6,
+                    ),
+                  ),
                 ),
                 child: widget.pickerContent(context),
               ),
@@ -328,10 +338,7 @@ class _PickerState extends State<Picker> {
     return KeyedSubtree(
       key: _childKey,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minWidth: 296.0,
-          maxWidth: 456.0,
-        ),
+        constraints: const BoxConstraints(maxWidth: 296),
         child: widget.child(context, open),
       ),
     );

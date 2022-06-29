@@ -40,7 +40,6 @@
 ### Content
 
 - [Motivation](#motivation)
-- [Sponsors](#sponsors)
 - [Installation](#installation)
   - [Badge](#badge)
 - [Style](#style)
@@ -123,14 +122,6 @@ See also:
 - [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
-
-## Sponsors
-
-Want to be a sponsor? Become one [here](https://patreon.com/bdlukaa)
-
-These are our really cool sponsors!
-
-<a href="https://github.com/phorcys420"><img src="https://github.com/phorcys420.png" width="50px" alt="phorcys420" /></a>&nbsp;&nbsp;
 
 ## Installation
 
@@ -1258,13 +1249,10 @@ Here's an example of how to create a basic date picker:
 ```dart
 DateTime date = DateTime.now();
 
-SizedBox(
-  width: 295,
-  child: DatePicker(
-    header: 'Pick a date',
-    selected: date,
-    onChanged: (v) => setState(() => date = v),
-  ),
+DatePicker(
+  header: 'Pick a date',
+  selected: date,
+  onChanged: (v) => setState(() => date = v),
 );
 ```
 
@@ -1283,13 +1271,10 @@ Here's an example of how to create a basic time picker:
 ```dart
 DateTime date = DateTime.now();
 
-SizedBox(
-  width: 240,
-  child: TimePicker(
-    header: 'Arrival time',
-    selected: date,
-    onChanged: (v) => setState(() => date = v),
-  ),
+TimePicker(
+  header: 'Arrival time',
+  selected: date,
+  onChanged: (v) => setState(() => date = v),
 ),
 ```
 
