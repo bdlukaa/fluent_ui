@@ -3,6 +3,88 @@ import 'package:flutter/material.dart' as m;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// Show the context menu at the offset
+///
+/// ```dart
+// GestureDetector(
+//   onSecondaryTapDown: (detail) {
+//     showMenu(
+//         context: context,
+//         offset: detail.globalPosition,
+//         builder: (context) {
+//           return MenuFlyout(
+///             items: [
+///               MenuFlyoutSubItem(
+///                 text: const Text('New'),
+///                 items: [
+///                   MenuFlyoutItem(
+///                     text: const Text('Plain Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Rich Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Other formats...'),
+///                     onPressed: () {},
+///                   ),
+///                 ],
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Open'),
+///                 onPressed: () {},
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Save'),
+///                 onPressed: () {},
+///               ),
+///               const MenuFlyoutSeparator(),
+///               MenuFlyoutItem(
+///                 text: const Text('Exit'),
+///                 onPressed: () {},
+///               ),
+///             ],
+///           );
+///         });
+///   },
+/// ),
+/// ```
+Future<T?> showMenu<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  required Offset offset,
+  FlyoutPlacement placement = FlyoutPlacement.start,
+  FlyoutPosition position = FlyoutPosition.below,
+  double verticalOffset = 0,
+  double horizontalOffset = 0,
+}) {
+  final NavigatorState navigator = Navigator.of(context);
+
+  assert(debugCheckHasDirectionality(context));
+
+  final Rect itemRect = offset & const Size(0, 0);
+
+  return navigator.push(_PopUpRoute<T>(
+    target: offset,
+    placementOffset: offset,
+    placement: placement,
+    position: position,
+    content: _PopupContentManager(content: builder),
+    buttonRect: itemRect,
+    elevation: 4,
+    capturedThemes: InheritedTheme.capture(
+      from: context,
+      to: navigator.context,
+    ),
+    transitionAnimationDuration:
+        FluentTheme.of(context).mediumAnimationDuration,
+    verticalOffset: verticalOffset,
+    horizontalOffset: horizontalOffset,
+    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
+  ));
+}
+
 class PopUp<T> extends StatefulWidget {
   const PopUp({
     Key? key,
