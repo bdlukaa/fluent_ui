@@ -48,6 +48,9 @@ Date format: DD/MM/YYYY
 
   The fields are ordered based on the current locale by default
   - On `DatePicker`, the day and year fields are now formatted based on the current locale (`getDateOrderFromLocale`)
+- Update `Slider` ([#405](https://github.com/bdlukaa/fluent_ui/issues/405)):
+  - Added `.thumbRadius` and `.trackHeight` to `SliderThemeData`
+  - The active track now isn't taller than the inactive track
 
 ## [4.0.0-pre.0] - [07/06/2022]
 

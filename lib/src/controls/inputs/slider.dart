@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -272,13 +273,15 @@ class _SliderState extends m.State<Slider> {
               thumbColor: style.thumbColor?.resolve(states),
               overlayShape: const m.RoundSliderOverlayShape(overlayRadius: 0),
               thumbShape: SliderThumbShape(
-                elevation: 1,
-                pressedElevation: 1,
+                elevation: 1.0,
+                pressedElevation: 1.0,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
                 borderColor: FluentTheme.of(context)
                     .resources
                     .controlSolidFillColorDefault,
+                enabledThumbRadius: style.thumbRadius?.resolve(states) ?? 10.0,
+                disabledThumbRadius: style.thumbRadius?.resolve(states),
               ),
               valueIndicatorShape: _RectangularSliderValueIndicatorShape(
                 backgroundColor: style.labelBackgroundColor,
@@ -286,11 +289,9 @@ class _SliderState extends m.State<Slider> {
                 ltr: direction == TextDirection.ltr,
                 strokeColor: theme.resources.controlSolidFillColorDefault,
               ),
-              trackHeight: 1.75,
+              trackHeight: style.trackHeight?.resolve(states),
               trackShape: _CustomTrackShape(),
-              disabledThumbColor: style.thumbColor?.resolve(
-                disabledState,
-              ),
+              disabledThumbColor: style.thumbColor?.resolve(disabledState),
               disabledInactiveTrackColor:
                   style.inactiveColor?.resolve(disabledState),
               disabledActiveTrackColor:
@@ -356,6 +357,33 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
         offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required m.SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 0,
+  }) {
+    return super.paint(
+      context,
+      offset,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      enableAnimation: enableAnimation,
+      textDirection: textDirection,
+      thumbCenter: thumbCenter,
+      isDiscrete: isDiscrete,
+      isEnabled: isEnabled,
+      additionalActiveTrackHeight: additionalActiveTrackHeight,
+    );
   }
 }
 
@@ -551,6 +579,9 @@ class SliderTheme extends InheritedTheme {
 @immutable
 class SliderThemeData with Diagnosticable {
   final ButtonState<Color?>? thumbColor;
+  final ButtonState<double?>? thumbRadius;
+  final ButtonState<double?>? trackHeight;
+
   final Color? labelBackgroundColor;
   final Color? labelForegroundColor;
 
@@ -564,6 +595,8 @@ class SliderThemeData with Diagnosticable {
   const SliderThemeData({
     this.margin,
     this.thumbColor,
+    this.thumbRadius,
+    this.trackHeight,
     this.activeColor,
     this.inactiveColor,
     this.labelBackgroundColor,
@@ -590,6 +623,7 @@ class SliderThemeData with Diagnosticable {
       useThumbBall: true,
       labelBackgroundColor: style.resources.controlFillColorDefault,
       labelForegroundColor: style.resources.textFillColorPrimary,
+      trackHeight: ButtonState.all(3.75),
     );
 
     return def;
@@ -599,6 +633,10 @@ class SliderThemeData with Diagnosticable {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
       thumbColor: ButtonState.lerp(a.thumbColor, b.thumbColor, t, Color.lerp),
+      thumbRadius:
+          ButtonState.lerp(a.thumbRadius, b.thumbRadius, t, lerpDouble),
+      trackHeight:
+          ButtonState.lerp(a.trackHeight, b.trackHeight, t, lerpDouble),
       activeColor:
           ButtonState.lerp(a.activeColor, b.activeColor, t, Color.lerp),
       inactiveColor:
@@ -613,10 +651,12 @@ class SliderThemeData with Diagnosticable {
     return SliderThemeData(
       margin: style?.margin ?? margin,
       thumbColor: style?.thumbColor ?? thumbColor,
+      thumbRadius: style?.thumbRadius ?? thumbRadius,
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
       labelBackgroundColor: style?.labelBackgroundColor ?? labelBackgroundColor,
       useThumbBall: style?.useThumbBall ?? useThumbBall,
+      trackHeight: style?.trackHeight ?? trackHeight,
     );
   }
 
