@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -22,7 +23,7 @@ class CheckboxPage extends ScrollablePage {
         'CheckBox controls let the user select a combination of binary options. In contrast, RadioButton controls allow the user to select from mutually exclusive options. The indeterminate state is used to indicate that an option is set for some, but not all, child options. Don\'t allow users to set an indeterminate state directly to indicate a third option.',
       ),
       subtitle(content: const Text('A 2-state Checkbox')),
-      Card(
+      CardHighlight(
         child: Row(children: [
           Checkbox(
             checked: state['first_checked'],
@@ -46,9 +47,15 @@ class CheckboxPage extends ScrollablePage {
             content: const Text('Disabled'),
           ),
         ]),
+        codeSnippet: '''bool checked = false;
+
+Checkbox(
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+)''',
       ),
       subtitle(content: const Text('A 3-state Checkbox')),
-      Card(
+      CardHighlight(
         child: Row(children: [
           Checkbox(
             checked: state['second_state'],
@@ -79,6 +86,26 @@ class CheckboxPage extends ScrollablePage {
             content: const Text('Disabled'),
           ),
         ]),
+        codeSnippet: '''bool checked = false;
+
+Checkbox(
+  checked: checked,
+  onPressed: disabled ? null : (v) {
+    setState(() {
+      // if v (the new value) is true, then true
+      // if v is false, then null (third state)
+      // if v is null (was third state before), then false
+      // otherwise (just to be safe), it's true
+      checked = (v == true
+        ? true
+          : v == false
+            ? null
+              : v == null
+                ? false
+                  : true);
+    });
+  },
+)''',
       ),
       subtitle(
         content: const Text('Using a 3-state Checkbox (TreeView)'),

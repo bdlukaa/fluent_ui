@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -18,7 +19,7 @@ class TimePickerPage extends ScrollablePage {
         'Use a TimePicker to let users set a time in your app, for example to set a reminder. The TimePicker displays three controls for hour, minute, and AM/PM. These controls are easy to use with touch or mouse, and they can be styled and configured in several different ways.',
       ),
       subtitle(content: const Text('A simple TimePicker')),
-      Card(
+      CardHighlight(
         child: Align(
           alignment: Alignment.centerLeft,
           child: TimePicker(
@@ -26,13 +27,19 @@ class TimePickerPage extends ScrollablePage {
             onChanged: (time) => setState(() => simpleTime = time),
           ),
         ),
+        codeSnippet: '''DateTime? selected;
+
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+),''',
       ),
       subtitle(
         content: const Text(
           'A TimePicker with a header and minute increments specified',
         ),
       ),
-      Card(
+      CardHighlight(
         child: Align(
           alignment: Alignment.centerLeft,
           child: TimePicker(
@@ -42,13 +49,21 @@ class TimePickerPage extends ScrollablePage {
             minuteIncrement: 15,
           ),
         ),
+        codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: 'Arrival time',
+  minuteIncrement: 15,
+),''',
       ),
       subtitle(
         content: const Text(
           'A TimePicker using a 24-hour clock',
         ),
       ),
-      Card(
+      CardHighlight(
         child: Align(
           alignment: Alignment.centerLeft,
           child: TimePicker(
@@ -58,6 +73,14 @@ class TimePickerPage extends ScrollablePage {
             hourFormat: HourFormat.HH,
           ),
         ),
+        codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: '24 hour clock',
+  hourFormat: HourFormat.HH,
+),''',
       ),
     ];
   }

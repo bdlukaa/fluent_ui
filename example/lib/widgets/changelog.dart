@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+List<String>? changelog;
+
 class Changelog extends StatefulWidget {
   const Changelog({Key? key}) : super(key: key);
 
@@ -15,8 +17,6 @@ class Changelog extends StatefulWidget {
 }
 
 class _ChangelogState extends State<Changelog> {
-  List<String>? changelog;
-
   @override
   void initState() {
     super.initState();
@@ -31,8 +31,8 @@ class _ChangelogState extends State<Changelog> {
     );
 
     if (response.statusCode == 200) {
-      final changelog = response.body.split('\n')..removeRange(0, 2);
-      setState(() => this.changelog = changelog);
+      final _changelog = response.body.split('\n')..removeRange(0, 2);
+      setState(() => changelog = _changelog);
     } else {
       debugPrint(response.body);
     }
@@ -42,6 +42,7 @@ class _ChangelogState extends State<Changelog> {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return ContentDialog(
+      style: const ContentDialogThemeData(padding: EdgeInsets.zero),
       constraints: const BoxConstraints(maxWidth: 600),
       content: () {
         if (changelog == null) return const ProgressRing();
@@ -84,6 +85,7 @@ class _ChangelogState extends State<Changelog> {
               ),
             ),
           ),
+          padding: const EdgeInsets.all(20.0),
         );
       }(),
     );

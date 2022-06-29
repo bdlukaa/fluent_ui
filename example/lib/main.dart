@@ -305,11 +305,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     TooltipPage(),
     const FlyoutPage().toPage(),
     // theming
-    const ColorsPage().toPage(),
+    ColorsPage(),
     const TypographyPage().toPage(),
     const IconsPage().toPage(),
     // others
-    const Settings().toPage(),
+    Settings(),
   ];
 
   @override
