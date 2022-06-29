@@ -19,10 +19,13 @@ class DatePickerPage extends ScrollablePage {
       ),
       subtitle(content: const Text('A simple DatePicker with a header')),
       CardHighlight(
-        child: DatePicker(
-          header: 'Pick a date',
-          selected: simpleTime,
-          onChanged: (time) => setState(() => simpleTime = time),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: DatePicker(
+            header: 'Pick a date',
+            selected: simpleTime,
+            onChanged: (time) => setState(() => simpleTime = time),
+          ),
         ),
         codeSnippet: '''DateTime? selected;
 

@@ -40,7 +40,6 @@
 ### Content
 
 - [Motivation](#motivation)
-- [Sponsors](#sponsors)
 - [Installation](#installation)
   - [Badge](#badge)
 - [Style](#style)
@@ -123,14 +122,6 @@ See also:
 - [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
 - [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
-
-## Sponsors
-
-Want to be a sponsor? Become one [here](https://patreon.com/bdlukaa)
-
-These are our really cool sponsors!
-
-<a href="https://github.com/phorcys420"><img src="https://github.com/phorcys420.png" width="50px" alt="phorcys420" /></a>&nbsp;&nbsp;
 
 ## Installation
 

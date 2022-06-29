@@ -365,7 +365,7 @@ class _DatePickerState extends State<DatePicker> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 ...fieldMap.elementAt(0) ?? [],
                 if (fieldMap.elementAt(1) != null) ...[
-                  divider,
+                  if (fieldMap.elementAt(0) != null) divider,
                   ...fieldMap.elementAt(1)!,
                 ],
                 if (fieldMap.elementAt(2) != null) ...[
