@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("AM"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("Terug"),
         "clickToSearch":
             MessageLookupByLibrary.simpleMessage("Klik om te zoeken"),
@@ -37,11 +38,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Knip"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Wis de selectie en plaats deze op het klembord"),
+        "day": MessageLookupByLibrary.simpleMessage("dag"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("Dialoog"),
+        "hour": MessageLookupByLibrary.simpleMessage("uur"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Minimaliseer"),
+        "minute": MessageLookupByLibrary.simpleMessage("minuut"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("Sluit"),
+        "month": MessageLookupByLibrary.simpleMessage("maand"),
         "newTabLabel":
             MessageLookupByLibrary.simpleMessage("Open nieuw tabblad"),
         "noResultsFoundLabel":
@@ -51,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Plak"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Plaats de inhoud van het klembord op de huidige plek"),
+        "pm": MessageLookupByLibrary.simpleMessage("PM"),
         "restoreWindowTooltip": MessageLookupByLibrary.simpleMessage("Herstel"),
         "scrollTabBackwardLabel":
             MessageLookupByLibrary.simpleMessage("Scrol tabbladlijst terug"),
@@ -60,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Selecteer alles"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Selecteer alle inhoud")
+            MessageLookupByLibrary.simpleMessage("Selecteer alle inhoud"),
+        "year": MessageLookupByLibrary.simpleMessage("jaar")
       };
 }
