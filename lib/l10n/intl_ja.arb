@@ -23,5 +23,12 @@
   "copyActionTooltip": "選択した内容をクリップボードにコピー",
   "cutActionTooltip": "選択した内容を切り取ってクリップボードに追加",
   "pasteActionTooltip": "クリップボードの内容をここに貼り付け",
-  "selectAllActionTooltip": "全て選択"
+  "selectAllActionTooltip": "全て選択",
+  "hour": "時",
+  "minute": "分",
+  "am": "午前",
+  "pm": "午後",
+  "month": "月",
+  "day": "日",
+  "year": "年"
 }

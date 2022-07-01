@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("午前"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("戻る"),
         "clickToSearch": MessageLookupByLibrary.simpleMessage("クリックして検索"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("閉じる"),
@@ -35,9 +36,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("切り取り"),
         "cutActionTooltip":
             MessageLookupByLibrary.simpleMessage("選択した内容を切り取ってクリップボードに追加"),
+        "day": MessageLookupByLibrary.simpleMessage("日"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("ダイアログ"),
+        "hour": MessageLookupByLibrary.simpleMessage("時"),
         "minimizeWindowTooltip": MessageLookupByLibrary.simpleMessage("最小化"),
+        "minute": MessageLookupByLibrary.simpleMessage("分"),
         "modalBarrierDismissLabel": MessageLookupByLibrary.simpleMessage("閉じる"),
+        "month": MessageLookupByLibrary.simpleMessage("月"),
         "newTabLabel": MessageLookupByLibrary.simpleMessage("新しいタブを追加"),
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("検索結果はありません"),
@@ -46,11 +51,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("貼り付け"),
         "pasteActionTooltip":
             MessageLookupByLibrary.simpleMessage("クリップボードの内容をここに貼り付け"),
+        "pm": MessageLookupByLibrary.simpleMessage("午後"),
         "restoreWindowTooltip": MessageLookupByLibrary.simpleMessage("元に戻す"),
         "scrollTabBackwardLabel": MessageLookupByLibrary.simpleMessage("前のタブへ"),
         "scrollTabForwardLabel": MessageLookupByLibrary.simpleMessage("次のタブへ"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("検索"),
         "selectAllActionLabel": MessageLookupByLibrary.simpleMessage("全て選択"),
-        "selectAllActionTooltip": MessageLookupByLibrary.simpleMessage("全て選択")
+        "selectAllActionTooltip": MessageLookupByLibrary.simpleMessage("全て選択"),
+        "year": MessageLookupByLibrary.simpleMessage("年")
       };
 }
