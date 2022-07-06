@@ -23,5 +23,12 @@
   "copyActionTooltip": "將選中的內容複製至剪貼簿",
   "cutActionTooltip": "將選中的內容剪下至剪貼簿",
   "pasteActionTooltip": "在當前位置插入剪貼簿內容",
-  "selectAllActionTooltip": "選擇所有內容"
+  "selectAllActionTooltip": "選擇所有內容",
+  "hour": "小時",
+  "minute": "分鐘",
+  "am": "上午",
+  "pm": "下午",
+  "month": "月",
+  "day": "日",
+  "year": "年"
 }
