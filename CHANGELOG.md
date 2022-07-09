@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
 - Apply correct color to the Date and Time Pickers button when selected ([#415](https://github.com/bdlukaa/fluent_ui/issues/415), [#417](https://github.com/bdlukaa/fluent_ui/issues/417))
+- Expose more useful properties to `AutoSuggestBox` ([#419](https://github.com/bdlukaa/fluent_ui/issues/419))
 
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 

@@ -51,6 +51,9 @@ class AutoSuggestBox extends StatefulWidget {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.textInputAction,
+    this.focusNode,
+    this.autofocus = false,
   })  : autovalidateMode = AutovalidateMode.disabled,
         validator = null,
         super(key: key);
@@ -81,6 +84,9 @@ class AutoSuggestBox extends StatefulWidget {
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.validator,
     this.autovalidateMode = AutovalidateMode.disabled,
+    this.textInputAction,
+    this.focusNode,
+    this.autofocus = false,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -173,7 +179,7 @@ class AutoSuggestBox extends StatefulWidget {
   ///
   /// This setting is only honored on iOS devices.
   ///
-  /// If unset, defaults to the brightness of [ThemeData.primaryColorBrightness].
+  /// If unset, defaults to the brightness of [ThemeData.brightness].
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
@@ -187,24 +193,38 @@ class AutoSuggestBox extends StatefulWidget {
   /// error text.
   final AutovalidateMode autovalidateMode;
 
+  /// The type of action button to use for the keyboard.
+  ///
+  /// Defaults to [TextInputAction.newline] if [keyboardType] is
+  /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
+  final TextInputAction? textInputAction;
+
+  /// An object that can be used by a stateful widget to obtain the keyboard focus
+  /// and to handle keyboard events.
+  final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.editableText.autofocus}
+  final bool autofocus;
+
   @override
   _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<String>('items', items));
-    properties.add(ObjectFlagProperty<ValueChanged<String>?>(
-      'onSelected',
-      onSelected,
-      ifNull: 'disabled',
-    ));
-    properties.add(FlagProperty(
-      'clearButtonEnabled',
-      value: clearButtonEnabled,
-      defaultValue: true,
-      ifFalse: 'clear button disabled',
-    ));
+    properties
+      ..add(IterableProperty<String>('items', items))
+      ..add(ObjectFlagProperty<ValueChanged<String>?>(
+        'onSelected',
+        onSelected,
+        ifNull: 'disabled',
+      ))
+      ..add(FlagProperty(
+        'clearButtonEnabled',
+        value: clearButtonEnabled,
+        defaultValue: true,
+        ifFalse: 'clear button disabled',
+      ));
   }
 
   static List defaultItemSorter<T>(String text, List items) {
@@ -215,7 +235,7 @@ class AutoSuggestBox extends StatefulWidget {
 }
 
 class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
-  final FocusNode focusNode = FocusNode();
+  late FocusNode focusNode = widget.focusNode ?? FocusNode();
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey();
@@ -251,10 +271,33 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   @override
   void dispose() {
     focusNode.removeListener(_handleFocusChanged);
-    if (widget.controller == null) {
-      controller.dispose();
+
+    {
+      // If the TextEditingController and FocusNode objects are created locally,
+      // we must dispose them.
+      if (widget.controller == null) controller.dispose();
+      if (widget.focusNode == null) focusNode.dispose();
     }
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AutoSuggestBox oldWidget) {
+    {
+      // if the focusNode or controller objects were changed, we must reflect the
+      // changes here. This is mostly used for a good dev-experience with hot
+      // reload, but can also be used to create fancy focus effects
+      if (widget.focusNode != oldWidget.focusNode) {
+        if (oldWidget.focusNode == null) focusNode.dispose();
+        focusNode = widget.focusNode ?? FocusNode();
+      }
+
+      if (widget.controller != oldWidget.controller) {
+        if (oldWidget.controller == null) controller.dispose();
+        controller = widget.controller ?? TextEditingController();
+      }
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void _handleFocusChanged() {
@@ -371,6 +414,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 key: _textBoxKey,
                 controller: controller,
                 focusNode: focusNode,
+                autofocus: widget.autofocus,
                 placeholder: widget.placeholder,
                 placeholderStyle: widget.placeholderStyle,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -391,11 +435,14 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 selectionWidthStyle: widget.selectionWidthStyle,
                 validator: widget.validator,
                 autovalidateMode: widget.autovalidateMode,
+                textInputAction: widget.textInputAction,
+                keyboardAppearance: widget.keyboardAppearance,
               )
             : TextBox(
                 key: _textBoxKey,
                 controller: controller,
                 focusNode: focusNode,
+                autofocus: widget.autofocus,
                 placeholder: widget.placeholder,
                 placeholderStyle: widget.placeholderStyle,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -415,6 +462,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 scrollPadding: widget.scrollPadding,
                 selectionHeightStyle: widget.selectionHeightStyle,
                 selectionWidthStyle: widget.selectionWidthStyle,
+                textInputAction: widget.textInputAction,
+                keyboardAppearance: widget.keyboardAppearance,
               ),
       ),
     );
