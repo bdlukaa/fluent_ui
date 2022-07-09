@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
+
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 
 - Exposed private properties that makes it easier to create custom panes for `NavigationView` ([#365](https://github.com/bdlukaa/fluent_ui/issues/365)):

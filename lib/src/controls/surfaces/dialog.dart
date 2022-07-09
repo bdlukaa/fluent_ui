@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 /// The default constraints for [ContentDialog]
 const kDefaultContentDialogConstraints = BoxConstraints(
   maxWidth: 368.0,
-  minHeight: 184.0,
   maxHeight: 756.0,
 );
 
