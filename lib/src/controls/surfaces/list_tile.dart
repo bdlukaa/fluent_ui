@@ -6,9 +6,10 @@ const kThreeLineTileHeight = 60.0;
 const kTwoLineTileHeight = 52.0;
 const kOneLineTileHeight = 40.0;
 
-const kDefaultContentPadding = EdgeInsets.symmetric(
-  horizontal: 12.0,
-  vertical: 6.0,
+const kDefaultContentPadding = EdgeInsetsDirectional.only(
+  end: 12.0,
+  top: 6.0,
+  bottom: 6.0,
 );
 
 class ListTile extends StatelessWidget {
@@ -22,6 +23,10 @@ class ListTile extends StatelessWidget {
     this.trailing,
     this.isThreeLine = false,
     this.contentPadding = kDefaultContentPadding,
+    this.selected = false,
+    this.onPressed,
+    this.focusNode,
+    this.autofocus = false,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -29,7 +34,7 @@ class ListTile extends StatelessWidget {
         super(key: key);
 
   /// The color of the tile
-  final Color? tileColor;
+  final ButtonState<Color>? tileColor;
 
   /// The shape of the tile
   final ShapeBorder? shape;
@@ -43,12 +48,17 @@ class ListTile extends StatelessWidget {
 
   final EdgeInsetsGeometry contentPadding;
 
+  final bool selected;
+  final VoidCallback? onPressed;
+
+  final FocusNode? focusNode;
+  final bool autofocus;
+
   bool get isTwoLine => subtitle != null;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('tileColor', tileColor));
     properties.add(FlagProperty(
       'isThreeLine',
       value: isThreeLine,
@@ -65,105 +75,57 @@ class ListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
-    final style = FluentTheme.of(context);
-    return Container(
-      decoration: ShapeDecoration(
-        shape: shape ?? const ContinuousRectangleBorder(),
-        color: tileColor,
-      ),
-      height: isThreeLine
-          ? kThreeLineTileHeight
-          : isTwoLine
-              ? kTwoLineTileHeight
-              : kOneLineTileHeight,
-      padding: contentPadding,
-      child: Row(children: [
-        if (leading != null)
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 14),
-            child: leading,
-          ),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (title != null)
-                DefaultTextStyle(
-                  style: (style.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 16,
-                  ),
-                  overflow: TextOverflow.clip,
-                  child: title!,
-                ),
-              if (subtitle != null)
-                DefaultTextStyle(
-                  style: style.typography.caption ?? const TextStyle(),
-                  overflow: TextOverflow.clip,
-                  child: subtitle!,
-                ),
-            ],
-          ),
+    final theme = FluentTheme.of(context);
+    final tile = Row(children: [
+      TweenAnimationBuilder<double>(
+        duration: theme.mediumAnimationDuration,
+        tween: Tween<double>(
+          begin: 0.0,
+          end: selected ? 16.0 : 0.0,
         ),
-        if (trailing != null) trailing!,
-      ]),
-    );
-  }
-}
+        builder: (context, height, child) => Container(
+          height: height,
+          width: 3.0,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100.0),
+            color: selected ? theme.accentColor : Colors.transparent,
+          ),
+          margin: const EdgeInsets.only(right: 6.0),
+        ),
+      ),
+      if (leading != null)
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: 14),
+          child: leading,
+        ),
+      Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title != null)
+              DefaultTextStyle(
+                style: (theme.typography.body ?? const TextStyle()).copyWith(
+                  fontSize: 16,
+                ),
+                overflow: TextOverflow.clip,
+                child: title!,
+              ),
+            if (subtitle != null)
+              DefaultTextStyle(
+                style: theme.typography.caption ?? const TextStyle(),
+                overflow: TextOverflow.clip,
+                child: subtitle!,
+              ),
+          ],
+        ),
+      ),
+      if (trailing != null) trailing!,
+    ]);
 
-class TappableListTile extends StatelessWidget {
-  const TappableListTile({
-    Key? key,
-    this.tileColor,
-    this.shape,
-    this.leading,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.isThreeLine = false,
-    this.onTap,
-    this.focusNode,
-    this.autofocus = false,
-    this.contentPadding = kDefaultContentPadding,
-  }) : super(key: key);
-
-  final VoidCallback? onTap;
-
-  final ButtonState<Color>? tileColor;
-  final ButtonState<ShapeBorder>? shape;
-
-  final Widget? leading;
-  final Widget? title;
-  final Widget? subtitle;
-  final Widget? trailing;
-
-  final bool isThreeLine;
-
-  final FocusNode? focusNode;
-  final bool autofocus;
-
-  final EdgeInsetsGeometry contentPadding;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty('onTap', onTap, ifNull: 'disabled'));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      defaultValue: false,
-      ifFalse: 'manual focus',
-    ));
-    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
     return HoverButton(
-      onPressed: onTap,
+      onPressed: onPressed,
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
@@ -171,19 +133,35 @@ class TappableListTile extends StatelessWidget {
           if (this.tileColor != null) {
             return this.tileColor!.resolve(states);
           } else if (states.isFocused) {
-            return style.accentColor.resolve(context);
+            return theme.accentColor.resolve(context);
           }
-          return ButtonThemeData.uncheckedInputColor(style, states);
+          return ButtonThemeData.uncheckedInputColor(
+            theme,
+            states,
+            transparentWhenNone: true,
+            transparentWhenDisabled: true,
+          );
         }();
-        return ListTile(
-          contentPadding: contentPadding,
-          leading: leading,
-          title: title,
-          subtitle: subtitle,
-          trailing: trailing,
-          isThreeLine: isThreeLine,
-          tileColor: tileColor,
-          shape: shape?.resolve(states),
+
+        return Container(
+          decoration: ShapeDecoration(
+            shape: shape ??
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+            color: tileColor,
+          ),
+          constraints: BoxConstraints(
+            minHeight: isThreeLine
+                ? kThreeLineTileHeight
+                : isTwoLine
+                    ? kTwoLineTileHeight
+                    : kOneLineTileHeight,
+            minWidth: 88.0,
+          ),
+          padding: contentPadding,
+          margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+          child: tile,
         );
       },
     );
