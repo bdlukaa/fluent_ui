@@ -335,11 +335,19 @@ class _PickerState extends State<Picker> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
     return KeyedSubtree(
       key: _childKey,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 296),
-        child: widget.child(context, open),
+        child: DefaultTextStyle.merge(
+          style: TextStyle(
+            color: theme.resources.textFillColorPrimary,
+          ),
+          child: widget.child(context, open),
+        ),
       ),
     );
   }

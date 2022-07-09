@@ -355,7 +355,7 @@ class _DatePickerState extends State<DatePicker> {
             curve: theme.animationCurve,
             height: kPickerHeight,
             decoration: kPickerDecorationBuilder(context, state),
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: TextStyle(
                 color: widget.selected == null
                     ? theme.resources.textFillColorSecondary

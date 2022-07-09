@@ -216,13 +216,12 @@ class _TimePickerState extends State<TimePicker> {
               horizontalMargin: EdgeInsets.zero,
             ),
           );
-          DateFormat.H();
           return AnimatedContainer(
             duration: FluentTheme.of(context).fastAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             height: kPickerHeight,
             decoration: kPickerDecorationBuilder(context, state),
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: TextStyle(
                 color: widget.selected == null
                     ? FluentTheme.of(context).resources.textFillColorSecondary
@@ -234,6 +233,7 @@ class _TimePickerState extends State<TimePicker> {
                     padding: widget.contentPadding,
                     child: Text(
                       () {
+                        // print(DefaultTextStyle.of(context).style.color);
                         if (widget.selected == null) return localizations.hour;
                         late int finalHour;
                         int hour = time.hour;
