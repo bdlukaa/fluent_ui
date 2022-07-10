@@ -1,3 +1,4 @@
+import 'package:example/screens/surface/tiles.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
@@ -250,6 +251,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Progress Indicators'),
     ),
     PaneItem(
+      icon: const Icon(FluentIcons.tiles),
+      title: const Text('Tiles'),
+    ),
+    PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
     ),
@@ -302,6 +307,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ExpanderPage(),
     InfoBarPage(),
     ProgressIndicatorsPage(),
+    TilePage(),
     TooltipPage(),
     const FlyoutPage().toPage(),
     // theming

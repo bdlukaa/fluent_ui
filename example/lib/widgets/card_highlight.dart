@@ -32,8 +32,14 @@ class _CardHighlightState extends State<CardHighlight> {
     return Column(children: [
       Card(
         backgroundColor: widget.backgroundColor,
-        child: widget.child,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4.0)),
+        child: SizedBox(
+          width: double.infinity,
+          child: Align(
+            alignment: AlignmentDirectional.topStart,
+            child: widget.child,
+          ),
+        ),
       ),
       Expander(
         key: PageStorageKey(key),

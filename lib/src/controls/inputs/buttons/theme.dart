@@ -273,9 +273,13 @@ class ButtonThemeData with Diagnosticable {
     ThemeData style,
     Set<ButtonStates> states, {
     bool transparentWhenNone = false,
+    bool transparentWhenDisabled = false,
   }) {
     final res = style.resources;
-    if (states.isDisabled) return res.controlAltFillColorDisabled;
+    if (states.isDisabled) {
+      if (transparentWhenDisabled) return res.controlAltFillColorTransparent;
+      return res.controlAltFillColorDisabled;
+    }
     if (states.isPressing) return res.controlAltFillColorQuarternary;
     if (states.isHovering) return res.controlAltFillColorTertiary;
     return transparentWhenNone

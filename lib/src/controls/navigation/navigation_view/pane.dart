@@ -619,7 +619,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
     final String titleText = item.getPropertyFromTitle<String>() ?? '';

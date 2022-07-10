@@ -94,7 +94,7 @@
   - [Time Picker](#time-picker)
   - [Progress Bar and Progress Ring](#progress-bar-and-progress-ring)
   - [Scrollbar](#scrollbar)
-  - [List Tile](#list-tile)
+  - [ListTile](#listtile)
   - [Info Label](#info-label)
   - [TreeView](#treeview)
     - [Scrollable tree view](#scrollable-tree-view)
@@ -1352,38 +1352,34 @@ Which produces the following:
 
 You can change the `isAlwaysVisible` property to either enable or disable the fade effect. It's disabled by default.
 
-## List Tile
+## ListTile
 
-You can use a `ListTile` in a `ListView`.
+A fluent-styled list tile. Usually used inside a `ListView`. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/item-templates-listview)
 
-### Example
+Here's an example of how to use a list tile inside a of `ListView`:
 
 ```dart
-final people = {
-  'Mass in B minor': 'Johann Sebastian Bach',
-  'Third Symphony': 'Ludwig van Beethoven',
-  'Serse': 'George Frideric Hendel',
-};
+String selectedContact = '';
+
+const contacts = ['Kendall', 'Collins', ...];
 
 ListView.builder(
-  itemCount: people.length,
+  itemCount: contacts.length,
   itemBuilder: (context, index) {
-    final title = people.keys.elementAt(index);
-    final subtitle = people[title];
-    return ListTile(
+    final contact = contacts[index];
+    return ListTile.selectable(
       leading: CircleAvatar(),
-      title: Text(title),
-      subtitle: Text(subtitle!),
+      title: Text(contact),
+      selected: selectedContact == contact,
+      onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
-  }
-),
+  } 
+)
 ```
 
 The code above produces the following:
 
-![Double Line Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/listitems/doublelineexample.png)
-
-If you want to create a tappable tile, use `TappableListTile` instead.
+![A selected ListTile in a ListView](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/listview-grouped-example-resized-final.png)
 
 ## Info Label
 

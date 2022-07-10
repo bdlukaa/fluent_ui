@@ -70,7 +70,7 @@ Future<T?> showMenu<T>({
     placementOffset: offset,
     placement: placement,
     position: position,
-    content: _PopupContentManager(content: builder),
+    content: ContentManager(content: builder),
     buttonRect: itemRect,
     elevation: 4,
     capturedThemes: InheritedTheme.capture(
@@ -177,7 +177,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       placementOffset: directionalityTarget,
       placement: directionalityPlacement,
       position: widget.position,
-      content: _PopupContentManager(content: widget.content),
+      content: ContentManager(content: widget.content),
       buttonRect: itemRect,
       elevation: 4,
       capturedThemes: InheritedTheme.capture(
@@ -540,8 +540,8 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   }
 }
 
-class _PopupContentManager extends StatefulWidget {
-  const _PopupContentManager({
+class ContentManager extends StatefulWidget {
+  const ContentManager({
     Key? key,
     required this.content,
   }) : super(key: key);
@@ -549,10 +549,10 @@ class _PopupContentManager extends StatefulWidget {
   final WidgetBuilder content;
 
   @override
-  State<_PopupContentManager> createState() => __PopupContentManagerState();
+  State<ContentManager> createState() => _ContentManagerState();
 }
 
-class __PopupContentManagerState extends State<_PopupContentManager> {
+class _ContentManagerState extends State<ContentManager> {
   final GlobalKey key = GlobalKey();
 
   Size size = Size.zero;
@@ -572,16 +572,18 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: key,
-      child: PopupContentSizeInfo(
+      child: ContentSizeInfo(
         size: size,
-        child: widget.content(context),
+        child: Builder(builder: (context) {
+          return widget.content(context);
+        }),
       ),
     );
   }
 }
 
-class PopupContentSizeInfo extends InheritedWidget {
-  const PopupContentSizeInfo({
+class ContentSizeInfo extends InheritedWidget {
+  const ContentSizeInfo({
     Key? key,
     required Widget child,
     required this.size,
@@ -589,16 +591,16 @@ class PopupContentSizeInfo extends InheritedWidget {
 
   final Size size;
 
-  static PopupContentSizeInfo of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>()!;
+  static ContentSizeInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>()!;
   }
 
-  static PopupContentSizeInfo? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>();
+  static ContentSizeInfo? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>();
   }
 
   @override
-  bool updateShouldNotify(PopupContentSizeInfo oldWidget) {
+  bool updateShouldNotify(ContentSizeInfo oldWidget) {
     return oldWidget.size != size;
   }
 }

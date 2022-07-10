@@ -57,7 +57,7 @@ Widget PickerHighlightTile() {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
-          tileColor: highlightTileColor,
+          tileColor: ButtonState.all(highlightTileColor),
         ),
       ),
     );
