@@ -19,6 +19,7 @@ class TilePage extends ScrollablePage {
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
+    final theme = FluentTheme.of(context);
     return [
       const Text('Tiles that are usually used inside a ListView'),
       subtitle(content: const Text('Basic ListView with selectable tiles')),
@@ -26,7 +27,11 @@ class TilePage extends ScrollablePage {
         child: Container(
           height: 400,
           width: 350,
-          decoration: BoxDecoration(border: Border.all()),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: theme.resources.surfaceStrokeColorDefault,
+            ),
+          ),
           child: ListView.builder(
             controller: firstController,
             shrinkWrap: true,
@@ -51,7 +56,11 @@ class TilePage extends ScrollablePage {
           Container(
             height: 400,
             width: 350,
-            decoration: BoxDecoration(border: Border.all()),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.surfaceStrokeColorDefault,
+              ),
+            ),
             child: ListView.builder(
               controller: secondController,
               shrinkWrap: true,
@@ -59,6 +68,7 @@ class TilePage extends ScrollablePage {
               itemBuilder: (context, index) {
                 final contact = contacts[index];
                 return ListTile.selectable(
+                  leading: const CircleAvatar(radius: 15.0),
                   title: Text(contact),
                   selectionMode: selectionMode,
                   selected: selected.contains(contact),

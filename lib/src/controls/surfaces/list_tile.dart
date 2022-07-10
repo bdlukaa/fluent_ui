@@ -2,14 +2,16 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-const kThreeLineTileHeight = 60.0;
-const kTwoLineTileHeight = 52.0;
 const kOneLineTileHeight = 40.0;
 
-const kDefaultContentPadding = EdgeInsetsDirectional.only(
+const kDefaultListTilePadding = EdgeInsetsDirectional.only(
   end: 12.0,
   top: 6.0,
   bottom: 6.0,
+);
+
+const kDefaultListTileShape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.all(Radius.circular(4.0)),
 );
 
 enum ListTileSelectionMode {
@@ -18,17 +20,24 @@ enum ListTileSelectionMode {
   multiple,
 }
 
+/// A fluent-styled list tile.
+///
+/// ![ListViewItem inside a ListView](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/listview-grouped-example-resized-final.png)
+///
+/// See also:
+///
+///  * [ListView], a scrollable list of widgets arranged linearly.
+///  * <https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.listviewitem>
 class ListTile extends StatelessWidget {
+  /// A fluent-styled list tile
   const ListTile({
     Key? key,
     this.tileColor,
-    this.shape,
+    this.shape = kDefaultListTileShape,
     this.leading,
     this.title,
     this.subtitle,
     this.trailing,
-    this.isThreeLine = false,
-    this.contentPadding = kDefaultContentPadding,
     this.onPressed,
     this.focusNode,
     this.autofocus = false,
@@ -41,16 +50,15 @@ class ListTile extends StatelessWidget {
         onSelectionChange = null,
         super(key: key);
 
+  /// A selectable list tile.
   const ListTile.selectable({
     Key? key,
     this.tileColor,
-    this.shape,
+    this.shape = kDefaultListTileShape,
     this.leading,
     this.title,
     this.subtitle,
     this.trailing,
-    this.isThreeLine = false,
-    this.contentPadding = kDefaultContentPadding,
     this.onPressed,
     this.focusNode,
     this.autofocus = false,
@@ -63,44 +71,106 @@ class ListTile extends StatelessWidget {
         ),
         super(key: key);
 
-  /// The color of the tile
+  /// The background color of the button.
+  ///
+  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
   final ButtonState<Color>? tileColor;
 
-  /// The shape of the tile
-  final ShapeBorder? shape;
+  /// The tile shape.
+  ///
+  /// [kDefaultListTileShape] is used by default
+  final ShapeBorder shape;
 
+  /// A widget to display before the title.
+  ///
+  /// Typically an [Icon] or a [CircleAvatar] widget.
   final Widget? leading;
+
+  /// The primary content of the list tile.
+  ///
+  /// Typically a [Text] widget.
   final Widget? title;
+
+  /// Additional content displayed below the title.
+  ///
+  /// Typically a [Text] widget.
   final Widget? subtitle;
+
+  /// A widget to display after the title.
+  ///
+  /// Typically an [Icon] widget.
   final Widget? trailing;
 
-  final bool isThreeLine;
-
-  final EdgeInsetsGeometry contentPadding;
-
+  /// Called when the user taps this list tile.
+  ///
+  /// If null, and [onSelectionChange] is also null, the tile does not perform
+  /// any action
   final VoidCallback? onPressed;
+
+  /// Whether this tile is selected within the list.
+  ///
+  /// See also:
+  ///
+  ///  * [selectionMode], which changes how the tile behave within the list
+  ///  * [onSelectionChange], which is called when the selection changes
   final bool selected;
+
+  /// How the tile selection will behave within the list
+  ///
+  /// See also:
+  ///
+  ///  * [selected], which tells the widget whether it's selected or not
+  ///  * [onSelectionChange], which is called when the selection changes
   final ListTileSelectionMode selectionMode;
+
+  /// Called when the selection changes.
+  ///
+  /// If [selectionMode] is single, this is called when any unselected tile is
+  /// pressed. If [selectionMode] is multiple, this is called when any tile is
+  /// pressed
+  ///
+  /// See also:
+  ///
+  ///  * [selected], which tells the widget whether it's selected or not
+  ///  * [selectionMode], which changes how the tile behave within the list
   final ValueChanged<bool>? onSelectionChange;
 
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
-  final bool autofocus;
 
-  bool get isTwoLine => subtitle != null;
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'isThreeLine',
-      value: isThreeLine,
-      ifFalse: isTwoLine ? 'two lines' : 'one line',
-    ));
-    properties.add(DiagnosticsProperty('shape', shape));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
-      'contentPadding',
-      contentPadding,
-    ));
+    properties
+      ..add(DiagnosticsProperty('shape', shape))
+      ..add(FlagProperty('selected', value: selected, defaultValue: false))
+      ..add(EnumProperty(
+        'selectionMode',
+        selectionMode,
+        defaultValue: ListTileSelectionMode.none,
+      ))
+      ..add(FlagProperty(
+        'enabled',
+        value: onPressed != null || onSelectionChange != null,
+        defaultValue: false,
+        ifFalse: 'disabled',
+      ));
+  }
+
+  void _onSelectionChange() {
+    switch (selectionMode) {
+      case ListTileSelectionMode.multiple:
+        onSelectionChange!(!selected);
+        break;
+      case ListTileSelectionMode.single:
+        if (!selected) onSelectionChange!(true);
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -109,24 +179,9 @@ class ListTile extends StatelessWidget {
     assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
 
-    print(selectionMode);
-
     return HoverButton(
-      onPressed: onPressed ??
-          () {
-            if (onSelectionChange != null) {
-              switch (selectionMode) {
-                case ListTileSelectionMode.multiple:
-                  onSelectionChange!(!selected);
-                  break;
-                case ListTileSelectionMode.single:
-                  if (!selected) onSelectionChange!(true);
-                  break;
-                default:
-                  break;
-              }
-            }
-          },
+      onPressed:
+          onPressed ?? (onSelectionChange != null ? _onSelectionChange : null),
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
@@ -143,19 +198,24 @@ class ListTile extends StatelessWidget {
           );
         }();
 
-        const placeholder = SizedBox(width: 9.0);
+        const placeholder = SizedBox(width: 12.0);
 
         final tile = Row(children: [
           if (selectionMode == ListTileSelectionMode.none)
             placeholder
           else if (selectionMode == ListTileSelectionMode.multiple)
             Padding(
-              padding: const EdgeInsetsDirectional.only(end: 6.0),
-              child: Checkbox(
-                checked: selected,
-                onChanged: (v) {
-                  onSelectionChange?.call(v ?? false);
-                },
+              padding: const EdgeInsetsDirectional.only(
+                start: 6.0,
+                end: 12.0,
+              ),
+              child: IgnorePointer(
+                child: Checkbox(
+                  checked: selected,
+                  onChanged: (v) {
+                    onSelectionChange?.call(v ?? false);
+                  },
+                ),
               ),
             )
           else if (selectionMode == ListTileSelectionMode.single)
@@ -178,7 +238,7 @@ class ListTile extends StatelessWidget {
                       ? theme.accentColor.defaultBrushFor(theme.brightness)
                       : Colors.transparent,
                 ),
-                margin: const EdgeInsets.only(right: 6.0),
+                margin: const EdgeInsets.only(right: 8.0),
               ),
             )
           else
@@ -215,26 +275,20 @@ class ListTile extends StatelessWidget {
           if (trailing != null) trailing!,
         ]);
 
-        return Container(
-          decoration: ShapeDecoration(
-            shape: shape ??
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-            color: tileColor,
-          ),
-          constraints: BoxConstraints(
-            minHeight: isThreeLine
-                ? kThreeLineTileHeight
-                : isTwoLine
-                    ? kTwoLineTileHeight
-                    : kOneLineTileHeight,
-            minWidth: 88.0,
-          ),
-          padding: contentPadding,
-          margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-          child: FocusBorder(
-            focused: states.isFocused,
+        return FocusBorder(
+          focused: states.isFocused,
+          renderOutside: false,
+          child: Container(
+            decoration: ShapeDecoration(
+              shape: shape,
+              color: tileColor,
+            ),
+            constraints: const BoxConstraints(
+              minHeight: kOneLineTileHeight,
+              minWidth: 88.0,
+            ),
+            padding: kDefaultListTilePadding,
+            margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
             child: tile,
           ),
         );
