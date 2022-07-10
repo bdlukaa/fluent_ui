@@ -8,7 +8,14 @@ class TilePage extends ScrollablePage {
     return const PageHeader(title: Text('Tiles'));
   }
 
-  String? selected;
+  // first
+  final firstController = ScrollController();
+  String firstSelected = '';
+
+  // second
+  final secondController = ScrollController();
+  ListTileSelectionMode selectionMode = ListTileSelectionMode.none;
+  List<String> selected = [];
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
@@ -21,20 +28,67 @@ class TilePage extends ScrollablePage {
           width: 350,
           decoration: BoxDecoration(border: Border.all()),
           child: ListView.builder(
+            controller: firstController,
             shrinkWrap: true,
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               final contact = contacts[index];
-              return ListTile(
+              return ListTile.selectable(
                 title: Text(contact),
-                onPressed: () {
-                  setState(() => selected = contact);
+                selected: firstSelected == contact,
+                onSelectionChange: (v) {
+                  setState(() => firstSelected = contact);
                 },
-                selected: selected == contact,
               );
             },
           ),
         ),
+        codeSnippet: '''''',
+      ),
+      subtitle(content: const Text('Basic ListView with Selection support')),
+      CardHighlight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            height: 400,
+            width: 350,
+            decoration: BoxDecoration(border: Border.all()),
+            child: ListView.builder(
+              controller: secondController,
+              shrinkWrap: true,
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return ListTile.selectable(
+                  title: Text(contact),
+                  selectionMode: selectionMode,
+                  selected: selected.contains(contact),
+                  onSelectionChange: (selected) {
+                    setState(() {
+                      if (selected) {
+                        this.selected.add(contact);
+                      } else {
+                        this.selected.remove(contact);
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+          const Spacer(),
+          Combobox<ListTileSelectionMode>(
+            value: selectionMode,
+            items: ListTileSelectionMode.values.map((mode) {
+              return ComboboxItem(
+                value: mode,
+                child: Text(mode.name),
+              );
+            }).toList(),
+            onChanged: (mode) => setState(
+              () => selectionMode = mode ?? ListTileSelectionMode.none,
+            ),
+          ),
+        ]),
         codeSnippet: '''''',
       ),
     ];
