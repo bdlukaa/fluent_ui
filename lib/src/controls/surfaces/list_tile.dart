@@ -27,7 +27,7 @@ enum ListTileSelectionMode {
 /// See also:
 ///
 ///  * [ListView], a scrollable list of widgets arranged linearly.
-///  * <https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.listviewitem>
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/item-templates-listview>
 class ListTile extends StatelessWidget {
   /// A fluent-styled list tile
   const ListTile({
