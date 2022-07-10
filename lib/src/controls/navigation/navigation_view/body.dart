@@ -118,15 +118,14 @@ class _NavigationBodyState extends State<NavigationBody> {
     assert(debugCheckHasFluentTheme(context));
     final body = InheritedNavigationView.maybeOf(context);
     final theme = FluentTheme.of(context);
-    final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve:
-            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
-        duration: widget.animationDuration ??
-            paneTheme.animationDuration ??
-            Duration.zero,
+        switchInCurve: widget.animationCurve ?? Curves.easeIn,
+        switchOutCurve: widget.animationCurve ?? Curves.easeOut,
+        duration: widget.animationDuration ?? const Duration(milliseconds: 300),
+        reverseDuration:
+            widget.animationDuration ?? const Duration(microseconds: 150),
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },

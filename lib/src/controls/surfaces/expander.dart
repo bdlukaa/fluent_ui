@@ -132,10 +132,7 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration ?? const Duration(milliseconds: 150),
-    );
+    _controller = AnimationController(vsync: this);
   }
 
   @override

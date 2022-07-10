@@ -333,7 +333,7 @@ class ToggleSwitchThemeData with Diagnosticable {
         );
       }),
       margin: const EdgeInsets.all(4),
-      animationDuration: style.fastAnimationDuration,
+      animationDuration: style.fasterAnimationDuration,
       animationCurve: style.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(

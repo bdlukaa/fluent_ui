@@ -320,9 +320,7 @@ class PaneItem extends NavigationPaneItem {
         return Semantics(
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
-          child: AnimatedContainer(
-            duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? standardCurve,
+          child: Container(
             margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {

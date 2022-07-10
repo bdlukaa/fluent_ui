@@ -11,6 +11,9 @@ Date format: DD/MM/YYYY
   - Added support for single and multiple selection. Use `ListTile.selectable` ([#409](https://github.com/bdlukaa/fluent_ui/issues/409))
   - Added focus support
   - Use the Win UI design
+- Reviewed animation durations ([#421](https://github.com/bdlukaa/fluent_ui/issues/421))
+  - **BREAKING** Removed `.animationDuration` and `.animationCurve` from `ScrollbarThemeData`
+  - Added `expandContractAnimationDuration` and `contractDelay` to `ScrollbarThemeData`
 
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 
