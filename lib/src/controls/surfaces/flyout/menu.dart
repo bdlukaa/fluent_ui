@@ -132,7 +132,7 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
@@ -159,7 +159,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     return SizedBox(
       width: size.width,
       child: const Padding(

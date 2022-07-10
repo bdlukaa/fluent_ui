@@ -200,96 +200,115 @@ class ListTile extends StatelessWidget {
 
         const placeholder = SizedBox(width: 12.0);
 
-        final tile = Row(children: [
-          if (selectionMode == ListTileSelectionMode.none)
-            placeholder
-          else if (selectionMode == ListTileSelectionMode.multiple)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: 6.0,
-                end: 12.0,
+        final tile = Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (leading != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 14),
+                child: leading,
               ),
-              child: IgnorePointer(
-                child: Checkbox(
-                  checked: selected,
-                  onChanged: (v) {
-                    onSelectionChange?.call(v ?? false);
-                  },
-                ),
-              ),
-            )
-          else if (selectionMode == ListTileSelectionMode.single)
-            TweenAnimationBuilder<double>(
-              duration: theme.mediumAnimationDuration,
-              tween: Tween<double>(
-                begin: 0.0,
-                end: selected
-                    ? states.isPressing
-                        ? 8.0
-                        : 16.0
-                    : 0.0,
-              ),
-              builder: (context, height, child) => Container(
-                height: height,
-                width: 3.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.0),
-                  color: selected
-                      ? theme.accentColor.defaultBrushFor(theme.brightness)
-                      : Colors.transparent,
-                ),
-                margin: const EdgeInsets.only(right: 8.0),
-              ),
-            )
-          else
-            placeholder,
-          if (leading != null)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 14),
-              child: leading,
-            ),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null)
-                  DefaultTextStyle(
-                    style:
-                        (theme.typography.body ?? const TextStyle()).copyWith(
-                      fontSize: 16,
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (title != null)
+                    DefaultTextStyle(
+                      style: (theme.typography.body ?? const TextStyle())
+                          .copyWith(fontSize: 16),
+                      overflow: TextOverflow.clip,
+                      child: title!,
                     ),
-                    overflow: TextOverflow.clip,
-                    child: title!,
-                  ),
-                if (subtitle != null)
-                  DefaultTextStyle(
-                    style: theme.typography.caption ?? const TextStyle(),
-                    overflow: TextOverflow.clip,
-                    child: subtitle!,
-                  ),
-              ],
+                  if (subtitle != null)
+                    DefaultTextStyle(
+                      style: theme.typography.caption ?? const TextStyle(),
+                      overflow: TextOverflow.clip,
+                      child: subtitle!,
+                    ),
+                ],
+              ),
             ),
-          ),
-          if (trailing != null) trailing!,
-        ]);
+            if (trailing != null) trailing!,
+          ],
+        );
 
         return FocusBorder(
           focused: states.isFocused,
           renderOutside: false,
           child: Container(
-            decoration: ShapeDecoration(
-              shape: shape,
-              color: tileColor,
-            ),
+            decoration: ShapeDecoration(shape: shape, color: tileColor),
             constraints: const BoxConstraints(
               minHeight: kOneLineTileHeight,
               minWidth: 88.0,
             ),
-            padding: kDefaultListTilePadding,
             margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-            child: tile,
+            child: ContentManager(content: (context) {
+              final tileHeight = ContentSizeInfo.of(context).size.height;
+              return Row(children: [
+                if (selectionMode == ListTileSelectionMode.none)
+                  placeholder
+                else if (selectionMode == ListTileSelectionMode.multiple)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 6.0,
+                      end: 12.0,
+                    ),
+                    child: IgnorePointer(
+                      child: Checkbox(
+                        checked: selected,
+                        onChanged: (v) {
+                          onSelectionChange?.call(v ?? false);
+                        },
+                      ),
+                    ),
+                  )
+                else if (selectionMode == ListTileSelectionMode.single)
+                  SizedBox(
+                    height: tileHeight,
+                    child: TweenAnimationBuilder<double>(
+                      duration: theme.mediumAnimationDuration,
+                      curve: theme.animationCurve,
+                      tween: Tween<double>(
+                        begin: 0.0,
+                        end: selected
+                            ? states.isPressing
+                                ? tileHeight * 0.3
+                                : tileHeight
+                            : 0.0,
+                      ),
+                      builder: (context, height, child) => Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: kDefaultListTilePadding.vertical,
+                          ),
+                          child: Container(
+                            height: height * 0.7,
+                            width: 3.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100.0),
+                              color: selected
+                                  ? theme.accentColor
+                                      .defaultBrushFor(theme.brightness)
+                                  : Colors.transparent,
+                            ),
+                            margin: const EdgeInsets.only(right: 8.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  placeholder,
+                Expanded(
+                  child: Padding(
+                    padding: kDefaultListTilePadding,
+                    child: tile,
+                  ),
+                ),
+              ]);
+            }),
           ),
         );
       },

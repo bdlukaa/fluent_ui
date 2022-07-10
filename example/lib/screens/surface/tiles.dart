@@ -8,14 +8,19 @@ class TilePage extends ScrollablePage {
     return const PageHeader(title: Text('Tiles'));
   }
 
+  final shuffledIcons = FluentIcons.allIcons.values.toList()..shuffle();
+
   // first
   final firstController = ScrollController();
   String firstSelected = '';
 
   // second
   final secondController = ScrollController();
-  ListTileSelectionMode selectionMode = ListTileSelectionMode.none;
   List<String> selected = [];
+
+  // third
+  String thirdSelected = '';
+  final thirdController = ScrollController();
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
@@ -48,9 +53,26 @@ class TilePage extends ScrollablePage {
             },
           ),
         ),
-        codeSnippet: '''''',
+        codeSnippet: '''String selectedContact = '';
+
+const contacts = ['Kendall', 'Collins', ...];
+
+ListView.builder(
+  itemCount: contacts.length,
+  itemBuilder: (context, index) {
+    final contact = contacts[index];
+    return ListTile.selectable(
+      title: Text(contact),
+      selected: selectedContact == contact,
+      onSelectionChange: (v) => setState(() => selectedContact = contact),
+    );
+  } 
+)
+''',
       ),
-      subtitle(content: const Text('Basic ListView with Selection support')),
+      subtitle(
+        content: const Text('ListViewItems with many properties applied'),
+      ),
       CardHighlight(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
@@ -70,7 +92,9 @@ class TilePage extends ScrollablePage {
                 return ListTile.selectable(
                   leading: const CircleAvatar(radius: 15.0),
                   title: Text(contact),
-                  selectionMode: selectionMode,
+                  subtitle: const Text('With a custom subtitle'),
+                  trailing: Icon(shuffledIcons[index]),
+                  selectionMode: ListTileSelectionMode.multiple,
                   selected: selected.contains(contact),
                   onSelectionChange: (selected) {
                     setState(() {
@@ -85,21 +109,107 @@ class TilePage extends ScrollablePage {
               },
             ),
           ),
-          const Spacer(),
-          Combobox<ListTileSelectionMode>(
-            value: selectionMode,
-            items: ListTileSelectionMode.values.map((mode) {
-              return ComboboxItem(
-                value: mode,
-                child: Text(mode.name),
-              );
-            }).toList(),
-            onChanged: (mode) => setState(
-              () => selectionMode = mode ?? ListTileSelectionMode.none,
+        ]),
+        codeSnippet: '''List<String> selectedContacts = [];
+
+const contacts = ['Kendall', 'Collins', ...];
+
+ListView.builder(
+  itemCount: contacts.length,
+  itemBuilder: (context, index) {
+    final contact = contacts[index];
+    return ListTile.selectable(
+      title: Text(contact),
+      selected: selectedContacts.contains(contact),
+      selectionMode: ListTileSelectionMode.multiple
+      onSelectionChange: (selected) {
+        setState(() {
+          if (selected) {
+            selectedContacts.add(contact);
+          } else {
+            selectedContacts.remove(contact);
+          }
+        });
+      },
+    );
+  } 
+)
+''',
+      ),
+      subtitle(
+        content: const Text('ListViewItems with images'),
+      ),
+      CardHighlight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            height: 400,
+            width: 550,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.surfaceStrokeColorDefault,
+              ),
+            ),
+            child: ListView.builder(
+              controller: thirdController,
+              shrinkWrap: true,
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return ListTile.selectable(
+                  leading: SizedBox(
+                    height: 100,
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: ColoredBox(
+                        color: Colors.accentColors[index ~/ 20],
+                        child: const Placeholder(),
+                      ),
+                    ),
+                  ),
+                  title: Text(contact),
+                  subtitle: const Text('With a custom subtitle'),
+                  selectionMode: ListTileSelectionMode.single,
+                  selected: thirdSelected == contact,
+                  onSelectionChange: (selected) {
+                    setState(() {
+                      if (selected) {
+                        thirdSelected = contact;
+                      }
+                    });
+                  },
+                );
+              },
             ),
           ),
         ]),
-        codeSnippet: '''''',
+        codeSnippet: '''String selectedContact = '';
+
+const contacts = ['Kendall', 'Collins', ...];
+
+ListView.builder(
+  itemCount: contacts.length,
+  itemBuilder: (context, index) {
+    final contact = contacts[index];
+    return ListTile.selectable(
+      leading: SizedBox(
+        height: 100,
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: ColoredBox(
+            color: Colors.accentColors[index ~/ 20],
+            child: const Placeholder(),
+          ),
+        ),
+      ),
+      title: Text(contact),
+      subtitle: const Text('With a custom subtitle'),
+      selectionMode: ListTileSelectionMode.single,
+      selected: selectedContact == contact,
+      onSelectionChange: (v) => setState(() => selectedContact = contact),
+    );
+  } 
+)
+''',
       ),
     ];
   }
