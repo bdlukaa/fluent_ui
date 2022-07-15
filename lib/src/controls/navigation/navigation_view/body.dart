@@ -134,8 +134,8 @@ class _NavigationBodyState extends State<NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
           bool useDrillTransition = true;
-          if (body != null && body.displayMode != null) {
-            if (body.displayMode! == PaneDisplayMode.top) {
+          if (body != null) {
+            if (body.displayMode == PaneDisplayMode.top) {
               useDrillTransition = false;
             }
           }
@@ -182,7 +182,7 @@ class InheritedNavigationView extends InheritedWidget {
   }) : super(key: key, child: child);
 
   /// The current pane display mode according to the current state.
-  final PaneDisplayMode? displayMode;
+  final PaneDisplayMode displayMode;
 
   /// Whether the minimal pane is open or not
   final bool minimalPaneOpen;
@@ -215,12 +215,14 @@ class InheritedNavigationView extends InheritedWidget {
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
     int? oldIndex,
+    bool? currentItemSelected,
   }) {
     return Builder(builder: (context) {
       final current = InheritedNavigationView.maybeOf(context);
       return InheritedNavigationView(
         key: key,
-        displayMode: displayMode ?? current?.displayMode,
+        displayMode:
+            displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
@@ -236,7 +238,7 @@ class InheritedNavigationView extends InheritedWidget {
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
         oldWidget.oldIndex != oldIndex ||
-        oldWidget.currentItemIndex != oldWidget.currentItemIndex;
+        oldWidget.currentItemIndex != currentItemIndex;
   }
 }
 

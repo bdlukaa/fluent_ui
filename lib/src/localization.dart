@@ -252,5 +252,5 @@ class _FluentLocalizationsDelegate
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
 
   @override
-  String toString() => 'DefaultMaterialLocalizations.delegate(en_US)';
+  String toString() => 'DefaultFluentLocalizations.delegate(en_US)';
 }

@@ -14,6 +14,8 @@ Date format: DD/MM/YYYY
 - Reviewed animation durations ([#421](https://github.com/bdlukaa/fluent_ui/issues/421))
   - **BREAKING** Removed `.animationDuration` and `.animationCurve` from `ScrollbarThemeData`
   - Added `expandContractAnimationDuration` and `contractDelay` to `ScrollbarThemeData`
+- `NavigationPaneSize` constraints are now correctly applied when in open mode ([#336](https://github.com/bdlukaa/fluent_ui/issues/336))
+- `NavigationIndicator` can't be invisble anymore when animation is stale ([#335](https://github.com/bdlukaa/fluent_ui/issues/335))
 
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 

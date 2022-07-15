@@ -372,9 +372,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           );
         }(),
         actions: Row(
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Spacer(),
             ToggleSwitch(
               content: const Text('Dark Mode'),
               checked: FluentTheme.of(context).brightness.isDark,
@@ -413,10 +412,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           resetSearch();
           setState(() => index = i);
         },
-        size: const NavigationPaneSize(
-          openMinWidth: 250.0,
-          openMaxWidth: 320.0,
-        ),
         header: Container(
           height: kOneLineTileHeight,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),

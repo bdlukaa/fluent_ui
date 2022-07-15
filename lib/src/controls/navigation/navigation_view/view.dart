@@ -138,7 +138,7 @@ class NavigationViewState extends State<NavigationView> {
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
-      oldIndex = oldWidget.pane?.selected ?? 0;
+      oldIndex = oldWidget.pane?.selected ?? -1;
     }
 
     if (oldWidget.pane?.effectiveItems.length !=
@@ -175,6 +175,7 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasDirectionality(context));
+    assert(debugCheckHasMediaQuery(context));
 
     final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
@@ -324,7 +325,8 @@ class NavigationViewState extends State<NavigationView> {
                 setState(() => _compactOverlayOpen = !_compactOverlayOpen);
               }
 
-              final openSize = pane.size?.openWidth ?? kOpenNavigationPaneWidth;
+              double openSize =
+                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
@@ -517,10 +519,7 @@ class NavigationViewState extends State<NavigationView> {
           minimalPaneOpen: _minimalPaneOpen,
           pane: widget.pane,
           oldIndex: oldIndex,
-          child: _PaneItemKeys(
-            keys: _itemKeys,
-            child: paneResult,
-          ),
+          child: _PaneItemKeys(keys: _itemKeys, child: paneResult),
         ),
       );
     });

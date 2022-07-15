@@ -1731,21 +1731,25 @@ The list of equivalents between this library and `flutter/material.dart`
 
 FluentUI widgets currently supports out-of-the-box an wide number of languages, including:
 
-- Arabic
+- Arabic (@dmakwt)
 - English
-- Dutch
-- French
-- German
-- Hindi
-- Italian
-- Korean
-- Malay
-- Polish
-- Portuguese
-- Russian
-- Simplified Chinese
-- Traditional Chinese
-- Spanish
+- Dutch (@h3x4d3c1m4l)
+- French (@WinXaito)
+- German (@larsb24)
+- Hindi (@alexmercerind)
+- Italian (@patricknicolosi)
+- Japanese (@chari8)
+- Korean (@dubh3)
+- Malay (@jonsaw)
+- Persian (@xmine64)
+- Polish (@madik7)
+- Portuguese (@bdlukaa)
+- Russian (@raitonoberu)
+- Simplified Chinese (@zacksleo, @rk0cc)
+- Traditional Chinese (@zacksleo, @rk0cc)
+- Spanish (@henry2man)
+
+If a language is not supported, your app may crash. You can [add support for a new language](#contributing-new-localizations) or use a supported language. [Learn more](https://github.com/bdlukaa/fluent_ui/issues/371)
 
 ## Contribution
 
