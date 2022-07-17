@@ -20,9 +20,13 @@ class TabViewPage extends ScrollablePage {
       semanticLabel: 'Document #$index',
       onClosed: () {
         setState(() {
-          final currentIndex = tabs!.indexOf(tab);
+          final tabIndex = tabs!.indexOf(tab);
           tabs!.remove(tab);
-          bodies!.removeAt(currentIndex);
+          bodies!.removeAt(tabIndex);
+
+          if (tabIndex == currentIndex && currentIndex > 0) {
+            currentIndex--;
+          }
         });
       },
     );
@@ -43,8 +47,9 @@ class TabViewPage extends ScrollablePage {
         'A control that displays a collection of tabs that can be used to display several documents.',
       ),
       subtitle(
-          content: const Text(
-              'A TabView with support for adding, closing and rearraging tabs')),
+        content: const Text(
+            'A TabView with support for adding, closing and rearraging tabs'),
+      ),
       Card(
         child: SizedBox(
           height: 400,

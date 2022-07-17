@@ -33,18 +33,19 @@ enum TabWidthBehavior {
   compact,
 }
 
-/// The TabView control is a way to display a set of tabs
-/// and their respective content. TabViews are useful for
-/// displaying several pages (or documents) of content while
-/// giving a user the capability to rearrange, open, or close
-/// new tabs.
+/// The TabView control is a way to display a set of tabs and their respective
+/// content. TabViews are useful for displaying several pages (or documents) of
+/// content while giving a user the capability to rearrange, open, or close new
+/// tabs.
 ///
-/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
+/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
 ///
 /// There must be enough space to render the tabview.
 ///
 /// See also:
-///   - [NavigationPanel]
+///
+///   * [NavigationView], control provides top-level navigation for your app.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tab-view>
 class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
