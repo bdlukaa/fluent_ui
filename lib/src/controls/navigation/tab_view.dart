@@ -260,6 +260,7 @@ class _TabViewState extends State<TabView> {
     final minWidth = () {
       switch (widget.tabWidthBehavior) {
         case TabWidthBehavior.sizeToContent:
+        case TabWidthBehavior.compact:
           return null;
         default:
           return preferredTabWidth;
@@ -312,10 +313,7 @@ class _TabViewState extends State<TabView> {
       ),
     );
     if (onPressed == null) return item;
-    return Tooltip(
-      message: tooltip,
-      child: item,
-    );
+    return Tooltip(message: tooltip, child: item);
   }
 
   Widget divider(int index) {
