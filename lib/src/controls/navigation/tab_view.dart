@@ -557,6 +557,7 @@ class _TabViewState extends State<TabView> {
   }
 }
 
+/// Represents a single tab within a [TabView].
 class Tab {
   /// Creates a tab.
   const Tab({
@@ -571,22 +572,29 @@ class Tab {
 
   final Key? key;
 
-  /// The leading icon of the tab. [FlutterLogo] is used by default
+  /// the IconSource to be displayed within the tab.
+  ///
+  /// Usually an [Icon] widget
   final Widget? icon;
 
-  /// The text of the tab. Usually a [Text] widget
+  /// The content that appears inside the tab strip to represent the tab.
+  ///
+  /// Usually a [Text] widget
   final Widget text;
 
   /// The close icon of the tab. Usually an [IconButton] widget
   final IconData? closeIcon;
 
-  /// Called when the close button is called or when the
-  /// shortcut `Ctrl + T` or `Ctrl + F4` is executed
+  /// Called when clicking x-to-close button or when thec`Ctrl + T` or
+  /// `Ctrl + F4` is executed
+  ///
+  /// If null, the tab is not closeable
   final VoidCallback? onClosed;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
+  /// The body of the view attached to this tab
   final Widget body;
 }
 
@@ -655,6 +663,8 @@ class __TabState extends State<_Tab>
       if (widget.tab.text is Text) {
         return (widget.tab.text as Text).data ??
             (widget.tab.text as Text).textSpan?.toPlainText();
+      } else if (widget.tab.text is RichText) {
+        return (widget.tab.text as RichText).text.toPlainText();
       }
     }();
     return HoverButton(

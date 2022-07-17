@@ -16,6 +16,40 @@ Date format: DD/MM/YYYY
   - Added `expandContractAnimationDuration` and `contractDelay` to `ScrollbarThemeData`
 - `NavigationPaneSize` constraints are now correctly applied when in open mode ([#336](https://github.com/bdlukaa/fluent_ui/issues/336))
 - `NavigationIndicator` can't be invisble anymore when animation is stale ([#335](https://github.com/bdlukaa/fluent_ui/issues/335))
+- Updated `TabView`:
+  - **BREAKING** Removed `TabView.bodies`. Now, `Tab.body` is used.
+    Before
+    ```dart
+    TabView(
+      tabs: [
+        Tab(text: Text('Tab 1')),
+        Tab(text: Text('Tab 2')),
+      ],
+      bodies: [
+        Tab1Body(),
+        Tab2Body(),
+      ],
+    ),
+    ```
+
+    Now:
+    ```dart
+    TabView(
+      tabs: [
+        Tab(
+          text: Text('Tab 1'),
+          body: Tab1Body(),
+        ),
+        Tab(
+          text: Text('Tab 2'),
+          body: Tab2Body(),
+        ),
+      ],
+    ),
+    ```
+  - Updated `TabView` tabs' constraints and padding
+  - Fixed tab width when `TabWidthBehavior` is `compact`
+  - `FlutterLogo` is no longer the default tab Icon
 
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 
