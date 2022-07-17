@@ -20,24 +20,28 @@ class TabViewPage extends ScrollablePage {
       semanticLabel: 'Document #$index',
       onClosed: () {
         setState(() {
-          final currentIndex = tabs!.indexOf(tab);
+          final closedIndex = tabs!.indexOf(tab);
           tabs!.remove(tab);
-          bodies!.removeAt(currentIndex);
+          bodies!.removeAt( closedIndex);
+          if (currentIndex >= closedIndex && currentIndex > 0) {
+            currentIndex--;
+          }
         });
       },
     );
     return tab;
   }
 
+  Widget generateBody(index) {
+    return Container(
+      color: Colors.accentColors[Random().nextInt(Colors.accentColors.length)],
+    );
+  }
+
   @override
   List<Widget> buildScrollable(BuildContext context) {
     tabs ??= List.generate(3, generateTab);
-    bodies ??= List.generate(3, (index) {
-      return Container(
-        color:
-            Colors.accentColors[Random().nextInt(Colors.accentColors.length)],
-      );
-    });
+    bodies ??= List.generate(3, generateBody);
     return [
       const Text(
         'A control that displays a collection of tabs that can be used to display several documents.',
@@ -55,13 +59,9 @@ class TabViewPage extends ScrollablePage {
             onChanged: (index) => setState(() => currentIndex = index),
             onNewPressed: () {
               setState(() {
-                final index = tabs!.length + 1;
-                final tab = generateTab(index);
-                tabs!.add(tab);
-                bodies!.add(ColoredBox(
-                  color: Colors.accentColors[
-                      Random().nextInt(Colors.accentColors.length)],
-                ));
+                final index = tabs!.length;
+                tabs!.add(generateTab(index));
+                bodies!.add(generateBody(index));
               });
             },
             onReorder: (oldIndex, newIndex) {
