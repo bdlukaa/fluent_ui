@@ -22,7 +22,7 @@ class TabViewPage extends ScrollablePage {
         setState(() {
           final closedIndex = tabs!.indexOf(tab);
           tabs!.remove(tab);
-          bodies!.removeAt( closedIndex);
+          bodies!.removeAt(closedIndex);
           if (currentIndex >= closedIndex && currentIndex > 0) {
             currentIndex--;
           }
