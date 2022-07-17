@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
 const double _kTileHeight = 34.0;
-const double _kButtonWidth = 40.0;
+const double _kButtonWidth = 32.0;
 
 enum CloseButtonVisibilityMode {
   /// The close button will never be visible
@@ -123,9 +123,12 @@ class TabView extends StatefulWidget {
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
 
-  /// Indicate if the wheel scroll changes the tabs positions.
+  // TODO: remove this property when https://github.com/flutter/flutter/issues/75180
+  // is fixed
+  /// Indicate if the mouse wheel should scroll the TabView
   ///
-  /// Defaults to `false`
+  /// Defaults to `false`.
+  ///
   final bool wheelScroll;
 
   /// Indicates the close button visibility mode
@@ -286,29 +289,26 @@ class _TabViewState extends State<TabView> {
   ) {
     final item = SizedBox(
       width: _kButtonWidth,
-      height: _kTileHeight - 10,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 2),
-        child: IconButton(
-          icon: icon,
-          onPressed: onPressed,
-          style: ButtonStyle(
-            foregroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled || states.isNone) {
-                return FluentTheme.of(context).disabledColor;
-              } else {
-                return FluentTheme.of(context).inactiveColor;
-              }
-            }),
-            backgroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled || states.isNone) return Colors.transparent;
-              return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context), states);
-            }),
-            padding: ButtonState.all(const EdgeInsets.symmetric(
-              horizontal: 10,
-            )),
-          ),
+      height: 24.0,
+      child: IconButton(
+        icon: Center(child: icon),
+        onPressed: onPressed,
+        style: ButtonStyle(
+          foregroundColor: ButtonState.resolveWith((states) {
+            if (states.isDisabled || states.isNone) {
+              return FluentTheme.of(context).disabledColor;
+            } else {
+              return FluentTheme.of(context).inactiveColor;
+            }
+          }),
+          backgroundColor: ButtonState.resolveWith((states) {
+            if (states.isDisabled || states.isNone) return Colors.transparent;
+            return ButtonThemeData.uncheckedInputColor(
+              FluentTheme.of(context),
+              states,
+            );
+          }),
+          padding: ButtonState.all(EdgeInsets.zero),
         ),
       ),
     );
@@ -416,34 +416,48 @@ class _TabViewState extends State<TabView> {
 
                 final bool showScrollButtons =
                     widget.showScrollButtons && scrollable;
-                final backwardButton = _buttonTabBuilder(
-                  context,
-                  const Icon(FluentIcons.caret_left_solid8, size: 10),
-                  !scrollController.canBackward
-                      ? () {
-                          if (direction == TextDirection.ltr) {
-                            scrollController.backward();
-                          } else {
-                            scrollController.forward();
+                final backwardButton = Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 8.0,
+                    end: 3.0,
+                    bottom: 3.0,
+                  ),
+                  child: _buttonTabBuilder(
+                    context,
+                    const Icon(FluentIcons.caret_left_solid8, size: 8),
+                    !scrollController.canBackward
+                        ? () {
+                            if (direction == TextDirection.ltr) {
+                              scrollController.backward();
+                            } else {
+                              scrollController.forward();
+                            }
                           }
-                        }
-                      : null,
-                  localizations.scrollTabBackwardLabel,
+                        : null,
+                    localizations.scrollTabBackwardLabel,
+                  ),
                 );
 
-                final forwardButton = _buttonTabBuilder(
-                  context,
-                  const Icon(FluentIcons.caret_right_solid8, size: 10),
-                  !scrollController.canForward
-                      ? () {
-                          if (direction == TextDirection.ltr) {
-                            scrollController.forward();
-                          } else {
-                            scrollController.backward();
+                final forwardButton = Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 3.0,
+                    end: 8.0,
+                    bottom: 3.0,
+                  ),
+                  child: _buttonTabBuilder(
+                    context,
+                    const Icon(FluentIcons.caret_right_solid8, size: 8),
+                    !scrollController.canForward
+                        ? () {
+                            if (direction == TextDirection.ltr) {
+                              scrollController.forward();
+                            } else {
+                              scrollController.backward();
+                            }
                           }
-                        }
-                      : null,
-                  localizations.scrollTabForwardLabel,
+                        : null,
+                    localizations.scrollTabForwardLabel,
+                  ),
                 );
 
                 return Row(children: [
@@ -460,11 +474,17 @@ class _TabViewState extends State<TabView> {
                         ? forwardButton
                         : backwardButton,
                   if (widget.showNewButton)
-                    _buttonTabBuilder(
-                      context,
-                      Icon(widget.addIconData, size: 16.0),
-                      widget.onNewPressed!,
-                      localizations.newTabLabel,
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 3.0,
+                        bottom: 3.0,
+                      ),
+                      child: _buttonTabBuilder(
+                        context,
+                        Icon(widget.addIconData, size: 12.0),
+                        widget.onNewPressed!,
+                        localizations.newTabLabel,
+                      ),
                     ),
                 ]);
               }),
@@ -666,7 +686,12 @@ class __TabState extends State<_Tab>
                 widget.tabWidthBehavior == TabWidthBehavior.sizeToContent
                     ? null
                     : const BoxConstraints(maxWidth: _kMaxTileWidth),
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+            padding: const EdgeInsetsDirectional.only(
+              start: 8,
+              top: 3,
+              end: 4,
+              bottom: 3,
+            ),
             decoration: BoxDecoration(
               borderRadius: borderRadius,
               color: widget.selected
@@ -686,47 +711,53 @@ class __TabState extends State<_Tab>
                     color: foregroundColor,
                   ),
                   child: IconTheme.merge(
-                    data: IconThemeData(color: foregroundColor),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (widget.tab.icon != null)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: widget.tab.icon!,
-                          ),
-                        if (widget.tabWidthBehavior !=
-                                TabWidthBehavior.compact ||
-                            (widget.tabWidthBehavior ==
-                                    TabWidthBehavior.compact &&
-                                widget.selected))
-                          Flexible(
-                            fit: widget.tabWidthBehavior ==
-                                    TabWidthBehavior.equal
-                                ? FlexFit.tight
-                                : FlexFit.loose,
+                    data: IconThemeData(
+                      color: foregroundColor,
+                      size: 16.0,
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      if (widget.tab.icon != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 10.0),
+                          child: widget.tab.icon!,
+                        ),
+                      if (widget.tabWidthBehavior != TabWidthBehavior.compact ||
+                          (widget.tabWidthBehavior ==
+                                  TabWidthBehavior.compact &&
+                              widget.selected))
+                        Flexible(
+                          fit: widget.tabWidthBehavior == TabWidthBehavior.equal
+                              ? FlexFit.tight
+                              : FlexFit.loose,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 4.0),
                             child: DefaultTextStyle.merge(
                               softWrap: false,
                               maxLines: 1,
                               overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 12.0),
                               child: widget.tab.text,
                             ),
                           ),
-                        if (widget.tab.closeIcon != null &&
-                            (widget.visibilityMode ==
-                                    CloseButtonVisibilityMode.always ||
-                                (widget.visibilityMode ==
-                                        CloseButtonVisibilityMode.onHover &&
-                                    states.isHovering)))
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2.0),
-                            child: FocusTheme(
-                              data: const FocusThemeData(
-                                primaryBorder: BorderSide.none,
-                                secondaryBorder: BorderSide.none,
-                              ),
-                              child: Tooltip(
-                                message: localizations.closeTabLabel,
+                        ),
+                      if (widget.tab.closeIcon != null &&
+                          (widget.visibilityMode ==
+                                  CloseButtonVisibilityMode.always ||
+                              (widget.visibilityMode ==
+                                      CloseButtonVisibilityMode.onHover &&
+                                  states.isHovering)))
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 4.0),
+                          child: FocusTheme(
+                            data: const FocusThemeData(
+                              primaryBorder: BorderSide.none,
+                              secondaryBorder: BorderSide.none,
+                            ),
+                            child: Tooltip(
+                              message: localizations.closeTabLabel,
+                              child: SizedBox(
+                                height: 24.0,
+                                width: 32.0,
                                 child: IconButton(
                                   icon: Icon(widget.tab.closeIcon),
                                   onPressed: widget.tab.onClosed,
@@ -735,8 +766,8 @@ class __TabState extends State<_Tab>
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ]),
                   ),
                 ),
               );
