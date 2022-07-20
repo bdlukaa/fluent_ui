@@ -312,12 +312,20 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
-    // return BoxConstraints(
-    //   maxWidth: constraints.maxWidth,
-    //   maxHeight:
-    //       screenSize.height - target.dy - verticalOffset - buttonRect.height,
-    // );
+    final isCloseToBottom = target.dy > screenSize.height / 3;
+    // If it's close to the bottom, we show the button above. Otherwise, we show
+    // it below
+    if (isCloseToBottom) {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: target.dy - buttonRect.height,
+      );
+    } else {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: screenSize.height - target.dy - buttonRect.height,
+      );
+    }
   }
 
   @override
@@ -336,7 +344,24 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             childSize: childSize,
             target: target,
             verticalOffset: verticalOffset,
-            preferBelow: position == FlyoutPosition.below,
+            preferBelow: () {
+              // if position is below, we need to verify if the
+              // [childSize + starting position (target.dy)] will overlap the
+              // screen at the bottom. If yes, we show it above.
+              //
+              // if position is above, we need to verify if the
+              // [starting position (target.dy) - childSize] will overlap the
+              // screen at the top. If yes, we show it below
+              //
+              // Fallbacks to true
+              if (position == FlyoutPosition.below) {
+                return screenSize.height > target.dy + childSize.height;
+              } else if (position == FlyoutPosition.above) {
+                return 0 > target.dy - childSize.height;
+              } else {
+                return true;
+              }
+            }(),
             margin: horizontalOffset,
           );
     if (position == FlyoutPosition.side) {
