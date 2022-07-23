@@ -312,12 +312,20 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
-    // return BoxConstraints(
-    //   maxWidth: constraints.maxWidth,
-    //   maxHeight:
-    //       screenSize.height - target.dy - verticalOffset - buttonRect.height,
-    // );
+    final isCloseToBottom = target.dy > screenSize.height / 3;
+    // If it's close to the bottom, we show the button above. Otherwise, we show
+    // it below
+    if (isCloseToBottom) {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: target.dy - buttonRect.height,
+      );
+    } else {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: screenSize.height - target.dy - buttonRect.height,
+      );
+    }
   }
 
   @override
@@ -327,7 +335,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             size: size,
             childSize: childSize,
             target: target,
-            verticalOffset: verticalOffset,
+            horizontalOffset: verticalOffset,
             margin: horizontalOffset,
             preferLeft: placement == FlyoutPlacement.end,
           )
@@ -336,7 +344,24 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             childSize: childSize,
             target: target,
             verticalOffset: verticalOffset,
-            preferBelow: position == FlyoutPosition.below,
+            preferBelow: () {
+              // if position is below, we need to verify if the
+              // [childSize + starting position (target.dy)] will overlap the
+              // screen at the bottom. If yes, we show it above.
+              //
+              // if position is above, we need to verify if the
+              // [starting position (target.dy) - childSize] will overlap the
+              // screen at the top. If yes, we show it below
+              //
+              // Fallbacks to true
+              if (position == FlyoutPosition.below) {
+                return screenSize.height > target.dy + childSize.height;
+              } else if (position == FlyoutPosition.above) {
+                return 0 > target.dy - childSize.height;
+              } else {
+                return true;
+              }
+            }(),
             margin: horizontalOffset,
           );
     if (position == FlyoutPosition.side) {
@@ -512,30 +537,28 @@ class _PopUpRoutePage<T> extends StatelessWidget {
       removeBottom: true,
       removeLeft: true,
       removeRight: true,
-      child: Builder(
-        builder: (BuildContext context) {
-          final mediaQuery = MediaQuery.of(context);
-          return SizedBox(
-            height: mediaQuery.size.height,
-            width: mediaQuery.size.width,
-            child: CustomSingleChildLayout(
-              delegate: _PopUpMenuRouteLayout<T>(
-                target: target,
-                placement: placement,
-                position: position,
-                placementOffset: placementOffset,
-                buttonRect: buttonRect,
-                route: route,
-                textDirection: textDirection,
-                verticalOffset: verticalOffset,
-                horizontalOffset: horizontalOffset,
-                screenSize: mediaQuery.size,
-              ),
-              child: capturedThemes.wrap(menu),
+      child: Builder(builder: (BuildContext context) {
+        final mediaQuery = MediaQuery.of(context);
+        return SizedBox(
+          height: mediaQuery.size.height,
+          width: mediaQuery.size.width,
+          child: CustomSingleChildLayout(
+            delegate: _PopUpMenuRouteLayout<T>(
+              target: target,
+              placement: placement,
+              position: position,
+              placementOffset: placementOffset,
+              buttonRect: buttonRect,
+              route: route,
+              textDirection: textDirection,
+              verticalOffset: verticalOffset,
+              horizontalOffset: horizontalOffset,
+              screenSize: mediaQuery.size,
             ),
-          );
-        },
-      ),
+            child: capturedThemes.wrap(menu),
+          ),
+        );
+      }),
     );
   }
 }

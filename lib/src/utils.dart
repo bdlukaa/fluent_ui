@@ -88,20 +88,21 @@ Offset horizontalPositionDependentBox({
   required Size childSize,
   required Offset target,
   required bool preferLeft,
-  double verticalOffset = 0.0,
+  double horizontalOffset = 0.0,
   double margin = 10.0,
 }) {
   // Horizontal DIRECTION
   final bool fitsLeft =
-      target.dx + verticalOffset + childSize.width <= size.width - margin;
-  final bool fitsRight = target.dx - verticalOffset - childSize.width >= margin;
+      target.dx + horizontalOffset + childSize.width <= size.width - margin;
+  final bool fitsRight =
+      target.dx - horizontalOffset - childSize.width >= margin;
   final bool tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
   double x;
   if (tooltipLeft) {
-    x = math.min(target.dx + verticalOffset, size.width - margin);
+    x = math.min(target.dx + horizontalOffset, size.width - margin);
   } else {
-    x = math.max(target.dx - verticalOffset - childSize.width, margin);
+    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
   }
   // Vertical DIRECTION
   double y;

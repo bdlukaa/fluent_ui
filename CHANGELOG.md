@@ -50,6 +50,8 @@ Date format: DD/MM/YYYY
   - Updated `TabView` tabs' constraints and padding
   - Fixed tab width when `TabWidthBehavior` is `compact`
   - `FlutterLogo` is no longer the default tab Icon
+- `DropDownButton` menu is now sized correctly according to the screen size
+- If there isn't enough space to display the menu on the preferred position, `Flyout` will display on the opposite position ([#435](https://github.com/bdlukaa/fluent_ui/pull/435))
 
 ## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 
