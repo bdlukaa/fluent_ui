@@ -820,7 +820,7 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
         size: size,
         childSize: childSize,
         target: target,
-        verticalOffset: verticalOffset,
+        horizontalOffset: verticalOffset,
         preferLeft: preferBelow,
       );
     } else {

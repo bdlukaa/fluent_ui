@@ -335,7 +335,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             size: size,
             childSize: childSize,
             target: target,
-            verticalOffset: verticalOffset,
+            horizontalOffset: verticalOffset,
             margin: horizontalOffset,
             preferLeft: placement == FlyoutPlacement.end,
           )
@@ -537,30 +537,28 @@ class _PopUpRoutePage<T> extends StatelessWidget {
       removeBottom: true,
       removeLeft: true,
       removeRight: true,
-      child: Builder(
-        builder: (BuildContext context) {
-          final mediaQuery = MediaQuery.of(context);
-          return SizedBox(
-            height: mediaQuery.size.height,
-            width: mediaQuery.size.width,
-            child: CustomSingleChildLayout(
-              delegate: _PopUpMenuRouteLayout<T>(
-                target: target,
-                placement: placement,
-                position: position,
-                placementOffset: placementOffset,
-                buttonRect: buttonRect,
-                route: route,
-                textDirection: textDirection,
-                verticalOffset: verticalOffset,
-                horizontalOffset: horizontalOffset,
-                screenSize: mediaQuery.size,
-              ),
-              child: capturedThemes.wrap(menu),
+      child: Builder(builder: (BuildContext context) {
+        final mediaQuery = MediaQuery.of(context);
+        return SizedBox(
+          height: mediaQuery.size.height,
+          width: mediaQuery.size.width,
+          child: CustomSingleChildLayout(
+            delegate: _PopUpMenuRouteLayout<T>(
+              target: target,
+              placement: placement,
+              position: position,
+              placementOffset: placementOffset,
+              buttonRect: buttonRect,
+              route: route,
+              textDirection: textDirection,
+              verticalOffset: verticalOffset,
+              horizontalOffset: horizontalOffset,
+              screenSize: mediaQuery.size,
             ),
-          );
-        },
-      ),
+            child: capturedThemes.wrap(menu),
+          ),
+        );
+      }),
     );
   }
 }
