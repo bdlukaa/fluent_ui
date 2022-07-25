@@ -182,12 +182,12 @@ class PaneItem extends NavigationPaneItem {
       onPressed: onPressed,
       cursor: mouseCursor,
       builder: (context, states) {
-        TextStyle textStyle = baseStyle.merge(
-          selected
-              ? theme.selectedTextStyle?.resolve(states)
-              : theme.unselectedTextStyle?.resolve(states),
-        );
-        if (isTop && states.isPressing) {
+        TextStyle textStyle = ((selected
+                    ? theme.selectedTextStyle?.resolve(states)
+                    : theme.unselectedTextStyle?.resolve(states)) ??
+                const TextStyle())
+            .merge(baseStyle);
+        if (isTop && states.isPressing && baseStyle.color == null) {
           textStyle = textStyle.copyWith(
             color: textStyle.color?.withOpacity(0.75),
           );
@@ -210,6 +210,13 @@ class PaneItem extends NavigationPaneItem {
               )
             : const SizedBox.shrink();
         Widget result() {
+          final iconThemeData = IconThemeData(
+            color: (selected
+                    ? theme.selectedIconColor?.resolve(states)
+                    : theme.unselectedIconColor?.resolve(states)) ??
+                textStyle.color,
+            size: textStyle.fontSize ?? 16.0,
+          );
           switch (mode) {
             case PaneDisplayMode.compact:
               return Container(
@@ -219,32 +226,23 @@ class PaneItem extends NavigationPaneItem {
                 child: Padding(
                   padding: theme.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme.merge(
-                    data: IconThemeData(
-                      color: (selected
-                              ? theme.selectedIconColor?.resolve(states)
-                              : theme.unselectedIconColor?.resolve(states)) ??
-                          textStyle.color,
-                      size: 16.0,
-                    ),
+                    data: iconThemeData,
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: () {
-                          if (infoBadge != null) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              clipBehavior: Clip.none,
-                              children: [
-                                icon,
-                                Positioned(
-                                  right: -8,
-                                  top: -8,
-                                  child: infoBadge!,
-                                ),
-                              ],
-                            );
-                          }
-                          return icon;
-                        }()),
+                      alignment: Alignment.centerLeft,
+                      child: () {
+                        if (infoBadge != null) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              icon,
+                              Positioned(right: -8, top: -8, child: infoBadge!),
+                            ],
+                          );
+                        }
+                        return icon;
+                      }(),
+                    ),
                   ),
                 ),
               );
@@ -257,13 +255,7 @@ class PaneItem extends NavigationPaneItem {
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
                     child: IconTheme.merge(
-                      data: IconThemeData(
-                        color: (selected
-                                ? theme.selectedIconColor?.resolve(states)
-                                : theme.unselectedIconColor?.resolve(states)) ??
-                            textStyle.color,
-                        size: 16.0,
-                      ),
+                      data: iconThemeData,
                       child: Center(child: icon),
                     ),
                   ),
@@ -276,40 +268,27 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              Widget result = Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: theme.iconPadding ?? EdgeInsets.zero,
-                    child: IconTheme.merge(
-                      data: IconThemeData(
-                        color: (selected
-                                ? theme.selectedIconColor?.resolve(states)
-                                : theme.unselectedIconColor?.resolve(states)) ??
-                            textStyle.color,
-                        size: 16.0,
-                      ),
-                      child: Center(child: icon),
-                    ),
+              Widget result = Row(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: theme.iconPadding ?? EdgeInsets.zero,
+                  child: IconTheme.merge(
+                    data: iconThemeData,
+                    child: Center(child: icon),
                   ),
-                  if (showTextOnTop) textResult,
-                ],
-              );
+                ),
+                if (showTextOnTop) textResult,
+              ]);
               if (infoBadge != null) {
-                return Stack(
-                  key: itemKey,
-                  clipBehavior: Clip.none,
-                  children: [
-                    result,
-                    if (infoBadge != null)
-                      Positioned.directional(
-                        textDirection: direction,
-                        end: -3,
-                        top: 3,
-                        child: infoBadge!,
-                      ),
-                  ],
-                );
+                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
+                  result,
+                  if (infoBadge != null)
+                    Positioned.directional(
+                      textDirection: direction,
+                      end: -3,
+                      top: 3,
+                      child: infoBadge!,
+                    ),
+                ]);
               }
               return KeyedSubtree(key: itemKey, child: result);
             default:
@@ -376,12 +355,6 @@ class PaneItem extends NavigationPaneItem {
       }
     }();
 
-    final GlobalKey? key = () {
-      if (index != null && !index.isNegative) {
-        return _PaneItemKeys.of(index, context);
-      }
-    }();
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: () {
@@ -389,6 +362,8 @@ class PaneItem extends NavigationPaneItem {
         if (maybeBody?.pane?.indicator != null &&
             index != null &&
             !index.isNegative) {
+          final key = _PaneItemKeys.of(index, context);
+
           return Stack(children: [
             button,
             Positioned.fill(
