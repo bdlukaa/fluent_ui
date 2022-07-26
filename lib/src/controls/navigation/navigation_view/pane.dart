@@ -676,7 +676,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   MenuFlyoutItemInterface buildMenuPaneItem(
-      BuildContext context, NavigationPaneItem item) {
+    BuildContext context,
+    NavigationPaneItem item,
+  ) {
     if (item is PaneItemSeparator) {
       return const MenuFlyoutSeparator();
     } else if (item is PaneItem) {
@@ -684,9 +686,24 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         item: item,
         onPressed: () => _onPressed(item),
       );
+    } else if (item is PaneItemHeader) {
+      return _MenuFlyoutHeader(header: item);
     } else {
-      throw UnsupportedError('${item.runtimeType} is not supported');
+      throw UnsupportedError(
+        '${item.runtimeType} is not a supported navigation pane item type',
+      );
     }
+  }
+}
+
+class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
+  final PaneItemHeader header;
+
+  const _MenuFlyoutHeader({required this.header});
+
+  @override
+  Widget build(BuildContext context) {
+    return header.build(context);
   }
 }
 
@@ -737,6 +754,8 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
           color: ButtonThemeData.uncheckedInputColor(
             FluentTheme.of(context),
             states,
+            transparentWhenNone: true,
+            transparentWhenDisabled: true,
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Padding(

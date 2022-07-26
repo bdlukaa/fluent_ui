@@ -1,6 +1,11 @@
 Date format: DD/MM/YYYY
 
-## [4.0.0-pre.2] - Tabs and Bugs - [23/07/2022]
+## [4.0.0-pre.3] - [00/08/2022]
+
+- NavigationView top mode fixes:
+  - When overflow, `PaneItemHeader` no longer throws an error
+
+## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
 - Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
 - Apply correct color to the Date and Time Pickers button when selected ([#415](https://github.com/bdlukaa/fluent_ui/issues/415), [#417](https://github.com/bdlukaa/fluent_ui/issues/417))
