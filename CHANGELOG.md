@@ -17,7 +17,7 @@ Date format: DD/MM/YYYY
   This was changed because the properties of `PaneItemHeader` needed to be accessed, but the old version only supported to get the properties of `PaneItem.title`. It can be called on a `Text`, `RichText` or in an `Icon` widget
   - `InheritedNavigationView` is now accessible on the top overflow menu
   - Added `NavigationPaneThemeData.selectedTopTextStyle` and `NavigationPaneThemeData.unselectedTopTextStyle`, which is applied to the items on top mode
-  
+  - Updated default transitions for top mode: `HorizontalSlidePageTransition`
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
