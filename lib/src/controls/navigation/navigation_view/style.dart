@@ -101,9 +101,15 @@ class NavigationPaneThemeData with Diagnosticable {
   final EdgeInsetsGeometry? labelPadding;
   final EdgeInsetsGeometry? iconPadding;
 
+  /// The padding applied to the header. This padding is not applied when
+  /// display mode is top
+  final EdgeInsetsGeometry? headerPadding;
+
   final TextStyle? itemHeaderTextStyle;
   final ButtonState<TextStyle?>? selectedTextStyle;
   final ButtonState<TextStyle?>? unselectedTextStyle;
+  final ButtonState<TextStyle?>? selectedTopTextStyle;
+  final ButtonState<TextStyle?>? unselectedTopTextStyle;
   final ButtonState<Color?>? selectedIconColor;
   final ButtonState<Color?>? unselectedIconColor;
 
@@ -116,9 +122,12 @@ class NavigationPaneThemeData with Diagnosticable {
     this.highlightColor,
     this.labelPadding,
     this.iconPadding,
+    this.headerPadding,
     this.itemHeaderTextStyle,
     this.selectedTextStyle,
     this.unselectedTextStyle,
+    this.selectedTopTextStyle,
+    this.unselectedTopTextStyle,
     this.animationDuration,
     this.animationCurve,
     this.selectedIconColor,
@@ -158,8 +167,27 @@ class NavigationPaneThemeData with Diagnosticable {
                   : resources.textFillColorPrimary,
         );
       }),
+      selectedTopTextStyle: ButtonState.resolveWith((states) {
+        return typography.body?.copyWith(
+          color: states.isPressing
+              ? resources.textFillColorTertiary
+              : states.isHovering
+                  ? resources.textFillColorSecondary
+                  : resources.textFillColorPrimary,
+        );
+      }),
+      unselectedTopTextStyle: ButtonState.resolveWith((states) {
+        return typography.body?.copyWith(
+          color: states.isPressing
+              ? resources.textFillColorSecondary
+              : states.isDisabled
+                  ? resources.textFillColorDisabled
+                  : resources.textFillColorPrimary,
+        );
+      }),
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+      headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
     );
   }
 
@@ -172,6 +200,8 @@ class NavigationPaneThemeData with Diagnosticable {
       iconPadding: EdgeInsetsGeometry.lerp(a?.iconPadding, b?.iconPadding, t),
       labelPadding:
           EdgeInsetsGeometry.lerp(a?.labelPadding, b?.labelPadding, t),
+      headerPadding:
+          EdgeInsetsGeometry.lerp(a?.headerPadding, b?.headerPadding, t),
       tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       itemHeaderTextStyle:
@@ -179,6 +209,10 @@ class NavigationPaneThemeData with Diagnosticable {
       selectedTextStyle: ButtonState.lerp(
           a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
       unselectedTextStyle: ButtonState.lerp(
+          a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
+      selectedTopTextStyle: ButtonState.lerp(
+          a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
+      unselectedTopTextStyle: ButtonState.lerp(
           a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
       highlightColor: Color.lerp(a?.highlightColor, b?.highlightColor, t),
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
@@ -195,11 +229,15 @@ class NavigationPaneThemeData with Diagnosticable {
     return NavigationPaneThemeData(
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,
+      headerPadding: style?.headerPadding ?? headerPadding,
       tileColor: style?.tileColor ?? tileColor,
       backgroundColor: style?.backgroundColor ?? backgroundColor,
       itemHeaderTextStyle: style?.itemHeaderTextStyle ?? itemHeaderTextStyle,
       selectedTextStyle: style?.selectedTextStyle ?? selectedTextStyle,
       unselectedTextStyle: style?.unselectedTextStyle ?? unselectedTextStyle,
+      selectedTopTextStyle: style?.selectedTopTextStyle ?? selectedTopTextStyle,
+      unselectedTopTextStyle:
+          style?.unselectedTopTextStyle ?? unselectedTopTextStyle,
       highlightColor: style?.highlightColor ?? highlightColor,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
@@ -211,22 +249,23 @@ class NavigationPaneThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('tileColor', tileColor));
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(ColorProperty('highlightColor', highlightColor));
-    properties.add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding));
-    properties.add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('iconPadding', iconPadding));
-    properties.add(
-        DiagnosticsProperty<Duration>('animationDuration', animationDuration));
     properties
-        .add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
-    properties.add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle));
-    properties
-        .add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle));
-    properties.add(DiagnosticsProperty('selectedIconColor', selectedIconColor));
-    properties
-        .add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
+      ..add(DiagnosticsProperty('tileColor', tileColor))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ColorProperty('highlightColor', highlightColor))
+      ..add(
+          DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('iconPadding', iconPadding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+          'headerPadding', headerPadding))
+      ..add(
+          DiagnosticsProperty<Duration>('animationDuration', animationDuration))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle))
+      ..add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle))
+      ..add(DiagnosticsProperty('selectedTopTextStyle', selectedTextStyle))
+      ..add(DiagnosticsProperty('unselectedTopTextStyle', unselectedTextStyle))
+      ..add(DiagnosticsProperty('selectedIconColor', selectedIconColor))
+      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
   }
 }

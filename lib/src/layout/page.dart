@@ -8,11 +8,10 @@ const double kPageDefaultVerticalPadding = 24.0;
 /// Creates a page that follows fluent-ui design guidelines.
 ///
 /// See also:
+///
 ///   * [PageHeader], usually used on the [header] property
 ///   * [NavigationBody], the widget that implements fluent page transitions
 ///     into navigation view.
-///   * [ScaffoldPageParent], used by [NavigationView] to tell `ScaffoldPage`
-///     if a button is necessary to be displayed before [title]
 class ScaffoldPage extends StatelessWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({
@@ -68,9 +67,6 @@ class ScaffoldPage extends StatelessWidget {
   /// The content of this page. The content area is where most of the information
   /// for the selected nav category is displayed.
   ///
-  /// If this widget is scrollable, you may want to provide [contentScrollController]
-  /// as well, to add a scrollbar to the right of the page.
-  ///
   /// ![Content Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-content.png)
   final Widget content;
 
@@ -87,9 +83,6 @@ class ScaffoldPage extends StatelessWidget {
 
   /// The padding used by this widget.
   ///
-  /// If [contentScrollController] is not null, the scrollbar is rendered over
-  /// this padding
-  ///
   /// If null, [PageHeader.horizontalPadding] is used horizontally and
   /// [kPageDefaultVerticalPadding] is used vertically
   final EdgeInsets? padding;
@@ -97,15 +90,19 @@ class ScaffoldPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+
     final theme = FluentTheme.of(context);
-    // final parentView = InheritedNavigationView.maybeOf(context);
+    final view = InheritedNavigationView.maybeOf(context);
+
     return Column(children: [
       Expanded(
         child: Container(
-          color: theme.scaffoldBackgroundColor,
+          // we only show the scaffold background color if a [NavigationView] is
+          // not a parent widget of this page. this happens because, if a navigation
+          // view is not used, the page would be uncolored.
+          color: view == null ? theme.scaffoldBackgroundColor : null,
           padding: EdgeInsets.only(
             top: padding?.top ?? kPageDefaultVerticalPadding,
-            // bottom: padding?.bottom ?? kPageDefaultVerticalPadding,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,6 +118,13 @@ class ScaffoldPage extends StatelessWidget {
   }
 }
 
+/// The header of a page
+///
+/// See also:
+///
+///   * [ScaffoldPage], which creates a page that follows fluent-ui design guidelines.
+///   * [Typography.title], which is the default style used by the header
+///   * [CommandBar], which provide quick access to common tasks on the page
 class PageHeader extends StatelessWidget {
   /// Creates a page header.
   const PageHeader({
@@ -131,23 +135,27 @@ class PageHeader extends StatelessWidget {
     this.padding,
   }) : super(key: key);
 
-  /// The widget displayed before [title]. If null, some widget
-  /// can be inserted here implicitly. To avoid this, set this
-  /// property to `SizedBox.shrink()`.
+  /// The widget displayed before the [title]
+  ///
+  /// Usually an [Icon] widget.
   final Widget? leading;
 
   /// The title of this bar.
   ///
-  /// Usually a [Text] widget.
-  ///
   /// ![Header Example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-header.png)
+  ///
+  /// Usually a [Text] widget.
   final Widget? title;
 
   /// A bar with a list of actions an user can take
+  ///
+  /// Usually a [CommandBar] widget.
   final Widget? commandBar;
 
+  /// The horizontal padding applied to both sides of the page
   final double? padding;
 
+  /// Gets the horizontal padding applied to the header based on the screen width
   static double horizontalPadding(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final screenWidth = MediaQuery.of(context).size.width;
@@ -162,6 +170,7 @@ class PageHeader extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final leading = this.leading;
     final horizontalPadding = padding ?? PageHeader.horizontalPadding(context);
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: 18.0,
