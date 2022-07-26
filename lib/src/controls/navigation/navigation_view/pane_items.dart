@@ -72,79 +72,6 @@ class PaneItem extends NavigationPaneItem {
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
 
-  T? getPropertyFromTitle<T>([dynamic def]) {
-    if (title is Text) {
-      final title = this.title as Text;
-      switch (T) {
-        case String:
-          return (title.data ?? title.textSpan?.toPlainText()) as T?;
-        case InlineSpan:
-          return (title.textSpan ??
-              TextSpan(
-                text: title.data ?? '',
-                style: getPropertyFromTitle<TextStyle>()
-                        ?.merge(def as TextStyle?) ??
-                    def as TextStyle?,
-              )) as T?;
-        case TextStyle:
-          return title.style as T?;
-        case TextAlign:
-          return title.textAlign as T?;
-        case TextHeightBehavior:
-          return title.textHeightBehavior as T?;
-        case TextWidthBasis:
-          return title.textWidthBasis as T?;
-      }
-    } else if (title is RichText) {
-      final title = this.title as RichText;
-      switch (T) {
-        case String:
-          return title.text.toPlainText() as T?;
-        case InlineSpan:
-          if (T is InlineSpan) {
-            final span = title.text;
-            span.style?.merge(def as TextStyle?);
-            return span as T;
-          }
-          return title.text as T;
-        case TextStyle:
-          return (title.text.style as T?) ?? def as T?;
-        case TextAlign:
-          return title.textAlign as T?;
-        case TextHeightBehavior:
-          return title.textHeightBehavior as T?;
-        case TextWidthBasis:
-          return title.textWidthBasis as T?;
-      }
-    } else if (title is Icon) {
-      final title = this.title as Icon;
-      switch (T) {
-        case String:
-          if (title.icon?.codePoint == null) return null;
-          return String.fromCharCode(title.icon!.codePoint) as T?;
-        case InlineSpan:
-          return TextSpan(
-            text: String.fromCharCode(title.icon!.codePoint),
-            style: getPropertyFromTitle<TextStyle>(),
-          ) as T?;
-        case TextStyle:
-          return TextStyle(
-            color: title.color,
-            fontSize: title.size,
-            fontFamily: title.icon?.fontFamily,
-            package: title.icon?.fontPackage,
-          ) as T?;
-        case TextAlign:
-          return null;
-        case TextHeightBehavior:
-          return null;
-        case TextWidthBasis:
-          return null;
-      }
-    }
-    return null;
-  }
-
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
@@ -168,10 +95,10 @@ class PaneItem extends NavigationPaneItem {
     final direction = Directionality.of(context);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final String titleText = getPropertyFromTitle<String>() ?? '';
+    final String titleText = title?.getProperty<String>() ?? '';
 
     final TextStyle baseStyle =
-        getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        title?.getProperty<TextStyle>() ?? const TextStyle();
 
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
@@ -196,15 +123,13 @@ class PaneItem extends NavigationPaneItem {
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
                 child: RichText(
-                  text: getPropertyFromTitle<InlineSpan>(textStyle)!,
+                  text: title!.getProperty<InlineSpan>(textStyle)!,
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  textAlign:
-                      getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
-                  textHeightBehavior:
-                      getPropertyFromTitle<TextHeightBehavior>(),
-                  textWidthBasis: getPropertyFromTitle<TextWidthBasis>() ??
+                  textAlign: title?.getProperty<TextAlign>() ?? TextAlign.start,
+                  textHeightBehavior: title?.getProperty<TextHeightBehavior>(),
+                  textWidthBasis: title?.getProperty<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
@@ -335,7 +260,7 @@ class PaneItem extends NavigationPaneItem {
 
                 if (showTooltip) {
                   return Tooltip(
-                    richMessage: getPropertyFromTitle<InlineSpan>(),
+                    richMessage: title?.getProperty<InlineSpan>(),
                     style: TooltipThemeData(textStyle: baseStyle),
                     child: result(),
                   );
@@ -443,15 +368,22 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
+    final view = InheritedNavigationView.of(context);
     return Padding(
       key: itemKey,
-      padding: theme.iconPadding ?? EdgeInsets.zero,
+      padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+        view.displayMode == PaneDisplayMode.top
+            ? EdgeInsets.zero
+            : theme.headerPadding ?? EdgeInsets.zero,
+      ),
       child: DefaultTextStyle(
         style: theme.itemHeaderTextStyle ?? const TextStyle(),
         softWrap: false,
         maxLines: 1,
         overflow: TextOverflow.fade,
-        textAlign: TextAlign.left,
+        textAlign: view.displayMode == PaneDisplayMode.top
+            ? TextAlign.center
+            : TextAlign.left,
         child: header,
       ),
     );
@@ -528,5 +460,80 @@ extension _ItemsExtension on List<NavigationPaneItem> {
       final position = paneBox.globalToLocal(globalPosition);
       return position;
     }).toList();
+  }
+}
+
+extension ItemExtension on Widget {
+  T? getProperty<T>([dynamic def]) {
+    if (this is Text) {
+      final title = this as Text;
+      switch (T) {
+        case String:
+          return (title.data ?? title.textSpan?.toPlainText()) as T?;
+        case InlineSpan:
+          return (title.textSpan ??
+              TextSpan(
+                text: title.data ?? '',
+                style:
+                    title.getProperty<TextStyle>()?.merge(def as TextStyle?) ??
+                        def as TextStyle?,
+              )) as T?;
+        case TextStyle:
+          return title.style as T?;
+        case TextAlign:
+          return title.textAlign as T?;
+        case TextHeightBehavior:
+          return title.textHeightBehavior as T?;
+        case TextWidthBasis:
+          return title.textWidthBasis as T?;
+      }
+    } else if (this is RichText) {
+      final title = this as RichText;
+      switch (T) {
+        case String:
+          return title.text.toPlainText() as T?;
+        case InlineSpan:
+          if (T is InlineSpan) {
+            final span = title.text;
+            span.style?.merge(def as TextStyle?);
+            return span as T;
+          }
+          return title.text as T;
+        case TextStyle:
+          return (title.text.style as T?) ?? def as T?;
+        case TextAlign:
+          return title.textAlign as T?;
+        case TextHeightBehavior:
+          return title.textHeightBehavior as T?;
+        case TextWidthBasis:
+          return title.textWidthBasis as T?;
+      }
+    } else if (this is Icon) {
+      final title = this as Icon;
+      switch (T) {
+        case String:
+          if (title.icon?.codePoint == null) return null;
+          return String.fromCharCode(title.icon!.codePoint) as T?;
+        case InlineSpan:
+          return TextSpan(
+            text: String.fromCharCode(title.icon!.codePoint),
+            style: title.getProperty<TextStyle>(),
+          ) as T?;
+        case TextStyle:
+          return TextStyle(
+            color: title.color,
+            fontSize: title.size,
+            fontFamily: title.icon?.fontFamily,
+            package: title.icon?.fontPackage,
+          ) as T?;
+        case TextAlign:
+          return null;
+        case TextHeightBehavior:
+          return null;
+        case TextWidthBasis:
+          return null;
+      }
+    }
+    return null;
   }
 }

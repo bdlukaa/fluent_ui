@@ -520,9 +520,24 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     widget.pane.changeTo(item);
   }
 
-  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
+  Widget _buildItem(
+    BuildContext context,
+    NavigationPaneItem item,
+    double height,
+  ) {
     if (item is PaneItemHeader) {
-      return item.build(context);
+      final theme = NavigationPaneTheme.of(context);
+      final TextStyle style = item.header.getProperty<TextStyle>() ??
+          theme.itemHeaderTextStyle ??
+          DefaultTextStyle.of(context).style;
+
+      return Padding(
+        padding: EdgeInsetsDirectional.only(
+          // This will center the item header
+          top: (height - (style.fontSize ?? 14.0)) / 4,
+        ),
+        child: item.build(context),
+      );
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.vertical);
     } else if (item is PaneItem) {
@@ -593,6 +608,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final view = InheritedNavigationView.of(context);
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
@@ -620,11 +636,18 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
             overflowWidget: Flyout(
               controller: overflowController,
               placement: FlyoutPlacement.end,
-              content: (context) => MenuFlyout(
-                items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
-                  final item = widget.pane.items[i];
-                  return buildMenuPaneItem(context, item);
-                }).toList(),
+              content: (context) => InheritedNavigationView(
+                displayMode: view.displayMode,
+                currentItemIndex: view.currentItemIndex,
+                minimalPaneOpen: view.minimalPaneOpen,
+                oldIndex: view.oldIndex,
+                pane: view.pane,
+                child: MenuFlyout(
+                  items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
+                    final item = widget.pane.items[i];
+                    return buildMenuPaneItem(context, item);
+                  }).toList(),
+                ),
               ),
               child: PaneItem(icon: const Icon(FluentIcons.more)).build(
                 context,
@@ -654,7 +677,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
               final item = widget.pane.items[index];
               return SizedBox(
                 height: height,
-                child: _buildItem(context, item),
+                child: _buildItem(context, item, height),
               );
             }).toList(),
           ),
@@ -662,14 +685,11 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         if (widget.pane.autoSuggestBox != null)
           Container(
             margin: const EdgeInsets.only(left: 30.0),
-            constraints: const BoxConstraints(
-              minWidth: 100.0,
-              maxWidth: 215.0,
-            ),
+            constraints: const BoxConstraints(minWidth: 100.0, maxWidth: 215.0),
             child: widget.pane.autoSuggestBox!,
           ),
         ...widget.pane.footerItems.map((item) {
-          return _buildItem(context, item);
+          return _buildItem(context, item, height);
         }).toList(),
       ]),
     );
@@ -703,7 +723,11 @@ class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    return header.build(context);
+    final theme = NavigationPaneTheme.of(context);
+    return Padding(
+      padding: theme.headerPadding ?? EdgeInsets.zero,
+      child: header.build(context),
+    );
   }
 }
 
@@ -722,23 +746,22 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     final size = ContentSizeInfo.of(context).size;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
-    final String titleText = item.getPropertyFromTitle<String>() ?? '';
+    final String titleText = item.title?.getProperty<String>() ?? '';
     final TextStyle baseStyle =
-        item.getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
     final textResult = titleText.isNotEmpty
         ? Padding(
             padding: theme.labelPadding ?? EdgeInsets.zero,
             child: RichText(
-              text: item.getPropertyFromTitle<InlineSpan>(baseStyle)!,
+              text: item.title!.getProperty<InlineSpan>(baseStyle)!,
               maxLines: 1,
               overflow: TextOverflow.fade,
               softWrap: false,
               textAlign:
-                  item.getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
-              textHeightBehavior:
-                  item.getPropertyFromTitle<TextHeightBehavior>(),
-              textWidthBasis: item.getPropertyFromTitle<TextWidthBasis>() ??
+                  item.title?.getProperty<TextAlign>() ?? TextAlign.start,
+              textHeightBehavior: item.title?.getProperty<TextHeightBehavior>(),
+              textWidthBasis: item.title?.getProperty<TextWidthBasis>() ??
                   TextWidthBasis.parent,
             ),
           )

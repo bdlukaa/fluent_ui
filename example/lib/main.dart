@@ -154,11 +154,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   void resetSearch() => searchController.clear();
   String get searchValue => searchController.text;
   final List<NavigationPaneItem> originalItems = [
-    PaneItem(
-      icon: const Icon(FluentIcons.home),
-      title: const Text('Home'),
-    ),
-    PaneItemSeparator(),
+    PaneItem(icon: const Icon(FluentIcons.home), title: const Text('Home')),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
       icon: const Icon(FluentIcons.button_control),
@@ -168,20 +164,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.checkbox_composite),
       title: const Text('Checkbox'),
     ),
-    PaneItem(
-      icon: const Icon(FluentIcons.slider),
-      title: const Text('Slider'),
-    ),
+    PaneItem(icon: const Icon(FluentIcons.slider), title: const Text('Slider')),
     PaneItem(
       icon: const Icon(FluentIcons.toggle_left),
       title: const Text('ToggleSwitch'),
     ),
-    PaneItemHeader(
-      header: const Padding(
-        padding: EdgeInsets.only(top: 12.0),
-        child: Text('Form'),
-      ),
-    ),
+    PaneItemHeader(header: const Text('Form')),
     PaneItem(
       icon: const Icon(FluentIcons.text_field),
       title: const Text('TextBox'),
@@ -202,12 +190,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.date_time),
       title: const Text('DatePicker'),
     ),
-    PaneItemHeader(
-      header: const Padding(
-        padding: EdgeInsets.only(top: 12.0),
-        child: Text('Navigation'),
-      ),
-    ),
+    PaneItemHeader(header: const Text('Navigation')),
     PaneItem(
       icon: const Icon(FluentIcons.navigation_flipper),
       title: const Text('NavigationView'),
@@ -220,12 +203,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.bulleted_tree_list),
       title: const Text('TreeView'),
     ),
-    PaneItemHeader(
-      header: const Padding(
-        padding: EdgeInsets.only(top: 12.0),
-        child: Text('Surfaces'),
-      ),
-    ),
+    PaneItemHeader(header: const Text('Surfaces')),
     PaneItem(
       icon: const Icon(FluentIcons.un_set_color),
       title: const Text('Acrylic'),
@@ -250,10 +228,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.progress_ring_dots),
       title: const Text('Progress Indicators'),
     ),
-    PaneItem(
-      icon: const Icon(FluentIcons.tiles),
-      title: const Text('Tiles'),
-    ),
+    PaneItem(icon: const Icon(FluentIcons.tiles), title: const Text('Tiles')),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
@@ -262,12 +237,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.pop_expand),
       title: const Text('Flyout'),
     ),
-    PaneItemHeader(
-      header: const Padding(
-        padding: EdgeInsets.only(top: 12.0),
-        child: Text('Theming'),
-      ),
-    ),
+    PaneItemHeader(header: const Text('Theming')),
     PaneItem(
       icon: const Icon(FluentIcons.color_solid),
       title: const Text('Colors'),

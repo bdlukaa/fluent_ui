@@ -101,6 +101,10 @@ class NavigationPaneThemeData with Diagnosticable {
   final EdgeInsetsGeometry? labelPadding;
   final EdgeInsetsGeometry? iconPadding;
 
+  /// The padding applied to the header. This padding is not applied when
+  /// display mode is top
+  final EdgeInsetsGeometry? headerPadding;
+
   final TextStyle? itemHeaderTextStyle;
   final ButtonState<TextStyle?>? selectedTextStyle;
   final ButtonState<TextStyle?>? unselectedTextStyle;
@@ -116,6 +120,7 @@ class NavigationPaneThemeData with Diagnosticable {
     this.highlightColor,
     this.labelPadding,
     this.iconPadding,
+    this.headerPadding,
     this.itemHeaderTextStyle,
     this.selectedTextStyle,
     this.unselectedTextStyle,
@@ -160,6 +165,7 @@ class NavigationPaneThemeData with Diagnosticable {
       }),
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+      headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
     );
   }
 
@@ -172,6 +178,8 @@ class NavigationPaneThemeData with Diagnosticable {
       iconPadding: EdgeInsetsGeometry.lerp(a?.iconPadding, b?.iconPadding, t),
       labelPadding:
           EdgeInsetsGeometry.lerp(a?.labelPadding, b?.labelPadding, t),
+      headerPadding:
+          EdgeInsetsGeometry.lerp(a?.headerPadding, b?.headerPadding, t),
       tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       itemHeaderTextStyle:
@@ -195,6 +203,7 @@ class NavigationPaneThemeData with Diagnosticable {
     return NavigationPaneThemeData(
       iconPadding: style?.iconPadding ?? iconPadding,
       labelPadding: style?.labelPadding ?? labelPadding,
+      headerPadding: style?.headerPadding ?? headerPadding,
       tileColor: style?.tileColor ?? tileColor,
       backgroundColor: style?.backgroundColor ?? backgroundColor,
       itemHeaderTextStyle: style?.itemHeaderTextStyle ?? itemHeaderTextStyle,
@@ -211,22 +220,21 @@ class NavigationPaneThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('tileColor', tileColor));
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(ColorProperty('highlightColor', highlightColor));
-    properties.add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding));
-    properties.add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('iconPadding', iconPadding));
-    properties.add(
-        DiagnosticsProperty<Duration>('animationDuration', animationDuration));
     properties
-        .add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
-    properties.add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle));
-    properties
-        .add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle));
-    properties.add(DiagnosticsProperty('selectedIconColor', selectedIconColor));
-    properties
-        .add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
+      ..add(DiagnosticsProperty('tileColor', tileColor))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ColorProperty('highlightColor', highlightColor))
+      ..add(
+          DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('iconPadding', iconPadding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+          'headerPadding', headerPadding))
+      ..add(
+          DiagnosticsProperty<Duration>('animationDuration', animationDuration))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle))
+      ..add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle))
+      ..add(DiagnosticsProperty('selectedIconColor', selectedIconColor))
+      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
   }
 }

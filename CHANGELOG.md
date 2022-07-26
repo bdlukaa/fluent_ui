@@ -2,8 +2,20 @@ Date format: DD/MM/YYYY
 
 ## [4.0.0-pre.3] - [00/08/2022]
 
-- NavigationView top mode fixes:
-  - When overflow, `PaneItemHeader` no longer throws an error
+- `NavigationView` top mode fixes:
+  - When top overflow menu is opened, `PaneItemHeader` no longer throws an unsupported error
+  - When on top mode, `PaneItemHeader` is properly aligned to the other items.
+  - Added `NavigationPaneThemeData.headerPadding`, which is applied to `PaneItemHeader` on open, compact and minimal mode. It defaults to 10 pixels at the top
+  - **BREAKING** `PaneItem.getPropertyFromTitle` is now `widget.getProperty`:
+
+  Before:
+  `getPropertyFromTitle<TextStyle>()`
+
+  Now:
+  `title.getProperty<TextStyle>()`
+
+  This was changed because the properties of `PaneItemHeader` needed to be accessed, but the old version only supported to get the properties of `PaneItem.title`. It can be called on a `Text`, `RichText` or in an `Icon` widget
+  - `InheritedNavigationView` is now accessible on the top overflow menu
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
