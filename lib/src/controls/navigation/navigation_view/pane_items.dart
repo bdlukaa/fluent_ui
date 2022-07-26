@@ -109,16 +109,18 @@ class PaneItem extends NavigationPaneItem {
       onPressed: onPressed,
       cursor: mouseCursor,
       builder: (context, states) {
-        TextStyle textStyle = ((selected
-                    ? theme.selectedTextStyle?.resolve(states)
-                    : theme.unselectedTextStyle?.resolve(states)) ??
-                const TextStyle())
-            .merge(baseStyle);
-        if (isTop && states.isPressing && baseStyle.color == null) {
-          textStyle = textStyle.copyWith(
-            color: textStyle.color?.withOpacity(0.75),
-          );
-        }
+        TextStyle textStyle = () {
+          TextStyle? style = !isTop
+              ? (selected
+                  ? theme.selectedTextStyle?.resolve(states)
+                  : theme.unselectedTextStyle?.resolve(states))
+              : (selected
+                  ? theme.selectedTopTextStyle?.resolve(states)
+                  : theme.unselectedTopTextStyle?.resolve(states));
+          if (style == null) return baseStyle;
+          return style.merge(baseStyle);
+        }();
+
         final textResult = titleText.isNotEmpty
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
@@ -136,10 +138,10 @@ class PaneItem extends NavigationPaneItem {
             : const SizedBox.shrink();
         Widget result() {
           final iconThemeData = IconThemeData(
-            color: (selected
+            color: textStyle.color ??
+                (selected
                     ? theme.selectedIconColor?.resolve(states)
-                    : theme.unselectedIconColor?.resolve(states)) ??
-                textStyle.color,
+                    : theme.unselectedIconColor?.resolve(states)),
             size: textStyle.fontSize ?? 16.0,
           );
           switch (mode) {

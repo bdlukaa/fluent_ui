@@ -616,18 +616,12 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       child: Row(children: [
         if (widget.pane.leading != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 6.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
             child: widget.pane.leading!,
           ),
         if (widget.pane.header != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 6.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
             child: widget.pane.header!,
           ),
         Expanded(
@@ -750,26 +744,33 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     final TextStyle baseStyle =
         item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
-    final textResult = titleText.isNotEmpty
-        ? Padding(
-            padding: theme.labelPadding ?? EdgeInsets.zero,
-            child: RichText(
-              text: item.title!.getProperty<InlineSpan>(baseStyle)!,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
-              textAlign:
-                  item.title?.getProperty<TextAlign>() ?? TextAlign.start,
-              textHeightBehavior: item.title?.getProperty<TextHeightBehavior>(),
-              textWidthBasis: item.title?.getProperty<TextWidthBasis>() ??
-                  TextWidthBasis.parent,
-            ),
-          )
-        : const SizedBox.shrink();
-
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
+        TextStyle textStyle = () {
+          TextStyle? style = theme.unselectedTextStyle?.resolve(states);
+          if (style == null) return baseStyle;
+          return style.merge(baseStyle);
+        }();
+
+        final textResult = titleText.isNotEmpty
+            ? Padding(
+                padding: theme.labelPadding ?? EdgeInsets.zero,
+                child: RichText(
+                  text: item.title!.getProperty<InlineSpan>(textStyle)!,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  textAlign:
+                      item.title?.getProperty<TextAlign>() ?? TextAlign.start,
+                  textHeightBehavior:
+                      item.title?.getProperty<TextHeightBehavior>(),
+                  textWidthBasis: item.title?.getProperty<TextWidthBasis>() ??
+                      TextWidthBasis.parent,
+                ),
+              )
+            : const SizedBox.shrink();
+
         return Container(
           width: size.isEmpty ? null : size.width,
           padding: MenuFlyout.itemsPadding,
