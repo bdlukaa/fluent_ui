@@ -151,6 +151,7 @@ abstract class FluentLocalizations {
 // din't let me set the default value in FluentApp.supportedLocales
 const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('ar'),
+  Locale('cs'),
   Locale('de'),
   Locale('en'),
   Locale('es'),
