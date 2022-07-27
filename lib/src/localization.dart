@@ -167,7 +167,8 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('pt'),
   Locale('ru'),
   Locale('zh'),
-  Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
+  Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+  Locale('hu'),
 ];
 
 /// Strings for the fluent widgets.
