@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/localization.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
@@ -110,7 +111,8 @@ class TimePicker extends StatefulWidget {
   }
 }
 
-class _TimePickerState extends State<TimePicker> {
+class _TimePickerState extends State<TimePicker>
+    with IntlScriptLocaleApplyMixin {
   late DateTime time;
 
   final GlobalKey _buttonKey = GlobalKey();
@@ -243,17 +245,8 @@ class _TimePickerState extends State<TimePicker> {
                           finalHour = hour;
                         }
 
-                        Locale currentLocale = Localizations.localeOf(context);
-                        String? appliedIntlLocale;
-
-                        if (currentLocale.languageCode == "zh" &&
-                            currentLocale.scriptCode == "Hant") {
-                          // Make sure it returned '時' instead of '时' when applying Trad. Chinese with no country code.
-                          appliedIntlLocale =
-                              "zh_${currentLocale.countryCode ?? "TW"}";
-                        }
-
-                        return DateFormat.H(appliedIntlLocale).format(DateTime(
+                        return DateFormat.H(getIntlLocale(context))
+                            .format(DateTime(
                           0, // year
                           0, // month
                           0, // day

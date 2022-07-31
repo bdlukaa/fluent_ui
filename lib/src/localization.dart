@@ -256,3 +256,29 @@ class _FluentLocalizationsDelegate
   @override
   String toString() => 'DefaultFluentLocalizations.delegate(en_US)';
 }
+
+/// Ensure `intl` package return correct format when applied [Locale.scriptCode].
+///
+/// It shoulde be implemented to [Diagnosticable] which required to uses `intl`
+/// feature like `DateFormat`.
+mixin IntlScriptLocaleApplyMixin on Diagnosticable {
+  /// Return a default country code if [Locale] doesn't applied.
+  static final Map<Locale, String> _defaultCountryCode = <Locale, String>{
+    const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'): "TW"
+  };
+
+  /// Get a [String] which recognizable for `intl` pakcage.
+  ///
+  /// It return `null` if no script code is specified in [Locale].
+  String? getIntlLocale(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    Locale noCountryLocale = Locale.fromSubtags(
+        languageCode: locale.languageCode, scriptCode: locale.scriptCode);
+
+    if (_defaultCountryCode.containsKey(noCountryLocale)) {
+      return "${locale.languageCode}_${locale.countryCode ?? _defaultCountryCode[noCountryLocale]}";
+    }
+
+    return null;
+  }
+}
