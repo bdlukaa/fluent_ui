@@ -243,7 +243,17 @@ class _TimePickerState extends State<TimePicker> {
                           finalHour = hour;
                         }
 
-                        return DateFormat.H().format(DateTime(
+                        Locale currentLocale = Localizations.localeOf(context);
+                        String? appliedIntlLocale;
+
+                        if (currentLocale.languageCode == "zh" &&
+                            currentLocale.scriptCode == "Hant") {
+                          // Make sure it returned '時' instead of '时' when applying Trad. Chinese with no country code.
+                          appliedIntlLocale =
+                              "zh_${currentLocale.countryCode ?? "TW"}";
+                        }
+
+                        return DateFormat.H(appliedIntlLocale).format(DateTime(
                           0, // year
                           0, // month
                           0, // day
