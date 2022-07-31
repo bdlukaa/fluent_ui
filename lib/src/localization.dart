@@ -271,6 +271,9 @@ mixin IntlScriptLocaleApplyMixin on Diagnosticable {
   ///
   /// It return `null` if no script code is specified in [Locale].
   String? getIntlLocale(BuildContext context) {
+    assert(_defaultCountryCode.keys
+        .every((element) => element.scriptCode != null));
+
     Locale locale = Localizations.localeOf(context);
     Locale noCountryLocale = Locale.fromSubtags(
         languageCode: locale.languageCode, scriptCode: locale.scriptCode);
