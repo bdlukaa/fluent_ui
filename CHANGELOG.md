@@ -19,6 +19,8 @@ Date format: DD/MM/YYYY
   - Added `NavigationPaneThemeData.selectedTopTextStyle` and `NavigationPaneThemeData.unselectedTopTextStyle`, which is applied to the items on top mode
   - Updated default transitions for top mode: `HorizontalSlidePageTransition`
 
+- Fix incorrect translation of `TimePicker` in Traditional Chinese.
+
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
 - Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
