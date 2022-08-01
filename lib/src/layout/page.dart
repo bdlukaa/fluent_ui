@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// The default vertical padding of the scaffold page
 ///
@@ -92,7 +93,7 @@ class ScaffoldPage extends StatelessWidget {
 
   /// If true the body and the scaffold's floating widgets should size
   /// themselves to avoid the onscreen keyboard whose height is defined by the
-  /// ambient MediaQuery's MediaQueryData.viewInsets bottom property.
+  /// ambient MediaQuery's [MediaQueryData.viewInsets] bottom property.
   ///
   /// For example, if there is an onscreen keyboard displayed above the
   /// scaffold, the body can be resized to avoid overlapping the keyboard, which
@@ -100,6 +101,22 @@ class ScaffoldPage extends StatelessWidget {
   ///
   /// Defaults to true.
   final bool resizeToAvoidBottomInset;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+        'padding',
+        padding,
+        defaultValue: kPageDefaultVerticalPadding,
+      ))
+      ..add(FlagProperty(
+        'resizeToAvoidBottomInset',
+        value: resizeToAvoidBottomInset,
+        defaultValue: true,
+      ));
+  }
 
   @override
   Widget build(BuildContext context) {

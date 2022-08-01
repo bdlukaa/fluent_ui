@@ -20,6 +20,7 @@ Date format: DD/MM/YYYY
   - Updated default transitions for top mode: `HorizontalSlidePageTransition`
 - Fix incorrect translation of `TimePicker` in Traditional Chinese.
 - Added `ScaffoldPage.resizeToAvoidBottomInset` ([#444](https://github.com/bdlukaa/fluent_ui/issues/444))
+- Consider view padding for `NavigationAppBar`
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
