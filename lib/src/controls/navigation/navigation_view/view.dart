@@ -13,21 +13,21 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
 
-/// The NavigationView control provides top-level navigation
-/// for your app. It adapts to a variety of screen sizes and
-/// supports both top and left navigation styles.
+/// The NavigationView control provides top-level navigation for your app. It
+/// adapts to a variety of screen sizes and supports both top and left
+/// navigation styles.
 ///
 /// ![NavigationView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
 ///
 /// See also:
 ///
-///   * [NavigationBody], a widget that implement fluent
-///     transitions into [NavigationView]
-///   * [NavigationPane], the pane used by [NavigationView],
-///     that can be displayed either at the left and top
-///   * [TabView], a widget similar to [NavigationView], useful
-///     to display several pages of content while giving a user
-///     the capability to rearrange, open, or close new tabs.
+///   * [NavigationBody], a widget that implement fluent transitions into
+///     [NavigationView]
+///   * [NavigationPane], the pane used by [NavigationView], that can be
+///     displayed either at the left and top
+///   * [TabView], a widget similar to [NavigationView], useful to display
+///     several pages of content while giving a user the capability to
+///     rearrange, open, or close new tabs.
 class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
   const NavigationView({
@@ -71,8 +71,15 @@ class NavigationView extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('appBar', appBar));
-    properties.add(DiagnosticsProperty('pane', pane));
+    properties
+      ..add(DiagnosticsProperty('appBar', appBar))
+      ..add(DiagnosticsProperty('pane', pane))
+      ..add(DiagnosticsProperty(
+        'clipBehavior',
+        clipBehavior,
+        defaultValue: Clip.hardEdge,
+      ))
+      ..add(DiagnosticsProperty('contentShape', contentShape));
   }
 
   @override
@@ -180,7 +187,8 @@ class NavigationViewState extends State<NavigationView> {
     final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
-    final appBarPadding = EdgeInsets.only(top: widget.appBar?.height ?? 0.0);
+    final appBarPadding =
+        EdgeInsets.only(top: widget.appBar?.finalHeight(context) ?? 0.0);
     final direction = Directionality.of(context);
 
     Color? _overlayBackgroundColor() {
@@ -335,7 +343,7 @@ class NavigationViewState extends State<NavigationView> {
                 AnimatedPositionedDirectional(
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  top: widget.appBar?.height ?? 0.0,
+                  top: widget.appBar?.finalHeight(context) ?? 0.0,
                   start: openedWithoutOverlay
                       ? openSize
                       : pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
@@ -442,7 +450,7 @@ class NavigationViewState extends State<NavigationView> {
             case PaneDisplayMode.minimal:
               paneResult = Stack(children: [
                 Positioned(
-                  top: widget.appBar?.height ?? 0.0,
+                  top: widget.appBar?.finalHeight(context) ?? 0.0,
                   left: 0.0,
                   right: 0.0,
                   bottom: 0.0,
@@ -541,9 +549,8 @@ class NavigationViewState extends State<NavigationView> {
 /// all the display modes.
 ///
 /// See also:
-///   - [NavigationView]
-///   - [NavigationPane]
-///   - [PaneDisplayMode]
+///
+///   * [NavigationView], which uses this to render the app bar
 class NavigationAppBar with Diagnosticable {
   final Key? key;
 
@@ -592,18 +599,19 @@ class NavigationAppBar with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'automatically imply leading',
-      value: automaticallyImplyLeading,
-      ifFalse: 'do not imply leading',
-      defaultValue: true,
-    ));
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(DoubleProperty(
-      'height',
-      height,
-      defaultValue: _kDefaultAppBarHeight,
-    ));
+    properties
+      ..add(FlagProperty(
+        'automatically imply leading',
+        value: automaticallyImplyLeading,
+        ifFalse: 'do not imply leading',
+        defaultValue: true,
+      ))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DoubleProperty(
+        'height',
+        height,
+        defaultValue: _kDefaultAppBarHeight,
+      ));
   }
 
   Widget _buildLeading([bool imply = true]) {
@@ -652,6 +660,15 @@ class NavigationAppBar with Diagnosticable {
       return widget;
     });
   }
+
+  double finalHeight(BuildContext context) {
+    assert(debugCheckHasMediaQuery(context));
+    final mediaQuery = MediaQuery.of(context);
+
+    final topPadding = mediaQuery.viewPadding.top;
+
+    return height + topPadding;
+  }
 }
 
 class _NavigationAppBar extends StatelessWidget {
@@ -666,10 +683,13 @@ class _NavigationAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasDirectionality(context));
 
+    final mediaQuery = MediaQuery.of(context);
     final direction = Directionality.of(context);
+
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
             PaneDisplayMode.top;
@@ -731,9 +751,12 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
+    final topPadding = mediaQuery.viewPadding.top;
+
     return Container(
       color: appBar.backgroundColor,
-      height: appBar.height,
+      height: appBar.finalHeight(context),
+      padding: EdgeInsets.only(top: topPadding),
       child: result,
     );
   }
