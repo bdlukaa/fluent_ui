@@ -774,6 +774,7 @@ class NavigationViewScrollBehavior extends FluentScrollBehavior {
     return Scrollbar(
       controller: PrimaryScrollController.of(context),
       thumbVisibility: false,
+      interactive: true,
       child: child,
     );
   }

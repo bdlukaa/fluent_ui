@@ -97,6 +97,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void updateScrollbarPainter() {
     assert(debugCheckHasDirectionality(context));
+    assert(debugCheckHasMediaQuery(context));
+    final direction = Directionality.of(context);
     final viewPadding = MediaQuery.of(context).padding;
     final animation = _hoverAnimationController;
     scrollbarPainter
@@ -126,9 +128,13 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
-      ..padding = (EdgeInsets.symmetric(
-        vertical: _scrollbarTheme.padding ?? 4.0,
-      )..add(viewPadding));
+      ..padding = Tween<EdgeInsets>(
+            begin:
+                _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
+            end: _scrollbarTheme.hoveringPadding?.resolve(direction) ??
+                EdgeInsets.zero,
+          ).evaluate(animation) +
+          viewPadding;
   }
 
   Future<void> get contractDelay => Future.delayed(
@@ -329,7 +335,10 @@ class ScrollbarThemeData with Diagnosticable {
   final Duration? contractDelay;
 
   /// The padding around the scrollbar thumb
-  final double? padding;
+  final EdgeInsetsGeometry? padding;
+
+  /// The padding around the scrollbar thumb when hovering
+  final EdgeInsetsGeometry? hoveringPadding;
 
   const ScrollbarThemeData({
     this.thickness,
@@ -347,6 +356,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.trackBorderColor,
     this.hoveringTrackBorderColor,
     this.padding,
+    this.hoveringPadding,
     this.expandContractAnimationDuration,
     this.contractDelay,
   });
@@ -355,26 +365,30 @@ class ScrollbarThemeData with Diagnosticable {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
-          ? const Color(0xFFc5c5c5)
-          : const Color(0xFF9d9d9d),
-      scrollbarPressingColor: brightness.isLight
-          ? const Color(0xFF5d5d5d)
-          : const Color(0xFFa4a4a4),
+          ? const Color(0xFF898989)
+          : const Color(0xFFa0a0a0),
       thickness: 2.0,
       hoveringThickness: 6.0,
       backgroundColor: brightness.isLight
-          ? const Color(0xFFfafafa)
+          ? const Color(0xFFf8f8f8)
           : const Color(0xFF292929),
       radius: const Radius.circular(100.0),
       hoveringRadius: const Radius.circular(100.0),
-      crossAxisMargin: 4.0,
+      crossAxisMargin: 0.0,
       hoveringCrossAxisMargin: 3.0,
       mainAxisMargin: 0.0,
       hoveringMainAxisMargin: 0.0,
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      padding: 4.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4.0,
+        vertical: 4.0,
+      ),
+      hoveringPadding: const EdgeInsets.symmetric(
+        horizontal: 0.0,
+        vertical: 4.0,
+      ),
       expandContractAnimationDuration: theme.fastAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
@@ -402,7 +416,9 @@ class ScrollbarThemeData with Diagnosticable {
       trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
       hoveringTrackBorderColor: Color.lerp(
           a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
-      padding: lerpDouble(a?.padding, b?.padding, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      hoveringPadding:
+          EdgeInsetsGeometry.lerp(a?.hoveringPadding, b?.hoveringPadding, t),
       expandContractAnimationDuration: lerpDuration(
         a?.expandContractAnimationDuration ?? Duration.zero,
         b?.expandContractAnimationDuration ?? Duration.zero,
@@ -438,6 +454,7 @@ class ScrollbarThemeData with Diagnosticable {
           style.hoveringTrackBorderColor ?? hoveringTrackBorderColor,
       trackBorderColor: style.trackBorderColor ?? trackBorderColor,
       padding: style.padding ?? padding,
+      hoveringPadding: style.hoveringPadding ?? hoveringPadding,
       expandContractAnimationDuration: style.expandContractAnimationDuration ??
           expandContractAnimationDuration,
       contractDelay: style.contractDelay ?? contractDelay,
@@ -447,60 +464,74 @@ class ScrollbarThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('scrollbarColor', scrollbarColor));
-    properties.add(
-      ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
-    );
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(DoubleProperty('thickness', thickness, defaultValue: 2.0));
-    properties.add(DoubleProperty(
-      'hoveringThickness',
-      hoveringThickness,
-      defaultValue: 16.0,
-    ));
-    properties.add(DiagnosticsProperty<Radius>(
-      'radius',
-      radius,
-      defaultValue: const Radius.circular(100),
-    ));
-    properties.add(DiagnosticsProperty<Radius>(
-      'hoveringRadius',
-      hoveringRadius,
-      defaultValue: Radius.zero,
-    ));
-    properties.add(
-      DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
-    );
-    properties.add(DoubleProperty(
-      'hoveringMainAxisMargin',
-      hoveringMainAxisMargin,
-      defaultValue: 0.0,
-    ));
-    properties.add(
-      DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
-    );
-    properties.add(DoubleProperty(
-      'hoveringCrossAxisMargin',
-      hoveringMainAxisMargin,
-      defaultValue: 0.0,
-    ));
-    properties.add(
-      DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
-    );
-    properties.add(ColorProperty('trackBorderColor', trackBorderColor));
-    properties.add(
-      ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor),
-    );
-    properties.add(DiagnosticsProperty<Duration>(
-      'expandContractAnimationDuration',
-      expandContractAnimationDuration,
-      defaultValue: const Duration(milliseconds: 100),
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'contractDelay',
-      contractDelay,
-      defaultValue: const Duration(seconds: 2),
-    ));
-    properties.add(DoubleProperty('padding', padding, defaultValue: 8));
+    properties
+      ..add(ColorProperty('scrollbarColor', scrollbarColor))
+      ..add(
+        ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
+      )
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DoubleProperty('thickness', thickness, defaultValue: 2.0))
+      ..add(DoubleProperty(
+        'hoveringThickness',
+        hoveringThickness,
+        defaultValue: 16.0,
+      ))
+      ..add(DiagnosticsProperty<Radius>(
+        'radius',
+        radius,
+        defaultValue: const Radius.circular(100),
+      ))
+      ..add(DiagnosticsProperty<Radius>(
+        'hoveringRadius',
+        hoveringRadius,
+        defaultValue: Radius.zero,
+      ))
+      ..add(
+        DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
+      )
+      ..add(DoubleProperty(
+        'hoveringMainAxisMargin',
+        hoveringMainAxisMargin,
+        defaultValue: 0.0,
+      ))
+      ..add(
+        DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
+      )
+      ..add(DoubleProperty(
+        'hoveringCrossAxisMargin',
+        hoveringMainAxisMargin,
+        defaultValue: 0.0,
+      ))
+      ..add(
+        DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
+      )
+      ..add(ColorProperty('trackBorderColor', trackBorderColor))
+      ..add(ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor))
+      ..add(DiagnosticsProperty<Duration>(
+        'expandContractAnimationDuration',
+        expandContractAnimationDuration,
+        defaultValue: const Duration(milliseconds: 100),
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'contractDelay',
+        contractDelay,
+        defaultValue: const Duration(seconds: 2),
+      ))
+      ..add(DiagnosticsProperty(
+        'padding',
+        padding,
+        defaultValue: const EdgeInsets.symmetric(
+          horizontal: 2.0,
+          vertical: 4.0,
+        ),
+      ))
+      ..add(DiagnosticsProperty(
+        'hoveringPadding',
+        hoveringPadding,
+        defaultValue: const EdgeInsets.symmetric(
+          horizontal: 0.0,
+          vertical: 4.0,
+        ),
+      ));
   }
 }
