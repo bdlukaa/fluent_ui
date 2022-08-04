@@ -21,6 +21,10 @@ Date format: DD/MM/YYYY
 - Fix incorrect translation of `TimePicker` in Traditional Chinese.
 - Added `ScaffoldPage.resizeToAvoidBottomInset` ([#444](https://github.com/bdlukaa/fluent_ui/issues/444))
 - Consider view padding for `NavigationAppBar`
+- `Scrollbar` updates ([#356](https://github.com/bdlukaa/fluent_ui/pull/356)):
+  - Correctly use `backgroundColor` to display the track color
+  - Added `padding` and `hoveringPadding`
+  - Check if animation is disposed before using it ([#446](https://github.com/bdlukaa/fluent_ui/issues/446))
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 

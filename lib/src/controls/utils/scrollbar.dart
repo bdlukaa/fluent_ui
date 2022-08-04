@@ -12,8 +12,6 @@ class Scrollbar extends RawScrollbar {
   /// The [child], or a descendant of the [child], should be a
   /// source of [ScrollNotification] notifications, typically a
   /// [Scrollable] widget.
-  ///
-  /// The [child], [fadeDuration], and [timeToFade] arguments must not be null.
   const Scrollbar({
     Key? key,
     required Widget child,
@@ -22,6 +20,7 @@ class Scrollbar extends RawScrollbar {
     this.style,
     Duration fadeDuration = const Duration(milliseconds: 300),
     Duration timeToFade = const Duration(milliseconds: 600),
+    bool? interactive,
   }) : super(
           key: key,
           child: child,
@@ -29,6 +28,7 @@ class Scrollbar extends RawScrollbar {
           controller: controller,
           timeToFade: timeToFade,
           fadeDuration: fadeDuration,
+          interactive: interactive,
         );
 
   /// The style applied to the scroll bar. If non-null, it's mescled
@@ -40,7 +40,7 @@ class Scrollbar extends RawScrollbar {
 }
 
 class _ScrollbarState extends RawScrollbarState<Scrollbar> {
-  late AnimationController _hoverController;
+  late AnimationController _hoverAnimationController;
   late ScrollbarThemeData _scrollbarTheme;
   bool _dragIsActive = false;
   bool _hoverIsActive = false;
@@ -48,11 +48,11 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void initState() {
     super.initState();
-    _hoverController = AnimationController(
+    _hoverAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 90),
     );
-    _hoverController.addListener(() {
+    _hoverAnimationController.addListener(() {
       updateScrollbarPainter();
     });
   }
@@ -61,7 +61,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
     _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
-    _hoverController.duration =
+    _hoverAnimationController.duration =
         _scrollbarTheme.expandContractAnimationDuration ?? Duration.zero;
     super.didChangeDependencies();
   }
@@ -77,9 +77,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(ButtonStates state) {
-    // if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
-    //   return _scrollbarTheme.backgroundColor ?? Colors.transparent;
-    // }
+    if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+      return _scrollbarTheme.backgroundColor ?? Colors.transparent;
+    }
     return Colors.transparent;
   }
 
@@ -95,7 +95,10 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void updateScrollbarPainter() {
     assert(debugCheckHasDirectionality(context));
-    final animation = _hoverController;
+    assert(debugCheckHasMediaQuery(context));
+    final direction = Directionality.of(context);
+    final viewPadding = MediaQuery.of(context).padding;
+    final animation = _hoverAnimationController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)
       ..trackColor = _trackColor(_currentState)
@@ -105,16 +108,17 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
             animation.value,
           ) ??
           Colors.transparent
+      ..trackRadius = const Radius.circular(6.0)
       ..textDirection = Directionality.of(context)
       ..thickness = Tween<double>(
         begin: _scrollbarTheme.thickness ?? 2.0,
         end: _scrollbarTheme.hoveringThickness ?? 16.0,
       ).evaluate(animation)
-      ..radius = _hoverController.status != AnimationStatus.dismissed
+      ..radius = _hoverAnimationController.status != AnimationStatus.dismissed
           ? _scrollbarTheme.hoveringRadius
           : _scrollbarTheme.radius
       ..crossAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.crossAxisMargin ?? 2.0,
+        begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
         end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..mainAxisMargin = Tween<double>(
@@ -122,7 +126,13 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
-      ..padding = MediaQuery.of(context).padding;
+      ..padding = Tween<EdgeInsets>(
+            begin:
+                _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
+            end: _scrollbarTheme.hoveringPadding?.resolve(direction) ??
+                EdgeInsets.zero,
+          ).evaluate(animation) +
+          viewPadding;
   }
 
   Future<void> get contractDelay => Future.delayed(
@@ -133,9 +143,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleThumbPressStart(Offset localPosition) {
     super.handleThumbPressStart(localPosition);
     if (mounted) {
-      setState(() {
-        _dragIsActive = true;
-      });
+      setState(() => _dragIsActive = true);
     }
   }
 
@@ -143,9 +151,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleThumbPressEnd(Offset localPosition, Velocity velocity) {
     super.handleThumbPressEnd(localPosition, velocity);
     if (mounted) {
-      setState(() {
-        _dragIsActive = false;
-      });
+      setState(() => _dragIsActive = false);
     }
   }
 
@@ -153,23 +159,19 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleHover(PointerHoverEvent event) async {
     super.handleHover(event);
     // Check if the position of the pointer falls over the painted scrollbar
-    if (isPointerOverScrollbar(event.position, event.kind)) {
+    if (isPointerOverScrollbar(event.position, event.kind, forHover: true)) {
       // Pointer is hovering over the scrollbar
       await contractDelay;
       if (mounted) {
-        setState(() {
-          _hoverIsActive = true;
-        });
+        setState(() => _hoverIsActive = true);
+        _hoverAnimationController.forward();
       }
-      _hoverController.forward();
     } else if (_hoverIsActive) {
       await contractDelay;
-      await _hoverController.reverse();
-      // Pointer was, but is no longer over painted scrollbar.
       if (mounted) {
-        setState(() {
-          _hoverIsActive = false;
-        });
+        // Pointer was, but is no longer over painted scrollbar.
+        await _hoverAnimationController.reverse();
+        setState(() => _hoverIsActive = false);
       }
     }
   }
@@ -178,16 +180,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleHoverExit(PointerExitEvent event) {
     super.handleHoverExit(event);
     if (mounted) {
-      setState(() {
-        _hoverIsActive = false;
-      });
+      setState(() => _hoverIsActive = false);
+      _hoverAnimationController.reverse();
     }
-    _hoverController.reverse();
   }
 
   @override
   void dispose() {
-    _hoverController.dispose();
+    _hoverAnimationController.dispose();
     super.dispose();
   }
 }
@@ -266,19 +266,19 @@ class ScrollbarThemeData with Diagnosticable {
   final double? hoveringThickness;
 
   /// The background color of the scrollbar when the user is
-  /// hovering or pressing it. If null, `Color(0xFFe9e9e9)` is
-  /// used for light theme and `Color(0xFF1b1b1b)` is used for
+  /// hovering or pressing it. If null, `Color(0xFFf8f8f8)` is
+  /// used for light theme and `Color(0xFF292929)` is used for
   /// dark theme.
   final Color? backgroundColor;
 
   /// The color of the scrollbar thumb on its default state. If
-  /// null, `Color(0xFF8c8c8c)` is used for light theme and
-  /// `Color(0xFF767676)` is used for dark theme.
+  /// null, `Color(0xFF898989)` is used for light theme and
+  /// `Color(0xFFa0a0a0)` is used for dark theme.
   final Color? scrollbarColor;
 
   /// The color of the scrollbar thumb when the user is hovering
-  /// or pressing it. If null, `const Color(0xFF5d5d5d)` is used
-  /// for light theme and `Color(0xFFa4a4a4)` is used for dark
+  /// or pressing it. If null, `const Color(0xFF898989)` is used
+  /// for light theme and `Color(0xFFa0a0a0)` is used for dark
   /// theme by default.
   final Color? scrollbarPressingColor;
 
@@ -332,6 +332,12 @@ class ScrollbarThemeData with Diagnosticable {
   /// Defaults to 500 milliseconds
   final Duration? contractDelay;
 
+  /// The padding around the scrollbar thumb
+  final EdgeInsetsGeometry? padding;
+
+  /// The padding around the scrollbar thumb when hovering
+  final EdgeInsetsGeometry? hoveringPadding;
+
   const ScrollbarThemeData({
     this.thickness,
     this.hoveringThickness,
@@ -347,6 +353,8 @@ class ScrollbarThemeData with Diagnosticable {
     this.minThumbLength,
     this.trackBorderColor,
     this.hoveringTrackBorderColor,
+    this.padding,
+    this.hoveringPadding,
     this.expandContractAnimationDuration,
     this.contractDelay,
   });
@@ -355,25 +363,30 @@ class ScrollbarThemeData with Diagnosticable {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
-          ? const Color(0xFF8c8c8c)
-          : const Color(0xFF767676),
-      scrollbarPressingColor: brightness.isLight
-          ? const Color(0xFF5d5d5d)
-          : const Color(0xFFa4a4a4),
+          ? const Color(0xFF898989)
+          : const Color(0xFFa0a0a0),
       thickness: 2.0,
       hoveringThickness: 6.0,
       backgroundColor: brightness.isLight
-          ? const Color(0xFFf9f9f9)
-          : const Color(0xFF2c2f2a),
+          ? const Color(0xFFf8f8f8)
+          : const Color(0xFF292929),
       radius: const Radius.circular(100.0),
       hoveringRadius: const Radius.circular(100.0),
-      crossAxisMargin: 4.0,
-      hoveringCrossAxisMargin: 4.0,
-      mainAxisMargin: 2.0,
-      hoveringMainAxisMargin: 2.0,
+      crossAxisMargin: 0.0,
+      hoveringCrossAxisMargin: 3.0,
+      mainAxisMargin: 0.0,
+      hoveringMainAxisMargin: 0.0,
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4.0,
+        vertical: 4.0,
+      ),
+      hoveringPadding: const EdgeInsets.symmetric(
+        horizontal: 0.0,
+        vertical: 4.0,
+      ),
       expandContractAnimationDuration: theme.fastAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
@@ -401,6 +414,9 @@ class ScrollbarThemeData with Diagnosticable {
       trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
       hoveringTrackBorderColor: Color.lerp(
           a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      hoveringPadding:
+          EdgeInsetsGeometry.lerp(a?.hoveringPadding, b?.hoveringPadding, t),
       expandContractAnimationDuration: lerpDuration(
         a?.expandContractAnimationDuration ?? Duration.zero,
         b?.expandContractAnimationDuration ?? Duration.zero,
@@ -435,6 +451,8 @@ class ScrollbarThemeData with Diagnosticable {
       hoveringTrackBorderColor:
           style.hoveringTrackBorderColor ?? hoveringTrackBorderColor,
       trackBorderColor: style.trackBorderColor ?? trackBorderColor,
+      padding: style.padding ?? padding,
+      hoveringPadding: style.hoveringPadding ?? hoveringPadding,
       expandContractAnimationDuration: style.expandContractAnimationDuration ??
           expandContractAnimationDuration,
       contractDelay: style.contractDelay ?? contractDelay,
@@ -444,59 +462,74 @@ class ScrollbarThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('scrollbarColor', scrollbarColor));
-    properties.add(
-      ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
-    );
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(DoubleProperty('thickness', thickness, defaultValue: 2.0));
-    properties.add(DoubleProperty(
-      'hoveringThickness',
-      hoveringThickness,
-      defaultValue: 16.0,
-    ));
-    properties.add(DiagnosticsProperty<Radius>(
-      'radius',
-      radius,
-      defaultValue: const Radius.circular(100),
-    ));
-    properties.add(DiagnosticsProperty<Radius>(
-      'hoveringRadius',
-      hoveringRadius,
-      defaultValue: Radius.zero,
-    ));
-    properties.add(
-      DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
-    );
-    properties.add(DoubleProperty(
-      'hoveringMainAxisMargin',
-      hoveringMainAxisMargin,
-      defaultValue: 0.0,
-    ));
-    properties.add(
-      DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
-    );
-    properties.add(DoubleProperty(
-      'hoveringCrossAxisMargin',
-      hoveringMainAxisMargin,
-      defaultValue: 0.0,
-    ));
-    properties.add(
-      DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
-    );
-    properties.add(ColorProperty('trackBorderColor', trackBorderColor));
-    properties.add(
-      ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor),
-    );
-    properties.add(DiagnosticsProperty<Duration>(
-      'expandContractAnimationDuration',
-      expandContractAnimationDuration,
-      defaultValue: const Duration(milliseconds: 100),
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'contractDelay',
-      contractDelay,
-      defaultValue: const Duration(seconds: 2),
-    ));
+    properties
+      ..add(ColorProperty('scrollbarColor', scrollbarColor))
+      ..add(
+        ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
+      )
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DoubleProperty('thickness', thickness, defaultValue: 2.0))
+      ..add(DoubleProperty(
+        'hoveringThickness',
+        hoveringThickness,
+        defaultValue: 16.0,
+      ))
+      ..add(DiagnosticsProperty<Radius>(
+        'radius',
+        radius,
+        defaultValue: const Radius.circular(100),
+      ))
+      ..add(DiagnosticsProperty<Radius>(
+        'hoveringRadius',
+        hoveringRadius,
+        defaultValue: Radius.zero,
+      ))
+      ..add(
+        DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
+      )
+      ..add(DoubleProperty(
+        'hoveringMainAxisMargin',
+        hoveringMainAxisMargin,
+        defaultValue: 0.0,
+      ))
+      ..add(
+        DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
+      )
+      ..add(DoubleProperty(
+        'hoveringCrossAxisMargin',
+        hoveringMainAxisMargin,
+        defaultValue: 0.0,
+      ))
+      ..add(
+        DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
+      )
+      ..add(ColorProperty('trackBorderColor', trackBorderColor))
+      ..add(ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor))
+      ..add(DiagnosticsProperty<Duration>(
+        'expandContractAnimationDuration',
+        expandContractAnimationDuration,
+        defaultValue: const Duration(milliseconds: 100),
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'contractDelay',
+        contractDelay,
+        defaultValue: const Duration(seconds: 2),
+      ))
+      ..add(DiagnosticsProperty(
+        'padding',
+        padding,
+        defaultValue: const EdgeInsets.symmetric(
+          horizontal: 2.0,
+          vertical: 4.0,
+        ),
+      ))
+      ..add(DiagnosticsProperty(
+        'hoveringPadding',
+        hoveringPadding,
+        defaultValue: const EdgeInsets.symmetric(
+          horizontal: 0.0,
+          vertical: 4.0,
+        ),
+      ));
   }
 }

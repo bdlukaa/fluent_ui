@@ -145,7 +145,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   int index = 0;
 
-  final settingsController = ScrollController();
   final viewKey = GlobalKey();
 
   final key = GlobalKey();
@@ -314,7 +313,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   void dispose() {
     windowManager.removeListener(this);
-    settingsController.dispose();
     searchController.dispose();
     searchFocusNode.dispose();
     super.dispose();
