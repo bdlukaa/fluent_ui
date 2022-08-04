@@ -189,16 +189,17 @@ class NavigationPane with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty('displayMode', displayMode));
-    properties.add(IterableProperty('items', items));
-    properties.add(IterableProperty('footerItems', footerItems));
-    properties.add(IntProperty('selected', selected));
     properties
-        .add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'));
-    properties.add(DiagnosticsProperty<ScrollController>(
-      'scrollController',
-      scrollController,
-    ));
+      ..add(EnumProperty('displayMode', displayMode))
+      ..add(IterableProperty('items', items))
+      ..add(IterableProperty('footerItems', footerItems))
+      ..add(IntProperty('selected', selected))
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(DiagnosticsProperty<ScrollController>(
+        'scrollController',
+        scrollController,
+      ))
+      ..add(DiagnosticsProperty<NavigationPaneSize>('size', size));
   }
 
   /// Changes the selected item to [item].
@@ -314,40 +315,46 @@ class NavigationPane with Diagnosticable {
 ///
 ///  * [NavigationPane], which this configures the size of
 ///  * [NavigationView], used to display [NavigationPane]s
-class NavigationPaneSize {
-  /// The height of the pane when he is in top mode.
+class NavigationPaneSize with Diagnosticable {
+  /// The height of the pane when it's in top mode.
   ///
-  /// If the value is null, [kOneLineTileHeight] is used.
+  /// If null, 40.0 is used.
   final double? topHeight;
 
-  /// The width of the pane when he is in compact mode.
+  /// The width of the pane when it's in compact mode.
   ///
-  /// If the value is null, [_kCompactNavigationPanelWidth] is used.
+  /// If null, 50.0 is used.
   final double? compactWidth;
 
-  /// The width of the pane when he is open.
+  /// The width of the pane when it's open.
   ///
-  /// If the value is null, [_kOpenNavigationPanelWidth] is used.
-  /// The width can be based on MediaQuery and used
-  /// with [minWidth] and [maxWidth].
+  /// If null, 320.0 is used.
+  ///
+  /// See also:
+  ///
+  ///  * [openMinWidth]
+  ///  * [openMaxWidth]
   final double? openWidth;
 
-  /// The minimum width of the pane when he is open.
+  /// The minimum width of the pane when it's open.
   ///
-  /// If width is smaller than minWidth, minWidth is used as width.
-  /// minWidth must be smaller or equal to maxWidth.
+  /// If the width is smaller than [minWidth], minWidth is used as width.
+  ///
+  /// It must be smaller or equal to [maxWidth].
   final double? openMinWidth;
 
-  /// The maximum width of the pane when he is open.
+  /// The maximum width of the pane when it's open.
   ///
   /// If width is greater than maxWidth, maxWidth is used as width.
-  /// maxWidth must be greater or equal than minWidth.
+  ///
+  /// It must be greater or equal to [minWidth].
   final double? openMaxWidth;
 
   /// The height of the header in NavigationPane.
   ///
   /// Only used when NavigationPane mode is open.
-  /// If the value is null, [_kOneLineTileHeight] is used.
+  ///
+  /// If null, 40.0 is used.
   final double? headerHeight;
 
   const NavigationPaneSize({
@@ -357,12 +364,88 @@ class NavigationPaneSize {
     this.openMinWidth,
     this.openMaxWidth,
     this.headerHeight,
-  }) : assert(
+  })  : assert(
           openMinWidth == null ||
               openMaxWidth == null ||
               openMinWidth <= openMaxWidth,
-          'openMinWidth should be greater than openMaxWidth',
+          'openMinWidth must be greater than openMaxWidth',
+        ),
+        assert(
+          topHeight == null || topHeight >= 0,
+          'topHeight must be greater than 0',
+        ),
+        assert(
+          compactWidth == null || compactWidth >= 0,
+          'compactWidth must be greater than 0',
+        ),
+        assert(
+          headerHeight == null || headerHeight >= 0,
+          'headerHeight must be greater than 0',
         );
+
+  /// Gets the open pane width with constraints applied.
+  double get openPaneWidth {
+    double paneWidth = openWidth ?? kOpenNavigationPaneWidth;
+    if (openMaxWidth != null && paneWidth > openMaxWidth!) {
+      paneWidth = openMaxWidth!;
+    }
+    if (openMinWidth != null && paneWidth < openMinWidth!) {
+      paneWidth = openMinWidth!;
+    }
+    return paneWidth;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is NavigationPaneSize &&
+        other.topHeight == topHeight &&
+        other.compactWidth == compactWidth &&
+        other.openWidth == openWidth &&
+        other.openMinWidth == openMinWidth &&
+        other.openMaxWidth == openMaxWidth &&
+        other.headerHeight == headerHeight;
+  }
+
+  @override
+  int get hashCode {
+    return topHeight.hashCode ^
+        compactWidth.hashCode ^
+        openWidth.hashCode ^
+        openMinWidth.hashCode ^
+        openMaxWidth.hashCode ^
+        headerHeight.hashCode;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+
+    properties
+      ..add(DoubleProperty(
+        'topHeight',
+        topHeight,
+        defaultValue: kOneLineTileHeight,
+      ))
+      ..add(DoubleProperty(
+        'compactWidth',
+        compactWidth,
+        defaultValue: kCompactNavigationPaneWidth,
+      ))
+      ..add(DoubleProperty(
+        'openWidth',
+        openWidth,
+        defaultValue: kOpenNavigationPaneWidth,
+      ))
+      ..add(DoubleProperty('openMinWidth', openMinWidth))
+      ..add(DoubleProperty('openMaxWidth', openMaxWidth))
+      ..add(DoubleProperty(
+        'headerHeight',
+        headerHeight,
+        defaultValue: kOneLineTileHeight,
+      ));
+  }
 }
 
 class NavigationPaneWidgetData {
@@ -437,9 +520,24 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     widget.pane.changeTo(item);
   }
 
-  Widget _buildItem(BuildContext context, NavigationPaneItem item) {
+  Widget _buildItem(
+    BuildContext context,
+    NavigationPaneItem item,
+    double height,
+  ) {
     if (item is PaneItemHeader) {
-      return item.build(context);
+      final theme = NavigationPaneTheme.of(context);
+      final TextStyle style = item.header.getProperty<TextStyle>() ??
+          theme.itemHeaderTextStyle ??
+          DefaultTextStyle.of(context).style;
+
+      return Padding(
+        padding: EdgeInsetsDirectional.only(
+          // This will center the item header
+          top: (height - (style.fontSize ?? 14.0)) / 4,
+        ),
+        child: item.build(context),
+      );
     } else if (item is PaneItemSeparator) {
       return item.build(context, Axis.vertical);
     } else if (item is PaneItem) {
@@ -510,6 +608,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final view = InheritedNavigationView.of(context);
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
@@ -517,18 +616,12 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       child: Row(children: [
         if (widget.pane.leading != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 6.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
             child: widget.pane.leading!,
           ),
         if (widget.pane.header != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 6.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
             child: widget.pane.header!,
           ),
         Expanded(
@@ -537,11 +630,18 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
             overflowWidget: Flyout(
               controller: overflowController,
               placement: FlyoutPlacement.end,
-              content: (context) => MenuFlyout(
-                items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
-                  final item = widget.pane.items[i];
-                  return buildMenuPaneItem(context, item);
-                }).toList(),
+              content: (context) => InheritedNavigationView(
+                displayMode: view.displayMode,
+                currentItemIndex: view.currentItemIndex,
+                minimalPaneOpen: view.minimalPaneOpen,
+                oldIndex: view.oldIndex,
+                pane: view.pane,
+                child: MenuFlyout(
+                  items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
+                    final item = widget.pane.items[i];
+                    return buildMenuPaneItem(context, item);
+                  }).toList(),
+                ),
               ),
               child: PaneItem(icon: const Icon(FluentIcons.more)).build(
                 context,
@@ -571,7 +671,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
               final item = widget.pane.items[index];
               return SizedBox(
                 height: height,
-                child: _buildItem(context, item),
+                child: _buildItem(context, item, height),
               );
             }).toList(),
           ),
@@ -579,21 +679,20 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         if (widget.pane.autoSuggestBox != null)
           Container(
             margin: const EdgeInsets.only(left: 30.0),
-            constraints: const BoxConstraints(
-              minWidth: 100.0,
-              maxWidth: 215.0,
-            ),
+            constraints: const BoxConstraints(minWidth: 100.0, maxWidth: 215.0),
             child: widget.pane.autoSuggestBox!,
           ),
         ...widget.pane.footerItems.map((item) {
-          return _buildItem(context, item);
+          return _buildItem(context, item, height);
         }).toList(),
       ]),
     );
   }
 
   MenuFlyoutItemInterface buildMenuPaneItem(
-      BuildContext context, NavigationPaneItem item) {
+    BuildContext context,
+    NavigationPaneItem item,
+  ) {
     if (item is PaneItemSeparator) {
       return const MenuFlyoutSeparator();
     } else if (item is PaneItem) {
@@ -601,9 +700,28 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         item: item,
         onPressed: () => _onPressed(item),
       );
+    } else if (item is PaneItemHeader) {
+      return _MenuFlyoutHeader(header: item);
     } else {
-      throw UnsupportedError('${item.runtimeType} is not supported');
+      throw UnsupportedError(
+        '${item.runtimeType} is not a supported navigation pane item type',
+      );
     }
+  }
+}
+
+class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
+  final PaneItemHeader header;
+
+  const _MenuFlyoutHeader({required this.header});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = NavigationPaneTheme.of(context);
+    return Padding(
+      padding: theme.headerPadding ?? EdgeInsets.zero,
+      child: header.build(context),
+    );
   }
 }
 
@@ -619,34 +737,40 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
 
-    final String titleText = item.getPropertyFromTitle<String>() ?? '';
+    final String titleText = item.title?.getProperty<String>() ?? '';
     final TextStyle baseStyle =
-        item.getPropertyFromTitle<TextStyle>() ?? const TextStyle();
-
-    final textResult = titleText.isNotEmpty
-        ? Padding(
-            padding: theme.labelPadding ?? EdgeInsets.zero,
-            child: RichText(
-              text: item.getPropertyFromTitle<InlineSpan>(baseStyle)!,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
-              textAlign:
-                  item.getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
-              textHeightBehavior:
-                  item.getPropertyFromTitle<TextHeightBehavior>(),
-              textWidthBasis: item.getPropertyFromTitle<TextWidthBasis>() ??
-                  TextWidthBasis.parent,
-            ),
-          )
-        : const SizedBox.shrink();
+        item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
+        TextStyle textStyle = () {
+          TextStyle? style = theme.unselectedTextStyle?.resolve(states);
+          if (style == null) return baseStyle;
+          return style.merge(baseStyle);
+        }();
+
+        final textResult = titleText.isNotEmpty
+            ? Padding(
+                padding: theme.labelPadding ?? EdgeInsets.zero,
+                child: RichText(
+                  text: item.title!.getProperty<InlineSpan>(textStyle)!,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  textAlign:
+                      item.title?.getProperty<TextAlign>() ?? TextAlign.start,
+                  textHeightBehavior:
+                      item.title?.getProperty<TextHeightBehavior>(),
+                  textWidthBasis: item.title?.getProperty<TextWidthBasis>() ??
+                      TextWidthBasis.parent,
+                ),
+              )
+            : const SizedBox.shrink();
+
         return Container(
           width: size.isEmpty ? null : size.width,
           padding: MenuFlyout.itemsPadding,
@@ -654,6 +778,8 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
           color: ButtonThemeData.uncheckedInputColor(
             FluentTheme.of(context),
             states,
+            transparentWhenNone: true,
+            transparentWhenDisabled: true,
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Padding(
@@ -874,15 +1000,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       }
       return null;
     }();
-    double paneWidth = widget.pane.size?.openWidth ?? kOpenNavigationPaneWidth;
-    if (widget.pane.size?.openMaxWidth != null &&
-        paneWidth > widget.pane.size!.openMaxWidth!) {
-      paneWidth = widget.pane.size!.openMaxWidth!;
-    }
-    if (widget.pane.size?.openMinWidth != null &&
-        paneWidth < widget.pane.size!.openMinWidth!) {
-      paneWidth = widget.pane.size!.openMinWidth!;
-    }
+    double paneWidth =
+        widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
     double paneHeaderHeight =
         widget.pane.size?.headerHeight ?? kOneLineTileHeight;

@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("AM"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("Back"),
         "clickToSearch":
             MessageLookupByLibrary.simpleMessage("Click to search"),
@@ -37,11 +38,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Cut"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Remove the selected content and put it in the clipboard"),
+        "day": MessageLookupByLibrary.simpleMessage("day"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("Dialog"),
+        "hour": MessageLookupByLibrary.simpleMessage("hour"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Minimize"),
+        "minute": MessageLookupByLibrary.simpleMessage("minute"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("Dismiss"),
+        "month": MessageLookupByLibrary.simpleMessage("month"),
         "newTabLabel": MessageLookupByLibrary.simpleMessage("Add new tab"),
         "noResultsFoundLabel":
             MessageLookupByLibrary.simpleMessage("No results found"),
@@ -50,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Paste"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Inserts the contents of the clipboard at the current location"),
+        "pm": MessageLookupByLibrary.simpleMessage("PM"),
         "restoreWindowTooltip": MessageLookupByLibrary.simpleMessage("Restore"),
         "scrollTabBackwardLabel":
             MessageLookupByLibrary.simpleMessage("Scroll tab list backward"),
@@ -59,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Select all"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Select all content")
+            MessageLookupByLibrary.simpleMessage("Select all content"),
+        "year": MessageLookupByLibrary.simpleMessage("year")
       };
 }

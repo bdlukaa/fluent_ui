@@ -23,5 +23,12 @@
   "copyActionTooltip": "Kopieer de selectie naar het klembord",
   "cutActionTooltip": "Wis de selectie en plaats deze op het klembord",
   "pasteActionTooltip": "Plaats de inhoud van het klembord op de huidige plek",
-  "selectAllActionTooltip": "Selecteer alle inhoud"
+  "selectAllActionTooltip": "Selecteer alle inhoud",
+  "hour": "uur",
+  "minute": "minuut",
+  "am": "AM",
+  "pm": "PM",
+  "month": "maand",
+  "day": "dag",
+  "year": "jaar"
 }

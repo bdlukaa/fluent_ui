@@ -98,6 +98,27 @@ abstract class FluentLocalizations {
   /// The tooltip for the select all action on the text selection controls
   String get selectAllActionTooltip;
 
+  /// The text used by [TimePicker] for the hour field
+  String get hour;
+
+  /// The text used by [TimePicker] for the minute field
+  String get minute;
+
+  /// The text used by [TimePicker] for the AM field
+  String get am;
+
+  /// The text used by [TimePicker] for the PM field
+  String get pm;
+
+  /// The text used by [DatePicker] for the month field
+  String get month;
+
+  /// The text used by [DatePicker] for the day field
+  String get day;
+
+  /// The text used by [DatePicker] for the year field
+  String get year;
+
   /// The `FluentLocalizations` from the closest [Localizations] instance
   /// that encloses the given context.
   ///
@@ -130,6 +151,7 @@ abstract class FluentLocalizations {
 // din't let me set the default value in FluentApp.supportedLocales
 const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('ar'),
+  Locale('cs'),
   Locale('de'),
   Locale('en'),
   Locale('es'),
@@ -137,6 +159,7 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('fr'),
   Locale('hi'),
   Locale('it'),
+  Locale('ja'),
   Locale('ko'),
   Locale('ms'),
   Locale('nl'),
@@ -144,7 +167,8 @@ const List<Locale> defaultSupportedLocales = <Locale>[
   Locale('pt'),
   Locale('ru'),
   Locale('zh'),
-  Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
+  Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+  Locale('hu'),
 ];
 
 /// Strings for the fluent widgets.
@@ -230,5 +254,34 @@ class _FluentLocalizationsDelegate
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
 
   @override
-  String toString() => 'DefaultMaterialLocalizations.delegate(en_US)';
+  String toString() => 'DefaultFluentLocalizations.delegate(en_US)';
+}
+
+/// Ensure `intl` package return correct format when applied [Locale.scriptCode].
+///
+/// It shoulde be implemented to [Diagnosticable] which required to uses `intl`
+/// feature like `DateFormat`.
+mixin IntlScriptLocaleApplyMixin on Diagnosticable {
+  /// Return a default country code if [Locale] doesn't applied.
+  static final Map<Locale, String> _defaultCountryCode = <Locale, String>{
+    const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'): "TW"
+  };
+
+  /// Get a [String] which recognizable for `intl` pakcage.
+  ///
+  /// It return `null` if no script code is specified in [Locale].
+  String? getIntlLocale(BuildContext context) {
+    assert(_defaultCountryCode.keys
+        .every((element) => element.scriptCode != null));
+
+    Locale locale = Localizations.localeOf(context);
+    Locale noCountryLocale = Locale.fromSubtags(
+        languageCode: locale.languageCode, scriptCode: locale.scriptCode);
+
+    if (_defaultCountryCode.containsKey(noCountryLocale)) {
+      return "${locale.languageCode}_${locale.countryCode ?? _defaultCountryCode[noCountryLocale]}";
+    }
+
+    return null;
+  }
 }

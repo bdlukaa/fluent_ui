@@ -61,8 +61,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
     _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
-    _hoverController.duration = _scrollbarTheme.animationDuration ??
-        FluentTheme.of(context).fasterAnimationDuration;
+    _hoverController.duration =
+        _scrollbarTheme.expandContractAnimationDuration ?? Duration.zero;
     super.didChangeDependencies();
   }
 
@@ -95,10 +95,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void updateScrollbarPainter() {
     assert(debugCheckHasDirectionality(context));
-    final animation = CurvedAnimation(
-      parent: _hoverController,
-      curve: _scrollbarTheme.animationCurve ?? Curves.linear,
-    );
+    final animation = _hoverController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)
       ..trackColor = _trackColor(_currentState)
@@ -132,6 +129,10 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
           );
   }
 
+  Future<void> get contractDelay => Future.delayed(
+        _scrollbarTheme.contractDelay ?? Duration.zero,
+      );
+
   @override
   void handleThumbPressStart(Offset localPosition) {
     super.handleThumbPressStart(localPosition);
@@ -158,6 +159,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     // Check if the position of the pointer falls over the painted scrollbar
     if (isPointerOverScrollbar(event.position, event.kind)) {
       // Pointer is hovering over the scrollbar
+      await contractDelay;
       if (mounted) {
         setState(() {
           _hoverIsActive = true;
@@ -165,6 +167,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       }
       _hoverController.forward();
     } else if (_hoverIsActive) {
+      await contractDelay;
       await _hoverController.reverse();
       // Pointer was, but is no longer over painted scrollbar.
       if (mounted) {
@@ -323,12 +326,15 @@ class ScrollbarThemeData with Diagnosticable {
   /// Defaults to [Colors.transparent]
   final Color? hoveringTrackBorderColor;
 
-  /// The duration of the animation. Defaults to [ThemeData.fasterAnimationDuration].
-  /// To disable the animation, set this to [Duration.zero]
-  final Duration? animationDuration;
+  /// The duration of the expand-contract animation.
+  ///
+  /// Defaults to 100 milliseconds
+  final Duration? expandContractAnimationDuration;
 
-  /// The curve used during the animation. Defaults to [ThemeData.animationCurve]
-  final Curve? animationCurve;
+  /// The duration of the expand-contract animation.
+  ///
+  /// Defaults to 500 milliseconds
+  final Duration? contractDelay;
 
   /// The padding around the scrollbar thumb
   final double? padding;
@@ -348,13 +354,13 @@ class ScrollbarThemeData with Diagnosticable {
     this.minThumbLength,
     this.trackBorderColor,
     this.hoveringTrackBorderColor,
-    this.animationDuration,
-    this.animationCurve,
     this.padding,
+    this.expandContractAnimationDuration,
+    this.contractDelay,
   });
 
-  factory ScrollbarThemeData.standard(ThemeData style) {
-    final brightness = style.brightness;
+  factory ScrollbarThemeData.standard(ThemeData theme) {
+    final brightness = theme.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
           ? const Color(0xFFc5c5c5)
@@ -376,9 +382,9 @@ class ScrollbarThemeData with Diagnosticable {
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      animationDuration: style.fasterAnimationDuration,
-      animationCurve: Curves.linear,
       padding: 8.0,
+      expandContractAnimationDuration: theme.fastAnimationDuration,
+      contractDelay: const Duration(milliseconds: 500),
     );
   }
 
@@ -404,10 +410,17 @@ class ScrollbarThemeData with Diagnosticable {
       trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
       hoveringTrackBorderColor: Color.lerp(
           a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
-      animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
-      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
-          b?.animationDuration ?? Duration.zero, t),
       padding: lerpDouble(a?.padding, b?.padding, t),
+      expandContractAnimationDuration: lerpDuration(
+        a?.expandContractAnimationDuration ?? Duration.zero,
+        b?.expandContractAnimationDuration ?? Duration.zero,
+        t,
+      ),
+      contractDelay: lerpDuration(
+        a?.contractDelay ?? Duration.zero,
+        b?.contractDelay ?? Duration.zero,
+        t,
+      ),
     );
   }
 
@@ -432,9 +445,10 @@ class ScrollbarThemeData with Diagnosticable {
       hoveringTrackBorderColor:
           style.hoveringTrackBorderColor ?? hoveringTrackBorderColor,
       trackBorderColor: style.trackBorderColor ?? trackBorderColor,
-      animationCurve: style.animationCurve ?? animationCurve,
-      animationDuration: style.animationDuration ?? animationDuration,
       padding: style.padding ?? padding,
+      expandContractAnimationDuration: style.expandContractAnimationDuration ??
+          expandContractAnimationDuration,
+      contractDelay: style.contractDelay ?? contractDelay,
     );
   }
 
@@ -486,14 +500,14 @@ class ScrollbarThemeData with Diagnosticable {
       ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor),
     );
     properties.add(DiagnosticsProperty<Duration>(
-      'animationDuration',
-      animationDuration,
-      defaultValue: const Duration(milliseconds: 90),
+      'expandContractAnimationDuration',
+      expandContractAnimationDuration,
+      defaultValue: const Duration(milliseconds: 100),
     ));
-    properties.add(DiagnosticsProperty<Curve>(
-      'animationCurve',
-      animationCurve,
-      defaultValue: Curves.linear,
+    properties.add(DiagnosticsProperty<Duration>(
+      'contractDelay',
+      contractDelay,
+      defaultValue: const Duration(seconds: 2),
     ));
     properties.add(DoubleProperty('padding', padding, defaultValue: 8));
   }

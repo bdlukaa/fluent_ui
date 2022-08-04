@@ -56,8 +56,8 @@ class NavigationBody extends StatefulWidget {
   ///
   /// It can be detect the display mode of the parent [NavigationView], if any,
   /// and change the transition accordingly. By default, if the display mode is
-  /// top, [EntrancePageTransition] is used, otherwise [DrillInPageTransition]
-  /// is used.
+  /// top, [HorizontalSlidePageTransition] is used, otherwise
+  /// [EntrancePageTransition] is used.
   ///
   /// ```dart
   /// NavigationBody(
@@ -66,12 +66,20 @@ class NavigationBody extends StatefulWidget {
   ///   },
   /// ),
   /// ```
-  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
-
-  /// The curve used by the transition. [NavigationPaneThemeData.animationCurve]
-  /// is used by default.
   ///
   /// See also:
+  ///
+  ///  * [EntrancePageTransition], used by default
+  ///  * [HorizontalSlidePageTransition], used by default on top navigation
+  ///  * [DrillInPageTransition], used when users navigate deeper into an app
+  ///  * [SuppressPageTransition], to have no animation at all
+  ///  * <https://docs.microsoft.com/en-us/windows/apps/design/motion/page-transitions>
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
+
+  /// The curve used by the transition.
+  ///
+  /// See also:
+  ///
   ///   * [Curves], a collection of common animation easing curves.
   final Curve? animationCurve;
 
@@ -85,17 +93,16 @@ class NavigationBody extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('index', index));
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
-    properties.add(
-      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
-    );
+    properties
+      ..add(IntProperty('index', index))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+      );
   }
 
   @override
-  _NavigationBodyState createState() => _NavigationBodyState();
+  State<NavigationBody> createState() => _NavigationBodyState();
 }
 
 class _NavigationBodyState extends State<NavigationBody> {
@@ -116,17 +123,16 @@ class _NavigationBodyState extends State<NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final body = InheritedNavigationView.maybeOf(context);
+    final view = InheritedNavigationView.maybeOf(context);
     final theme = FluentTheme.of(context);
-    final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve:
-            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
-        duration: widget.animationDuration ??
-            paneTheme.animationDuration ??
-            Duration.zero,
+        switchInCurve: widget.animationCurve ?? Curves.ease,
+        switchOutCurve: widget.animationCurve ?? Curves.ease,
+        duration: widget.animationDuration ?? const Duration(milliseconds: 300),
+        reverseDuration:
+            widget.animationDuration ?? const Duration(microseconds: 150),
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },
@@ -134,24 +140,29 @@ class _NavigationBodyState extends State<NavigationBody> {
           if (widget.transitionBuilder != null) {
             return widget.transitionBuilder!(child, animation);
           }
-          bool useDrillTransition = true;
-          if (body != null && body.displayMode != null) {
-            if (body.displayMode! == PaneDisplayMode.top) {
-              useDrillTransition = false;
+
+          if (view != null) {
+            bool isTop = view.displayMode == PaneDisplayMode.top;
+
+            if (isTop) {
+              // Other transtitions other than default is only applied to top nav
+              // when clicking overflow on topnav, transition is from bottom
+              // otherwise if prevItem is on left side of nextActualItem, transition is from left
+              //           if prevItem is on right side of nextActualItem, transition is from right
+              // click on Settings item is considered Default
+              return HorizontalSlidePageTransition(
+                animation: animation,
+                fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
+                child: child,
+              );
             }
           }
-          if (useDrillTransition) {
-            return DrillInPageTransition(
-              animation: animation,
-              child: child,
-            );
-          } else {
-            return EntrancePageTransition(
-              animation: animation,
-              vertical: true,
-              child: child,
-            );
-          }
+
+          return EntrancePageTransition(
+            animation: animation,
+            vertical: true,
+            child: child,
+          );
         },
         child: SizedBox(
           key: ValueKey<int>(widget.index),
@@ -183,7 +194,7 @@ class InheritedNavigationView extends InheritedWidget {
   }) : super(key: key, child: child);
 
   /// The current pane display mode according to the current state.
-  final PaneDisplayMode? displayMode;
+  final PaneDisplayMode displayMode;
 
   /// Whether the minimal pane is open or not
   final bool minimalPaneOpen;
@@ -216,12 +227,14 @@ class InheritedNavigationView extends InheritedWidget {
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
     int? oldIndex,
+    bool? currentItemSelected,
   }) {
     return Builder(builder: (context) {
       final current = InheritedNavigationView.maybeOf(context);
       return InheritedNavigationView(
         key: key,
-        displayMode: displayMode ?? current?.displayMode,
+        displayMode:
+            displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
@@ -237,7 +250,7 @@ class InheritedNavigationView extends InheritedWidget {
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
         oldWidget.oldIndex != oldIndex ||
-        oldWidget.currentItemIndex != oldWidget.currentItemIndex;
+        oldWidget.currentItemIndex != currentItemIndex;
   }
 }
 

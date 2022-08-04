@@ -35,9 +35,8 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: AnimatedDefaultTextStyle(
+        child: DefaultTextStyle(
           style: data.typography.body!,
-          duration: kThemeAnimationDuration,
           child: child,
         ),
       ),
@@ -151,9 +150,21 @@ class _AnimatedFluentThemeState
 }
 
 extension BrightnessExtension on Brightness {
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isLight = FluentTheme.of(context).brightness.isLight;
+  /// ```
   bool get isLight => this == Brightness.light;
+
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isDark = FluentTheme.of(context).brightness.isDark;
+  /// ```
   bool get isDark => this == Brightness.dark;
 
+  /// Gets the opposite brightness from this
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
 }
 
@@ -545,7 +556,7 @@ class ThemeData with Diagnosticable {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
-      typography: typography ?? this.typography,
+      typography: this.typography.merge(typography),
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,

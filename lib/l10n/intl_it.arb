@@ -23,5 +23,12 @@
   "copyActionTooltip": "Copia il contenuto selezionato",
   "cutActionTooltip": "Taglia il contenuto selezionato",
   "pasteActionTooltip": "Incolla il contenuto dalla clipboard",
-  "selectAllActionTooltip": "Selziona tutto il contenuto"
+  "selectAllActionTooltip": "Selziona tutto il contenuto",
+  "hour": "ore",
+  "minute": "minuti",
+  "am": "AM",
+  "pm": "PM",
+  "month": "mese",
+  "day": "giorno",
+  "year": "anno"
 }

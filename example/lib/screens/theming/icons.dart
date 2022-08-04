@@ -40,7 +40,22 @@ class _IconsPageState extends State<IconsPage> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ScaffoldPage.withPadding(
+
+    final entries = FluentIcons.allIcons.entries.where(
+      (icon) =>
+          filterText.isEmpty ||
+          // Remove '_'
+          icon.key
+              .replaceAll('_', '')
+              // toLowerCase
+              .toLowerCase()
+              .contains(filterText
+                  .toLowerCase()
+                  // Remove spaces
+                  .replaceAll(' ', '')),
+    );
+
+    return ScaffoldPage(
       header: PageHeader(
         title: const Text('Fluent Icons Gallery showcase'),
         commandBar: SizedBox(
@@ -57,30 +72,28 @@ class _IconsPageState extends State<IconsPage> {
           ),
         ),
       ),
-      bottomBar: const InfoBar(
-        title: Text('Tip:'),
-        content: Text(
-          'You can click on any icon to copy its name to the clipboard!',
+      bottomBar: const SizedBox(
+        width: double.infinity,
+        child: InfoBar(
+          title: Text('Tip:'),
+          content: Text(
+            'You can click on any icon to copy its name to the clipboard!',
+          ),
         ),
       ),
-      content: GridView.extent(
-        maxCrossAxisExtent: 150,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        padding: const EdgeInsets.only(top: kPageDefaultVerticalPadding),
-        children: FluentIcons.allIcons.entries
-            .where((icon) =>
-                filterText.isEmpty ||
-                // Remove '_'
-                icon.key
-                    .replaceAll('_', '')
-                    // toLowerCase
-                    .toLowerCase()
-                    .contains(filterText
-                        .toLowerCase()
-                        // Remove spaces
-                        .replaceAll(' ', '')))
-            .map((e) {
+      content: GridView.builder(
+        padding: EdgeInsets.only(
+          left: PageHeader.horizontalPadding(context),
+          right: PageHeader.horizontalPadding(context),
+        ),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 150,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+        ),
+        itemCount: entries.length,
+        itemBuilder: (context, index) {
+          final e = entries.elementAt(index);
           return HoverButton(
             onPressed: () async {
               final copyText = 'FluentIcons.${e.key}';
@@ -127,7 +140,7 @@ class _IconsPageState extends State<IconsPage> {
               );
             },
           );
-        }).toList(),
+        },
       ),
     );
   }

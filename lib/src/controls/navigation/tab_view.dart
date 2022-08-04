@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
 const double _kTileHeight = 34.0;
-const double _kButtonWidth = 40.0;
+const double _kButtonWidth = 32.0;
 
 enum CloseButtonVisibilityMode {
   /// The close button will never be visible
@@ -33,18 +33,19 @@ enum TabWidthBehavior {
   compact,
 }
 
-/// The TabView control is a way to display a set of tabs
-/// and their respective content. TabViews are useful for
-/// displaying several pages (or documents) of content while
-/// giving a user the capability to rearrange, open, or close
-/// new tabs.
+/// The TabView control is a way to display a set of tabs and their respective
+/// content. TabViews are useful for displaying several pages (or documents) of
+/// content while giving a user the capability to rearrange, open, or close new
+/// tabs.
 ///
-/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/tabview/tab-introduction.png)
+/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
 ///
 /// There must be enough space to render the tabview.
 ///
 /// See also:
-///   - [NavigationPanel]
+///
+///   * [NavigationView], control provides top-level navigation for your app.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tab-view>
 class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
@@ -56,7 +57,6 @@ class TabView extends StatefulWidget {
     required this.currentIndex,
     this.onChanged,
     required this.tabs,
-    required this.bodies,
     this.onNewPressed,
     this.addIconData = FluentIcons.add,
     this.shortcutsEnabled = true,
@@ -70,8 +70,7 @@ class TabView extends StatefulWidget {
     this.tabWidthBehavior = TabWidthBehavior.equal,
     this.header,
     this.footer,
-  })  : assert(tabs.length == bodies.length),
-        super(key: key);
+  }) : super(key: key);
 
   /// The index of the tab to be displayed
   final int currentIndex;
@@ -82,10 +81,6 @@ class TabView extends StatefulWidget {
   /// The tabs to be displayed. This must have the same
   /// length of [bodies]
   final List<Tab> tabs;
-
-  /// The bodies of the tabs. This must have the same
-  /// length of [tabs]
-  final List<Widget> bodies;
 
   /// Called when the new button is pressed or when the
   /// shortcut `Ctrl + T` is executed.
@@ -128,9 +123,12 @@ class TabView extends StatefulWidget {
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
 
-  /// Indicate if the wheel scroll changes the tabs positions.
+  // TODO: remove this property when https://github.com/flutter/flutter/issues/75180
+  // is fixed
+  /// Indicate if the mouse wheel should scroll the TabView
   ///
-  /// Defaults to `false`
+  /// Defaults to `false`.
+  ///
   final bool wheelScroll;
 
   /// Indicates the close button visibility mode
@@ -265,6 +263,7 @@ class _TabViewState extends State<TabView> {
     final minWidth = () {
       switch (widget.tabWidthBehavior) {
         case TabWidthBehavior.sizeToContent:
+        case TabWidthBehavior.compact:
           return null;
         default:
           return preferredTabWidth;
@@ -290,37 +289,31 @@ class _TabViewState extends State<TabView> {
   ) {
     final item = SizedBox(
       width: _kButtonWidth,
-      height: _kTileHeight - 10,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 2),
-        child: IconButton(
-          icon: icon,
-          onPressed: onPressed,
-          style: ButtonStyle(
-            foregroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled || states.isNone) {
-                return FluentTheme.of(context).disabledColor;
-              } else {
-                return FluentTheme.of(context).inactiveColor;
-              }
-            }),
-            backgroundColor: ButtonState.resolveWith((states) {
-              if (states.isDisabled || states.isNone) return Colors.transparent;
-              return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context), states);
-            }),
-            padding: ButtonState.all(const EdgeInsets.symmetric(
-              horizontal: 10,
-            )),
-          ),
+      height: 24.0,
+      child: IconButton(
+        icon: Center(child: icon),
+        onPressed: onPressed,
+        style: ButtonStyle(
+          foregroundColor: ButtonState.resolveWith((states) {
+            if (states.isDisabled || states.isNone) {
+              return FluentTheme.of(context).disabledColor;
+            } else {
+              return FluentTheme.of(context).inactiveColor;
+            }
+          }),
+          backgroundColor: ButtonState.resolveWith((states) {
+            if (states.isDisabled || states.isNone) return Colors.transparent;
+            return ButtonThemeData.uncheckedInputColor(
+              FluentTheme.of(context),
+              states,
+            );
+          }),
+          padding: ButtonState.all(EdgeInsets.zero),
         ),
       ),
     );
     if (onPressed == null) return item;
-    return Tooltip(
-      message: tooltip,
-      child: item,
-    );
+    return Tooltip(message: tooltip, child: item);
   }
 
   Widget divider(int index) {
@@ -344,8 +337,9 @@ class _TabViewState extends State<TabView> {
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
-    final TextDirection direction = Directionality.of(context);
-    final ThemeData theme = FluentTheme.of(context);
+
+    final direction = Directionality.of(context);
+    final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
     final headerFooterTextStyle =
@@ -359,77 +353,78 @@ class _TabViewState extends State<TabView> {
           padding: const EdgeInsets.only(left: 8),
           height: _kTileHeight,
           width: double.infinity,
-          child: Row(
-            children: [
-              if (widget.header != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: DefaultTextStyle(
-                    style: headerFooterTextStyle,
-                    child: widget.header!,
-                  ),
+          child: Row(children: [
+            if (widget.header != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: DefaultTextStyle(
+                  style: headerFooterTextStyle,
+                  child: widget.header!,
                 ),
-              Expanded(
-                child: LayoutBuilder(builder: (context, consts) {
-                  final width = consts.biggest.width;
-                  assert(
-                    width.isFinite,
-                    'You can only create a TabView in a box with defined width',
-                  );
+              ),
+            Expanded(
+              child: LayoutBuilder(builder: (context, consts) {
+                final width = consts.biggest.width;
+                assert(
+                  width.isFinite,
+                  'You can only create a TabView in a box with defined width',
+                );
 
-                  final double preferredTabWidth =
-                      ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
-                              widget.tabs.length)
-                          .clamp(widget.minTabWidth, widget.maxTabWidth);
+                final double preferredTabWidth =
+                    ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
+                            widget.tabs.length)
+                        .clamp(widget.minTabWidth, widget.maxTabWidth);
 
-                  final Widget listView = Listener(
-                    onPointerSignal: widget.wheelScroll
-                        ? (PointerSignalEvent e) {
-                            if (e is PointerScrollEvent) {
-                              if (e.scrollDelta.dy > 0) {
-                                scrollController.forward(
-                                  align: false,
-                                  animate: false,
-                                );
-                              } else {
-                                scrollController.backward(
-                                  align: false,
-                                  animate: false,
-                                );
-                              }
+                final Widget listView = Listener(
+                  onPointerSignal: widget.wheelScroll
+                      ? (PointerSignalEvent e) {
+                          if (e is PointerScrollEvent) {
+                            if (e.scrollDelta.dy > 0) {
+                              scrollController.forward(
+                                align: false,
+                                animate: false,
+                              );
+                            } else {
+                              scrollController.backward(
+                                align: false,
+                                animate: false,
+                              );
                             }
                           }
-                        : null,
-                    child: ReorderableListView.builder(
-                      buildDefaultDragHandles: false,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      scrollController: scrollController,
-                      onReorder: (i, ii) {
-                        widget.onReorder?.call(i, ii);
-                      },
-                      itemCount: widget.tabs.length,
-                      proxyDecorator: (child, index, animation) {
-                        return child;
-                      },
-                      itemBuilder: (context, index) {
-                        return _tabBuilder(
-                          context,
-                          index,
-                          preferredTabWidth,
-                        );
-                      },
-                    ),
-                  );
+                        }
+                      : null,
+                  child: ReorderableListView.builder(
+                    buildDefaultDragHandles: false,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    scrollController: scrollController,
+                    onReorder: (i, ii) {
+                      widget.onReorder?.call(i, ii);
+                    },
+                    itemCount: widget.tabs.length,
+                    proxyDecorator: (child, index, animation) {
+                      return child;
+                    },
+                    itemBuilder: (context, index) {
+                      return _tabBuilder(context, index, preferredTabWidth);
+                    },
+                  ),
+                );
 
-                  bool scrollable = preferredTabWidth * widget.tabs.length >
-                      width - (widget.showNewButton ? _kButtonWidth : 0);
+                bool scrollable = preferredTabWidth * widget.tabs.length >
+                    width - (widget.showNewButton ? _kButtonWidth : 0);
 
-                  final bool showScrollButtons =
-                      widget.showScrollButtons && scrollable;
-                  final backwardButton = _buttonTabBuilder(
+                final bool showScrollButtons =
+                    widget.showScrollButtons && scrollable;
+                final backwardButton = Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 8.0,
+                    end: 3.0,
+                    bottom: 3.0,
+                  ),
+                  child: _buttonTabBuilder(
                     context,
-                    const Icon(FluentIcons.caret_left_solid8, size: 10),
+                    const Icon(FluentIcons.caret_left_solid8, size: 8),
                     !scrollController.canBackward
                         ? () {
                             if (direction == TextDirection.ltr) {
@@ -440,11 +435,18 @@ class _TabViewState extends State<TabView> {
                           }
                         : null,
                     localizations.scrollTabBackwardLabel,
-                  );
+                  ),
+                );
 
-                  final forwardButton = _buttonTabBuilder(
+                final forwardButton = Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 3.0,
+                    end: 8.0,
+                    bottom: 3.0,
+                  ),
+                  child: _buttonTabBuilder(
                     context,
-                    const Icon(FluentIcons.caret_right_solid8, size: 10),
+                    const Icon(FluentIcons.caret_right_solid8, size: 8),
                     !scrollController.canForward
                         ? () {
                             if (direction == TextDirection.ltr) {
@@ -455,45 +457,51 @@ class _TabViewState extends State<TabView> {
                           }
                         : null,
                     localizations.scrollTabForwardLabel,
-                  );
+                  ),
+                );
 
-                  return Row(children: [
-                    if (showScrollButtons)
-                      direction == TextDirection.ltr
-                          ? backwardButton
-                          : forwardButton,
-                    if (scrollable)
-                      Expanded(child: listView)
-                    else
-                      Flexible(child: listView),
-                    if (showScrollButtons)
-                      direction == TextDirection.ltr
-                          ? forwardButton
-                          : backwardButton,
-                    if (widget.showNewButton)
-                      _buttonTabBuilder(
+                return Row(children: [
+                  if (showScrollButtons)
+                    direction == TextDirection.ltr
+                        ? backwardButton
+                        : forwardButton,
+                  if (scrollable)
+                    Expanded(child: listView)
+                  else
+                    Flexible(child: listView),
+                  if (showScrollButtons)
+                    direction == TextDirection.ltr
+                        ? forwardButton
+                        : backwardButton,
+                  if (widget.showNewButton)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 3.0,
+                        bottom: 3.0,
+                      ),
+                      child: _buttonTabBuilder(
                         context,
-                        Icon(widget.addIconData, size: 16.0),
+                        Icon(widget.addIconData, size: 12.0),
                         widget.onNewPressed!,
                         localizations.newTabLabel,
                       ),
-                  ]);
-                }),
-              ),
-              if (widget.footer != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: DefaultTextStyle(
-                    style: headerFooterTextStyle,
-                    child: widget.footer!,
-                  ),
+                    ),
+                ]);
+              }),
+            ),
+            if (widget.footer != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: DefaultTextStyle(
+                  style: headerFooterTextStyle,
+                  child: widget.footer!,
                 ),
-            ],
-          ),
+              ),
+          ]),
         ),
       ),
-      if (widget.bodies.isNotEmpty)
-        Expanded(child: widget.bodies[widget.currentIndex]),
+      if (widget.tabs.isNotEmpty)
+        Expanded(child: widget.tabs[widget.currentIndex].body),
     ]);
     if (widget.shortcutsEnabled) {
       void _onClosePressed() {
@@ -549,12 +557,14 @@ class _TabViewState extends State<TabView> {
   }
 }
 
+/// Represents a single tab within a [TabView].
 class Tab {
   /// Creates a tab.
   const Tab({
     this.key,
-    this.icon = const FlutterLogo(),
+    this.icon = const SizedBox.shrink(),
     required this.text,
+    required this.body,
     this.closeIcon = FluentIcons.chrome_close,
     this.onClosed,
     this.semanticLabel,
@@ -562,21 +572,30 @@ class Tab {
 
   final Key? key;
 
-  /// The leading icon of the tab. [FlutterLogo] is used by default
+  /// the IconSource to be displayed within the tab.
+  ///
+  /// Usually an [Icon] widget
   final Widget? icon;
 
-  /// The text of the tab. Usually a [Text] widget
+  /// The content that appears inside the tab strip to represent the tab.
+  ///
+  /// Usually a [Text] widget
   final Widget text;
 
   /// The close icon of the tab. Usually an [IconButton] widget
   final IconData? closeIcon;
 
-  /// Called when the close button is called or when the
-  /// shortcut `Ctrl + T` or `Ctrl + F4` is executed
+  /// Called when clicking x-to-close button or when thec`Ctrl + T` or
+  /// `Ctrl + F4` is executed
+  ///
+  /// If null, the tab is not closeable
   final VoidCallback? onClosed;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
+
+  /// The body of the view attached to this tab
+  final Widget body;
 }
 
 class _Tab extends StatefulWidget {
@@ -644,6 +663,8 @@ class __TabState extends State<_Tab>
       if (widget.tab.text is Text) {
         return (widget.tab.text as Text).data ??
             (widget.tab.text as Text).textSpan?.toPlainText();
+      } else if (widget.tab.text is RichText) {
+        return (widget.tab.text as RichText).text.toPlainText();
       }
     }();
     return HoverButton(
@@ -675,7 +696,12 @@ class __TabState extends State<_Tab>
                 widget.tabWidthBehavior == TabWidthBehavior.sizeToContent
                     ? null
                     : const BoxConstraints(maxWidth: _kMaxTileWidth),
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+            padding: const EdgeInsetsDirectional.only(
+              start: 8,
+              top: 3,
+              end: 4,
+              bottom: 3,
+            ),
             decoration: BoxDecoration(
               borderRadius: borderRadius,
               color: widget.selected
@@ -695,47 +721,53 @@ class __TabState extends State<_Tab>
                     color: foregroundColor,
                   ),
                   child: IconTheme.merge(
-                    data: IconThemeData(color: foregroundColor),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (widget.tab.icon != null)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: widget.tab.icon!,
-                          ),
-                        if (widget.tabWidthBehavior !=
-                                TabWidthBehavior.compact ||
-                            (widget.tabWidthBehavior ==
-                                    TabWidthBehavior.compact &&
-                                widget.selected))
-                          Flexible(
-                            fit: widget.tabWidthBehavior ==
-                                    TabWidthBehavior.equal
-                                ? FlexFit.tight
-                                : FlexFit.loose,
+                    data: IconThemeData(
+                      color: foregroundColor,
+                      size: 16.0,
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      if (widget.tab.icon != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 10.0),
+                          child: widget.tab.icon!,
+                        ),
+                      if (widget.tabWidthBehavior != TabWidthBehavior.compact ||
+                          (widget.tabWidthBehavior ==
+                                  TabWidthBehavior.compact &&
+                              widget.selected))
+                        Flexible(
+                          fit: widget.tabWidthBehavior == TabWidthBehavior.equal
+                              ? FlexFit.tight
+                              : FlexFit.loose,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 4.0),
                             child: DefaultTextStyle.merge(
                               softWrap: false,
                               maxLines: 1,
                               overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 12.0),
                               child: widget.tab.text,
                             ),
                           ),
-                        if (widget.tab.closeIcon != null &&
-                            (widget.visibilityMode ==
-                                    CloseButtonVisibilityMode.always ||
-                                (widget.visibilityMode ==
-                                        CloseButtonVisibilityMode.onHover &&
-                                    states.isHovering)))
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2.0),
-                            child: FocusTheme(
-                              data: const FocusThemeData(
-                                primaryBorder: BorderSide.none,
-                                secondaryBorder: BorderSide.none,
-                              ),
-                              child: Tooltip(
-                                message: localizations.closeTabLabel,
+                        ),
+                      if (widget.tab.closeIcon != null &&
+                          (widget.visibilityMode ==
+                                  CloseButtonVisibilityMode.always ||
+                              (widget.visibilityMode ==
+                                      CloseButtonVisibilityMode.onHover &&
+                                  states.isHovering)))
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 4.0),
+                          child: FocusTheme(
+                            data: const FocusThemeData(
+                              primaryBorder: BorderSide.none,
+                              secondaryBorder: BorderSide.none,
+                            ),
+                            child: Tooltip(
+                              message: localizations.closeTabLabel,
+                              child: SizedBox(
+                                height: 24.0,
+                                width: 32.0,
                                 child: IconButton(
                                   icon: Icon(widget.tab.closeIcon),
                                   onPressed: widget.tab.onClosed,
@@ -744,8 +776,8 @@ class __TabState extends State<_Tab>
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ]),
                   ),
                 ),
               );

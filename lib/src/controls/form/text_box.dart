@@ -827,10 +827,10 @@ class _TextBoxState extends State<TextBox>
             ),
           if (child != null) child,
         ]);
-        // if (!_showPrefixWidget(text) && !_showSuffixWidget(text)) return result;
-        return Row(children: <Widget>[
+        if (!_showPrefixWidget(text) && !_showSuffixWidget(text)) return result;
+        return Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
           if (_showPrefixWidget(text)) widget.prefix!,
-          Expanded(child: result),
+          Flexible(child: result),
           if (_showSuffixWidget(text))
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -1091,9 +1091,9 @@ class _TextBoxState extends State<TextBox>
             !_showOutsideSuffixWidget(text)) {
           return child!;
         }
-        return Row(children: [
+        return Row(mainAxisSize: MainAxisSize.min, children: [
           if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-          Expanded(child: child!),
+          Flexible(child: child!),
           if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
         ]);
       },

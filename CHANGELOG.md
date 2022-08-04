@@ -1,6 +1,82 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [4.0.0-pre.3] - [00/08/2022]
+
+- `NavigationView` top mode fixes:
+  - When top overflow menu is opened, `PaneItemHeader` no longer throws an unsupported error
+  - When on top mode, `PaneItemHeader` is properly aligned to the other items.
+  - Added `NavigationPaneThemeData.headerPadding`, which is applied to `PaneItemHeader` on open, compact and minimal mode. It defaults to 10 pixels at the top
+  - **BREAKING** `PaneItem.getPropertyFromTitle` is now `widget.getProperty`:
+
+  Before:
+  `getPropertyFromTitle<TextStyle>()`
+
+  Now:
+  `title.getProperty<TextStyle>()`
+
+  This was changed because the properties of `PaneItemHeader` needed to be accessed, but the old version only supported to get the properties of `PaneItem.title`. It can be called on a `Text`, `RichText` or in an `Icon` widget
+  - `InheritedNavigationView` is now accessible on the top overflow menu
+  - Added `NavigationPaneThemeData.selectedTopTextStyle` and `NavigationPaneThemeData.unselectedTopTextStyle`, which is applied to the items on top mode
+  - Updated default transitions for top mode: `HorizontalSlidePageTransition`
+- Fix incorrect translation of `TimePicker` in Traditional Chinese.
+- Added `ScaffoldPage.resizeToAvoidBottomInset` ([#444](https://github.com/bdlukaa/fluent_ui/issues/444))
+- Consider view padding for `NavigationAppBar`
+- Use `trackColor` and add inner `padding` for Scrollbar ([#356](https://github.com/bdlukaa/fluent_ui/pull/356))
+
+## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
+
+- Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
+- Apply correct color to the Date and Time Pickers button when selected ([#415](https://github.com/bdlukaa/fluent_ui/issues/415), [#417](https://github.com/bdlukaa/fluent_ui/issues/417))
+- Expose more useful properties to `AutoSuggestBox` ([#419](https://github.com/bdlukaa/fluent_ui/issues/419))
+- **BREAKING** `PopupContentSizeInfo` was renamed to `ContentSizeInfo`
+- Reworked `ListTile` ([#422](https://github.com/bdlukaa/fluent_ui/pull/422)):
+  - **BREAKING** Removed `TappableListTile` 
+  - Added support for single and multiple selection. Use `ListTile.selectable` ([#409](https://github.com/bdlukaa/fluent_ui/issues/409))
+  - Added focus support
+  - Use the Win UI design
+- Reviewed animation durations ([#421](https://github.com/bdlukaa/fluent_ui/issues/421))
+  - **BREAKING** Removed `.animationDuration` and `.animationCurve` from `ScrollbarThemeData`
+  - Added `expandContractAnimationDuration` and `contractDelay` to `ScrollbarThemeData`
+- `NavigationPaneSize` constraints are now correctly applied when in open mode ([#336](https://github.com/bdlukaa/fluent_ui/issues/336))
+- `NavigationIndicator` can't be invisble anymore when animation is stale ([#335](https://github.com/bdlukaa/fluent_ui/issues/335))
+- Updated `TabView`:
+  - **BREAKING** Removed `TabView.bodies`. Now, `Tab.body` is used.
+    Before
+    ```dart
+    TabView(
+      tabs: [
+        Tab(text: Text('Tab 1')),
+        Tab(text: Text('Tab 2')),
+      ],
+      bodies: [
+        Tab1Body(),
+        Tab2Body(),
+      ],
+    ),
+    ```
+
+    Now:
+    ```dart
+    TabView(
+      tabs: [
+        Tab(
+          text: Text('Tab 1'),
+          body: Tab1Body(),
+        ),
+        Tab(
+          text: Text('Tab 2'),
+          body: Tab2Body(),
+        ),
+      ],
+    ),
+    ```
+  - Updated `TabView` tabs' constraints and padding
+  - Fixed tab width when `TabWidthBehavior` is `compact`
+  - `FlutterLogo` is no longer the default tab Icon
+- `DropDownButton` menu is now sized correctly according to the screen size
+- If there isn't enough space to display the menu on the preferred position, `Flyout` will display on the opposite position ([#435](https://github.com/bdlukaa/fluent_ui/pull/435))
+
+## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
 
 - Exposed private properties that makes it easier to create custom panes for `NavigationView` ([#365](https://github.com/bdlukaa/fluent_ui/issues/365)):
   - `kCompactNavigationPaneWidth`
@@ -30,7 +106,27 @@ Date format: DD/MM/YYYY
 - Updated `TextBox`:
   - `TextBox` colors were updated to match the Win 11 design.
   - Fluent Text Selection Control now make use of `Acrylic`. Its items were also updated
-- Use `trackColor` and add inner `padding` for Scrollbar ([#356](https://github.com/bdlukaa/fluent_ui/pull/356))
+- Updated pickers ([#406](https://github.com/bdlukaa/fluent_ui/pull/406)):
+  - If `selected` is null, a placeholder text is shown ([#306](https://github.com/bdlukaa/fluent_ui/issues/306))
+  - Added new localization messages: `hour`, `minute`, `AM`, `PM`, `month`, `day`and `year`.
+  - **BREAKING** Removed `.hourPlaceholder`, `.minutePlaceholder`, `.amText`, `.pmText` from `TimePicker`. It was replaced, respectivelly, by the `hour`, `minute`, `AM`, `PM` localization messages
+  - On `DatePicker`, it's now possible to change the order of the fields:
+  ```dart
+  DatePicker(
+    ...,
+    fieldOrder: [
+      DatePickerField.day,
+      DatePickerField.month,
+      DatePickerField.year,
+    ],
+  )
+  ```
+
+  The fields are ordered based on the current locale by default
+  - On `DatePicker`, the day and year fields are now formatted based on the current locale (`getDateOrderFromLocale`)
+- Update `Slider` ([#405](https://github.com/bdlukaa/fluent_ui/issues/405)):
+  - Added `.thumbRadius` and `.trackHeight` to `SliderThemeData`
+  - The active track now isn't taller than the inactive track
 
 ## [4.0.0-pre.0] - [07/06/2022]
 

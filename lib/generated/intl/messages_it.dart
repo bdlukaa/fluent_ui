@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("AM"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("Indietro"),
         "clickToSearch":
             MessageLookupByLibrary.simpleMessage("Clicca per cercare"),
@@ -37,11 +38,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Taglia"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Taglia il contenuto selezionato"),
+        "day": MessageLookupByLibrary.simpleMessage("giorno"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("Dialog"),
+        "hour": MessageLookupByLibrary.simpleMessage("ore"),
         "minimizeWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Minimizza"),
+        "minute": MessageLookupByLibrary.simpleMessage("minuti"),
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("Chiudi"),
+        "month": MessageLookupByLibrary.simpleMessage("mese"),
         "newTabLabel":
             MessageLookupByLibrary.simpleMessage("Aggiungi una nuova scheda"),
         "noResultsFoundLabel":
@@ -50,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Incolla"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "Incolla il contenuto dalla clipboard"),
+        "pm": MessageLookupByLibrary.simpleMessage("PM"),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Ripristina"),
         "scrollTabBackwardLabel":
@@ -60,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Seleziona tutto"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Selziona tutto il contenuto")
+            MessageLookupByLibrary.simpleMessage("Selziona tutto il contenuto"),
+        "year": MessageLookupByLibrary.simpleMessage("anno")
       };
 }

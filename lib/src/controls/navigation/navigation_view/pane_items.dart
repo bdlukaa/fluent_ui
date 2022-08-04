@@ -72,79 +72,6 @@ class PaneItem extends NavigationPaneItem {
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
 
-  T? getPropertyFromTitle<T>([dynamic def]) {
-    if (title is Text) {
-      final title = this.title as Text;
-      switch (T) {
-        case String:
-          return (title.data ?? title.textSpan?.toPlainText()) as T?;
-        case InlineSpan:
-          return (title.textSpan ??
-              TextSpan(
-                text: title.data ?? '',
-                style: getPropertyFromTitle<TextStyle>()
-                        ?.merge(def as TextStyle?) ??
-                    def as TextStyle?,
-              )) as T?;
-        case TextStyle:
-          return title.style as T?;
-        case TextAlign:
-          return title.textAlign as T?;
-        case TextHeightBehavior:
-          return title.textHeightBehavior as T?;
-        case TextWidthBasis:
-          return title.textWidthBasis as T?;
-      }
-    } else if (title is RichText) {
-      final title = this.title as RichText;
-      switch (T) {
-        case String:
-          return title.text.toPlainText() as T?;
-        case InlineSpan:
-          if (T is InlineSpan) {
-            final span = title.text;
-            span.style?.merge(def as TextStyle?);
-            return span as T;
-          }
-          return title.text as T;
-        case TextStyle:
-          return (title.text.style as T?) ?? def as T?;
-        case TextAlign:
-          return title.textAlign as T?;
-        case TextHeightBehavior:
-          return title.textHeightBehavior as T?;
-        case TextWidthBasis:
-          return title.textWidthBasis as T?;
-      }
-    } else if (title is Icon) {
-      final title = this.title as Icon;
-      switch (T) {
-        case String:
-          if (title.icon?.codePoint == null) return null;
-          return String.fromCharCode(title.icon!.codePoint) as T?;
-        case InlineSpan:
-          return TextSpan(
-            text: String.fromCharCode(title.icon!.codePoint),
-            style: getPropertyFromTitle<TextStyle>(),
-          ) as T?;
-        case TextStyle:
-          return TextStyle(
-            color: title.color,
-            fontSize: title.size,
-            fontFamily: title.icon?.fontFamily,
-            package: title.icon?.fontPackage,
-          ) as T?;
-        case TextAlign:
-          return null;
-        case TextHeightBehavior:
-          return null;
-        case TextWidthBasis:
-          return null;
-      }
-    }
-    return null;
-  }
-
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
@@ -168,10 +95,10 @@ class PaneItem extends NavigationPaneItem {
     final direction = Directionality.of(context);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final String titleText = getPropertyFromTitle<String>() ?? '';
+    final String titleText = title?.getProperty<String>() ?? '';
 
     final TextStyle baseStyle =
-        getPropertyFromTitle<TextStyle>() ?? const TextStyle();
+        title?.getProperty<TextStyle>() ?? const TextStyle();
 
     final bool isTop = mode == PaneDisplayMode.top;
     final bool isCompact = mode == PaneDisplayMode.compact;
@@ -182,34 +109,41 @@ class PaneItem extends NavigationPaneItem {
       onPressed: onPressed,
       cursor: mouseCursor,
       builder: (context, states) {
-        TextStyle textStyle = baseStyle.merge(
-          selected
-              ? theme.selectedTextStyle?.resolve(states)
-              : theme.unselectedTextStyle?.resolve(states),
-        );
-        if (isTop && states.isPressing) {
-          textStyle = textStyle.copyWith(
-            color: textStyle.color?.withOpacity(0.75),
-          );
-        }
+        TextStyle textStyle = () {
+          TextStyle? style = !isTop
+              ? (selected
+                  ? theme.selectedTextStyle?.resolve(states)
+                  : theme.unselectedTextStyle?.resolve(states))
+              : (selected
+                  ? theme.selectedTopTextStyle?.resolve(states)
+                  : theme.unselectedTopTextStyle?.resolve(states));
+          if (style == null) return baseStyle;
+          return style.merge(baseStyle);
+        }();
+
         final textResult = titleText.isNotEmpty
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsets.zero,
                 child: RichText(
-                  text: getPropertyFromTitle<InlineSpan>(textStyle)!,
+                  text: title!.getProperty<InlineSpan>(textStyle)!,
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  textAlign:
-                      getPropertyFromTitle<TextAlign>() ?? TextAlign.start,
-                  textHeightBehavior:
-                      getPropertyFromTitle<TextHeightBehavior>(),
-                  textWidthBasis: getPropertyFromTitle<TextWidthBasis>() ??
+                  textAlign: title?.getProperty<TextAlign>() ?? TextAlign.start,
+                  textHeightBehavior: title?.getProperty<TextHeightBehavior>(),
+                  textWidthBasis: title?.getProperty<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
             : const SizedBox.shrink();
         Widget result() {
+          final iconThemeData = IconThemeData(
+            color: textStyle.color ??
+                (selected
+                    ? theme.selectedIconColor?.resolve(states)
+                    : theme.unselectedIconColor?.resolve(states)),
+            size: textStyle.fontSize ?? 16.0,
+          );
           switch (mode) {
             case PaneDisplayMode.compact:
               return Container(
@@ -219,32 +153,23 @@ class PaneItem extends NavigationPaneItem {
                 child: Padding(
                   padding: theme.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme.merge(
-                    data: IconThemeData(
-                      color: (selected
-                              ? theme.selectedIconColor?.resolve(states)
-                              : theme.unselectedIconColor?.resolve(states)) ??
-                          textStyle.color,
-                      size: 16.0,
-                    ),
+                    data: iconThemeData,
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: () {
-                          if (infoBadge != null) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              clipBehavior: Clip.none,
-                              children: [
-                                icon,
-                                Positioned(
-                                  right: -8,
-                                  top: -8,
-                                  child: infoBadge!,
-                                ),
-                              ],
-                            );
-                          }
-                          return icon;
-                        }()),
+                      alignment: Alignment.centerLeft,
+                      child: () {
+                        if (infoBadge != null) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              icon,
+                              Positioned(right: -8, top: -8, child: infoBadge!),
+                            ],
+                          );
+                        }
+                        return icon;
+                      }(),
+                    ),
                   ),
                 ),
               );
@@ -257,13 +182,7 @@ class PaneItem extends NavigationPaneItem {
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
                     child: IconTheme.merge(
-                      data: IconThemeData(
-                        color: (selected
-                                ? theme.selectedIconColor?.resolve(states)
-                                : theme.unselectedIconColor?.resolve(states)) ??
-                            textStyle.color,
-                        size: 16.0,
-                      ),
+                      data: iconThemeData,
                       child: Center(child: icon),
                     ),
                   ),
@@ -276,40 +195,27 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              Widget result = Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: theme.iconPadding ?? EdgeInsets.zero,
-                    child: IconTheme.merge(
-                      data: IconThemeData(
-                        color: (selected
-                                ? theme.selectedIconColor?.resolve(states)
-                                : theme.unselectedIconColor?.resolve(states)) ??
-                            textStyle.color,
-                        size: 16.0,
-                      ),
-                      child: Center(child: icon),
-                    ),
+              Widget result = Row(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: theme.iconPadding ?? EdgeInsets.zero,
+                  child: IconTheme.merge(
+                    data: iconThemeData,
+                    child: Center(child: icon),
                   ),
-                  if (showTextOnTop) textResult,
-                ],
-              );
+                ),
+                if (showTextOnTop) textResult,
+              ]);
               if (infoBadge != null) {
-                return Stack(
-                  key: itemKey,
-                  clipBehavior: Clip.none,
-                  children: [
-                    result,
-                    if (infoBadge != null)
-                      Positioned.directional(
-                        textDirection: direction,
-                        end: -3,
-                        top: 3,
-                        child: infoBadge!,
-                      ),
-                  ],
-                );
+                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
+                  result,
+                  if (infoBadge != null)
+                    Positioned.directional(
+                      textDirection: direction,
+                      end: -3,
+                      top: 3,
+                      child: infoBadge!,
+                    ),
+                ]);
               }
               return KeyedSubtree(key: itemKey, child: result);
             default:
@@ -320,9 +226,7 @@ class PaneItem extends NavigationPaneItem {
         return Semantics(
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
-          child: AnimatedContainer(
-            duration: theme.animationDuration ?? Duration.zero,
-            curve: theme.animationCurve ?? standardCurve,
+          child: Container(
             margin: const EdgeInsets.only(right: 6.0, left: 6.0),
             decoration: BoxDecoration(
               color: () {
@@ -358,7 +262,7 @@ class PaneItem extends NavigationPaneItem {
 
                 if (showTooltip) {
                   return Tooltip(
-                    richMessage: getPropertyFromTitle<InlineSpan>(),
+                    richMessage: title?.getProperty<InlineSpan>(),
                     style: TooltipThemeData(textStyle: baseStyle),
                     child: result(),
                   );
@@ -378,24 +282,23 @@ class PaneItem extends NavigationPaneItem {
       }
     }();
 
-    final GlobalKey? key = () {
-      if (index != null && !index.isNegative) {
-        return _PaneItemKeys.of(index, context);
-      }
-    }();
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: () {
         // If there is an indicator and the item is an effective item
-        if (maybeBody?.pane?.indicator != null && index != -1) {
+        if (maybeBody?.pane?.indicator != null &&
+            index != null &&
+            !index.isNegative) {
+          final key = _PaneItemKeys.of(index, context);
+
           return Stack(children: [
             button,
             Positioned.fill(
               child: InheritedNavigationView.merge(
                 currentItemIndex: index,
+                currentItemSelected: selected,
                 child: KeyedSubtree(
-                  key: index != null ? key : null,
+                  key: key,
                   child: maybeBody!.pane!.indicator!,
                 ),
               ),
@@ -467,15 +370,22 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
+    final view = InheritedNavigationView.of(context);
     return Padding(
       key: itemKey,
-      padding: theme.iconPadding ?? EdgeInsets.zero,
+      padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+        view.displayMode == PaneDisplayMode.top
+            ? EdgeInsets.zero
+            : theme.headerPadding ?? EdgeInsets.zero,
+      ),
       child: DefaultTextStyle(
         style: theme.itemHeaderTextStyle ?? const TextStyle(),
         softWrap: false,
         maxLines: 1,
         overflow: TextOverflow.fade,
-        textAlign: TextAlign.left,
+        textAlign: view.displayMode == PaneDisplayMode.top
+            ? TextAlign.center
+            : TextAlign.left,
         child: header,
       ),
     );
@@ -552,5 +462,80 @@ extension _ItemsExtension on List<NavigationPaneItem> {
       final position = paneBox.globalToLocal(globalPosition);
       return position;
     }).toList();
+  }
+}
+
+extension ItemExtension on Widget {
+  T? getProperty<T>([dynamic def]) {
+    if (this is Text) {
+      final title = this as Text;
+      switch (T) {
+        case String:
+          return (title.data ?? title.textSpan?.toPlainText()) as T?;
+        case InlineSpan:
+          return (title.textSpan ??
+              TextSpan(
+                text: title.data ?? '',
+                style:
+                    title.getProperty<TextStyle>()?.merge(def as TextStyle?) ??
+                        def as TextStyle?,
+              )) as T?;
+        case TextStyle:
+          return title.style as T?;
+        case TextAlign:
+          return title.textAlign as T?;
+        case TextHeightBehavior:
+          return title.textHeightBehavior as T?;
+        case TextWidthBasis:
+          return title.textWidthBasis as T?;
+      }
+    } else if (this is RichText) {
+      final title = this as RichText;
+      switch (T) {
+        case String:
+          return title.text.toPlainText() as T?;
+        case InlineSpan:
+          if (T is InlineSpan) {
+            final span = title.text;
+            span.style?.merge(def as TextStyle?);
+            return span as T;
+          }
+          return title.text as T;
+        case TextStyle:
+          return (title.text.style as T?) ?? def as T?;
+        case TextAlign:
+          return title.textAlign as T?;
+        case TextHeightBehavior:
+          return title.textHeightBehavior as T?;
+        case TextWidthBasis:
+          return title.textWidthBasis as T?;
+      }
+    } else if (this is Icon) {
+      final title = this as Icon;
+      switch (T) {
+        case String:
+          if (title.icon?.codePoint == null) return null;
+          return String.fromCharCode(title.icon!.codePoint) as T?;
+        case InlineSpan:
+          return TextSpan(
+            text: String.fromCharCode(title.icon!.codePoint),
+            style: title.getProperty<TextStyle>(),
+          ) as T?;
+        case TextStyle:
+          return TextStyle(
+            color: title.color,
+            fontSize: title.size,
+            fontFamily: title.icon?.fontFamily,
+            package: title.icon?.fontPackage,
+          ) as T?;
+        case TextAlign:
+          return null;
+        case TextHeightBehavior:
+          return null;
+        case TextWidthBasis:
+          return null;
+      }
+    }
+    return null;
   }
 }
