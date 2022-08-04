@@ -403,6 +403,18 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     _showOverlay();
   }
 
+  void _onSubmitted() {
+    final currentlySelectedIndex = widget.items.indexWhere(
+      (item) => item.selected,
+    );
+    if (currentlySelectedIndex.isNegative) return;
+
+    final item = widget.items[currentlySelectedIndex];
+    widget.onSelected?.call(item.value);
+
+    controller.text = item.value;
+  }
+
   /// Whether a [TextFormBox] is used instead of a [TextBox]
   bool get useForm => widget.validator != null;
 
@@ -477,6 +489,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 suffix: suffix,
                 suffixMode: OverlayVisibilityMode.always,
                 onChanged: _onChanged,
+                onFieldSubmitted: (text) => _onSubmitted(),
                 style: widget.style,
                 decoration: widget.decoration,
                 highlightColor: widget.highlightColor,
@@ -505,6 +518,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 suffix: suffix,
                 suffixMode: OverlayVisibilityMode.always,
                 onChanged: _onChanged,
+                onSubmitted: (text) => _onSubmitted(),
                 style: widget.style,
                 decoration: widget.decoration,
                 foregroundDecoration: widget.foregroundDecoration,
