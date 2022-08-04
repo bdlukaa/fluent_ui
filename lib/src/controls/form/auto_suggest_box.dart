@@ -289,6 +289,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     focusNode.removeListener(_handleFocusChanged);
     focusStream.close();
 
+    // unselect all items
+    for (final item in widget.items) {
+      item.selected = false;
+    }
+
     {
       // If the TextEditingController and FocusNode objects are created locally,
       // we must dispose them.
@@ -342,30 +347,26 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             width: box.size.width,
             child: FluentTheme(
               data: FluentTheme.of(context),
-              child: StreamBuilder(
-                stream: focusStream.stream,
-                builder: (context, snapshot) {
-                  return _AutoSuggestBoxOverlay(
-                    node: overlayNode,
-                    controller: controller,
-                    items: widget.items,
-                    onSelected: (String item) {
-                      widget.onSelected?.call(item);
-                      controller.text = item;
-                      controller.selection = TextSelection.collapsed(
-                        offset: item.length,
-                      );
-                      widget.onChanged?.call(
-                        item,
-                        TextChangedReason.suggestionChosen,
-                      );
-
-                      // After selected, the overlay is dismissed and the text box is
-                      // unfocused
-                      _dismissOverlay();
-                      focusNode.unfocus();
-                    },
+              child: _AutoSuggestBoxOverlay(
+                node: overlayNode,
+                controller: controller,
+                items: widget.items,
+                focusStream: focusStream.stream,
+                onSelected: (String item) {
+                  widget.onSelected?.call(item);
+                  controller.text = item;
+                  controller.selection = TextSelection.collapsed(
+                    offset: item.length,
                   );
+                  widget.onChanged?.call(
+                    item,
+                    TextChangedReason.suggestionChosen,
+                  );
+
+                  // After selected, the overlay is dismissed and the text box is
+                  // unfocused
+                  _dismissOverlay();
+                  focusNode.unfocus();
                 },
               ),
             ),
@@ -453,9 +454,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             // if nothing is selected, select the last
-            if (currentlySelectedIndex == -1) {
+            if (currentlySelectedIndex == -1 || currentlySelectedIndex == 0) {
               select(widget.items.length - 1);
-            } else if (currentlySelectedIndex > 0) {
+            } else {
               select(currentlySelectedIndex - 1);
             }
             return KeyEventResult.handled;
@@ -531,18 +532,50 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
     required this.controller,
     required this.onSelected,
     required this.node,
+    required this.focusStream,
   }) : super(key: key);
 
   final List<AutoSuggestBoxItem> items;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
   final FocusScopeNode node;
+  final Stream focusStream;
 
   @override
   State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
 }
 
 class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
+  late final StreamSubscription focusStream;
+  final ScrollController scrollController = ScrollController();
+
+  /// Tile height + padding
+  static const tileHeight = (kOneLineTileHeight + 2.0);
+
+  @override
+  void initState() {
+    super.initState();
+    focusStream = widget.focusStream.listen((index) {
+      if (!mounted) return;
+
+      final currentSelectedOffset = tileHeight * index;
+
+      scrollController.animateTo(
+        currentSelectedOffset,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+      );
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    focusStream.cancel();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -579,7 +612,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
             builder: (context, value, _) {
               final items = AutoSuggestBox.defaultItemSorter(
                 value.text,
-                this.widget.items,
+                widget.items,
               );
               late Widget result;
               if (items.isEmpty) {
@@ -591,18 +624,21 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                   ),
                 );
               } else {
-                result = ListView(
+                result = ListView.builder(
+                  itemExtent: tileHeight,
+                  controller: scrollController,
                   key: ValueKey<int>(items.length),
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(bottom: 4.0),
-                  children: List.generate(items.length, (index) {
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
                     final item = items[index];
                     return _AutoSuggestBoxOverlayTile(
                       text: item.value,
                       selected: item.selected,
                       onSelected: () => widget.onSelected(item.value),
                     );
-                  }),
+                  },
                 );
               }
               return result;
@@ -654,53 +690,25 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return HoverButton(
+
+    return ListTile.selectable(
+      title: EntrancePageTransition(
+        animation: Tween<double>(
+          begin: 0.75,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeOut,
+        )),
+        vertical: true,
+        child: Text(
+          widget.text,
+          style: theme.typography.body,
+        ),
+      ),
+      selected: widget.selected,
+      selectionMode: ListTileSelectionMode.single,
       onPressed: widget.onSelected,
-      margin: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
-      builder: (context, states) {
-        return Stack(children: [
-          Container(
-            height: 36.0,
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.0),
-              color: ButtonThemeData.uncheckedInputColor(
-                theme,
-                states.isDisabled ? {ButtonStates.none} : states,
-                transparentWhenNone: true,
-              ),
-            ),
-            alignment: AlignmentDirectional.centerStart,
-            child: EntrancePageTransition(
-              animation: Tween<double>(
-                begin: 0.75,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: controller,
-                curve: Curves.easeOut,
-              )),
-              vertical: true,
-              child: Text(
-                widget.text,
-                style: theme.typography.body,
-              ),
-            ),
-          ),
-          if (widget.selected)
-            Positioned(
-              top: 11.0,
-              bottom: 11.0,
-              left: 0.0,
-              child: Container(
-                width: 3.0,
-                decoration: BoxDecoration(
-                  color: theme.accentColor,
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-            ),
-        ]);
-      },
     );
   }
 }
