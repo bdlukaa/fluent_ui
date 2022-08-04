@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:ui' as ui;
-import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
@@ -10,6 +13,15 @@ enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed because the user
   /// chose the suggestion
   suggestionChosen,
+}
+
+class AutoSuggestBoxItem {
+  final String value;
+  bool selected = false;
+
+  AutoSuggestBoxItem({
+    required this.value,
+  });
 }
 
 // TODO: Navigate through items using keyboard (https://github.com/bdlukaa/fluent_ui/issues/19)
@@ -90,7 +102,7 @@ class AutoSuggestBox extends StatefulWidget {
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
-  final List<String> items;
+  final List<AutoSuggestBoxItem> items;
 
   /// The controller used to have control over what to show on
   /// the [TextBox].
@@ -213,7 +225,7 @@ class AutoSuggestBox extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<String>('items', items))
+      ..add(IterableProperty<AutoSuggestBoxItem>('items', items))
       ..add(ObjectFlagProperty<ValueChanged<String>?>(
         'onSelected',
         onSelected,
@@ -227,7 +239,10 @@ class AutoSuggestBox extends StatefulWidget {
       ));
   }
 
-  static List defaultItemSorter<T>(String text, List items) {
+  static List<AutoSuggestBoxItem> defaultItemSorter<T>(
+    String text,
+    List<AutoSuggestBoxItem> items,
+  ) {
     return items.where((element) {
       return element.toString().toLowerCase().contains(text.toLowerCase());
     }).toList();
@@ -242,6 +257,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
+  final focusStream = StreamController.broadcast();
 
   Size _boxSize = Size.zero;
 
@@ -271,6 +287,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   @override
   void dispose() {
     focusNode.removeListener(_handleFocusChanged);
+    focusStream.close();
 
     {
       // If the TextEditingController and FocusNode objects are created locally,
@@ -325,25 +342,30 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             width: box.size.width,
             child: FluentTheme(
               data: FluentTheme.of(context),
-              child: _AutoSuggestBoxOverlay(
-                node: overlayNode,
-                controller: controller,
-                items: widget.items,
-                onSelected: (String item) {
-                  widget.onSelected?.call(item);
-                  controller.text = item;
-                  controller.selection = TextSelection.collapsed(
-                    offset: item.length,
-                  );
-                  widget.onChanged?.call(
-                    item,
-                    TextChangedReason.suggestionChosen,
-                  );
+              child: StreamBuilder(
+                stream: focusStream.stream,
+                builder: (context, snapshot) {
+                  return _AutoSuggestBoxOverlay(
+                    node: overlayNode,
+                    controller: controller,
+                    items: widget.items,
+                    onSelected: (String item) {
+                      widget.onSelected?.call(item);
+                      controller.text = item;
+                      controller.selection = TextSelection.collapsed(
+                        offset: item.length,
+                      );
+                      widget.onChanged?.call(
+                        item,
+                        TextChangedReason.suggestionChosen,
+                      );
 
-                  // After selected, the overlay is dismissed and the text box is
-                  // unfocused
-                  _dismissOverlay();
-                  focusNode.unfocus();
+                      // After selected, the overlay is dismissed and the text box is
+                      // unfocused
+                      _dismissOverlay();
+                      focusNode.unfocus();
+                    },
+                  );
                 },
               ),
             ),
@@ -405,9 +427,41 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
     return CompositedTransformTarget(
       link: _layerLink,
-      child: Actions(
-        actions: {
-          DirectionalFocusIntent: _DirectionalFocusAction(),
+      child: Focus(
+        onKeyEvent: (node, event) {
+          if (event is! KeyDownEvent) return KeyEventResult.ignored;
+          final currentlySelectedIndex = widget.items.indexWhere(
+            (item) => item.selected,
+          );
+
+          void select(int index) {
+            // unselect all items
+            for (final item in widget.items) {
+              item.selected = false;
+            }
+            widget.items[index].selected = true;
+            focusStream.add(index);
+          }
+
+          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            // if nothing is selected, select the first
+            if (currentlySelectedIndex == -1) {
+              select(0);
+            } else if (currentlySelectedIndex >= 0) {
+              select(currentlySelectedIndex + 1);
+            }
+            return KeyEventResult.handled;
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            // if nothing is selected, select the last
+            if (currentlySelectedIndex == -1) {
+              select(widget.items.length - 1);
+            } else if (currentlySelectedIndex > 0) {
+              select(currentlySelectedIndex - 1);
+            }
+            return KeyEventResult.handled;
+          } else {
+            return KeyEventResult.ignored;
+          }
         },
         child: useForm
             ? TextFormBox(
@@ -470,17 +524,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   }
 }
 
-class _DirectionalFocusAction extends DirectionalFocusAction {
-  @override
-  void invoke(covariant DirectionalFocusIntent intent) {
-    // if (!intent.ignoreTextFields || !_isForTextField) {
-    //   primaryFocus!.focusInDirection(intent.direction);
-    // }
-    debugPrint(intent.direction.toString());
-  }
-}
-
-class _AutoSuggestBoxOverlay extends StatelessWidget {
+class _AutoSuggestBoxOverlay extends StatefulWidget {
   const _AutoSuggestBoxOverlay({
     Key? key,
     required this.items,
@@ -489,17 +533,22 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
     required this.node,
   }) : super(key: key);
 
-  final List items;
+  final List<AutoSuggestBoxItem> items;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
   final FocusScopeNode node;
 
   @override
+  State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
+}
+
+class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
+  @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     return FocusScope(
-      node: node,
+      node: widget.node,
       child: Container(
         constraints: const BoxConstraints(maxHeight: 380),
         decoration: ShapeDecoration(
@@ -526,11 +575,11 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
         ),
         child: Acrylic(
           child: ValueListenableBuilder<TextEditingValue>(
-            valueListenable: controller,
+            valueListenable: widget.controller,
             builder: (context, value, _) {
               final items = AutoSuggestBox.defaultItemSorter(
                 value.text,
-                this.items,
+                this.widget.items,
               );
               late Widget result;
               if (items.isEmpty) {
@@ -538,6 +587,7 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 4.0),
                   child: _AutoSuggestBoxOverlayTile(
                     text: localizations.noResultsFoundLabel,
+                    selected: false,
                   ),
                 );
               } else {
@@ -548,8 +598,9 @@ class _AutoSuggestBoxOverlay extends StatelessWidget {
                   children: List.generate(items.length, (index) {
                     final item = items[index];
                     return _AutoSuggestBoxOverlayTile(
-                      text: '$item',
-                      onSelected: () => onSelected(item),
+                      text: item.value,
+                      selected: item.selected,
+                      onSelected: () => widget.onSelected(item.value),
                     );
                   }),
                 );
@@ -567,21 +618,22 @@ class _AutoSuggestBoxOverlayTile extends StatefulWidget {
   const _AutoSuggestBoxOverlayTile({
     Key? key,
     required this.text,
+    this.selected = false,
     this.onSelected,
   }) : super(key: key);
 
   final String text;
   final VoidCallback? onSelected;
+  final bool selected;
 
   @override
-  __AutoSuggestBoxOverlayTileState createState() =>
+  State<_AutoSuggestBoxOverlayTile> createState() =>
       __AutoSuggestBoxOverlayTileState();
 }
 
 class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
-  final node = FocusNode();
 
   @override
   void initState() {
@@ -596,7 +648,6 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
   @override
   void dispose() {
     controller.dispose();
-    node.dispose();
     super.dispose();
   }
 
@@ -604,11 +655,10 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return HoverButton(
-      focusNode: node,
       onPressed: widget.onSelected,
       margin: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
-      builder: (context, states) => Stack(
-        children: [
+      builder: (context, states) {
+        return Stack(children: [
           Container(
             height: 36.0,
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -636,7 +686,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
               ),
             ),
           ),
-          if (states.isFocused)
+          if (widget.selected)
             Positioned(
               top: 11.0,
               bottom: 11.0,
@@ -649,8 +699,8 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
                 ),
               ),
             ),
-        ],
-      ),
+        ]);
+      },
     );
   }
 }
