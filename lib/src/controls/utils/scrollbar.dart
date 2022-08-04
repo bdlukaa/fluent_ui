@@ -22,6 +22,7 @@ class Scrollbar extends RawScrollbar {
     this.style,
     Duration fadeDuration = const Duration(milliseconds: 300),
     Duration timeToFade = const Duration(milliseconds: 600),
+    bool? interactive,
   }) : super(
           key: key,
           child: child,
@@ -29,6 +30,7 @@ class Scrollbar extends RawScrollbar {
           controller: controller,
           timeToFade: timeToFade,
           fadeDuration: fadeDuration,
+          interactive: interactive,
         );
 
   /// The style applied to the scroll bar. If non-null, it's mescled
@@ -40,7 +42,7 @@ class Scrollbar extends RawScrollbar {
 }
 
 class _ScrollbarState extends RawScrollbarState<Scrollbar> {
-  late AnimationController _hoverController;
+  late AnimationController _hoverAnimationController;
   late ScrollbarThemeData _scrollbarTheme;
   bool _dragIsActive = false;
   bool _hoverIsActive = false;
@@ -48,11 +50,11 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void initState() {
     super.initState();
-    _hoverController = AnimationController(
+    _hoverAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 90),
     );
-    _hoverController.addListener(() {
+    _hoverAnimationController.addListener(() {
       updateScrollbarPainter();
     });
   }
@@ -61,7 +63,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void didChangeDependencies() {
     assert(debugCheckHasFluentTheme(context));
     _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
-    _hoverController.duration =
+    _hoverAnimationController.duration =
         _scrollbarTheme.expandContractAnimationDuration ?? Duration.zero;
     super.didChangeDependencies();
   }
@@ -95,7 +97,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   @override
   void updateScrollbarPainter() {
     assert(debugCheckHasDirectionality(context));
-    final animation = _hoverController;
+    final viewPadding = MediaQuery.of(context).padding;
+    final animation = _hoverAnimationController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)
       ..trackColor = _trackColor(_currentState)
@@ -111,7 +114,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         begin: _scrollbarTheme.thickness ?? 2.0,
         end: _scrollbarTheme.hoveringThickness ?? 16.0,
       ).evaluate(animation)
-      ..radius = _hoverController.status != AnimationStatus.dismissed
+      ..radius = _hoverAnimationController.status != AnimationStatus.dismissed
           ? _scrollbarTheme.hoveringRadius
           : _scrollbarTheme.radius
       ..crossAxisMargin = Tween<double>(
@@ -123,10 +126,9 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
-      ..padding = MediaQuery.of(context).padding +
-          EdgeInsets.symmetric(
-            vertical: _scrollbarTheme.padding ?? 4.0,
-          );
+      ..padding = (EdgeInsets.symmetric(
+        vertical: _scrollbarTheme.padding ?? 4.0,
+      )..add(viewPadding));
   }
 
   Future<void> get contractDelay => Future.delayed(
@@ -137,9 +139,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleThumbPressStart(Offset localPosition) {
     super.handleThumbPressStart(localPosition);
     if (mounted) {
-      setState(() {
-        _dragIsActive = true;
-      });
+      setState(() => _dragIsActive = true);
     }
   }
 
@@ -147,9 +147,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleThumbPressEnd(Offset localPosition, Velocity velocity) {
     super.handleThumbPressEnd(localPosition, velocity);
     if (mounted) {
-      setState(() {
-        _dragIsActive = false;
-      });
+      setState(() => _dragIsActive = false);
     }
   }
 
@@ -157,23 +155,19 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleHover(PointerHoverEvent event) async {
     super.handleHover(event);
     // Check if the position of the pointer falls over the painted scrollbar
-    if (isPointerOverScrollbar(event.position, event.kind)) {
+    if (isPointerOverScrollbar(event.position, event.kind, forHover: true)) {
       // Pointer is hovering over the scrollbar
       await contractDelay;
       if (mounted) {
-        setState(() {
-          _hoverIsActive = true;
-        });
+        setState(() => _hoverIsActive = true);
+        _hoverAnimationController.forward();
       }
-      _hoverController.forward();
     } else if (_hoverIsActive) {
       await contractDelay;
-      await _hoverController.reverse();
-      // Pointer was, but is no longer over painted scrollbar.
       if (mounted) {
-        setState(() {
-          _hoverIsActive = false;
-        });
+        // Pointer was, but is no longer over painted scrollbar.
+        await _hoverAnimationController.reverse();
+        setState(() => _hoverIsActive = false);
       }
     }
   }
@@ -182,16 +176,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void handleHoverExit(PointerExitEvent event) {
     super.handleHoverExit(event);
     if (mounted) {
-      setState(() {
-        _hoverIsActive = false;
-      });
+      setState(() => _hoverIsActive = false);
+      _hoverAnimationController.reverse();
     }
-    _hoverController.reverse();
   }
 
   @override
   void dispose() {
-    _hoverController.dispose();
+    _hoverAnimationController.dispose();
     super.dispose();
   }
 }
@@ -376,13 +368,13 @@ class ScrollbarThemeData with Diagnosticable {
       radius: const Radius.circular(100.0),
       hoveringRadius: const Radius.circular(100.0),
       crossAxisMargin: 4.0,
-      hoveringCrossAxisMargin: 4.0,
-      mainAxisMargin: 2.0,
-      hoveringMainAxisMargin: 2.0,
+      hoveringCrossAxisMargin: 3.0,
+      mainAxisMargin: 0.0,
+      hoveringMainAxisMargin: 0.0,
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      padding: 8.0,
+      padding: 4.0,
       expandContractAnimationDuration: theme.fastAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
