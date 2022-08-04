@@ -12,8 +12,6 @@ class Scrollbar extends RawScrollbar {
   /// The [child], or a descendant of the [child], should be a
   /// source of [ScrollNotification] notifications, typically a
   /// [Scrollable] widget.
-  ///
-  /// The [child], [fadeDuration], and [timeToFade] arguments must not be null.
   const Scrollbar({
     Key? key,
     required Widget child,
@@ -268,19 +266,19 @@ class ScrollbarThemeData with Diagnosticable {
   final double? hoveringThickness;
 
   /// The background color of the scrollbar when the user is
-  /// hovering or pressing it. If null, `Color(0xFFe9e9e9)` is
-  /// used for light theme and `Color(0xFF1b1b1b)` is used for
+  /// hovering or pressing it. If null, `Color(0xFFf8f8f8)` is
+  /// used for light theme and `Color(0xFF292929)` is used for
   /// dark theme.
   final Color? backgroundColor;
 
   /// The color of the scrollbar thumb on its default state. If
-  /// null, `Color(0xFF8c8c8c)` is used for light theme and
-  /// `Color(0xFF767676)` is used for dark theme.
+  /// null, `Color(0xFF898989)` is used for light theme and
+  /// `Color(0xFFa0a0a0)` is used for dark theme.
   final Color? scrollbarColor;
 
   /// The color of the scrollbar thumb when the user is hovering
-  /// or pressing it. If null, `const Color(0xFF5d5d5d)` is used
-  /// for light theme and `Color(0xFFa4a4a4)` is used for dark
+  /// or pressing it. If null, `const Color(0xFF898989)` is used
+  /// for light theme and `Color(0xFFa0a0a0)` is used for dark
   /// theme by default.
   final Color? scrollbarPressingColor;
 

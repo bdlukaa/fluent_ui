@@ -1320,7 +1320,7 @@ A scrollbar thumb indicates which portion of a [ScrollView] is actually visible.
 
 Depending on the situation, the scrollbar uses two different visualizations, shown in the following illustration: the panning indicator (left) and the traditional scrollbar (right).
 
-> Note that the arrows aren't visible. See [this](https://github.com/flutter/flutter/issues/80370) and [this](https://github.com/bdlukaa/fluent_ui/issues/14) issues for more info.
+> Note that the arrows aren't visible. See [#80370](https://github.com/flutter/flutter/issues/80370) and [#14](https://github.com/bdlukaa/fluent_ui/issues/14) issues for more info.
 
 ![Scrollbar Panning Indicator](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/scrollbar-panning.png)
 ![Traditional Scrollbar](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/scrollbar-traditional.png)
