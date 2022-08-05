@@ -18,25 +18,32 @@ class AutoSuggestBoxPage extends ScrollablePage {
       ),
       subtitle(content: const Text('A basic AutoSuggestBox')),
       CardHighlight(
-        child: Row(
-          children: [
-            SizedBox(
-              width: 350.0,
-              child: AutoSuggestBox(
-                items: _cats,
-                onSelected: (item) {
-                  setState(() => selectedCat = item);
-                },
-              ),
+        child: Row(children: [
+          SizedBox(
+            width: 350.0,
+            child: AutoSuggestBox(
+              items: _cats
+                  .map<AutoSuggestBoxItem>(
+                    (cat) => AutoSuggestBoxItem(
+                      value: cat,
+                      onFocusChange: (focused) {
+                        if (focused) debugPrint('Focused $cat');
+                      },
+                    ),
+                  )
+                  .toList(),
+              onSelected: (item) {
+                setState(() => selectedCat = item.value);
+              },
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(selectedCat ?? ''),
-              ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(selectedCat ?? ''),
             ),
-          ],
-        ),
+          ),
+        ]),
         codeSnippet: '''
 String? selectedCat;
 
@@ -53,8 +60,7 @@ const _cats = <String>[
   'American Bobtail',
   'American Curl',
   ...
-];
-''',
+];''',
       ),
     ];
   }
