@@ -6,6 +6,11 @@ import 'package:flutter/services.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef AutoSuggestBoxSorter = List<AutoSuggestBoxItem> Function(
+  String text,
+  List<AutoSuggestBoxItem> items,
+);
+
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
   userInput,
@@ -43,6 +48,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.sorter = defaultItemSorter,
     this.leadingIcon,
     this.trailingIcon,
     this.clearButtonEnabled = true,
@@ -75,6 +81,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.sorter = defaultItemSorter,
     this.leadingIcon,
     this.trailingIcon,
     this.clearButtonEnabled = true,
@@ -103,15 +110,21 @@ class AutoSuggestBox extends StatefulWidget {
   /// The list of items to display to the user to pick
   final List<AutoSuggestBoxItem> items;
 
-  /// The controller used to have control over what to show on
-  /// the [TextBox].
+  /// The controller used to have control over what to show on the [TextBox].
   final TextEditingController? controller;
 
   /// Called when the text is updated
   final void Function(String text, TextChangedReason reason)? onChanged;
 
   /// Called when the user selected a value.
-  final ValueChanged<String>? onSelected;
+  final ValueChanged<AutoSuggestBoxItem>? onSelected;
+
+  /// Sort the [items] based on the current query text
+  ///
+  /// See also:
+  ///
+  ///  * [AutoSuggestBox.defaultItemSorter], the default item sorter
+  final AutoSuggestBoxSorter sorter;
 
   /// A widget displayed at the start of the text box
   ///
@@ -225,7 +238,7 @@ class AutoSuggestBox extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(IterableProperty<AutoSuggestBoxItem>('items', items))
-      ..add(ObjectFlagProperty<ValueChanged<String>?>(
+      ..add(ObjectFlagProperty<ValueChanged<AutoSuggestBoxItem>?>(
         'onSelected',
         onSelected,
         ifNull: 'disabled',
@@ -238,10 +251,13 @@ class AutoSuggestBox extends StatefulWidget {
       ));
   }
 
-  static List<AutoSuggestBoxItem> defaultItemSorter<T>(
+  static List<AutoSuggestBoxItem> defaultItemSorter(
     String text,
     List<AutoSuggestBoxItem> items,
   ) {
+    text = text.trim();
+    if (text.isEmpty) return items;
+
     return items.where((element) {
       return element.value.toLowerCase().contains(text.toLowerCase());
     }).toList();
@@ -260,42 +276,29 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   Size _boxSize = Size.zero;
 
-  late final List<AutoSuggestBoxItem> _localItems = widget.items;
+  late List<AutoSuggestBoxItem> _localItems;
+
+  void updateLocalItems() {
+    setState(() {
+      _localItems = widget.sorter(controller.text, widget.items);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     controller = widget.controller ?? TextEditingController();
-    controller.addListener(() {
-      if (!mounted) return;
-      if (controller.text.length < 2) setState(() {});
 
-      final items = AutoSuggestBox.defaultItemSorter(
-        controller.text,
-        widget.items,
-      );
-      _localItems
-        ..clear()
-        ..addAll(items);
-
-      // Update the overlay when the text box size has changed
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
-
-        if (_boxSize != box.size) {
-          _dismissOverlay();
-          setState(() {});
-          _showOverlay();
-          _boxSize = box.size;
-        }
-      });
-    });
+    controller.addListener(_handleTextChanged);
     focusNode.addListener(_handleFocusChanged);
+
+    _localItems = widget.sorter(controller.text, widget.items);
   }
 
   @override
   void dispose() {
     focusNode.removeListener(_handleFocusChanged);
+    controller.removeListener(_handleTextChanged);
     _focusStreamController.close();
     _unselectAll();
 
@@ -338,6 +341,35 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     setState(() {});
   }
 
+  void _handleTextChanged() {
+    if (!mounted) return;
+    if (controller.text.length < 2) setState(() {});
+
+    updateLocalItems();
+
+    // if (controller.text.isEmpty) {
+    // _dismissOverlay();
+    // setState(() {});
+    // _showOverlay();
+    // }
+
+    // Update the overlay when the text box size has changed
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      updateLocalItems();
+
+      final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+
+      if (_boxSize != box.size) {
+        _dismissOverlay();
+        setState(() {});
+        _showOverlay();
+        _boxSize = box.size;
+      }
+    });
+  }
+
   void _insertOverlay() {
     _entry = OverlayEntry(builder: (context) {
       final context = _textBoxKey.currentContext;
@@ -358,14 +390,16 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 controller: controller,
                 items: widget.items,
                 focusStream: _focusStreamController.stream,
-                onSelected: (String item) {
+                sorter: widget.sorter,
+                onSelected: (AutoSuggestBoxItem item) {
                   widget.onSelected?.call(item);
-                  controller.text = item;
-                  controller.selection = TextSelection.collapsed(
-                    offset: item.length,
-                  );
+                  controller
+                    ..text = item.value
+                    ..selection = TextSelection.collapsed(
+                      offset: item.value.length,
+                    );
                   widget.onChanged?.call(
-                    item,
+                    item.value,
                     TextChangedReason.suggestionChosen,
                   );
 
@@ -423,7 +457,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     if (currentlySelectedIndex.isNegative) return;
 
     final item = _localItems[currentlySelectedIndex];
-    widget.onSelected?.call(item.value);
+    widget.onSelected?.call(item);
 
     controller.text = item.value;
   }
@@ -461,6 +495,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             _dismissOverlay();
             return KeyEventResult.handled;
           }
+
+          if (_localItems.isEmpty) return KeyEventResult.ignored;
 
           final currentlySelectedIndex = _localItems.indexWhere(
             (item) => item._selected,
@@ -566,20 +602,22 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
     required this.onSelected,
     required this.node,
     required this.focusStream,
+    required this.sorter,
   }) : super(key: key);
 
   final List<AutoSuggestBoxItem> items;
   final TextEditingController controller;
-  final ValueChanged<String> onSelected;
+  final ValueChanged<AutoSuggestBoxItem> onSelected;
   final FocusScopeNode node;
   final Stream<int> focusStream;
+  final AutoSuggestBoxSorter sorter;
 
   @override
   State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
 }
 
 class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
-  late final StreamSubscription focusStream;
+  late final StreamSubscription focusSubscription;
   final ScrollController scrollController = ScrollController();
 
   /// Tile height + padding
@@ -588,7 +626,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
   @override
   void initState() {
     super.initState();
-    focusStream = widget.focusStream.listen((index) {
+    focusSubscription = widget.focusStream.listen((index) {
       if (!mounted) return;
 
       final currentSelectedOffset = tileHeight * index;
@@ -604,7 +642,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
 
   @override
   void dispose() {
-    focusStream.cancel();
+    focusSubscription.cancel();
     scrollController.dispose();
     super.dispose();
   }
@@ -643,10 +681,8 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
           child: ValueListenableBuilder<TextEditingValue>(
             valueListenable: widget.controller,
             builder: (context, value, _) {
-              final items = AutoSuggestBox.defaultItemSorter(
-                value.text,
-                widget.items,
-              );
+              final items = widget.sorter(value.text, widget.items);
+              // final items = widget.items;
               late Widget result;
               if (items.isEmpty) {
                 result = Padding(
@@ -669,7 +705,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                     return _AutoSuggestBoxOverlayTile(
                       text: item.value,
                       selected: item._selected,
-                      onSelected: () => widget.onSelected(item.value),
+                      onSelected: () => widget.onSelected(item),
                     );
                   },
                 );

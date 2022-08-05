@@ -28,7 +28,7 @@ class AutoSuggestBoxPage extends ScrollablePage {
                   )
                   .toList(),
               onSelected: (item) {
-                setState(() => selectedCat = item);
+                setState(() => selectedCat = item.value);
               },
             ),
           ),
@@ -55,8 +55,7 @@ const _cats = <String>[
   'American Bobtail',
   'American Curl',
   ...
-];
-''',
+];''',
       ),
     ];
   }
