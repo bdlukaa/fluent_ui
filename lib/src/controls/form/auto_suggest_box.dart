@@ -372,9 +372,19 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   void _insertOverlay() {
     _entry = OverlayEntry(builder: (context) {
-      final context = _textBoxKey.currentContext;
-      if (context == null) return const SizedBox.shrink();
-      final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+      assert(debugCheckHasMediaQuery(context));
+
+      final boxContext = _textBoxKey.currentContext;
+      if (boxContext == null) return const SizedBox.shrink();
+      final box = boxContext.findRenderObject() as RenderBox;
+      final globalOffset = box.localToGlobal(Offset.zero);
+
+      final mediaQuery = MediaQuery.of(context);
+      final screenHeight =
+          mediaQuery.size.height - mediaQuery.viewPadding.bottom;
+      final overlayY = globalOffset.dy + box.size.height;
+      final maxHeight = screenHeight - overlayY;
+
       Widget child = Positioned(
         width: box.size.width,
         child: CompositedTransformFollower(
@@ -386,6 +396,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
             child: FluentTheme(
               data: FluentTheme.of(context),
               child: _AutoSuggestBoxOverlay(
+                maxHeight: maxHeight,
                 node: overlayNode,
                 controller: controller,
                 items: widget.items,
@@ -603,6 +614,7 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
     required this.node,
     required this.focusStream,
     required this.sorter,
+    required this.maxHeight,
   }) : super(key: key);
 
   final List<AutoSuggestBoxItem> items;
@@ -611,6 +623,7 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
   final FocusScopeNode node;
   final Stream<int> focusStream;
   final AutoSuggestBoxSorter sorter;
+  final double maxHeight;
 
   @override
   State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
@@ -654,7 +667,9 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
     return FocusScope(
       node: widget.node,
       child: Container(
-        constraints: const BoxConstraints(maxHeight: 380),
+        constraints: BoxConstraints(
+          maxHeight: widget.maxHeight.clamp(0, 380.0),
+        ),
         decoration: ShapeDecoration(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
