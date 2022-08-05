@@ -255,8 +255,8 @@ class InheritedNavigationView extends InheritedWidget {
 }
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
-class _PaneItemKeys extends InheritedWidget {
-  const _PaneItemKeys({
+class PaneItemKeys extends InheritedWidget {
+  const PaneItemKeys({
     Key? key,
     required Widget child,
     required this.keys,
@@ -267,12 +267,12 @@ class _PaneItemKeys extends InheritedWidget {
   /// Gets the item global key based on the index
   static GlobalKey of(int index, BuildContext context) {
     final reference =
-        context.dependOnInheritedWidgetOfExactType<_PaneItemKeys>()!;
+        context.dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;
     return reference.keys[index]!;
   }
 
   @override
-  bool updateShouldNotify(_PaneItemKeys oldWidget) {
+  bool updateShouldNotify(PaneItemKeys oldWidget) {
     return keys != oldWidget.keys;
   }
 }
