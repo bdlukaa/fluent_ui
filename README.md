@@ -1010,7 +1010,17 @@ AutoSuggestBox(
     'Chausie',
     'Munchkin',
     'York Chocolate',
-  ],
+  ].map((breed) {
+    return AutoSuggestBoxItem(
+      value: breed, // Takes a String
+      onFocusChange: (focused) {
+        if (focused) print('Focused $breed');
+      },
+      onSelected: () {
+        print('Selected $breed');
+      },
+    )
+  }).toList(),
   onSelected: (breed) {
     print(breed);
   },

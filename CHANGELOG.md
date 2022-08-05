@@ -25,6 +25,48 @@ Date format: DD/MM/YYYY
   - Correctly use `backgroundColor` to display the track color
   - Added `padding` and `hoveringPadding`
   - Check if animation is disposed before using it ([#446](https://github.com/bdlukaa/fluent_ui/issues/446))
+- Update `AutoSuggestBox` ([#450](https://github.com/bdlukaa/fluent_ui/pull/450)):
+  - Added `.enableKeyboardControls`. When true, items can be selected using the keyboard ([#19](https://github.com/bdlukaa/fluent_ui/issues/19))
+  - Added `.sorter`, which lets you set a custom sort function for the suggestions. `AutoSuggestBox.defaultItemSorter` is used by default
+  - Overlay's height is now correctly calculated based on the screen size. It no longer overlaps the screen. `viewPadding` is also taken into consideration
+  - **BREAKING** `.items` is now a `List<AutoSuggestBoxItem>`:
+  Before:
+  ```dart
+  AutoSuggestBox(
+    items: [
+      'Cat',
+      'Dog',
+      'Bird',
+      'Horse',
+    ],
+    ...
+  ),
+  ```
+  Now:
+  ```dart
+  AutoSuggestBox(
+    items: [
+      'Cat',
+      'Dog',
+      'Bird',
+      'Horse',
+    ].map((animal) {
+      return AutoSuggestBoxItem(
+        value: animal, // this takes a String
+        child: Text('Animal $animal'), // this takes a Widget. If null, value is displayed as a text
+        onFocusChange: (focused) {
+          // this is called when the item is focused using the keyboard arrow keys
+          if (focused) debugPrint('Focused animal $animal');
+        },
+        onSelected: () {
+          // this is called when the item is selected
+          debugPrint('Selected animal $animal');
+        }
+      );
+    }).toList(),
+    ...
+  )
+  ```
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
