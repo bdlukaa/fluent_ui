@@ -17,14 +17,12 @@ enum TextChangedReason {
 
 class AutoSuggestBoxItem {
   final String value;
-  bool selected = false;
+  bool _selected = false;
 
   AutoSuggestBoxItem({
     required this.value,
   });
 }
-
-// TODO: Navigate through items using keyboard (https://github.com/bdlukaa/fluent_ui/issues/19)
 
 /// An AutoSuggestBox provides a list of suggestions for a user to select from
 /// as they type.
@@ -70,6 +68,7 @@ class AutoSuggestBox extends StatefulWidget {
         validator = null,
         super(key: key);
 
+  /// Creates a fluent-styled auto suggest form box.
   const AutoSuggestBox.form({
     Key? key,
     required this.items,
@@ -244,7 +243,7 @@ class AutoSuggestBox extends StatefulWidget {
     List<AutoSuggestBoxItem> items,
   ) {
     return items.where((element) {
-      return element.toString().toLowerCase().contains(text.toLowerCase());
+      return element.value.toLowerCase().contains(text.toLowerCase());
     }).toList();
   }
 }
@@ -257,9 +256,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
-  final focusStream = StreamController.broadcast();
+  final _focusStreamController = StreamController<int>.broadcast();
 
   Size _boxSize = Size.zero;
+
+  late final List<AutoSuggestBoxItem> _localItems = widget.items;
 
   @override
   void initState() {
@@ -268,6 +269,14 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     controller.addListener(() {
       if (!mounted) return;
       if (controller.text.length < 2) setState(() {});
+
+      final items = AutoSuggestBox.defaultItemSorter(
+        controller.text,
+        widget.items,
+      );
+      _localItems
+        ..clear()
+        ..addAll(items);
 
       // Update the overlay when the text box size has changed
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -287,12 +296,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   @override
   void dispose() {
     focusNode.removeListener(_handleFocusChanged);
-    focusStream.close();
-
-    // unselect all items
-    for (final item in widget.items) {
-      item.selected = false;
-    }
+    _focusStreamController.close();
+    _unselectAll();
 
     {
       // If the TextEditingController and FocusNode objects are created locally,
@@ -300,6 +305,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
       if (widget.controller == null) controller.dispose();
       if (widget.focusNode == null) focusNode.dispose();
     }
+
     super.dispose();
   }
 
@@ -351,7 +357,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 node: overlayNode,
                 controller: controller,
                 items: widget.items,
-                focusStream: focusStream.stream,
+                focusStream: _focusStreamController.stream,
                 onSelected: (String item) {
                   widget.onSelected?.call(item);
                   controller.text = item;
@@ -390,11 +396,18 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   void _dismissOverlay() {
     _entry?.remove();
     _entry = null;
+    _unselectAll();
   }
 
   void _showOverlay() {
     if (_entry == null && !(_entry?.mounted ?? false)) {
       _insertOverlay();
+    }
+  }
+
+  void _unselectAll() {
+    for (final item in _localItems) {
+      item._selected = false;
     }
   }
 
@@ -404,12 +417,12 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   }
 
   void _onSubmitted() {
-    final currentlySelectedIndex = widget.items.indexWhere(
-      (item) => item.selected,
+    final currentlySelectedIndex = _localItems.indexWhere(
+      (item) => item._selected,
     );
     if (currentlySelectedIndex.isNegative) return;
 
-    final item = widget.items[currentlySelectedIndex];
+    final item = _localItems[currentlySelectedIndex];
     widget.onSelected?.call(item.value);
 
     controller.text = item.value;
@@ -443,22 +456,28 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
       child: Focus(
         onKeyEvent: (node, event) {
           if (event is! KeyDownEvent) return KeyEventResult.ignored;
-          final currentlySelectedIndex = widget.items.indexWhere(
-            (item) => item.selected,
+
+          if (event.logicalKey == LogicalKeyboardKey.escape) {
+            _dismissOverlay();
+            return KeyEventResult.handled;
+          }
+
+          final currentlySelectedIndex = _localItems.indexWhere(
+            (item) => item._selected,
           );
 
           void select(int index) {
-            // unselect all items
-            for (final item in widget.items) {
-              item.selected = false;
-            }
-            widget.items[index].selected = true;
-            focusStream.add(index);
+            _unselectAll();
+            _localItems[index]._selected = true;
+            _focusStreamController.add(index);
           }
+
+          final lastIndex = _localItems.length - 1;
 
           if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
             // if nothing is selected, select the first
-            if (currentlySelectedIndex == -1) {
+            if (currentlySelectedIndex == -1 ||
+                currentlySelectedIndex == lastIndex) {
               select(0);
             } else if (currentlySelectedIndex >= 0) {
               select(currentlySelectedIndex + 1);
@@ -467,7 +486,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             // if nothing is selected, select the last
             if (currentlySelectedIndex == -1 || currentlySelectedIndex == 0) {
-              select(widget.items.length - 1);
+              select(_localItems.length - 1);
             } else {
               select(currentlySelectedIndex - 1);
             }
@@ -553,7 +572,7 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
   final FocusScopeNode node;
-  final Stream focusStream;
+  final Stream<int> focusStream;
 
   @override
   State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
@@ -649,7 +668,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                     final item = items[index];
                     return _AutoSuggestBoxOverlayTile(
                       text: item.value,
-                      selected: item.selected,
+                      selected: item._selected,
                       onSelected: () => widget.onSelected(item.value),
                     );
                   },
