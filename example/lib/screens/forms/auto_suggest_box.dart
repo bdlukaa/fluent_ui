@@ -24,7 +24,12 @@ class AutoSuggestBoxPage extends ScrollablePage {
             child: AutoSuggestBox(
               items: _cats
                   .map<AutoSuggestBoxItem>(
-                    (cat) => AutoSuggestBoxItem(value: cat),
+                    (cat) => AutoSuggestBoxItem(
+                      value: cat,
+                      onFocusChange: (focused) {
+                        if (focused) debugPrint('Focused $cat');
+                      },
+                    ),
                   )
                   .toList(),
               onSelected: (item) {

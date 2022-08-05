@@ -20,12 +20,32 @@ enum TextChangedReason {
   suggestionChosen,
 }
 
+/// An item used in [AutoSuggestBox]
 class AutoSuggestBoxItem {
+  /// The value attached to this item
   final String value;
+
+  /// The widget to be shown.
+  ///
+  /// If null, [value] is displayed.
+  ///
+  /// Usually a [Text]
+  final Widget? child;
+
+  /// Called when this item's focus is changed.
+  final ValueChanged<bool>? onFocusChange;
+
+  /// Called when this item is selected
+  final VoidCallback? onSelected;
+
   bool _selected = false;
 
+  /// Creates an auto suggest box item
   AutoSuggestBoxItem({
     required this.value,
+    this.child,
+    this.onFocusChange,
+    this.onSelected,
   });
 }
 
@@ -70,6 +90,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.textInputAction,
     this.focusNode,
     this.autofocus = false,
+    this.enableKeyboardControls = true,
   })  : autovalidateMode = AutovalidateMode.disabled,
         validator = null,
         super(key: key);
@@ -105,6 +126,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.textInputAction,
     this.focusNode,
     this.autofocus = false,
+    this.enableKeyboardControls = true,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -229,6 +251,16 @@ class AutoSuggestBox extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.autofocus}
   final bool autofocus;
+
+  /// Whether the items can be selected using the keyboard
+  ///
+  /// Arrow Up - focus the item above
+  /// Arrow Down - focus the item below
+  /// Enter - select the current focused item
+  /// Escape - close the suggestions overlay
+  ///
+  /// Defaults to `true`
+  final bool enableKeyboardControls;
 
   @override
   _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
@@ -403,6 +435,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 focusStream: _focusStreamController.stream,
                 sorter: widget.sorter,
                 onSelected: (AutoSuggestBoxItem item) {
+                  item.onSelected?.call();
                   widget.onSelected?.call(item);
                   controller
                     ..text = item.value
@@ -453,6 +486,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   void _unselectAll() {
     for (final item in _localItems) {
       item._selected = false;
+      item.onFocusChange?.call(false);
     }
   }
 
@@ -469,6 +503,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
     final item = _localItems[currentlySelectedIndex];
     widget.onSelected?.call(item);
+    item.onSelected?.call();
 
     controller.text = item.value;
   }
@@ -500,7 +535,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
       link: _layerLink,
       child: Focus(
         onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
+          if (event is! KeyDownEvent || !widget.enableKeyboardControls) {
+            return KeyEventResult.ignored;
+          }
 
           if (event.logicalKey == LogicalKeyboardKey.escape) {
             _dismissOverlay();
@@ -515,7 +552,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
           void select(int index) {
             _unselectAll();
-            _localItems[index]._selected = true;
+            final item = _localItems[index];
+            item._selected = true;
+            item.onFocusChange?.call(true);
             _focusStreamController.add(index);
           }
 
@@ -662,8 +701,12 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
+
     return FocusScope(
       node: widget.node,
       child: Container(
@@ -703,7 +746,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                 result = Padding(
                   padding: const EdgeInsets.only(bottom: 4.0),
                   child: _AutoSuggestBoxOverlayTile(
-                    text: localizations.noResultsFoundLabel,
+                    text: Text(localizations.noResultsFoundLabel),
                     selected: false,
                   ),
                 );
@@ -718,7 +761,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                   itemBuilder: (context, index) {
                     final item = items[index];
                     return _AutoSuggestBoxOverlayTile(
-                      text: item.value,
+                      text: item.child ?? Text(item.value),
                       selected: item._selected,
                       onSelected: () => widget.onSelected(item),
                     );
@@ -742,7 +785,7 @@ class _AutoSuggestBoxOverlayTile extends StatefulWidget {
     this.onSelected,
   }) : super(key: key);
 
-  final String text;
+  final Widget text;
   final VoidCallback? onSelected;
   final bool selected;
 
@@ -785,9 +828,9 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
           curve: Curves.easeOut,
         )),
         vertical: true,
-        child: Text(
-          widget.text,
-          style: theme.typography.body,
+        child: DefaultTextStyle(
+          style: theme.typography.body ?? const TextStyle(),
+          child: widget.text,
         ),
       ),
       selected: widget.selected,
