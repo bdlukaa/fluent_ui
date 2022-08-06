@@ -21,7 +21,7 @@ const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.symmetric(vertical: 8.0);
 const double kMinInteractiveDimension = 48.0;
-final kComboboxRadius = BorderRadius.circular(4.0);
+const kComboboxRadius = Radius.circular(4.0);
 
 /// A builder to customize combobox buttons.
 ///
@@ -39,7 +39,7 @@ class _ComboboxMenuPainter extends CustomPainter {
           // configuration in the paint() function and you must provide some sort
           // of onChanged callback here.
           // color: color,
-          borderRadius: kComboboxRadius,
+          borderRadius: const BorderRadius.all(kComboboxRadius),
           border: Border.all(width: 1.0, color: borderColor),
           // color: backgroundColor,
         ).createBoxPainter(),
@@ -258,10 +258,16 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
       curve: const Interval(0.25, 0.5),
       reverseCurve: const Threshold(0.0),
     );
+
+    _resize.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+
     // The menu is shown in three stages (unit timing in brackets):
     // [0s - 0.25s] - Fade in a rect-sized menu container with the selected item.
     // [0.25s - 0.5s] - Grow the otherwise empty menu container from the center
@@ -295,31 +301,43 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
           borderColor:
               FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
         ),
-        child: Semantics(
-          scopesRoute: true,
-          namesRoute: true,
-          explicitChildNodes: true,
-          // label: localizations.popupMenuLabel,
-          child: DefaultTextStyle(
-            style: route.style,
-            child: ScrollConfiguration(
-              behavior: const _ComboboxScrollBehavior(),
-              child: PrimaryScrollController(
-                controller: widget.route.scrollController!,
-                child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    // final double menuTotalHeight = widget.route.itemHeights
-                    //     .reduce(
-                    //         (double total, double height) => total + height);
-                    // final bool isScrollable =
-                    //     _kListPadding.vertical + menuTotalHeight >
-                    //         constraints.maxHeight;
-                    return ListView(
-                      padding: _kListPadding,
-                      shrinkWrap: true,
-                      children: children,
-                    );
-                  },
+        child: ClipRRect(
+          clipper: _ComboboxResizeClipper(
+            resizeAnimation: _resize,
+            getSelectedItemOffset: () =>
+                route.getItemOffset(route.selectedIndex),
+          ),
+          child: Acrylic(
+            tintAlpha: 1.0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(kComboboxRadius),
+            ),
+            elevation: route.elevation.toDouble(),
+            child: Semantics(
+              scopesRoute: true,
+              namesRoute: true,
+              explicitChildNodes: true,
+              // label: localizations.popupMenuLabel,
+              child: DefaultTextStyle(
+                style: route.style,
+                child: ScrollConfiguration(
+                  behavior: const _ComboboxScrollBehavior(),
+                  child: PrimaryScrollController(
+                    controller: widget.route.scrollController!,
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      // final double menuTotalHeight = widget.route.itemHeights
+                      //     .reduce(
+                      //         (double total, double height) => total + height);
+                      // final bool isScrollable =
+                      //     _kListPadding.vertical + menuTotalHeight >
+                      //         constraints.maxHeight;
+                      return ListView(
+                        padding: _kListPadding,
+                        shrinkWrap: true,
+                        children: children,
+                      );
+                    }),
+                  ),
                 ),
               ),
             ),
@@ -328,6 +346,44 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
       ),
     );
   }
+}
+
+class _ComboboxResizeClipper extends CustomClipper<RRect> {
+  final Animation<double> resizeAnimation;
+  final ValueGetter<double> getSelectedItemOffset;
+
+  const _ComboboxResizeClipper({
+    required this.resizeAnimation,
+    required this.getSelectedItemOffset,
+  });
+
+  @override
+  RRect getClip(Size size) {
+    final selectedItemOffset = getSelectedItemOffset();
+    final Tween<double> top = Tween<double>(
+      begin: selectedItemOffset.clamp(0.0, size.height - _kMenuItemHeight),
+      end: 0.0,
+    );
+
+    final Tween<double> bottom = Tween<double>(
+      begin:
+          (top.begin! + _kMenuItemHeight).clamp(_kMenuItemHeight, size.height),
+      end: size.height,
+    );
+
+    return RRect.fromRectAndRadius(
+      Rect.fromLTWH(
+        0,
+        top.evaluate(resizeAnimation),
+        size.width,
+        bottom.evaluate(resizeAnimation),
+      ),
+      kComboboxRadius,
+    );
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<RRect> oldClipper) => true;
 }
 
 class _ComboboxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
@@ -632,14 +688,7 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
               route: route,
               textDirection: textDirection,
             ),
-            child: capturedThemes.wrap(Acrylic(
-              tintAlpha: 1.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: kComboboxRadius,
-              ),
-              elevation: route.elevation.toDouble(),
-              child: menu,
-            )),
+            child: capturedThemes.wrap(menu),
           );
         },
       ),
