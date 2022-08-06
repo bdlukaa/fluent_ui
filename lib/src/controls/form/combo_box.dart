@@ -924,7 +924,7 @@ class Combobox<T> extends StatefulWidget {
   /// this widget is displayed as a placeholder for the combobox button's value.
   final Widget? disabledHint;
 
-  /// {@template flutter.material.comboboxButton.onChanged}
+  /// {@template fluent_ui.comboboxButton.onChanged}
   /// Called when the user selects an item.
   ///
   /// If the [onChanged] callback is null or the list of [Combobox.items]
@@ -1048,28 +1048,20 @@ class Combobox<T> extends StatefulWidget {
   /// [ThemeData.textTheme] of the current [Theme].
   final TextStyle? style;
 
-  /// The widget to use for the drop-down button's icon.
+  /// The widget to use for the comobo box button's icon.
   ///
   /// Defaults to an [Icon] with the [FluentIcons.chevron_down] glyph.
   final Widget? icon;
 
   /// The color of any [Icon] descendant of [icon] if this button is disabled,
   /// i.e. if [onChanged] is null.
-  ///
-  /// Defaults to [MaterialColor.shade400] of [Colors.grey] when the theme's
-  /// [ThemeData.brightness] is [Brightness.light] and to
-  /// [Colors.white10] when it is [Brightness.dark]
   final Color? iconDisabledColor;
 
   /// The color of any [Icon] descendant of [icon] if this button is enabled,
   /// i.e. if [onChanged] is defined.
-  ///
-  /// Defaults to [MaterialColor.shade700] of [Colors.grey] when the theme's
-  /// [ThemeData.brightness] is [Brightness.light] and to
-  /// [Colors.white70] when it is [Brightness.dark]
   final Color? iconEnabledColor;
 
-  /// The size to use for the drop-down button's down arrow icon button.
+  /// The size to use for the checkbox button's down arrow icon button.
   ///
   /// Defaults to 24.0.
   final double iconSize;
