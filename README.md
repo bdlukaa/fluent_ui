@@ -1029,7 +1029,7 @@ AutoSuggestBox(
 
 ## Combo Box
 
-Use a combo box (also known as a drop-down list) to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. A ListBox is similar to a combo box, but is not collapsible/does not have a compact state. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box)
+Use a combo box (also known as a drop-down list) to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box)
 
 Here's an example of how to create a basic combo box:
 
