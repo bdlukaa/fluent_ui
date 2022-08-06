@@ -873,10 +873,10 @@ class _CompactNavigationPane extends StatelessWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
         },
         onItemPressed: (item) {
-          pane._changeTo(item);
+          pane.changeTo(item);
         },
       );
     } else if (item is PaneItem) {
@@ -997,11 +997,11 @@ class _OpenNavigationPane extends StatefulWidget {
         context,
         selected,
         () {
-          pane._changeTo(item);
+          pane.changeTo(item);
           onChanged?.call();
         },
         onItemPressed: (item) {
-          pane._changeTo(item);
+          pane.changeTo(item);
           onChanged?.call();
         },
       );

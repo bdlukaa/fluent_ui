@@ -503,6 +503,7 @@ class _LinkPaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    bool? autofocus,
     int? itemIndex,
   }) {
     return Link(
@@ -513,6 +514,8 @@ class _LinkPaneItemAction extends PaneItem {
         followLink,
         displayMode: displayMode,
         showTextOnTop: showTextOnTop,
+        itemIndex: itemIndex,
+        autofocus: autofocus,
       ),
     );
   }

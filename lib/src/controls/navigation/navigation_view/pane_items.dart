@@ -88,6 +88,7 @@ class PaneItem extends NavigationPaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     int? itemIndex,
+    bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final PaneDisplayMode mode = displayMode ??
@@ -111,7 +112,7 @@ class PaneItem extends NavigationPaneItem {
     final bool isCompact = mode == PaneDisplayMode.compact;
 
     final button = HoverButton(
-      autofocus: autofocus,
+      autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
       onPressed: onPressed,
       cursor: mouseCursor,
@@ -207,24 +208,21 @@ class PaneItem extends NavigationPaneItem {
                 ]),
               );
             case PaneDisplayMode.top:
-              Widget result = Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: theme.iconPadding ?? EdgeInsets.zero,
-                    child: IconTheme.merge(
-                      data: iconThemeData,
-                      child: Center(child: icon),
-                    ),
+              Widget result = Row(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: theme.iconPadding ?? EdgeInsets.zero,
+                  child: IconTheme.merge(
+                    data: iconThemeData,
+                    child: Center(child: icon),
                   ),
-                  if (showTextOnTop) textResult,
-                  if (trailing != null)
-                    IconTheme.merge(
-                      data: const IconThemeData(size: 16.0),
-                      child: trailing!,
-                    ),
-                ],
-              );
+                ),
+                if (showTextOnTop) textResult,
+                if (trailing != null)
+                  IconTheme.merge(
+                    data: const IconThemeData(size: 16.0),
+                    child: trailing!,
+                  ),
+              ]);
               if (infoBadge != null) {
                 return Stack(key: itemKey, clipBehavior: Clip.none, children: [
                   result,
@@ -477,6 +475,7 @@ class PaneItemAction extends PaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    bool? autofocus,
     int? itemIndex,
   }) {
     return super.build(
@@ -485,6 +484,8 @@ class PaneItemAction extends PaneItem {
       onTap,
       displayMode: displayMode,
       showTextOnTop: showTextOnTop,
+      autofocus: autofocus,
+      itemIndex: itemIndex,
     );
   }
 }
@@ -522,6 +523,7 @@ class PaneItemExpander extends PaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     ValueChanged<PaneItem>? onItemPressed,
+    bool? autofocus,
     int? itemIndex,
   }) {
     return _PaneItemExpander(

@@ -138,6 +138,10 @@ class FlyoutListTile extends StatelessWidget {
         final theme = FluentTheme.of(context);
         final radius = BorderRadius.circular(4.0);
 
+        if (selected) {
+          states = {ButtonStates.hovering};
+        }
+
         Widget content = Stack(children: [
           Container(
             decoration: BoxDecoration(
