@@ -111,6 +111,7 @@ Combobox<String>(
                         : (color) {
                             setState(() => selectedCat = color);
                           },
+                    placeholder: const Text('Select a cat breed'),
                   ),
                 ),
                 Container(

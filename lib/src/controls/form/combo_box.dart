@@ -317,6 +317,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                   child: PrimaryScrollController(
                     controller: widget.route.scrollController!,
                     child: ListView.builder(
+                      primary: true,
                       itemCount: route.items.length,
                       padding: _kListPadding,
                       shrinkWrap: true,
