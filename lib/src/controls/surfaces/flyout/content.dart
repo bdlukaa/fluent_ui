@@ -163,25 +163,25 @@ class FlyoutListTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
                   child: DefaultTextStyle(
-                    child: text,
                     style: TextStyle(
                       inherit: false,
                       fontSize: 14.0,
                       letterSpacing: -0.15,
                       color: theme.inactiveColor,
                     ),
+                    child: text,
                   ),
                 ),
               ),
               if (trailing != null)
                 DefaultTextStyle(
-                  child: trailing!,
                   style: TextStyle(
                     inherit: false,
                     fontSize: 12.0,
                     color: theme.borderInputColor,
                     height: 0.7,
                   ),
+                  child: trailing!,
                 ),
             ]),
           ),
@@ -198,6 +198,7 @@ class FlyoutListTile extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(100),
                 ),
+                child: trailing!,
               ),
             ),
         ]);

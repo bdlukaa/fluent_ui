@@ -1,19 +1,22 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class FlyoutShowcase extends StatefulWidget {
-  const FlyoutShowcase({Key? key}) : super(key: key);
+class FlyoutPage extends StatefulWidget {
+  const FlyoutPage({Key? key}) : super(key: key);
 
   @override
-  State<FlyoutShowcase> createState() => _FlyoutShowcaseState();
+  State<FlyoutPage> createState() => _FlyoutShowcaseState();
 }
 
-class _FlyoutShowcaseState extends State<FlyoutShowcase> {
+class _FlyoutShowcaseState extends State<FlyoutPage> {
   Typography get typography => FluentTheme.of(context).typography;
 
+  FlyoutController buttonController = FlyoutController();
   FlyoutController flyoutController = FlyoutController();
 
   @override
   void dispose() {
+    buttonController.dispose();
     flyoutController.dispose();
     super.dispose();
   }
@@ -23,23 +26,104 @@ class _FlyoutShowcaseState extends State<FlyoutShowcase> {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Flyouts')),
       children: [
-        Wrap(spacing: 12.0, runSpacing: 12.0, children: [
-          _flyoutOnHover(),
-          _flyoutOnPress(),
-          _flyoutOnLongPress(),
-          _flyoutWithController(),
-        ]),
-        Wrap(spacing: 12.0, runSpacing: 12.0, children: [
-          _flyoutAtStart(),
-          _flyoutAtCenter(),
-          _flyoutAtEnd(),
-          _flyoutAtCustomPosition(),
-        ]),
+        const Text(
+          'A Flyout displays lightweight UI that is either information, or requires user interaction. Unlike a dialog, a Flyout can be light dismissed by clicking or tapping off of it. Use it to collect input from the user, show more details about an item, or ask the user to confirm an action.',
+        ),
+        Text('A button with a Flyout', style: typography.subtitle),
+        const SizedBox(height: 10.0),
+        CardHighlight(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Flyout(
+              controller: buttonController,
+              content: (context) {
+                return FlyoutContent(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'All items will be removed. Do you want to continue?',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Button(
+                        child: const Text('Yes, empty my cart'),
+                        onPressed: buttonController.close,
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Button(
+                child: const Text('Empty cart'),
+                onPressed: buttonController.open,
+              ),
+            ),
+          ),
+          codeSnippet:
+              '''// define the controller. It'll be responsible to open/close the flyout programatically
+FlyoutController buttonController = FlyoutController();
+
+Flyout(
+  controller: buttonController,
+  // [content] is the content of the flyout popup, opened when the user presses
+  // the button
+  content: (context) {
+    return FlyoutContent(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'All items will be removed. Do you want to continue?',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12.0),
+          Button(
+            child: const Text('Yes, empty my cart'),
+            onPressed: buttonController.close,
+          ),
+        ],
+      ),
+    );
+  },
+  child: Button(
+    child: const Text('Empty cart'),
+    onPressed: buttonController.open,
+  )
+)''',
+        ),
+        const SizedBox(height: 20.0),
+        DefaultTextStyle(
+          style: const TextStyle(color: Colors.white),
+          child: Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+            _flyoutOnHover(),
+            _flyoutOnPress(),
+            _flyoutOnLongPress(),
+            _flyoutWithController(),
+          ]),
+        ),
+        DefaultTextStyle(
+          style: const TextStyle(color: Colors.white),
+          child: Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+            _flyoutAtStart(),
+            _flyoutAtCenter(),
+            _flyoutAtEnd(),
+            _flyoutAtCustomPosition(),
+          ]),
+        ),
         const PageHeader(title: Text('Menu Flyouts'), padding: 0.0),
-        Wrap(spacing: 12.0, runSpacing: 12.0, children: [
-          _menuFlyout(),
-          _menuFlyoutWithSubItem(),
-        ]),
+        const Text(
+          'A MenuFlyout displays lightweight UI that is light dismissed by clicking or tapping off of it. Use it to let the user choose from a contextual list of simple commands or options.',
+        ),
+        DefaultTextStyle(
+          style: const TextStyle(color: Colors.white),
+          child: Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+            _menuFlyout(),
+            _menuFlyoutWithSubItem(),
+          ]),
+        ),
       ],
     );
   }

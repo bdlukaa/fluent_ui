@@ -1,0 +1,18 @@
+{
+  "line-length": false,
+  "no-inline-html": {
+    "allowed_elements": [
+      "div",
+			"h1",
+			"a",
+			"img",
+			"br",
+			"p"
+    ]
+  },
+	"first-line-heading": false,
+	"first-line-h1": false,
+	"ol-prefix": false,
+	"no-empty-links": false,
+	"no-duplicate-header": false
+}

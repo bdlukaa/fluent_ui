@@ -5,7 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 /// An application that uses fluent design.
 ///
 /// A convenience widget that wraps a number of widgets that are commonly
-/// required for fluent design applications.
+/// required for fluent design applications. It builds upon a [WidgetsApp] by
+/// adding fluent-design specific functionality, such as [AnimatedFluentTheme].
 ///
 /// The [FluentApp] configures the top-level [Navigator] to search for routes
 /// in the following order:
@@ -29,6 +30,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 ///
 /// If [home], [routes], [onGenerateRoute], and [onUnknownRoute] are all null,
 /// and [builder] is not null, then no [Navigator] is created.
+///
+/// See also:
+///
+///  * [NavigationView], to provide fluent app-wide navigation
+///  * [Navigator], which is used to manage the app's stack of pages.
+///  * [WidgetsApp], which defines the basic app elements but does not depend on
+/// the fluent library.
 class FluentApp extends StatefulWidget {
   /// Creates a FluentApp.
   ///
@@ -282,9 +290,9 @@ class FluentApp extends StatefulWidget {
   /// ```dart
   /// Widget build(BuildContext context) {
   ///   return FluentApp(
-  ///     shortcuts: <LogicalKeySet, Intent>{
-  ///       ...WidgetsApp.defaultShortcuts,
-  ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+  ///     shortcuts: <ShortcutActivator, Intent>{
+  ///       ... WidgetsApp.defaultShortcuts,
+  ///       const SingleActivator(LogicalKeyboardKey.select): const ActivateIntent(),
   ///     },
   ///     color: const Color(0xFFFF0000),
   ///     builder: (BuildContext context, Widget? child) {
@@ -295,7 +303,7 @@ class FluentApp extends StatefulWidget {
   /// ```
   /// {@end-tool}
   /// {@macro flutter.widgets.widgetsApp.shortcuts.seeAlso}
-  final Map<LogicalKeySet, Intent>? shortcuts;
+  final Map<ShortcutActivator, Intent>? shortcuts;
 
   /// {@macro flutter.widgets.widgetsApp.actions}
   /// {@tool snippet}
@@ -340,12 +348,6 @@ class FluentApp extends StatefulWidget {
   ///  * [ScrollConfiguration], which controls how [Scrollable] widgets behave
   ///    in a subtree.
   final ScrollBehavior scrollBehavior;
-
-  static bool showPerformanceOverlayOverride = false;
-
-  static bool debugShowWidgetInspectorOverride = false;
-
-  static bool debugAllowBannerOverride = true;
 
   /// {@macro flutter.widgets.widgetsApp.useInheritedMediaQuery}
   final bool useInheritedMediaQuery;
@@ -542,8 +544,8 @@ class FluentScrollBehavior extends ScrollBehavior {
           case TargetPlatform.macOS:
           case TargetPlatform.windows:
             return Scrollbar(
-              child: child,
               controller: details.controller,
+              child: child,
             );
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
 
-/// The typography applied to a [ThemeData]. It implements Window's [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+/// The typography applied to a [ThemeData]. It implements Windows' [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 ///
 /// | Do                                                  | Don't                                                                             |
 /// | :-------------------------------------------------- | :-------------------------------------------------------------------------------- |
@@ -12,13 +12,13 @@ import 'package:flutter/foundation.dart';
 /// | Keep to 50–60 letters per line for ease of reading. | Less than 20 characters or more than 60 characters per line is difficult to read. |
 /// | Clip text, and wrap if multiple lines are enabled.  | Use ellipses to avoid visual clutter.                                             |
 ///
-/// ![Hierarchy](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/type/type-hierarchy.svg)
+/// ![Hierarchy](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/text-block-type-ramp.svg)
 ///
 /// For more info, read [Typography](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography)
 class Typography with Diagnosticable {
   /// The header style. Use this as the top of the hierarchy
   ///
-  /// Don't use [header] if the text needs to wrap.
+  /// Don't use [titleLarge] if the text needs to wrap.
   final TextStyle? display;
 
   final TextStyle? titleLarge;
@@ -78,7 +78,7 @@ class Typography with Diagnosticable {
       titleLarge: TextStyle(
         fontSize: 40,
         color: color,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
       title: TextStyle(
         fontSize: 28,
@@ -88,7 +88,7 @@ class Typography with Diagnosticable {
       subtitle: TextStyle(
         fontSize: 20,
         color: color,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
       bodyLarge: TextStyle(
         fontSize: 18,

@@ -4,18 +4,18 @@ import 'package:flutter/foundation.dart';
 /// A card with appropriate margins, padding, and elevation for it to
 /// contain one or more [CommandBar]s.
 class CommandBarCard extends StatelessWidget {
-  final Widget child;
-  final double elevation;
-  final EdgeInsetsGeometry margin;
-  final EdgeInsets padding;
-
   const CommandBarCard({
     Key? key,
     required this.child,
-    this.margin = const EdgeInsets.all(0),
+    this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
-    this.elevation = 2.0,
+    this.backgroundColor,
   }) : super(key: key);
+
+  final Widget child;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsets padding;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class CommandBarCard extends StatelessWidget {
       padding: margin,
       child: Card(
         padding: padding,
-        elevation: elevation,
+        backgroundColor: backgroundColor,
         child: child,
       ),
     );
@@ -219,7 +219,6 @@ class _CommandBarState extends State<CommandBar> {
         allSecondaryItems.removeAt(0);
       }
       overflowWidget = Flyout(
-        child: overflowItem.build(context, primaryMode),
         content: (context) => FlyoutContent(
           constraints: const BoxConstraints(maxWidth: 250.0),
           padding: const EdgeInsets.only(top: 8.0),
@@ -234,6 +233,7 @@ class _CommandBarState extends State<CommandBar> {
           ),
         ),
         controller: secondaryFlyoutController,
+        child: overflowItem.build(context, primaryMode),
       );
     }
 
@@ -276,7 +276,6 @@ class _CommandBarState extends State<CommandBar> {
         w = DynamicOverflow(
           alignment: widget.mainAxisAlignment,
           crossAxisAlignment: widget.crossAxisAlignment,
-          children: builtItems.toList(),
           alwaysDisplayOverflowWidget: widget.secondaryItems.isNotEmpty,
           overflowWidget: overflowWidget!,
           overflowWidgetAlignment: widget.overflowItemAlignment,
@@ -295,6 +294,7 @@ class _CommandBarState extends State<CommandBar> {
               dynamicallyHiddenPrimaryItems = hiddenItems;
             });
           },
+          children: builtItems.toList(),
         );
         break;
       case CommandBarOverflowBehavior.clip:
@@ -386,7 +386,10 @@ abstract class CommandBarItem with Diagnosticable {
 /// a CommandBarItem built in the given display mode. Can be useful to
 /// wrap the widget in a [Tooltip] etc.
 typedef CommandBarItemWidgetBuilder = Widget Function(
-    BuildContext context, CommandBarItemDisplayMode displayMode, Widget w);
+  BuildContext context,
+  CommandBarItemDisplayMode displayMode,
+  Widget child,
+);
 
 class CommandBarBuilderItem extends CommandBarItem {
   /// Function that is called with the built widget of the wrappedItem for
@@ -395,7 +398,7 @@ class CommandBarBuilderItem extends CommandBarItem {
   final CommandBarItemWidgetBuilder builder;
   final CommandBarItem wrappedItem;
 
-  CommandBarBuilderItem({
+  const CommandBarBuilderItem({
     Key? key,
     required this.builder,
     required this.wrappedItem,
@@ -418,8 +421,10 @@ class CommandBarBuilderItem extends CommandBarItem {
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
-  const CommandBarItemInPrimary({Key? key, required this.child})
-      : super(key: key);
+  const CommandBarItemInPrimary({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -475,19 +480,27 @@ class CommandBarButton extends CommandBarItem {
           onLongPress: onLongPress,
           focusNode: focusNode,
           autofocus: autofocus,
-          icon: CommandBarItemInPrimary(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (showIcon)
-                  IconTheme(
-                    data: IconTheme.of(context).copyWith(size: 16),
-                    child: icon!,
-                  ),
-                if (showIcon && showLabel) const SizedBox(width: 10),
-                if (showLabel) label!,
-              ],
-            ),
+          style: ButtonStyle(
+            backgroundColor: ButtonState.resolveWith((states) {
+              final theme = FluentTheme.of(context);
+              return ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              );
+            }),
+          ),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showIcon)
+                IconTheme.merge(
+                  data: const IconThemeData(size: 16),
+                  child: icon!,
+                ),
+              if (showIcon && showLabel) const SizedBox(width: 10),
+              if (showLabel) label!,
+            ],
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:

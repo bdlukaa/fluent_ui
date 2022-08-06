@@ -88,20 +88,21 @@ Offset horizontalPositionDependentBox({
   required Size childSize,
   required Offset target,
   required bool preferLeft,
-  double verticalOffset = 0.0,
+  double horizontalOffset = 0.0,
   double margin = 10.0,
 }) {
   // Horizontal DIRECTION
   final bool fitsLeft =
-      target.dx + verticalOffset + childSize.width <= size.width - margin;
-  final bool fitsRight = target.dx - verticalOffset - childSize.width >= margin;
+      target.dx + horizontalOffset + childSize.width <= size.width - margin;
+  final bool fitsRight =
+      target.dx - horizontalOffset - childSize.width >= margin;
   final bool tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
   double x;
   if (tooltipLeft) {
-    x = math.min(target.dx + verticalOffset, size.width - margin);
+    x = math.min(target.dx + horizontalOffset, size.width - margin);
   } else {
-    x = math.max(target.dx - verticalOffset - childSize.width, margin);
+    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
   }
   // Vertical DIRECTION
   double y;
@@ -120,4 +121,39 @@ Offset horizontalPositionDependentBox({
     }
   }
   return Offset(x, y);
+}
+
+extension DecorationExtension on Decoration {
+  /// Gets the border radius of this decoration, if reacheable
+  BorderRadiusGeometry? getBorderRadius() {
+    if (this is BoxDecoration) {
+      return (this as BoxDecoration).borderRadius;
+    } else if (this is ShapeDecoration) {
+      final shape = (this as ShapeDecoration).shape;
+      if (shape is RoundedRectangleBorder) {
+        return shape.borderRadius;
+      } else if (shape is CircleBorder) {
+        return BorderRadius.circular(100);
+      }
+    }
+    return null;
+  }
+}
+
+extension StringExtension on String {
+  /// Results this string with the first char uppercased
+  ///
+  /// january -> January
+  String uppercaseFirst() {
+    final first = substring(0, 1);
+    return first.toUpperCase() + substring(1);
+  }
+
+  /// Results this string with the first char uppercased
+  ///
+  /// January -> january
+  String lowercaseFirst() {
+    final first = substring(0, 1);
+    return first.toLowerCase() + substring(1);
+  }
 }

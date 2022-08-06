@@ -23,5 +23,12 @@
   "copyActionTooltip": "Copiar el contenido seleccionado al portapapeles",
   "cutActionTooltip": "Cortar el contenido seleccionado y ponerlo en el portapapeles",
   "pasteActionTooltip": "Insertar el contenido del portapapeles en la posición actual",
-  "selectAllActionTooltip": "Seleccionar todo el contenido"
+  "selectAllActionTooltip": "Seleccionar todo el contenido",
+  "hour": "hora",
+  "minute": "minuto",
+  "am": "AM",
+  "pm": "PM",
+  "month": "mes",
+  "day": "día",
+  "year": "año"
 }

@@ -167,11 +167,11 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           ]);
         }
         return Semantics(
-          child: FocusBorder(
-            child: child,
-            focused: states.isFocused,
-          ),
           checked: widget.checked,
+          child: FocusBorder(
+            focused: states.isFocused,
+            child: child,
+          ),
         );
       },
     );
@@ -310,11 +310,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     return ToggleSwitchThemeData(
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: !states.isDisabled
-              ? ButtonThemeData.checkedInputColor(style, states)
-              : style.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                  : const Color.fromRGBO(255, 255, 255, 0.1581),
+          color: ButtonThemeData.checkedInputColor(style, states),
           border: Border.all(
             width: 1,
             color: Colors.transparent,
@@ -323,9 +319,9 @@ class ToggleSwitchThemeData with Diagnosticable {
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: !states.isDisabled
-              ? ButtonThemeData.uncheckedInputColor(style, states)
-              : Colors.transparent,
+          color: states.isNone
+              ? style.resources.subtleFillColorTransparent
+              : ButtonThemeData.uncheckedInputColor(style, states),
           border: Border.all(
             width: 1,
             color: !states.isDisabled
@@ -337,24 +333,20 @@ class ToggleSwitchThemeData with Diagnosticable {
         );
       }),
       margin: const EdgeInsets.all(4),
-      animationDuration: style.fastAnimationDuration,
+      animationDuration: style.fasterAnimationDuration,
       animationCurve: style.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
           color: !states.isDisabled
-              ? style.checkedColor
-              : style.brightness.isLight
-                  ? Colors.white
-                  : const Color.fromRGBO(255, 255, 255, 0.5302),
+              ? style.resources.textOnAccentFillColorDisabled
+              : style.resources.textOnAccentFillColorPrimary,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
           color: !states.isDisabled
-              ? style.uncheckedColor
-              : style.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.3614)
-                  : const Color.fromRGBO(255, 255, 255, 0.3628),
+              ? style.resources.textFillColorSecondary
+              : style.resources.textFillColorDisabled,
         );
       }),
     );

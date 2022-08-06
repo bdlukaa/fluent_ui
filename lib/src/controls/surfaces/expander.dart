@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef ShapeBuilder = ShapeBorder Function(bool open);
+
 /// The expander direction
 enum ExpanderDirection {
   /// Whether the [Expander] expands down
@@ -43,6 +45,7 @@ class Expander extends StatefulWidget {
     this.headerHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
+    this.headerShape,
   }) : super(key: key);
 
   /// The leading widget.
@@ -108,6 +111,8 @@ class Expander extends StatefulWidget {
   /// The content color of the header
   final Color? contentBackgroundColor;
 
+  final ShapeBuilder? headerShape;
+
   @override
   ExpanderState createState() => ExpanderState();
 }
@@ -127,10 +132,7 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration ?? const Duration(milliseconds: 150),
-    );
+    _controller = AnimationController(vsync: this);
   }
 
   @override
@@ -171,59 +173,39 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static Color backgroundColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFFf9f9f9).withOpacity(0.2);
-      if (states.isHovering) return const Color(0xFFf9f9f9).withOpacity(0.4);
-      return Colors.white.withOpacity(0.7);
-    } else {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return Colors.white.withOpacity(0.03);
-      if (states.isHovering) return Colors.white.withOpacity(0.082);
-      return Colors.white.withOpacity(0.05);
-    }
-  }
-
-  static Color borderColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isHovering && !states.isPressing) {
-        return const Color(0xFF212121).withOpacity(0.22);
-      }
-      return const Color(0xFF212121).withOpacity(0.17);
-    } else {
-      if (states.isPressing) return Colors.white.withOpacity(0.062);
-      if (states.isHovering) return Colors.white.withOpacity(0.02);
-      return Colors.black.withOpacity(0.52);
-    }
-  }
-
-  static const double borderSize = 0.5;
-  static final Color darkBorderColor = Colors.black.withOpacity(0.8);
-
   static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     final children = [
+      // HEADER
       HoverButton(
         onPressed: _handlePressed,
         builder: (context, states) {
           return AnimatedContainer(
             duration: expanderAnimationDuration,
             height: widget.headerHeight,
-            decoration: BoxDecoration(
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.vertical(
+            //     top: const Radius.circular(4.0),
+            //     bottom: Radius.circular(open ? 0.0 : 4.0),
+            //   ),
+            // ),
+            decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
-                  backgroundColor(_theme, states),
-              border: Border.all(
-                width: borderSize,
-                color: borderColor(_theme, states),
-              ),
-              borderRadius: BorderRadius.vertical(
-                top: const Radius.circular(4.0),
-                bottom: Radius.circular(open ? 0.0 : 4.0),
-              ),
+                  theme.resources.cardBackgroundFillColorDefault,
+              shape: widget.headerShape?.call(open) ??
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(4.0),
+                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                    ),
+                  ),
             ),
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
@@ -275,11 +257,10 @@ class ExpanderState extends State<Expander>
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
-              width: borderSize,
-              color: borderColor(_theme, {ButtonStates.none}),
+              color: theme.resources.cardStrokeColorDefault,
             ),
             color: widget.contentBackgroundColor ??
-                backgroundColor(_theme, {ButtonStates.none}),
+                theme.resources.cardBackgroundFillColorSecondary,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
@@ -289,6 +270,7 @@ class ExpanderState extends State<Expander>
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: _isDown ? children : children.reversed.toList(),
     );
   }

@@ -99,7 +99,7 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return Container(
       height: widget.strokeWidth,
       constraints: const BoxConstraints(minWidth: _kMinProgressBarWidth),
@@ -113,9 +113,10 @@ class _ProgressBarState extends State<ProgressBar>
             painter: _ProgressBarPainter(
               value: widget.value == null ? null : widget.value! / 100,
               strokeWidth: widget.strokeWidth,
-              activeColor: widget.activeColor ?? style.accentColor,
+              activeColor: widget.activeColor ??
+                  theme.accentColor.defaultBrushFor(theme.brightness),
               backgroundColor:
-                  widget.backgroundColor ?? style.inactiveBackgroundColor,
+                  widget.backgroundColor ?? theme.inactiveBackgroundColor,
               p1: p1,
               p2: p2,
               idleFrames: idleFrames,
@@ -341,7 +342,7 @@ class _ProgressRingState extends State<ProgressRing>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return Container(
       constraints: const BoxConstraints(
         minWidth: _kMinProgressRingIndicatorSize,
@@ -358,9 +359,10 @@ class _ProgressRingState extends State<ProgressRing>
                 return CustomPaint(
                   painter: _RingPainter(
                     backgroundColor:
-                        widget.backgroundColor ?? style.inactiveBackgroundColor,
+                        widget.backgroundColor ?? theme.inactiveBackgroundColor,
                     value: widget.value,
-                    color: widget.activeColor ?? style.accentColor,
+                    color: widget.activeColor ??
+                        theme.accentColor.defaultBrushFor(theme.brightness),
                     strokeWidth: widget.strokeWidth,
                     d1: d1,
                     d2: d2,
@@ -380,9 +382,9 @@ class _ProgressRingState extends State<ProgressRing>
           }
           return CustomPaint(
             painter: _RingPainter(
-              backgroundColor: style.inactiveBackgroundColor,
+              backgroundColor: theme.inactiveBackgroundColor,
               value: widget.value,
-              color: style.accentColor,
+              color: theme.accentColor.defaultBrushFor(theme.brightness),
               strokeWidth: widget.strokeWidth,
               d1: d1,
               d2: d2,
@@ -466,9 +468,9 @@ class _RingPainter extends CustomPainter {
           d2 -= 360;
         }
         if ((d1 - d2).abs() >= 180) {
-          final _speed1 = speed1;
+          final newSpeed1 = speed1;
           speed1 = speed2;
-          speed2 = _speed1;
+          speed2 = newSpeed1;
         }
         // update the values changed above
         onUpdate([d1, d2, speed1, speed2]);

@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "am": MessageLookupByLibrary.simpleMessage("上午"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("返回"),
         "clickToSearch": MessageLookupByLibrary.simpleMessage("点击搜索"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("关闭"),
@@ -34,15 +35,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("剪切"),
         "cutActionTooltip":
             MessageLookupByLibrary.simpleMessage("将选中的内容剪切到剪贴板"),
+        "day": MessageLookupByLibrary.simpleMessage("日"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("对话"),
+        "hour": MessageLookupByLibrary.simpleMessage("时"),
         "minimizeWindowTooltip": MessageLookupByLibrary.simpleMessage("最小化"),
+        "minute": MessageLookupByLibrary.simpleMessage("分"),
         "modalBarrierDismissLabel": MessageLookupByLibrary.simpleMessage("取消"),
+        "month": MessageLookupByLibrary.simpleMessage("月"),
         "newTabLabel": MessageLookupByLibrary.simpleMessage("添加新标签"),
         "noResultsFoundLabel": MessageLookupByLibrary.simpleMessage("没有找到结果"),
         "openNavigationTooltip": MessageLookupByLibrary.simpleMessage("打开导航"),
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("粘贴"),
         "pasteActionTooltip":
             MessageLookupByLibrary.simpleMessage("在当前位置插入剪贴板的内容"),
+        "pm": MessageLookupByLibrary.simpleMessage("下午"),
         "restoreWindowTooltip": MessageLookupByLibrary.simpleMessage("恢复"),
         "scrollTabBackwardLabel":
             MessageLookupByLibrary.simpleMessage("向后滚动标签列表"),
@@ -50,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("向前滚动标签列表"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectAllActionLabel": MessageLookupByLibrary.simpleMessage("全选"),
-        "selectAllActionTooltip": MessageLookupByLibrary.simpleMessage("选择所有内容")
+        "selectAllActionTooltip":
+            MessageLookupByLibrary.simpleMessage("选择所有内容"),
+        "year": MessageLookupByLibrary.simpleMessage("年")
       };
 }

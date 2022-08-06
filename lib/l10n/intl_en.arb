@@ -23,5 +23,12 @@
   "copyActionTooltip": "Copy the selected content to the clipboard",
   "cutActionTooltip": "Remove the selected content and put it in the clipboard",
   "pasteActionTooltip": "Inserts the contents of the clipboard at the current location",
-  "selectAllActionTooltip": "Select all content"
+  "selectAllActionTooltip": "Select all content",
+  "hour": "hour",
+  "minute": "minute",
+  "am": "AM",
+  "pm": "PM",
+  "month": "month",
+  "day": "day",
+  "year": "year"
 }

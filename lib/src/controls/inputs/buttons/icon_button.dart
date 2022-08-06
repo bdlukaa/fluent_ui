@@ -12,6 +12,7 @@ class IconButton extends BaseButton {
     bool autofocus = false,
     ButtonStyle? style,
     this.iconButtonMode,
+    bool focusable = true,
   }) : super(
           key: key,
           child: icon,
@@ -20,6 +21,7 @@ class IconButton extends BaseButton {
           onLongPress: onLongPress,
           onPressed: onPressed,
           style: style,
+          focusable: focusable,
         );
 
   final IconButtonMode? iconButtonMode;
@@ -39,12 +41,18 @@ class IconButton extends BaseButton {
           ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
           : const EdgeInsets.all(8.0)),
       backgroundColor: ButtonState.resolveWith((states) {
-        return states.isDisabled
-            ? ButtonThemeData.buttonColor(theme.brightness, states)
-            : ButtonThemeData.uncheckedInputColor(theme, states);
+        if (states.isDisabled) {
+          return ButtonThemeData.buttonColor(context, states);
+        } else {
+          return ButtonThemeData.uncheckedInputColor(
+            theme,
+            states,
+            transparentWhenNone: true,
+          );
+        }
       }),
       foregroundColor: ButtonState.resolveWith((states) {
-        if (states.isDisabled) return theme.disabledColor;
+        if (states.isDisabled) return theme.resources.textFillColorDisabled;
         return null;
       }),
       shape: ButtonState.all(RoundedRectangleBorder(

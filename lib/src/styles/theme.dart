@@ -35,9 +35,8 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: AnimatedDefaultTextStyle(
+        child: DefaultTextStyle(
           style: data.typography.body!,
-          duration: kThemeAnimationDuration,
           child: child,
         ),
       ),
@@ -60,7 +59,7 @@ class _FluentTheme extends InheritedTheme {
 
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return _FluentTheme(child: child, data: data);
+    return _FluentTheme(data: data, child: child);
   }
 }
 
@@ -137,8 +136,8 @@ class _AnimatedFluentThemeState
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
-      child: widget.child,
       data: _data!.evaluate(animation),
+      child: widget.child,
     );
   }
 
@@ -151,9 +150,21 @@ class _AnimatedFluentThemeState
 }
 
 extension BrightnessExtension on Brightness {
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isLight = FluentTheme.of(context).brightness.isLight;
+  /// ```
   bool get isLight => this == Brightness.light;
+
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isDark = FluentTheme.of(context).brightness.isDark;
+  /// ```
   bool get isDark => this == Brightness.dark;
 
+  /// Gets the opposite brightness from this
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
 }
 
@@ -210,6 +221,8 @@ class ThemeData with Diagnosticable {
 
   final ButtonThemeData buttonTheme;
 
+  final ResourceDictionary resources;
+
   const ThemeData.raw({
     required this.typography,
     required this.accentColor,
@@ -253,6 +266,7 @@ class ThemeData with Diagnosticable {
     required this.bottomSheetTheme,
     required this.menuColor,
     required this.cardColor,
+    required this.resources,
   });
 
   static ThemeData light() {
@@ -307,6 +321,7 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
 
@@ -317,22 +332,21 @@ class ThemeData with Diagnosticable {
     fastAnimationDuration ??= const Duration(milliseconds: 167);
     mediumAnimationDuration ??= const Duration(milliseconds: 250);
     slowAnimationDuration ??= const Duration(milliseconds: 358);
+    resources ??= isLight
+        ? const ResourceDictionary.light()
+        : const ResourceDictionary.dark();
     animationCurve ??= standardCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
-    disabledColor ??=
-        isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
+    disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? Colors.white : Colors.white.withOpacity(0.025);
-    acrylicBackgroundColor ??= isLight
-        ? const Color.fromARGB(204, 255, 255, 255)
-        : const Color(0x7F1e1e1e);
-    micaBackgroundColor ??=
-        isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
+    scaffoldBackgroundColor ??= resources.layerFillColorDefault;
+    acrylicBackgroundColor ??=
+        isLight ? const Color(0xFFfcfcfc) : const Color(0xFF2c2c2c);
+    micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)
         : const Color.fromRGBO(255, 255, 255, 0.786);
@@ -341,7 +355,7 @@ class ThemeData with Diagnosticable {
         ? const Color.fromRGBO(0, 0, 0, 0.4458)
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
-    cardColor ??= isLight ? const Color(0xFFf3f3f3) : const Color(0xFF2e2e2e);
+    cardColor ??= resources.cardBackgroundFillColorDefault;
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
@@ -363,14 +377,11 @@ class ThemeData with Diagnosticable {
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
     navigationPaneTheme ??= NavigationPaneThemeData.standard(
+      resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
       backgroundColor: micaBackgroundColor,
-      disabledColor: disabledColor,
-      highlightColor: accentColor.resolveFromReverseBrightness(
-        brightness,
-        level: brightness.isDark ? 2 : 0,
-      ),
+      highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
       inactiveColor: inactiveColor,
     );
@@ -382,6 +393,7 @@ class ThemeData with Diagnosticable {
     bottomNavigationTheme ??= const BottomNavigationThemeData();
     snackbarTheme ??= const SnackbarThemeData();
     bottomSheetTheme ??= const BottomSheetThemeData();
+
     return ThemeData.raw(
       brightness: brightness,
       visualDensity: visualDensity,
@@ -425,6 +437,7 @@ class ThemeData with Diagnosticable {
       bottomSheetTheme: bottomSheetTheme,
       menuColor: menuColor,
       cardColor: cardColor,
+      resources: resources,
     );
   }
 
@@ -432,6 +445,7 @@ class ThemeData with Diagnosticable {
     return ThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
+      resources: ResourceDictionary.lerp(a.resources, b.resources, t),
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
       typography: Typography.lerp(a.typography, b.typography, t),
       activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
@@ -537,11 +551,12 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
-      typography: typography ?? this.typography,
+      typography: this.typography.merge(typography),
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
@@ -589,6 +604,7 @@ class ThemeData with Diagnosticable {
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
       snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
+      resources: resources ?? this.resources,
     );
   }
 

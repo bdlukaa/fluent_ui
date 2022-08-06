@@ -41,11 +41,10 @@ class InfoBadge extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
 
     final theme = FluentTheme.of(context);
-    final color = this.color ??
-        theme.accentColor.resolveFromReverseBrightness(
-          theme.brightness,
-          level: 1,
-        );
+    final color =
+        this.color ?? theme.accentColor.defaultBrushFor(theme.brightness);
+    final foregroundColor =
+        this.foregroundColor ?? theme.resources.textOnAccentFillColorPrimary;
 
     return Container(
       constraints: source == null
@@ -67,12 +66,12 @@ class InfoBadge extends StatelessWidget {
           : DefaultTextStyle(
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: foregroundColor ?? color.basedOnLuminance(),
+                color: foregroundColor,
                 fontSize: 11.0,
               ),
               child: IconTheme.merge(
                 data: IconThemeData(
-                  color: foregroundColor ?? color.basedOnLuminance(),
+                  color: foregroundColor,
                   size: 8.0,
                 ),
                 child: source!,

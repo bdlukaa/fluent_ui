@@ -141,6 +141,8 @@ class Checkbox extends StatelessWidget {
         return Semantics(
           checked: checked,
           child: FocusBorder(
+            useStackApproach: true,
+            renderOutside: true,
             focused: state.isFocused,
             child: child,
           ),
@@ -259,25 +261,18 @@ class CheckboxThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: !states.isDisabled
-              ? ButtonThemeData.checkedInputColor(style, states)
-              : style.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                  : const Color.fromRGBO(255, 255, 255, 0.1581),
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
             width: 1,
-            color: !states.isDisabled
-                ? style.borderInputColor
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: states.isDisabled || states.isPressing
+                ? style.resources.controlStrongStrokeColorDisabled
+                : style.resources.controlStrongStrokeColorDefault,
           ),
-          color:
-              states.isHovering ? style.inactiveColor.withOpacity(0.1) : null,
+          color: ButtonThemeData.uncheckedInputColor(style, states),
           borderRadius: radius,
         ),
       ),
@@ -288,14 +283,7 @@ class CheckboxThemeData with Diagnosticable {
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
-        return !states.isDisabled
-            ? ButtonThemeData.checkedInputColor(
-                style,
-                states,
-              ).basedOnLuminance()
-            : style.brightness.isLight
-                ? Colors.white
-                : const Color.fromRGBO(255, 255, 255, 0.5302);
+        return FilledButton.foregroundColor(style, states);
       }),
       uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,

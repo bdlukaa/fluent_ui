@@ -89,8 +89,8 @@ class Chip extends StatelessWidget {
             minWidth: 24,
           ),
           decoration: decoration?.resolve(states),
-          padding: EdgeInsets.only(
-            left: spacing + visualDensity.horizontal,
+          padding: EdgeInsetsDirectional.only(
+            start: spacing + visualDensity.horizontal,
             top: spacing,
             bottom: spacing,
           ),
@@ -105,16 +105,20 @@ class Chip extends StatelessWidget {
                   curve: FluentTheme.of(context).animationCurve,
                   opacity: isEnabled || _type == _ChipType.selected ? 1.0 : 0.6,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                        right: spacing + visualDensity.horizontal),
+                    padding: EdgeInsetsDirectional.only(
+                      end: spacing + visualDensity.horizontal,
+                    ),
                     child: image,
                   ),
                 ),
               if (text != null)
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: spacing + visualDensity.horizontal),
-                  child: text,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      end: spacing + visualDensity.horizontal,
+                    ),
+                    child: text,
+                  ),
                 ),
             ]),
           ),
@@ -224,17 +228,6 @@ class ChipThemeData with Diagnosticable {
             : states.isFocused || states.isHovering
                 ? const Color(0xFF383838)
                 : const Color(0xFF212121);
-    Color selectedColor(Set<ButtonStates> states) =>
-        states.isFocused || states.isPressing || states.isHovering
-            ? style.accentColor.resolveFromBrightness(
-                style.brightness,
-                level: states.isPressing
-                    ? 2
-                    : states.isFocused
-                        ? 0
-                        : 1,
-              )
-            : style.accentColor;
     return ChipThemeData(
       spacing: _kChipSpacing,
       decoration: ButtonState.resolveWith((states) {
@@ -253,11 +246,11 @@ class ChipThemeData with Diagnosticable {
       selectedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: selectedColor(states),
+          color: ButtonThemeData.checkedInputColor(style, states),
         );
       }),
       selectedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: selectedColor(states).basedOnLuminance());
+        return TextStyle(color: FilledButton.foregroundColor(style, states));
       }),
     );
   }

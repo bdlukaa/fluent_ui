@@ -21,6 +21,7 @@ const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.symmetric(vertical: 8.0);
 const double kMinInteractiveDimension = 48.0;
+final kComboboxRadius = BorderRadius.circular(4.0);
 
 /// A builder to customize combobox buttons.
 ///
@@ -32,17 +33,15 @@ class _ComboboxMenuPainter extends CustomPainter {
     this.selectedIndex,
     required this.resize,
     required this.getSelectedItemOffset,
-    required Color backgroundColor,
-    required double elevation,
+    Color borderColor = Colors.black,
   })  : _painter = BoxDecoration(
           // If you add an image here, you must provide a real
           // configuration in the paint() function and you must provide some sort
           // of onChanged callback here.
           // color: color,
-          borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(width: 0.25),
-          color: backgroundColor,
-          boxShadow: kElevationToShadow[elevation],
+          borderRadius: kComboboxRadius,
+          border: Border.all(width: 1.0, color: borderColor),
+          // color: backgroundColor,
         ).createBoxPainter(),
         super(repaint: resize);
 
@@ -172,6 +171,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
             Container(
               decoration: BoxDecoration(
                 color: () {
+                  if (states.isNone) return Colors.transparent;
                   if (states.isFocused) {
                     return ButtonThemeData.uncheckedInputColor(
                       theme,
@@ -194,8 +194,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
                 child: Container(
                   width: 3.0,
                   decoration: BoxDecoration(
-                    color: theme.accentColor
-                        .resolveFromReverseBrightness(theme.brightness),
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
                     borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
@@ -292,8 +291,9 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
           // This offset is passed as a callback, not a value, because it must
           // be retrieved at paint time (after layout), not at build time.
           getSelectedItemOffset: () => route.getItemOffset(route.selectedIndex),
-          backgroundColor: FluentTheme.of(context).menuColor,
-          elevation: route.elevation.toDouble(),
+          // elevation: route.elevation.toDouble(),
+          borderColor:
+              FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
         ),
         child: Semantics(
           scopesRoute: true,
@@ -632,7 +632,14 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
               route: route,
               textDirection: textDirection,
             ),
-            child: capturedThemes.wrap(menu),
+            child: capturedThemes.wrap(Acrylic(
+              tintAlpha: 1.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: kComboboxRadius,
+              ),
+              elevation: route.elevation.toDouble(),
+              child: menu,
+            )),
           );
         },
       ),
@@ -1041,7 +1048,7 @@ class Combobox<T> extends StatefulWidget {
   _ComboboxState<T> createState() => _ComboboxState<T>();
 }
 
-class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
+class _ComboboxState<T> extends State<Combobox<T>> {
   int? _selectedIndex;
   _ComboboxRoute<T>? _comboboxRoute;
   Orientation? _lastOrientation;
@@ -1049,7 +1056,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
   bool _hasPrimaryFocus = false;
   late Map<Type, Action<Intent>> _actionMap;
-  late FocusHighlightMode _focusHighlightMode;
 
   // Only used if needed to create _internalNode.
   FocusNode _createFocusNode() {
@@ -1072,17 +1078,11 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       ),
     };
     focusNode!.addListener(_handleFocusChanged);
-    final FocusManager focusManager = WidgetsBinding.instance!.focusManager;
-    _focusHighlightMode = focusManager.highlightMode;
-    focusManager.addHighlightModeListener(_handleFocusHighlightModeChange);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
     _removeComboboxRoute();
-    WidgetsBinding.instance!.focusManager
-        .removeHighlightModeListener(_handleFocusHighlightModeChange);
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     super.dispose();
@@ -1100,15 +1100,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
         _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
       });
     }
-  }
-
-  void _handleFocusHighlightModeChange(FocusHighlightMode mode) {
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _focusHighlightMode = mode;
-    });
   }
 
   @override
@@ -1177,7 +1168,7 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
             ancestor: navigator.context.findRenderObject()) &
         itemBox.size;
     _comboboxRoute = _ComboboxRoute<T>(
-      acrylicEnabled: DisableAcrylic.of(context) != null,
+      acrylicEnabled: DisableAcrylic.of(context) == null,
       items: menuItems,
       buttonRect: menuMargin.resolve(textDirection).inflateRect(itemRect),
       padding: _kMenuItemPadding.resolve(textDirection),
@@ -1243,15 +1234,6 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
           : Orientation.portrait;
     }
     return result;
-  }
-
-  bool get _showHighlight {
-    switch (_focusHighlightMode) {
-      case FocusHighlightMode.touch:
-        return false;
-      case FocusHighlightMode.traditional:
-        return _hasPrimaryFocus;
-    }
   }
 
   @override
@@ -1345,23 +1327,12 @@ class _ComboboxState<T> extends State<Combobox<T>> with WidgetsBindingObserver {
       button: true,
       child: Actions(
         actions: _actionMap,
-        child: HoverButton(
-          focusNode: focusNode,
-          autofocus: widget.autofocus,
+        child: Button(
           onPressed: _enabled ? _handleTap : null,
-          builder: (context, states) {
-            return Container(
-              decoration: kPickerDecorationBuilder(context, () {
-                if (_showHighlight) {
-                  return {ButtonStates.focused};
-                } else if (states.isFocused) {
-                  return <ButtonStates>{};
-                }
-                return states;
-              }()),
-              child: result,
-            );
-          },
+          autofocus: widget.autofocus,
+          focusNode: focusNode,
+          style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
+          child: result,
         ),
       ),
     );

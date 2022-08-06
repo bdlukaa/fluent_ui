@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart';
 /// for the incoming content. Use page refresh when the user is taken to the top
 /// of a navigational stack, such as navigating between tabs or left-nav items.
 ///
-/// This animation is used by default by [NavigationBody] if display mode is top
+/// This animation is used by default by [NavigationBody].
+///
+/// ![EntrancePageTransition showcase](https://docs.microsoft.com/en-us/windows/apps/design/motion/images/page-refresh.gif)
 class EntrancePageTransition extends StatelessWidget {
   /// Creates an entrance page transition
   const EntrancePageTransition({
@@ -37,43 +39,48 @@ class EntrancePageTransition extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'vertical',
-      value: vertical,
-      ifFalse: 'horizontal',
-      defaultValue: true,
-    ));
-    properties.add(FlagProperty(
-      vertical ? 'from top' : 'from left',
-      value: reverse,
-      ifTrue: vertical ? 'from bottom' : 'from right',
-      defaultValue: false,
-    ));
-    properties.add(PercentProperty(
-      'animationValue',
-      animation.value,
-      ifNull: 'stopped',
-    ));
+    properties
+      ..add(FlagProperty(
+        'vertical',
+        value: vertical,
+        ifFalse: 'horizontal',
+        defaultValue: true,
+      ))
+      ..add(FlagProperty(
+        vertical ? 'from top' : 'from left',
+        value: reverse,
+        ifTrue: vertical ? 'from bottom' : 'from right',
+        defaultValue: false,
+      ))
+      ..add(PercentProperty(
+        'animationValue',
+        animation.value,
+        ifNull: 'stopped',
+      ));
   }
 
   @override
   Widget build(BuildContext context) {
     final value = animation.value + (reverse ? -startFrom : startFrom);
     return SlideTransition(
-      child: FadeTransition(
-        child: child,
-        opacity: animation,
-      ),
       position: Tween<Offset>(
         begin: vertical ? Offset(0, value) : Offset(value, 0),
         end: Offset.zero,
       ).animate(animation),
+      child: FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
     );
   }
 }
 
-/// Use drill when users navigate deeper into an app, such as
-/// displaying more information after selecting an item.
+/// Use drill when users navigate deeper into an app, such as displaying more
+/// information after selecting an item.
+///
+/// The desired feeling is that the user has gone deeper into the app.
+///
+/// ![DrillInPageTransition showcase](https://docs.microsoft.com/en-us/windows/apps/design/motion/images/drill.gif)
 class DrillInPageTransition extends StatelessWidget {
   /// Creates a drill in page transition.
   const DrillInPageTransition({
@@ -103,18 +110,17 @@ class DrillInPageTransition extends StatelessWidget {
     return FadeTransition(
       opacity: animation,
       child: ScaleTransition(
-        child: child,
         scale: Tween<double>(begin: 0.88, end: 1.0).animate(animation),
+        child: child,
       ),
     );
   }
 }
 
-/// Use horizontal slide to show that sibling pages appear
-/// next to each other. [NavigationPanel] automatically uses
-/// this animation for top nav, but if you are building your
-/// own horizontal navigation experience, then you can implement
-/// horizontal slide with SlideNavigationTransitionInfo.
+/// Use horizontal slide to show that sibling pages appear next to each other.
+/// [NavigationBody] automatically uses this animation for top nav, but if you
+/// are building your own horizontal navigation experience, then you can
+/// implement horizontal slide with [HorizontalSlidePageTransition].
 class HorizontalSlidePageTransition extends StatelessWidget {
   /// Creates a horizontal slide page transition.
   const HorizontalSlidePageTransition({
@@ -154,12 +160,12 @@ class HorizontalSlidePageTransition extends StatelessWidget {
     final offsetTween = () {
       if (fromLeft) {
         return Tween<Offset>(
-          begin: const Offset(-1, 0),
+          begin: const Offset(-0.65, 0),
           end: Offset.zero,
         );
       } else {
         return Tween<Offset>(
-          begin: const Offset(1, 0),
+          begin: const Offset(0.65, 0),
           end: Offset.zero,
         );
       }
@@ -171,11 +177,12 @@ class HorizontalSlidePageTransition extends StatelessWidget {
   }
 }
 
-/// To avoid playing any animation during navigation, use this
-/// animation.
+/// To avoid playing any animation during navigation, use this animation.
 class SuppressPageTransition extends StatelessWidget {
-  const SuppressPageTransition({Key? key, required this.child})
-      : super(key: key);
+  const SuppressPageTransition({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   /// The widget to be animation
   final Widget child;

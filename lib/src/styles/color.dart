@@ -68,7 +68,7 @@ class Colors {
   /// A opaque white color.
   static const Color white = Color(0xFFFFFFFF);
 
-  static final AccentColor yellow = AccentColor('normal', const <String, Color>{
+  static final AccentColor yellow = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xfff9a825),
     'darker': Color(0xfffbc02d),
     'dark': Color(0xfffdd835),
@@ -78,7 +78,7 @@ class Colors {
     'lightest': Color(0xfffff59d),
   });
 
-  static final AccentColor orange = AccentColor('normal', const <String, Color>{
+  static final AccentColor orange = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff993d07),
     'darker': Color(0xffac4508),
     'dark': Color(0xffd1540a),
@@ -88,7 +88,7 @@ class Colors {
     'lightest': Color(0xfffa9e68),
   });
 
-  static final AccentColor red = AccentColor('normal', const <String, Color>{
+  static final AccentColor red = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff8f0a15),
     'darker': Color(0xffa20b18),
     'dark': Color(0xffb90d1c),
@@ -98,8 +98,7 @@ class Colors {
     'lightest': Color(0xfff06b76),
   });
 
-  static final AccentColor magenta =
-      AccentColor('normal', const <String, Color>{
+  static final AccentColor magenta = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff6f0061),
     'darker': Color(0xff7e006e),
     'dark': Color(0xff90007e),
@@ -109,7 +108,7 @@ class Colors {
     'lightest': Color(0xffd060c2),
   });
 
-  static final AccentColor purple = AccentColor('normal', const <String, Color>{
+  static final AccentColor purple = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff472f68),
     'darker': Color(0xff513576),
     'dark': Color(0xff644293),
@@ -119,7 +118,7 @@ class Colors {
     'lightest': Color(0xffa890c9),
   });
 
-  static final AccentColor blue = AccentColor('normal', const <String, Color>{
+  static final AccentColor blue = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff004a83),
     'darker': Color(0xff005494),
     'dark': Color(0xff0066b4),
@@ -129,7 +128,7 @@ class Colors {
     'lightest': Color(0xff60abe4),
   });
 
-  static final AccentColor teal = AccentColor('normal', const <String, Color>{
+  static final AccentColor teal = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff006e5b),
     'darker': Color(0xff007c67),
     'dark': Color(0xff00977d),
@@ -139,7 +138,7 @@ class Colors {
     'lightest': Color(0xff60cfbc),
   });
 
-  static final AccentColor green = AccentColor('normal', const <String, Color>{
+  static final AccentColor green = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff094c09),
     'darker': Color(0xff0c5d0c),
     'dark': Color(0xff0e6f0e),
@@ -150,20 +149,17 @@ class Colors {
   });
 
   static const Color warningPrimaryColor = Color(0xFFd83b01);
-  static final warningSecondaryColor =
-      AccentColor('normal', const <String, Color>{
+  static final warningSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF433519),
     'normal': Color(0xFFfff4ce),
   });
   static const Color errorPrimaryColor = Color(0xFFa80000);
-  static final errorSecondaryColor =
-      AccentColor('normal', const <String, Color>{
+  static final errorSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF442726),
     'normal': Color(0xFFfde7e9),
   });
   static const Color successPrimaryColor = Color(0xFF107c10);
-  static final successSecondaryColor =
-      AccentColor('normal', const <String, Color>{
+  static final successSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF393d1b),
     'normal': Color(0xFFdff6dd),
   });
@@ -191,10 +187,10 @@ class ShadedColor extends ColorSwatch<int> {
   }
 }
 
-/// An accent color is a color that can have multiple shades. It's
-/// similar to [ShadedColor] and [ColorSwatch], but it has helper
-/// methods to help you access the shade you want easily. These
-/// shades may not be accessible on every accent color.
+/// An accent color is a color that can have multiple shades. It's similar to
+/// [ShadedColor] and [ColorSwatch], but it has helper methods to help you
+/// access the color variant you want easily. These shades may not be accessible
+/// on every accent color.
 ///
 /// This library already provides some accent colors by default:
 ///
@@ -216,22 +212,27 @@ class AccentColor extends ColorSwatch<String> {
   /// The avaiable shades for this color. This can't be null nor empty
   final Map<String, Color> swatch;
 
-  /// Create a new accent color.
+  /// Creates a new accent color.
   AccentColor(this.primary, this.swatch)
       : super(swatch[primary]!.value, swatch);
 
+  /// Creates a new accent color based on a swatch
+  AccentColor.swatch(this.swatch)
+      : primary = 'normal',
+        super(swatch['normal']!.value, swatch);
+
   /// The darkest shade of the color.
-  Color get darkest => swatch['darkest'] ?? darker;
+  Color get darkest => swatch['darkest'] ?? darker.withOpacity(0.7);
 
   /// The darker shade of the color.
   ///
   /// Usually used for shadows
-  Color get darker => swatch['darker'] ?? dark;
+  Color get darker => swatch['darker'] ?? dark.withOpacity(0.8);
 
   /// The dark shade of the color.
   ///
   /// Usually used for the mouse press effect;
-  Color get dark => swatch['dark'] ?? normal;
+  Color get dark => swatch['dark'] ?? normal.withOpacity(0.9);
 
   /// The default shade of the color.
   Color get normal => swatch['normal']!;
@@ -239,28 +240,28 @@ class AccentColor extends ColorSwatch<String> {
   /// The light shade of the color.
   ///
   /// Usually used for the mouse hover effect
-  Color get light => swatch['light'] ?? normal;
+  Color get light => swatch['light'] ?? normal.withOpacity(0.9);
 
   /// The lighter shade of the color.
   ///
   /// Usually used for shadows
-  Color get lighter => swatch['lighter'] ?? light;
+  Color get lighter => swatch['lighter'] ?? light.withOpacity(0.8);
 
   /// The lighest shade of the color
-  Color get lightest => swatch['lightest'] ?? lighter;
+  Color get lightest => swatch['lightest'] ?? lighter.withOpacity(0.7);
 
-  static AccentColor lerp(AccentColor? a, AccentColor? b, double t) {
-    final darkest = Color.lerp(a?.darkest, b?.darkest, t);
-    final darker = Color.lerp(a?.darker, b?.darker, t);
-    final dark = Color.lerp(a?.dark, b?.dark, t);
-    final light = Color.lerp(a?.light, b?.light, t);
-    final lighter = Color.lerp(a?.lighter, b?.lighter, t);
-    final lightest = Color.lerp(a?.lightest, b?.lightest, t);
-    return AccentColor('normal', {
+  static AccentColor lerp(AccentColor a, AccentColor b, double t) {
+    final darkest = Color.lerp(a.darkest, b.darkest, t);
+    final darker = Color.lerp(a.darker, b.darker, t);
+    final dark = Color.lerp(a.dark, b.dark, t);
+    final light = Color.lerp(a.light, b.light, t);
+    final lighter = Color.lerp(a.lighter, b.lighter, t);
+    final lightest = Color.lerp(a.lightest, b.lightest, t);
+    return AccentColor.swatch({
       if (darkest != null) 'darkest': darkest,
       if (darker != null) 'darker': darker,
       if (dark != null) 'dark': dark,
-      'normal': Color.lerp(a?.normal, b?.normal, t)!,
+      'normal': Color.lerp(a.normal, b.normal, t)!,
       if (light != null) 'light': light,
       if (lighter != null) 'lighter': lighter,
       if (lightest != null) 'lightest': lightest,
@@ -312,6 +313,30 @@ class AccentColor extends ColorSwatch<String> {
                 : darkest;
     }
   }
+
+  Color defaultBrushFor(Brightness brightness) {
+    if (brightness.isDark) {
+      return lighter;
+    } else {
+      return dark;
+    }
+  }
+
+  Color secondaryBrushFor(Brightness brightness) {
+    if (brightness.isDark) {
+      return lighter.withOpacity(0.9);
+    } else {
+      return dark.withOpacity(0.9);
+    }
+  }
+
+  Color tertiaryBrushFor(Brightness brightness) {
+    if (brightness.isDark) {
+      return lighter.withOpacity(0.8);
+    } else {
+      return dark.withOpacity(0.8);
+    }
+  }
 }
 
 /// Extension methods to help dealing with colors.
@@ -336,7 +361,7 @@ extension ColorExtension on Color {
     // if (this is AccentColor) {
     //   return this as AccentColor;
     // }
-    return AccentColor('normal', {
+    return AccentColor.swatch({
       'darkest': lerpWith(Colors.black, darkestFactor),
       'darker': lerpWith(Colors.black, darkerFactor),
       'dark': lerpWith(Colors.black, darkFactor),
