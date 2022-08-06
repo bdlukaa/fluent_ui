@@ -22,7 +22,7 @@ class AutoSuggestBoxPage extends ScrollablePage {
           SizedBox(
             width: 350.0,
             child: AutoSuggestBox(
-              items: _cats
+              items: cats
                   .map<AutoSuggestBoxItem>(
                     (cat) => AutoSuggestBoxItem(
                       value: cat,
@@ -48,13 +48,20 @@ class AutoSuggestBoxPage extends ScrollablePage {
 String? selectedCat;
 
 AutoSuggestBox(
-  items: _cats,
+  items: cats.map((cat) {
+    return AutoSuggestBoxItem(
+      value: cat,
+      onFocusChange: (focused) {
+        if (focused) debugPrint('Focused \$cat');
+      }
+    );
+  }).toList(),
   onSelected: (item) {
     setState(() => selected = item);
   },
 ),
 
-const _cats = <String>[
+const cats = <String>[
   'Abyssinian',
   'Aegean',
   'American Bobtail',
@@ -66,7 +73,7 @@ const _cats = <String>[
   }
 }
 
-const _cats = <String>[
+const cats = <String>[
   'Abyssinian',
   'Aegean',
   'American Bobtail',
