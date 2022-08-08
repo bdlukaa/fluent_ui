@@ -311,6 +311,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   late List<AutoSuggestBoxItem> _localItems;
 
   void updateLocalItems() {
+    if (!mounted) return;
     setState(() {
       _localItems = widget.sorter(controller.text, widget.items);
     });
@@ -325,6 +326,17 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     focusNode.addListener(_handleFocusChanged);
 
     _localItems = widget.sorter(controller.text, widget.items);
+
+    // Update the overlay when the text box size has changed
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+      if (_boxSize != box.size) {
+        _dismissOverlay();
+        _boxSize = box.size;
+      }
+    });
   }
 
   @override
@@ -379,26 +391,10 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
     updateLocalItems();
 
-    // if (controller.text.isEmpty) {
-    // _dismissOverlay();
-    // setState(() {});
-    // _showOverlay();
-    // }
-
     // Update the overlay when the text box size has changed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-
       updateLocalItems();
-
-      final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
-
-      if (_boxSize != box.size) {
-        _dismissOverlay();
-        setState(() {});
-        _showOverlay();
-        _boxSize = box.size;
-      }
     });
   }
 
