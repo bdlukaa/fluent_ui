@@ -70,6 +70,7 @@ Date format: DD/MM/YYYY
 - `Combobox` updates ([#454](https://github.com/bdlukaa/fluent_ui/pull/454)):
   - Popup size is now correctly calculated ([#413](https://github.com/bdlukaa/fluent_ui/issues/413))
   - Correctly clip the popup while performing the animation ([#379](https://github.com/bdlukaa/fluent_ui/issues/379))
+- Correctly check if a locale is supported ([#455](https://github.com/bdlukaa/fluent_ui/issues/455))
 
 ## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
 
