@@ -289,7 +289,7 @@ class PaneItem extends NavigationPaneItem {
         if (maybeBody?.pane?.indicator != null &&
             index != null &&
             !index.isNegative) {
-          final key = _PaneItemKeys.of(index, context);
+          final key = PaneItemKeys.of(index, context);
 
           return Stack(children: [
             button,
