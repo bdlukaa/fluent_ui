@@ -80,4 +80,17 @@ void main() {
       expect(find.text('Brightness.dark'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'Do not display warning if country code is provided for supportedLocales',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const FluentApp(
+          supportedLocales: [
+            Locale('en', 'US'),
+          ],
+        ),
+      );
+    },
+  );
 }

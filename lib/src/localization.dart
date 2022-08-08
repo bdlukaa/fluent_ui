@@ -185,7 +185,7 @@ class DefaultFluentLocalizations extends S implements FluentLocalizations {
   }
 
   static bool supports(Locale locale) {
-    return S.delegate.supportedLocales.contains(locale);
+    return S.delegate.isSupported(locale);
   }
 
   // Special cases - Those that include operating system dependent messages
