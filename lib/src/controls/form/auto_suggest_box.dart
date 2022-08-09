@@ -11,6 +11,11 @@ typedef AutoSuggestBoxSorter = List<AutoSuggestBoxItem> Function(
   List<AutoSuggestBoxItem> items,
 );
 
+typedef OnChangeAutoSuggestBox = void Function(
+  String text,
+  TextChangedReason reason,
+);
+
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
   userInput,
@@ -148,7 +153,7 @@ class AutoSuggestBox extends StatefulWidget {
   final TextEditingController? controller;
 
   /// Called when the text is updated
-  final void Function(String text, TextChangedReason reason)? onChanged;
+  final OnChangeAutoSuggestBox? onChanged;
 
   /// Called when the user selected a value.
   final ValueChanged<AutoSuggestBoxItem>? onSelected;
@@ -326,9 +331,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
 
   void updateLocalItems() {
     if (!mounted) return;
-    setState(() {
-      _localItems = widget.sorter(controller.text, widget.items);
-    });
+    setState(() => _localItems = widget.sorter(controller.text, widget.items));
   }
 
   @override
