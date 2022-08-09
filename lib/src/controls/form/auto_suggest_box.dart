@@ -723,6 +723,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
   @override
   void dispose() {
     focusSubscription.cancel();
+    itemsSubscription.cancel();
     scrollController.dispose();
     super.dispose();
   }
