@@ -101,6 +101,7 @@ class PaneItem extends NavigationPaneItem {
         title?.getProperty<TextStyle>() ?? const TextStyle();
 
     final bool isTop = mode == PaneDisplayMode.top;
+    final bool isMinimal = mode == PaneDisplayMode.minimal;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
     final button = HoverButton(
@@ -108,6 +109,7 @@ class PaneItem extends NavigationPaneItem {
       focusNode: focusNode,
       onPressed: onPressed,
       cursor: mouseCursor,
+      focusEnabled: isMinimal ? (maybeBody?.minimalPaneOpen ?? false) : true,
       builder: (context, states) {
         TextStyle textStyle = () {
           TextStyle? style = !isTop

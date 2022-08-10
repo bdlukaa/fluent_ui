@@ -11,6 +11,11 @@ typedef AutoSuggestBoxSorter = List<AutoSuggestBoxItem> Function(
   List<AutoSuggestBoxItem> items,
 );
 
+typedef OnChangeAutoSuggestBox = void Function(
+  String text,
+  TextChangedReason reason,
+);
+
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
   userInput,
@@ -47,6 +52,18 @@ class AutoSuggestBoxItem {
     this.onFocusChange,
     this.onSelected,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AutoSuggestBoxItem && other.value == value;
+  }
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
 }
 
 /// An AutoSuggestBox provides a list of suggestions for a user to select from
@@ -136,7 +153,7 @@ class AutoSuggestBox extends StatefulWidget {
   final TextEditingController? controller;
 
   /// Called when the text is updated
-  final void Function(String text, TextChangedReason reason)? onChanged;
+  final OnChangeAutoSuggestBox? onChanged;
 
   /// Called when the user selected a value.
   final ValueChanged<AutoSuggestBoxItem>? onSelected;
@@ -296,7 +313,7 @@ class AutoSuggestBox extends StatefulWidget {
   }
 }
 
-class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
+class _AutoSuggestBoxState extends State<AutoSuggestBox> {
   late FocusNode focusNode = widget.focusNode ?? FocusNode();
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
@@ -305,6 +322,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
   final _focusStreamController = StreamController<int>.broadcast();
+  final _dynamicItemsController =
+      StreamController<List<AutoSuggestBoxItem>>.broadcast();
 
   Size _boxSize = Size.zero;
 
@@ -312,9 +331,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
 
   void updateLocalItems() {
     if (!mounted) return;
-    setState(() {
-      _localItems = widget.sorter(controller.text, widget.items);
-    });
+    setState(() => _localItems = widget.sorter(controller.text, widget.items));
   }
 
   @override
@@ -344,6 +361,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
     focusNode.removeListener(_handleFocusChanged);
     controller.removeListener(_handleTextChanged);
     _focusStreamController.close();
+    _dynamicItemsController.close();
     _unselectAll();
 
     {
@@ -372,6 +390,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
         controller = widget.controller ?? TextEditingController();
       }
     }
+
+    if (widget.items != oldWidget.items) {
+      _dynamicItemsController.add(widget.items);
+    }
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -429,6 +452,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox> {
                 controller: controller,
                 items: widget.items,
                 focusStream: _focusStreamController.stream,
+                itemsStream: _dynamicItemsController.stream,
                 sorter: widget.sorter,
                 onSelected: (AutoSuggestBoxItem item) {
                   item.onSelected?.call();
@@ -648,6 +672,7 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
     required this.onSelected,
     required this.node,
     required this.focusStream,
+    required this.itemsStream,
     required this.sorter,
     required this.maxHeight,
   }) : super(key: key);
@@ -657,6 +682,7 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
   final ValueChanged<AutoSuggestBoxItem> onSelected;
   final FocusScopeNode node;
   final Stream<int> focusStream;
+  final Stream<List<AutoSuggestBoxItem>> itemsStream;
   final AutoSuggestBoxSorter sorter;
   final double maxHeight;
 
@@ -666,10 +692,13 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
 
 class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
   late final StreamSubscription focusSubscription;
+  late final StreamSubscription itemsSubscription;
   final ScrollController scrollController = ScrollController();
 
   /// Tile height + padding
   static const tileHeight = (kOneLineTileHeight + 2.0);
+
+  late List<AutoSuggestBoxItem> items = widget.items;
 
   @override
   void initState() {
@@ -686,11 +715,15 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
       );
       setState(() {});
     });
+    itemsSubscription = widget.itemsStream.listen((items) {
+      this.items = items;
+    });
   }
 
   @override
   void dispose() {
     focusSubscription.cancel();
+    itemsSubscription.cancel();
     scrollController.dispose();
     super.dispose();
   }
@@ -735,10 +768,9 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
           child: ValueListenableBuilder<TextEditingValue>(
             valueListenable: widget.controller,
             builder: (context, value, _) {
-              final items = widget.sorter(value.text, widget.items);
-              // final items = widget.items;
+              final sortedItems = widget.sorter(value.text, items);
               late Widget result;
-              if (items.isEmpty) {
+              if (sortedItems.isEmpty) {
                 result = Padding(
                   padding: const EdgeInsets.only(bottom: 4.0),
                   child: _AutoSuggestBoxOverlayTile(
@@ -750,12 +782,12 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                 result = ListView.builder(
                   itemExtent: tileHeight,
                   controller: scrollController,
-                  key: ValueKey<int>(items.length),
+                  key: ValueKey<int>(sortedItems.length),
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(bottom: 4.0),
-                  itemCount: items.length,
+                  itemCount: sortedItems.length,
                   itemBuilder: (context, index) {
-                    final item = items[index];
+                    final item = sortedItems[index];
                     return _AutoSuggestBoxOverlayTile(
                       text: item.child ?? Text(item.value),
                       selected: item._selected,

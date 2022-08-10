@@ -2,7 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [4.0.0-pre.3] - [00/08/2022]
 
-- `NavigationView` top mode fixes:
+- `NavigationView` mode fixes:
   - When top overflow menu is opened, `PaneItemHeader` no longer throws an unsupported error
   - When on top mode, `PaneItemHeader` is properly aligned to the other items.
   - Added `NavigationPaneThemeData.headerPadding`, which is applied to `PaneItemHeader` on open, compact and minimal mode. It defaults to 10 pixels at the top
@@ -17,6 +17,7 @@ Date format: DD/MM/YYYY
   This was changed because the properties of `PaneItemHeader` needed to be accessed, but the old version only supported to get the properties of `PaneItem.title`. It can be called on a `Text`, `RichText` or in an `Icon` widget
   - `InheritedNavigationView` is now accessible on the top overflow menu
   - Added `NavigationPaneThemeData.selectedTopTextStyle` and `NavigationPaneThemeData.unselectedTopTextStyle`, which is applied to the items on top mode
+  - Fixed `content` focus on minimal mode
   - Updated default transitions for top mode: `HorizontalSlidePageTransition`
 - Fix incorrect translation of `TimePicker` in Traditional Chinese.
 - Added `ScaffoldPage.resizeToAvoidBottomInset` ([#444](https://github.com/bdlukaa/fluent_ui/issues/444))
@@ -30,6 +31,7 @@ Date format: DD/MM/YYYY
   - Added `.sorter`, which lets you set a custom sort function for the suggestions. `AutoSuggestBox.defaultItemSorter` is used by default
   - Overlay's height is now correctly calculated based on the screen size. It no longer overlaps the screen. `viewPadding` is also taken into consideration
   - Close the overlay if the textbox width is changes ([#456](https://github.com/bdlukaa/fluent_ui/issues/456))
+  - `.items` can be dynamically loaded ([#387](https://github.com/bdlukaa/fluent_ui/issues/387))
   - **BREAKING** `.items` is now a `List<AutoSuggestBoxItem>`:
   Before:
   ```dart
