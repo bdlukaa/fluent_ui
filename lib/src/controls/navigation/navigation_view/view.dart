@@ -529,7 +529,7 @@ class NavigationViewState extends State<NavigationView> {
           minimalPaneOpen: _minimalPaneOpen,
           pane: widget.pane,
           oldIndex: oldIndex,
-          child: _PaneItemKeys(keys: _itemKeys, child: paneResult),
+          child: PaneItemKeys(keys: _itemKeys, child: paneResult),
         ),
       );
     });

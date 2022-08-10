@@ -91,7 +91,7 @@ class _AcrylicState extends State<Acrylic> {
     super.initState();
     _NoiseTextureCacher._instance ??= _NoiseTextureCacher._new();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateProperties();
+      if (mounted) _updateProperties();
       setState(() {});
     });
   }
