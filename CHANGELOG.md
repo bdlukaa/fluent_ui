@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [4.0.0-pre.3] - [00/08/2022]
+## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
 - `NavigationView` mode fixes:
   - When top overflow menu is opened, `PaneItemHeader` no longer throws an unsupported error
