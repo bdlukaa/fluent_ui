@@ -17,10 +17,13 @@ import 'package:flutter/rendering.dart';
 /// by the device.
 ///
 /// See also:
-///   - [Checkbox]
-///   - [RadioButton]
-///   - [ToggleButton]
-///   - [RadioButton]
+///
+///  * [Checkbox], which let the user select multiple items from a collection of
+///    two or more items
+///  * [ToggleButton], which let the user toggle a option on or off
+///  * [RadioButton], which let the user select one item from a collection of two
+///    or more options
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/toggles>
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
@@ -35,23 +38,22 @@ class ToggleSwitch extends StatefulWidget {
     this.autofocus = false,
   }) : super(key: key);
 
-  /// Whether the [ToggleSwitch] is checked
+  /// Whether this toggle switch is checked
   final bool checked;
 
-  /// Called when the value of the [ToggleSwitch] should change.
+  /// Called when the value of the switch should change.
   ///
-  /// This callback passes a new value, but doesn't update its state
-  /// internally.
+  /// This callback updates a new value, but doesn't update its state internally.
   ///
-  /// If this callback is null, the ToggleSwitch is disabled.
+  /// If this callback is null, the switch is considered disabled.
   final ValueChanged<bool>? onChanged;
 
-  /// The thumb of this [ToggleSwitch]. If this is null, defaults to [DefaultToggleSwitchThumb]
+  /// The thumb of the switch
+  ///
+  /// If null, [DefaultToggleSwitchThumb] is used
   final Widget? thumb;
 
-  /// The style of this [ToggleSwitch].
-  ///
-  /// This style is mescled with [ThemeData.toggleSwitchThemeData]
+  /// The style of the toggle switch
   final ToggleSwitchThemeData? style;
 
   /// The content of the radio button.
@@ -62,7 +64,7 @@ class ToggleSwitch extends StatefulWidget {
   /// Usually a [Text] or [Icon] widget
   final Widget? content;
 
-  /// The `semanticLabel` of this [ToggleSwitch]
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -202,8 +204,10 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
-      height: 18,
-      width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
+      height: 18.0,
+      width: 12.0 +
+          (states.isHovering ? 2.0 : 0.0) +
+          (states.isPressing ? 5.0 : 0),
       decoration: checked
           ? style?.checkedThumbDecoration?.resolve(states)
           : style?.uncheckedThumbDecoration?.resolve(states),
@@ -337,16 +341,16 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: style.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: !states.isDisabled
+          color: states.isDisabled
               ? style.resources.textOnAccentFillColorDisabled
               : style.resources.textOnAccentFillColorPrimary,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: !states.isDisabled
-              ? style.resources.textFillColorSecondary
-              : style.resources.textFillColorDisabled,
+          color: states.isDisabled
+              ? style.resources.textFillColorDisabled
+              : style.resources.textFillColorSecondary,
         );
       }),
     );

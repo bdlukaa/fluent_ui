@@ -24,8 +24,7 @@ import 'package:flutter/rendering.dart';
 ///   * [Slider], which let the user lie within a range of values,
 ///     (for example, 10, 20, 30, ... 100).
 ///   * [Checkbox], which let the user select multiple options.
-///   * [ComboBox], which let the user select multiple options, when
-///     there's more than eight options.
+///   * [Combobox], which let the user select multiple options from a popup
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
