@@ -4,7 +4,7 @@ Date format: DD/MM/YYYY
 
 - `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
-- Use the correct color for `DefaultToggleSwitchThumb` ([#468](https://github.com/bdlukaa/fluent_ui/issues/463)) 
+- Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463)) 
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
 - Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
 
