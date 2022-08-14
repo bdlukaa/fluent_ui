@@ -19,6 +19,11 @@ class ComboboxPage extends ScrollablePage {
     'Green': Colors.green,
     'Red': Colors.red,
     'Yellow': Colors.yellow,
+    'Grey': Colors.grey,
+    'Magenta': Colors.magenta,
+    'Orange': Colors.orange,
+    'purple': Colors.purple,
+    'teal': Colors.teal,
   };
 
   @override
@@ -41,6 +46,7 @@ class ComboboxPage extends ScrollablePage {
                 SizedBox(
                   width: 200,
                   child: Combobox<String>(
+                    comboboxColor: colors[selectedColor],
                     value: selectedColor,
                     items: colors.entries.map((e) {
                       return ComboboxItem(

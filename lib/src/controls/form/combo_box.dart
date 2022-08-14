@@ -34,6 +34,7 @@ class _ComboboxMenuPainter extends CustomPainter {
     required this.resize,
     required this.getSelectedItemOffset,
     Color borderColor = Colors.black,
+    Color? backgroundColor,
   })  : _painter = BoxDecoration(
           // If you add an image here, you must provide a real
           // configuration in the paint() function and you must provide some sort
@@ -41,7 +42,7 @@ class _ComboboxMenuPainter extends CustomPainter {
           // color: color,
           borderRadius: const BorderRadius.all(kComboboxRadius),
           border: Border.all(width: 1.0, color: borderColor),
-          // color: backgroundColor,
+          color: backgroundColor,
         ).createBoxPainter(),
         super(repaint: resize);
 
@@ -292,6 +293,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
           // elevation: route.elevation.toDouble(),
           borderColor:
               FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
+          backgroundColor: widget.comboboxColor,
         ),
         child: ClipRRect(
           clipper: _ComboboxResizeClipper(
@@ -808,6 +810,8 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 /// shows the currently selected item as well as an arrow that opens a menu for
 /// selecting another item.
 ///
+/// ![Combobox Popup preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-list-item-state.png)
+///
 /// The type `T` is the type of the [value] that each combobox item represents.
 /// All the entries in a given menu must represent values with consistent types.
 /// Typically, an enum is used. Each [ComboboxItem] in [items] must be
@@ -829,6 +833,7 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 /// See also:
 ///
 ///  * [ComboboxItem], the class used to represent the [items].
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box>
 class Combobox<T> extends StatefulWidget {
   /// Creates a combobox button.
   ///
@@ -851,8 +856,7 @@ class Combobox<T> extends StatefulWidget {
   /// The [autofocus] argument must not be null.
   ///
   /// The [comboboxColor] argument specifies the background color of the
-  /// combobox when it is open. If it is null, the current theme's
-  /// [ThemeData.canvasColor] will be used instead.
+  /// combobox when it is open. If it is null, the default [Acrylic] color is used.
   Combobox({
     Key? key,
     required this.items,
@@ -874,8 +878,6 @@ class Combobox<T> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.comboboxColor,
-    // When adding new arguments, consider adding similar arguments to
-    // ComboboxFormField.
   })  : assert(
           items == null ||
               items.isEmpty ||
@@ -924,7 +926,6 @@ class Combobox<T> extends StatefulWidget {
   /// this widget is displayed as a placeholder for the combobox button's value.
   final Widget? disabledHint;
 
-  /// {@template fluent_ui.comboboxButton.onChanged}
   /// Called when the user selects an item.
   ///
   /// If the [onChanged] callback is null or the list of [Combobox.items]
@@ -933,7 +934,6 @@ class Combobox<T> extends StatefulWidget {
   /// will display the [Combobox.disabledHint] widget if it is non-null.
   /// If [Combobox.disabledHint] is also null but [Combobox.placeholder] is
   /// non-null, [Combobox.placeholder] will instead be displayed.
-  /// {@endtemplate}
   final ValueChanged<T?>? onChanged;
 
   /// Called when the combobox button is tapped.
@@ -1044,8 +1044,7 @@ class Combobox<T> extends StatefulWidget {
   /// ```
   /// {@end-tool}
   ///
-  /// Defaults to the [TextTheme.subtitle1] value of the current
-  /// [ThemeData.textTheme] of the current [Theme].
+  /// Defaults to the [Typography.body] value of the closest [ThemeData]
   final TextStyle? style;
 
   /// The widget to use for the comobo box button's icon.
@@ -1097,8 +1096,7 @@ class Combobox<T> extends StatefulWidget {
 
   /// The background color of the combobox.
   ///
-  /// If it is not provided, the theme's [ThemeData.canvasColor] will be used
-  /// instead.
+  /// If it is not provided, the default [Acrylic] color is used.
   final Color? comboboxColor;
 
   @override
