@@ -269,12 +269,15 @@ class _TabViewState extends State<TabView> {
           return preferredTabWidth;
       }
     }();
+    if (minWidth == null) {
+      return KeyedSubtree(
+        key: ValueKey<Tab>(tab),
+        child: child,
+      );
+    }
     return AnimatedContainer(
       key: ValueKey<Tab>(tab),
-      constraints: BoxConstraints(
-        maxWidth: minWidth ?? double.infinity,
-        minWidth: minWidth ?? 0.0,
-      ),
+      constraints: BoxConstraints(maxWidth: minWidth, minWidth: minWidth),
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,
       child: child,
