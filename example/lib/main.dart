@@ -250,6 +250,18 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Icons'),
     ),
   ];
+  final List<NavigationPaneItem> footerItems = [
+    PaneItemSeparator(),
+    PaneItem(
+      icon: const Icon(FluentIcons.settings),
+      title: const Text('Settings'),
+    ),
+    _LinkPaneItemAction(
+      icon: const Icon(FluentIcons.open_source),
+      title: const Text('Source code'),
+      link: 'https://github.com/bdlukaa/fluent_ui',
+    ),
+  ];
   late List<NavigationPaneItem> items = originalItems;
 
   final content = <Page>[
@@ -295,7 +307,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         if (searchValue.isEmpty) {
           items = originalItems;
         } else {
-          items = originalItems
+          items = [...originalItems, ...footerItems]
               .whereType<PaneItem>()
               .where((item) {
                 assert(item.title is Text);
@@ -339,23 +351,20 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           );
         }(),
-        actions: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ToggleSwitch(
-              content: const Text('Dark Mode'),
-              checked: FluentTheme.of(context).brightness.isDark,
-              onChanged: (v) {
-                if (v) {
-                  appTheme.mode = ThemeMode.dark;
-                } else {
-                  appTheme.mode = ThemeMode.light;
-                }
-              },
-            ),
-            if (!kIsWeb) const WindowButtons(),
-          ],
-        ),
+        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          ToggleSwitch(
+            content: const Text('Dark Mode'),
+            checked: FluentTheme.of(context).brightness.isDark,
+            onChanged: (v) {
+              if (v) {
+                appTheme.mode = ThemeMode.dark;
+              } else {
+                appTheme.mode = ThemeMode.light;
+              }
+            },
+          ),
+          if (!kIsWeb) const WindowButtons(),
+        ]),
       ),
       pane: NavigationPane(
         selected: () {
@@ -363,7 +372,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           if (searchValue.isEmpty) return index;
 
           final indexOnScreen = items.indexOf(
-            originalItems.whereType<PaneItem>().elementAt(index),
+            [...originalItems, ...footerItems]
+                .whereType<PaneItem>()
+                .elementAt(index),
           );
           if (indexOnScreen.isNegative) return null;
           return indexOnScreen;
@@ -371,7 +382,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         onChanged: (i) {
           // If searching, the values will have different indexes
           if (searchValue.isNotEmpty) {
-            final equivalentIndex = originalItems
+            final equivalentIndex = [...originalItems, ...footerItems]
                 .whereType<PaneItem>()
                 .toList()
                 .indexOf(items[i] as PaneItem);
@@ -408,18 +419,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           focusNode: searchFocusNode,
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
-        footerItems: [
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.settings),
-            title: const Text('Settings'),
-          ),
-          _LinkPaneItemAction(
-            icon: const Icon(FluentIcons.open_source),
-            title: const Text('Source code'),
-            link: 'https://github.com/bdlukaa/fluent_ui',
-          ),
-        ],
+        footerItems: searchValue.isNotEmpty ? [] : footerItems,
       ),
       content: NavigationBody(
         index: index,
