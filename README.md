@@ -532,7 +532,7 @@ NavigationBody(
   index: _currentIndex,
   children: [
     const ScaffoldPage(
-      topBar: PageHeader(header: Text('Your Songs'))
+      header: PageHeader(title: Text('Your Songs'))
     )
   ],
 )
