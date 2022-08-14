@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- `DisableAcrylic` now fully disable transparency ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
 - `NavigationView` mode fixes:

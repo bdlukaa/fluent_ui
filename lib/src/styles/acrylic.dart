@@ -375,10 +375,10 @@ class _AcrylicGuts extends StatelessWidget {
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: CustomPaint(
         painter: _AcrylicPainter(
-          tintColor: tint,
+          tintColor: disabled ? tint.withOpacity(1.0) : tint,
           luminosityColor: AcrylicHelper.getLuminosityColor(
             tint,
-            properties.luminosityAlpha,
+            disabled ? 1.0 : properties.luminosityAlpha,
           ),
         ),
         child: disabled
