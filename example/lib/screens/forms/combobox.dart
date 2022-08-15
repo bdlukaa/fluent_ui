@@ -138,19 +138,23 @@ Combobox<String>(
           ),
         ]),
         codeSnippet: '''
-// Green by default
-Color selectedColor = 'Green';
+List<String> cats=[...];
 
 Combobox<String>(
-  value: selectedColor,
-  items: colors.entries.map((e) {
-    return ComboboxItem(
-      child: Text(e.key),
-      value: e.key,
-    );
-  }).toList(),
-  onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
-)''',
+                    value: selectedCat,
+                    items: cats.map<ComboboxItem<String>>((e) {
+                      return ComboboxItem<String>(
+                        child: Text(e),
+                        value: e,
+                      );
+                    }).toList(),
+                    onChanged: disabled
+                        ? null
+                        : (color) {
+                            setState(() => selectedCat = color);
+                          },
+                    placeholder: const Text('Select a cat breed'),
+                  ),''',
       ),
     ];
   }
