@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_highlighter/themes/github.dart';
 
@@ -46,7 +47,18 @@ class _CardHighlightState extends State<CardHighlight> {
         headerShape: (open) => const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
         ),
-        header: const Text('Source code'),
+        header: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Source code'),
+            Button(
+              child: const Text('Copy'),
+              onPressed: () => Clipboard.setData(
+                ClipboardData(text: widget.codeSnippet),
+              ),
+            ),
+          ],
+        ),
         content: HighlightView(
           widget.codeSnippet,
           language: 'dart',
