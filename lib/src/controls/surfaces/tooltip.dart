@@ -362,9 +362,10 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     _showTooltip();
   }
 
-  void _handleMouseExit({bool immediately = true}) {
+  void _handleMouseExit({bool immediately = false}) {
     // If the tip is currently covered, we can just remove it without waiting.
     _dismissTooltip(immediately: _isConcealed || immediately);
+    print('mouse exit');
   }
 
   void _createNewEntry() {
@@ -392,8 +393,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         height: height,
         padding: padding,
         margin: margin,
-        onEnter: _mouseIsConnected ? (_) => _handleMouseEnter() : null,
-        onExit: _mouseIsConnected ? (_) => _handleMouseExit() : null,
         decoration: decoration,
         textStyle: textStyle,
         animation: CurvedAnimation(
@@ -459,11 +458,11 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _removeEntry();
     GestureBinding.instance.pointerRouter
         .removeGlobalRoute(_handlePointerEvent);
     RendererBinding.instance.mouseTracker
         .removeListener(_handleMouseTrackerChange);
-    _removeEntry();
     _controller.dispose();
     super.dispose();
   }
@@ -856,8 +855,6 @@ class _TooltipOverlay extends StatelessWidget {
     required this.verticalOffset,
     required this.preferBelow,
     this.displayHorizontally = false,
-    this.onEnter,
-    this.onExit,
   }) : super(key: key);
 
   final InlineSpan richMessage;
@@ -871,41 +868,33 @@ class _TooltipOverlay extends StatelessWidget {
   final double verticalOffset;
   final bool preferBelow;
   final bool displayHorizontally;
-  final PointerEnterEventListener? onEnter;
-  final PointerExitEventListener? onExit;
 
   @override
   Widget build(BuildContext context) {
     Widget result = IgnorePointer(
-        child: FadeTransition(
-      opacity: animation,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: height),
-        child: DefaultTextStyle(
-          style: FluentTheme.of(context).typography.body!,
-          child: Container(
-            decoration: decoration,
-            padding: padding,
-            margin: margin,
-            child: Center(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: Text.rich(
-                richMessage,
-                style: textStyle,
+      child: FadeTransition(
+        opacity: animation,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height),
+          child: DefaultTextStyle(
+            style: FluentTheme.of(context).typography.body!,
+            child: Container(
+              decoration: decoration,
+              padding: padding,
+              margin: margin,
+              child: Center(
+                widthFactor: 1.0,
+                heightFactor: 1.0,
+                child: Text.rich(
+                  richMessage,
+                  style: textStyle,
+                ),
               ),
             ),
           ),
         ),
       ),
-    ));
-    if (onEnter != null || onExit != null) {
-      result = MouseRegion(
-        onEnter: onEnter,
-        onExit: onExit,
-        child: result,
-      );
-    }
+    );
     return Positioned.fill(
       child: CustomSingleChildLayout(
         delegate: _TooltipPositionDelegate(
