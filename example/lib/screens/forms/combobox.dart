@@ -22,8 +22,8 @@ class ComboboxPage extends ScrollablePage {
     'Grey': Colors.grey,
     'Magenta': Colors.magenta,
     'Orange': Colors.orange,
-    'purple': Colors.purple,
-    'teal': Colors.teal,
+    'Purple': Colors.purple,
+    'Teal': Colors.teal,
   };
 
   @override
@@ -43,23 +43,21 @@ class ComboboxPage extends ScrollablePage {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 200,
-                  child: Combobox<String>(
-                    comboboxColor: colors[selectedColor],
-                    value: selectedColor,
-                    items: colors.entries.map((e) {
-                      return ComboboxItem(
-                        child: Text(e.key),
-                        value: e.key,
-                      );
-                    }).toList(),
-                    onChanged: disabled
-                        ? null
-                        : (color) {
-                            setState(() => selectedColor = color);
-                          },
-                  ),
+                Combobox<String>(
+                  isExpanded: false,
+                  comboboxColor: colors[selectedColor],
+                  value: selectedColor,
+                  items: colors.entries.map((e) {
+                    return ComboboxItem(
+                      child: Text(e.key),
+                      value: e.key,
+                    );
+                  }).toList(),
+                  onChanged: disabled
+                      ? null
+                      : (color) {
+                          setState(() => selectedColor = color);
+                        },
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8.0),
@@ -102,23 +100,21 @@ Combobox<String>(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 300,
-                  child: Combobox<String>(
-                    value: selectedCat,
-                    items: cats.map<ComboboxItem<String>>((e) {
-                      return ComboboxItem<String>(
-                        child: Text(e),
-                        value: e,
-                      );
-                    }).toList(),
-                    onChanged: disabled
-                        ? null
-                        : (color) {
-                            setState(() => selectedCat = color);
-                          },
-                    placeholder: const Text('Select a cat breed'),
-                  ),
+                Combobox<String>(
+                  isExpanded: false,
+                  value: selectedCat,
+                  items: cats.map<ComboboxItem<String>>((e) {
+                    return ComboboxItem<String>(
+                      child: Text(e),
+                      value: e,
+                    );
+                  }).toList(),
+                  onChanged: disabled
+                      ? null
+                      : (color) {
+                          setState(() => selectedCat = color);
+                        },
+                  placeholder: const Text('Select a cat breed'),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8.0),

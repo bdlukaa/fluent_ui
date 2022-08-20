@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'dart:ui' show window;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -571,8 +570,6 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     final double buttonBottom = math.min(buttonRect.bottom, availableHeight);
     final double selectedItemOffset = getItemOffset(index);
 
-    print(selectedItemOffset);
-
     // If the button is placed on the bottom or top of the screen, its top or
     // bottom may be less than [kComboboxItemHeightWithPadding] from the edge of the screen.
     // In this case, we want to change the menu limits to align with the top
@@ -627,11 +624,10 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     if (preferredMenuHeight > computedMaxHeight) {
       // The offset should be zero if the selected item is in view at the beginning
       // of the menu. Otherwise, the scroll offset should center the item if possible.
-      scrollOffset = math.max(0.0, selectedItemOffset - buttonTop - menuTop);
+      scrollOffset = math.max(0.0, selectedItemOffset - (buttonTop - menuTop));
       // If the selected item's scroll offset is greater than the maximum scroll offset,
       // set it instead to the maximum allowed scroll offset.
       scrollOffset = math.min(scrollOffset, preferredMenuHeight - menuHeight);
-      // scrollOffset = getItemOffset(selectedIndex);
     }
 
     assert((menuBottom - menuTop - menuHeight).abs() < precisionErrorTolerance);
@@ -844,10 +840,10 @@ class Combobox<T> extends StatefulWidget {
     this.onTap,
     this.elevation = 8,
     this.style,
-    this.icon,
+    this.icon = const Icon(FluentIcons.chevron_down),
     this.iconDisabledColor,
     this.iconEnabledColor,
-    this.iconSize = 10.0,
+    this.iconSize = 8.0,
     this.isExpanded = false,
     this.focusColor,
     this.focusNode,
@@ -1024,7 +1020,7 @@ class Combobox<T> extends StatefulWidget {
   /// The widget to use for the comobo box button's icon.
   ///
   /// Defaults to an [Icon] with the [FluentIcons.chevron_down] glyph.
-  final Widget? icon;
+  final Widget icon;
 
   /// The color of any [Icon] descendant of [icon] if this button is disabled,
   /// i.e. if [onChanged] is null.
@@ -1036,7 +1032,7 @@ class Combobox<T> extends StatefulWidget {
 
   /// The size to use for the checkbox button's down arrow icon button.
   ///
-  /// Defaults to 24.0.
+  /// Defaults to 8.0.
   final double iconSize;
 
   /// Set the combobox's inner contents to horizontally fill its parent.
@@ -1191,25 +1187,14 @@ class _ComboboxState<T> extends State<Combobox<T>> {
   }
 
   Color get _iconColor {
-    // These colors are not defined in the Material Design spec.
     if (_enabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
 
-      switch (FluentTheme.of(context).brightness) {
-        case Brightness.light:
-          return Colors.grey[190];
-        case Brightness.dark:
-          return Colors.white.withOpacity(0.7);
-      }
+      return FluentTheme.of(context).resources.textFillColorTertiary;
     } else {
       if (widget.iconDisabledColor != null) return widget.iconDisabledColor!;
 
-      switch (FluentTheme.of(context).brightness) {
-        case Brightness.light:
-          return Colors.grey[150];
-        case Brightness.dark:
-          return Colors.white.withOpacity(0.10);
-      }
+      return FluentTheme.of(context).resources.textFillColorDisabled;
     }
   }
 
@@ -1233,6 +1218,11 @@ class _ComboboxState<T> extends State<Combobox<T>> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+
+    final theme = FluentTheme.of(context);
+
     final Orientation newOrientation = _getOrientation(context);
     _lastOrientation ??= newOrientation;
     if (newOrientation != _lastOrientation) {
@@ -1261,9 +1251,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
 
       placeholderIndex = items.length;
       items.add(DefaultTextStyle(
-        style: _textStyle!.copyWith(
-          color: FluentTheme.of(context).disabledColor,
-        ),
+        style: _textStyle!.copyWith(color: theme.disabledColor),
         child: IgnorePointer(
           ignoringSemantics: false,
           child: displayedHint,
@@ -1281,6 +1269,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     } else {
       innerItemsWidget = _ContainerWithoutPadding(
         child: IndexedStack(
+          sizing: StackFit.passthrough,
           index: _selectedIndex ?? placeholderIndex,
           alignment: AlignmentDirectional.centerStart,
           children: items.map((Widget item) {
@@ -1290,12 +1279,10 @@ class _ComboboxState<T> extends State<Combobox<T>> {
       );
     }
 
-    const Icon defaultIcon = Icon(FluentIcons.chevron_down);
-
     Widget result = DefaultTextStyle(
       style: _enabled
           ? _textStyle!
-          : _textStyle!.copyWith(color: FluentTheme.of(context).disabledColor),
+          : _textStyle!.copyWith(color: theme.disabledColor),
       child: Container(
         padding: padding.resolve(Directionality.of(context)),
         child: Row(
@@ -1306,9 +1293,12 @@ class _ComboboxState<T> extends State<Combobox<T>> {
               Expanded(child: innerItemsWidget)
             else
               innerItemsWidget,
-            IconTheme.merge(
-              data: IconThemeData(color: _iconColor, size: widget.iconSize),
-              child: widget.icon ?? defaultIcon,
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8.0),
+              child: IconTheme.merge(
+                data: IconThemeData(color: _iconColor, size: widget.iconSize),
+                child: widget.icon,
+              ),
             ),
           ],
         ),
