@@ -23,6 +23,9 @@ enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed because the user
   /// chose the suggestion
   suggestionChosen,
+
+  /// Whether the text in an [AutoSuggestBox] was cleared by the user
+  cleared,
 }
 
 /// An item used in [AutoSuggestBox]
@@ -545,6 +548,10 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
             icon: const Icon(FluentIcons.chrome_close),
             onPressed: () {
               controller.clear();
+              widget.onChanged?.call(
+                controller.text,
+                TextChangedReason.cleared,
+              );
               focusNode.unfocus();
             },
           ),
