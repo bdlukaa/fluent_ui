@@ -85,7 +85,7 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
 
     controller.selection = TextSelection(
       baseOffset: 0,
-      extentOffset: controller.text.length - 1,
+      extentOffset: controller.text.length,
       affinity: TextAffinity.downstream,
     );
   }
@@ -95,117 +95,37 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
 
-    final theme = FluentTheme.of(context);
+    return Focus(
+      onKeyEvent: (node, event) {
+        if (event is! KeyDownEvent) {
+          return KeyEventResult.ignored;
+        }
 
-    // The width of the button and the menu are defined by the widest
-    // item and the width of the placeholder.
-    // We should explicitly type the items list to be a list of <Widget>,
-    // otherwise, no explicit type adding items maybe trigger a crash/failure
-    // when placeholder and selectedItemBuilder are provided.
-    final List<Widget> items = widget.selectedItemBuilder == null
-        ? (widget.items != null ? List<Widget>.from(widget.items!) : <Widget>[])
-        : List<Widget>.from(widget.selectedItemBuilder!(context));
-
-    int? placeholderIndex;
-    if (widget.placeholder != null ||
-        (!isEnabled && widget.disabledHint != null)) {
-      Widget displayedHint = isEnabled
-          ? widget.placeholder!
-          : widget.disabledHint ?? widget.placeholder!;
-      if (widget.selectedItemBuilder == null) {
-        displayedHint = _ComboboxItemContainer(child: displayedHint);
-      }
-
-      placeholderIndex = items.length;
-      items.add(DefaultTextStyle(
-        style: textStyle!.copyWith(color: theme.disabledColor),
-        child: IgnorePointer(
-          ignoringSemantics: false,
-          child: displayedHint,
-        ),
-      ));
-    }
-
-    const EdgeInsetsGeometry padding = _kAlignedButtonPadding;
-
-    // If value is null (then selectedIndex is null) then we
-    // display the placeholder or nothing at all.
-    final Widget innerItemsWidget;
-    if (items.isEmpty) {
-      innerItemsWidget = Container();
-    } else {
-      innerItemsWidget = _ContainerWithoutPadding(
-        child: IndexedStack(
-          sizing: StackFit.passthrough,
-          index: selectedIndex ?? placeholderIndex,
-          alignment: AlignmentDirectional.centerStart,
-          children: items.map((Widget item) {
-            return Column(mainAxisSize: MainAxisSize.min, children: [item]);
-          }).toList(),
-        ),
-      );
-    }
-
-    Widget result = DefaultTextStyle(
-      style: isEnabled
-          ? textStyle!
-          : textStyle!.copyWith(color: theme.disabledColor),
-      child: Container(
-        padding: padding.resolve(Directionality.of(context)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.isExpanded)
-              Expanded(child: innerItemsWidget)
-            else
-              innerItemsWidget,
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8.0),
-              child: IconTheme.merge(
-                data: IconThemeData(color: iconColor, size: widget.iconSize),
-                child: widget.icon,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    return TextBox(
-      focusNode: focusNode,
-      autofocus: widget.autofocus,
-      controller: controller,
-      expands: widget.isExpanded,
-      enabled: isEnabled,
-      unfocusedColor: Colors.transparent,
-      suffix: IconButton(
-        icon: IconTheme.merge(
-          data: IconThemeData(color: iconColor, size: widget.iconSize),
-          child: widget.icon,
-        ),
-        onPressed: openPopup,
-      ),
-      onSubmitted: (text) {
-        final newText = editable.onFieldSubmitted(text);
-        _setText(newText);
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+            event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          openPopup();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
       },
-      onTap: () {
-        _setText(controller.text);
-      },
-    );
-
-    return Semantics(
-      button: true,
-      child: Actions(
-        actions: _actionMap,
-        child: Button(
-          onPressed: isEnabled ? openPopup : null,
-          autofocus: widget.autofocus,
-          focusNode: focusNode,
-          style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
-          child: result,
+      child: TextBox(
+        focusNode: focusNode,
+        autofocus: widget.autofocus,
+        controller: controller,
+        expands: widget.isExpanded,
+        enabled: isEnabled,
+        unfocusedColor: Colors.transparent,
+        suffix: IconButton(
+          icon: IconTheme.merge(
+            data: IconThemeData(color: iconColor, size: widget.iconSize),
+            child: widget.icon,
+          ),
+          onPressed: openPopup,
         ),
+        onSubmitted: (text) {
+          final newText = editable.onFieldSubmitted(text);
+          _setText(newText);
+        },
       ),
     );
   }
