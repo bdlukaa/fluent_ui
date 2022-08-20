@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 
 /// A tooltip is a short description that is linked to another
 /// control or object. Tooltips help users understand unfamiliar
@@ -365,7 +364,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   void _handleMouseExit({bool immediately = false}) {
     // If the tip is currently covered, we can just remove it without waiting.
     _dismissTooltip(immediately: _isConcealed || immediately);
-    print('mouse exit');
   }
 
   void _createNewEntry() {

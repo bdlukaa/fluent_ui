@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-typedef PageState = Map<String, dynamic>;
-
 abstract class Page {
   Page() {
     _pageIndex++;
