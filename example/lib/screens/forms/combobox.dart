@@ -7,6 +7,7 @@ import 'auto_suggest_box.dart';
 class ComboboxPage extends ScrollablePage {
   String? selectedColor = 'Green';
   String? selectedCat;
+  double fontSize = 20.0;
   bool disabled = false;
 
   @override
@@ -25,6 +26,23 @@ class ComboboxPage extends ScrollablePage {
     'Purple': Colors.purple,
     'Teal': Colors.teal,
   };
+
+  static const fontSizes = <double>[
+    8,
+    9,
+    10,
+    11,
+    12,
+    14,
+    16,
+    18,
+    20,
+    24,
+    28,
+    36,
+    48,
+    72,
+  ];
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
@@ -134,7 +152,109 @@ Combobox<String>(
           ),
         ]),
         codeSnippet: '''
-List<String> cats=[...];
+List<String> cats= [...];
+
+Combobox<String>(
+  value: selectedCat,
+  items: cats.map<ComboboxItem<String>>((e) {
+    return ComboboxItem<String>(
+      child: Text(e),
+      value: e,
+    );
+  }).toList(),
+  onChanged: disabled
+      ? null
+      : (color) {
+          setState(() => selectedCat = color);
+        },
+  placeholder: const Text('Select a cat breed'),
+),''',
+      ),
+      subtitle(
+        content: const Text('An editable Combobox'),
+      ),
+      CardHighlight(
+        child: Row(children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: EditableCombobox<int>(
+                    isExpanded: false,
+                    value: fontSize.toInt(),
+                    items: fontSizes.map<ComboboxItem<int>>((fontSize) {
+                      return ComboboxItem<int>(
+                        child: Text('${fontSize.toInt()}'),
+                        value: fontSize.toInt(),
+                      );
+                    }).toList(),
+                    onChanged: disabled
+                        ? null
+                        : (size) {
+                            setState(
+                                () => fontSize = (size ?? fontSize).toDouble());
+                          },
+                    placeholder: const Text('Font size'),
+                    onFieldSubmitted: (text) {
+                      try {
+                        final newSize = int.parse(text);
+
+                        if (newSize < 8 || newSize > 100) {
+                          throw UnsupportedError(
+                            'The font size must be a number between 8 and 100.',
+                          );
+                        }
+
+                        setState(() => fontSize = newSize.toDouble());
+                      } catch (e) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ContentDialog(
+                              content: const Text(
+                                'The font size must be a number between 8 and 100.',
+                              ),
+                              actions: [
+                                FilledButton(
+                                  child: const Text('Close'),
+                                  onPressed: Navigator.of(context).pop,
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      return '${fontSize.toInt()}';
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 8.0),
+                  constraints: const BoxConstraints(minHeight: 50.0),
+                  child: Text(
+                    'You can set the font size for this text',
+                    style: TextStyle(fontSize: fontSize),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ToggleSwitch(
+            checked: disabled,
+            onChanged: (v) {
+              setState(() => disabled = v);
+            },
+            content: const Text('Disabled'),
+          ),
+        ]),
+        codeSnippet: '''
+  static const fontSizes = <double>[
+    8,
+    9,
+    ...,
+  ];
 
 Combobox<String>(
                     value: selectedCat,

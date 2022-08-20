@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui' show window;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'pickers/pickers.dart';
+
+part 'editable_combo_box.dart';
 
 const Duration _kComboboxMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemBottomPadding = 6.0;
@@ -829,7 +830,7 @@ class Combobox<T> extends StatefulWidget {
   ///
   /// The [comboboxColor] argument specifies the background color of the
   /// combobox when it is open. If it is null, the default [Acrylic] color is used.
-  Combobox({
+  const Combobox({
     Key? key,
     required this.items,
     this.selectedItemBuilder,
@@ -849,20 +850,7 @@ class Combobox<T> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.comboboxColor,
-  })  : assert(
-          items == null ||
-              items.isEmpty ||
-              value == null ||
-              items.where((ComboboxItem<T> item) {
-                    return item.value == value;
-                  }).length ==
-                  1,
-          "There should be exactly one item with [Combobox]'s value: "
-          '$value. \n'
-          'Either zero or 2 or more [ComboboxItem]s were detected '
-          'with the same value',
-        ),
-        super(key: key);
+  }) : super(key: key);
 
   /// The list of items the user can select.
   ///
@@ -921,8 +909,6 @@ class Combobox<T> extends StatefulWidget {
   /// from the list corresponds to the [ComboboxItem] of the same index
   /// in [items].
   ///
-  /// {@tool dartpad --template=stateful_widget_scaffold}
-  ///
   /// This sample shows a `Combobox` with a button with [Text] that
   /// corresponds to but is unique from [ComboboxItem].
   ///
@@ -952,7 +938,6 @@ class Combobox<T> extends StatefulWidget {
   ///   );
   /// }
   /// ```
-  /// {@end-tool}
   ///
   /// If this callback is null, the [ComboboxItem] from [items]
   /// that matches [value] will be displayed.
@@ -971,8 +956,6 @@ class Combobox<T> extends StatefulWidget {
   ///
   /// To use a separate text style for selected item when it's displayed within
   /// the combobox button, consider using [selectedItemBuilder].
-  ///
-  /// {@tool dartpad --template=stateful_widget_scaffold}
   ///
   /// This sample shows a `Combobox` with a combobox button text style
   /// that is different than its menu items.
@@ -1012,7 +995,6 @@ class Combobox<T> extends StatefulWidget {
   ///   );
   /// }
   /// ```
-  /// {@end-tool}
   ///
   /// Defaults to the [Typography.body] value of the closest [ThemeData]
   final TextStyle? style;
@@ -1057,13 +1039,14 @@ class Combobox<T> extends StatefulWidget {
   final Color? comboboxColor;
 
   @override
-  _ComboboxState<T> createState() => _ComboboxState<T>();
+  State<Combobox<T>> createState() => ComboboxState<T>();
 }
 
-class _ComboboxState<T> extends State<Combobox<T>> {
+class ComboboxState<T> extends State<Combobox<T>> {
   int? _selectedIndex;
+  int? get selectedIndex => _selectedIndex;
+
   _ComboboxRoute<T>? _comboboxRoute;
-  Orientation? _lastOrientation;
   FocusNode? _internalNode;
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
   bool _hasPrimaryFocus = false;
@@ -1083,10 +1066,10 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     }
     _actionMap = <Type, Action<Intent>>{
       ActivateIntent: CallbackAction<ActivateIntent>(
-        onInvoke: (ActivateIntent intent) => _handleTap(),
+        onInvoke: (ActivateIntent intent) => openPopup(),
       ),
       ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-        onInvoke: (ButtonActivateIntent intent) => _handleTap(),
+        onInvoke: (ButtonActivateIntent intent) => openPopup(),
       ),
     };
     focusNode!.addListener(_handleFocusChanged);
@@ -1094,16 +1077,15 @@ class _ComboboxState<T> extends State<Combobox<T>> {
 
   @override
   void dispose() {
-    _removeComboboxRoute();
+    closePopup();
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     super.dispose();
   }
 
-  void _removeComboboxRoute() {
+  void closePopup() {
     _comboboxRoute?._dismiss();
     _comboboxRoute = null;
-    _lastOrientation = null;
   }
 
   void _handleFocusChanged() {
@@ -1134,22 +1116,22 @@ class _ComboboxState<T> extends State<Combobox<T>> {
       return;
     }
 
-    assert(widget.items!
-            .where((ComboboxItem<T> item) => item.value == widget.value)
-            .length ==
-        1);
-    for (int itemIndex = 0; itemIndex < widget.items!.length; itemIndex++) {
-      if (widget.items![itemIndex].value == widget.value) {
-        _selectedIndex = itemIndex;
-        return;
+    // only update the selected value if it exists
+    if (widget.items!
+        .any((ComboboxItem<T> item) => item.value == widget.value)) {
+      for (int itemIndex = 0; itemIndex < widget.items!.length; itemIndex++) {
+        if (widget.items![itemIndex].value == widget.value) {
+          _selectedIndex = itemIndex;
+          return;
+        }
       }
     }
   }
 
-  TextStyle? get _textStyle =>
+  TextStyle? get textStyle =>
       widget.style ?? FluentTheme.of(context).typography.body;
 
-  void _handleTap() {
+  void openPopup() {
     final TextDirection? textDirection = Directionality.maybeOf(context);
     const EdgeInsetsGeometry menuMargin = _kAlignedMenuMargin;
 
@@ -1168,7 +1150,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
       elevation: widget.elevation,
       capturedThemes:
           InheritedTheme.capture(from: context, to: navigator.context),
-      style: _textStyle!,
+      style: textStyle!,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       comboboxColor: widget.comboboxColor,
     );
@@ -1176,9 +1158,9 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     navigator
         .push(_comboboxRoute!)
         .then<void>((_ComboboxRouteResult<T>? newValue) {
-      _removeComboboxRoute();
+      closePopup();
       if (!mounted || newValue == null) return;
-      if (widget.onChanged != null) widget.onChanged!(newValue.result);
+      onChanged(newValue.result);
     });
 
     if (widget.onTap != null) {
@@ -1186,8 +1168,12 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     }
   }
 
-  Color get _iconColor {
-    if (_enabled) {
+  void onChanged(T? newValue) {
+    if (widget.onChanged != null) widget.onChanged!(newValue);
+  }
+
+  Color get iconColor {
+    if (isEnabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
 
       return FluentTheme.of(context).resources.textFillColorTertiary;
@@ -1198,23 +1184,10 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     }
   }
 
-  bool get _enabled =>
+  bool get isEnabled =>
       widget.items != null &&
       widget.items!.isNotEmpty &&
       widget.onChanged != null;
-
-  Orientation _getOrientation(BuildContext context) {
-    Orientation? result = MediaQuery.maybeOf(context)?.orientation;
-    if (result == null) {
-      // If there's no MediaQuery, then use the window aspect to determine
-      // orientation.
-      final Size size = window.physicalSize;
-      result = size.width > size.height
-          ? Orientation.landscape
-          : Orientation.portrait;
-    }
-    return result;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1222,13 +1195,6 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     assert(debugCheckHasFluentLocalizations(context));
 
     final theme = FluentTheme.of(context);
-
-    final Orientation newOrientation = _getOrientation(context);
-    _lastOrientation ??= newOrientation;
-    if (newOrientation != _lastOrientation) {
-      _removeComboboxRoute();
-      _lastOrientation = newOrientation;
-    }
 
     // The width of the button and the menu are defined by the widest
     // item and the width of the placeholder.
@@ -1241,8 +1207,8 @@ class _ComboboxState<T> extends State<Combobox<T>> {
 
     int? placeholderIndex;
     if (widget.placeholder != null ||
-        (!_enabled && widget.disabledHint != null)) {
-      Widget displayedHint = _enabled
+        (!isEnabled && widget.disabledHint != null)) {
+      Widget displayedHint = isEnabled
           ? widget.placeholder!
           : widget.disabledHint ?? widget.placeholder!;
       if (widget.selectedItemBuilder == null) {
@@ -1251,7 +1217,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
 
       placeholderIndex = items.length;
       items.add(DefaultTextStyle(
-        style: _textStyle!.copyWith(color: theme.disabledColor),
+        style: textStyle!.copyWith(color: theme.disabledColor),
         child: IgnorePointer(
           ignoringSemantics: false,
           child: displayedHint,
@@ -1280,9 +1246,9 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     }
 
     Widget result = DefaultTextStyle(
-      style: _enabled
-          ? _textStyle!
-          : _textStyle!.copyWith(color: theme.disabledColor),
+      style: isEnabled
+          ? textStyle!
+          : textStyle!.copyWith(color: theme.disabledColor),
       child: Container(
         padding: padding.resolve(Directionality.of(context)),
         child: Row(
@@ -1296,7 +1262,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 8.0),
               child: IconTheme.merge(
-                data: IconThemeData(color: _iconColor, size: widget.iconSize),
+                data: IconThemeData(color: iconColor, size: widget.iconSize),
                 child: widget.icon,
               ),
             ),
@@ -1310,7 +1276,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
       child: Actions(
         actions: _actionMap,
         child: Button(
-          onPressed: _enabled ? _handleTap : null,
+          onPressed: isEnabled ? openPopup : null,
           autofocus: widget.autofocus,
           focusNode: focusNode,
           style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
