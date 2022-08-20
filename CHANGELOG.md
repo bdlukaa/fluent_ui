@@ -7,6 +7,8 @@ Date format: DD/MM/YYYY
 - Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463)) 
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
 - Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
+- Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
+- Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
