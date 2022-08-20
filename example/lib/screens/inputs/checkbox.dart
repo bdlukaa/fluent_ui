@@ -3,13 +3,11 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class CheckboxPage extends ScrollablePage {
-  PageState state = <String, dynamic>{
-    'first_checked': false,
-    'first_disabled': false,
-    'second_state': false,
-    'second_disabled': false,
-    'icon_disabled': false,
-  };
+  bool firstChecked = false;
+  bool firstDisabled = false;
+  bool? secondChecked = false;
+  bool secondDisabled = false;
+  bool iconDisabled = false;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -26,22 +24,22 @@ class CheckboxPage extends ScrollablePage {
       CardHighlight(
         child: Row(children: [
           Checkbox(
-            checked: state['first_checked'],
-            onChanged: state['first_disabled']
+            checked: firstChecked,
+            onChanged: firstDisabled
                 ? null
                 : (v) {
                     setState(() {
-                      state['first_checked'] = v;
+                      firstChecked = v!;
                     });
                   },
             content: const Text('Two-state Checkbox'),
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['first_disabled'],
+            checked: firstDisabled,
             onChanged: (v) {
               setState(() {
-                state['first_disabled'] = v;
+                firstDisabled = v;
               });
             },
             content: const Text('Disabled'),
@@ -58,13 +56,13 @@ Checkbox(
       CardHighlight(
         child: Row(children: [
           Checkbox(
-            checked: state['second_state'],
+            checked: secondChecked,
             // checked: null,
-            onChanged: state['second_disabled']
+            onChanged: secondDisabled
                 ? null
                 : (v) {
                     setState(() {
-                      state['second_state'] = v == true
+                      secondChecked = v == true
                           ? true
                           : v == false
                               ? null
@@ -77,10 +75,10 @@ Checkbox(
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['second_disabled'],
+            checked: secondDisabled,
             onChanged: (v) {
               setState(() {
-                state['second_disabled'] = v;
+                secondDisabled = v;
               });
             },
             content: const Text('Disabled'),

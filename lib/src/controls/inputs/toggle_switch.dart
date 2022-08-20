@@ -2,6 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+typedef ToggleSwitchThumbBuilder = Widget Function(
+  BuildContext context,
+  Set<ButtonStates> states,
+);
+
 /// The toggle switch represents a physical switch that allows users to
 /// turn things on or off, like a light switch. Use toggle switch controls
 /// to present users with two mutually exclusive options (such as on/off),
@@ -32,8 +37,10 @@ class ToggleSwitch extends StatefulWidget {
     required this.onChanged,
     this.style,
     this.content,
+    this.leadingContent = false,
     this.semanticLabel,
     this.thumb,
+    this.thumbBuilder,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
@@ -50,8 +57,19 @@ class ToggleSwitch extends StatefulWidget {
 
   /// The thumb of the switch
   ///
-  /// If null, [DefaultToggleSwitchThumb] is used
+  /// [DefaultToggleSwitchThumb] is used by default
+  ///
+  /// See also:
+  ///   * [thumbBuilder], which builds the thumb based on the current state
+  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
   final Widget? thumb;
+
+  /// Build the thumb of the switch based on the current state
+  ///
+  /// See also:
+  ///   * [thumb], a static thumb
+  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
+  final ToggleSwitchThumbBuilder? thumbBuilder;
 
   /// The style of the toggle switch
   final ToggleSwitchThemeData? style;
@@ -63,6 +81,11 @@ class ToggleSwitch extends StatefulWidget {
   ///
   /// Usually a [Text] or [Icon] widget
   final Widget? content;
+
+  /// Whether to position [content] before the switch, if provided
+  ///
+  /// Defaults to `false`
+  final bool leadingContent;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
@@ -78,6 +101,8 @@ class ToggleSwitch extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(FlagProperty('leadingContent',
+          value: leadingContent, ifFalse: 'trailingContent'))
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
       ..add(
           FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
@@ -155,6 +180,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               ? style.checkedDecoration?.resolve(states)
               : style.uncheckedDecoration?.resolve(states),
           child: widget.thumb ??
+              widget.thumbBuilder?.call(context, states) ??
               DefaultToggleSwitchThumb(
                 checked: widget.checked,
                 style: style,
@@ -162,11 +188,20 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               ),
         );
         if (widget.content != null) {
-          child = Row(mainAxisSize: MainAxisSize.min, children: [
-            child,
-            const SizedBox(width: 10.0),
-            widget.content!,
-          ]);
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: widget.leadingContent
+                ? [
+                    widget.content!,
+                    const SizedBox(width: 10.0),
+                    child,
+                  ]
+                : [
+                    child,
+                    const SizedBox(width: 10.0),
+                    widget.content!,
+                  ],
+          );
         }
         return Semantics(
           checked: widget.checked,

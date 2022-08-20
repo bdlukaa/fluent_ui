@@ -4,9 +4,14 @@ Date format: DD/MM/YYYY
 
 - `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
-- Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463)) 
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
 - Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
+- `ToggleSwitch` updates:
+  - Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463)) 
+  - Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
+  - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
+- Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
+- `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

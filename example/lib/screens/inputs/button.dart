@@ -6,16 +6,14 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/card_highlight.dart';
 
 class ButtonPage extends ScrollablePage {
-  PageState state = <String, dynamic>{
-    'simple_disabled': false,
-    'filled_disabled': false,
-    'icon_disabled': false,
-    'toggle_state': false,
-    'toggle_disabled': false,
-    'split_button_disabled': false,
-    'radio_button_disabled': false,
-    'radio_button_selected': -1,
-  };
+  bool simpleDisabled = false;
+  bool filledDisabled = false;
+  bool iconDisabled = false;
+  bool toggleDisabled = false;
+  bool toggleState = false;
+  bool splitButtonDisabled = false;
+  bool radioButtonDisabled = false;
+  int radioButtonSelected = -1;
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -33,14 +31,14 @@ class ButtonPage extends ScrollablePage {
         child: Row(children: [
           Button(
             child: const Text('Standart Button'),
-            onPressed: state['simple_disabled'] ? null : () {},
+            onPressed: simpleDisabled ? null : () {},
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['simple_disabled'],
+            checked: simpleDisabled,
             onChanged: (v) {
               setState(() {
-                state['simple_disabled'] = v;
+                simpleDisabled = v;
               });
             },
             content: const Text('Disabled'),
@@ -56,14 +54,14 @@ class ButtonPage extends ScrollablePage {
         child: Row(children: [
           FilledButton(
             child: const Text('Filled Button'),
-            onPressed: state['filled_disabled'] ? null : () {},
+            onPressed: filledDisabled ? null : () {},
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['filled_disabled'],
+            checked: filledDisabled,
             onChanged: (v) {
               setState(() {
-                state['filled_disabled'] = v;
+                filledDisabled = v;
               });
             },
             content: const Text('Disabled'),
@@ -81,14 +79,14 @@ class ButtonPage extends ScrollablePage {
         child: Row(children: [
           IconButton(
             icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
-            onPressed: state['icon_disabled'] ? null : () {},
+            onPressed: iconDisabled ? null : () {},
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['icon_disabled'],
+            checked: iconDisabled,
             onChanged: (v) {
               setState(() {
-                state['icon_disabled'] = v;
+                iconDisabled = v;
               });
             },
             content: const Text('Disabled'),
@@ -107,21 +105,21 @@ class ButtonPage extends ScrollablePage {
         child: Row(children: [
           ToggleButton(
             child: const Text('Toggle Button'),
-            checked: state['toggle_state'],
-            onChanged: state['toggle_disabled']
+            checked: toggleState,
+            onChanged: toggleDisabled
                 ? null
                 : (v) {
                     setState(() {
-                      state['toggle_state'] = v;
+                      toggleState = v;
                     });
                   },
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['toggle_disabled'],
+            checked: toggleDisabled,
             onChanged: (v) {
               setState(() {
-                state['toggle_disabled'] = v;
+                toggleDisabled = v;
               });
             },
             content: const Text('Disabled'),
@@ -189,7 +187,7 @@ ToggleButton(
                 Button(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: state['split_button_disabled']
+                      color: splitButtonDisabled
                           ? FluentTheme.of(context).accentColor.darker
                           : FluentTheme.of(context).accentColor,
                       borderRadius: const BorderRadiusDirectional.horizontal(
@@ -199,23 +197,23 @@ ToggleButton(
                     height: 24,
                     width: 24,
                   ),
-                  onPressed: state['split_button_disabled'] ? null : () {},
+                  onPressed: splitButtonDisabled ? null : () {},
                 ),
                 IconButton(
                   icon: const SizedBox(
                     // height: splitButtonHeight,
                     child: Icon(FluentIcons.chevron_down, size: 10.0),
                   ),
-                  onPressed: state['split_button_disabled'] ? null : () {},
+                  onPressed: splitButtonDisabled ? null : () {},
                 ),
               ],
             ),
             const Spacer(),
             ToggleSwitch(
-              checked: state['split_button_disabled'],
+              checked: splitButtonDisabled,
               onChanged: (v) {
                 setState(() {
-                  state['split_button_disabled'] = v;
+                  splitButtonDisabled = v;
                 });
               },
               content: const Text('Disabled'),
@@ -253,13 +251,13 @@ ToggleButton(
                 return Padding(
                   padding: EdgeInsets.only(bottom: index == 2 ? 0.0 : 14.0),
                   child: RadioButton(
-                    checked: state['radio_button_selected'] == index,
-                    onChanged: state['radio_button_disabled']
+                    checked: radioButtonSelected == index,
+                    onChanged: radioButtonDisabled
                         ? null
                         : (v) {
                             if (v) {
                               setState(() {
-                                state['radio_button_selected'] = index;
+                                radioButtonSelected = index;
                               });
                             }
                           },
@@ -271,10 +269,10 @@ ToggleButton(
           ),
           const Spacer(),
           ToggleSwitch(
-            checked: state['radio_button_disabled'],
+            checked: radioButtonDisabled,
             onChanged: (v) {
               setState(() {
-                state['radio_button_disabled'] = v;
+                radioButtonDisabled = v;
               });
             },
             content: const Text('Disabled'),

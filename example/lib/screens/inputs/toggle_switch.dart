@@ -3,25 +3,21 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:example/widgets/card_highlight.dart';
 
 class ToggleSwitchPage extends ScrollablePage {
-  PageState state = <String, dynamic>{
-    'disabled': false,
-    'first_value': false,
-    'second_value': true,
-  };
+  bool disabled = false;
+  bool firstValue = false;
+  bool secondValue = true;
 
   @override
   Widget buildHeader(BuildContext context) {
     return PageHeader(
       title: const Text('ToggleSwitch'),
       commandBar: ToggleSwitch(
-        checked: isDisabled,
-        onChanged: (v) => setState(() => state['disabled'] = v),
+        checked: disabled,
+        onChanged: (v) => setState(() => disabled = v),
         content: const Text('Disabled'),
       ),
     );
   }
-
-  bool get isDisabled => state['disabled'];
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
@@ -34,13 +30,13 @@ class ToggleSwitchPage extends ScrollablePage {
         child: Align(
           alignment: Alignment.centerLeft,
           child: ToggleSwitch(
-            checked: state['first_value'],
-            onChanged: isDisabled
+            checked: firstValue,
+            onChanged: disabled
                 ? null
                 : (v) {
-                    setState(() => state['first_value'] = v);
+                    setState(() => firstValue = v);
                   },
-            content: Text(state['first_value'] ? 'On' : 'Off'),
+            content: Text(firstValue ? 'On' : 'Off'),
           ),
         ),
         codeSnippet: '''bool checked = false;
@@ -58,16 +54,16 @@ ToggleSwitch(
           InfoLabel(
             label: 'Header',
             child: ToggleSwitch(
-              checked: state['second_value'],
-              onChanged: isDisabled
+              checked: secondValue,
+              onChanged: disabled
                   ? null
                   : (v) {
-                      setState(() => state['second_value'] = v);
+                      setState(() => secondValue = v);
                     },
-              content: Text(state['second_value'] ? 'Working' : 'Do work'),
+              content: Text(secondValue ? 'Working' : 'Do work'),
             ),
           ),
-          if (state['second_value'])
+          if (secondValue)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: ProgressRing(),
