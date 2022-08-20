@@ -10,17 +10,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'pickers/pickers.dart';
 
 const Duration _kComboboxMenuDuration = Duration(milliseconds: 300);
-const double _kMenuItemHeight = kPickerHeight;
+const double _kMenuItemBottomPadding = 6.0;
+const double kComboboxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
 const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
-  top: 4.0,
-  bottom: 4.0,
   right: 8.0,
   left: 12.0,
 );
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
-const EdgeInsets _kListPadding = EdgeInsets.symmetric(vertical: 8.0);
-const double kMinInteractiveDimension = 48.0;
+const EdgeInsets _kListPadding = EdgeInsets.only(top: _kMenuItemBottomPadding);
 const kComboboxRadius = Radius.circular(4.0);
 
 /// A builder to customize combobox buttons.
@@ -55,13 +53,13 @@ class _ComboboxMenuPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double selectedItemOffset = getSelectedItemOffset();
     final Tween<double> top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, size.height - _kMenuItemHeight),
+      begin: selectedItemOffset.clamp(0.0, size.height - kComboboxItemHeight),
       end: 0.0,
     );
 
     final Tween<double> bottom = Tween<double>(
-      begin: (top.begin! + _kMenuItemHeight).clamp(
-        _kMenuItemHeight,
+      begin: (top.begin! + kComboboxItemHeight).clamp(
+        kComboboxItemHeight,
         size.height,
       ),
       end: size.height,
@@ -144,7 +142,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
 
   void _handleOnTap() {
     final ComboboxItem<T> comboboxMenuItem =
-        widget.route.items[widget.itemIndex].item!;
+        widget.route.items[widget.itemIndex];
 
     if (comboboxMenuItem.onTap != null) {
       comboboxMenuItem.onTap!();
@@ -215,7 +213,11 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
         child: child,
       );
     }
-    return child;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: _kMenuItemBottomPadding),
+      child: child,
+    );
   }
 }
 
@@ -324,7 +326,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                       padding: _kListPadding,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return _ComboboxItemContainer(
+                        Widget container = _ComboboxItemContainer(
                           child: _ComboboxItemButton<T>(
                             route: widget.route,
                             padding: widget.padding,
@@ -333,6 +335,7 @@ class _ComboboxMenuState<T> extends State<_ComboboxMenu<T>> {
                             itemIndex: index,
                           ),
                         );
+                        return container;
                       },
                     ),
                   ),
@@ -359,13 +362,13 @@ class _ComboboxResizeClipper extends CustomClipper<RRect> {
   RRect getClip(Size size) {
     final selectedItemOffset = getSelectedItemOffset();
     final Tween<double> top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, size.height - _kMenuItemHeight),
+      begin: selectedItemOffset.clamp(0.0, size.height - kComboboxItemHeight),
       end: 0.0,
     );
 
     final Tween<double> bottom = Tween<double>(
-      begin: (top.begin! + _kMenuItemHeight).clamp(
-        _kMenuItemHeight,
+      begin: (top.begin! + kComboboxItemHeight).clamp(
+        kComboboxItemHeight,
         size.height,
       ),
       end: size.height,
@@ -404,7 +407,7 @@ class _ComboboxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     // with which to dismiss the menu.
     //   -- https://material.io/design/components/menus.html#usage
     final double maxHeight =
-        math.max(0.0, constraints.maxHeight - 2 * _kMenuItemHeight);
+        math.max(0.0, constraints.maxHeight - 2 * kComboboxItemHeight);
     // The width of a menu should be at most the view width. This ensures that
     // the menu does not extend past the left and right edges of the screen.
     final double width = math.min(constraints.maxWidth, buttonRect.width);
@@ -490,19 +493,16 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     required this.style,
     required this.acrylicEnabled,
     this.barrierLabel,
-    this.itemHeight,
     this.comboboxColor,
-  }) : itemHeights = List<double>.filled(
-            items.length, itemHeight ?? kMinInteractiveDimension);
+  }) : itemHeights = List<double>.filled(items.length, kComboboxItemHeight);
 
-  final List<_MenuItem<T>> items;
+  final List<ComboboxItem<T>> items;
   final EdgeInsetsGeometry padding;
   final Rect buttonRect;
   final int selectedIndex;
   final int elevation;
   final CapturedThemes capturedThemes;
   final TextStyle style;
-  final double? itemHeight;
   final Color? comboboxColor;
   final bool acrylicEnabled;
 
@@ -527,7 +527,6 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
       final page = _ComboboxRoutePage<T>(
         route: this,
         constraints: constraints,
-        items: items,
         padding: padding,
         buttonRect: buttonRect,
         selectedIndex: selectedIndex,
@@ -564,7 +563,7 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
   // that's possible given availableHeight.
   _MenuLimits getMenuLimits(
       Rect buttonRect, double availableHeight, int index) {
-    double computedMaxHeight = availableHeight - 2.0 * _kMenuItemHeight;
+    double computedMaxHeight = availableHeight - 2.0 * kComboboxItemHeight;
     // if (menuMaxHeight != null) {
     //   computedMaxHeight = math.min(computedMaxHeight, menuMaxHeight!);
     // }
@@ -572,22 +571,24 @@ class _ComboboxRoute<T> extends PopupRoute<_ComboboxRouteResult<T>> {
     final double buttonBottom = math.min(buttonRect.bottom, availableHeight);
     final double selectedItemOffset = getItemOffset(index);
 
+    print(selectedItemOffset);
+
     // If the button is placed on the bottom or top of the screen, its top or
-    // bottom may be less than [_kMenuItemHeightWithPadding] from the edge of the screen.
+    // bottom may be less than [kComboboxItemHeightWithPadding] from the edge of the screen.
     // In this case, we want to change the menu limits to align with the top
     // or bottom edge of the button.
-    final double topLimit = math.min(_kMenuItemHeight, buttonTop);
+    const double topLimit = _kMenuItemBottomPadding;
     final double bottomLimit =
-        math.max(availableHeight - _kMenuItemHeight, buttonBottom);
+        math.max(availableHeight - kComboboxItemHeight, buttonBottom);
 
     double menuTop = (buttonTop - selectedItemOffset) -
         (itemHeights[selectedIndex] - buttonRect.height) / 2.0;
+
     double preferredMenuHeight = _kListPadding.vertical;
     if (items.isNotEmpty) {
       preferredMenuHeight +=
           itemHeights.reduce((double total, double height) => total + height);
     }
-
     // If there are too many elements in the menu, we need to shrink it down
     // so it is at most the computedMaxHeight.
     final double menuHeight = math.min(computedMaxHeight, preferredMenuHeight);
@@ -643,7 +644,6 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
     Key? key,
     required this.route,
     required this.constraints,
-    this.items,
     required this.padding,
     required this.buttonRect,
     required this.selectedIndex,
@@ -655,7 +655,6 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
 
   final _ComboboxRoute<T> route;
   final BoxConstraints constraints;
-  final List<_MenuItem<T>>? items;
   final EdgeInsetsGeometry padding;
   final Rect buttonRect;
   final int selectedIndex;
@@ -671,9 +670,9 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
     // Computing the initialScrollOffset now, before the items have been laid
     // out. This only works if the item heights are effectively fixed, i.e. either
     // Combobox.itemHeight is specified or Combobox.itemHeight is null
-    // and all of the items' intrinsic heights are less than kMinInteractiveDimension.
+    // and all of the items' intrinsic heights are less than kItemHeight.
     // Otherwise the initialScrollOffset is just a rough approximation based on
-    // treating the items as if their heights were all equal to kMinInteractveDimension.
+    // treating the items as if their heights were all equal to kComboboxItemHeight.
     if (route.scrollController == null) {
       final _MenuLimits menuLimits =
           route.getMenuLimits(buttonRect, constraints.maxHeight, selectedIndex);
@@ -698,58 +697,15 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
       removeBottom: true,
       removeLeft: true,
       removeRight: true,
-      child: Builder(
-        builder: (BuildContext context) {
-          return CustomSingleChildLayout(
-            delegate: _ComboboxMenuRouteLayout<T>(
-              buttonRect: buttonRect,
-              route: route,
-              textDirection: textDirection,
-            ),
-            child: capturedThemes.wrap(menu),
-          );
-        },
+      child: CustomSingleChildLayout(
+        delegate: _ComboboxMenuRouteLayout<T>(
+          buttonRect: buttonRect,
+          route: route,
+          textDirection: textDirection,
+        ),
+        child: capturedThemes.wrap(menu),
       ),
     );
-  }
-}
-
-// This widget enables _ComboboxRoute to look up the sizes of
-// each menu item. These sizes are used to compute the offset of the selected
-// item so that _ComboboxRoutePage can align the vertical center of the
-// selected item lines up with the vertical center of the combobox button,
-// as closely as possible.
-class _MenuItem<T> extends SingleChildRenderObjectWidget {
-  const _MenuItem({
-    Key? key,
-    required this.onLayout,
-    required this.item,
-  }) : super(key: key, child: item);
-
-  final ValueChanged<Size> onLayout;
-  final ComboboxItem<T>? item;
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _RenderMenuItem(onLayout);
-  }
-
-  @override
-  void updateRenderObject(
-      BuildContext context, covariant _RenderMenuItem renderObject) {
-    renderObject.onLayout = onLayout;
-  }
-}
-
-class _RenderMenuItem extends RenderProxyBox {
-  _RenderMenuItem(this.onLayout, [RenderBox? child]) : super(child);
-
-  ValueChanged<Size> onLayout;
-
-  @override
-  void performLayout() {
-    super.performLayout();
-    onLayout(size);
   }
 }
 
@@ -772,11 +728,31 @@ class _ComboboxItemContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasPadding = _ContainerWithoutPadding.of(context) == null;
     return Container(
-      height: _kMenuItemHeight,
+      height: hasPadding
+          ? kComboboxItemHeight
+          : kComboboxItemHeight - _kMenuItemBottomPadding,
       alignment: AlignmentDirectional.centerStart,
       child: child,
     );
+  }
+}
+
+class _ContainerWithoutPadding extends InheritedWidget {
+  const _ContainerWithoutPadding({
+    Key? key,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static _ContainerWithoutPadding? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_ContainerWithoutPadding>();
+  }
+
+  @override
+  bool updateShouldNotify(_ContainerWithoutPadding oldWidget) {
+    return true;
   }
 }
 
@@ -873,7 +849,6 @@ class Combobox<T> extends StatefulWidget {
     this.iconEnabledColor,
     this.iconSize = 10.0,
     this.isExpanded = false,
-    this.itemHeight = kMinInteractiveDimension,
     this.focusColor,
     this.focusNode,
     this.autofocus = false,
@@ -891,7 +866,6 @@ class Combobox<T> extends StatefulWidget {
           'Either zero or 2 or more [ComboboxItem]s were detected '
           'with the same value',
         ),
-        assert(itemHeight == null || itemHeight >= kMinInteractiveDimension),
         super(key: key);
 
   /// The list of items the user can select.
@@ -1072,19 +1046,6 @@ class Combobox<T> extends StatefulWidget {
   /// surrounding container.
   final bool isExpanded;
 
-  /// If null, then the menu item heights will vary according to each menu item's
-  /// intrinsic height.
-  ///
-  /// The default value is [kMinInteractiveDimension], which is also the minimum
-  /// height for menu items.
-  ///
-  /// If this value is null and there isn't enough vertical room for the menu,
-  /// then the menu's initial scroll offset may not align the selected item with
-  /// the combobox button. That's because, in this case, the initial scroll
-  /// offset is computed as if all of the menu item heights were
-  /// [kMinInteractiveDimension].
-  final double? itemHeight;
-
   /// The color for the button's [Material] when it has the input focus.
   final Color? focusColor;
 
@@ -1196,26 +1157,6 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     final TextDirection? textDirection = Directionality.maybeOf(context);
     const EdgeInsetsGeometry menuMargin = _kAlignedMenuMargin;
 
-    final List<_MenuItem<T>> menuItems = <_MenuItem<T>>[
-      for (int index = 0; index < widget.items!.length; index += 1)
-        _MenuItem<T>(
-          item: widget.items![index],
-          onLayout: (Size size) {
-            // If [_comboboxRoute] is null and onLayout is called, this means
-            // that performLayout was called on a _ComboboxRoute that has not
-            // left the widget tree but is already on its way out.
-            //
-            // Since onLayout is used primarily to collect the desired heights
-            // of each menu item before laying them out, not having the _ComboboxRoute
-            // collect each item's height to lay out is fine since the route is
-            // already on its way out.
-            if (_comboboxRoute == null) return;
-
-            _comboboxRoute!.itemHeights[index] = size.height + 4.0;
-          },
-        )
-    ];
-
     final NavigatorState navigator = Navigator.of(context);
     assert(_comboboxRoute == null);
     final RenderBox itemBox = context.findRenderObject()! as RenderBox;
@@ -1224,7 +1165,7 @@ class _ComboboxState<T> extends State<Combobox<T>> {
         itemBox.size;
     _comboboxRoute = _ComboboxRoute<T>(
       acrylicEnabled: DisableAcrylic.of(context) == null,
-      items: menuItems,
+      items: widget.items!,
       buttonRect: menuMargin.resolve(textDirection).inflateRect(itemRect),
       padding: _kMenuItemPadding.resolve(textDirection),
       selectedIndex: _selectedIndex ?? 0,
@@ -1233,7 +1174,6 @@ class _ComboboxState<T> extends State<Combobox<T>> {
           InheritedTheme.capture(from: context, to: navigator.context),
       style: _textStyle!,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
-      itemHeight: widget.itemHeight,
       comboboxColor: widget.comboboxColor,
     );
 
@@ -1339,17 +1279,14 @@ class _ComboboxState<T> extends State<Combobox<T>> {
     if (items.isEmpty) {
       innerItemsWidget = Container();
     } else {
-      innerItemsWidget = IndexedStack(
-        index: _selectedIndex ?? placeholderIndex,
-        alignment: AlignmentDirectional.centerStart,
-        children: items.map((Widget item) {
-          return widget.itemHeight != null
-              ? SizedBox(height: widget.itemHeight, child: item)
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[item],
-                );
-        }).toList(),
+      innerItemsWidget = _ContainerWithoutPadding(
+        child: IndexedStack(
+          index: _selectedIndex ?? placeholderIndex,
+          alignment: AlignmentDirectional.centerStart,
+          children: items.map((Widget item) {
+            return Column(mainAxisSize: MainAxisSize.min, children: [item]);
+          }).toList(),
+        ),
       );
     }
 
@@ -1361,7 +1298,6 @@ class _ComboboxState<T> extends State<Combobox<T>> {
           : _textStyle!.copyWith(color: FluentTheme.of(context).disabledColor),
       child: Container(
         padding: padding.resolve(Directionality.of(context)),
-        height: _kMenuItemHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
