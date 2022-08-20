@@ -144,8 +144,13 @@ class _DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasDirectionality(context));
 
     // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
-    List<Widget> space(Iterable<Widget> children) => children.expand(
-      (item) sync* { yield const SizedBox(width: 8.0); yield item; }).skip(1).toList();
+    List<Widget> space(Iterable<Widget> children) => children
+        .expand((item) sync* {
+          yield const SizedBox(width: 8.0);
+          yield item;
+        })
+        .skip(1)
+        .toList();
 
     final buttonChildren = space(<Widget>[
       if (widget.leading != null)
