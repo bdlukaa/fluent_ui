@@ -64,9 +64,7 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(
-      text: '${widget.value}',
-    );
+    controller = TextEditingController(text: '${widget.value}');
   }
 
   @override
@@ -89,6 +87,24 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
       extentOffset: controller.text.length,
       affinity: TextAffinity.downstream,
     );
+  }
+
+  @override
+  void _handleFocusChanged() {
+    super._handleFocusChanged();
+
+    // if lost focus, call onFieldSubmitted
+    if (!focusNode!.hasFocus) {
+      final text = controller.text;
+      final newText = widget.onFieldSubmitted(text);
+      _setText(newText);
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
