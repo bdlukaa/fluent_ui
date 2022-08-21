@@ -79,7 +79,8 @@
 - [Forms](#forms)
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
-  - [Combo Box](#combo-box)
+  - [ComboBox](#combobox)
+  - [EditableComboBox](#editablecombobox)
 - [Widgets](#widgets)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
@@ -1027,7 +1028,7 @@ AutoSuggestBox(
 )
 ```
 
-## Combo Box
+## ComboBox
 
 Use a combo box (also known as a drop-down list) to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box)
 
@@ -1061,6 +1062,74 @@ SizedBox(
 The code above produces the following:
 
 ![Combo box Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-no-selection.png)
+
+## EditableComboBox
+
+By default, a combo box lets the user select from a pre-defined list of options. However, there are cases where the list contains only a subset of valid values, and the user should be able to enter other values that aren't listed. To support this, you can make the combo box editable. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box#make-a-combo-box-editable)
+
+Here's an example of how to create an editable combobox:
+
+```dart
+static const fontSizes = <double>[
+  8,
+  9,
+  ...,
+];
+
+double fontSize = 20.0;
+
+EditableCombobox<int>(
+  value: fontSize.toInt(),
+  items: cats.map<ComboboxItem<int>>((e) {
+    return ComboboxItem<int>(
+      child: Text('\$e'),
+      value: e.toInt(),
+    );
+  }).toList(),
+  onChanged: disabled
+      ? null
+      : (size) {
+          setState(() => fontSize = size?.toDouble() ?? fontSize);
+        },
+  placeholder: const Text('Select a font size'),
+  onFieldSubmitted: (String text) {
+    // When the value in the text field is changed, this callback is called
+    // It's up to the developer to handle the text change
+
+    try {
+      final newSize = int.parse(text);
+
+      if (newSize < 8 || newSize > 100) {
+        throw UnsupportedError(
+          'The font size must be a number between 8 and 100.',
+        );
+      }
+
+      setState(() => fontSize = newSize.toDouble());
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ContentDialog(
+            content: const Text(
+              'The font size must be a number between 8 and 100.',
+            ),
+            actions: [
+              FilledButton(
+                child: const Text('Close'),
+                onPressed: Navigator.of(context).pop,
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return fontSize.toInt().toString();
+  },
+),
+```
+
+`onFieldSubmitted` is called when the text of the undelaying `TextBox` is submitted. It has the `text` paramter, which is the value of the text box. It must return a `String`, which is going to be the new text of the text box.
 
 # Widgets
 

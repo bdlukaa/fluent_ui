@@ -90,8 +90,7 @@ class ComboboxPage extends ScrollablePage {
             color: colors[selectedColor],
           ),
         ]),
-        codeSnippet: '''
-// Green by default
+        codeSnippet: '''// Green by default
 Color selectedColor = 'Green';
 
 Combobox<String>(
@@ -132,8 +131,7 @@ Combobox<String>(
             child: Text(selectedCat ?? ''),
           ),
         ]),
-        codeSnippet: '''
-List<String> cats= [...];
+        codeSnippet: '''List<String> cats= [...];
 
 Combobox<String>(
   value: selectedCat,
@@ -215,8 +213,7 @@ Combobox<String>(
             ),
           ),
         ]),
-        codeSnippet: '''
-static const fontSizes = <double>[
+        codeSnippet: '''static const fontSizes = <double>[
   8,
   9,
   ...,
@@ -313,8 +310,7 @@ EditableCombobox<int>(
             color: colors[selectedColor],
           ),
         ]),
-        codeSnippet: '''
-// Green by default
+        codeSnippet: '''// Green by default
 Color selectedColor = 'Green';
 
 Combobox<String>(
@@ -352,7 +348,13 @@ Combobox<String>(
             onPressed: () => comboboxKey.currentState?.openPopup(),
           )
         ]),
-        codeSnippet: '''
+        codeSnippet:
+            '''// A GlobalKey<ComboboxState> is used to access the current
+// state of the combobox. With it, it's possible to call .openPopup() and .closePopup()
+// which will open and close the popup, respectively
+//
+// It is possible to use the key with Combobox and EditableCombobox, and with
+// their FormField relatives
 final comboboxKey = GlobalKey<ComboboxState>();
 
 Combobox<String>(
@@ -364,8 +366,7 @@ Combobox<String>(
 Button(
   child: const Text('Open popup'),
   onPressed: () => comboboxKey.currentState?.openPopup(),
-),
-''',
+),''',
       ),
     ];
   }
