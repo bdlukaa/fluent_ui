@@ -353,8 +353,7 @@ Combobox<String>(
 // state of the combobox. With it, it's possible to call .openPopup() and .closePopup()
 // which will open and close the popup, respectively
 //
-// It is possible to use the key with Combobox and EditableCombobox, and with
-// their FormField relatives
+// It is possible to use the key with Combobox and EditableCombobox
 final comboboxKey = GlobalKey<ComboboxState>();
 
 Combobox<String>(

@@ -200,6 +200,7 @@ class ComboboxFormField<T> extends FormField<T> {
     // When adding new arguments, consider adding similar arguments to
     // Combobox.
   }) : super(
+          key: key,
           onSaved: onSaved,
           initialValue: value,
           validator: validator,
@@ -221,7 +222,6 @@ class ComboboxFormField<T> extends FormField<T> {
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Combobox<T>(
-                      key: key,
                       items: items,
                       selectedItemBuilder: selectedItemBuilder,
                       value: state.value,
@@ -327,6 +327,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
     // When adding new arguments, consider adding similar arguments to
     // EditableCombobox.
   }) : super(
+          key: key,
           onSaved: onSaved,
           initialValue: value,
           validator: validator,
@@ -348,7 +349,6 @@ class EditableComboboxFormField<T> extends FormField<T> {
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: EditableCombobox<T>(
-                      key: key,
                       items: items,
                       selectedItemBuilder: selectedItemBuilder,
                       value: state.value,
