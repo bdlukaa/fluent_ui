@@ -310,18 +310,34 @@ EditableComboBox<int>(
             color: colors[selectedColor],
           ),
         ]),
-        codeSnippet: '''// Green by default
+        codeSnippet: '''Map<String, Color> colors = { ... };
 Color selectedColor = 'Green';
 
-ComboBox<String>(
-  value: selectedColor,
-  items: colors.entries.map((e) {
-    return ComboboxItem(
-      child: Text(e.key),
-      value: e.key,
-    );
-  }).toList(),
-  onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
+Form(
+  autovalidateMode: AutovalidateMode.always,
+  child: ComboboxFormField<String>(
+    value: selectedColor,
+    items: colors.entries.map((e) {
+      return ComboboxItem(
+        child: Text(e.key),
+        value: e.key,
+      );
+    }).toList(),
+    onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
+    validator: (text) {
+      if (text == null || text.isEmpty) {
+        return 'Please provide a value';
+      }
+
+      final acceptedValues = colors.keys.skip(4);
+
+      if (!acceptedValues.contains(text)) {
+        return '\$text is not a valid value today';
+      }
+
+      return null;
+    },
+  ),
 ),''',
       ),
       subtitle(content: const Text('Open popup programatically')),
