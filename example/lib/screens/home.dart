@@ -47,7 +47,7 @@ class HomePage extends ScrollablePage {
             width: 100,
             child: InfoLabel(
               label: 'Forms',
-              child: Combobox<String>(
+              child: ComboBox<String>(
                 value: comboboxValue,
                 items: ['Item 1', 'Item 2']
                     .map((e) => ComboboxItem(

@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "am": MessageLookupByLibrary.simpleMessage("AM"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("Geri"),
         "clickToSearch":
-            MessageLookupByLibrary.simpleMessage("Aramak için tıkla"),
+            MessageLookupByLibrary.simpleMessage("Aramak için tıklayın"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("Kapat"),
         "closeNavigationTooltip":
             MessageLookupByLibrary.simpleMessage("Navigasyonu kapat"),
@@ -37,7 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Seçili içeriği panoya kopyala"),
         "cutActionLabel": MessageLookupByLibrary.simpleMessage("Kes"),
         "cutActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Seçili içeriği panoya kes ve yapıştır"),
+            "Seçili içeriği panoya kopyala ve sil"),
         "day": MessageLookupByLibrary.simpleMessage("gün"),
         "dialogLabel": MessageLookupByLibrary.simpleMessage("İletişim"),
         "hour": MessageLookupByLibrary.simpleMessage("saat"),
@@ -46,14 +46,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "modalBarrierDismissLabel":
             MessageLookupByLibrary.simpleMessage("Kapat"),
         "month": MessageLookupByLibrary.simpleMessage("ay"),
-        "newTabLabel": MessageLookupByLibrary.simpleMessage("Yeni sekme"),
+        "newTabLabel": MessageLookupByLibrary.simpleMessage("Yeni sekme ekle"),
         "noResultsFoundLabel":
-            MessageLookupByLibrary.simpleMessage("Hiçbir sonuç bulunamadı"),
+            MessageLookupByLibrary.simpleMessage("Sonuç bulunamadı"),
         "openNavigationTooltip":
             MessageLookupByLibrary.simpleMessage("Navigasyonu aç"),
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("Yapıştır"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
-            "Panodan kopyalanan içeriği yerine yapıştır"),
+            "Pano içeriğini geçerli konuma ekle"),
         "pm": MessageLookupByLibrary.simpleMessage("PM"),
         "restoreWindowTooltip":
             MessageLookupByLibrary.simpleMessage("Geri yükle"),
@@ -65,7 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectAllActionLabel":
             MessageLookupByLibrary.simpleMessage("Tümünü seç"),
         "selectAllActionTooltip":
-            MessageLookupByLibrary.simpleMessage("Tüm içerik seç"),
+            MessageLookupByLibrary.simpleMessage("Tüm içeriği seç"),
         "year": MessageLookupByLibrary.simpleMessage("yıl")
       };
 }

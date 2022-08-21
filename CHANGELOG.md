@@ -13,6 +13,13 @@ Date format: DD/MM/YYYY
 - Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
 - `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
 - Do not add unnecessary padding in `DropdownButton` ([#475](https://github.com/bdlukaa/fluent_ui/issues/475))
+- `ComboBox` updates:
+  - **BREAKING** Renamed `Combobox` to `ComboBox`
+  - Implement `EditableComboBox`, a combo box that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244)) 
+  - `ComboBox.isExpanded: false` now correctly sets the button width ([#382](https://github.com/bdlukaa/fluent_ui/issues/382))
+  - `ComboBox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
+  - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
+  - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

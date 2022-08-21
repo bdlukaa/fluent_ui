@@ -79,7 +79,8 @@
 - [Forms](#forms)
   - [TextBox](#textbox)
   - [Auto Suggest Box](#auto-suggest-box)
-  - [Combo Box](#combo-box)
+  - [ComboBox](#combobox)
+  - [EditableComboBox](#editablecombobox)
 - [Widgets](#widgets)
   - [Tooltip](#tooltip)
   - [Content Dialog](#content-dialog)
@@ -1027,7 +1028,7 @@ AutoSuggestBox(
 )
 ```
 
-## Combo Box
+## ComboBox
 
 Use a combo box (also known as a drop-down list) to present a list of items that a user can select from. A combo box starts in a compact state and expands to show a list of selectable items. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box)
 
@@ -1040,7 +1041,7 @@ String? comboBoxValue;
 
 SizedBox(
   width: 200,
-  child: Combobox<String>(
+  child: ComboBox<String>(
     placeholder: Text('Selected list item'),
     isExpanded: true,
     items: values
@@ -1051,7 +1052,6 @@ SizedBox(
         .toList(),
     value: comboBoxValue,
     onChanged: (value) {
-      // print(value);
       if (value != null) setState(() => comboBoxValue = value);
     },
   ),
@@ -1061,6 +1061,74 @@ SizedBox(
 The code above produces the following:
 
 ![Combo box Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-no-selection.png)
+
+## EditableComboBox
+
+By default, a combo box lets the user select from a pre-defined list of options. However, there are cases where the list contains only a subset of valid values, and the user should be able to enter other values that aren't listed. To support this, you can make the combo box editable. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box#make-a-combo-box-editable)
+
+Here's an example of how to create an editable combo box:
+
+```dart
+static const fontSizes = <double>[
+  8,
+  9,
+  ...,
+];
+
+double fontSize = 20.0;
+
+EditableComboBox<int>(
+  value: fontSize.toInt(),
+  items: cats.map<ComboboxItem<int>>((e) {
+    return ComboboxItem<int>(
+      child: Text('\$e'),
+      value: e.toInt(),
+    );
+  }).toList(),
+  onChanged: disabled
+      ? null
+      : (size) {
+          setState(() => fontSize = size?.toDouble() ?? fontSize);
+        },
+  placeholder: const Text('Select a font size'),
+  onFieldSubmitted: (String text) {
+    // When the value in the text field is changed, this callback is called
+    // It's up to the developer to handle the text change
+
+    try {
+      final newSize = int.parse(text);
+
+      if (newSize < 8 || newSize > 100) {
+        throw UnsupportedError(
+          'The font size must be a number between 8 and 100.',
+        );
+      }
+
+      setState(() => fontSize = newSize.toDouble());
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ContentDialog(
+            content: const Text(
+              'The font size must be a number between 8 and 100.',
+            ),
+            actions: [
+              FilledButton(
+                child: const Text('Close'),
+                onPressed: Navigator.of(context).pop,
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return fontSize.toInt().toString();
+  },
+),
+```
+
+`onFieldSubmitted` is called when the text of the undelaying `TextBox` is submitted. It has the `text` paramter, which is the value of the text box. It must return a `String`, which is going to be the new text of the text box.
 
 # Widgets
 
@@ -1395,7 +1463,7 @@ The code above produces the following:
 
 You can use an `InfoLabel` to tell the user the purpose of something.
 
-Here's an example of how to add an info header to a combobox:
+Here's an example of how to add an info header to a combo box:
 
 ```dart
 InfoLabel(
@@ -1710,7 +1778,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
 | TextFormField             | TextFormBox      |
-| DropdownButton            | Combobox         |
+| DropdownButton            | ComboBox         |
 | PopupMenuButton           | DropDownButton   |
 | -                         | AutoSuggestBox   |
 | AlertDialog               | ContentDialog    |
@@ -1757,6 +1825,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Russian (@raitonoberu)
 - Simplified Chinese (@zacksleo, @rk0cc)
 - Traditional Chinese (@zacksleo, @rk0cc)
+- Turkish (@timurturbil)
 - Spanish (@henry2man)
 
 If a language is not supported, your app may crash. You can [add support for a new language](#contributing-new-localizations) or use a supported language. [Learn more](https://github.com/bdlukaa/fluent_ui/issues/371)

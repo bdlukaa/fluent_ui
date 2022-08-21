@@ -104,13 +104,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+2"
-  flutter_highlighter:
+  flutter_highlight:
     dependency: "direct main"
     description:
-      name: flutter_highlighter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
+      path: flutter_highlight
+      ref: b5e7de8bc95f4e8e30534d7b1da5b41979caab01
+      resolved-ref: b5e7de8bc95f4e8e30534d7b1da5b41979caab01
+      url: "https://github.com/shreyas1599/highlight.dart.git"
+    source: git
+    version: "0.7.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -147,13 +149,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  highlighter:
+  highlight:
     dependency: transitive
     description:
-      name: highlighter
+      name: highlight
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.7.0"
   http:
     dependency: "direct main"
     description:
