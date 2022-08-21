@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_highlighter/flutter_highlighter.dart';
-import 'package:flutter_highlighter/themes/github.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/github.dart';
 
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
@@ -23,6 +24,7 @@ class CardHighlight extends StatefulWidget {
 
 class _CardHighlightState extends State<CardHighlight> {
   bool isOpen = false;
+  bool isCopying = false;
 
   final key = Random().nextInt(1000);
 
@@ -46,6 +48,53 @@ class _CardHighlightState extends State<CardHighlight> {
         headerShape: (open) => const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
         ),
+        onStateChanged: (state) {
+          Future.delayed(Duration.zero, () {
+            setState(() {
+              isOpen = state;
+            });
+          });
+        },
+        trailing: isOpen
+            ? Container(
+                height: 31,
+                constraints: const BoxConstraints(minWidth: 75),
+                child: Button(
+                  style: ButtonStyle(
+                      backgroundColor: isCopying
+                          ? ButtonState.all(theme.brightness.isDark
+                              ? Colors.green.toAccentColor().lightest
+                              : Colors.green.toAccentColor())
+                          : null),
+                  child: isCopying
+                      ? Icon(
+                          FluentIcons.check_mark,
+                          color: theme.brightness.isDark
+                              ? Colors.grey
+                              : Colors.white,
+                          size: 18,
+                        )
+                      : Row(
+                          children: const [
+                            Icon(FluentIcons.copy),
+                            SizedBox(width: 6.0),
+                            Text('Copy')
+                          ],
+                        ),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: widget.codeSnippet));
+                    setState(() {
+                      isCopying = true;
+                    });
+                    Future.delayed(const Duration(milliseconds: 1500), () {
+                      setState(() {
+                        isCopying = false;
+                      });
+                    });
+                  },
+                ),
+              )
+            : null,
         header: const Text('Source code'),
         content: HighlightView(
           widget.codeSnippet,

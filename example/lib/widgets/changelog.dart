@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
-import 'package:flutter_highlighter/flutter_highlighter.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:http/http.dart' as http;
