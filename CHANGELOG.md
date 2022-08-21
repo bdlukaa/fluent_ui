@@ -12,6 +12,9 @@ Date format: DD/MM/YYYY
   - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
 - Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
 - `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
+- Implement `EditableCombobox`, a combobox that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244)) 
+- `Combobox.isExpanded: false` now correctly sets the button width ([#382](https://github.com/bdlukaa/fluent_ui/issues/382))
+- `Combobox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
