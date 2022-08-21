@@ -9,10 +9,20 @@ class ComboboxPage extends ScrollablePage {
   String? selectedCat;
   double fontSize = 20.0;
   bool disabled = false;
+  final comboboxKey = GlobalKey<ComboboxState>();
 
   @override
   Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('Combobox'));
+    return PageHeader(
+      title: const Text('Combobox'),
+      commandBar: ToggleSwitch(
+        checked: disabled,
+        onChanged: (v) {
+          setState(() => disabled = v);
+        },
+        content: const Text('Disabled'),
+      ),
+    );
   }
 
   Map<String, Color> colors = {
@@ -56,42 +66,28 @@ class ComboboxPage extends ScrollablePage {
         ),
       ),
       CardHighlight(
-        child: Row(children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Combobox<String>(
-                  isExpanded: false,
-                  comboboxColor: colors[selectedColor],
-                  value: selectedColor,
-                  items: colors.entries.map((e) {
-                    return ComboboxItem(
-                      child: Text(e.key),
-                      value: e.key,
-                    );
-                  }).toList(),
-                  onChanged: disabled
-                      ? null
-                      : (color) {
-                          setState(() => selectedColor = color);
-                        },
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8.0),
-                  height: 30,
-                  width: 100,
-                  color: colors[selectedColor],
-                ),
-              ],
-            ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Combobox<String>(
+            isExpanded: false,
+            comboboxColor: colors[selectedColor],
+            value: selectedColor,
+            items: colors.entries.map((e) {
+              return ComboboxItem(
+                child: Text(e.key),
+                value: e.key,
+              );
+            }).toList(),
+            onChanged: disabled
+                ? null
+                : (color) {
+                    setState(() => selectedColor = color);
+                  },
           ),
-          ToggleSwitch(
-            checked: disabled,
-            onChanged: (v) {
-              setState(() => disabled = v);
-            },
-            content: const Text('Disabled'),
+          Container(
+            margin: const EdgeInsets.only(top: 8.0),
+            height: 30,
+            width: 100,
+            color: colors[selectedColor],
           ),
         ]),
         codeSnippet: '''
@@ -113,42 +109,28 @@ Combobox<String>(
         content: const Text('A Combobox with a long list of items'),
       ),
       CardHighlight(
-        child: Row(children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Combobox<String>(
-                  isExpanded: false,
-                  value: selectedCat,
-                  items: cats.map<ComboboxItem<String>>((e) {
-                    return ComboboxItem<String>(
-                      child: Text(e),
-                      value: e,
-                    );
-                  }).toList(),
-                  onChanged: disabled
-                      ? null
-                      : (color) {
-                          setState(() => selectedCat = color);
-                        },
-                  placeholder: const Text('Select a cat breed'),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8.0),
-                  height: 30,
-                  width: 100,
-                  child: Text(selectedCat ?? ''),
-                ),
-              ],
-            ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Combobox<String>(
+            isExpanded: false,
+            value: selectedCat,
+            items: cats.map<ComboboxItem<String>>((e) {
+              return ComboboxItem<String>(
+                child: Text(e),
+                value: e,
+              );
+            }).toList(),
+            onChanged: disabled
+                ? null
+                : (color) {
+                    setState(() => selectedCat = color);
+                  },
+            placeholder: const Text('Select a cat breed'),
           ),
-          ToggleSwitch(
-            checked: disabled,
-            onChanged: (v) {
-              setState(() => disabled = v);
-            },
-            content: const Text('Disabled'),
+          Container(
+            margin: const EdgeInsets.only(top: 8.0),
+            height: 30,
+            width: 100,
+            child: Text(selectedCat ?? ''),
           ),
         ]),
         codeSnippet: '''
@@ -174,77 +156,64 @@ Combobox<String>(
         content: const Text('An editable Combobox'),
       ),
       CardHighlight(
-        child: Row(children: [
-          Expanded(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(
-                width: 150,
-                child: EditableCombobox<int>(
-                  isExpanded: false,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            width: 150,
+            child: EditableCombobox<int>(
+              isExpanded: false,
+              value: fontSize.toInt(),
+              items: fontSizes.map<ComboboxItem<int>>((fontSize) {
+                return ComboboxItem<int>(
+                  child: Text('${fontSize.toInt()}'),
                   value: fontSize.toInt(),
-                  items: fontSizes.map<ComboboxItem<int>>((fontSize) {
-                    return ComboboxItem<int>(
-                      child: Text('${fontSize.toInt()}'),
-                      value: fontSize.toInt(),
+                );
+              }).toList(),
+              onChanged: disabled
+                  ? null
+                  : (size) {
+                      setState(() => fontSize = (size ?? fontSize).toDouble());
+                    },
+              placeholder: const Text('Font size'),
+              onFieldSubmitted: (text) {
+                try {
+                  final newSize = int.parse(text);
+
+                  if (newSize < 8 || newSize > 100) {
+                    throw UnsupportedError(
+                      'The font size must be a number between 8 and 100.',
                     );
-                  }).toList(),
-                  onChanged: disabled
-                      ? null
-                      : (size) {
-                          setState(
-                              () => fontSize = (size ?? fontSize).toDouble());
-                        },
-                  placeholder: const Text('Font size'),
-                  onFieldSubmitted: (text) {
-                    try {
-                      final newSize = int.parse(text);
+                  }
 
-                      if (newSize < 8 || newSize > 100) {
-                        throw UnsupportedError(
+                  setState(() => fontSize = newSize.toDouble());
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ContentDialog(
+                        content: const Text(
                           'The font size must be a number between 8 and 100.',
-                        );
-                      }
-
-                      setState(() => fontSize = newSize.toDouble());
-                    } catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ContentDialog(
-                            content: const Text(
-                              'The font size must be a number between 8 and 100.',
-                            ),
-                            actions: [
-                              FilledButton(
-                                child: const Text('Close'),
-                                onPressed: Navigator.of(context).pop,
-                              ),
-                            ],
-                          );
-                        },
+                        ),
+                        actions: [
+                          FilledButton(
+                            child: const Text('Close'),
+                            onPressed: Navigator.of(context).pop,
+                          ),
+                        ],
                       );
-                    }
-                    return '${fontSize.toInt()}';
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 8.0),
-                constraints: const BoxConstraints(minHeight: 50.0),
-                child: Text(
-                  'You can set the font size for this text',
-                  style: TextStyle(fontSize: fontSize),
-                ),
-              ),
-            ]),
+                    },
+                  );
+                }
+                return '${fontSize.toInt()}';
+              },
+            ),
           ),
-          ToggleSwitch(
-            checked: disabled,
-            onChanged: (v) {
-              setState(() => disabled = v);
-            },
-            content: const Text('Disabled'),
+          Container(
+            margin: const EdgeInsets.only(top: 8.0),
+            constraints: const BoxConstraints(minHeight: 50.0),
+            child: Text(
+              'You can set the font size for this text',
+              style: TextStyle(fontSize: fontSize),
+            ),
           ),
         ]),
         codeSnippet: '''
@@ -271,6 +240,100 @@ Combobox<int>(
         },
   placeholder: const Text('Select a font size'),
 ),''',
+      ),
+      subtitle(content: const Text('A Combobox Form Field')),
+      CardHighlight(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Form(
+            autovalidateMode: AutovalidateMode.always,
+            child: ComboboxFormField<String>(
+              // isExpanded: false,
+              comboboxColor: colors[selectedColor],
+              value: selectedColor,
+              items: colors.entries.map((e) {
+                return ComboboxItem(
+                  child: Text(e.key),
+                  value: e.key,
+                );
+              }).toList(),
+              onChanged: disabled
+                  ? null
+                  : (color) => setState(() => selectedColor = color),
+              validator: (text) {
+                if (text == null || text.isEmpty) {
+                  return 'Please provide a value';
+                }
+
+                final acceptedValues = colors.keys.skip(4);
+
+                if (!acceptedValues.contains(text)) {
+                  return '$text is not a valid value today';
+                }
+
+                return null;
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 8.0),
+            height: 30,
+            width: 100,
+            color: colors[selectedColor],
+          ),
+        ]),
+        codeSnippet: '''
+// Green by default
+Color selectedColor = 'Green';
+
+Combobox<String>(
+  value: selectedColor,
+  items: colors.entries.map((e) {
+    return ComboboxItem(
+      child: Text(e.key),
+      value: e.key,
+    );
+  }).toList(),
+  onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
+),''',
+      ),
+      subtitle(content: const Text('Open popup programatically')),
+      CardHighlight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Combobox<String>(
+            key: comboboxKey,
+            isExpanded: false,
+            comboboxColor: colors[selectedColor],
+            value: selectedColor,
+            items: colors.entries.map((e) {
+              return ComboboxItem(
+                child: Text(e.key),
+                value: e.key,
+              );
+            }).toList(),
+            onChanged: disabled
+                ? null
+                : (color) => setState(() => selectedColor = color),
+          ),
+          const SizedBox(width: 8.0),
+          Button(
+            child: const Text('Open popup'),
+            onPressed: () => comboboxKey.currentState?.openPopup(),
+          )
+        ]),
+        codeSnippet: '''
+final comboboxKey = GlobalKey<ComboboxState>();
+
+Combobox<String>(
+  key: comboboxKey,
+  // define the other properties here
+  ...
+),
+
+Button(
+  child: const Text('Open popup'),
+  onPressed: () => comboboxKey.currentState?.openPopup(),
+),
+''',
       ),
     ];
   }

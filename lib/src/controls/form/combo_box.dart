@@ -836,7 +836,7 @@ class Combobox<T> extends StatefulWidget {
     this.selectedItemBuilder,
     this.value,
     this.placeholder,
-    this.disabledHint,
+    this.disabledPlaceholder,
     this.onChanged,
     this.onTap,
     this.elevation = 8,
@@ -882,7 +882,7 @@ class Combobox<T> extends StatefulWidget {
   ///
   /// If [value] is null, the combobox is disabled ([items] or [onChanged] is null),
   /// this widget is displayed as a placeholder for the combobox button's value.
-  final Widget? disabledHint;
+  final Widget? disabledPlaceholder;
 
   /// Called when the user selects an item.
   ///
@@ -1207,10 +1207,10 @@ class ComboboxState<T> extends State<Combobox<T>> {
 
     int? placeholderIndex;
     if (widget.placeholder != null ||
-        (!isEnabled && widget.disabledHint != null)) {
+        (!isEnabled && widget.disabledPlaceholder != null)) {
       Widget displayedHint = isEnabled
           ? widget.placeholder!
-          : widget.disabledHint ?? widget.placeholder!;
+          : widget.disabledPlaceholder ?? widget.placeholder!;
       if (widget.selectedItemBuilder == null) {
         displayedHint = _ComboboxItemContainer(child: displayedHint);
       }
@@ -1260,7 +1260,7 @@ class ComboboxState<T> extends State<Combobox<T>> {
             else
               innerItemsWidget,
             Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8.0),
+              padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
               child: IconTheme.merge(
                 data: IconThemeData(color: iconColor, size: widget.iconSize),
                 child: widget.icon,
