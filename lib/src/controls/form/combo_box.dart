@@ -850,6 +850,8 @@ class Combobox<T> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.comboboxColor,
+    // When adding new arguments, consider adding similar arguments to
+    // ComboboxFormField.
   }) : super(key: key);
 
   /// The list of items the user can select.

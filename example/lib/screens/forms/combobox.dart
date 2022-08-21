@@ -109,7 +109,7 @@ Combobox<String>(
         content: const Text('A Combobox with a long list of items'),
       ),
       CardHighlight(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Wrap(spacing: 10.0, runSpacing: 10.0, children: [
           Combobox<String>(
             isExpanded: false,
             value: selectedCat,
@@ -129,7 +129,6 @@ Combobox<String>(
           Container(
             margin: const EdgeInsets.only(top: 8.0),
             height: 30,
-            width: 100,
             child: Text(selectedCat ?? ''),
           ),
         ]),
@@ -225,12 +224,12 @@ static const fontSizes = <double>[
 
 double fontSize = 20.0;
 
-Combobox<int>(
-  value: fontSize,
+EditableCombobox<int>(
+  value: fontSize.toInt(),
   items: cats.map<ComboboxItem<int>>((e) {
     return ComboboxItem<int>(
       child: Text('\$e'),
-      value: e,
+      value: e.toInt(),
     );
   }).toList(),
   onChanged: disabled
@@ -239,6 +238,40 @@ Combobox<int>(
           setState(() => fontSize = size?.toDouble() ?? fontSize);
         },
   placeholder: const Text('Select a font size'),
+  onFieldSubmitted: (String text) {
+    // When the value in the text field is changed, this callback is called
+    // It's up to the developer to handle the text change
+
+    try {
+      final newSize = int.parse(text);
+
+      if (newSize < 8 || newSize > 100) {
+        throw UnsupportedError(
+          'The font size must be a number between 8 and 100.',
+        );
+      }
+
+      setState(() => fontSize = newSize.toDouble());
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ContentDialog(
+            content: const Text(
+              'The font size must be a number between 8 and 100.',
+            ),
+            actions: [
+              FilledButton(
+                child: const Text('Close'),
+                onPressed: Navigator.of(context).pop,
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return fontSize.toInt().toString();
+  },
 ),''',
       ),
       subtitle(content: const Text('A Combobox Form Field')),
@@ -247,7 +280,6 @@ Combobox<int>(
           Form(
             autovalidateMode: AutovalidateMode.always,
             child: ComboboxFormField<String>(
-              // isExpanded: false,
               comboboxColor: colors[selectedColor],
               value: selectedColor,
               items: colors.entries.map((e) {

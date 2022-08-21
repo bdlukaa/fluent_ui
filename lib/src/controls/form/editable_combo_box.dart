@@ -32,6 +32,8 @@ class EditableCombobox<T> extends Combobox<T> {
     super.style,
     super.value,
     required this.onFieldSubmitted,
+    // When adding new arguments, consider adding similar arguments to
+    // EditableComboboxFormField.
   });
 
   /// Called when the text field text is submitted
@@ -44,19 +46,18 @@ class EditableCombobox<T> extends Combobox<T> {
   /// EditableCombobox(
   ///   onFieldSubmitted: (text) {
   ///     return text.toUpperCase();
-  ///   }
+  ///   },
   /// ),
   /// ```
   final SubmitEditableCombobox onFieldSubmitted;
 
   @override
-  State<Combobox<T>> createState() =>
-      // ignore: no_logic_in_create_state
-      _EditableComboboxState<T>()..editable = this;
+  State<Combobox<T>> createState() => _EditableComboboxState<T>();
 }
 
 class _EditableComboboxState<T> extends ComboboxState<T> {
-  late final EditableCombobox editable;
+  @override
+  EditableCombobox<T> get widget => super.widget as EditableCombobox<T>;
 
   late final TextEditingController controller;
 
@@ -123,7 +124,7 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
           onPressed: openPopup,
         ),
         onSubmitted: (text) {
-          final newText = editable.onFieldSubmitted(text);
+          final newText = widget.onFieldSubmitted(text);
           _setText(newText);
         },
       ),
@@ -149,11 +150,10 @@ class ComboboxFormField<T> extends FormField<T> {
   /// Creates a [Combobox] widget that is a [FormField]
   ///
   /// For a description of the `onSaved`, `validator`, or `autovalidateMode`
-  /// parameters, see [FormField]. For the rest (other than [decoration]), see
-  /// [Combobox].
+  /// parameters, see [FormField]. For the rest, see [Combobox].
   ///
-  /// The `items`, `elevation`, `iconSize`, `isExpanded`,
-  /// `autofocus`, and `decoration`  parameters must not be null.
+  /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
+  /// parameters must not be null.
   ComboboxFormField({
     Key? key,
     required List<ComboboxItem<T>>? items,
@@ -190,8 +190,8 @@ class ComboboxFormField<T> extends FormField<T> {
           validator: validator,
           autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
           builder: (FormFieldState<T> field) {
-            final _DropdownButtonFormFieldState<T> state =
-                field as _DropdownButtonFormFieldState<T>;
+            final _ComboboxFormFieldState<T> state =
+                field as _ComboboxFormFieldState<T>;
 
             // An unfocusable Focus widget so that this widget can detect if its
             // descendants have focus or not.
@@ -236,10 +236,10 @@ class ComboboxFormField<T> extends FormField<T> {
   final ValueChanged<T?>? onChanged;
 
   @override
-  FormFieldState<T> createState() => _DropdownButtonFormFieldState<T>();
+  FormFieldState<T> createState() => _ComboboxFormFieldState<T>();
 }
 
-class _DropdownButtonFormFieldState<T> extends FormFieldState<T> {
+class _ComboboxFormFieldState<T> extends FormFieldState<T> {
   @override
   void didChange(T? value) {
     super.didChange(value);
@@ -251,6 +251,134 @@ class _DropdownButtonFormFieldState<T> extends FormFieldState<T> {
 
   @override
   void didUpdateWidget(ComboboxFormField<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue) {
+      setValue(widget.initialValue);
+    }
+  }
+}
+
+/// A [FormField] that contains an [EditableCombobox].
+///
+/// This is a convenience widget that wraps an [EditableCombobox] widget in a
+/// [FormField].
+///
+/// A [Form] ancestor is not required. The [Form] simply makes it easier to
+/// save, reset, or validate multiple fields at once. To use without a [Form],
+/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
+/// save or reset the form field.
+///
+/// See also:
+///
+///  * [EditableCombobox], which is the underlying text field without the [Form]
+///    integration.
+class EditableComboboxFormField<T> extends FormField<T> {
+  /// Creates an [EditableCombobox] widget that is a [FormField]
+  ///
+  /// For a description of the `onSaved`, `validator`, or `autovalidateMode`
+  /// parameters, see [FormField]. For the rest, see [EditableCombobox].
+  ///
+  /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
+  /// parameters must not be null.
+  EditableComboboxFormField({
+    Key? key,
+    required List<ComboboxItem<T>>? items,
+    ComboboxBuilder? selectedItemBuilder,
+    T? value,
+    Widget? placeholder,
+    Widget? disabledPlaceholder,
+    required this.onChanged,
+    VoidCallback? onTap,
+    int elevation = 8,
+    TextStyle? style,
+    Widget icon = const Icon(FluentIcons.chevron_down),
+    Color? iconDisabledColor,
+    Color? iconEnabledColor,
+    double iconSize = 8.0,
+    bool isExpanded = false,
+    Color? focusColor,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    Color? comboboxColor,
+    FormFieldSetter<T>? onSaved,
+    FormFieldValidator<T>? validator,
+    AutovalidateMode? autovalidateMode,
+    double? menuMaxHeight,
+    bool? enableFeedback,
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+    BorderRadius? borderRadius,
+    required SubmitEditableCombobox onFieldSubmitted,
+    // When adding new arguments, consider adding similar arguments to
+    // EditableCombobox.
+  }) : super(
+          key: key,
+          onSaved: onSaved,
+          initialValue: value,
+          validator: validator,
+          autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
+          builder: (FormFieldState<T> field) {
+            final _EditableComboboxFormFieldState<T> state =
+                field as _EditableComboboxFormFieldState<T>;
+
+            // An unfocusable Focus widget so that this widget can detect if its
+            // descendants have focus or not.
+            return Focus(
+              canRequestFocus: false,
+              skipTraversal: true,
+              child: Builder(builder: (BuildContext context) {
+                return FormRow(
+                  padding: EdgeInsets.zero,
+                  error:
+                      field.errorText != null ? Text(field.errorText!) : null,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: EditableCombobox<T>(
+                      items: items,
+                      selectedItemBuilder: selectedItemBuilder,
+                      value: state.value,
+                      placeholder: placeholder,
+                      disabledPlaceholder: disabledPlaceholder,
+                      onChanged: onChanged == null ? null : state.didChange,
+                      onTap: onTap,
+                      elevation: elevation,
+                      style: style,
+                      icon: icon,
+                      iconDisabledColor: iconDisabledColor,
+                      iconEnabledColor: iconEnabledColor,
+                      iconSize: iconSize,
+                      isExpanded: isExpanded,
+                      focusColor: focusColor,
+                      focusNode: focusNode,
+                      autofocus: autofocus,
+                      comboboxColor: comboboxColor,
+                      onFieldSubmitted: onFieldSubmitted,
+                    ),
+                  ),
+                );
+              }),
+            );
+          },
+        );
+
+  /// {@macro flutter.material.dropdownButton.onChanged}
+  final ValueChanged<T?>? onChanged;
+
+  @override
+  FormFieldState<T> createState() => _EditableComboboxFormFieldState<T>();
+}
+
+class _EditableComboboxFormFieldState<T> extends FormFieldState<T> {
+  @override
+  void didChange(T? value) {
+    super.didChange(value);
+    final EditableComboboxFormField<T> dropdownButtonFormField =
+        widget as EditableComboboxFormField<T>;
+    assert(dropdownButtonFormField.onChanged != null);
+    dropdownButtonFormField.onChanged!(value);
+  }
+
+  @override
+  void didUpdateWidget(EditableComboboxFormField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.initialValue != widget.initialValue) {
       setValue(widget.initialValue);
