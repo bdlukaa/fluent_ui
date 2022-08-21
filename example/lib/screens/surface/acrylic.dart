@@ -61,7 +61,7 @@ class AcrylicPage extends ScrollablePage {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               InfoLabel(
                 label: 'Tint color',
-                child: Combobox<Color>(
+                child: ComboBox<Color>(
                   placeholder: const Text('Tint color               '),
                   onChanged: (c) => setState(() => color = c),
                   value: color,

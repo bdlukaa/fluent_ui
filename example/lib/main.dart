@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     PaneItem(
       icon: const Icon(FluentIcons.combobox),
-      title: const Text('Combobox'),
+      title: const Text('ComboBox'),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.time_picker),

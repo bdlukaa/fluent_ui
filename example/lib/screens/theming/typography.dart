@@ -39,7 +39,7 @@ class _TypographyPageState extends State<TypographyPage> {
           width: 180.0,
           child: Tooltip(
             message: 'Pick a text color',
-            child: Combobox<Color>(
+            child: ComboBox<Color>(
               placeholder: const Text('Text Color'),
               onChanged: (c) => setState(() => color = c),
               value: color,

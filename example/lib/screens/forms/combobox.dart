@@ -14,7 +14,7 @@ class ComboboxPage extends ScrollablePage {
   @override
   Widget buildHeader(BuildContext context) {
     return PageHeader(
-      title: const Text('Combobox'),
+      title: const Text('ComboBox'),
       commandBar: ToggleSwitch(
         checked: disabled,
         onChanged: (v) {
@@ -62,12 +62,12 @@ class ComboboxPage extends ScrollablePage {
       ),
       subtitle(
         content: const Text(
-          'A Combobox with items defined inline and its width set',
+          'A ComboBox with items defined inline and its width set',
         ),
       ),
       CardHighlight(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Combobox<String>(
+          ComboBox<String>(
             isExpanded: false,
             comboboxColor: colors[selectedColor],
             value: selectedColor,
@@ -93,7 +93,7 @@ class ComboboxPage extends ScrollablePage {
         codeSnippet: '''// Green by default
 Color selectedColor = 'Green';
 
-Combobox<String>(
+ComboBox<String>(
   value: selectedColor,
   items: colors.entries.map((e) {
     return ComboboxItem(
@@ -105,11 +105,11 @@ Combobox<String>(
 ),''',
       ),
       subtitle(
-        content: const Text('A Combobox with a long list of items'),
+        content: const Text('A ComboBox with a long list of items'),
       ),
       CardHighlight(
         child: Wrap(spacing: 10.0, runSpacing: 10.0, children: [
-          Combobox<String>(
+          ComboBox<String>(
             isExpanded: false,
             value: selectedCat,
             items: cats.map<ComboboxItem<String>>((e) {
@@ -133,7 +133,7 @@ Combobox<String>(
         ]),
         codeSnippet: '''List<String> cats= [...];
 
-Combobox<String>(
+ComboBox<String>(
   value: selectedCat,
   items: cats.map<ComboboxItem<String>>((e) {
     return ComboboxItem<String>(
@@ -150,13 +150,13 @@ Combobox<String>(
 ),''',
       ),
       subtitle(
-        content: const Text('An editable Combobox'),
+        content: const Text('An editable ComboBox'),
       ),
       CardHighlight(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
             width: 150,
-            child: EditableCombobox<int>(
+            child: EditableComboBox<int>(
               isExpanded: false,
               value: fontSize.toInt(),
               items: fontSizes.map<ComboboxItem<int>>((fontSize) {
@@ -221,7 +221,7 @@ Combobox<String>(
 
 double fontSize = 20.0;
 
-EditableCombobox<int>(
+EditableComboBox<int>(
   value: fontSize.toInt(),
   items: cats.map<ComboboxItem<int>>((e) {
     return ComboboxItem<int>(
@@ -271,7 +271,7 @@ EditableCombobox<int>(
   },
 ),''',
       ),
-      subtitle(content: const Text('A Combobox Form Field')),
+      subtitle(content: const Text('A ComboBox Form Field')),
       CardHighlight(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Form(
@@ -313,7 +313,7 @@ EditableCombobox<int>(
         codeSnippet: '''// Green by default
 Color selectedColor = 'Green';
 
-Combobox<String>(
+ComboBox<String>(
   value: selectedColor,
   items: colors.entries.map((e) {
     return ComboboxItem(
@@ -327,7 +327,7 @@ Combobox<String>(
       subtitle(content: const Text('Open popup programatically')),
       CardHighlight(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Combobox<String>(
+          ComboBox<String>(
             key: comboboxKey,
             isExpanded: false,
             comboboxColor: colors[selectedColor],
@@ -350,13 +350,13 @@ Combobox<String>(
         ]),
         codeSnippet:
             '''// A GlobalKey<ComboboxState> is used to access the current
-// state of the combobox. With it, it's possible to call .openPopup() and .closePopup()
+// state of the combo box. With it, it's possible to call .openPopup() and .closePopup()
 // which will open and close the popup, respectively
 //
-// It is possible to use the key with Combobox and EditableCombobox
+// It is possible to use the key with ComboBox and EditableComboBox
 final comboboxKey = GlobalKey<ComboboxState>();
 
-Combobox<String>(
+ComboBox<String>(
   key: comboboxKey,
   // define the other properties here
   ...

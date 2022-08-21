@@ -9,9 +9,9 @@ typedef SubmitEditableCombobox = String Function(String text);
 ///
 /// See also:
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box#make-a-combo-box-editable>
-class EditableCombobox<T> extends Combobox<T> {
-  /// Creates an editable combobox.
-  const EditableCombobox({
+class EditableComboBox<T> extends ComboBox<T> {
+  /// Creates an editable combo box.
+  const EditableComboBox({
     super.key,
     super.autofocus,
     super.comboboxColor,
@@ -43,7 +43,7 @@ class EditableCombobox<T> extends Combobox<T> {
   /// In the folllowing example, everytime the user submits the text box, the
   /// text is uppercased
   /// ```dart
-  /// EditableCombobox(
+  /// EditableComboBox(
   ///   onFieldSubmitted: (text) {
   ///     return text.toUpperCase();
   ///   },
@@ -52,12 +52,12 @@ class EditableCombobox<T> extends Combobox<T> {
   final SubmitEditableCombobox onFieldSubmitted;
 
   @override
-  State<Combobox<T>> createState() => _EditableComboboxState<T>();
+  State<ComboBox<T>> createState() => _EditableComboboxState<T>();
 }
 
 class _EditableComboboxState<T> extends ComboboxState<T> {
   @override
-  EditableCombobox<T> get widget => super.widget as EditableCombobox<T>;
+  EditableComboBox<T> get widget => super.widget as EditableComboBox<T>;
 
   late final TextEditingController controller;
 
@@ -148,9 +148,9 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
   }
 }
 
-/// A [FormField] that contains a [Combobox].
+/// A [FormField] that contains a [ComboBox].
 ///
-/// This is a convenience widget that wraps a [Combobox] widget in a
+/// This is a convenience widget that wraps a [ComboBox] widget in a
 /// [FormField].
 ///
 /// A [Form] ancestor is not required. The [Form] simply makes it easier to
@@ -160,13 +160,13 @@ class _EditableComboboxState<T> extends ComboboxState<T> {
 ///
 /// See also:
 ///
-///  * [Combobox], which is the underlying text field without the [Form]
+///  * [ComboBox], which is the underlying text field without the [Form]
 ///    integration.
 class ComboboxFormField<T> extends FormField<T> {
-  /// Creates a [Combobox] widget that is a [FormField]
+  /// Creates a [ComboBox] widget that is a [FormField]
   ///
   /// For a description of the `onSaved`, `validator`, or `autovalidateMode`
-  /// parameters, see [FormField]. For the rest, see [Combobox].
+  /// parameters, see [FormField]. For the rest, see [ComboBox].
   ///
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
@@ -198,7 +198,7 @@ class ComboboxFormField<T> extends FormField<T> {
     AlignmentGeometry alignment = AlignmentDirectional.centerStart,
     BorderRadius? borderRadius,
     // When adding new arguments, consider adding similar arguments to
-    // Combobox.
+    // ComboBox.
   }) : super(
           key: key,
           onSaved: onSaved,
@@ -221,7 +221,7 @@ class ComboboxFormField<T> extends FormField<T> {
                       field.errorText != null ? Text(field.errorText!) : null,
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: Combobox<T>(
+                    child: ComboBox<T>(
                       items: items,
                       selectedItemBuilder: selectedItemBuilder,
                       value: state.value,
@@ -274,9 +274,9 @@ class _ComboboxFormFieldState<T> extends FormFieldState<T> {
   }
 }
 
-/// A [FormField] that contains an [EditableCombobox].
+/// A [FormField] that contains an [EditableComboBox].
 ///
-/// This is a convenience widget that wraps an [EditableCombobox] widget in a
+/// This is a convenience widget that wraps an [EditableComboBox] widget in a
 /// [FormField].
 ///
 /// A [Form] ancestor is not required. The [Form] simply makes it easier to
@@ -286,13 +286,13 @@ class _ComboboxFormFieldState<T> extends FormFieldState<T> {
 ///
 /// See also:
 ///
-///  * [EditableCombobox], which is the underlying text field without the [Form]
+///  * [EditableComboBox], which is the underlying text field without the [Form]
 ///    integration.
 class EditableComboboxFormField<T> extends FormField<T> {
-  /// Creates an [EditableCombobox] widget that is a [FormField]
+  /// Creates an [EditableComboBox] widget that is a [FormField]
   ///
   /// For a description of the `onSaved`, `validator`, or `autovalidateMode`
-  /// parameters, see [FormField]. For the rest, see [EditableCombobox].
+  /// parameters, see [FormField]. For the rest, see [EditableComboBox].
   ///
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
@@ -325,7 +325,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
     BorderRadius? borderRadius,
     required SubmitEditableCombobox onFieldSubmitted,
     // When adding new arguments, consider adding similar arguments to
-    // EditableCombobox.
+    // EditableComboBox.
   }) : super(
           key: key,
           onSaved: onSaved,
@@ -348,7 +348,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
                       field.errorText != null ? Text(field.errorText!) : null,
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: EditableCombobox<T>(
+                    child: EditableComboBox<T>(
                       items: items,
                       selectedItemBuilder: selectedItemBuilder,
                       value: state.value,

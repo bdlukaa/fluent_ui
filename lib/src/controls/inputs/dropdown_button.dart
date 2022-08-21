@@ -23,7 +23,7 @@ typedef DropDownButtonBuilder = Widget Function(
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
 ///  content. Used to back this button
-///   * [Combobox], a list of items that a user can select from
+///   * [ComboBox], a list of items that a user can select from
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.

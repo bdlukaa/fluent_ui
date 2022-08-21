@@ -1041,7 +1041,7 @@ String? comboBoxValue;
 
 SizedBox(
   width: 200,
-  child: Combobox<String>(
+  child: ComboBox<String>(
     placeholder: Text('Selected list item'),
     isExpanded: true,
     items: values
@@ -1052,7 +1052,6 @@ SizedBox(
         .toList(),
     value: comboBoxValue,
     onChanged: (value) {
-      // print(value);
       if (value != null) setState(() => comboBoxValue = value);
     },
   ),
@@ -1067,7 +1066,7 @@ The code above produces the following:
 
 By default, a combo box lets the user select from a pre-defined list of options. However, there are cases where the list contains only a subset of valid values, and the user should be able to enter other values that aren't listed. To support this, you can make the combo box editable. [Learn more](https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box#make-a-combo-box-editable)
 
-Here's an example of how to create an editable combobox:
+Here's an example of how to create an editable combo box:
 
 ```dart
 static const fontSizes = <double>[
@@ -1078,7 +1077,7 @@ static const fontSizes = <double>[
 
 double fontSize = 20.0;
 
-EditableCombobox<int>(
+EditableComboBox<int>(
   value: fontSize.toInt(),
   items: cats.map<ComboboxItem<int>>((e) {
     return ComboboxItem<int>(
@@ -1464,7 +1463,7 @@ The code above produces the following:
 
 You can use an `InfoLabel` to tell the user the purpose of something.
 
-Here's an example of how to add an info header to a combobox:
+Here's an example of how to add an info header to a combo box:
 
 ```dart
 InfoLabel(
@@ -1779,7 +1778,7 @@ The list of equivalents between this library and `flutter/material.dart`
 | Switch                    | ToggleSwitch     |
 | TextField                 | TextBox          |
 | TextFormField             | TextFormBox      |
-| DropdownButton            | Combobox         |
+| DropdownButton            | ComboBox         |
 | PopupMenuButton           | DropDownButton   |
 | -                         | AutoSuggestBox   |
 | AlertDialog               | ContentDialog    |

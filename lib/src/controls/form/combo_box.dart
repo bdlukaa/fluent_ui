@@ -21,9 +21,9 @@ const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.only(top: _kMenuItemBottomPadding);
 const kComboboxRadius = Radius.circular(4.0);
 
-/// A builder to customize combobox buttons.
+/// A builder to customize combo box buttons.
 ///
-/// Used by [Combobox.selectedItemBuilder].
+/// Used by [ComboBox.selectedItemBuilder].
 typedef ComboboxBuilder = List<Widget> Function(BuildContext context);
 
 class _ComboboxMenuPainter extends CustomPainter {
@@ -79,7 +79,7 @@ class _ComboboxMenuPainter extends CustomPainter {
 }
 
 // Do not use the platform-specific default scroll configuration.
-// Combobox menus should never overscroll or display an overscroll indicator.
+// ComboBox menus should never overscroll or display an overscroll indicator.
 class _ComboboxScrollBehavior extends FluentScrollBehavior {
   const _ComboboxScrollBehavior();
 
@@ -207,7 +207,7 @@ class _ComboboxItemButtonState<T> extends State<_ComboboxItemButton<T>> {
     );
     if (kIsWeb) {
       // On the web, enter doesn't select things, *except* in a <select>
-      // element, which is what a combobox emulates.
+      // element, which is what a combo box emulates.
       child = Shortcuts(
         shortcuts: _webShortcuts,
         child: child,
@@ -666,7 +666,7 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
 
     // Computing the initialScrollOffset now, before the items have been laid
     // out. This only works if the item heights are effectively fixed, i.e. either
-    // Combobox.itemHeight is specified or Combobox.itemHeight is null
+    // ComboBox.itemHeight is specified or ComboBox.itemHeight is null
     // and all of the items' intrinsic heights are less than kItemHeight.
     // Otherwise the initialScrollOffset is just a rough approximation based on
     // treating the items as if their heights were all equal to kComboboxItemHeight.
@@ -706,11 +706,11 @@ class _ComboboxRoutePage<T> extends StatelessWidget {
   }
 }
 
-// The container widget for a menu item created by a [Combobox]. It
+// The container widget for a menu item created by a [ComboBox]. It
 // provides the default configuration for [ComboboxItem]s, as well as a
-// [Combobox]'s placeholder and disabledHint widgets.
+// [ComboBox]'s placeholder and disabledPlaceholder widgets.
 class _ComboboxItemContainer extends StatelessWidget {
-  /// Creates an item for a combobox menu.
+  /// Creates an item for a combo box menu.
   ///
   /// The [child] argument is required.
   const _ComboboxItemContainer({
@@ -753,12 +753,12 @@ class _ContainerWithoutPadding extends InheritedWidget {
   }
 }
 
-/// An item in a menu created by a [Combobox].
+/// An item in a menu created by a [ComboBox].
 ///
 /// The type `T` is the type of the value the entry represents. All the entries
 /// in a given menu must represent values with consistent types.
 class ComboboxItem<T> extends _ComboboxItemContainer {
-  /// Creates an item for a combobox menu.
+  /// Creates an item for a combo box menu.
   ///
   /// The [child] argument is required.
   const ComboboxItem({
@@ -768,37 +768,37 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
     required Widget child,
   }) : super(key: key, child: child);
 
-  /// Called when the combobox menu item is tapped.
+  /// Called when the combo box menu item is tapped.
   final VoidCallback? onTap;
 
   /// The value to return if the user selects this menu item.
   ///
-  /// Eventually returned in a call to [Combobox.onChanged].
+  /// Eventually returned in a call to [ComboBox.onChanged].
   final T? value;
 }
 
 /// A fluent design button for selecting from a list of items.
 ///
-/// A combobox button lets the user select from a number of items. The button
+/// A combo box button lets the user select from a number of items. The button
 /// shows the currently selected item as well as an arrow that opens a menu for
 /// selecting another item.
 ///
-/// ![Combobox Popup preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-list-item-state.png)
+/// ![ComboBox Popup preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-list-item-state.png)
 ///
-/// The type `T` is the type of the [value] that each combobox item represents.
+/// The type `T` is the type of the [value] that each combo box item represents.
 /// All the entries in a given menu must represent values with consistent types.
 /// Typically, an enum is used. Each [ComboboxItem] in [items] must be
 /// specialized with that same type argument.
 ///
 /// The [onChanged] callback should update a state variable that defines the
-/// combobox's value. It should also call [State.setState] to rebuild the
-/// combobox with the new value.
+/// combo box's value. It should also call [State.setState] to rebuild the
+/// combo box with the new value.
 ///
 /// If the [onChanged] callback is null or the list of [items] is null
-/// then the combobox button will be disabled, i.e. its arrow will be
+/// then the combo box button will be disabled, i.e. its arrow will be
 /// displayed in grey and it will not respond to input. A disabled button
-/// will display the [disabledHint] widget if it is non-null. However, if
-/// [disabledHint] is null and [placeholder] is non-null, the [placeholder]
+/// will display the [disabledPlaceholder] widget if it is non-null. However, if
+/// [disabledPlaceholder] is null and [placeholder] is non-null, the [placeholder]
 /// widget will instead be displayed.
 ///
 /// Requires one of its ancestors to be a [Material] widget.
@@ -807,8 +807,8 @@ class ComboboxItem<T> extends _ComboboxItemContainer {
 ///
 ///  * [ComboboxItem], the class used to represent the [items].
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box>
-class Combobox<T> extends StatefulWidget {
-  /// Creates a combobox button.
+class ComboBox<T> extends StatefulWidget {
+  /// Creates a combo box button.
   ///
   /// The [items] must have distinct values. If [value] isn't null then it
   /// must be equal to one of the [ComboboxItem] values. If [items] or
@@ -818,8 +818,8 @@ class Combobox<T> extends StatefulWidget {
   /// If [value] is null and the button is enabled, [placeholder] will be displayed
   /// if it is non-null.
   ///
-  /// If [value] is null and the button is disabled, [disabledHint] will be displayed
-  /// if it is non-null. If [disabledHint] is null, then [placeholder] will be displayed
+  /// If [value] is null and the button is disabled, [disabledPlaceholder] will be displayed
+  /// if it is non-null. If [disabledPlaceholder] is null, then [placeholder] will be displayed
   /// if it is non-null.
   ///
   /// The [elevation] and [iconSize] arguments must not be null (they both have
@@ -829,8 +829,8 @@ class Combobox<T> extends StatefulWidget {
   /// The [autofocus] argument must not be null.
   ///
   /// The [comboboxColor] argument specifies the background color of the
-  /// combobox when it is open. If it is null, the default [Acrylic] color is used.
-  const Combobox({
+  /// combo box when it is open. If it is null, the default [Acrylic] color is used.
+  const ComboBox({
     Key? key,
     required this.items,
     this.selectedItemBuilder,
@@ -857,7 +857,7 @@ class Combobox<T> extends StatefulWidget {
   /// The list of items the user can select.
   ///
   /// If the [onChanged] callback is null or the list of items is null
-  /// then the combobox button will be disabled, i.e. its arrow will be
+  /// then the combo box button will be disabled, i.e. its arrow will be
   /// displayed in grey and it will not respond to input.
   final List<ComboboxItem<T>>? items;
 
@@ -866,52 +866,52 @@ class Combobox<T> extends StatefulWidget {
   /// If [value] is null and the button is enabled, [placeholder] will be displayed
   /// if it is non-null.
   ///
-  /// If [value] is null and the button is disabled, [disabledHint] will be displayed
-  /// if it is non-null. If [disabledHint] is null, then [placeholder] will be displayed
+  /// If [value] is null and the button is disabled, [disabledPlaceholder] will be displayed
+  /// if it is non-null. If [disabledPlaceholder] is null, then [placeholder] will be displayed
   /// if it is non-null.
   final T? value;
 
-  /// A placeholder widget that is displayed by the combobox button.
+  /// A placeholder widget that is displayed by the combo box button.
   ///
-  /// If [value] is null and the combobox is enabled ([items] and [onChanged] are non-null),
-  /// this widget is displayed as a placeholder for the combobox button's value.
+  /// If [value] is null and the combo box is enabled ([items] and [onChanged] are non-null),
+  /// this widget is displayed as a placeholder for the combo box button's value.
   ///
-  /// If [value] is null and the combobox is disabled and [disabledHint] is null,
+  /// If [value] is null and the combo box is disabled and [disabledPlaceholder] is null,
   /// this widget is used as the placeholder.
   final Widget? placeholder;
 
-  /// A preferred placeholder widget that is displayed when the combobox is disabled.
+  /// A preferred placeholder widget that is displayed when the combo box is disabled.
   ///
-  /// If [value] is null, the combobox is disabled ([items] or [onChanged] is null),
-  /// this widget is displayed as a placeholder for the combobox button's value.
+  /// If [value] is null, the combo box is disabled ([items] or [onChanged] is null),
+  /// this widget is displayed as a placeholder for the combo box button's value.
   final Widget? disabledPlaceholder;
 
   /// Called when the user selects an item.
   ///
-  /// If the [onChanged] callback is null or the list of [Combobox.items]
-  /// is null then the combobox button will be disabled, i.e. its arrow will be
+  /// If the [onChanged] callback is null or the list of [ComboBox.items]
+  /// is null then the combo box button will be disabled, i.e. its arrow will be
   /// displayed in grey and it will not respond to input. A disabled button
-  /// will display the [Combobox.disabledHint] widget if it is non-null.
-  /// If [Combobox.disabledHint] is also null but [Combobox.placeholder] is
-  /// non-null, [Combobox.placeholder] will instead be displayed.
+  /// will display the [ComboBox.disabledPlaceholder] widget if it is non-null.
+  /// If [ComboBox.disabledPlaceholder] is also null but [ComboBox.placeholder] is
+  /// non-null, [ComboBox.placeholder] will instead be displayed.
   final ValueChanged<T?>? onChanged;
 
-  /// Called when the combobox button is tapped.
+  /// Called when the combo box button is tapped.
   ///
   /// This is distinct from [onChanged], which is called when the user
-  /// selects an item from the combobox.
+  /// selects an item from the combo box.
   ///
-  /// The callback will not be invoked if the combobox button is disabled.
+  /// The callback will not be invoked if the combo box button is disabled.
   final VoidCallback? onTap;
 
-  /// A builder to customize the combobox buttons corresponding to the
+  /// A builder to customize the combo box buttons corresponding to the
   /// [ComboboxItem]s in [items].
   ///
   /// When a [ComboboxItem] is selected, the widget that will be displayed
   /// from the list corresponds to the [ComboboxItem] of the same index
   /// in [items].
   ///
-  /// This sample shows a `Combobox` with a button with [Text] that
+  /// This sample shows a `ComboBox` with a button with [Text] that
   /// corresponds to but is unique from [ComboboxItem].
   ///
   /// ```dart
@@ -922,7 +922,7 @@ class Combobox<T> extends StatefulWidget {
   /// Widget build(BuildContext context) {
   ///   return Padding(
   ///     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-  ///     child: Combobox<String>(
+  ///     child: ComboBox<String>(
   ///       value: selectedItem,
   ///       onChanged: (String? string) => setState(() => selectedItem = string!),
   ///       selectedItemBuilder: (BuildContext context) {
@@ -950,16 +950,16 @@ class Combobox<T> extends StatefulWidget {
   /// The following elevations have defined shadows: 1, 2, 3, 4, 6, 8, 9, 12,
   /// 16, and 24. See [kElevationToShadow].
   ///
-  /// Defaults to 8, the appropriate elevation for combobox buttons.
+  /// Defaults to 8, the appropriate elevation for combo box buttons.
   final int elevation;
 
-  /// The text style to use for text in the combobox button and the combobox
+  /// The text style to use for text in the combo box button and the combo box
   /// menu that appears when you tap the button.
   ///
   /// To use a separate text style for selected item when it's displayed within
-  /// the combobox button, consider using [selectedItemBuilder].
+  /// the combo box button, consider using [selectedItemBuilder].
   ///
-  /// This sample shows a `Combobox` with a combobox button text style
+  /// This sample shows a `ComboBox` with a combo box button text style
   /// that is different than its menu items.
   ///
   /// ```dart
@@ -971,7 +971,7 @@ class Combobox<T> extends StatefulWidget {
   ///   return Container(
   ///     alignment: Alignment.center,
   ///     color: Colors.blue,
-  ///     child: Combobox<String>(
+  ///     child: ComboBox<String>(
   ///       value: comboboxValue,
   ///       onChanged: (String? newValue) {
   ///         setState(() {
@@ -1019,7 +1019,7 @@ class Combobox<T> extends StatefulWidget {
   /// Defaults to 8.0.
   final double iconSize;
 
-  /// Set the combobox's inner contents to horizontally fill its parent.
+  /// Set the combo box's inner contents to horizontally fill its parent.
   ///
   /// By default this button's inner width is the minimum size of its contents.
   /// If [isExpanded] is true, the inner width is expanded to fill its
@@ -1035,16 +1035,16 @@ class Combobox<T> extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  /// The background color of the combobox.
+  /// The background color of the combo box menu.
   ///
   /// If it is not provided, the default [Acrylic] color is used.
   final Color? comboboxColor;
 
   @override
-  State<Combobox<T>> createState() => ComboboxState<T>();
+  State<ComboBox<T>> createState() => ComboboxState<T>();
 }
 
-class ComboboxState<T> extends State<Combobox<T>> {
+class ComboboxState<T> extends State<ComboBox<T>> {
   int? _selectedIndex;
   int? get selectedIndex => _selectedIndex;
 
@@ -1099,7 +1099,7 @@ class ComboboxState<T> extends State<Combobox<T>> {
   }
 
   @override
-  void didUpdateWidget(Combobox<T> oldWidget) {
+  void didUpdateWidget(ComboBox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.focusNode != oldWidget.focusNode) {
       oldWidget.focusNode?.removeListener(_handleFocusChanged);
