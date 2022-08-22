@@ -339,10 +339,44 @@ class _TimePickerContentPopup extends StatefulWidget {
 class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   bool get isAm => widget.amPmController.selectedItem == 0;
 
-  late DateTime localDate = widget.date;
+  late DateTime localDate;
+
+  @override
+  void initState() {
+    super.initState();
+    localDate = widget.date;
+    final possibleMinutes = List.generate(
+      60 ~/ widget.minuteIncrement,
+      (index) => (index * widget.minuteIncrement),
+    );
+    if (!possibleMinutes.contains(localDate.minute)) {
+      localDate = DateTime(
+        localDate.year,
+        localDate.month,
+        localDate.day,
+        localDate.hour,
+        getClosestMinute(possibleMinutes, localDate.minute),
+        localDate.second,
+        localDate.millisecond,
+        localDate.microsecond,
+      );
+    }
+  }
 
   void handleDateChanged(DateTime time) {
-    setState(() => localDate = time);
+    localDate = time;
+    Future.delayed(const Duration(milliseconds: 1), () {
+      if (mounted) setState(() {});
+    });
+  }
+
+  int getClosestMinute(List<int> possibleMinutes, int goal) {
+    return possibleMinutes
+        .reduce(
+          (prev, curr) =>
+              (curr - goal).abs() < (prev - goal).abs() ? curr : prev,
+        )
+        .clamp(0, 59);
   }
 
   @override
@@ -535,7 +569,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                       ),
                     ],
                     onSelectedItemChanged: (index) {
-                      setState(() {});
+                      // setState(() {});
                       int hour = localDate.hour;
                       final isAm = index == 0;
                       if (!widget.use24Format) {

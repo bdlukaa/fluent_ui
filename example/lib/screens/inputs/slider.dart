@@ -3,25 +3,21 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class SliderPage extends ScrollablePage {
-  PageState state = <String, dynamic>{
-    'disabled': false,
-    'first_value': 23.0,
-    'vertical_value': 50.0,
-  };
+  bool disabled = false;
+  double firstValue = 23.0;
+  double verticalValue = 50.0;
 
   @override
   Widget buildHeader(BuildContext context) {
     return PageHeader(
       title: const Text('Slider'),
       commandBar: ToggleSwitch(
-        checked: isDisabled,
-        onChanged: (v) => setState(() => state['disabled'] = v),
+        checked: disabled,
+        onChanged: (v) => setState(() => disabled = v),
         content: const Text('Disabled'),
       ),
     );
   }
-
-  bool get isDisabled => state['disabled'];
 
   @override
   List<Widget> buildScrollable(BuildContext context) {
@@ -32,16 +28,16 @@ class SliderPage extends ScrollablePage {
       CardHighlight(
         child: Row(children: [
           Slider(
-            label: '${state['first_value'].toInt()}',
-            value: state['first_value'],
-            onChanged: isDisabled
+            label: '${firstValue.toInt()}',
+            value: firstValue,
+            onChanged: disabled
                 ? null
                 : (v) {
-                    setState(() => state['first_value'] = v);
+                    setState(() => firstValue = v);
                   },
           ),
           const Spacer(),
-          Text('Output:\n${state['first_value'].toInt()}'),
+          Text('Output:\n${firstValue.toInt()}'),
         ]),
         codeSnippet: '''double value = 0;
 
@@ -57,16 +53,13 @@ Slider(
         child: Row(children: [
           Slider(
             vertical: true,
-            label: '${state['vertical_value'].toInt()}',
-            value: state['vertical_value'],
-            onChanged: isDisabled
-                ? null
-                : (v) {
-                    setState(() => state['vertical_value'] = v);
-                  },
+            label: '${verticalValue.toInt()}',
+            value: verticalValue,
+            onChanged:
+                disabled ? null : (v) => setState(() => verticalValue = v),
           ),
           const Spacer(),
-          Text('Output:\n${state['vertical_value'].toInt()}'),
+          Text('Output:\n${verticalValue.toInt()}'),
         ]),
         codeSnippet: '''double value = 0;
 

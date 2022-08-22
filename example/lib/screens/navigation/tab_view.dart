@@ -30,12 +30,9 @@ class TabViewPage extends ScrollablePage {
       ),
       onClosed: () {
         setState(() {
-          final tabIndex = tabs!.indexOf(tab);
           tabs!.remove(tab);
 
-          if (tabIndex == currentIndex && currentIndex > 0) {
-            currentIndex--;
-          }
+          if (currentIndex > 0) currentIndex--;
         });
       },
     );
@@ -64,7 +61,7 @@ class TabViewPage extends ScrollablePage {
               width: 150,
               child: InfoLabel(
                 label: 'Tab width behavior',
-                child: Combobox<TabWidthBehavior>(
+                child: ComboBox<TabWidthBehavior>(
                   isExpanded: true,
                   value: tabWidthBehavior,
                   items: TabWidthBehavior.values.map((behavior) {
@@ -85,7 +82,7 @@ class TabViewPage extends ScrollablePage {
               width: 150,
               child: InfoLabel(
                 label: 'Close button visbility',
-                child: Combobox<CloseButtonVisibilityMode>(
+                child: ComboBox<CloseButtonVisibilityMode>(
                   isExpanded: true,
                   value: closeButtonVisibilityMode,
                   items: CloseButtonVisibilityMode.values.map((mode) {

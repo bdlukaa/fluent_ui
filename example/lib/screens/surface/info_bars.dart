@@ -63,7 +63,7 @@ class InfoBarPage extends ScrollablePage {
               Container(
                 margin: const EdgeInsets.only(top: 10.0),
                 width: 150.0,
-                child: Combobox<InfoBarSeverity>(
+                child: ComboBox<InfoBarSeverity>(
                   isExpanded: true,
                   items: InfoBarSeverity.values
                       .map(

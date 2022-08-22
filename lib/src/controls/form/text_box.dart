@@ -132,6 +132,7 @@ class TextBox extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
+    this.unfocusedColor,
     this.clearGlobalKey,
     this.selectionControls,
     this.mouseCursor,
@@ -341,6 +342,12 @@ class TextBox extends StatefulWidget {
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
   final Color? highlightColor;
+
+  /// The unfocused color of the highlight border.
+  ///
+  /// See also:
+  ///   * [highlightColor], displayed when the field is focused
+  final Color? unfocusedColor;
 
   /// {@macro flutter.widgets.editableText.strutStyle}
   final StrutStyle? strutStyle;
@@ -913,9 +920,10 @@ class _TextBoxState extends State<TextBox>
               ? widget.highlightColor ?? theme.accentColor
               : !enabled
                   ? Colors.transparent
-                  : theme.brightness.isLight
-                      ? const Color.fromRGBO(0, 0, 0, 0.45)
-                      : const Color.fromRGBO(255, 255, 255, 0.54),
+                  : widget.unfocusedColor ??
+                      (theme.brightness.isLight
+                          ? const Color.fromRGBO(0, 0, 0, 0.45)
+                          : const Color.fromRGBO(255, 255, 255, 0.54)),
           width: _effectiveFocusNode.hasFocus ? 2 : 0,
         ),
       ),

@@ -23,7 +23,7 @@ typedef DropDownButtonBuilder = Widget Function(
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
 ///  content. Used to back this button
-///   * [Combobox], a list of items that a user can select from
+///   * [ComboBox], a list of items that a user can select from
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
@@ -143,21 +143,24 @@ class _DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
 
-    final buttonChildren = <Widget>[
+    // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
+    List<Widget> space(Iterable<Widget> children) => children
+        .expand((item) sync* {
+          yield const SizedBox(width: 8.0);
+          yield item;
+        })
+        .skip(1)
+        .toList();
+
+    final buttonChildren = space(<Widget>[
       if (widget.leading != null)
-        Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0),
-          child: IconTheme.merge(
-            data: const IconThemeData(size: 20.0),
-            child: widget.leading!,
-          ),
+        IconTheme.merge(
+          data: const IconThemeData(size: 20.0),
+          child: widget.leading!,
         ),
       if (widget.title != null) widget.title!,
-      Padding(
-        padding: const EdgeInsetsDirectional.only(start: 8.0),
-        child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
-      ),
-    ];
+      widget.trailing ?? _kDefaultDropdownButtonTrailing,
+    ]);
 
     return Flyout(
       placement: widget.placement,

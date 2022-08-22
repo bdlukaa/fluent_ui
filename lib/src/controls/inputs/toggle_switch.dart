@@ -2,6 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+typedef ToggleSwitchThumbBuilder = Widget Function(
+  BuildContext context,
+  Set<ButtonStates> states,
+);
+
 /// The toggle switch represents a physical switch that allows users to
 /// turn things on or off, like a light switch. Use toggle switch controls
 /// to present users with two mutually exclusive options (such as on/off),
@@ -17,10 +22,13 @@ import 'package:flutter/rendering.dart';
 /// by the device.
 ///
 /// See also:
-///   - [Checkbox]
-///   - [RadioButton]
-///   - [ToggleButton]
-///   - [RadioButton]
+///
+///  * [Checkbox], which let the user select multiple items from a collection of
+///    two or more items
+///  * [ToggleButton], which let the user toggle a option on or off
+///  * [RadioButton], which let the user select one item from a collection of two
+///    or more options
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/toggles>
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
@@ -29,29 +37,41 @@ class ToggleSwitch extends StatefulWidget {
     required this.onChanged,
     this.style,
     this.content,
+    this.leadingContent = false,
     this.semanticLabel,
     this.thumb,
+    this.thumbBuilder,
     this.focusNode,
     this.autofocus = false,
   }) : super(key: key);
 
-  /// Whether the [ToggleSwitch] is checked
+  /// Whether this toggle switch is checked
   final bool checked;
 
-  /// Called when the value of the [ToggleSwitch] should change.
+  /// Called when the value of the switch should change.
   ///
-  /// This callback passes a new value, but doesn't update its state
-  /// internally.
+  /// This callback updates a new value, but doesn't update its state internally.
   ///
-  /// If this callback is null, the ToggleSwitch is disabled.
+  /// If this callback is null, the switch is considered disabled.
   final ValueChanged<bool>? onChanged;
 
-  /// The thumb of this [ToggleSwitch]. If this is null, defaults to [DefaultToggleSwitchThumb]
+  /// The thumb of the switch
+  ///
+  /// [DefaultToggleSwitchThumb] is used by default
+  ///
+  /// See also:
+  ///   * [thumbBuilder], which builds the thumb based on the current state
+  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
   final Widget? thumb;
 
-  /// The style of this [ToggleSwitch].
+  /// Build the thumb of the switch based on the current state
   ///
-  /// This style is mescled with [ThemeData.toggleSwitchThemeData]
+  /// See also:
+  ///   * [thumb], a static thumb
+  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
+  final ToggleSwitchThumbBuilder? thumbBuilder;
+
+  /// The style of the toggle switch
   final ToggleSwitchThemeData? style;
 
   /// The content of the radio button.
@@ -62,7 +82,12 @@ class ToggleSwitch extends StatefulWidget {
   /// Usually a [Text] or [Icon] widget
   final Widget? content;
 
-  /// The `semanticLabel` of this [ToggleSwitch]
+  /// Whether to position [content] before the switch, if provided
+  ///
+  /// Defaults to `false`
+  final bool leadingContent;
+
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -76,6 +101,8 @@ class ToggleSwitch extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(FlagProperty('leadingContent',
+          value: leadingContent, ifFalse: 'trailingContent'))
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
       ..add(
           FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
@@ -153,6 +180,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               ? style.checkedDecoration?.resolve(states)
               : style.uncheckedDecoration?.resolve(states),
           child: widget.thumb ??
+              widget.thumbBuilder?.call(context, states) ??
               DefaultToggleSwitchThumb(
                 checked: widget.checked,
                 style: style,
@@ -160,11 +188,20 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               ),
         );
         if (widget.content != null) {
-          child = Row(mainAxisSize: MainAxisSize.min, children: [
-            child,
-            const SizedBox(width: 10.0),
-            widget.content!,
-          ]);
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: widget.leadingContent
+                ? [
+                    widget.content!,
+                    const SizedBox(width: 10.0),
+                    child,
+                  ]
+                : [
+                    child,
+                    const SizedBox(width: 10.0),
+                    widget.content!,
+                  ],
+          );
         }
         return Semantics(
           checked: widget.checked,
@@ -202,8 +239,10 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
-      height: 18,
-      width: 12 + (states.isHovering ? 2 : 0) + (states.isPressing ? 5 : 0),
+      height: 18.0,
+      width: 12.0 +
+          (states.isHovering ? 2.0 : 0.0) +
+          (states.isPressing ? 5.0 : 0),
       decoration: checked
           ? style?.checkedThumbDecoration?.resolve(states)
           : style?.uncheckedThumbDecoration?.resolve(states),
@@ -337,16 +376,16 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: style.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: !states.isDisabled
+          color: states.isDisabled
               ? style.resources.textOnAccentFillColorDisabled
               : style.resources.textOnAccentFillColorPrimary,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
-          color: !states.isDisabled
-              ? style.resources.textFillColorSecondary
-              : style.resources.textFillColorDisabled,
+          color: states.isDisabled
+              ? style.resources.textFillColorDisabled
+              : style.resources.textFillColorSecondary,
         );
       }),
     );
