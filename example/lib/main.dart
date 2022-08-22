@@ -194,6 +194,24 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.navigation_flipper),
       title: const Text('NavigationView'),
     ),
+    PaneItemExpander(
+      icon: const Icon(FluentIcons.account_management),
+      title: const Text('Sample PaneItemExpander'),
+      items: [
+        PaneItem(
+          icon: const Icon(FluentIcons.favorite_star),
+          title: const Text('First Item'),
+        ),
+        PaneItem(
+          icon: const Icon(FluentIcons.favorite_star),
+          title: const Text('Second Item'),
+        ),
+        PaneItem(
+          icon: const Icon(FluentIcons.favorite_star),
+          title: const Text('Third Item'),
+        ),
+      ],
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.table_header_row),
       title: const Text('TabView'),
@@ -278,7 +296,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     TimePickerPage(),
     DatePickerPage(),
     // navigation
-    EmptyPage(),
+    EmptyPage(), // navigation view
+    EmptyPage(), // sample pane item expander
+    EmptyPage(), // first
+    EmptyPage(), // second
+    EmptyPage(), // third
     TabViewPage(),
     TreeViewPage(),
     // surfaces

@@ -492,7 +492,11 @@ class PaneItemAction extends PaneItem {
   }
 }
 
+typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
+
 class PaneItemExpander extends PaneItem {
+  final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
+
   PaneItemExpander({
     required Widget icon,
     required this.items,
@@ -529,6 +533,7 @@ class PaneItemExpander extends PaneItem {
     int? itemIndex,
   }) {
     return _PaneItemExpander(
+      key: expanderKey,
       item: this,
       items: items,
       displayMode: displayMode,
@@ -602,7 +607,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = InheritedNavigationView.maybeOf(context)!;
+    final body = InheritedNavigationView.of(context);
 
     // Indexes
     // Ensure, if the child item is not visible, this is shown as the selected
@@ -714,8 +719,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
               items: widget.items.map<MenuFlyoutItemInterface>((item) {
                 if (item is PaneItem) {
                   return MenuFlyoutItem(
-                    leading: item.icon,
-                    text: item.title ?? const SizedBox.shrink(),
+                    // leading: item.icon,
+                    text: item.title ?? item.icon,
                     trailing: item.infoBadge,
                     onPressed: () {
                       widget.onItemPressed?.call(item);

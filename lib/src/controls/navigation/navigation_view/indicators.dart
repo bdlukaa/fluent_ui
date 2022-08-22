@@ -94,19 +94,20 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return InheritedNavigationView.of(context).oldIndex;
   }
 
-  /// Whether this item is a child of a [PaneItemExpander]
-  bool get isSubItem {
+  /// The parent of this item, if any
+  PaneItemExpander? get parent {
     final items = InheritedNavigationView.of(context).pane!.effectiveItems;
 
     final expandableItems = items.whereType<PaneItemExpander>();
-    if (expandableItems.isEmpty) return false;
+    if (expandableItems.isEmpty) return null;
 
     final item =
         InheritedNavigationView.of(context).pane!.effectiveItems[itemIndex];
     for (final expandable in expandableItems) {
-      if (expandable.items.contains(item)) return true;
+      if (expandable.items.contains(item)) return expandable;
     }
-    return false;
+
+    return null;
   }
 
   @override
@@ -342,8 +343,13 @@ class _StickyNavigationIndicatorState
                     ? EdgeInsets.only(
                         left: () {
                           final x = offsets![itemIndex].dx;
-                          if (isSubItem) {
-                            return x + _PaneItemExpander.leadingPadding.start;
+                          if (parent != null) {
+                            final isOpen =
+                                parent!.expanderKey.currentState?._open ??
+                                    false;
+                            if (isOpen) {
+                              return x + _PaneItemExpander.leadingPadding.start;
+                            }
                           }
                           return x;
                         }(),
