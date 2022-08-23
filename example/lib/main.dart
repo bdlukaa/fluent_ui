@@ -201,6 +201,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         PaneItem(
           icon: const Icon(FluentIcons.favorite_star),
           title: const Text('First Item'),
+          infoBadge: const InfoBadge(
+            source: Text('8'),
+          ),
         ),
         PaneItem(
           icon: const Icon(FluentIcons.favorite_star),
@@ -297,10 +300,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     DatePickerPage(),
     // navigation
     EmptyPage(), // navigation view
-    EmptyPage(), // sample pane item expander
-    EmptyPage(), // first
-    EmptyPage(), // second
-    EmptyPage(), // third
+    EmptyPage(
+        const Text('SAMPLE PANE ITEM EXPANDER')), // sample pane item expander
+    EmptyPage(const Text('FIRST PANE')), // first
+    EmptyPage(const Text('SECOND PANE')), // second
+    EmptyPage(const Text('THIRD PANE')), // third
     TabViewPage(),
     TreeViewPage(),
     // surfaces

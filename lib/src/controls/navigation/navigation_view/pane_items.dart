@@ -718,15 +718,13 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
             return MenuFlyout(
               items: widget.items.map<MenuFlyoutItemInterface>((item) {
                 if (item is PaneItem) {
-                  return MenuFlyoutItem(
-                    // leading: item.icon,
-                    text: item.title ?? item.icon,
-                    trailing: item.infoBadge,
+                  return _PaneItemExpanderMenuItem(
+                    item: item,
                     onPressed: () {
                       widget.onItemPressed?.call(item);
                       Navigator.pop(context);
                     },
-                    selected: body.pane!.isSelected(item),
+                    isSelected: body.pane!.isSelected(item),
                   );
                 } else if (item is PaneItemSeparator) {
                   return const MenuFlyoutSeparator();
@@ -743,6 +741,58 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
       default:
         return item;
     }
+  }
+}
+
+class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
+  const _PaneItemExpanderMenuItem({
+    Key? key,
+    required this.item,
+    required this.onPressed,
+    required this.isSelected,
+  }) : super(key: key);
+
+  final PaneItem item;
+  final VoidCallback onPressed;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final size = ContentSizeInfo.of(context).size;
+    return Container(
+      width: size.isEmpty ? null : size.width,
+      padding: MenuFlyout.itemsPadding,
+      child: HoverButton(
+        onPressed: onPressed,
+        builder: (context, states) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+            margin: const EdgeInsets.only(bottom: 4.0),
+            decoration: BoxDecoration(
+              color: ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              ),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Flexible(
+                fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+                child: item.title ?? item.icon,
+              ),
+              if (item.infoBadge != null)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  child: item.infoBadge!,
+                ),
+            ]),
+          );
+        },
+      ),
+    );
   }
 }
 

@@ -350,6 +350,11 @@ class _StickyNavigationIndicatorState
                             if (isOpen) {
                               return x + _PaneItemExpander.leadingPadding.start;
                             }
+
+                            final parentIndex =
+                                pane.effectiveItems.indexOf(parent!);
+                            final parentX = offsets![parentIndex].dx;
+                            return parentX;
                           }
                           return x;
                         }(),
