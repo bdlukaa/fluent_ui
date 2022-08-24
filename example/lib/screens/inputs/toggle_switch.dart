@@ -23,7 +23,10 @@ class ToggleSwitchPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use ToggleSwitch controls to present users with exactly two mutually exclusive options (like on/off), where choosing an option results in an immediate commit. A toggle switch should have a single label',
+        'The toggle switch represents a physical switch that allows users to '
+        'turn things on or off, like a light switch. Use toggle switch controls '
+        'to present users with two mutually exclusive options (such as on/off), '
+        'where choosing an option provides immediate results.',
       ),
       subtitle(content: const Text('A simple ToggleSwitch')),
       CardHighlight(
@@ -31,11 +34,7 @@ class ToggleSwitchPage extends ScrollablePage {
           alignment: Alignment.centerLeft,
           child: ToggleSwitch(
             checked: firstValue,
-            onChanged: disabled
-                ? null
-                : (v) {
-                    setState(() => firstValue = v);
-                  },
+            onChanged: disabled ? null : (v) => setState(() => firstValue = v),
             content: Text(firstValue ? 'On' : 'Off'),
           ),
         ),
@@ -55,11 +54,8 @@ ToggleSwitch(
             label: 'Header',
             child: ToggleSwitch(
               checked: secondValue,
-              onChanged: disabled
-                  ? null
-                  : (v) {
-                      setState(() => secondValue = v);
-                    },
+              onChanged:
+                  disabled ? null : (v) => setState(() => secondValue = v),
               content: Text(secondValue ? 'Working' : 'Do work'),
             ),
           ),

@@ -41,6 +41,18 @@ abstract class ScrollablePage extends Page {
     );
   }
 
+  Widget description({required Widget content}) {
+    return Builder(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: DefaultTextStyle(
+          style: FluentTheme.of(context).typography.body!,
+          child: content,
+        ),
+      );
+    });
+  }
+
   Widget subtitle({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(

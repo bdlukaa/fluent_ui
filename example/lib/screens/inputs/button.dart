@@ -27,6 +27,9 @@ class ButtonPage extends ScrollablePage {
         'The Button control provides a Click event to respond to user input from a touch, mouse, keyboard, stylus, or other input device. You can put different kinds of content in a button, such as text or an image, or you can restyle a button to give it a new look.',
       ),
       subtitle(content: const Text('A simple button with text content')),
+      description(
+        content: const Text('A button that initiates an immediate action.'),
+      ),
       CardHighlight(
         child: Row(children: [
           Button(
@@ -98,8 +101,11 @@ class ButtonPage extends ScrollablePage {
 )''',
       ),
       subtitle(content: const Text('A simple ToggleButton with text content')),
-      const Text(
-        'A ToggleButton looks like a Button, but works like a CheckBox. It typically has two states, checked (on) or unchecked (off).',
+      description(
+        content: const Text(
+          'A ToggleButton looks like a Button, but works like a CheckBox. It '
+          'typically has two states, checked (on) or unchecked (off).',
+        ),
       ),
       CardHighlight(
         child: Row(children: [
@@ -179,47 +185,52 @@ ToggleButton(
 )''',
       ),
       subtitle(content: const Text('SplitButton')),
-      CardHighlight(
-        child: Row(
-          children: [
-            SplitButtonBar(
-              buttons: [
-                Button(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: splitButtonDisabled
-                          ? FluentTheme.of(context).accentColor.darker
-                          : FluentTheme.of(context).accentColor,
-                      borderRadius: const BorderRadiusDirectional.horizontal(
-                        start: Radius.circular(4.0),
-                      ),
-                    ),
-                    height: 24,
-                    width: 24,
-                  ),
-                  onPressed: splitButtonDisabled ? null : () {},
-                ),
-                IconButton(
-                  icon: const SizedBox(
-                    // height: splitButtonHeight,
-                    child: Icon(FluentIcons.chevron_down, size: 10.0),
-                  ),
-                  onPressed: splitButtonDisabled ? null : () {},
-                ),
-              ],
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: splitButtonDisabled,
-              onChanged: (v) {
-                setState(() {
-                  splitButtonDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ],
+      description(
+        content: const Text(
+          'Represents a button with two parts that can be invoked separately. '
+          'One part behaves like a standard button and the other part invokes '
+          'a flyout.',
         ),
+      ),
+      CardHighlight(
+        child: Row(children: [
+          SplitButtonBar(
+            buttons: [
+              Button(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: splitButtonDisabled
+                        ? FluentTheme.of(context).accentColor.darker
+                        : FluentTheme.of(context).accentColor,
+                    borderRadius: const BorderRadiusDirectional.horizontal(
+                      start: Radius.circular(4.0),
+                    ),
+                  ),
+                  height: 24,
+                  width: 24,
+                ),
+                onPressed: splitButtonDisabled ? null : () {},
+              ),
+              IconButton(
+                icon: const SizedBox(
+                  // height: splitButtonHeight,
+                  child: Icon(FluentIcons.chevron_down, size: 10.0),
+                ),
+                onPressed: splitButtonDisabled ? null : () {},
+              ),
+            ],
+          ),
+          const Spacer(),
+          ToggleSwitch(
+            checked: splitButtonDisabled,
+            onChanged: (v) {
+              setState(() {
+                splitButtonDisabled = v;
+              });
+            },
+            content: const Text('Disabled'),
+          ),
+        ]),
         codeSnippet: '''SplitButtonBar(
   buttons: [
     Button(
@@ -238,8 +249,13 @@ ToggleButton(
 )''',
       ),
       subtitle(content: const Text('RadioButton')),
-      const Text(
-        'A control that allows a user to select a single option from a group of options',
+      description(
+        content: const Text(
+          'Radio buttons, also called option buttons, let users select one option '
+          'from a collection of two or more mutually exclusive, but related, '
+          'options. Radio buttons are always used in groups, and each option is '
+          'represented by one radio button in the group.',
+        ),
       ),
       CardHighlight(
         child: Row(children: [
