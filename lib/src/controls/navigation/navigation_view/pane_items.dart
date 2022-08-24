@@ -1,7 +1,7 @@
 part of 'view.dart';
 
 class NavigationPaneItem with Diagnosticable {
-  final GlobalKey itemKey = GlobalKey();
+  GlobalKey itemKey = GlobalKey();
 
   NavigationPaneItem();
 }
@@ -19,11 +19,13 @@ class NavigationPaneItem with Diagnosticable {
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
     required this.icon,
     this.title,
+    this.trailing,
     this.infoBadge,
     this.focusNode,
     this.autofocus = false,
@@ -53,7 +55,13 @@ class PaneItem extends NavigationPaneItem {
   final Widget icon;
 
   /// The info badge used by this item
-  final InfoBadge? infoBadge;
+  final Widget? infoBadge;
+
+  /// The trailing widget used by this item. If the current display mode is
+  /// compact, this is not disaplayed
+  ///
+  /// Usually an [Icon] widget
+  final Widget? trailing;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -80,6 +88,7 @@ class PaneItem extends NavigationPaneItem {
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
+    int? itemIndex,
     bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
@@ -194,6 +203,11 @@ class PaneItem extends NavigationPaneItem {
                       padding: const EdgeInsetsDirectional.only(end: 8.0),
                       child: infoBadge!,
                     ),
+                  if (trailing != null)
+                    IconTheme.merge(
+                      data: const IconThemeData(size: 16.0),
+                      child: trailing!,
+                    ),
                 ]),
               );
             case PaneDisplayMode.top:
@@ -206,6 +220,11 @@ class PaneItem extends NavigationPaneItem {
                   ),
                 ),
                 if (showTextOnTop) textResult,
+                if (trailing != null)
+                  IconTheme.merge(
+                    data: const IconThemeData(size: 16.0),
+                    child: trailing!,
+                  ),
               ]);
               if (infoBadge != null) {
                 return Stack(key: itemKey, clipBehavior: Clip.none, children: [
@@ -279,6 +298,7 @@ class PaneItem extends NavigationPaneItem {
     );
 
     final int? index = () {
+      if (itemIndex != null) return itemIndex;
       if (maybeBody?.pane?.indicator != null) {
         return maybeBody!.pane!.effectiveIndexOf(this);
       }
@@ -312,6 +332,30 @@ class PaneItem extends NavigationPaneItem {
       }(),
     );
   }
+
+  PaneItem copyWith({
+    Widget? title,
+    Widget? icon,
+    Widget? infoBadge,
+    Widget? trailing,
+    FocusNode? focusNode,
+    bool? autofocus,
+    MouseCursor? mouseCursor,
+    ButtonState<Color?>? tileColor,
+    ButtonState<Color?>? selectedTileColor,
+  }) {
+    return PaneItem(
+      title: title ?? this.title,
+      icon: icon ?? this.icon,
+      infoBadge: infoBadge ?? this.infoBadge,
+      trailing: trailing ?? this.trailing,
+      focusNode: focusNode ?? this.focusNode,
+      autofocus: autofocus ?? this.autofocus,
+      mouseCursor: mouseCursor ?? this.mouseCursor,
+      tileColor: tileColor ?? this.tileColor,
+      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
+    )..itemKey = itemKey;
+  }
 }
 
 /// Separators for grouping navigation items. Set the color property to
@@ -319,9 +363,11 @@ class PaneItem extends NavigationPaneItem {
 /// under the hood, consequently uses the closest [DividerThemeData].
 ///
 /// See also:
+///
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
   PaneItemSeparator({this.color, this.thickness});
@@ -356,9 +402,11 @@ class PaneItemSeparator extends NavigationPaneItem {
 /// mode is [PaneDisplayMode.compact]
 ///
 /// See also:
+///
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemHeader({required this.header});
@@ -396,26 +444,27 @@ class PaneItemHeader extends NavigationPaneItem {
 
 /// The item used by [NavigationView] to display the tiles.
 ///
-/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
-/// used as a tooltip. On the other display modes, [icon] and [title] are
-/// displayed in a [Row].
+/// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is used
+/// as a tooltip. On the other display modes, [icon] and [title] are displayed
+/// in a [Row].
 ///
-/// The difference with [PaneItem] is that the item is not linked
-/// to a page but to an action passed in parameter (callback)
+/// The difference with [PaneItem] is that the item is not linked to a page but
+/// to an action passed in parameter (callback)
 ///
 /// See also:
 ///
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
     required this.onTap,
-    title,
-    infoBadge,
-    focusNode,
-    autofocus = false,
+    Widget? title,
+    Widget? infoBadge,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) : super(
           icon: icon,
           title: title,
@@ -435,7 +484,7 @@ class PaneItemAction extends PaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
-    int index = -1,
+    int? itemIndex,
   }) {
     return super.build(
       context,
@@ -444,13 +493,345 @@ class PaneItemAction extends PaneItem {
       displayMode: displayMode,
       showTextOnTop: showTextOnTop,
       autofocus: autofocus,
+      itemIndex: itemIndex,
     );
+  }
+}
+
+typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
+
+/// Hierhical navigation item used on [NavigationView]
+///
+/// Some apps may have a more complex hierarchical structure that requires more
+/// than just a flat list of navigation items. You may want to use top-level
+/// navigation items to display categories of pages, with children items
+/// displaying specific pages. It is also useful if you have hub-style pages
+/// that only link to other pages. For these kinds of cases, you should create a
+/// hierarchical [NavigationView].
+///
+/// ![Navigation View Hierarchy Labeled](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/navigation-view-hierarchy-labeled.png)
+///
+/// See also:
+///
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#hierarchical-navigation>
+///  * [PaneItem], the item used by [NavigationView] to render tiles
+///  * [PaneItemSeparator], used to group navigation items
+///  * [PaneItemHeader], used to label groups of items.
+class PaneItemExpander extends PaneItem {
+  final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
+
+  PaneItemExpander({
+    required super.icon,
+    required this.items,
+    super.title,
+    super.infoBadge,
+    super.trailing = kDefaultTrailing,
+    super.focusNode,
+    super.autofocus = false,
+    super.mouseCursor,
+    super.tileColor,
+    super.selectedTileColor,
+  }) : assert(
+          items.any((item) => item is PaneItemExpander) == false,
+          'There can not be nested PaneItemExpanders',
+        );
+
+  final List<NavigationPaneItem> items;
+  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
+
+  @override
+  Widget build(
+    BuildContext context,
+    bool selected,
+    VoidCallback? onPressed, {
+    PaneDisplayMode? displayMode,
+    bool showTextOnTop = true,
+    ValueChanged<PaneItem>? onItemPressed,
+    bool? autofocus,
+    int? itemIndex,
+  }) {
+    return _PaneItemExpander(
+      key: expanderKey,
+      item: this,
+      items: items,
+      displayMode: displayMode,
+      showTextOnTop: showTextOnTop,
+      selected: selected,
+      onPressed: onPressed,
+      onItemPressed: onItemPressed,
+    );
+  }
+}
+
+class _PaneItemExpander extends StatefulWidget {
+  const _PaneItemExpander({
+    Key? key,
+    required this.item,
+    required this.items,
+    required this.displayMode,
+    required this.showTextOnTop,
+    required this.selected,
+    required this.onPressed,
+    required this.onItemPressed,
+  }) : super(key: key);
+
+  final PaneItem item;
+  final List<NavigationPaneItem> items;
+  final PaneDisplayMode? displayMode;
+  final bool showTextOnTop;
+  final bool selected;
+  final VoidCallback? onPressed;
+  final ValueChanged<PaneItem>? onItemPressed;
+
+  static const leadingPadding = EdgeInsetsDirectional.only(start: 28.0);
+
+  @override
+  State<_PaneItemExpander> createState() => __PaneItemExpanderState();
+}
+
+class __PaneItemExpanderState extends State<_PaneItemExpander>
+    with SingleTickerProviderStateMixin {
+  final flyoutController = FlyoutController();
+  bool get useFlyout {
+    return widget.displayMode != PaneDisplayMode.open;
+  }
+
+  bool _open = false;
+  late AnimationController controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 100),
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    flyoutController.dispose();
+    super.dispose();
+  }
+
+  void toggleOpen() {
+    setState(() => _open = !_open);
+    if (useFlyout) {
+      flyoutController.toggle();
+    }
+    if (_open) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final body = InheritedNavigationView.of(context);
+
+    // Indexes
+    // Ensure, if the child item is not visible, this is shown as the selected
+    // item
+    int realIndex = body.pane!.effectiveIndexOf(widget.item);
+    final childrenIndexes = body.pane!.effectiveItems.where((item) {
+      return widget.items.contains(item);
+    }).map((item) => body.pane!.effectiveIndexOf(item));
+    if (childrenIndexes.contains(body.pane!.selected!) && !_open) {
+      realIndex = body.pane!.selected!;
+    }
+
+    // the item is this item with changes on the trailing widget: the padding
+    // and rotation animation
+    final Widget item = widget.item
+        .copyWith(
+      trailing: GestureDetector(
+        onTap: toggleOpen,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.only(end: 14.0),
+          child: AnimatedBuilder(
+            animation: controller,
+            builder: (context, child) => RotationTransition(
+              turns: controller.drive(Tween<double>(
+                begin: _open ? 0 : 1.0,
+                end: _open ? 0.5 : 0.5,
+              )),
+              child: child,
+            ),
+            child: widget.item.trailing!,
+          ),
+        ),
+      ),
+    )
+        .build(
+      context,
+      widget.selected,
+      () {
+        widget.onPressed?.call();
+        toggleOpen();
+      },
+      displayMode: widget.displayMode,
+      showTextOnTop: widget.showTextOnTop,
+      itemIndex: realIndex,
+    );
+    if (widget.items.isEmpty) {
+      return item;
+    }
+    final displayMode = body.displayMode;
+    switch (displayMode) {
+      case PaneDisplayMode.open:
+      case PaneDisplayMode.minimal:
+        return Column(mainAxisSize: MainAxisSize.min, children: [
+          item,
+          AnimatedSize(
+            duration: theme.fastAnimationDuration,
+            curve: Curves.easeIn,
+            child: !_open
+                ? const SizedBox(width: double.infinity)
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.items.map((item) {
+                      if (item is PaneItem) {
+                        final i = item.copyWith(
+                          icon: Padding(
+                            padding: _PaneItemExpander.leadingPadding,
+                            child: item.icon,
+                          ),
+                        );
+                        return i.build(
+                          context,
+                          body.pane!.isSelected(item),
+                          () => widget.onItemPressed?.call(item),
+                          displayMode: widget.displayMode,
+                          showTextOnTop: widget.showTextOnTop,
+                          itemIndex: body.pane!.effectiveIndexOf(item),
+                        );
+                      } else if (item is PaneItemHeader) {
+                        return item.build(context);
+                      } else if (item is PaneItemSeparator) {
+                        return item.build(
+                          context,
+                          widget.displayMode == PaneDisplayMode.top
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                        );
+                      } else {
+                        throw UnsupportedError(
+                          '${item.runtimeType} is not a supported item type',
+                        );
+                      }
+                    }).toList(),
+                  ),
+          ),
+        ]);
+      case PaneDisplayMode.top:
+      case PaneDisplayMode.compact:
+        return Flyout(
+          controller: flyoutController,
+          position: displayMode == PaneDisplayMode.compact
+              ? FlyoutPosition.side
+              : FlyoutPosition.below,
+          placement: displayMode == PaneDisplayMode.compact
+              ? FlyoutPlacement.end
+              : FlyoutPlacement.center,
+          onClose: toggleOpen,
+          content: (context) {
+            return MenuFlyout(
+              items: widget.items.map<MenuFlyoutItemInterface>((item) {
+                if (item is PaneItem) {
+                  return _PaneItemExpanderMenuItem(
+                    item: item,
+                    onPressed: () {
+                      widget.onItemPressed?.call(item);
+                      Navigator.pop(context);
+                    },
+                    isSelected: body.pane!.isSelected(item),
+                  );
+                } else if (item is PaneItemSeparator) {
+                  return const MenuFlyoutSeparator();
+                } else {
+                  throw UnsupportedError(
+                    '${item.runtimeType} is not a supported item type',
+                  );
+                }
+              }).toList(),
+            );
+          },
+          child: item,
+        );
+      default:
+        return item;
+    }
+  }
+}
+
+class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
+  const _PaneItemExpanderMenuItem({
+    Key? key,
+    required this.item,
+    required this.onPressed,
+    required this.isSelected,
+  }) : super(key: key);
+
+  final PaneItem item;
+  final VoidCallback onPressed;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final size = ContentSizeInfo.of(context).size;
+    return Container(
+      width: size.isEmpty ? null : size.width,
+      padding: MenuFlyout.itemsPadding,
+      child: HoverButton(
+        onPressed: onPressed,
+        builder: (context, states) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+            margin: const EdgeInsets.only(bottom: 4.0),
+            decoration: BoxDecoration(
+              color: ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              ),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Flexible(
+                fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+                child: item.title ?? item.icon,
+              ),
+              if (item.infoBadge != null)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  child: item.infoBadge!,
+                ),
+            ]),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _PaneItemExpanderItem extends LinkedListEntry<_PaneItemExpanderItem> {
+  final PaneItem parent;
+  final NavigationPaneItem expanderItem;
+  final List<NavigationPaneItem> siblings;
+
+  _PaneItemExpanderItem(this.parent, this.expanderItem, this.siblings);
+
+  @override
+  String toString() {
+    return '$parent : $expanderItem : $siblings';
   }
 }
 
 extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> _getPaneItemsOffsets(GlobalKey<State<StatefulWidget>> paneKey) {
+  List<Offset> _getPaneItemsOffsets(
+    GlobalKey<State<StatefulWidget>> paneKey,
+  ) {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;

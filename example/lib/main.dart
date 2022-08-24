@@ -278,7 +278,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     TimePickerPage(),
     DatePickerPage(),
     // navigation
-    EmptyPage(),
+    EmptyPage(), // navigation view
+
     TabViewPage(),
     TreeViewPage(),
     // surfaces
@@ -504,6 +505,7 @@ class _LinkPaneItemAction extends PaneItem {
     PaneDisplayMode? displayMode,
     bool showTextOnTop = true,
     bool? autofocus,
+    int? itemIndex,
   }) {
     return Link(
       uri: Uri.parse(link),
@@ -513,6 +515,7 @@ class _LinkPaneItemAction extends PaneItem {
         followLink,
         displayMode: displayMode,
         showTextOnTop: showTextOnTop,
+        itemIndex: itemIndex,
         autofocus: autofocus,
       ),
     );

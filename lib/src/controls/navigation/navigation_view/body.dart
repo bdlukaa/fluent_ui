@@ -18,7 +18,7 @@ class NavigationBody extends StatefulWidget {
     this.transitionBuilder,
     this.animationCurve,
     this.animationDuration,
-  })  : assert(index >= 0 && index <= children.length),
+  })  : assert(index >= 0),
         children = children,
         itemBuilder = null,
         itemCount = null,

@@ -94,6 +94,22 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return InheritedNavigationView.of(context).oldIndex;
   }
 
+  /// The parent of this item, if any
+  PaneItemExpander? get parent {
+    final items = InheritedNavigationView.of(context).pane!.effectiveItems;
+
+    final expandableItems = items.whereType<PaneItemExpander>();
+    if (expandableItems.isEmpty) return null;
+
+    final item =
+        InheritedNavigationView.of(context).pane!.effectiveItems[itemIndex];
+    for (final expandable in expandableItems) {
+      if (expandable.items.contains(item)) return expandable;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return const SizedBox.shrink();
@@ -322,11 +338,25 @@ class _StickyNavigationIndicatorState
                 return const SizedBox.shrink();
               }
             }
-
             return Padding(
               padding: isHorizontal
                   ? EdgeInsets.only(
-                      left: offsets![itemIndex].dx,
+                      left: () {
+                        final x = offsets![itemIndex].dx;
+                        if (parent != null) {
+                          final isOpen =
+                              parent!.expanderKey.currentState?._open ?? false;
+                          if (isOpen) {
+                            return x + _PaneItemExpander.leadingPadding.start;
+                          }
+
+                          final parentIndex =
+                              pane.effectiveItems.indexOf(parent!);
+                          final parentX = offsets![parentIndex].dx;
+                          return parentX;
+                        }
+                        return x;
+                      }(),
                       top: widget.leftPadding * (upAnimation?.value ?? 1.0),
                       bottom:
                           widget.leftPadding * (downAnimation?.value ?? 1.0),
