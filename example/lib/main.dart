@@ -249,27 +249,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.icon_sets_flag),
       title: const Text('Icons'),
     ),
-    PaneItemExpander(
-      icon: const Icon(FluentIcons.account_management),
-      title: const Text('Sample PaneItemExpander'),
-      items: [
-        PaneItem(
-          icon: const Icon(FluentIcons.favorite_star),
-          title: const Text('First Item'),
-          infoBadge: const InfoBadge(
-            source: Text('8'),
-          ),
-        ),
-        PaneItem(
-          icon: const Icon(FluentIcons.favorite_star),
-          title: const Text('Second Item'),
-        ),
-        PaneItem(
-          icon: const Icon(FluentIcons.favorite_star),
-          title: const Text('Third Item'),
-        ),
-      ],
-    ),
   ];
   final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
@@ -286,11 +265,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   late List<NavigationPaneItem> items = originalItems;
 
   final content = <Page>[
-    EmptyPage(
-        const Text('SAMPLE PANE ITEM EXPANDER')), // sample pane item expander
-    EmptyPage(const Text('FIRST PANE')), // first
-    EmptyPage(const Text('SECOND PANE')), // second
-    EmptyPage(const Text('THIRD PANE')), // third
     HomePage(),
     // inputs
     ButtonPage(),

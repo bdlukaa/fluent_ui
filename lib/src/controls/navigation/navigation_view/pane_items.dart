@@ -19,6 +19,7 @@ class NavigationPaneItem with Diagnosticable {
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
@@ -362,9 +363,11 @@ class PaneItem extends NavigationPaneItem {
 /// under the hood, consequently uses the closest [DividerThemeData].
 ///
 /// See also:
+///
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
   PaneItemSeparator({this.color, this.thickness});
@@ -399,9 +402,11 @@ class PaneItemSeparator extends NavigationPaneItem {
 /// mode is [PaneDisplayMode.compact]
 ///
 /// See also:
+///
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemHeader({required this.header});
@@ -451,6 +456,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
+///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
     required Widget icon,
@@ -494,28 +500,40 @@ class PaneItemAction extends PaneItem {
 
 typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 
+/// Hierhical navigation item used on [NavigationView]
+///
+/// Some apps may have a more complex hierarchical structure that requires more
+/// than just a flat list of navigation items. You may want to use top-level
+/// navigation items to display categories of pages, with children items
+/// displaying specific pages. It is also useful if you have hub-style pages
+/// that only link to other pages. For these kinds of cases, you should create a
+/// hierarchical [NavigationView].
+///
+/// ![Navigation View Hierarchy Labeled](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/navigation-view-hierarchy-labeled.png)
+///
+/// See also:
+///
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#hierarchical-navigation>
+///  * [PaneItem], the item used by [NavigationView] to render tiles
+///  * [PaneItemSeparator], used to group navigation items
+///  * [PaneItemHeader], used to label groups of items.
 class PaneItemExpander extends PaneItem {
   final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
 
   PaneItemExpander({
-    required Widget icon,
+    required super.icon,
     required this.items,
-    Widget? title,
-    Widget? infoBadge,
-    Widget trailing = kDefaultTrailing,
-    FocusNode? focusNode,
-    bool autofocus = false,
-  })  : assert(
+    super.title,
+    super.infoBadge,
+    super.trailing = kDefaultTrailing,
+    super.focusNode,
+    super.autofocus = false,
+    super.mouseCursor,
+    super.tileColor,
+    super.selectedTileColor,
+  }) : assert(
           items.any((item) => item is PaneItemExpander) == false,
           'There can not be nested PaneItemExpanders',
-        ),
-        super(
-          icon: icon,
-          title: title,
-          infoBadge: infoBadge,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          trailing: trailing,
         );
 
   final List<NavigationPaneItem> items;
@@ -800,6 +818,7 @@ class _PaneItemExpanderItem extends LinkedListEntry<_PaneItemExpanderItem> {
   final PaneItem parent;
   final NavigationPaneItem expanderItem;
   final List<NavigationPaneItem> siblings;
+
   _PaneItemExpanderItem(this.parent, this.expanderItem, this.siblings);
 
   @override

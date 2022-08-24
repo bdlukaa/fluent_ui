@@ -3,7 +3,6 @@ Date format: DD/MM/YYYY
 ## [next]
 
 - `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
-- `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
 - Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
 - `ToggleSwitch` updates:
@@ -20,6 +19,8 @@ Date format: DD/MM/YYYY
   - `ComboBox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
   - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
   - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
+  - `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+- Implemented `PaneItemExpander` ([#299](https://github.com/bdlukaa/fluent_ui/pull/299))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
