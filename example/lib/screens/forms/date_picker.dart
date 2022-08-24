@@ -15,7 +15,14 @@ class DatePickerPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use a DatePicker to let users set a date in your app, for example to schedule an appointment. The DatePicker displays three controls for month, date, and year. These controls are easy to use with touch or mouse, and they can be styled and configured in several different ways.',
+        'Use a DatePicker to let users set a date in your app, for example to '
+        'schedule an appointment. The DatePicker displays three controls for '
+        'month, date, and year. These controls are easy to use with touch or '
+        'mouse, and they can be styled and configured in several different ways.'
+        '\n\nThe entry point displays the chosen date, and when the user '
+        'selects the entry point, a picker surface expands vertically from the '
+        'middle for the user to make a selection. The date picker overlays '
+        'other UI; it doesn\'t push other UI out of the way.',
       ),
       subtitle(content: const Text('A simple DatePicker with a header')),
       CardHighlight(

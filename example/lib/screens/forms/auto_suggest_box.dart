@@ -14,7 +14,9 @@ class AutoSuggestBoxPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'A text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.',
+        'A text control that makes suggestions to users as they type. The app '
+        'is notified when text has been changed by the user and is responsible '
+        'for providing relevant suggestions for this control to display.',
       ),
       subtitle(content: const Text('A basic AutoSuggestBox')),
       CardHighlight(
