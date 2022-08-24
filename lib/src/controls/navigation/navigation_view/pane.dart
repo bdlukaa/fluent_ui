@@ -888,7 +888,6 @@ class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemInterface {
 
 class _MenuFlyoutPaneItemExpanderWidget extends StatefulWidget {
   const _MenuFlyoutPaneItemExpanderWidget({
-    super.key,
     required this.item,
     required this.onPressed,
     required this.onItemPressed,
