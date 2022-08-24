@@ -321,54 +321,54 @@ class _StickyNavigationIndicatorState
       height: double.infinity,
       child: IgnorePointer(
         child: AnimatedBuilder(
-            animation: Listenable.merge([upController, downController]),
-            child: isHorizontal
-                ? Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Container(width: 2.5, decoration: decoration),
-                  )
-                : Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(height: 2.5, decoration: decoration),
-                  ),
-            builder: (context, child) {
-              if (!isSelected) {
-                if (upController.status == AnimationStatus.dismissed ||
-                    downController.status == AnimationStatus.dismissed) {
-                  return const SizedBox.shrink();
-                }
+          animation: Listenable.merge([upController, downController]),
+          child: isHorizontal
+              ? Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Container(width: 2.5, decoration: decoration),
+                )
+              : Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(height: 2.5, decoration: decoration),
+                ),
+          builder: (context, child) {
+            if (!isSelected) {
+              if (upController.status == AnimationStatus.dismissed ||
+                  downController.status == AnimationStatus.dismissed) {
+                return const SizedBox.shrink();
               }
-              return Padding(
-                padding: isHorizontal
-                    ? EdgeInsets.only(
-                        left: () {
-                          final x = offsets![itemIndex].dx;
-                          if (parent != null) {
-                            final isOpen =
-                                parent!.expanderKey.currentState?._open ??
-                                    false;
-                            if (isOpen) {
-                              return x + _PaneItemExpander.leadingPadding.start;
-                            }
-
-                            final parentIndex =
-                                pane.effectiveItems.indexOf(parent!);
-                            final parentX = offsets![parentIndex].dx;
-                            return parentX;
+            }
+            return Padding(
+              padding: isHorizontal
+                  ? EdgeInsets.only(
+                      left: () {
+                        final x = offsets![itemIndex].dx;
+                        if (parent != null) {
+                          final isOpen =
+                              parent!.expanderKey.currentState?._open ?? false;
+                          if (isOpen) {
+                            return x + _PaneItemExpander.leadingPadding.start;
                           }
-                          return x;
-                        }(),
-                        top: widget.leftPadding * (upAnimation?.value ?? 1.0),
-                        bottom:
-                            widget.leftPadding * (downAnimation?.value ?? 1.0),
-                      )
-                    : EdgeInsetsDirectional.only(
-                        start: widget.topPadding * (upAnimation?.value ?? 1.0),
-                        end: widget.topPadding * (downAnimation?.value ?? 1.0),
-                      ),
-                child: child,
-              );
-            }),
+
+                          final parentIndex =
+                              pane.effectiveItems.indexOf(parent!);
+                          final parentX = offsets![parentIndex].dx;
+                          return parentX;
+                        }
+                        return x;
+                      }(),
+                      top: widget.leftPadding * (upAnimation?.value ?? 1.0),
+                      bottom:
+                          widget.leftPadding * (downAnimation?.value ?? 1.0),
+                    )
+                  : EdgeInsetsDirectional.only(
+                      start: widget.topPadding * (upAnimation?.value ?? 1.0),
+                      end: widget.topPadding * (downAnimation?.value ?? 1.0),
+                    ),
+              child: child,
+            );
+          },
+        ),
       ),
     );
   }

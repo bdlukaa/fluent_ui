@@ -681,7 +681,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 child: MenuFlyout(
                   items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
                     final item = widget.pane.items[i];
-                    return buildMenuPaneItem(context, item);
+                    return _buildMenuPaneItem(context, item, _onPressed);
                   }).toList(),
                 ),
               ),
@@ -730,25 +730,34 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       ]),
     );
   }
+}
 
-  MenuFlyoutItemInterface buildMenuPaneItem(
-    BuildContext context,
-    NavigationPaneItem item,
-  ) {
-    if (item is PaneItemSeparator) {
-      return const MenuFlyoutSeparator();
-    } else if (item is PaneItem) {
-      return _MenuFlyoutPaneItem(
-        item: item,
-        onPressed: () => _onPressed(item),
-      );
-    } else if (item is PaneItemHeader) {
-      return _MenuFlyoutHeader(header: item);
-    } else {
-      throw UnsupportedError(
-        '${item.runtimeType} is not a supported navigation pane item type',
-      );
-    }
+MenuFlyoutItemInterface _buildMenuPaneItem(
+  BuildContext context,
+  NavigationPaneItem item,
+  ValueChanged<PaneItem> onPressed, {
+  EdgeInsetsGeometry? paneItemPadding,
+}) {
+  if (item is PaneItemSeparator) {
+    return const MenuFlyoutSeparator();
+  } else if (item is PaneItemExpander) {
+    return _MenuFlyoutPaneItemExpander(
+      item: item,
+      onPressed: () => onPressed(item),
+      onItemPressed: (item) => onPressed(item),
+    );
+  } else if (item is PaneItem) {
+    return _MenuFlyoutPaneItem(
+      item: item,
+      onPressed: () => onPressed(item),
+      padding: paneItemPadding,
+    );
+  } else if (item is PaneItemHeader) {
+    return _MenuFlyoutHeader(header: item);
+  } else {
+    throw UnsupportedError(
+      '${item.runtimeType} is not a supported navigation pane item type',
+    );
   }
 }
 
@@ -772,10 +781,14 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
     Key? key,
     required this.item,
     required this.onPressed,
+    this.trailing = const SizedBox.shrink(),
+    this.padding,
   }) : super(key: key);
 
   final PaneItem item;
   final VoidCallback? onPressed;
+  final Widget trailing;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -815,7 +828,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
 
         return Container(
           width: size.isEmpty ? null : size.width,
-          padding: MenuFlyout.itemsPadding,
+          padding: MenuFlyout.itemsPadding
+              // the scrollbar padding
+              .add(const EdgeInsetsDirectional.only(end: 4.0))
+              .add(padding ?? EdgeInsets.zero),
           height: 36.0,
           color: ButtonThemeData.uncheckedInputColor(
             FluentTheme.of(context),
@@ -840,9 +856,124 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
               child: textResult,
             ),
             if (item.infoBadge != null) item.infoBadge!,
+            trailing,
           ]),
         );
       },
+    );
+  }
+}
+
+class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemInterface {
+  _MenuFlyoutPaneItemExpander({
+    Key? key,
+    required this.item,
+    required this.onPressed,
+    required this.onItemPressed,
+  }) : super(key: key);
+
+  final PaneItemExpander item;
+  final VoidCallback? onPressed;
+  final ValueChanged<PaneItem> onItemPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return _MenuFlyoutPaneItemExpanderWidget(
+      item: item,
+      onPressed: onPressed,
+      onItemPressed: onItemPressed,
+    );
+  }
+}
+
+class _MenuFlyoutPaneItemExpanderWidget extends StatefulWidget {
+  const _MenuFlyoutPaneItemExpanderWidget({
+    super.key,
+    required this.item,
+    required this.onPressed,
+    required this.onItemPressed,
+  });
+
+  final PaneItemExpander item;
+  final VoidCallback? onPressed;
+  final ValueChanged<PaneItem> onItemPressed;
+
+  @override
+  State<_MenuFlyoutPaneItemExpanderWidget> createState() =>
+      _MenuFlyoutPaneItemExpanderState();
+}
+
+class _MenuFlyoutPaneItemExpanderState
+    extends State<_MenuFlyoutPaneItemExpanderWidget>
+    with SingleTickerProviderStateMixin {
+  bool _open = false;
+  late AnimationController controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 100),
+  );
+
+  void toggleOpen() {
+    setState(() => _open = !_open);
+    if (_open) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = ContentSizeInfo.of(context).size;
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
+    return SizedBox(
+      width: size.isEmpty ? null : size.width,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        _MenuFlyoutPaneItem(
+          item: widget.item,
+          onPressed: () {
+            toggleOpen();
+            widget.onPressed?.call();
+          },
+          trailing: AnimatedBuilder(
+            animation: controller,
+            builder: (context, child) => RotationTransition(
+              turns: controller.drive(Tween<double>(
+                begin: _open ? 0 : 1.0,
+                end: _open ? 0.5 : 0.5,
+              )),
+              child: child,
+            ),
+            child: const Icon(FluentIcons.chevron_down, size: 10.0),
+          ),
+        ).build(context),
+        if (!size.isEmpty)
+          AnimatedSize(
+            duration: theme.fastAnimationDuration,
+            curve: Curves.easeIn,
+            child: !_open
+                ? const SizedBox()
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.item.items.map((item) {
+                      return _buildMenuPaneItem(
+                        context,
+                        item,
+                        widget.onItemPressed,
+                        paneItemPadding:
+                            const EdgeInsetsDirectional.only(start: 24.0),
+                      ).build(context);
+                    }).toList(),
+                  ),
+          ),
+      ]),
     );
   }
 }

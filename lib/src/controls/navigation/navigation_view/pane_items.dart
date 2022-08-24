@@ -703,8 +703,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   ),
           ),
         ]);
-      case PaneDisplayMode.compact:
       case PaneDisplayMode.top:
+      case PaneDisplayMode.compact:
         return Flyout(
           controller: flyoutController,
           position: displayMode == PaneDisplayMode.compact
