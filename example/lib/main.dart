@@ -19,6 +19,7 @@ import 'screens/inputs/button.dart';
 import 'screens/inputs/checkbox.dart';
 import 'screens/inputs/slider.dart';
 import 'screens/inputs/toggle_switch.dart';
+import 'screens/navigation/navigation_view.dart';
 import 'screens/navigation/tab_view.dart';
 import 'screens/navigation/tree_view.dart';
 import 'screens/settings.dart';
@@ -278,8 +279,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     TimePickerPage(),
     DatePickerPage(),
     // navigation
-    EmptyPage(), // navigation view
-
+    NavigationViewPage(),
     TabViewPage(),
     TreeViewPage(),
     // surfaces

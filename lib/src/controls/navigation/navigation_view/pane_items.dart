@@ -797,9 +797,13 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
               borderRadius: BorderRadius.circular(6.0),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 12.0),
+                child: item.icon,
+              ),
               Flexible(
                 fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
-                child: item.title ?? item.icon,
+                child: item.title ?? const SizedBox.shrink(),
               ),
               if (item.infoBadge != null)
                 Padding(

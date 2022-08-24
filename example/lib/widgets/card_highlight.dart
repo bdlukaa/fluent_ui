@@ -50,9 +50,11 @@ class _CardHighlightState extends State<CardHighlight> {
         ),
         onStateChanged: (state) {
           Future.delayed(Duration.zero, () {
-            setState(() {
-              isOpen = state;
-            });
+            if (mounted) {
+              setState(() {
+                isOpen = state;
+              });
+            }
           });
         },
         trailing: isOpen
