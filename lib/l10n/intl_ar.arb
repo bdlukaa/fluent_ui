@@ -26,8 +26,8 @@
   "selectAllActionTooltip": "تحديد المحتوى بالكامل",
   "hour": "ساعة",
   "minute": "دقيقة",
-  "am": "AM",
-  "pm": "PM",
+  "am": "ص",
+  "pm": "م",
   "month": "شهر",
   "day": "يوم",
   "year": "سنة"
