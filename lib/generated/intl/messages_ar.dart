@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "am": MessageLookupByLibrary.simpleMessage("AM"),
+        "am": MessageLookupByLibrary.simpleMessage("ص"),
         "backButtonTooltip": MessageLookupByLibrary.simpleMessage("رجوع"),
         "clickToSearch": MessageLookupByLibrary.simpleMessage("انقر للبحث"),
         "closeButtonLabel": MessageLookupByLibrary.simpleMessage("إغلاق"),
@@ -54,7 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pasteActionLabel": MessageLookupByLibrary.simpleMessage("لصق"),
         "pasteActionTooltip": MessageLookupByLibrary.simpleMessage(
             "إدراج محتويات الحافظة إلى الموقع الحالي"),
-        "pm": MessageLookupByLibrary.simpleMessage("PM"),
+        "pm": MessageLookupByLibrary.simpleMessage("م"),
         "restoreWindowTooltip": MessageLookupByLibrary.simpleMessage("إسترجاع"),
         "scrollTabBackwardLabel": MessageLookupByLibrary.simpleMessage(
             "تمرير قائمة علامة التبويب للخلف"),
