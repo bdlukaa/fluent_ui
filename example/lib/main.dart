@@ -298,6 +298,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     const IconsPage().toPage(),
     // others
     Settings(),
+
+    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
 
   @override

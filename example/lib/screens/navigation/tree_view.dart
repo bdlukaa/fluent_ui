@@ -250,6 +250,10 @@ TreeView(
               ),
             ]);
         });
+        setState(() {
+          item.expanded = true;
+          item.updateSelected();
+        });
       },
     ),
   ];

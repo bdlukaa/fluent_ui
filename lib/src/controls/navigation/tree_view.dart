@@ -1,5 +1,6 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 const double _whiteSpace = 28.0;
 
@@ -254,6 +255,53 @@ class TreeViewItem with Diagnosticable {
           value: selected, defaultValue: false, ifFalse: 'unselected'))
       ..add(FlagProperty('loading',
           value: loading, defaultValue: false, ifFalse: 'not loading'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TreeViewItem &&
+        other.key == key &&
+        other.leading == leading &&
+        other.content == content &&
+        other.value == value &&
+        listEquals(other.children, children) &&
+        other.collapsable == collapsable &&
+        other._anyExpandableSiblings == _anyExpandableSiblings &&
+        other.expanded == expanded &&
+        other.selected == selected &&
+        other.onInvoked == onInvoked &&
+        other.backgroundColor == backgroundColor &&
+        other._visible == _visible &&
+        other.autofocus == autofocus &&
+        other.focusNode == focusNode &&
+        other.semanticLabel == semanticLabel &&
+        other.loading == loading &&
+        other.loadingWidget == loadingWidget &&
+        other.lazy == lazy;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^
+        leading.hashCode ^
+        content.hashCode ^
+        value.hashCode ^
+        children.hashCode ^
+        collapsable.hashCode ^
+        _anyExpandableSiblings.hashCode ^
+        expanded.hashCode ^
+        selected.hashCode ^
+        onInvoked.hashCode ^
+        backgroundColor.hashCode ^
+        _visible.hashCode ^
+        autofocus.hashCode ^
+        focusNode.hashCode ^
+        semanticLabel.hashCode ^
+        loading.hashCode ^
+        loadingWidget.hashCode ^
+        lazy.hashCode;
   }
 }
 

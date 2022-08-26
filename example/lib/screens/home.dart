@@ -3,6 +3,7 @@ import 'package:url_launcher/link.dart';
 
 import '../models/sponsor.dart';
 import '../widgets/changelog.dart';
+import '../widgets/material_equivalents.dart';
 import '../widgets/page.dart';
 import '../widgets/sponsor.dart';
 
@@ -209,9 +210,11 @@ class HomePage extends ScrollablePage {
               ),
               const Text('Become a Sponsor!'),
             ]),
-          )
+          ),
         ],
       ),
+      subtitle(content: const Text('Equivalents with the material library')),
+      const MaterialEquivalents(),
     ];
   }
 }
