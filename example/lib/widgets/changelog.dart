@@ -46,46 +46,49 @@ class _ChangelogState extends State<Changelog> {
       constraints: const BoxConstraints(maxWidth: 600),
       content: () {
         if (changelog == null) return const ProgressRing();
-        return Markdown(
-          data: changelog!.map<String>((line) {
-            if (line.startsWith('## [')) {
-              final version = line.split(']').first.replaceAll('## [', '');
-              // if (line.split('-').length == 2) {
-              //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
-              // }
-              String date =
-                  line.split('-').last.replaceAll('[', '').replaceAll(']', '');
+        return SingleChildScrollView(
+          child: Markdown(
+            shrinkWrap: true,
+            data: changelog!.map<String>((line) {
+              if (line.startsWith('## [')) {
+                final version = line.split(']').first.replaceAll('## [', '');
+                // if (line.split('-').length == 2) {
+                //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
+                // }
+                String date =
+                    line.split('-').last.replaceAll('[', '').replaceAll(']', '');
 
-              if (!date.startsWith('##')) {
-                final splitDate = date.split('/');
-                final dateTime = DateTime(
-                  int.parse(splitDate[2]),
-                  int.parse(splitDate[1]),
-                  int.parse(splitDate[0]),
-                );
-                final formatter = DateFormat.MMMMEEEEd();
-                date = '${formatter.format(dateTime)}\n';
-              } else {
-                date = '';
+                if (!date.startsWith('##')) {
+                  final splitDate = date.split('/');
+                  final dateTime = DateTime(
+                    int.parse(splitDate[2]),
+                    int.parse(splitDate[1]),
+                    int.parse(splitDate[0]),
+                  );
+                  final formatter = DateFormat.MMMMEEEEd();
+                  date = '${formatter.format(dateTime)}\n';
+                } else {
+                  date = '';
+                }
+                return '## $version\n$date';
               }
-              return '## $version\n$date';
-            }
-            return line;
-          }).join('\n'),
-          onTapLink: (text, href, title) {
-            launch(href!);
-          },
-          styleSheet: MarkdownStyleSheet.fromTheme(
-            m.Theme.of(context),
-          ).copyWith(
-            a: TextStyle(
-              color: theme.accentColor.resolveFromReverseBrightness(
-                theme.brightness,
-                level: 1,
+              return line;
+            }).join('\n'),
+            onTapLink: (text, href, title) {
+              launch(href!);
+            },
+            styleSheet: MarkdownStyleSheet.fromTheme(
+              m.Theme.of(context),
+            ).copyWith(
+              a: TextStyle(
+                color: theme.accentColor.resolveFromReverseBrightness(
+                  theme.brightness,
+                  level: 1,
+                ),
               ),
             ),
+            padding: const EdgeInsets.all(20.0),
           ),
-          padding: const EdgeInsets.all(20.0),
         );
       }(),
     );
