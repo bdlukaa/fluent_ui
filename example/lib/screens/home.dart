@@ -139,7 +139,11 @@ class HomePage extends ScrollablePage {
       const SizedBox(height: 22.0),
       IconButton(
         onPressed: () {
-          showDialog(context: context, builder: (context) => const Changelog());
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => const Changelog(),
+          );
         },
         icon: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
