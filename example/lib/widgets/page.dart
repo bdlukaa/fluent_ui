@@ -16,30 +16,6 @@ abstract class Page {
     func();
     _controller.add(null);
   }
-}
-
-int _pageIndex = -1;
-
-abstract class ScrollablePage extends Page {
-  ScrollablePage() : super();
-
-  final scrollController = ScrollController();
-  Widget buildHeader(BuildContext context) => const SizedBox.shrink();
-
-  Widget buildBottomBar(BuildContext context) => const SizedBox.shrink();
-
-  List<Widget> buildScrollable(BuildContext context);
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldPage.scrollable(
-      key: PageStorageKey(_pageIndex),
-      scrollController: scrollController,
-      header: buildHeader(context),
-      children: buildScrollable(context),
-      bottomBar: buildBottomBar(context),
-    );
-  }
 
   Widget description({required Widget content}) {
     return Builder(builder: (context) {
@@ -63,6 +39,30 @@ abstract class ScrollablePage extends Page {
         ),
       );
     });
+  }
+}
+
+int _pageIndex = -1;
+
+abstract class ScrollablePage extends Page {
+  ScrollablePage() : super();
+
+  final scrollController = ScrollController();
+  Widget buildHeader(BuildContext context) => const SizedBox.shrink();
+
+  Widget buildBottomBar(BuildContext context) => const SizedBox.shrink();
+
+  List<Widget> buildScrollable(BuildContext context);
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      key: PageStorageKey(_pageIndex),
+      scrollController: scrollController,
+      header: buildHeader(context),
+      children: buildScrollable(context),
+      bottomBar: buildBottomBar(context),
+    );
   }
 }
 

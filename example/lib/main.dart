@@ -33,6 +33,7 @@ import 'screens/surface/progress_indicators.dart';
 import 'screens/surface/tooltip.dart';
 import 'screens/theming/colors.dart';
 import 'screens/theming/icons.dart';
+import 'screens/theming/reveal_focus.dart';
 import 'screens/theming/typography.dart';
 import 'theme.dart';
 
@@ -250,6 +251,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       icon: const Icon(FluentIcons.icon_sets_flag),
       title: const Text('Icons'),
     ),
+    PaneItem(
+      icon: const Icon(FluentIcons.focus),
+      title: const Text('Reveal Focus'),
+    ),
   ];
   final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
@@ -296,6 +301,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ColorsPage(),
     const TypographyPage().toPage(),
     const IconsPage().toPage(),
+    RevealFocusPage(),
     // others
     Settings(),
 

@@ -42,32 +42,7 @@
 - [Motivation](#motivation)
 - [Installation](#installation)
   - [Badge](#badge)
-- [Style](#style)
-  - [Icons](#icons)
-  - [Colors](#colors)
-    - [Accent color](#accent-color)
-  - [Brightness](#brightness)
-  - [Visual Density](#visual-density)
-  - [Typograpy](#typography)
-    - [Font](#font)
-    - [Type ramp](#type-ramp)
-  - [Reveal Focus](#reveal-focus)
-- [Navigation](#navigation)
-  - [Bottom Navigation](#bottom-navigation)
-- [Widgets](#widgets)
-  - [Flyout](#flyout)
-  - **TODO** [Teaching tip]()
-  - [Acrylic](#acrylic)
-  - **TODO** [Calendar View](#calendar-view)
-  - **TODO** [Calendar Date Picker]()
-  - [Scrollbar](#scrollbar)
-- [Mobile Widgets](#mobile-widgets)
-  - [Chip](#chip)
-  - [Pill Button Bar](#pill-button-bar)
-  - [Snackbar](#snackbar)
-- [Layout Widgets](#layout-widgets)
-  - [DynamicOverflow](#dynamicoverflow)
-- [Equivalents with the material library](#equivalents-with-the-material-library)
+- [Accent color](#accent-color)
 - [Localization](#Localization)
 - [Contribution](#contribution)
   - [Contributing new localizations](#contributing-new-localizations)
@@ -80,9 +55,9 @@ See [this](https://github.com/flutter/flutter/issues/46481) for more info on the
 
 See also:
 
-- [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
-- [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
-- [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
+  * [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
+  * [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
+  * [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
 ## Installation
 
@@ -129,33 +104,6 @@ Add the following code to your `README.md` or to your website:
 
 ---
 
-# Style
-
-[Learn more about Fluent Style](https://docs.microsoft.com/en-us/windows/uwp/design/style/)
-
-You can use the `FluentTheme` widget to, well... theme your widgets. You can style your widgets in two ways:
-
-1. Using the `FluentApp` widget
-
-```dart
-FluentApp(
-  title: 'MyApp',
-  theme: ThemeData(
-    ...
-  ),
-)
-```
-
-2. Using the `FluentTheme` widget
-
-```dart
-FluentTheme(
-  theme: ThemeData(
-    ...
-  ),
-  child: ...,
-),
-```
 
 ### Accent color
 
@@ -177,74 +125,6 @@ import 'package:system_theme/system_theme.dart';
 ThemeData(
   accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
 )
-```
-
-## Reveal Focus
-
-Reveal Focus is a lighting effect for [10-foot experiences](https://docs.microsoft.com/en-us/windows/uwp/design/devices/designing-for-tv), such as Xbox One and television screens. It animates the border of focusable elements, such as buttons, when the user moves gamepad or keyboard focus to them. It's turned off by default, but it's simple to enable. [Learn more](https://docs.microsoft.com/en-us/windows/uwp/design/style/reveal-focus)
-
-Reveal Focus calls attention to focused elements by adding an animated glow around the element's border:
-
-![Reveal Focus Preview](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/traveling-focus-fullscreen-light-rf.gif)
-
-This is especially helpful in 10-foot scenarios where the user might not be paying full attention to the entire TV screen.
-
-### Enabling it
-
-Reveal Focus is off by default. To enable it, change the `focusTheme` in your app `ThemeData`:
-
-```dart
-theme: ThemeData(
-  focusTheme: FocusThemeData(
-    glowFactor: 4.0,
-  ),
-),
-```
-
-To enable it in a 10 foot screen, use the method `is10footScreen`:
-
-```dart
-import 'dart:ui' as ui;
-
-theme: ThemeData(
-  focusTheme: FocusThemeData(
-    glowFactor: is10footScreen(ui.window.physicalSize.width) ? 2.0 : 0.0,
-  ),
-),
-```
-
-Go to the [example](/example) project to a full example
-
-### Why isn't Reveal Focus on by default?
-
-As you can see, it's fairly easy to turn on Reveal Focus when the app detects it's running on 10 foot screen. So, why doesn't the system just turn it on for you? Because Reveal Focus increases the size of the focus visual, which might cause issues with your UI layout. In some cases, you'll want to customize the Reveal Focus effect to optimize it for your app.
-
-### Customizing Reveal Focus
-
-You can customize the focus border, border radius and glow color:
-
-```dart
-focusTheme: FocusStyle(
-  borderRadius: BorderRadius.zero,
-  glowColor: theme.accentColor?.withOpacity(0.2),
-  glowFactor: 0.0,
-  border: BorderSide(
-    width: 2.0,
-    color: theme.inactiveColor ?? Colors.transparent,
-  ),
-),
-```
-
-To customize it to a single widget, wrap the widget in a `FocusTheme` widget, and change the options you want:
-
-```dart
-FocusTheme(
-  data: FocusThemeData(...),
-  child: Button(
-    text: Text('Custom Focus Button'),
-    onPressed: () {},
-  )
-),
 ```
 
 ## Localization

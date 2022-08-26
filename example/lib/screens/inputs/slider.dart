@@ -88,7 +88,6 @@ Slider(
 ),
 ''',
       ),
-      // TODO: slider label
     ];
   }
 }
