@@ -26,7 +26,11 @@ class TilePage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     final theme = FluentTheme.of(context);
     return [
-      const Text('Tiles that are usually used inside a ListView'),
+      description(
+        content: const Text(
+          'A fluent-styled list tile. Usually used inside a ListView',
+        ),
+      ),
       subtitle(content: const Text('Basic ListView with selectable tiles')),
       CardHighlight(
         child: Container(
@@ -67,8 +71,7 @@ ListView.builder(
       onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
   } 
-)
-''',
+),''',
       ),
       subtitle(
         content: const Text('ListViewItems with many properties applied'),
@@ -121,7 +124,7 @@ ListView.builder(
     return ListTile.selectable(
       title: Text(contact),
       selected: selectedContacts.contains(contact),
-      selectionMode: ListTileSelectionMode.multiple
+      selectionMode: ListTileSelectionMode.multiple,
       onSelectionChange: (selected) {
         setState(() {
           if (selected) {
@@ -133,8 +136,7 @@ ListView.builder(
       },
     );
   } 
-)
-''',
+),''',
       ),
       subtitle(
         content: const Text('ListViewItems with images'),
@@ -208,8 +210,7 @@ ListView.builder(
       onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
   } 
-)
-''',
+),''',
       ),
     ];
   }

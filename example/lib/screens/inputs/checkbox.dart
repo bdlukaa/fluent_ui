@@ -25,13 +25,8 @@ class CheckboxPage extends ScrollablePage {
         child: Row(children: [
           Checkbox(
             checked: firstChecked,
-            onChanged: firstDisabled
-                ? null
-                : (v) {
-                    setState(() {
-                      firstChecked = v!;
-                    });
-                  },
+            onChanged:
+                firstDisabled ? null : (v) => setState(() => firstChecked = v!),
             content: const Text('Two-state Checkbox'),
           ),
           const Spacer(),

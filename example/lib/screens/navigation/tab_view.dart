@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -44,7 +45,10 @@ class TabViewPage extends ScrollablePage {
     tabs ??= List.generate(3, generateTab);
     return [
       const Text(
-        'A control that displays a collection of tabs that can be used to display several documents.',
+        'The TabView control is a way to display a set of tabs and their '
+        'respective content. TabViews are useful for displaying several pages '
+        '(or documents) of content while giving a user the capability to '
+        'rearrange, open, or close new tabs.',
       ),
       subtitle(
         content: const Text(
@@ -112,7 +116,7 @@ class TabViewPage extends ScrollablePage {
           ],
         ),
       ),
-      Card(
+      CardHighlight(
         child: SizedBox(
           height: 400,
           child: TabView(
@@ -147,6 +151,8 @@ class TabViewPage extends ScrollablePage {
             },
           ),
         ),
+        // TODO: TabView snippets
+        codeSnippet: '''''',
       ),
     ];
   }

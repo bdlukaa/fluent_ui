@@ -10,13 +10,16 @@ void main() {
 
     await tester.pumpWidget(
       wrapApp(
-        child: const InfoLabel(
+        child: InfoLabel(
           label: 'Label text',
           labelStyle: labelStyle,
         ),
       ),
     );
 
-    expect(tester.widget<Text>(find.text('Label text')).style, labelStyle);
+    expect(
+      tester.widget<Text>(find.text('Label text')).textSpan?.style,
+      labelStyle,
+    );
   });
 }

@@ -14,7 +14,10 @@ class ContentDialogPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use a ContentDialog to show relavant information or to provide a modal dialog experience that can show any content.',
+        'Dialog controls are modal UI overlays that provide contextual app '
+        'information. They block interactions with the app window until being '
+        'explicitly dismissed. They often request some kind of action from the '
+        'user.',
       ),
       subtitle(content: const Text('A basic content dialog with content')),
       CardHighlight(

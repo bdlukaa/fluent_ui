@@ -58,7 +58,15 @@ class ComboboxPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use a ComboBox when you need to conserve on-screen space and when users select only one option at a time. A ComboBox shows only the currently selected item.',
+        'Use a combo box (also known as a drop-down list) to present a list of '
+        'items that a user can select from. A combo box starts in a compact '
+        'state and expands to show a list of selectable items.\n\n'
+        'When the combo box is closed, it either displays the current selection '
+        'or is empty if there is no selected item. When the user expands the '
+        'combo box, it displays the list of selectable items.\n\n'
+        'Use a ComboBox when you need to conserve on-screen space and when '
+        'users select only one option at a time. A ComboBox shows only the '
+        'currently selected item.',
       ),
       subtitle(
         content: const Text(
@@ -149,8 +157,15 @@ ComboBox<String>(
   placeholder: const Text('Select a cat breed'),
 ),''',
       ),
-      subtitle(
-        content: const Text('An editable ComboBox'),
+      subtitle(content: const Text('An editable ComboBox')),
+      description(
+        content: const Text(
+          'By default, a combo box lets the user select from a pre-defined '
+          'list of options. However, there are cases where the list contains '
+          'only a subset of valid values, and the user should be able to enter '
+          'other values that aren\'t listed. To support this, you can make the'
+          ' combo box editable.',
+        ),
       ),
       CardHighlight(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -85,41 +85,42 @@ class _TypographyPageState extends State<TypographyPage> {
               const Divider(
                 style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
               ),
+              const SizedBox(height: 4.0),
+              const Text(
+                'The Windows type ramp establishes crucial relationships '
+                'between the type styles on a page, helping users read content '
+                'easily.',
+              ),
               Expanded(
-                child: ListView(
-                  children: [
-                    Text('Display',
-                        style:
-                            typography.display?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Title Large',
-                        style: typography.titleLarge
-                            ?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Title',
-                        style: typography.title?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Subtitle',
-                        style:
-                            typography.subtitle?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Body Large',
-                        style:
-                            typography.bodyLarge?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Body Strong',
-                        style: typography.bodyStrong
-                            ?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Body',
-                        style: typography.body?.apply(fontSizeFactor: scale)),
-                    spacer,
-                    Text('Caption',
-                        style:
-                            typography.caption?.apply(fontSizeFactor: scale)),
-                    spacer,
-                  ],
-                ),
+                child: ListView(children: [
+                  Text('Display',
+                      style: typography.display?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Title Large',
+                      style:
+                          typography.titleLarge?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Title',
+                      style: typography.title?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Subtitle',
+                      style: typography.subtitle?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Body Large',
+                      style:
+                          typography.bodyLarge?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Body Strong',
+                      style:
+                          typography.bodyStrong?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Body',
+                      style: typography.body?.apply(fontSizeFactor: scale)),
+                  spacer,
+                  Text('Caption',
+                      style: typography.caption?.apply(fontSizeFactor: scale)),
+                  spacer,
+                ]),
               ),
             ],
           ),

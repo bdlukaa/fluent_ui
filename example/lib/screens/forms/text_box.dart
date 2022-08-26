@@ -12,7 +12,15 @@ class TextBoxPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use a TextBox to let a user enter simple text input in your app. You can add a header and placeholder text to let the user know what the TextBox is for, and you can customize it in other ways.',
+        'The TextBox control lets a user type text into an app. It\'s typically '
+        'used to capture a single line of text, but can be configured to capture '
+        'multiple lines of text. The text displays on the screen in a simple, '
+        'uniform, plaintext format.\n\n'
+        'TextBox has a number of features that can simplify text entry. It comes '
+        'with a familiar, built-in context menu with support for copying and '
+        'pasting text. The "clear all" button lets a user quickly delete all '
+        'text that has been entered. It also has spell checking capabilities '
+        'built in and enabled by default.',
       ),
       subtitle(content: const Text('A simple TextBox')),
       CardHighlight(

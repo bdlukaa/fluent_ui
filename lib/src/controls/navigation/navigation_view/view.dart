@@ -724,18 +724,21 @@ class _NavigationAppBar extends StatelessWidget {
           leading,
           if (additionalLeading != null) additionalLeading!,
           title,
-          if (appBar.actions != null) Expanded(child: appBar.actions!),
+          if (appBar.actions != null) Expanded(child: appBar.actions!)
         ]);
         break;
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
         result = Stack(children: [
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            leading,
-            if (additionalLeading != null) additionalLeading!,
-            Flexible(child: title),
-          ]),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              leading,
+              if (additionalLeading != null) additionalLeading!,
+              Flexible(child: title),
+            ]),
+          ),
           if (appBar.actions != null)
             Positioned.directional(
               textDirection: direction,

@@ -21,6 +21,9 @@ Date format: DD/MM/YYYY
   - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
   - `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - Implemented `PaneItemExpander` ([#299](https://github.com/bdlukaa/fluent_ui/pull/299))
+- `TimePicker` and `DatePicker` popup now needs a minimum width of 260 ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- Correctly align `NavigationAppBar` content ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- **BREAKING** Added `InfoLabel.rich`. `InfoLabel` is no longer a constant contructor ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

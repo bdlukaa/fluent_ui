@@ -16,6 +16,30 @@ abstract class Page {
     func();
     _controller.add(null);
   }
+
+  Widget description({required Widget content}) {
+    return Builder(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: DefaultTextStyle(
+          style: FluentTheme.of(context).typography.body!,
+          child: content,
+        ),
+      );
+    });
+  }
+
+  Widget subtitle({required Widget content}) {
+    return Builder(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
+        child: DefaultTextStyle(
+          style: FluentTheme.of(context).typography.subtitle!,
+          child: content,
+        ),
+      );
+    });
+  }
 }
 
 int _pageIndex = -1;
@@ -39,18 +63,6 @@ abstract class ScrollablePage extends Page {
       children: buildScrollable(context),
       bottomBar: buildBottomBar(context),
     );
-  }
-
-  Widget subtitle({required Widget content}) {
-    return Builder(builder: (context) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
-        child: DefaultTextStyle(
-          style: FluentTheme.of(context).typography.subtitle!,
-          child: content,
-        ),
-      );
-    });
   }
 }
 

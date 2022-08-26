@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// The padding used on the content of [DatePicker] and [TimePicker]
@@ -301,12 +303,21 @@ class _PickerState extends State<Picker> {
 
         final theme = FluentTheme.of(context);
 
+        const minWidth = 260.0;
+        final width = max(box.size.width, minWidth);
+        final x = () {
+          if (box.size.width > minWidth) return childOffset.dx;
+
+          // if the box width is less than [minWidth], center the popup
+          return childOffset.dx - (width / 4);
+        }();
+
         final view = Stack(children: [
           Positioned(
-            left: childOffset.dx,
+            left: x,
             top: y,
             height: widget.pickerHeight,
-            width: box.size.width,
+            width: width,
             child: FadeTransition(
               opacity: primary,
               child: Container(

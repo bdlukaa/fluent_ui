@@ -16,7 +16,14 @@ class TimePickerPage extends ScrollablePage {
   List<Widget> buildScrollable(BuildContext context) {
     return [
       const Text(
-        'Use a TimePicker to let users set a time in your app, for example to set a reminder. The TimePicker displays three controls for hour, minute, and AM/PM. These controls are easy to use with touch or mouse, and they can be styled and configured in several different ways.',
+        'Use a TimePicker to let users set a time in your app, for example to '
+        'set a reminder. The TimePicker displays three controls for hour, '
+        'minute, and AM/PM. These controls are easy to use with touch or mouse, '
+        'and they can be styled and configured in several different ways.\n\n'
+        'The entry point displays the chosen time, and when the user selects '
+        'the entry point, a picker surface expands vertically from the middle '
+        'for the user to make a selection. The time picker overlays other UI; '
+        'it doesn\'t push other UI out of the way.',
       ),
       subtitle(content: const Text('A simple TimePicker')),
       CardHighlight(
