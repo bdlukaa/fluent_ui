@@ -38,7 +38,7 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
   Widget build(BuildContext context) {
     List<List<Widget>> children = [
       [
-        const Text('TextButton'),
+        const Text('Button'),
         Button(
           child: const Text('Content'),
           onPressed: () {},

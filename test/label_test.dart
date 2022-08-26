@@ -17,6 +17,9 @@ void main() {
       ),
     );
 
-    expect(tester.widget<Text>(find.text('Label text')).style, labelStyle);
+    expect(
+      tester.widget<Text>(find.text('Label text')).textSpan?.style,
+      labelStyle,
+    );
   });
 }
