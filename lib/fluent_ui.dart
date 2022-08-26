@@ -19,6 +19,7 @@ export 'package:flutter/material.dart'
         SelectableDayPredicate,
         DatePickerMode,
         ReorderableListView,
+        DefaultMaterialLocalizations,
         ReorderableDragStartListener,
         kThemeAnimationDuration,
         TooltipVisibility,

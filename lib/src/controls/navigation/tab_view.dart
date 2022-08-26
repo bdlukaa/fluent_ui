@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 const double _kMinTileWidth = 80.0;
 const double _kMaxTileWidth = 240.0;
@@ -396,21 +397,27 @@ class _TabViewState extends State<TabView> {
                           }
                         }
                       : null,
-                  child: ReorderableListView.builder(
-                    buildDefaultDragHandles: false,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    scrollController: scrollController,
-                    onReorder: (i, ii) {
-                      widget.onReorder?.call(i, ii);
-                    },
-                    itemCount: widget.tabs.length,
-                    proxyDecorator: (child, index, animation) {
-                      return child;
-                    },
-                    itemBuilder: (context, index) {
-                      return _tabBuilder(context, index, preferredTabWidth);
-                    },
+                  child: Localizations.override(
+                    context: context,
+                    delegates: const [
+                      GlobalMaterialLocalizations.delegate,
+                    ],
+                    child: ReorderableListView.builder(
+                      buildDefaultDragHandles: false,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      scrollController: scrollController,
+                      onReorder: (i, ii) {
+                        widget.onReorder?.call(i, ii);
+                      },
+                      itemCount: widget.tabs.length,
+                      proxyDecorator: (child, index, animation) {
+                        return child;
+                      },
+                      itemBuilder: (context, index) {
+                        return _tabBuilder(context, index, preferredTabWidth);
+                      },
+                    ),
                   ),
                 );
 
