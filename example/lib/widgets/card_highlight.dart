@@ -22,7 +22,8 @@ class CardHighlight extends StatefulWidget {
   State<CardHighlight> createState() => _CardHighlightState();
 }
 
-class _CardHighlightState extends State<CardHighlight> {
+class _CardHighlightState extends State<CardHighlight>
+    with AutomaticKeepAliveClientMixin<CardHighlight> {
   bool isOpen = false;
   bool isCopying = false;
 
@@ -30,6 +31,7 @@ class _CardHighlightState extends State<CardHighlight> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = FluentTheme.of(context);
     return Column(children: [
       Card(
@@ -111,6 +113,9 @@ class _CardHighlightState extends State<CardHighlight> {
       ),
     ]);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 const fluentHighlightTheme = {

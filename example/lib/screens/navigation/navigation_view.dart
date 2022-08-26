@@ -13,6 +13,15 @@ class NavigationViewPage extends ScrollablePage {
 
   int topIndex = 0;
 
+  PaneDisplayMode displayMode = PaneDisplayMode.open;
+  String pageTransition = 'default';
+  static const List<String> pageTransitions = [
+    'default',
+    'entrance',
+    'drill in',
+    'horizontal',
+  ];
+
   @override
   List<Widget> buildScrollable(BuildContext context) {
     return [
@@ -21,36 +30,67 @@ class NavigationViewPage extends ScrollablePage {
         'It adapts to a variety of screen sizes and supports both top and left '
         'navigation styles.',
       ),
-      subtitle(content: const Text('Top display mode')),
+      const SizedBox(height: 10.0),
       ...buildDisplayMode(
         PaneDisplayMode.top,
+        'Top display mode',
         'The pane is positioned above the content.',
       ),
-      subtitle(content: const Text('Open display mode')),
       ...buildDisplayMode(
         PaneDisplayMode.open,
+        'Open display mode',
         'The pane is expanded and positioned to the left of the content.',
       ),
-      subtitle(content: const Text('Compact display mode')),
       ...buildDisplayMode(
         PaneDisplayMode.compact,
+        'Compact display mode',
         'The pane shows only icons until opened and is positioned to the left '
-        'of the content. When opened, the pane overlays the content.',
+            'of the content. When opened, the pane overlays the content.',
       ),
-      subtitle(content: const Text('Minimal display mode')),
       ...buildDisplayMode(
         PaneDisplayMode.minimal,
+        'Minimal display mode',
         'Only the menu button is shown until the pane is opened. When opened, '
-        'the pane overlays the left side of the content.',
+            'the pane overlays the left side of the content.',
       ),
     ];
   }
 
   List<Widget> buildDisplayMode(
     PaneDisplayMode displayMode,
+    String title,
     String desc,
   ) {
+    if (displayMode != this.displayMode) return [];
     return [
+      Wrap(runSpacing: 10.0, spacing: 10.0, children: [
+        InfoLabel(
+          label: 'Display mode',
+          child: ComboBox<PaneDisplayMode>(
+            value: displayMode,
+            items: ([...PaneDisplayMode.values]..remove(PaneDisplayMode.auto))
+                .map((mode) {
+              return ComboboxItem(child: Text(mode.name), value: mode);
+            }).toList(),
+            onChanged: (mode) => setState(
+              () => this.displayMode = mode ?? displayMode,
+            ),
+          ),
+        ),
+        InfoLabel(
+          label: 'Page Transition',
+          child: ComboBox<String>(
+            items: pageTransitions
+                .map((e) => ComboboxItem(child: Text(e), value: e))
+                .toList(),
+            value: pageTransition,
+            onChanged: (transition) => setState(
+              () => pageTransition = transition ?? pageTransition,
+            ),
+          ),
+        ),
+      ]),
+      subtitle(content: Text(title)),
       description(content: Text(desc)),
       CardHighlight(
         child: SizedBox(
@@ -97,6 +137,31 @@ class NavigationViewPage extends ScrollablePage {
             ),
             content: NavigationBody(
               index: topIndex,
+              transitionBuilder: pageTransition == 'default'
+                  ? null
+                  : (child, animation) {
+                      switch (pageTransition) {
+                        case 'entrance':
+                          return EntrancePageTransition(
+                            child: child,
+                            animation: animation,
+                          );
+                        case 'drill in':
+                          return DrillInPageTransition(
+                            child: child,
+                            animation: animation,
+                          );
+                        case 'horizontal':
+                          return HorizontalSlidePageTransition(
+                            child: child,
+                            animation: animation,
+                          );
+                        default:
+                          throw UnsupportedError(
+                            '$pageTransition is not a supported transition',
+                          );
+                      }
+                    },
               children: const [
                 _NavigationBodyItem(),
                 _NavigationBodyItem(

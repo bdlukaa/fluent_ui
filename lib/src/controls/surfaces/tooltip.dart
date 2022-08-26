@@ -7,15 +7,17 @@ import 'package:flutter/rendering.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// A tooltip is a short description that is linked to another
-/// control or object. Tooltips help users understand unfamiliar
-/// objects that aren't described directly in the UI. They display
-/// automatically when the user moves focus to, presses and holds,
-/// or hovers the mouse pointer over a control. The tooltip disappears
-/// after a few seconds, or when the user moves the finger, pointer
-/// or keyboard/gamepad focus.
+/// A tooltip is a popup that contains additional information about another
+/// control or object. Tooltips display automatically when the user moves focus
+/// to, presses and holds, or hovers the pointer over the associated control.
+/// The tooltip disappears when the user moves focus from, stops pressing on,
+/// or stops hovering the pointer over the associated control (unless the
+/// pointer is moving towards the tooltip).
 ///
 /// ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
+///
+/// See also:
+///   * [Flyout], which creates a popup with interactive content
 class Tooltip extends StatefulWidget {
   /// Creates a tooltip.
   ///

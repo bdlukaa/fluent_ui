@@ -75,6 +75,18 @@ class InfoBarPage extends ScrollablePage {
                       .toList(),
                   value: severity,
                   onChanged: (v) => setState(() => severity = v ?? severity),
+                  comboboxColor: () {
+                    switch (severity) {
+                      case InfoBarSeverity.info:
+                        break;
+                      case InfoBarSeverity.warning:
+                        return Colors.warningPrimaryColor;
+                      case InfoBarSeverity.error:
+                        return Colors.errorPrimaryColor;
+                      case InfoBarSeverity.success:
+                        return Colors.successPrimaryColor;
+                    }
+                  }(),
                 ),
               ),
             ],

@@ -3,6 +3,26 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../settings.dart';
 
+const questionMark = Padding(
+  padding: EdgeInsetsDirectional.only(start: 4.0),
+  child: Icon(FluentIcons.status_circle_question_mark, size: 14.0),
+);
+
+InlineSpan _buildLabel(String label, String description) {
+  return TextSpan(
+    text: label,
+    children: [
+      WidgetSpan(
+        child: Tooltip(
+          useMousePosition: false,
+          message: description,
+          child: questionMark,
+        ),
+      ),
+    ],
+  );
+}
+
 class AcrylicPage extends ScrollablePage {
   @override
   Widget buildHeader(BuildContext context) {
@@ -18,7 +38,11 @@ class AcrylicPage extends ScrollablePage {
   @override
   List<Widget> buildScrollable(BuildContext context) {
     return [
-      const Text('A translucent material recommended for panel backgrounds.'),
+      const Text(
+        'A translucent material recommended for panel backgrounds. Acrylic is a '
+        'type of Brush that creates a translucent texture. You can apply acrylic '
+        'to app surfaces to add depth and help establish a visual hierarchy.',
+      ),
       subtitle(content: const Text('Default background acrylic brush.')),
       Card(
         child: SizedBox(
@@ -59,8 +83,11 @@ class AcrylicPage extends ScrollablePage {
               ]),
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              InfoLabel(
-                label: 'Tint color',
+              InfoLabel.rich(
+                label: _buildLabel(
+                  'Tint color',
+                  'the color/tint overlay layer.',
+                ),
                 child: ComboBox<Color>(
                   placeholder: const Text('Tint color               '),
                   onChanged: (c) => setState(() => color = c),
@@ -96,8 +123,11 @@ class AcrylicPage extends ScrollablePage {
                   ],
                 ),
               ),
-              InfoLabel(
-                label: 'Tint opacity',
+              InfoLabel.rich(
+                label: _buildLabel(
+                  'Tint opacity',
+                  'the opacity of the tint layer.',
+                ),
                 child: Slider(
                   value: tintOpacity,
                   min: 0.0,
@@ -105,8 +135,12 @@ class AcrylicPage extends ScrollablePage {
                   onChanged: (v) => setState(() => tintOpacity = v),
                 ),
               ),
-              InfoLabel(
-                label: 'Luminosity opacity',
+              InfoLabel.rich(
+                label: _buildLabel(
+                  'Tint luminosity opacity',
+                  'controls the amount of saturation that is allowed through '
+                      'the acrylic surface from the background.',
+                ),
                 child: Slider(
                   value: luminosityOpacity,
                   min: 0.0,

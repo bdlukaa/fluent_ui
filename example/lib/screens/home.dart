@@ -60,12 +60,13 @@ class HomePage extends ScrollablePage {
               ),
             ),
           ),
-          const RepaintBoundary(
+          RepaintBoundary(
             child: Padding(
-              padding: EdgeInsetsDirectional.only(start: 4.0),
+              padding: const EdgeInsetsDirectional.only(start: 4.0),
               child: InfoLabel(
                 label: 'Progress',
-                child: SizedBox(height: 30, width: 30, child: ProgressRing()),
+                child: const SizedBox(
+                    height: 30, width: 30, child: ProgressRing()),
               ),
             ),
           ),
@@ -88,9 +89,9 @@ class HomePage extends ScrollablePage {
               ]),
             ),
           ),
-          const InfoLabel(
+          InfoLabel(
             label: 'Icons',
-            child: Icon(FluentIcons.graph_symbol, size: 30.0),
+            child: const Icon(FluentIcons.graph_symbol, size: 30.0),
           ),
           InfoLabel(
             label: 'Colors',
