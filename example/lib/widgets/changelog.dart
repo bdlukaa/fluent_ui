@@ -55,8 +55,11 @@ class _ChangelogState extends State<Changelog> {
                 // if (line.split('-').length == 2) {
                 //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
                 // }
-                String date =
-                    line.split('-').last.replaceAll('[', '').replaceAll(']', '');
+                String date = line
+                    .split('-')
+                    .last
+                    .replaceAll('[', '')
+                    .replaceAll(']', '');
 
                 if (!date.startsWith('##')) {
                   final splitDate = date.split('/');
