@@ -281,8 +281,8 @@ class _DatePickerState extends State<DatePicker> {
           initControllers();
           await open();
         },
-        builder: (context, state) {
-          if (state.isDisabled) state = <ButtonStates>{};
+        builder: (context, states) {
+          if (states.isDisabled) states = <ButtonStates>{};
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
@@ -350,29 +350,32 @@ class _DatePickerState extends State<DatePicker> {
 
           final fieldMap = fieldOrder.map((e) => fields[e]);
 
-          return AnimatedContainer(
-            duration: theme.fastAnimationDuration,
-            curve: theme.animationCurve,
-            height: kPickerHeight,
-            decoration: kPickerDecorationBuilder(context, state),
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                color: widget.selected == null
-                    ? theme.resources.textFillColorSecondary
-                    : null,
+          return FocusBorder(
+            focused: states.isFocused,
+            child: AnimatedContainer(
+              duration: theme.fastAnimationDuration,
+              curve: theme.animationCurve,
+              height: kPickerHeight,
+              decoration: kPickerDecorationBuilder(context, states),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: widget.selected == null
+                      ? theme.resources.textFillColorSecondary
+                      : null,
+                ),
+                maxLines: 1,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  ...fieldMap.elementAt(0) ?? [],
+                  if (fieldMap.elementAt(1) != null) ...[
+                    if (fieldMap.elementAt(0) != null) divider,
+                    ...fieldMap.elementAt(1)!,
+                  ],
+                  if (fieldMap.elementAt(2) != null) ...[
+                    divider,
+                    ...fieldMap.elementAt(2)!,
+                  ],
+                ]),
               ),
-              maxLines: 1,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                ...fieldMap.elementAt(0) ?? [],
-                if (fieldMap.elementAt(1) != null) ...[
-                  if (fieldMap.elementAt(0) != null) divider,
-                  ...fieldMap.elementAt(1)!,
-                ],
-                if (fieldMap.elementAt(2) != null) ...[
-                  divider,
-                  ...fieldMap.elementAt(2)!,
-                ],
-              ]),
             ),
           );
         },

@@ -45,6 +45,7 @@ class HoverButton extends StatefulWidget {
     this.onFocusChange,
     this.autofocus = false,
     this.actionsEnabled = true,
+    this.customActions,
     this.focusEnabled = true,
   }) : super(key: key);
 
@@ -97,7 +98,18 @@ class HoverButton extends StatefulWidget {
   final ValueChanged<bool>? onFocusChange;
 
   /// Whether actions and shortcuts are enabled
+  ///
+  /// Actions:
+  ///
+  ///  * Execute [onPressed] with Enter
   final bool actionsEnabled;
+
+  /// Custom actions
+  ///
+  /// See also:
+  ///
+  ///  * [actionsEnabled], which controls if actions are enabled or not
+  final Map<Type, Action<Intent>>? customActions;
 
   /// Whether the focus is enabled.
   ///
@@ -113,6 +125,7 @@ class _HoverButtonState extends State<HoverButton> {
   late FocusNode node;
 
   late Map<Type, Action<Intent>> _actionMap;
+  late Map<Type, Action<Intent>> defaultActions;
 
   @override
   void initState() {
@@ -126,13 +139,18 @@ class _HoverButtonState extends State<HoverButton> {
       if (mounted) setState(() => _pressing = false);
     }
 
-    _actionMap = <Type, Action<Intent>>{
+    defaultActions = {
       ActivateIntent: CallbackAction<ActivateIntent>(
         onInvoke: (ActivateIntent intent) => _handleActionTap(),
       ),
       ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
         onInvoke: (ButtonActivateIntent intent) => _handleActionTap(),
       ),
+    };
+
+    _actionMap = <Type, Action<Intent>>{
+      ...defaultActions,
+      if (widget.customActions != null) ...widget.customActions!,
     };
   }
 
@@ -141,6 +159,13 @@ class _HoverButtonState extends State<HoverButton> {
     super.didUpdateWidget(oldWidget);
     if (widget.focusNode != oldWidget.focusNode) {
       node = widget.focusNode ?? node;
+    }
+
+    if (widget.customActions != oldWidget.customActions) {
+      _actionMap = <Type, Action<Intent>>{
+        ...defaultActions,
+        if (widget.customActions != null) ...widget.customActions!,
+      };
     }
   }
 
