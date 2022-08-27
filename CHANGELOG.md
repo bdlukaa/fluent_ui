@@ -10,6 +10,7 @@ Date format: DD/MM/YYYY
   - Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
   - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
 - Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
+- Call `AutoSuggestBox.onChanged` when an item is selected using the keyboard ([#483](https://github.com/bdlukaa/fluent_ui/issues/483))
 - `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
 - Do not add unnecessary padding in `DropdownButton` ([#475](https://github.com/bdlukaa/fluent_ui/issues/475))
 - `ComboBox` updates:

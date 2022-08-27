@@ -529,6 +529,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
     item.onSelected?.call();
 
     controller.text = item.value;
+    widget.onChanged?.call(controller.text, TextChangedReason.suggestionChosen);
   }
 
   /// Whether a [TextFormBox] is used instead of a [TextBox]
