@@ -97,23 +97,25 @@ class HoverButton extends StatefulWidget {
 
   final ValueChanged<bool>? onFocusChange;
 
-  /// Whether actions and shortcuts are enabled
+  /// Whether actions are enabled
   ///
-  /// Actions:
-  ///
+  /// Default actions:
   ///  * Execute [onPressed] with Enter
+  ///
+  /// See also:
+  ///  * [customActions], which lets you execute custom actions
   final bool actionsEnabled;
 
-  /// Custom actions
+  /// Custom actions that will be executed around the subtree of this widget.
   ///
   /// See also:
   ///
   ///  * [actionsEnabled], which controls if actions are enabled or not
   final Map<Type, Action<Intent>>? customActions;
 
-  /// Whether the focus is enabled.
+  /// Whether the focusing is enabled.
   ///
-  /// If disabled, actions and shortcurts will not work, regardless of what is
+  /// If false, actions and shortcurts will not work, regardless of what is
   /// set on [actionsEnabled].
   final bool focusEnabled;
 

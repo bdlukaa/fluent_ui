@@ -27,6 +27,13 @@ Date format: DD/MM/YYYY
 - **BREAKING** Added `InfoLabel.rich`. `InfoLabel` is no longer a constant contructor ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 - Always add `GlobalMaterialLocalizations` above `ReorderableListView` ([#492](https://github.com/bdlukaa/fluent_ui/issues/492))
 - **BREAKING** Removed `ContentDialog.backgroundDismiss`. Use `showDialog.barrierDismissable` ([#490](https://github.com/bdlukaa/fluent_ui/issues/490))
+- Reviewed focus ([#496](https://github.com/bdlukaa/fluent_ui/issues/496))
+  - `DatePicker` and `TimePicker` now show the focus highlight.
+    Their popup now can be controlled using the keyboard
+  - `NavigationBody` now uses a `FocusTraversalGroup` to handle focus
+    This means the the content of the body will be fully traversed before moving on to another widget or group of widgets. [Learn more](https://docs.flutter.dev/development/ui/advanced/focus#focustraversalgroup-widget)
+  - `TreeViewItem` now shows the focus highlight. They can also be selected using the keyboard
+  - `Expander` now shows the focus highlight
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
