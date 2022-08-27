@@ -1072,6 +1072,7 @@ class _CompactNavigationPane extends StatelessWidget {
             ),
           Expanded(
             child: ListView(
+              shrinkWrap: true,
               key: listKey,
               primary: true,
               children: pane.items.map((item) {
@@ -1250,6 +1251,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
               ),
             Expanded(
               child: ListView(
+                shrinkWrap: true,
                 key: widget.listKey,
                 primary: true,
                 children: widget.pane.items.map((item) {
