@@ -57,7 +57,6 @@ class ContentDialog extends StatelessWidget {
     this.content,
     this.actions,
     this.style,
-    this.backgroundDismiss = true,
     this.constraints = kDefaultContentDialogConstraints,
   }) : super(key: key);
 
@@ -70,12 +69,9 @@ class ContentDialog extends StatelessWidget {
   /// The actions of the dialog. Usually, a List of [Button]s
   final List<Widget>? actions;
 
-  /// The style used by this dialog. If non-null, it's mescled with
-  /// [ThemeData.dialogThemeData]
+  /// The style used by this dialog. If non-null, it's merged with
+  /// [ThemeData.dialogTheme]
   final ContentDialogThemeData? style;
-
-  /// Whether the background is dismissible or not.
-  final bool backgroundDismiss;
 
   /// The constraints of the dialog. It defaults to `BoxConstraints(maxWidth: 368)`
   final BoxConstraints constraints;
