@@ -92,7 +92,7 @@ TreeView(
       subtitle(content: const Text('A TreeView with lazy-loading items')),
       CardHighlight(
         child: TreeView(
-          selectionMode: TreeViewSelectionMode.multiple,
+          selectionMode: TreeViewSelectionMode.single,
           shrinkWrap: true,
           items: lazyItems,
           onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),

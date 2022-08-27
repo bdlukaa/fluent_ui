@@ -148,63 +148,89 @@ class PickerNavigatorIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return HoverButton(
-      focusEnabled: false,
+      customActions: {
+        DirectionalFocusIntent: CallbackAction<DirectionalFocusIntent>(
+          onInvoke: (intent) {
+            switch (intent.direction) {
+              case TraversalDirection.up:
+                onBackward();
+                break;
+              case TraversalDirection.down:
+                onForward();
+                break;
+              case TraversalDirection.left:
+                FocusScope.of(context).previousFocus();
+                break;
+              case TraversalDirection.right:
+                FocusScope.of(context).nextFocus();
+                break;
+            }
+            return null;
+          },
+        ),
+      },
       onPressed: () {},
-      builder: (context, state) {
-        final show = state.isHovering || state.isPressing || state.isFocused;
-        return ButtonTheme.merge(
-          data: ButtonThemeData.all(ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(
-              vertical: 10.0,
+      builder: (context, states) {
+        final show = states.isHovering || states.isPressing || states.isFocused;
+        return FocusBorder(
+          focused: states.isFocused,
+          child: ButtonTheme.merge(
+            data: ButtonThemeData.all(ButtonStyle(
+              padding: ButtonState.all(const EdgeInsets.symmetric(
+                vertical: 10.0,
+              )),
+              backgroundColor:
+                  ButtonState.all(FluentTheme.of(context).menuColor),
+              border: ButtonState.all(BorderSide.none),
+              elevation: ButtonState.all(0.0),
+              iconSize: ButtonState.resolveWith((states) {
+                if (states.isPressing) {
+                  return 8.0;
+                } else {
+                  return 10.0;
+                }
+              }),
             )),
-            backgroundColor: ButtonState.all(FluentTheme.of(context).menuColor),
-            border: ButtonState.all(BorderSide.none),
-            elevation: ButtonState.all(0.0),
-            iconSize: ButtonState.resolveWith((states) {
-              if (states.isPressing) {
-                return 8.0;
-              } else {
-                return 10.0;
-              }
-            }),
-          )),
-          child: FocusTheme(
-            data: const FocusThemeData(renderOutside: false),
-            child: Stack(children: [
-              child,
-              if (show) ...[
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: kOneLineTileHeight,
-                  child: Button(
-                    onPressed: onBackward,
-                    child: const Center(
-                      child: Icon(
-                        FluentIcons.caret_up_solid8,
-                        color: Color(0xFFcfcfcf),
+            child: FocusTheme(
+              data: const FocusThemeData(renderOutside: false),
+              child: Stack(children: [
+                child,
+                if (show) ...[
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: kOneLineTileHeight,
+                    child: Button(
+                      focusable: false,
+                      onPressed: onBackward,
+                      child: const Center(
+                        child: Icon(
+                          FluentIcons.caret_up_solid8,
+                          color: Color(0xFFcfcfcf),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: kOneLineTileHeight,
-                  child: Button(
-                    onPressed: onForward,
-                    child: const Center(
-                      child: Icon(
-                        FluentIcons.caret_down_solid8,
-                        color: Color(0xFFcfcfcf),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: kOneLineTileHeight,
+                    child: Button(
+                      focusable: false,
+                      onPressed: onForward,
+                      child: const Center(
+                        child: Icon(
+                          FluentIcons.caret_down_solid8,
+                          color: Color(0xFFcfcfcf),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ]),
+                ],
+              ]),
+            ),
           ),
         );
       },

@@ -185,6 +185,7 @@ class _TimePickerState extends State<TimePicker>
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
 
+    final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
     Widget picker = Picker(
@@ -211,7 +212,7 @@ class _TimePickerState extends State<TimePicker>
           initControllers();
           await open();
         },
-        builder: (context, state) {
+        builder: (context, states) {
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
@@ -219,78 +220,82 @@ class _TimePickerState extends State<TimePicker>
               horizontalMargin: EdgeInsets.zero,
             ),
           );
-          return AnimatedContainer(
-            duration: FluentTheme.of(context).fastAnimationDuration,
-            curve: FluentTheme.of(context).animationCurve,
-            height: kPickerHeight,
-            decoration: kPickerDecorationBuilder(context, state),
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                color: widget.selected == null
-                    ? FluentTheme.of(context).resources.textFillColorSecondary
-                    : null,
-              ),
-              child: Row(key: _buttonKey, children: [
-                Expanded(
-                  child: Padding(
-                    padding: widget.contentPadding,
-                    child: Text(
-                      () {
-                        // print(DefaultTextStyle.of(context).style.color);
-                        if (widget.selected == null) return localizations.hour;
-                        late int finalHour;
-                        int hour = time.hour;
-                        if (!widget.use24Format && hour > 12) {
-                          finalHour = hour - 12;
-                        } else {
-                          finalHour = hour;
-                        }
-
-                        return DateFormat.H(getIntlLocale(context))
-                            .format(DateTime(
-                          0, // year
-                          0, // month
-                          0, // day
-                          finalHour,
-                        ));
-                      }(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+          return FocusBorder(
+            focused: states.isFocused,
+            child: AnimatedContainer(
+              duration: theme.fastAnimationDuration,
+              curve: theme.animationCurve,
+              height: kPickerHeight,
+              decoration: kPickerDecorationBuilder(context, states),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: widget.selected == null
+                      ? theme.resources.textFillColorSecondary
+                      : null,
                 ),
-                divider,
-                Expanded(
-                  child: Padding(
-                    padding: widget.contentPadding,
-                    child: Text(
-                      widget.selected == null
-                          ? localizations.minute
-                          : DateFormat.m().format(DateTime(
-                              0, // year
-                              0, // month
-                              0, // day
-                              0, // hour,
-                              time.minute,
-                            )),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                divider,
-                if (!widget.use24Format)
+                child: Row(key: _buttonKey, children: [
                   Expanded(
                     child: Padding(
                       padding: widget.contentPadding,
                       child: Text(
                         () {
-                          if (_isPm) return localizations.pm;
-                          return localizations.am;
+                          if (widget.selected == null) {
+                            return localizations.hour;
+                          }
+                          late int finalHour;
+                          int hour = time.hour;
+                          if (!widget.use24Format && hour > 12) {
+                            finalHour = hour - 12;
+                          } else {
+                            finalHour = hour;
+                          }
+
+                          return DateFormat.H(getIntlLocale(context))
+                              .format(DateTime(
+                            0, // year
+                            0, // month
+                            0, // day
+                            finalHour,
+                          ));
                         }(),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-              ]),
+                  divider,
+                  Expanded(
+                    child: Padding(
+                      padding: widget.contentPadding,
+                      child: Text(
+                        widget.selected == null
+                            ? localizations.minute
+                            : DateFormat.m().format(DateTime(
+                                0, // year
+                                0, // month
+                                0, // day
+                                0, // hour,
+                                time.minute,
+                              )),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  divider,
+                  if (!widget.use24Format)
+                    Expanded(
+                      child: Padding(
+                        padding: widget.contentPadding,
+                        child: Text(
+                          () {
+                            if (_isPm) return localizations.pm;
+                            return localizations.am;
+                          }(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ]),
+              ),
             ),
           );
         },
@@ -383,6 +388,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
     const divider = Divider(
@@ -392,8 +398,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
         horizontalMargin: EdgeInsets.zero,
       ),
     );
-    final duration = FluentTheme.of(context).fasterAnimationDuration;
-    final curve = FluentTheme.of(context).animationCurve;
+    final duration = theme.fasterAnimationDuration;
+    final curve = theme.animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
     return Column(children: [
       Expanded(

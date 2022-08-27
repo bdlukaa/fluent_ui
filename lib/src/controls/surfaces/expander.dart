@@ -221,30 +221,36 @@ class ExpanderState extends State<Expander>
                   padding: const EdgeInsetsDirectional.only(start: 20.0),
                   child: widget.trailing!,
                 ),
-              Container(
-                margin: EdgeInsetsDirectional.only(
+              Padding(
+                padding: EdgeInsetsDirectional.only(
                   start: widget.trailing != null ? 8.0 : 20.0,
                   end: 8.0,
                   top: 8.0,
                   bottom: 8.0,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(_theme, states),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                alignment: Alignment.center,
-                child: widget.icon ??
-                    RotationTransition(
-                      turns: Tween<double>(begin: 0, end: 0.5)
-                          .animate(_controller),
-                      child: Icon(
-                        _isDown
-                            ? FluentIcons.chevron_down
-                            : FluentIcons.chevron_up,
-                        size: 10,
-                      ),
+                child: FocusBorder(
+                  focused: states.isFocused,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color:
+                          ButtonThemeData.uncheckedInputColor(_theme, states),
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
+                    alignment: Alignment.center,
+                    child: widget.icon ??
+                        RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 0.5)
+                              .animate(_controller),
+                          child: Icon(
+                            _isDown
+                                ? FluentIcons.chevron_down
+                                : FluentIcons.chevron_up,
+                            size: 10,
+                          ),
+                        ),
+                  ),
+                ),
               ),
             ]),
           );

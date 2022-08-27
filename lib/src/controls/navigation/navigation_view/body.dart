@@ -164,10 +164,12 @@ class _NavigationBodyState extends State<NavigationBody> {
             child: child,
           );
         },
-        child: SizedBox(
-          key: ValueKey<int>(widget.index),
-          child: widget.itemBuilder?.call(context, widget.index) ??
-              widget.children![widget.index],
+        child: FocusTraversalGroup(
+          child: SizedBox(
+            key: ValueKey<int>(widget.index),
+            child: widget.itemBuilder?.call(context, widget.index) ??
+                widget.children![widget.index],
+          ),
         ),
       ),
     );

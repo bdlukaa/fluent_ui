@@ -676,8 +676,9 @@ class _TreeViewItem extends StatelessWidget {
           horizontal: 4.0,
         ),
         builder: (context, states) {
-          return Stack(
-            children: [
+          return FocusBorder(
+            focused: states.isFocused,
+            child: Stack(children: [
               Container(
                 height: selectionMode == TreeViewSelectionMode.multiple
                     ? 28.0
@@ -779,7 +780,7 @@ class _TreeViewItem extends StatelessWidget {
                     ),
                   ),
                 ),
-            ],
+            ]),
           );
         },
       ),
