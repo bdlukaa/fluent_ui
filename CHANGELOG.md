@@ -10,6 +10,7 @@ Date format: DD/MM/YYYY
   - Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
   - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
 - Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
+- Call `AutoSuggestBox.onChanged` when an item is selected using the keyboard ([#483](https://github.com/bdlukaa/fluent_ui/issues/483))
 - `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
 - Do not add unnecessary padding in `DropdownButton` ([#475](https://github.com/bdlukaa/fluent_ui/issues/475))
 - `ComboBox` updates:
@@ -24,6 +25,8 @@ Date format: DD/MM/YYYY
 - `TimePicker` and `DatePicker` popup now needs a minimum width of 260 ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 - Correctly align `NavigationAppBar` content ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 - **BREAKING** Added `InfoLabel.rich`. `InfoLabel` is no longer a constant contructor ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- Always add `GlobalMaterialLocalizations` above `ReorderableListView` ([#492](https://github.com/bdlukaa/fluent_ui/issues/492))
+- **BREAKING** Removed `ContentDialog.backgroundDismiss`. Use `showDialog.barrierDismissable` ([#490](https://github.com/bdlukaa/fluent_ui/issues/490))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

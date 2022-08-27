@@ -115,6 +115,7 @@ class ScaffoldPage extends StatelessWidget {
         'resizeToAvoidBottomInset',
         value: resizeToAvoidBottomInset,
         defaultValue: true,
+        ifFalse: 'do not resize',
       ));
   }
 

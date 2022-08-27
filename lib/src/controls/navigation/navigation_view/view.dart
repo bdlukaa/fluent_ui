@@ -367,7 +367,6 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   ),
-                // appBar,
                 PaneScrollConfiguration(
                   child: () {
                     if (openedWithoutOverlay) {

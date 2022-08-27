@@ -59,8 +59,7 @@ void showContentDialog(BuildContext context) async {
     ),
   );
   setState(() {});
-}
-''',
+}''',
       ),
     ];
   }
