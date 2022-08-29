@@ -382,9 +382,11 @@ class _ProgressRingState extends State<ProgressRing>
           }
           return CustomPaint(
             painter: _RingPainter(
-              backgroundColor: theme.inactiveBackgroundColor,
+              backgroundColor:
+                  widget.backgroundColor ?? theme.inactiveBackgroundColor,
               value: widget.value,
-              color: theme.accentColor.defaultBrushFor(theme.brightness),
+              color: widget.activeColor ??
+                  theme.accentColor.defaultBrushFor(theme.brightness),
               strokeWidth: widget.strokeWidth,
               d1: d1,
               d2: d2,
