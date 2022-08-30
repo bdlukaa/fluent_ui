@@ -35,6 +35,7 @@ Date format: DD/MM/YYYY
   - `TreeViewItem` now shows the focus highlight. They can also be selected using the keyboard
   - `Expander` now shows the focus highlight
 - Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502)) 
+- Added `AutoSuggestBox.enabled` ([#504](https://github.com/bdlukaa/fluent_ui/issues/504))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

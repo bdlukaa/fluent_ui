@@ -4,10 +4,18 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class AutoSuggestBoxPage extends ScrollablePage {
   String? selectedCat;
+  bool enabled = true;
 
   @override
   Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('AutoSuggestBox'));
+    return PageHeader(
+      title: const Text('AutoSuggestBox'),
+      commandBar: ToggleSwitch(
+        content: const Text('Disabled'),
+        checked: !enabled,
+        onChanged: (v) => setState(() => enabled = !v),
+      ),
+    );
   }
 
   @override
@@ -24,6 +32,7 @@ class AutoSuggestBoxPage extends ScrollablePage {
           SizedBox(
             width: 350.0,
             child: AutoSuggestBox(
+              enabled: enabled,
               items: cats
                   .map<AutoSuggestBoxItem>(
                     (cat) => AutoSuggestBoxItem(
