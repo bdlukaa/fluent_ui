@@ -178,15 +178,16 @@ const List<Locale> defaultSupportedLocales = <Locale>[
 ///
 ///  * [FluentApp.localizationsDelegates], which automatically includes
 ///  * [DefaultFluentLocalizations.delegate] by default.
-class DefaultFluentLocalizations extends S implements FluentLocalizations {
+class DefaultFluentLocalizations extends FluentS
+    implements FluentLocalizations {
   final Locale locale;
 
   DefaultFluentLocalizations._defaultFluentLocalizations(this.locale) {
-    S.load(locale);
+    FluentS.load(locale);
   }
 
   static bool supports(Locale locale) {
-    return S.delegate.isSupported(locale);
+    return FluentS.delegate.isSupported(locale);
   }
 
   // Special cases - Those that include operating system dependent messages
