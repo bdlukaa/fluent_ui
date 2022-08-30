@@ -34,6 +34,7 @@ Date format: DD/MM/YYYY
     This means the the content of the body will be fully traversed before moving on to another widget or group of widgets. [Learn more](https://docs.flutter.dev/development/ui/advanced/focus#focustraversalgroup-widget)
   - `TreeViewItem` now shows the focus highlight. They can also be selected using the keyboard
   - `Expander` now shows the focus highlight
+- Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502)) 
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
