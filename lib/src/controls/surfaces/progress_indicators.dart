@@ -348,7 +348,7 @@ class _ProgressRingState extends State<ProgressRing>
   }
 
   double d1 = 0, d2 = 0;
-  double speed1 = 1440, speed2 = 2160; // deg per second
+  double speed1 = 1440, speed2 = 2160; // deg per 3 seconds
   double lastValue = 0;
 
   @override
