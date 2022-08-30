@@ -35,3 +35,4 @@ flutter:
 
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the package. Default: false
+  class_name: FluentS
