@@ -514,7 +514,7 @@ class _TabViewState extends State<TabView> {
         Expanded(child: widget.tabs[widget.currentIndex].body),
     ]);
     if (widget.shortcutsEnabled) {
-      void _onClosePressed() {
+      void onClosePressed() {
         widget.tabs[widget.currentIndex].onClosed?.call();
       }
 
@@ -523,9 +523,9 @@ class _TabViewState extends State<TabView> {
         child: CallbackShortcuts(
           bindings: {
             const SingleActivator(LogicalKeyboardKey.f4, control: true):
-                _onClosePressed,
+                onClosePressed,
             const SingleActivator(LogicalKeyboardKey.keyW, control: true):
-                _onClosePressed,
+                onClosePressed,
             const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
               widget.onNewPressed?.call();
             },

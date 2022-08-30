@@ -193,7 +193,7 @@ class NavigationViewState extends State<NavigationView> {
         EdgeInsets.only(top: widget.appBar?.finalHeight(context) ?? 0.0);
     final direction = Directionality.of(context);
 
-    Color? _overlayBackgroundColor() {
+    Color? overlayBackgroundColor() {
       if (theme.backgroundColor == null) {
         if (brightness.isDark) {
           return const Color(0xFF202020);
@@ -389,7 +389,7 @@ class NavigationViewState extends State<NavigationView> {
                     } else if (_compactOverlayOpen) {
                       return Mica(
                         key: _overlayKey,
-                        backgroundColor: _overlayBackgroundColor(),
+                        backgroundColor: overlayBackgroundColor(),
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
@@ -482,7 +482,7 @@ class NavigationViewState extends State<NavigationView> {
                     child: ColoredBox(
                       color: Colors.black,
                       child: Mica(
-                        backgroundColor: _overlayBackgroundColor(),
+                        backgroundColor: overlayBackgroundColor(),
                         elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
