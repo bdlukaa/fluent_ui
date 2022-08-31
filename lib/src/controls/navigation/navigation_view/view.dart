@@ -109,7 +109,7 @@ class NavigationViewState extends State<NavigationView> {
   OverlayEntry? minimalOverlayEntry;
 
   bool _minimalPaneOpen = false;
-  bool _compactOverlayOpen = false;
+  late bool _compactOverlayOpen;
 
   int oldIndex = 0;
 
@@ -137,6 +137,12 @@ class NavigationViewState extends State<NavigationView> {
     });
 
     generateKeys();
+
+    _compactOverlayOpen = PageStorage.of(context)?.readState(
+          context,
+          identifier: 'compactOverlayOpen',
+        ) as bool? ??
+        false;
   }
 
   @override
@@ -316,6 +322,13 @@ class NavigationViewState extends State<NavigationView> {
           if (displayMode != PaneDisplayMode.compact) {
             _compactOverlayOpen = false;
           }
+          if (displayMode != PaneDisplayMode.open) {
+            PageStorage.of(context)?.writeState(
+              context,
+              false,
+              identifier: 'openModeOpen',
+            );
+          }
           switch (displayMode) {
             case PaneDisplayMode.top:
               paneResult = Column(children: [
@@ -333,7 +346,19 @@ class NavigationViewState extends State<NavigationView> {
             case PaneDisplayMode.compact:
               void toggleCompactOpenMode() {
                 setState(() => _compactOverlayOpen = !_compactOverlayOpen);
+                PageStorage.of(context)?.writeState(
+                  context,
+                  _compactOverlayOpen,
+                  identifier: 'compactOverlayOpen',
+                );
               }
+
+              // Ensure the overlay state is correct
+              _compactOverlayOpen = PageStorage.of(context)?.readState(
+                    context,
+                    identifier: 'compactOverlayOpen',
+                  ) as bool? ??
+                  _compactOverlayOpen;
 
               double openSize =
                   pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
@@ -341,94 +366,107 @@ class NavigationViewState extends State<NavigationView> {
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
-              paneResult = Stack(children: [
-                AnimatedPositionedDirectional(
-                  duration: theme.animationDuration ?? Duration.zero,
-                  curve: theme.animationCurve ?? Curves.linear,
-                  top: widget.appBar?.finalHeight(context) ?? 0.0,
-                  start: openedWithoutOverlay
-                      ? openSize
-                      : pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
-                  end: 0,
-                  bottom: 0,
-                  child: content,
-                ),
-                // If the overlay is open, add a gesture detector above the
-                // content to close if the user click outside the overlay
-                if (_compactOverlayOpen)
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: toggleCompactOpenMode,
-                      child: AbsorbPointer(
-                        child: Semantics(
-                          label: localizations.modalBarrierDismissLabel,
-                          child: const SizedBox.expand(),
+              if (openedWithoutOverlay || !_compactOverlayOpen) {
+                paneResult = Column(children: [
+                  appBar,
+                  Expanded(
+                    child: Row(children: [
+                      PaneScrollConfiguration(
+                        child: () {
+                          if (openedWithoutOverlay) {
+                            return Mica(
+                              key: _overlayKey,
+                              backgroundColor: theme.backgroundColor,
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 1.0),
+                                child: _OpenNavigationPane(
+                                  theme: theme,
+                                  pane: pane,
+                                  paneKey: _panelKey,
+                                  listKey: _listKey,
+                                  onToggle: toggleCompactOpenMode,
+                                  onItemSelected: toggleCompactOpenMode,
+                                  initiallyOpen: true,
+                                  // initiallyOpen:
+                                  //     PageStorage.of(context)?.readState(
+                                  //           context,
+                                  //           identifier: 'openedWithoutOverlay',
+                                  //         ) as bool? ??
+                                  //         false,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return KeyedSubtree(
+                              key: _overlayKey,
+                              child: _CompactNavigationPane(
+                                pane: pane,
+                                paneKey: _panelKey,
+                                listKey: _listKey,
+                                onToggle: toggleCompactOpenMode,
+                              ),
+                            );
+                          }
+                        }(),
+                      ),
+                      Expanded(child: content),
+                    ]),
+                  ),
+                ]);
+              } else {
+                paneResult = Stack(children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      top: widget.appBar?.finalHeight(context) ?? 0.0,
+                      start: pane.size?.compactWidth ??
+                          kCompactNavigationPaneWidth,
+                    ),
+                    child: content,
+                  ),
+                  // If the overlay is open, add a gesture detector above the
+                  // content to close if the user click outside the overlay
+                  if (_compactOverlayOpen && !openedWithoutOverlay)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: toggleCompactOpenMode,
+                        child: AbsorbPointer(
+                          child: Semantics(
+                            label: localizations.modalBarrierDismissLabel,
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  PaneScrollConfiguration(
+                    child: Mica(
+                      key: _overlayKey,
+                      backgroundColor: overlayBackgroundColor(),
+                      elevation: 10.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFF6c6c6c),
+                            width: 0.15,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 1.0),
+                        padding: appBarPadding,
+                        child: _OpenNavigationPane(
+                          theme: theme,
+                          pane: pane,
+                          paneKey: _panelKey,
+                          listKey: _listKey,
+                          onToggle: toggleCompactOpenMode,
+                          onItemSelected: toggleCompactOpenMode,
                         ),
                       ),
                     ),
                   ),
-                PaneScrollConfiguration(
-                  child: () {
-                    if (openedWithoutOverlay) {
-                      return Mica(
-                        key: _overlayKey,
-                        backgroundColor: theme.backgroundColor,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                            onItemSelected: toggleCompactOpenMode,
-                          ),
-                        ),
-                      );
-                    } else if (_compactOverlayOpen) {
-                      return Mica(
-                        key: _overlayKey,
-                        backgroundColor: overlayBackgroundColor(),
-                        elevation: 10.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color(0xFF6c6c6c),
-                              width: 0.15,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                            onItemSelected: toggleCompactOpenMode,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: appBarPadding,
-                        child: KeyedSubtree(
-                          key: _overlayKey,
-                          child: _CompactNavigationPane(
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onToggle: toggleCompactOpenMode,
-                          ),
-                        ),
-                      );
-                    }
-                  }(),
-                ),
-                appBar,
-              ]);
+                  appBar,
+                ]);
+              }
               break;
             case PaneDisplayMode.open:
               paneResult = Column(children: [
@@ -441,6 +479,11 @@ class NavigationViewState extends State<NavigationView> {
                         pane: pane,
                         paneKey: _panelKey,
                         listKey: _listKey,
+                        initiallyOpen: PageStorage.of(context)?.readState(
+                              context,
+                              identifier: 'openModeOpen',
+                            ) as bool? ??
+                            false,
                       ),
                     ),
                     Expanded(child: content),

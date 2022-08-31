@@ -256,6 +256,10 @@ class _StickyNavigationIndicatorState
       return;
     }
 
+    _old = PageStorage.of(context)?.readState(context) as int? ?? _old;
+
+    if (_old == oldIndex) return;
+
     if (isShowing) {
       if (isBelow) {
         if (isSelected) {
@@ -295,7 +299,10 @@ class _StickyNavigationIndicatorState
     }
 
     _old = oldIndex;
-    if (mounted) setState(() {});
+    if (mounted) {
+      PageStorage.of(context)?.writeState(context, _old);
+      setState(() {});
+    }
   }
 
   @override

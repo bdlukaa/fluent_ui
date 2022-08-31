@@ -38,6 +38,7 @@ Date format: DD/MM/YYYY
   - `Expander` now shows the focus highlight
 - Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502)) 
 - Added `AutoSuggestBox.enabled` ([#504](https://github.com/bdlukaa/fluent_ui/issues/504))
+- Correctly keep the `NavigationView` animation state
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 

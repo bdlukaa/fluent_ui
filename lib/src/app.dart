@@ -425,6 +425,22 @@ class _FluentAppState extends State<FluentApp> {
                   .withOpacity(0.8),
               cursorColor: themeData.inactiveColor,
             ),
+            colorScheme: m.ColorScheme.fromSwatch(
+              primarySwatch: m.MaterialColor(
+                400,
+                {
+                  100: themeData.accentColor.lightest,
+                  200: themeData.accentColor.lighter,
+                  300: themeData.accentColor.light,
+                  400: themeData.accentColor.normal,
+                  500: themeData.accentColor.dark,
+                  600: themeData.accentColor.darker,
+                  700: themeData.accentColor.darkest,
+                },
+              ),
+              primaryColorDark: themeData.accentColor.dark,
+              brightness: themeData.brightness,
+            ),
           ),
       child: AnimatedFluentTheme(
         curve: themeData.animationCurve,

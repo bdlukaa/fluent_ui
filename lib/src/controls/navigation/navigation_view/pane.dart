@@ -1034,6 +1034,7 @@ class _CompactNavigationPane extends StatelessWidget {
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
       key: paneKey,
+      // duration: Duration.zero,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
@@ -1102,6 +1103,7 @@ class _OpenNavigationPane extends StatefulWidget {
     this.listKey,
     this.onToggle,
     this.onItemSelected,
+    this.initiallyOpen = false,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
@@ -1109,8 +1111,8 @@ class _OpenNavigationPane extends StatefulWidget {
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
-
   final NavigationPaneThemeData theme;
+  final bool initiallyOpen;
 
   static Widget buildItem(
     BuildContext context,
@@ -1170,7 +1172,16 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       vsync: this,
       duration: theme.animationDuration,
     );
-    controller.forward();
+    if (widget.initiallyOpen) {
+      controller.value = 1;
+    } else {
+      controller.forward();
+      PageStorage.of(context)?.writeState(
+        context,
+        true,
+        identifier: 'openModeOpen',
+      );
+    }
   }
 
   @override
@@ -1209,11 +1220,14 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     return SizeTransition(
       axisAlignment: -1,
       axis: Axis.horizontal,
-      sizeFactor: Tween<double>(begin: 0, end: 1.0).animate(controller),
+      sizeFactor: Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
+        parent: controller,
+        curve: theme.animationCurve ?? Curves.linear,
+      )),
       child: AnimatedContainer(
         key: widget.paneKey,
-        duration: Duration.zero,
-        curve: Curves.linear,
+        duration: theme.animationDuration ?? Duration.zero,
+        curve: theme.animationCurve ?? Curves.linear,
         width: paneWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
