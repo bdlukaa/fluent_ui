@@ -15,12 +15,14 @@ Date format: DD/MM/YYYY
 - Do not add unnecessary padding in `DropdownButton` ([#475](https://github.com/bdlukaa/fluent_ui/issues/475))
 - `ComboBox` updates:
   - **BREAKING** Renamed `Combobox` to `ComboBox`
+  - **BREAKING** Renamed `ComboboxItem` to `ComboBoxItem`
+  - **BREAKING** Renamed `ComboBox.backgroundColor` to `ComboBox.popupColor`
   - Implement `EditableComboBox`, a combo box that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244)) 
   - `ComboBox.isExpanded: false` now correctly sets the button width ([#382](https://github.com/bdlukaa/fluent_ui/issues/382))
   - `ComboBox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
   - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
   - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
-  - `Combobox.comboboxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+  - `ComboBox.comboBoxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - Implemented `PaneItemExpander` ([#299](https://github.com/bdlukaa/fluent_ui/pull/299))
 - `TimePicker` and `DatePicker` popup now needs a minimum width of 260 ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 - Correctly align `NavigationAppBar` content ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))

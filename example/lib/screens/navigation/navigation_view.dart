@@ -70,7 +70,7 @@ class NavigationViewPage extends ScrollablePage {
             value: displayMode,
             items: ([...PaneDisplayMode.values]..remove(PaneDisplayMode.auto))
                 .map((mode) {
-              return ComboboxItem(child: Text(mode.name), value: mode);
+              return ComboBoxItem(child: Text(mode.name), value: mode);
             }).toList(),
             onChanged: (mode) => setState(
               () => this.displayMode = mode ?? displayMode,
@@ -81,7 +81,7 @@ class NavigationViewPage extends ScrollablePage {
           label: 'Page Transition',
           child: ComboBox<String>(
             items: pageTransitions
-                .map((e) => ComboboxItem(child: Text(e), value: e))
+                .map((e) => ComboBoxItem(child: Text(e), value: e))
                 .toList(),
             value: pageTransition,
             onChanged: (transition) => setState(

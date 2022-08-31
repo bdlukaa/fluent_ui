@@ -51,7 +51,7 @@ class HomePage extends ScrollablePage {
               child: ComboBox<String>(
                 value: comboboxValue,
                 items: ['Item 1', 'Item 2']
-                    .map((e) => ComboboxItem(
+                    .map((e) => ComboBoxItem(
                           child: Text(e),
                           value: e,
                         ))

@@ -14,7 +14,7 @@ class EditableComboBox<T> extends ComboBox<T> {
   const EditableComboBox({
     super.key,
     super.autofocus,
-    super.comboboxColor,
+    super.popupColor,
     super.disabledPlaceholder,
     super.elevation,
     super.focusColor,
@@ -55,7 +55,7 @@ class EditableComboBox<T> extends ComboBox<T> {
   State<ComboBox<T>> createState() => _EditableComboboxState<T>();
 }
 
-class _EditableComboboxState<T> extends ComboboxState<T> {
+class _EditableComboboxState<T> extends ComboBoxState<T> {
   @override
   EditableComboBox<T> get widget => super.widget as EditableComboBox<T>;
 
@@ -172,8 +172,8 @@ class ComboboxFormField<T> extends FormField<T> {
   /// parameters must not be null.
   ComboboxFormField({
     Key? key,
-    required List<ComboboxItem<T>>? items,
-    ComboboxBuilder? selectedItemBuilder,
+    required List<ComboBoxItem<T>>? items,
+    ComboBoxBuilder? selectedItemBuilder,
     T? value,
     Widget? placeholder,
     Widget? disabledPlaceholder,
@@ -189,7 +189,7 @@ class ComboboxFormField<T> extends FormField<T> {
     Color? focusColor,
     FocusNode? focusNode,
     bool autofocus = false,
-    Color? comboboxColor,
+    Color? popupColor,
     FormFieldSetter<T>? onSaved,
     FormFieldValidator<T>? validator,
     AutovalidateMode? autovalidateMode,
@@ -239,7 +239,7 @@ class ComboboxFormField<T> extends FormField<T> {
                       focusColor: focusColor,
                       focusNode: focusNode,
                       autofocus: autofocus,
-                      comboboxColor: comboboxColor,
+                      popupColor: popupColor,
                     ),
                   ),
                 );
@@ -298,8 +298,8 @@ class EditableComboboxFormField<T> extends FormField<T> {
   /// parameters must not be null.
   EditableComboboxFormField({
     Key? key,
-    required List<ComboboxItem<T>>? items,
-    ComboboxBuilder? selectedItemBuilder,
+    required List<ComboBoxItem<T>>? items,
+    ComboBoxBuilder? selectedItemBuilder,
     T? value,
     Widget? placeholder,
     Widget? disabledPlaceholder,
@@ -315,7 +315,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
     Color? focusColor,
     FocusNode? focusNode,
     bool autofocus = false,
-    Color? comboboxColor,
+    Color? popupColor,
     FormFieldSetter<T>? onSaved,
     FormFieldValidator<T>? validator,
     AutovalidateMode? autovalidateMode,
@@ -366,7 +366,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
                       focusColor: focusColor,
                       focusNode: focusNode,
                       autofocus: autofocus,
-                      comboboxColor: comboboxColor,
+                      popupColor: popupColor,
                       onFieldSubmitted: onFieldSubmitted,
                     ),
                   ),

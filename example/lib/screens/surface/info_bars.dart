@@ -67,7 +67,7 @@ class InfoBarPage extends ScrollablePage {
                   isExpanded: true,
                   items: InfoBarSeverity.values
                       .map(
-                        (severity) => ComboboxItem(
+                        (severity) => ComboBoxItem(
                           child: Text(severity.name),
                           value: severity,
                         ),
@@ -75,7 +75,7 @@ class InfoBarPage extends ScrollablePage {
                       .toList(),
                   value: severity,
                   onChanged: (v) => setState(() => severity = v ?? severity),
-                  comboboxColor: () {
+                  popupColor: () {
                     switch (severity) {
                       case InfoBarSeverity.info:
                         break;

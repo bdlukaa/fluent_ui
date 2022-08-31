@@ -93,7 +93,7 @@ class AcrylicPage extends ScrollablePage {
                   onChanged: (c) => setState(() => color = c),
                   value: color,
                   items: [
-                    ComboboxItem(
+                    ComboBoxItem(
                       child: Row(children: [
                         buildColorBox(Colors.white),
                         const SizedBox(width: 10.0),
@@ -101,7 +101,7 @@ class AcrylicPage extends ScrollablePage {
                       ]),
                       value: Colors.white,
                     ),
-                    ComboboxItem(
+                    ComboBoxItem(
                       child: Row(children: [
                         buildColorBox(const Color(0xE4000000)),
                         const SizedBox(width: 10.0),
@@ -111,7 +111,7 @@ class AcrylicPage extends ScrollablePage {
                     ),
                     ...List.generate(Colors.accentColors.length, (index) {
                       final color = Colors.accentColors[index];
-                      return ComboboxItem(
+                      return ComboBoxItem(
                         child: Row(children: [
                           buildColorBox(color),
                           const SizedBox(width: 10.0),

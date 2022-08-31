@@ -9,7 +9,7 @@ class ComboboxPage extends ScrollablePage {
   String? selectedCat;
   double fontSize = 20.0;
   bool disabled = false;
-  final comboboxKey = GlobalKey<ComboboxState>();
+  final comboboxKey = GlobalKey<ComboBoxState>();
 
   @override
   Widget buildHeader(BuildContext context) {
@@ -77,10 +77,10 @@ class ComboboxPage extends ScrollablePage {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ComboBox<String>(
             isExpanded: false,
-            comboboxColor: colors[selectedColor],
+            popupColor: colors[selectedColor],
             value: selectedColor,
             items: colors.entries.map((e) {
-              return ComboboxItem(
+              return ComboBoxItem(
                 child: Text(e.key),
                 value: e.key,
               );
@@ -104,7 +104,7 @@ Color selectedColor = 'Green';
 ComboBox<String>(
   value: selectedColor,
   items: colors.entries.map((e) {
-    return ComboboxItem(
+    return ComboBoxItem(
       child: Text(e.key),
       value: e.key,
     );
@@ -120,8 +120,8 @@ ComboBox<String>(
           ComboBox<String>(
             isExpanded: false,
             value: selectedCat,
-            items: cats.map<ComboboxItem<String>>((e) {
-              return ComboboxItem<String>(
+            items: cats.map<ComboBoxItem<String>>((e) {
+              return ComboBoxItem<String>(
                 child: Text(e),
                 value: e,
               );
@@ -143,8 +143,8 @@ ComboBox<String>(
 
 ComboBox<String>(
   value: selectedCat,
-  items: cats.map<ComboboxItem<String>>((e) {
-    return ComboboxItem<String>(
+  items: cats.map<ComboBoxItem<String>>((e) {
+    return ComboBoxItem<String>(
       child: Text(e),
       value: e,
     );
@@ -174,8 +174,8 @@ ComboBox<String>(
             child: EditableComboBox<int>(
               isExpanded: false,
               value: fontSize.toInt(),
-              items: fontSizes.map<ComboboxItem<int>>((fontSize) {
-                return ComboboxItem<int>(
+              items: fontSizes.map<ComboBoxItem<int>>((fontSize) {
+                return ComboBoxItem<int>(
                   child: Text('${fontSize.toInt()}'),
                   value: fontSize.toInt(),
                 );
@@ -238,8 +238,8 @@ double fontSize = 20.0;
 
 EditableComboBox<int>(
   value: fontSize.toInt(),
-  items: cats.map<ComboboxItem<int>>((e) {
-    return ComboboxItem<int>(
+  items: cats.map<ComboBoxItem<int>>((e) {
+    return ComboBoxItem<int>(
       child: Text('\$e'),
       value: e.toInt(),
     );
@@ -292,10 +292,10 @@ EditableComboBox<int>(
           Form(
             autovalidateMode: AutovalidateMode.always,
             child: ComboboxFormField<String>(
-              comboboxColor: colors[selectedColor],
+              popupColor: colors[selectedColor],
               value: selectedColor,
               items: colors.entries.map((e) {
-                return ComboboxItem(
+                return ComboBoxItem(
                   child: Text(e.key),
                   value: e.key,
                 );
@@ -333,7 +333,7 @@ Form(
   child: ComboboxFormField<String>(
     value: selectedColor,
     items: colors.entries.map((e) {
-      return ComboboxItem(
+      return ComboBoxItem(
         child: Text(e.key),
         value: e.key,
       );
@@ -361,10 +361,10 @@ Form(
           ComboBox<String>(
             key: comboboxKey,
             isExpanded: false,
-            comboboxColor: colors[selectedColor],
+            popupColor: colors[selectedColor],
             value: selectedColor,
             items: colors.entries.map((e) {
-              return ComboboxItem(
+              return ComboBoxItem(
                 child: Text(e.key),
                 value: e.key,
               );

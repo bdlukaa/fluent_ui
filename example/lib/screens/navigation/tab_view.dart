@@ -69,7 +69,7 @@ class TabViewPage extends ScrollablePage {
                   isExpanded: true,
                   value: tabWidthBehavior,
                   items: TabWidthBehavior.values.map((behavior) {
-                    return ComboboxItem(
+                    return ComboBoxItem(
                       child: Text(behavior.name),
                       value: behavior,
                     );
@@ -90,7 +90,7 @@ class TabViewPage extends ScrollablePage {
                   isExpanded: true,
                   value: closeButtonVisibilityMode,
                   items: CloseButtonVisibilityMode.values.map((mode) {
-                    return ComboboxItem(
+                    return ComboBoxItem(
                       child: Text(mode.name),
                       value: mode,
                     );

@@ -144,7 +144,7 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
         const Text('ComboBox'),
         ComboBox<String>(
           items: comboboxItems
-              .map((e) => ComboboxItem(child: Text(e), value: e))
+              .map((e) => ComboBoxItem(child: Text(e), value: e))
               .toList(),
           value: comboboxItem,
           onChanged: (value) => setState(() => comboboxItem = value),
