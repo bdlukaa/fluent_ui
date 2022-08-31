@@ -111,6 +111,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableKeyboardControls = true,
+    this.enabled = true,
   })  : autovalidateMode = AutovalidateMode.disabled,
         validator = null,
         super(key: key);
@@ -147,6 +148,7 @@ class AutoSuggestBox extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableKeyboardControls = true,
+    this.enabled = true,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -281,6 +283,12 @@ class AutoSuggestBox extends StatefulWidget {
   ///
   /// Defaults to `true`
   final bool enableKeyboardControls;
+
+  /// Whether the text box is enabled
+  ///
+  /// See also:
+  ///  * [TextBox.enabled]
+  final bool enabled;
 
   @override
   _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
@@ -638,6 +646,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
                 autovalidateMode: widget.autovalidateMode,
                 textInputAction: widget.textInputAction,
                 keyboardAppearance: widget.keyboardAppearance,
+                enabled: widget.enabled,
               )
             : TextBox(
                 key: _textBoxKey,
@@ -666,6 +675,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
                 selectionWidthStyle: widget.selectionWidthStyle,
                 textInputAction: widget.textInputAction,
                 keyboardAppearance: widget.keyboardAppearance,
+                enabled: widget.enabled,
               ),
       ),
     );

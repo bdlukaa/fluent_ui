@@ -95,6 +95,7 @@ class _ProgressBarState extends State<ProgressBar>
 
   double p1 = 0, p2 = 0;
   double idleFrames = 15, cycle = 1, idle = 1;
+  double lastValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -107,30 +108,36 @@ class _ProgressBarState extends State<ProgressBar>
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
         maxValueLength: 100,
-        child: ValueListenableBuilder(
-          valueListenable: _controller,
-          builder: (context, value, child) => CustomPaint(
-            painter: _ProgressBarPainter(
-              value: widget.value == null ? null : widget.value! / 100,
-              strokeWidth: widget.strokeWidth,
-              activeColor: widget.activeColor ??
-                  theme.accentColor.defaultBrushFor(theme.brightness),
-              backgroundColor:
-                  widget.backgroundColor ?? theme.inactiveBackgroundColor,
-              p1: p1,
-              p2: p2,
-              idleFrames: idleFrames,
-              cycle: cycle,
-              idle: idle,
-              onUpdate: (values) {
-                p1 = values[0];
-                p2 = values[1];
-                idleFrames = values[2];
-                cycle = values[3];
-                idle = values[4];
-              },
-            ),
-          ),
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            double deltaValue = _controller.value - lastValue;
+            lastValue = _controller.value;
+            if (deltaValue < 0) deltaValue++; // repeat
+            return CustomPaint(
+              painter: _ProgressBarPainter(
+                value: widget.value == null ? null : widget.value! / 100,
+                strokeWidth: widget.strokeWidth,
+                activeColor: widget.activeColor ??
+                    theme.accentColor.defaultBrushFor(theme.brightness),
+                backgroundColor:
+                    widget.backgroundColor ?? theme.inactiveBackgroundColor,
+                p1: p1,
+                p2: p2,
+                idleFrames: idleFrames,
+                cycle: cycle,
+                idle: idle,
+                deltaValue: deltaValue,
+                onUpdate: (values) {
+                  p1 = values[0];
+                  p2 = values[1];
+                  idleFrames = values[2];
+                  cycle = values[3];
+                  idle = values[4];
+                },
+              ),
+            );
+          },
         ),
       ),
     );
@@ -138,11 +145,12 @@ class _ProgressBarState extends State<ProgressBar>
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  static const _step1 = 0.015, _step2 = 0.025, _velocityScale = 0.8;
+  static const _step1 = 2.7, _step2 = 4.5, _velocityScale = 0.8;
   static const _short = 0.4; // percentage of short line (0..1)
   static const _long = 80 / 130; // percentage of long line (0..1)
 
   double p1, p2, idleFrames, cycle, idle;
+  double deltaValue;
 
   ValueChanged<List<double>> onUpdate;
 
@@ -158,6 +166,7 @@ class _ProgressBarPainter extends CustomPainter {
     required this.idle,
     required this.cycle,
     required this.idleFrames,
+    required this.deltaValue,
     required this.onUpdate,
     required this.strokeWidth,
     required this.backgroundColor,
@@ -212,7 +221,8 @@ class _ProgressBarPainter extends CustomPainter {
     }
 
     double calcVelocity(double p) {
-      return 1 + math.cos(math.pi * p - (math.pi / 2)) * _velocityScale;
+      return (1 + math.cos(math.pi * p - (math.pi / 2)) * _velocityScale) *
+          deltaValue;
     }
 
     final v1 = calcVelocity(p1);
@@ -337,7 +347,9 @@ class _ProgressRingState extends State<ProgressRing>
     super.dispose();
   }
 
-  double d1 = 0, d2 = 0, lowSpeed = 8, highSpeed = 12;
+  double d1 = 0, d2 = 0;
+  double speed1 = 1440, speed2 = 2160; // deg per 3 seconds
+  double lastValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -351,52 +363,36 @@ class _ProgressRingState extends State<ProgressRing>
       child: Semantics(
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
-        child: () {
-          if (widget.value == null) {
-            return AnimatedBuilder(
-              animation: _controller,
-              builder: (context, value) {
-                return CustomPaint(
-                  painter: _RingPainter(
-                    backgroundColor:
-                        widget.backgroundColor ?? theme.inactiveBackgroundColor,
-                    value: widget.value,
-                    color: widget.activeColor ??
-                        theme.accentColor.defaultBrushFor(theme.brightness),
-                    strokeWidth: widget.strokeWidth,
-                    d1: d1,
-                    d2: d2,
-                    lowSpeed: lowSpeed,
-                    highSpeed: highSpeed,
-                    onUpdate: (v) {
-                      d1 = v[0];
-                      d2 = v[1];
-                      lowSpeed = v[2];
-                      highSpeed = v[3];
-                    },
-                    backwards: widget.backwards,
-                  ),
-                );
-              },
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            double deltaValue = _controller.value - lastValue;
+            lastValue = _controller.value;
+            if (deltaValue < 0) deltaValue++; // repeat
+            return CustomPaint(
+              painter: _RingPainter(
+                backgroundColor:
+                    widget.backgroundColor ?? theme.inactiveBackgroundColor,
+                value: widget.value,
+                color: widget.activeColor ??
+                    theme.accentColor.defaultBrushFor(theme.brightness),
+                strokeWidth: widget.strokeWidth,
+                d1: d1,
+                d2: d2,
+                speed1: speed1,
+                speed2: speed2,
+                deltaValue: deltaValue,
+                onUpdate: (v) {
+                  d1 = v[0];
+                  d2 = v[1];
+                  speed1 = v[2];
+                  speed2 = v[3];
+                },
+                backwards: widget.backwards,
+              ),
             );
-          }
-          return CustomPaint(
-            painter: _RingPainter(
-              backgroundColor:
-                  widget.backgroundColor ?? theme.inactiveBackgroundColor,
-              value: widget.value,
-              color: widget.activeColor ??
-                  theme.accentColor.defaultBrushFor(theme.brightness),
-              strokeWidth: widget.strokeWidth,
-              d1: d1,
-              d2: d2,
-              lowSpeed: lowSpeed,
-              highSpeed: highSpeed,
-              onUpdate: (v) {},
-              backwards: widget.backwards,
-            ),
-          );
-        }(),
+          },
+        ),
       ),
     );
   }
@@ -407,8 +403,9 @@ class _RingPainter extends CustomPainter {
   final Color backgroundColor;
   final double strokeWidth;
   final double? value;
-  final double d1, d2, lowSpeed, highSpeed;
-  final ValueChanged onUpdate;
+  final double d1, d2, speed1, speed2;
+  final double deltaValue;
+  final ValueChanged<List<double>> onUpdate;
   final bool backwards;
 
   const _RingPainter({
@@ -418,8 +415,9 @@ class _RingPainter extends CustomPainter {
     required this.value,
     required this.d1,
     required this.d2,
-    required this.lowSpeed,
-    required this.highSpeed,
+    required this.speed1,
+    required this.speed2,
+    required this.deltaValue,
     required this.onUpdate,
     required this.backwards,
   });
@@ -450,7 +448,10 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
     if (value == null) {
-      double d1 = this.d1, d2 = this.d2, speed1 = lowSpeed, speed2 = highSpeed;
+      double d1 = this.d1,
+          d2 = this.d2,
+          speed1 = this.speed1,
+          speed2 = this.speed2;
 
       void drawArc() {
         canvas.drawArc(
@@ -463,16 +464,16 @@ class _RingPainter extends CustomPainter {
       }
 
       void update() {
-        d1 += speed1;
-        d2 += speed2;
+        d1 += speed1 * deltaValue;
+        d2 += speed2 * deltaValue;
         if (d1 > 360 && d2 > 360) {
           d1 -= 360;
           d2 -= 360;
         }
         if ((d1 - d2).abs() >= 180) {
-          final newSpeed1 = speed1;
+          final speed = speed1;
           speed1 = speed2;
-          speed2 = newSpeed1;
+          speed2 = speed;
         }
         // update the values changed above
         onUpdate([d1, d2, speed1, speed2]);

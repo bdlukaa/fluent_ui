@@ -313,7 +313,7 @@ class AcrylicProperties {
         shape = const RoundedRectangleBorder();
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         tint,
         tintAlpha,
         luminosityAlpha,
