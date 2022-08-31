@@ -320,15 +320,51 @@ class ProgressRing extends StatefulWidget {
 class _ProgressRingState extends State<ProgressRing>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late final Animation<double> _startAngle;
+  late final Animation<double> _sweepAngle;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
     if (widget.value == null) _controller.repeat();
+
+    _startAngle = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 0,
+          end: 450,
+        ),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 450,
+          end: 1080,
+        ),
+        weight: 1,
+      ),
+    ]).animate(_controller);
+
+    _sweepAngle = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 0,
+          end: 180,
+        ),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 180,
+          end: 0,
+        ),
+        weight: 1,
+      ),
+    ]).animate(_controller);
   }
 
   @override
@@ -347,10 +383,6 @@ class _ProgressRingState extends State<ProgressRing>
     super.dispose();
   }
 
-  double d1 = 0, d2 = 0;
-  double speed1 = 1440, speed2 = 2160; // deg per 3 seconds
-  double lastValue = 0;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -366,9 +398,6 @@ class _ProgressRingState extends State<ProgressRing>
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            double deltaValue = _controller.value - lastValue;
-            lastValue = _controller.value;
-            if (deltaValue < 0) deltaValue++; // repeat
             return CustomPaint(
               painter: _RingPainter(
                 backgroundColor:
@@ -377,17 +406,8 @@ class _ProgressRingState extends State<ProgressRing>
                 color: widget.activeColor ??
                     theme.accentColor.defaultBrushFor(theme.brightness),
                 strokeWidth: widget.strokeWidth,
-                d1: d1,
-                d2: d2,
-                speed1: speed1,
-                speed2: speed2,
-                deltaValue: deltaValue,
-                onUpdate: (v) {
-                  d1 = v[0];
-                  d2 = v[1];
-                  speed1 = v[2];
-                  speed2 = v[3];
-                },
+                startAngle: _startAngle.value,
+                sweepAngle: _sweepAngle.value,
                 backwards: widget.backwards,
               ),
             );
@@ -403,9 +423,7 @@ class _RingPainter extends CustomPainter {
   final Color backgroundColor;
   final double strokeWidth;
   final double? value;
-  final double d1, d2, speed1, speed2;
-  final double deltaValue;
-  final ValueChanged<List<double>> onUpdate;
+  final double startAngle, sweepAngle;
   final bool backwards;
 
   const _RingPainter({
@@ -413,12 +431,8 @@ class _RingPainter extends CustomPainter {
     required this.backgroundColor,
     required this.strokeWidth,
     required this.value,
-    required this.d1,
-    required this.d2,
-    required this.speed1,
-    required this.speed2,
-    required this.deltaValue,
-    required this.onUpdate,
+    required this.startAngle,
+    required this.sweepAngle,
     required this.backwards,
   });
 
@@ -448,40 +462,13 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
     if (value == null) {
-      double d1 = this.d1,
-          d2 = this.d2,
-          speed1 = this.speed1,
-          speed2 = this.speed2;
-
-      void drawArc() {
-        canvas.drawArc(
-          Offset.zero & size,
-          (backwards ? (90 - d2) : (90 + d2)) * _deg2Rad,
-          ((d2 - d1) * _deg2Rad),
-          false,
-          paint,
-        );
-      }
-
-      void update() {
-        d1 += speed1 * deltaValue;
-        d2 += speed2 * deltaValue;
-        if (d1 > 360 && d2 > 360) {
-          d1 -= 360;
-          d2 -= 360;
-        }
-        if ((d1 - d2).abs() >= 180) {
-          final speed = speed1;
-          speed1 = speed2;
-          speed2 = speed;
-        }
-        // update the values changed above
-        onUpdate([d1, d2, speed1, speed2]);
-      }
-
-      update();
-      if (d1 == d2 && d1 % 360 == 0) return;
-      drawArc();
+      canvas.drawArc(
+        Offset.zero & size,
+        ((backwards ? -startAngle : startAngle) - 90) * _deg2Rad,
+        sweepAngle * _deg2Rad,
+        false,
+        paint,
+      );
     } else {
       canvas.drawArc(
         Offset.zero & size,
