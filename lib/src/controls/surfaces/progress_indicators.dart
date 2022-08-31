@@ -319,9 +319,40 @@ class ProgressRing extends StatefulWidget {
 
 class _ProgressRingState extends State<ProgressRing>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late final Animation<double> _startAngle;
-  late final Animation<double> _sweepAngle;
+  static final TweenSequence<double> _startAngleTween = TweenSequence([
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 0,
+        end: 450,
+      ),
+      weight: 1,
+    ),
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 450,
+        end: 1080,
+      ),
+      weight: 1,
+    ),
+  ]);
+  static final TweenSequence<double> _sweepAngleTween = TweenSequence([
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 0,
+        end: 180,
+      ),
+      weight: 1,
+    ),
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 180,
+        end: 0,
+      ),
+      weight: 1,
+    ),
+  ]);
+
+  late final AnimationController _controller;
 
   @override
   void initState() {
@@ -331,40 +362,6 @@ class _ProgressRingState extends State<ProgressRing>
       vsync: this,
     );
     if (widget.value == null) _controller.repeat();
-
-    _startAngle = TweenSequence([
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 0,
-          end: 450,
-        ),
-        weight: 1,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 450,
-          end: 1080,
-        ),
-        weight: 1,
-      ),
-    ]).animate(_controller);
-
-    _sweepAngle = TweenSequence([
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 0,
-          end: 180,
-        ),
-        weight: 1,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 180,
-          end: 0,
-        ),
-        weight: 1,
-      ),
-    ]).animate(_controller);
   }
 
   @override
@@ -406,8 +403,8 @@ class _ProgressRingState extends State<ProgressRing>
                 color: widget.activeColor ??
                     theme.accentColor.defaultBrushFor(theme.brightness),
                 strokeWidth: widget.strokeWidth,
-                startAngle: _startAngle.value,
-                sweepAngle: _sweepAngle.value,
+                startAngle: _startAngleTween.evaluate(_controller),
+                sweepAngle: _sweepAngleTween.evaluate(_controller),
                 backwards: widget.backwards,
               ),
             );
