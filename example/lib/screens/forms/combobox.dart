@@ -376,8 +376,9 @@ Form(
           const SizedBox(width: 8.0),
           Button(
             child: const Text('Open popup'),
-            onPressed: () => comboboxKey.currentState?.openPopup(),
-          )
+            onPressed:
+                disabled ? null : () => comboboxKey.currentState?.openPopup(),
+          ),
         ]),
         codeSnippet:
             '''// A GlobalKey<ComboboxState> is used to access the current

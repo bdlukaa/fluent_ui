@@ -1134,6 +1134,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       widget.style ?? FluentTheme.of(context).typography.body;
 
   void openPopup() {
+    assert(isEnabled, 'The ComboBox must be enabled to open a popup');
     final TextDirection? textDirection = Directionality.maybeOf(context);
     const EdgeInsetsGeometry menuMargin = _kAlignedMenuMargin;
 

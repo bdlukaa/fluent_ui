@@ -23,6 +23,7 @@ Date format: DD/MM/YYYY
   - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
   - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
   - `ComboBox.comboBoxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+  - `ComboBox` popup can't be opened if disabled
 - Implemented `PaneItemExpander` ([#299](https://github.com/bdlukaa/fluent_ui/pull/299))
 - `TimePicker` and `DatePicker` popup now needs a minimum width of 260 ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
 - Correctly align `NavigationAppBar` content ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
@@ -38,7 +39,7 @@ Date format: DD/MM/YYYY
   - `Expander` now shows the focus highlight
 - Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502)) 
 - Added `AutoSuggestBox.enabled` ([#504](https://github.com/bdlukaa/fluent_ui/issues/504))
-- Correctly keep the `NavigationView` animation state
+- Correctly keep the `NavigationView` animation state ([cf0fae1](https://github.com/bdlukaa/fluent_ui/commit/cf0fae16ce9a8879653606571e90af12f711bb84) ,[bd89ba6](https://github.com/bdlukaa/fluent_ui/commit/bd89ba6791dfe2762b37b3e291d8d1a7979cb3f5))
 
 ## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
 
