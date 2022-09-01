@@ -51,12 +51,11 @@ class _CardHighlightState extends State<CardHighlight>
           borderRadius: BorderRadius.zero,
         ),
         onStateChanged: (state) {
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              setState(() {
-                isOpen = state;
-              });
-            }
+          // this is done because [onStateChanges] is called while the [Expander]
+          // is updating. By using this, we schedule the rebuilt of this widget
+          // to the next frame
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            if (mounted) setState(() => isOpen = state);
           });
         },
         trailing: isOpen
@@ -66,16 +65,15 @@ class _CardHighlightState extends State<CardHighlight>
                 child: Button(
                   style: ButtonStyle(
                       backgroundColor: isCopying
-                          ? ButtonState.all(theme.brightness.isDark
-                              ? Colors.green.toAccentColor().lightest
-                              : Colors.green.toAccentColor())
+                          ? ButtonState.all(
+                              theme.accentColor
+                                  .defaultBrushFor(theme.brightness),
+                            )
                           : null),
                   child: isCopying
                       ? Icon(
                           FluentIcons.check_mark,
-                          color: theme.brightness.isDark
-                              ? Colors.grey
-                              : Colors.white,
+                          color: theme.resources.textOnAccentFillColorPrimary,
                           size: 18,
                         )
                       : Row(
@@ -87,13 +85,10 @@ class _CardHighlightState extends State<CardHighlight>
                         ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: widget.codeSnippet));
-                    setState(() {
-                      isCopying = true;
-                    });
+                    setState(() => isCopying = true);
                     Future.delayed(const Duration(milliseconds: 1500), () {
-                      setState(() {
-                        isCopying = false;
-                      });
+                      isCopying = false;
+                      if (mounted) setState(() {});
                     });
                   },
                 ),

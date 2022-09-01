@@ -108,11 +108,7 @@ Checkbox(
           items: [
             TreeViewItem(
               content: const Text('Select all'),
-              children: [
-                TreeViewItem(content: const Text('Option 1')),
-                TreeViewItem(content: const Text('Option 2')),
-                TreeViewItem(content: const Text('Option 3')),
-              ],
+              children: treeViewItems,
             ),
           ],
           selectionMode: TreeViewSelectionMode.multiple,
@@ -120,4 +116,10 @@ Checkbox(
       ),
     ];
   }
+
+  final treeViewItems = [
+    TreeViewItem(content: const Text('Option 1')),
+    TreeViewItem(content: const Text('Option 2')),
+    TreeViewItem(content: const Text('Option 3')),
+  ];
 }
