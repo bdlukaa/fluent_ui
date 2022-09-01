@@ -596,11 +596,24 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     return widget.displayMode != PaneDisplayMode.open;
   }
 
-  bool _open = false;
+  late bool _open;
   late AnimationController controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 100),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _open = PageStorage.of(context)?.readState(
+          context,
+          identifier: 'paneItemExpanderOpen',
+        ) as bool? ??
+        false;
+    if (_open) {
+      controller.value = 1;
+    }
+  }
 
   @override
   void dispose() {
@@ -611,6 +624,12 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
   void toggleOpen() {
     setState(() => _open = !_open);
+
+    PageStorage.of(context)?.writeState(
+      context,
+      _open,
+      identifier: 'paneItemExpanderOpen',
+    );
     if (useFlyout) {
       flyoutController.toggle();
     }
@@ -626,6 +645,12 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
+
+    _open = PageStorage.of(context)?.readState(
+          context,
+          identifier: 'paneItemExpanderOpen',
+        ) as bool? ??
+        _open;
 
     // Indexes
     // Ensure, if the child item is not visible, this is shown as the selected

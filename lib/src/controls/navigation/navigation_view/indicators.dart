@@ -75,7 +75,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   bool get isSelected {
-    return pane.isSelected(pane.effectiveItems[itemIndex]);
+    return pane.isSelected(item);
   }
 
   Axis get axis {
@@ -94,15 +94,17 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return InheritedNavigationView.of(context).oldIndex;
   }
 
+  PaneItem get item {
+    return pane.effectiveItems[itemIndex];
+  }
+
   /// The parent of this item, if any
   PaneItemExpander? get parent {
-    final items = InheritedNavigationView.of(context).pane!.effectiveItems;
+    final items = pane.effectiveItems;
 
     final expandableItems = items.whereType<PaneItemExpander>();
     if (expandableItems.isEmpty) return null;
 
-    final item =
-        InheritedNavigationView.of(context).pane!.effectiveItems[itemIndex];
     for (final expandable in expandableItems) {
       if (expandable.items.contains(item)) return expandable;
     }
@@ -256,9 +258,17 @@ class _StickyNavigationIndicatorState
       return;
     }
 
-    _old = PageStorage.of(context)?.readState(context) as int? ?? _old;
+    _old = (PageStorage.of(context)?.readState(
+          context,
+          identifier: 'oldIndex$itemIndex',
+        ) as num?)
+            ?.toInt() ??
+        _old;
 
-    if (_old == oldIndex) return;
+    // do not perform the animation twice
+    if (_old == oldIndex) {
+      return;
+    }
 
     if (isShowing) {
       if (isBelow) {
@@ -300,7 +310,11 @@ class _StickyNavigationIndicatorState
 
     _old = oldIndex;
     if (mounted) {
-      PageStorage.of(context)?.writeState(context, _old);
+      PageStorage.of(context)?.writeState(
+        context,
+        _old,
+        identifier: 'oldIndex$itemIndex',
+      );
       setState(() {});
     }
   }

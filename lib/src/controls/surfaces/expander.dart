@@ -133,7 +133,10 @@ class ExpanderState extends State<Expander>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _open = PageStorage.of(context)?.readState(context) as bool? ??
+    _open = PageStorage.of(context)?.readState(
+          context,
+          identifier: 'expanderOpen',
+        ) as bool? ??
         widget.initiallyExpanded;
     if (_open == true) {
       _controller.value = 1;
@@ -166,7 +169,11 @@ class ExpanderState extends State<Expander>
       );
       _open = true;
     }
-    PageStorage.of(context)?.writeState(context, open);
+    PageStorage.of(context)?.writeState(
+      context,
+      open,
+      identifier: 'expanderOpen',
+    );
     widget.onStateChanged?.call(open);
     if (mounted) setState(() {});
   }
