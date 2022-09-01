@@ -376,7 +376,7 @@ class ThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPaneTheme ??= NavigationPaneThemeData.standard(
+    navigationPaneTheme = NavigationPaneThemeData.standard(
       resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
@@ -384,7 +384,7 @@ class ThemeData with Diagnosticable {
       highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
       inactiveColor: inactiveColor,
-    );
+    ).merge(navigationPaneTheme);
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
