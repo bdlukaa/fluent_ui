@@ -67,23 +67,24 @@ class FocusBorder extends StatelessWidget {
     ));
   }
 
-  static Widget buildBorder(
-    BuildContext context,
+  static Widget _buildBorder(
     FocusThemeData style,
     bool focused, [
     Widget? child,
   ]) {
-    return IgnorePointer(
-      child: AnimatedContainer(
-        duration: FluentTheme.of(context).fasterAnimationDuration,
-        curve: FluentTheme.of(context).animationCurve,
-        decoration: style.buildPrimaryDecoration(focused),
-        child: DecoratedBox(
-          decoration: style.buildSecondaryDecoration(focused),
-          child: child,
+    return Builder(builder: (context) {
+      return IgnorePointer(
+        child: AnimatedContainer(
+          duration: FluentTheme.of(context).fasterAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
+          decoration: style.buildPrimaryDecoration(focused),
+          child: DecoratedBox(
+            decoration: style.buildSecondaryDecoration(focused),
+            child: child,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override
@@ -105,12 +106,12 @@ class FocusBorder extends StatelessWidget {
             right: renderOutside ? -borderWidth : 0,
             top: renderOutside ? -borderWidth : 0,
             bottom: renderOutside ? -borderWidth : 0,
-            child: buildBorder(context, style, focused),
+            child: _buildBorder(style, focused),
           ),
         ],
       );
     } else {
-      return buildBorder(context, style, focused, child);
+      return _buildBorder(style, focused, child);
     }
   }
 }

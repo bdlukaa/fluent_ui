@@ -430,6 +430,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: searchValue.isNotEmpty ? [] : footerItems,
       ),
+      onOpenSearch: () {
+        searchFocusNode.requestFocus();
+      },
       content: NavigationBody(
         index: index,
         children: content.transform(context),

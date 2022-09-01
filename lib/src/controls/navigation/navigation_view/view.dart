@@ -39,8 +39,7 @@ class NavigationView extends StatefulWidget {
     this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
-    // If more properties are added here, make sure to
-    // add them to the automatic mode as well.
+    this.onOpenSearch,
   }) : super(key: key);
 
   /// The app bar of the app.
@@ -65,6 +64,9 @@ class NavigationView extends StatefulWidget {
   /// The content is not clipped on when [PaneDisplayMode.displayMode]
   /// is [PaneDisplayMode.minimal]
   final ShapeBorder? contentShape;
+
+  /// Called when the search button is tapped
+  final VoidCallback? onOpenSearch;
 
   static NavigationViewState of(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>()!;
@@ -405,6 +407,7 @@ class NavigationViewState extends State<NavigationView> {
                                 paneKey: _panelKey,
                                 listKey: _listKey,
                                 onToggle: toggleCompactOpenMode,
+                                onOpenSearch: widget.onOpenSearch,
                               ),
                             );
                           }
