@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## [4.0.0-pre.4] - Almost there - [02/09/2022]
 
 - `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
