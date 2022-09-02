@@ -983,12 +983,14 @@ class _CompactNavigationPane extends StatelessWidget {
     this.paneKey,
     this.listKey,
     this.onToggle,
+    this.onOpenSearch,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
+  final VoidCallback? onOpenSearch;
 
   Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
@@ -1034,7 +1036,6 @@ class _CompactNavigationPane extends StatelessWidget {
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
       key: paneKey,
-      // duration: Duration.zero,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
@@ -1051,6 +1052,7 @@ class _CompactNavigationPane extends StatelessWidget {
                 pane,
                 onPressed: () {
                   onToggle?.call();
+                  onOpenSearch?.call();
                 },
                 padding: showReplacement ? EdgeInsets.zero : topPadding,
               );

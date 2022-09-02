@@ -116,6 +116,7 @@ class _IconsPageState extends State<IconsPage> {
                         color: ButtonThemeData.uncheckedInputColor(
                           FluentTheme.of(context),
                           states,
+                          transparentWhenNone: true,
                         ),
                         borderRadius: BorderRadius.circular(20.0),
                       ),

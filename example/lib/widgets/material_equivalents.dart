@@ -103,7 +103,7 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
         m.Radio<bool>(
           groupValue: true,
           value: radioChecked,
-          onChanged: (v) => setState(() => radioChecked = v ?? radioChecked),
+          onChanged: (v) => setState(() => radioChecked = !radioChecked),
         ),
       ],
       [
@@ -185,7 +185,7 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           onSelected: (e) => setState(() => dropdownItem = e),
           initialValue: dropdownItem,
           position: m.PopupMenuPosition.under,
-          child: TextButton(
+          child: m.TextButton(
             child: Text(dropdownItem),
             onPressed: () {
               popupKey.currentState?.showButtonMenu();

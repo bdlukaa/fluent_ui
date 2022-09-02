@@ -269,7 +269,6 @@ class TreeViewItem with Diagnosticable {
         listEquals(other.children, children) &&
         other.collapsable == collapsable &&
         other._anyExpandableSiblings == _anyExpandableSiblings &&
-        other.expanded == expanded &&
         other.selected == selected &&
         other.onInvoked == onInvoked &&
         other.backgroundColor == backgroundColor &&
@@ -291,7 +290,6 @@ class TreeViewItem with Diagnosticable {
         children.hashCode ^
         collapsable.hashCode ^
         _anyExpandableSiblings.hashCode ^
-        expanded.hashCode ^
         selected.hashCode ^
         onInvoked.hashCode ^
         backgroundColor.hashCode ^
@@ -493,21 +491,28 @@ class TreeView extends StatefulWidget {
   }
 }
 
-class _TreeViewState extends State<TreeView> {
+class _TreeViewState extends State<TreeView>
+    with AutomaticKeepAliveClientMixin {
   late List<TreeViewItem> items;
+
+  /// Builds all the items based on the items provided by the [widget]
+  void buildItems() {
+    items = widget.items.build();
+    items.executeForAll(
+      (item) => item.executeForAllParents((parent) => parent?.updateSelected()),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    items = widget.items.build();
+    buildItems();
   }
 
   @override
   void didUpdateWidget(TreeView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.items != oldWidget.items) {
-      items = widget.items.build();
-    }
+    if (widget.items != oldWidget.items) buildItems();
   }
 
   @override
@@ -518,6 +523,7 @@ class _TreeViewState extends State<TreeView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
     return ConstrainedBox(
@@ -623,6 +629,9 @@ class _TreeViewState extends State<TreeView> {
       if (item.onInvoked != null) item.onInvoked!(item),
     ]);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _TreeViewItem extends StatelessWidget {

@@ -197,15 +197,8 @@ class ExpanderState extends State<Expander>
       HoverButton(
         onPressed: _handlePressed,
         builder: (context, states) {
-          return AnimatedContainer(
-            duration: expanderAnimationDuration,
+          return Container(
             height: widget.headerHeight,
-            // decoration: BoxDecoration(
-            //   borderRadius: BorderRadius.vertical(
-            //     top: const Radius.circular(4.0),
-            //     bottom: Radius.circular(open ? 0.0 : 4.0),
-            //   ),
-            // ),
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
