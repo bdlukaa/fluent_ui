@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:example/widgets/deferred_widget.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 abstract class Page {
@@ -74,6 +76,23 @@ class EmptyPage extends Page {
   @override
   Widget build(BuildContext context) {
     return child ?? const SizedBox.shrink();
+  }
+}
+
+typedef DeferredPageBuilder = Page Function();
+
+class DeferredPage extends Page {
+  final LibraryLoader libraryLoader;
+  final DeferredPageBuilder createPage;
+
+  DeferredPage({
+    required this.libraryLoader,
+    required this.createPage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DeferredWidget(libraryLoader, () => createPage().build(context));
   }
 }
 

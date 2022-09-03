@@ -1,4 +1,3 @@
-import 'package:example/screens/surface/tiles.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
@@ -9,32 +8,15 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/forms/auto_suggest_box.dart';
-import 'screens/forms/combobox.dart';
-import 'screens/forms/date_picker.dart';
-import 'screens/forms/text_box.dart';
-import 'screens/forms/time_picker.dart';
 import 'screens/home.dart';
-import 'screens/inputs/button.dart';
-import 'screens/inputs/checkbox.dart';
-import 'screens/inputs/slider.dart';
-import 'screens/inputs/toggle_switch.dart';
-import 'screens/navigation/navigation_view.dart';
-import 'screens/navigation/tab_view.dart';
-import 'screens/navigation/tree_view.dart';
 import 'screens/settings.dart';
-import 'screens/surface/acrylic.dart';
-import 'screens/surface/commandbars.dart';
-import 'screens/surface/content_dialog.dart';
-import 'screens/surface/expander.dart';
-import 'screens/surface/flyouts.dart';
-import 'screens/surface/info_bars.dart';
-import 'screens/surface/progress_indicators.dart';
-import 'screens/surface/tooltip.dart';
-import 'screens/theming/colors.dart';
-import 'screens/theming/icons.dart';
-import 'screens/theming/reveal_focus.dart';
-import 'screens/theming/typography.dart';
+
+import 'routes/forms.dart' deferred as forms;
+import 'routes/inputs.dart' deferred as inputs;
+import 'routes/navigation.dart' deferred as navigation;
+import 'routes/surfaces.dart' deferred as surfaces;
+import 'routes/theming.dart' deferred as theming;
+
 import 'theme.dart';
 
 const String appTitle = 'Fluent UI Showcase for Flutter';
@@ -273,35 +255,85 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   final content = <Page>[
     HomePage(),
     // inputs
-    ButtonPage(),
-    CheckboxPage(),
-    SliderPage(),
-    ToggleSwitchPage(),
+    DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.ButtonPage()),
+    DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.CheckboxPage()),
+    DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.SliderPage()),
+    DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.ToggleSwitchPage()),
     // forms
-    TextBoxPage(),
-    AutoSuggestBoxPage(),
-    ComboboxPage(),
-    TimePickerPage(),
-    DatePickerPage(),
+    DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.TextBoxPage()),
+    DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.AutoSuggestBoxPage()),
+    DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.ComboboxPage()),
+    DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.TimePickerPage()),
+    DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.DatePickerPage()),
     // navigation
-    NavigationViewPage(),
-    TabViewPage(),
-    TreeViewPage(),
+    DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.NavigationViewPage()),
+    DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.TabViewPage()),
+    DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.TreeViewPage()),
     // surfaces
-    AcrylicPage(),
-    CommandBarsPage(),
-    ContentDialogPage(),
-    ExpanderPage(),
-    InfoBarPage(),
-    ProgressIndicatorsPage(),
-    TilePage(),
-    TooltipPage(),
-    const FlyoutPage().toPage(),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.AcrylicPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.CommandBarsPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ContentDialogPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ExpanderPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.InfoBarPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ProgressIndicatorsPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.TilePage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.TooltipPage()),
+    DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.FlyoutPage().toPage()),
     // theming
-    ColorsPage(),
-    const TypographyPage().toPage(),
-    const IconsPage().toPage(),
-    RevealFocusPage(),
+    DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.ColorsPage()),
+    DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.TypographyPage().toPage()),
+    DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.IconsPage().toPage()),
+    DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.RevealFocusPage()),
     // others
     Settings(),
 
