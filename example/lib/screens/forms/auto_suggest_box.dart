@@ -98,8 +98,9 @@ const cats = <String>[
                       label: cat.name,
                       // label: "${cat.name} [${cat.id}]${cat.hasTag?" 🏷": ""}",
                       onFocusChange: (focused) {
-                        if (focused)
+                        if (focused) {
                           debugPrint('Focused #${cat.id} - ${cat.name}');
+                        }
                       },
                     ),
                   )
