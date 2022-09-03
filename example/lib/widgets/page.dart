@@ -87,6 +87,7 @@ class DeferredPage extends Page {
   final DeferredPageBuilder createPage;
 
   DeferredPage({
+    super.key,
     required this.libraryLoader,
     required this.createPage,
   });
@@ -107,11 +108,5 @@ extension PageExtension on List<Page> {
         },
       );
     }).toList();
-  }
-}
-
-extension WidgetPageExtension on Widget {
-  Page toPage() {
-    return EmptyPage(this);
   }
 }

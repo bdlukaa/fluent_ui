@@ -7,6 +7,8 @@ class TimePickerPage extends ScrollablePage {
   DateTime? arrivalTime;
   DateTime? hhTime;
 
+  TimePickerPage({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('TimePicker'));

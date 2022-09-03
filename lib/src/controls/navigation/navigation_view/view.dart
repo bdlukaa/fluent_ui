@@ -39,6 +39,7 @@ class NavigationView extends StatefulWidget {
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
     this.onOpenSearch,
+    this.transitionBuilder,
   }) : super(key: key);
 
   /// The app bar of the app.
@@ -60,6 +61,30 @@ class NavigationView extends StatefulWidget {
 
   /// Called when the search button is tapped
   final VoidCallback? onOpenSearch;
+
+  /// The transition builder.
+  ///
+  /// It can be detect the display mode of the parent [NavigationView], if any,
+  /// and change the transition accordingly. By default, if the display mode is
+  /// top, [HorizontalSlidePageTransition] is used, otherwise
+  /// [EntrancePageTransition] is used.
+  ///
+  /// ```dart
+  /// NavigationBody(
+  ///   transitionBuilder: (child, animation) {
+  ///     return DrillInPageTransition(child: child, animation: animation);
+  ///   },
+  /// ),
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///  * [EntrancePageTransition], used by default
+  ///  * [HorizontalSlidePageTransition], used by default on top navigation
+  ///  * [DrillInPageTransition], used when users navigate deeper into an app
+  ///  * [SuppressPageTransition], to have no animation at all
+  ///  * <https://docs.microsoft.com/en-us/windows/apps/design/motion/page-transitions>
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
   static NavigationViewState of(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>()!;
@@ -272,7 +297,13 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
-        final body = pane.selectedItem.body;
+        final body = _NavigationBody(
+          key: ValueKey(pane.selected ?? -1),
+          transitionBuilder: widget.transitionBuilder,
+          child: pane.selected != null
+              ? pane.selectedItem.body
+              : const SizedBox.shrink(),
+        );
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
             return PaneScrollConfiguration(
