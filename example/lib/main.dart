@@ -137,105 +137,215 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   void resetSearch() => searchController.clear();
   String get searchValue => searchController.text;
   final List<NavigationPaneItem> originalItems = [
-    PaneItem(icon: const Icon(FluentIcons.home), title: const Text('Home')),
+    PaneItem(
+      icon: const Icon(FluentIcons.home),
+      title: const Text('Home'),
+      body: HomePage(),
+    ),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
       icon: const Icon(FluentIcons.button_control),
       title: const Text('Button'),
+      body: DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.ButtonPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.checkbox_composite),
       title: const Text('Checkbox'),
+      body: DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.CheckboxPage(),
+      ),
     ),
-    PaneItem(icon: const Icon(FluentIcons.slider), title: const Text('Slider')),
+    PaneItem(
+      icon: const Icon(FluentIcons.slider),
+      title: const Text('Slider'),
+      body: DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.SliderPage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.toggle_left),
       title: const Text('ToggleSwitch'),
+      body: DeferredPage(
+        libraryLoader: inputs.loadLibrary,
+        createPage: () => inputs.ToggleSwitchPage(),
+      ),
     ),
     PaneItemHeader(header: const Text('Form')),
     PaneItem(
       icon: const Icon(FluentIcons.text_field),
       title: const Text('TextBox'),
+      body: DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.TextBoxPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.page_list),
       title: const Text('AutoSuggestBox'),
+      body: DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.AutoSuggestBoxPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.combobox),
       title: const Text('ComboBox'),
+      body: DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.ComboboxPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.time_picker),
       title: const Text('TimePicker'),
+      body: DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.TimePickerPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.date_time),
       title: const Text('DatePicker'),
+      body: DeferredPage(
+        libraryLoader: forms.loadLibrary,
+        createPage: () => forms.DatePickerPage(),
+      ),
     ),
     PaneItemHeader(header: const Text('Navigation')),
     PaneItem(
       icon: const Icon(FluentIcons.navigation_flipper),
       title: const Text('NavigationView'),
+      body: DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.NavigationViewPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.table_header_row),
       title: const Text('TabView'),
+      body: DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.TabViewPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.bulleted_tree_list),
       title: const Text('TreeView'),
+      body: DeferredPage(
+        libraryLoader: navigation.loadLibrary,
+        createPage: () => navigation.TreeViewPage(),
+      ),
     ),
     PaneItemHeader(header: const Text('Surfaces')),
     PaneItem(
       icon: const Icon(FluentIcons.un_set_color),
       title: const Text('Acrylic'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.AcrylicPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.customize_toolbar),
       title: const Text('CommandBar'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.CommandBarsPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.comment_urgent),
       title: const Text('ContentDialog'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ContentDialogPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ExpanderPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.info_solid),
       title: const Text('InfoBar'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.InfoBarPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.progress_ring_dots),
       title: const Text('Progress Indicators'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.ProgressIndicatorsPage(),
+      ),
     ),
-    PaneItem(icon: const Icon(FluentIcons.tiles), title: const Text('Tiles')),
+    PaneItem(
+      icon: const Icon(FluentIcons.tiles),
+      title: const Text('Tiles'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.TilePage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.TooltipPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.pop_expand),
       title: const Text('Flyout'),
+      body: DeferredPage(
+        libraryLoader: surfaces.loadLibrary,
+        createPage: () => surfaces.FlyoutPage().toPage(),
+      ),
     ),
     PaneItemHeader(header: const Text('Theming')),
     PaneItem(
       icon: const Icon(FluentIcons.color_solid),
       title: const Text('Colors'),
+      body: DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.ColorsPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.font_color_a),
       title: const Text('Typography'),
+      body: DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.TypographyPage().toPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.icon_sets_flag),
       title: const Text('Icons'),
+      body: DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.IconsPage().toPage(),
+      ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.focus),
       title: const Text('Reveal Focus'),
+      body: DeferredPage(
+        libraryLoader: theming.loadLibrary,
+        createPage: () => theming.RevealFocusPage(),
+      ),
     ),
   ];
   final List<NavigationPaneItem> footerItems = [
@@ -243,102 +353,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       icon: const Icon(FluentIcons.settings),
       title: const Text('Settings'),
+      body: Settings(),
     ),
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
       title: const Text('Source code'),
       link: 'https://github.com/bdlukaa/fluent_ui',
+      body: const SizedBox.shrink(),
     ),
-  ];
-  late List<NavigationPaneItem> items = originalItems;
-
-  final content = <Page>[
-    HomePage(),
-    // inputs
-    DeferredPage(
-        libraryLoader: inputs.loadLibrary,
-        createPage: () => inputs.ButtonPage()),
-    DeferredPage(
-        libraryLoader: inputs.loadLibrary,
-        createPage: () => inputs.CheckboxPage()),
-    DeferredPage(
-        libraryLoader: inputs.loadLibrary,
-        createPage: () => inputs.SliderPage()),
-    DeferredPage(
-        libraryLoader: inputs.loadLibrary,
-        createPage: () => inputs.ToggleSwitchPage()),
-    // forms
-    DeferredPage(
-        libraryLoader: forms.loadLibrary,
-        createPage: () => forms.TextBoxPage()),
-    DeferredPage(
-        libraryLoader: forms.loadLibrary,
-        createPage: () => forms.AutoSuggestBoxPage()),
-    DeferredPage(
-        libraryLoader: forms.loadLibrary,
-        createPage: () => forms.ComboboxPage()),
-    DeferredPage(
-        libraryLoader: forms.loadLibrary,
-        createPage: () => forms.TimePickerPage()),
-    DeferredPage(
-        libraryLoader: forms.loadLibrary,
-        createPage: () => forms.DatePickerPage()),
-    // navigation
-    DeferredPage(
-        libraryLoader: navigation.loadLibrary,
-        createPage: () => navigation.NavigationViewPage()),
-    DeferredPage(
-        libraryLoader: navigation.loadLibrary,
-        createPage: () => navigation.TabViewPage()),
-    DeferredPage(
-        libraryLoader: navigation.loadLibrary,
-        createPage: () => navigation.TreeViewPage()),
-    // surfaces
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.AcrylicPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.CommandBarsPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.ContentDialogPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.ExpanderPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.InfoBarPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.ProgressIndicatorsPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.TilePage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.TooltipPage()),
-    DeferredPage(
-        libraryLoader: surfaces.loadLibrary,
-        createPage: () => surfaces.FlyoutPage().toPage()),
-    // theming
-    DeferredPage(
-        libraryLoader: theming.loadLibrary,
-        createPage: () => theming.ColorsPage()),
-    DeferredPage(
-        libraryLoader: theming.loadLibrary,
-        createPage: () => theming.TypographyPage().toPage()),
-    DeferredPage(
-        libraryLoader: theming.loadLibrary,
-        createPage: () => theming.IconsPage().toPage()),
-    DeferredPage(
-        libraryLoader: theming.loadLibrary,
-        createPage: () => theming.RevealFocusPage()),
-    // others
-    Settings(),
-
     // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
+  late List<NavigationPaneItem> items = originalItems;
 
   @override
   void initState() {
@@ -465,10 +490,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       onOpenSearch: () {
         searchFocusNode.requestFocus();
       },
-      content: NavigationBody(
-        index: index,
-        children: content.transform(context),
-      ),
     );
   }
 
@@ -524,19 +545,11 @@ class WindowButtons extends StatelessWidget {
 
 class _LinkPaneItemAction extends PaneItem {
   _LinkPaneItemAction({
-    required Widget icon,
+    required super.icon,
     required this.link,
-    title,
-    infoBadge,
-    focusNode,
-    autofocus = false,
-  }) : super(
-          icon: icon,
-          title: title,
-          infoBadge: infoBadge,
-          focusNode: focusNode,
-          autofocus: autofocus,
-        );
+    required super.body,
+    super.title,
+  });
 
   final String link;
 

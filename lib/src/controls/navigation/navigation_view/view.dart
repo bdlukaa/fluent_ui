@@ -36,7 +36,6 @@ class NavigationView extends StatefulWidget {
     Key? key,
     this.appBar,
     this.pane,
-    this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
     this.onOpenSearch,
@@ -46,23 +45,17 @@ class NavigationView extends StatefulWidget {
   final NavigationAppBar? appBar;
 
   /// The navigation pane, that can be displayed either on the
-  /// left, on the top, or above [content].
+  /// left, on the top, or above the body.
   final NavigationPane? pane;
-
-  /// The content of the pane.
-  ///
-  /// Usually an [NavigationBody].
-  final Widget content;
 
   /// {@macro flutter.rendering.ClipRectLayer.clipBehavior}
   ///
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
 
-  /// How the content should be clipped
+  /// How the body content should be clipped
   ///
-  /// The content is not clipped on when [PaneDisplayMode.displayMode]
-  /// is [PaneDisplayMode.minimal]
+  /// The body content is not clipped on when the display mode is [PaneDisplayMode.minimal]
   final ShapeBorder? contentShape;
 
   /// Called when the search button is tapped
@@ -253,6 +246,7 @@ class NavigationViewState extends State<NavigationView> {
                   : localizations.closeNavigationTooltip,
             ),
             icon: const Icon(FluentIcons.global_nav_button),
+            body: const SizedBox.shrink(),
           ).build(
             context,
             false,
@@ -278,6 +272,7 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
+        final body = pane.selectedItem.body;
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
             return PaneScrollConfiguration(
@@ -285,7 +280,7 @@ class NavigationViewState extends State<NavigationView> {
                 context,
                 NavigationPaneWidgetData(
                   appBar: appBar,
-                  content: ClipRect(child: widget.content),
+                  content: ClipRect(child: body),
                   listKey: _listKey,
                   paneKey: _panelKey,
                   scrollController: scrollController,
@@ -310,14 +305,14 @@ class NavigationViewState extends State<NavigationView> {
           final Widget content = ClipRect(
             key: _contentKey,
             child: displayMode == PaneDisplayMode.minimal
-                ? widget.content
+                ? body
                 : DecoratedBox(
                     position: DecorationPosition.foreground,
                     decoration: ShapeDecoration(shape: contentShape),
                     child: ClipPath(
                       clipBehavior: widget.clipBehavior,
                       clipper: ShapeBorderClipper(shape: contentShape),
-                      child: widget.content,
+                      child: body,
                     ),
                   ),
           );
@@ -564,7 +559,7 @@ class NavigationViewState extends State<NavigationView> {
       } else {
         paneResult = Column(children: [
           appBar,
-          Expanded(child: widget.content),
+          // Expanded(child: widget.content),
         ]);
       }
       return Mica(
@@ -692,6 +687,7 @@ class NavigationAppBar with Diagnosticable {
             builder: (context) => PaneItem(
               icon: const Icon(FluentIcons.back, size: 14.0),
               title: Text(localizations.backButtonTooltip),
+              body: const SizedBox.shrink(),
             ).build(
               context,
               false,

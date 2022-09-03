@@ -4,14 +4,15 @@ import 'package:example/widgets/deferred_widget.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-abstract class Page {
-  Page() {
+abstract class Page extends StatelessWidget {
+  Page({super.key}) {
     _pageIndex++;
   }
 
   final StreamController _controller = StreamController.broadcast();
   Stream get stateStream => _controller.stream;
 
+  @override
   Widget build(BuildContext context);
 
   void setState(VoidCallback func) {
@@ -47,7 +48,7 @@ abstract class Page {
 int _pageIndex = -1;
 
 abstract class ScrollablePage extends Page {
-  ScrollablePage() : super();
+  ScrollablePage({super.key});
 
   final scrollController = ScrollController();
   Widget buildHeader(BuildContext context) => const SizedBox.shrink();
