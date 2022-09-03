@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-typedef AutoSuggestBoxSorter = List<AutoSuggestBoxItem> Function(
+typedef AutoSuggestBoxSorter<T> = List<AutoSuggestBoxItem<T>> Function(
   String text,
-  List<AutoSuggestBoxItem> items,
+  List<AutoSuggestBoxItem<T>> items,
 );
 
-typedef OnChangeAutoSuggestBox = void Function(
+typedef OnChangeAutoSuggestBox<T> = void Function(
   String text,
   TextChangedReason reason,
 );
@@ -29,13 +29,16 @@ enum TextChangedReason {
 }
 
 /// An item used in [AutoSuggestBox]
-class AutoSuggestBoxItem {
+class AutoSuggestBoxItem<T> {
   /// The value attached to this item
-  final String value;
+  final T? value;
+
+  /// The label that identifies this item
+  final String label;
 
   /// The widget to be shown.
   ///
-  /// If null, [value] is displayed.
+  /// If null, [label] is displayed
   ///
   /// Usually a [Text]
   final Widget? child;
@@ -51,6 +54,7 @@ class AutoSuggestBoxItem {
   /// Creates an auto suggest box item
   AutoSuggestBoxItem({
     required this.value,
+    required this.label,
     this.child,
     this.onFocusChange,
     this.onSelected,
@@ -80,7 +84,7 @@ class AutoSuggestBoxItem {
 ///  * [TextBox], which is used by this widget to enter user text input
 ///  * [TextFormBox], which is used by this widget by Form
 ///  * [Overlay], which is used to show the suggestion popup
-class AutoSuggestBox extends StatefulWidget {
+class AutoSuggestBox<T> extends StatefulWidget {
   /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
     Key? key,
@@ -152,7 +156,7 @@ class AutoSuggestBox extends StatefulWidget {
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
-  final List<AutoSuggestBoxItem> items;
+  final List<AutoSuggestBoxItem<T>> items;
 
   /// The controller used to have control over what to show on the [TextBox].
   final TextEditingController? controller;
@@ -161,7 +165,7 @@ class AutoSuggestBox extends StatefulWidget {
   final OnChangeAutoSuggestBox? onChanged;
 
   /// Called when the user selected a value.
-  final ValueChanged<AutoSuggestBoxItem>? onSelected;
+  final ValueChanged<AutoSuggestBoxItem<T>>? onSelected;
 
   /// Sort the [items] based on the current query text
   ///
@@ -291,14 +295,14 @@ class AutoSuggestBox extends StatefulWidget {
   final bool enabled;
 
   @override
-  _AutoSuggestBoxState createState() => _AutoSuggestBoxState();
+  _AutoSuggestBoxState createState() => _AutoSuggestBoxState<T>();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<AutoSuggestBoxItem>('items', items))
-      ..add(ObjectFlagProperty<ValueChanged<AutoSuggestBoxItem>?>(
+      ..add(IterableProperty<AutoSuggestBoxItem<T>>('items', items))
+      ..add(ObjectFlagProperty<ValueChanged<AutoSuggestBoxItem<T>>?>(
         'onSelected',
         onSelected,
         ifNull: 'disabled',
@@ -319,12 +323,12 @@ class AutoSuggestBox extends StatefulWidget {
     if (text.isEmpty) return items;
 
     return items.where((element) {
-      return element.value.toLowerCase().contains(text.toLowerCase());
+      return element.label.toLowerCase().contains(text.toLowerCase());
     }).toList();
   }
 }
 
-class _AutoSuggestBoxState extends State<AutoSuggestBox> {
+class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   late FocusNode focusNode = widget.focusNode ?? FocusNode();
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
@@ -334,15 +338,15 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
   final FocusScopeNode overlayNode = FocusScopeNode();
   final _focusStreamController = StreamController<int>.broadcast();
   final _dynamicItemsController =
-      StreamController<List<AutoSuggestBoxItem>>.broadcast();
+      StreamController<List<AutoSuggestBoxItem<T>>>.broadcast();
 
   Size _boxSize = Size.zero;
 
-  late List<AutoSuggestBoxItem> _localItems;
+  late List<AutoSuggestBoxItem<T>> _localItems;
 
   void updateLocalItems() {
     if (!mounted) return;
-    setState(() => _localItems = widget.sorter(controller.text, widget.items));
+    setState(() => _localItems = (widget.sorter(controller.text, widget.items ) as List<AutoSuggestBoxItem<T>>)) ;
   }
 
   @override
@@ -353,7 +357,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
     controller.addListener(_handleTextChanged);
     focusNode.addListener(_handleFocusChanged);
 
-    _localItems = widget.sorter(controller.text, widget.items);
+    _localItems = (widget.sorter(controller.text, widget.items) as List<AutoSuggestBoxItem<T>>);
 
     // Update the overlay when the text box size has changed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -386,7 +390,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
   }
 
   @override
-  void didUpdateWidget(covariant AutoSuggestBox oldWidget) {
+  void didUpdateWidget(covariant AutoSuggestBox<T> oldWidget) {
     {
       // if the focusNode or controller objects were changed, we must reflect the
       // changes here. This is mostly used for a good dev-experience with hot
@@ -457,7 +461,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
             width: box.size.width,
             child: FluentTheme(
               data: FluentTheme.of(context),
-              child: _AutoSuggestBoxOverlay(
+              child: _AutoSuggestBoxOverlay<T>(
                 maxHeight: maxHeight,
                 node: overlayNode,
                 controller: controller,
@@ -465,16 +469,16 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
                 focusStream: _focusStreamController.stream,
                 itemsStream: _dynamicItemsController.stream,
                 sorter: widget.sorter,
-                onSelected: (AutoSuggestBoxItem item) {
+                onSelected: (AutoSuggestBoxItem<T> item) {
                   item.onSelected?.call();
                   widget.onSelected?.call(item);
                   controller
-                    ..text = item.value
+                    ..text = item.label
                     ..selection = TextSelection.collapsed(
-                      offset: item.value.length,
+                      offset: item.label.length,
                     );
                   widget.onChanged?.call(
-                    item.value,
+                    item.label,
                     TextChangedReason.suggestionChosen,
                   );
 
@@ -536,7 +540,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
     widget.onSelected?.call(item);
     item.onSelected?.call();
 
-    controller.text = item.value;
+    controller.text = item.label;
     widget.onChanged?.call(controller.text, TextChangedReason.suggestionChosen);
   }
 
@@ -682,7 +686,7 @@ class _AutoSuggestBoxState extends State<AutoSuggestBox> {
   }
 }
 
-class _AutoSuggestBoxOverlay extends StatefulWidget {
+class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   const _AutoSuggestBoxOverlay({
     Key? key,
     required this.items,
@@ -695,20 +699,20 @@ class _AutoSuggestBoxOverlay extends StatefulWidget {
     required this.maxHeight,
   }) : super(key: key);
 
-  final List<AutoSuggestBoxItem> items;
+  final List<AutoSuggestBoxItem<T>> items;
   final TextEditingController controller;
-  final ValueChanged<AutoSuggestBoxItem> onSelected;
+  final ValueChanged<AutoSuggestBoxItem<T>> onSelected;
   final FocusScopeNode node;
   final Stream<int> focusStream;
-  final Stream<List<AutoSuggestBoxItem>> itemsStream;
+  final Stream<List<AutoSuggestBoxItem<T>>> itemsStream;
   final AutoSuggestBoxSorter sorter;
   final double maxHeight;
 
   @override
-  State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState();
+  State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState<T>();
 }
 
-class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
+class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
   late final StreamSubscription focusSubscription;
   late final StreamSubscription itemsSubscription;
   final ScrollController scrollController = ScrollController();
@@ -716,7 +720,7 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
   /// Tile height + padding
   static const tileHeight = (kOneLineTileHeight + 2.0);
 
-  late List<AutoSuggestBoxItem> items = widget.items;
+  late List<AutoSuggestBoxItem<T>> items = widget.items;
 
   @override
   void initState() {
@@ -807,9 +811,9 @@ class _AutoSuggestBoxOverlayState extends State<_AutoSuggestBoxOverlay> {
                   itemBuilder: (context, index) {
                     final item = sortedItems[index];
                     return _AutoSuggestBoxOverlayTile(
-                      text: item.child ?? Text(item.value),
+                      text: item.child ?? Text(item.label),
                       selected: item._selected,
-                      onSelected: () => widget.onSelected(item),
+                      onSelected: () => widget.onSelected(item as AutoSuggestBoxItem<T>),
                     );
                   },
                 );
