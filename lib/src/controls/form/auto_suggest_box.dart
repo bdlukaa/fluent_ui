@@ -346,7 +346,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
   void updateLocalItems() {
     if (!mounted) return;
-    setState(() => _localItems = (widget.sorter(controller.text, widget.items ) as List<AutoSuggestBoxItem<T>>)) ;
+    setState(() => _localItems = (widget.sorter(controller.text, widget.items)
+        as List<AutoSuggestBoxItem<T>>));
   }
 
   @override
@@ -357,7 +358,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     controller.addListener(_handleTextChanged);
     focusNode.addListener(_handleFocusChanged);
 
-    _localItems = (widget.sorter(controller.text, widget.items) as List<AutoSuggestBoxItem<T>>);
+    _localItems = (widget.sorter(controller.text, widget.items)
+        as List<AutoSuggestBoxItem<T>>);
 
     // Update the overlay when the text box size has changed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -709,7 +711,8 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   final double maxHeight;
 
   @override
-  State<_AutoSuggestBoxOverlay> createState() => _AutoSuggestBoxOverlayState<T>();
+  State<_AutoSuggestBoxOverlay> createState() =>
+      _AutoSuggestBoxOverlayState<T>();
 }
 
 class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
@@ -813,7 +816,8 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                     return _AutoSuggestBoxOverlayTile(
                       text: item.child ?? Text(item.label),
                       selected: item._selected,
-                      onSelected: () => widget.onSelected(item as AutoSuggestBoxItem<T>),
+                      onSelected: () =>
+                          widget.onSelected(item as AutoSuggestBoxItem<T>),
                     );
                   },
                 );

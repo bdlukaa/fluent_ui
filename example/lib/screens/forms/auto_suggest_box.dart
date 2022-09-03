@@ -83,8 +83,8 @@ const cats = <String>[
   ...
 ];''',
       ),
-
-      subtitle(content: const Text('An AutoSuggestBox with dynamic type "Cat"')),
+      subtitle(
+          content: const Text('An AutoSuggestBox with dynamic type "Cat"')),
       CardHighlight(
         child: Row(children: [
           SizedBox(
@@ -98,7 +98,8 @@ const cats = <String>[
                       label: cat.name,
                       // label: "${cat.name} [${cat.id}]${cat.hasTag?" 🏷": ""}",
                       onFocusChange: (focused) {
-                        if (focused) debugPrint('Focused #${cat.id} - ${cat.name}');
+                        if (focused)
+                          debugPrint('Focused #${cat.id} - ${cat.name}');
                       },
                     ),
                   )
@@ -111,7 +112,9 @@ const cats = <String>[
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Text(selectedObjectCat != null? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}' : ''),
+              child: Text(selectedObjectCat != null
+                  ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
+                  : ''),
             ),
           ),
         ]),
