@@ -19,6 +19,7 @@ export 'package:flutter/material.dart'
         SelectableDayPredicate,
         DatePickerMode,
         ReorderableListView,
+        DefaultMaterialLocalizations,
         ReorderableDragStartListener,
         kThemeAnimationDuration,
         TooltipVisibility,
@@ -32,7 +33,7 @@ export 'package:scroll_pos/scroll_pos.dart';
 
 export 'src/app.dart';
 export 'src/icons.dart';
-export 'src/localization.dart';
+export 'src/localization.dart' hide IntlScriptLocaleApplyMixin;
 export 'src/utils.dart';
 
 export 'src/navigation/route.dart';
@@ -94,6 +95,7 @@ export 'src/layout/dynamic_overflow.dart';
 
 export 'src/styles/motion/page_transitions.dart';
 export 'src/styles/acrylic.dart';
+export 'src/styles/color_resources.dart';
 export 'src/styles/color.dart' hide ColorConst;
 export 'src/styles/mica.dart';
 export 'src/styles/theme.dart';
@@ -102,3 +104,5 @@ export 'src/styles/typography.dart';
 export 'src/styles/focus.dart';
 export 'src/utils/horizontal_scroll_view.dart';
 export 'src/utils/label.dart';
+
+export 'src/utils/popup.dart';

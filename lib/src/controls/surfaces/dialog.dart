@@ -3,6 +3,12 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
+/// The default constraints for [ContentDialog]
+const kDefaultContentDialogConstraints = BoxConstraints(
+  maxWidth: 368.0,
+  maxHeight: 756.0,
+);
+
 /// Dialog controls are modal UI overlays that provide contextual
 /// app information. They block interactions with the app window
 /// until being explicitly dismissed. They often request some kind
@@ -51,8 +57,7 @@ class ContentDialog extends StatelessWidget {
     this.content,
     this.actions,
     this.style,
-    this.backgroundDismiss = true,
-    this.constraints = const BoxConstraints(maxWidth: 368),
+    this.constraints = kDefaultContentDialogConstraints,
   }) : super(key: key);
 
   /// The title of the dialog. Usually, a [Text] widget
@@ -64,12 +69,9 @@ class ContentDialog extends StatelessWidget {
   /// The actions of the dialog. Usually, a List of [Button]s
   final List<Widget>? actions;
 
-  /// The style used by this dialog. If non-null, it's mescled with
-  /// [ThemeData.dialogThemeData]
+  /// The style used by this dialog. If non-null, it's merged with
+  /// [ThemeData.dialogTheme]
   final ContentDialogThemeData? style;
-
-  /// Whether the background is dismissible or not.
-  final bool backgroundDismiss;
 
   /// The constraints of the dialog. It defaults to `BoxConstraints(maxWidth: 368)`
   final BoxConstraints constraints;
@@ -91,28 +93,33 @@ class ContentDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: style.padding ?? EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (title != null)
-                    Padding(
-                      padding: style.titlePadding ?? EdgeInsets.zero,
-                      child: DefaultTextStyle(
-                        style: style.titleStyle ?? const TextStyle(),
-                        child: title!,
+            Flexible(
+              child: Padding(
+                padding: style.padding ?? EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      Padding(
+                        padding: style.titlePadding ?? EdgeInsets.zero,
+                        child: DefaultTextStyle(
+                          style: style.titleStyle ?? const TextStyle(),
+                          child: title!,
+                        ),
                       ),
-                    ),
-                  if (content != null)
-                    Padding(
-                      padding: style.bodyPadding ?? EdgeInsets.zero,
-                      child: DefaultTextStyle(
-                        style: style.bodyStyle ?? const TextStyle(),
-                        child: content!,
+                    if (content != null)
+                      Flexible(
+                        child: Padding(
+                          padding: style.bodyPadding ?? EdgeInsets.zero,
+                          child: DefaultTextStyle(
+                            style: style.bodyStyle ?? const TextStyle(),
+                            child: content!,
+                          ),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
             if (actions != null)
@@ -307,8 +314,8 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
               child: Actions(
                 actions: {DismissIntent: _DismissAction(context)},
                 child: FocusScope(
-                  child: dialog,
                   autofocus: true,
+                  child: dialog,
                 ),
               ),
             );
@@ -402,7 +409,7 @@ class ContentDialogThemeData {
       actionsDecoration: BoxDecoration(
         color: style.micaBackgroundColor,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
-        boxShadow: kElevationToShadow[1],
+        // boxShadow: kElevationToShadow[1],
       ),
       actionsPadding: const EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),

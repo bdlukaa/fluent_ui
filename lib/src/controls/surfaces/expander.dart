@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef ShapeBuilder = ShapeBorder Function(bool open);
+
 /// The expander direction
 enum ExpanderDirection {
   /// Whether the [Expander] expands down
@@ -43,6 +45,7 @@ class Expander extends StatefulWidget {
     this.headerHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
+    this.headerShape,
   }) : super(key: key);
 
   /// The leading widget.
@@ -108,16 +111,18 @@ class Expander extends StatefulWidget {
   /// The content color of the header
   final Color? contentBackgroundColor;
 
+  final ShapeBuilder? headerShape;
+
   @override
   ExpanderState createState() => ExpanderState();
 }
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
-  late ThemeData theme;
+  late ThemeData _theme;
 
-  late bool _open;
-  bool get open => _open;
+  bool? _open;
+  bool get open => _open ?? false;
   set open(bool value) {
     if (_open != value) _handlePressed();
   }
@@ -127,29 +132,48 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _open = widget.initiallyExpanded;
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration ?? const Duration(milliseconds: 150),
-    );
+    _controller = AnimationController(vsync: this);
+    _open = PageStorage.of(context)?.readState(
+          context,
+          identifier: 'expanderOpen',
+        ) as bool? ??
+        widget.initiallyExpanded;
+    if (_open == true) {
+      _controller.value = 1;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _theme = FluentTheme.of(context);
+    if (_open == null) {
+      _open = !widget.initiallyExpanded;
+      open = widget.initiallyExpanded;
+    }
   }
 
   void _handlePressed() {
     if (open) {
       _controller.animateTo(
         0.0,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _open = false;
     } else {
       _controller.animateTo(
         1.0,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _open = true;
     }
+    PageStorage.of(context)?.writeState(
+      context,
+      open,
+      identifier: 'expanderOpen',
+    );
     widget.onStateChanged?.call(open);
     if (mounted) setState(() {});
   }
@@ -162,60 +186,32 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static Color backgroundColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFFf9f9f9).withOpacity(0.2);
-      if (states.isHovering) return const Color(0xFFf9f9f9).withOpacity(0.4);
-      return Colors.white.withOpacity(0.7);
-    } else {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return Colors.white.withOpacity(0.03);
-      if (states.isHovering) return Colors.white.withOpacity(0.082);
-      return Colors.white.withOpacity(0.05);
-    }
-  }
-
-  static Color borderColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isHovering && !states.isPressing) {
-        return const Color(0xFF212121).withOpacity(0.22);
-      }
-      return const Color(0xFF212121).withOpacity(0.17);
-    } else {
-      if (states.isPressing) return Colors.white.withOpacity(0.062);
-      if (states.isHovering) return Colors.white.withOpacity(0.02);
-      return Colors.black.withOpacity(0.52);
-    }
-  }
-
-  static const double borderSize = 0.5;
-  static final Color darkBorderColor = Colors.black.withOpacity(0.8);
-
   static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     final children = [
+      // HEADER
       HoverButton(
         onPressed: _handlePressed,
         builder: (context, states) {
-          return AnimatedContainer(
-            duration: expanderAnimationDuration,
+          return Container(
             height: widget.headerHeight,
-            decoration: BoxDecoration(
+            decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
-                  backgroundColor(theme, states),
-              border: Border.all(
-                width: borderSize,
-                color: borderColor(theme, states),
-              ),
-              borderRadius: BorderRadius.vertical(
-                top: const Radius.circular(4.0),
-                bottom: Radius.circular(open ? 0.0 : 4.0),
-              ),
+                  theme.resources.cardBackgroundFillColorDefault,
+              shape: widget.headerShape?.call(open) ??
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(4.0),
+                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                    ),
+                  ),
             ),
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
@@ -231,30 +227,36 @@ class ExpanderState extends State<Expander>
                   padding: const EdgeInsetsDirectional.only(start: 20.0),
                   child: widget.trailing!,
                 ),
-              Container(
-                margin: EdgeInsetsDirectional.only(
+              Padding(
+                padding: EdgeInsetsDirectional.only(
                   start: widget.trailing != null ? 8.0 : 20.0,
                   end: 8.0,
                   top: 8.0,
                   bottom: 8.0,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(theme, states),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                alignment: Alignment.center,
-                child: widget.icon ??
-                    RotationTransition(
-                      turns: Tween<double>(begin: 0, end: 0.5)
-                          .animate(_controller),
-                      child: Icon(
-                        _isDown
-                            ? FluentIcons.chevron_down
-                            : FluentIcons.chevron_up,
-                        size: 10,
-                      ),
+                child: FocusBorder(
+                  focused: states.isFocused,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color:
+                          ButtonThemeData.uncheckedInputColor(_theme, states),
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
+                    alignment: Alignment.center,
+                    child: widget.icon ??
+                        RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 0.5)
+                              .animate(_controller),
+                          child: Icon(
+                            _isDown
+                                ? FluentIcons.chevron_down
+                                : FluentIcons.chevron_up,
+                            size: 10,
+                          ),
+                        ),
+                  ),
+                ),
               ),
             ]),
           );
@@ -267,11 +269,10 @@ class ExpanderState extends State<Expander>
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
-              width: borderSize,
-              color: borderColor(theme, {ButtonStates.none}),
+              color: theme.resources.cardStrokeColorDefault,
             ),
             color: widget.contentBackgroundColor ??
-                backgroundColor(theme, {ButtonStates.none}),
+                theme.resources.cardBackgroundFillColorSecondary,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
@@ -281,6 +282,7 @@ class ExpanderState extends State<Expander>
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: _isDown ? children : children.reversed.toList(),
     );
   }

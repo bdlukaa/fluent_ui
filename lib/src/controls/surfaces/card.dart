@@ -1,32 +1,33 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class Card extends StatelessWidget {
+  /// Creates a card
   const Card({
     Key? key,
     required this.child,
     this.padding = const EdgeInsets.all(12.0),
+    this.margin,
     this.backgroundColor,
-    this.elevation = 4.0,
-    this.borderRadius = const BorderRadius.all(Radius.circular(6.0)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
   }) : super(key: key);
 
   /// The card content
   final Widget child;
 
-  /// The padding around content
+  /// The padding around [child]
   final EdgeInsets padding;
 
-  /// The background color.
+  /// The margin around [child]
+  final EdgeInsets? margin;
+
+  /// The card's background color.
   ///
   /// If null, [ThemeData.cardColor] is used
   final Color? backgroundColor;
 
-  /// The z-coordinate relative to the parent at which to place this card
-  ///
-  /// The valus is non-negative
-  final double elevation;
-
   /// The rounded corners of this card
+  ///
+  /// A circular border with a 4.0 radius is used by default
   final BorderRadiusGeometry borderRadius;
 
   @override
@@ -34,18 +35,17 @@ class Card extends StatelessWidget {
     assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
-    return PhysicalModel(
-      elevation: elevation,
-      color: Colors.transparent,
-      borderRadius: borderRadius.resolve(Directionality.of(context)),
-      child: Container(
-        decoration: BoxDecoration(
-          color: backgroundColor ?? theme.cardColor,
-          borderRadius: borderRadius,
+    return Container(
+      margin: margin,
+      decoration: BoxDecoration(
+        color: backgroundColor ?? theme.cardColor,
+        borderRadius: borderRadius,
+        border: Border.all(
+          color: theme.resources.cardStrokeColorDefault,
         ),
-        padding: padding,
-        child: child,
       ),
+      padding: padding,
+      child: child,
     );
   }
 }

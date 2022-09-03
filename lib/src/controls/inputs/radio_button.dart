@@ -24,8 +24,7 @@ import 'package:flutter/rendering.dart';
 ///   * [Slider], which let the user lie within a range of values,
 ///     (for example, 10, 20, 30, ... 100).
 ///   * [Checkbox], which let the user select multiple options.
-///   * [ComboBox], which let the user select multiple options, when
-///     there's more than eight options.
+///   * [ComboBox], which let the user select multiple options from a popup
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
@@ -126,13 +125,16 @@ class RadioButton extends StatelessWidget {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
             const SizedBox(width: 6.0),
-            content!,
+            Flexible(child: content!),
           ]);
         }
         return Semantics(
           label: semanticLabel,
           selected: checked,
-          child: FocusBorder(focused: state.isFocused, child: child),
+          child: FocusBorder(
+            focused: state.isFocused,
+            child: child,
+          ),
         );
       },
     );
@@ -217,11 +219,7 @@ class RadioButtonThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: !states.isDisabled
-                ? style.accentColor.light
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: ButtonThemeData.checkedInputColor(style, states),
             width: !states.isDisabled
                 ? states.isHovering && !states.isPressing
                     ? 3.4

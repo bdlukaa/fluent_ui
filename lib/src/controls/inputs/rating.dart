@@ -30,7 +30,7 @@ class RatingBar extends StatefulWidget {
     this.animationDuration = Duration.zero,
     this.animationCurve,
     this.icon,
-    this.iconSize,
+    this.iconSize = 20.0,
     this.ratedIconColor,
     this.unratedIconColor,
     this.semanticLabel,
@@ -64,7 +64,7 @@ class RatingBar extends StatefulWidget {
   final IconData? icon;
 
   /// The size of the icon. If `null`, uses [IconThemeData.size]
-  final double? iconSize;
+  final double iconSize;
 
   /// The space between each icon
   final double starSpacing;
@@ -209,8 +209,8 @@ class _RatingBarState extends State<RatingBar> {
     }
   }
 
-  void _handleUpdate(double x, double? size) {
-    final iSize = (widget.iconSize ?? size ?? 24);
+  void _handleUpdate(double x) {
+    final iSize = (widget.iconSize);
     final value = (x / iSize) - (widget.starSpacing / widget.amount);
     if (value <= widget.amount && !value.isNegative) {
       widget.onChanged?.call(value);
@@ -220,7 +220,6 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final double size = widget.iconSize ?? 22;
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed
@@ -240,10 +239,9 @@ class _RatingBarState extends State<RatingBar> {
         },
         child: GestureDetector(
           dragStartBehavior: widget.dragStartBehavior,
-          onTapDown: (d) => _handleUpdate(d.localPosition.dx, size),
-          onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx, size),
-          onHorizontalDragUpdate: (d) =>
-              _handleUpdate(d.localPosition.dx, size),
+          onTapDown: (d) => _handleUpdate(d.localPosition.dx),
+          onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx),
+          onHorizontalDragUpdate: (d) => _handleUpdate(d.localPosition.dx),
           child: FocusBorder(
             focused: widget.onChanged != null && _showFocusHighlight,
             useStackApproach: true,
@@ -266,7 +264,7 @@ class _RatingBarState extends State<RatingBar> {
                         icon: widget.icon ?? kRatingBarIcon,
                         ratedColor: widget.ratedIconColor,
                         unratedColor: widget.unratedIconColor,
-                        size: widget.iconSize ?? size,
+                        size: widget.iconSize,
                       );
                       if (index != widget.amount - 1) {
                         return Padding(
@@ -344,19 +342,30 @@ class RatingIcon extends StatelessWidget {
     final style = FluentTheme.of(context);
     final icon = this.icon;
     final size = this.size;
+    final unratedColor =
+        this.unratedColor ?? style.resources.controlFillColorSecondary;
+    final ratedColor =
+        this.ratedColor ?? style.accentColor.defaultBrushFor(style.brightness);
     if (rating == 1.0) {
-      return Icon(icon, color: ratedColor ?? style.accentColor, size: size);
+      return Icon(
+        icon,
+        color: ratedColor,
+        size: size,
+      );
     } else if (rating == 0.0) {
-      return Icon(icon, color: unratedColor ?? style.disabledColor, size: size);
+      return Icon(icon, color: unratedColor, size: size);
     }
     return Stack(
       children: [
-        Icon(icon, color: unratedColor ?? style.disabledColor, size: size),
+        Icon(icon, color: unratedColor, size: size),
         ClipRect(
           clipper: _StarClipper(rating),
           child: Icon(
             icon,
-            color: ratedColor ?? style.accentColor,
+            // IconData(
+            //   fontFamily: 'Segoe MDL2 Assets',
+            // ),
+            color: ratedColor,
             size: size,
           ),
         ),

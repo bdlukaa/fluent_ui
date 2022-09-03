@@ -95,11 +95,12 @@ class _ProgressBarState extends State<ProgressBar>
 
   double p1 = 0, p2 = 0;
   double idleFrames = 15, cycle = 1, idle = 1;
+  double lastValue = 0;
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return Container(
       height: widget.strokeWidth,
       constraints: const BoxConstraints(minWidth: _kMinProgressBarWidth),
@@ -107,29 +108,36 @@ class _ProgressBarState extends State<ProgressBar>
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
         maxValueLength: 100,
-        child: ValueListenableBuilder(
-          valueListenable: _controller,
-          builder: (context, value, child) => CustomPaint(
-            painter: _ProgressBarPainter(
-              value: widget.value == null ? null : widget.value! / 100,
-              strokeWidth: widget.strokeWidth,
-              activeColor: widget.activeColor ?? style.accentColor,
-              backgroundColor:
-                  widget.backgroundColor ?? style.inactiveBackgroundColor,
-              p1: p1,
-              p2: p2,
-              idleFrames: idleFrames,
-              cycle: cycle,
-              idle: idle,
-              onUpdate: (values) {
-                p1 = values[0];
-                p2 = values[1];
-                idleFrames = values[2];
-                cycle = values[3];
-                idle = values[4];
-              },
-            ),
-          ),
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            double deltaValue = _controller.value - lastValue;
+            lastValue = _controller.value;
+            if (deltaValue < 0) deltaValue++; // repeat
+            return CustomPaint(
+              painter: _ProgressBarPainter(
+                value: widget.value == null ? null : widget.value! / 100,
+                strokeWidth: widget.strokeWidth,
+                activeColor: widget.activeColor ??
+                    theme.accentColor.defaultBrushFor(theme.brightness),
+                backgroundColor:
+                    widget.backgroundColor ?? theme.inactiveBackgroundColor,
+                p1: p1,
+                p2: p2,
+                idleFrames: idleFrames,
+                cycle: cycle,
+                idle: idle,
+                deltaValue: deltaValue,
+                onUpdate: (values) {
+                  p1 = values[0];
+                  p2 = values[1];
+                  idleFrames = values[2];
+                  cycle = values[3];
+                  idle = values[4];
+                },
+              ),
+            );
+          },
         ),
       ),
     );
@@ -137,11 +145,12 @@ class _ProgressBarState extends State<ProgressBar>
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  static const _step1 = 0.015, _step2 = 0.025, _velocityScale = 0.8;
+  static const _step1 = 2.7, _step2 = 4.5, _velocityScale = 0.8;
   static const _short = 0.4; // percentage of short line (0..1)
   static const _long = 80 / 130; // percentage of long line (0..1)
 
   double p1, p2, idleFrames, cycle, idle;
+  double deltaValue;
 
   ValueChanged<List<double>> onUpdate;
 
@@ -157,6 +166,7 @@ class _ProgressBarPainter extends CustomPainter {
     required this.idle,
     required this.cycle,
     required this.idleFrames,
+    required this.deltaValue,
     required this.onUpdate,
     required this.strokeWidth,
     required this.backgroundColor,
@@ -211,7 +221,8 @@ class _ProgressBarPainter extends CustomPainter {
     }
 
     double calcVelocity(double p) {
-      return 1 + math.cos(math.pi * p - (math.pi / 2)) * _velocityScale;
+      return (1 + math.cos(math.pi * p - (math.pi / 2)) * _velocityScale) *
+          deltaValue;
     }
 
     final v1 = calcVelocity(p1);
@@ -308,13 +319,46 @@ class ProgressRing extends StatefulWidget {
 
 class _ProgressRingState extends State<ProgressRing>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  static final TweenSequence<double> _startAngleTween = TweenSequence([
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 0,
+        end: 450,
+      ),
+      weight: 1,
+    ),
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 450,
+        end: 1080,
+      ),
+      weight: 1,
+    ),
+  ]);
+  static final TweenSequence<double> _sweepAngleTween = TweenSequence([
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 0,
+        end: 180,
+      ),
+      weight: 1,
+    ),
+    TweenSequenceItem(
+      tween: Tween<double>(
+        begin: 180,
+        end: 0,
+      ),
+      weight: 1,
+    ),
+  ]);
+
+  late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
     if (widget.value == null) _controller.repeat();
@@ -336,12 +380,10 @@ class _ProgressRingState extends State<ProgressRing>
     super.dispose();
   }
 
-  double d1 = 0, d2 = 0, lowSpeed = 8, highSpeed = 12;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return Container(
       constraints: const BoxConstraints(
         minWidth: _kMinProgressRingIndicatorSize,
@@ -350,49 +392,24 @@ class _ProgressRingState extends State<ProgressRing>
       child: Semantics(
         label: widget.semanticLabel,
         value: widget.value?.toStringAsFixed(2),
-        child: () {
-          if (widget.value == null) {
-            return AnimatedBuilder(
-              animation: _controller,
-              builder: (context, value) {
-                return CustomPaint(
-                  painter: _RingPainter(
-                    backgroundColor:
-                        widget.backgroundColor ?? style.inactiveBackgroundColor,
-                    value: widget.value,
-                    color: widget.activeColor ?? style.accentColor,
-                    strokeWidth: widget.strokeWidth,
-                    d1: d1,
-                    d2: d2,
-                    lowSpeed: lowSpeed,
-                    highSpeed: highSpeed,
-                    onUpdate: (v) {
-                      d1 = v[0];
-                      d2 = v[1];
-                      lowSpeed = v[2];
-                      highSpeed = v[3];
-                    },
-                    backwards: widget.backwards,
-                  ),
-                );
-              },
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return CustomPaint(
+              painter: _RingPainter(
+                backgroundColor:
+                    widget.backgroundColor ?? theme.inactiveBackgroundColor,
+                value: widget.value,
+                color: widget.activeColor ??
+                    theme.accentColor.defaultBrushFor(theme.brightness),
+                strokeWidth: widget.strokeWidth,
+                startAngle: _startAngleTween.evaluate(_controller),
+                sweepAngle: _sweepAngleTween.evaluate(_controller),
+                backwards: widget.backwards,
+              ),
             );
-          }
-          return CustomPaint(
-            painter: _RingPainter(
-              backgroundColor: style.inactiveBackgroundColor,
-              value: widget.value,
-              color: style.accentColor,
-              strokeWidth: widget.strokeWidth,
-              d1: d1,
-              d2: d2,
-              lowSpeed: lowSpeed,
-              highSpeed: highSpeed,
-              onUpdate: (v) {},
-              backwards: widget.backwards,
-            ),
-          );
-        }(),
+          },
+        ),
       ),
     );
   }
@@ -403,8 +420,7 @@ class _RingPainter extends CustomPainter {
   final Color backgroundColor;
   final double strokeWidth;
   final double? value;
-  final double d1, d2, lowSpeed, highSpeed;
-  final ValueChanged onUpdate;
+  final double startAngle, sweepAngle;
   final bool backwards;
 
   const _RingPainter({
@@ -412,11 +428,8 @@ class _RingPainter extends CustomPainter {
     required this.backgroundColor,
     required this.strokeWidth,
     required this.value,
-    required this.d1,
-    required this.d2,
-    required this.lowSpeed,
-    required this.highSpeed,
-    required this.onUpdate,
+    required this.startAngle,
+    required this.sweepAngle,
     required this.backwards,
   });
 
@@ -446,37 +459,13 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
     if (value == null) {
-      double d1 = this.d1, d2 = this.d2, speed1 = lowSpeed, speed2 = highSpeed;
-
-      void drawArc() {
-        canvas.drawArc(
-          Offset.zero & size,
-          (backwards ? (90 - d2) : (90 + d2)) * _deg2Rad,
-          ((d2 - d1) * _deg2Rad),
-          false,
-          paint,
-        );
-      }
-
-      void update() {
-        d1 += speed1;
-        d2 += speed2;
-        if (d1 > 360 && d2 > 360) {
-          d1 -= 360;
-          d2 -= 360;
-        }
-        if ((d1 - d2).abs() >= 180) {
-          final _speed1 = speed1;
-          speed1 = speed2;
-          speed2 = _speed1;
-        }
-        // update the values changed above
-        onUpdate([d1, d2, speed1, speed2]);
-      }
-
-      update();
-      if (d1 == d2 && d1 % 360 == 0) return;
-      drawArc();
+      canvas.drawArc(
+        Offset.zero & size,
+        ((backwards ? -startAngle : startAngle) - 90) * _deg2Rad,
+        sweepAngle * _deg2Rad,
+        false,
+        paint,
+      );
     } else {
       canvas.drawArc(
         Offset.zero & size,

@@ -146,13 +146,9 @@ class DividerThemeData with Diagnosticable {
       thickness: 1,
       horizontalMargin: const EdgeInsets.symmetric(horizontal: 10),
       verticalMargin: const EdgeInsets.symmetric(vertical: 10),
-      decoration: () {
-        if (style.brightness == Brightness.light) {
-          return const BoxDecoration(color: Color(0xFFB7B7B7));
-        } else {
-          return const BoxDecoration(color: Color(0xFF484848));
-        }
-      }(),
+      decoration: BoxDecoration(
+        color: style.resources.dividerStrokeColorDefault,
+      ),
     );
   }
 

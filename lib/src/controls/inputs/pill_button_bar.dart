@@ -240,7 +240,7 @@ class PillButtonBarThemeData with Diagnosticable {
   });
 
   factory PillButtonBarThemeData.standard(ThemeData style) {
-    Color _applyOpacity(Color color, Set<ButtonStates> states) {
+    Color applyOpacity(Color color, Set<ButtonStates> states) {
       return color.withOpacity(
         states.isPressing
             ? 0.925
@@ -259,11 +259,11 @@ class PillButtonBarThemeData with Diagnosticable {
     return PillButtonBarThemeData(
       backgroundColor: isLight ? style.accentColor : const Color(0xFF212121),
       selectedColor: ButtonState.resolveWith((states) {
-        return _applyOpacity(
+        return applyOpacity(
             isLight ? Colors.white : const Color(0xFF404040), states);
       }),
       unselectedColor: ButtonState.resolveWith((states) {
-        return _applyOpacity(unselectedColor, states);
+        return applyOpacity(unselectedColor, states);
       }),
       selectedTextStyle:
           TextStyle(color: isLight ? Colors.black : Colors.white),

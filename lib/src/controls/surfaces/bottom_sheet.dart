@@ -219,8 +219,8 @@ class _BottomSheetState extends State<_BottomSheet> {
             onVerticalDragStart: _handleDragStart,
             onVerticalDragUpdate: _handleDragUpdate,
             onVerticalDragEnd: _handleDragEnd,
-            child: bottomSheet,
             excludeFromSemantics: true,
+            child: bottomSheet,
           );
   }
 }

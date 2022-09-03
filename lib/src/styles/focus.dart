@@ -67,23 +67,24 @@ class FocusBorder extends StatelessWidget {
     ));
   }
 
-  static Widget buildBorder(
-    BuildContext context,
+  static Widget _buildBorder(
     FocusThemeData style,
     bool focused, [
     Widget? child,
   ]) {
-    return IgnorePointer(
-      child: AnimatedContainer(
-        duration: FluentTheme.of(context).fasterAnimationDuration,
-        curve: FluentTheme.of(context).animationCurve,
-        decoration: style.buildPrimaryDecoration(focused),
-        child: DecoratedBox(
-          decoration: style.buildSecondaryDecoration(focused),
-          child: child,
+    return Builder(builder: (context) {
+      return IgnorePointer(
+        child: AnimatedContainer(
+          duration: FluentTheme.of(context).fasterAnimationDuration,
+          curve: FluentTheme.of(context).animationCurve,
+          decoration: style.buildPrimaryDecoration(focused),
+          child: DecoratedBox(
+            decoration: style.buildSecondaryDecoration(focused),
+            child: child,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override
@@ -105,12 +106,12 @@ class FocusBorder extends StatelessWidget {
             right: renderOutside ? -borderWidth : 0,
             top: renderOutside ? -borderWidth : 0,
             bottom: renderOutside ? -borderWidth : 0,
-            child: buildBorder(context, style, focused),
+            child: _buildBorder(style, focused),
           ),
         ],
       );
     } else {
-      return buildBorder(context, style, focused, child);
+      return _buildBorder(style, focused, child);
     }
   }
 }
@@ -161,7 +162,7 @@ class FocusThemeData with Diagnosticable {
     required Color glowColor,
   }) {
     return FocusThemeData(
-      borderRadius: BorderRadius.zero,
+      borderRadius: BorderRadius.circular(6.0),
       primaryBorder: BorderSide(width: 2, color: primaryBorderColor),
       secondaryBorder: BorderSide(width: 1, color: secondaryBorderColor),
       glowColor: glowColor,
@@ -195,13 +196,13 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
-  BoxDecoration buildPrimaryDecoration(bool focused) {
-    return BoxDecoration(
-      borderRadius: borderRadius,
-      border: Border.fromBorderSide(
-        !focused ? BorderSide.none : primaryBorder ?? BorderSide.none,
+  Decoration buildPrimaryDecoration(bool focused) {
+    return ShapeDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        side: !focused ? BorderSide.none : primaryBorder ?? BorderSide.none,
       ),
-      boxShadow: focused && glowFactor != 0 && glowColor != null
+      shadows: focused && glowFactor != 0 && glowColor != null
           ? [
               BoxShadow(
                 offset: const Offset(1, 1),
@@ -232,11 +233,11 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
-  BoxDecoration buildSecondaryDecoration(bool focused) {
-    return BoxDecoration(
-      borderRadius: borderRadius,
-      border: Border.fromBorderSide(
-        !focused ? BorderSide.none : secondaryBorder ?? BorderSide.none,
+  Decoration buildSecondaryDecoration(bool focused) {
+    return ShapeDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        side: !focused ? BorderSide.none : secondaryBorder ?? BorderSide.none,
       ),
     );
   }

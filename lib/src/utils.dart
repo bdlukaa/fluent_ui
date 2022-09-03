@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -80,4 +81,79 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
 bool is10footScreen([double? width]) {
   width ??= ui.window.physicalSize.width;
   return width >= 11520;
+}
+
+Offset horizontalPositionDependentBox({
+  required Size size,
+  required Size childSize,
+  required Offset target,
+  required bool preferLeft,
+  double horizontalOffset = 0.0,
+  double margin = 10.0,
+}) {
+  // Horizontal DIRECTION
+  final bool fitsLeft =
+      target.dx + horizontalOffset + childSize.width <= size.width - margin;
+  final bool fitsRight =
+      target.dx - horizontalOffset - childSize.width >= margin;
+  final bool tooltipLeft =
+      preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
+  double x;
+  if (tooltipLeft) {
+    x = math.min(target.dx + horizontalOffset, size.width - margin);
+  } else {
+    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
+  }
+  // Vertical DIRECTION
+  double y;
+  if (size.height - margin * 2.0 < childSize.height) {
+    y = (size.height - childSize.height) / 2.0;
+  } else {
+    final double normalizedTargetY =
+        target.dy.clamp(margin, size.height - margin);
+    final double edge = margin + childSize.height / 2.0;
+    if (normalizedTargetY < edge) {
+      y = margin;
+    } else if (normalizedTargetY > size.height - edge) {
+      y = size.height - margin - childSize.height;
+    } else {
+      y = normalizedTargetY - childSize.height / 2.0;
+    }
+  }
+  return Offset(x, y);
+}
+
+extension DecorationExtension on Decoration {
+  /// Gets the border radius of this decoration, if reacheable
+  BorderRadiusGeometry? getBorderRadius() {
+    if (this is BoxDecoration) {
+      return (this as BoxDecoration).borderRadius;
+    } else if (this is ShapeDecoration) {
+      final shape = (this as ShapeDecoration).shape;
+      if (shape is RoundedRectangleBorder) {
+        return shape.borderRadius;
+      } else if (shape is CircleBorder) {
+        return BorderRadius.circular(100);
+      }
+    }
+    return null;
+  }
+}
+
+extension StringExtension on String {
+  /// Results this string with the first char uppercased
+  ///
+  /// january -> January
+  String uppercaseFirst() {
+    final first = substring(0, 1);
+    return first.toUpperCase() + substring(1);
+  }
+
+  /// Results this string with the first char uppercased
+  ///
+  /// January -> january
+  String lowercaseFirst() {
+    final first = substring(0, 1);
+    return first.toLowerCase() + substring(1);
+  }
 }

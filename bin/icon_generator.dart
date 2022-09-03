@@ -43,7 +43,7 @@ void main(List<String> args) async {
   }
 
   // NEW Map of all glyphs (adds iteration capabilities)
-  dartFileBuffer.writeln("  static const Map<String,IconData> allIcons = {");
+  dartFileBuffer.writeln("  static const Map<String, IconData> allIcons = {");
   for (final Glyph glyph in glyphs) {
     dartFileBuffer.writeln(
       "    '${glyph.name}': ${glyph.name},",
@@ -56,6 +56,7 @@ void main(List<String> args) async {
   final formatProcess = await Process.start(
     'flutter',
     ['format', outputFile.path],
+    runInShell: true,
   );
   stdout.addStream(formatProcess.stdout);
   await outputFile.writeAsString(dartFileBuffer.toString());

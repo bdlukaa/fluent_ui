@@ -1,12 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// An InfoBadge is a small piece of UI that can be added
-/// into an app and customized to display a number, icon,
-/// or a simple dot.
+/// Badging is a non-intrusive and intuitive way to display notifications or
+/// bring focus to an area within an app - whether that be for notifications,
+/// indicating new content, or showing an alert. An `InfoBadge` is a small
+/// piece of UI that can be added into an app and customized to display a number,
+/// icon, or a simple dot.
+///
+/// ![InfoBadge Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/infobadge/infobadge-example-1.png)
+///
+/// [InfoBadge] is built into [NavigationView], but can also be placed as a
+/// standalone widget, allowing you to place [InfoBadge] into any control or
+/// piece of UI of your choosing. When you use an [InfoBadge] somewhere other
+/// than [NavigationView], you are responsible for programmatically determining
+/// when to show and dismiss the [InfoBadge], and where to place the [InfoBadge].
 ///
 /// Learn more:
 ///
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/info-badge>
+///  * [NavigationView], which provides top-level navigation for your app
 class InfoBadge extends StatelessWidget {
   /// Creates an info badge.
   const InfoBadge({
@@ -40,7 +51,11 @@ class InfoBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final color = this.color ?? FluentTheme.of(context).accentColor;
+    final theme = FluentTheme.of(context);
+    final color =
+        this.color ?? theme.accentColor.defaultBrushFor(theme.brightness);
+    final foregroundColor =
+        this.foregroundColor ?? theme.resources.textOnAccentFillColorPrimary;
 
     return Container(
       constraints: source == null
@@ -57,17 +72,17 @@ class InfoBadge extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(100),
       ),
-      alignment: Alignment.center,
       child: source == null
           ? null
           : DefaultTextStyle(
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: foregroundColor ?? color.basedOnLuminance(),
+                color: foregroundColor,
                 fontSize: 11.0,
               ),
               child: IconTheme.merge(
                 data: IconThemeData(
-                  color: foregroundColor ?? color.basedOnLuminance(),
+                  color: foregroundColor,
                   size: 8.0,
                 ),
                 child: source!,

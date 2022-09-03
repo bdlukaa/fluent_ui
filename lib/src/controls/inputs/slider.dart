@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -6,19 +7,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
 
-/// A slider is a control that lets the user select from a
-/// range of values by moving a thumb control along a track.
+/// A slider is a control that lets the user select from a range of values by
+/// moving a thumb control along a track.
 ///
-/// A slider is a good choice when you know that users think
-/// of the value as a relative quantity, not a numeric value.
-/// For example, users think about setting their audio volume
-/// to low or medium—not about setting the value to 2 or 5.
+/// A slider is a good choice when you know that users think of the value as a
+/// relative quantity, not a numeric value. For example, users think about
+/// setting their audio volume to low or medium — not about setting the value to
+/// 2 or 5.
 ///
-/// ![Slider Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/slider.png)
+/// ![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
 ///
 /// See also:
-///   - [RatingBar]
+///
+///   * [RatingBar], that allows users to view and set ratings
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
+  /// Creates a Slider
   const Slider({
     Key? key,
     required this.value,
@@ -242,8 +246,11 @@ class _SliderState extends m.State<Slider> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
+    final theme = FluentTheme.of(context);
     final style = SliderTheme.of(context).merge(widget.style);
     final direction = Directionality.of(context);
+
+    final disabledState = {ButtonStates.disabled};
     Widget child = HoverButton(
       onPressed: widget.onChanged == null ? null : () {},
       margin: style.margin ?? EdgeInsets.zero,
@@ -263,25 +270,32 @@ class _SliderState extends m.State<Slider> {
           builder: (context, innerFactor, child) => m.SliderTheme(
             data: m.SliderThemeData(
               showValueIndicator: m.ShowValueIndicator.always,
-              thumbColor: style.thumbColor ?? style.activeColor,
+              thumbColor: style.thumbColor?.resolve(states),
               overlayShape: const m.RoundSliderOverlayShape(overlayRadius: 0),
               thumbShape: SliderThumbShape(
-                elevation: 0,
-                pressedElevation: 0,
+                elevation: 1.0,
+                pressedElevation: 1.0,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
-                brightness: FluentTheme.of(context).brightness,
+                borderColor: FluentTheme.of(context)
+                    .resources
+                    .controlSolidFillColorDefault,
+                enabledThumbRadius: style.thumbRadius?.resolve(states) ?? 10.0,
+                disabledThumbRadius: style.thumbRadius?.resolve(states),
               ),
               valueIndicatorShape: _RectangularSliderValueIndicatorShape(
                 backgroundColor: style.labelBackgroundColor,
                 vertical: widget.vertical,
                 ltr: direction == TextDirection.ltr,
+                strokeColor: theme.resources.controlSolidFillColorDefault,
               ),
-              trackHeight: 1.75,
+              trackHeight: style.trackHeight?.resolve(states),
               trackShape: _CustomTrackShape(),
-              disabledThumbColor: style.disabledThumbColor,
-              disabledInactiveTrackColor: style.disabledInactiveColor,
-              disabledActiveTrackColor: style.disabledActiveColor,
+              disabledThumbColor: style.thumbColor?.resolve(disabledState),
+              disabledInactiveTrackColor:
+                  style.inactiveColor?.resolve(disabledState),
+              disabledActiveTrackColor:
+                  style.activeColor?.resolve(disabledState),
             ),
             child: child!,
           ),
@@ -298,8 +312,8 @@ class _SliderState extends m.State<Slider> {
               widget.onChangeStart?.call(v);
               setState(() => _sliding = true);
             },
-            activeColor: style.activeColor,
-            inactiveColor: style.inactiveColor,
+            activeColor: style.activeColor?.resolve(states),
+            inactiveColor: style.inactiveColor?.resolve(states),
             divisions: widget.divisions,
             label: widget.label,
             focusNode: _focusNode,
@@ -344,6 +358,33 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required m.SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 0,
+  }) {
+    return super.paint(
+      context,
+      offset,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      enableAnimation: enableAnimation,
+      textDirection: textDirection,
+      thumbCenter: thumbCenter,
+      isDiscrete: isDiscrete,
+      isEnabled: isEnabled,
+      additionalActiveTrackHeight: additionalActiveTrackHeight,
+    );
+  }
 }
 
 /// The default shape of a [Slider]'s thumb.
@@ -358,12 +399,10 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.pressedElevation = 6.0,
     this.useBall = true,
     this.innerFactor = 1.0,
-    this.brightness = Brightness.light,
+    this.borderColor = Colors.transparent,
   });
 
   final double innerFactor;
-
-  final Brightness brightness;
 
   /// Whether to draw a ball instead of a line
   final bool useBall;
@@ -396,6 +435,8 @@ class SliderThumbShape extends m.SliderComponentShape {
   /// Use 0 for no shadow. The higher the value, the larger the shadow. For
   /// example, a value of 12 will create a very large shadow.
   final double pressedElevation;
+
+  final Color borderColor;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
@@ -462,10 +503,7 @@ class SliderThumbShape extends m.SliderComponentShape {
       canvas.drawCircle(
         center,
         radius,
-        Paint()
-          ..color = brightness == Brightness.light
-              ? Colors.white
-              : const Color(0xFF454545),
+        Paint()..color = borderColor,
       );
       canvas.drawCircle(
         center,
@@ -540,63 +578,72 @@ class SliderTheme extends InheritedTheme {
 
 @immutable
 class SliderThemeData with Diagnosticable {
-  final Color? thumbColor;
-  final Color? disabledThumbColor;
+  final ButtonState<Color?>? thumbColor;
+  final ButtonState<double?>? thumbRadius;
+  final ButtonState<double?>? trackHeight;
+
   final Color? labelBackgroundColor;
+  final Color? labelForegroundColor;
 
   final bool? useThumbBall;
 
-  final Color? activeColor;
-  final Color? inactiveColor;
-
-  final Color? disabledActiveColor;
-  final Color? disabledInactiveColor;
+  final ButtonState<Color?>? activeColor;
+  final ButtonState<Color?>? inactiveColor;
 
   final EdgeInsetsGeometry? margin;
 
   const SliderThemeData({
     this.margin,
     this.thumbColor,
-    this.disabledThumbColor,
+    this.thumbRadius,
+    this.trackHeight,
     this.activeColor,
-    this.disabledActiveColor,
     this.inactiveColor,
-    this.disabledInactiveColor,
     this.labelBackgroundColor,
+    this.labelForegroundColor,
     this.useThumbBall,
   });
 
-  factory SliderThemeData.standard(ThemeData? style) {
+  factory SliderThemeData.standard(ThemeData style) {
     final def = SliderThemeData(
-      thumbColor: style?.accentColor,
-      activeColor: style?.accentColor,
-      inactiveColor: style?.disabledColor.withOpacity(1),
+      thumbColor: ButtonState.resolveWith(
+        (states) => ButtonThemeData.checkedInputColor(style, states),
+      ),
+      activeColor: ButtonState.resolveWith(
+        (states) => ButtonThemeData.checkedInputColor(style, states),
+      ),
+      inactiveColor: ButtonState.resolveWith((states) {
+        if (states.isDisabled) {
+          return style.resources.controlStrongFillColorDisabled;
+        } else {
+          return style.resources.controlStrongFillColorDefault;
+        }
+      }),
       margin: EdgeInsets.zero,
-      disabledActiveColor: style?.disabledColor.withOpacity(1),
-      disabledThumbColor: style?.disabledColor.withOpacity(1),
-      disabledInactiveColor: style?.disabledColor,
       useThumbBall: true,
+      labelBackgroundColor: style.resources.controlFillColorDefault,
+      labelForegroundColor: style.resources.textFillColorPrimary,
+      trackHeight: ButtonState.all(3.75),
     );
 
     return def;
   }
 
-  static SliderThemeData lerp(
-      SliderThemeData? a, SliderThemeData? b, double t) {
+  static SliderThemeData lerp(SliderThemeData a, SliderThemeData b, double t) {
     return SliderThemeData(
-      margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
-      thumbColor: Color.lerp(a?.thumbColor, b?.thumbColor, t),
-      activeColor: Color.lerp(a?.activeColor, b?.activeColor, t),
-      inactiveColor: Color.lerp(a?.inactiveColor, b?.inactiveColor, t),
-      disabledActiveColor:
-          Color.lerp(a?.disabledActiveColor, b?.disabledActiveColor, t),
-      disabledInactiveColor:
-          Color.lerp(a?.disabledInactiveColor, b?.disabledInactiveColor, t),
-      disabledThumbColor:
-          Color.lerp(a?.disabledThumbColor, b?.disabledThumbColor, t),
+      margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
+      thumbColor: ButtonState.lerp(a.thumbColor, b.thumbColor, t, Color.lerp),
+      thumbRadius:
+          ButtonState.lerp(a.thumbRadius, b.thumbRadius, t, lerpDouble),
+      trackHeight:
+          ButtonState.lerp(a.trackHeight, b.trackHeight, t, lerpDouble),
+      activeColor:
+          ButtonState.lerp(a.activeColor, b.activeColor, t, Color.lerp),
+      inactiveColor:
+          ButtonState.lerp(a.inactiveColor, b.inactiveColor, t, Color.lerp),
       labelBackgroundColor:
-          Color.lerp(a?.labelBackgroundColor, b?.labelBackgroundColor, t),
-      useThumbBall: t < 0.5 ? a?.useThumbBall : b?.useThumbBall,
+          Color.lerp(a.labelBackgroundColor, b.labelBackgroundColor, t),
+      useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
     );
   }
 
@@ -604,14 +651,12 @@ class SliderThemeData with Diagnosticable {
     return SliderThemeData(
       margin: style?.margin ?? margin,
       thumbColor: style?.thumbColor ?? thumbColor,
+      thumbRadius: style?.thumbRadius ?? thumbRadius,
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
-      disabledActiveColor: style?.disabledActiveColor ?? disabledActiveColor,
-      disabledInactiveColor:
-          style?.disabledInactiveColor ?? disabledInactiveColor,
-      disabledThumbColor: style?.disabledThumbColor ?? disabledThumbColor,
       labelBackgroundColor: style?.labelBackgroundColor ?? labelBackgroundColor,
       useThumbBall: style?.useThumbBall ?? useThumbBall,
+      trackHeight: style?.trackHeight ?? trackHeight,
     );
   }
 
@@ -619,30 +664,29 @@ class SliderThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(ColorProperty('thumbColor', thumbColor));
-    properties.add(ColorProperty('activeColor', activeColor));
-    properties.add(ColorProperty('inactiveColor', inactiveColor));
-    properties.add(ColorProperty('disabledActiveColor', disabledActiveColor));
-    properties
-        .add(ColorProperty('disabledInactiveColor', disabledInactiveColor));
-    properties.add(ColorProperty('disabledThumbColor', disabledThumbColor));
+    properties.add(DiagnosticsProperty('thumbColor', thumbColor));
+    properties.add(DiagnosticsProperty('activeColor', activeColor));
+    properties.add(DiagnosticsProperty('inactiveColor', inactiveColor));
     properties.add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
   }
 }
 
 class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
   final Color? backgroundColor;
+  final Color? strokeColor;
   final bool vertical;
   final bool ltr;
 
   /// Create a slider value indicator that resembles a rectangular tooltip.
   const _RectangularSliderValueIndicatorShape({
     this.backgroundColor,
+    this.strokeColor,
     this.vertical = false,
     this.ltr = false,
   });
 
-  get _pathPainter => _RectangularSliderValueIndicatorPathPainter(
+  _RectangularSliderValueIndicatorPathPainter get _pathPainter =>
+      _RectangularSliderValueIndicatorPathPainter(
         vertical,
         ltr,
       );
@@ -685,6 +729,7 @@ class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
       textScaleFactor: textScaleFactor,
       sizeWithOverflow: sizeWithOverflow,
       backgroundPaintColor: backgroundColor ?? sliderTheme.valueIndicatorColor!,
+      strokePaintColor: strokeColor,
     );
   }
 }

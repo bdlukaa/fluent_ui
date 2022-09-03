@@ -32,37 +32,47 @@ class FilledButton extends Button {
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final buttonTheme = ButtonTheme.of(context);
+    return buttonTheme.filledButtonStyle;
+  }
+
+  @override
+  ButtonStyle defaultStyleOf(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return ButtonStyle(backgroundColor: ButtonState.resolveWith((states) {
-      return backgroundColor(theme, states);
-    }), foregroundColor: ButtonState.resolveWith((states) {
-      if (states.isDisabled) {
-        return theme.brightness.isDark ? theme.disabledColor : Colors.white;
-      }
-      return backgroundColor(theme, states).basedOnLuminance();
-    }));
+
+    final def = ButtonStyle(
+      backgroundColor: ButtonState.resolveWith((states) {
+        return backgroundColor(theme, states);
+      }),
+      foregroundColor: ButtonState.resolveWith(
+        (states) => foregroundColor(theme, states),
+      ),
+    );
+
+    return super.defaultStyleOf(context).merge(def) ?? def;
   }
 
   static Color backgroundColor(ThemeData theme, Set<ButtonStates> states) {
     if (states.isDisabled) {
-      if (theme.brightness.isDark) {
-        return const Color(0xFF434343);
-      } else {
-        return const Color(0xFFBFBFBF);
-      }
+      return theme.resources.accentFillColorDisabled;
     } else if (states.isPressing) {
-      if (theme.brightness.isDark) {
-        return theme.accentColor.darker;
-      } else {
-        return theme.accentColor.lighter;
-      }
+      return theme.accentColor.tertiaryBrushFor(theme.brightness);
     } else if (states.isHovering) {
-      if (theme.brightness.isDark) {
-        return theme.accentColor.dark;
-      } else {
-        return theme.accentColor.light;
-      }
+      return theme.accentColor.secondaryBrushFor(theme.brightness);
+    } else {
+      return theme.accentColor.defaultBrushFor(theme.brightness);
     }
-    return theme.accentColor;
+  }
+
+  static Color foregroundColor(ThemeData theme, Set<ButtonStates> states) {
+    final res = theme.resources;
+    if (states.isPressing) {
+      return res.textOnAccentFillColorSecondary;
+    } else if (states.isHovering) {
+      return res.textOnAccentFillColorPrimary;
+    } else if (states.isDisabled) {
+      return res.textOnAccentFillColorDisabled;
+    }
+    return res.textOnAccentFillColorPrimary;
   }
 }

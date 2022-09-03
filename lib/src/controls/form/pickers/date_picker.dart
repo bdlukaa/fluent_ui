@@ -1,11 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'package:fluent_ui/src/utils/popup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 import 'pickers.dart';
+
+/// The fields used on date picker.
+enum DatePickerField {
+  /// The month field
+  month,
+
+  /// The day field
+  day,
+
+  /// The year field
+  year,
+}
 
 // There is a known issue with clicking in the popup and select the date.
 // The current workaround is very hacky and doesn't work very well with the
@@ -13,17 +24,17 @@ import 'pickers.dart';
 // https://github.com/flutter/flutter/issues/38803
 
 /// The date picker gives you a standardized way to let users pick a localized
-/// date value using touch, mouse, or keyboard input. Use a date picker to let
-/// a user pick a known date, such as a date of birth, where the context of the
-/// calendar is not important.
+/// date value using touch, mouse, or keyboard input.
 ///
-/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls_datepicker_expand.png)
+/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
 ///
 /// See also:
 ///
-/// - [DatePicker Documentation](https://pub.dev/packages/fluent_ui#date-picker)
-/// - [TimePicker](https://pub.dev/packages/fluent_ui#time-picker)
+///  * [TimePicker], which gives you a standardized way to let users pick a time
+///    value
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/date-picker>
 class DatePicker extends StatefulWidget {
+  /// Creates a date picker.
   const DatePicker({
     Key? key,
     required this.selected,
@@ -37,52 +48,93 @@ class DatePicker extends StatefulWidget {
     this.startYear,
     this.endYear,
     this.contentPadding = kPickerContentPadding,
-    this.popupHeight = kPopupHeight,
+    this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
+    this.locale,
+    this.fieldOrder,
   }) : super(key: key);
 
-  /// The current date.
-  final DateTime selected;
+  /// The current date selected date.
+  ///
+  /// If null, no date is going to be shown.
+  final DateTime? selected;
 
-  /// Whenever the current date is changed. If this is null, the picker is considered disabled
+  /// Whenever the current selected date is changed by the user.
+  ///
+  /// If null, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
 
-  /// Whenever the user cancels when changing the date.
+  /// Whenever the user cancels the date change.
   final VoidCallback? onCancel;
 
-  /// The header of the picker
+  /// The content of the header
   final String? header;
 
   /// The style of the [header]
   final TextStyle? headerStyle;
 
-  /// Whenever to show the month property
+  /// Whenever to show the month field
+  ///
+  /// See also:
+  ///
+  ///  * [showDay]
+  ///  * [showYear]
   final bool showMonth;
 
-  /// Whenever to show the day property
+  /// Whenever to show the day field
+  ///
+  /// See also:
+  ///
+  ///  * [showMonth]
+  ///  * [showYear]
   final bool showDay;
 
-  /// Whenever to show the year property
+  /// Whenever to show the year field
+  ///
+  /// See also:
+  ///
+  ///  * [showDay]
+  ///  * [showMonth]
   final bool showYear;
 
-  /// The year to start counting from. If `null`, defaults to [date]'s year `- 100`
+  /// The year to start counting from.
+  ///
+  /// If null, defaults to [selected]'s year `- 100`
   final int? startYear;
 
-  /// The year to end the counting. If `null`, defaults to [date]'s year `+ 25`
+  /// The year to end the counting.
+  ///
+  /// If null, defaults to [selected]'s year `+ 25`
   final int? endYear;
 
-  /// The padding of the picker. Defaults to [kPickerContentPadding]
+  /// The padding of the picker fields. Defaults to [kPickerContentPadding]
   final EdgeInsetsGeometry contentPadding;
 
-  /// The focus node of the picker.
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Whenever `autofocus` is enabled or not
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  /// The height of the popup. Defaults to [kPopupHeight]
+  /// The height of the popup.
+  ///
+  /// Defaults to [kPickerPopupHeight]
   final double popupHeight;
+
+  /// The locale used to format the month name.
+  ///
+  /// If null, the system locale will be used.
+  final Locale? locale;
+
+  /// The order of the fields.
+  ///
+  /// If null, the order is based on the current locale.
+  ///
+  /// See also:
+  ///  * [getDateOrderFromLocale], which returns the order of the fields based
+  ///    on the current locale
+  final List<DatePickerField>? fieldOrder;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -90,6 +142,7 @@ class DatePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
+    final selected = this.selected ?? DateTime.now();
     properties
       ..add(DiagnosticsProperty('selected', selected,
           ifNull: '${DateTime.now()}'))
@@ -111,14 +164,14 @@ class DatePicker extends StatefulWidget {
 
 class _DatePickerState extends State<DatePicker> {
   late DateTime date;
-  final popupKey = GlobalKey<PopUpState>();
 
   FixedExtentScrollController? _monthController;
   FixedExtentScrollController? _dayController;
   FixedExtentScrollController? _yearController;
 
-  int get startYear => (widget.startYear ?? DateTime.now().year - 100).toInt();
-  int get endYear => (widget.endYear ?? DateTime.now().year + 25).toInt();
+  int get startYear =>
+      ((widget.startYear ?? DateTime.now().year) - 100).toInt();
+  int get endYear => ((widget.endYear ?? DateTime.now().year) + 25).toInt();
 
   int get currentYear {
     return List.generate(endYear - startYear, (index) {
@@ -129,11 +182,14 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    date = widget.selected;
+    date = widget.selected ?? DateTime.now();
     initControllers();
   }
 
   void initControllers() {
+    if (widget.selected == null && mounted) {
+      setState(() => date = DateTime.now());
+    }
     _monthController = FixedExtentScrollController(
       initialItem: date.month - 1,
     );
@@ -158,7 +214,7 @@ class _DatePickerState extends State<DatePicker> {
   void didUpdateWidget(DatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selected != date) {
-      date = widget.selected;
+      date = widget.selected ?? DateTime.now();
       _monthController?.jumpToItem(date.month - 1);
       _dayController?.jumpToItem(date.day - 1);
       _yearController?.jumpToItem(currentYear - startYear - 1);
@@ -166,106 +222,163 @@ class _DatePickerState extends State<DatePicker> {
   }
 
   void handleDateChanged(DateTime newDate) {
-    setState(() => date = newDate);
+    if (mounted) setState(() => date = newDate);
   }
-
-  Size? size;
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasFluentTheme(context));
-    Widget picker = HoverButton(
-      autofocus: widget.autofocus,
-      focusNode: widget.focusNode,
-      onPressed: () async {
-        await popupKey.currentState?.openPopup();
-        _monthController?.dispose();
-        _monthController = null;
-        _dayController?.dispose();
-        _dayController = null;
-        _yearController?.dispose();
-        _yearController = null;
-        initControllers();
-      },
-      builder: (context, state) {
-        if (state.isDisabled) state = <ButtonStates>{};
-        const divider = Divider(
-          direction: Axis.vertical,
-          style: DividerThemeData(
-            verticalMargin: EdgeInsets.zero,
-            horizontalMargin: EdgeInsets.zero,
-            thickness: 0.6,
-          ),
-        );
-        return AnimatedContainer(
-          duration: FluentTheme.of(context).fastAnimationDuration,
-          curve: FluentTheme.of(context).animationCurve,
-          height: kPickerHeight,
-          decoration: kPickerDecorationBuilder(context, state),
-          child: Row(children: [
-            if (widget.showMonth)
-              Expanded(
-                flex: 2,
-                child: () {
-                  // MONTH
-                  return Padding(
-                    padding: widget.contentPadding,
-                    child: Text(DateFormat.MMMM().format(widget.selected)),
-                  );
-                }(),
-              ),
-            if (widget.showDay) ...[
-              divider,
-              Expanded(
-                child: () {
-                  // DAY
-                  return Padding(
-                    padding: widget.contentPadding,
-                    child: Text(
-                      '${widget.selected.day}',
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }(),
-              ),
-            ],
-            if (widget.showYear) ...[
-              divider,
-              Expanded(
-                child: () {
-                  // YEAR
-                  return Padding(
-                    padding: widget.contentPadding,
-                    child: Text(
-                      '${widget.selected.year}',
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }(),
-              ),
-            ],
-          ]),
-        );
-      },
+    final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+
+    final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
+
+    final fieldOrder = widget.fieldOrder ?? getDateOrderFromLocale(locale);
+    assert(fieldOrder.isNotEmpty);
+    assert(
+      fieldOrder.where((f) => f == DatePickerField.month).length == 1,
+      'There can be only one month field',
     );
-    picker = PopUp(
-      contentHeight: widget.popupHeight,
-      key: popupKey,
-      child: picker,
-      content: (context) => _DatePickerContentPopUp(
-        height: widget.popupHeight,
-        date: date,
-        dayController: _dayController!,
-        endYear: endYear,
-        handleDateChanged: handleDateChanged,
-        monthController: _monthController!,
-        onCancel: () => widget.onCancel?.call(),
-        onChanged: () => widget.onChanged?.call(date),
-        showDay: widget.showDay,
-        showMonth: widget.showMonth,
-        showYear: widget.showYear,
-        startYear: startYear,
-        yearController: _yearController!,
+    assert(
+      fieldOrder.where((f) => f == DatePickerField.day).length == 1,
+      'There can be only one day field',
+    );
+    assert(
+      fieldOrder.where((f) => f == DatePickerField.year).length == 1,
+      'There can be only one year field',
+    );
+
+    Widget picker = Picker(
+      pickerContent: (context) {
+        return _DatePickerContentPopUp(
+          date: date,
+          dayController: _dayController!,
+          endYear: endYear,
+          monthController: _monthController!,
+          onCancel: () => widget.onCancel?.call(),
+          onChanged: (date) => widget.onChanged?.call(date),
+          showDay: widget.showDay,
+          showMonth: widget.showMonth,
+          showYear: widget.showYear,
+          startYear: startYear,
+          yearController: _yearController!,
+          locale: widget.locale,
+          fieldOrder: fieldOrder,
+        );
+      },
+      pickerHeight: widget.popupHeight,
+      child: (context, open) => HoverButton(
+        autofocus: widget.autofocus,
+        focusNode: widget.focusNode,
+        onPressed: () async {
+          _monthController?.dispose();
+          _monthController = null;
+          _dayController?.dispose();
+          _dayController = null;
+          _yearController?.dispose();
+          _yearController = null;
+          initControllers();
+          await open();
+        },
+        builder: (context, states) {
+          if (states.isDisabled) states = <ButtonStates>{};
+          const divider = Divider(
+            direction: Axis.vertical,
+            style: DividerThemeData(
+              verticalMargin: EdgeInsets.zero,
+              horizontalMargin: EdgeInsets.zero,
+            ),
+          );
+
+          final monthWidgets = [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.month
+                      : DateFormat(DateFormat.STANDALONE_MONTH, '$locale')
+                          .format(widget.selected!)
+                          .uppercaseFirst(),
+                  locale: locale,
+                ),
+              ),
+            )
+          ];
+
+          final dayWidget = [
+            Expanded(
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.day
+                      : DateFormat.d().format(DateTime(
+                          0,
+                          0,
+                          widget.selected!.day,
+                        )),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ];
+
+          final yearWidgets = [
+            Expanded(
+              child: Padding(
+                padding: widget.contentPadding,
+                child: Text(
+                  widget.selected == null
+                      ? localizations.year
+                      : DateFormat.y().format(DateTime(
+                          widget.selected!.year,
+                        )),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ];
+
+          final fields = <DatePickerField, List<Widget>>{
+            if (widget.showYear) DatePickerField.year: yearWidgets,
+            if (widget.showMonth) DatePickerField.month: monthWidgets,
+            if (widget.showDay) DatePickerField.day: dayWidget,
+          };
+
+          final fieldMap = fieldOrder.map((e) => fields[e]);
+
+          return FocusBorder(
+            focused: states.isFocused,
+            child: AnimatedContainer(
+              duration: theme.fastAnimationDuration,
+              curve: theme.animationCurve,
+              height: kPickerHeight,
+              decoration: kPickerDecorationBuilder(context, states),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: widget.selected == null
+                      ? theme.resources.textFillColorSecondary
+                      : null,
+                ),
+                maxLines: 1,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  ...fieldMap.elementAt(0) ?? [],
+                  if (fieldMap.elementAt(1) != null) ...[
+                    if (fieldMap.elementAt(0) != null) divider,
+                    ...fieldMap.elementAt(1)!,
+                  ],
+                  if (fieldMap.elementAt(2) != null) ...[
+                    divider,
+                    ...fieldMap.elementAt(2)!,
+                  ],
+                ]),
+              ),
+            ),
+          );
+        },
       ),
     );
     if (widget.header != null) {
@@ -286,7 +399,6 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.showDay,
     required this.showYear,
     required this.date,
-    required this.handleDateChanged,
     required this.onChanged,
     required this.onCancel,
     required this.monthController,
@@ -294,22 +406,23 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.yearController,
     required this.startYear,
     required this.endYear,
-    required this.height,
+    required this.locale,
+    required this.fieldOrder,
   }) : super(key: key);
 
   final bool showMonth;
   final bool showDay;
   final bool showYear;
   final DateTime date;
-  final ValueChanged<DateTime> handleDateChanged;
-  final VoidCallback onChanged;
+  final ValueChanged<DateTime> onChanged;
   final VoidCallback onCancel;
   final FixedExtentScrollController monthController;
   final FixedExtentScrollController dayController;
   final FixedExtentScrollController yearController;
   final int startYear;
   final int endYear;
-  final double height;
+  final Locale? locale;
+  final List<DatePickerField> fieldOrder;
 
   @override
   __DatePickerContentPopUpState createState() =>
@@ -326,10 +439,20 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     ).duration.inDays;
   }
 
+  late DateTime localDate = widget.date;
+
+  void handleDateChanged(DateTime time) {
+    if (localDate == time) {
+      return;
+    }
+    setState(() {
+      localDate = time;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
@@ -338,243 +461,272 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       ),
     );
 
-    final highlightTileColor =
-        theme.accentColor.resolveFromBrightness(theme.brightness);
+    final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
-    return SizedBox(
-      height: widget.height,
-      child: Acrylic(
-        tint: kPickerBackgroundColor(context),
-        shape: kPickerShape(context),
-        child: Column(children: [
-          Expanded(
-            child: Stack(children: [
-              kHighlightTile(),
-              Row(children: [
-                if (widget.showMonth)
-                  Expanded(
-                    flex: 2,
-                    child: () {
-                      final items = List.generate(
-                        12,
-                        (month) {
-                          month++;
-                          final text = DateFormat.MMMM().format(
-                            DateTime(1, month),
-                          );
-                          return ListTile(
-                            title: Text(
-                              text,
-                              style: kPickerPopupTextStyle(context)?.copyWith(
-                                color: month == widget.date.month
-                                    ? highlightTileColor.basedOnLuminance()
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                      // MONTH
-                      return PickerNavigatorIndicator(
-                        onBackward: () {
-                          navigateSides(
-                            context,
-                            widget.monthController,
-                            false,
-                            12,
-                          );
-                        },
-                        onForward: () {
-                          navigateSides(
-                            context,
-                            widget.monthController,
-                            true,
-                            12,
-                          );
-                        },
-                        child: ListWheelScrollView.useDelegate(
-                          controller: widget.monthController,
-                          itemExtent: kOneLineTileHeight,
-                          diameterRatio: kPickerDiameterRatio,
-                          physics: const FixedExtentScrollPhysics(),
-                          childDelegate: ListWheelChildLoopingListDelegate(
-                            children: items,
-                          ),
-                          onSelectedItemChanged: (index) {
-                            final month = index + 1;
-                            final daysInMonth =
-                                _getDaysInMonth(month, widget.date.year);
-                            int day = widget.date.day;
-                            if (day > daysInMonth) day = daysInMonth;
-                            widget.handleDateChanged(DateTime(
-                              widget.date.year,
-                              month,
-                              day,
-                              widget.date.hour,
-                              widget.date.minute,
-                              widget.date.second,
-                              widget.date.millisecond,
-                              widget.date.microsecond,
-                            ));
-                            setState(() {});
-                          },
-                        ),
-                      );
-                    }(),
-                  ),
-                if (widget.showDay) ...[
-                  divider,
-                  Expanded(
-                    child: () {
-                      // DAY
-                      final daysInMonth =
-                          _getDaysInMonth(widget.date.month, widget.date.year);
-                      return PickerNavigatorIndicator(
-                        onBackward: () {
-                          navigateSides(
-                            context,
-                            widget.dayController,
-                            false,
-                            daysInMonth,
-                          );
-                        },
-                        onForward: () {
-                          navigateSides(
-                            context,
-                            widget.dayController,
-                            true,
-                            daysInMonth,
-                          );
-                        },
-                        child: ListWheelScrollView.useDelegate(
-                          controller: widget.dayController,
-                          itemExtent: kOneLineTileHeight,
-                          diameterRatio: kPickerDiameterRatio,
-                          physics: const FixedExtentScrollPhysics(),
-                          childDelegate: ListWheelChildLoopingListDelegate(
-                            children: List<Widget>.generate(
-                              daysInMonth,
-                              (day) {
-                                day++;
-                                return ListTile(
-                                  title: Center(
-                                    child: Text(
-                                      '$day',
-                                      style: kPickerPopupTextStyle(context)
-                                          ?.copyWith(
-                                        color: day == widget.date.day
-                                            ? highlightTileColor
-                                                .basedOnLuminance()
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          onSelectedItemChanged: (index) {
-                            widget.handleDateChanged(DateTime(
-                              widget.date.year,
-                              widget.date.month,
-                              index + 1,
-                              widget.date.hour,
-                              widget.date.minute,
-                              widget.date.second,
-                              widget.date.millisecond,
-                              widget.date.microsecond,
-                            ));
-                            setState(() {});
-                          },
-                        ),
-                      );
-                    }(),
-                  ),
-                ],
-                if (widget.showYear) ...[
-                  divider,
-                  Expanded(
-                    child: () {
-                      final years = widget.endYear - widget.startYear;
-                      // YEAR
-                      return PickerNavigatorIndicator(
-                        onBackward: () {
-                          navigateSides(
-                            context,
-                            widget.yearController,
-                            false,
-                            years,
-                          );
-                        },
-                        onForward: () {
-                          navigateSides(
-                            context,
-                            widget.yearController,
-                            true,
-                            years,
-                          );
-                        },
-                        child: ListWheelScrollView(
-                          controller: widget.yearController,
-                          children: List.generate(years, (index) {
-                            // index++;
-                            final realYear = widget.startYear + index + 1;
-                            return ListTile(
-                              title: Center(
-                                child: Text(
-                                  '$realYear',
-                                  style: kPickerPopupTextStyle(context)
-                                      ?.copyWith(
-                                          color: realYear == widget.date.year
-                                              ? highlightTileColor
-                                                  .basedOnLuminance()
-                                              : null),
-                                ),
-                              ),
-                            );
-                          }),
-                          itemExtent: kOneLineTileHeight,
-                          diameterRatio: kPickerDiameterRatio,
-                          physics: const FixedExtentScrollPhysics(),
-                          onSelectedItemChanged: (index) {
-                            widget.handleDateChanged(DateTime(
-                              widget.startYear + index + 1,
-                              widget.date.month,
-                              widget.date.day,
-                              widget.date.hour,
-                              widget.date.minute,
-                              widget.date.second,
-                              widget.date.millisecond,
-                              widget.date.microsecond,
-                            ));
-                            setState(() {});
-                          },
-                        ),
-                      );
-                    }(),
-                  ),
-                ],
-              ]),
-            ]),
-          ),
-          const Divider(
-            style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+    final monthWidget = [
+      Expanded(
+        flex: 2,
+        child: () {
+          final formatter = DateFormat.MMMM(locale.toString());
+          // MONTH
+          return PickerNavigatorIndicator(
+            onBackward: () {
+              widget.monthController.navigateSides(
+                context,
+                false,
+                12,
+              );
+            },
+            onForward: () {
+              widget.monthController.navigateSides(
+                context,
+                true,
+                12,
+              );
+            },
+            child: ListWheelScrollView.useDelegate(
+              controller: widget.monthController,
+              itemExtent: kOneLineTileHeight,
+              diameterRatio: kPickerDiameterRatio,
+              physics: const FixedExtentScrollPhysics(),
+              childDelegate: ListWheelChildLoopingListDelegate(
+                children: List.generate(12, (month) {
+                  month++;
+                  final text =
+                      formatter.format(DateTime(1, month)).uppercaseFirst();
+                  return ListTile(
+                    title: Text(
+                      text,
+                      style: kPickerPopupTextStyle(
+                        context,
+                        month == localDate.month,
+                      ),
+                      locale: locale,
+                    ),
+                  );
+                }),
+              ),
+              onSelectedItemChanged: (index) {
+                final month = index + 1;
+                final daysInMonth = _getDaysInMonth(month, localDate.year);
+                int day = localDate.day;
+                if (day > daysInMonth) day = daysInMonth;
+                handleDateChanged(DateTime(
+                  localDate.year,
+                  month,
+                  day,
+                  localDate.hour,
+                  localDate.minute,
+                  localDate.second,
+                  localDate.millisecond,
+                  localDate.microsecond,
+                ));
+              },
             ),
-          ),
-          YesNoPickerControl(
-            onChanged: () {
-              Navigator.pop(context);
-              widget.onChanged();
+          );
+        }(),
+      ),
+    ];
+
+    final dayWidget = [
+      Expanded(
+        child: () {
+          // DAY
+          final daysInMonth = _getDaysInMonth(localDate.month, localDate.year);
+          final formatter = DateFormat.d(locale.toString());
+          return PickerNavigatorIndicator(
+            onBackward: () {
+              widget.dayController.navigateSides(
+                context,
+                false,
+                daysInMonth,
+              );
             },
-            onCancel: () {
-              Navigator.pop(context);
-              widget.onCancel();
+            onForward: () {
+              widget.dayController.navigateSides(
+                context,
+                true,
+                daysInMonth,
+              );
             },
-          ),
+            child: ListWheelScrollView.useDelegate(
+              controller: widget.dayController,
+              itemExtent: kOneLineTileHeight,
+              diameterRatio: kPickerDiameterRatio,
+              physics: const FixedExtentScrollPhysics(),
+              childDelegate: ListWheelChildLoopingListDelegate(
+                children: List<Widget>.generate(
+                  daysInMonth,
+                  (day) {
+                    day++;
+                    return ListTile(
+                      title: Center(
+                        child: Text(
+                          formatter.format(DateTime(0, 0, day)),
+                          style: kPickerPopupTextStyle(
+                            context,
+                            day == localDate.day,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              onSelectedItemChanged: (index) {
+                handleDateChanged(DateTime(
+                  localDate.year,
+                  localDate.month,
+                  index + 1,
+                  localDate.hour,
+                  localDate.minute,
+                  localDate.second,
+                  localDate.millisecond,
+                  localDate.microsecond,
+                ));
+              },
+            ),
+          );
+        }(),
+      ),
+    ];
+
+    final yearWidget = [
+      Expanded(
+        child: () {
+          final years = widget.endYear - widget.startYear;
+          final formatter = DateFormat.y(locale.toString());
+          // YEAR
+          return PickerNavigatorIndicator(
+            onBackward: () {
+              widget.yearController.navigateSides(
+                context,
+                false,
+                years,
+              );
+            },
+            onForward: () {
+              widget.yearController.navigateSides(
+                context,
+                true,
+                years,
+              );
+            },
+            child: ListWheelScrollView(
+              controller: widget.yearController,
+              itemExtent: kOneLineTileHeight,
+              diameterRatio: kPickerDiameterRatio,
+              physics: const FixedExtentScrollPhysics(),
+              onSelectedItemChanged: (index) {
+                handleDateChanged(DateTime(
+                  widget.startYear + index + 1,
+                  localDate.month,
+                  localDate.day,
+                  localDate.hour,
+                  localDate.minute,
+                  localDate.second,
+                  localDate.millisecond,
+                  localDate.microsecond,
+                ));
+              },
+              children: List.generate(years, (index) {
+                // index++;
+                final realYear = widget.startYear + index + 1;
+                return ListTile(
+                  title: Center(
+                    child: Text(
+                      formatter.format(DateTime(realYear)),
+                      style: kPickerPopupTextStyle(
+                        context,
+                        realYear == localDate.year,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          );
+        }(),
+      ),
+    ];
+
+    final fields = <DatePickerField, List<Widget>>{
+      if (widget.showYear) DatePickerField.year: yearWidget,
+      if (widget.showMonth) DatePickerField.month: monthWidget,
+      if (widget.showDay) DatePickerField.day: dayWidget,
+    };
+
+    final fieldMap = widget.fieldOrder.map((e) => fields[e]);
+
+    return Column(children: [
+      Expanded(
+        child: Stack(children: [
+          PickerHighlightTile(),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            ...fieldMap.elementAt(0) ?? [],
+            if (fieldMap.elementAt(1) != null) ...[
+              divider,
+              ...fieldMap.elementAt(1)!,
+            ],
+            if (fieldMap.elementAt(2) != null) ...[
+              divider,
+              ...fieldMap.elementAt(2)!,
+            ],
+          ]),
         ]),
       ),
-    );
+      const Divider(
+        style: DividerThemeData(
+          verticalMargin: EdgeInsets.zero,
+          horizontalMargin: EdgeInsets.zero,
+        ),
+      ),
+      YesNoPickerControl(
+        onChanged: () {
+          widget.onChanged(localDate);
+          Navigator.pop(context);
+        },
+        onCancel: () {
+          widget.onCancel();
+          Navigator.pop(context);
+        },
+      ),
+    ]);
   }
+}
+
+/// Get the date order based on the current locale.
+///
+///
+/// ![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Date_format_by_country_NEW.svg/700px-Date_format_by_country_NEW.svg.png)
+///
+/// DMY is mostly used around the globe, so that's the returned
+///
+/// See also:
+///
+///  * <https://en.wikipedia.org/wiki/Date_format_by_country>
+List<DatePickerField> getDateOrderFromLocale(Locale? locale) {
+  final dmy = [
+    DatePickerField.day,
+    DatePickerField.month,
+    DatePickerField.year,
+  ];
+  final ymd = [
+    DatePickerField.year,
+    DatePickerField.month,
+    DatePickerField.day,
+  ];
+  final mdy = [
+    DatePickerField.month,
+    DatePickerField.day,
+    DatePickerField.year,
+  ];
+
+  if (locale?.countryCode?.toLowerCase() == 'us') return mdy;
+
+  final lang = locale?.languageCode;
+
+  if (['zh', 'ko', 'jp'].contains(lang)) return ymd;
+
+  return dmy;
 }

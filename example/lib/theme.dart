@@ -60,20 +60,27 @@ class AppTheme extends ChangeNotifier {
     _textDirection = direction;
     notifyListeners();
   }
+
+  Locale? _locale;
+  Locale? get locale => _locale;
+  set locale(Locale? locale) {
+    _locale = locale;
+    notifyListeners();
+  }
 }
 
 AccentColor get systemAccentColor {
-  if (defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      kIsWeb) {
-    return AccentColor('normal', {
-      'darkest': SystemTheme.accentInstance.darkest,
-      'darker': SystemTheme.accentInstance.darker,
-      'dark': SystemTheme.accentInstance.dark,
-      'normal': SystemTheme.accentInstance.accent,
-      'light': SystemTheme.accentInstance.light,
-      'lighter': SystemTheme.accentInstance.lighter,
-      'lightest': SystemTheme.accentInstance.lightest,
+  if ((defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.android) &&
+      !kIsWeb) {
+    return AccentColor.swatch({
+      'darkest': SystemTheme.accentColor.darkest,
+      'darker': SystemTheme.accentColor.darker,
+      'dark': SystemTheme.accentColor.dark,
+      'normal': SystemTheme.accentColor.accent,
+      'light': SystemTheme.accentColor.light,
+      'lighter': SystemTheme.accentColor.lighter,
+      'lightest': SystemTheme.accentColor.lightest,
     });
   }
   return Colors.blue;

@@ -23,7 +23,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
     Offset selectionMidpoint,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
-    ClipboardStatusNotifier clipboardStatus,
+    ClipboardStatusNotifier? clipboardStatus,
     Offset? lastSecondaryTapDownPosition,
   ) {
     return _FluentTextSelectionControlsToolbar(
@@ -100,7 +100,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.lastSecondaryTapDownPosition,
   }) : super(key: key);
 
-  final ClipboardStatusNotifier clipboardStatus;
+  final ClipboardStatusNotifier? clipboardStatus;
   final List<TextSelectionPoint> endpoints;
   final Rect globalEditableRegion;
   final VoidCallback? handleCopy;
@@ -290,6 +290,8 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     final double paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
     final Offset localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
 
+    final radius = BorderRadius.circular(6.0);
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         _kToolbarScreenPadding,
@@ -301,19 +303,10 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
           anchor: anchor - localAdjustment,
         ),
-        child: PhysicalModel(
+        child: Acrylic(
           elevation: 4.0,
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(6.0),
+          shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
-            decoration: BoxDecoration(
-              color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(6.0),
-              border: Border.all(
-                width: 0.25,
-                color: FluentTheme.of(context).inactiveBackgroundColor,
-              ),
-            ),
             padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
             child: SizedBox(
               width: _kToolbarWidth,
@@ -364,7 +357,11 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
               message: tooltip,
               child: Container(
                 decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(theme, states),
+                  color: ButtonThemeData.uncheckedInputColor(
+                    theme,
+                    states,
+                    transparentWhenNone: true,
+                  ),
                   borderRadius: radius,
                 ),
                 padding: const EdgeInsets.only(

@@ -90,8 +90,8 @@ class _AcrylicState extends State<Acrylic> {
   void initState() {
     super.initState();
     _NoiseTextureCacher._instance ??= _NoiseTextureCacher._new();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _updateProperties();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) _updateProperties();
       setState(() {});
     });
   }
@@ -138,7 +138,7 @@ class _AcrylicState extends State<Acrylic> {
     assert(_properties.luminosityAlpha >= 0,
         "The luminosityAlpha must be always positive");
 
-    final Color _shadowColor =
+    final Color shadowColor =
         widget.shadowColor ?? FluentTheme.of(context).shadowColor;
 
     return _AcrylicInheritedWidget(
@@ -149,12 +149,12 @@ class _AcrylicState extends State<Acrylic> {
           shadows: [
             /* The shadows were taken from the official FluentUI design kit on Figma */
             BoxShadow(
-              color: _shadowColor.withOpacity(0.13),
+              color: shadowColor.withOpacity(0.13),
               blurRadius: 0.9 * widget.elevation,
               offset: Offset(0, 0.4 * widget.elevation),
             ),
             BoxShadow(
-              color: _shadowColor.withOpacity(0.11),
+              color: shadowColor.withOpacity(0.11),
               blurRadius: 0.225 * widget.elevation,
               offset: Offset(0, 0.085 * widget.elevation),
             ),
@@ -313,7 +313,7 @@ class AcrylicProperties {
         shape = const RoundedRectangleBorder();
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         tint,
         tintAlpha,
         luminosityAlpha,
@@ -364,7 +364,7 @@ class _AcrylicGuts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final properties = AcrylicProperties.of(context);
-    final _tint = AcrylicHelper.getEffectiveTintColor(
+    final tint = AcrylicHelper.getEffectiveTintColor(
       properties.tint,
       AcrylicHelper.getTintOpacityModifier(properties.tint),
     );
@@ -375,10 +375,10 @@ class _AcrylicGuts extends StatelessWidget {
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: CustomPaint(
         painter: _AcrylicPainter(
-          tintColor: _tint,
+          tintColor: disabled ? tint.withOpacity(1.0) : tint,
           luminosityColor: AcrylicHelper.getLuminosityColor(
-            _tint,
-            properties.luminosityAlpha,
+            tint,
+            disabled ? 1.0 : properties.luminosityAlpha,
           ),
         ),
         child: disabled

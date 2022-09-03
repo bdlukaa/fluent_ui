@@ -23,5 +23,12 @@
   "copyActionTooltip": "Copier le contenu sélectionné dans le presse-papier",
   "cutActionTooltip": "Couper le contenu sélectionné et le mettre dans le presse-papier",
   "pasteActionTooltip": "Coller le contenu du presse-papier à la position actuelle",
-  "selectAllActionTooltip": "Sélectionner tout le contenu"
+  "selectAllActionTooltip": "Sélectionner tout le contenu",
+  "hour": "heure",
+  "minute": "minute",
+  "am": "AM",
+  "pm": "PM",
+  "month": "mois",
+  "day": "jour",
+  "year": "année"
 }
