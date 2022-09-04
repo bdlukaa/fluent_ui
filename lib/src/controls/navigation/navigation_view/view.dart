@@ -298,7 +298,7 @@ class NavigationViewState extends State<NavigationView> {
       if (widget.pane != null) {
         final pane = widget.pane!;
         final body = _NavigationBody(
-          key: ValueKey(pane.selected ?? -1),
+          itemKey: ValueKey(pane.selected ?? -1),
           transitionBuilder: widget.transitionBuilder,
           child: pane.selected != null
               ? pane.selectedItem.body

@@ -424,16 +424,19 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           );
         }(),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          ToggleSwitch(
-            content: const Text('Dark Mode'),
-            checked: FluentTheme.of(context).brightness.isDark,
-            onChanged: (v) {
-              if (v) {
-                appTheme.mode = ThemeMode.dark;
-              } else {
-                appTheme.mode = ThemeMode.light;
-              }
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.only(end: 8.0),
+            child: ToggleSwitch(
+              content: const Text('Dark Mode'),
+              checked: FluentTheme.of(context).brightness.isDark,
+              onChanged: (v) {
+                if (v) {
+                  appTheme.mode = ThemeMode.dark;
+                } else {
+                  appTheme.mode = ThemeMode.light;
+                }
+              },
+            ),
           ),
           if (!kIsWeb) const WindowButtons(),
         ]),

@@ -11,12 +11,15 @@ class _NavigationBody extends StatefulWidget {
   ///
   /// [index] must be greater than 0 and less than [children.length]
   const _NavigationBody({
-    ValueKey<int>? super.key,
+    super.key,
+    required this.itemKey,
     required this.child,
     this.transitionBuilder,
     this.animationCurve,
     this.animationDuration,
   });
+
+  final ValueKey<int>? itemKey;
 
   final Widget child;
 
@@ -98,7 +101,8 @@ class _NavigationBodyState extends State<_NavigationBody> {
       child: AnimatedSwitcher(
         switchInCurve: widget.animationCurve ?? Curves.ease,
         switchOutCurve: widget.animationCurve ?? Curves.ease,
-        duration: widget.animationDuration ?? const Duration(milliseconds: 300),
+        duration:
+            widget.animationDuration ?? const Duration(milliseconds: 300),
         reverseDuration:
             widget.animationDuration ?? const Duration(microseconds: 150),
         layoutBuilder: (child, children) {
@@ -133,10 +137,8 @@ class _NavigationBodyState extends State<_NavigationBody> {
           );
         },
         child: FocusTraversalGroup(
-          key: widget.key,
-          child: SizedBox(
-            child: widget.child,
-          ),
+          key: widget.itemKey,
+          child: widget.child,
         ),
       ),
     );
