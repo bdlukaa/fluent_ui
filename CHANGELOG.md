@@ -1,5 +1,53 @@
 Date format: DD/MM/YYYY
 
+## [next]
+
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead:
+  Before:
+  ```dart
+  NavigationBody(
+    pane: NavigationPane(
+      items: [
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+      ],
+    ),
+    content: NavigationBody(
+      children: [
+        _Item1(),
+        _Item2(),
+        _Item3(),
+      ],
+    ),
+  ),
+  ```
+  
+  Now:
+  ```dart
+  NavigationBody(
+    ...
+    pane: NavigationPane(
+      items: [
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item1(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item2(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item3(),
+        ),
+      ],
+    ),
+  ),
+  ```
+
+  You can use `NavigationView.transitionsBuilder`
+
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 
 - `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))

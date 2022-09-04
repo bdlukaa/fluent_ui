@@ -76,21 +76,6 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
-  // late int previousIndex;
-  int get currentIndex => (widget.key as ValueKey<int>).value;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   previousIndex = currentIndex;
-  // }
-
-  // @override
-  // void didUpdateWidget(covariant _NavigationBody oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   previousIndex = (widget.key as ValueKey<int>).value;
-  // }
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -101,8 +86,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
       child: AnimatedSwitcher(
         switchInCurve: widget.animationCurve ?? Curves.ease,
         switchOutCurve: widget.animationCurve ?? Curves.ease,
-        duration:
-            widget.animationDuration ?? const Duration(milliseconds: 300),
+        duration: widget.animationDuration ?? const Duration(milliseconds: 300),
         reverseDuration:
             widget.animationDuration ?? const Duration(microseconds: 150),
         layoutBuilder: (child, children) {
