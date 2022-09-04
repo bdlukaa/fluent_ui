@@ -2,7 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead:
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
   Before:
   ```dart
   NavigationBody(
@@ -47,6 +47,7 @@ Date format: DD/MM/YYYY
   ```
 
   You can use `NavigationView.transitionsBuilder`
+- Fixes memory leaks on `NavigationView`
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 

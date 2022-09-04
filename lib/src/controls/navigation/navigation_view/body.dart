@@ -31,11 +31,9 @@ class _NavigationBody extends StatefulWidget {
   /// [EntrancePageTransition] is used.
   ///
   /// ```dart
-  /// NavigationBody(
-  ///   transitionBuilder: (child, animation) {
-  ///     return DrillInPageTransition(child: child, animation: animation);
-  ///   },
-  /// ),
+  /// transitionBuilder: (child, animation) {
+  ///   return DrillInPageTransition(child: child, animation: animation);
+  /// },
   /// ```
   ///
   /// See also:
@@ -135,7 +133,6 @@ class _NavigationBodyState extends State<_NavigationBody> {
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-///  * [NavigationBody], which is used to display the content on the view
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
