@@ -709,7 +709,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   final FocusScopeNode node;
   final Stream<int> focusStream;
   final Stream<List<AutoSuggestBoxItem<T>>> itemsStream;
-  final AutoSuggestBoxSorter sorter;
+  final AutoSuggestBoxSorter<T> sorter;
   final double maxHeight;
 
   @override
