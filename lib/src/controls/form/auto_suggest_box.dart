@@ -34,6 +34,8 @@ class AutoSuggestBoxItem<T> {
   final T? value;
 
   /// The label that identifies this item
+  ///
+  /// The data is filtered based on this label
   final String label;
 
   /// The widget to be shown.
