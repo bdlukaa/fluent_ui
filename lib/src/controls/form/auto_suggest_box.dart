@@ -713,7 +713,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   final double maxHeight;
 
   @override
-  State<_AutoSuggestBoxOverlay> createState() =>
+  State<_AutoSuggestBoxOverlay<T>> createState() =>
       _AutoSuggestBoxOverlayState<T>();
 }
 
