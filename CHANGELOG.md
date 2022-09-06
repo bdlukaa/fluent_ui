@@ -2,7 +2,39 @@ Date format: DD/MM/YYYY
 
 ## [unreleased]
 
-- `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441))
+- **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441))
+  Before:
+  ```dart
+AutoSuggestBox(
+items: cats.map((cat) {
+return AutoSuggestBoxItem(
+value: cat,
+onFocusChange: (focused) {
+if (focused) debugPrint('Focused $cat');
+}
+);
+}).toList(),
+onSelected: (item) {
+setState(() => selected = item);
+},
+),
+  ```Now:
+  ```dart
+AutoSuggestBox<String>(
+  items: cats.map((cat) {
+    return AutoSuggestBoxItem<String>(
+      value: cat,
+      label: cat,
+      onFocusChange: (focused) {
+        if (focused) debugPrint('Focused \$cat');
+      }
+    );
+  }).toList(),
+  onSelected: (item) {
+    setState(() => selected = item);
+  },
+),
+```
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 

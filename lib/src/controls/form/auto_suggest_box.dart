@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 typedef AutoSuggestBoxSorter<T> = List<AutoSuggestBoxItem<T>> Function(
   String text,
@@ -94,7 +93,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
-    this.sorter = defaultItemSorter,
+    this.sorter,
     this.leadingIcon,
     this.trailingIcon,
     this.clearButtonEnabled = true,
@@ -129,7 +128,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
-    this.sorter = defaultItemSorter,
+    this.sorter,
     this.leadingIcon,
     this.trailingIcon,
     this.clearButtonEnabled = true,
@@ -174,7 +173,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// See also:
   ///
   ///  * [AutoSuggestBox.defaultItemSorter], the default item sorter
-  final AutoSuggestBoxSorter sorter;
+  final AutoSuggestBoxSorter<T>? sorter;
 
   /// A widget displayed at the start of the text box
   ///
@@ -317,9 +316,9 @@ class AutoSuggestBox<T> extends StatefulWidget {
       ));
   }
 
-  static List<AutoSuggestBoxItem> defaultItemSorter(
+  List<AutoSuggestBoxItem<T>> defaultItemSorter(
     String text,
-    List<AutoSuggestBoxItem> items,
+    List<AutoSuggestBoxItem<T>> items,
   ) {
     text = text.trim();
     if (text.isEmpty) return items;
@@ -342,14 +341,16 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   final _dynamicItemsController =
       StreamController<List<AutoSuggestBoxItem<T>>>.broadcast();
 
+  AutoSuggestBoxSorter<T> get sorter =>
+      widget.sorter ?? widget.defaultItemSorter;
+
   Size _boxSize = Size.zero;
 
   late List<AutoSuggestBoxItem<T>> _localItems;
 
   void updateLocalItems() {
     if (!mounted) return;
-    setState(() => _localItems = (widget.sorter(controller.text, widget.items)
-        as List<AutoSuggestBoxItem<T>>));
+    setState(() => _localItems = sorter(controller.text, widget.items));
   }
 
   @override
@@ -360,8 +361,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     controller.addListener(_handleTextChanged);
     focusNode.addListener(_handleFocusChanged);
 
-    _localItems = (widget.sorter(controller.text, widget.items)
-        as List<AutoSuggestBoxItem<T>>);
+    _localItems = sorter(controller.text, widget.items);
 
     // Update the overlay when the text box size has changed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -472,7 +472,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 items: widget.items,
                 focusStream: _focusStreamController.stream,
                 itemsStream: _dynamicItemsController.stream,
-                sorter: widget.sorter,
+                sorter: sorter,
                 onSelected: (AutoSuggestBoxItem<T> item) {
                   item.onSelected?.call();
                   widget.onSelected?.call(item);
@@ -818,8 +818,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                     return _AutoSuggestBoxOverlayTile(
                       text: item.child ?? Text(item.label),
                       selected: item._selected,
-                      onSelected: () =>
-                          widget.onSelected(item as AutoSuggestBoxItem<T>),
+                      onSelected: () => widget.onSelected(item),
                     );
                   },
                 );
