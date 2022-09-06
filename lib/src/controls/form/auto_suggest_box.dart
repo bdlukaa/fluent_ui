@@ -297,7 +297,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   final bool enabled;
 
   @override
-  _AutoSuggestBoxState createState() => _AutoSuggestBoxState<T>();
+  State<AutoSuggestBox<T>> createState() => _AutoSuggestBoxState<T>();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
