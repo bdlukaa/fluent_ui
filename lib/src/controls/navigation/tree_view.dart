@@ -107,6 +107,9 @@ class TreeViewItem with Diagnosticable {
   /// Called when this item is invoked
   final Future<void> Function(TreeViewItem item)? onInvoked;
 
+  /// Called when this items expansion state is toggled.
+  final Future<void> Function(TreeViewItem item)? onExpandToggle;
+
   /// The background color of this item.
   ///
   /// See also:
@@ -149,6 +152,7 @@ class TreeViewItem with Diagnosticable {
     bool? expanded,
     this.selected = false,
     this.onInvoked,
+    this.onExpandToggle,
     this.backgroundColor,
     this.autofocus = false,
     FocusNode? focusNode,
@@ -174,6 +178,7 @@ class TreeViewItem with Diagnosticable {
           expanded: source.expanded,
           selected: source.selected,
           onInvoked: source.onInvoked,
+          onExpandToggle: source.onExpandToggle,
           backgroundColor: source.backgroundColor,
           autofocus: source.autofocus,
           focusNode: source.focusNode,
@@ -283,6 +288,7 @@ class TreeViewItem with Diagnosticable {
         other._anyExpandableSiblings == _anyExpandableSiblings &&
         other.selected == selected &&
         other.onInvoked == onInvoked &&
+        other.onExpandToggle == onExpandToggle &&
         other.backgroundColor == backgroundColor &&
         other._visible == _visible &&
         other.autofocus == autofocus &&
@@ -304,6 +310,7 @@ class TreeViewItem with Diagnosticable {
         _anyExpandableSiblings.hashCode ^
         selected.hashCode ^
         onInvoked.hashCode ^
+        onExpandToggle.hashCode ^
         backgroundColor.hashCode ^
         _visible.hashCode ^
         autofocus.hashCode ^
@@ -416,6 +423,7 @@ class TreeView extends StatefulWidget {
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
+    this.onItemExpandToggle,
     this.onSecondaryTap,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
@@ -441,6 +449,9 @@ class TreeView extends StatefulWidget {
 
   /// Called when an item is invoked
   final TreeViewItemInvoked? onItemInvoked;
+
+  /// Called when an item's expand state is toggled.
+  final Future<void> Function(TreeViewItem item)? onItemExpandToggle;
 
   ///  A tap with a secondary button has occurred.
   final TreeViewItemOnSecondaryTap? onSecondaryTap;
