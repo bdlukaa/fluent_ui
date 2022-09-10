@@ -188,72 +188,77 @@ class ExpanderState extends State<Expander>
     final theme = FluentTheme.of(context);
     final children = [
       // HEADER
-      HoverButton(
-        onPressed: _handlePressed,
-        builder: (context, states) => Container(
-          decoration: ShapeDecoration(
-            color: widget.headerBackgroundColor?.resolve(states) ??
-                theme.resources.cardBackgroundFillColorDefault,
-            shape: widget.headerShape?.call(open) ??
-                RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: theme.resources.cardStrokeColorDefault,
+      Flexible(
+        fit: FlexFit.loose,
+        child: HoverButton(
+          onPressed: _handlePressed,
+          builder: (context, states) => Container(
+            decoration: ShapeDecoration(
+              color: widget.headerBackgroundColor?.resolve(states) ??
+                  theme.resources.cardBackgroundFillColorDefault,
+              shape: widget.headerShape?.call(open) ??
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(4.0),
+                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                    ),
                   ),
-                  borderRadius: BorderRadius.vertical(
-                    top: const Radius.circular(4.0),
-                    bottom: Radius.circular(open ? 0.0 : 4.0),
-                  ),
-                ),
-          ),
-          padding: const EdgeInsetsDirectional.only(start: 16.0),
-          alignment: AlignmentDirectional.centerStart,
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (widget.leading != null)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end: 10.0),
-                child: widget.leading!,
-              ),
-            Expanded(child: widget.header),
-            if (widget.trailing != null)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(start: 20.0),
-                child: widget.trailing!,
-              ),
-            Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: widget.trailing != null ? 8.0 : 20.0,
-                end: 8.0,
-                top: 8.0,
-                bottom: 8.0,
-              ),
-              child: FocusBorder(
-                focused: states.isFocused,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: ButtonThemeData.uncheckedInputColor(_theme, states),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  alignment: Alignment.center,
-                  child: widget.icon ??
-                      RotationTransition(
-                        turns: Tween<double>(begin: 0, end: 0.5)
-                            .animate(_controller),
-                        child: Icon(
-                          _isDown
-                              ? FluentIcons.chevron_down
-                              : FluentIcons.chevron_up,
-                          size: 10,
-                        ),
-                      ),
-                ),
-              ),
             ),
-          ]),
+            padding: const EdgeInsetsDirectional.only(start: 16.0),
+            alignment: AlignmentDirectional.centerStart,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              if (widget.leading != null)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 10.0),
+                  child: widget.leading!,
+                ),
+              Expanded(child: widget.header),
+              if (widget.trailing != null)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 20.0),
+                  child: widget.trailing!,
+                ),
+              Padding(
+                padding: EdgeInsetsDirectional.only(
+                  start: widget.trailing != null ? 8.0 : 20.0,
+                  end: 8.0,
+                  top: 8.0,
+                  bottom: 8.0,
+                ),
+                child: FocusBorder(
+                  focused: states.isFocused,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color:
+                          ButtonThemeData.uncheckedInputColor(_theme, states),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    alignment: Alignment.center,
+                    child: widget.icon ??
+                        RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 0.5)
+                              .animate(_controller),
+                          child: Icon(
+                            _isDown
+                                ? FluentIcons.chevron_down
+                                : FluentIcons.chevron_up,
+                            size: 10,
+                          ),
+                        ),
+                  ),
+                ),
+              ),
+            ]),
+          ),
         ),
       ),
       // CONTENT
-      Expanded(
+      Flexible(
+        fit: FlexFit.loose,
         child: SizeTransition(
           sizeFactor: _controller,
           child: Container(
