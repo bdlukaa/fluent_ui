@@ -198,7 +198,6 @@ class ExpanderState extends State<Expander>
         onPressed: _handlePressed,
         builder: (context, states) {
           return Container(
-            height: widget.headerHeight,
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
@@ -262,25 +261,27 @@ class ExpanderState extends State<Expander>
           );
         },
       ),
-      Expanded(
-        child: SizeTransition(
-          sizeFactor: _controller,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: theme.resources.cardStrokeColorDefault,
+      _isDown
+          ? Expanded(
+              child: SizeTransition(
+                sizeFactor: _controller,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    color: widget.contentBackgroundColor ??
+                        theme.resources.cardBackgroundFillColorSecondary,
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(4.0)),
+                  ),
+                  child: widget.content,
+                ),
               ),
-              color: widget.contentBackgroundColor ??
-                  theme.resources.cardBackgroundFillColorSecondary,
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(4.0)),
-            ),
-            child: widget.content,
-          ),
-        ),
-      ),
+            )
+          : const SizedBox(),
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
