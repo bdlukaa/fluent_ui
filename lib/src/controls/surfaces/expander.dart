@@ -261,27 +261,25 @@ class ExpanderState extends State<Expander>
           );
         },
       ),
-      _isDown
-          ? Expanded(
-              child: SizeTransition(
-                sizeFactor: _controller,
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme.resources.cardStrokeColorDefault,
-                    ),
-                    color: widget.contentBackgroundColor ??
-                        theme.resources.cardBackgroundFillColorSecondary,
-                    borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(4.0)),
-                  ),
-                  child: widget.content,
-                ),
+      Expanded(
+        child: SizeTransition(
+          sizeFactor: _controller,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.cardStrokeColorDefault,
               ),
-            )
-          : const SizedBox(),
+              color: widget.contentBackgroundColor ??
+                  theme.resources.cardBackgroundFillColorSecondary,
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            ),
+            child: widget.content,
+          ),
+        ),
+      ),
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
