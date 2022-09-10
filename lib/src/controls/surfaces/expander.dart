@@ -103,7 +103,7 @@ class Expander extends StatefulWidget {
   /// The height of the header.
   ///
   /// Defaults to 48.0
-  final double headerHeight;
+  final double? headerHeight;
 
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
@@ -262,21 +262,23 @@ class ExpanderState extends State<Expander>
           );
         },
       ),
-      SizeTransition(
-        sizeFactor: _controller,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.resources.cardStrokeColorDefault,
+      Expanded(
+        child: SizeTransition(
+          sizeFactor: _controller,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.cardStrokeColorDefault,
+              ),
+              color: widget.contentBackgroundColor ??
+                  theme.resources.cardBackgroundFillColorSecondary,
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(4.0)),
             ),
-            color: widget.contentBackgroundColor ??
-                theme.resources.cardBackgroundFillColorSecondary,
-            borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            child: widget.content,
           ),
-          child: widget.content,
         ),
       ),
     ];
