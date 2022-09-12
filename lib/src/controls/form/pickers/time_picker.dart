@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/localization.dart'
-    show IntlScriptLocaleApplyMixin;
+import 'package:fluent_ui/src/intl_script_locale_apply_mixin.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
