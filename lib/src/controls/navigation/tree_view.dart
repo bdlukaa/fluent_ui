@@ -2,14 +2,18 @@ import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-const double _whiteSpace = 28.0;
+const double _whiteSpace = 8.0;
 
 /// Default loading indicator used by [TreeView]
-const Widget kTreeViewLoadingIndicator = SizedBox(
-  height: 12.0,
-  width: 12.0,
-  child: ProgressRing(
-    strokeWidth: 3.0,
+const Widget kTreeViewLoadingIndicator = Padding(
+  // Padding to make it the same width as the expand icon
+  padding: EdgeInsetsDirectional.only(start: 6.0, end: 6.0),
+  child: SizedBox(
+    height: 12.0,
+    width: 12.0,
+    child: ProgressRing(
+      strokeWidth: 3.0,
+    ),
   ),
 );
 
@@ -413,6 +417,7 @@ class TreeView extends StatefulWidget {
     this.itemExtent,
     this.addRepaintBoundaries = true,
     this.usePrototypeItem = false,
+    this.narrowSpacing = false,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -478,8 +483,12 @@ class TreeView extends StatefulWidget {
   /// item to be the same size as the first item in the tree view.
   final bool usePrototypeItem;
 
+  /// Whether or not to have narrow spacing between the contents of each item.
+  /// The default value is `false`.
+  final bool narrowSpacing;
+
   @override
-  _TreeViewState createState() => _TreeViewState();
+  State<TreeView> createState() => _TreeViewState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -543,6 +552,7 @@ class _TreeViewState extends State<TreeView>
             ? _TreeViewItem(
                 item: items.first,
                 selectionMode: widget.selectionMode,
+                narrowSpacing: widget.narrowSpacing,
                 onInvoked: () {},
                 onSelect: () {},
                 onSecondaryTap: (details) {},
@@ -558,6 +568,7 @@ class _TreeViewState extends State<TreeView>
             key: item.key ?? ValueKey<TreeViewItem>(item),
             item: item,
             selectionMode: widget.selectionMode,
+            narrowSpacing: widget.narrowSpacing,
             onSecondaryTap: (details) {
               if (widget.onSecondaryTap != null) {
                 widget.onSecondaryTap!(item, details.globalPosition);
@@ -644,6 +655,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.onExpandToggle,
     required this.onInvoked,
     required this.loadingWidgetFallback,
+    required this.narrowSpacing,
   }) : super(key: key);
 
   final TreeViewItem item;
@@ -653,6 +665,7 @@ class _TreeViewItem extends StatelessWidget {
   final VoidCallback onExpandToggle;
   final VoidCallback onInvoked;
   final Widget loadingWidgetFallback;
+  final bool narrowSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -688,12 +701,21 @@ class _TreeViewItem extends StatelessWidget {
           return FocusBorder(
             focused: states.isFocused,
             child: Stack(children: [
+              // Indentation and selection indicator for single selection mode.
               Container(
                 height: selectionMode == TreeViewSelectionMode.multiple
                     ? 28.0
                     : 26.0,
                 padding: EdgeInsetsDirectional.only(
-                  start: 12.0 + item.depth * _whiteSpace,
+                  start: selectionMode == TreeViewSelectionMode.multiple
+                      ? !narrowSpacing
+                          ? item.depth * _whiteSpace * 3
+                          // The extra 4 pixels are added as the checkbox's
+                          // width is not a multiple of 8.
+                          : item.depth * (_whiteSpace * 2 + 4)
+                      : !narrowSpacing
+                          ? item.depth * _whiteSpace * 2
+                          : item.depth * _whiteSpace,
                 ),
                 decoration: BoxDecoration(
                   color: item.backgroundColor?.resolve(states) ??
@@ -716,9 +738,12 @@ class _TreeViewItem extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Checkbox for multi selection mode
                     if (selectionMode == TreeViewSelectionMode.multiple)
                       Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 20.0),
+                        padding: EdgeInsetsDirectional.only(
+                          end: narrowSpacing ? 0.0 : _whiteSpace,
+                        ),
                         child: Checkbox(
                           checked: item.selected,
                           onChanged: (value) {
@@ -727,6 +752,8 @@ class _TreeViewItem extends StatelessWidget {
                           },
                         ),
                       ),
+
+                    // Expand icon with hitbox
                     if (item.isExpandable)
                       if (item.loading)
                         item.loadingWidget ?? loadingWidgetFallback
@@ -734,43 +761,60 @@ class _TreeViewItem extends StatelessWidget {
                         GestureDetector(
                           behavior: HitTestBehavior.deferToChild,
                           onTap: onExpandToggle,
-                          child: Icon(
-                            item.expanded
-                                ? FluentIcons.chevron_down
-                                : direction == TextDirection.ltr
-                                    ? FluentIcons.chevron_right
-                                    : FluentIcons.chevron_left,
-                            size: 8.0,
-                            color: Colors.grey[80],
+                          child: Container(
+                            // The hitbox for the chevron is three times the
+                            // chevron's (max) width.
+                            width: 24,
+                            // The hitbox fills the available height.
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Icon(
+                              item.expanded
+                                  ? FluentIcons.chevron_down
+                                  : direction == TextDirection.ltr
+                                      ? FluentIcons.chevron_right
+                                      : FluentIcons.chevron_left,
+                              size: 8.0,
+                              color: Colors.grey[80],
+                            ),
                           ),
                         )
-                    else if (item._anyExpandableSiblings)
-                      // if some child items are expandable and others are not,
-                      // make sure that they line up vertically the same for the
-                      // same depth
+                    else
+                      // Add padding to make all items of the same depth level
+                      // have the same indentation, regardless whether or not
+                      // they are expandable.
                       const Padding(
-                          padding: EdgeInsetsDirectional.only(start: 8.0)),
+                          padding: EdgeInsetsDirectional.only(start: 24.0)),
+
+                    // Leading icon
                     if (item.leading != null)
                       Container(
-                        margin: const EdgeInsetsDirectional.only(start: 18.0),
+                        margin: EdgeInsetsDirectional.only(
+                          start: narrowSpacing ? 0 : _whiteSpace,
+                          end: narrowSpacing ? _whiteSpace : 2 * _whiteSpace,
+                        ),
                         width: 20.0,
                         child: IconTheme.merge(
                           data: const IconThemeData(size: 20.0),
                           child: item.leading!,
                         ),
-                      ),
+                      )
+                    else if (!narrowSpacing)
+                      const SizedBox(width: _whiteSpace),
+
+                    // Item content
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.only(start: 18.0),
-                        child: DefaultTextStyle(
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            color: theme.typography.body!.color!.withOpacity(
-                              states.isPressing ? 0.7 : 1.0,
-                            ),
+                      child: DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: theme.typography.body!.color!.withOpacity(
+                            states.isPressing ? 0.7 : 1.0,
                           ),
-                          child: item.content,
                         ),
+                        child: item.content,
                       ),
                     ),
                   ],
