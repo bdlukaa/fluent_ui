@@ -649,6 +649,7 @@ class _TextBoxState extends State<TextBox>
             : TextEditingValue(text: widget.initialValue!),
       );
     }
+    _effectiveFocusNode.canRequestFocus = enabled;
     _effectiveFocusNode.addListener(_handleFocusChanged);
   }
 
@@ -657,6 +658,12 @@ class _TextBoxState extends State<TextBox>
       _effectiveFocusNode.nextFocus();
     }
     setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _effectiveFocusNode.canRequestFocus = enabled;
   }
 
   @override
@@ -674,6 +681,8 @@ class _TextBoxState extends State<TextBox>
     if (wasEnabled && !isEnabled) {
       _effectiveFocusNode.unfocus();
     }
+
+    _effectiveFocusNode.canRequestFocus = enabled;
   }
 
   @override
