@@ -23,8 +23,6 @@ const double _kDefaultAppBarHeight = 50.0;
 ///
 /// See also:
 ///
-///   * [NavigationBody], a widget that implement fluent transitions into
-///     [NavigationView]
 ///   * [NavigationPane], the pane used by [NavigationView], that can be
 ///     displayed either at the left and top
 ///   * [TabView], a widget similar to [NavigationView], useful to display
@@ -36,37 +34,53 @@ class NavigationView extends StatefulWidget {
     Key? key,
     this.appBar,
     this.pane,
-    this.content = const SizedBox.shrink(),
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
     this.onOpenSearch,
+    this.transitionBuilder,
   }) : super(key: key);
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
 
   /// The navigation pane, that can be displayed either on the
-  /// left, on the top, or above [content].
+  /// left, on the top, or above the body.
   final NavigationPane? pane;
-
-  /// The content of the pane.
-  ///
-  /// Usually an [NavigationBody].
-  final Widget content;
 
   /// {@macro flutter.rendering.ClipRectLayer.clipBehavior}
   ///
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
 
-  /// How the content should be clipped
+  /// How the body content should be clipped
   ///
-  /// The content is not clipped on when [PaneDisplayMode.displayMode]
-  /// is [PaneDisplayMode.minimal]
+  /// The body content is not clipped on when the display mode is [PaneDisplayMode.minimal]
   final ShapeBorder? contentShape;
 
   /// Called when the search button is tapped
   final VoidCallback? onOpenSearch;
+
+  /// The transition builder.
+  ///
+  /// It can be detect the display mode of the parent [NavigationView], if any,
+  /// and change the transition accordingly. By default, if the display mode is
+  /// top, [HorizontalSlidePageTransition] is used, otherwise
+  /// [EntrancePageTransition] is used.
+  ///
+  /// ```dart
+  /// transitionBuilder: (child, animation) {
+  ///   return DrillInPageTransition(child: child, animation: animation);
+  /// },
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///  * [EntrancePageTransition], used by default
+  ///  * [HorizontalSlidePageTransition], used by default on top navigation
+  ///  * [DrillInPageTransition], used when users navigate deeper into an app
+  ///  * [SuppressPageTransition], to have no animation at all
+  ///  * <https://docs.microsoft.com/en-us/windows/apps/design/motion/page-transitions>
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
   static NavigationViewState of(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>()!;
@@ -97,7 +111,7 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// It's also used to display and control the [Scrollbar] introduced
   /// by the panes.
-  late ScrollController scrollController;
+  late ScrollController paneScrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
@@ -107,13 +121,10 @@ class NavigationViewState extends State<NavigationView> {
 
   final Map<int, GlobalKey> _itemKeys = {};
 
-  /// The overlay entry used for minimal pane
-  OverlayEntry? minimalOverlayEntry;
-
   bool _minimalPaneOpen = false;
   late bool _compactOverlayOpen;
 
-  int oldIndex = 0;
+  int _oldIndex = 0;
 
   PaneDisplayMode? _autoDisplayMode;
 
@@ -130,15 +141,14 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    scrollController = ScrollController(
-      debugLabel: '${widget.runtimeType} scroll controller',
-      keepScrollOffset: true,
-    );
-    scrollController.addListener(() {
-      if (mounted) setState(() {});
-    });
+    paneScrollController = widget.pane?.scrollController ??
+        ScrollController(
+          debugLabel: '${widget.runtimeType} scroll controller',
+          keepScrollOffset: true,
+        );
+    paneScrollController.addListener(_handleScrollControllerEvent);
 
-    generateKeys();
+    _generateKeys();
 
     _compactOverlayOpen = PageStorage.of(context)?.readState(
           context,
@@ -147,26 +157,31 @@ class NavigationViewState extends State<NavigationView> {
         false;
   }
 
+  void _handleScrollControllerEvent() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void didUpdateWidget(NavigationView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.pane?.scrollController != scrollController) {
-      scrollController = widget.pane?.scrollController ?? scrollController;
+    if (widget.pane?.scrollController != paneScrollController) {
+      paneScrollController =
+          widget.pane?.scrollController ?? paneScrollController;
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
-      oldIndex = oldWidget.pane?.selected ?? -1;
+      _oldIndex = oldWidget.pane?.selected ?? -1;
     }
 
     if (oldWidget.pane?.effectiveItems.length !=
         widget.pane?.effectiveItems.length) {
       if (widget.pane?.effectiveItems.length != null) {
-        generateKeys();
+        _generateKeys();
       }
     }
   }
 
-  void generateKeys() {
+  void _generateKeys() {
     if (widget.pane == null) return;
     _itemKeys
       ..clear()
@@ -183,7 +198,12 @@ class NavigationViewState extends State<NavigationView> {
 
   @override
   void dispose() {
-    scrollController.dispose();
+    // If the controller was created locally, dispose it
+    if (widget.pane?.scrollController == null) {
+      paneScrollController.dispose();
+    } else {
+      paneScrollController.removeListener(_handleScrollControllerEvent);
+    }
     super.dispose();
   }
 
@@ -191,15 +211,17 @@ class NavigationViewState extends State<NavigationView> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
-    assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasDirectionality(context));
 
     final Brightness brightness = FluentTheme.of(context).brightness;
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final localizations = FluentLocalizations.of(context);
-    final appBarPadding =
-        EdgeInsets.only(top: widget.appBar?.finalHeight(context) ?? 0.0);
-    final direction = Directionality.of(context);
+    final FluentLocalizations localizations = FluentLocalizations.of(context);
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
+      top: widget.appBar?.finalHeight(context) ?? 0.0,
+    );
+    final TextDirection direction = Directionality.of(context);
 
     Color? overlayBackgroundColor() {
       if (theme.backgroundColor == null) {
@@ -229,7 +251,7 @@ class NavigationViewState extends State<NavigationView> {
         /// (641px to 1007px).
         /// - Only a menu button (minimal) on small window widths (640px or less).
         double width = consts.biggest.width;
-        if (width.isInfinite) width = MediaQuery.of(context).size.width;
+        if (width.isInfinite) width = mediaQuery.size.width;
 
         if (width <= 640) {
           _autoDisplayMode = PaneDisplayMode.minimal;
@@ -253,6 +275,7 @@ class NavigationViewState extends State<NavigationView> {
                   : localizations.closeNavigationTooltip,
             ),
             icon: const Icon(FluentIcons.global_nav_button),
+            body: const SizedBox.shrink(),
           ).build(
             context,
             false,
@@ -278,6 +301,13 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
+        final body = _NavigationBody(
+          itemKey: ValueKey(pane.selected ?? -1),
+          transitionBuilder: widget.transitionBuilder,
+          child: pane.selected != null
+              ? pane.selectedItem.body
+              : const SizedBox.shrink(),
+        );
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
             return PaneScrollConfiguration(
@@ -285,10 +315,10 @@ class NavigationViewState extends State<NavigationView> {
                 context,
                 NavigationPaneWidgetData(
                   appBar: appBar,
-                  content: ClipRect(child: widget.content),
+                  content: ClipRect(child: body),
                   listKey: _listKey,
                   paneKey: _panelKey,
-                  scrollController: scrollController,
+                  scrollController: paneScrollController,
                   pane: pane,
                 ),
               ),
@@ -310,14 +340,14 @@ class NavigationViewState extends State<NavigationView> {
           final Widget content = ClipRect(
             key: _contentKey,
             child: displayMode == PaneDisplayMode.minimal
-                ? widget.content
+                ? body
                 : DecoratedBox(
                     position: DecorationPosition.foreground,
                     decoration: ShapeDecoration(shape: contentShape),
                     child: ClipPath(
                       clipBehavior: widget.clipBehavior,
                       clipper: ShapeBorderClipper(shape: contentShape),
-                      child: widget.content,
+                      child: body,
                     ),
                   ),
           );
@@ -523,7 +553,7 @@ class NavigationViewState extends State<NavigationView> {
                   curve: theme.animationCurve ?? Curves.linear,
                   start: _minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
                   width: kOpenNavigationPaneWidth,
-                  height: MediaQuery.of(context).size.height,
+                  height: mediaQuery.size.height,
                   child: PaneScrollConfiguration(
                     child: ColoredBox(
                       color: Colors.black,
@@ -564,7 +594,7 @@ class NavigationViewState extends State<NavigationView> {
       } else {
         paneResult = Column(children: [
           appBar,
-          Expanded(child: widget.content),
+          // Expanded(child: widget.content),
         ]);
       }
       return Mica(
@@ -573,7 +603,7 @@ class NavigationViewState extends State<NavigationView> {
           displayMode: _compactOverlayOpen ? PaneDisplayMode.open : displayMode,
           minimalPaneOpen: _minimalPaneOpen,
           pane: widget.pane,
-          oldIndex: oldIndex,
+          oldIndex: _oldIndex,
           child: PaneItemKeys(keys: _itemKeys, child: paneResult),
         ),
       );
@@ -582,13 +612,15 @@ class NavigationViewState extends State<NavigationView> {
 
   // ignore: non_constant_identifier_names
   Widget PaneScrollConfiguration({required Widget child}) {
-    return PrimaryScrollController(
-      controller: scrollController,
-      child: ScrollConfiguration(
-        behavior: const NavigationViewScrollBehavior(),
-        child: child,
-      ),
-    );
+    return Builder(builder: (context) {
+      return PrimaryScrollController(
+        controller: paneScrollController,
+        child: ScrollConfiguration(
+          behavior: const NavigationViewScrollBehavior(),
+          child: child,
+        ),
+      );
+    });
   }
 }
 
@@ -692,6 +724,7 @@ class NavigationAppBar with Diagnosticable {
             builder: (context) => PaneItem(
               icon: const Icon(FluentIcons.back, size: 14.0),
               title: Text(localizations.backButtonTooltip),
+              body: const SizedBox.shrink(),
             ).build(
               context,
               false,
@@ -711,7 +744,6 @@ class NavigationAppBar with Diagnosticable {
   double finalHeight(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final mediaQuery = MediaQuery.of(context);
-
     final topPadding = mediaQuery.viewPadding.top;
 
     return height + topPadding;

@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_initializing_formals
 part of 'view.dart';
 
 /// A helper widget that implements fluent page transitions into
@@ -7,50 +6,25 @@ part of 'view.dart';
 /// See also:
 ///   * [NavigationView], used alongside this to navigate through pages
 ///   * [NavigationAppBar], the app top bar
-class NavigationBody extends StatefulWidget {
+class _NavigationBody extends StatefulWidget {
   /// Creates a navigation body.
   ///
   /// [index] must be greater than 0 and less than [children.length]
-  const NavigationBody({
-    Key? key,
-    required this.index,
-    required List<Widget> children,
+  const _NavigationBody({
+    // ignore: unused_element
+    super.key,
+    required this.itemKey,
+    required this.child,
     this.transitionBuilder,
+    // ignore: unused_element
     this.animationCurve,
+    // ignore: unused_element
     this.animationDuration,
-  })  : assert(index >= 0),
-        children = children,
-        itemBuilder = null,
-        itemCount = null,
-        super(key: key);
+  });
 
-  /// Creates a navigation body that uses a builder to supply child pages
-  ///
-  /// [index] must be greater than 0 and less than [itemCount] if it is provided
-  const NavigationBody.builder({
-    Key? key,
-    required this.index,
-    required IndexedWidgetBuilder itemBuilder,
-    this.itemCount,
-    this.transitionBuilder,
-    this.animationCurve,
-    this.animationDuration,
-  })  : assert(index >= 0 && (itemCount == null || index <= itemCount)),
-        itemBuilder = itemBuilder,
-        children = null,
-        super(key: key);
+  final ValueKey<int>? itemKey;
 
-  /// The pages this body can have
-  final List<Widget>? children;
-
-  /// The builder that will be used to build the pages
-  final IndexedWidgetBuilder? itemBuilder;
-
-  /// Optional number of items to assume builder can create.
-  final int? itemCount;
-
-  /// The current page index.
-  final int index;
+  final Widget child;
 
   /// The transition builder.
   ///
@@ -60,11 +34,9 @@ class NavigationBody extends StatefulWidget {
   /// [EntrancePageTransition] is used.
   ///
   /// ```dart
-  /// NavigationBody(
-  ///   transitionBuilder: (child, animation) {
-  ///     return DrillInPageTransition(child: child, animation: animation);
-  ///   },
-  /// ),
+  /// transitionBuilder: (child, animation) {
+  ///   return DrillInPageTransition(child: child, animation: animation);
+  /// },
   /// ```
   ///
   /// See also:
@@ -94,7 +66,6 @@ class NavigationBody extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IntProperty('index', index))
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
       ..add(
         DiagnosticsProperty<Duration>('animationDuration', animationDuration),
@@ -102,24 +73,10 @@ class NavigationBody extends StatefulWidget {
   }
 
   @override
-  State<NavigationBody> createState() => _NavigationBodyState();
+  State<_NavigationBody> createState() => _NavigationBodyState();
 }
 
-class _NavigationBodyState extends State<NavigationBody> {
-  late int previousIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    previousIndex = widget.index;
-  }
-
-  @override
-  void didUpdateWidget(NavigationBody oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    previousIndex = oldWidget.index;
-  }
-
+class _NavigationBodyState extends State<_NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -165,11 +122,8 @@ class _NavigationBodyState extends State<NavigationBody> {
           );
         },
         child: FocusTraversalGroup(
-          child: SizedBox(
-            key: ValueKey<int>(widget.index),
-            child: widget.itemBuilder?.call(context, widget.index) ??
-                widget.children![widget.index],
-          ),
+          key: widget.itemKey,
+          child: widget.child,
         ),
       ),
     );
@@ -182,7 +136,6 @@ class _NavigationBodyState extends State<NavigationBody> {
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-///  * [NavigationBody], which is used to display the content on the view
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({

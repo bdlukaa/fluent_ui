@@ -279,6 +279,7 @@ class NavigationPane with Diagnosticable {
       child: PaneItem(
         title: itemTitle,
         icon: const Icon(FluentIcons.global_nav_button),
+        body: const SizedBox.shrink(),
       ).build(
         context,
         false,
@@ -685,7 +686,10 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                   }).toList(),
                 ),
               ),
-              child: PaneItem(icon: const Icon(FluentIcons.more)).build(
+              child: PaneItem(
+                icon: const Icon(FluentIcons.more),
+                body: const SizedBox.shrink(),
+              ).build(
                 context,
                 false,
                 overflowController.open,
@@ -1065,6 +1069,7 @@ class _CompactNavigationPane extends StatelessWidget {
               child: PaneItem(
                 title: Text(FluentLocalizations.of(context).clickToSearch),
                 icon: pane.autoSuggestBoxReplacement!,
+                body: const SizedBox.shrink(),
               ).build(
                 context,
                 false,

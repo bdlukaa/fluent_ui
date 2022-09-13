@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 /// for the incoming content. Use page refresh when the user is taken to the top
 /// of a navigational stack, such as navigating between tabs or left-nav items.
 ///
-/// This animation is used by default by [NavigationBody].
-///
 /// ![EntrancePageTransition showcase](https://docs.microsoft.com/en-us/windows/apps/design/motion/images/page-refresh.gif)
 class EntrancePageTransition extends StatelessWidget {
   /// Creates an entrance page transition
@@ -118,9 +116,6 @@ class DrillInPageTransition extends StatelessWidget {
 }
 
 /// Use horizontal slide to show that sibling pages appear next to each other.
-/// [NavigationBody] automatically uses this animation for top nav, but if you
-/// are building your own horizontal navigation experience, then you can
-/// implement horizontal slide with [HorizontalSlidePageTransition].
 class HorizontalSlidePageTransition extends StatelessWidget {
   /// Creates a horizontal slide page transition.
   const HorizontalSlidePageTransition({

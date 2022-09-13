@@ -24,6 +24,7 @@ class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
     required this.icon,
+    required this.body,
     this.title,
     this.trailing,
     this.infoBadge,
@@ -62,6 +63,9 @@ class PaneItem extends NavigationPaneItem {
   ///
   /// Usually an [Icon] widget
   final Widget? trailing;
+
+  /// The body of the view attached to this tab
+  final Widget body;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -338,6 +342,7 @@ class PaneItem extends NavigationPaneItem {
     Widget? icon,
     Widget? infoBadge,
     Widget? trailing,
+    Widget? body,
     FocusNode? focusNode,
     bool? autofocus,
     MouseCursor? mouseCursor,
@@ -349,6 +354,7 @@ class PaneItem extends NavigationPaneItem {
       icon: icon ?? this.icon,
       infoBadge: infoBadge ?? this.infoBadge,
       trailing: trailing ?? this.trailing,
+      body: body ?? this.body,
       focusNode: focusNode ?? this.focusNode,
       autofocus: autofocus ?? this.autofocus,
       mouseCursor: mouseCursor ?? this.mouseCursor,
@@ -459,19 +465,18 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
-    required Widget icon,
+    required super.icon,
+    required super.body,
     required this.onTap,
-    Widget? title,
-    Widget? infoBadge,
-    FocusNode? focusNode,
-    bool autofocus = false,
-  }) : super(
-          icon: icon,
-          title: title,
-          infoBadge: infoBadge,
-          focusNode: focusNode,
-          autofocus: autofocus,
-        );
+    super.title,
+    super.infoBadge,
+    super.focusNode,
+    super.autofocus = false,
+    super.mouseCursor,
+    super.selectedTileColor,
+    super.tileColor,
+    super.trailing,
+  });
 
   /// The function that will be executed when the item is clicked
   final VoidCallback onTap;
@@ -523,6 +528,7 @@ class PaneItemExpander extends PaneItem {
   PaneItemExpander({
     required super.icon,
     required this.items,
+    required super.body,
     super.title,
     super.infoBadge,
     super.trailing = kDefaultTrailing,

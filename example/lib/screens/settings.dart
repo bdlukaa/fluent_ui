@@ -78,6 +78,8 @@ List<WindowEffect> get currentWindowEffects {
 }
 
 class Settings extends ScrollablePage {
+  Settings({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('Settings'));

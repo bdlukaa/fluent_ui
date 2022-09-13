@@ -3,12 +3,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
 
-class NavigationViewPage extends ScrollablePage {
-  @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('NavigationView'));
-  }
+class NavigationViewPage extends StatefulWidget {
+  const NavigationViewPage({Key? key}) : super(key: key);
 
+  @override
+  State<NavigationViewPage> createState() => _NavigationViewPageState();
+}
+
+class _NavigationViewPageState extends State<NavigationViewPage>
+    with PageMixin {
   static const double itemHeight = 300.0;
 
   int topIndex = 0;
@@ -23,37 +26,40 @@ class NavigationViewPage extends ScrollablePage {
   ];
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const Text(
-        'The NavigationView control provides top-level navigation for your app. '
-        'It adapts to a variety of screen sizes and supports both top and left '
-        'navigation styles.',
-      ),
-      const SizedBox(height: 10.0),
-      ...buildDisplayMode(
-        PaneDisplayMode.top,
-        'Top display mode',
-        'The pane is positioned above the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.open,
-        'Open display mode',
-        'The pane is expanded and positioned to the left of the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.compact,
-        'Compact display mode',
-        'The pane shows only icons until opened and is positioned to the left '
-            'of the content. When opened, the pane overlays the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.minimal,
-        'Minimal display mode',
-        'Only the menu button is shown until the pane is opened. When opened, '
-            'the pane overlays the left side of the content.',
-      ),
-    ];
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('NavigationView')),
+      children: [
+        const Text(
+          'The NavigationView control provides top-level navigation for your app. '
+          'It adapts to a variety of screen sizes and supports both top and left '
+          'navigation styles.',
+        ),
+        const SizedBox(height: 10.0),
+        ...buildDisplayMode(
+          PaneDisplayMode.top,
+          'Top display mode',
+          'The pane is positioned above the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.open,
+          'Open display mode',
+          'The pane is expanded and positioned to the left of the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.compact,
+          'Compact display mode',
+          'The pane shows only icons until opened and is positioned to the left '
+              'of the content. When opened, the pane overlays the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.minimal,
+          'Minimal display mode',
+          'Only the menu button is shown until the pane is opened. When opened, '
+              'the pane overlays the left side of the content.',
+        ),
+      ],
+    );
   }
 
   List<Widget> buildDisplayMode(
@@ -107,23 +113,49 @@ class NavigationViewPage extends ScrollablePage {
                 PaneItem(
                   icon: const Icon(FluentIcons.home),
                   title: const Text('Home'),
+                  body: const _NavigationBodyItem(),
                 ),
                 PaneItem(
                   icon: const Icon(FluentIcons.issue_tracking),
                   title: const Text('Track orders'),
                   infoBadge: const InfoBadge(source: Text('8')),
+                  body: const _NavigationBodyItem(
+                    header: 'Badging',
+                    content: Text(
+                      'Badging is a non-intrusive and intuitive way to display '
+                      'notifications or bring focus to an area within an app - '
+                      'whether that be for notifications, indicating new content, '
+                      'or showing an alert. An InfoBadge is a small piece of UI '
+                      'that can be added into an app and customized to display a '
+                      'number, icon, or a simple dot.',
+                    ),
+                  ),
                 ),
                 PaneItemExpander(
                   icon: const Icon(FluentIcons.account_management),
                   title: const Text('Account'),
+                  body: const _NavigationBodyItem(
+                    header: 'PaneItemExpander',
+                    content: Text(
+                      'Some apps may have a more complex hierarchical structure '
+                      'that requires more than just a flat list of navigation '
+                      'items. You may want to use top-level navigation items to '
+                      'display categories of pages, with children items displaying '
+                      'specific pages. It is also useful if you have hub-style '
+                      'pages that only link to other pages. For these kinds of '
+                      'cases, you should create a hierarchical NavigationView.',
+                    ),
+                  ),
                   items: [
                     PaneItem(
                       icon: const Icon(FluentIcons.mail),
                       title: const Text('Mail'),
+                      body: const _NavigationBodyItem(),
                     ),
                     PaneItem(
                       icon: const Icon(FluentIcons.calendar),
                       title: const Text('Calendar'),
+                      body: const _NavigationBodyItem(),
                     ),
                   ],
                 ),
@@ -132,66 +164,35 @@ class NavigationViewPage extends ScrollablePage {
                 PaneItem(
                   icon: const Icon(FluentIcons.settings),
                   title: const Text('Settings'),
+                  body: const _NavigationBodyItem(),
                 ),
               ],
             ),
-            content: NavigationBody(
-              index: topIndex,
-              transitionBuilder: pageTransition == 'default'
-                  ? null
-                  : (child, animation) {
-                      switch (pageTransition) {
-                        case 'entrance':
-                          return EntrancePageTransition(
-                            child: child,
-                            animation: animation,
-                          );
-                        case 'drill in':
-                          return DrillInPageTransition(
-                            child: child,
-                            animation: animation,
-                          );
-                        case 'horizontal':
-                          return HorizontalSlidePageTransition(
-                            child: child,
-                            animation: animation,
-                          );
-                        default:
-                          throw UnsupportedError(
-                            '$pageTransition is not a supported transition',
-                          );
-                      }
-                    },
-              children: const [
-                _NavigationBodyItem(),
-                _NavigationBodyItem(
-                  header: 'Badging',
-                  content: Text(
-                    'Badging is a non-intrusive and intuitive way to display '
-                    'notifications or bring focus to an area within an app - '
-                    'whether that be for notifications, indicating new content, '
-                    'or showing an alert. An InfoBadge is a small piece of UI '
-                    'that can be added into an app and customized to display a '
-                    'number, icon, or a simple dot.',
-                  ),
-                ),
-                _NavigationBodyItem(
-                  header: 'PaneItemExpander',
-                  content: Text(
-                    'Some apps may have a more complex hierarchical structure '
-                    'that requires more than just a flat list of navigation '
-                    'items. You may want to use top-level navigation items to '
-                    'display categories of pages, with children items displaying '
-                    'specific pages. It is also useful if you have hub-style '
-                    'pages that only link to other pages. For these kinds of '
-                    'cases, you should create a hierarchical NavigationView.',
-                  ),
-                ),
-                _NavigationBodyItem(),
-                _NavigationBodyItem(),
-                _NavigationBodyItem(),
-              ],
-            ),
+            transitionBuilder: pageTransition == 'default'
+                ? null
+                : (child, animation) {
+                    switch (pageTransition) {
+                      case 'entrance':
+                        return EntrancePageTransition(
+                          child: child,
+                          animation: animation,
+                        );
+                      case 'drill in':
+                        return DrillInPageTransition(
+                          child: child,
+                          animation: animation,
+                        );
+                      case 'horizontal':
+                        return HorizontalSlidePageTransition(
+                          child: child,
+                          animation: animation,
+                        );
+                      default:
+                        throw UnsupportedError(
+                          '$pageTransition is not a supported transition',
+                        );
+                    }
+                  },
           ),
         ),
         codeSnippet: '''NavigationView(
@@ -206,37 +207,33 @@ class NavigationViewPage extends ScrollablePage {
       PaneItem(
         icon: const Icon(FluentIcons.home),
         title: const Text('Home'),
+        body: BodyItem(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.issue_tracking),
         title: const Text('Track an order'),
         infoBadge: const InfoBadge(source: Text('8')),
+        body: BodyItem(),
       ),
       PaneItemExpander(
         icon: const Icon(FluentIcons.account_management),
         title: const Text('Account'),
+        body: BodyItem(),
         items: [
           PaneItem(
             icon: const Icon(FluentIcons.mail),
             title: const Text('Mail'),
+            body: BodyItem(),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.calendar),
             title: const Text('Calendar'),
+            body: BodyItem(),
           ),
         ],
       ),
     ],
   ),
-  body: NavigationBody(
-    index: topIndex,
-    children: const [
-      BodyItem(),
-      BodyItem(),
-      BodyItem(),
-      BodyItem(),
-    ],
-  )
 )''',
       ),
     ];

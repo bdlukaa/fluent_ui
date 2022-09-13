@@ -2,60 +2,65 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class AutoSuggestBoxPage extends ScrollablePage {
+class AutoSuggestBoxPage extends StatefulWidget {
+  const AutoSuggestBoxPage({Key? key}) : super(key: key);
+
+  @override
+  State<AutoSuggestBoxPage> createState() => _AutoSuggestBoxPageState();
+}
+
+class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
+    with PageMixin {
   String? selectedCat;
   bool enabled = true;
 
   @override
-  Widget buildHeader(BuildContext context) {
-    return PageHeader(
-      title: const Text('AutoSuggestBox'),
-      commandBar: ToggleSwitch(
-        content: const Text('Disabled'),
-        checked: !enabled,
-        onChanged: (v) => setState(() => enabled = !v),
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: PageHeader(
+        title: const Text('AutoSuggestBox'),
+        commandBar: ToggleSwitch(
+          content: const Text('Disabled'),
+          checked: !enabled,
+          onChanged: (v) => setState(() => enabled = !v),
+        ),
       ),
-    );
-  }
-
-  @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const Text(
-        'A text control that makes suggestions to users as they type. The app '
-        'is notified when text has been changed by the user and is responsible '
-        'for providing relevant suggestions for this control to display.',
-      ),
-      subtitle(content: const Text('A basic AutoSuggestBox')),
-      CardHighlight(
-        child: Row(children: [
-          SizedBox(
-            width: 350.0,
-            child: AutoSuggestBox(
-              enabled: enabled,
-              items: cats
-                  .map<AutoSuggestBoxItem>(
-                    (cat) => AutoSuggestBoxItem(
-                      value: cat,
-                      onFocusChange: (focused) {
-                        if (focused) debugPrint('Focused $cat');
-                      },
-                    ),
-                  )
-                  .toList(),
-              onSelected: (item) {
-                setState(() => selectedCat = item.value);
-              },
+      children: [
+        const Text(
+          'A text control that makes suggestions to users as they type. The app '
+          'is notified when text has been changed by the user and is responsible '
+          'for providing relevant suggestions for this control to display.',
+        ),
+        subtitle(content: const Text('A basic AutoSuggestBox')),
+        CardHighlight(
+          child: Row(children: [
+            SizedBox(
+              width: 350.0,
+              child: AutoSuggestBox(
+                enabled: enabled,
+                items: cats
+                    .map<AutoSuggestBoxItem>(
+                      (cat) => AutoSuggestBoxItem(
+                        value: cat,
+                        onFocusChange: (focused) {
+                          if (focused) debugPrint('Focused $cat');
+                        },
+                      ),
+                    )
+                    .toList(),
+                onSelected: (item) {
+                  setState(() => selectedCat = item.value);
+                },
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(selectedCat ?? ''),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(selectedCat ?? ''),
+              ),
             ),
-          ),
-        ]),
-        codeSnippet: '''
+          ]),
+          codeSnippet: '''
 String? selectedCat;
 
 AutoSuggestBox(
@@ -79,8 +84,9 @@ const cats = <String>[
   'American Curl',
   ...
 ];''',
-      ),
-    ];
+        ),
+      ],
+    );
   }
 }
 

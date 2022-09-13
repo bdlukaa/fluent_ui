@@ -2,7 +2,53 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-- `TreeView` updated: 
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
+  Before:
+  ```dart
+  NavigationBody(
+    pane: NavigationPane(
+      items: [
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+      ],
+    ),
+    content: NavigationBody(
+      children: [
+        _Item1(),
+        _Item2(),
+        _Item3(),
+      ],
+    ),
+  ),
+  ```
+  
+  Now:
+  ```dart
+  NavigationBody(
+    ...
+    pane: NavigationPane(
+      items: [
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item1(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item2(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item3(),
+        ),
+      ],
+    ),
+  ),
+  ```
+
+  You can use `NavigationView.transitionsBuilder`
+- Fixes memory leaks on `NavigationView`
+- `TreeView` updates: 
   - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
   - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
   - You can now choose whether the items of a TreeView should use narrow or wide spacing. The examples shown in the Microsoft documentation use a wider spacing than the implementation used in the explorer of Windows 10/11.

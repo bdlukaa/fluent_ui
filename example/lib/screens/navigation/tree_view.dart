@@ -3,6 +3,8 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TreeViewPage extends ScrollablePage {
+  TreeViewPage({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('TreeView'));
