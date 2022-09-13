@@ -11,11 +11,14 @@ class _NavigationBody extends StatefulWidget {
   ///
   /// [index] must be greater than 0 and less than [children.length]
   const _NavigationBody({
+    // ignore: unused_element
     super.key,
     required this.itemKey,
     required this.child,
     this.transitionBuilder,
+    // ignore: unused_element
     this.animationCurve,
+    // ignore: unused_element
     this.animationDuration,
   });
 

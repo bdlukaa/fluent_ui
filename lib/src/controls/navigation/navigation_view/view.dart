@@ -111,7 +111,7 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// It's also used to display and control the [Scrollbar] introduced
   /// by the panes.
-  late final ScrollController paneScrollController;
+  late ScrollController paneScrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();

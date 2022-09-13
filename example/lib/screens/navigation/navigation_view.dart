@@ -3,14 +3,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
 
-class NavigationViewPage extends ScrollablePage {
-  NavigationViewPage({super.key});
+class NavigationViewPage extends StatefulWidget {
+  const NavigationViewPage({Key? key}) : super(key: key);
 
   @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('NavigationView'));
-  }
+  State<NavigationViewPage> createState() => _NavigationViewPageState();
+}
 
+class _NavigationViewPageState extends State<NavigationViewPage>
+    with PageMixin {
   static const double itemHeight = 300.0;
 
   int topIndex = 0;
@@ -25,37 +26,40 @@ class NavigationViewPage extends ScrollablePage {
   ];
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const Text(
-        'The NavigationView control provides top-level navigation for your app. '
-        'It adapts to a variety of screen sizes and supports both top and left '
-        'navigation styles.',
-      ),
-      const SizedBox(height: 10.0),
-      ...buildDisplayMode(
-        PaneDisplayMode.top,
-        'Top display mode',
-        'The pane is positioned above the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.open,
-        'Open display mode',
-        'The pane is expanded and positioned to the left of the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.compact,
-        'Compact display mode',
-        'The pane shows only icons until opened and is positioned to the left '
-            'of the content. When opened, the pane overlays the content.',
-      ),
-      ...buildDisplayMode(
-        PaneDisplayMode.minimal,
-        'Minimal display mode',
-        'Only the menu button is shown until the pane is opened. When opened, '
-            'the pane overlays the left side of the content.',
-      ),
-    ];
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('NavigationView')),
+      children: [
+        const Text(
+          'The NavigationView control provides top-level navigation for your app. '
+          'It adapts to a variety of screen sizes and supports both top and left '
+          'navigation styles.',
+        ),
+        const SizedBox(height: 10.0),
+        ...buildDisplayMode(
+          PaneDisplayMode.top,
+          'Top display mode',
+          'The pane is positioned above the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.open,
+          'Open display mode',
+          'The pane is expanded and positioned to the left of the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.compact,
+          'Compact display mode',
+          'The pane shows only icons until opened and is positioned to the left '
+              'of the content. When opened, the pane overlays the content.',
+        ),
+        ...buildDisplayMode(
+          PaneDisplayMode.minimal,
+          'Minimal display mode',
+          'Only the menu button is shown until the pane is opened. When opened, '
+              'the pane overlays the left side of the content.',
+        ),
+      ],
+    );
   }
 
   List<Widget> buildDisplayMode(

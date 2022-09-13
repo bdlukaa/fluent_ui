@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
-      body: HomePage(),
+      body: const HomePage(),
     ),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
@@ -162,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Checkbox'),
       body: DeferredWidget(
         inputs.loadLibrary,
-        () => inputs.CheckboxPage(),
+        () => inputs.CheckBoxPage(),
       ),
     ),
     PaneItem(
@@ -203,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('ComboBox'),
       body: DeferredWidget(
         forms.loadLibrary,
-        () => forms.ComboboxPage(),
+        () => forms.ComboBoxPage(),
       ),
     ),
     PaneItem(
@@ -285,7 +285,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('InfoBar'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.InfoBarPage(),
+        () => surfaces.InfoBarsPage(),
       ),
     ),
     PaneItem(
@@ -301,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Tiles'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.TilePage(),
+        () => surfaces.TilesPage(),
       ),
     ),
     PaneItem(

@@ -2,12 +2,14 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:example/widgets/page.dart';
 
-class TilePage extends ScrollablePage {
-  @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('Tiles'));
-  }
+class TilesPage extends StatefulWidget {
+  const TilesPage({Key? key}) : super(key: key);
 
+  @override
+  State<TilesPage> createState() => _TilesPageState();
+}
+
+class _TilesPageState extends State<TilesPage> with PageMixin {
   final shuffledIcons = FluentIcons.allIcons.values.toList()..shuffle();
 
   // first
@@ -23,41 +25,43 @@ class TilePage extends ScrollablePage {
   final thirdController = ScrollController();
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return [
-      description(
-        content: const Text(
-          'A fluent-styled list tile. Usually used inside a ListView',
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('Tiles')),
+      children: [
+        description(
+          content: const Text(
+            'A fluent-styled list tile. Usually used inside a ListView',
+          ),
         ),
-      ),
-      subtitle(content: const Text('Basic ListView with selectable tiles')),
-      CardHighlight(
-        child: Container(
-          height: 400,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.resources.surfaceStrokeColorDefault,
+        subtitle(content: const Text('Basic ListView with selectable tiles')),
+        CardHighlight(
+          child: Container(
+            height: 400,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.surfaceStrokeColorDefault,
+              ),
+            ),
+            child: ListView.builder(
+              controller: firstController,
+              shrinkWrap: true,
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return ListTile.selectable(
+                  title: Text(contact),
+                  selected: firstSelected == contact,
+                  onSelectionChange: (v) {
+                    setState(() => firstSelected = contact);
+                  },
+                );
+              },
             ),
           ),
-          child: ListView.builder(
-            controller: firstController,
-            shrinkWrap: true,
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return ListTile.selectable(
-                title: Text(contact),
-                selected: firstSelected == contact,
-                onSelectionChange: (v) {
-                  setState(() => firstSelected = contact);
-                },
-              );
-            },
-          ),
-        ),
-        codeSnippet: '''String selectedContact = '';
+          codeSnippet: '''String selectedContact = '';
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -72,48 +76,48 @@ ListView.builder(
     );
   } 
 ),''',
-      ),
-      subtitle(
-        content: const Text('ListViewItems with many properties applied'),
-      ),
-      CardHighlight(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: 400,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: theme.resources.surfaceStrokeColorDefault,
+        ),
+        subtitle(
+          content: const Text('ListViewItems with many properties applied'),
+        ),
+        CardHighlight(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              height: 400,
+              width: 350,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: theme.resources.surfaceStrokeColorDefault,
+                ),
+              ),
+              child: ListView.builder(
+                controller: secondController,
+                shrinkWrap: true,
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  final contact = contacts[index];
+                  return ListTile.selectable(
+                    leading: const CircleAvatar(radius: 15.0),
+                    title: Text(contact),
+                    subtitle: const Text('With a custom subtitle'),
+                    trailing: Icon(shuffledIcons[index]),
+                    selectionMode: ListTileSelectionMode.multiple,
+                    selected: selected.contains(contact),
+                    onSelectionChange: (selected) {
+                      setState(() {
+                        if (selected) {
+                          this.selected.add(contact);
+                        } else {
+                          this.selected.remove(contact);
+                        }
+                      });
+                    },
+                  );
+                },
               ),
             ),
-            child: ListView.builder(
-              controller: secondController,
-              shrinkWrap: true,
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                final contact = contacts[index];
-                return ListTile.selectable(
-                  leading: const CircleAvatar(radius: 15.0),
-                  title: Text(contact),
-                  subtitle: const Text('With a custom subtitle'),
-                  trailing: Icon(shuffledIcons[index]),
-                  selectionMode: ListTileSelectionMode.multiple,
-                  selected: selected.contains(contact),
-                  onSelectionChange: (selected) {
-                    setState(() {
-                      if (selected) {
-                        this.selected.add(contact);
-                      } else {
-                        this.selected.remove(contact);
-                      }
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-        ]),
-        codeSnippet: '''List<String> selectedContacts = [];
+          ]),
+          codeSnippet: '''List<String> selectedContacts = [];
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -137,54 +141,54 @@ ListView.builder(
     );
   } 
 ),''',
-      ),
-      subtitle(
-        content: const Text('ListViewItems with images'),
-      ),
-      CardHighlight(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: 400,
-            width: 550,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: theme.resources.surfaceStrokeColorDefault,
+        ),
+        subtitle(
+          content: const Text('ListViewItems with images'),
+        ),
+        CardHighlight(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              height: 400,
+              width: 550,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: theme.resources.surfaceStrokeColorDefault,
+                ),
               ),
-            ),
-            child: ListView.builder(
-              controller: thirdController,
-              shrinkWrap: true,
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                final contact = contacts[index];
-                return ListTile.selectable(
-                  leading: SizedBox(
-                    height: 100,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: ColoredBox(
-                        color: Colors.accentColors[index ~/ 20],
-                        child: const Placeholder(),
+              child: ListView.builder(
+                controller: thirdController,
+                shrinkWrap: true,
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  final contact = contacts[index];
+                  return ListTile.selectable(
+                    leading: SizedBox(
+                      height: 100,
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: ColoredBox(
+                          color: Colors.accentColors[index ~/ 20],
+                          child: const Placeholder(),
+                        ),
                       ),
                     ),
-                  ),
-                  title: Text(contact),
-                  subtitle: const Text('With a custom subtitle'),
-                  selectionMode: ListTileSelectionMode.single,
-                  selected: thirdSelected == contact,
-                  onSelectionChange: (selected) {
-                    setState(() {
-                      if (selected) {
-                        thirdSelected = contact;
-                      }
-                    });
-                  },
-                );
-              },
+                    title: Text(contact),
+                    subtitle: const Text('With a custom subtitle'),
+                    selectionMode: ListTileSelectionMode.single,
+                    selected: thirdSelected == contact,
+                    onSelectionChange: (selected) {
+                      setState(() {
+                        if (selected) {
+                          thirdSelected = contact;
+                        }
+                      });
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ]),
-        codeSnippet: '''String selectedContact = '';
+          ]),
+          codeSnippet: '''String selectedContact = '';
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -211,8 +215,9 @@ ListView.builder(
     );
   } 
 ),''',
-      ),
-    ];
+        ),
+      ],
+    );
   }
 }
 

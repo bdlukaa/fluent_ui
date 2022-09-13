@@ -2,35 +2,39 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class ContentDialogPage extends ScrollablePage {
-  @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('ContentDialog'));
-  }
+class ContentDialogPage extends StatefulWidget {
+  const ContentDialogPage({Key? key}) : super(key: key);
 
+  @override
+  State<ContentDialogPage> createState() => _ContentDialogPageState();
+}
+
+class _ContentDialogPageState extends State<ContentDialogPage> with PageMixin {
   String? result = '';
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const Text(
-        'Dialog controls are modal UI overlays that provide contextual app '
-        'information. They block interactions with the app window until being '
-        'explicitly dismissed. They often request some kind of action from the '
-        'user.',
-      ),
-      subtitle(content: const Text('A basic content dialog with content')),
-      CardHighlight(
-        child: Row(children: [
-          Button(
-            child: const Text('Show dialog'),
-            onPressed: () => showContentDialog(context),
-          ),
-          const SizedBox(width: 10.0),
-          Text(result ?? ''),
-          const Spacer(),
-        ]),
-        codeSnippet: '''Button(
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('ContentDialog')),
+      children: [
+        const Text(
+          'Dialog controls are modal UI overlays that provide contextual app '
+          'information. They block interactions with the app window until being '
+          'explicitly dismissed. They often request some kind of action from the '
+          'user.',
+        ),
+        subtitle(content: const Text('A basic content dialog with content')),
+        CardHighlight(
+          child: Row(children: [
+            Button(
+              child: const Text('Show dialog'),
+              onPressed: () => showContentDialog(context),
+            ),
+            const SizedBox(width: 10.0),
+            Text(result ?? ''),
+            const Spacer(),
+          ]),
+          codeSnippet: '''Button(
   child: const Text('Show dialog'),
   onPressed: () => showContentDialog(context),
 ),
@@ -60,8 +64,9 @@ void showContentDialog(BuildContext context) async {
   );
   setState(() {});
 }''',
-      ),
-    ];
+        ),
+      ],
+    );
   }
 
   void showContentDialog(BuildContext context) async {

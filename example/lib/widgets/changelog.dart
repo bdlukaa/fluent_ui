@@ -81,7 +81,7 @@ class _ChangelogState extends State<Changelog> {
                 return line;
               }).join('\n'),
               onTapLink: (text, href, title) {
-                launch(href!);
+                launchUrl(Uri.parse(href!));
               },
               styleSheet: flutter_markdown.MarkdownStyleSheet.fromTheme(
                 m.Theme.of(context),
