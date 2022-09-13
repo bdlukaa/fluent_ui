@@ -100,13 +100,13 @@ class Expander extends StatefulWidget {
   /// open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
 
-  /// The background color of the header.
-  final ButtonState<Color>? headerBackgroundColor;
-
   /// The minimum height of the header.
   ///
   /// Defaults to 48.0
   final double minHeight;
+
+  /// The background color of the header.
+  final ButtonState<Color>? headerBackgroundColor;
 
   /// The content color of the header
   final Color? contentBackgroundColor;
