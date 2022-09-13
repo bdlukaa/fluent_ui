@@ -1,6 +1,6 @@
 Date format: DD/MM/YYYY
 ## [next]
-- **BREAKING** `Expander` header height is now dynamically calculated. Removed `Expander.headerHeight`
+- **BREAKING** `Expander` header height is now dynamically calculated. Replaced `Expander.headerHeight` with `Expander.minHeight`. Added padding to `Expander` header top and bottom.
 
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]

@@ -103,7 +103,7 @@ class Expander extends StatefulWidget {
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
 
-  /// The height of the header.
+  /// The minimum height of the header.
   ///
   /// Defaults to 48.0
   final double minHeight;
@@ -213,7 +213,11 @@ class ExpanderState extends State<Expander>
                     ),
                   ),
             ),
-            padding: const EdgeInsetsDirectional.only(start: 16.0),
+            padding: const EdgeInsetsDirectional.only(
+              start: 16.0,
+              top: 16.0,
+              bottom: 16.0,
+            ),
             alignment: AlignmentDirectional.centerStart,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (widget.leading != null)
