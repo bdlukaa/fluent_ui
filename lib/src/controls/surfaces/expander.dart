@@ -42,6 +42,7 @@ class Expander extends StatefulWidget {
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
+    this.minHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
     this.headerShape,
@@ -101,6 +102,11 @@ class Expander extends StatefulWidget {
 
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
+
+  /// The height of the header.
+  ///
+  /// Defaults to 48.0
+  final double minHeight;
 
   /// The content color of the header
   final Color? contentBackgroundColor;
@@ -192,7 +198,7 @@ class ExpanderState extends State<Expander>
         onPressed: _handlePressed,
         builder: (context, states) {
           return Container(
-            constraints: const BoxConstraints(minHeight: 48),
+            constraints: BoxConstraints(minHeight: widget.minHeight),
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
