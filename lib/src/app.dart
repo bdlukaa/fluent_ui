@@ -67,7 +67,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = defaultSupportedLocales,
+    this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -105,7 +105,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = defaultSupportedLocales,
+    this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -374,7 +374,7 @@ class _FluentAppState extends State<FluentApp> {
     if (widget.localizationsDelegates != null) {
       yield* widget.localizationsDelegates!;
     }
-    yield DefaultFluentLocalizations.delegate;
+    yield FluentLocalizations.delegate;
     yield GlobalMaterialLocalizations.delegate;
     yield GlobalWidgetsLocalizations.delegate;
   }
