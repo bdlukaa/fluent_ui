@@ -1,7 +1,6 @@
 Date format: DD/MM/YYYY
-## Expander height determination 10/09/2022
-- Determine the height of Expander's header from the height of its children.
-- Removed headerHeight parameter
+## [next]
+- **BREAKING** `Expander` header height is now dynamically calculated. Removed `Expander.headerHeight`
 
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
