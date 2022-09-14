@@ -23,16 +23,17 @@ import 'fluent_localizations_pl.dart';
 import 'fluent_localizations_pt.dart';
 import 'fluent_localizations_ru.dart';
 import 'fluent_localizations_tr.dart';
+import 'fluent_localizations_vi.dart';
 import 'fluent_localizations_zh.dart';
 
-/// Callers can lookup localized strings with an instance of FluentLocalizations returned
-/// by `FluentLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of FluentLocalizations
+/// returned by `FluentLocalizations.of(context)`.
 ///
 /// Applications need to include `FluentLocalizations.delegate()` in their app's
-/// localizationDelegates list, and the locales they support in the app's
-/// supportedLocales list. For example:
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
 ///
-/// ```
+/// ```dart
 /// import 'generated/fluent_localizations.dart';
 ///
 /// return MaterialApp(
@@ -127,6 +128,7 @@ abstract class FluentLocalizations {
     Locale('pt'),
     Locale('ru'),
     Locale('tr'),
+    Locale('vi'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
   ];
@@ -348,6 +350,7 @@ class _FluentLocalizationsDelegate
         'pt',
         'ru',
         'tr',
+        'vi',
         'zh'
       ].contains(locale.languageCode);
 
@@ -406,6 +409,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsRu();
     case 'tr':
       return FluentLocalizationsTr();
+    case 'vi':
+      return FluentLocalizationsVi();
     case 'zh':
       return FluentLocalizationsZh();
   }
