@@ -2,10 +2,10 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)/[#531](https://github.com/bdlukaa/fluent_ui/pull/531)):  
   Before:
   ```dart
-  NavigationBody(
+  NavigationView(
     pane: NavigationPane(
       items: [
         PaneItem(icon: Icon(FluentIcons.add)),
@@ -23,9 +23,9 @@ Date format: DD/MM/YYYY
   ),
   ```
   
-  Now:
+  Now:  
   ```dart
-  NavigationBody(
+  NavigationView(
     ...
     pane: NavigationPane(
       items: [
@@ -45,6 +45,19 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
+  
+  Or if you didn't have panes, you can use the content like that:  
+  ```dart
+  NavigationView(
+    content: ScaffoldPage(
+      header: PageHeader(
+        title: titleRow,
+      ),
+      content: child,
+    ),
+  ),
+  ```
+  *Note: one attribute of pane or content attribute must be null*
 
   You can use `NavigationView.transitionsBuilder`
 - Fixes memory leaks on `NavigationView`
