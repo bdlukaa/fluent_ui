@@ -57,7 +57,7 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
-  *Note: one attribute of pane or content attribute must be null*
+  *Note: one attribute of pane or content must be null*
 
   You can use `NavigationView.transitionsBuilder`
 - Fixes memory leaks on `NavigationView`
