@@ -2,7 +2,7 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead. ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
   Before:
   ```dart
   NavigationBody(
@@ -47,6 +47,7 @@ Date format: DD/MM/YYYY
   ```
 
   You can use `NavigationView.transitionsBuilder`
+- Added `PaneItem.onTap` ([#533](https://github.com/bdlukaa/fluent_ui/issues/533))
 - Fixes memory leaks on `NavigationView`
 - `TreeView` updates: 
   - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
