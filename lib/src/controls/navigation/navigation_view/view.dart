@@ -207,6 +207,16 @@ class NavigationViewState extends State<NavigationView> {
     super.dispose();
   }
 
+  /// Toggles the current compact mode
+  void toggleCompactOpenMode() {
+    setState(() => _compactOverlayOpen = !_compactOverlayOpen);
+    PageStorage.of(context)?.writeState(
+      context,
+      _compactOverlayOpen,
+      identifier: 'compactOverlayOpen',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -376,14 +386,6 @@ class NavigationViewState extends State<NavigationView> {
               ]);
               break;
             case PaneDisplayMode.compact:
-              void toggleCompactOpenMode() {
-                setState(() => _compactOverlayOpen = !_compactOverlayOpen);
-                PageStorage.of(context)?.writeState(
-                  context,
-                  _compactOverlayOpen,
-                  identifier: 'compactOverlayOpen',
-                );
-              }
 
               // Ensure the overlay state is correct
               _compactOverlayOpen = PageStorage.of(context)?.readState(
@@ -397,6 +399,12 @@ class NavigationViewState extends State<NavigationView> {
 
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
+
+              // print(
+              //     'open: $_compactOverlayOpen - without overlay:$openedWithoutOverlay - storage: ${PageStorage.of(context)?.readState(
+              //   context,
+              //   identifier: 'compactOverlayOpen',
+              // )}');
 
               if (openedWithoutOverlay || !_compactOverlayOpen) {
                 paneResult = Column(children: [
@@ -418,14 +426,7 @@ class NavigationViewState extends State<NavigationView> {
                                   paneKey: _panelKey,
                                   listKey: _listKey,
                                   onToggle: toggleCompactOpenMode,
-                                  onItemSelected: toggleCompactOpenMode,
                                   initiallyOpen: true,
-                                  // initiallyOpen:
-                                  //     PageStorage.of(context)?.readState(
-                                  //           context,
-                                  //           identifier: 'openedWithoutOverlay',
-                                  //         ) as bool? ??
-                                  //         false,
                                 ),
                               ),
                             );
