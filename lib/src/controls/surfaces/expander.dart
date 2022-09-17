@@ -100,7 +100,7 @@ class Expander extends StatefulWidget {
   /// open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
 
-  /// The minimum height of the header.
+  /// The minimum possible height of the header.
   ///
   /// Defaults to 48.0
   final double minHeight;
@@ -154,21 +154,12 @@ class ExpanderState extends State<Expander>
   }
 
   void _handlePressed() {
-    if (open) {
-      _controller.animateTo(
-        0.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? _theme.animationCurve,
-      );
-      _open = false;
-    } else {
-      _controller.animateTo(
-        1.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? _theme.animationCurve,
-      );
-      _open = true;
-    }
+    _controller.animateTo(
+      open ? 0.0 : 1.0,
+      duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+      curve: widget.animationCurve ?? _theme.animationCurve,
+    );
+    _open = !open;
     PageStorage.of(context)?.writeState(
       context,
       open,
@@ -186,7 +177,7 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
+  // static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
 
   @override
   Widget build(BuildContext context) {
@@ -213,11 +204,7 @@ class ExpanderState extends State<Expander>
                     ),
                   ),
             ),
-            padding: const EdgeInsetsDirectional.only(
-              start: 16.0,
-              top: 16.0,
-              bottom: 16.0,
-            ),
+            padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (widget.leading != null)
@@ -225,7 +212,12 @@ class ExpanderState extends State<Expander>
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
                   child: widget.leading!,
                 ),
-              Expanded(child: widget.header),
+              Expanded(
+                  child: Padding(
+                padding:
+                    const EdgeInsetsDirectional.only(top: 8.0, bottom: 8.0),
+                child: widget.header,
+              )),
               if (widget.trailing != null)
                 Padding(
                   padding: const EdgeInsetsDirectional.only(start: 20.0),
@@ -268,7 +260,6 @@ class ExpanderState extends State<Expander>
       ),
       // CONTENT
       Flexible(
-        fit: FlexFit.loose,
         child: SizeTransition(
           sizeFactor: _controller,
           child: Container(
