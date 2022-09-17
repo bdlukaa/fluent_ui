@@ -76,6 +76,7 @@ Date format: DD/MM/YYYY
       },
     )
     ```
+  - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 
