@@ -2,6 +2,12 @@ import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
+typedef TreeViewItemOnSecondaryTap = void Function(
+  TreeViewItem item,
+  TapDownDetails details,
+);
+
 const double _whiteSpace = 8.0;
 
 /// Default loading indicator used by [TreeView]
@@ -432,10 +438,10 @@ class TreeView extends StatefulWidget {
   final TreeViewSelectionMode selectionMode;
 
   /// Called when an item is invoked
-  final Future<void> Function(TreeViewItem item)? onItemInvoked;
+  final TreeViewItemInvoked? onItemInvoked;
 
   ///  A tap with a secondary button has occurred.
-  final Future<void> Function(TreeViewItem item, Offset offset)? onSecondaryTap;
+  final TreeViewItemOnSecondaryTap? onSecondaryTap;
 
   /// Called when the selection changes. The items that are currently
   /// selected will be passed to the callback. This could be empty
@@ -570,9 +576,7 @@ class _TreeViewState extends State<TreeView>
             selectionMode: widget.selectionMode,
             narrowSpacing: widget.narrowSpacing,
             onSecondaryTap: (details) {
-              if (widget.onSecondaryTap != null) {
-                widget.onSecondaryTap!(item, details.globalPosition);
-              }
+              widget.onSecondaryTap?.call(item, details);
             },
             onSelect: () async {
               final onSelectionChanged = widget.onSelectionChanged;
@@ -674,22 +678,14 @@ class _TreeViewItem extends StatelessWidget {
     final selected = item.selected ?? false;
     final direction = Directionality.of(context);
     return GestureDetector(
-      onSecondaryTapDown: (details) {
-        if (selectionMode == TreeViewSelectionMode.single) {
-          onSecondaryTap(details);
-          onSelect();
-          onInvoked();
-        }
-      },
+      onSecondaryTapDown: onSecondaryTap,
       child: HoverButton(
-        onPressed: selectionMode == TreeViewSelectionMode.none
-            ? onInvoked
-            : selectionMode == TreeViewSelectionMode.single
-                ? () {
-                    onSelect();
-                    onInvoked();
-                  }
-                : onInvoked,
+        onPressed: selectionMode == TreeViewSelectionMode.single
+            ? () {
+                onSelect();
+                onInvoked();
+              }
+            : onInvoked,
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -828,7 +824,8 @@ class _TreeViewItem extends StatelessWidget {
                   child: Container(
                     width: 3.0,
                     decoration: BoxDecoration(
-                      color: theme.accentColor,
+                      color:
+                          theme.accentColor.defaultBrushFor(theme.brightness),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                   ),

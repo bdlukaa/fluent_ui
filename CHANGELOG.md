@@ -57,6 +57,25 @@ Date format: DD/MM/YYYY
   - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
   - You can now choose whether the items of a TreeView should use narrow or wide spacing. The examples shown in the Microsoft documentation use a wider spacing than the implementation used in the explorer of Windows 10/11.
   - The build method of TreeViewItem now contains some short comments to make it easier to find individual parts of each item like the selection checkbox or the expand icon.
+  - Do not invoke the tree view item on secondary tap ([#526](https://github.com/bdlukaa/fluent_ui/issues/526))
+  - **BREAKING** `TreeView.onSecondaryTap` is now a `(TreeViewItem item, TapDownDetails details)` callback:
+    Before:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, offset) async {}
+    ),
+    ```
+
+    Now:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, details) {
+        final offset = details.globalPosition;
+      },
+    )
+    ```
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 
