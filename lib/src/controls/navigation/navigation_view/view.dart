@@ -613,7 +613,7 @@ class NavigationViewState extends State<NavigationView> {
           appBar,
           Expanded(child: widget.content!),
         ]);
-      } else{
+      } else {
         throw 'Either pane or content must be provided';
       }
       return Mica(
