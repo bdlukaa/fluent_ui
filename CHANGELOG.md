@@ -46,7 +46,7 @@ Date format: DD/MM/YYYY
   ),
   ```
   
-  Or if you didn't have panes, you can use the content like that:  
+  Or if you don't have a pane, you can use the content like the following:  
   ```dart
   NavigationView(
     content: ScaffoldPage(

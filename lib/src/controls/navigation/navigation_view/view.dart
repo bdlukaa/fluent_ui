@@ -43,8 +43,11 @@ class NavigationView extends StatefulWidget {
     this.contentShape,
     this.onOpenSearch,
     this.transitionBuilder,
-  })  : assert((pane != null && content == null) ||
-            (pane == null && content != null)),
+  })  : assert(
+          (pane != null && content == null) ||
+              (pane == null && content != null),
+          'Either pane or content must be provided',
+        ),
         super(key: key);
 
   /// The app bar of the app.
@@ -56,7 +59,9 @@ class NavigationView extends StatefulWidget {
 
   /// The content of the pane.
   ///
-  /// Usually an [NavigationBody].
+  /// If [pane] is provided, this is ignored
+  ///
+  /// Usually a [ScaffoldPage]
   final Widget? content;
 
   /// {@macro flutter.rendering.ClipRectLayer.clipBehavior}
@@ -608,6 +613,8 @@ class NavigationViewState extends State<NavigationView> {
           appBar,
           Expanded(child: widget.content!),
         ]);
+      } else{
+        throw 'Either pane or content must be provided';
       }
       return Mica(
         backgroundColor: theme.backgroundColor,
