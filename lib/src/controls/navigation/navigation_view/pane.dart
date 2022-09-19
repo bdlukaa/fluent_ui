@@ -1218,8 +1218,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
     double paneWidth =
         widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-    double paneHeaderHeight =
-        widget.pane.size?.headerHeight ?? kOneLineTileHeight;
+    double? paneHeaderHeight = widget.pane.size?.headerHeight;
     if (widget.pane.header == null && menuButton == null) {
       paneHeaderHeight = -1.0;
     }
@@ -1240,10 +1239,10 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
           crossAxisAlignment: CrossAxisAlignment.start,
           key: widget.pane.paneKey,
           children: [
-            if (paneHeaderHeight >= 0)
+            if (paneHeaderHeight == null || paneHeaderHeight >= 0)
               Container(
                 margin: widget.pane.autoSuggestBox != null
-                    ? EdgeInsets.zero
+                    ? (menuButton == null ? theme.iconPadding : null)
                     : topPadding,
                 height: paneHeaderHeight,
                 child: () {

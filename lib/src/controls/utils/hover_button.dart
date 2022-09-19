@@ -46,6 +46,7 @@ class HoverButton extends StatefulWidget {
     this.autofocus = false,
     this.actionsEnabled = true,
     this.customActions,
+    this.shortcuts,
     this.focusEnabled = true,
   }) : super(key: key);
 
@@ -112,6 +113,9 @@ class HoverButton extends StatefulWidget {
   ///
   ///  * [actionsEnabled], which controls if actions are enabled or not
   final Map<Type, Action<Intent>>? customActions;
+
+  /// {@macro flutter.widgets.shortcuts.shortcuts}
+  final Map<ShortcutActivator, Intent>? shortcuts;
 
   /// Whether the focusing is enabled.
   ///
@@ -246,6 +250,7 @@ class _HoverButtonState extends State<HoverButton> {
         focusNode: node,
         autofocus: widget.autofocus,
         enabled: enabled,
+        shortcuts: widget.shortcuts,
         actions: widget.actionsEnabled ? _actionMap : {},
         onFocusChange: widget.onFocusChange,
         onShowFocusHighlight: (v) {
