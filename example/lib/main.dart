@@ -405,6 +405,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
+    final theme = FluentTheme.of(context);
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
@@ -466,14 +467,27 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           resetSearch();
           setState(() => index = i);
         },
-        header: Container(
+        header: SizedBox(
           height: kOneLineTileHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: FlutterLogo(
-            style: appTheme.displayMode == PaneDisplayMode.top
-                ? FlutterLogoStyle.markOnly
-                : FlutterLogoStyle.horizontal,
-            size: appTheme.displayMode == PaneDisplayMode.top ? 24 : 100.0,
+          child: ShaderMask(
+            shaderCallback: (rect) {
+              final color = appTheme.color.resolveFromReverseBrightness(
+                theme.brightness,
+                level: theme.brightness == Brightness.light ? 0 : 2,
+              );
+              return LinearGradient(
+                colors: [
+                  color,
+                  color,
+                ],
+              ).createShader(rect);
+            },
+            child: const FlutterLogo(
+              style: FlutterLogoStyle.horizontal,
+              size: 80.0,
+              textColor: Colors.white,
+              duration: Duration.zero,
+            ),
           ),
         ),
         displayMode: appTheme.displayMode,

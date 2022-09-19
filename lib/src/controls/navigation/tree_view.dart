@@ -1,6 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
+
+typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
+typedef TreeViewItemOnSecondaryTap = void Function(
+  TreeViewItem item,
+  TapDownDetails details,
+);
 
 const double _whiteSpace = 8.0;
 
@@ -115,7 +122,7 @@ class TreeViewItem with Diagnosticable {
   final bool autofocus;
 
   /// {@macro flutter.widgets.Focus.focusNode}
-  final FocusNode? focusNode;
+  final FocusNode focusNode;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
@@ -144,12 +151,13 @@ class TreeViewItem with Diagnosticable {
     this.onInvoked,
     this.backgroundColor,
     this.autofocus = false,
-    this.focusNode,
+    FocusNode? focusNode,
     this.semanticLabel,
     this.loadingWidget,
     this.lazy = false,
   })  : expanded = expanded ?? children.isNotEmpty,
-        _anyExpandableSiblings = false;
+        _anyExpandableSiblings = false,
+        focusNode = focusNode ?? FocusNode();
 
   /// Deep copy constructor that can be used to copy an item and all of
   /// its child items. Useful if you want to have multiple trees with the
@@ -432,10 +440,10 @@ class TreeView extends StatefulWidget {
   final TreeViewSelectionMode selectionMode;
 
   /// Called when an item is invoked
-  final Future<void> Function(TreeViewItem item)? onItemInvoked;
+  final TreeViewItemInvoked? onItemInvoked;
 
   ///  A tap with a secondary button has occurred.
-  final Future<void> Function(TreeViewItem item, Offset offset)? onSecondaryTap;
+  final TreeViewItemOnSecondaryTap? onSecondaryTap;
 
   /// Called when the selection changes. The items that are currently
   /// selected will be passed to the callback. This could be empty
@@ -535,101 +543,102 @@ class _TreeViewState extends State<TreeView>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 28.0),
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        // If shrinkWrap is true, then we default to not using the primary
-        // scroll controller (should not normally need any controller in
-        // this case).
-        primary: widget.scrollPrimary ?? (widget.shrinkWrap ? false : null),
-        controller: widget.scrollController,
-        shrinkWrap: widget.shrinkWrap,
-        cacheExtent: widget.cacheExtent,
-        itemExtent: widget.itemExtent,
-        addRepaintBoundaries: widget.addRepaintBoundaries,
-        prototypeItem: widget.usePrototypeItem && items.isNotEmpty
-            ? _TreeViewItem(
-                item: items.first,
-                selectionMode: widget.selectionMode,
-                narrowSpacing: widget.narrowSpacing,
-                onInvoked: () {},
-                onSelect: () {},
-                onSecondaryTap: (details) {},
-                onExpandToggle: () {},
-                loadingWidgetFallback: widget.loadingWidget,
-              )
-            : null,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
+    return FocusTraversalGroup(
+      policy: WidgetOrderTraversalPolicy(),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 28.0),
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          // If shrinkWrap is true, then we default to not using the primary
+          // scroll controller (should not normally need any controller in
+          // this case).
+          primary: widget.scrollPrimary ?? (widget.shrinkWrap ? false : null),
+          controller: widget.scrollController,
+          shrinkWrap: widget.shrinkWrap,
+          cacheExtent: widget.cacheExtent,
+          itemExtent: widget.itemExtent,
+          addRepaintBoundaries: widget.addRepaintBoundaries,
+          prototypeItem: widget.usePrototypeItem && items.isNotEmpty
+              ? _TreeViewItem(
+                  item: items.first,
+                  selectionMode: widget.selectionMode,
+                  narrowSpacing: widget.narrowSpacing,
+                  onInvoked: () {},
+                  onSelect: () {},
+                  onSecondaryTap: (details) {},
+                  onExpandToggle: () {},
+                  loadingWidgetFallback: widget.loadingWidget,
+                )
+              : null,
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final item = items[index];
 
-          return _TreeViewItem(
-            key: item.key ?? ValueKey<TreeViewItem>(item),
-            item: item,
-            selectionMode: widget.selectionMode,
-            narrowSpacing: widget.narrowSpacing,
-            onSecondaryTap: (details) {
-              if (widget.onSecondaryTap != null) {
-                widget.onSecondaryTap!(item, details.globalPosition);
-              }
-            },
-            onSelect: () async {
-              final onSelectionChanged = widget.onSelectionChanged;
-              switch (widget.selectionMode) {
-                case TreeViewSelectionMode.single:
-                  setState(() {
-                    for (final item in items) {
-                      item.selected = false;
+            return _TreeViewItem(
+              key: item.key ?? ValueKey<TreeViewItem>(item),
+              item: item,
+              selectionMode: widget.selectionMode,
+              narrowSpacing: widget.narrowSpacing,
+              onSecondaryTap: (details) {
+                widget.onSecondaryTap?.call(item, details);
+              },
+              onSelect: () async {
+                final onSelectionChanged = widget.onSelectionChanged;
+                switch (widget.selectionMode) {
+                  case TreeViewSelectionMode.single:
+                    setState(() {
+                      for (final item in items) {
+                        item.selected = false;
+                      }
+                      item.selected = true;
+                    });
+                    if (onSelectionChanged != null) {
+                      await onSelectionChanged([item]);
                     }
-                    item.selected = true;
-                  });
-                  if (onSelectionChanged != null) {
-                    await onSelectionChanged([item]);
-                  }
-                  break;
-                case TreeViewSelectionMode.multiple:
-                  setState(() {
-                    // if it's root
-                    if (item.selected == null || item.selected == false) {
-                      item
-                        ..selected = true
-                        ..children.executeForAll((item) {
-                          item.selected = true;
-                        })
-                        ..executeForAllParents((p) => p?.updateSelected());
-                    } else {
-                      item
-                        ..selected = false
-                        ..children.executeForAll((item) {
-                          item.selected = false;
-                        })
-                        ..executeForAllParents((p) => p?.updateSelected());
+                    break;
+                  case TreeViewSelectionMode.multiple:
+                    setState(() {
+                      // if it's root
+                      if (item.selected == null || item.selected == false) {
+                        item
+                          ..selected = true
+                          ..children.executeForAll((item) {
+                            item.selected = true;
+                          })
+                          ..executeForAllParents((p) => p?.updateSelected());
+                      } else {
+                        item
+                          ..selected = false
+                          ..children.executeForAll((item) {
+                            item.selected = false;
+                          })
+                          ..executeForAllParents((p) => p?.updateSelected());
+                      }
+                    });
+                    if (onSelectionChanged != null) {
+                      final selectedItems = widget.items
+                          .whereForAll((item) => item.selected ?? false);
+                      await onSelectionChanged(selectedItems);
                     }
+                    break;
+                  default:
+                    break;
+                }
+              },
+              onExpandToggle: () async {
+                await invokeItem(item);
+                if (item.collapsable) {
+                  setState(() {
+                    item.expanded = !item.expanded;
+                    items = widget.items.build();
                   });
-                  if (onSelectionChanged != null) {
-                    final selectedItems = widget.items
-                        .whereForAll((item) => item.selected ?? false);
-                    await onSelectionChanged(selectedItems);
-                  }
-                  break;
-                default:
-                  break;
-              }
-            },
-            onExpandToggle: () async {
-              await invokeItem(item);
-              if (item.collapsable) {
-                setState(() {
-                  item.expanded = !item.expanded;
-                  items = widget.items.build();
-                });
-              }
-            },
-            onInvoked: () => invokeItem(item),
-            loadingWidgetFallback: widget.loadingWidget,
-          );
-        },
+                }
+              },
+              onInvoked: () => invokeItem(item),
+              loadingWidgetFallback: widget.loadingWidget,
+            );
+          },
+        ),
       ),
     );
   }
@@ -674,22 +683,43 @@ class _TreeViewItem extends StatelessWidget {
     final selected = item.selected ?? false;
     final direction = Directionality.of(context);
     return GestureDetector(
-      onSecondaryTapDown: (details) {
-        if (selectionMode == TreeViewSelectionMode.single) {
-          onSecondaryTap(details);
-          onSelect();
-          onInvoked();
-        }
-      },
+      onSecondaryTapDown: onSecondaryTap,
       child: HoverButton(
-        onPressed: selectionMode == TreeViewSelectionMode.none
-            ? onInvoked
-            : selectionMode == TreeViewSelectionMode.single
-                ? () {
-                    onSelect();
-                    onInvoked();
+        shortcuts: item.isExpandable
+            ? {
+                const SingleActivator(LogicalKeyboardKey.arrowLeft):
+                    VoidCallbackIntent(() {
+                  if (item.expanded) {
+                    // if the item is already expanded, close it
+                    onExpandToggle();
                   }
-                : onInvoked,
+                }),
+                const SingleActivator(LogicalKeyboardKey.arrowRight):
+                    VoidCallbackIntent(() {
+                  if (item.expanded) {
+                    // if the item is already expanded, move to its first child
+                    FocusScope.of(context).nextFocus();
+                  } else {
+                    // expand the item
+                    onExpandToggle();
+                  }
+                }),
+              }
+            : {
+                const SingleActivator(LogicalKeyboardKey.arrowLeft):
+                    VoidCallbackIntent(() {
+                  if (item.parent != null) {
+                    // if the item has a parent, focus the parent
+                    item.parent!.focusNode.requestFocus();
+                  }
+                }),
+              },
+        onPressed: selectionMode == TreeViewSelectionMode.single
+            ? () {
+                onSelect();
+                onInvoked();
+              }
+            : onInvoked,
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -828,7 +858,8 @@ class _TreeViewItem extends StatelessWidget {
                   child: Container(
                     width: 3.0,
                     decoration: BoxDecoration(
-                      color: theme.accentColor,
+                      color:
+                          theme.accentColor.defaultBrushFor(theme.brightness),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                   ),

@@ -33,6 +33,7 @@ class PaneItem extends NavigationPaneItem {
     this.mouseCursor,
     this.tileColor,
     this.selectedTileColor,
+    this.onTap,
   });
 
   /// The title used by this item. If the display mode is top
@@ -84,6 +85,9 @@ class PaneItem extends NavigationPaneItem {
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
 
+  /// Called when the item is tapped, regardless of selected or not
+  final VoidCallback? onTap;
+
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
   Widget build(
@@ -117,10 +121,17 @@ class PaneItem extends NavigationPaneItem {
     final bool isMinimal = mode == PaneDisplayMode.minimal;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
+    final onItemTapped = onPressed == null && onTap == null
+        ? null
+        : () {
+            onPressed?.call();
+            onTap?.call();
+          };
+
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
-      onPressed: onPressed,
+      onPressed: onItemTapped,
       cursor: mouseCursor,
       focusEnabled: isMinimal ? (maybeBody?.minimalPaneOpen ?? false) : true,
       builder: (context, states) {
@@ -348,6 +359,7 @@ class PaneItem extends NavigationPaneItem {
     MouseCursor? mouseCursor,
     ButtonState<Color?>? tileColor,
     ButtonState<Color?>? selectedTileColor,
+    VoidCallback? onTap,
   }) {
     return PaneItem(
       title: title ?? this.title,
@@ -360,7 +372,8 @@ class PaneItem extends NavigationPaneItem {
       mouseCursor: mouseCursor ?? this.mouseCursor,
       tileColor: tileColor ?? this.tileColor,
       selectedTileColor: selectedTileColor ?? this.selectedTileColor,
-    )..itemKey = itemKey;
+      onTap: onTap ?? this.onTap,
+    );
   }
 }
 
@@ -467,7 +480,7 @@ class PaneItemAction extends PaneItem {
   PaneItemAction({
     required super.icon,
     required super.body,
-    required this.onTap,
+    required VoidCallback super.onTap,
     super.title,
     super.infoBadge,
     super.focusNode,
@@ -477,9 +490,6 @@ class PaneItemAction extends PaneItem {
     super.tileColor,
     super.trailing,
   });
-
-  /// The function that will be executed when the item is clicked
-  final VoidCallback onTap;
 
   @override
   Widget build(
@@ -537,6 +547,7 @@ class PaneItemExpander extends PaneItem {
     super.mouseCursor,
     super.tileColor,
     super.selectedTileColor,
+    super.onTap,
   }) : assert(
           items.any((item) => item is PaneItemExpander) == false,
           'There can not be nested PaneItemExpanders',
