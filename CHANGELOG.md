@@ -2,8 +2,6 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-## [next]
-
 - **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead. ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
   Before:
   ```dart
@@ -119,7 +117,7 @@ AutoSuggestBox<String>(
 - Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
 - Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
 - `ToggleSwitch` updates:
-  - Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463)) 
+  - Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463))
   - Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
   - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
 - Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
@@ -130,7 +128,7 @@ AutoSuggestBox<String>(
   - **BREAKING** Renamed `Combobox` to `ComboBox`
   - **BREAKING** Renamed `ComboboxItem` to `ComboBoxItem`
   - **BREAKING** Renamed `ComboBox.backgroundColor` to `ComboBox.popupColor`
-  - Implement `EditableComboBox`, a combo box that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244)) 
+  - Implement `EditableComboBox`, a combo box that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244))
   - `ComboBox.isExpanded: false` now correctly sets the button width ([#382](https://github.com/bdlukaa/fluent_ui/issues/382))
   - `ComboBox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
   - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
@@ -150,7 +148,7 @@ AutoSuggestBox<String>(
     This means the the content of the body will be fully traversed before moving on to another widget or group of widgets. [Learn more](https://docs.flutter.dev/development/ui/advanced/focus#focustraversalgroup-widget)
   - `TreeViewItem` now shows the focus highlight. They can also be selected using the keyboard
   - `Expander` now shows the focus highlight
-- Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502)) 
+- Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502))
 - Added `AutoSuggestBox.enabled` ([#504](https://github.com/bdlukaa/fluent_ui/issues/504))
 - Correctly keep the `NavigationView` animation state ([cf0fae1](https://github.com/bdlukaa/fluent_ui/commit/cf0fae16ce9a8879653606571e90af12f711bb84) ,[bd89ba6](https://github.com/bdlukaa/fluent_ui/commit/bd89ba6791dfe2762b37b3e291d8d1a7979cb3f5))
 - Calculate `selected` for all parents as soon as the `TreeView` is built
@@ -188,7 +186,7 @@ AutoSuggestBox<String>(
   - Close the overlay if the textbox width is changes ([#456](https://github.com/bdlukaa/fluent_ui/issues/456))
   - `.items` can be dynamically loaded ([#387](https://github.com/bdlukaa/fluent_ui/issues/387))
   - **BREAKING** `.items` is now a `List<AutoSuggestBoxItem>`:
-  Before:
+    Before:
   ```dart
   AutoSuggestBox(
     items: [
@@ -237,7 +235,7 @@ AutoSuggestBox<String>(
 - Expose more useful properties to `AutoSuggestBox` ([#419](https://github.com/bdlukaa/fluent_ui/issues/419))
 - **BREAKING** `PopupContentSizeInfo` was renamed to `ContentSizeInfo`
 - Reworked `ListTile` ([#422](https://github.com/bdlukaa/fluent_ui/pull/422)):
-  - **BREAKING** Removed `TappableListTile` 
+  - **BREAKING** Removed `TappableListTile`
   - Added support for single and multiple selection. Use `ListTile.selectable` ([#409](https://github.com/bdlukaa/fluent_ui/issues/409))
   - Added focus support
   - Use the Win UI design
@@ -357,7 +355,7 @@ AutoSuggestBox<String>(
   - Update the picker popup style and behavior
 - Colors Update ([#368](https://github.com/bdlukaa/fluent_ui/pull/368)):
   - Added `ResourceDictionary`, which provides default colors to be used on components
-  - (forms) Updated `Combobox` style. It now uses `Acrylic` on the combobox popup menu 
+  - (forms) Updated `Combobox` style. It now uses `Acrylic` on the combobox popup menu
   - (buttons) Updated `Button`, `FilledButton`, `IconButton` and `TextButton` styles
   - (toggleable inputs) Updated `Checkbox`, `Chip`, `RadioButton`, `RatingBar`, `ToggleButton` and `ToggleSwitch`
     - **BREAKING** Updated `Slider`:
@@ -572,7 +570,7 @@ AutoSuggestBox<String>(
   - Use `Curves.easeIn` for sticky navigation indicator by default
   - Use the correct accent color for navigation indicators by default
   - `EntrancePageTransition` is now the correct page transition used when display mode is top
-  - Apply correct press effect for `PaneItem` when display mode is top 
+  - Apply correct press effect for `PaneItem` when display mode is top
   - **BREAKING** Removed `NavigationPane.defaultNavigationIndicator`
   - **BREAKING** Replaced `offsets` and `sizes` with `pane` in `NavigationPane`
 
@@ -710,7 +708,7 @@ AutoSuggestBox<String>(
 - **BREAKING** Minimal Flutter version is now 2.8
 - `NavigationAppBar.backgroundColor` is now applied correctly. ([#100](https://github.com/bdlukaa/fluent_ui/issues/100))
 - ComboBox's Popup Acrylic can now be disabled if wrapped in a `DisableAcrylic` ([#105](https://github.com/bdlukaa/fluent_ui/issues/105))
-- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99)) 
+- `NavigationPane` width can now be customizable ([#99](https://github.com/bdlukaa/fluent_ui/issues/99))
 - Implement `PaneItemAction` for `NavigationPane` ([#104](https://github.com/bdlukaa/fluent_ui/issues/104))
 
 ## [3.4.1] - [08/11/2021]
@@ -735,7 +733,7 @@ AutoSuggestBox<String>(
 
 - Back button now isn't forced when using top navigation mode ([#74](https://github.com/bdlukaa/fluent_ui/issues/74))
 - `PilButtonBar` now accept 2 items ([#66](https://github.com/bdlukaa/fluent_ui/issues/66))
-- Added builder variant to `NavigationBody`. 
+- Added builder variant to `NavigationBody`.
 - Fixed content bug when `AppBar` was not supplied too `NavigationView`
 
 ## [3.2.0] - Flutter 2.5.0 - [15/09/2021]
