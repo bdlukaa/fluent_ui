@@ -5,9 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 part 'body.dart';
+
 part 'indicators.dart';
+
 part 'pane.dart';
+
 part 'pane_items.dart';
+
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -34,11 +38,17 @@ class NavigationView extends StatefulWidget {
     Key? key,
     this.appBar,
     this.pane,
+    this.content,
     this.clipBehavior = Clip.antiAlias,
     this.contentShape,
     this.onOpenSearch,
     this.transitionBuilder,
-  }) : super(key: key);
+  })  : assert(
+          (pane != null && content == null) ||
+              (pane == null && content != null),
+          'Either pane or content must be provided',
+        ),
+        super(key: key);
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
@@ -46,6 +56,13 @@ class NavigationView extends StatefulWidget {
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above the body.
   final NavigationPane? pane;
+
+  /// The content of the pane.
+  ///
+  /// If [pane] is provided, this is ignored
+  ///
+  /// Usually a [ScaffoldPage]
+  final Widget? content;
 
   /// {@macro flutter.rendering.ClipRectLayer.clipBehavior}
   ///
@@ -592,11 +609,13 @@ class NavigationViewState extends State<NavigationView> {
               paneResult = content;
           }
         }
-      } else {
+      } else if (widget.content != null) {
         paneResult = Column(children: [
           appBar,
-          // Expanded(child: widget.content),
+          Expanded(child: widget.content!),
         ]);
+      } else {
+        throw 'Either pane or content must be provided';
       }
       return Mica(
         backgroundColor: theme.backgroundColor,
