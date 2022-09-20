@@ -22,7 +22,7 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
-
+  
   Now:
   ```dart
   NavigationBody(
@@ -85,7 +85,7 @@ AutoSuggestBox<String>(
   To toggle it programatically, use `NavigationViewState.toggleCompactOpenMode` when an item is tapped
 - Dynamic header height for open pane ([#530](https://github.com/bdlukaa/fluent_ui/issues/530))
 - Fixes memory leaks on `NavigationView`
-- `TreeView` updates:
+- `TreeView` updates: 
   - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
   - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
   - You can now choose whether the items of a TreeView should use narrow or wide spacing. The examples shown in the Microsoft documentation use a wider spacing than the implementation used in the explorer of Windows 10/11.
