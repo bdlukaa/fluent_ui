@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
+
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('AutoSuggestBox basics testing', (tester) async {
     await tester.pumpWidget(wrapApp(
       child: AutoSuggestBox(
