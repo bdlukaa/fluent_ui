@@ -1,0 +1,51 @@
+{
+  "de": [
+    "hour",
+    "minute",
+    "am",
+    "pm",
+    "month",
+    "day",
+    "year"
+  ],
+
+  "ko": [
+    "hour",
+    "minute",
+    "am",
+    "pm",
+    "month",
+    "day",
+    "year"
+  ],
+
+  "ms": [
+    "hour",
+    "minute",
+    "am",
+    "pm",
+    "month",
+    "day",
+    "year"
+  ],
+
+  "pl": [
+    "hour",
+    "minute",
+    "am",
+    "pm",
+    "month",
+    "day",
+    "year"
+  ],
+
+  "ru": [
+    "hour",
+    "minute",
+    "am",
+    "pm",
+    "month",
+    "day",
+    "year"
+  ]
+}

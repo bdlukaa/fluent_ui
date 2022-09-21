@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:fluent_ui/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -79,6 +78,8 @@ List<WindowEffect> get currentWindowEffects {
 }
 
 class Settings extends ScrollablePage {
+  Settings({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('Settings'));
@@ -91,7 +92,7 @@ class Settings extends ScrollablePage {
     const spacer = SizedBox(height: 10.0);
     const biggerSpacer = SizedBox(height: 40.0);
 
-    final supportedLocales = const AppLocalizationDelegate().supportedLocales;
+    const supportedLocales = FluentLocalizations.supportedLocales;
     final currentLocale =
         appTheme.locale ?? Localizations.maybeLocaleOf(context);
 

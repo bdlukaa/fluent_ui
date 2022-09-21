@@ -13,16 +13,16 @@ dependencies:
     sdk: flutter
   fluent_ui:
     path: ../
-  provider: ^6.0.2
+  provider: ^6.0.3
   system_theme: ^2.0.0
-  window_manager: ^0.2.1
+  window_manager: ^0.2.7
   flutter_acrylic: ^1.0.0+2
   url_strategy: ^0.2.0
-  url_launcher: ^6.0.20
+  url_launcher: ^6.1.5
   clipboard: ^0.1.3
   email_validator: ^2.0.1
   http: ^0.13.4
-  flutter_markdown: ^0.6.10+2
+  flutter_markdown: ^0.6.10+5
   flutter_highlight:
     git:
       url: https://github.com/shreyas1599/highlight.dart.git

@@ -11,8 +11,6 @@ const double kPageDefaultVerticalPadding = 24.0;
 /// See also:
 ///
 ///   * [PageHeader], usually used on the [header] property
-///   * [NavigationBody], the widget that implements fluent page transitions
-///     into navigation view.
 class ScaffoldPage extends StatelessWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({

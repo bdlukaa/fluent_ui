@@ -2,11 +2,11 @@ Date format: DD/MM/YYYY
 
 ## [next]
 
-- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead. ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)):
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)/[#531](https://github.com/bdlukaa/fluent_ui/pull/531)):  
   Before:
   ```dart
-  NavigationBody(
-    pane: NavigationPane(
+  NavigationView(
+  pane: NavigationPane(
       items: [
         PaneItem(icon: Icon(FluentIcons.add)),
         PaneItem(icon: Icon(FluentIcons.add)),
@@ -22,10 +22,10 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
-  
-  Now:
+
+  Now:  
   ```dart
-  NavigationBody(
+  NavigationView(
     ...
     pane: NavigationPane(
       items: [
@@ -45,6 +45,19 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
+  
+  Or if you don't have a pane, you can use the content like the following:  
+  ```dart
+  NavigationView(
+    content: ScaffoldPage(
+      header: PageHeader(
+        title: titleRow,
+      ),
+      content: child,
+    ),
+  ),
+  ```
+  *Note: one attribute of pane or content must be null*
 
   You can use `NavigationView.transitionsBuilder`
 - **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441))

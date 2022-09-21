@@ -3,6 +3,8 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TreeViewPage extends ScrollablePage {
+  TreeViewPage({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('TreeView'));
@@ -29,8 +31,11 @@ class TreeViewPage extends ScrollablePage {
           onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),
           onSelectionChanged: (selectedItems) async => debugPrint(
               'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+          onSecondaryTap: (item, details) async {
+            debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+          },
         ),
-        codeSnippet: '''final items = [
+        codeSnippet: r'''final items = [
   TreeViewItem(
     content: const Text('Personal Documents'),
     value: 'personal_docs',
@@ -86,20 +91,25 @@ TreeView(
   onItemInvoked: (item) async => debugPrint('onItemInvoked: \$item'),
   onSelectionChanged: (selectedItems) async => debugPrint(
               'onSelectionChanged: \${selectedItems.map((i) => i.value)}'),
+  onSecondaryTap: (item, details) async {
+    debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+  },
 )
 ''',
       ),
       subtitle(content: const Text('A TreeView with lazy-loading items')),
       CardHighlight(
         child: TreeView(
-          selectionMode: TreeViewSelectionMode.single,
           shrinkWrap: true,
           items: lazyItems,
           onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),
           onSelectionChanged: (selectedItems) async => debugPrint(
               'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+          onSecondaryTap: (item, details) async {
+            debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+          },
         ),
-        codeSnippet: '''final lazyItems = [
+        codeSnippet: r'''final lazyItems = [
   TreeViewItem(
     content: const Text('Work Documents'),
     value: 'work_docs',
@@ -153,6 +163,9 @@ TreeView(
   onItemInvoked: (item) async => debugPrint('onItemInvoked: \$item'),
   onSelectionChanged: (selectedItems) async => debugPrint(
               'onSelectionChanged: \${selectedItems.map((i) => i.value)}'),
+  onSecondaryTap: (item, details) async {
+    debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+  },
 )
 ''',
       ),

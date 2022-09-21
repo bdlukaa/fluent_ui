@@ -24,6 +24,7 @@ class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
     required this.icon,
+    required this.body,
     this.title,
     this.trailing,
     this.infoBadge,
@@ -32,6 +33,7 @@ class PaneItem extends NavigationPaneItem {
     this.mouseCursor,
     this.tileColor,
     this.selectedTileColor,
+    this.onTap,
   });
 
   /// The title used by this item. If the display mode is top
@@ -63,6 +65,9 @@ class PaneItem extends NavigationPaneItem {
   /// Usually an [Icon] widget
   final Widget? trailing;
 
+  /// The body of the view attached to this tab
+  final Widget body;
+
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
@@ -79,6 +84,9 @@ class PaneItem extends NavigationPaneItem {
   /// The color of the tile when unselected.
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
   final ButtonState<Color?>? selectedTileColor;
+
+  /// Called when the item is tapped, regardless of selected or not
+  final VoidCallback? onTap;
 
   /// Used to construct the pane items all around [NavigationView]. You can
   /// customize how the pane items should look like by overriding this method
@@ -113,10 +121,17 @@ class PaneItem extends NavigationPaneItem {
     final bool isMinimal = mode == PaneDisplayMode.minimal;
     final bool isCompact = mode == PaneDisplayMode.compact;
 
+    final onItemTapped = onPressed == null && onTap == null
+        ? null
+        : () {
+            onPressed?.call();
+            onTap?.call();
+          };
+
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
-      onPressed: onPressed,
+      onPressed: onItemTapped,
       cursor: mouseCursor,
       focusEnabled: isMinimal ? (maybeBody?.minimalPaneOpen ?? false) : true,
       builder: (context, states) {
@@ -338,23 +353,27 @@ class PaneItem extends NavigationPaneItem {
     Widget? icon,
     Widget? infoBadge,
     Widget? trailing,
+    Widget? body,
     FocusNode? focusNode,
     bool? autofocus,
     MouseCursor? mouseCursor,
     ButtonState<Color?>? tileColor,
     ButtonState<Color?>? selectedTileColor,
+    VoidCallback? onTap,
   }) {
     return PaneItem(
       title: title ?? this.title,
       icon: icon ?? this.icon,
       infoBadge: infoBadge ?? this.infoBadge,
       trailing: trailing ?? this.trailing,
+      body: body ?? this.body,
       focusNode: focusNode ?? this.focusNode,
       autofocus: autofocus ?? this.autofocus,
       mouseCursor: mouseCursor ?? this.mouseCursor,
       tileColor: tileColor ?? this.tileColor,
       selectedTileColor: selectedTileColor ?? this.selectedTileColor,
-    )..itemKey = itemKey;
+      onTap: onTap ?? this.onTap,
+    );
   }
 }
 
@@ -459,22 +478,18 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
-    required Widget icon,
-    required this.onTap,
-    Widget? title,
-    Widget? infoBadge,
-    FocusNode? focusNode,
-    bool autofocus = false,
-  }) : super(
-          icon: icon,
-          title: title,
-          infoBadge: infoBadge,
-          focusNode: focusNode,
-          autofocus: autofocus,
-        );
-
-  /// The function that will be executed when the item is clicked
-  final VoidCallback onTap;
+    required super.icon,
+    required super.body,
+    required VoidCallback super.onTap,
+    super.title,
+    super.infoBadge,
+    super.focusNode,
+    super.autofocus = false,
+    super.mouseCursor,
+    super.selectedTileColor,
+    super.tileColor,
+    super.trailing,
+  });
 
   @override
   Widget build(
@@ -523,6 +538,7 @@ class PaneItemExpander extends PaneItem {
   PaneItemExpander({
     required super.icon,
     required this.items,
+    required super.body,
     super.title,
     super.infoBadge,
     super.trailing = kDefaultTrailing,
@@ -531,6 +547,7 @@ class PaneItemExpander extends PaneItem {
     super.mouseCursor,
     super.tileColor,
     super.selectedTileColor,
+    super.onTap,
   }) : assert(
           items.any((item) => item is PaneItemExpander) == false,
           'There can not be nested PaneItemExpanders',

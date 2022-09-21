@@ -31,9 +31,11 @@ export 'package:flutter/material.dart'
         SelectableText;
 export 'package:scroll_pos/scroll_pos.dart';
 
+export 'l10n/extension/fluent_localizations_extension.dart';
+export 'l10n/generated/fluent_localizations.dart';
+
 export 'src/app.dart';
 export 'src/icons.dart';
-export 'src/localization.dart' hide IntlScriptLocaleApplyMixin;
 export 'src/utils.dart';
 
 export 'src/navigation/route.dart';

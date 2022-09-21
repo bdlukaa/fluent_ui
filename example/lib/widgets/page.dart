@@ -1,15 +1,44 @@
 import 'dart:async';
 
+import 'package:example/widgets/deferred_widget.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
-abstract class Page {
-  Page() {
+mixin PageMixin {
+  Widget description({required Widget content}) {
+    return Builder(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: DefaultTextStyle(
+          style: FluentTheme.of(context).typography.body!,
+          child: content,
+        ),
+      );
+    });
+  }
+
+  Widget subtitle({required Widget content}) {
+    return Builder(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
+        child: DefaultTextStyle(
+          style: FluentTheme.of(context).typography.subtitle!,
+          child: content,
+        ),
+      );
+    });
+  }
+}
+
+abstract class Page extends StatelessWidget {
+  Page({super.key}) {
     _pageIndex++;
   }
 
   final StreamController _controller = StreamController.broadcast();
   Stream get stateStream => _controller.stream;
 
+  @override
   Widget build(BuildContext context);
 
   void setState(VoidCallback func) {
@@ -45,7 +74,7 @@ abstract class Page {
 int _pageIndex = -1;
 
 abstract class ScrollablePage extends Page {
-  ScrollablePage() : super();
+  ScrollablePage({super.key});
 
   final scrollController = ScrollController();
   Widget buildHeader(BuildContext context) => const SizedBox.shrink();
@@ -69,11 +98,32 @@ abstract class ScrollablePage extends Page {
 class EmptyPage extends Page {
   final Widget? child;
 
-  EmptyPage([this.child]);
+  EmptyPage({
+    this.child,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return child ?? const SizedBox.shrink();
+  }
+}
+
+typedef DeferredPageBuilder = Page Function();
+
+class DeferredPage extends Page {
+  final LibraryLoader libraryLoader;
+  final DeferredPageBuilder createPage;
+
+  DeferredPage({
+    super.key,
+    required this.libraryLoader,
+    required this.createPage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DeferredWidget(libraryLoader, () => createPage().build(context));
   }
 }
 
@@ -87,11 +137,5 @@ extension PageExtension on List<Page> {
         },
       );
     }).toList();
-  }
-}
-
-extension WidgetPageExtension on Widget {
-  Page toPage() {
-    return EmptyPage(this);
   }
 }

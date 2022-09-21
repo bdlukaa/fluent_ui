@@ -16,6 +16,8 @@ const _primaryNames = [
 ];
 
 class ColorsPage extends ScrollablePage {
+  ColorsPage({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('Colors Showcase'));

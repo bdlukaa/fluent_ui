@@ -109,6 +109,8 @@ class CommandBarsPage extends ScrollablePage {
     ),
   ];
 
+  CommandBarsPage({super.key});
+
   @override
   Widget buildHeader(BuildContext context) {
     return const PageHeader(title: Text('CommandBar'));

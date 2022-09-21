@@ -8,6 +8,8 @@ import '../../widgets/page.dart';
 class RevealFocusPage extends Page {
   final FocusNode focus = FocusNode();
 
+  RevealFocusPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
