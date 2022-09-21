@@ -12,6 +12,7 @@ class AutoSuggestBoxPage extends StatefulWidget {
 class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
     with PageMixin {
   String? selectedCat;
+  Cat? selectedObjectCat;
   bool enabled = true;
 
   @override
@@ -36,12 +37,13 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
           child: Row(children: [
             SizedBox(
               width: 350.0,
-              child: AutoSuggestBox(
+              child: AutoSuggestBox<String>(
                 enabled: enabled,
                 items: cats
-                    .map<AutoSuggestBoxItem>(
-                      (cat) => AutoSuggestBoxItem(
+                    .map<AutoSuggestBoxItem<String>>(
+                      (cat) => AutoSuggestBoxItem<String>(
                         value: cat,
+                        label: cat,
                         onFocusChange: (focused) {
                           if (focused) debugPrint('Focused $cat');
                         },
@@ -69,7 +71,9 @@ AutoSuggestBox<String>(
       value: cat,
       label: cat,
       onFocusChange: (focused) {
-        if (focused) debugPrint('Focused \$cat');
+        if (focused) { 
+          debugPrint('Focused \$cat');
+        }
       }
     );
   }).toList(),
@@ -85,7 +89,85 @@ const cats = <String>[
   'American Curl',
   ...
 ];''',
+        ),
+        const Text(
+          'The control can be used with a custom value class. With this feature,'
+          ' AutoSuggestBox can be used as a replacement of a ComboBox.',
+        ),
+        subtitle(
+            content: const Text('A AutoSuggestBox with a custom type "Cat"')),
+        CardHighlight(
+          child: Row(children: [
+            SizedBox(
+              width: 350.0,
+              child: AutoSuggestBox<Cat>(
+                enabled: enabled,
+                items: objectCats
+                    .map<AutoSuggestBoxItem<Cat>>(
+                      (cat) => AutoSuggestBoxItem<Cat>(
+                        value: cat,
+                        label: cat.name,
+                        onFocusChange: (focused) {
+                          if (focused) {
+                            debugPrint('Focused $cat');
+                          }
+                        },
+                      ),
+                    )
+                    .toList(),
+                onSelected: (item) {
+                  setState(() => selectedObjectCat = item.value);
+                },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(selectedObjectCat != null
+                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
+                    : ''),
+              ),
+            ),
+          ]),
+          codeSnippet: '''
+class Cat {
+  final int id;
+  final String name;
+  final bool hasTag;
 
+  const Cat(this.id, this.name, this.hasTag);
+}
+        
+Cat? selectedObjectCat;
+
+AutoSuggestBox<Cat>(
+  items: objectCats
+      .map<AutoSuggestBoxItem<Cat>>(
+        (cat) => AutoSuggestBoxItem<Cat>(
+          value: cat,
+          label: cat.name,
+          onFocusChange: (focused) {
+            if (focused) {
+              debugPrint('Focused #\${cat.id} - \${cat.name}');
+            }
+          },
+        ),
+      )
+      .toList(),
+  onSelected: (item) {
+    setState(() => selectedObjectCat = item.value);
+  },
+),
+
+const objectCats = [
+  Cat(1, 'Abyssinian', true),
+  Cat(2, 'Aegean', true),
+  Cat(3, 'American Bobtail', false),
+  Cat(4, 'American Curl', true),
+  Cat(5, 'American Ringtail', false),
+  Cat(6, 'American Shorthair', true),
+  ...
+];''',
         ),
       ],
     );
