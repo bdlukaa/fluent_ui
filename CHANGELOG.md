@@ -123,6 +123,10 @@ AutoSuggestBox<String>(
     )
     ```
   - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
+  - Add global onItemExpandToggle callback to TreeView.
+  - Add onExpandToggle callback to TreeViewItem.
+    The new callbacks can be used to load child items lazily, which fixes the unexpected behavior of triggering child loading on invoking an item. The loading of children now can be triggered, only when the item gets expanded; then a loading indicator is shown if the loading takes some time. When loading is complete, the loading indicator is removed and the item gets expanded.
+    -> The 'global' callback gets executed before(!) the item's callback, like the 'global' onItemInvoke' callback gets executed before the onInvoke callback. 
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 

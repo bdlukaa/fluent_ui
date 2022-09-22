@@ -3,12 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
-typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
-typedef TreeViewItemOnSecondaryTap = void Function(
-  TreeViewItem item,
-  TapDownDetails details,
-);
-
 const double _whiteSpace = 8.0;
 
 /// Default loading indicator used by [TreeView]
@@ -105,7 +99,21 @@ class TreeViewItem with Diagnosticable {
   bool? selected;
 
   /// Called when this item is invoked
+  ///
+  /// This item is passed to the callback.
+  ///
+  /// This callback is executed __after__ the global
+  /// [TreeView.onItemInvoked]-callback.
   final Future<void> Function(TreeViewItem item)? onInvoked;
+
+  /// Called when this item's expansion state is toggled.
+  ///
+  /// This item and its future expand state are passed to the callback.
+  ///
+  /// This callback is executed __after__ the global
+  /// [TreeView.onItemExpandToggle]-callback.
+  final Future<void> Function(TreeViewItem item, bool getsExpanded)?
+      onExpandToggle;
 
   /// The background color of this item.
   ///
@@ -149,6 +157,7 @@ class TreeViewItem with Diagnosticable {
     bool? expanded,
     this.selected = false,
     this.onInvoked,
+    this.onExpandToggle,
     this.backgroundColor,
     this.autofocus = false,
     FocusNode? focusNode,
@@ -174,6 +183,7 @@ class TreeViewItem with Diagnosticable {
           expanded: source.expanded,
           selected: source.selected,
           onInvoked: source.onInvoked,
+          onExpandToggle: source.onExpandToggle,
           backgroundColor: source.backgroundColor,
           autofocus: source.autofocus,
           focusNode: source.focusNode,
@@ -283,6 +293,7 @@ class TreeViewItem with Diagnosticable {
         other._anyExpandableSiblings == _anyExpandableSiblings &&
         other.selected == selected &&
         other.onInvoked == onInvoked &&
+        other.onExpandToggle == onExpandToggle &&
         other.backgroundColor == backgroundColor &&
         other._visible == _visible &&
         other.autofocus == autofocus &&
@@ -304,6 +315,7 @@ class TreeViewItem with Diagnosticable {
         _anyExpandableSiblings.hashCode ^
         selected.hashCode ^
         onInvoked.hashCode ^
+        onExpandToggle.hashCode ^
         backgroundColor.hashCode ^
         _visible.hashCode ^
         autofocus.hashCode ^
@@ -384,6 +396,29 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 typedef TreeViewSelectionChangedCallback = Future<void> Function(
     Iterable<TreeViewItem> selectedItems)?;
 
+/// A callback that receives a notification that an item has been invoked.
+///
+/// Used by [TreeView.onItemInvoked]
+typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
+
+/// A callback that receives a notification that an item
+/// received a secondary tap.
+///
+/// Used by [TreeView.onSecondaryTap]
+typedef TreeViewItemOnSecondaryTap = void Function(
+  TreeViewItem item,
+  TapDownDetails details,
+);
+
+/// A callback that receives a notification that the expansion state of an
+/// item has been toggled.
+///
+/// Used by [TreeView.onItemExpandToggle]
+typedef TreeViewItemOnExpandToggle = Future<void> Function(
+  TreeViewItem item,
+  bool getsExpanded,
+);
+
 /// The `TreeView` control enables a hierarchical list with expanding and
 /// collapsing nodes that contain nested items. It can be used to illustrate a
 /// folder structure or nested relationships in your UI.
@@ -416,6 +451,7 @@ class TreeView extends StatefulWidget {
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
+    this.onItemExpandToggle,
     this.onSecondaryTap,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
@@ -440,9 +476,25 @@ class TreeView extends StatefulWidget {
   final TreeViewSelectionMode selectionMode;
 
   /// Called when an item is invoked
+  ///
+  /// The item invoked is passed to the callback.
+  ///
+  /// This callback is executed __before__ the item's own
+  /// [TreeViewItem.onInvoked]-callback.
   final TreeViewItemInvoked? onItemInvoked;
 
-  ///  A tap with a secondary button has occurred.
+  /// Called when an item's expand state is toggled.
+  ///
+  /// The item and its future expand state are passed to the callback.
+  /// The callback is executed before the item's expand state actually changes.
+  ///
+  /// This callback is executed __before__ the item's own
+  /// [TreeViewItem.onExpandToggle]-callback.
+  final TreeViewItemOnExpandToggle? onItemExpandToggle;
+
+  /// A tap with a secondary button has occurred.
+  ///
+  /// The item tapped and [TapDownDetails] are passed to the callback.
   final TreeViewItemOnSecondaryTap? onSecondaryTap;
 
   /// Called when the selection changes. The items that are currently
@@ -628,7 +680,24 @@ class _TreeViewState extends State<TreeView>
               onExpandToggle: () async {
                 await invokeItem(item);
                 if (item.collapsable) {
+                  if (item.lazy) {
+                    // Triggers a loading indicator.
+                    setState(() {
+                      item.loading = true;
+                    });
+                  }
+
+                  if (widget.onItemExpandToggle != null) {
+                    await widget.onItemExpandToggle!(item, !item.expanded);
+                  }
+                  if (item.onExpandToggle != null) {
+                    await item.onExpandToggle!(item, !item.expanded);
+                  }
+
+                  // Remove the loading indicator.
+                  // Toggle the expand icon.
                   setState(() {
+                    item.loading = false;
                     item.expanded = !item.expanded;
                     items = widget.items.build();
                   });
