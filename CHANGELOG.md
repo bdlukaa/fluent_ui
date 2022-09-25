@@ -1,12 +1,12 @@
 Date format: DD/MM/YYYY
 
-## [next]
+## 4.0.0
 
 - **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)/[#531](https://github.com/bdlukaa/fluent_ui/pull/531)):  
   Before:
   ```dart
   NavigationView(
-  pane: NavigationPane(
+    pane: NavigationPane(
       items: [
         PaneItem(icon: Icon(FluentIcons.add)),
         PaneItem(icon: Icon(FluentIcons.add)),
@@ -57,43 +57,46 @@ Date format: DD/MM/YYYY
     ),
   ),
   ```
-  *Note: one attribute of pane or content must be null*
+  *either one attribute of pane or content must not be null*
 
-  You can use `NavigationView.transitionsBuilder`
-- **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441))
+  Use `NavigationView.transitionsBuilder` to create custom transitions
+- Added `PaneItem.onTap` ([#533](https://github.com/bdlukaa/fluent_ui/issues/533))
+- **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441)):
+
   Before:
   ```dart
-AutoSuggestBox(
-items: cats.map((cat) {
-return AutoSuggestBoxItem(
-value: cat,
-onFocusChange: (focused) {
-if (focused) debugPrint('Focused $cat');
-}
-);
-}).toList(),
-onSelected: (item) {
-setState(() => selected = item);
-},
-),
-  ```Now:
+  AutoSuggestBox(
+    items: cats.map((cat) {
+      return AutoSuggestBoxItem(
+        value: cat,
+        onFocusChange: (focused) {
+          if (focused) debugPrint('Focused $cat');
+        }
+      );
+    }).toList(),
+    onSelected: (item) {
+      setState(() => selected = item);
+    },
+  ),
+  ```
+  
+  Now:
   ```dart
-AutoSuggestBox<String>(
-  items: cats.map((cat) {
-    return AutoSuggestBoxItem<String>(
-      value: cat,
-      label: cat,
-      onFocusChange: (focused) {
-        if (focused) debugPrint('Focused \$cat');
-      }
-    );
-  }).toList(),
-  onSelected: (item) {
-    setState(() => selected = item);
-  },
-),
-```
-- Added `PaneItem.onTap` ([#533](https://github.com/bdlukaa/fluent_ui/issues/533))
+  AutoSuggestBox<String>(
+    items: cats.map((cat) {
+      return AutoSuggestBoxItem<String>(
+        value: cat,
+        label: cat,
+        onFocusChange: (focused) {
+          if (focused) debugPrint('Focused \$cat');
+        }
+      );
+    }).toList(),
+    onSelected: (item) {
+      setState(() => selected = item);
+    },
+  ),
+  ```
 - Compact pane is no longer toggled when item is selected ([#533](https://github.com/bdlukaa/fluent_ui/issues/533)).
   To toggle it programatically, use `NavigationViewState.toggleCompactOpenMode` when an item is tapped
 - Dynamic header height for open pane ([#530](https://github.com/bdlukaa/fluent_ui/issues/530))
@@ -101,8 +104,7 @@ AutoSuggestBox<String>(
 - `TreeView` updates: 
   - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
   - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
-  - You can now choose whether the items of a TreeView should use narrow or wide spacing. The examples shown in the Microsoft documentation use a wider spacing than the implementation used in the explorer of Windows 10/11.
-  - The build method of TreeViewItem now contains some short comments to make it easier to find individual parts of each item like the selection checkbox or the expand icon.
+  - You can now choose whether the items of a TreeView should use narrow or wide spacing.
   - Do not invoke the tree view item on secondary tap ([#526](https://github.com/bdlukaa/fluent_ui/issues/526))
   - **BREAKING** `TreeView.onSecondaryTap` is now a `(TreeViewItem item, TapDownDetails details)` callback:
     Before:
@@ -123,10 +125,7 @@ AutoSuggestBox<String>(
     )
     ```
   - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
-  - Add global onItemExpandToggle callback to TreeView.
-  - Add onExpandToggle callback to TreeViewItem.
-    The new callbacks can be used to load child items lazily, which fixes the unexpected behavior of triggering child loading on invoking an item. The loading of children now can be triggered, only when the item gets expanded; then a loading indicator is shown if the loading takes some time. When loading is complete, the loading indicator is removed and the item gets expanded.
-    -> The 'global' callback gets executed before(!) the item's callback, like the 'global' onItemInvoke' callback gets executed before the onInvoke callback. 
+  - Added `TreeView.onItemExpandToggle` and `TreeViewItem.onExpandToggle` ([#522](https://github.com/bdlukaa/fluent_ui/issues/522))
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 
