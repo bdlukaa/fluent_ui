@@ -504,7 +504,7 @@ class PaneItemAction extends PaneItem {
     return super.build(
       context,
       selected,
-      onTap,
+      onPressed,
       displayMode: displayMode,
       showTextOnTop: showTextOnTop,
       autofocus: autofocus,
