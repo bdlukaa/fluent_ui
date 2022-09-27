@@ -212,13 +212,14 @@ class _DropDownButtonState extends State<DropDownButton> {
             if (widget.closeAfterClick) {
               return MenuFlyoutItem(
                 onPressed: () {
-                  item.onPressed?.call();
                   flyoutController.close();
+                  item.onPressed?.call();
                 },
                 key: item.key,
                 leading: item.leading,
                 text: item.text,
                 trailing: item.trailing,
+                selected: item.selected,
               );
             }
             return item;
