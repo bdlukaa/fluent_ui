@@ -81,10 +81,10 @@ class AutoSuggestBoxItem<T> {
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 ///  * [TextBox], which is used by this widget to enter user text input
 ///  * [TextFormBox], which is used by this widget by Form
 ///  * [Overlay], which is used to show the suggestion popup
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 class AutoSuggestBox<T> extends StatefulWidget {
   /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
@@ -93,6 +93,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.noResultsFoundBuilder,
     this.sorter,
     this.leadingIcon,
     this.trailingIcon,
@@ -117,6 +118,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.autofocus = false,
     this.enableKeyboardControls = true,
     this.enabled = true,
+    this.inputFormatters,
   })  : autovalidateMode = AutovalidateMode.disabled,
         validator = null,
         super(key: key);
@@ -128,6 +130,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.noResultsFoundBuilder,
     this.sorter,
     this.leadingIcon,
     this.trailingIcon,
@@ -154,6 +157,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.autofocus = false,
     this.enableKeyboardControls = true,
     this.enabled = true,
+    this.inputFormatters,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -167,6 +171,9 @@ class AutoSuggestBox<T> extends StatefulWidget {
 
   /// Called when the user selected a value.
   final ValueChanged<AutoSuggestBoxItem<T>>? onSelected;
+
+  /// Widget to be displayed when none of the items fit the [sorter]
+  final WidgetBuilder? noResultsFoundBuilder;
 
   /// Sort the [items] based on the current query text
   ///
@@ -294,6 +301,9 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// See also:
   ///  * [TextBox.enabled]
   final bool enabled;
+
+  /// {@macro flutter.widgets.editableText.inputFormatters}
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<AutoSuggestBox<T>> createState() => _AutoSuggestBoxState<T>();
@@ -491,6 +501,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                   _dismissOverlay();
                   focusNode.unfocus();
                 },
+                noResultsFoundBuilder: widget.noResultsFoundBuilder,
               ),
             ),
           ),
@@ -655,6 +666,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 textInputAction: widget.textInputAction,
                 keyboardAppearance: widget.keyboardAppearance,
                 enabled: widget.enabled,
+                inputFormatters: widget.inputFormatters,
               )
             : TextBox(
                 key: _textBoxKey,
@@ -684,6 +696,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 textInputAction: widget.textInputAction,
                 keyboardAppearance: widget.keyboardAppearance,
                 enabled: widget.enabled,
+                inputFormatters: widget.inputFormatters,
               ),
       ),
     );
@@ -701,6 +714,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
     required this.itemsStream,
     required this.sorter,
     required this.maxHeight,
+    required this.noResultsFoundBuilder,
   }) : super(key: key);
 
   final List<AutoSuggestBoxItem<T>> items;
@@ -711,6 +725,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   final Stream<List<AutoSuggestBoxItem<T>>> itemsStream;
   final AutoSuggestBoxSorter<T> sorter;
   final double maxHeight;
+  final WidgetBuilder? noResultsFoundBuilder;
 
   @override
   State<_AutoSuggestBoxOverlay<T>> createState() =>
@@ -798,13 +813,14 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
               final sortedItems = widget.sorter(value.text, items);
               late Widget result;
               if (sortedItems.isEmpty) {
-                result = Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: _AutoSuggestBoxOverlayTile(
-                    text: Text(localizations.noResultsFoundLabel),
-                    selected: false,
-                  ),
-                );
+                result = widget.noResultsFoundBuilder?.call(context) ??
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: _AutoSuggestBoxOverlayTile(
+                        text: Text(localizations.noResultsFoundLabel),
+                        selected: false,
+                      ),
+                    );
               } else {
                 result = ListView.builder(
                   itemExtent: tileHeight,

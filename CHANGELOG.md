@@ -7,6 +7,8 @@ Date format: DD/MM/YYYY
 - Ensure `MenuFlyoutItem.onPressed` is called after the flyout is closed if `DropDownButton.closeAfterClick` is true ([#520](https://github.com/bdlukaa/fluent_ui/issues/520))
 - Ensure the `TimePicker` and `DatePicker` popups will fit if the screen is small ([#544](https://github.com/bdlukaa/fluent_ui/issues/544))
 - Do not apply padding to `NavigationAppBar.leading` ([#539](https://github.com/bdlukaa/fluent_ui/issues/539))
+- Added `AutoSuggestBox.noResultsFoundBuilder` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
+- Added `AutoSuggestBox.inputFormatters` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
 
 ## 4.0.0
 
