@@ -3,6 +3,7 @@ Date format: DD/MM/YYYY
 ## 4.0.1
 
 - `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))
+- Added `DropDownButton.onOpen` and `DropDownButton.onClose` callbacks ([#437](https://github.com/bdlukaa/fluent_ui/issues/537))
 
 ## 4.0.0
 

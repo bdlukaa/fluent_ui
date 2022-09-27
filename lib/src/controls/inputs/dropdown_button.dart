@@ -43,6 +43,8 @@ class DropDownButton extends StatefulWidget {
     this.placement = FlyoutPlacement.center,
     this.menuShape,
     this.menuColor,
+    this.onOpen,
+    this.onClose,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
@@ -103,6 +105,20 @@ class DropDownButton extends StatefulWidget {
 
   /// The menu color. If null, [ThemeData.menuColor] is used
   final Color? menuColor;
+
+  /// Called when the flyout is opened
+  ///
+  /// See also:
+  ///
+  ///  * [Flyout.onClose]
+  final VoidCallback? onOpen;
+
+  /// Called when the flyout is closed
+  ///
+  /// See also:
+  ///
+  ///  * [Flyout.onClose]
+  final VoidCallback? onClose;
 
   @override
   State<DropDownButton> createState() => _DropDownButtonState();
@@ -167,6 +183,8 @@ class _DropDownButtonState extends State<DropDownButton> {
       position: FlyoutPosition.below,
       controller: flyoutController,
       verticalOffset: widget.verticalOffset,
+      onOpen: widget.onOpen,
+      onClose: widget.onClose,
       child: Builder(builder: (context) {
         return widget.buttonBuilder?.call(
               context,
