@@ -31,7 +31,7 @@
 
 <div align="center">
   <a href="https://bdlukaa.github.io/fluent_ui">
-    <img src="images/example-showcase.png" />
+    <img src="https://raw.githubusercontent.com/bdlukaa/fluent_ui/master/images/example-showcase.png" />
   </a>
 </div>
 
