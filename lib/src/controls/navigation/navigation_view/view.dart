@@ -684,7 +684,7 @@ class NavigationAppBar with Diagnosticable {
   /// The background color of this app bar.
   final Color? backgroundColor;
 
-  /// Creates an app bar
+  /// Creates a fluent-styled app bar.
   const NavigationAppBar({
     this.key,
     this.leading,
@@ -715,15 +715,13 @@ class NavigationAppBar with Diagnosticable {
 
   Widget _buildLeading([bool imply = true]) {
     return Builder(builder: (context) {
-      final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-      final bool canPop = parentRoute?.canPop ?? false;
       late Widget widget;
       if (leading != null) {
-        widget = Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: leading,
-        );
+        widget = leading!;
       } else if (automaticallyImplyLeading && imply) {
+        final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+        final bool canPop = parentRoute?.canPop ?? false;
+
         assert(debugCheckHasFluentLocalizations(context));
         assert(debugCheckHasFluentTheme(context));
         final localizations = FluentLocalizations.of(context);
@@ -797,10 +795,13 @@ class _NavigationAppBar extends StatelessWidget {
       if (appBar.title != null) {
         assert(debugCheckHasFluentTheme(context));
         final theme = NavigationPaneTheme.of(context);
+
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
-          padding: const EdgeInsetsDirectional.only(start: 16.0),
+          padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+            const EdgeInsetsDirectional.only(start: 6.0),
+          ),
           child: DefaultTextStyle(
             style:
                 FluentTheme.of(context).typography.caption ?? const TextStyle(),
