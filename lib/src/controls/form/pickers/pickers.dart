@@ -132,7 +132,14 @@ class YesNoPickerControl extends StatelessWidget {
   }
 }
 
+/// A helper widget that creates fluent-styled controls for a list
+///
+/// See also:
+///
+///  * [TimePicker], which uses this to control its popup's lists
+///  * [DatePicker], which uses this to control its popup's lists
 class PickerNavigatorIndicator extends StatelessWidget {
+  /// Creates a picker navigator indicator
   const PickerNavigatorIndicator({
     Key? key,
     required this.child,
@@ -140,13 +147,25 @@ class PickerNavigatorIndicator extends StatelessWidget {
     required this.onForward,
   }) : super(key: key);
 
+  /// The content of the widget.
+  ///
+  /// THe indicators will be rendered above this
   final Widget child;
+
+  /// Called when the forward button is pressed
+  ///
+  /// If null, no forward button is shown
   final VoidCallback onForward;
+
+  /// Called when the backward button is pressed
+  ///
+  /// If null, no backward button is shown
   final VoidCallback onBackward;
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+
     return HoverButton(
       customActions: {
         DirectionalFocusIntent: CallbackAction<DirectionalFocusIntent>(
@@ -239,14 +258,23 @@ class PickerNavigatorIndicator extends StatelessWidget {
 }
 
 extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
-  Future<void> navigateSides(BuildContext context, bool forward, int amount) {
+  /// Navigates a fixed-extent list into a specific direction
+  Future<void> navigateSides(
+    BuildContext context,
+    bool forward,
+    int amount, {
+    Duration? duration,
+    Curve? curve,
+  }) {
     assert(debugCheckHasFluentTheme(context));
-    final duration = FluentTheme.of(context).fasterAnimationDuration;
-    final curve = FluentTheme.of(context).animationCurve;
+    duration ??= FluentTheme.of(context).fasterAnimationDuration;
+    curve ??= FluentTheme.of(context).animationCurve;
+
     if (forward) {
       final currentItem = selectedItem;
       int to = currentItem + 1;
       if (currentItem == amount - 1) to = 0;
+
       return animateToItem(
         to,
         duration: duration,
@@ -256,6 +284,7 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
       final currentItem = selectedItem;
       int to = currentItem - 1;
       if (currentItem == 0) to = amount - 1;
+
       return animateToItem(
         to,
         duration: duration,
@@ -329,7 +358,9 @@ class _PickerState extends State<Picker> {
 
         final theme = FluentTheme.of(context);
 
-        const minWidth = 260.0;
+        // If the screen is smaller than 260, we ensure the popup will fit in the
+        // screen. https://github.com/bdlukaa/fluent_ui/issues/544
+        final minWidth = min(260.0, MediaQuery.of(context).size.width);
         final width = max(box.size.width, minWidth);
         final x = () {
           if (box.size.width > minWidth) return childOffset.dx;
