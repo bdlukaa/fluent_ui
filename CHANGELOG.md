@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## 4.0.1
+
+- `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))
+
 ## 4.0.0
 
 - **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)/[#531](https://github.com/bdlukaa/fluent_ui/pull/531)):  
@@ -61,6 +65,35 @@ Date format: DD/MM/YYYY
 
   Use `NavigationView.transitionsBuilder` to create custom transitions
 - Added `PaneItem.onTap` ([#533](https://github.com/bdlukaa/fluent_ui/issues/533))
+- Compact pane is no longer toggled when item is selected ([#533](https://github.com/bdlukaa/fluent_ui/issues/533)).
+  To toggle it programatically, use `NavigationViewState.toggleCompactOpenMode` when an item is tapped
+- Dynamic header height for open pane ([#530](https://github.com/bdlukaa/fluent_ui/issues/530))
+- Fixes memory leaks on `NavigationView`
+- `TreeView` updates: 
+  - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
+  - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
+  - You can now choose whether the items of a TreeView should use narrow or wide spacing.
+  - Do not invoke the tree view item on secondary tap ([#526](https://github.com/bdlukaa/fluent_ui/issues/526))
+  - **BREAKING** `TreeView.onSecondaryTap` is now a `(TreeViewItem item, TapDownDetails details)` callback:
+    Before:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, offset) async {}
+    ),
+    ```
+
+    Now:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, details) {
+        final offset = details.globalPosition;
+      },
+    )
+    ```
+  - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
+  - Added `TreeView.onItemExpandToggle` and `TreeViewItem.onExpandToggle` ([#522](https://github.com/bdlukaa/fluent_ui/issues/522))
 - **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441)):
 
   Before:
@@ -97,35 +130,6 @@ Date format: DD/MM/YYYY
     },
   ),
   ```
-- Compact pane is no longer toggled when item is selected ([#533](https://github.com/bdlukaa/fluent_ui/issues/533)).
-  To toggle it programatically, use `NavigationViewState.toggleCompactOpenMode` when an item is tapped
-- Dynamic header height for open pane ([#530](https://github.com/bdlukaa/fluent_ui/issues/530))
-- Fixes memory leaks on `NavigationView`
-- `TreeView` updates: 
-  - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
-  - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
-  - You can now choose whether the items of a TreeView should use narrow or wide spacing.
-  - Do not invoke the tree view item on secondary tap ([#526](https://github.com/bdlukaa/fluent_ui/issues/526))
-  - **BREAKING** `TreeView.onSecondaryTap` is now a `(TreeViewItem item, TapDownDetails details)` callback:
-    Before:
-    ```dart
-    TreeView(
-      ...,
-      onSecondaryTap: (item, offset) async {}
-    ),
-    ```
-
-    Now:
-    ```dart
-    TreeView(
-      ...,
-      onSecondaryTap: (item, details) {
-        final offset = details.globalPosition;
-      },
-    )
-    ```
-  - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
-  - Added `TreeView.onItemExpandToggle` and `TreeViewItem.onExpandToggle` ([#522](https://github.com/bdlukaa/fluent_ui/issues/522))
 
 ## [4.0.0-pre.4] - Almost there - [02/09/2022]
 

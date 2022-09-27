@@ -479,7 +479,7 @@ class PaneItemHeader extends NavigationPaneItem {
 class PaneItemAction extends PaneItem {
   PaneItemAction({
     required super.icon,
-    required super.body,
+    super.body = const SizedBox.shrink(),
     required VoidCallback super.onTap,
     super.title,
     super.infoBadge,
