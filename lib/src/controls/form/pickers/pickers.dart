@@ -358,15 +358,18 @@ class _PickerState extends State<Picker> {
 
         final theme = FluentTheme.of(context);
 
-        // If the screen is smaller than 260, we ensure the popup will fit in the
-        // screen. https://github.com/bdlukaa/fluent_ui/issues/544
-        final minWidth = min(260.0, MediaQuery.of(context).size.width);
-        final width = max(box.size.width, minWidth);
-        final x = () {
-          if (box.size.width > minWidth) return childOffset.dx;
+        // ensure the popup will fit on the screen.
+        // https://github.com/bdlukaa/fluent_ui/issues/544
+        final minWidth = MediaQuery.of(context).size.width;
+        final width = min(box.size.width, minWidth);
 
-          // if the box width is less than [minWidth], center the popup
-          return childOffset.dx - (width / 4);
+        final x = () {
+          final popupOffset = width / 4;
+
+          // use [popupOffset] only if the screen is wide enough
+          return width + popupOffset * 2 >= minWidth
+              ? childOffset.dx
+              : childOffset.dx - popupOffset;
         }();
 
         final view = Stack(children: [
