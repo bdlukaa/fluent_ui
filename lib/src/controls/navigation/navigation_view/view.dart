@@ -261,6 +261,26 @@ class NavigationViewState extends State<NavigationView> {
       return theme.backgroundColor;
     }
 
+    Widget? paneNavigationButton() {
+      final minimalLeading = PaneItem(
+        title: Text(
+          !_minimalPaneOpen
+              ? localizations.openNavigationTooltip
+              : localizations.closeNavigationTooltip,
+        ),
+        icon: const Icon(FluentIcons.global_nav_button),
+        body: const SizedBox.shrink(),
+      ).build(
+        context,
+        false,
+        () async {
+          setState(() => _minimalPaneOpen = !_minimalPaneOpen);
+        },
+        displayMode: PaneDisplayMode.compact,
+      );
+      return minimalLeading;
+    }
+
     return LayoutBuilder(builder: (context, consts) {
       var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
 
@@ -290,31 +310,19 @@ class NavigationViewState extends State<NavigationView> {
 
         displayMode = _autoDisplayMode!;
       }
-
       assert(displayMode != PaneDisplayMode.auto);
 
       Widget appBar = () {
         if (widget.appBar != null) {
-          final minimalLeading = PaneItem(
-            title: Text(
-              !_minimalPaneOpen
-                  ? localizations.openNavigationTooltip
-                  : localizations.closeNavigationTooltip,
-            ),
-            icon: const Icon(FluentIcons.global_nav_button),
-            body: const SizedBox.shrink(),
-          ).build(
-            context,
-            false,
-            () async {
-              setState(() => _minimalPaneOpen = !_minimalPaneOpen);
-            },
-            displayMode: PaneDisplayMode.compact,
-          );
           return _NavigationAppBar(
             appBar: widget.appBar!,
-            additionalLeading:
-                displayMode == PaneDisplayMode.minimal ? minimalLeading : null,
+            additionalLeading: () {
+              if (widget.pane != null) {
+                return displayMode == PaneDisplayMode.minimal
+                    ? paneNavigationButton()
+                    : null;
+              }
+            }(),
           );
         }
         return LayoutBuilder(
