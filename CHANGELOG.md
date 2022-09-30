@@ -1,3 +1,7 @@
+## 4.0.2
+
+- Fixed `NavigationAppBar` unnecessary leading icon when no pane is provided in `NavigationView` 
+
 ## 4.0.1
 
 - `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))
