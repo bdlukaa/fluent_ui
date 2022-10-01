@@ -1,3 +1,7 @@
+## (next)
+
+- Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#553](https://github.com/bdlukaa/fluent_ui/pull/553))
+
 ## 4.0.1
 
 - `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))

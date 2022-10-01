@@ -6,11 +6,11 @@ part of 'view.dart';
 /// See also:
 ///   * [NavigationView], used alongside this to navigate through pages
 ///   * [NavigationAppBar], the app top bar
-class _NavigationBody extends StatefulWidget {
+class NavigationBody extends StatefulWidget {
   /// Creates a navigation body.
   ///
   /// [index] must be greater than 0 and less than [children.length]
-  const _NavigationBody({
+  const NavigationBody({
     // ignore: unused_element
     super.key,
     required this.itemKey,
@@ -73,10 +73,10 @@ class _NavigationBody extends StatefulWidget {
   }
 
   @override
-  State<_NavigationBody> createState() => _NavigationBodyState();
+  State<NavigationBody> createState() => _NavigationBodyState();
 }
 
-class _NavigationBodyState extends State<_NavigationBody> {
+class _NavigationBodyState extends State<NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
