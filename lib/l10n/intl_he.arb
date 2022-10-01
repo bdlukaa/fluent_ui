@@ -1,0 +1,127 @@
+{
+  "@@locale": "he",
+  "backButtonTooltip": "הקודם",
+  "@backButtonTooltip": {
+    "description": "The tooltip for the back button on [NavigationAppBar]."
+  },
+  "closeButtonLabel": "סגור",
+  "@closeButtonLabel": {
+    "description": "Label for \"close\" buttons and menu items."
+  },
+  "searchLabel": "חיפוש",
+  "@searchLabel": {
+    "description": "Label for \"search\" text fields."
+  },
+  "closeNavigationTooltip": "סגור ניווט",
+  "@closeNavigationTooltip": {
+    "description": "The tooltip for the toggle navigation button."
+  },
+  "openNavigationTooltip": "פתח ניווט",
+  "@openNavigationTooltip": {
+    "description": "The tooltip for the toogle navigation button."
+  },
+  "clickToSearch": "חיפוש",
+  "@clickToSearch": {
+    "description": "The tooltip for the \"Click to Search\" button."
+  },
+  "modalBarrierDismissLabel": "הסתר",
+  "@modalBarrierDismissLabel": {
+    "description": "Label read out by accessibility tools (TalkBack or VoiceOver) for a modal barrier to indicate that a tap dismisses the barrier. A modal barrier can for example be found behind an alert or popup to block user interaction with elements behind it."
+  },
+  "minimizeWindowTooltip": "מזער",
+  "@minimizeWindowTooltip": {
+    "description": "The tooltip used by the \"Minimize\" button on desktop windows."
+  },
+  "restoreWindowTooltip": "שחזור",
+  "@restoreWindowTooltip": {
+    "description": "The tooltip used by the \"Restore\" button on desktop windows."
+  },
+  "closeWindowTooltip": "סגור",
+  "@closeWindowTooltip": {
+    "description": "The tooltip used by the \"Close\" button on desktop windows."
+  },
+  "dialogLabel": "דיאלוג",
+  "@dialogLabel": {
+    "description": "The dialog label."
+  },
+  "cutActionLabel": "גזור",
+  "@cutActionLabel": {
+    "description": "The label for the cut action on the text selection controls."
+  },
+  "copyActionLabel": "העתק",
+  "@copyActionLabel": {
+    "description": "The label for the copy action on the text selection controls."
+  },
+  "pasteActionLabel": "הדבק",
+  "@pasteActionLabel": {
+    "description": "The label for the paste button on the text selection controls."
+  },
+  "selectAllActionLabel": "בחר הכל",
+  "@selectAllActionLabel": {
+    "description": "The label for the select all button on the text selection controls."
+  },
+  "newTabLabel": "כרטיסייה חדשה",
+  "@newTabLabel": {
+    "description": "The label used by [TabView]'s new button."
+  },
+  "closeTabLabelSuffix": "סגור כרטיסייה",
+  "@closeTabLabelSuffix": {
+    "description": "The label used by [TabView]'s close button."
+  },
+  "scrollTabBackwardLabel": "גלול רשימת כרטיסיות אחורה",
+  "@scrollTabBackwardLabel": {
+    "description": "The label used by [TabView]'s scroll backward button."
+  },
+  "scrollTabForwardLabel": "גלול רשימת כרטיסיות קדימה",
+  "@scrollTabForwardLabel": {
+    "description": "The label used by [TabView]'s scroll forward button."
+  },
+  "noResultsFoundLabel": "לא נמצאו תוצאות",
+  "@noResultsFoundLabel": {
+    "description": "The label used by [AutoSuggestBox] when the results can't be found."
+  },
+  "copyActionTooltip": "העתק את התוכן שנבחר",
+  "@copyActionTooltip": {
+    "description": "The tooltip for the copy action on the text selection controls."
+  },
+  "cutActionTooltip": "גזור את התוכן שנבחר",
+  "@cutActionTooltip": {
+    "description": "The tooltip for the cut action on the text selection controls."
+  },
+  "pasteActionTooltip": "הדבק את התוכן שנבחר למיקום הנוכחי",
+  "@pasteActionTooltip": {
+    "description": "The tooltip for the paste action on the text selection controls."
+  },
+  "selectAllActionTooltip": "בחר הכל",
+  "@selectAllActionTooltip": {
+    "description": "The tooltip for the select all action on the text selection controls."
+  },
+  "hour": "שעה",
+  "@hour": {
+    "description": "The text used by [TimePicker] for the hour field."
+  },
+  "minute": "דקה",
+  "@minute": {
+    "description": "The text used by [TimePicker] for the minute field."
+  },
+  "am": "AM",
+  "@am": {
+    "description": "The text used by [TimePicker] for the AM field."
+  },
+  "pm": "PM",
+  "@pm": {
+    "description": "The text used by [TimePicker] for the PM field."
+  },
+  "month": "חודש",
+  "@month": {
+    "description": "The text used by [DatePicker] for the month field"
+  },
+  "day": "יום",
+  "@day": {
+    "description": "The text used by [DatePicker] for the day field"
+  },
+  "year": "שנה",
+  "@year": {
+    "description": "The text used by [DatePicker] for the year field"
+  }
+}
