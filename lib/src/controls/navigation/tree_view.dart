@@ -476,6 +476,7 @@ class TreeView extends StatefulWidget {
     this.addRepaintBoundaries = true,
     this.usePrototypeItem = false,
     this.narrowSpacing = false,
+    this.includePartiallySelectedItems = false,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -517,6 +518,11 @@ class TreeView extends StatefulWidget {
   /// [TreeViewSelectionMode.single] then it will contain exactly
   /// zero or one items.
   final TreeViewSelectionChangedCallback onSelectionChanged;
+
+  /// If true, will include items that are in an indeterminute (partially
+  /// selected) state in the list of selected items in the
+  /// [onSelectionChanged] callback.
+  final bool includePartiallySelectedItems;
 
   /// A widget to be shown when a node is loading. Only used if
   /// [TreeViewItem.loadingWidget] is null.
@@ -700,8 +706,10 @@ class _TreeViewState extends State<TreeView>
                       }
                     });
                     if (onSelectionChanged != null) {
-                      final selectedItems = widget.items
-                          .whereForAll((item) => item.selected ?? false);
+                      final selectedItems = widget.items.whereForAll((item) =>
+                          (item.selected ?? false) ||
+                          (widget.includePartiallySelectedItems &&
+                              item.selected == null));
                       await onSelectionChanged(selectedItems);
                     }
                     break;
