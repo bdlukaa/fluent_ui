@@ -40,6 +40,18 @@ enum TreeViewSelectionMode {
   multiple,
 }
 
+/// The reason that a [TreeViewItem] was invoked
+enum TreeViewItemInvokeReason {
+  /// The item was expanded/collapsed
+  expandToggle,
+
+  /// The item selection state was toggled
+  selectionToggle,
+
+  /// The item was pressed
+  pressed,
+}
+
 /// The item used by [TreeView] to render tiles
 ///
 /// See also:
@@ -104,7 +116,8 @@ class TreeViewItem with Diagnosticable {
   ///
   /// This callback is executed __after__ the global
   /// [TreeView.onItemInvoked]-callback.
-  final Future<void> Function(TreeViewItem item)? onInvoked;
+  final Future<void> Function(
+      TreeViewItem item, TreeViewItemInvokeReason reason)? onInvoked;
 
   /// Called when this item's expansion state is toggled.
   ///
@@ -399,7 +412,8 @@ typedef TreeViewSelectionChangedCallback = Future<void> Function(
 /// A callback that receives a notification that an item has been invoked.
 ///
 /// Used by [TreeView.onItemInvoked]
-typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
+typedef TreeViewItemInvoked = Future<void> Function(
+    TreeViewItem item, TreeViewItemInvokeReason reason);
 
 /// A callback that receives a notification that an item
 /// received a secondary tap.
@@ -615,7 +629,7 @@ class _TreeViewState extends State<TreeView>
                   item: items.first,
                   selectionMode: widget.selectionMode,
                   narrowSpacing: widget.narrowSpacing,
-                  onInvoked: () {},
+                  onInvoked: (_) {},
                   onSelect: () {},
                   onSecondaryTap: (details) {},
                   onExpandToggle: () {},
@@ -678,7 +692,7 @@ class _TreeViewState extends State<TreeView>
                 }
               },
               onExpandToggle: () async {
-                await invokeItem(item);
+                await invokeItem(item, TreeViewItemInvokeReason.expandToggle);
                 if (item.collapsable) {
                   if (item.lazy) {
                     // Triggers a loading indicator.
@@ -703,7 +717,7 @@ class _TreeViewState extends State<TreeView>
                   });
                 }
               },
-              onInvoked: () => invokeItem(item),
+              onInvoked: (reason) => invokeItem(item, reason),
               loadingWidgetFallback: widget.loadingWidget,
             );
           },
@@ -712,10 +726,11 @@ class _TreeViewState extends State<TreeView>
     );
   }
 
-  Future<void> invokeItem(TreeViewItem item) async {
+  Future<void> invokeItem(
+      TreeViewItem item, TreeViewItemInvokeReason reason) async {
     await Future.wait([
-      if (widget.onItemInvoked != null) widget.onItemInvoked!(item),
-      if (item.onInvoked != null) item.onInvoked!(item),
+      if (widget.onItemInvoked != null) widget.onItemInvoked!(item, reason),
+      if (item.onInvoked != null) item.onInvoked!(item, reason),
     ]);
   }
 
@@ -741,7 +756,7 @@ class _TreeViewItem extends StatelessWidget {
   final VoidCallback onSelect;
   final GestureTapDownCallback onSecondaryTap;
   final VoidCallback onExpandToggle;
-  final VoidCallback onInvoked;
+  final void Function(TreeViewItemInvokeReason reason) onInvoked;
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
@@ -786,9 +801,11 @@ class _TreeViewItem extends StatelessWidget {
         onPressed: selectionMode == TreeViewSelectionMode.single
             ? () {
                 onSelect();
-                onInvoked();
+                onInvoked(TreeViewItemInvokeReason.pressed);
               }
-            : onInvoked,
+            : () {
+                onInvoked(TreeViewItemInvokeReason.pressed);
+              },
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -847,7 +864,7 @@ class _TreeViewItem extends StatelessWidget {
                           checked: item.selected,
                           onChanged: (value) {
                             onSelect();
-                            onInvoked();
+                            onInvoked(TreeViewItemInvokeReason.selectionToggle);
                           },
                         ),
                       ),
