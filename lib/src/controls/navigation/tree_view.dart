@@ -671,9 +671,9 @@ class _TreeViewState extends State<TreeView>
                 switch (widget.selectionMode) {
                   case TreeViewSelectionMode.single:
                     setState(() {
-                      for (final item in items) {
+                      items.executeForAll((item) {
                         item.selected = false;
-                      }
+                      });
                       item.selected = true;
                     });
                     if (onSelectionChanged != null) {
