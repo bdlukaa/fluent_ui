@@ -253,8 +253,25 @@ class TreeViewItem with Diagnosticable {
     }
   }
 
-  /// Updates [selected] based on the [children]s' state
-  void updateSelected() {
+  /// Changes the selection state for this item and all of its children
+  /// to either all selected or all deselected. Also appropriately updates
+  /// the selection state of this item's parents as required. This should not
+  /// be used for an item that belongs to a [TreeView] in single selection
+  /// mode. See also [TreeView.deselectParentWhenChildrenDeselected].
+  void setSelectionStateForMultiSelectionMode(
+      bool newSelectionState, bool deselectParentWhenChildrenDeselected) {
+    selected = newSelectionState;
+    children.executeForAll((item) {
+      item.selected = newSelectionState;
+    });
+    executeForAllParents(
+        (p) => p?.updateSelected(deselectParentWhenChildrenDeselected));
+  }
+
+  /// Updates [selected] based on the [children]s' state. [selected] will not
+  /// be forced to false if `deselectParentWhenChildrenDeselected` is false and
+  /// either there are no children or all children are deselected.
+  void updateSelected(bool deselectParentWhenChildrenDeselected) {
     bool hasNull = false;
     bool hasFalse = false;
     bool hasTrue = false;
@@ -269,7 +286,19 @@ class TreeViewItem with Diagnosticable {
       }
     }
 
-    selected = hasNull || (hasTrue && hasFalse) ? null : hasTrue;
+    if (!deselectParentWhenChildrenDeselected &&
+        (children.isEmpty || (!hasNull && hasFalse && !hasTrue))) {
+      if (selected == null && children.isEmpty) {
+        // should not be possible unless children were removed after the
+        // selected was updated previously...
+        selected = true;
+      } else if (selected == true) {
+        // we're now only in a partially selected state
+        selected = null;
+      }
+    } else {
+      selected = hasNull || (hasTrue && hasFalse) ? null : hasTrue;
+    }
   }
 
   @override
@@ -400,6 +429,14 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     }
     return result;
   }
+
+  /// Returns an iteration of all selected items (optionally including items
+  /// that are only partially selected).
+  Iterable<TreeViewItem> selectedItems(bool includePartiallySelectedItems) {
+    return whereForAll((item) =>
+        (item.selected ?? false) ||
+        (includePartiallySelectedItems && item.selected == null));
+  }
 }
 
 /// A callback that receives a notification that the selection state of
@@ -477,6 +514,7 @@ class TreeView extends StatefulWidget {
     this.usePrototypeItem = false,
     this.narrowSpacing = false,
     this.includePartiallySelectedItems = false,
+    this.deselectParentWhenChildrenDeselected = true,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -489,6 +527,12 @@ class TreeView extends StatefulWidget {
   ///
   /// [TreeViewSelectionMode.none] is used by default
   final TreeViewSelectionMode selectionMode;
+
+  /// If [selectionMode] is [TreeViewSelectionMode.multiple], indicates if
+  /// a parent will automatically be deselected when all of its children
+  /// are deselected. If you disable this behavior, also consider if you
+  /// want to set [includePartiallySelectedItems] to true.
+  final bool deselectParentWhenChildrenDeselected;
 
   /// Called when an item is invoked
   ///
@@ -589,8 +633,8 @@ class _TreeViewState extends State<TreeView>
     items = widget.items.build();
     if (widget.selectionMode != TreeViewSelectionMode.single) {
       items.executeForAll(
-        (item) =>
-            item.executeForAllParents((parent) => parent?.updateSelected()),
+        (item) => item.executeForAllParents((parent) => parent
+            ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
       );
     } else {
       // make sure that at most only a single item is selected
@@ -688,28 +732,15 @@ class _TreeViewState extends State<TreeView>
                     break;
                   case TreeViewSelectionMode.multiple:
                     setState(() {
-                      // if it's root
-                      if (item.selected == null || item.selected == false) {
-                        item
-                          ..selected = true
-                          ..children.executeForAll((item) {
-                            item.selected = true;
-                          })
-                          ..executeForAllParents((p) => p?.updateSelected());
-                      } else {
-                        item
-                          ..selected = false
-                          ..children.executeForAll((item) {
-                            item.selected = false;
-                          })
-                          ..executeForAllParents((p) => p?.updateSelected());
-                      }
+                      final newSelectionState =
+                          (item.selected == null || item.selected == false);
+                      item.setSelectionStateForMultiSelectionMode(
+                          newSelectionState,
+                          widget.deselectParentWhenChildrenDeselected);
                     });
                     if (onSelectionChanged != null) {
-                      final selectedItems = widget.items.whereForAll((item) =>
-                          (item.selected ?? false) ||
-                          (widget.includePartiallySelectedItems &&
-                              item.selected == null));
+                      final selectedItems = widget.items
+                          .selectedItems(widget.includePartiallySelectedItems);
                       await onSelectionChanged(selectedItems);
                     }
                     break;
