@@ -581,9 +581,27 @@ class _TreeViewState extends State<TreeView>
   /// Builds all the items based on the items provided by the [widget]
   void buildItems() {
     items = widget.items.build();
-    items.executeForAll(
-      (item) => item.executeForAllParents((parent) => parent?.updateSelected()),
-    );
+    if (widget.selectionMode != TreeViewSelectionMode.single) {
+      items.executeForAll(
+        (item) =>
+            item.executeForAllParents((parent) => parent?.updateSelected()),
+      );
+    } else {
+      // make sure that at most only a single item is selected
+      int foundSelected = 0;
+      for (final item in widget.items) {
+        final selected = item.selected;
+        // the null "indeterminute" state is not allowed in single select mode
+        if (selected == null) {
+          item.selected = false;
+        } else if (selected) {
+          foundSelected++;
+          if (foundSelected >= 2) {
+            item.selected = false;
+          }
+        }
+      }
+    }
   }
 
   @override
