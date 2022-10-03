@@ -1,6 +1,6 @@
 ## (next)
 
-- Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#553](https://github.com/bdlukaa/fluent_ui/pull/553))
+- Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
 
 ## 4.0.1
 
