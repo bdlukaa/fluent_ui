@@ -630,8 +630,8 @@ class _TreeViewState extends State<TreeView>
 
   /// Builds all the items based on the items provided by the [widget]
   void buildItems() {
-    items = widget.items.build();
     if (widget.selectionMode != TreeViewSelectionMode.single) {
+      items = widget.items.build();
       items.executeForAll(
         (item) => item.executeForAllParents((parent) => parent
             ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
@@ -651,6 +651,7 @@ class _TreeViewState extends State<TreeView>
           }
         }
       }
+      items = widget.items.build();
     }
   }
 
