@@ -1,3 +1,7 @@
+## 4.0.2
+
+- Added support for Uzbek language
+
 ## 4.0.1
 
 - `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))

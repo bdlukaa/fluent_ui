@@ -68,7 +68,8 @@ class FluentLocalizationsHu extends FluentLocalizations {
   String get copyActionTooltip => 'Kijelölt tartalom másolása a vágólapra';
 
   @override
-  String get cutActionTooltip => 'Kijelölt tartalom kivágása és vágólapra helyezése';
+  String get cutActionTooltip =>
+      'Kijelölt tartalom kivágása és vágólapra helyezése';
 
   @override
   String get pasteActionTooltip => 'Vágólap tartalmának beillesztése ide';
