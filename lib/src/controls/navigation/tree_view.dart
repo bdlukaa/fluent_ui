@@ -40,6 +40,18 @@ enum TreeViewSelectionMode {
   multiple,
 }
 
+/// The reason that a [TreeViewItem] was invoked
+enum TreeViewItemInvokeReason {
+  /// The item was expanded/collapsed
+  expandToggle,
+
+  /// The item selection state was toggled
+  selectionToggle,
+
+  /// The item was pressed
+  pressed,
+}
+
 /// The item used by [TreeView] to render tiles
 ///
 /// See also:
@@ -104,7 +116,8 @@ class TreeViewItem with Diagnosticable {
   ///
   /// This callback is executed __after__ the global
   /// [TreeView.onItemInvoked]-callback.
-  final Future<void> Function(TreeViewItem item)? onInvoked;
+  final Future<void> Function(
+      TreeViewItem item, TreeViewItemInvokeReason reason)? onInvoked;
 
   /// Called when this item's expansion state is toggled.
   ///
@@ -240,8 +253,25 @@ class TreeViewItem with Diagnosticable {
     }
   }
 
-  /// Updates [selected] based on the [children]s' state
-  void updateSelected() {
+  /// Changes the selection state for this item and all of its children
+  /// to either all selected or all deselected. Also appropriately updates
+  /// the selection state of this item's parents as required. This should not
+  /// be used for an item that belongs to a [TreeView] in single selection
+  /// mode. See also [TreeView.deselectParentWhenChildrenDeselected].
+  void setSelectionStateForMultiSelectionMode(
+      bool newSelectionState, bool deselectParentWhenChildrenDeselected) {
+    selected = newSelectionState;
+    children.executeForAll((item) {
+      item.selected = newSelectionState;
+    });
+    executeForAllParents(
+        (p) => p?.updateSelected(deselectParentWhenChildrenDeselected));
+  }
+
+  /// Updates [selected] based on the [children]s' state. [selected] will not
+  /// be forced to false if `deselectParentWhenChildrenDeselected` is false and
+  /// either there are no children or all children are deselected.
+  void updateSelected(bool deselectParentWhenChildrenDeselected) {
     bool hasNull = false;
     bool hasFalse = false;
     bool hasTrue = false;
@@ -256,7 +286,19 @@ class TreeViewItem with Diagnosticable {
       }
     }
 
-    selected = hasNull || (hasTrue && hasFalse) ? null : hasTrue;
+    if (!deselectParentWhenChildrenDeselected &&
+        (children.isEmpty || (!hasNull && hasFalse && !hasTrue))) {
+      if (selected == null && children.isEmpty) {
+        // should not be possible unless children were removed after the
+        // selected was updated previously...
+        selected = true;
+      } else if (selected == true) {
+        // we're now only in a partially selected state
+        selected = null;
+      }
+    } else {
+      selected = hasNull || (hasTrue && hasFalse) ? null : hasTrue;
+    }
   }
 
   @override
@@ -387,6 +429,14 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     }
     return result;
   }
+
+  /// Returns an iteration of all selected items (optionally including items
+  /// that are only partially selected).
+  Iterable<TreeViewItem> selectedItems(bool includePartiallySelectedItems) {
+    return whereForAll((item) =>
+        (item.selected ?? false) ||
+        (includePartiallySelectedItems && item.selected == null));
+  }
 }
 
 /// A callback that receives a notification that the selection state of
@@ -399,7 +449,8 @@ typedef TreeViewSelectionChangedCallback = Future<void> Function(
 /// A callback that receives a notification that an item has been invoked.
 ///
 /// Used by [TreeView.onItemInvoked]
-typedef TreeViewItemInvoked = Future<void> Function(TreeViewItem item);
+typedef TreeViewItemInvoked = Future<void> Function(
+    TreeViewItem item, TreeViewItemInvokeReason reason);
 
 /// A callback that receives a notification that an item
 /// received a secondary tap.
@@ -462,6 +513,8 @@ class TreeView extends StatefulWidget {
     this.addRepaintBoundaries = true,
     this.usePrototypeItem = false,
     this.narrowSpacing = false,
+    this.includePartiallySelectedItems = false,
+    this.deselectParentWhenChildrenDeselected = true,
   })  : assert(items.length > 0, 'There must be at least one item'),
         super(key: key);
 
@@ -474,6 +527,12 @@ class TreeView extends StatefulWidget {
   ///
   /// [TreeViewSelectionMode.none] is used by default
   final TreeViewSelectionMode selectionMode;
+
+  /// If [selectionMode] is [TreeViewSelectionMode.multiple], indicates if
+  /// a parent will automatically be deselected when all of its children
+  /// are deselected. If you disable this behavior, also consider if you
+  /// want to set [includePartiallySelectedItems] to true.
+  final bool deselectParentWhenChildrenDeselected;
 
   /// Called when an item is invoked
   ///
@@ -503,6 +562,11 @@ class TreeView extends StatefulWidget {
   /// [TreeViewSelectionMode.single] then it will contain exactly
   /// zero or one items.
   final TreeViewSelectionChangedCallback onSelectionChanged;
+
+  /// If true, will include items that are in an indeterminute (partially
+  /// selected) state in the list of selected items in the
+  /// [onSelectionChanged] callback.
+  final bool includePartiallySelectedItems;
 
   /// A widget to be shown when a node is loading. Only used if
   /// [TreeViewItem.loadingWidget] is null.
@@ -566,10 +630,29 @@ class _TreeViewState extends State<TreeView>
 
   /// Builds all the items based on the items provided by the [widget]
   void buildItems() {
-    items = widget.items.build();
-    items.executeForAll(
-      (item) => item.executeForAllParents((parent) => parent?.updateSelected()),
-    );
+    if (widget.selectionMode != TreeViewSelectionMode.single) {
+      items = widget.items.build();
+      items.executeForAll(
+        (item) => item.executeForAllParents((parent) => parent
+            ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
+      );
+    } else {
+      // make sure that at most only a single item is selected
+      int foundSelected = 0;
+      for (final item in widget.items) {
+        final selected = item.selected;
+        // the null "indeterminute" state is not allowed in single select mode
+        if (selected == null) {
+          item.selected = false;
+        } else if (selected) {
+          foundSelected++;
+          if (foundSelected >= 2) {
+            item.selected = false;
+          }
+        }
+      }
+      items = widget.items.build();
+    }
   }
 
   @override
@@ -615,7 +698,7 @@ class _TreeViewState extends State<TreeView>
                   item: items.first,
                   selectionMode: widget.selectionMode,
                   narrowSpacing: widget.narrowSpacing,
-                  onInvoked: () {},
+                  onInvoked: (_) {},
                   onSelect: () {},
                   onSecondaryTap: (details) {},
                   onExpandToggle: () {},
@@ -639,9 +722,9 @@ class _TreeViewState extends State<TreeView>
                 switch (widget.selectionMode) {
                   case TreeViewSelectionMode.single:
                     setState(() {
-                      for (final item in items) {
+                      items.executeForAll((item) {
                         item.selected = false;
-                      }
+                      });
                       item.selected = true;
                     });
                     if (onSelectionChanged != null) {
@@ -650,26 +733,15 @@ class _TreeViewState extends State<TreeView>
                     break;
                   case TreeViewSelectionMode.multiple:
                     setState(() {
-                      // if it's root
-                      if (item.selected == null || item.selected == false) {
-                        item
-                          ..selected = true
-                          ..children.executeForAll((item) {
-                            item.selected = true;
-                          })
-                          ..executeForAllParents((p) => p?.updateSelected());
-                      } else {
-                        item
-                          ..selected = false
-                          ..children.executeForAll((item) {
-                            item.selected = false;
-                          })
-                          ..executeForAllParents((p) => p?.updateSelected());
-                      }
+                      final newSelectionState =
+                          (item.selected == null || item.selected == false);
+                      item.setSelectionStateForMultiSelectionMode(
+                          newSelectionState,
+                          widget.deselectParentWhenChildrenDeselected);
                     });
                     if (onSelectionChanged != null) {
                       final selectedItems = widget.items
-                          .whereForAll((item) => item.selected ?? false);
+                          .selectedItems(widget.includePartiallySelectedItems);
                       await onSelectionChanged(selectedItems);
                     }
                     break;
@@ -678,7 +750,7 @@ class _TreeViewState extends State<TreeView>
                 }
               },
               onExpandToggle: () async {
-                await invokeItem(item);
+                await invokeItem(item, TreeViewItemInvokeReason.expandToggle);
                 if (item.collapsable) {
                   if (item.lazy) {
                     // Triggers a loading indicator.
@@ -703,7 +775,7 @@ class _TreeViewState extends State<TreeView>
                   });
                 }
               },
-              onInvoked: () => invokeItem(item),
+              onInvoked: (reason) => invokeItem(item, reason),
               loadingWidgetFallback: widget.loadingWidget,
             );
           },
@@ -712,10 +784,11 @@ class _TreeViewState extends State<TreeView>
     );
   }
 
-  Future<void> invokeItem(TreeViewItem item) async {
+  Future<void> invokeItem(
+      TreeViewItem item, TreeViewItemInvokeReason reason) async {
     await Future.wait([
-      if (widget.onItemInvoked != null) widget.onItemInvoked!(item),
-      if (item.onInvoked != null) item.onInvoked!(item),
+      if (widget.onItemInvoked != null) widget.onItemInvoked!(item, reason),
+      if (item.onInvoked != null) item.onInvoked!(item, reason),
     ]);
   }
 
@@ -741,7 +814,7 @@ class _TreeViewItem extends StatelessWidget {
   final VoidCallback onSelect;
   final GestureTapDownCallback onSecondaryTap;
   final VoidCallback onExpandToggle;
-  final VoidCallback onInvoked;
+  final void Function(TreeViewItemInvokeReason reason) onInvoked;
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
@@ -786,9 +859,11 @@ class _TreeViewItem extends StatelessWidget {
         onPressed: selectionMode == TreeViewSelectionMode.single
             ? () {
                 onSelect();
-                onInvoked();
+                onInvoked(TreeViewItemInvokeReason.pressed);
               }
-            : onInvoked,
+            : () {
+                onInvoked(TreeViewItemInvokeReason.pressed);
+              },
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -847,7 +922,7 @@ class _TreeViewItem extends StatelessWidget {
                           checked: item.selected,
                           onChanged: (value) {
                             onSelect();
-                            onInvoked();
+                            onInvoked(TreeViewItemInvokeReason.selectionToggle);
                           },
                         ),
                       ),
