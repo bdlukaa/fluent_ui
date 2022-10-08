@@ -43,6 +43,7 @@ class NavigationView extends StatefulWidget {
     this.contentShape,
     this.onOpenSearch,
     this.transitionBuilder,
+    this.paneBodyBuilder,
   })  : assert(
           (pane != null && content == null) ||
               (pane == null && content != null),
@@ -52,6 +53,17 @@ class NavigationView extends StatefulWidget {
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
+
+  /// Can be used to override the widget that is built from
+  /// the [PaneItem.body]. Only used if [pane] is provided.
+  /// If nothing is selected, `selectedPaneItemBody` will be
+  /// null.
+  ///
+  /// This can be useful if you are using router-based navigation,
+  /// and the body of the navigation pane is dynamically determined or
+  /// affected by the current route rather than just by the currently
+  /// selected pane.
+  final Widget Function(Widget? selectedPaneItemBody)? paneBodyBuilder;
 
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above the body.
@@ -328,12 +340,16 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
+        final paneBodyBuilder = widget.paneBodyBuilder;
         final body = _NavigationBody(
           itemKey: ValueKey(pane.selected ?? -1),
           transitionBuilder: widget.transitionBuilder,
-          child: pane.selected != null
-              ? pane.selectedItem.body
-              : const SizedBox.shrink(),
+          child: paneBodyBuilder != null
+              ? paneBodyBuilder(
+                  pane.selected != null ? pane.selectedItem.body : null)
+              : (pane.selected != null
+                  ? pane.selectedItem.body
+                  : const SizedBox.shrink()),
         );
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
