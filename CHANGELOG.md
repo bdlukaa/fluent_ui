@@ -1,6 +1,14 @@
 ## (next)
 
 - Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
+- `TreeView` updates ([#555](https://github.com/bdlukaa/fluent_ui/issues/555)):
+  - **BREAKING** Added `TreeViewItemInvokeReason` parameter to `TreeView.onItemInvoked` and `TreeViewItem.onInvoked`.
+  - Fix clearing out selection state on initial state build in certain cases for a single selection mode tree view.
+  - Fix single selection mode to properly deselect hidden child items when selecting a collapsed parent item.
+  - Add `TreeView.includePartiallySelectedItems` so that items who have children with a mixed selection state will be included in the `onSelectionChanged` callback.
+  - Add `TreeView.deselectParentWhenChildrenDeselected` optional behavior so that parent items can remain selected when all of their children are deselected.
+  - Add `TreeViewItem.setSelectionStateForMultiSelectionMode` helper method and `[TreeViewItem].selectedItems` extension method, to make it easier for application code to programmatically change selection state of items in a multi-selection mode tree view.
+- Added support for Uzbek language
 
 ## 4.0.1
 
@@ -11,6 +19,7 @@
 - Do not apply padding to `NavigationAppBar.leading` ([#539](https://github.com/bdlukaa/fluent_ui/issues/539))
 - Added `AutoSuggestBox.noResultsFoundBuilder` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
 - Added `AutoSuggestBox.inputFormatters` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
+- Added support for Hebrew language
 
 ## 4.0.0
 

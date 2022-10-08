@@ -28,7 +28,8 @@ class TreeViewPage extends ScrollablePage {
           selectionMode: TreeViewSelectionMode.multiple,
           shrinkWrap: true,
           items: items,
-          onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),
+          onItemInvoked: (item, reason) async =>
+              debugPrint('onItemInvoked(reason=$reason): $item'),
           onSelectionChanged: (selectedItems) async => debugPrint(
               'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
           onSecondaryTap: (item, details) async {
@@ -104,7 +105,8 @@ TreeView(
             TreeView(
               shrinkWrap: true,
               items: lazyItems,
-              onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),
+              onItemInvoked: (item, reason) async =>
+                  debugPrint('onItemInvoked(reason=$reason): $item'),
               onSelectionChanged: (selectedItems) async => debugPrint(
                   'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
               onSecondaryTap: (item, details) async {

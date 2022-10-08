@@ -12,6 +12,7 @@ import 'fluent_localizations_en.dart';
 import 'fluent_localizations_es.dart';
 import 'fluent_localizations_fa.dart';
 import 'fluent_localizations_fr.dart';
+import 'fluent_localizations_he.dart';
 import 'fluent_localizations_hi.dart';
 import 'fluent_localizations_hu.dart';
 import 'fluent_localizations_it.dart';
@@ -23,16 +24,17 @@ import 'fluent_localizations_pl.dart';
 import 'fluent_localizations_pt.dart';
 import 'fluent_localizations_ru.dart';
 import 'fluent_localizations_tr.dart';
+import 'fluent_localizations_uz.dart';
 import 'fluent_localizations_zh.dart';
 
-/// Callers can lookup localized strings with an instance of FluentLocalizations returned
-/// by `FluentLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of FluentLocalizations
+/// returned by `FluentLocalizations.of(context)`.
 ///
 /// Applications need to include `FluentLocalizations.delegate()` in their app's
-/// localizationDelegates list, and the locales they support in the app's
-/// supportedLocales list. For example:
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
 ///
-/// ```
+/// ```dart
 /// import 'generated/fluent_localizations.dart';
 ///
 /// return MaterialApp(
@@ -47,14 +49,14 @@ import 'fluent_localizations_zh.dart';
 /// Please make sure to update your pubspec.yaml to include the following
 /// packages:
 ///
-/// ```
+/// ```yaml
 /// dependencies:
 ///   # Internationalization support.
 ///   flutter_localizations:
 ///     sdk: flutter
 ///   intl: any # Use the pinned version from flutter_localizations
 ///
-///   # rest of dependencies
+///   # Rest of dependencies
 /// ```
 ///
 /// ## iOS Applications
@@ -116,6 +118,7 @@ abstract class FluentLocalizations {
     Locale('es'),
     Locale('fa'),
     Locale('fr'),
+    Locale('he'),
     Locale('hi'),
     Locale('hu'),
     Locale('it'),
@@ -127,6 +130,7 @@ abstract class FluentLocalizations {
     Locale('pt'),
     Locale('ru'),
     Locale('tr'),
+    Locale('uz'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
   ];
@@ -337,6 +341,7 @@ class _FluentLocalizationsDelegate
         'es',
         'fa',
         'fr',
+        'he',
         'hi',
         'hu',
         'it',
@@ -348,6 +353,7 @@ class _FluentLocalizationsDelegate
         'pt',
         'ru',
         'tr',
+        'uz',
         'zh'
       ].contains(locale.languageCode);
 
@@ -384,6 +390,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsFa();
     case 'fr':
       return FluentLocalizationsFr();
+    case 'he':
+      return FluentLocalizationsHe();
     case 'hi':
       return FluentLocalizationsHi();
     case 'hu':
@@ -406,6 +414,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsRu();
     case 'tr':
       return FluentLocalizationsTr();
+    case 'uz':
+      return FluentLocalizationsUz();
     case 'zh':
       return FluentLocalizationsZh();
   }
