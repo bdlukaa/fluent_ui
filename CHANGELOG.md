@@ -7,6 +7,7 @@
   - Add `TreeView.includePartiallySelectedItems` so that items who have children with a mixed selection state will be included in the `onSelectionChanged` callback.
   - Add `TreeView.deselectParentWhenChildrenDeselected` optional behavior so that parent items can remain selected when all of their children are deselected.
   - Add `TreeViewItem.setSelectionStateForMultiSelectionMode` helper method and `[TreeViewItem].selectedItems` extension method, to make it easier for application code to programmatically change selection state of items in a multi-selection mode tree view.
+- Added support for Uzbek language
 
 ## 4.0.1
 
