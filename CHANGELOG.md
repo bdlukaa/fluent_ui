@@ -1,6 +1,8 @@
+
 ## (next)
 
 - Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
+- Fixed `NavigationAppBar` unnecessary leading icon when no pane is provided in `NavigationView` ([#551](https://github.com/bdlukaa/fluent_ui/pull/551))
 - `TreeView` updates ([#555](https://github.com/bdlukaa/fluent_ui/issues/555)):
   - **BREAKING** Added `TreeViewItemInvokeReason` parameter to `TreeView.onItemInvoked` and `TreeViewItem.onInvoked`.
   - Fix clearing out selection state on initial state build in certain cases for a single selection mode tree view.
