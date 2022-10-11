@@ -151,6 +151,19 @@ class NavigationViewState extends State<NavigationView> {
   final Map<int, GlobalKey> _itemKeys = {};
 
   bool _minimalPaneOpen = false;
+
+  /// Whether the minimal pane is open
+  ///
+  /// Always false if the current display mode is not minimal.
+  bool get minimalPaneOpen => _minimalPaneOpen;
+  set minimalPaneOpen(bool open) {
+    if (displayMode == PaneDisplayMode.minimal) {
+      setState(() => _minimalPaneOpen = open);
+    } else {
+      setState(() => _minimalPaneOpen = false);
+    }
+  }
+
   late bool _compactOverlayOpen;
 
   int _oldIndex = 0;
@@ -276,7 +289,7 @@ class NavigationViewState extends State<NavigationView> {
     Widget? paneNavigationButton() {
       final minimalLeading = PaneItem(
         title: Text(
-          !_minimalPaneOpen
+          !minimalPaneOpen
               ? localizations.openNavigationTooltip
               : localizations.closeNavigationTooltip,
         ),
@@ -286,7 +299,7 @@ class NavigationViewState extends State<NavigationView> {
         context,
         false,
         () async {
-          setState(() => _minimalPaneOpen = !_minimalPaneOpen);
+          minimalPaneOpen = !minimalPaneOpen;
         },
         displayMode: PaneDisplayMode.compact,
       );
@@ -575,12 +588,10 @@ class NavigationViewState extends State<NavigationView> {
                   bottom: 0.0,
                   child: content,
                 ),
-                if (_minimalPaneOpen)
+                if (minimalPaneOpen)
                   Positioned.fill(
                     child: GestureDetector(
-                      onTap: () {
-                        setState(() => _minimalPaneOpen = false);
-                      },
+                      onTap: () => minimalPaneOpen = false,
                       child: AbsorbPointer(
                         child: Semantics(
                           label: localizations.modalBarrierDismissLabel,
@@ -593,7 +604,7 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: _minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
+                  start: minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
                   width: kOpenNavigationPaneWidth,
                   height: mediaQuery.size.height,
                   child: PaneScrollConfiguration(
@@ -617,9 +628,7 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
-                            onItemSelected: () {
-                              setState(() => _minimalPaneOpen = false);
-                            },
+                            onItemSelected: () => minimalPaneOpen = false,
                           ),
                         ),
                       ),
@@ -645,7 +654,7 @@ class NavigationViewState extends State<NavigationView> {
         backgroundColor: theme.backgroundColor,
         child: InheritedNavigationView(
           displayMode: _compactOverlayOpen ? PaneDisplayMode.open : displayMode,
-          minimalPaneOpen: _minimalPaneOpen,
+          minimalPaneOpen: minimalPaneOpen,
           pane: widget.pane,
           oldIndex: _oldIndex,
           child: PaneItemKeys(keys: _itemKeys, child: paneResult),
