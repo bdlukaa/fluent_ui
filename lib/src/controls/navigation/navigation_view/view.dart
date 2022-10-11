@@ -451,6 +451,7 @@ class NavigationViewState extends State<NavigationView> {
               double openSize =
                   pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
+              final bool noOverlayRequired = consts.maxWidth / 2.5 > openSize;
               final bool openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
@@ -460,7 +461,7 @@ class NavigationViewState extends State<NavigationView> {
               //   identifier: 'compactOverlayOpen',
               // )}');
 
-              if (openedWithoutOverlay || !_compactOverlayOpen) {
+              if (noOverlayRequired) {
                 paneResult = Column(children: [
                   appBar,
                   Expanded(
@@ -506,7 +507,7 @@ class NavigationViewState extends State<NavigationView> {
                 paneResult = Stack(children: [
                   Padding(
                     padding: EdgeInsetsDirectional.only(
-                      top: widget.appBar?.finalHeight(context) ?? 0.0,
+                      top: appBarPadding.resolve(direction).top,
                       start: pane.size?.compactWidth ??
                           kCompactNavigationPaneWidth,
                     ),
@@ -527,30 +528,56 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   PaneScrollConfiguration(
-                    child: Mica(
-                      key: _overlayKey,
-                      backgroundColor: overlayBackgroundColor(),
-                      elevation: 10.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF6c6c6c),
-                            width: 0.15,
+                    child: () {
+                      if (_compactOverlayOpen) {
+                        return ClipRect(
+                          child: Mica(
+                            key: _overlayKey,
+                            backgroundColor: overlayBackgroundColor(),
+                            elevation: 10.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFF6c6c6c),
+                                  width: 0.15,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 1.0,
+                              ),
+                              padding: appBarPadding,
+                              child: _OpenNavigationPane(
+                                theme: theme,
+                                pane: pane,
+                                paneKey: _panelKey,
+                                listKey: _listKey,
+                                onToggle: toggleCompactOpenMode,
+                                onItemSelected: toggleCompactOpenMode,
+                              ),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 1.0),
-                        padding: appBarPadding,
-                        child: _OpenNavigationPane(
-                          theme: theme,
-                          pane: pane,
-                          paneKey: _panelKey,
-                          listKey: _listKey,
-                          onToggle: toggleCompactOpenMode,
-                          onItemSelected: toggleCompactOpenMode,
-                        ),
-                      ),
-                    ),
+                        );
+                      } else {
+                        return Mica(
+                          key: _overlayKey,
+                          backgroundColor: overlayBackgroundColor(),
+                          elevation: 10.0,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: appBarPadding.resolve(direction).top,
+                            ),
+                            child: _CompactNavigationPane(
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onToggle: toggleCompactOpenMode,
+                              onOpenSearch: widget.onOpenSearch,
+                            ),
+                          ),
+                        );
+                      }
+                    }(),
                   ),
                   appBar,
                 ]);
