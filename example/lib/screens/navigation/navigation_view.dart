@@ -159,34 +159,6 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                     ),
                   ],
                 ),
-                PaneItemExpander(
-                  icon: const Icon(FluentIcons.account_management),
-                  title: const Text('Account'),
-                  body: const _NavigationBodyItem(
-                    header: 'PaneItemExpander',
-                    content: Text(
-                      'Some apps may have a more complex hierarchical structure '
-                      'that requires more than just a flat list of navigation '
-                      'items. You may want to use top-level navigation items to '
-                      'display categories of pages, with children items displaying '
-                      'specific pages. It is also useful if you have hub-style '
-                      'pages that only link to other pages. For these kinds of '
-                      'cases, you should create a hierarchical NavigationView.',
-                    ),
-                  ),
-                  items: [
-                    PaneItem(
-                      icon: const Icon(FluentIcons.mail),
-                      title: const Text('Mail'),
-                      body: const _NavigationBodyItem(),
-                    ),
-                    PaneItem(
-                      icon: const Icon(FluentIcons.calendar),
-                      title: const Text('Calendar'),
-                      body: const _NavigationBodyItem(),
-                    ),
-                  ],
-                ),
               ],
               footerItems: [
                 PaneItem(
