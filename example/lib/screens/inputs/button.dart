@@ -37,7 +37,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
         CardHighlight(
           child: Row(children: [
             Button(
-              child: const Text('Standart Button'),
+              child: const Text('Standard Button'),
               onPressed: simpleDisabled ? null : () {},
             ),
             const Spacer(),
@@ -52,7 +52,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
             ),
           ]),
           codeSnippet: '''Button(
-  child: const Text('Standart Button'),
+  child: const Text('Standard Button'),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
         ),
