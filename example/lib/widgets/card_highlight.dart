@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/github.dart';
+import 'package:flutter_syntax_view/flutter_syntax_view.dart';
 
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
@@ -95,15 +94,11 @@ class _CardHighlightState extends State<CardHighlight>
               )
             : null,
         header: const Text('Source code'),
-        content: HighlightView(
-          widget.codeSnippet,
-          language: 'dart',
-          theme: theme.brightness.isDark ? fluentHighlightTheme : githubTheme,
-          textStyle: const TextStyle(
-            fontFamily: 'monospace',
-            fontSize: 14.0,
-            wordSpacing: 1.0,
-          ),
+        content: SyntaxView(
+          code: widget.codeSnippet,
+          syntaxTheme: theme.brightness.isDark
+              ? SyntaxTheme.vscodeDark()
+              : SyntaxTheme.vscodeLight(),
         ),
       ),
     ]);

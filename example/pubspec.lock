@@ -104,15 +104,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+2"
-  flutter_highlight:
-    dependency: "direct main"
-    description:
-      path: flutter_highlight
-      ref: b5e7de8bc95f4e8e30534d7b1da5b41979caab01
-      resolved-ref: b5e7de8bc95f4e8e30534d7b1da5b41979caab01
-      url: "https://github.com/shreyas1599/highlight.dart.git"
-    source: git
-    version: "0.7.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -139,6 +130,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.6"
+  flutter_syntax_view:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "8b0fb4944fc36f691e40fdc944d08b7bc16973ea"
+      url: "https://github.com/YehudaKremer/flutter_syntax_view.git"
+    source: git
+    version: "4.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -149,13 +149,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  highlight:
-    dependency: transitive
-    description:
-      name: highlight
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   http:
     dependency: "direct main"
     description:

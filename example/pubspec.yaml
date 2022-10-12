@@ -23,11 +23,9 @@ dependencies:
   email_validator: ^2.0.1
   http: ^0.13.4
   flutter_markdown: ^0.6.10+5
-  flutter_highlight:
+  flutter_syntax_view: 
     git:
-      url: https://github.com/shreyas1599/highlight.dart.git
-      path: flutter_highlight
-      ref: b5e7de8bc95f4e8e30534d7b1da5b41979caab01
+      url: https://github.com/YehudaKremer/flutter_syntax_view.git
 
 dev_dependencies:
   flutter_test:
