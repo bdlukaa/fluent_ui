@@ -4,6 +4,7 @@
 - Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
 - Fixed `NavigationAppBar` unnecessary leading icon when no pane is provided in `NavigationView` ([#551](https://github.com/bdlukaa/fluent_ui/pull/551))
 - Added `NavigationView.minimalPaneOpen` and, with it, the possibility to open minimal pane programatically ([#564](https://github.com/bdlukaa/fluent_ui/issues/564))
+- Assign an index to pane item expanders ([#566](https://github.com/bdlukaa/fluent_ui/issues/566)) 
 - Update `NavigationView` compact mode transition
 - `TreeView` updates ([#555](https://github.com/bdlukaa/fluent_ui/issues/555)):
   - **BREAKING** Added `TreeViewItemInvokeReason` parameter to `TreeView.onItemInvoked` and `TreeViewItem.onInvoked`.
