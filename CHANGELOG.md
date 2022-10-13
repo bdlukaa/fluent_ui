@@ -1,5 +1,5 @@
 
-## (next)
+## 4.0.2
 
 - Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
 - Fixed `NavigationAppBar` unnecessary leading icon when no pane is provided in `NavigationView` ([#551](https://github.com/bdlukaa/fluent_ui/pull/551))
