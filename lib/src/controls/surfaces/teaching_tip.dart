@@ -60,6 +60,7 @@ Future<T?> showTeachingTip<T extends Object?>({
   String? barrierLabel,
   Color? barrierColor = Colors.transparent,
   bool barrierDismissible = true,
+  Offset? at,
 }) {
   assert(debugCheckHasFluentLocalizations(context));
 
@@ -224,6 +225,39 @@ class TeachingTip extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class TeachingTipTarget extends StatefulWidget {
+  const TeachingTipTarget({
+    Key? key,
+    required this.teachingTip,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget teachingTip;
+
+  final Widget child;
+
+  @override
+  State<TeachingTipTarget> createState() => TeachingTipTargetState();
+}
+
+class TeachingTipTargetState extends State<TeachingTipTarget> {
+  final _targetKey = GlobalKey();
+
+  void showTeachingTip() {
+    final box = _targetKey.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+    print(offset);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: _targetKey,
+      child: widget.child,
     );
   }
 }

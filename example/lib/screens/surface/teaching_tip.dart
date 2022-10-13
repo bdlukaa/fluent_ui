@@ -12,6 +12,8 @@ class TeachingTipPage extends StatefulWidget {
 }
 
 class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
+  final targetKey = GlobalKey<TeachingTipTargetState>();
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -64,6 +66,62 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
                 ),
               );
             },
+          ),
+          codeSnippet: '''final teachingTip = TeachingTip(
+  title: Text('Change themes without hassle'),
+  subtitle: Text(
+    'It's easier to see control samples in both light and dark theme',
+  ),
+  buttons: <Widget>[
+    Button(
+      child: const Text('Toggle theme now'),
+      onPressed: () {
+        // toggle theme here
+
+        // then close the popup
+        Navigator.of(context).pop();
+      },
+    ),
+    Button(
+      child: const Text('Got it'),
+      onPressed: Navigator.of(context).pop,
+    ),
+  ],
+),
+
+showTeachingTip(
+  context: context,
+  teachingTip: teachingTip,
+);''',
+        ),
+        subtitle(
+          content: const Text('Show a targeted TeachingTip'),
+        ),
+        CardHighlight(
+          child: Row(
+            children: [
+              Button(
+                child: const Text('Show TeachingTip'),
+                onPressed: () => targetKey.currentState?.showTeachingTip(),
+              ),
+              const Spacer(),
+              TeachingTipTarget(
+                key: targetKey,
+                teachingTip: const TeachingTip(
+                  alignment: Alignment.bottomCenter,
+                  placementMargin: EdgeInsets.all(20.0),
+                  title: Text('Change themes without hassle'),
+                  subtitle: Text(
+                    'It\'s easier to see control samples in both light and dark theme',
+                  ),
+                ),
+                child: Container(
+                  height: 100,
+                  width: 200,
+                  color: theme.accentColor.defaultBrushFor(theme.brightness),
+                ),
+              ),
+            ],
           ),
           codeSnippet: '''final teachingTip = TeachingTip(
   title: Text('Change themes without hassle'),
