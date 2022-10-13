@@ -297,6 +297,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
+      icon: const Icon(FluentIcons.field_filled),
+      title: const Text('Teaching Tip'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => surfaces.TeachingTipPage(),
+      ),
+    ),
+    PaneItem(
       icon: const Icon(FluentIcons.tiles),
       title: const Text('Tiles'),
       body: DeferredWidget(
