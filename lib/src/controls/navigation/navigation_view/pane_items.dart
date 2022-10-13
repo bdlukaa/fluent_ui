@@ -614,19 +614,20 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   late bool _open;
-  late AnimationController controller = AnimationController(
+  late final AnimationController controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 100),
   );
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _open = PageStorage.of(context)?.readState(
           context,
-          identifier: 'paneItemExpanderOpen',
+          identifier: 'paneItemExpanderOpen$index',
         ) as bool? ??
         false;
+
     if (_open) {
       controller.value = 1;
     }
@@ -639,13 +640,19 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     super.dispose();
   }
 
+  int get index {
+    final body = InheritedNavigationView.of(context);
+
+    return body.pane?.effectiveIndexOf(widget.item) ?? 0;
+  }
+
   void toggleOpen() {
     setState(() => _open = !_open);
 
     PageStorage.of(context)?.writeState(
       context,
       _open,
-      identifier: 'paneItemExpanderOpen',
+      identifier: 'paneItemExpanderOpen$index',
     );
     if (useFlyout) {
       flyoutController.toggle();
@@ -665,7 +672,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
     _open = PageStorage.of(context)?.readState(
           context,
-          identifier: 'paneItemExpanderOpen',
+          identifier: 'paneItemExpanderOpen$index',
         ) as bool? ??
         _open;
 
