@@ -935,7 +935,7 @@ class NavigationViewScrollBehavior extends FluentScrollBehavior {
   @override
   Widget buildScrollbar(context, child, details) {
     return Scrollbar(
-      controller: PrimaryScrollController.of(context),
+      controller: details.controller,
       thumbVisibility: false,
       interactive: true,
       child: child,

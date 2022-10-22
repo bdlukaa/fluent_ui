@@ -1,3 +1,7 @@
+## [next]
+
+- `NavigationView` scrollbar can now be dragged ([#472](https://github.com/bdlukaa/fluent_ui/issues/472))
+
 
 ## 4.0.2
 
