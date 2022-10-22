@@ -147,7 +147,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                     ),
                   ),
                   items: [
-                    PaneItemHeader(header: Text('Test header')),
+                    PaneItemHeader(header: const Text('Apps')),
                     PaneItem(
                       icon: const Icon(FluentIcons.mail),
                       title: const Text('Mail'),

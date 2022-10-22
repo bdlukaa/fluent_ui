@@ -562,7 +562,6 @@ class NavigationViewState extends State<NavigationView> {
                         return Mica(
                           key: _overlayKey,
                           backgroundColor: overlayBackgroundColor(),
-                          elevation: 10.0,
                           child: Padding(
                             padding: EdgeInsets.only(
                               top: appBarPadding.resolve(direction).top,
