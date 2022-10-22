@@ -638,7 +638,7 @@ class NavigationViewState extends State<NavigationView> {
                       color: Colors.black,
                       child: Mica(
                         backgroundColor: overlayBackgroundColor(),
-                        elevation: 10.0,
+                        elevation: 0.0,
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(

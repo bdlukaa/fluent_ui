@@ -755,7 +755,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           itemIndex: body.pane!.effectiveIndexOf(item),
                         );
                       } else if (item is PaneItemHeader) {
-                        return item.build(context);
+                        return Padding(
+                          padding: _PaneItemExpander.leadingPadding,
+                          child: item.build(context),
+                        );
                       } else if (item is PaneItemSeparator) {
                         return item.build(
                           context,
