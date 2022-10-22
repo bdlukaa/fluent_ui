@@ -669,6 +669,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
+    final navigationTheme = NavigationPaneTheme.of(context);
 
     _open = PageStorage.of(context)?.readState(
           context,
@@ -795,6 +796,27 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   );
                 } else if (item is PaneItemSeparator) {
                   return const MenuFlyoutSeparator();
+                } else if (item is PaneItemHeader) {
+                  return MenuFlyoutItemBuilder(builder: (context) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 8.0,
+                      ),
+                      margin: const EdgeInsets.only(bottom: 4.0),
+                      child: DefaultTextStyle(
+                        style: navigationTheme.itemHeaderTextStyle ??
+                            const TextStyle(),
+                        softWrap: false,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        // textAlign: view.displayMode == PaneDisplayMode.top
+                        //     ? TextAlign.center
+                        //     : TextAlign.left,
+                        child: item.header,
+                      ),
+                    );
+                  });
                 } else {
                   throw UnsupportedError(
                     '${item.runtimeType} is not a supported item type',
@@ -834,8 +856,10 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
         onPressed: onPressed,
         builder: (context, states) {
           return Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 8.0,
+            ),
             margin: const EdgeInsets.only(bottom: 4.0),
             decoration: BoxDecoration(
               color: ButtonThemeData.uncheckedInputColor(

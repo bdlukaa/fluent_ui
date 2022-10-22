@@ -112,6 +112,18 @@ abstract class MenuFlyoutItemInterface {
   Widget build(BuildContext context);
 }
 
+class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
+  final WidgetBuilder builder;
+
+  const MenuFlyoutItemBuilder({
+    super.key,
+    required this.builder,
+  });
+
+  @override
+  Widget build(BuildContext context) => builder(context);
+}
+
 class MenuFlyoutItem extends MenuFlyoutItemInterface {
   MenuFlyoutItem({
     Key? key,
