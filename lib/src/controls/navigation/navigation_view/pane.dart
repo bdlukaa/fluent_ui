@@ -1230,10 +1230,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
         parent: controller,
         curve: theme.animationCurve ?? Curves.linear,
       )),
-      child: AnimatedContainer(
+      child: SizedBox(
         key: widget.paneKey,
-        duration: theme.animationDuration ?? Duration.zero,
-        curve: theme.animationCurve ?? Curves.linear,
         width: paneWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

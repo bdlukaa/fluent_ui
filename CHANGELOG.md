@@ -2,6 +2,7 @@
 
 - `NavigationView` scrollbar can now be dragged ([#472](https://github.com/bdlukaa/fluent_ui/issues/472))
 - `PaneItemHeader` can now be used inside a `PaneItemExpander` ([#575](https://github.com/bdlukaa/fluent_ui/issues/575))
+- `InfoBadge` no longer overflows when transitioning from compact mode to open mode in `NavigationView` ([#588](https://github.com/bdlukaa/fluent_ui/issues/588))
 
 
 ## 4.0.2

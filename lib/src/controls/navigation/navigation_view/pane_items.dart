@@ -737,6 +737,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                 ? const SizedBox(width: double.infinity)
                 : Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: widget.items.map((item) {
                       if (item is PaneItem) {
                         final i = item.copyWith(
