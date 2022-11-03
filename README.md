@@ -16,7 +16,7 @@
   </div>
   <div>
     <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
-      <img src="https://img.shields.io/badge/web-example---?style=flat-square&color=e88d0c" />
+      <img src="https://img.shields.io/badge/documentation---?style=flat-square&color=e88d0c" />
     </a>
   </div>
   <br/>
@@ -27,6 +27,9 @@
   <p>
   Unofficial implementation of Fluent UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
   </p>
+  <h3>
+  Read the <a href="https://bdlukaa.github.io/fluent_ui/">documentation</a>
+  </h3>
 </div>
 
 <div align="center">
@@ -75,8 +78,6 @@ dependencies:
   fluent_ui:
     git: https://github.com/bdlukaa/fluent_ui.git
 ```
-
-You can see the example app [here](https://bdlukaa.github.io/fluent_ui//)
 
 Finally, run `dart pub get` to download the package.
 
