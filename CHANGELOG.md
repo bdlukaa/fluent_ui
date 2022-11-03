@@ -1,4 +1,8 @@
-## [4.0.3]
+## 4.0.3+1
+
+- Update documentation
+
+## 4.0.3
 
 - `NavigationView` scrollbar can now be dragged ([#472](https://github.com/bdlukaa/fluent_ui/issues/472))
 - `PaneItemHeader` can now be used inside a `PaneItemExpander` ([#575](https://github.com/bdlukaa/fluent_ui/issues/575))
