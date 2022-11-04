@@ -1,3 +1,7 @@
+## 4.0.4 - Unreleased
+
+- `NavigationView`: Make compatible the use of PaneItems and content attribute again ([#595](https://github.com/bdlukaa/fluent_ui/pull/595))
+
 ## 4.0.3+1
 
 - Update documentation
