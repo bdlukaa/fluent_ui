@@ -34,7 +34,7 @@ const double _kDefaultAppBarHeight = 50.0;
 ///     rearrange, open, or close new tabs.
 class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
-  const NavigationView({
+  NavigationView({
     Key? key,
     this.appBar,
     this.pane,
@@ -45,11 +45,40 @@ class NavigationView extends StatefulWidget {
     this.transitionBuilder,
     this.paneBodyBuilder,
   })  : assert(
-          (pane != null && content == null) ||
-              (pane == null && content != null),
-          'Either pane or content must be provided',
+          (content == null &&
+                  _checkAllPaneItemHasBodies(pane?.items) &&
+                  (pane?.footerItems == null ||
+                      _checkAllPaneItemHasBodies(pane?.footerItems))) ||
+              (content != null &&
+                  (pane?.items == null ||
+                      _checkAllPaneItemHasNotBodies(pane?.items)) &&
+                  (pane?.footerItems == null ||
+                      _checkAllPaneItemHasNotBodies(pane?.footerItems))),
+          'Either content or PaneItems with bodies must be provided',
         ),
         super(key: key);
+
+  static bool _checkAllPaneItemHasBodies(List<NavigationPaneItem>? items) {
+    var allPaneItemHaveBodies = items != null &&
+        (items.whereType<PaneItem>().every((element) {
+          return element.body != null;
+        })) &&
+        (items.whereType<PaneItemExpander>().every((element) {
+          return _checkAllPaneItemHasBodies(element.items);
+        }));
+    return allPaneItemHaveBodies;
+  }
+
+  static bool _checkAllPaneItemHasNotBodies(List<NavigationPaneItem>? items) {
+    var allPaneItemHasNotBodies = items != null &&
+        ((items.whereType<PaneItem>().every((element) {
+          return element.body == null;
+        }))) &&
+        (items.whereType<PaneItemExpander>().every((element) {
+          return _checkAllPaneItemHasNotBodies(element.items);
+        }));
+    return allPaneItemHasNotBodies;
+  }
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
@@ -156,6 +185,7 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// Always false if the current display mode is not minimal.
   bool get minimalPaneOpen => _minimalPaneOpen;
+
   set minimalPaneOpen(bool open) {
     if (displayMode == PaneDisplayMode.minimal) {
       setState(() => _minimalPaneOpen = open);
@@ -365,12 +395,14 @@ class NavigationViewState extends State<NavigationView> {
         final body = _NavigationBody(
           itemKey: ValueKey(pane.selected ?? -1),
           transitionBuilder: widget.transitionBuilder,
-          child: paneBodyBuilder != null
-              ? paneBodyBuilder(
-                  pane.selected != null ? pane.selectedItem.body : null)
-              : (pane.selected != null
-                  ? pane.selectedItem.body
-                  : const SizedBox.shrink()),
+          child: widget.content != null
+              ? widget.content!
+              : (paneBodyBuilder != null
+                  ? paneBodyBuilder(
+                      pane.selected != null ? pane.selectedItem.body! : null)
+                  : (pane.selected != null
+                      ? pane.selectedItem.body!
+                      : const SizedBox.shrink())),
         );
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
@@ -440,7 +472,6 @@ class NavigationViewState extends State<NavigationView> {
               ]);
               break;
             case PaneDisplayMode.compact:
-
               // Ensure the overlay state is correct
               _compactOverlayOpen = PageStorage.of(context)?.readState(
                     context,
@@ -674,7 +705,7 @@ class NavigationViewState extends State<NavigationView> {
           Expanded(child: widget.content!),
         ]);
       } else {
-        throw 'Either pane or content must be provided';
+        throw 'Either content or PaneItems with bodies must be provided';
       }
       return Mica(
         backgroundColor: theme.backgroundColor,

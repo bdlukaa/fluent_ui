@@ -24,7 +24,7 @@ class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
     required this.icon,
-    required this.body,
+    this.body,
     this.title,
     this.trailing,
     this.infoBadge,
@@ -66,7 +66,7 @@ class PaneItem extends NavigationPaneItem {
   final Widget? trailing;
 
   /// The body of the view attached to this tab
-  final Widget body;
+  final Widget? body;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -538,7 +538,7 @@ class PaneItemExpander extends PaneItem {
   PaneItemExpander({
     required super.icon,
     required this.items,
-    required super.body,
+    super.body,
     super.title,
     super.infoBadge,
     super.trailing = kDefaultTrailing,
