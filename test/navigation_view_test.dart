@@ -181,36 +181,36 @@ void main() {
 
   testWidgets(
       'Either content or PaneItems with bodies - case without "content", items with bodies, expander selected',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(
-          FluentApp(
-            home: FluentApp(
-              home: NavigationView(
-                pane: NavigationPane(selected: 1, items: [
-                  PaneItem(
-                    icon: const Icon(FluentIcons.add),
-                    title: const Text("Item1"),
-                    body: const Text("Body Item1"),
-                  ),
-                  PaneItemExpander(
-                      icon: const Icon(FluentIcons.add),
-                      title: const Text("Expander 1"),
-                      body: const Text("Body Expander 1"),
-                      items: [
-                        PaneItem(
-                          icon: const Icon(FluentIcons.add),
-                          title: const Text("Item1-1"),
-                          body: const Text("Body Item1-1"),
-                        ),
-                      ])
-                ]),
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      FluentApp(
+        home: FluentApp(
+          home: NavigationView(
+            pane: NavigationPane(selected: 1, items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.add),
+                title: const Text("Item1"),
+                body: const Text("Body Item1"),
               ),
-            ),
+              PaneItemExpander(
+                  icon: const Icon(FluentIcons.add),
+                  title: const Text("Expander 1"),
+                  body: const Text("Body Expander 1"),
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.add),
+                      title: const Text("Item1-1"),
+                      body: const Text("Body Item1-1"),
+                    ),
+                  ])
+            ]),
           ),
-        );
+        ),
+      ),
+    );
 
-        expect(find.text('Body Item1'), findsNothing);
-        expect(find.text('Body Expander 1'), findsOneWidget);
-        expect(find.text('Body Item1-1'), findsNothing);
-      });
+    expect(find.text('Body Item1'), findsNothing);
+    expect(find.text('Body Expander 1'), findsOneWidget);
+    expect(find.text('Body Item1-1'), findsNothing);
+  });
 }
