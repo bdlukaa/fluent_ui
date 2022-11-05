@@ -268,9 +268,19 @@ class TreeViewItem with Diagnosticable {
         (p) => p?.updateSelected(deselectParentWhenChildrenDeselected));
   }
 
-  /// Updates [selected] based on the [children]s' state. [selected] will not
-  /// be forced to false if `deselectParentWhenChildrenDeselected` is false and
+  /// Updates [selected] based on the direct [children]s' state.
+  /// [selected] will not be forced to false if
+  /// `deselectParentWhenChildrenDeselected` is false and
   /// either there are no children or all children are deselected.
+  ///
+  /// Since this only updates the state based on direct children,
+  /// you would normally only call this in a depth-first manner on
+  /// all parents, for example:
+  ///
+  /// ```dart
+  /// item.executeForAllParents((parent) => parent
+  ///   ?.updateSelected(widget.deselectParentWhenChildrenDeselected))
+  /// ```
   void updateSelected(bool deselectParentWhenChildrenDeselected) {
     bool hasNull = false;
     bool hasFalse = false;
