@@ -276,7 +276,7 @@ class TreeViewItem with Diagnosticable {
     bool hasFalse = false;
     bool hasTrue = false;
 
-    for (final child in children.build(assignInternalProperties: false)) {
+    for (final child in children) {
       if (child.selected == null) {
         hasNull = true;
       } else if (child.selected == false) {
@@ -372,35 +372,26 @@ class TreeViewItem with Diagnosticable {
 extension TreeViewItemCollection on List<TreeViewItem> {
   /// Adds the [TreeViewItem.parent] property to the [TreeViewItem]s
   /// and calculates other internal properties.
-  List<TreeViewItem> build({
-    TreeViewItem? parent,
-    bool assignInternalProperties = true,
-  }) {
+  List<TreeViewItem> build({TreeViewItem? parent}) {
     if (isNotEmpty) {
       final List<TreeViewItem> list = [];
-      final anyExpandableSiblings =
-          assignInternalProperties ? any((i) => i.isExpandable) : null;
+      final anyExpandableSiblings = any((i) => i.isExpandable);
       for (final item in [...this]) {
-        if (assignInternalProperties) {
-          item._parent = parent;
-          item._anyExpandableSiblings = anyExpandableSiblings!;
-        }
+        item._parent = parent;
+        item._anyExpandableSiblings = anyExpandableSiblings;
         if (parent != null) {
           item._visible = parent._visible;
         }
         if (item._visible) {
           list.add(item);
         }
-        final itemAnyExpandableSiblings = assignInternalProperties
-            ? item.children.any((i) => i.isExpandable)
-            : null;
+        final itemAnyExpandableSiblings =
+            item.children.any((i) => i.isExpandable);
         for (final child in item.children) {
           // only add the children when it's expanded and visible
           child._visible = item.expanded && item._visible;
-          if (assignInternalProperties) {
-            child._parent = item;
-            child._anyExpandableSiblings = itemAnyExpandableSiblings!;
-          }
+          child._parent = item;
+          child._anyExpandableSiblings = itemAnyExpandableSiblings;
           if (child._visible) {
             list.add(child);
           }
@@ -632,7 +623,7 @@ class _TreeViewState extends State<TreeView>
   void buildItems() {
     if (widget.selectionMode != TreeViewSelectionMode.single) {
       items = widget.items.build();
-      items.executeForAll(
+      widget.items.executeForAll(
         (item) => item.executeForAllParents((parent) => parent
             ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
       );
@@ -771,7 +762,7 @@ class _TreeViewState extends State<TreeView>
                   setState(() {
                     item.loading = false;
                     item.expanded = !item.expanded;
-                    items = widget.items.build();
+                    buildItems();
                   });
                 }
               },
