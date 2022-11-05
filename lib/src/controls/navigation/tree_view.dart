@@ -268,15 +268,25 @@ class TreeViewItem with Diagnosticable {
         (p) => p?.updateSelected(deselectParentWhenChildrenDeselected));
   }
 
-  /// Updates [selected] based on the [children]s' state. [selected] will not
-  /// be forced to false if `deselectParentWhenChildrenDeselected` is false and
+  /// Updates [selected] based on the direct [children]s' state.
+  /// [selected] will not be forced to false if
+  /// `deselectParentWhenChildrenDeselected` is false and
   /// either there are no children or all children are deselected.
+  ///
+  /// Since this only updates the state based on direct children,
+  /// you would normally only call this in a depth-first manner on
+  /// all parents, for example:
+  ///
+  /// ```dart
+  /// item.executeForAllParents((parent) => parent
+  ///   ?.updateSelected(widget.deselectParentWhenChildrenDeselected))
+  /// ```
   void updateSelected(bool deselectParentWhenChildrenDeselected) {
     bool hasNull = false;
     bool hasFalse = false;
     bool hasTrue = false;
 
-    for (final child in children.build(assignInternalProperties: false)) {
+    for (final child in children) {
       if (child.selected == null) {
         hasNull = true;
       } else if (child.selected == false) {
@@ -372,35 +382,26 @@ class TreeViewItem with Diagnosticable {
 extension TreeViewItemCollection on List<TreeViewItem> {
   /// Adds the [TreeViewItem.parent] property to the [TreeViewItem]s
   /// and calculates other internal properties.
-  List<TreeViewItem> build({
-    TreeViewItem? parent,
-    bool assignInternalProperties = true,
-  }) {
+  List<TreeViewItem> build({TreeViewItem? parent}) {
     if (isNotEmpty) {
       final List<TreeViewItem> list = [];
-      final anyExpandableSiblings =
-          assignInternalProperties ? any((i) => i.isExpandable) : null;
+      final anyExpandableSiblings = any((i) => i.isExpandable);
       for (final item in [...this]) {
-        if (assignInternalProperties) {
-          item._parent = parent;
-          item._anyExpandableSiblings = anyExpandableSiblings!;
-        }
+        item._parent = parent;
+        item._anyExpandableSiblings = anyExpandableSiblings;
         if (parent != null) {
           item._visible = parent._visible;
         }
         if (item._visible) {
           list.add(item);
         }
-        final itemAnyExpandableSiblings = assignInternalProperties
-            ? item.children.any((i) => i.isExpandable)
-            : null;
+        final itemAnyExpandableSiblings =
+            item.children.any((i) => i.isExpandable);
         for (final child in item.children) {
           // only add the children when it's expanded and visible
           child._visible = item.expanded && item._visible;
-          if (assignInternalProperties) {
-            child._parent = item;
-            child._anyExpandableSiblings = itemAnyExpandableSiblings!;
-          }
+          child._parent = item;
+          child._anyExpandableSiblings = itemAnyExpandableSiblings;
           if (child._visible) {
             list.add(child);
           }
@@ -632,7 +633,7 @@ class _TreeViewState extends State<TreeView>
   void buildItems() {
     if (widget.selectionMode != TreeViewSelectionMode.single) {
       items = widget.items.build();
-      items.executeForAll(
+      widget.items.executeForAll(
         (item) => item.executeForAllParents((parent) => parent
             ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
       );
@@ -771,7 +772,7 @@ class _TreeViewState extends State<TreeView>
                   setState(() {
                     item.loading = false;
                     item.expanded = !item.expanded;
-                    items = widget.items.build();
+                    buildItems();
                   });
                 }
               },

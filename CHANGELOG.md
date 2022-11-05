@@ -1,3 +1,7 @@
+## (future)
+
+- Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
+
 ## 4.0.3+1
 
 - Update documentation
