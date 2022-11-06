@@ -68,8 +68,7 @@ class FluentLocalizationsCs extends FluentLocalizations {
   String get copyActionTooltip => 'Kopírovat vybraný obsah do schránky';
 
   @override
-  String get cutActionTooltip =>
-      'Odebrat vybraný obsah a kopírovat jej do schránky';
+  String get cutActionTooltip => 'Odebrat vybraný obsah a kopírovat jej do schránky';
 
   @override
   String get pasteActionTooltip => 'Vložit obsah schránky na aktuální pozici';

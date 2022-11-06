@@ -65,16 +65,13 @@ class FluentLocalizationsEs extends FluentLocalizations {
   String get noResultsFoundLabel => 'No se encontraron resultados';
 
   @override
-  String get copyActionTooltip =>
-      'Copiar el contenido seleccionado al portapapeles';
+  String get copyActionTooltip => 'Copiar el contenido seleccionado al portapapeles';
 
   @override
-  String get cutActionTooltip =>
-      'Cortar el contenido seleccionado y ponerlo en el portapapeles';
+  String get cutActionTooltip => 'Cortar el contenido seleccionado y ponerlo en el portapapeles';
 
   @override
-  String get pasteActionTooltip =>
-      'Insertar el contenido del portapapeles en la posición actual';
+  String get pasteActionTooltip => 'Insertar el contenido del portapapeles en la posición actual';
 
   @override
   String get selectAllActionTooltip => 'Seleccionar todo el contenido';
