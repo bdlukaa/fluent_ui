@@ -77,11 +77,25 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
+  final _pageKey = GlobalKey();
+  final _pageController = PageController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final view = InheritedNavigationView.of(context);
+
+    if (view.oldIndex != view.pane?.selected) {
+      _pageController.jumpToPage(view.pane?.selected ?? 0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.maybeOf(context);
+    final view = InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
+
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
@@ -98,21 +112,19 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
 
-          if (view != null) {
-            bool isTop = view.displayMode == PaneDisplayMode.top;
+          bool isTop = view.displayMode == PaneDisplayMode.top;
 
-            if (isTop) {
-              // Other transtitions other than default is only applied to top nav
-              // when clicking overflow on topnav, transition is from bottom
-              // otherwise if prevItem is on left side of nextActualItem, transition is from left
-              //           if prevItem is on right side of nextActualItem, transition is from right
-              // click on Settings item is considered Default
-              return HorizontalSlidePageTransition(
-                animation: animation,
-                fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
-                child: child,
-              );
-            }
+          if (isTop) {
+            // Other transtitions other than default is only applied to top nav
+            // when clicking overflow on topnav, transition is from bottom
+            // otherwise if prevItem is on left side of nextActualItem, transition is from left
+            //           if prevItem is on right side of nextActualItem, transition is from right
+            // click on Settings item is considered Default
+            return HorizontalSlidePageTransition(
+              animation: animation,
+              fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
+              child: child,
+            );
           }
 
           return EntrancePageTransition(
@@ -121,9 +133,20 @@ class _NavigationBodyState extends State<_NavigationBody> {
             child: child,
           );
         },
-        child: FocusTraversalGroup(
+        child: KeyedSubtree(
           key: widget.itemKey,
-          child: widget.child,
+          child: PageView.builder(
+            key: _pageKey,
+            physics: const NeverScrollableScrollPhysics(),
+            allowImplicitScrolling: false,
+            controller: _pageController,
+            itemCount: view.pane!.effectiveItems.length,
+            itemBuilder: (context, index) {
+              return view.pane!.effectiveItems
+                  .map((item) => FocusTraversalGroup(child: item.body))
+                  .elementAt(index);
+            },
+          ),
         ),
       ),
     );
