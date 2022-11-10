@@ -209,7 +209,10 @@ TreeView(
               value: 'tax_middle_years',
               children: [
                 TreeViewItem(content: const Text('2018'), value: "tax_2018"),
-                TreeViewItem(content: const Text('2019'), value: "tax_2019"),
+                TreeViewItem(
+                    content: const Text('2019'),
+                    value: "tax_2019",
+                    selected: true),
                 TreeViewItem(content: const Text('2020'), value: "tax_2020"),
               ],
             ),
