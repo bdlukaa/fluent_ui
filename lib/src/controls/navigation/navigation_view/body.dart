@@ -145,6 +145,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
               final bool isSelected = view.pane!.selected == index;
               return view.pane!.effectiveItems.map((item) {
                 final body = FocusTraversalGroup(
+                  key: item.bodyKey,
                   child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
                 );
 
