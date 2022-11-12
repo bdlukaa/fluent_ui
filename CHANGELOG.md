@@ -2,6 +2,7 @@
 
 - Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
 - Added support for Romanian language
+- Ensure the body state in `NavigationView` is properly preserved ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
 
 ## 4.0.3+1
 

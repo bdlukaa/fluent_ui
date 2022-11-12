@@ -85,7 +85,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
     super.didChangeDependencies();
     final view = InheritedNavigationView.of(context);
 
-    if (view.oldIndex != view.pane?.selected) {
+    if (_pageController.hasClients && view.oldIndex != view.pane?.selected) {
       _pageController.jumpToPage(view.pane?.selected ?? 0);
     }
   }
