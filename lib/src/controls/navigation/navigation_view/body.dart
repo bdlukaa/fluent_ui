@@ -142,9 +142,14 @@ class _NavigationBodyState extends State<_NavigationBody> {
             controller: _pageController,
             itemCount: view.pane!.effectiveItems.length,
             itemBuilder: (context, index) {
-              return view.pane!.effectiveItems
-                  .map((item) => FocusTraversalGroup(child: item.body))
-                  .elementAt(index);
+              final bool isSelected = view.pane!.selected == index;
+              return view.pane!.effectiveItems.map((item) {
+                final body = FocusTraversalGroup(child: item.body);
+
+                if (!isSelected) return ExcludeFocus(child: body);
+
+                return body;
+              }).elementAt(index);
             },
           ),
         ),
