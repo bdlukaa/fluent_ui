@@ -14,7 +14,7 @@ class _NavigationBody extends StatefulWidget {
     // ignore: unused_element
     super.key,
     required this.itemKey,
-    required this.child,
+    this.paneBodyBuilder,
     this.transitionBuilder,
     // ignore: unused_element
     this.animationCurve,
@@ -24,7 +24,7 @@ class _NavigationBody extends StatefulWidget {
 
   final ValueKey<int>? itemKey;
 
-  final Widget child;
+  final NavigationContentBuilder? paneBodyBuilder;
 
   /// The transition builder.
   ///
@@ -144,7 +144,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
             itemBuilder: (context, index) {
               final bool isSelected = view.pane!.selected == index;
               return view.pane!.effectiveItems.map((item) {
-                final body = FocusTraversalGroup(child: item.body);
+                final body = FocusTraversalGroup(
+                  child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
+                );
 
                 if (!isSelected) return ExcludeFocus(child: body);
 
