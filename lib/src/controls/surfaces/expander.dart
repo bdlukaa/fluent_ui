@@ -11,25 +11,25 @@ enum ExpanderDirection {
   up,
 }
 
-/// The [Expander] control lets you show or hide less important content
-/// that's related to a piece of primary content that's always visible.
-/// Items contained in the Header are always visible. The user can expand
-/// and collapse the Content area, where secondary content is displayed,
-/// by interacting with the header. When the content area is expanded,
-/// it pushes other UI elements out of the way; it does not overlay other
-/// UI. The Expander can expand upwards or downwards.
+/// The [Expander] control lets you show or hide less important content that's
+/// related to a piece of primary content that's always visible. Items contained
+/// in the Header are always visible. The user can expand and collapse the Content
+/// area, where secondary content is displayed, by interacting with the header.
+/// When the content area is expanded, it pushes other UI elements out of the
+/// way; it does not overlay other UI. The Expander can expand upwards or
+/// downwards.
 ///
-/// Both the Header and Content areas can contain any content, from simple
-/// text to complex UI layouts. For example, you can use the control to show
-/// additional options for an item.
+/// Both the Header and Content areas can contain any content, from simple text
+/// to complex UI layouts. For example, you can use the control to show additional
+/// options for an item.
 ///
 /// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
-  /// Creates an expander
+  /// Creates a fluent-styled expander.
   const Expander({
     Key? key,
     this.leading,
@@ -52,14 +52,14 @@ class Expander extends StatefulWidget {
   ///
   /// See also:
   ///
-  ///  * [Icon]
-  ///  * [RadioButton]
-  ///  * [Checkbox]
+  ///  * [Icon], used to display graphic content
+  ///  * [RadioButton], used to select an exclusive option from a set of options
+  ///  * [Checkbox], used to select or deselect items within a list
   final Widget? leading;
 
   /// The expander header
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget header;
 
   /// The expander content
@@ -82,12 +82,14 @@ class Expander extends StatefulWidget {
   ///  * [ToggleSwitch]
   final Widget? trailing;
 
-  /// The expand-collapse animation duration. If null, defaults to
-  /// [FluentTheme.fastAnimationDuration]
+  /// The expand-collapse animation duration.
+  ///
+  /// If null, defaults to [ThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
-  /// The expand-collapse animation curve. If null, defaults to
-  /// [FluentTheme.animationCurve]
+  /// The expand-collapse animation curve.
+  ///
+  /// If null, defaults to [ThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The expand direction. Defaults to [ExpanderDirection.down]
@@ -111,17 +113,18 @@ class Expander extends StatefulWidget {
   /// The content color of the header
   final Color? contentBackgroundColor;
 
+  /// The shape of the header
   final ShapeBuilder? headerShape;
 
   @override
-  ExpanderState createState() => ExpanderState();
+  State<Expander> createState() => ExpanderState();
 }
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late ThemeData _theme;
 
-  bool _isExpanded = false;
+  late bool _isExpanded;
   bool get isExpanded => _isExpanded;
   set isExpanded(bool value) {
     if (_isExpanded != value) _handlePressed();
