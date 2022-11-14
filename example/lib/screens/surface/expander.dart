@@ -31,7 +31,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
 
   @override
   Widget build(BuildContext context) {
-    final open = expanderKey.currentState?.open ?? false;
+    final open = expanderKey.currentState?.isExpanded ?? false;
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Expander')),
       children: [
@@ -164,7 +164,7 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
                 checked: open,
                 onChanged: (v) {
                   setState(() {
-                    expanderKey.currentState?.open = v;
+                    expanderKey.currentState?.isExpanded = v;
                   });
                 },
                 content: Text(open ? 'Close' : 'Open'),

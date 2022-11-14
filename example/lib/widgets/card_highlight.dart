@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_syntax_view/flutter_syntax_view.dart';
@@ -26,12 +24,13 @@ class _CardHighlightState extends State<CardHighlight>
   bool isOpen = false;
   bool isCopying = false;
 
-  final key = Random().nextInt(1000);
+  final GlobalKey expanderKey = GlobalKey<ExpanderState>();
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final theme = FluentTheme.of(context);
+
     return Column(children: [
       Card(
         backgroundColor: widget.backgroundColor,
@@ -45,7 +44,7 @@ class _CardHighlightState extends State<CardHighlight>
         ),
       ),
       Expander(
-        key: PageStorageKey(key),
+        key: expanderKey,
         headerShape: (open) => const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
         ),
@@ -63,25 +62,23 @@ class _CardHighlightState extends State<CardHighlight>
                 constraints: const BoxConstraints(minWidth: 75),
                 child: Button(
                   style: ButtonStyle(
-                      backgroundColor: isCopying
-                          ? ButtonState.all(
-                              theme.accentColor
-                                  .defaultBrushFor(theme.brightness),
-                            )
-                          : null),
+                    backgroundColor: isCopying
+                        ? ButtonState.all(
+                            theme.accentColor.defaultBrushFor(theme.brightness),
+                          )
+                        : null,
+                  ),
                   child: isCopying
                       ? Icon(
                           FluentIcons.check_mark,
                           color: theme.resources.textOnAccentFillColorPrimary,
                           size: 18,
                         )
-                      : Row(
-                          children: const [
-                            Icon(FluentIcons.copy),
-                            SizedBox(width: 6.0),
-                            Text('Copy')
-                          ],
-                        ),
+                      : Row(children: const [
+                          Icon(FluentIcons.copy),
+                          SizedBox(width: 6.0),
+                          Text('Copy')
+                        ]),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: widget.codeSnippet));
                     setState(() => isCopying = true);

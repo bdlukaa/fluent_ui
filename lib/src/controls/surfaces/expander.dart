@@ -121,10 +121,10 @@ class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late ThemeData _theme;
 
-  bool? _open;
-  bool get open => _open ?? false;
-  set open(bool value) {
-    if (_open != value) _handlePressed();
+  bool _isExpanded = false;
+  bool get isExpanded => _isExpanded;
+  set isExpanded(bool value) {
+    if (_isExpanded != value) _handlePressed();
   }
 
   late AnimationController _controller;
@@ -133,12 +133,9 @@ class ExpanderState extends State<Expander>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _open = PageStorage.of(context)?.readState(
-          context,
-          identifier: 'expanderOpen',
-        ) as bool? ??
+    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
-    if (_open == true) {
+    if (_isExpanded == true) {
       _controller.value = 1;
     }
   }
@@ -147,34 +144,26 @@ class ExpanderState extends State<Expander>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _theme = FluentTheme.of(context);
-    if (_open == null) {
-      _open = !widget.initiallyExpanded;
-      open = widget.initiallyExpanded;
-    }
   }
 
   void _handlePressed() {
-    if (open) {
+    if (_isExpanded) {
       _controller.animateTo(
         0.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = false;
+      _isExpanded = false;
     } else {
       _controller.animateTo(
         1.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = true;
+      _isExpanded = true;
     }
-    PageStorage.of(context)?.writeState(
-      context,
-      open,
-      identifier: 'expanderOpen',
-    );
-    widget.onStateChanged?.call(open);
+    PageStorage.of(context)?.writeState(context, _isExpanded);
+    widget.onStateChanged?.call(_isExpanded);
     if (mounted) setState(() {});
   }
 
@@ -202,14 +191,14 @@ class ExpanderState extends State<Expander>
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
-              shape: widget.headerShape?.call(open) ??
+              shape: widget.headerShape?.call(_isExpanded) ??
                   RoundedRectangleBorder(
                     side: BorderSide(
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
                       top: const Radius.circular(4.0),
-                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                      bottom: Radius.circular(_isExpanded ? 0.0 : 4.0),
                     ),
                   ),
             ),
