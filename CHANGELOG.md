@@ -8,6 +8,7 @@
 - Ensure the TabView scroll controller has clients before using it ([#615](https://github.com/bdlukaa/fluent_ui/issues/615))
 - TabView now waits a time to resize after closed ([#617](https://github.com/bdlukaa/fluent_ui/issues/617))
 - `ToggleButton` border width is uniform ([#610](https://github.com/bdlukaa/fluent_ui/issues/610))
+- Add code snippet to TabView example.
 
 ## 4.0.3+1
 

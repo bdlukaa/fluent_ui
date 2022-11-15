@@ -155,8 +155,68 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               },
             ),
           ),
-          // TODO: TabView snippets
-          codeSnippet: '''''',
+          codeSnippet: r'''
+Tab generateTab(int index) {
+  late Tab tab;
+  tab = Tab(
+    text: Text('Document $index'),
+    semanticLabel: 'Document #$index',
+    icon: const FlutterLogo(),
+    body: Container(
+      color: Colors.accentColors[
+        Random().nextInt(Colors.accentColors.length),
+      ],
+    ),
+    onClosed: () {
+      setState(() {
+        tabs!.remove(tab);
+        if (currentIndex > 0) currentIndex--;
+      });
+    },
+  );
+  return tab;
+}
+
+final tabs ??= List.generate(3, generateTab);
+
+TabView(
+  tabs: tabs!,
+  currentIndex: currentIndex,
+  onChanged: (index) => setState(() => currentIndex = index),
+  tabWidthBehavior: ''' +
+              tabWidthBehavior.toString() +
+              r''',
+  closeButtonVisibility: ''' +
+              closeButtonVisibilityMode.toString() +
+              r''',
+  showScrollButtons: ''' +
+              showScrollButtons.toString() +
+              r''',
+  wheelScroll: ''' +
+              wheelScroll.toString() +
+              r''',
+  onNewPressed: () {
+    setState(() {
+      final index = tabs!.length + 1;
+      final tab = generateTab(index);
+      tabs!.add(tab);
+    });
+  },
+  onReorder: (oldIndex, newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final item = tabs!.removeAt(oldIndex);
+      tabs!.insert(newIndex, item);
+      if (currentIndex == newIndex) {
+        currentIndex = oldIndex;
+      } else if (currentIndex == oldIndex) {
+        currentIndex = newIndex;
+      }
+    });
+  },
+)''',
         ),
       ],
     );
