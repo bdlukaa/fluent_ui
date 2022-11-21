@@ -144,14 +144,13 @@ class _NavigationBodyState extends State<_NavigationBody> {
             itemBuilder: (context, index) {
               final bool isSelected = view.pane!.selected == index;
               return view.pane!.effectiveItems.map((item) {
-                final body = FocusTraversalGroup(
+                return ExcludeFocus(
                   key: item.bodyKey,
-                  child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
+                  excluding: !isSelected,
+                  child: FocusTraversalGroup(
+                    child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
+                  ),
                 );
-
-                if (!isSelected) return ExcludeFocus(child: body);
-
-                return body;
               }).elementAt(index);
             },
           ),
