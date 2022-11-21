@@ -145,7 +145,7 @@ class TabView extends StatefulWidget {
 
   /// Displayed after all the tabs and buttons.
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget? footer;
 
   /// Whenever the new button should be displayed.
@@ -219,7 +219,8 @@ class _TabViewState extends State<TabView> {
     if (widget.tabs.length != oldWidget.tabs.length) {
       scrollController.itemCount = widget.tabs.length;
     }
-    if (widget.currentIndex != oldWidget.currentIndex) {
+    if (widget.currentIndex != oldWidget.currentIndex &&
+        scrollController.hasClients) {
       scrollController.scrollToItem(widget.currentIndex, center: false);
     }
   }
@@ -382,7 +383,8 @@ class _TabViewState extends State<TabView> {
                 final Widget listView = Listener(
                   onPointerSignal: widget.wheelScroll
                       ? (PointerSignalEvent e) {
-                          if (e is PointerScrollEvent) {
+                          if (e is PointerScrollEvent &&
+                              scrollController.hasClients) {
                             if (e.scrollDelta.dy > 0) {
                               scrollController.forward(
                                 align: false,
@@ -421,68 +423,75 @@ class _TabViewState extends State<TabView> {
                   ),
                 );
 
+                /// Whether the tab bar is scrollable
                 bool scrollable = preferredTabWidth * widget.tabs.length >
                     width - (widget.showNewButton ? _kButtonWidth : 0);
 
-                final bool showScrollButtons =
-                    widget.showScrollButtons && scrollable;
-                final backwardButton = Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 8.0,
-                    end: 3.0,
-                    bottom: 3.0,
-                  ),
-                  child: _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_left_solid8, size: 8),
-                    !scrollController.canBackward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.backward();
-                            } else {
-                              scrollController.forward();
-                            }
-                          }
-                        : null,
-                    localizations.scrollTabBackwardLabel,
-                  ),
-                );
+                final bool showScrollButtons = widget.showScrollButtons &&
+                    scrollable &&
+                    scrollController.hasClients;
 
-                final forwardButton = Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 3.0,
-                    end: 8.0,
-                    bottom: 3.0,
-                  ),
-                  child: _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_right_solid8, size: 8),
-                    !scrollController.canForward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.forward();
-                            } else {
-                              scrollController.backward();
+                Widget backwardButton() {
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      end: 3.0,
+                      bottom: 3.0,
+                    ),
+                    child: _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_left_solid8, size: 8),
+                      !scrollController.canBackward
+                          ? () {
+                              if (direction == TextDirection.ltr) {
+                                scrollController.backward();
+                              } else {
+                                scrollController.forward();
+                              }
                             }
-                          }
-                        : null,
-                    localizations.scrollTabForwardLabel,
-                  ),
-                );
+                          : null,
+                      localizations.scrollTabBackwardLabel,
+                    ),
+                  );
+                }
+
+                Widget forwardButton() {
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 3.0,
+                      end: 8.0,
+                      bottom: 3.0,
+                    ),
+                    child: _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_right_solid8, size: 8),
+                      !scrollController.canForward
+                          ? () {
+                              if (direction == TextDirection.ltr) {
+                                scrollController.forward();
+                              } else {
+                                scrollController.backward();
+                              }
+                            }
+                          : null,
+                      localizations.scrollTabForwardLabel,
+                    ),
+                  );
+                }
 
                 return Row(children: [
                   if (showScrollButtons)
                     direction == TextDirection.ltr
-                        ? backwardButton
-                        : forwardButton,
+                        ? backwardButton()
+                        : forwardButton(),
                   if (scrollable)
                     Expanded(child: listView)
                   else
                     Flexible(child: listView),
                   if (showScrollButtons)
                     direction == TextDirection.ltr
-                        ? forwardButton
-                        : backwardButton,
+                        ? forwardButton()
+                        : backwardButton(),
                   if (widget.showNewButton)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(
