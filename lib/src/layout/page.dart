@@ -11,7 +11,7 @@ const double kPageDefaultVerticalPadding = 24.0;
 /// See also:
 ///
 ///   * [PageHeader], usually used on the [header] property
-class ScaffoldPage extends StatelessWidget {
+class ScaffoldPage extends StatefulWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({
     Key? key,
@@ -101,6 +101,9 @@ class ScaffoldPage extends StatelessWidget {
   final bool resizeToAvoidBottomInset;
 
   @override
+  State<ScaffoldPage> createState() => _ScaffoldPageState();
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
@@ -116,6 +119,10 @@ class ScaffoldPage extends StatelessWidget {
         ifFalse: 'do not resize',
       ));
   }
+}
+
+class _ScaffoldPageState extends State<ScaffoldPage> {
+  final _bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -126,31 +133,36 @@ class ScaffoldPage extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final view = InheritedNavigationView.maybeOf(context);
 
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: resizeToAvoidBottomInset ? mediaQuery.viewInsets.bottom : 0.0,
-      ),
-      child: Column(children: [
-        Expanded(
-          child: Container(
-            // we only show the scaffold background color if a [NavigationView] is
-            // not a parent widget of this page. this happens because, if a navigation
-            // view is not used, the page would be uncolored.
-            color: view == null ? theme.scaffoldBackgroundColor : null,
-            padding: EdgeInsets.only(
-              top: padding?.top ?? kPageDefaultVerticalPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (header != null) header!,
-                Expanded(child: content),
-              ],
+    return PageStorage(
+      bucket: _bucket,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: widget.resizeToAvoidBottomInset
+              ? mediaQuery.viewInsets.bottom
+              : 0.0,
+        ),
+        child: Column(children: [
+          Expanded(
+            child: Container(
+              // we only show the scaffold background color if a [NavigationView] is
+              // not a parent widget of this page. this happens because, if a navigation
+              // view is not used, the page would be uncolored.
+              color: view == null ? theme.scaffoldBackgroundColor : null,
+              padding: EdgeInsets.only(
+                top: widget.padding?.top ?? kPageDefaultVerticalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.header != null) widget.header!,
+                  Expanded(child: widget.content),
+                ],
+              ),
             ),
           ),
-        ),
-        if (bottomBar != null) bottomBar!,
-      ]),
+          if (widget.bottomBar != null) widget.bottomBar!,
+        ]),
+      ),
     );
   }
 }
