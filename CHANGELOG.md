@@ -6,6 +6,7 @@
 - **BREAKING** Renamed `ExpanderState.open` to `ExpanderState.isExpanded`
 - The same identifier is no longer used for every `Expander` ([#596](https://github.com/bdlukaa/fluent_ui/issues/596))
 - Ensure the TabView scroll controller has clients before using it ([#615](https://github.com/bdlukaa/fluent_ui/issues/615))
+- TabView now waits a time to resize after closed ([#617](https://github.com/bdlukaa/fluent_ui/issues/617))
 
 ## 4.0.3+1
 
