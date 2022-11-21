@@ -19,6 +19,8 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
 
+typedef NavigationContentBuilder = Widget Function(Widget? body);
+
 /// The NavigationView control provides top-level navigation for your app. It
 /// adapts to a variety of screen sizes and supports both top and left
 /// navigation styles.
@@ -56,14 +58,13 @@ class NavigationView extends StatefulWidget {
 
   /// Can be used to override the widget that is built from
   /// the [PaneItem.body]. Only used if [pane] is provided.
-  /// If nothing is selected, `selectedPaneItemBody` will be
-  /// null.
+  /// If nothing is selected, `body` will be null.
   ///
   /// This can be useful if you are using router-based navigation,
   /// and the body of the navigation pane is dynamically determined or
   /// affected by the current route rather than just by the currently
   /// selected pane.
-  final Widget Function(Widget? selectedPaneItemBody)? paneBodyBuilder;
+  final NavigationContentBuilder? paneBodyBuilder;
 
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above the body.
@@ -361,17 +362,12 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
-        final paneBodyBuilder = widget.paneBodyBuilder;
         final body = _NavigationBody(
           itemKey: ValueKey(pane.selected ?? -1),
           transitionBuilder: widget.transitionBuilder,
-          child: paneBodyBuilder != null
-              ? paneBodyBuilder(
-                  pane.selected != null ? pane.selectedItem.body : null)
-              : (pane.selected != null
-                  ? pane.selectedItem.body
-                  : const SizedBox.shrink()),
+          paneBodyBuilder: widget.paneBodyBuilder,
         );
+
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
             return PaneScrollConfiguration(

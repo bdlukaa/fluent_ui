@@ -1,6 +1,12 @@
 part of 'view.dart';
 
 class NavigationPaneItem with Diagnosticable {
+  /// The key used for the item itself. Useful to find the position and size of
+  /// the pane item within the screen
+  ///
+  /// See also:
+  ///
+  ///   * [PaneItem.build], which assigns
   GlobalKey itemKey = GlobalKey();
 
   NavigationPaneItem();
@@ -21,6 +27,14 @@ class NavigationPaneItem with Diagnosticable {
 ///   * [PaneItemAction], the item used for execute an action on click
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItem extends NavigationPaneItem {
+  /// The key used for the body content
+  ///
+  /// See also:
+  ///
+  ///   * [body], which this is assigned to
+  ///   * [_NavigationBody], which assigns this to every pane body
+  GlobalKey bodyKey = GlobalKey();
+
   /// Creates a pane item.
   PaneItem({
     required this.icon,
