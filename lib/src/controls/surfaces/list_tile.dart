@@ -145,7 +145,8 @@ class ListTile extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('shape', shape))
-      ..add(FlagProperty('selected', value: selected, defaultValue: false))
+      ..add(FlagProperty('selected',
+          value: selected, ifFalse: 'unselected', defaultValue: false))
       ..add(EnumProperty(
         'selectionMode',
         selectionMode,
