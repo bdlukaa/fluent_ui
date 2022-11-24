@@ -137,11 +137,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   final viewKey = GlobalKey();
 
-  final key = GlobalKey();
+  final searchKey = GlobalKey();
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
-  void resetSearch() => searchController.clear();
-  String get searchValue => searchController.text;
+
   final List<NavigationPaneItem> originalItems = [
     PaneItem(
       icon: const Icon(FluentIcons.home),
@@ -369,28 +368,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
-  late List<NavigationPaneItem> items = originalItems;
 
   @override
   void initState() {
     windowManager.addListener(this);
-    searchController.addListener(() {
-      setState(() {
-        if (searchValue.isEmpty) {
-          items = originalItems;
-        } else {
-          items = [...originalItems, ...footerItems]
-              .whereType<PaneItem>()
-              .where((item) {
-                assert(item.title is Text);
-                final text = (item.title as Text).data!;
-                return text.toLowerCase().contains(searchValue.toLowerCase());
-              })
-              .toList()
-              .cast<NavigationPaneItem>();
-        }
-      });
-    });
     super.initState();
   }
 
@@ -443,28 +424,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ]),
       ),
       pane: NavigationPane(
-        selected: () {
-          // if not searching, return the current index
-          if (searchValue.isEmpty) return index;
-
-          final indexOnScreen = items.indexOf(
-            [...originalItems, ...footerItems]
-                .whereType<PaneItem>()
-                .elementAt(index),
-          );
-          if (indexOnScreen.isNegative) return null;
-          return indexOnScreen;
-        }(),
+        selected: index,
         onChanged: (i) {
-          // If searching, the values will have different indexes
-          if (searchValue.isNotEmpty) {
-            final equivalentIndex = [...originalItems, ...footerItems]
-                .whereType<PaneItem>()
-                .toList()
-                .indexOf(items[i] as PaneItem);
-            i = equivalentIndex;
-          }
-          resetSearch();
           setState(() => index = i);
         },
         header: SizedBox(
@@ -500,15 +461,33 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        items: items,
-        autoSuggestBox: TextBox(
-          key: key,
-          controller: searchController,
-          placeholder: 'Search',
+        items: originalItems,
+        autoSuggestBox: AutoSuggestBox(
+          key: searchKey,
           focusNode: searchFocusNode,
+          controller: searchController,
+          items: originalItems.whereType<PaneItem>().map((item) {
+            assert(item.title is Text);
+            final text = (item.title as Text).data!;
+
+            return AutoSuggestBoxItem(
+              label: text,
+              value: text,
+              onSelected: () async {
+                final itemIndex = NavigationPane(
+                  items: originalItems,
+                ).effectiveIndexOf(item);
+
+                setState(() => index = itemIndex);
+                await Future.delayed(const Duration(milliseconds: 17));
+                searchController.clear();
+              },
+            );
+          }).toList(),
+          placeholder: 'Search',
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
-        footerItems: searchValue.isNotEmpty ? [] : footerItems,
+        footerItems: footerItems,
       ),
       onOpenSearch: () {
         searchFocusNode.requestFocus();

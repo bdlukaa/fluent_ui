@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
@@ -71,6 +73,7 @@ class TabView extends StatefulWidget {
     this.tabWidthBehavior = TabWidthBehavior.equal,
     this.header,
     this.footer,
+    this.closeDelayDuration = const Duration(milliseconds: 400),
   }) : super(key: key);
 
   /// The index of the tab to be displayed
@@ -129,7 +132,6 @@ class TabView extends StatefulWidget {
   /// Indicate if the mouse wheel should scroll the TabView
   ///
   /// Defaults to `false`.
-  ///
   final bool wheelScroll;
 
   /// Indicates the close button visibility mode
@@ -145,8 +147,14 @@ class TabView extends StatefulWidget {
 
   /// Displayed after all the tabs and buttons.
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget? footer;
+
+  /// The delay duration to animate the tab after it's closed. Only applied when
+  /// [tabWidthBehavior] is [TabWidthBehavior.equal].
+  ///
+  /// Defaults to 400 milliseconds.
+  final Duration closeDelayDuration;
 
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
@@ -161,40 +169,53 @@ class TabView extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('currentIndex', currentIndex));
-    properties.add(FlagProperty(
-      'showNewButton',
-      value: showNewButton,
-      ifFalse: 'no new button',
-    ));
-    properties.add(IconDataProperty('addIconData', addIconData));
-    properties.add(ObjectFlagProperty(
-      'onChanged',
-      onChanged,
-      ifNull: 'disabled',
-    ));
-    properties.add(ObjectFlagProperty(
-      'onNewPressed',
-      onNewPressed,
-      ifNull: 'no new button',
-    ));
-    properties.add(IntProperty('tabs', tabs.length));
-    properties.add(FlagProperty(
-      'reorderEnabled',
-      value: isReorderEnabled,
-      ifFalse: 'reorder disabled',
-    ));
-    properties.add(FlagProperty(
-      'showScrollButtons',
-      value: showScrollButtons,
-      ifFalse: 'hide scroll buttons',
-    ));
-    properties.add(EnumProperty('closeButtonVisibility', closeButtonVisibility,
-        defaultValue: CloseButtonVisibilityMode.always));
+    properties
+      ..add(IntProperty('currentIndex', currentIndex))
+      ..add(FlagProperty(
+        'showNewButton',
+        value: showNewButton,
+        ifFalse: 'no new button',
+      ))
+      ..add(IconDataProperty('addIconData', addIconData))
+      ..add(ObjectFlagProperty(
+        'onChanged',
+        onChanged,
+        ifNull: 'disabled',
+      ))
+      ..add(ObjectFlagProperty(
+        'onNewPressed',
+        onNewPressed,
+        ifNull: 'no new button',
+      ))
+      ..add(IntProperty('tabs', tabs.length))
+      ..add(FlagProperty(
+        'reorderEnabled',
+        value: isReorderEnabled,
+        ifFalse: 'reorder disabled',
+      ))
+      ..add(FlagProperty(
+        'showScrollButtons',
+        value: showScrollButtons,
+        ifFalse: 'hide scroll buttons',
+      ))
+      ..add(EnumProperty(
+        'closeButtonVisibility',
+        closeButtonVisibility,
+        defaultValue: CloseButtonVisibilityMode.always,
+      ))
+      ..add(EnumProperty(
+        'tabWidthBehavior',
+        tabWidthBehavior,
+        defaultValue: TabWidthBehavior.equal,
+      ));
   }
 }
 
 class _TabViewState extends State<TabView> {
+  Timer? closeTimer;
+  double? lockedTabWidth;
+  double preferredTabWidth = 0.0;
+
   late ScrollPosController scrollController;
 
   @override
@@ -219,7 +240,8 @@ class _TabViewState extends State<TabView> {
     if (widget.tabs.length != oldWidget.tabs.length) {
       scrollController.itemCount = widget.tabs.length;
     }
-    if (widget.currentIndex != oldWidget.currentIndex) {
+    if (widget.currentIndex != oldWidget.currentIndex &&
+        scrollController.hasClients) {
       scrollController.scrollToItem(widget.currentIndex, center: false);
     }
   }
@@ -230,7 +252,45 @@ class _TabViewState extends State<TabView> {
       // only dispose the local controller
       scrollController.dispose();
     }
+    closeTimer?.cancel();
     super.dispose();
+  }
+
+  void close(int index) {
+    final tab = widget.tabs[index];
+    final closable = tab.onClosed != null;
+
+    void createTimer() {
+      closeTimer = Timer(widget.closeDelayDuration, () {
+        closeTimer!.cancel();
+        closeTimer = null;
+        lockedTabWidth = null;
+
+        if (mounted) setState(() {});
+      });
+    }
+
+    if (closable) {
+      widget.tabs[index].onClosed!();
+
+      closeTimer?.cancel();
+
+      double tabWidth = preferredTabWidth;
+
+      final tabBox =
+          tab._tabKey.currentContext?.findRenderObject() as RenderBox?;
+      if (tabBox != null && tabBox.hasSize) {
+        tabWidth = tabBox.size.width;
+
+        // consider the divider thickness when calculating the tab width
+        final thickness = DividerTheme.of(context).thickness ?? 0;
+        tabWidth += (thickness * (widget.tabs.length - 1)) - thickness * 2;
+      }
+
+      setState(() => lockedTabWidth = tabWidth);
+
+      createTimer();
+    }
   }
 
   Widget _tabBuilder(
@@ -246,18 +306,21 @@ class _TabViewState extends State<TabView> {
       selected: index == widget.currentIndex,
       onPressed:
           widget.onChanged == null ? null : () => widget.onChanged!(index),
+      onClose: widget.tabs[index].onClosed == null ? null : () => close(index),
       animationDuration: FluentTheme.of(context).fastAnimationDuration,
       animationCurve: FluentTheme.of(context).animationCurve,
       visibilityMode: widget.closeButtonVisibility,
       tabWidthBehavior: widget.tabWidthBehavior,
     );
     final Widget child = GestureDetector(
-      onTertiaryTapUp: (_) => tab.onClosed?.call(),
+      onTertiaryTapUp: (_) => close(index),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (widget.tabWidthBehavior == TabWidthBehavior.equal)
-          Expanded(child: tabWidget)
-        else
-          Flexible(child: tabWidget),
+        Flexible(
+          fit: widget.tabWidthBehavior == TabWidthBehavior.equal
+              ? FlexFit.tight
+              : FlexFit.loose,
+          child: tabWidget,
+        ),
         divider(index),
       ]),
     );
@@ -267,7 +330,7 @@ class _TabViewState extends State<TabView> {
         case TabWidthBehavior.compact:
           return null;
         default:
-          return preferredTabWidth;
+          return lockedTabWidth ?? preferredTabWidth;
       }
     }();
     if (minWidth == null) {
@@ -374,7 +437,7 @@ class _TabViewState extends State<TabView> {
                   'You can only create a TabView in a box with defined width',
                 );
 
-                final double preferredTabWidth =
+                preferredTabWidth =
                     ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
                             widget.tabs.length)
                         .clamp(widget.minTabWidth, widget.maxTabWidth);
@@ -382,7 +445,8 @@ class _TabViewState extends State<TabView> {
                 final Widget listView = Listener(
                   onPointerSignal: widget.wheelScroll
                       ? (PointerSignalEvent e) {
-                          if (e is PointerScrollEvent) {
+                          if (e is PointerScrollEvent &&
+                              scrollController.hasClients) {
                             if (e.scrollDelta.dy > 0) {
                               scrollController.forward(
                                 align: false,
@@ -421,68 +485,75 @@ class _TabViewState extends State<TabView> {
                   ),
                 );
 
+                /// Whether the tab bar is scrollable
                 bool scrollable = preferredTabWidth * widget.tabs.length >
                     width - (widget.showNewButton ? _kButtonWidth : 0);
 
-                final bool showScrollButtons =
-                    widget.showScrollButtons && scrollable;
-                final backwardButton = Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 8.0,
-                    end: 3.0,
-                    bottom: 3.0,
-                  ),
-                  child: _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_left_solid8, size: 8),
-                    !scrollController.canBackward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.backward();
-                            } else {
-                              scrollController.forward();
-                            }
-                          }
-                        : null,
-                    localizations.scrollTabBackwardLabel,
-                  ),
-                );
+                final bool showScrollButtons = widget.showScrollButtons &&
+                    scrollable &&
+                    scrollController.hasClients;
 
-                final forwardButton = Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 3.0,
-                    end: 8.0,
-                    bottom: 3.0,
-                  ),
-                  child: _buttonTabBuilder(
-                    context,
-                    const Icon(FluentIcons.caret_right_solid8, size: 8),
-                    !scrollController.canForward
-                        ? () {
-                            if (direction == TextDirection.ltr) {
-                              scrollController.forward();
-                            } else {
-                              scrollController.backward();
+                Widget backwardButton() {
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      end: 3.0,
+                      bottom: 3.0,
+                    ),
+                    child: _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_left_solid8, size: 8),
+                      !scrollController.canBackward
+                          ? () {
+                              if (direction == TextDirection.ltr) {
+                                scrollController.backward();
+                              } else {
+                                scrollController.forward();
+                              }
                             }
-                          }
-                        : null,
-                    localizations.scrollTabForwardLabel,
-                  ),
-                );
+                          : null,
+                      localizations.scrollTabBackwardLabel,
+                    ),
+                  );
+                }
+
+                Widget forwardButton() {
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 3.0,
+                      end: 8.0,
+                      bottom: 3.0,
+                    ),
+                    child: _buttonTabBuilder(
+                      context,
+                      const Icon(FluentIcons.caret_right_solid8, size: 8),
+                      !scrollController.canForward
+                          ? () {
+                              if (direction == TextDirection.ltr) {
+                                scrollController.forward();
+                              } else {
+                                scrollController.backward();
+                              }
+                            }
+                          : null,
+                      localizations.scrollTabForwardLabel,
+                    ),
+                  );
+                }
 
                 return Row(children: [
                   if (showScrollButtons)
                     direction == TextDirection.ltr
-                        ? backwardButton
-                        : forwardButton,
+                        ? backwardButton()
+                        : forwardButton(),
                   if (scrollable)
                     Expanded(child: listView)
                   else
                     Flexible(child: listView),
                   if (showScrollButtons)
                     direction == TextDirection.ltr
-                        ? forwardButton
-                        : backwardButton,
+                        ? forwardButton()
+                        : backwardButton(),
                   if (widget.showNewButton)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(
@@ -515,7 +586,7 @@ class _TabViewState extends State<TabView> {
     ]);
     if (widget.shortcutsEnabled) {
       void onClosePressed() {
-        widget.tabs[widget.currentIndex].onClosed?.call();
+        close(widget.currentIndex);
       }
 
       return FocusScope(
@@ -569,8 +640,10 @@ class _TabViewState extends State<TabView> {
 
 /// Represents a single tab within a [TabView].
 class Tab {
+  final _tabKey = GlobalKey<__TabState>();
+
   /// Creates a tab.
-  const Tab({
+  Tab({
     this.key,
     this.icon = const SizedBox.shrink(),
     required this.text,
@@ -614,6 +687,7 @@ class _Tab extends StatefulWidget {
     Key? key,
     this.onPressed,
     required this.selected,
+    required this.onClose,
     this.reorderIndex,
     this.animationDuration = Duration.zero,
     this.animationCurve = Curves.linear,
@@ -624,6 +698,7 @@ class _Tab extends StatefulWidget {
   final Tab tab;
   final bool selected;
   final VoidCallback? onPressed;
+  final VoidCallback? onClose;
   final int? reorderIndex;
   final Duration animationDuration;
   final Curve animationCurve;
@@ -701,6 +776,7 @@ class __TabState extends State<_Tab>
           renderOutside: false,
           style: const FocusThemeData(borderRadius: borderRadius),
           child: Container(
+            key: widget.tab._tabKey,
             height: _kTileHeight,
             constraints:
                 widget.tabWidthBehavior == TabWidthBehavior.sizeToContent
@@ -780,7 +856,7 @@ class __TabState extends State<_Tab>
                                 width: 32.0,
                                 child: IconButton(
                                   icon: Icon(widget.tab.closeIcon),
-                                  onPressed: widget.tab.onClosed,
+                                  onPressed: widget.onClose,
                                   focusable: false,
                                 ),
                               ),
