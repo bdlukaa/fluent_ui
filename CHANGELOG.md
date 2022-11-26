@@ -1,4 +1,4 @@
-## (future)
+## 4.1.0
 
 - Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
 - Added support for Romanian language ([#602](https://github.com/bdlukaa/fluent_ui/pull/602))
