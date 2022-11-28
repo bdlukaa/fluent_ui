@@ -15,6 +15,7 @@ import 'fluent_localizations_fr.dart';
 import 'fluent_localizations_he.dart';
 import 'fluent_localizations_hi.dart';
 import 'fluent_localizations_hu.dart';
+import 'fluent_localizations_id.dart';
 import 'fluent_localizations_it.dart';
 import 'fluent_localizations_ja.dart';
 import 'fluent_localizations_ko.dart';
@@ -80,8 +81,7 @@ import 'fluent_localizations_zh.dart';
 /// be consistent with the languages listed in the FluentLocalizations.supportedLocales
 /// property.
 abstract class FluentLocalizations {
-  FluentLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  FluentLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -89,8 +89,7 @@ abstract class FluentLocalizations {
     return Localizations.of<FluentLocalizations>(context, FluentLocalizations)!;
   }
 
-  static const LocalizationsDelegate<FluentLocalizations> delegate =
-      _FluentLocalizationsDelegate();
+  static const LocalizationsDelegate<FluentLocalizations> delegate = _FluentLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -102,8 +101,7 @@ abstract class FluentLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -122,6 +120,7 @@ abstract class FluentLocalizations {
     Locale('he'),
     Locale('hi'),
     Locale('hu'),
+    Locale('id'),
     Locale('it'),
     Locale('ja'),
     Locale('ko'),
@@ -324,110 +323,64 @@ abstract class FluentLocalizations {
   String get year;
 }
 
-class _FluentLocalizationsDelegate
-    extends LocalizationsDelegate<FluentLocalizations> {
+class _FluentLocalizationsDelegate extends LocalizationsDelegate<FluentLocalizations> {
   const _FluentLocalizationsDelegate();
 
   @override
   Future<FluentLocalizations> load(Locale locale) {
-    return SynchronousFuture<FluentLocalizations>(
-        lookupFluentLocalizations(locale));
+    return SynchronousFuture<FluentLocalizations>(lookupFluentLocalizations(locale));
   }
 
   @override
-  bool isSupported(Locale locale) => <String>[
-        'ar',
-        'cs',
-        'de',
-        'en',
-        'es',
-        'fa',
-        'fr',
-        'he',
-        'hi',
-        'hu',
-        'it',
-        'ja',
-        'ko',
-        'ms',
-        'nl',
-        'pl',
-        'pt',
-        'ro',
-        'ru',
-        'tr',
-        'uz',
-        'zh'
-      ].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'cs', 'de', 'en', 'es', 'fa', 'fr', 'he', 'hi', 'hu', 'id', 'it', 'ja', 'ko', 'ms', 'nl', 'pl', 'pt', 'ro', 'ru', 'tr', 'uz', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
 }
 
 FluentLocalizations lookupFluentLocalizations(Locale locale) {
+
   // Lookup logic when language+script codes are specified.
   switch (locale.languageCode) {
-    case 'zh':
-      {
-        switch (locale.scriptCode) {
-          case 'Hant':
-            return FluentLocalizationsZhHant();
-        }
-        break;
-      }
+    case 'zh': {
+  switch (locale.scriptCode) {
+    case 'Hant': return FluentLocalizationsZhHant();
+   }
+  break;
+   }
   }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar':
-      return FluentLocalizationsAr();
-    case 'cs':
-      return FluentLocalizationsCs();
-    case 'de':
-      return FluentLocalizationsDe();
-    case 'en':
-      return FluentLocalizationsEn();
-    case 'es':
-      return FluentLocalizationsEs();
-    case 'fa':
-      return FluentLocalizationsFa();
-    case 'fr':
-      return FluentLocalizationsFr();
-    case 'he':
-      return FluentLocalizationsHe();
-    case 'hi':
-      return FluentLocalizationsHi();
-    case 'hu':
-      return FluentLocalizationsHu();
-    case 'it':
-      return FluentLocalizationsIt();
-    case 'ja':
-      return FluentLocalizationsJa();
-    case 'ko':
-      return FluentLocalizationsKo();
-    case 'ms':
-      return FluentLocalizationsMs();
-    case 'nl':
-      return FluentLocalizationsNl();
-    case 'pl':
-      return FluentLocalizationsPl();
-    case 'pt':
-      return FluentLocalizationsPt();
-    case 'ro':
-      return FluentLocalizationsRo();
-    case 'ru':
-      return FluentLocalizationsRu();
-    case 'tr':
-      return FluentLocalizationsTr();
-    case 'uz':
-      return FluentLocalizationsUz();
-    case 'zh':
-      return FluentLocalizationsZh();
+    case 'ar': return FluentLocalizationsAr();
+    case 'cs': return FluentLocalizationsCs();
+    case 'de': return FluentLocalizationsDe();
+    case 'en': return FluentLocalizationsEn();
+    case 'es': return FluentLocalizationsEs();
+    case 'fa': return FluentLocalizationsFa();
+    case 'fr': return FluentLocalizationsFr();
+    case 'he': return FluentLocalizationsHe();
+    case 'hi': return FluentLocalizationsHi();
+    case 'hu': return FluentLocalizationsHu();
+    case 'id': return FluentLocalizationsId();
+    case 'it': return FluentLocalizationsIt();
+    case 'ja': return FluentLocalizationsJa();
+    case 'ko': return FluentLocalizationsKo();
+    case 'ms': return FluentLocalizationsMs();
+    case 'nl': return FluentLocalizationsNl();
+    case 'pl': return FluentLocalizationsPl();
+    case 'pt': return FluentLocalizationsPt();
+    case 'ro': return FluentLocalizationsRo();
+    case 'ru': return FluentLocalizationsRu();
+    case 'tr': return FluentLocalizationsTr();
+    case 'uz': return FluentLocalizationsUz();
+    case 'zh': return FluentLocalizationsZh();
   }
 
   throw FlutterError(
-      'FluentLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'FluentLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }
