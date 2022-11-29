@@ -133,6 +133,7 @@ ThemeData(
 FluentUI widgets currently supports out-of-the-box an wide number of languages, including:
 
 - Arabic (@dmakwt)
+- Bahasa Indonesia (@ekasetiawans)
 - English
 - Dutch (@h3x4d3c1m4l)
 - French (@WinXaito)
