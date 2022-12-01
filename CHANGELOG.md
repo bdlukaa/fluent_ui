@@ -1,3 +1,7 @@
+## [next]
+
+- Ensure acrylic is updated only if it's mounted ([#634](https://github.com/bdlukaa/fluent_ui/issues/634))
+
 ## 4.1.0
 
 - Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
