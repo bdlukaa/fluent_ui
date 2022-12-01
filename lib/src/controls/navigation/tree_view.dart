@@ -833,14 +833,18 @@ class _TreeViewItem extends StatelessWidget {
                 const SingleActivator(LogicalKeyboardKey.arrowLeft):
                     VoidCallbackIntent(() {
                   if (item.expanded) {
-                    // if the item is already expanded, close it
+                    // if the item is expanded, close it
                     onExpandToggle();
+                  } else if (item.parent != null) {
+                    // if the item is already closed and has a parent
+                    // focus the parent
+                    item.parent!.focusNode.requestFocus();
                   }
                 }),
                 const SingleActivator(LogicalKeyboardKey.arrowRight):
                     VoidCallbackIntent(() {
                   if (item.expanded) {
-                    // if the item is already expanded, move to its first child
+                    // if the item is already expanded, focus its first child
                     FocusScope.of(context).nextFocus();
                   } else {
                     // expand the item

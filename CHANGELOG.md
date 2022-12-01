@@ -8,6 +8,7 @@
 - Ensure the TabView scroll controller has clients before using it ([#615](https://github.com/bdlukaa/fluent_ui/issues/615))
 - TabView now waits a time to resize after closed ([#617](https://github.com/bdlukaa/fluent_ui/issues/617))
 - `ToggleButton` border width is uniform ([#610](https://github.com/bdlukaa/fluent_ui/issues/610))
+- Fix left arrow key not moving to parent item on collapsed `TreeViewItem` ([#632](https://github.com/bdlukaa/fluent_ui/issues/632)) 
 
 ## 4.0.3+1
 
