@@ -132,6 +132,7 @@ class DatePicker extends StatefulWidget {
   /// If null, the order is based on the current locale.
   ///
   /// See also:
+  ///
   ///  * [getDateOrderFromLocale], which returns the order of the fields based
   ///    on the current locale
   final List<DatePickerField>? fieldOrder;
@@ -158,7 +159,10 @@ class DatePicker extends StatefulWidget {
       ..add(ObjectFlagProperty.has('focusNode', focusNode))
       ..add(
           FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
-      ..add(DoubleProperty('popupHeight', popupHeight));
+      ..add(DoubleProperty('popupHeight', popupHeight,
+          defaultValue: kPickerPopupHeight))
+      ..add(DiagnosticsProperty<Locale>('locale', locale))
+      ..add(IterableProperty<DatePickerField>('fieldOrder', fieldOrder));
   }
 }
 
@@ -170,8 +174,8 @@ class _DatePickerState extends State<DatePicker> {
   FixedExtentScrollController? _yearController;
 
   int get startYear =>
-      ((widget.startYear ?? DateTime.now().year) - 100).toInt();
-  int get endYear => ((widget.endYear ?? DateTime.now().year) + 25).toInt();
+      (widget.startYear ?? (DateTime.now().year - 100)).toInt();
+  int get endYear => (widget.endYear ?? (DateTime.now().year + 25)).toInt();
 
   int get currentYear {
     return List.generate(endYear - startYear, (index) {
