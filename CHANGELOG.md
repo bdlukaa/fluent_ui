@@ -3,6 +3,7 @@
 - Ensure acrylic is updated only if it's mounted ([#634](https://github.com/bdlukaa/fluent_ui/issues/634))
 - Ensure the provided `startYear` and `endYear` in `DateTime` are used properly ([#627](https://github.com/bdlukaa/fluent_ui/issues/627))
 - Fix left arrow key not moving to parent item on collapsed `TreeViewItem` ([#632](https://github.com/bdlukaa/fluent_ui/issues/632)) 
+- Added `NavigationPane.scrollBehavior` ([#640](https://github.com/bdlukaa/fluent_ui/issues/640))
 
 ## 4.1.0
 

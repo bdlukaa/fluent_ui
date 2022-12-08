@@ -691,7 +691,8 @@ class NavigationViewState extends State<NavigationView> {
       return PrimaryScrollController(
         controller: paneScrollController,
         child: ScrollConfiguration(
-          behavior: const NavigationViewScrollBehavior(),
+          behavior: widget.pane?.scrollBehavior ??
+              const NavigationViewScrollBehavior(),
           child: child,
         ),
       );
