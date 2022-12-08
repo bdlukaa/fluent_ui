@@ -206,6 +206,7 @@ class TextFormBox extends FormField<String> {
                   scribbleEnabled: scribbleEnabled,
                   textDirection: textDirection,
                   selectionControls: selectionControls,
+                  initialValue: initialValue,
                 ),
               ),
             );

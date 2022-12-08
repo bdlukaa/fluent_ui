@@ -2,41 +2,48 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class TreeViewPage extends ScrollablePage {
-  TreeViewPage({super.key});
+class TreeViewPage extends StatefulWidget {
+  const TreeViewPage({Key? key}) : super(key: key);
 
   @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('TreeView'));
-  }
+  State<TreeViewPage> createState() => _TreeViewPageState();
+}
+
+class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
+  final treeViewKey = GlobalKey<TreeViewState>();
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const Text(
-        'The tree view control enables a hierarchical list with expanding and '
-        'collapsing nodes that contain nested items. It can be used to '
-        'illustrate a folder structure or nested relationships in your UI.\n\n'
-        'The tree view uses a combination of indentation and icons to represent '
-        'the nested relationship between parent nodes and child nodes. Collapsed '
-        'nodes use a chevron pointing to the right, and expanded nodes use a '
-        'chevron pointing down.',
-      ),
-      subtitle(content: const Text('A TreeView with Multi-selection enabled')),
-      CardHighlight(
-        child: TreeView(
-          selectionMode: TreeViewSelectionMode.multiple,
-          shrinkWrap: true,
-          items: items,
-          onItemInvoked: (item, reason) async =>
-              debugPrint('onItemInvoked(reason=$reason): $item'),
-          onSelectionChanged: (selectedItems) async => debugPrint(
-              'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-          onSecondaryTap: (item, details) async {
-            debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-          },
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('TreeView')),
+      children: [
+        const Text(
+          'The tree view control enables a hierarchical list with expanding and '
+          'collapsing nodes that contain nested items. It can be used to '
+          'illustrate a folder structure or nested relationships in your UI.\n\n'
+          'The tree view uses a combination of indentation and icons to represent '
+          'the nested relationship between parent nodes and child nodes. Collapsed '
+          'nodes use a chevron pointing to the right, and expanded nodes use a '
+          'chevron pointing down.',
         ),
-        codeSnippet: r'''final items = [
+        subtitle(
+          content: const Text('A TreeView with Multi-selection enabled'),
+        ),
+        CardHighlight(
+          child: TreeView(
+            key: treeViewKey,
+            selectionMode: TreeViewSelectionMode.multiple,
+            shrinkWrap: true,
+            items: items,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
+          ),
+          codeSnippet: r'''final items = [
   TreeViewItem(
     content: const Text('Personal Documents'),
     value: 'personal_docs',
@@ -97,25 +104,26 @@ TreeView(
   },
 )
 ''',
-      ),
-      subtitle(content: const Text('A TreeView with lazy-loading items')),
-      CardHighlight(
-        child: Column(
-          children: [
-            TreeView(
-              shrinkWrap: true,
-              items: lazyItems,
-              onItemInvoked: (item, reason) async =>
-                  debugPrint('onItemInvoked(reason=$reason): $item'),
-              onSelectionChanged: (selectedItems) async => debugPrint(
-                  'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-              onSecondaryTap: (item, details) async {
-                debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-              },
-            ),
-          ],
         ),
-        codeSnippet: r'''final lazyItems = [
+        subtitle(content: const Text('A TreeView with lazy-loading items')),
+        CardHighlight(
+          child: Column(
+            children: [
+              TreeView(
+                shrinkWrap: true,
+                items: lazyItems,
+                onItemInvoked: (item, reason) async =>
+                    debugPrint('onItemInvoked(reason=$reason): $item'),
+                onSelectionChanged: (selectedItems) async => debugPrint(
+                    'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+                onSecondaryTap: (item, details) async {
+                  debugPrint(
+                      'onSecondaryTap $item at ${details.globalPosition}');
+                },
+              ),
+            ],
+          ),
+          codeSnippet: r'''final lazyItems = [
   TreeViewItem(
     content: const Text('Item with lazy loading'),
     value: 'lazy_load',
@@ -168,8 +176,9 @@ TreeView(
           },
 )
 ''',
-      ),
-    ];
+        ),
+      ],
+    );
   }
 
   late final items = [

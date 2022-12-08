@@ -613,7 +613,7 @@ class TreeView extends StatefulWidget {
   final bool narrowSpacing;
 
   @override
-  State<TreeView> createState() => _TreeViewState();
+  State<TreeView> createState() => TreeViewState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -625,14 +625,13 @@ class TreeView extends StatefulWidget {
   }
 }
 
-class _TreeViewState extends State<TreeView>
-    with AutomaticKeepAliveClientMixin {
-  late List<TreeViewItem> items;
+class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
+  late List<TreeViewItem> _items;
 
   /// Builds all the items based on the items provided by the [widget]
-  void buildItems() {
+  void _buildItems() {
     if (widget.selectionMode != TreeViewSelectionMode.single) {
-      items = widget.items.build();
+      _items = widget.items.build();
       widget.items.executeForAll(
         (item) => item.executeForAllParents((parent) => parent
             ?.updateSelected(widget.deselectParentWhenChildrenDeselected)),
@@ -652,25 +651,25 @@ class _TreeViewState extends State<TreeView>
           }
         }
       }
-      items = widget.items.build();
+      _items = widget.items.build();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    buildItems();
+    _buildItems();
   }
 
   @override
   void didUpdateWidget(TreeView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.items != oldWidget.items) buildItems();
+    if (widget.items != oldWidget.items) _buildItems();
   }
 
   @override
   void dispose() {
-    items.clear();
+    _items.clear();
     super.dispose();
   }
 
@@ -679,6 +678,7 @@ class _TreeViewState extends State<TreeView>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
+
     return FocusTraversalGroup(
       policy: WidgetOrderTraversalPolicy(),
       child: ConstrainedBox(
@@ -694,9 +694,9 @@ class _TreeViewState extends State<TreeView>
           cacheExtent: widget.cacheExtent,
           itemExtent: widget.itemExtent,
           addRepaintBoundaries: widget.addRepaintBoundaries,
-          prototypeItem: widget.usePrototypeItem && items.isNotEmpty
+          prototypeItem: widget.usePrototypeItem && _items.isNotEmpty
               ? _TreeViewItem(
-                  item: items.first,
+                  item: _items.first,
                   selectionMode: widget.selectionMode,
                   narrowSpacing: widget.narrowSpacing,
                   onInvoked: (_) {},
@@ -706,9 +706,9 @@ class _TreeViewState extends State<TreeView>
                   loadingWidgetFallback: widget.loadingWidget,
                 )
               : null,
-          itemCount: items.length,
+          itemCount: _items.length,
           itemBuilder: (context, index) {
-            final item = items[index];
+            final item = _items[index];
 
             return _TreeViewItem(
               key: item.key ?? ValueKey<TreeViewItem>(item),
@@ -723,7 +723,7 @@ class _TreeViewState extends State<TreeView>
                 switch (widget.selectionMode) {
                   case TreeViewSelectionMode.single:
                     setState(() {
-                      items.executeForAll((item) {
+                      _items.executeForAll((item) {
                         item.selected = false;
                       });
                       item.selected = true;
@@ -751,7 +751,7 @@ class _TreeViewState extends State<TreeView>
                 }
               },
               onExpandToggle: () async {
-                await invokeItem(item, TreeViewItemInvokeReason.expandToggle);
+                await _invokeItem(item, TreeViewItemInvokeReason.expandToggle);
                 if (item.collapsable) {
                   if (item.lazy) {
                     // Triggers a loading indicator.
@@ -772,11 +772,11 @@ class _TreeViewState extends State<TreeView>
                   setState(() {
                     item.loading = false;
                     item.expanded = !item.expanded;
-                    buildItems();
+                    _buildItems();
                   });
                 }
               },
-              onInvoked: (reason) => invokeItem(item, reason),
+              onInvoked: (reason) => _invokeItem(item, reason),
               loadingWidgetFallback: widget.loadingWidget,
             );
           },
@@ -785,12 +785,22 @@ class _TreeViewState extends State<TreeView>
     );
   }
 
-  Future<void> invokeItem(
-      TreeViewItem item, TreeViewItemInvokeReason reason) async {
-    await Future.wait([
+  Future<void> _invokeItem(
+    TreeViewItem item,
+    TreeViewItemInvokeReason reason,
+  ) {
+    return Future.wait([
       if (widget.onItemInvoked != null) widget.onItemInvoked!(item, reason),
       if (item.onInvoked != null) item.onInvoked!(item, reason),
     ]);
+  }
+
+  /// Toggles the [item] expanded state
+  void toggleItem(TreeViewItem item) {
+    setState(() {
+      item.expanded = !item.expanded;
+      _buildItems();
+    });
   }
 
   @override
