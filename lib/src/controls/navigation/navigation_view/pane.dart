@@ -1278,6 +1278,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 shrinkWrap: true,
                 key: widget.listKey,
                 primary: true,
+                addAutomaticKeepAlives: true,
                 children: widget.pane.items.map((item) {
                   return _OpenNavigationPane.buildItem(
                     context,

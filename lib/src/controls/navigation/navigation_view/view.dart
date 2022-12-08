@@ -214,6 +214,20 @@ class NavigationViewState extends State<NavigationView> {
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _oldIndex = oldWidget.pane?.selected ?? -1;
+
+      final item = widget.pane?.selectedItem.itemKey.currentContext;
+
+      if (item != null) {
+        final atEnd =
+            (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
+
+        Scrollable.ensureVisible(
+          item,
+          alignmentPolicy: atEnd
+              ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+              : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        );
+      }
     }
 
     if (oldWidget.pane?.effectiveItems.length !=
