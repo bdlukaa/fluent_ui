@@ -129,7 +129,9 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
         break;
     }
 
-    if (focused && inTraditionalMode) {
+    final scrollable = widget.route.scrollController!.hasClients;
+
+    if (focused && inTraditionalMode && scrollable) {
       final _MenuLimits menuLimits = widget.route.getMenuLimits(
           widget.buttonRect, widget.constraints.maxHeight, widget.itemIndex);
       widget.route.scrollController!.animateTo(

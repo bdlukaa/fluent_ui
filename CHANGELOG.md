@@ -5,6 +5,7 @@
 - Fix left arrow key not moving to parent item on collapsed `TreeViewItem` ([#632](https://github.com/bdlukaa/fluent_ui/issues/632)) 
 - Added `NavigationPane.scrollBehavior` ([#640](https://github.com/bdlukaa/fluent_ui/issues/640))
 - Added `CommandBarCard.borderRadius` ([#641](https://github.com/bdlukaa/fluent_ui/issues/641))
+- Ensure combobox scroll controller has a client attached before using it ([#620](https://github.com/bdlukaa/fluent_ui/issues/620))
 
 ## 4.1.0
 
