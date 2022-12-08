@@ -15,10 +15,10 @@ class Card extends StatelessWidget {
   final Widget child;
 
   /// The padding around [child]
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   /// The margin around [child]
-  final EdgeInsets? margin;
+  final EdgeInsetsGeometry? margin;
 
   /// The card's background color.
   ///

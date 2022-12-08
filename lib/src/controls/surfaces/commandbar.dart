@@ -9,12 +9,26 @@ class CommandBarCard extends StatelessWidget {
     required this.child,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.backgroundColor,
   }) : super(key: key);
 
   final Widget child;
+
+  /// The margin around [child]
   final EdgeInsetsGeometry margin;
-  final EdgeInsets padding;
+
+  /// The padding around [child]
+  final EdgeInsetsGeometry padding;
+
+  /// The rounded corners of the card
+  ///
+  /// A circular border with a 4.0 radius is used by default
+  final BorderRadiusGeometry borderRadius;
+
+  /// The card's background color.
+  ///
+  /// If null, [ThemeData.cardColor] is used
   final Color? backgroundColor;
 
   @override
@@ -24,6 +38,7 @@ class CommandBarCard extends StatelessWidget {
       child: Card(
         padding: padding,
         backgroundColor: backgroundColor,
+        borderRadius: borderRadius,
         child: child,
       ),
     );
