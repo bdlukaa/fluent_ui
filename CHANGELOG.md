@@ -1,3 +1,7 @@
+## [next]
+
+- `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
+
 ## 4.1.1
 
 - Ensure acrylic is updated only if it's mounted ([#634](https://github.com/bdlukaa/fluent_ui/issues/634))

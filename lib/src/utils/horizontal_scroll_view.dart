@@ -59,7 +59,7 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
                     _controller.animateTo(
                         _controller.offset + event.scrollDelta.dy,
                         duration: const Duration(milliseconds: 100),
-                        curve: Curves.ease);
+                        curve: Curves.ease,);
                   }
                 });
               }

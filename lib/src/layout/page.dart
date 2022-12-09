@@ -222,10 +222,9 @@ class PageHeader extends StatelessWidget {
     final horizontalPadding = padding ?? PageHeader.horizontalPadding(context);
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: 18.0,
-        left: leading != null ? 0 : horizontalPadding,
-        right: horizontalPadding,
+        start: leading != null ? 0 : horizontalPadding,
       ),
       child: Row(children: [
         if (leading != null) leading!,
@@ -235,7 +234,19 @@ class PageHeader extends StatelessWidget {
             child: title ?? const SizedBox(),
           ),
         ),
-        if (commandBar != null) commandBar!,
+        SizedBox(width: horizontalPadding),
+        if (commandBar != null) ...[
+          Flexible(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 160.0),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: commandBar!,
+              ),
+            ),
+          ),
+          SizedBox(width: horizontalPadding),
+        ],
       ]),
     );
   }
