@@ -188,7 +188,7 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
               child: widget.route.items[widget.itemIndex],
             ),
             if (states.isFocused)
-              AnimatedPositioned(
+              AnimatedPositionedDirectional(
                 duration: theme.fastAnimationDuration,
                 curve: theme.animationCurve,
                 top: states.isPressing ? 10.0 : 8.0,

@@ -77,16 +77,24 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
-  final _pageKey = GlobalKey();
-  final _pageController = PageController();
+  final _pageKey = GlobalKey<State<PageView>>();
+  PageController? _pageController;
+
+  PageController get pageController => _pageController!;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final view = InheritedNavigationView.of(context);
+    final selected = view.pane?.selected ?? 0;
+    MediaQuery.of(context);
 
-    if (_pageController.hasClients && view.oldIndex != view.pane?.selected) {
-      _pageController.jumpToPage(view.pane?.selected ?? 0);
+    _pageController ??= PageController(initialPage: selected);
+
+    if (pageController.hasClients) {
+      if (view.oldIndex != selected || pageController.page != selected) {
+        pageController.jumpToPage(selected);
+      }
     }
   }
 
@@ -139,19 +147,19 @@ class _NavigationBodyState extends State<_NavigationBody> {
             key: _pageKey,
             physics: const NeverScrollableScrollPhysics(),
             allowImplicitScrolling: false,
-            controller: _pageController,
+            controller: pageController,
             itemCount: view.pane!.effectiveItems.length,
             itemBuilder: (context, index) {
               final bool isSelected = view.pane!.selected == index;
-              return view.pane!.effectiveItems.map((item) {
-                return ExcludeFocus(
-                  key: item.bodyKey,
-                  excluding: !isSelected,
-                  child: FocusTraversalGroup(
-                    child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
-                  ),
-                );
-              }).elementAt(index);
+              final item = view.pane!.effectiveItems[index];
+
+              return ExcludeFocus(
+                key: item.bodyKey,
+                excluding: !isSelected,
+                child: FocusTraversalGroup(
+                  child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
+                ),
+              );
             },
           ),
         ),
