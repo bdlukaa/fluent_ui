@@ -19,7 +19,7 @@ class TooltipPage extends ScrollablePage {
       subtitle(content: const Text('Button with a simple tooltip')),
       CardHighlight(
         child: Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Tooltip(
             message: 'Simple ToolTip',
             child: Button(
@@ -43,7 +43,7 @@ class TooltipPage extends ScrollablePage {
       ),
       CardHighlight(
         child: Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Tooltip(
             message: 'Horizontal ToolTip',
             displayHorizontally: true,

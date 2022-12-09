@@ -270,7 +270,8 @@ ToggleButton(
                 3,
                 (index) {
                   return Padding(
-                    padding: EdgeInsets.only(bottom: index == 2 ? 0.0 : 14.0),
+                    padding: EdgeInsetsDirectional.only(
+                        bottom: index == 2 ? 0.0 : 14.0),
                     child: RadioButton(
                       checked: radioButtonSelected == index,
                       onChanged: radioButtonDisabled

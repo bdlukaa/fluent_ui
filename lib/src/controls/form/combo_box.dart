@@ -13,9 +13,9 @@ const Duration _kComboBoxMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemBottomPadding = 6.0;
 const double kComboBoxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
 const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
-const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsets.only(
-  right: 8.0,
-  left: 12.0,
+const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsetsDirectional.only(
+  start: 12.0,
+  end: 8.0,
 );
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.only(top: _kMenuItemBottomPadding);
@@ -169,9 +169,9 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
       builder: (context, states) {
         final theme = FluentTheme.of(context);
         return Padding(
-          padding: const EdgeInsets.only(
-            right: 6.0,
-            left: 6.0,
+          padding: const EdgeInsetsDirectional.only(
+            end: 6.0,
+            start: 6.0,
             // bottom: 4.0,
           ),
           child: Stack(fit: StackFit.loose, children: [
@@ -217,7 +217,8 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: _kMenuItemBottomPadding),
+      padding:
+          const EdgeInsetsDirectional.only(bottom: _kMenuItemBottomPadding),
       child: child,
     );
   }
@@ -971,7 +972,7 @@ class ComboBox<T> extends StatefulWidget {
   /// @override
   /// Widget build(BuildContext context) {
   ///   return Container(
-  ///     alignment: Alignment.center,
+  ///     alignment: AlignmentDirectional.center,
   ///     color: Colors.blue,
   ///     child: ComboBox<String>(
   ///       value: comboboxValue,

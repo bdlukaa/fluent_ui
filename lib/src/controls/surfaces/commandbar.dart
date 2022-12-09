@@ -236,7 +236,7 @@ class _CommandBarState extends State<CommandBar> {
       overflowWidget = Flyout(
         content: (context) => FlyoutContent(
           constraints: const BoxConstraints(maxWidth: 250.0),
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: const EdgeInsetsDirectional.only(top: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: allSecondaryItems
@@ -520,7 +520,7 @@ class CommandBarButton extends CommandBarItem {
         );
       case CommandBarItemDisplayMode.inSecondary:
         return Padding(
-          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
           child: FlyoutListTile(
             key: key,
             onPressed: onPressed,
@@ -582,7 +582,7 @@ class CommandBarSeparator extends CommandBarItem {
           style: DividerThemeData(
             thickness: thickness,
             decoration: color != null ? BoxDecoration(color: color) : null,
-            horizontalMargin: const EdgeInsets.only(bottom: 5.0),
+            horizontalMargin: const EdgeInsetsDirectional.only(bottom: 5.0),
           ),
         );
     }

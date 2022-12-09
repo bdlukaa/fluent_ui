@@ -121,9 +121,6 @@ class PaneItem extends NavigationPaneItem {
     assert(mode != PaneDisplayMode.auto);
 
     assert(debugCheckHasFluentTheme(context));
-    assert(debugCheckHasDirectionality(context));
-
-    final direction = Directionality.of(context);
 
     final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
     final String titleText = title?.getProperty<String>() ?? '';
@@ -189,21 +186,25 @@ class PaneItem extends NavigationPaneItem {
               return Container(
                 key: itemKey,
                 height: 36.0,
-                alignment: Alignment.center,
+                alignment: AlignmentDirectional.center,
                 child: Padding(
                   padding: theme.iconPadding ?? EdgeInsets.zero,
                   child: IconTheme.merge(
                     data: iconThemeData,
                     child: Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: () {
                         if (infoBadge != null) {
                           return Stack(
-                            alignment: Alignment.center,
+                            alignment: AlignmentDirectional.center,
                             clipBehavior: Clip.none,
                             children: [
                               icon,
-                              Positioned(right: -8, top: -8, child: infoBadge!),
+                              PositionedDirectional(
+                                end: -8,
+                                top: -8,
+                                child: infoBadge!,
+                              ),
                             ],
                           );
                         }
@@ -259,8 +260,7 @@ class PaneItem extends NavigationPaneItem {
                 return Stack(key: itemKey, clipBehavior: Clip.none, children: [
                   result,
                   if (infoBadge != null)
-                    Positioned.directional(
-                      textDirection: direction,
+                    PositionedDirectional(
                       end: -3,
                       top: 3,
                       child: infoBadge!,
@@ -277,7 +277,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
-            margin: const EdgeInsets.only(right: 6.0, left: 6.0),
+            margin: const EdgeInsets.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final ButtonState<Color?> tileColor = this.tileColor ??
@@ -334,7 +334,7 @@ class PaneItem extends NavigationPaneItem {
     }();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4.0),
+      padding: const EdgeInsetsDirectional.only(bottom: 4.0),
       child: () {
         // If there is an indicator and the item is an effective item
         if (maybeBody?.pane?.indicator != null &&
@@ -821,7 +821,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         horizontal: 10.0,
                         vertical: 8.0,
                       ),
-                      margin: const EdgeInsets.only(bottom: 4.0),
+                      margin: const EdgeInsetsDirectional.only(bottom: 4.0),
                       child: DefaultTextStyle(
                         style: navigationTheme.itemHeaderTextStyle ??
                             const TextStyle(),
@@ -878,7 +878,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
               horizontal: 10.0,
               vertical: 8.0,
             ),
-            margin: const EdgeInsets.only(bottom: 4.0),
+            margin: const EdgeInsetsDirectional.only(bottom: 4.0),
             decoration: BoxDecoration(
               color: ButtonThemeData.uncheckedInputColor(
                 theme,

@@ -688,9 +688,9 @@ class BottomSheet extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = BottomSheetTheme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsetsDirectional.only(top: 8.0),
       child: Align(
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.center,
         child: Container(
           width: 40,
           height: 4.0,

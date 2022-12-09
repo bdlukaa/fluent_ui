@@ -170,7 +170,9 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
       builder: (context, states) {
         Widget child = AnimatedContainer(
           alignment: _alignment ??
-              (widget.checked ? Alignment.centerRight : Alignment.centerLeft),
+              (widget.checked
+                  ? AlignmentDirectional.centerEnd
+                  : AlignmentDirectional.centerStart),
           height: 20,
           width: 40,
           duration: style.animationDuration ?? Duration.zero,

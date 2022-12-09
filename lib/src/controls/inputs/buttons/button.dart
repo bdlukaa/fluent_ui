@@ -42,10 +42,10 @@ class Button extends BaseButton {
       //   return 0.3;
       // }),
       shadowColor: ButtonState.all(theme.shadowColor),
-      padding: ButtonState.all(const EdgeInsets.only(
-        left: 11.0,
+      padding: ButtonState.all(const EdgeInsetsDirectional.only(
+        start: 11.0,
         top: 5.0,
-        right: 11.0,
+        end: 11.0,
         bottom: 5.0,
       )),
       shape: ButtonState.resolveWith((states) {

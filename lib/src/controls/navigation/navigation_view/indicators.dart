@@ -349,7 +349,7 @@ class _StickyNavigationIndicatorState
                   child: Container(width: 2.5, decoration: decoration),
                 )
               : Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: AlignmentDirectional.bottomCenter,
                   child: Container(height: 2.5, decoration: decoration),
                 ),
           builder: (context, child) {
@@ -361,8 +361,8 @@ class _StickyNavigationIndicatorState
             }
             return Padding(
               padding: isHorizontal
-                  ? EdgeInsets.only(
-                      left: () {
+                  ? EdgeInsetsDirectional.only(
+                      start: () {
                         final x = offsets![itemIndex].dx;
                         if (parent != null) {
                           final isOpen =

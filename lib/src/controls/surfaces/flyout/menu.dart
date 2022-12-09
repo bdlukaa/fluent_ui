@@ -175,7 +175,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
     return SizedBox(
       width: size.width,
       child: const Padding(
-        padding: EdgeInsets.only(bottom: 5.0),
+        padding: EdgeInsetsDirectional.only(bottom: 5.0),
         child: Divider(
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),

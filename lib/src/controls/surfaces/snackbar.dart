@@ -14,7 +14,7 @@ const Duration snackbarLongDuration = Duration(seconds: 4);
 /// the snackbar will long forever, and have to be dismissed manually.
 ///
 /// [alignment] is used to align the snackbar within the screen. Defaults
-/// to [Alignment.bottomCenter]
+/// to [AlignmentDirectional.bottomCenter]
 ///
 /// [margin] is the margin applied to snackbar. Defaults to 16 logical
 /// pixels on all sides
@@ -32,7 +32,7 @@ OverlayEntry showSnackbar(
   BuildContext context,
   Widget snackbar, {
   Duration? duration = snackbarShortDuration,
-  Alignment alignment = Alignment.bottomCenter,
+  AlignmentGeometry alignment = AlignmentDirectional.bottomCenter,
   EdgeInsetsGeometry margin = const EdgeInsets.all(16.0),
   VoidCallback? onDismiss,
 }) {
@@ -151,8 +151,9 @@ class SnackbarState extends State<Snackbar>
               widget.content,
               if (widget.action != null)
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: widget.extended ? 0 : 16.0 + visualDensity.horizontal,
+                  padding: EdgeInsetsDirectional.only(
+                    start:
+                        widget.extended ? 0 : 16.0 + visualDensity.horizontal,
                     top: !widget.extended ? 0 : 8.0 + visualDensity.vertical,
                   ),
                   child: ButtonTheme.merge(

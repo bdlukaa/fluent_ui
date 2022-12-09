@@ -32,7 +32,7 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
         subtitle(content: const Text('A simple TimePicker')),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
               selected: simpleTime,
               onChanged: (time) => setState(() => simpleTime = time),
@@ -52,7 +52,7 @@ TimePicker(
         ),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
               header: 'Arrival time',
               selected: arrivalTime,
@@ -76,7 +76,7 @@ TimePicker(
         ),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
               header: '24 hour clock',
               selected: hhTime,

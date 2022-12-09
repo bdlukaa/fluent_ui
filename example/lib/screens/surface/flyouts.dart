@@ -33,7 +33,7 @@ class _FlyoutShowcaseState extends State<FlyoutPage> {
         const SizedBox(height: 10.0),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Flyout(
               controller: buttonController,
               content: (context) {
@@ -132,7 +132,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout on hover', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.hover,
           content: (context) {
@@ -154,7 +154,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout on click/press', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.press,
           content: (context) {
@@ -176,7 +176,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout on long click/press', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.longPress,
           content: (context) {
@@ -198,7 +198,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout with controller', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           controller: flyoutController,
           content: (context) {
@@ -223,7 +223,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout displayed at start', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.start,
@@ -246,7 +246,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout displayed at center', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.center,
@@ -269,7 +269,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout displayed at end', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.end,
@@ -292,7 +292,7 @@ Flyout(
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Flyout displayed at custom position', style: typography.subtitle),
       Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsetsDirectional.only(top: 10.0),
         child: Flyout(
           openMode: FlyoutOpenMode.press,
           placement: FlyoutPlacement.full,

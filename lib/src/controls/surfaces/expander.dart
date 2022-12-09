@@ -235,7 +235,7 @@ class ExpanderState extends State<Expander>
                           ButtonThemeData.uncheckedInputColor(_theme, states),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    alignment: Alignment.center,
+                    alignment: AlignmentDirectional.center,
                     child: widget.icon ??
                         RotationTransition(
                           turns: Tween<double>(begin: 0, end: 0.5)
