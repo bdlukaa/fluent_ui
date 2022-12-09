@@ -78,7 +78,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                 children: crosts
                     .map(
                       (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsetsDirectional.only(bottom: 8.0),
                         child: RadioButton(
                           checked: crost == e,
                           onChanged: (selected) {
@@ -95,7 +95,8 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: sizes
                     .map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding:
+                              const EdgeInsetsDirectional.only(bottom: 8.0),
                           child: RadioButton(
                             checked: size == e,
                             onChanged: (selected) {

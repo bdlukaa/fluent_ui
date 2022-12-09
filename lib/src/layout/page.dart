@@ -36,10 +36,10 @@ class ScaffoldPage extends StatefulWidget {
   })  : content = Builder(builder: (context) {
           return ListView(
             controller: scrollController,
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               bottom: kPageDefaultVerticalPadding,
-              left: PageHeader.horizontalPadding(context),
-              right: PageHeader.horizontalPadding(context),
+              start: PageHeader.horizontalPadding(context),
+              end: PageHeader.horizontalPadding(context),
             ),
             children: children,
           );
@@ -56,10 +56,10 @@ class ScaffoldPage extends StatefulWidget {
     this.resizeToAvoidBottomInset = true,
   })  : content = Builder(builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               bottom: kPageDefaultVerticalPadding,
-              left: PageHeader.horizontalPadding(context),
-              right: PageHeader.horizontalPadding(context),
+              start: PageHeader.horizontalPadding(context),
+              end: PageHeader.horizontalPadding(context),
             ),
             child: content,
           );
@@ -136,7 +136,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     return PageStorage(
       bucket: _bucket,
       child: Padding(
-        padding: EdgeInsets.only(
+        padding: EdgeInsetsDirectional.only(
           bottom: widget.resizeToAvoidBottomInset
               ? mediaQuery.viewInsets.bottom
               : 0.0,
@@ -148,7 +148,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
               // not a parent widget of this page. this happens because, if a navigation
               // view is not used, the page would be uncolored.
               color: view == null ? theme.scaffoldBackgroundColor : null,
-              padding: EdgeInsets.only(
+              padding: EdgeInsetsDirectional.only(
                 top: widget.padding?.top ?? kPageDefaultVerticalPadding,
               ),
               child: Column(
@@ -222,10 +222,9 @@ class PageHeader extends StatelessWidget {
     final horizontalPadding = padding ?? PageHeader.horizontalPadding(context);
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: 18.0,
-        left: leading != null ? 0 : horizontalPadding,
-        right: horizontalPadding,
+        start: leading != null ? 0 : horizontalPadding,
       ),
       child: Row(children: [
         if (leading != null) leading!,
@@ -235,7 +234,19 @@ class PageHeader extends StatelessWidget {
             child: title ?? const SizedBox(),
           ),
         ),
-        if (commandBar != null) commandBar!,
+        SizedBox(width: horizontalPadding),
+        if (commandBar != null) ...[
+          Flexible(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 160.0),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: commandBar!,
+              ),
+            ),
+          ),
+          SizedBox(width: horizontalPadding),
+        ],
       ]),
     );
   }

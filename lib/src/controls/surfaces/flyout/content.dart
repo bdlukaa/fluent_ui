@@ -90,7 +90,7 @@ class FlyoutListTile extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
-    this.margin = const EdgeInsets.only(bottom: 5.0),
+    this.margin = const EdgeInsetsDirectional.only(bottom: 5.0),
     this.selected = false,
   }) : super(key: key);
 
@@ -197,7 +197,7 @@ class FlyoutListTile extends StatelessWidget {
             ]),
           ),
           if (selected)
-            Positioned(
+            PositionedDirectional(
               top: 0,
               bottom: 0,
               child: Container(

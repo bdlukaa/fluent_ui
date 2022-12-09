@@ -465,7 +465,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       final overlayY = globalOffset.dy + box.size.height;
       final maxHeight = screenHeight - overlayY;
 
-      Widget child = Positioned(
+      Widget child = PositionedDirectional(
         width: box.size.width,
         child: CompositedTransformFollower(
           link: _layerLink,
@@ -815,7 +815,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
               if (sortedItems.isEmpty) {
                 result = widget.noResultsFoundBuilder?.call(context) ??
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
+                      padding: const EdgeInsetsDirectional.only(bottom: 4.0),
                       child: _AutoSuggestBoxOverlayTile(
                         text: Text(localizations.noResultsFoundLabel),
                         selected: false,
@@ -827,7 +827,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                   controller: scrollController,
                   key: ValueKey<int>(sortedItems.length),
                   shrinkWrap: true,
-                  padding: const EdgeInsets.only(bottom: 4.0),
+                  padding: const EdgeInsetsDirectional.only(bottom: 4.0),
                   itemCount: sortedItems.length,
                   itemBuilder: (context, index) {
                     final item = sortedItems[index];

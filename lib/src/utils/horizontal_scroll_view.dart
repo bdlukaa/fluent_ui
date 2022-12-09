@@ -57,9 +57,10 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
                     // jump beyond the boundaries and then "rebound" like jumpTo
                     // would do if used here).
                     _controller.animateTo(
-                        _controller.offset + event.scrollDelta.dy,
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.ease);
+                      _controller.offset + event.scrollDelta.dy,
+                      duration: const Duration(milliseconds: 100),
+                      curve: Curves.ease,
+                    );
                   }
                 });
               }

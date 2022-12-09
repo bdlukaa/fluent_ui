@@ -573,7 +573,7 @@ class NavigationViewState extends State<NavigationView> {
                           key: _overlayKey,
                           backgroundColor: overlayBackgroundColor(),
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: EdgeInsetsDirectional.only(
                               top: appBarPadding.resolve(direction).top,
                             ),
                             child: _CompactNavigationPane(
@@ -617,10 +617,10 @@ class NavigationViewState extends State<NavigationView> {
               break;
             case PaneDisplayMode.minimal:
               paneResult = Stack(children: [
-                Positioned(
+                PositionedDirectional(
                   top: widget.appBar?.finalHeight(context) ?? 0.0,
-                  left: 0.0,
-                  right: 0.0,
+                  start: 0.0,
+                  end: 0.0,
                   bottom: 0.0,
                   child: content,
                 ),
@@ -852,10 +852,8 @@ class _NavigationAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-    assert(debugCheckHasDirectionality(context));
 
     final mediaQuery = MediaQuery.of(context);
-    final direction = Directionality.of(context);
 
     final PaneDisplayMode displayMode =
         InheritedNavigationView.maybeOf(context)?.displayMode ??
@@ -900,7 +898,7 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.compact:
         result = Stack(children: [
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               leading,
               if (additionalLeading != null) additionalLeading!,
@@ -908,14 +906,13 @@ class _NavigationAppBar extends StatelessWidget {
             ]),
           ),
           if (appBar.actions != null)
-            Positioned.directional(
-              textDirection: direction,
+            PositionedDirectional(
               start: 0,
               end: 0.0,
               top: 0.0,
               bottom: 0.0,
               child: Align(
-                alignment: Alignment.topRight,
+                alignment: AlignmentDirectional.topEnd,
                 child: appBar.actions!,
               ),
             ),
@@ -929,7 +926,7 @@ class _NavigationAppBar extends StatelessWidget {
     return Container(
       color: appBar.backgroundColor,
       height: appBar.finalHeight(context),
-      padding: EdgeInsets.only(top: topPadding),
+      padding: EdgeInsetsDirectional.only(top: topPadding),
       child: result,
     );
   }

@@ -2,7 +2,14 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
 
-class CommandBarsPage extends ScrollablePage {
+class CommandBarsPage extends StatefulWidget {
+  const CommandBarsPage({Key? key}) : super(key: key);
+
+  @override
+  State<CommandBarsPage> createState() => _CommandBarsPageState();
+}
+
+class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   final simpleCommandBarItems = <CommandBarItem>[
     CommandBarBuilderItem(
       builder: (context, mode, w) => Tooltip(
@@ -109,30 +116,37 @@ class CommandBarsPage extends ScrollablePage {
     ),
   ];
 
-  CommandBarsPage({super.key});
-
   @override
-  Widget buildHeader(BuildContext context) {
-    return const PageHeader(title: Text('CommandBar'));
-  }
-
-  @override
-  List<Widget> buildScrollable(BuildContext context) {
-    return [
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Simple command bar (no wrapping)',
-        child: CommandBar(
-          overflowBehavior: CommandBarOverflowBehavior.noWrap,
+  Widget build(BuildContext context) {
+    return ScaffoldPage.scrollable(
+      header: PageHeader(
+        title: const Text('CommandBar'),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
           primaryItems: [
             ...simpleCommandBarItems,
           ],
         ),
       ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Command bar with many items (wrapping, auto-compact < 600px)',
-        child: CommandBar(
+      children: [
+        const Text(
+          'Command bars provide users with easy access to your app\'s most '
+          'common tasks. Command bars can provide access to app-level or '
+          'page-specific commands and can be used with any navigation pattern.',
+        ),
+        subtitle(content: const Text('Simple command bar (no wrapping)')),
+        CommandBar(
+          overflowBehavior: CommandBarOverflowBehavior.noWrap,
+          primaryItems: [
+            ...simpleCommandBarItems,
+          ],
+        ),
+        subtitle(
+          content: const Text(
+            'Command bar with many items (wrapping, auto-compact < 600px)',
+          ),
+        ),
+        CommandBar(
           overflowBehavior: CommandBarOverflowBehavior.wrap,
           compactBreakpointWidth: 600,
           primaryItems: [
@@ -141,11 +155,12 @@ class CommandBarsPage extends ScrollablePage {
             ...moreCommandBarItems,
           ],
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Carded compact command bar with many items (clipped)',
-        child: ConstrainedBox(
+        subtitle(
+          content: const Text(
+            'Carded compact command bar with many items (clipped)',
+          ),
+        ),
+        ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 230),
           child: CommandBarCard(
             child: CommandBar(
@@ -159,11 +174,12 @@ class CommandBarsPage extends ScrollablePage {
             ),
           ),
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Carded command bar with many items (dynamic overflow)',
-        child: CommandBarCard(
+        subtitle(
+          content: const Text(
+            'Carded compact command bar with many items (dynamic overflow)',
+          ),
+        ),
+        CommandBarCard(
           child: CommandBar(
             overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
             primaryItems: [
@@ -175,12 +191,12 @@ class CommandBarsPage extends ScrollablePage {
             ],
           ),
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label:
+        subtitle(
+          content: const Text(
             'End-aligned command bar with many items (dynamic overflow, auto-compact < 900px)',
-        child: CommandBar(
+          ),
+        ),
+        CommandBar(
           mainAxisAlignment: MainAxisAlignment.end,
           overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
           compactBreakpointWidth: 900,
@@ -192,12 +208,12 @@ class CommandBarsPage extends ScrollablePage {
             ...evenMoreCommandBarItems,
           ],
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label:
+        subtitle(
+          content: const Text(
             'End-aligned command bar with permanent secondary items (dynamic overflow)',
-        child: CommandBar(
+          ),
+        ),
+        CommandBar(
           mainAxisAlignment: MainAxisAlignment.end,
           overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
           primaryItems: [
@@ -207,79 +223,77 @@ class CommandBarsPage extends ScrollablePage {
           ],
           secondaryItems: evenMoreCommandBarItems,
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Command bar with secondary items (wrapping)',
-        child: CommandBar(
+        subtitle(
+          content: const Text(
+            'Command bar with secondary items (wrapping)',
+          ),
+        ),
+        CommandBar(
           overflowBehavior: CommandBarOverflowBehavior.wrap,
           primaryItems: simpleCommandBarItems,
           secondaryItems: moreCommandBarItems,
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label:
+        subtitle(
+          content: const Text(
             'Carded complex command bar with many items (horizontal scrolling)',
-        child: CommandBarCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                  primaryItems: [
-                    ...simpleCommandBarItems,
-                    const CommandBarSeparator(),
-                    ...moreCommandBarItems,
-                  ],
-                ),
-              ),
-              // End-aligned button(s)
-              CommandBar(
-                overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                primaryItems: [
-                  CommandBarButton(
-                    icon: const Icon(FluentIcons.refresh),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
-      ),
-      const SizedBox(height: 20.0),
-      InfoLabel(
-        label: 'Carded complex command bar with many items (dynamic overflow)',
-        child: CommandBarCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-                  overflowItemAlignment: MainAxisAlignment.end,
-                  primaryItems: [
-                    ...simpleCommandBarItems,
-                    const CommandBarSeparator(),
-                    ...moreCommandBarItems,
-                  ],
-                  secondaryItems: evenMoreCommandBarItems,
-                ),
-              ),
-              // End-aligned button(s)
-              CommandBar(
-                overflowBehavior: CommandBarOverflowBehavior.noWrap,
+        CommandBarCard(
+          child: Row(children: [
+            Expanded(
+              child: CommandBar(
+                overflowBehavior: CommandBarOverflowBehavior.scrolling,
                 primaryItems: [
-                  CommandBarButton(
-                    icon: const Icon(FluentIcons.refresh),
-                    onPressed: () {},
-                  ),
+                  ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...moreCommandBarItems,
                 ],
               ),
-            ],
+            ),
+            // End-aligned button(s)
+            CommandBar(
+              overflowBehavior: CommandBarOverflowBehavior.noWrap,
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.refresh),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ]),
+        ),
+        subtitle(
+          content: const Text(
+            'Carded complex command bar with many items (dynamic overflow)',
           ),
         ),
-      ),
-    ];
+        CommandBarCard(
+          child: Row(children: [
+            Expanded(
+              child: CommandBar(
+                overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+                overflowItemAlignment: MainAxisAlignment.end,
+                primaryItems: [
+                  ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...moreCommandBarItems,
+                ],
+                secondaryItems: evenMoreCommandBarItems,
+              ),
+            ),
+            // End-aligned button(s)
+            CommandBar(
+              overflowBehavior: CommandBarOverflowBehavior.noWrap,
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.refresh),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ]),
+        ),
+      ],
+    );
   }
 }

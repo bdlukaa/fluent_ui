@@ -101,9 +101,9 @@ class FocusBorder extends StatelessWidget {
         clipBehavior: clipBehavior,
         children: [
           child,
-          Positioned.fill(
-            left: renderOutside ? -borderWidth : 0,
-            right: renderOutside ? -borderWidth : 0,
+          PositionedDirectional(
+            start: renderOutside ? -borderWidth : 0,
+            end: renderOutside ? -borderWidth : 0,
             top: renderOutside ? -borderWidth : 0,
             bottom: renderOutside ? -borderWidth : 0,
             child: _buildBorder(style, focused),

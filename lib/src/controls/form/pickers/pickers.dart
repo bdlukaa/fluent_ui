@@ -52,7 +52,7 @@ Widget PickerHighlightTile() {
     );
     return Positioned.fill(
       child: Container(
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.center,
         height: kOneLineTileHeight,
         padding: const EdgeInsets.all(6.0),
         child: ListTile(
@@ -215,10 +215,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
               child: Stack(children: [
                 child,
                 if (show) ...[
-                  Positioned(
+                  PositionedDirectional(
                     top: 0,
-                    left: 0,
-                    right: 0,
+                    start: 0,
+                    end: 0,
                     height: kOneLineTileHeight,
                     child: Button(
                       focusable: false,
@@ -231,10 +231,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
+                  PositionedDirectional(
                     bottom: 0,
-                    left: 0,
-                    right: 0,
+                    start: 0,
+                    end: 0,
                     height: kOneLineTileHeight,
                     child: Button(
                       focusable: false,
@@ -370,8 +370,8 @@ class _PickerState extends State<Picker> {
         }();
 
         final view = Stack(children: [
-          Positioned(
-            left: x,
+          PositionedDirectional(
+            start: x,
             top: y,
             height: widget.pickerHeight,
             width: width,

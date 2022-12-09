@@ -416,14 +416,14 @@ class _TabViewState extends State<TabView> {
       ScrollConfiguration(
         behavior: const _TabViewScrollBehavior(),
         child: Container(
-          margin: const EdgeInsets.only(top: 4.5),
-          padding: const EdgeInsets.only(left: 8),
+          margin: const EdgeInsetsDirectional.only(top: 4.5),
+          padding: const EdgeInsetsDirectional.only(start: 8),
           height: _kTileHeight,
           width: double.infinity,
           child: Row(children: [
             if (widget.header != null)
               Padding(
-                padding: const EdgeInsets.only(right: 12.0),
+                padding: const EdgeInsetsDirectional.only(end: 12.0),
                 child: DefaultTextStyle(
                   style: headerFooterTextStyle,
                   child: widget.header!,
@@ -572,7 +572,7 @@ class _TabViewState extends State<TabView> {
             ),
             if (widget.footer != null)
               Padding(
-                padding: const EdgeInsets.only(left: 12.0),
+                padding: const EdgeInsetsDirectional.only(start: 12.0),
                 child: DefaultTextStyle(
                   style: headerFooterTextStyle,
                   child: widget.footer!,
@@ -582,7 +582,12 @@ class _TabViewState extends State<TabView> {
         ),
       ),
       if (widget.tabs.isNotEmpty)
-        Expanded(child: widget.tabs[widget.currentIndex].body),
+        Expanded(
+          child: IndexedStack(
+            index: widget.currentIndex,
+            children: widget.tabs.map((tab) => tab.body).toList(),
+          ),
+        ),
     ]);
     if (widget.shortcutsEnabled) {
       void onClosePressed() {

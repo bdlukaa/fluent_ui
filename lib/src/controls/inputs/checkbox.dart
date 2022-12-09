@@ -95,7 +95,7 @@ class Checkbox extends StatelessWidget {
           : () => onChanged!(checked == null ? null : !(checked!)),
       builder: (context, state) {
         Widget child = AnimatedContainer(
-          alignment: Alignment.center,
+          alignment: AlignmentDirectional.center,
           duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
@@ -432,7 +432,7 @@ class _Icon extends StatelessWidget {
         case TextDirection.rtl:
           iconWidget = Transform(
             transform: Matrix4.identity()..scale(-1.0, 1.0, 1.0),
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.center,
             transformHitTests: false,
             child: iconWidget,
           );

@@ -280,7 +280,7 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
             .map(
               (children) => Container(
                 constraints: const BoxConstraints(minHeight: 50.0),
-                alignment: Alignment.center,
+                alignment: AlignmentDirectional.center,
                 child: children[index],
               ),
             )

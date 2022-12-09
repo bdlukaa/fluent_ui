@@ -268,7 +268,9 @@ class _RatingBarState extends State<RatingBar> {
                       );
                       if (index != widget.amount - 1) {
                         return Padding(
-                          padding: EdgeInsets.only(right: widget.starSpacing),
+                          padding: EdgeInsetsDirectional.only(
+                            end: widget.starSpacing,
+                          ),
                           child: icon,
                         );
                       }

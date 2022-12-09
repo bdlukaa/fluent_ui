@@ -57,7 +57,7 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
                 child: Text(selectedCat ?? ''),
               ),
             ),
@@ -122,7 +122,7 @@ const cats = <String>[
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
                 child: Text(selectedObjectCat != null
                     ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
                     : ''),

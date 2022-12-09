@@ -35,7 +35,7 @@ class _ToggleSwitchPageState extends State<ToggleSwitchPage> with PageMixin {
         subtitle(content: const Text('A simple ToggleSwitch')),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: ToggleSwitch(
               checked: firstValue,
               onChanged:

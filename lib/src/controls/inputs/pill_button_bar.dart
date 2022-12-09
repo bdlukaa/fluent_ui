@@ -114,7 +114,7 @@ class _PillButtonBarItem extends StatelessWidget {
         final Color unselectedColor = theme.unselectedColor?.resolve(states) ??
             FluentTheme.of(context).accentColor.dark;
         return Align(
-          alignment: Alignment.center,
+          alignment: AlignmentDirectional.center,
           child: Container(
             decoration: BoxDecoration(
               color: selected ? selectedColor : unselectedColor,
@@ -124,7 +124,7 @@ class _PillButtonBarItem extends StatelessWidget {
               minWidth: _kMinButtonWidth + visualDensity.horizontal,
               maxHeight: _kMaxButtonHeight + visualDensity.vertical,
             ),
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.center,
             padding: EdgeInsets.symmetric(
               horizontal: 16.0 + visualDensity.horizontal,
               vertical: 3.0,

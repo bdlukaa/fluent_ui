@@ -65,7 +65,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                   content: const Text('Is open'),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 10.0),
+                  margin: const EdgeInsetsDirectional.only(top: 10.0),
                   width: 150.0,
                   child: ComboBox<InfoBarSeverity>(
                     isExpanded: true,

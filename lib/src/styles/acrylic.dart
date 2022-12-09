@@ -400,7 +400,7 @@ class _AcrylicGuts extends StatelessWidget {
                             "assets/AcrylicNoise.png",
                             package: "fluent_ui",
                           ),
-                          alignment: Alignment.topLeft,
+                          alignment: AlignmentDirectional.topStart,
                           repeat: ImageRepeat.repeat,
                         ),
                         backgroundBlendMode: BlendMode.srcOver,

@@ -293,7 +293,7 @@ class ListTile extends StatelessWidget {
                                       .defaultBrushFor(theme.brightness)
                                   : Colors.transparent,
                             ),
-                            margin: const EdgeInsets.only(right: 8.0),
+                            margin: const EdgeInsetsDirectional.only(end: 8.0),
                           ),
                         ),
                       ),

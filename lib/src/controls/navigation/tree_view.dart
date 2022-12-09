@@ -1010,10 +1010,10 @@ class _TreeViewItem extends StatelessWidget {
                 ),
               ),
               if (selected && selectionMode == TreeViewSelectionMode.single)
-                Positioned(
+                PositionedDirectional(
                   top: 6.0,
                   bottom: 6.0,
-                  left: 0.0,
+                  start: 0.0,
                   child: Container(
                     width: 3.0,
                     decoration: BoxDecoration(
