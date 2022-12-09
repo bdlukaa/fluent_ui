@@ -582,7 +582,12 @@ class _TabViewState extends State<TabView> {
         ),
       ),
       if (widget.tabs.isNotEmpty)
-        Expanded(child: widget.tabs[widget.currentIndex].body),
+        Expanded(
+          child: IndexedStack(
+            index: widget.currentIndex,
+            children: widget.tabs.map((tab) => tab.body).toList(),
+          ),
+        ),
     ]);
     if (widget.shortcutsEnabled) {
       void onClosePressed() {
