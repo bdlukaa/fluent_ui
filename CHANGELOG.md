@@ -4,6 +4,7 @@
 - Ensure `NavigationView` body state is not lost when resizing window
 - Ensure `TabView`' tabs' state are not lost when changing selected tab ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
 - Do not block text field tap ([#343](https://github.com/bdlukaa/fluent_ui/issues/343))
+- Do not duplicate `trailing` in `FlyoutContent` ([#487](https://github.com/bdlukaa/fluent_ui/issues/487))
 
 ## 4.1.1
 

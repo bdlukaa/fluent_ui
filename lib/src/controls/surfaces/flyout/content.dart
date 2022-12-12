@@ -209,7 +209,6 @@ class FlyoutListTile extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: trailing!,
               ),
             ),
         ]);
