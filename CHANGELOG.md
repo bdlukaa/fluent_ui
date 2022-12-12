@@ -1,4 +1,4 @@
-## [next]
+## 4.1.2
 
 - `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
 - Ensure `NavigationView` body state is not lost when resizing window
