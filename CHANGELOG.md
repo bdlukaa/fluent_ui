@@ -3,6 +3,7 @@
 - `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
 - Ensure `NavigationView` body state is not lost when resizing window
 - Ensure `TabView`' tabs' state are not lost when changing selected tab ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
+- Do not block text field tap ([#343](https://github.com/bdlukaa/fluent_ui/issues/343))
 
 ## 4.1.1
 

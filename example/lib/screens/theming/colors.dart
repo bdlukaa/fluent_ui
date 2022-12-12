@@ -188,6 +188,7 @@ class ColorBlock extends StatelessWidget {
           await FlutterClipboard.copy(clipboard);
           showCopiedSnackbar(context, clipboard);
         },
+        cursor: SystemMouseCursors.copy,
         builder: (context, states) {
           return FocusBorder(
             focused: states.isFocused,

@@ -1038,7 +1038,8 @@ class _TextBoxState extends State<TextBox>
         ignoring: !enabled,
         child: HoverButton(
           focusEnabled: false,
-          onPressed: enabled ? () {} : null,
+          forceEnabled: enabled,
+          hitTestBehavior: HitTestBehavior.translucent,
           builder: (context, states) {
             return Container(
               decoration: BoxDecoration(

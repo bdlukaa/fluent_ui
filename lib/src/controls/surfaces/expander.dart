@@ -188,6 +188,7 @@ class ExpanderState extends State<Expander>
       // HEADER
       HoverButton(
         onPressed: _handlePressed,
+        hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
             height: widget.headerHeight,

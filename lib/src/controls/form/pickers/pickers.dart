@@ -188,7 +188,8 @@ class PickerNavigatorIndicator extends StatelessWidget {
           },
         ),
       },
-      onPressed: () {},
+      forceEnabled: true,
+      hitTestBehavior: HitTestBehavior.translucent,
       builder: (context, states) {
         final show = states.isHovering || states.isPressing || states.isFocused;
         return FocusBorder(
