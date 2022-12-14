@@ -300,7 +300,7 @@ class PaneItem extends NavigationPaneItem {
                       : newStates,
                 );
               }(),
-              borderRadius: BorderRadius.circular(4.0),
+              borderRadius: BorderRadius.circular(0),
             ),
             child: FocusBorder(
               focused: states.isFocused,
@@ -885,7 +885,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
                 states,
                 transparentWhenNone: true,
               ),
-              borderRadius: BorderRadius.circular(6.0),
+              borderRadius: BorderRadius.circular(0),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               Padding(
