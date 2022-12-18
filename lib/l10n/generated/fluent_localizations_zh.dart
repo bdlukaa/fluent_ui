@@ -100,7 +100,7 @@ class FluentLocalizationsZh extends FluentLocalizations {
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
 class FluentLocalizationsZhHant extends FluentLocalizationsZh {
-  FluentLocalizationsZhHant() : super('zh_Hant');
+  FluentLocalizationsZhHant(): super('zh_Hant');
 
   @override
   String get backButtonTooltip => '返回';
