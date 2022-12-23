@@ -1,5 +1,6 @@
 ## [next]
 
+- `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))
 - Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
 
 ## 4.1.2
