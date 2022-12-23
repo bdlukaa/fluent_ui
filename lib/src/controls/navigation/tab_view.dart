@@ -217,6 +217,7 @@ class _TabViewState extends State<TabView> {
   double preferredTabWidth = 0.0;
 
   late ScrollPosController scrollController;
+  final FocusScopeNode _focusTrapNode = FocusScopeNode();
 
   @override
   void initState() {
@@ -253,6 +254,7 @@ class _TabViewState extends State<TabView> {
       scrollController.dispose();
     }
     closeTimer?.cancel();
+    _focusTrapNode.dispose();
     super.dispose();
   }
 
@@ -583,9 +585,12 @@ class _TabViewState extends State<TabView> {
       ),
       if (widget.tabs.isNotEmpty)
         Expanded(
-          child: IndexedStack(
-            index: widget.currentIndex,
-            children: widget.tabs.map((tab) => tab.body).toList(),
+          child: FocusTrap(
+            focusScopeNode: _focusTrapNode,
+            child: IndexedStack(
+              index: widget.currentIndex,
+              children: widget.tabs.map((tab) => tab.body).toList(),
+            ),
           ),
         ),
     ]);
