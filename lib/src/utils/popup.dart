@@ -85,6 +85,8 @@ Future<T?> showMenu<T>({
   ));
 }
 
+typedef NavigatorKey = GlobalKey<NavigatorState>;
+
 class PopUp<T> extends StatefulWidget {
   const PopUp({
     Key? key,
@@ -94,6 +96,7 @@ class PopUp<T> extends StatefulWidget {
     this.horizontalOffset = 0,
     this.placement = FlyoutPlacement.center,
     this.position = FlyoutPosition.above,
+    this.navigatorKey,
   }) : super(key: key);
 
   final Widget child;
@@ -104,6 +107,8 @@ class PopUp<T> extends StatefulWidget {
   final FlyoutPlacement placement;
   final FlyoutPosition position;
 
+  final NavigatorKey? navigatorKey;
+
   @override
   PopUpState<T> createState() => PopUpState<T>();
 }
@@ -113,7 +118,8 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   Future<void> openPopup() {
     assert(_dropdownRoute == null, 'You can NOT open a popup twice');
-    final NavigatorState navigator = Navigator.of(context);
+    final NavigatorState navigator =
+        widget.navigatorKey?.currentState ?? Navigator.of(context);
     final RenderBox itemBox = context.findRenderObject()! as RenderBox;
     Offset leftTarget = itemBox.localToGlobal(
       itemBox.size.centerLeft(Offset.zero),
