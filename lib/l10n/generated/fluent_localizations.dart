@@ -26,6 +26,7 @@ import 'fluent_localizations_pt.dart';
 import 'fluent_localizations_ro.dart';
 import 'fluent_localizations_ru.dart';
 import 'fluent_localizations_tr.dart';
+import 'fluent_localizations_uk.dart';
 import 'fluent_localizations_uz.dart';
 import 'fluent_localizations_zh.dart';
 
@@ -134,6 +135,7 @@ abstract class FluentLocalizations {
     Locale('ro'),
     Locale('ru'),
     Locale('tr'),
+    Locale('uk'),
     Locale('uz'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
@@ -359,6 +361,7 @@ class _FluentLocalizationsDelegate
         'ro',
         'ru',
         'tr',
+        'uk',
         'uz',
         'zh'
       ].contains(locale.languageCode);
@@ -424,6 +427,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsRu();
     case 'tr':
       return FluentLocalizationsTr();
+    case 'uk':
+      return FluentLocalizationsUk();
     case 'uz':
       return FluentLocalizationsUz();
     case 'zh':

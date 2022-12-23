@@ -134,12 +134,14 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 
 - Arabic (@dmakwt)
 - Bahasa Indonesia (@ekasetiawans)
-- English
+- Czech (@morning4coffe-dev)
 - Dutch (@h3x4d3c1m4l)
+- English
 - French (@WinXaito)
 - German (@larsb24)
 - Hebrew (@yehudakremer)
 - Hindi (@alexmercerind)
+- Hungarian (@RedyAu)
 - Italian (@patricknicolosi)
 - Japanese (@chari8)
 - Korean (@dubh3)
@@ -153,6 +155,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Traditional Chinese (@zacksleo, @rk0cc)
 - Turkish (@timurturbil)
 - Spanish (@henry2man)
+- Ukranian (@vadimbarda)
 - Uzbek (@bobobekturdiyev)
 
 If a language is not supported, your app may crash. You can [add support for a new language](#contributing-new-localizations) or use a supported language. [Learn more](https://github.com/bdlukaa/fluent_ui/issues/371)

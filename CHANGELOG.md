@@ -1,3 +1,7 @@
+## [next]
+
+- Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
+
 ## 4.1.2
 
 - `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
