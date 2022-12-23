@@ -1,6 +1,7 @@
 ## [next]
 
 - Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
+- Ensure `fontFamily` is inherit in some widgets ([654](https://github.com/bdlukaa/fluent_ui/issues/654))
 
 ## 4.1.2
 
