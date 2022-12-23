@@ -7,9 +7,11 @@ class NavigationPaneItem with Diagnosticable {
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns
-  GlobalKey itemKey = GlobalKey();
+  final GlobalKey itemKey;
 
-  NavigationPaneItem();
+  NavigationPaneItem({
+    GlobalKey? key,
+  }) : itemKey = key ?? GlobalKey();
 }
 
 /// The item used by [NavigationView] to display the tiles.
@@ -37,6 +39,7 @@ class PaneItem extends NavigationPaneItem {
 
   /// Creates a pane item.
   PaneItem({
+    GlobalKey? key,
     required this.icon,
     required this.body,
     this.title,
@@ -48,7 +51,7 @@ class PaneItem extends NavigationPaneItem {
     this.tileColor,
     this.selectedTileColor,
     this.onTap,
-  });
+  }) : super(key: key);
 
   /// The title used by this item. If the display mode is top
   /// or compact, this is shown as a tooltip. If it's open, this
@@ -403,7 +406,11 @@ class PaneItem extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
-  PaneItemSeparator({this.color, this.thickness});
+  PaneItemSeparator({
+    GlobalKey? key,
+    this.color,
+    this.thickness,
+  }) : super(key: key);
 
   /// The color used by the [Divider].
   final Color? color;
@@ -442,7 +449,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
-  PaneItemHeader({required this.header});
+  PaneItemHeader({GlobalKey? key, required this.header}) : super(key: key);
 
   /// The header. The default style is [NavigationPaneThemeData.itemHeaderTextStyle],
   /// but can be overriten by [Text.style].
@@ -492,6 +499,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
+    GlobalKey? key,
     required super.icon,
     super.body = const SizedBox.shrink(),
     required VoidCallback super.onTap,
@@ -503,7 +511,7 @@ class PaneItemAction extends PaneItem {
     super.selectedTileColor,
     super.tileColor,
     super.trailing,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(
@@ -550,6 +558,7 @@ class PaneItemExpander extends PaneItem {
   final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
 
   PaneItemExpander({
+    GlobalKey? key,
     required super.icon,
     required this.items,
     required super.body,
@@ -562,10 +571,11 @@ class PaneItemExpander extends PaneItem {
     super.tileColor,
     super.selectedTileColor,
     super.onTap,
-  }) : assert(
+  })  : assert(
           items.any((item) => item is PaneItemExpander) == false,
           'There can not be nested PaneItemExpanders',
-        );
+        ),
+        super(key: key);
 
   final List<NavigationPaneItem> items;
   static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
