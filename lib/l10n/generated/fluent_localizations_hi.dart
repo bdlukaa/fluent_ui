@@ -68,10 +68,12 @@ class FluentLocalizationsHi extends FluentLocalizations {
   String get copyActionTooltip => 'सेलेक्टेड कंटेंट क्लिपबोर्ड पर कॉपी करें';
 
   @override
-  String get cutActionTooltip => 'सिलेक्टेड कंटेंट यहाँ से हटा कर क्लिपबोर्ड पर कॉपी करें';
+  String get cutActionTooltip =>
+      'सिलेक्टेड कंटेंट यहाँ से हटा कर क्लिपबोर्ड पर कॉपी करें';
 
   @override
-  String get pasteActionTooltip => 'क्लिपबोर्ड का कंटेंट इस लोकेशन पर पेस्ट करें';
+  String get pasteActionTooltip =>
+      'क्लिपबोर्ड का कंटेंट इस लोकेशन पर पेस्ट करें';
 
   @override
   String get selectAllActionTooltip => 'सारा कंटेंट सेलेक्ट करें';

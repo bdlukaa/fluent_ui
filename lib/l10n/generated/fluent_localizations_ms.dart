@@ -68,10 +68,12 @@ class FluentLocalizationsMs extends FluentLocalizations {
   String get copyActionTooltip => 'Salin kandungan terpilih ke papan keratan';
 
   @override
-  String get cutActionTooltip => 'Alih keluar kandungan yang dipilih dan letakkan dalam papan keratan';
+  String get cutActionTooltip =>
+      'Alih keluar kandungan yang dipilih dan letakkan dalam papan keratan';
 
   @override
-  String get pasteActionTooltip => 'Masukkan kandungan papan keratan di lokasi semasa';
+  String get pasteActionTooltip =>
+      'Masukkan kandungan papan keratan di lokasi semasa';
 
   @override
   String get selectAllActionTooltip => 'Pilih semua kandungan';

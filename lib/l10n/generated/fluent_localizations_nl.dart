@@ -68,10 +68,12 @@ class FluentLocalizationsNl extends FluentLocalizations {
   String get copyActionTooltip => 'Kopieer de selectie naar het klembord';
 
   @override
-  String get cutActionTooltip => 'Wis de selectie en plaats deze op het klembord';
+  String get cutActionTooltip =>
+      'Wis de selectie en plaats deze op het klembord';
 
   @override
-  String get pasteActionTooltip => 'Plaats de inhoud van het klembord op de huidige plek';
+  String get pasteActionTooltip =>
+      'Plaats de inhoud van het klembord op de huidige plek';
 
   @override
   String get selectAllActionTooltip => 'Selecteer alle inhoud';
