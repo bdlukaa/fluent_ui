@@ -6,7 +6,7 @@ part of 'flyout.dart';
 ///
 ///   * [Flyout], which is a light dismiss container that can show arbitrary UI
 ///     as its content
-///   * [FlyoutListTile],
+///   * [FlyoutListTile], a list tile adapted to flyouts
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
   const FlyoutContent({
@@ -128,7 +128,7 @@ class FlyoutListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = ContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.maybeOf(context)?.size;
 
     return HoverButton(
       key: key,
@@ -170,7 +170,9 @@ class FlyoutListTile extends StatelessWidget {
                   ),
                 ),
               Flexible(
-                fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+                fit: size == null || size.isEmpty
+                    ? FlexFit.loose
+                    : FlexFit.tight,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
                   child: DefaultTextStyle.merge(
