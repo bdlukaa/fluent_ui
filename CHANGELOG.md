@@ -1,7 +1,8 @@
-## [next]
+## 4.1.3
 
 - `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))
 - Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
+- Add swedish localization ([#655](https://github.com/bdlukaa/fluent_ui/pull/655))
 - Add `key` parameter to `NavigationPaneItem` and all its instances ([#656](https://github.com/bdlukaa/fluent_ui/issues/656))
 - Ensure `fontFamily` is inherit in some widgets ([654](https://github.com/bdlukaa/fluent_ui/issues/654))
 - Add `Flyout.navigatorKey` ([#538](https://github.com/bdlukaa/fluent_ui/issues/538))
