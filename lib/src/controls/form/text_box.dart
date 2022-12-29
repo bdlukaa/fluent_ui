@@ -902,6 +902,7 @@ class _TextBoxState extends State<TextBox>
     final Color disabledColor = theme.resources.textFillColorDisabled;
     final defaultTextStyle = TextStyle(
       color: enabled ? theme.resources.textFillColorPrimary : disabledColor,
+      fontFamily: theme.typography.body?.fontFamily,
     );
     final TextStyle textStyle = defaultTextStyle.merge(widget.style);
 

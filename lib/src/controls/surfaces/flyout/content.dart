@@ -175,9 +175,8 @@ class FlyoutListTile extends StatelessWidget {
                     : FlexFit.tight,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: DefaultTextStyle(
+                  child: DefaultTextStyle.merge(
                     style: TextStyle(
-                      inherit: false,
                       fontSize: 14.0,
                       letterSpacing: -0.15,
                       color: theme.inactiveColor,
@@ -187,9 +186,8 @@ class FlyoutListTile extends StatelessWidget {
                 ),
               ),
               if (trailing != null)
-                DefaultTextStyle(
+                DefaultTextStyle.merge(
                   style: TextStyle(
-                    inherit: false,
                     fontSize: 12.0,
                     color: theme.borderInputColor,
                     height: 0.7,

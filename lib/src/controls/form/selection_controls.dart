@@ -385,7 +385,6 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                       child: Text(
                         text,
                         style: TextStyle(
-                          inherit: false,
                           fontSize: 14.0,
                           letterSpacing: -0.15,
                           color: theme.inactiveColor,
@@ -396,7 +395,6 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                   Text(
                     shortcut,
                     style: TextStyle(
-                      inherit: false,
                       fontSize: 12.0,
                       color: theme.borderInputColor,
                       height: 0.7,

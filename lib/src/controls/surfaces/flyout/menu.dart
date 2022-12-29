@@ -124,7 +124,14 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
   Widget build(BuildContext context) => builder(context);
 }
 
+/// The standart flyout item used inside a [MenuFlyout]
+///
+/// See also:
+///
+///   * [MenuFlyout]
+///   * [Flyout]
 class MenuFlyoutItem extends MenuFlyoutItemInterface {
+  /// Creates a menu flyout item
   MenuFlyoutItem({
     Key? key,
     this.leading,
