@@ -7,11 +7,11 @@ class NavigationPaneItem with Diagnosticable {
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns
-  final GlobalKey itemKey;
+  final GlobalKey itemKey = GlobalKey();
 
-  NavigationPaneItem({
-    GlobalKey? key,
-  }) : itemKey = key ?? GlobalKey();
+  final Key? key;
+
+  NavigationPaneItem({this.key});
 }
 
 /// The item used by [NavigationView] to display the tiles.
@@ -39,7 +39,7 @@ class PaneItem extends NavigationPaneItem {
 
   /// Creates a pane item.
   PaneItem({
-    GlobalKey? key,
+    Key? key,
     required this.icon,
     required this.body,
     this.title,
@@ -337,6 +337,7 @@ class PaneItem extends NavigationPaneItem {
     }();
 
     return Padding(
+      key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4.0),
       child: () {
         // If there is an indicator and the item is an effective item
@@ -407,7 +408,7 @@ class PaneItem extends NavigationPaneItem {
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
   PaneItemSeparator({
-    GlobalKey? key,
+    Key? key,
     this.color,
     this.thickness,
   }) : super(key: key);
@@ -419,19 +420,22 @@ class PaneItemSeparator extends NavigationPaneItem {
   final double? thickness;
 
   Widget build(BuildContext context, Axis direction) {
-    return Divider(
-      key: itemKey,
-      direction: direction,
-      style: DividerThemeData(
-        thickness: thickness,
-        decoration: color != null ? BoxDecoration(color: color) : null,
-        verticalMargin: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 10.0,
-        ),
-        horizontalMargin: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 10.0,
+    return KeyedSubtree(
+      key: key,
+      child: Divider(
+        key: itemKey,
+        direction: direction,
+        style: DividerThemeData(
+          thickness: thickness,
+          decoration: color != null ? BoxDecoration(color: color) : null,
+          verticalMargin: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 10.0,
+          ),
+          horizontalMargin: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 10.0,
+          ),
         ),
       ),
     );
@@ -449,7 +453,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
-  PaneItemHeader({GlobalKey? key, required this.header}) : super(key: key);
+  PaneItemHeader({Key? key, required this.header}) : super(key: key);
 
   /// The header. The default style is [NavigationPaneThemeData.itemHeaderTextStyle],
   /// but can be overriten by [Text.style].
@@ -461,22 +465,25 @@ class PaneItemHeader extends NavigationPaneItem {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     final view = InheritedNavigationView.of(context);
-    return Padding(
-      key: itemKey,
-      padding: (theme.iconPadding ?? EdgeInsets.zero).add(
-        view.displayMode == PaneDisplayMode.top
-            ? EdgeInsets.zero
-            : theme.headerPadding ?? EdgeInsets.zero,
-      ),
-      child: DefaultTextStyle(
-        style: theme.itemHeaderTextStyle ?? const TextStyle(),
-        softWrap: false,
-        maxLines: 1,
-        overflow: TextOverflow.fade,
-        textAlign: view.displayMode == PaneDisplayMode.top
-            ? TextAlign.center
-            : TextAlign.left,
-        child: header,
+    return KeyedSubtree(
+      key: key,
+      child: Padding(
+        key: itemKey,
+        padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+          view.displayMode == PaneDisplayMode.top
+              ? EdgeInsets.zero
+              : theme.headerPadding ?? EdgeInsets.zero,
+        ),
+        child: DefaultTextStyle(
+          style: theme.itemHeaderTextStyle ?? const TextStyle(),
+          softWrap: false,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          textAlign: view.displayMode == PaneDisplayMode.top
+              ? TextAlign.center
+              : TextAlign.left,
+          child: header,
+        ),
       ),
     );
   }
@@ -499,7 +506,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
-    GlobalKey? key,
+    Key? key,
     required super.icon,
     super.body = const SizedBox.shrink(),
     required VoidCallback super.onTap,
@@ -558,7 +565,7 @@ class PaneItemExpander extends PaneItem {
   final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
 
   PaneItemExpander({
-    GlobalKey? key,
+    Key? key,
     required super.icon,
     required this.items,
     required super.body,
@@ -591,15 +598,18 @@ class PaneItemExpander extends PaneItem {
     bool? autofocus,
     int? itemIndex,
   }) {
-    return _PaneItemExpander(
-      key: expanderKey,
-      item: this,
-      items: items,
-      displayMode: displayMode,
-      showTextOnTop: showTextOnTop,
-      selected: selected,
-      onPressed: onPressed,
-      onItemPressed: onItemPressed,
+    return KeyedSubtree(
+      key: key,
+      child: _PaneItemExpander(
+        key: expanderKey,
+        item: this,
+        items: items,
+        displayMode: displayMode,
+        showTextOnTop: showTextOnTop,
+        selected: selected,
+        onPressed: onPressed,
+        onItemPressed: onItemPressed,
+      ),
     );
   }
 }
