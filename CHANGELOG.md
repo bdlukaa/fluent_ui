@@ -1,3 +1,7 @@
+## [next]
+
+- Avoid overflow in `DatePicker` and `TimePicker` popup ([#663](https://github.com/bdlukaa/fluent_ui/issues/663))
+
 ## 4.1.3
 
 - `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))
