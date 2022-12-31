@@ -563,8 +563,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   daysInMonth,
                   (day) {
                     day++;
-                    return ListTile(
-                      title: Center(
+                    return SizedBox(
+                      height: kOneLineTileHeight,
+                      child: Center(
                         child: Text(
                           formatter.format(DateTime(0, 0, day)),
                           style: kPickerPopupTextStyle(
@@ -636,8 +637,9 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               children: List.generate(years, (index) {
                 // index++;
                 final realYear = widget.startYear + index + 1;
-                return ListTile(
-                  title: Center(
+                return SizedBox(
+                  height: kOneLineTileHeight,
+                  child: Center(
                     child: Text(
                       formatter.format(DateTime(realYear)),
                       style: kPickerPopupTextStyle(
