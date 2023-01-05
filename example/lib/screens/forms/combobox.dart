@@ -16,7 +16,7 @@ class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
   String? selectedCat;
   double fontSize = 20.0;
   bool disabled = false;
-  final comboboxKey = GlobalKey<ComboBoxState>();
+  final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +365,7 @@ Form(
 // which will open and close the popup, respectively
 //
 // It is possible to use the key with ComboBox and EditableComboBox
-final comboboxKey = GlobalKey<ComboboxState>();
+final comboboxKey = GlobalKey<ComboboxState>(debugLabel: 'Combobox Key');
 
 ComboBox<String>(
   key: comboboxKey,

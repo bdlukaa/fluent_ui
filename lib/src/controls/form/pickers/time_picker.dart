@@ -115,7 +115,7 @@ class _TimePickerState extends State<TimePicker>
     with IntlScriptLocaleApplyMixin {
   late DateTime time;
 
-  final GlobalKey _buttonKey = GlobalKey();
+  final GlobalKey _buttonKey = GlobalKey(debugLabel: 'Time Picker button key');
 
   late FixedExtentScrollController _hourController;
   late FixedExtentScrollController _minuteController;

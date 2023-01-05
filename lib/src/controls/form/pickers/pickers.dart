@@ -318,7 +318,7 @@ class Picker extends StatefulWidget {
 }
 
 class _PickerState extends State<Picker> {
-  final GlobalKey _childKey = GlobalKey();
+  late final GlobalKey _childKey = GlobalKey(debugLabel: '${widget.child} key');
 
   Future<void> open() {
     assert(

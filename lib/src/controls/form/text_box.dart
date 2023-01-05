@@ -605,7 +605,7 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
-  final _localClearGlobalKey = GlobalKey();
+  final _localClearGlobalKey = GlobalKey(debugLabel: 'Clear Button key');
   GlobalKey get _clearGlobalKey =>
       widget.clearGlobalKey ?? _localClearGlobalKey;
 

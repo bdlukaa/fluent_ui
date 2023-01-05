@@ -135,9 +135,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   int index = 0;
 
-  final viewKey = GlobalKey();
-
-  final searchKey = GlobalKey();
+  final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
+  final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 

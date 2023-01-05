@@ -11,7 +11,7 @@ class ExpanderPage extends StatefulWidget {
 }
 
 class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
-  final expanderKey = GlobalKey<ExpanderState>();
+  final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
   bool crostOpen = false;
   List<String> crosts = [
@@ -171,7 +171,8 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
                 content: Text(open ? 'Close' : 'Open'),
               ),
             ]),
-            codeSnippet: '''final expanderKey = GlobalKey<ExpanderState>();
+            codeSnippet:
+                '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
 Expander(
   key: expanderKey,

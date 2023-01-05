@@ -343,7 +343,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   late FocusNode focusNode = widget.focusNode ?? FocusNode();
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
-  final GlobalKey _textBoxKey = GlobalKey();
+  final GlobalKey _textBoxKey = GlobalKey(
+    debugLabel: 'AutoSuggestBox\'s TextBox Key',
+  );
 
   late TextEditingController controller;
   final FocusScopeNode overlayNode = FocusScopeNode();
