@@ -434,8 +434,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                           }
                           return hour;
                         }();
-                        return ListTile(
-                          title: Center(
+                        return SizedBox(
+                          height: kOneLineTileHeight,
+                          child: Center(
                             child: Text(
                               '$hour',
                               style: kPickerPopupTextStyle(
@@ -494,8 +495,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                       60 ~/ widget.minuteIncrement,
                       (index) {
                         final int minute = index * widget.minuteIncrement;
-                        return ListTile(
-                          title: Center(
+                        return SizedBox(
+                          height: kOneLineTileHeight,
+                          child: Center(
                             child: Text(
                               '$minute',
                               style: kPickerPopupTextStyle(
@@ -550,8 +552,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     itemExtent: kOneLineTileHeight,
                     physics: const FixedExtentScrollPhysics(),
                     children: [
-                      ListTile(
-                        title: Center(
+                      SizedBox(
+                        height: kOneLineTileHeight,
+                        child: Center(
                           child: Text(
                             localizations.am,
                             style: kPickerPopupTextStyle(
@@ -561,8 +564,9 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                           ),
                         ),
                       ),
-                      ListTile(
-                        title: Center(
+                      SizedBox(
+                        height: kOneLineTileHeight,
+                        child: Center(
                           child: Text(
                             localizations.pm,
                             style: kPickerPopupTextStyle(
