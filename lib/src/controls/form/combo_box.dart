@@ -114,7 +114,7 @@ class _ComboBoxItemButton<T> extends StatefulWidget {
   final int itemIndex;
 
   @override
-  _ComboBoxItemButtonState<T> createState() => _ComboBoxItemButtonState<T>();
+  State<_ComboBoxItemButton<T>> createState() => _ComboBoxItemButtonState<T>();
 }
 
 class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
@@ -241,7 +241,7 @@ class _ComboBoxMenu<T> extends StatefulWidget {
   final Color? popupColor;
 
   @override
-  _ComboBoxMenuState<T> createState() => _ComboBoxMenuState<T>();
+  State<_ComboBoxMenu<T>> createState() => _ComboBoxMenuState<T>();
 }
 
 class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {

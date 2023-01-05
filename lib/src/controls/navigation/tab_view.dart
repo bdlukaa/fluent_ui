@@ -711,7 +711,7 @@ class _Tab extends StatefulWidget {
   final TabWidthBehavior tabWidthBehavior;
 
   @override
-  __TabState createState() => __TabState();
+  State<_Tab> createState() => __TabState();
 }
 
 class __TabState extends State<_Tab>

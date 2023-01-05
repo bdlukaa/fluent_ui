@@ -353,7 +353,7 @@ class FluentApp extends StatefulWidget {
   final bool useInheritedMediaQuery;
 
   @override
-  _FluentAppState createState() => _FluentAppState();
+  State<FluentApp> createState() => _FluentAppState();
 }
 
 class _FluentAppState extends State<FluentApp> {

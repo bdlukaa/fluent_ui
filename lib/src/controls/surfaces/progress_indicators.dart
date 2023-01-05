@@ -53,7 +53,7 @@ class ProgressBar extends StatefulWidget {
   final Color? activeColor;
 
   @override
-  _ProgressBarState createState() => _ProgressBarState();
+  State<ProgressBar> createState() => _ProgressBarState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -307,7 +307,7 @@ class ProgressRing extends StatefulWidget {
   final bool backwards;
 
   @override
-  _ProgressRingState createState() => _ProgressRingState();
+  State<ProgressRing> createState() => _ProgressRingState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

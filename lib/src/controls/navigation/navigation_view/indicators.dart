@@ -51,7 +51,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     super.initState();
     fetch();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 
@@ -129,7 +129,8 @@ class EndNavigationIndicator extends NavigationIndicator {
   final Color unselectedColor;
 
   @override
-  _EndNavigationIndicatorState createState() => _EndNavigationIndicatorState();
+  NavigationIndicatorState<EndNavigationIndicator> createState() =>
+      _EndNavigationIndicatorState();
 }
 
 class _EndNavigationIndicatorState
@@ -192,7 +193,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   final double leftPadding;
 
   @override
-  _StickyNavigationIndicatorState createState() =>
+  NavigationIndicatorState<StickyNavigationIndicator> createState() =>
       _StickyNavigationIndicatorState();
 }
 

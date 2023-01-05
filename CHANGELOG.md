@@ -1,3 +1,7 @@
+## [next]
+
+- Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
+
 ## 4.1.3
 
 - `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))

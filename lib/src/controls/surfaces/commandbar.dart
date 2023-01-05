@@ -156,7 +156,7 @@ class CommandBar extends StatefulWidget {
         super(key: key);
 
   @override
-  _CommandBarState createState() => _CommandBarState();
+  State<CommandBar> createState() => _CommandBarState();
 }
 
 class _CommandBarState extends State<CommandBar> {

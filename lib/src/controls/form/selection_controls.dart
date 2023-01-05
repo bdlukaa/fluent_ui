@@ -112,7 +112,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   final double textLineHeight;
 
   @override
-  _FluentTextSelectionControlsToolbarState createState() =>
+  State<_FluentTextSelectionControlsToolbar> createState() =>
       _FluentTextSelectionControlsToolbarState();
 }
 

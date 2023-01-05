@@ -529,7 +529,7 @@ class TextBox extends StatefulWidget {
   final MouseCursor? mouseCursor;
 
   @override
-  _TextBoxState createState() => _TextBoxState();
+  State<TextBox> createState() => _TextBoxState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

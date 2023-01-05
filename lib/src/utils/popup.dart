@@ -110,7 +110,7 @@ class PopUp<T> extends StatefulWidget {
   final NavigatorKey? navigatorKey;
 
   @override
-  PopUpState<T> createState() => PopUpState<T>();
+  State<PopUp<T>> createState() => PopUpState<T>();
 }
 
 class PopUpState<T> extends State<PopUp<T>> {
@@ -255,7 +255,7 @@ class _PopUpMenu<T> extends StatefulWidget {
   final Color? dropdownColor;
 
   @override
-  _PopUpMenuState<T> createState() => _PopUpMenuState<T>();
+  State<_PopUpMenu<T>> createState() => _PopUpMenuState<T>();
 }
 
 class _PopUpMenuState<T> extends State<_PopUpMenu<T>> {

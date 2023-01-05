@@ -6,7 +6,7 @@ class TypographyPage extends StatefulWidget {
   const TypographyPage({Key? key}) : super(key: key);
 
   @override
-  _TypographyPageState createState() => _TypographyPageState();
+  State<TypographyPage> createState() => _TypographyPageState();
 }
 
 class _TypographyPageState extends State<TypographyPage> {

@@ -31,7 +31,7 @@ class IconsPage extends StatefulWidget {
   const IconsPage({Key? key}) : super(key: key);
 
   @override
-  _IconsPageState createState() => _IconsPageState();
+  State<IconsPage> createState() => _IconsPageState();
 }
 
 class _IconsPageState extends State<IconsPage> {

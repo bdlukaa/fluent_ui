@@ -81,7 +81,7 @@ class TimePicker extends StatefulWidget {
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
   @override
-  _TimePickerState createState() => _TimePickerState();
+  State<TimePicker> createState() => _TimePickerState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -336,7 +336,7 @@ class _TimePickerContentPopup extends StatefulWidget {
   final int minuteIncrement;
 
   @override
-  __TimePickerContentPopupState createState() =>
+  State<_TimePickerContentPopup> createState() =>
       __TimePickerContentPopupState();
 }
 

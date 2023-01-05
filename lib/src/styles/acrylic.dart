@@ -240,7 +240,8 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
   }
 
   @override
-  _AnimatedAcrylicState createState() => _AnimatedAcrylicState();
+  AnimatedWidgetBaseState<AnimatedAcrylic> createState() =>
+      _AnimatedAcrylicState();
 }
 
 class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
