@@ -24,7 +24,9 @@ class _CardHighlightState extends State<CardHighlight>
   bool isOpen = false;
   bool isCopying = false;
 
-  final GlobalKey expanderKey = GlobalKey<ExpanderState>();
+  final GlobalKey expanderKey = GlobalKey<ExpanderState>(
+    debugLabel: 'Card Expander Key',
+  );
 
   @override
   Widget build(BuildContext context) {

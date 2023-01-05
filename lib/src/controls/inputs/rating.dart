@@ -94,7 +94,7 @@ class RatingBar extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
 
   @override
-  _RatingBarState createState() => _RatingBarState();
+  State<RatingBar> createState() => _RatingBarState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

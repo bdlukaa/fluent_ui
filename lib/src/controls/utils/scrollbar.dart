@@ -36,7 +36,7 @@ class Scrollbar extends RawScrollbar {
   final ScrollbarThemeData? style;
 
   @override
-  _ScrollbarState createState() => _ScrollbarState();
+  RawScrollbarState<Scrollbar> createState() => _ScrollbarState();
 }
 
 class _ScrollbarState extends RawScrollbarState<Scrollbar> {

@@ -74,7 +74,7 @@ abstract class BaseButton extends StatefulWidget {
   bool get enabled => onPressed != null || onLongPress != null;
 
   @override
-  _BaseButtonState createState() => _BaseButtonState();
+  State<BaseButton> createState() => _BaseButtonState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

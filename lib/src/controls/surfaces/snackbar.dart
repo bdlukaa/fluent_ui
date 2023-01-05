@@ -105,7 +105,7 @@ class Snackbar extends StatefulWidget {
   final bool extended;
 
   @override
-  SnackbarState createState() => SnackbarState();
+  State<Snackbar> createState() => SnackbarState();
 }
 
 class SnackbarState extends State<Snackbar>

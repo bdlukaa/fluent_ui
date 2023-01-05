@@ -645,7 +645,7 @@ class _TabViewState extends State<TabView> {
 
 /// Represents a single tab within a [TabView].
 class Tab {
-  final _tabKey = GlobalKey<__TabState>();
+  final _tabKey = GlobalKey<__TabState>(debugLabel: 'Tab key');
 
   /// Creates a tab.
   Tab({
@@ -711,7 +711,7 @@ class _Tab extends StatefulWidget {
   final TabWidthBehavior tabWidthBehavior;
 
   @override
-  __TabState createState() => __TabState();
+  State<_Tab> createState() => __TabState();
 }
 
 class __TabState extends State<_Tab>

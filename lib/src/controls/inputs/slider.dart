@@ -200,7 +200,7 @@ class Slider extends StatefulWidget {
   final MouseCursor mouseCursor;
 
   @override
-  _SliderState createState() => _SliderState();
+  State<Slider> createState() => _SliderState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

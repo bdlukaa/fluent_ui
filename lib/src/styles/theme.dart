@@ -119,7 +119,8 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   final Widget child;
 
   @override
-  _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
+  AnimatedWidgetBaseState<AnimatedFluentTheme> createState() =>
+      _AnimatedFluentThemeState();
 }
 
 class _AnimatedFluentThemeState

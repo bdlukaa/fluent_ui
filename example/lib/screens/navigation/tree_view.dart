@@ -10,7 +10,7 @@ class TreeViewPage extends StatefulWidget {
 }
 
 class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
-  final treeViewKey = GlobalKey<TreeViewState>();
+  final treeViewKey = GlobalKey<TreeViewState>(debugLabel: 'TreeView key');
 
   @override
   Widget build(BuildContext context) {

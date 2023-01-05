@@ -21,7 +21,7 @@ class HorizontalScrollView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _HorizontalScrollViewState createState() => _HorizontalScrollViewState();
+  State<HorizontalScrollView> createState() => _HorizontalScrollViewState();
 }
 
 class _HorizontalScrollViewState extends State<HorizontalScrollView> {

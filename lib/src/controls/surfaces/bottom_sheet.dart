@@ -105,7 +105,7 @@ class _BottomSheet extends StatefulWidget {
   final ShapeBorder? shape;
 
   @override
-  _BottomSheetState createState() => _BottomSheetState();
+  State<_BottomSheet> createState() => _BottomSheetState();
 
   /// Creates an [AnimationController] suitable for a
   /// [_BottomSheet.animationController].
@@ -273,7 +273,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final bool enableDrag;
 
   @override
-  _ModalBottomSheetState<T> createState() => _ModalBottomSheetState<T>();
+  State<_ModalBottomSheet<T>> createState() => _ModalBottomSheetState<T>();
 }
 
 class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {

@@ -138,7 +138,7 @@ class DatePicker extends StatefulWidget {
   final List<DatePickerField>? fieldOrder;
 
   @override
-  _DatePickerState createState() => _DatePickerState();
+  State<DatePicker> createState() => _DatePickerState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -429,7 +429,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
   final List<DatePickerField> fieldOrder;
 
   @override
-  __DatePickerContentPopUpState createState() =>
+  State<_DatePickerContentPopUp> createState() =>
       __DatePickerContentPopUpState();
 }
 
