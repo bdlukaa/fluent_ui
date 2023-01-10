@@ -6,7 +6,7 @@ import 'app_test.dart';
 void main() {
   testWidgets('ToggleSwitch change state accordingly',
       (WidgetTester tester) async {
-    bool toggleSwitchValue = false;
+    var toggleSwitchValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
@@ -40,7 +40,7 @@ void main() {
   });
 
   testWidgets('ToggleSwitch can drag (LTR)', (WidgetTester tester) async {
-    bool value = false;
+    var value = false;
 
     await tester.pumpWidget(
       wrapApp(

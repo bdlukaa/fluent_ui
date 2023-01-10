@@ -97,7 +97,7 @@ class RadioButton extends StatelessWidget {
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final BoxDecoration decoration = (checked
+        final decoration = (checked
                 ? style.checkedDecoration?.resolve(state)
                 : style.uncheckedDecoration?.resolve(state)) ??
             const BoxDecoration(shape: BoxShape.circle);
@@ -175,7 +175,7 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final RadioButtonTheme? theme =
+    final theme =
         context.dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
     return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
   }
@@ -280,9 +280,10 @@ class RadioButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-        'checkedDecoration', checkedDecoration));
-    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-        'uncheckedDecoration', uncheckedDecoration));
+    properties
+      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+          'checkedDecoration', checkedDecoration))
+      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+          'uncheckedDecoration', uncheckedDecoration));
   }
 }

@@ -35,7 +35,7 @@ class Button extends BaseButton {
   @override
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return ButtonStyle(
       // elevation: ButtonState.resolveWith((states) {
       //   if (states.isPressing) return 0.0;

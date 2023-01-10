@@ -224,60 +224,6 @@ class ThemeData with Diagnosticable {
 
   final ResourceDictionary resources;
 
-  const ThemeData.raw({
-    required this.typography,
-    required this.accentColor,
-    required this.activeColor,
-    required this.inactiveColor,
-    required this.inactiveBackgroundColor,
-    required this.disabledColor,
-    required this.shadowColor,
-    required this.uncheckedColor,
-    required this.checkedColor,
-    required this.borderInputColor,
-    required this.fasterAnimationDuration,
-    required this.fastAnimationDuration,
-    required this.mediumAnimationDuration,
-    required this.slowAnimationDuration,
-    required this.animationCurve,
-    required this.brightness,
-    required this.visualDensity,
-    required this.scaffoldBackgroundColor,
-    required this.acrylicBackgroundColor,
-    required this.micaBackgroundColor,
-    required this.buttonTheme,
-    required this.checkboxTheme,
-    required this.chipTheme,
-    required this.toggleSwitchTheme,
-    required this.bottomNavigationTheme,
-    required this.iconTheme,
-    required this.splitButtonTheme,
-    required this.dialogTheme,
-    required this.tooltipTheme,
-    required this.dividerTheme,
-    required this.navigationPaneTheme,
-    required this.radioButtonTheme,
-    required this.toggleButtonTheme,
-    required this.sliderTheme,
-    required this.infoBarTheme,
-    required this.focusTheme,
-    required this.scrollbarTheme,
-    required this.snackbarTheme,
-    required this.pillButtonBarTheme,
-    required this.bottomSheetTheme,
-    required this.menuColor,
-    required this.cardColor,
-    required this.resources,
-  });
-
-  static ThemeData light() {
-    return ThemeData(brightness: Brightness.light);
-  }
-
-  static ThemeData dark() {
-    return ThemeData(brightness: Brightness.dark);
-  }
-
   factory ThemeData({
     Brightness? brightness,
     VisualDensity? visualDensity,
@@ -326,7 +272,7 @@ class ThemeData with Diagnosticable {
   }) {
     brightness ??= Brightness.light;
 
-    final bool isLight = brightness == Brightness.light;
+    final isLight = brightness == Brightness.light;
 
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= const Duration(milliseconds: 83);
@@ -440,6 +386,60 @@ class ThemeData with Diagnosticable {
       cardColor: cardColor,
       resources: resources,
     );
+  }
+
+  const ThemeData.raw({
+    required this.typography,
+    required this.accentColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.inactiveBackgroundColor,
+    required this.disabledColor,
+    required this.shadowColor,
+    required this.uncheckedColor,
+    required this.checkedColor,
+    required this.borderInputColor,
+    required this.fasterAnimationDuration,
+    required this.fastAnimationDuration,
+    required this.mediumAnimationDuration,
+    required this.slowAnimationDuration,
+    required this.animationCurve,
+    required this.brightness,
+    required this.visualDensity,
+    required this.scaffoldBackgroundColor,
+    required this.acrylicBackgroundColor,
+    required this.micaBackgroundColor,
+    required this.buttonTheme,
+    required this.checkboxTheme,
+    required this.chipTheme,
+    required this.toggleSwitchTheme,
+    required this.bottomNavigationTheme,
+    required this.iconTheme,
+    required this.splitButtonTheme,
+    required this.dialogTheme,
+    required this.tooltipTheme,
+    required this.dividerTheme,
+    required this.navigationPaneTheme,
+    required this.radioButtonTheme,
+    required this.toggleButtonTheme,
+    required this.sliderTheme,
+    required this.infoBarTheme,
+    required this.focusTheme,
+    required this.scrollbarTheme,
+    required this.snackbarTheme,
+    required this.pillButtonBarTheme,
+    required this.bottomSheetTheme,
+    required this.menuColor,
+    required this.cardColor,
+    required this.resources,
+  });
+
+  static ThemeData light() {
+    return ThemeData(brightness: Brightness.light);
+  }
+
+  static ThemeData dark() {
+    return ThemeData(brightness: Brightness.dark);
   }
 
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
@@ -623,26 +623,26 @@ class ThemeData with Diagnosticable {
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
-      ..add(ColorProperty('cardColor', cardColor));
-    properties.add(EnumProperty('brightness', brightness));
-    properties.add(DiagnosticsProperty<Duration>(
-      'slowAnimationDuration',
-      slowAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'mediumAnimationDuration',
-      mediumAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fastAnimationDuration',
-      fastAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fasterAnimationDuration',
-      fasterAnimationDuration,
-    ));
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
+      ..add(ColorProperty('cardColor', cardColor))
+      ..add(EnumProperty('brightness', brightness))
+      ..add(DiagnosticsProperty<Duration>(
+        'slowAnimationDuration',
+        slowAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'mediumAnimationDuration',
+        mediumAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fastAnimationDuration',
+        fastAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fasterAnimationDuration',
+        fasterAnimationDuration,
+      ))
+      ..add(
+        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+      );
   }
 }

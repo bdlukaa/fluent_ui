@@ -226,8 +226,9 @@ class _TabViewState extends State<TabView> {
           itemCount: widget.tabs.length,
           animationDuration: const Duration(milliseconds: 100),
         );
-    scrollController.itemCount = widget.tabs.length;
-    scrollController.addListener(_handleScrollUpdate);
+    scrollController
+      ..itemCount = widget.tabs.length
+      ..addListener(_handleScrollUpdate);
   }
 
   void _handleScrollUpdate() {
@@ -242,7 +243,7 @@ class _TabViewState extends State<TabView> {
     }
     if (widget.currentIndex != oldWidget.currentIndex &&
         scrollController.hasClients) {
-      scrollController.scrollToItem(widget.currentIndex, center: false);
+      scrollController.scrollToItem(widget.currentIndex);
     }
   }
 
@@ -275,7 +276,7 @@ class _TabViewState extends State<TabView> {
 
       closeTimer?.cancel();
 
-      double tabWidth = preferredTabWidth;
+      var tabWidth = preferredTabWidth;
 
       final tabBox =
           tab._tabKey.currentContext?.findRenderObject() as RenderBox?;
@@ -298,7 +299,7 @@ class _TabViewState extends State<TabView> {
     int index,
     double preferredTabWidth,
   ) {
-    final Tab tab = widget.tabs[index];
+    final tab = widget.tabs[index];
     final tabWidget = _Tab(
       tab,
       key: ValueKey<int>(index),
@@ -410,7 +411,7 @@ class _TabViewState extends State<TabView> {
     final localizations = FluentLocalizations.of(context);
 
     final headerFooterTextStyle =
-        (theme.typography.bodyLarge ?? const TextStyle());
+        theme.typography.bodyLarge ?? const TextStyle();
 
     Widget tabBar = Column(children: [
       ScrollConfiguration(
@@ -486,10 +487,10 @@ class _TabViewState extends State<TabView> {
                 );
 
                 /// Whether the tab bar is scrollable
-                bool scrollable = preferredTabWidth * widget.tabs.length >
+                var scrollable = preferredTabWidth * widget.tabs.length >
                     width - (widget.showNewButton ? _kButtonWidth : 0);
 
-                final bool showScrollButtons = widget.showScrollButtons &&
+                final showScrollButtons = widget.showScrollButtons &&
                     scrollable &&
                     scrollController.hasClients;
 
@@ -744,12 +745,12 @@ class __TabState extends State<_Tab>
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     final res = theme.resources;
     final localizations = FluentLocalizations.of(context);
 
     // The text of the tab, if a [Text] widget is used
-    final String? text = () {
+    final text = () {
       if (widget.tab.text is Text) {
         return (widget.tab.text as Text).data ??
             (widget.tab.text as Text).textSpan?.toPlainText();
@@ -891,7 +892,6 @@ class __TabState extends State<_Tab>
         }
         if (widget.selected) {
           child = CustomPaint(
-            willChange: false,
             painter: _TabPainter(res.solidBackgroundFillColorTertiary),
             child: child,
           );

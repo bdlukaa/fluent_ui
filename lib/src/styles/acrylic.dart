@@ -1,11 +1,10 @@
 import 'dart:math' as math;
-import 'dart:ui' show ImageFilter;
 import 'dart:ui' as ui show Image;
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as m;
+import 'dart:ui' show ImageFilter;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as m;
 
 const double kBlurAmount = 30.0;
 
@@ -70,13 +69,14 @@ class Acrylic extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('tint', tint));
-    properties.add(DoubleProperty('tintAlpha', tintAlpha));
-    properties.add(DoubleProperty('luminosityAlpha', luminosityAlpha));
-    properties.add(DoubleProperty('blurAmount', blurAmount));
-    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape));
-    properties.add(ColorProperty('shadowColor', shadowColor));
-    properties.add(DoubleProperty('elevation', elevation));
+    properties
+      ..add(ColorProperty('tint', tint))
+      ..add(DoubleProperty('tintAlpha', tintAlpha))
+      ..add(DoubleProperty('luminosityAlpha', luminosityAlpha))
+      ..add(DoubleProperty('blurAmount', blurAmount))
+      ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
+      ..add(ColorProperty('shadowColor', shadowColor))
+      ..add(DoubleProperty('elevation', elevation));
   }
 
   @override
@@ -135,12 +135,12 @@ class _AcrylicState extends State<Acrylic> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    assert(widget.elevation >= 0, "The elevation must be always positive");
-    assert(_properties.tintAlpha >= 0, "The tintAlpha must be always positive");
+    assert(widget.elevation >= 0, 'The elevation must be always positive');
+    assert(_properties.tintAlpha >= 0, 'The tintAlpha must be always positive');
     assert(_properties.luminosityAlpha >= 0,
-        "The luminosityAlpha must be always positive");
+        'The luminosityAlpha must be always positive');
 
-    final Color shadowColor =
+    final shadowColor =
         widget.shadowColor ?? FluentTheme.of(context).shadowColor;
 
     return _AcrylicInheritedWidget(
@@ -230,13 +230,14 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('tint', tint));
-    properties.add(DoubleProperty('tintAlpha', tintAlpha));
-    properties.add(DoubleProperty('luminosityAlpha', luminosityAlpha));
-    properties.add(DoubleProperty('blurAmount', blurAmount));
-    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape));
-    properties.add(ColorProperty('shadowColor', shadowColor));
-    properties.add(DoubleProperty('elevation', elevation));
+    properties
+      ..add(ColorProperty('tint', tint))
+      ..add(DoubleProperty('tintAlpha', tintAlpha))
+      ..add(DoubleProperty('luminosityAlpha', luminosityAlpha))
+      ..add(DoubleProperty('blurAmount', blurAmount))
+      ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
+      ..add(ColorProperty('shadowColor', shadowColor))
+      ..add(DoubleProperty('elevation', elevation));
   }
 
   @override
@@ -398,8 +399,8 @@ class _AcrylicGuts extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
-                            "assets/AcrylicNoise.png",
-                            package: "fluent_ui",
+                            'assets/AcrylicNoise.png',
+                            package: 'fluent_ui',
                           ),
                           alignment: AlignmentDirectional.topStart,
                           repeat: ImageRepeat.repeat,
@@ -432,14 +433,15 @@ class _AcrylicPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawColor(luminosityColor, BlendMode.luminosity);
-    canvas.drawColor(red, BlendMode.saturation);
-    canvas.drawColor(blue, BlendMode.saturation);
-    canvas.drawColor(green, BlendMode.saturation);
-    canvas.drawColor(
-      tintColor,
-      tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
-    );
+    canvas
+      ..drawColor(luminosityColor, BlendMode.luminosity)
+      ..drawColor(red, BlendMode.saturation)
+      ..drawColor(blue, BlendMode.saturation)
+      ..drawColor(green, BlendMode.saturation)
+      ..drawColor(
+        tintColor,
+        tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
+      );
   }
 
   @override
@@ -469,24 +471,24 @@ class AcrylicHelper {
     } else {
       // To create the Luminosity blend input color without luminosity opacity,
       // we're taking the TintColor input, converting to HSV, and clamping the V between these values
-      const double minHsvV = 0.125;
-      const double maxHsvV = 0.965;
+      const minHsvV = 0.125;
+      const maxHsvV = 0.965;
 
-      HSVColor hsvTintColor = HSVColor.fromColor(tintColor);
+      var hsvTintColor = HSVColor.fromColor(tintColor);
 
-      double clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
+      var clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
 
-      HSVColor hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
-      Color rgbLuminosityColor = hsvLuminosityColor.toColor();
+      var hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
+      var rgbLuminosityColor = hsvLuminosityColor.toColor();
 
       // Now figure out luminosity opacity
       // Map original *tint* opacity to this range
-      const double minLuminosityOpacity = 0.15;
-      const double maxLuminosityOpacity = 1.03;
+      const minLuminosityOpacity = 0.15;
+      const maxLuminosityOpacity = 1.03;
 
-      const double luminosityOpacityRangeMax =
+      const luminosityOpacityRangeMax =
           maxLuminosityOpacity - minLuminosityOpacity;
-      double mappedTintOpacity =
+      var mappedTintOpacity =
           ((tintColor.alpha / 255.0) * luminosityOpacityRangeMax) +
               minLuminosityOpacity;
 
@@ -502,20 +504,20 @@ class AcrylicHelper {
 
   static double getTintOpacityModifier(Color color) {
     // Mid point of HsvV range that these calculations are based on. This is here for easy tuning.
-    const double midPoint = 0.50;
+    const midPoint = 0.50;
 
-    const double whiteMaxOpacity = 0.45; // 100% luminosity
-    const double midPointMaxOpacity = 0.90; // 50% luminosity
-    const double blackMaxOpacity = 0.85; // 0% luminosity
+    const whiteMaxOpacity = 0.45; // 100% luminosity
+    const midPointMaxOpacity = 0.90; // 50% luminosity
+    const blackMaxOpacity = 0.85; // 0% luminosity
 
-    HSVColor hsv = HSVColor.fromColor(color);
+    var hsv = HSVColor.fromColor(color);
 
-    double opacityModifier = midPointMaxOpacity;
+    var opacityModifier = midPointMaxOpacity;
 
     if (hsv.value != midPoint) {
       // Determine maximum suppression amount
-      double lowestMaxOpacity = midPointMaxOpacity;
-      double maxDeviation = midPoint;
+      var lowestMaxOpacity = midPointMaxOpacity;
+      var maxDeviation = midPoint;
 
       if (hsv.value > midPoint) {
         lowestMaxOpacity = whiteMaxOpacity; // At white (100% hsvV)
@@ -524,11 +526,11 @@ class AcrylicHelper {
         lowestMaxOpacity = blackMaxOpacity; // At black (0% hsvV)
       }
 
-      double maxOpacitySuppression = midPointMaxOpacity - lowestMaxOpacity;
+      var maxOpacitySuppression = midPointMaxOpacity - lowestMaxOpacity;
 
       // Determine normalized deviation from the midpoint
-      double deviation = (hsv.value - midPoint);
-      double normalizedDeviation = deviation / maxDeviation;
+      var deviation = hsv.value - midPoint;
+      var normalizedDeviation = deviation / maxDeviation;
 
       // If we have saturation, reduce opacity suppression to allow that color to come through more
       if (hsv.saturation > 0) {
@@ -536,7 +538,7 @@ class AcrylicHelper {
         maxOpacitySuppression *= math.max(1 - (hsv.saturation * 2), 0.0);
       }
 
-      double opacitySuppression = maxOpacitySuppression * normalizedDeviation;
+      var opacitySuppression = maxOpacitySuppression * normalizedDeviation;
 
       opacityModifier = midPointMaxOpacity - opacitySuppression;
     }
@@ -554,10 +556,10 @@ class _NoiseTextureCacher {
     _computeImage();
   }
 
-  void _computeImage() async {
+  Future<void> _computeImage() async {
     const ImageProvider provider = AssetImage(
-      "assets/AcrylicNoise.png",
-      package: "fluent_ui",
+      'assets/AcrylicNoise.png',
+      package: 'fluent_ui',
     );
 
     provider.resolve(const ImageConfiguration()).addListener(

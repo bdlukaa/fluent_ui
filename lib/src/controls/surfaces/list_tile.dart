@@ -185,7 +185,7 @@ class ListTile extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
-        final Color tileColor = () {
+        final tileColor = () {
           if (this.tileColor != null) {
             return this.tileColor!.resolve(states);
           }
@@ -211,20 +211,17 @@ class ListTile extends StatelessWidget {
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (title != null)
                     DefaultTextStyle(
                       style: (theme.typography.body ?? const TextStyle())
                           .copyWith(fontSize: 16),
-                      overflow: TextOverflow.clip,
                       child: title!,
                     ),
                   if (subtitle != null)
                     DefaultTextStyle(
                       style: theme.typography.caption ?? const TextStyle(),
-                      overflow: TextOverflow.clip,
                       child: subtitle!,
                     ),
                 ],

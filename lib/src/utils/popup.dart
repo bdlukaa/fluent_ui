@@ -1,7 +1,6 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 /// Show the context menu at the offset
 ///
@@ -59,11 +58,11 @@ Future<T?> showMenu<T>({
   double verticalOffset = 0,
   double horizontalOffset = 0,
 }) {
-  final NavigatorState navigator = Navigator.of(context);
+  final navigator = Navigator.of(context);
 
   assert(debugCheckHasDirectionality(context));
 
-  final Rect itemRect = offset & const Size(0, 0);
+  final itemRect = offset & const Size(0, 0);
 
   return navigator.push(_PopUpRoute<T>(
     target: offset,
@@ -118,18 +117,18 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   Future<void> openPopup() {
     assert(_dropdownRoute == null, 'You can NOT open a popup twice');
-    final NavigatorState navigator =
+    final navigator =
         widget.navigatorKey?.currentState ?? Navigator.of(context);
-    final RenderBox itemBox = context.findRenderObject()! as RenderBox;
-    Offset leftTarget = itemBox.localToGlobal(
+    final itemBox = context.findRenderObject()! as RenderBox;
+    var leftTarget = itemBox.localToGlobal(
       itemBox.size.centerLeft(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
-    Offset centerTarget = itemBox.localToGlobal(
+    var centerTarget = itemBox.localToGlobal(
       itemBox.size.center(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
-    Offset rightTarget = itemBox.localToGlobal(
+    var rightTarget = itemBox.localToGlobal(
       itemBox.size.centerRight(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
@@ -138,7 +137,7 @@ class PopUpState<T> extends State<PopUp<T>> {
     final directionality = Directionality.of(context);
 
     // The target according to the current directionality
-    final Offset directionalityTarget = () {
+    final directionalityTarget = () {
       switch (widget.placement) {
         case FlyoutPlacement.start:
           if (directionality == TextDirection.ltr) {
@@ -159,7 +158,7 @@ class PopUpState<T> extends State<PopUp<T>> {
     }();
 
     // The placement according to the current directionality
-    final FlyoutPlacement directionalityPlacement = () {
+    final directionalityPlacement = () {
       switch (widget.placement) {
         case FlyoutPlacement.start:
           if (directionality == TextDirection.rtl) {
@@ -177,7 +176,7 @@ class PopUpState<T> extends State<PopUp<T>> {
       }
     }();
 
-    final Rect itemRect = directionalityTarget & itemBox.size;
+    final itemRect = directionalityTarget & itemBox.size;
     _dropdownRoute = _PopUpRoute<T>(
       target: centerTarget,
       placementOffset: directionalityTarget,
@@ -530,7 +529,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasDirectionality(context));
 
-    final TextDirection? textDirection = Directionality.maybeOf(context);
+    final textDirection = Directionality.maybeOf(context);
     final Widget menu = _PopUpMenu<T>(
       route: route,
       buttonRect: buttonRect,
@@ -591,7 +590,7 @@ class _ContentManagerState extends State<ContentManager> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final context = key.currentContext;
       if (context == null) return;
-      final RenderBox box = context.findRenderObject() as RenderBox;
+      final box = context.findRenderObject() as RenderBox;
       setState(() => size = box.size);
     });
     super.initState();

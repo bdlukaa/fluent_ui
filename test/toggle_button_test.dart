@@ -6,7 +6,7 @@ import 'app_test.dart';
 void main() {
   testWidgets('ToggleButton change state accordingly',
       (WidgetTester tester) async {
-    bool toggleButtonValue = false;
+    var toggleButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(

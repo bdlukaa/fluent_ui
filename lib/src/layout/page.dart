@@ -208,8 +208,8 @@ class PageHeader extends StatelessWidget {
   static double horizontalPadding(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 640.0;
-    final double horizontalPadding =
+    final isSmallScreen = screenWidth < 640.0;
+    final horizontalPadding =
         isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
     return horizontalPadding;
   }

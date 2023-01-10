@@ -44,7 +44,7 @@ class FlyoutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     return PhysicalModel(
       elevation: elevation,
       color: Colors.transparent,

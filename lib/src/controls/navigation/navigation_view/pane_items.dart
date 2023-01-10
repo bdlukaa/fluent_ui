@@ -117,7 +117,7 @@ class PaneItem extends NavigationPaneItem {
     bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
-    final PaneDisplayMode mode = displayMode ??
+    final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
@@ -125,15 +125,14 @@ class PaneItem extends NavigationPaneItem {
 
     assert(debugCheckHasFluentTheme(context));
 
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final String titleText = title?.getProperty<String>() ?? '';
+    final theme = NavigationPaneTheme.of(context);
+    final titleText = title?.getProperty<String>() ?? '';
 
-    final TextStyle baseStyle =
-        title?.getProperty<TextStyle>() ?? const TextStyle();
+    final baseStyle = title?.getProperty<TextStyle>() ?? const TextStyle();
 
-    final bool isTop = mode == PaneDisplayMode.top;
-    final bool isMinimal = mode == PaneDisplayMode.minimal;
-    final bool isCompact = mode == PaneDisplayMode.compact;
+    final isTop = mode == PaneDisplayMode.top;
+    final isMinimal = mode == PaneDisplayMode.minimal;
+    final isCompact = mode == PaneDisplayMode.compact;
 
     final onItemTapped = onPressed == null && onTap == null
         ? null
@@ -149,8 +148,8 @@ class PaneItem extends NavigationPaneItem {
       cursor: mouseCursor,
       focusEnabled: isMinimal ? (maybeBody?.minimalPaneOpen ?? false) : true,
       builder: (context, states) {
-        TextStyle textStyle = () {
-          TextStyle? style = !isTop
+        var textStyle = () {
+          var style = !isTop
               ? (selected
                   ? theme.selectedTextStyle?.resolve(states)
                   : theme.unselectedTextStyle?.resolve(states))
@@ -283,7 +282,7 @@ class PaneItem extends NavigationPaneItem {
             margin: const EdgeInsets.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
-                final ButtonState<Color?> tileColor = this.tileColor ??
+                final tileColor = this.tileColor ??
                     theme.tileColor ??
                     kDefaultTileColor(
                       context,
@@ -329,7 +328,7 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
-    final int? index = () {
+    final index = () {
       if (itemIndex != null) return itemIndex;
       if (maybeBody?.pane?.indicator != null) {
         return maybeBody!.pane!.effectiveIndexOf(this);
@@ -714,7 +713,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     // Indexes
     // Ensure, if the child item is not visible, this is shown as the selected
     // item
-    int realIndex = body.pane!.effectiveIndexOf(widget.item);
+    var realIndex = body.pane!.effectiveIndexOf(widget.item);
     final childrenIndexes = body.pane!.effectiveItems.where((item) {
       return widget.items.contains(item);
     }).map((item) => body.pane!.effectiveIndexOf(item));
@@ -724,7 +723,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
     // the item is this item with changes on the trailing widget: the padding
     // and rotation animation
-    final Widget item = widget.item
+    final item = widget.item
         .copyWith(
       trailing: GestureDetector(
         onTap: toggleOpen,

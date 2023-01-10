@@ -22,7 +22,7 @@ void main() {
   testWidgets(
     'DropdownButton flyout should be displayed above if not enough space',
     (tester) async {
-      Size screenSize = const Size(600, 600);
+      const screenSize = Size(600, 600);
       await tester.pumpWidget(SizedBox.fromSize(
         size: screenSize,
         child: wrapApp(

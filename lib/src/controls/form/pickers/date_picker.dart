@@ -1,10 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
+import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-
-import 'pickers.dart';
 
 /// The fields used on date picker.
 enum DatePickerField {
@@ -513,8 +511,10 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               onSelectedItemChanged: (index) {
                 final month = index + 1;
                 final daysInMonth = _getDaysInMonth(month, localDate.year);
-                int day = localDate.day;
+
+                var day = localDate.day;
                 if (day > daysInMonth) day = daysInMonth;
+
                 handleDateChanged(DateTime(
                   localDate.year,
                   month,

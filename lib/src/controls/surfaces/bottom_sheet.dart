@@ -127,7 +127,7 @@ class _BottomSheetState extends State<_BottomSheet> {
   final GlobalKey _childKey = GlobalKey(debugLabel: '_BottomSheet child');
 
   double get _childHeight {
-    final RenderBox renderBox =
+    final renderBox =
         _childKey.currentContext!.findRenderObject()! as RenderBox;
     return renderBox.size.height;
   }
@@ -148,10 +148,9 @@ class _BottomSheetState extends State<_BottomSheet> {
   void _handleDragEnd(DragEndDetails details) {
     assert(widget.enableDrag);
     if (_dismissUnderway) return;
-    bool isClosing = false;
+    var isClosing = false;
     if (details.velocity.pixelsPerSecond.dy > _minFlingVelocity) {
-      final double flingVelocity =
-          -details.velocity.pixelsPerSecond.dy / _childHeight;
+      final flingVelocity = -details.velocity.pixelsPerSecond.dy / _childHeight;
       if (widget.animationController!.value > 0.0) {
         widget.animationController!.fling(velocity: flingVelocity);
       }
@@ -186,12 +185,10 @@ class _BottomSheetState extends State<_BottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final BottomSheetThemeData bottomSheetTheme = BottomSheetTheme.of(context);
-    final Color? color =
-        widget.backgroundColor ?? bottomSheetTheme.backgroundColor;
-    final double elevation =
-        widget.elevation ?? bottomSheetTheme.elevation ?? 0;
-    final ShapeBorder? shape = widget.shape ?? bottomSheetTheme.shape;
+    final bottomSheetTheme = BottomSheetTheme.of(context);
+    final color = widget.backgroundColor ?? bottomSheetTheme.backgroundColor;
+    final elevation = widget.elevation ?? bottomSheetTheme.elevation ?? 0;
+    final shape = widget.shape ?? bottomSheetTheme.shape;
 
     final Widget bottomSheet = PhysicalModel(
       color: Colors.black,
@@ -201,7 +198,7 @@ class _BottomSheetState extends State<_BottomSheet> {
               ? shape.borderRadius as BorderRadius
               : BorderRadius.zero
           : BorderRadius.zero,
-      child: Container(
+      child: DecoratedBox(
         key: _childKey,
         decoration: ShapeDecoration(
           shape: shape ?? const RoundedRectangleBorder(),
@@ -236,7 +233,6 @@ class _ModalBottomSheetLayout extends SingleChildLayoutDelegate {
     return BoxConstraints(
       minWidth: constraints.maxWidth,
       maxWidth: constraints.maxWidth,
-      minHeight: 0.0,
       maxHeight: isScrollControlled
           ? constraints.maxHeight
           : constraints.maxHeight * 9.0 / 16.0,
@@ -309,9 +305,9 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
-    final FluentLocalizations localizations = FluentLocalizations.of(context);
-    final String routeLabel = _getRouteLabel(localizations);
+    final mediaQuery = MediaQuery.of(context);
+    final localizations = FluentLocalizations.of(context);
+    final routeLabel = _getRouteLabel(localizations);
 
     return AnimatedBuilder(
       animation: widget.route!.animation!,
@@ -333,7 +329,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
       builder: (BuildContext context, Widget? child) {
         // Disable the initial animation when accessible navigation is on so
         // that the semantics are added to the tree at the correct time.
-        final double animationValue = animationCurve.transform(
+        final animationValue = animationCurve.transform(
           mediaQuery.accessibleNavigation
               ? 1.0
               : widget.route!.animation!.value,
@@ -420,7 +416,7 @@ class _ModalBottomSheetRoute<T> extends PopupRoute<T> {
       removeTop: true,
       child: Builder(
         builder: (BuildContext context) {
-          final BottomSheetThemeData sheetTheme = BottomSheetTheme.of(context);
+          final sheetTheme = BottomSheetTheme.of(context);
           return _ModalBottomSheet<T>(
             route: this,
             backgroundColor: backgroundColor ?? sheetTheme.backgroundColor,
@@ -480,8 +476,8 @@ class _BottomSheetSuspendedCurve extends ParametricCurve<double> {
       return t;
     }
 
-    final double curveProgress = (t - startingPoint) / (1 - startingPoint);
-    final double transformed = curve.transform(curveProgress);
+    final curveProgress = (t - startingPoint) / (1 - startingPoint);
+    final transformed = curve.transform(curveProgress);
     return lerpDouble(startingPoint, 1, transformed)!;
   }
 
@@ -596,8 +592,7 @@ Future<T?> showBottomSheet<T>({
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasFluentLocalizations(context));
 
-  final NavigatorState navigator =
-      Navigator.of(context, rootNavigator: useRootNavigator);
+  final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
   return navigator.push(_ModalBottomSheetRoute<T>(
     builder: builder,
     capturedThemes:
@@ -825,7 +820,7 @@ class BottomSheetThemeData with Diagnosticable {
   });
 
   factory BottomSheetThemeData.standard(ThemeData style) {
-    final bool isLight = style.brightness.isLight;
+    final isLight = style.brightness.isLight;
     return BottomSheetThemeData(
       backgroundColor:
           isLight ? style.scaffoldBackgroundColor : const Color(0xFF212121),
@@ -863,9 +858,10 @@ class BottomSheetThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(ColorProperty('handleColor', handleColor));
-    properties.add(DiagnosticsProperty('shape', shape));
-    properties.add(DoubleProperty('elevation', elevation));
+    properties
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ColorProperty('handleColor', handleColor))
+      ..add(DiagnosticsProperty('shape', shape))
+      ..add(DoubleProperty('elevation', elevation));
   }
 }

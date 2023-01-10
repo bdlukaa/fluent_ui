@@ -162,7 +162,7 @@ class _BottomNavigationItem extends StatelessWidget {
           return FocusBorder(
             focused: state.isFocused,
             renderOutside: false,
-            child: Container(
+            child: ColoredBox(
               color: ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),
                 state,

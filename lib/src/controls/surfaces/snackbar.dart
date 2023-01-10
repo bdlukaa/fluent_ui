@@ -37,7 +37,7 @@ OverlayEntry showSnackbar(
   VoidCallback? onDismiss,
 }) {
   assert(debugCheckHasOverlay(context));
-  final GlobalKey<SnackbarState> key = snackbar.key is GlobalKey<SnackbarState>
+  final key = snackbar.key is GlobalKey<SnackbarState>
       ? snackbar.key as GlobalKey<SnackbarState>
       : GlobalKey<SnackbarState>();
   final entry = OverlayEntry(builder: (context) {
@@ -131,8 +131,8 @@ class SnackbarState extends State<Snackbar>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final SnackbarThemeData theme = SnackbarTheme.of(context);
-    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
+    final theme = SnackbarTheme.of(context);
+    final visualDensity = FluentTheme.of(context).visualDensity;
     return FadeTransition(
       opacity: controller,
       child: Container(
@@ -281,12 +281,13 @@ class SnackbarThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonThemeData>(
-      'actionStyle',
-      actionStyle,
-      ifNull: 'no style',
-    ));
-    properties.add(DiagnosticsProperty('padding', padding));
-    properties.add(DiagnosticsProperty('decoration', decoration));
+    properties
+      ..add(DiagnosticsProperty<ButtonThemeData>(
+        'actionStyle',
+        actionStyle,
+        ifNull: 'no style',
+      ))
+      ..add(DiagnosticsProperty('padding', padding))
+      ..add(DiagnosticsProperty('decoration', decoration));
   }
 }

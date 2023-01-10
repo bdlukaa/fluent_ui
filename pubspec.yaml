@@ -12,7 +12,11 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
+  # Used on date and time pickers
   intl: ^0.17.0
+
+  # Used on TabView
   scroll_pos: ^0.3.0
 
   # Used on icon generator

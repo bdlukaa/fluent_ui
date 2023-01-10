@@ -103,7 +103,6 @@ class InfoBar extends StatelessWidget {
       if (this.content == null) return null;
       return DefaultTextStyle(
         style: theme.typography.body ?? const TextStyle(),
-        softWrap: true,
         child: this.content!,
       );
     }();
@@ -230,8 +229,7 @@ class InfoBarTheme extends InheritedTheme {
   /// InfoBarThemeData theme = InfoBarTheme.of(context);
   /// ```
   static InfoBarThemeData of(BuildContext context) {
-    final InfoBarTheme? theme =
-        context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
     return InfoBarThemeData.standard(FluentTheme.of(context)).merge(
       theme?.data ?? FluentTheme.of(context).infoBarTheme,
     );
@@ -299,7 +297,6 @@ class InfoBarThemeData with Diagnosticable {
           color: color,
           borderRadius: BorderRadius.circular(4.0),
           border: Border.all(
-            width: 1.0,
             color: style.resources.cardStrokeColorDefault,
           ),
         );

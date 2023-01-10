@@ -1,10 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
 import 'package:fluent_ui/src/intl_script_locale_apply_mixin.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-
-import 'pickers.dart';
 
 /// The time picker gives you a standardized way to let users pick a time value
 /// using touch, mouse, or keyboard input.
@@ -144,7 +143,7 @@ class _TimePickerState extends State<TimePicker>
     if (widget.selected != time) {
       time = widget.selected ?? DateTime.now();
       _hourController.jumpToItem(() {
-        int hour = time.hour - 1;
+        var hour = time.hour - 1;
         if (!widget.use24Format) {
           hour -= 12;
         }
@@ -165,7 +164,7 @@ class _TimePickerState extends State<TimePicker>
     }
     _hourController = FixedExtentScrollController(
       initialItem: () {
-        int hour = time.hour - 1;
+        var hour = time.hour - 1;
         if (!widget.use24Format) {
           hour -= 12;
         }
@@ -242,7 +241,7 @@ class _TimePickerState extends State<TimePicker>
                             return localizations.hour;
                           }
                           late int finalHour;
-                          int hour = time.hour;
+                          var hour = time.hour;
                           if (!widget.use24Format && hour > 12) {
                             finalHour = hour - 12;
                           } else {
@@ -351,7 +350,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     localDate = widget.date;
     final possibleMinutes = List.generate(
       60 ~/ widget.minuteIncrement,
-      (index) => (index * widget.minuteIncrement),
+      (index) => index * widget.minuteIncrement,
     );
     if (!possibleMinutes.contains(localDate.minute)) {
       localDate = DateTime(
@@ -453,7 +452,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (index) {
-                    int hour = index + 1;
+                    var hour = index + 1;
                     if (!widget.use24Format && !isAm) {
                       hour += 12;
                     }
@@ -494,7 +493,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     children: List.generate(
                       60 ~/ widget.minuteIncrement,
                       (index) {
-                        final int minute = index * widget.minuteIncrement;
+                        final minute = index * widget.minuteIncrement;
                         return SizedBox(
                           height: kOneLineTileHeight,
                           child: Center(
@@ -514,7 +513,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (index) {
-                    final int minute = index * widget.minuteIncrement;
+                    final minute = index * widget.minuteIncrement;
                     handleDateChanged(DateTime(
                       localDate.year,
                       localDate.month,
@@ -579,7 +578,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     ],
                     onSelectedItemChanged: (index) {
                       // setState(() {});
-                      int hour = localDate.hour;
+                      var hour = localDate.hour;
                       final isAm = index == 0;
                       if (!widget.use24Format) {
                         // If it was previously am and now it's pm

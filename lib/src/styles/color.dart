@@ -275,7 +275,7 @@ class AccentColor extends ColorSwatch<String> {
   }
 
   Color resolveFrom(BuildContext context, [Brightness? bright]) {
-    final ThemeData? theme = FluentTheme.maybeOf(context);
+    final theme = FluentTheme.maybeOf(context);
     final brightness = bright ?? theme?.brightness ?? Brightness.light;
     return resolveFromBrightness(brightness);
   }
@@ -404,7 +404,6 @@ extension ColorExtension on Color {
 
 class ColorConst extends Color {
   const ColorConst.withOpacity(int value, double opacity)
-      : super(
-            ((((opacity * 0xff ~/ 1) & 0xff) << 24) | ((0x00ffffff & value))) &
-                0xFFFFFFFF);
+      : super(((((opacity * 0xff ~/ 1) & 0xff) << 24) | (0x00ffffff & value)) &
+            0xFFFFFFFF);
 }

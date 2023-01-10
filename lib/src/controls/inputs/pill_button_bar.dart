@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kMinHeight = 28.0;
 const double _kMaxHeight = 46.0;
@@ -105,13 +104,13 @@ class _PillButtonBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = PillButtonBarTheme.of(context);
-    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
+    final visualDensity = FluentTheme.of(context).visualDensity;
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
-        final Color selectedColor =
+        final selectedColor =
             theme.selectedColor?.resolve(states) ?? Colors.transparent;
-        final Color unselectedColor = theme.unselectedColor?.resolve(states) ??
+        final unselectedColor = theme.unselectedColor?.resolve(states) ??
             FluentTheme.of(context).accentColor.dark;
         return Align(
           alignment: AlignmentDirectional.center,

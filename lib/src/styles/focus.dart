@@ -50,21 +50,22 @@ class FocusBorder extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      FlagProperty('focused', value: focused, ifFalse: 'unfocused'),
-    );
-    properties.add(DiagnosticsProperty<FocusThemeData>('style', style));
-    properties.add(FlagProperty(
-      'renderOutside',
-      value: renderOutside,
-      ifFalse: 'render inside',
-    ));
-    properties.add(FlagProperty(
-      'useStackApproach',
-      value: useStackApproach,
-      defaultValue: true,
-      ifFalse: 'use border approach',
-    ));
+    properties
+      ..add(
+        FlagProperty('focused', value: focused, ifFalse: 'unfocused'),
+      )
+      ..add(DiagnosticsProperty<FocusThemeData>('style', style))
+      ..add(FlagProperty(
+        'renderOutside',
+        value: renderOutside,
+        ifFalse: 'render inside',
+      ))
+      ..add(FlagProperty(
+        'useStackApproach',
+        value: useStackApproach,
+        defaultValue: true,
+        ifFalse: 'use border approach',
+      ));
   }
 
   static Widget _buildBorder(
@@ -91,7 +92,7 @@ class FocusBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = FocusTheme.of(context).merge(this.style);
-    final double borderWidth =
+    final borderWidth =
         (style.primaryBorder?.width ?? 0) + (style.secondaryBorder?.width ?? 0);
     if (useStackApproach) {
       final renderOutside = this.renderOutside ?? style.renderOutside ?? true;
@@ -164,7 +165,7 @@ class FocusThemeData with Diagnosticable {
     return FocusThemeData(
       borderRadius: BorderRadius.circular(6.0),
       primaryBorder: BorderSide(width: 2, color: primaryBorderColor),
-      secondaryBorder: BorderSide(width: 1, color: secondaryBorderColor),
+      secondaryBorder: BorderSide(color: secondaryBorderColor),
       glowColor: glowColor,
       glowFactor: 0.0,
       renderOutside: true,
@@ -245,32 +246,33 @@ class FocusThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BorderSide>(
-      'primaryBorder',
-      primaryBorder,
-      ifNull: 'No primary border',
-    ));
-    properties.add(DiagnosticsProperty<BorderSide>(
-      'secondaryBorder',
-      secondaryBorder,
-      ifNull: 'No secondary border',
-    ));
-    properties.add(DiagnosticsProperty<BorderRadius>(
-      'borderRadius',
-      borderRadius,
-      defaultValue: BorderRadius.zero,
-    ));
-    properties.add(DoubleProperty('glowFactor', glowFactor, defaultValue: 0.0));
-    properties.add(ColorProperty(
-      'glowColor',
-      glowColor,
-      defaultValue: Colors.transparent,
-    ));
-    properties.add(FlagProperty(
-      'renderOutside',
-      value: renderOutside,
-      defaultValue: true,
-      ifFalse: 'renderInside',
-    ));
+    properties
+      ..add(DiagnosticsProperty<BorderSide>(
+        'primaryBorder',
+        primaryBorder,
+        ifNull: 'No primary border',
+      ))
+      ..add(DiagnosticsProperty<BorderSide>(
+        'secondaryBorder',
+        secondaryBorder,
+        ifNull: 'No secondary border',
+      ))
+      ..add(DiagnosticsProperty<BorderRadius>(
+        'borderRadius',
+        borderRadius,
+        defaultValue: BorderRadius.zero,
+      ))
+      ..add(DoubleProperty('glowFactor', glowFactor, defaultValue: 0.0))
+      ..add(ColorProperty(
+        'glowColor',
+        glowColor,
+        defaultValue: Colors.transparent,
+      ))
+      ..add(FlagProperty(
+        'renderOutside',
+        value: renderOutside,
+        defaultValue: true,
+        ifFalse: 'renderInside',
+      ));
   }
 }

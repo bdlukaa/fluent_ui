@@ -91,7 +91,7 @@ class YesNoPickerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    ButtonStyle buttonStyle = ButtonStyle(
+    final buttonStyle = ButtonStyle(
       elevation: ButtonState.all(0.0),
       backgroundColor: ButtonState.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
@@ -273,7 +273,7 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
 
     if (forward) {
       final currentItem = selectedItem;
-      int to = currentItem + 1;
+      var to = currentItem + 1;
       if (currentItem == amount - 1) to = 0;
 
       return animateToItem(
@@ -283,7 +283,7 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
       );
     } else {
       final currentItem = selectedItem;
-      int to = currentItem - 1;
+      var to = currentItem - 1;
       if (currentItem == 0) to = amount - 1;
 
       return animateToItem(
@@ -345,7 +345,7 @@ class _PickerState extends State<Picker> {
         // value from the Win UI 3 Gallery
         final centeredOffset = widget.pickerHeight * 0.41;
         // the popup menu y is the [button y] - [y of highlight tile]
-        double y = childOffset.dy - centeredOffset;
+        var y = childOffset.dy - centeredOffset;
 
         // if the popup menu [y] + picker height overlaps the screen height, make
         // it to the bottom of the screen

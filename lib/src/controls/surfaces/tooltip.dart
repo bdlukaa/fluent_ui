@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:ui' show lerpDouble;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 /// A tooltip is a popup that contains additional information about another
 /// control or object. Tooltips display automatically when the user moves focus
@@ -101,8 +100,8 @@ class Tooltip extends StatefulWidget {
   static void _concealOtherTooltips(_TooltipState current) {
     if (_openedTooltips.isNotEmpty) {
       // Avoid concurrent modification.
-      final List<_TooltipState> openedTooltips = _openedTooltips.toList();
-      for (final _TooltipState state in openedTooltips) {
+      final openedTooltips = _openedTooltips.toList();
+      for (final state in openedTooltips) {
         if (state == current) {
           continue;
         }
@@ -126,8 +125,8 @@ class Tooltip extends StatefulWidget {
   static bool dismissAllToolTips() {
     if (_openedTooltips.isNotEmpty) {
       // Avoid concurrent modification.
-      final List<_TooltipState> openedTooltips = _openedTooltips.toList();
-      for (final _TooltipState state in openedTooltips) {
+      final openedTooltips = _openedTooltips.toList();
+      for (final state in openedTooltips) {
         state._dismissTooltip(immediately: true);
       }
       return true;
@@ -246,7 +245,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     if (!mounted) {
       return;
     }
-    final bool mouseIsConnected =
+    final mouseIsConnected =
         RendererBinding.instance.mouseTracker.mouseIsConnected;
     if (mouseIsConnected != _mouseIsConnected) {
       setState(() {
@@ -319,11 +318,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     _showTimer?.cancel();
     _showTimer = null;
     if (!_entry!.mounted) {
-      final OverlayState overlayState = Overlay.of(
-        context,
-        debugRequiredFor: widget,
-      )!;
-      overlayState.insert(_entry!);
+      Overlay.of(context, debugRequiredFor: widget)!.insert(_entry!);
     }
     SemanticsService.tooltip(_tooltipMessage);
     _controller.forward();
@@ -369,13 +364,13 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   }
 
   void _createNewEntry() {
-    final OverlayState overlayState = Overlay.of(
+    final overlayState = Overlay.of(
       context,
       debugRequiredFor: widget,
     )!;
 
-    final RenderBox box = context.findRenderObject()! as RenderBox;
-    Offset target = box.localToGlobal(
+    final box = context.findRenderObject()! as RenderBox;
+    var target = box.localToGlobal(
       box.size.center(Offset.zero),
       ancestor: overlayState.context.findRenderObject(),
     );
@@ -469,7 +464,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
   void _handlePress() {
     _pressActivated = true;
-    final bool tooltipCreated = ensureTooltipVisible();
+    final tooltipCreated = ensureTooltipVisible();
     if (tooltipCreated && enableFeedback) {
       if (triggerMode == TooltipTriggerMode.longPress) {
         Feedback.forLongPress(context);
@@ -489,9 +484,8 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     }
     assert(debugCheckHasFluentTheme(context));
     assert(Overlay.of(context, debugRequiredFor: widget) != null);
-    final ThemeData theme = FluentTheme.of(context);
-    final TooltipThemeData tooltipTheme =
-        TooltipTheme.of(context).merge(widget.style);
+    final theme = FluentTheme.of(context);
+    final tooltipTheme = TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
     defaultTextStyle = theme.typography.body!.copyWith(
@@ -759,23 +753,24 @@ class TooltipThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('height', height));
-    properties.add(DoubleProperty('verticalOffset', verticalOffset));
-    properties.add(
-      DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding),
-    );
-    properties.add(
-      DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin),
-    );
-    properties.add(FlagProperty(
-      'preferBelow',
-      value: preferBelow,
-      ifFalse: 'prefer above',
-    ));
-    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(DiagnosticsProperty<Duration>('waitDuration', waitDuration));
-    properties.add(DiagnosticsProperty<Duration>('showDuration', showDuration));
-    properties.add(DiagnosticsProperty<TextStyle>('textStyle', textStyle));
+    properties
+      ..add(DoubleProperty('height', height))
+      ..add(DoubleProperty('verticalOffset', verticalOffset))
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding),
+      )
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin),
+      )
+      ..add(FlagProperty(
+        'preferBelow',
+        value: preferBelow,
+        ifFalse: 'prefer above',
+      ))
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(DiagnosticsProperty<Duration>('waitDuration', waitDuration))
+      ..add(DiagnosticsProperty<Duration>('showDuration', showDuration))
+      ..add(DiagnosticsProperty<TextStyle>('textStyle', textStyle));
   }
 }
 

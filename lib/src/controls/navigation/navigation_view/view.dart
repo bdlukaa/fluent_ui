@@ -187,7 +187,6 @@ class NavigationViewState extends State<NavigationView> {
     paneScrollController = widget.pane?.scrollController ??
         ScrollController(
           debugLabel: '${widget.runtimeType} scroll controller',
-          keepScrollOffset: true,
         );
     paneScrollController.addListener(_handleScrollControllerEvent);
 
@@ -281,14 +280,14 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasDirectionality(context));
 
-    final Brightness brightness = FluentTheme.of(context).brightness;
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final FluentLocalizations localizations = FluentLocalizations.of(context);
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final brightness = FluentTheme.of(context).brightness;
+    final theme = NavigationPaneTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+    final mediaQuery = MediaQuery.of(context);
     final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
       top: widget.appBar?.finalHeight(context) ?? 0.0,
     );
-    final TextDirection direction = Directionality.of(context);
+    final direction = Directionality.of(context);
 
     Color? overlayBackgroundColor() {
       if (theme.backgroundColor == null) {
@@ -337,7 +336,7 @@ class NavigationViewState extends State<NavigationView> {
         /// - A left, icon-only, nav pane (compact) on medium window widths
         /// (641px to 1007px).
         /// - Only a menu button (minimal) on small window widths (640px or less).
-        double width = consts.biggest.width;
+        var width = consts.biggest.width;
         if (width.isInfinite) width = mediaQuery.size.width;
 
         if (width <= 640) {
@@ -352,7 +351,7 @@ class NavigationViewState extends State<NavigationView> {
       }
       assert(displayMode != PaneDisplayMode.auto);
 
-      Widget appBar = () {
+      var appBar = () {
         if (widget.appBar != null) {
           return _NavigationAppBar(
             appBar: widget.appBar!,
@@ -458,11 +457,11 @@ class NavigationViewState extends State<NavigationView> {
                   ) as bool? ??
                   _compactOverlayOpen;
 
-              double openSize =
+              var openSize =
                   pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-              final bool noOverlayRequired = consts.maxWidth / 2.5 > openSize;
-              final bool openedWithoutOverlay =
+              final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
+              final openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
               // print(
@@ -648,7 +647,6 @@ class NavigationViewState extends State<NavigationView> {
                       color: Colors.black,
                       child: Mica(
                         backgroundColor: overlayBackgroundColor(),
-                        elevation: 0.0,
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -790,7 +788,7 @@ class NavigationAppBar with Diagnosticable {
         widget = leading!;
       } else if (automaticallyImplyLeading && imply) {
         final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-        final bool canPop = parentRoute?.canPop ?? false;
+        final canPop = parentRoute?.canPop ?? false;
 
         assert(debugCheckHasFluentLocalizations(context));
         assert(debugCheckHasFluentTheme(context));
@@ -855,9 +853,8 @@ class _NavigationAppBar extends StatelessWidget {
 
     final mediaQuery = MediaQuery.of(context);
 
-    final PaneDisplayMode displayMode =
-        InheritedNavigationView.maybeOf(context)?.displayMode ??
-            PaneDisplayMode.top;
+    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
@@ -873,7 +870,6 @@ class _NavigationAppBar extends StatelessWidget {
           child: DefaultTextStyle(
             style:
                 FluentTheme.of(context).typography.caption ?? const TextStyle(),
-            overflow: TextOverflow.clip,
             maxLines: 1,
             softWrap: false,
             child: appBar.title!,

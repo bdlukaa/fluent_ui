@@ -72,7 +72,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   bool canSelectAll(TextSelectionDelegate delegate) {
     // Allow SelectAll when selection is not collapsed, unless everything has
     // already been selected. Same behavior as Android.
-    final TextEditingValue value = delegate.textEditingValue;
+    final value = delegate.textEditingValue;
     return delegate.selectAllEnabled &&
         value.text.isNotEmpty &&
         !(value.selection.start == 0 &&
@@ -173,9 +173,9 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     assert(debugCheckHasMediaQuery(context));
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final mediaQuery = MediaQuery.of(context);
 
-    final Offset midpointAnchor = Offset(
+    final midpointAnchor = Offset(
       (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
         mediaQuery.padding.left,
         mediaQuery.size.width - mediaQuery.padding.right,
@@ -184,8 +184,8 @@ class _FluentTextSelectionControlsToolbarState
     );
 
     assert(debugCheckHasFluentLocalizations(context));
-    final FluentLocalizations localizations = FluentLocalizations.of(context);
-    final List<Widget> items = <Widget>[];
+    final localizations = FluentLocalizations.of(context);
+    final items = <Widget>[];
 
     void addToolbarButton(
       String text,
@@ -285,10 +285,10 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final mediaQuery = MediaQuery.of(context);
 
-    final double paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
-    final Offset localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+    final paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
+    final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
 
     final radius = BorderRadius.circular(6.0);
 

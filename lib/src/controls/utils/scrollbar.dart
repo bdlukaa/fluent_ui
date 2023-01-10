@@ -52,9 +52,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       vsync: this,
       duration: const Duration(milliseconds: 90),
     );
-    _hoverAnimationController.addListener(() {
-      updateScrollbarPainter();
-    });
+    _hoverAnimationController.addListener(updateScrollbarPainter);
   }
 
   @override
@@ -384,7 +382,6 @@ class ScrollbarThemeData with Diagnosticable {
         vertical: 4.0,
       ),
       hoveringPadding: const EdgeInsets.symmetric(
-        horizontal: 0.0,
         vertical: 4.0,
       ),
       expandContractAnimationDuration: theme.fastAnimationDuration,
@@ -527,7 +524,6 @@ class ScrollbarThemeData with Diagnosticable {
         'hoveringPadding',
         hoveringPadding,
         defaultValue: const EdgeInsets.symmetric(
-          horizontal: 0.0,
           vertical: 4.0,
         ),
       ));

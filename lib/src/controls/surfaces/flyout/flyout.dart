@@ -274,7 +274,6 @@ class _FlyoutState extends State<Flyout> {
         );
       case FlyoutOpenMode.longHover:
         return MouseRegion(
-          opaque: true,
           onEnter: (event) {
             longHoverTimer = Timer(widget.longHoverDuration, controller.open);
           },

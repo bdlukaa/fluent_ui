@@ -399,7 +399,7 @@ class _FluentAppState extends State<FluentApp> {
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    ThemeData data = () {
+    final data = () {
       late ThemeData result;
       if (usedarkStyle) {
         result = widget.darkTheme ?? widget.theme ?? ThemeData();

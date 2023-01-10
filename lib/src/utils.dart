@@ -1,5 +1,5 @@
-import 'dart:ui' as ui;
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -92,11 +92,10 @@ Offset horizontalPositionDependentBox({
   double margin = 10.0,
 }) {
   // Horizontal DIRECTION
-  final bool fitsLeft =
+  final fitsLeft =
       target.dx + horizontalOffset + childSize.width <= size.width - margin;
-  final bool fitsRight =
-      target.dx - horizontalOffset - childSize.width >= margin;
-  final bool tooltipLeft =
+  final fitsRight = target.dx - horizontalOffset - childSize.width >= margin;
+  final tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
   double x;
   if (tooltipLeft) {
@@ -109,9 +108,8 @@ Offset horizontalPositionDependentBox({
   if (size.height - margin * 2.0 < childSize.height) {
     y = (size.height - childSize.height) / 2.0;
   } else {
-    final double normalizedTargetY =
-        target.dy.clamp(margin, size.height - margin);
-    final double edge = margin + childSize.height / 2.0;
+    final normalizedTargetY = target.dy.clamp(margin, size.height - margin);
+    final edge = margin + childSize.height / 2.0;
     if (normalizedTargetY < edge) {
       y = margin;
     } else if (normalizedTargetY > size.height - edge) {

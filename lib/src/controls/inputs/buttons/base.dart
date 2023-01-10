@@ -1,7 +1,6 @@
 // import 'package:flutter/material.dart' as m;
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// {@template fluent_ui.buttons.base}
 /// Buttons give people a way to trigger an action. They’re typically found in
@@ -80,11 +79,11 @@ abstract class BaseButton extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'));
-    properties.add(
-        DiagnosticsProperty<ButtonStyle>('style', style, defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
+      ..add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'))
+      ..add(
+          DiagnosticsProperty<ButtonStyle>('style', style, defaultValue: null))
+      ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
+          defaultValue: null));
   }
 }
 
@@ -92,16 +91,16 @@ class _BaseButtonState extends State<BaseButton> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
 
-    final ButtonStyle? widgetStyle = widget.style;
-    final ButtonStyle? themeStyle = widget.themeStyleOf(context);
-    final ButtonStyle defaultStyle = widget.defaultStyleOf(context);
+    final widgetStyle = widget.style;
+    final themeStyle = widget.themeStyleOf(context);
+    final defaultStyle = widget.defaultStyleOf(context);
 
     T? effectiveValue<T>(T? Function(ButtonStyle? style) getProperty) {
-      final T? widgetValue = getProperty(widgetStyle);
-      final T? themeValue = getProperty(themeStyle);
-      final T? defaultValue = getProperty(defaultStyle);
+      final widgetValue = getProperty(widgetStyle);
+      final themeValue = getProperty(themeStyle);
+      final defaultValue = getProperty(defaultStyle);
       return widgetValue ?? themeValue ?? defaultValue;
     }
 
@@ -119,32 +118,32 @@ class _BaseButtonState extends State<BaseButton> {
           );
         }
 
-        final double? resolvedElevation =
+        final resolvedElevation =
             resolve<double?>((ButtonStyle? style) => style?.elevation);
-        final TextStyle? resolvedTextStyle = theme.typography.body?.merge(
+        final resolvedTextStyle = theme.typography.body?.merge(
             resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle));
-        final Color? resolvedBackgroundColor =
+        final resolvedBackgroundColor =
             resolve<Color?>((ButtonStyle? style) => style?.backgroundColor);
-        final Color? resolvedForegroundColor =
+        final resolvedForegroundColor =
             resolve<Color?>((ButtonStyle? style) => style?.foregroundColor);
-        final Color? resolvedShadowColor =
+        final resolvedShadowColor =
             resolve<Color?>((ButtonStyle? style) => style?.shadowColor);
-        final EdgeInsetsGeometry resolvedPadding = resolve<EdgeInsetsGeometry?>(
+        final resolvedPadding = resolve<EdgeInsetsGeometry?>(
                 (ButtonStyle? style) => style?.padding) ??
             EdgeInsets.zero;
-        final BorderSide? resolvedBorder =
+        final resolvedBorder =
             resolve<BorderSide?>((ButtonStyle? style) => style?.border);
-        final OutlinedBorder resolvedShape =
+        final resolvedShape =
             resolve<OutlinedBorder?>((ButtonStyle? style) => style?.shape) ??
                 const RoundedRectangleBorder();
 
-        final EdgeInsetsGeometry padding = resolvedPadding
+        final padding = resolvedPadding
             .add(EdgeInsets.symmetric(
               horizontal: theme.visualDensity.horizontal,
               vertical: theme.visualDensity.vertical,
             ))
             .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
-        final double? iconSize = resolve<double?>((style) => style?.iconSize);
+        final iconSize = resolve<double?>((style) => style?.iconSize);
         Widget result = PhysicalModel(
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? Colors.black,

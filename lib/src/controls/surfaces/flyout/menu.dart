@@ -50,7 +50,7 @@ class MenuFlyout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasLeading = () {
+    final hasLeading = () {
       try {
         items.whereType<MenuFlyoutItem>().firstWhere((i) => i.leading != null);
         return true;

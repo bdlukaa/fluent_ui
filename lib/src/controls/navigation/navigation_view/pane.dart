@@ -216,7 +216,7 @@ class NavigationPane with Diagnosticable {
 
   /// A list of all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
-    final List<NavigationPaneItem> all = items + footerItems;
+    final all = items + footerItems;
 
     {
       final expandItems = LinkedList<_PaneItemExpanderItem>();
@@ -423,7 +423,7 @@ class NavigationPaneSize with Diagnosticable {
 
   /// Gets the open pane width with constraints applied.
   double get openPaneWidth {
-    double paneWidth = openWidth ?? kOpenNavigationPaneWidth;
+    var paneWidth = openWidth ?? kOpenNavigationPaneWidth;
     if (openMaxWidth != null && paneWidth > openMaxWidth!) {
       paneWidth = openMaxWidth!;
     }
@@ -565,7 +565,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   ) {
     if (item is PaneItemHeader) {
       final theme = NavigationPaneTheme.of(context);
-      final TextStyle style = item.header.getProperty<TextStyle>() ??
+      final style = item.header.getProperty<TextStyle>() ??
           theme.itemHeaderTextStyle ??
           DefaultTextStyle.of(context).style;
 
@@ -584,7 +584,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         context,
         selected,
         () => _onPressed(item),
-        onItemPressed: (item) => _onPressed(item),
+        onItemPressed: _onPressed,
         // only show the text if the item is not in the footer
         showTextOnTop: !widget.pane.footerItems.contains(item),
         displayMode: PaneDisplayMode.top,
@@ -633,7 +633,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           hiddenPaneItems.contains(_localItemHold.indexOf(selectedItem))) {
         generateLocalItemHold();
 
-        int item = hiddenPaneItems.first - 1;
+        var item = hiddenPaneItems.first - 1;
         while (widget.pane.items[item] is! PaneItem) {
           item--;
           if (item.isNegative) {
@@ -736,7 +736,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
         ...widget.pane.footerItems.map((item) {
           return _buildItem(context, item, height);
-        }).toList(),
+        }),
       ]),
     );
   }
@@ -803,17 +803,16 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
   @override
   Widget build(BuildContext context) {
     final size = ContentSizeInfo.of(context).size;
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
+    final theme = NavigationPaneTheme.of(context);
 
-    final String titleText = item.title?.getProperty<String>() ?? '';
-    final TextStyle baseStyle =
-        item.title?.getProperty<TextStyle>() ?? const TextStyle();
+    final titleText = item.title?.getProperty<String>() ?? '';
+    final baseStyle = item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
-        TextStyle textStyle = () {
-          TextStyle? style = theme.unselectedTextStyle?.resolve(states);
+        var textStyle = () {
+          var style = theme.unselectedTextStyle?.resolve(states);
           if (style == null) return baseStyle;
           return style.merge(baseStyle);
         }();
@@ -1017,9 +1016,7 @@ class _CompactNavigationPane extends StatelessWidget {
         () {
           pane.changeTo(item);
         },
-        onItemPressed: (item) {
-          pane.changeTo(item);
-        },
+        onItemPressed: pane.changeTo,
       );
     } else if (item is PaneItem) {
       final selected = pane.isSelected(item);
@@ -1043,7 +1040,7 @@ class _CompactNavigationPane extends StatelessWidget {
     final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding =
         EdgeInsetsDirectional.only(bottom: 8.0);
-    final bool showReplacement =
+    final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
       key: paneKey,
@@ -1223,10 +1220,9 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       }
       return null;
     }();
-    double paneWidth =
-        widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+    var paneWidth = widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-    double? paneHeaderHeight = widget.pane.size?.headerHeight;
+    var paneHeaderHeight = widget.pane.size?.headerHeight;
     if (widget.pane.header == null && menuButton == null) {
       paneHeaderHeight = -1.0;
     }
@@ -1280,7 +1276,6 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 shrinkWrap: true,
                 key: widget.listKey,
                 primary: true,
-                addAutomaticKeepAlives: true,
                 children: widget.pane.items.map((item) {
                   return _OpenNavigationPane.buildItem(
                     context,

@@ -58,8 +58,9 @@ class ProgressBar extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('value', value, ifNull: 'indeterminate'));
-    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+    properties
+      ..add(DoubleProperty('value', value, ifNull: 'indeterminate'))
+      ..add(DoubleProperty('strokeWidth', strokeWidth));
   }
 }
 
@@ -111,7 +112,7 @@ class _ProgressBarState extends State<ProgressBar>
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            double deltaValue = _controller.value - lastValue;
+            var deltaValue = _controller.value - lastValue;
             lastValue = _controller.value;
             if (deltaValue < 0) deltaValue++; // repeat
             return CustomPaint(
@@ -312,8 +313,9 @@ class ProgressRing extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('value', value, ifNull: 'indeterminate'));
-    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+    properties
+      ..add(DoubleProperty('value', value, ifNull: 'indeterminate'))
+      ..add(DoubleProperty('strokeWidth', strokeWidth));
   }
 }
 
@@ -453,7 +455,7 @@ class _RingPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth,
     );
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round

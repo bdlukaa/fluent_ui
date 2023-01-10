@@ -199,7 +199,6 @@ class _DropDownButtonState extends State<DropDownButton> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: buttonChildren,
               ),
             );

@@ -137,17 +137,18 @@ class HorizontalSlidePageTransition extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(PercentProperty(
-      'animationValue',
-      animation.value,
-      ifNull: 'stopped',
-    ));
-    properties.add(FlagProperty(
-      'fromLeft',
-      value: fromLeft,
-      defaultValue: true,
-      ifFalse: 'from right',
-    ));
+    properties
+      ..add(PercentProperty(
+        'animationValue',
+        animation.value,
+        ifNull: 'stopped',
+      ))
+      ..add(FlagProperty(
+        'fromLeft',
+        value: fromLeft,
+        defaultValue: true,
+        ifFalse: 'from right',
+      ));
   }
 
   @override

@@ -230,7 +230,7 @@ Future<T?> showDialog<T extends Object?>({
 }) {
   assert(debugCheckHasFluentLocalizations(context));
 
-  final CapturedThemes themes = InheritedTheme.capture(
+  final themes = InheritedTheme.capture(
     from: context,
     to: Navigator.of(
       context,

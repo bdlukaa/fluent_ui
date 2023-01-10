@@ -104,7 +104,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
     final view = InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
 
-    return Container(
+    return ColoredBox(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
         switchInCurve: widget.animationCurve ?? Curves.ease,
@@ -120,7 +120,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
 
-          bool isTop = view.displayMode == PaneDisplayMode.top;
+          var isTop = view.displayMode == PaneDisplayMode.top;
 
           if (isTop) {
             // Other transtitions other than default is only applied to top nav
@@ -137,7 +137,6 @@ class _NavigationBodyState extends State<_NavigationBody> {
 
           return EntrancePageTransition(
             animation: animation,
-            vertical: true,
             child: child,
           );
         },
@@ -146,11 +145,10 @@ class _NavigationBodyState extends State<_NavigationBody> {
           child: PageView.builder(
             key: _pageKey,
             physics: const NeverScrollableScrollPhysics(),
-            allowImplicitScrolling: false,
             controller: pageController,
             itemCount: view.pane!.effectiveItems.length,
             itemBuilder: (context, index) {
-              final bool isSelected = view.pane!.selected == index;
+              final isSelected = view.pane!.selected == index;
               final item = view.pane!.effectiveItems[index];
 
               return ExcludeFocus(

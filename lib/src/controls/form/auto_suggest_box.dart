@@ -344,7 +344,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   OverlayEntry? _entry;
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey(
-    debugLabel: 'AutoSuggestBox\'s TextBox Key',
+    debugLabel: "AutoSuggestBox's TextBox Key",
   );
 
   late TextEditingController controller;
@@ -609,8 +609,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
           void select(int index) {
             _unselectAll();
-            final item = _localItems[index];
-            item._selected = true;
+            final item = (_localItems[index]).._selected = true;
             item.onFocusChange?.call(true);
             _focusStreamController.add(index);
           }
@@ -649,7 +648,6 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 prefix: widget.leadingIcon,
                 suffix: suffix,
-                suffixMode: OverlayVisibilityMode.always,
                 onChanged: _onChanged,
                 onFieldSubmitted: (text) => _onSubmitted(),
                 style: widget.style,
@@ -680,7 +678,6 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 prefix: widget.leadingIcon,
                 suffix: suffix,
-                suffixMode: OverlayVisibilityMode.always,
                 onChanged: _onChanged,
                 onSubmitted: (text) => _onSubmitted(),
                 style: widget.style,
@@ -740,7 +737,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
   final ScrollController scrollController = ScrollController();
 
   /// Tile height + padding
-  static const tileHeight = (kOneLineTileHeight + 2.0);
+  static const tileHeight = kOneLineTileHeight + 2.0;
 
   late List<AutoSuggestBoxItem<T>> items = widget.items;
 
@@ -820,7 +817,6 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                       padding: const EdgeInsetsDirectional.only(bottom: 4.0),
                       child: _AutoSuggestBoxOverlayTile(
                         text: Text(localizations.noResultsFoundLabel),
-                        selected: false,
                       ),
                     );
               } else {
@@ -900,14 +896,12 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
           parent: controller,
           curve: Curves.easeOut,
         )),
-        vertical: true,
         child: DefaultTextStyle(
           style: theme.typography.body ?? const TextStyle(),
           child: widget.text,
         ),
       ),
       selected: widget.selected,
-      selectionMode: ListTileSelectionMode.single,
       onPressed: widget.onSelected,
     );
   }

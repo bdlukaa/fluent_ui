@@ -99,30 +99,28 @@ class RatingBar extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('amount', amount, defaultValue: 5));
-    properties.add(DoubleProperty('rating', rating));
-    properties.add(
-      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
-    );
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
-    properties.add(DoubleProperty('iconSize', iconSize));
-    properties.add(IconDataProperty('icon', icon));
-    properties.add(ColorProperty('ratedIconColor', ratedIconColor));
-    properties.add(ColorProperty('unratedIconColor', unratedIconColor));
-    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      ifFalse: 'manual focus',
-    ));
-    properties.add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0));
-    properties.add(EnumProperty(
-      'dragStartBehavior',
-      dragStartBehavior,
-      defaultValue: DragStartBehavior.down,
-    ));
+    properties
+      ..add(IntProperty('amount', amount, defaultValue: 5))
+      ..add(DoubleProperty('rating', rating))
+      ..add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+      )
+      ..add(
+        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+      )
+      ..add(DoubleProperty('iconSize', iconSize))
+      ..add(IconDataProperty('icon', icon))
+      ..add(ColorProperty('ratedIconColor', ratedIconColor))
+      ..add(ColorProperty('unratedIconColor', unratedIconColor))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+      ..add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0))
+      ..add(EnumProperty(
+        'dragStartBehavior',
+        dragStartBehavior,
+        defaultValue: DragStartBehavior.down,
+      ));
   }
 }
 
@@ -210,7 +208,7 @@ class _RatingBarState extends State<RatingBar> {
   }
 
   void _handleUpdate(double x) {
-    final iSize = (widget.iconSize);
+    final iSize = widget.iconSize;
     final value = (x / iSize) - (widget.starSpacing / widget.amount);
     if (value <= widget.amount && !value.isNegative) {
       widget.onChanged?.call(value);
@@ -244,15 +242,14 @@ class _RatingBarState extends State<RatingBar> {
           onHorizontalDragUpdate: (d) => _handleUpdate(d.localPosition.dx),
           child: FocusBorder(
             focused: widget.onChanged != null && _showFocusHighlight,
-            useStackApproach: true,
             child: TweenAnimationBuilder<double>(
               builder: (context, value, child) {
-                double v = value + 1;
+                var v = value + 1.0;
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: () {
                     final items = List.generate(widget.amount, (index) {
-                      double r = v - 1;
+                      var r = v - 1.0;
                       v -= 1;
                       if (r > 1) {
                         r = 1;
