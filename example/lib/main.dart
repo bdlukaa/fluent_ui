@@ -465,6 +465,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           key: searchKey,
           focusNode: searchFocusNode,
           controller: searchController,
+          unfocusedColor: Colors.transparent,
           items: originalItems.whereType<PaneItem>().map((item) {
             assert(item.title is Text);
             final text = (item.title as Text).data!;
