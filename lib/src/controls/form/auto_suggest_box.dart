@@ -592,7 +592,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       link: _layerLink,
       child: Focus(
         onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent || !widget.enableKeyboardControls) {
+          if (!(event is KeyDownEvent || event is KeyRepeatEvent) ||
+              !widget.enableKeyboardControls) {
             return KeyEventResult.ignored;
           }
 
@@ -831,7 +832,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                     final item = sortedItems[index];
                     return _AutoSuggestBoxOverlayTile(
                       text: item.child ?? Text(item.label),
-                      selected: item._selected,
+                      selected: item._selected || widget.node.hasFocus,
                       onSelected: () => widget.onSelected(item),
                     );
                   },
