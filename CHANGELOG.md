@@ -1,4 +1,4 @@
-## [next]
+## 4.1.4
 
 - Avoid overflow in `DatePicker` and `TimePicker` popup ([#663](https://github.com/bdlukaa/fluent_ui/issues/663))
 - Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
