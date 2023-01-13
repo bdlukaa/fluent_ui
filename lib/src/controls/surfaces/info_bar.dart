@@ -42,7 +42,7 @@ Future<void> displayInfoBar(
 
   var isFading = true;
 
-  bool alreadyInitialized = false;
+  var alreadyInitialized = false;
 
   entry = OverlayEntry(builder: (context) {
     return SafeArea(
