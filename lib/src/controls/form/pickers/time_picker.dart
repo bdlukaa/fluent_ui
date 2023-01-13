@@ -399,6 +399,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     final duration = theme.fasterAnimationDuration;
     final curve = theme.animationCurve;
     final hoursAmount = widget.use24Format ? 24 : 12;
+
     return Column(children: [
       Expanded(
         child: Stack(children: [

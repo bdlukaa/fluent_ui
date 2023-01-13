@@ -2,6 +2,7 @@
 
 - Avoid overflow in `DatePicker` and `TimePicker` popup ([#663](https://github.com/bdlukaa/fluent_ui/issues/663))
 - Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
+- Date and Time pickers popup are now positioned correctly in RTL mode ([#675](https://github.com/bdlukaa/fluent_ui/issues/675))
 
 ## 4.1.3
 

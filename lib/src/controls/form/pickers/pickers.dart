@@ -330,6 +330,7 @@ class _PickerState extends State<Picker> {
 
     final navigator = Navigator.of(context);
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
+
     return navigator.push(PageRouteBuilder(
       barrierColor: Colors.transparent,
       opaque: false,
@@ -371,8 +372,10 @@ class _PickerState extends State<Picker> {
         }();
 
         final view = Stack(children: [
-          PositionedDirectional(
-            start: x,
+          // We can not use PositionedDirectional here
+          // See https://github.com/bdlukaa/fluent_ui/issues/675
+          Positioned(
+            left: x,
             top: y,
             height: widget.pickerHeight,
             width: width,
