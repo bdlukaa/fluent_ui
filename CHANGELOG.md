@@ -4,6 +4,7 @@
 - Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
 - Date and Time pickers popup are now positioned correctly in RTL mode ([#675](https://github.com/bdlukaa/fluent_ui/issues/675))
 - It's now possible to navigate through `AutoSuggestBox` items by long pressing arrow up and down keys
+- Do not clear focus scope after selecting an item in `AutoSuggestBox` ([#671](https://github.com/bdlukaa/fluent_ui/issues/671))
 
 ## 4.1.3
 

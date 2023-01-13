@@ -501,7 +501,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                   // After selected, the overlay is dismissed and the text box is
                   // unfocused
                   _dismissOverlay();
-                  focusNode.unfocus();
+                  focusNode.unfocus(
+                      disposition: UnfocusDisposition.previouslyFocusedChild);
                 },
                 noResultsFoundBuilder: widget.noResultsFoundBuilder,
               ),
@@ -582,7 +583,9 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 controller.text,
                 TextChangedReason.cleared,
               );
-              focusNode.unfocus();
+              focusNode.unfocus(
+                disposition: UnfocusDisposition.previouslyFocusedChild,
+              );
             },
           ),
         ),
