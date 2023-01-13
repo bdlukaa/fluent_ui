@@ -8,6 +8,7 @@
 - `AutoSuggestBox`'s `trailingIcon` now comes after the close button
 - **MINOR BREAK** `TextBox.clearGlobalKey` was remove, since it was not used
 - Add `AutoSuggestBox.unfocusedColor` and `TextFormBox.unfocusedColor`
+- Implement `displayInfoBar`, which shows an info bar as an overlay ([#673](https://github.com/bdlukaa/fluent_ui/issues/673))
 
 ## 4.1.3
 
