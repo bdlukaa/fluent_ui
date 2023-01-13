@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 const Duration snackbarShortDuration = Duration(seconds: 2);
-const Duration snackbarLongDuration = Duration(seconds: 2);
+const Duration snackbarLongDuration = Duration(seconds: 4);
 
 /// Shows a snackbar on the given context.
 ///
@@ -14,7 +14,7 @@ const Duration snackbarLongDuration = Duration(seconds: 2);
 /// the snackbar will long forever, and have to be dismissed manually.
 ///
 /// [alignment] is used to align the snackbar within the screen. Defaults
-/// to [Alignment.bottomCenter]
+/// to [AlignmentDirectional.bottomCenter]
 ///
 /// [margin] is the margin applied to snackbar. Defaults to 16 logical
 /// pixels on all sides
@@ -32,12 +32,12 @@ OverlayEntry showSnackbar(
   BuildContext context,
   Widget snackbar, {
   Duration? duration = snackbarShortDuration,
-  Alignment alignment = Alignment.bottomCenter,
+  AlignmentGeometry alignment = AlignmentDirectional.bottomCenter,
   EdgeInsetsGeometry margin = const EdgeInsets.all(16.0),
   VoidCallback? onDismiss,
 }) {
   assert(debugCheckHasOverlay(context));
-  final GlobalKey<SnackbarState> key = snackbar.key is GlobalKey<SnackbarState>
+  final key = snackbar.key is GlobalKey<SnackbarState>
       ? snackbar.key as GlobalKey<SnackbarState>
       : GlobalKey<SnackbarState>();
   final entry = OverlayEntry(builder: (context) {
@@ -105,7 +105,7 @@ class Snackbar extends StatefulWidget {
   final bool extended;
 
   @override
-  SnackbarState createState() => SnackbarState();
+  State<Snackbar> createState() => SnackbarState();
 }
 
 class SnackbarState extends State<Snackbar>
@@ -131,8 +131,8 @@ class SnackbarState extends State<Snackbar>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final SnackbarThemeData theme = SnackbarTheme.of(context);
-    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
+    final theme = SnackbarTheme.of(context);
+    final visualDensity = FluentTheme.of(context).visualDensity;
     return FadeTransition(
       opacity: controller,
       child: Container(
@@ -151,8 +151,9 @@ class SnackbarState extends State<Snackbar>
               widget.content,
               if (widget.action != null)
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: widget.extended ? 0 : 16.0 + visualDensity.horizontal,
+                  padding: EdgeInsetsDirectional.only(
+                    start:
+                        widget.extended ? 0 : 16.0 + visualDensity.horizontal,
                     top: !widget.extended ? 0 : 8.0 + visualDensity.vertical,
                   ),
                   child: ButtonTheme.merge(
@@ -280,12 +281,13 @@ class SnackbarThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonThemeData>(
-      'actionStyle',
-      actionStyle,
-      ifNull: 'no style',
-    ));
-    properties.add(DiagnosticsProperty('padding', padding));
-    properties.add(DiagnosticsProperty('decoration', decoration));
+    properties
+      ..add(DiagnosticsProperty<ButtonThemeData>(
+        'actionStyle',
+        actionStyle,
+        ifNull: 'no style',
+      ))
+      ..add(DiagnosticsProperty('padding', padding))
+      ..add(DiagnosticsProperty('decoration', decoration));
   }
 }

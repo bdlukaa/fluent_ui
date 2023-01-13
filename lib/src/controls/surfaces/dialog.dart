@@ -3,6 +3,12 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
+/// The default constraints for [ContentDialog]
+const kDefaultContentDialogConstraints = BoxConstraints(
+  maxWidth: 368.0,
+  maxHeight: 756.0,
+);
+
 /// Dialog controls are modal UI overlays that provide contextual
 /// app information. They block interactions with the app window
 /// until being explicitly dismissed. They often request some kind
@@ -51,8 +57,7 @@ class ContentDialog extends StatelessWidget {
     this.content,
     this.actions,
     this.style,
-    this.backgroundDismiss = true,
-    this.constraints = const BoxConstraints(maxWidth: 368),
+    this.constraints = kDefaultContentDialogConstraints,
   }) : super(key: key);
 
   /// The title of the dialog. Usually, a [Text] widget
@@ -64,12 +69,9 @@ class ContentDialog extends StatelessWidget {
   /// The actions of the dialog. Usually, a List of [Button]s
   final List<Widget>? actions;
 
-  /// The style used by this dialog. If non-null, it's mescled with
-  /// [ThemeData.dialogThemeData]
+  /// The style used by this dialog. If non-null, it's merged with
+  /// [ThemeData.dialogTheme]
   final ContentDialogThemeData? style;
-
-  /// Whether the background is dismissible or not.
-  final bool backgroundDismiss;
 
   /// The constraints of the dialog. It defaults to `BoxConstraints(maxWidth: 368)`
   final BoxConstraints constraints;
@@ -83,7 +85,7 @@ class ContentDialog extends StatelessWidget {
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return Align(
-      alignment: Alignment.center,
+      alignment: AlignmentDirectional.center,
       child: Container(
         constraints: constraints,
         decoration: style.decoration,
@@ -129,7 +131,7 @@ class ContentDialog extends StatelessWidget {
                   child: () {
                     if (actions!.length == 1) {
                       return Align(
-                        alignment: Alignment.centerRight,
+                        alignment: AlignmentDirectional.centerEnd,
                         child: actions!.first,
                       );
                     }
@@ -228,7 +230,7 @@ Future<T?> showDialog<T extends Object?>({
 }) {
   assert(debugCheckHasFluentLocalizations(context));
 
-  final CapturedThemes themes = InheritedTheme.capture(
+  final themes = InheritedTheme.capture(
     from: context,
     to: Navigator.of(
       context,
@@ -402,12 +404,12 @@ class ContentDialogThemeData {
         boxShadow: kElevationToShadow[6],
       ),
       padding: const EdgeInsets.all(20),
-      titlePadding: const EdgeInsets.only(bottom: 12),
+      titlePadding: const EdgeInsetsDirectional.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
         color: style.micaBackgroundColor,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
-        boxShadow: kElevationToShadow[1],
+        // boxShadow: kElevationToShadow[1],
       ),
       actionsPadding: const EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),

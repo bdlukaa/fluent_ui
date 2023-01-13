@@ -1,5 +1,5 @@
-import 'dart:ui' as ui;
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -88,29 +88,28 @@ Offset horizontalPositionDependentBox({
   required Size childSize,
   required Offset target,
   required bool preferLeft,
-  double verticalOffset = 0.0,
+  double horizontalOffset = 0.0,
   double margin = 10.0,
 }) {
   // Horizontal DIRECTION
-  final bool fitsLeft =
-      target.dx + verticalOffset + childSize.width <= size.width - margin;
-  final bool fitsRight = target.dx - verticalOffset - childSize.width >= margin;
-  final bool tooltipLeft =
+  final fitsLeft =
+      target.dx + horizontalOffset + childSize.width <= size.width - margin;
+  final fitsRight = target.dx - horizontalOffset - childSize.width >= margin;
+  final tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
   double x;
   if (tooltipLeft) {
-    x = math.min(target.dx + verticalOffset, size.width - margin);
+    x = math.min(target.dx + horizontalOffset, size.width - margin);
   } else {
-    x = math.max(target.dx - verticalOffset - childSize.width, margin);
+    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
   }
   // Vertical DIRECTION
   double y;
   if (size.height - margin * 2.0 < childSize.height) {
     y = (size.height - childSize.height) / 2.0;
   } else {
-    final double normalizedTargetY =
-        target.dy.clamp(margin, size.height - margin);
-    final double edge = margin + childSize.height / 2.0;
+    final normalizedTargetY = target.dy.clamp(margin, size.height - margin);
+    final edge = margin + childSize.height / 2.0;
     if (normalizedTargetY < edge) {
       y = margin;
     } else if (normalizedTargetY > size.height - edge) {
@@ -146,5 +145,13 @@ extension StringExtension on String {
   String uppercaseFirst() {
     final first = substring(0, 1);
     return first.toUpperCase() + substring(1);
+  }
+
+  /// Results this string with the first char uppercased
+  ///
+  /// January -> january
+  String lowercaseFirst() {
+    final first = substring(0, 1);
+    return first.toLowerCase() + substring(1);
   }
 }

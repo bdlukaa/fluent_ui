@@ -67,7 +67,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = defaultSupportedLocales,
+    this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -105,7 +105,7 @@ class FluentApp extends StatefulWidget {
     this.localizationsDelegates,
     this.localeListResolutionCallback,
     this.localeResolutionCallback,
-    this.supportedLocales = defaultSupportedLocales,
+    this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
     this.checkerboardRasterCacheImages = false,
     this.checkerboardOffscreenLayers = false,
@@ -353,7 +353,7 @@ class FluentApp extends StatefulWidget {
   final bool useInheritedMediaQuery;
 
   @override
-  _FluentAppState createState() => _FluentAppState();
+  State<FluentApp> createState() => _FluentAppState();
 }
 
 class _FluentAppState extends State<FluentApp> {
@@ -374,7 +374,7 @@ class _FluentAppState extends State<FluentApp> {
     if (widget.localizationsDelegates != null) {
       yield* widget.localizationsDelegates!;
     }
-    yield DefaultFluentLocalizations.delegate;
+    yield FluentLocalizations.delegate;
     yield GlobalMaterialLocalizations.delegate;
     yield GlobalWidgetsLocalizations.delegate;
   }
@@ -399,7 +399,7 @@ class _FluentAppState extends State<FluentApp> {
     final usedarkStyle = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
-    ThemeData data = () {
+    final data = () {
       late ThemeData result;
       if (usedarkStyle) {
         result = widget.darkTheme ?? widget.theme ?? ThemeData();
@@ -425,6 +425,22 @@ class _FluentAppState extends State<FluentApp> {
                   .withOpacity(0.8),
               cursorColor: themeData.inactiveColor,
             ),
+            // colorScheme: m.ColorScheme.fromSwatch(
+            //   primarySwatch: m.MaterialColor(
+            //     400,
+            //     {
+            //       100: themeData.accentColor.lightest,
+            //       200: themeData.accentColor.lighter,
+            //       300: themeData.accentColor.light,
+            //       400: themeData.accentColor.normal,
+            //       500: themeData.accentColor.dark,
+            //       600: themeData.accentColor.darker,
+            //       700: themeData.accentColor.darkest,
+            //     },
+            //   ),
+            //   primaryColorDark: themeData.accentColor.dark,
+            //   brightness: themeData.brightness,
+            // ),
           ),
       child: AnimatedFluentTheme(
         curve: themeData.animationCurve,

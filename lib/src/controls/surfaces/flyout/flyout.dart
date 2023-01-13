@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/utils/popup.dart';
 import 'package:flutter/foundation.dart';
-
-import '../../../utils/popup.dart';
 
 export 'controller.dart';
 
@@ -98,6 +97,7 @@ class Flyout extends StatefulWidget {
     this.longHoverDuration = kDefaultLongHoverDuration,
     this.onOpen,
     this.onClose,
+    this.navigatorKey,
   }) : super(key: key);
 
   /// The child that will be attached to the flyout.
@@ -150,8 +150,15 @@ class Flyout extends StatefulWidget {
   /// Called when the flyout is closed, either by [controller] or by the user
   final VoidCallback? onClose;
 
+  /// A key to the navigator used to show the flyout.
+  ///
+  /// Usually provided when the Flyout if off the scope of a [Navigator].
+  ///
+  /// If null, [Navigator.of] is used
+  final NavigatorKey? navigatorKey;
+
   @override
-  _FlyoutState createState() => _FlyoutState();
+  State<Flyout> createState() => _FlyoutState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -252,6 +259,7 @@ class _FlyoutState extends State<Flyout> {
       horizontalOffset: widget.horizontalOffset,
       placement: widget.placement,
       position: widget.position,
+      navigatorKey: widget.navigatorKey,
       child: widget.child,
     );
 
@@ -266,7 +274,6 @@ class _FlyoutState extends State<Flyout> {
         );
       case FlyoutOpenMode.longHover:
         return MouseRegion(
-          opaque: true,
           onEnter: (event) {
             longHoverTimer = Timer(widget.longHoverDuration, controller.open);
           },

@@ -1,6 +1,443 @@
-Date format: DD/MM/YYYY
+## [next]
 
-## [3.x.0]
+- Avoid overflow in `DatePicker` and `TimePicker` popup ([#663](https://github.com/bdlukaa/fluent_ui/issues/663))
+- Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
+- Date and Time pickers popup are now positioned correctly in RTL mode ([#675](https://github.com/bdlukaa/fluent_ui/issues/675))
+- It's now possible to navigate through `AutoSuggestBox` items by long pressing arrow up and down keys
+- Do not clear focus scope after selecting an item in `AutoSuggestBox` ([#671](https://github.com/bdlukaa/fluent_ui/issues/671))
+- `AutoSuggestBox`'s `trailingIcon` now comes after the close button
+- **MINOR BREAK** `TextBox.clearGlobalKey` was remove, since it was not used
+- Add `AutoSuggestBox.unfocusedColor` and `TextFormBox.unfocusedColor`
+- Implement `displayInfoBar`, which shows an info bar as an overlay ([#673](https://github.com/bdlukaa/fluent_ui/issues/673))
+
+## 4.1.3
+
+- `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))
+- Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
+- Add swedish localization ([#655](https://github.com/bdlukaa/fluent_ui/pull/655))
+- Add `key` parameter to `NavigationPaneItem` and all its instances ([#656](https://github.com/bdlukaa/fluent_ui/issues/656))
+- Ensure `fontFamily` is inherit in some widgets ([654](https://github.com/bdlukaa/fluent_ui/issues/654))
+- Add `Flyout.navigatorKey` ([#538](https://github.com/bdlukaa/fluent_ui/issues/538))
+- Add `Card.borderColor` ([#643](https://github.com/bdlukaa/fluent_ui/issues/643))
+
+## 4.1.2
+
+- `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
+- Ensure `NavigationView` body state is not lost when resizing window
+- Ensure `TabView`' tabs' state are not lost when changing selected tab ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
+- Do not block text field tap ([#343](https://github.com/bdlukaa/fluent_ui/issues/343))
+- Do not duplicate `trailing` in `FlyoutContent` ([#487](https://github.com/bdlukaa/fluent_ui/issues/487))
+
+## 4.1.1
+
+- Ensure acrylic is updated only if it's mounted ([#634](https://github.com/bdlukaa/fluent_ui/issues/634))
+- Ensure the provided `startYear` and `endYear` in `DateTime` are used properly ([#627](https://github.com/bdlukaa/fluent_ui/issues/627))
+- Fix left arrow key not moving to parent item on collapsed `TreeViewItem` ([#632](https://github.com/bdlukaa/fluent_ui/issues/632)) 
+- Added `NavigationPane.scrollBehavior` ([#640](https://github.com/bdlukaa/fluent_ui/issues/640))
+- Added `CommandBarCard.borderRadius` ([#641](https://github.com/bdlukaa/fluent_ui/issues/641))
+- Ensure combobox scroll controller has a client attached before using it ([#620](https://github.com/bdlukaa/fluent_ui/issues/620))
+- Correctly use `TextFormBox.initialValue`
+- Added `TreeViewState.toggleItem`, which toggles the item expanded state ([#493](https://github.com/bdlukaa/fluent_ui/issues/493))
+- Ensure `NavigationView` pane items are brought into view when selected
+
+## 4.1.0
+
+- Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
+- Added support for Romanian language ([#602](https://github.com/bdlukaa/fluent_ui/pull/602))
+- Ensure the body state in `NavigationView` is properly preserved ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
+- **BREAKING** Renamed `ExpanderState.open` to `ExpanderState.isExpanded`
+- The same identifier is no longer used for every `Expander` ([#596](https://github.com/bdlukaa/fluent_ui/issues/596))
+- Ensure the TabView scroll controller has clients before using it ([#615](https://github.com/bdlukaa/fluent_ui/issues/615))
+- TabView now waits a time to resize after closed ([#617](https://github.com/bdlukaa/fluent_ui/issues/617))
+- `ToggleButton` border width is uniform ([#610](https://github.com/bdlukaa/fluent_ui/issues/610))
+
+## 4.0.3+1
+
+- Update documentation
+
+## 4.0.3
+
+- `NavigationView` scrollbar can now be dragged ([#472](https://github.com/bdlukaa/fluent_ui/issues/472))
+- `PaneItemHeader` can now be used inside a `PaneItemExpander` ([#575](https://github.com/bdlukaa/fluent_ui/issues/575))
+- `InfoBadge` no longer overflows when transitioning from compact mode to open mode in `NavigationView` ([#588](https://github.com/bdlukaa/fluent_ui/issues/588))
+
+## 4.0.2
+
+- Add `NavigationView.paneBodyBuilder` for customization of widget built for body of pane. ([#548](https://github.com/bdlukaa/fluent_ui/issues/548))
+- Fixed `NavigationAppBar` unnecessary leading icon when no pane is provided in `NavigationView` ([#551](https://github.com/bdlukaa/fluent_ui/pull/551))
+- Added `NavigationView.minimalPaneOpen` and, with it, the possibility to open minimal pane programatically ([#564](https://github.com/bdlukaa/fluent_ui/issues/564))
+- Assign an index to pane item expanders ([#566](https://github.com/bdlukaa/fluent_ui/issues/566)) 
+- Update `NavigationView` compact mode transition
+- `TreeView` updates ([#555](https://github.com/bdlukaa/fluent_ui/issues/555)):
+  - **BREAKING** Added `TreeViewItemInvokeReason` parameter to `TreeView.onItemInvoked` and `TreeViewItem.onInvoked`.
+  - Fix clearing out selection state on initial state build in certain cases for a single selection mode tree view.
+  - Fix single selection mode to properly deselect hidden child items when selecting a collapsed parent item.
+  - Add `TreeView.includePartiallySelectedItems` so that items who have children with a mixed selection state will be included in the `onSelectionChanged` callback.
+  - Add `TreeView.deselectParentWhenChildrenDeselected` optional behavior so that parent items can remain selected when all of their children are deselected.
+  - Add `TreeViewItem.setSelectionStateForMultiSelectionMode` helper method and `[TreeViewItem].selectedItems` extension method, to make it easier for application code to programmatically change selection state of items in a multi-selection mode tree view.
+- Added support for Uzbek language
+
+## 4.0.1
+
+- `PaneItemAction.body` is no longer required ([#545](https://github.com/bdlukaa/fluent_ui/issues/545))
+- Added `DropDownButton.onOpen` and `DropDownButton.onClose` callbacks ([#537](https://github.com/bdlukaa/fluent_ui/issues/537))
+- Ensure `MenuFlyoutItem.onPressed` is called after the flyout is closed if `DropDownButton.closeAfterClick` is true ([#520](https://github.com/bdlukaa/fluent_ui/issues/520))
+- Ensure the `TimePicker` and `DatePicker` popups will fit if the screen is small ([#544](https://github.com/bdlukaa/fluent_ui/issues/544))
+- Do not apply padding to `NavigationAppBar.leading` ([#539](https://github.com/bdlukaa/fluent_ui/issues/539))
+- Added `AutoSuggestBox.noResultsFoundBuilder` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
+- Added `AutoSuggestBox.inputFormatters` ([#542](https://github.com/bdlukaa/fluent_ui/issues/542))
+- Added support for Hebrew language
+
+## 4.0.0
+
+- **BREAKING** Removed `NavigationBody`. Use `PaneItem.body` instead ([#510](https://github.com/bdlukaa/fluent_ui/pull/510)/[#531](https://github.com/bdlukaa/fluent_ui/pull/531)):  
+  Before:
+  ```dart
+  NavigationView(
+    pane: NavigationPane(
+      items: [
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: Icon(FluentIcons.add)),
+      ],
+    ),
+    content: NavigationBody(
+      children: [
+        _Item1(),
+        _Item2(),
+        _Item3(),
+      ],
+    ),
+  ),
+  ```
+
+  Now:  
+  ```dart
+  NavigationView(
+    ...
+    pane: NavigationPane(
+      items: [
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item1(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item2(),
+        ),
+        PaneItem(
+          icon: Icon(FluentIcons.add),
+          body: _Item3(),
+        ),
+      ],
+    ),
+  ),
+  ```
+  
+  Or if you don't have a pane, you can use the content like the following:  
+  ```dart
+  NavigationView(
+    content: ScaffoldPage(
+      header: PageHeader(
+        title: titleRow,
+      ),
+      content: child,
+    ),
+  ),
+  ```
+  *either one attribute of pane or content must not be null*
+
+  Use `NavigationView.transitionsBuilder` to create custom transitions
+- Added `PaneItem.onTap` ([#533](https://github.com/bdlukaa/fluent_ui/issues/533))
+- Compact pane is no longer toggled when item is selected ([#533](https://github.com/bdlukaa/fluent_ui/issues/533)).
+  To toggle it programatically, use `NavigationViewState.toggleCompactOpenMode` when an item is tapped
+- Dynamic header height for open pane ([#530](https://github.com/bdlukaa/fluent_ui/issues/530))
+- Fixes memory leaks on `NavigationView`
+- `TreeView` updates: 
+  - All items of the same depth level now have the same indentation. Before, only items with the same parent were aligned.
+  - The hitbox for the expand icon of each item now uses the item's full height and is three times wider than the actual icon. This corresponds to the implementation in the explorer of Windows 10/11.
+  - You can now choose whether the items of a TreeView should use narrow or wide spacing.
+  - Do not invoke the tree view item on secondary tap ([#526](https://github.com/bdlukaa/fluent_ui/issues/526))
+  - **BREAKING** `TreeView.onSecondaryTap` is now a `(TreeViewItem item, TapDownDetails details)` callback:
+    Before:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, offset) async {}
+    ),
+    ```
+
+    Now:
+    ```dart
+    TreeView(
+      ...,
+      onSecondaryTap: (item, details) {
+        final offset = details.globalPosition;
+      },
+    )
+    ```
+  - Expand/collape items with right and left arrow keys, respectively ([#517](https://github.com/bdlukaa/fluent_ui/issues/517))
+  - Added `TreeView.onItemExpandToggle` and `TreeViewItem.onExpandToggle` ([#522](https://github.com/bdlukaa/fluent_ui/issues/522))
+- **BREAKING** `AutoSuggestBox` dynamic type support ([#441](https://github.com/bdlukaa/fluent_ui/issues/441)):
+
+  Before:
+  ```dart
+  AutoSuggestBox(
+    items: cats.map((cat) {
+      return AutoSuggestBoxItem(
+        value: cat,
+        onFocusChange: (focused) {
+          if (focused) debugPrint('Focused $cat');
+        }
+      );
+    }).toList(),
+    onSelected: (item) {
+      setState(() => selected = item);
+    },
+  ),
+  ```
+  
+  Now:
+  ```dart
+  AutoSuggestBox<String>(
+    items: cats.map((cat) {
+      return AutoSuggestBoxItem<String>(
+        value: cat,
+        label: cat,
+        onFocusChange: (focused) {
+          if (focused) debugPrint('Focused \$cat');
+        }
+      );
+    }).toList(),
+    onSelected: (item) {
+      setState(() => selected = item);
+    },
+  ),
+  ```
+
+## [4.0.0-pre.4] - Almost there - [02/09/2022]
+
+- `DisableAcrylic` now fully disable transparency of its decendents `Acrylic`s ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+- Do not interpolate between infinite constraints on `TabView` ([#430](https://github.com/bdlukaa/fluent_ui/issues/430))
+- Do not rebuild the `TimePicker` popup when already rebuilding ([#437](https://github.com/bdlukaa/fluent_ui/issues/437))
+- `ToggleSwitch` updates:
+  - Use the correct color for `DefaultToggleSwitchThumb` ([#463](https://github.com/bdlukaa/fluent_ui/issues/463))
+  - Added `ToggleSwitch.leadingContent`, which positions the content before the switch ([#464](https://github.com/bdlukaa/fluent_ui/issues/464))
+  - Added `ToggleSwitch.thumbBuilder`, which builds the thumb based on the current state
+- Added `TextChangedReason.cleared`, which is called when the text is cleared by the user in an `AutoSuggestBox` ([#461](https://github.com/bdlukaa/fluent_ui/issues/461))
+- Call `AutoSuggestBox.onChanged` when an item is selected using the keyboard ([#483](https://github.com/bdlukaa/fluent_ui/issues/483))
+- `Tooltip` overlay is now ignored when hovered ([#443](https://github.com/bdlukaa/fluent_ui/issues/443))
+- Do not add unnecessary padding in `DropdownButton` ([#475](https://github.com/bdlukaa/fluent_ui/issues/475))
+- `ComboBox` updates:
+  - **BREAKING** Renamed `Combobox` to `ComboBox`
+  - **BREAKING** Renamed `ComboboxItem` to `ComboBoxItem`
+  - **BREAKING** Renamed `ComboBox.backgroundColor` to `ComboBox.popupColor`
+  - Implement `EditableComboBox`, a combo box that accepts items that aren't listed ([#244](https://github.com/bdlukaa/fluent_ui/issues/244))
+  - `ComboBox.isExpanded: false` now correctly sets the button width ([#382](https://github.com/bdlukaa/fluent_ui/issues/382))
+  - `ComboBox`'s items height are correctly calculated, as well as initial scroll offset ([#472](https://github.com/bdlukaa/fluent_ui/issues/478))
+  - **BREAKING** `ComboBox.disabledHint` was renamed to `ComboBox.disabledPlaceholder`
+  - Added `ComboBoxFormField` and `EditableComboBoxFormField` ([#373](https://github.com/bdlukaa/fluent_ui/issues/373))
+  - `ComboBox.comboBoxColor` is now correctly applied ([#468](https://github.com/bdlukaa/fluent_ui/issues/468))
+  - `ComboBox` popup can't be opened if disabled
+- Implemented `PaneItemExpander` ([#299](https://github.com/bdlukaa/fluent_ui/pull/299))
+- `TimePicker` and `DatePicker` popup now needs a minimum width of 260 ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- Correctly align `NavigationAppBar` content ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- **BREAKING** Added `InfoLabel.rich`. `InfoLabel` is no longer a constant contructor ([#494](https://github.com/bdlukaa/fluent_ui/pull/494))
+- Always add `GlobalMaterialLocalizations` above `ReorderableListView` ([#492](https://github.com/bdlukaa/fluent_ui/issues/492))
+- **BREAKING** Removed `ContentDialog.backgroundDismiss`. Use `showDialog.barrierDismissable` ([#490](https://github.com/bdlukaa/fluent_ui/issues/490))
+- Reviewed focus ([#496](https://github.com/bdlukaa/fluent_ui/issues/496))
+  - `DatePicker` and `TimePicker` now show the focus highlight.
+    Their popup now can be controlled using the keyboard
+  - `NavigationBody` now uses a `FocusTraversalGroup` to handle focus
+    This means the the content of the body will be fully traversed before moving on to another widget or group of widgets. [Learn more](https://docs.flutter.dev/development/ui/advanced/focus#focustraversalgroup-widget)
+  - `TreeViewItem` now shows the focus highlight. They can also be selected using the keyboard
+  - `Expander` now shows the focus highlight
+- Progress Indicators velocity is no longer affected by device frame rate ([#502](https://github.com/bdlukaa/fluent_ui/pull/502))
+- Added `AutoSuggestBox.enabled` ([#504](https://github.com/bdlukaa/fluent_ui/issues/504))
+- Correctly keep the `NavigationView` animation state ([cf0fae1](https://github.com/bdlukaa/fluent_ui/commit/cf0fae16ce9a8879653606571e90af12f711bb84) ,[bd89ba6](https://github.com/bdlukaa/fluent_ui/commit/bd89ba6791dfe2762b37b3e291d8d1a7979cb3f5))
+- Calculate `selected` for all parents as soon as the `TreeView` is built
+
+## [4.0.0-pre.3] - Top navigation and auto suggestions - [13/08/2022]
+
+- `NavigationView` mode fixes:
+  - When top overflow menu is opened, `PaneItemHeader` no longer throws an unsupported error
+  - When on top mode, `PaneItemHeader` is properly aligned to the other items.
+  - Added `NavigationPaneThemeData.headerPadding`, which is applied to `PaneItemHeader` on open, compact and minimal mode. It defaults to 10 pixels at the top
+  - **BREAKING** `PaneItem.getPropertyFromTitle` is now `widget.getProperty`:
+
+  Before:
+  `getPropertyFromTitle<TextStyle>()`
+
+  Now:
+  `title.getProperty<TextStyle>()`
+
+  This was changed because the properties of `PaneItemHeader` needed to be accessed, but the old version only supported to get the properties of `PaneItem.title`. It can be called on a `Text`, `RichText` or in an `Icon` widget
+  - `InheritedNavigationView` is now accessible on the top overflow menu
+  - Added `NavigationPaneThemeData.selectedTopTextStyle` and `NavigationPaneThemeData.unselectedTopTextStyle`, which is applied to the items on top mode
+  - Fixed `content` focus on minimal mode
+  - Updated default transitions for top mode: `HorizontalSlidePageTransition`
+- Fix incorrect translation of `TimePicker` in Traditional Chinese.
+- Added `ScaffoldPage.resizeToAvoidBottomInset` ([#444](https://github.com/bdlukaa/fluent_ui/issues/444))
+- Consider view padding for `NavigationAppBar`
+- `Scrollbar` updates ([#356](https://github.com/bdlukaa/fluent_ui/pull/356)):
+  - Correctly use `backgroundColor` to display the track color
+  - Added `padding` and `hoveringPadding`
+  - Check if animation is disposed before using it ([#446](https://github.com/bdlukaa/fluent_ui/issues/446))
+- Update `AutoSuggestBox` ([#450](https://github.com/bdlukaa/fluent_ui/pull/450)):
+  - Added `.enableKeyboardControls`. When true, items can be selected using the keyboard ([#19](https://github.com/bdlukaa/fluent_ui/issues/19))
+  - Added `.sorter`, which lets you set a custom sort function for the suggestions. `AutoSuggestBox.defaultItemSorter` is used by default
+  - Overlay's height is now correctly calculated based on the screen size. It no longer overlaps the screen. `viewPadding` is also taken into consideration
+  - Close the overlay if the textbox width is changes ([#456](https://github.com/bdlukaa/fluent_ui/issues/456))
+  - `.items` can be dynamically loaded ([#387](https://github.com/bdlukaa/fluent_ui/issues/387))
+  - **BREAKING** `.items` is now a `List<AutoSuggestBoxItem>`:
+    Before:
+  ```dart
+  AutoSuggestBox(
+    items: [
+      'Cat',
+      'Dog',
+      'Bird',
+      'Horse',
+    ],
+    ...
+  ),
+  ```
+  Now:
+  ```dart
+  AutoSuggestBox(
+    items: [
+      'Cat',
+      'Dog',
+      'Bird',
+      'Horse',
+    ].map((animal) {
+      return AutoSuggestBoxItem(
+        value: animal, // this takes a String
+        child: Text('Animal $animal'), // this takes a Widget. If null, value is displayed as a text
+        onFocusChange: (focused) {
+          // this is called when the item is focused using the keyboard arrow keys
+          if (focused) debugPrint('Focused animal $animal');
+        },
+        onSelected: () {
+          // this is called when the item is selected
+          debugPrint('Selected animal $animal');
+        }
+      );
+    }).toList(),
+    ...
+  )
+  ```
+- `Combobox` updates ([#454](https://github.com/bdlukaa/fluent_ui/pull/454)):
+  - Popup size is now correctly calculated ([#413](https://github.com/bdlukaa/fluent_ui/issues/413))
+  - Correctly clip the popup while performing the animation ([#379](https://github.com/bdlukaa/fluent_ui/issues/379))
+- Correctly check if a locale is supported ([#455](https://github.com/bdlukaa/fluent_ui/issues/455))
+
+## [4.0.0-pre.2] - Tabs, Tiles and Bugs - [23/07/2022]
+
+- Remove whitespace on `ContentDialog` if title is omitted ([#418](https://github.com/bdlukaa/fluent_ui/issues/418))
+- Apply correct color to the Date and Time Pickers button when selected ([#415](https://github.com/bdlukaa/fluent_ui/issues/415), [#417](https://github.com/bdlukaa/fluent_ui/issues/417))
+- Expose more useful properties to `AutoSuggestBox` ([#419](https://github.com/bdlukaa/fluent_ui/issues/419))
+- **BREAKING** `PopupContentSizeInfo` was renamed to `ContentSizeInfo`
+- Reworked `ListTile` ([#422](https://github.com/bdlukaa/fluent_ui/pull/422)):
+  - **BREAKING** Removed `TappableListTile`
+  - Added support for single and multiple selection. Use `ListTile.selectable` ([#409](https://github.com/bdlukaa/fluent_ui/issues/409))
+  - Added focus support
+  - Use the Win UI design
+- Reviewed animation durations ([#421](https://github.com/bdlukaa/fluent_ui/issues/421))
+  - **BREAKING** Removed `.animationDuration` and `.animationCurve` from `ScrollbarThemeData`
+  - Added `expandContractAnimationDuration` and `contractDelay` to `ScrollbarThemeData`
+- `NavigationPaneSize` constraints are now correctly applied when in open mode ([#336](https://github.com/bdlukaa/fluent_ui/issues/336))
+- `NavigationIndicator` can't be invisble anymore when animation is stale ([#335](https://github.com/bdlukaa/fluent_ui/issues/335))
+- Updated `TabView`:
+  - **BREAKING** Removed `TabView.bodies`. Now, `Tab.body` is used.
+    Before
+    ```dart
+    TabView(
+      tabs: [
+        Tab(text: Text('Tab 1')),
+        Tab(text: Text('Tab 2')),
+      ],
+      bodies: [
+        Tab1Body(),
+        Tab2Body(),
+      ],
+    ),
+    ```
+
+    Now:
+    ```dart
+    TabView(
+      tabs: [
+        Tab(
+          text: Text('Tab 1'),
+          body: Tab1Body(),
+        ),
+        Tab(
+          text: Text('Tab 2'),
+          body: Tab2Body(),
+        ),
+      ],
+    ),
+    ```
+  - Updated `TabView` tabs' constraints and padding
+  - Fixed tab width when `TabWidthBehavior` is `compact`
+  - `FlutterLogo` is no longer the default tab Icon
+- `DropDownButton` menu is now sized correctly according to the screen size
+- If there isn't enough space to display the menu on the preferred position, `Flyout` will display on the opposite position ([#435](https://github.com/bdlukaa/fluent_ui/pull/435))
+
+## [4.0.0-pre.1] - Materials and Pickers - [29/06/2022]
+
+- Exposed private properties that makes it easier to create custom panes for `NavigationView` ([#365](https://github.com/bdlukaa/fluent_ui/issues/365)):
+  - `kCompactNavigationPaneWidth`
+  - `kOpenNavigationPaneWidth`
+  - `NavigationPane.changeTo`
+  - `PaneItem.getPropertyFromTitle`
+- `PaneScrollConfiguration` is now applied to custom pane on `NavigationView`
+- Added `NavigationViewState.displayMode`. It results in the current display mode used by the view, including the automatic display mode ([#360](https://github.com/bdlukaa/fluent_ui/issues/360)):
+  ```dart
+  // Define the key
+  final key = GlobalKey<NavigationViewState>();
+
+  NavigationView(
+    // pass the key to the view
+    key: key,
+    ...,
+  )
+
+  // Get the current display mode. Note that, in order to find out the automatic display mode,
+  // the widget must have been built at least once
+  final PaneDisplayMode currentDisplayMode = key.currentState.displayMode;
+  ```
+- The app bar action no longer overflow when minimal pane/compact overlay is open ([#361](https://github.com/bdlukaa/fluent_ui/issues/361))
+- Update `AutoSuggestBox`:
+  - It now uses `Acrylic`, but it can be disabled using `DisableAcrylic`
+  - `TextChangedReason.suggestionChoosen` is now called properly
+- Updated `TextBox`:
+  - `TextBox` colors were updated to match the Win 11 design.
+  - Fluent Text Selection Control now make use of `Acrylic`. Its items were also updated
+- Updated pickers ([#406](https://github.com/bdlukaa/fluent_ui/pull/406)):
+  - If `selected` is null, a placeholder text is shown ([#306](https://github.com/bdlukaa/fluent_ui/issues/306))
+  - Added new localization messages: `hour`, `minute`, `AM`, `PM`, `month`, `day`and `year`.
+  - **BREAKING** Removed `.hourPlaceholder`, `.minutePlaceholder`, `.amText`, `.pmText` from `TimePicker`. It was replaced, respectivelly, by the `hour`, `minute`, `AM`, `PM` localization messages
+  - On `DatePicker`, it's now possible to change the order of the fields:
+  ```dart
+  DatePicker(
+    ...,
+    fieldOrder: [
+      DatePickerField.day,
+      DatePickerField.month,
+      DatePickerField.year,
+    ],
+  )
+  ```
+
+  The fields are ordered based on the current locale by default
+  - On `DatePicker`, the day and year fields are now formatted based on the current locale (`getDateOrderFromLocale`)
+- Update `Slider` ([#405](https://github.com/bdlukaa/fluent_ui/issues/405)):
+  - Added `.thumbRadius` and `.trackHeight` to `SliderThemeData`
+  - The active track now isn't taller than the inactive track
+
+## [4.0.0-pre.0] - [07/06/2022]
 
 - Added support for NavigationPane right side via property `NavigationPane.position`. Works only with `PaneDisplayMode.open`, `PaneDisplayMode.compact`.
 - Show menu button on automatic minimal display mode ([#350](https://github.com/bdlukaa/fluent_ui/pull/350))
@@ -16,13 +453,39 @@ Date format: DD/MM/YYYY
   - Updated card's background colors
   - **BREAKING** Removed `Card.elevation`
   - Added `Card.margin`, which is the margin around the card
-- `InfoBar` updates:
-  - Added `InfoBar.isIconVisible`
-  - Updated its design to follow the new Win UI 3 guidelines
 - Updated `Combobox` and `Button` designs
+- Updated `NavigationPane` behaviour. Now, if the header is null, the space it should have taken will be removed from the pane (display mode affected: minimal, open only) ([#359](https://github.com/bdlukaa/fluent_ui/pull/359))
 - Reviewed `DatePicker` and `TimePicker` ([#357](https://github.com/bdlukaa/fluent_ui/pull/357))
   - Correctly apply dimensions and positions to both pickers
   - Update the picker popup style and behavior
+- Colors Update ([#368](https://github.com/bdlukaa/fluent_ui/pull/368)):
+  - Added `ResourceDictionary`, which provides default colors to be used on components
+  - (forms) Updated `Combobox` style. It now uses `Acrylic` on the combobox popup menu
+  - (buttons) Updated `Button`, `FilledButton`, `IconButton` and `TextButton` styles
+  - (toggleable inputs) Updated `Checkbox`, `Chip`, `RadioButton`, `RatingBar`, `ToggleButton` and `ToggleSwitch`
+    - **BREAKING** Updated `Slider`:
+      - `SliderThemeData.thumbColor`, `SliderThemeData.activeColor` and `SliderThemeData.inactiveColor` now are of type `ButtonState<Color?>?`, which handles the button color on different states. `SliderThemeData.disabledThumbColor`, `SliderThemeData.disabledActiveColor` and `SliderThemeData.disabledInactiveColor` were removed
+      - Before:
+      ```dart
+      SliderThemeData(
+        thumbColor: Colors.green,
+      ),
+      ```
+      - Now:
+      ```dart
+      SliderThemeData(
+        // Apply Colors.green for all button states. Instead you can use ButtonState.resolveWith to use different values according to the current state
+        thumbColor: ButtonState.all(Colors.green),
+      ),
+      ```
+  - (navigation) Updated `NavigationView`, `PaneItem` and `ScaffoldPage`
+    - Updated `TabView` and its tabs styles. A `FocusBorder` is now used to display the focus highlight of the tabs
+    - All combinations of `BorderRadius` can now be used on `FocusBorder`
+  - (surfaces) Updated `Card`, `ContentDialog`, `InfoBar`, `Expander`, `Flyout` and `Divider``
+    - Added `InfoBar.isIconVisible`
+  - (indicators) Updated `ProgressBar`, `ProgressRing` and `InfoBadge`
+  - (other) Added helper methods for `AccentColor`: `AccentColor.defaultBrushFor`, `AccentColor.secondaryBrushFor` and `AccentColor.tertiaryBrushFor`
+  - Polish translation added
 
 ## [3.12.0] - Flutter 3.0 - [13/05/2022]
 

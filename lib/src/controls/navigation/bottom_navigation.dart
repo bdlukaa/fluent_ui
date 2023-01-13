@@ -148,7 +148,7 @@ class _BottomNavigationItem extends StatelessWidget {
             ),
             if (item.title != null)
               Padding(
-                padding: const EdgeInsets.only(top: 1.0),
+                padding: const EdgeInsetsDirectional.only(top: 1.0),
                 child: DefaultTextStyle(
                   style: FluentTheme.of(context).typography.caption!.copyWith(
                         color: selected
@@ -162,7 +162,7 @@ class _BottomNavigationItem extends StatelessWidget {
           return FocusBorder(
             focused: state.isFocused,
             renderOutside: false,
-            child: Container(
+            child: ColoredBox(
               color: ButtonThemeData.uncheckedInputColor(
                 FluentTheme.of(context),
                 state,

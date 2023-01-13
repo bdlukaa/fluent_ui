@@ -35,7 +35,7 @@ class FluentPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
   ) {
     assert(debugCheckHasFluentTheme(context));
-    final Widget result = _builder(context);
+    final result = _builder(context);
     return Semantics(
       scopesRoute: true,
       explicitChildNodes: true,

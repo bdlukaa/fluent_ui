@@ -23,6 +23,13 @@
   "copyActionTooltip": "انسخ المحتوى المحدد إلى الحافظة",
   "cutActionTooltip": "قم بإزالة المحتوى المحدد وضعه في الحافظة",
   "pasteActionTooltip": "إدراج محتويات الحافظة إلى الموقع الحالي",
-  "selectAllActionTooltip": "تحديد المحتوى بالكامل"
+  "selectAllActionTooltip": "تحديد المحتوى بالكامل",
+  "hour": "ساعة",
+  "minute": "دقيقة",
+  "am": "ص",
+  "pm": "م",
+  "month": "شهر",
+  "day": "يوم",
+  "year": "سنة"
 }
 

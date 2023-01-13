@@ -18,6 +18,6 @@ void main() {
       ),
     );
 
-    expect(expanderKey.currentState!.open, true);
+    expect(expanderKey.currentState!.isExpanded, true);
   });
 }

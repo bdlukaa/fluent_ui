@@ -2,7 +2,7 @@
 
 ## Pre-launch Checklist
 
-<!-- Mark all that applyes -->
+<!-- Mark all that applies -->
 
 - [ ] I have updated `CHANGELOG.md` with my changes <!-- REQUIRED --> 
 - [ ] I have run "dart format ." on the project <!-- REQUIRED --> 

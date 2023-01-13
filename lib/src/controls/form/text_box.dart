@@ -1,13 +1,12 @@
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import 'pickers/pickers.dart';
-
-const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 5);
+const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5);
 
 enum OverlayVisibilityMode {
   never,
@@ -28,19 +27,6 @@ class _TextBoxSelectionGestureDetectorBuilder
   @override
   void onSingleTapUp(TapUpDetails details) {
     editableText.hideToolbar();
-    // Because TextSelectionGestureDetector listens to taps that happen on
-    // widgets in front of it, tapping the clear button will also trigger
-    // this handler. If the clear button widget recognizes the up event,
-    // then do not handle it.
-    if (_state._clearGlobalKey.currentContext != null) {
-      final RenderBox renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject()! as RenderBox;
-      final Offset localOffset =
-          renderBox.globalToLocal(details.globalPosition);
-      if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
-        return;
-      }
-    }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
     _state.widget.onTap?.call();
@@ -132,7 +118,7 @@ class TextBox extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
-    this.clearGlobalKey,
+    this.unfocusedColor,
     this.selectionControls,
     this.mouseCursor,
     this.scribbleEnabled = true,
@@ -340,7 +326,16 @@ class TextBox extends StatefulWidget {
   /// The highlight color of the text box.
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
+
+  /// The unfocused color of the highlight border.
+  ///
+  /// See also:
+  ///   * [highlightColor], displayed when the field is focused
+  final Color? unfocusedColor;
 
   /// {@macro flutter.widgets.editableText.strutStyle}
   final StrutStyle? strutStyle;
@@ -501,8 +496,6 @@ class TextBox extends StatefulWidget {
 
   final ButtonThemeData? iconButtonThemeData;
 
-  final GlobalKey? clearGlobalKey;
-
   /// {@macro flutter.widgets.editableText.scribbleEnabled}
   final bool scribbleEnabled;
 
@@ -522,7 +515,7 @@ class TextBox extends StatefulWidget {
   final MouseCursor? mouseCursor;
 
   @override
-  _TextBoxState createState() => _TextBoxState();
+  State<TextBox> createState() => _TextBoxState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -598,10 +591,6 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
-  final _localClearGlobalKey = GlobalKey();
-  GlobalKey get _clearGlobalKey =>
-      widget.clearGlobalKey ?? _localClearGlobalKey;
-
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller!.value;
@@ -642,7 +631,9 @@ class _TextBoxState extends State<TextBox>
             : TextEditingValue(text: widget.initialValue!),
       );
     }
-    _effectiveFocusNode.addListener(_handleFocusChanged);
+    _effectiveFocusNode
+      ..canRequestFocus = enabled
+      ..addListener(_handleFocusChanged);
   }
 
   void _handleFocusChanged() {
@@ -650,6 +641,12 @@ class _TextBoxState extends State<TextBox>
       _effectiveFocusNode.nextFocus();
     }
     setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _effectiveFocusNode.canRequestFocus = enabled;
   }
 
   @override
@@ -662,11 +659,13 @@ class _TextBoxState extends State<TextBox>
       _controller!.dispose();
       _controller = null;
     }
-    final bool isEnabled = widget.enabled ?? true;
-    final bool wasEnabled = oldWidget.enabled ?? true;
+    final isEnabled = widget.enabled ?? true;
+    final wasEnabled = oldWidget.enabled ?? true;
     if (wasEnabled && !isEnabled) {
       _effectiveFocusNode.unfocus();
     }
+
+    _effectiveFocusNode.canRequestFocus = enabled;
   }
 
   @override
@@ -730,7 +729,7 @@ class _TextBoxState extends State<TextBox>
     if (cause == SelectionChangedCause.longPress) {
       _editableText.bringIntoView(selection.base);
     }
-    final bool willShowSelectionHandles = _shouldShowSelectionHandles(cause);
+    final willShowSelectionHandles = _shouldShowSelectionHandles(cause);
     if (willShowSelectionHandles != _showSelectionHandles) {
       setState(() {
         _showSelectionHandles = willShowSelectionHandles;
@@ -827,10 +826,10 @@ class _TextBoxState extends State<TextBox>
             ),
           if (child != null) child,
         ]);
-        // if (!_showPrefixWidget(text) && !_showSuffixWidget(text)) return result;
-        return Row(children: <Widget>[
+        if (!_showPrefixWidget(text) && !_showSuffixWidget(text)) return result;
+        return Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
           if (_showPrefixWidget(text)) widget.prefix!,
-          Expanded(child: result),
+          Flexible(child: result),
           if (_showSuffixWidget(text))
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -850,9 +849,8 @@ class _TextBoxState extends State<TextBox>
 
   @override
   TextInputConfiguration get textInputConfiguration {
-    final List<String>? autofillHints =
-        widget.autofillHints?.toList(growable: false);
-    final AutofillConfiguration autofillConfiguration = autofillHints != null
+    final autofillHints = widget.autofillHints?.toList(growable: false);
+    final autofillConfiguration = autofillHints != null
         ? AutofillConfiguration(
             uniqueIdentifier: autofillId,
             autofillHints: autofillHints,
@@ -870,12 +868,11 @@ class _TextBoxState extends State<TextBox>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     final textDirection = Directionality.of(context);
-    final TextEditingController controller = _effectiveController;
-    final List<TextInputFormatter> formatters =
-        widget.inputFormatters ?? <TextInputFormatter>[];
-    const Offset cursorOffset = Offset(0, -1);
+    final controller = _effectiveController;
+    final formatters = widget.inputFormatters ?? <TextInputFormatter>[];
+    const cursorOffset = Offset(0, -1);
     if (widget.maxLength != null) {
       formatters.add(LengthLimitingTextInputFormatter(
         widget.maxLength,
@@ -883,39 +880,40 @@ class _TextBoxState extends State<TextBox>
       ));
     }
 
+    final disabledColor = theme.resources.textFillColorDisabled;
     final defaultTextStyle = TextStyle(
-      color: enabled ? theme.inactiveColor : theme.disabledColor,
+      color: enabled ? theme.resources.textFillColorPrimary : disabledColor,
+      fontFamily: theme.typography.body?.fontFamily,
     );
-    final TextStyle textStyle = defaultTextStyle.merge(widget.style);
+    final textStyle = defaultTextStyle.merge(widget.style);
 
-    final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? theme.brightness;
-    final Color cursorColor = widget.cursorColor ?? theme.inactiveColor;
-    final Color disabledColor = theme.disabledColor;
+    final keyboardAppearance = widget.keyboardAppearance ?? theme.brightness;
+    final cursorColor = widget.cursorColor ?? theme.inactiveColor;
 
-    final TextStyle placeholderStyle = textStyle
-        .copyWith(
-          color: !enabled
-              ? theme.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.3614)
-                  : const Color.fromRGBO(255, 255, 255, 0.3628)
-              : theme.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.6063)
-                  : const Color.fromRGBO(255, 255, 255, 0.786),
-          fontWeight: FontWeight.w400,
-        )
-        .merge(widget.placeholderStyle);
+    TextStyle placeholderStyle(Set<ButtonStates> states) {
+      return textStyle
+          .copyWith(
+            color: !enabled
+                ? disabledColor
+                : (states.isPressing || states.isFocused)
+                    ? theme.resources.textFillColorTertiary
+                    : theme.resources.textFillColorSecondary,
+            fontWeight: FontWeight.w400,
+          )
+          .merge(widget.placeholderStyle);
+    }
 
-    final BoxDecoration foregroundDecoration = BoxDecoration(
+    final foregroundDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(
           color: _effectiveFocusNode.hasFocus
               ? widget.highlightColor ?? theme.accentColor
               : !enabled
                   ? Colors.transparent
-                  : theme.brightness.isLight
-                      ? const Color.fromRGBO(0, 0, 0, 0.45)
-                      : const Color.fromRGBO(255, 255, 255, 0.54),
+                  : widget.unfocusedColor ??
+                      (theme.brightness.isLight
+                          ? const Color.fromRGBO(0, 0, 0, 0.45)
+                          : const Color.fromRGBO(255, 255, 255, 0.54)),
           width: _effectiveFocusNode.hasFocus ? 2 : 0,
         ),
       ),
@@ -930,7 +928,7 @@ class _TextBoxState extends State<TextBox>
       shape: widget.foregroundDecoration?.shape,
     );
 
-    final Color selectionColor = theme.accentColor
+    final selectionColor = theme.accentColor
         .resolveFromReverseBrightness(theme.brightness)
         .withOpacity(0.6);
 
@@ -1002,9 +1000,8 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    final BorderRadius radius =
-        widget.decoration?.borderRadius?.resolve(textDirection) ??
-            BorderRadius.circular(4.0);
+    final radius = widget.decoration?.borderRadius?.resolve(textDirection) ??
+        BorderRadius.circular(4.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
@@ -1021,19 +1018,14 @@ class _TextBoxState extends State<TextBox>
         ignoring: !enabled,
         child: HoverButton(
           focusEnabled: false,
-          onPressed: enabled ? () {} : null,
+          forceEnabled: enabled,
+          hitTestBehavior: HitTestBehavior.translucent,
           builder: (context, states) {
             return Container(
               decoration: BoxDecoration(
                 borderRadius: radius,
                 border: Border.all(
-                  style: _effectiveFocusNode.hasFocus
-                      ? BorderStyle.solid
-                      : BorderStyle.none,
-                  width: 1,
-                  color: theme.brightness.isLight
-                      ? const Color.fromRGBO(0, 0, 0, 0.08)
-                      : const Color.fromRGBO(255, 255, 255, 0.07),
+                  color: theme.resources.controlStrokeColorDefault,
                 ),
                 color: _backgroundColor(states),
               ).copyWith(
@@ -1065,7 +1057,7 @@ class _TextBoxState extends State<TextBox>
                     child: _addTextDependentAttachments(
                       paddedEditable,
                       textStyle,
-                      placeholderStyle,
+                      placeholderStyle(states),
                     ),
                   ),
                 ),
@@ -1096,9 +1088,9 @@ class _TextBoxState extends State<TextBox>
             !_showOutsideSuffixWidget(text)) {
           return child!;
         }
-        return Row(children: [
+        return Row(mainAxisSize: MainAxisSize.min, children: [
           if (_showOutsidePrefixWidget(text)) widget.outsidePrefix!,
-          Expanded(child: child!),
+          Flexible(child: child!),
           if (_showOutsideSuffixWidget(text)) widget.outsideSuffix!,
         ]);
       },
@@ -1125,28 +1117,16 @@ class _TextBoxState extends State<TextBox>
   }
 
   Color _backgroundColor(Set<ButtonStates> states) {
-    final brightness = FluentTheme.of(context).brightness;
+    final res = FluentTheme.of(context).resources;
 
-    if (brightness.isDark) {
-      if (!enabled) {
-        return const Color.fromRGBO(255, 255, 255, 0.04);
-      } else if (states.isPressing || states.isFocused) {
-        return const Color(0xFF1f1f1f);
-      } else if (states.isHovering) {
-        return const Color(0xFF323232);
-      } else {
-        return const Color(0xFF2d2d2d);
-      }
+    if (!enabled) {
+      return res.controlFillColorDisabled;
+    } else if (states.isPressing || states.isFocused) {
+      return res.controlFillColorInputActive;
+    } else if (states.isHovering) {
+      return res.controlFillColorSecondary;
     } else {
-      if (!enabled) {
-        return const Color.fromRGBO(249, 249, 249, 0.3);
-      } else if (states.isPressing || states.isFocused) {
-        return const Color(0xFFffffff);
-      } else if (states.isHovering) {
-        return const Color(0xFFfbfbfb);
-      } else {
-        return const Color(0xFFf6f6f6);
-      }
+      return res.controlFillColorDefault;
     }
   }
 }

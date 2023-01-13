@@ -7,22 +7,7 @@ typedef ButtonStateWidgetBuilder = Widget Function(
   Set<ButtonStates> state,
 );
 
-/// Base widget for any widget that requires input. It
-/// provides a [builder] callback to build the child with
-/// the current input state: none, hovering, pressing or
-/// focused.
-///
-/// It's used by the following widgets:
-/// - [Button]
-/// - [Checkbox]
-/// - [ComboBox]
-/// - [DatePicker]
-/// - [IconButton]
-/// - [RadioButton]
-/// - [TabView]'s [Tab]
-/// - [TappableListTile]
-/// - [TimePicker]
-/// - [ToggleSwitch]
+/// Base widget for any widget that requires input.
 class HoverButton extends StatefulWidget {
   /// Creates a hover button.
   const HoverButton({
@@ -45,7 +30,11 @@ class HoverButton extends StatefulWidget {
     this.onFocusChange,
     this.autofocus = false,
     this.actionsEnabled = true,
+    this.customActions,
+    this.shortcuts,
     this.focusEnabled = true,
+    this.forceEnabled = false,
+    this.hitTestBehavior = HitTestBehavior.opaque,
   }) : super(key: key);
 
   /// {@template fluent_ui.controls.inputs.HoverButton.mouseCursor}
@@ -56,6 +45,7 @@ class HoverButton extends StatefulWidget {
   /// cursor to the next region behind it in hit-test order.
   /// {@endtemplate}
   final MouseCursor? cursor;
+
   final VoidCallback? onLongPress;
   final VoidCallback? onLongPressStart;
   final VoidCallback? onLongPressEnd;
@@ -96,29 +86,58 @@ class HoverButton extends StatefulWidget {
 
   final ValueChanged<bool>? onFocusChange;
 
-  /// Whether actions and shortcuts are enabled
+  /// Whether actions are enabled
+  ///
+  /// Default actions:
+  ///  * Execute [onPressed] with Enter and Space
+  ///
+  /// See also:
+  ///
+  ///  * [customActions], which lets you execute custom actions
   final bool actionsEnabled;
 
-  /// Whether the focus is enabled.
+  /// Custom actions that will be executed around the subtree of this widget.
   ///
-  /// If disabled, actions and shortcurts will not work, regardless of what is
+  /// See also:
+  ///
+  ///  * [actionsEnabled], which controls if actions are enabled or not
+  final Map<Type, Action<Intent>>? customActions;
+
+  /// {@macro flutter.widgets.shortcuts.shortcuts}
+  final Map<ShortcutActivator, Intent>? shortcuts;
+
+  /// Whether the focusing is enabled.
+  ///
+  /// If `false`, actions and shortcurts will not work, regardless of what is
   /// set on [actionsEnabled].
   final bool focusEnabled;
 
+  /// Whether the hover button should be always enabled.
+  ///
+  /// If `true`, the button will be considered active even if [onPressed] is not
+  /// provided
+  final bool forceEnabled;
+
+  /// How this gesture detector should behave during hit testing.
+  ///
+  /// This defaults to [HitTestBehavior.opaque]
+  final HitTestBehavior hitTestBehavior;
+
   @override
-  _HoverButtonState createState() => _HoverButtonState();
+  State<HoverButton> createState() => _HoverButtonState();
 }
 
 class _HoverButtonState extends State<HoverButton> {
   late FocusNode node;
 
   late Map<Type, Action<Intent>> _actionMap;
+  late Map<Type, Action<Intent>> defaultActions;
 
   @override
   void initState() {
     super.initState();
     node = widget.focusNode ?? _createFocusNode();
-    void _handleActionTap() async {
+    Future<void> handleActionTap() async {
       if (!enabled) return;
       setState(() => _pressing = true);
       widget.onPressed?.call();
@@ -126,13 +145,18 @@ class _HoverButtonState extends State<HoverButton> {
       if (mounted) setState(() => _pressing = false);
     }
 
-    _actionMap = <Type, Action<Intent>>{
+    defaultActions = {
       ActivateIntent: CallbackAction<ActivateIntent>(
-        onInvoke: (ActivateIntent intent) => _handleActionTap(),
+        onInvoke: (ActivateIntent intent) => handleActionTap(),
       ),
       ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-        onInvoke: (ButtonActivateIntent intent) => _handleActionTap(),
+        onInvoke: (ButtonActivateIntent intent) => handleActionTap(),
       ),
+    };
+
+    _actionMap = <Type, Action<Intent>>{
+      ...defaultActions,
+      if (widget.customActions != null) ...widget.customActions!,
     };
   }
 
@@ -141,6 +165,13 @@ class _HoverButtonState extends State<HoverButton> {
     super.didUpdateWidget(oldWidget);
     if (widget.focusNode != oldWidget.focusNode) {
       node = widget.focusNode ?? node;
+    }
+
+    if (widget.customActions != oldWidget.customActions) {
+      _actionMap = <Type, Action<Intent>>{
+        ...defaultActions,
+        if (widget.customActions != null) ...widget.customActions!,
+      };
     }
   }
 
@@ -159,16 +190,21 @@ class _HoverButtonState extends State<HoverButton> {
   bool _shouldShowFocus = false;
 
   bool get enabled =>
+      widget.forceEnabled ||
       widget.onPressed != null ||
       widget.onTapUp != null ||
       widget.onTapDown != null ||
       widget.onTapDown != null ||
       widget.onLongPress != null ||
       widget.onLongPressStart != null ||
-      widget.onLongPressEnd != null;
+      widget.onLongPressEnd != null ||
+      widget.onHorizontalDragStart != null ||
+      widget.onHorizontalDragUpdate != null ||
+      widget.onHorizontalDragEnd != null;
 
   Set<ButtonStates> get states {
     if (!enabled) return {ButtonStates.disabled};
+
     return {
       if (_pressing) ButtonStates.pressing,
       if (_hovering) ButtonStates.hovering,
@@ -179,7 +215,7 @@ class _HoverButtonState extends State<HoverButton> {
   @override
   Widget build(BuildContext context) {
     Widget w = GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: widget.hitTestBehavior,
       onTap: enabled ? widget.onPressed : null,
       onTapDown: (_) {
         if (!enabled) return;
@@ -219,6 +255,7 @@ class _HoverButtonState extends State<HoverButton> {
         focusNode: node,
         autofocus: widget.autofocus,
         enabled: enabled,
+        shortcuts: widget.shortcuts,
         actions: widget.actionsEnabled ? _actionMap : {},
         onFocusChange: widget.onFocusChange,
         onShowFocusHighlight: (v) {
@@ -231,6 +268,7 @@ class _HoverButtonState extends State<HoverButton> {
       );
     } else {
       w = MouseRegion(
+        cursor: widget.cursor ?? MouseCursor.defer,
         onEnter: (e) {
           if (mounted) setState(() => _hovering = true);
         },
@@ -311,8 +349,8 @@ class _LerpProperties<T> implements ButtonState<T?> {
 
   @override
   T? resolve(Set<ButtonStates> states) {
-    final T? resolvedA = a?.resolve(states);
-    final T? resolvedB = b?.resolve(states);
+    final resolvedA = a?.resolve(states);
+    final resolvedB = b?.resolve(states);
     return lerpFunction(resolvedA, resolvedB, t);
   }
 }

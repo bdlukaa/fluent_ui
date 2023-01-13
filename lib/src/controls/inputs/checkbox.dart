@@ -1,7 +1,6 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 /// A check box is used to select or deselect action items. It can
 /// be used for a single item or for a list of multiple items that
@@ -83,8 +82,8 @@ class Checkbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final CheckboxThemeData style = CheckboxTheme.of(context).merge(this.style);
-    const double size = 20;
+    final style = CheckboxTheme.of(context).merge(this.style);
+    const size = 20.0;
     return HoverButton(
       autofocus: autofocus,
       semanticLabel: semanticLabel,
@@ -92,10 +91,10 @@ class Checkbox extends StatelessWidget {
       focusNode: focusNode,
       onPressed: onChanged == null
           ? null
-          : () => onChanged!(checked == null ? null : !(checked!)),
+          : () => onChanged!(checked == null ? null : !checked!),
       builder: (context, state) {
         Widget child = AnimatedContainer(
-          alignment: Alignment.center,
+          alignment: AlignmentDirectional.center,
           duration: FluentTheme.of(context).fastAnimationDuration,
           curve: FluentTheme.of(context).animationCurve,
           padding: style.padding,
@@ -116,7 +115,7 @@ class Checkbox extends StatelessWidget {
                       style.checkedIconColor?.resolve(state) ??
                       FluentTheme.of(context).inactiveColor,
                 )
-              : Icon(
+              : _Icon(
                   style.icon,
                   size: 12,
                   color: () {
@@ -141,7 +140,6 @@ class Checkbox extends StatelessWidget {
         return Semantics(
           checked: checked,
           child: FocusBorder(
-            useStackApproach: true,
             renderOutside: true,
             focused: state.isFocused,
             child: child,
@@ -213,7 +211,7 @@ class CheckboxTheme extends InheritedTheme {
 
   static CheckboxThemeData _getInheritedCheckboxThemeData(
       BuildContext context) {
-    final CheckboxTheme? checkboxTheme =
+    final checkboxTheme =
         context.dependOnInheritedWidgetOfExactType<CheckboxTheme>();
     return checkboxTheme?.data ?? FluentTheme.of(context).checkboxTheme;
   }
@@ -261,25 +259,17 @@ class CheckboxThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: !states.isDisabled
-              ? ButtonThemeData.checkedInputColor(style, states)
-              : style.brightness.isLight
-                  ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                  : const Color.fromRGBO(255, 255, 255, 0.1581),
+          color: ButtonThemeData.checkedInputColor(style, states),
         ),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
-            width: 1,
-            color: !states.isDisabled
-                ? style.borderInputColor
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: states.isDisabled || states.isPressing
+                ? style.resources.controlStrongStrokeColorDisabled
+                : style.resources.controlStrongStrokeColorDefault,
           ),
-          color:
-              states.isHovering ? style.inactiveColor.withOpacity(0.1) : null,
+          color: ButtonThemeData.uncheckedInputColor(style, states),
           borderRadius: radius,
         ),
       ),
@@ -290,14 +280,7 @@ class CheckboxThemeData with Diagnosticable {
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
-        return !states.isDisabled
-            ? ButtonThemeData.checkedInputColor(
-                style,
-                states,
-              ).basedOnLuminance()
-            : style.brightness.isLight
-                ? Colors.white
-                : const Color.fromRGBO(255, 255, 255, 0.5302);
+        return FilledButton.foregroundColor(style, states);
       }),
       uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,
@@ -346,42 +329,134 @@ class CheckboxThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'thirdstateDecoration',
-      thirdstateDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'uncheckedDecoration',
-      uncheckedDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'checkedDecoration',
-      checkedDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
-      'thirdstateIconColor',
-      thirdstateIconColor,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
-      'uncheckedIconColor',
-      uncheckedIconColor,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Color?>?>.has(
-      'checkedIconColor',
-      checkedIconColor,
-    ));
-    properties.add(IconDataProperty('icon', icon));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'checkedDecoration',
-      checkedDecoration,
-    ));
-    properties.add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-      'uncheckedDecoration',
-      uncheckedDecoration,
-    ));
-    properties.add(
-      DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
+    properties
+      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+        'thirdstateDecoration',
+        thirdstateDecoration,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+        'uncheckedDecoration',
+        uncheckedDecoration,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+        'checkedDecoration',
+        checkedDecoration,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+        'thirdstateIconColor',
+        thirdstateIconColor,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+        'uncheckedIconColor',
+        uncheckedIconColor,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+        'checkedIconColor',
+        checkedIconColor,
+      ))
+      ..add(IconDataProperty('icon', icon))
+      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+        'checkedDecoration',
+        checkedDecoration,
+      ))
+      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+        'uncheckedDecoration',
+        uncheckedDecoration,
+      ))
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
+      )
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+  }
+}
+
+/// Copy if [Icon], with specified font weight
+/// See https://github.com/bdlukaa/fluent_ui/issues/471
+class _Icon extends StatelessWidget {
+  const _Icon(
+    this.icon, {
+    Key? key,
+    this.size,
+    this.color,
+  }) : super(key: key);
+
+  final IconData? icon;
+
+  final double? size;
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasDirectionality(context));
+    final textDirection = Directionality.of(context);
+
+    final iconTheme = IconTheme.of(context);
+
+    final iconSize = size ?? iconTheme.size;
+
+    final iconShadows = iconTheme.shadows;
+
+    if (icon == null) {
+      return SizedBox(width: iconSize, height: iconSize);
+    }
+
+    final iconOpacity = iconTheme.opacity ?? 1.0;
+    var iconColor = color ?? iconTheme.color!;
+    if (iconOpacity != 1.0) {
+      iconColor = iconColor.withOpacity(iconColor.opacity * iconOpacity);
+    }
+
+    Widget iconWidget = RichText(
+      overflow: TextOverflow.visible, // Never clip.
+      textDirection:
+          textDirection, // Since we already fetched it for the assert...
+      text: TextSpan(
+        text: String.fromCharCode(icon!.codePoint),
+        style: TextStyle(
+          inherit: false,
+          color: iconColor,
+          fontSize: iconSize,
+          fontWeight: FontWeight.w900,
+          fontFamily: icon!.fontFamily,
+          package: icon!.fontPackage,
+          shadows: iconShadows,
+        ),
+      ),
     );
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
+
+    if (icon!.matchTextDirection) {
+      switch (textDirection) {
+        case TextDirection.rtl:
+          iconWidget = Transform(
+            transform: Matrix4.identity()..scale(-1.0, 1.0, 1.0),
+            alignment: AlignmentDirectional.center,
+            transformHitTests: false,
+            child: iconWidget,
+          );
+          break;
+        case TextDirection.ltr:
+          break;
+      }
+    }
+
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: iconSize,
+        height: iconSize,
+        child: Center(
+          child: iconWidget,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IconDataProperty('icon', icon, ifNull: '<empty>', showName: false))
+      ..add(DoubleProperty('size', size, defaultValue: null))
+      ..add(ColorProperty('color', color, defaultValue: null));
   }
 }

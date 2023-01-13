@@ -50,7 +50,7 @@ class MenuFlyout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasLeading = () {
+    final hasLeading = () {
       try {
         items.whereType<MenuFlyoutItem>().firstWhere((i) => i.leading != null);
         return true;
@@ -112,7 +112,26 @@ abstract class MenuFlyoutItemInterface {
   Widget build(BuildContext context);
 }
 
+class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
+  final WidgetBuilder builder;
+
+  const MenuFlyoutItemBuilder({
+    super.key,
+    required this.builder,
+  });
+
+  @override
+  Widget build(BuildContext context) => builder(context);
+}
+
+/// The standart flyout item used inside a [MenuFlyout]
+///
+/// See also:
+///
+///   * [MenuFlyout]
+///   * [Flyout]
 class MenuFlyoutItem extends MenuFlyoutItemInterface {
+  /// Creates a menu flyout item
   MenuFlyoutItem({
     Key? key,
     this.leading,
@@ -132,7 +151,7 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
@@ -159,11 +178,11 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
 
   @override
   Widget build(BuildContext context) {
-    final size = PopupContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.of(context).size;
     return SizedBox(
       width: size.width,
       child: const Padding(
-        padding: EdgeInsets.only(bottom: 5.0),
+        padding: EdgeInsetsDirectional.only(bottom: 5.0),
         child: Divider(
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),

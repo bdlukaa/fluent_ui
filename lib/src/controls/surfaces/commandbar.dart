@@ -9,12 +9,26 @@ class CommandBarCard extends StatelessWidget {
     required this.child,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.backgroundColor,
   }) : super(key: key);
 
   final Widget child;
+
+  /// The margin around [child]
   final EdgeInsetsGeometry margin;
-  final EdgeInsets padding;
+
+  /// The padding around [child]
+  final EdgeInsetsGeometry padding;
+
+  /// The rounded corners of the card
+  ///
+  /// A circular border with a 4.0 radius is used by default
+  final BorderRadiusGeometry borderRadius;
+
+  /// The card's background color.
+  ///
+  /// If null, [ThemeData.cardColor] is used
   final Color? backgroundColor;
 
   @override
@@ -24,6 +38,7 @@ class CommandBarCard extends StatelessWidget {
       child: Card(
         padding: padding,
         backgroundColor: backgroundColor,
+        borderRadius: borderRadius,
         child: child,
       ),
     );
@@ -141,7 +156,7 @@ class CommandBar extends StatefulWidget {
         super(key: key);
 
   @override
-  _CommandBarState createState() => _CommandBarState();
+  State<CommandBar> createState() => _CommandBarState();
 }
 
 class _CommandBarState extends State<CommandBar> {
@@ -221,7 +236,7 @@ class _CommandBarState extends State<CommandBar> {
       overflowWidget = Flyout(
         content: (context) => FlyoutContent(
           constraints: const BoxConstraints(maxWidth: 250.0),
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: const EdgeInsetsDirectional.only(top: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: allSecondaryItems
@@ -386,7 +401,10 @@ abstract class CommandBarItem with Diagnosticable {
 /// a CommandBarItem built in the given display mode. Can be useful to
 /// wrap the widget in a [Tooltip] etc.
 typedef CommandBarItemWidgetBuilder = Widget Function(
-    BuildContext context, CommandBarItemDisplayMode displayMode, Widget w);
+  BuildContext context,
+  CommandBarItemDisplayMode displayMode,
+  Widget child,
+);
 
 class CommandBarBuilderItem extends CommandBarItem {
   /// Function that is called with the built widget of the wrappedItem for
@@ -395,7 +413,7 @@ class CommandBarBuilderItem extends CommandBarItem {
   final CommandBarItemWidgetBuilder builder;
   final CommandBarItem wrappedItem;
 
-  CommandBarBuilderItem({
+  const CommandBarBuilderItem({
     Key? key,
     required this.builder,
     required this.wrappedItem,
@@ -405,7 +423,7 @@ class CommandBarBuilderItem extends CommandBarItem {
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
     // First, build the widget for the wrappedItem in the given displayMode,
     // as it is always passed to the callback
-    Widget w = wrappedItem.build(context, displayMode);
+    var w = wrappedItem.build(context, displayMode);
     return builder(context, displayMode, w);
   }
 }
@@ -418,8 +436,10 @@ class CommandBarBuilderItem extends CommandBarItem {
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
-  const CommandBarItemInPrimary({Key? key, required this.child})
-      : super(key: key);
+  const CommandBarItemInPrimary({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -466,33 +486,41 @@ class CommandBarButton extends CommandBarItem {
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:
-        final showIcon = (icon != null);
-        final showLabel = (label != null &&
-            (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon));
+        final showIcon = icon != null;
+        final showLabel = label != null &&
+            (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon);
         return IconButton(
           key: key,
           onPressed: onPressed,
           onLongPress: onLongPress,
           focusNode: focusNode,
           autofocus: autofocus,
-          icon: CommandBarItemInPrimary(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (showIcon)
-                  IconTheme(
-                    data: IconTheme.of(context).copyWith(size: 16),
-                    child: icon!,
-                  ),
-                if (showIcon && showLabel) const SizedBox(width: 10),
-                if (showLabel) label!,
-              ],
-            ),
+          style: ButtonStyle(
+            backgroundColor: ButtonState.resolveWith((states) {
+              final theme = FluentTheme.of(context);
+              return ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              );
+            }),
+          ),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showIcon)
+                IconTheme.merge(
+                  data: const IconThemeData(size: 16),
+                  child: icon!,
+                ),
+              if (showIcon && showLabel) const SizedBox(width: 10),
+              if (showLabel) label!,
+            ],
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
         return Padding(
-          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
           child: FlyoutListTile(
             key: key,
             onPressed: onPressed,
@@ -540,21 +568,16 @@ class CommandBarSeparator extends CommandBarItem {
               style: DividerThemeData(
                 thickness: thickness,
                 decoration: color != null ? BoxDecoration(color: color) : null,
-                verticalMargin: const EdgeInsets.symmetric(
-                  vertical: 0.0,
-                  horizontal: 0.0,
-                ),
               ),
             ),
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
         return Divider(
-          direction: Axis.horizontal,
           style: DividerThemeData(
             thickness: thickness,
             decoration: color != null ? BoxDecoration(color: color) : null,
-            horizontalMargin: const EdgeInsets.only(bottom: 5.0),
+            horizontalMargin: const EdgeInsetsDirectional.only(bottom: 5.0),
           ),
         );
     }

@@ -1,189 +1,312 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-const kThreeLineTileHeight = 60.0;
-const kTwoLineTileHeight = 52.0;
 const kOneLineTileHeight = 40.0;
 
-const kDefaultContentPadding = EdgeInsets.symmetric(
-  horizontal: 12.0,
-  vertical: 6.0,
+const kDefaultListTilePadding = EdgeInsetsDirectional.only(
+  end: 12.0,
+  top: 6.0,
+  bottom: 6.0,
 );
 
+const kDefaultListTileShape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+);
+
+enum ListTileSelectionMode {
+  none,
+  single,
+  multiple,
+}
+
+/// A fluent-styled list tile.
+///
+/// ![ListViewItem inside a ListView](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/listview-grouped-example-resized-final.png)
+///
+/// See also:
+///
+///  * [ListView], a scrollable list of widgets arranged linearly.
+///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/item-templates-listview>
 class ListTile extends StatelessWidget {
+  /// A fluent-styled list tile
   const ListTile({
     Key? key,
     this.tileColor,
-    this.shape,
+    this.shape = kDefaultListTileShape,
     this.leading,
     this.title,
     this.subtitle,
     this.trailing,
-    this.isThreeLine = false,
-    this.contentPadding = kDefaultContentPadding,
+    this.onPressed,
+    this.focusNode,
+    this.autofocus = false,
+  })  : assert(
+          subtitle != null ? title != null : true,
+          'To have a subtitle, there must be a title',
+        ),
+        selected = false,
+        selectionMode = ListTileSelectionMode.none,
+        onSelectionChange = null,
+        super(key: key);
+
+  /// A selectable list tile.
+  const ListTile.selectable({
+    Key? key,
+    this.tileColor,
+    this.shape = kDefaultListTileShape,
+    this.leading,
+    this.title,
+    this.subtitle,
+    this.trailing,
+    this.onPressed,
+    this.focusNode,
+    this.autofocus = false,
+    this.selected = false,
+    this.selectionMode = ListTileSelectionMode.single,
+    this.onSelectionChange,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
         ),
         super(key: key);
 
-  /// The color of the tile
-  final Color? tileColor;
+  /// The background color of the button.
+  ///
+  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
+  final ButtonState<Color>? tileColor;
 
-  /// The shape of the tile
-  final ShapeBorder? shape;
+  /// The tile shape.
+  ///
+  /// [kDefaultListTileShape] is used by default
+  final ShapeBorder shape;
 
+  /// A widget to display before the title.
+  ///
+  /// Typically an [Icon] or a [CircleAvatar] widget.
   final Widget? leading;
+
+  /// The primary content of the list tile.
+  ///
+  /// Typically a [Text] widget.
   final Widget? title;
+
+  /// Additional content displayed below the title.
+  ///
+  /// Typically a [Text] widget.
   final Widget? subtitle;
+
+  /// A widget to display after the title.
+  ///
+  /// Typically an [Icon] widget.
   final Widget? trailing;
 
-  final bool isThreeLine;
+  /// Called when the user taps this list tile.
+  ///
+  /// If null, and [onSelectionChange] is also null, the tile does not perform
+  /// any action
+  final VoidCallback? onPressed;
 
-  final EdgeInsetsGeometry contentPadding;
+  /// Whether this tile is selected within the list.
+  ///
+  /// See also:
+  ///
+  ///  * [selectionMode], which changes how the tile behave within the list
+  ///  * [onSelectionChange], which is called when the selection changes
+  final bool selected;
 
-  bool get isTwoLine => subtitle != null;
+  /// How the tile selection will behave within the list
+  ///
+  /// See also:
+  ///
+  ///  * [selected], which tells the widget whether it's selected or not
+  ///  * [onSelectionChange], which is called when the selection changes
+  final ListTileSelectionMode selectionMode;
+
+  /// Called when the selection changes.
+  ///
+  /// If [selectionMode] is single, this is called when any unselected tile is
+  /// pressed. If [selectionMode] is multiple, this is called when any tile is
+  /// pressed
+  ///
+  /// See also:
+  ///
+  ///  * [selected], which tells the widget whether it's selected or not
+  ///  * [selectionMode], which changes how the tile behave within the list
+  final ValueChanged<bool>? onSelectionChange;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
+  final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('tileColor', tileColor));
-    properties.add(FlagProperty(
-      'isThreeLine',
-      value: isThreeLine,
-      ifFalse: isTwoLine ? 'two lines' : 'one line',
-    ));
-    properties.add(DiagnosticsProperty('shape', shape));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
-      'contentPadding',
-      contentPadding,
-    ));
+    properties
+      ..add(DiagnosticsProperty('shape', shape))
+      ..add(FlagProperty('selected',
+          value: selected, ifFalse: 'unselected', defaultValue: false))
+      ..add(EnumProperty(
+        'selectionMode',
+        selectionMode,
+        defaultValue: ListTileSelectionMode.none,
+      ))
+      ..add(FlagProperty(
+        'enabled',
+        value: onPressed != null || onSelectionChange != null,
+        defaultValue: false,
+        ifFalse: 'disabled',
+      ));
+  }
+
+  void _onSelectionChange() {
+    switch (selectionMode) {
+      case ListTileSelectionMode.multiple:
+        onSelectionChange!(!selected);
+        break;
+      case ListTileSelectionMode.single:
+        if (!selected) onSelectionChange!(true);
+        break;
+      default:
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
-    final style = FluentTheme.of(context);
-    return Container(
-      decoration: ShapeDecoration(
-        shape: shape ?? const ContinuousRectangleBorder(),
-        color: tileColor,
-      ),
-      height: isThreeLine
-          ? kThreeLineTileHeight
-          : isTwoLine
-              ? kTwoLineTileHeight
-              : kOneLineTileHeight,
-      padding: contentPadding,
-      child: Row(children: [
-        if (leading != null)
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 14),
-            child: leading,
-          ),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (title != null)
-                DefaultTextStyle(
-                  style: (style.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 16,
-                  ),
-                  overflow: TextOverflow.clip,
-                  child: title!,
-                ),
-              if (subtitle != null)
-                DefaultTextStyle(
-                  style: style.typography.caption ?? const TextStyle(),
-                  overflow: TextOverflow.clip,
-                  child: subtitle!,
-                ),
-            ],
-          ),
-        ),
-        if (trailing != null) trailing!,
-      ]),
-    );
-  }
-}
+    final theme = FluentTheme.of(context);
 
-class TappableListTile extends StatelessWidget {
-  const TappableListTile({
-    Key? key,
-    this.tileColor,
-    this.shape,
-    this.leading,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.isThreeLine = false,
-    this.onTap,
-    this.focusNode,
-    this.autofocus = false,
-    this.contentPadding = kDefaultContentPadding,
-  }) : super(key: key);
-
-  final VoidCallback? onTap;
-
-  final ButtonState<Color>? tileColor;
-  final ButtonState<ShapeBorder>? shape;
-
-  final Widget? leading;
-  final Widget? title;
-  final Widget? subtitle;
-  final Widget? trailing;
-
-  final bool isThreeLine;
-
-  final FocusNode? focusNode;
-  final bool autofocus;
-
-  final EdgeInsetsGeometry contentPadding;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty('onTap', onTap, ifNull: 'disabled'));
-    properties.add(FlagProperty(
-      'autofocus',
-      value: autofocus,
-      defaultValue: false,
-      ifFalse: 'manual focus',
-    ));
-    properties.add(ObjectFlagProperty.has('focusNode', focusNode));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
     return HoverButton(
-      onPressed: onTap,
+      onPressed:
+          onPressed ?? (onSelectionChange != null ? _onSelectionChange : null),
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
-        final Color tileColor = () {
+        final tileColor = () {
           if (this.tileColor != null) {
             return this.tileColor!.resolve(states);
-          } else if (states.isFocused) {
-            return style.accentColor.resolve(context);
           }
-          return ButtonThemeData.uncheckedInputColor(style, states);
+
+          return ButtonThemeData.uncheckedInputColor(
+            theme,
+            selected ? {ButtonStates.hovering} : states,
+            transparentWhenNone: true,
+            transparentWhenDisabled: true,
+          );
         }();
-        return ListTile(
-          contentPadding: contentPadding,
-          leading: leading,
-          title: title,
-          subtitle: subtitle,
-          trailing: trailing,
-          isThreeLine: isThreeLine,
-          tileColor: tileColor,
-          shape: shape?.resolve(states),
+
+        const placeholder = SizedBox(width: 12.0);
+
+        final tile = Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (leading != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 14),
+                child: leading,
+              ),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (title != null)
+                    DefaultTextStyle(
+                      style: (theme.typography.body ?? const TextStyle())
+                          .copyWith(fontSize: 16),
+                      child: title!,
+                    ),
+                  if (subtitle != null)
+                    DefaultTextStyle(
+                      style: theme.typography.caption ?? const TextStyle(),
+                      child: subtitle!,
+                    ),
+                ],
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
+        );
+
+        return FocusBorder(
+          focused: states.isFocused,
+          renderOutside: false,
+          child: Container(
+            decoration: ShapeDecoration(shape: shape, color: tileColor),
+            constraints: const BoxConstraints(
+              minHeight: kOneLineTileHeight,
+              minWidth: 88.0,
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+            child: ContentManager(content: (context) {
+              final tileHeight = ContentSizeInfo.of(context).size.height;
+              return Row(children: [
+                if (selectionMode == ListTileSelectionMode.none)
+                  placeholder
+                else if (selectionMode == ListTileSelectionMode.multiple)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 6.0,
+                      end: 12.0,
+                    ),
+                    child: IgnorePointer(
+                      child: Checkbox(
+                        checked: selected,
+                        onChanged: (v) {
+                          onSelectionChange?.call(v ?? false);
+                        },
+                      ),
+                    ),
+                  )
+                else if (selectionMode == ListTileSelectionMode.single)
+                  SizedBox(
+                    height: tileHeight,
+                    child: TweenAnimationBuilder<double>(
+                      duration: theme.mediumAnimationDuration,
+                      curve: theme.animationCurve,
+                      tween: Tween<double>(
+                        begin: 0.0,
+                        end: selected
+                            ? states.isPressing
+                                ? tileHeight * 0.3
+                                : tileHeight
+                            : 0.0,
+                      ),
+                      builder: (context, height, child) => Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: kDefaultListTilePadding.vertical,
+                          ),
+                          child: Container(
+                            height: height * 0.7,
+                            width: 3.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100.0),
+                              color: selected
+                                  ? theme.accentColor
+                                      .defaultBrushFor(theme.brightness)
+                                  : Colors.transparent,
+                            ),
+                            margin: const EdgeInsetsDirectional.only(end: 8.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  placeholder,
+                Expanded(
+                  child: Padding(
+                    padding: kDefaultListTilePadding,
+                    child: tile,
+                  ),
+                ),
+              ]);
+            }),
+          ),
         );
       },
     );

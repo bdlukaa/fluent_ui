@@ -1,7 +1,6 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
 
 Widget wrapApp({required Widget child}) {
   return FluentApp(home: child);
@@ -78,6 +77,19 @@ void main() {
 
       expect(find.text('Brightness.light'), findsOneWidget);
       expect(find.text('Brightness.dark'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Do not display warning if country code is provided for supportedLocales',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const FluentApp(
+          supportedLocales: [
+            Locale('en', 'US'),
+          ],
+        ),
+      );
     },
   );
 }

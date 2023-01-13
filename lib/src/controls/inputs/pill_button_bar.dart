@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const double _kMinHeight = 28.0;
 const double _kMaxHeight = 46.0;
@@ -105,16 +104,16 @@ class _PillButtonBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = PillButtonBarTheme.of(context);
-    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
+    final visualDensity = FluentTheme.of(context).visualDensity;
     return HoverButton(
       onPressed: onPressed,
       builder: (context, states) {
-        final Color selectedColor =
+        final selectedColor =
             theme.selectedColor?.resolve(states) ?? Colors.transparent;
-        final Color unselectedColor = theme.unselectedColor?.resolve(states) ??
+        final unselectedColor = theme.unselectedColor?.resolve(states) ??
             FluentTheme.of(context).accentColor.dark;
         return Align(
-          alignment: Alignment.center,
+          alignment: AlignmentDirectional.center,
           child: Container(
             decoration: BoxDecoration(
               color: selected ? selectedColor : unselectedColor,
@@ -124,7 +123,7 @@ class _PillButtonBarItem extends StatelessWidget {
               minWidth: _kMinButtonWidth + visualDensity.horizontal,
               maxHeight: _kMaxButtonHeight + visualDensity.vertical,
             ),
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.center,
             padding: EdgeInsets.symmetric(
               horizontal: 16.0 + visualDensity.horizontal,
               vertical: 3.0,
@@ -240,7 +239,7 @@ class PillButtonBarThemeData with Diagnosticable {
   });
 
   factory PillButtonBarThemeData.standard(ThemeData style) {
-    Color _applyOpacity(Color color, Set<ButtonStates> states) {
+    Color applyOpacity(Color color, Set<ButtonStates> states) {
       return color.withOpacity(
         states.isPressing
             ? 0.925
@@ -259,11 +258,11 @@ class PillButtonBarThemeData with Diagnosticable {
     return PillButtonBarThemeData(
       backgroundColor: isLight ? style.accentColor : const Color(0xFF212121),
       selectedColor: ButtonState.resolveWith((states) {
-        return _applyOpacity(
+        return applyOpacity(
             isLight ? Colors.white : const Color(0xFF404040), states);
       }),
       unselectedColor: ButtonState.resolveWith((states) {
-        return _applyOpacity(unselectedColor, states);
+        return applyOpacity(unselectedColor, states);
       }),
       selectedTextStyle:
           TextStyle(color: isLight ? Colors.black : Colors.white),

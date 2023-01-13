@@ -32,8 +32,12 @@ class NavigationIndicator extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear));
-    properties.add(ColorProperty('highlight color', color));
+      ..add(DiagnosticsProperty(
+        'curve',
+        curve,
+        defaultValue: Curves.linear,
+      ))
+      ..add(ColorProperty('highlight color', color));
   }
 
   @override
@@ -48,7 +52,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     super.initState();
     fetch();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 
@@ -67,12 +71,12 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return InheritedNavigationView.of(context).pane!;
   }
 
-  int get index {
-    return pane.selected ?? 0;
+  int get selectedIndex {
+    return pane.selected ?? -1;
   }
 
   bool get isSelected {
-    return pane.isSelected(pane.effectiveItems[itemIndex]);
+    return pane.isSelected(item);
   }
 
   Axis get axis {
@@ -84,11 +88,29 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get itemIndex {
-    return InheritedNavigationView.maybeOf(context)?.currentItemIndex ?? -1;
+    return InheritedNavigationView.of(context).currentItemIndex;
   }
 
   int get oldIndex {
-    return InheritedNavigationView.maybeOf(context)?.oldIndex ?? -1;
+    return InheritedNavigationView.of(context).oldIndex;
+  }
+
+  PaneItem get item {
+    return pane.effectiveItems[itemIndex];
+  }
+
+  /// The parent of this item, if any
+  PaneItemExpander? get parent {
+    final items = pane.effectiveItems;
+
+    final expandableItems = items.whereType<PaneItemExpander>();
+    if (expandableItems.isEmpty) return null;
+
+    for (final expandable in expandableItems) {
+      if (expandable.items.contains(item)) return expandable;
+    }
+
+    return null;
   }
 
   @override
@@ -108,16 +130,18 @@ class EndNavigationIndicator extends NavigationIndicator {
   final Color unselectedColor;
 
   @override
-  _EndNavigationIndicatorState createState() => _EndNavigationIndicatorState();
+  NavigationIndicatorState<EndNavigationIndicator> createState() =>
+      _EndNavigationIndicatorState();
 }
 
 class _EndNavigationIndicatorState
     extends NavigationIndicatorState<EndNavigationIndicator> {
   @override
   Widget build(BuildContext context) {
+    if (selectedIndex.isNegative) return const SizedBox.shrink();
     assert(debugCheckHasFluentTheme(context));
 
-    final bool isTop = axis == Axis.vertical;
+    final isTop = axis == Axis.vertical;
     final theme = NavigationPaneTheme.of(context);
 
     return IgnorePointer(
@@ -136,7 +160,7 @@ class _EndNavigationIndicatorState
             ),
             width: isTop ? 20.0 : 6.0,
             height: isTop ? 4.5 : double.infinity,
-            color: itemIndex != index
+            color: itemIndex != selectedIndex
                 ? widget.unselectedColor
                 : widget.color ?? theme.highlightColor,
           ),
@@ -170,7 +194,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   final double leftPadding;
 
   @override
-  _StickyNavigationIndicatorState createState() =>
+  NavigationIndicatorState<StickyNavigationIndicator> createState() =>
       _StickyNavigationIndicatorState();
 }
 
@@ -187,15 +211,13 @@ class _StickyNavigationIndicatorState
       vsync: this,
       duration: widget.duration,
       value: 1.0,
-    )..addListener(_updateListener);
+    );
     downController = AnimationController(
       vsync: this,
       duration: widget.duration,
       value: 1.0,
-    )..addListener(_updateListener);
+    );
   }
-
-  void _updateListener() => setState(() {});
 
   Animation<double>? upAnimation;
   Animation<double>? downAnimation;
@@ -219,14 +241,13 @@ class _StickyNavigationIndicatorState
 
   bool get isShowing {
     if (itemIndex.isNegative) return false;
-    if (itemIndex == oldIndex && _old != oldIndex) {
-      return true;
-    }
-    return itemIndex == index;
+
+    if (itemIndex == selectedIndex) return true;
+    return itemIndex == oldIndex && _old != oldIndex;
   }
 
-  bool get isAbove => oldIndex < index;
-  bool get isBelow => oldIndex > index;
+  bool get isAbove => oldIndex < selectedIndex;
+  bool get isBelow => oldIndex > selectedIndex;
 
   @override
   void didChangeDependencies() {
@@ -234,12 +255,24 @@ class _StickyNavigationIndicatorState
     animate();
   }
 
-  void animate() async {
+  Future<void> animate() async {
     if (!mounted) {
       return;
     }
 
-    if (isShowing && _old != oldIndex) {
+    _old = (PageStorage.of(context)?.readState(
+          context,
+          identifier: 'oldIndex$itemIndex',
+        ) as num?)
+            ?.toInt() ??
+        _old;
+
+    // do not perform the animation twice
+    if (_old == oldIndex) {
+      return;
+    }
+
+    if (isShowing) {
       if (isBelow) {
         if (isSelected) {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
@@ -248,11 +281,13 @@ class _StickyNavigationIndicatorState
               parent: downController,
             ),
           );
+          upAnimation = null;
           await downController.forward(from: 0.0);
         } else {
           upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: upController),
           );
+          downAnimation = null;
           await upController.reverse(from: 1.0);
         }
       } else if (isAbove) {
@@ -263,22 +298,32 @@ class _StickyNavigationIndicatorState
               parent: upController,
             ),
           );
+          downAnimation = null;
           await upController.forward(from: 0.0);
         } else {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: downController),
           );
+          upAnimation = null;
           await downController.reverse(from: 1.0);
         }
       }
     }
 
     _old = oldIndex;
+    if (mounted) {
+      PageStorage.of(context)?.writeState(
+        context,
+        _old,
+        identifier: 'oldIndex$itemIndex',
+      );
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || !isShowing) {
+    if (offsets == null || !isShowing || selectedIndex.isNegative) {
       return const SizedBox.shrink();
     }
 
@@ -287,50 +332,66 @@ class _StickyNavigationIndicatorState
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
 
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final bool isHorizontal = axis == Axis.horizontal;
+    final theme = NavigationPaneTheme.of(context);
+    final isHorizontal = axis == Axis.horizontal;
+
+    final decoration = BoxDecoration(
+      color: widget.color ?? theme.highlightColor,
+      borderRadius: BorderRadius.circular(100),
+    );
 
     return SizedBox(
       height: double.infinity,
       child: IgnorePointer(
-        child: Builder(builder: (context) {
-          final decoration = BoxDecoration(
-            color: widget.color ?? theme.highlightColor,
-            borderRadius: BorderRadius.circular(100),
-          );
-          final child = isHorizontal
+        child: AnimatedBuilder(
+          animation: Listenable.merge([upController, downController]),
+          child: isHorizontal
               ? Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: Container(width: 2.5, decoration: decoration),
                 )
               : Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: AlignmentDirectional.bottomCenter,
                   child: Container(height: 2.5, decoration: decoration),
-                );
-          if (!isSelected) {
-            if (upController.status == AnimationStatus.dismissed ||
-                downController.status == AnimationStatus.dismissed) {
-              return const SizedBox.shrink();
+                ),
+          builder: (context, child) {
+            if (!isSelected) {
+              if (upController.status == AnimationStatus.dismissed ||
+                  downController.status == AnimationStatus.dismissed) {
+                return const SizedBox.shrink();
+              }
             }
-          } else {
-            if (upAnimation?.value == 0.0 || downAnimation?.value == 0.0) {
-              return const SizedBox.shrink();
-            }
-          }
-          return Padding(
-            padding: isHorizontal
-                ? EdgeInsets.only(
-                    left: offsets![itemIndex].dx,
-                    top: widget.leftPadding * (upAnimation?.value ?? 1.0),
-                    bottom: widget.leftPadding * (downAnimation?.value ?? 1.0),
-                  )
-                : EdgeInsetsDirectional.only(
-                    start: widget.topPadding * (upAnimation?.value ?? 1.0),
-                    end: widget.topPadding * (downAnimation?.value ?? 1.0),
-                  ),
-            child: child,
-          );
-        }),
+            return Padding(
+              padding: isHorizontal
+                  ? EdgeInsetsDirectional.only(
+                      start: () {
+                        final x = offsets![itemIndex].dx;
+                        if (parent != null) {
+                          final isOpen =
+                              parent!.expanderKey.currentState?._open ?? false;
+                          if (isOpen) {
+                            return x + _PaneItemExpander.leadingPadding.start;
+                          }
+
+                          final parentIndex =
+                              pane.effectiveItems.indexOf(parent!);
+                          final parentX = offsets![parentIndex].dx;
+                          return parentX;
+                        }
+                        return x;
+                      }(),
+                      top: widget.leftPadding * (upAnimation?.value ?? 1.0),
+                      bottom:
+                          widget.leftPadding * (downAnimation?.value ?? 1.0),
+                    )
+                  : EdgeInsetsDirectional.only(
+                      start: widget.topPadding * (upAnimation?.value ?? 1.0),
+                      end: widget.topPadding * (downAnimation?.value ?? 1.0),
+                    ),
+              child: child,
+            );
+          },
+        ),
       ),
     );
   }

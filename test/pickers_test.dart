@@ -11,7 +11,7 @@ void main() {
         await tester.pumpWidget(wrapApp(
           child: DatePicker(
             locale: const Locale('pt'),
-            selected: DateTime(1, 1, 1),
+            selected: DateTime(1),
           ),
         ));
 
@@ -25,7 +25,7 @@ void main() {
         await tester.pumpWidget(FluentApp(
           locale: const Locale('pt'),
           home: DatePicker(
-            selected: DateTime(1, 1, 1),
+            selected: DateTime(1),
           ),
         ));
 

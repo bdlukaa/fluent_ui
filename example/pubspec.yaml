@@ -6,21 +6,26 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   fluent_ui:
     path: ../
-  provider: ^6.0.2
-  system_theme: ^2.0.0
-  window_manager: ^0.2.1
+  provider: ^6.0.5
+  system_theme: ^2.1.0
+  window_manager: ^0.3.0
   flutter_acrylic: ^1.0.0+2
   url_strategy: ^0.2.0
-  url_launcher: ^6.0.20
+  url_launcher: ^6.1.7
   clipboard: ^0.1.3
-  email_validator: ^2.0.1
+  email_validator: ^2.1.17
+  http: ^0.13.5
+  flutter_markdown: ^0.6.13
+  flutter_syntax_view: 
+    git:
+      url: https://github.com/YehudaKremer/flutter_syntax_view.git
 
 dev_dependencies:
   flutter_test:

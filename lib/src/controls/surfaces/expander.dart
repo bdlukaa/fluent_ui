@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+typedef ShapeBuilder = ShapeBorder Function(bool open);
+
 /// The expander direction
 enum ExpanderDirection {
   /// Whether the [Expander] expands down
@@ -9,25 +11,25 @@ enum ExpanderDirection {
   up,
 }
 
-/// The [Expander] control lets you show or hide less important content
-/// that's related to a piece of primary content that's always visible.
-/// Items contained in the Header are always visible. The user can expand
-/// and collapse the Content area, where secondary content is displayed,
-/// by interacting with the header. When the content area is expanded,
-/// it pushes other UI elements out of the way; it does not overlay other
-/// UI. The Expander can expand upwards or downwards.
+/// The [Expander] control lets you show or hide less important content that's
+/// related to a piece of primary content that's always visible. Items contained
+/// in the Header are always visible. The user can expand and collapse the Content
+/// area, where secondary content is displayed, by interacting with the header.
+/// When the content area is expanded, it pushes other UI elements out of the
+/// way; it does not overlay other UI. The Expander can expand upwards or
+/// downwards.
 ///
-/// Both the Header and Content areas can contain any content, from simple
-/// text to complex UI layouts. For example, you can use the control to show
-/// additional options for an item.
+/// Both the Header and Content areas can contain any content, from simple text
+/// to complex UI layouts. For example, you can use the control to show additional
+/// options for an item.
 ///
 /// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
-  /// Creates an expander
+  /// Creates a fluent-styled expander.
   const Expander({
     Key? key,
     this.leading,
@@ -43,20 +45,21 @@ class Expander extends StatefulWidget {
     this.headerHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
+    this.headerShape,
   }) : super(key: key);
 
   /// The leading widget.
   ///
   /// See also:
   ///
-  ///  * [Icon]
-  ///  * [RadioButton]
-  ///  * [Checkbox]
+  ///  * [Icon], used to display graphic content
+  ///  * [RadioButton], used to select an exclusive option from a set of options
+  ///  * [Checkbox], used to select or deselect items within a list
   final Widget? leading;
 
   /// The expander header
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget header;
 
   /// The expander content
@@ -79,12 +82,14 @@ class Expander extends StatefulWidget {
   ///  * [ToggleSwitch]
   final Widget? trailing;
 
-  /// The expand-collapse animation duration. If null, defaults to
-  /// [FluentTheme.fastAnimationDuration]
+  /// The expand-collapse animation duration.
+  ///
+  /// If null, defaults to [ThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
-  /// The expand-collapse animation curve. If null, defaults to
-  /// [FluentTheme.animationCurve]
+  /// The expand-collapse animation curve.
+  ///
+  /// If null, defaults to [ThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The expand direction. Defaults to [ExpanderDirection.down]
@@ -108,18 +113,21 @@ class Expander extends StatefulWidget {
   /// The content color of the header
   final Color? contentBackgroundColor;
 
+  /// The shape of the header
+  final ShapeBuilder? headerShape;
+
   @override
-  ExpanderState createState() => ExpanderState();
+  State<Expander> createState() => ExpanderState();
 }
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late ThemeData _theme;
 
-  bool? _open;
-  bool get open => _open ?? false;
-  set open(bool value) {
-    if (_open != value) _handlePressed();
+  late bool _isExpanded;
+  bool get isExpanded => _isExpanded;
+  set isExpanded(bool value) {
+    if (_isExpanded != value) _handlePressed();
   }
 
   late AnimationController _controller;
@@ -127,39 +135,38 @@ class ExpanderState extends State<Expander>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration ?? const Duration(milliseconds: 150),
-    );
+    _controller = AnimationController(vsync: this);
+    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
+        widget.initiallyExpanded;
+    if (_isExpanded == true) {
+      _controller.value = 1;
+    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _theme = FluentTheme.of(context);
-    if (_open == null) {
-      _open = !widget.initiallyExpanded;
-      open = widget.initiallyExpanded;
-    }
   }
 
   void _handlePressed() {
-    if (open) {
+    if (_isExpanded) {
       _controller.animateTo(
         0.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = false;
+      _isExpanded = false;
     } else {
       _controller.animateTo(
         1.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = true;
+      _isExpanded = true;
     }
-    widget.onStateChanged?.call(open);
+    PageStorage.of(context)?.writeState(context, _isExpanded);
+    widget.onStateChanged?.call(_isExpanded);
     if (mounted) setState(() {});
   }
 
@@ -171,59 +178,33 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static Color backgroundColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return const Color(0xFFf9f9f9).withOpacity(0.2);
-      if (states.isHovering) return const Color(0xFFf9f9f9).withOpacity(0.4);
-      return Colors.white.withOpacity(0.7);
-    } else {
-      if (states.isDisabled) return style.disabledColor;
-      if (states.isPressing) return Colors.white.withOpacity(0.03);
-      if (states.isHovering) return Colors.white.withOpacity(0.082);
-      return Colors.white.withOpacity(0.05);
-    }
-  }
-
-  static Color borderColor(ThemeData style, Set<ButtonStates> states) {
-    if (style.brightness == Brightness.light) {
-      if (states.isHovering && !states.isPressing) {
-        return const Color(0xFF212121).withOpacity(0.22);
-      }
-      return const Color(0xFF212121).withOpacity(0.17);
-    } else {
-      if (states.isPressing) return Colors.white.withOpacity(0.062);
-      if (states.isHovering) return Colors.white.withOpacity(0.02);
-      return Colors.black.withOpacity(0.52);
-    }
-  }
-
-  static const double borderSize = 0.5;
-  static final Color darkBorderColor = Colors.black.withOpacity(0.8);
-
   static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     final children = [
+      // HEADER
       HoverButton(
         onPressed: _handlePressed,
+        hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
-          return AnimatedContainer(
-            duration: expanderAnimationDuration,
+          return Container(
             height: widget.headerHeight,
-            decoration: BoxDecoration(
+            decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
-                  backgroundColor(_theme, states),
-              border: Border.all(
-                width: borderSize,
-                color: borderColor(_theme, states),
-              ),
-              borderRadius: BorderRadius.vertical(
-                top: const Radius.circular(4.0),
-                bottom: Radius.circular(open ? 0.0 : 4.0),
-              ),
+                  theme.resources.cardBackgroundFillColorDefault,
+              shape: widget.headerShape?.call(_isExpanded) ??
+                  RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.resources.cardStrokeColorDefault,
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(4.0),
+                      bottom: Radius.circular(_isExpanded ? 0.0 : 4.0),
+                    ),
+                  ),
             ),
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
@@ -239,30 +220,36 @@ class ExpanderState extends State<Expander>
                   padding: const EdgeInsetsDirectional.only(start: 20.0),
                   child: widget.trailing!,
                 ),
-              Container(
-                margin: EdgeInsetsDirectional.only(
+              Padding(
+                padding: EdgeInsetsDirectional.only(
                   start: widget.trailing != null ? 8.0 : 20.0,
                   end: 8.0,
                   top: 8.0,
                   bottom: 8.0,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(_theme, states),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                alignment: Alignment.center,
-                child: widget.icon ??
-                    RotationTransition(
-                      turns: Tween<double>(begin: 0, end: 0.5)
-                          .animate(_controller),
-                      child: Icon(
-                        _isDown
-                            ? FluentIcons.chevron_down
-                            : FluentIcons.chevron_up,
-                        size: 10,
-                      ),
+                child: FocusBorder(
+                  focused: states.isFocused,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color:
+                          ButtonThemeData.uncheckedInputColor(_theme, states),
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
+                    alignment: AlignmentDirectional.center,
+                    child: widget.icon ??
+                        RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 0.5)
+                              .animate(_controller),
+                          child: Icon(
+                            _isDown
+                                ? FluentIcons.chevron_down
+                                : FluentIcons.chevron_up,
+                            size: 10,
+                          ),
+                        ),
+                  ),
+                ),
               ),
             ]),
           );
@@ -275,11 +262,10 @@ class ExpanderState extends State<Expander>
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
-              width: borderSize,
-              color: borderColor(_theme, {ButtonStates.none}),
+              color: theme.resources.cardStrokeColorDefault,
             ),
             color: widget.contentBackgroundColor ??
-                backgroundColor(_theme, {ButtonStates.none}),
+                theme.resources.cardBackgroundFillColorSecondary,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
@@ -289,6 +275,7 @@ class ExpanderState extends State<Expander>
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: _isDown ? children : children.reversed.toList(),
     );
   }

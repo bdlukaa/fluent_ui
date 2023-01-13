@@ -6,7 +6,7 @@ import 'app_test.dart';
 void main() {
   testWidgets('RadioButton change state accordingly',
       (WidgetTester tester) async {
-    bool radioButtonValue = false;
+    var radioButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(

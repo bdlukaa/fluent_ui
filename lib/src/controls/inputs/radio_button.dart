@@ -24,8 +24,7 @@ import 'package:flutter/rendering.dart';
 ///   * [Slider], which let the user lie within a range of values,
 ///     (for example, 10, 20, 30, ... 100).
 ///   * [Checkbox], which let the user select multiple options.
-///   * [ComboBox], which let the user select multiple options, when
-///     there's more than eight options.
+///   * [ComboBox], which let the user select multiple options from a popup
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
@@ -98,7 +97,7 @@ class RadioButton extends StatelessWidget {
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       builder: (context, state) {
-        final BoxDecoration decoration = (checked
+        final decoration = (checked
                 ? style.checkedDecoration?.resolve(state)
                 : style.uncheckedDecoration?.resolve(state)) ??
             const BoxDecoration(shape: BoxShape.circle);
@@ -176,7 +175,7 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final RadioButtonTheme? theme =
+    final theme =
         context.dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
     return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
   }
@@ -220,11 +219,7 @@ class RadioButtonThemeData with Diagnosticable {
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: !states.isDisabled
-                ? style.accentColor.light
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: ButtonThemeData.checkedInputColor(style, states),
             width: !states.isDisabled
                 ? states.isHovering && !states.isPressing
                     ? 3.4
@@ -285,9 +280,10 @@ class RadioButtonThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-        'checkedDecoration', checkedDecoration));
-    properties.add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-        'uncheckedDecoration', uncheckedDecoration));
+    properties
+      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+          'checkedDecoration', checkedDecoration))
+      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+          'uncheckedDecoration', uncheckedDecoration));
   }
 }

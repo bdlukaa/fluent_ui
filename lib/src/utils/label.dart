@@ -8,21 +8,24 @@ import 'package:flutter/foundation.dart';
 /// ![InfoLabel above a TextBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)
 class InfoLabel extends StatelessWidget {
   /// Creates an info label.
-  const InfoLabel({
+  InfoLabel({
+    Key? key,
+    this.child,
+    required String label,
+    TextStyle? labelStyle,
+    this.isHeader = true,
+  })  : label = TextSpan(text: label, style: labelStyle),
+        super(key: key);
+
+  /// Creates an info label.
+  const InfoLabel.rich({
     Key? key,
     this.child,
     required this.label,
-    this.labelStyle,
     this.isHeader = true,
   }) : super(key: key);
 
-  /// The text of the label. It'll be styled acorrding to
-  /// [labelStyle]. If this is empty, a blank space will
-  /// be rendered.
-  final String label;
-
-  /// The style of the text. If null, [Typography.body] is used
-  final TextStyle? labelStyle;
+  final InlineSpan label;
 
   /// The widget to apply the label.
   final Widget? child;
@@ -33,15 +36,14 @@ class InfoLabel extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('label', label));
-    properties.add(DiagnosticsProperty<TextStyle>('labelStyle', labelStyle));
+    properties.add(DiagnosticsProperty<InlineSpan>('label', label));
   }
 
   @override
   Widget build(BuildContext context) {
-    final labelWidget = Text(
+    final labelWidget = Text.rich(
       label,
-      style: labelStyle ?? FluentTheme.maybeOf(context)?.typography.body,
+      style: FluentTheme.maybeOf(context)?.typography.body,
     );
     return Flex(
       direction: isHeader ? Axis.vertical : Axis.horizontal,
@@ -51,13 +53,13 @@ class InfoLabel extends StatelessWidget {
       children: [
         if (isHeader)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 4.0),
             child: labelWidget,
           ),
         if (child != null) Flexible(child: child!),
         if (!isHeader)
           Padding(
-            padding: const EdgeInsets.only(left: 4.0),
+            padding: const EdgeInsetsDirectional.only(start: 4.0),
             child: labelWidget,
           ),
       ],

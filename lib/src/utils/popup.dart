@@ -1,7 +1,90 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
-import 'package:fluent_ui/fluent_ui.dart';
+/// Show the context menu at the offset
+///
+/// ```dart
+// GestureDetector(
+//   onSecondaryTapDown: (detail) {
+//     showMenu(
+//         context: context,
+//         offset: detail.globalPosition,
+//         builder: (context) {
+//           return MenuFlyout(
+///             items: [
+///               MenuFlyoutSubItem(
+///                 text: const Text('New'),
+///                 items: [
+///                   MenuFlyoutItem(
+///                     text: const Text('Plain Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Rich Text Document'),
+///                     onPressed: () {},
+///                   ),
+///                   MenuFlyoutItem(
+///                     text: const Text('Other formats...'),
+///                     onPressed: () {},
+///                   ),
+///                 ],
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Open'),
+///                 onPressed: () {},
+///               ),
+///               MenuFlyoutItem(
+///                 text: const Text('Save'),
+///                 onPressed: () {},
+///               ),
+///               const MenuFlyoutSeparator(),
+///               MenuFlyoutItem(
+///                 text: const Text('Exit'),
+///                 onPressed: () {},
+///               ),
+///             ],
+///           );
+///         });
+///   },
+/// ),
+/// ```
+Future<T?> showMenu<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  required Offset offset,
+  FlyoutPlacement placement = FlyoutPlacement.start,
+  FlyoutPosition position = FlyoutPosition.below,
+  double verticalOffset = 0,
+  double horizontalOffset = 0,
+}) {
+  final navigator = Navigator.of(context);
+
+  assert(debugCheckHasDirectionality(context));
+
+  final itemRect = offset & const Size(0, 0);
+
+  return navigator.push(_PopUpRoute<T>(
+    target: offset,
+    placementOffset: offset,
+    placement: placement,
+    position: position,
+    content: ContentManager(content: builder),
+    buttonRect: itemRect,
+    elevation: 4,
+    capturedThemes: InheritedTheme.capture(
+      from: context,
+      to: navigator.context,
+    ),
+    transitionAnimationDuration:
+        FluentTheme.of(context).mediumAnimationDuration,
+    verticalOffset: verticalOffset,
+    horizontalOffset: horizontalOffset,
+    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
+  ));
+}
+
+typedef NavigatorKey = GlobalKey<NavigatorState>;
 
 class PopUp<T> extends StatefulWidget {
   const PopUp({
@@ -12,6 +95,7 @@ class PopUp<T> extends StatefulWidget {
     this.horizontalOffset = 0,
     this.placement = FlyoutPlacement.center,
     this.position = FlyoutPosition.above,
+    this.navigatorKey,
   }) : super(key: key);
 
   final Widget child;
@@ -22,8 +106,10 @@ class PopUp<T> extends StatefulWidget {
   final FlyoutPlacement placement;
   final FlyoutPosition position;
 
+  final NavigatorKey? navigatorKey;
+
   @override
-  PopUpState<T> createState() => PopUpState<T>();
+  State<PopUp<T>> createState() => PopUpState<T>();
 }
 
 class PopUpState<T> extends State<PopUp<T>> {
@@ -31,17 +117,18 @@ class PopUpState<T> extends State<PopUp<T>> {
 
   Future<void> openPopup() {
     assert(_dropdownRoute == null, 'You can NOT open a popup twice');
-    final NavigatorState navigator = Navigator.of(context);
-    final RenderBox itemBox = context.findRenderObject()! as RenderBox;
-    Offset leftTarget = itemBox.localToGlobal(
+    final navigator =
+        widget.navigatorKey?.currentState ?? Navigator.of(context);
+    final itemBox = context.findRenderObject()! as RenderBox;
+    var leftTarget = itemBox.localToGlobal(
       itemBox.size.centerLeft(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
-    Offset centerTarget = itemBox.localToGlobal(
+    var centerTarget = itemBox.localToGlobal(
       itemBox.size.center(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
-    Offset rightTarget = itemBox.localToGlobal(
+    var rightTarget = itemBox.localToGlobal(
       itemBox.size.centerRight(Offset.zero),
       ancestor: navigator.context.findRenderObject(),
     );
@@ -50,7 +137,7 @@ class PopUpState<T> extends State<PopUp<T>> {
     final directionality = Directionality.of(context);
 
     // The target according to the current directionality
-    final Offset directionalityTarget = () {
+    final directionalityTarget = () {
       switch (widget.placement) {
         case FlyoutPlacement.start:
           if (directionality == TextDirection.ltr) {
@@ -71,7 +158,7 @@ class PopUpState<T> extends State<PopUp<T>> {
     }();
 
     // The placement according to the current directionality
-    final FlyoutPlacement directionalityPlacement = () {
+    final directionalityPlacement = () {
       switch (widget.placement) {
         case FlyoutPlacement.start:
           if (directionality == TextDirection.rtl) {
@@ -89,13 +176,13 @@ class PopUpState<T> extends State<PopUp<T>> {
       }
     }();
 
-    final Rect itemRect = directionalityTarget & itemBox.size;
+    final itemRect = directionalityTarget & itemBox.size;
     _dropdownRoute = _PopUpRoute<T>(
       target: centerTarget,
       placementOffset: directionalityTarget,
       placement: directionalityPlacement,
       position: widget.position,
-      content: _PopupContentManager(content: widget.content),
+      content: ContentManager(content: widget.content),
       buttonRect: itemRect,
       elevation: 4,
       capturedThemes: InheritedTheme.capture(
@@ -167,7 +254,7 @@ class _PopUpMenu<T> extends StatefulWidget {
   final Color? dropdownColor;
 
   @override
-  _PopUpMenuState<T> createState() => _PopUpMenuState<T>();
+  State<_PopUpMenu<T>> createState() => _PopUpMenuState<T>();
 }
 
 class _PopUpMenuState<T> extends State<_PopUpMenu<T>> {
@@ -230,11 +317,20 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return BoxConstraints(
-      maxWidth: constraints.maxWidth,
-      maxHeight:
-          screenSize.height - target.dy - verticalOffset - buttonRect.height,
-    );
+    final isCloseToBottom = target.dy > screenSize.height / 3;
+    // If it's close to the bottom, we show the button above. Otherwise, we show
+    // it below
+    if (isCloseToBottom) {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: target.dy - buttonRect.height,
+      );
+    } else {
+      return BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: screenSize.height - target.dy - buttonRect.height,
+      );
+    }
   }
 
   @override
@@ -244,7 +340,7 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             size: size,
             childSize: childSize,
             target: target,
-            verticalOffset: verticalOffset,
+            horizontalOffset: verticalOffset,
             margin: horizontalOffset,
             preferLeft: placement == FlyoutPlacement.end,
           )
@@ -253,7 +349,24 @@ class _PopUpMenuRouteLayout<T> extends SingleChildLayoutDelegate {
             childSize: childSize,
             target: target,
             verticalOffset: verticalOffset,
-            preferBelow: position == FlyoutPosition.below,
+            preferBelow: () {
+              // if position is below, we need to verify if the
+              // [childSize + starting position (target.dy)] will overlap the
+              // screen at the bottom. If yes, we show it above.
+              //
+              // if position is above, we need to verify if the
+              // [starting position (target.dy) - childSize] will overlap the
+              // screen at the top. If yes, we show it below
+              //
+              // Fallbacks to true
+              if (position == FlyoutPosition.below) {
+                return screenSize.height > target.dy + childSize.height;
+              } else if (position == FlyoutPosition.above) {
+                return 0 > target.dy - childSize.height;
+              } else {
+                return true;
+              }
+            }(),
             margin: horizontalOffset,
           );
     if (position == FlyoutPosition.side) {
@@ -416,7 +529,7 @@ class _PopUpRoutePage<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasDirectionality(context));
 
-    final TextDirection? textDirection = Directionality.maybeOf(context);
+    final textDirection = Directionality.maybeOf(context);
     final Widget menu = _PopUpMenu<T>(
       route: route,
       buttonRect: buttonRect,
@@ -429,36 +542,34 @@ class _PopUpRoutePage<T> extends StatelessWidget {
       removeBottom: true,
       removeLeft: true,
       removeRight: true,
-      child: Builder(
-        builder: (BuildContext context) {
-          final mediaQuery = MediaQuery.of(context);
-          return SizedBox(
-            height: mediaQuery.size.height,
-            width: mediaQuery.size.width,
-            child: CustomSingleChildLayout(
-              delegate: _PopUpMenuRouteLayout<T>(
-                target: target,
-                placement: placement,
-                position: position,
-                placementOffset: placementOffset,
-                buttonRect: buttonRect,
-                route: route,
-                textDirection: textDirection,
-                verticalOffset: verticalOffset,
-                horizontalOffset: horizontalOffset,
-                screenSize: mediaQuery.size,
-              ),
-              child: capturedThemes.wrap(menu),
+      child: Builder(builder: (BuildContext context) {
+        final mediaQuery = MediaQuery.of(context);
+        return SizedBox(
+          height: mediaQuery.size.height,
+          width: mediaQuery.size.width,
+          child: CustomSingleChildLayout(
+            delegate: _PopUpMenuRouteLayout<T>(
+              target: target,
+              placement: placement,
+              position: position,
+              placementOffset: placementOffset,
+              buttonRect: buttonRect,
+              route: route,
+              textDirection: textDirection,
+              verticalOffset: verticalOffset,
+              horizontalOffset: horizontalOffset,
+              screenSize: mediaQuery.size,
             ),
-          );
-        },
-      ),
+            child: capturedThemes.wrap(menu),
+          ),
+        );
+      }),
     );
   }
 }
 
-class _PopupContentManager extends StatefulWidget {
-  const _PopupContentManager({
+class ContentManager extends StatefulWidget {
+  const ContentManager({
     Key? key,
     required this.content,
   }) : super(key: key);
@@ -466,10 +577,10 @@ class _PopupContentManager extends StatefulWidget {
   final WidgetBuilder content;
 
   @override
-  State<_PopupContentManager> createState() => __PopupContentManagerState();
+  State<ContentManager> createState() => _ContentManagerState();
 }
 
-class __PopupContentManagerState extends State<_PopupContentManager> {
+class _ContentManagerState extends State<ContentManager> {
   final GlobalKey key = GlobalKey();
 
   Size size = Size.zero;
@@ -479,7 +590,7 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final context = key.currentContext;
       if (context == null) return;
-      final RenderBox box = context.findRenderObject() as RenderBox;
+      final box = context.findRenderObject() as RenderBox;
       setState(() => size = box.size);
     });
     super.initState();
@@ -489,16 +600,18 @@ class __PopupContentManagerState extends State<_PopupContentManager> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: key,
-      child: PopupContentSizeInfo(
+      child: ContentSizeInfo(
         size: size,
-        child: widget.content(context),
+        child: Builder(builder: (context) {
+          return widget.content(context);
+        }),
       ),
     );
   }
 }
 
-class PopupContentSizeInfo extends InheritedWidget {
-  const PopupContentSizeInfo({
+class ContentSizeInfo extends InheritedWidget {
+  const ContentSizeInfo({
     Key? key,
     required Widget child,
     required this.size,
@@ -506,16 +619,16 @@ class PopupContentSizeInfo extends InheritedWidget {
 
   final Size size;
 
-  static PopupContentSizeInfo of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>()!;
+  static ContentSizeInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>()!;
   }
 
-  static PopupContentSizeInfo? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<PopupContentSizeInfo>();
+  static ContentSizeInfo? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ContentSizeInfo>();
   }
 
   @override
-  bool updateShouldNotify(PopupContentSizeInfo oldWidget) {
+  bool updateShouldNotify(ContentSizeInfo oldWidget) {
     return oldWidget.size != size;
   }
 }

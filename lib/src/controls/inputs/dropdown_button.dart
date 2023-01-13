@@ -23,7 +23,7 @@ typedef DropDownButtonBuilder = Widget Function(
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
 ///  content. Used to back this button
-///   * [Combobox], a list of items that a user can select from
+///   * [ComboBox], a list of items that a user can select from
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
@@ -43,6 +43,8 @@ class DropDownButton extends StatefulWidget {
     this.placement = FlyoutPlacement.center,
     this.menuShape,
     this.menuColor,
+    this.onOpen,
+    this.onClose,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
@@ -104,6 +106,20 @@ class DropDownButton extends StatefulWidget {
   /// The menu color. If null, [ThemeData.menuColor] is used
   final Color? menuColor;
 
+  /// Called when the flyout is opened
+  ///
+  /// See also:
+  ///
+  ///  * [Flyout.onClose]
+  final VoidCallback? onOpen;
+
+  /// Called when the flyout is closed
+  ///
+  /// See also:
+  ///
+  ///  * [Flyout.onClose]
+  final VoidCallback? onClose;
+
   @override
   State<DropDownButton> createState() => _DropDownButtonState();
 
@@ -143,27 +159,32 @@ class _DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
 
-    final buttonChildren = <Widget>[
+    // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
+    List<Widget> space(Iterable<Widget> children) => children
+        .expand((item) sync* {
+          yield const SizedBox(width: 8.0);
+          yield item;
+        })
+        .skip(1)
+        .toList();
+
+    final buttonChildren = space(<Widget>[
       if (widget.leading != null)
-        Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0),
-          child: IconTheme.merge(
-            data: const IconThemeData(size: 20.0),
-            child: widget.leading!,
-          ),
+        IconTheme.merge(
+          data: const IconThemeData(size: 20.0),
+          child: widget.leading!,
         ),
       if (widget.title != null) widget.title!,
-      Padding(
-        padding: const EdgeInsetsDirectional.only(start: 8.0),
-        child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
-      ),
-    ];
+      widget.trailing ?? _kDefaultDropdownButtonTrailing,
+    ]);
 
     return Flyout(
       placement: widget.placement,
       position: FlyoutPosition.below,
       controller: flyoutController,
       verticalOffset: widget.verticalOffset,
+      onOpen: widget.onOpen,
+      onClose: widget.onClose,
       child: Builder(builder: (context) {
         return widget.buttonBuilder?.call(
               context,
@@ -178,7 +199,6 @@ class _DropDownButtonState extends State<DropDownButton> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: buttonChildren,
               ),
             );
@@ -191,13 +211,14 @@ class _DropDownButtonState extends State<DropDownButton> {
             if (widget.closeAfterClick) {
               return MenuFlyoutItem(
                 onPressed: () {
-                  item.onPressed?.call();
                   flyoutController.close();
+                  item.onPressed?.call();
                 },
                 key: item.key,
                 leading: item.leading,
                 text: item.text,
                 trailing: item.trailing,
+                selected: item.selected,
               );
             }
             return item;

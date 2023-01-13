@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_initializing_formals
 part of 'view.dart';
 
 /// A helper widget that implements fluent page transitions into
@@ -7,71 +6,52 @@ part of 'view.dart';
 /// See also:
 ///   * [NavigationView], used alongside this to navigate through pages
 ///   * [NavigationAppBar], the app top bar
-class NavigationBody extends StatefulWidget {
+class _NavigationBody extends StatefulWidget {
   /// Creates a navigation body.
   ///
   /// [index] must be greater than 0 and less than [children.length]
-  const NavigationBody({
-    Key? key,
-    required this.index,
-    required List<Widget> children,
+  const _NavigationBody({
+    // ignore: unused_element
+    super.key,
+    required this.itemKey,
+    this.paneBodyBuilder,
     this.transitionBuilder,
+    // ignore: unused_element
     this.animationCurve,
+    // ignore: unused_element
     this.animationDuration,
-  })  : assert(index >= 0 && index <= children.length),
-        children = children,
-        itemBuilder = null,
-        itemCount = null,
-        super(key: key);
+  });
 
-  /// Creates a navigation body that uses a builder to supply child pages
-  ///
-  /// [index] must be greater than 0 and less than [itemCount] if it is provided
-  const NavigationBody.builder({
-    Key? key,
-    required this.index,
-    required IndexedWidgetBuilder itemBuilder,
-    this.itemCount,
-    this.transitionBuilder,
-    this.animationCurve,
-    this.animationDuration,
-  })  : assert(index >= 0 && (itemCount == null || index <= itemCount)),
-        itemBuilder = itemBuilder,
-        children = null,
-        super(key: key);
+  final ValueKey<int>? itemKey;
 
-  /// The pages this body can have
-  final List<Widget>? children;
-
-  /// The builder that will be used to build the pages
-  final IndexedWidgetBuilder? itemBuilder;
-
-  /// Optional number of items to assume builder can create.
-  final int? itemCount;
-
-  /// The current page index.
-  final int index;
+  final NavigationContentBuilder? paneBodyBuilder;
 
   /// The transition builder.
   ///
   /// It can be detect the display mode of the parent [NavigationView], if any,
   /// and change the transition accordingly. By default, if the display mode is
-  /// top, [EntrancePageTransition] is used, otherwise [DrillInPageTransition]
-  /// is used.
+  /// top, [HorizontalSlidePageTransition] is used, otherwise
+  /// [EntrancePageTransition] is used.
   ///
   /// ```dart
-  /// NavigationBody(
-  ///   transitionBuilder: (child, animation) {
-  ///     return DrillInPageTransition(child: child, animation: animation);
-  ///   },
-  /// ),
+  /// transitionBuilder: (child, animation) {
+  ///   return DrillInPageTransition(child: child, animation: animation);
+  /// },
   /// ```
-  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
-
-  /// The curve used by the transition. [NavigationPaneThemeData.animationCurve]
-  /// is used by default.
   ///
   /// See also:
+  ///
+  ///  * [EntrancePageTransition], used by default
+  ///  * [HorizontalSlidePageTransition], used by default on top navigation
+  ///  * [DrillInPageTransition], used when users navigate deeper into an app
+  ///  * [SuppressPageTransition], to have no animation at all
+  ///  * <https://docs.microsoft.com/en-us/windows/apps/design/motion/page-transitions>
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
+
+  /// The curve used by the transition.
+  ///
+  /// See also:
+  ///
   ///   * [Curves], a collection of common animation easing curves.
   final Curve? animationCurve;
 
@@ -85,48 +65,53 @@ class NavigationBody extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IntProperty('index', index));
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
-    properties.add(
-      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
-    );
+    properties
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+      );
   }
 
   @override
-  _NavigationBodyState createState() => _NavigationBodyState();
+  State<_NavigationBody> createState() => _NavigationBodyState();
 }
 
-class _NavigationBodyState extends State<NavigationBody> {
-  late int previousIndex;
+class _NavigationBodyState extends State<_NavigationBody> {
+  final _pageKey = GlobalKey<State<PageView>>();
+  PageController? _pageController;
+
+  PageController get pageController => _pageController!;
 
   @override
-  void initState() {
-    super.initState();
-    previousIndex = widget.index;
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final view = InheritedNavigationView.of(context);
+    final selected = view.pane?.selected ?? 0;
+    MediaQuery.of(context);
 
-  @override
-  void didUpdateWidget(NavigationBody oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    previousIndex = oldWidget.index;
+    _pageController ??= PageController(initialPage: selected);
+
+    if (pageController.hasClients) {
+      if (view.oldIndex != selected || pageController.page != selected) {
+        pageController.jumpToPage(selected);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final body = InheritedNavigationView.maybeOf(context);
+    final view = InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
-    final NavigationPaneThemeData paneTheme = NavigationPaneTheme.of(context);
-    return Container(
+
+    return ColoredBox(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve:
-            widget.animationCurve ?? paneTheme.animationCurve ?? Curves.linear,
-        duration: widget.animationDuration ??
-            paneTheme.animationDuration ??
-            Duration.zero,
+        switchInCurve: widget.animationCurve ?? Curves.ease,
+        switchOutCurve: widget.animationCurve ?? Curves.ease,
+        duration: widget.animationDuration ?? const Duration(milliseconds: 300),
+        reverseDuration:
+            widget.animationDuration ?? const Duration(microseconds: 150),
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },
@@ -134,29 +119,47 @@ class _NavigationBodyState extends State<NavigationBody> {
           if (widget.transitionBuilder != null) {
             return widget.transitionBuilder!(child, animation);
           }
-          bool useDrillTransition = true;
-          if (body != null && body.displayMode != null) {
-            if (body.displayMode! == PaneDisplayMode.top) {
-              useDrillTransition = false;
-            }
-          }
-          if (useDrillTransition) {
-            return DrillInPageTransition(
+
+          var isTop = view.displayMode == PaneDisplayMode.top;
+
+          if (isTop) {
+            // Other transtitions other than default is only applied to top nav
+            // when clicking overflow on topnav, transition is from bottom
+            // otherwise if prevItem is on left side of nextActualItem, transition is from left
+            //           if prevItem is on right side of nextActualItem, transition is from right
+            // click on Settings item is considered Default
+            return HorizontalSlidePageTransition(
               animation: animation,
-              child: child,
-            );
-          } else {
-            return EntrancePageTransition(
-              animation: animation,
-              vertical: true,
+              fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
               child: child,
             );
           }
+
+          return EntrancePageTransition(
+            animation: animation,
+            child: child,
+          );
         },
-        child: SizedBox(
-          key: ValueKey<int>(widget.index),
-          child: widget.itemBuilder?.call(context, widget.index) ??
-              widget.children![widget.index],
+        child: KeyedSubtree(
+          key: widget.itemKey,
+          child: PageView.builder(
+            key: _pageKey,
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            itemCount: view.pane!.effectiveItems.length,
+            itemBuilder: (context, index) {
+              final isSelected = view.pane!.selected == index;
+              final item = view.pane!.effectiveItems[index];
+
+              return ExcludeFocus(
+                key: item.bodyKey,
+                excluding: !isSelected,
+                child: FocusTraversalGroup(
+                  child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -169,7 +172,6 @@ class _NavigationBodyState extends State<NavigationBody> {
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-///  * [NavigationBody], which is used to display the content on the view
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
@@ -183,7 +185,7 @@ class InheritedNavigationView extends InheritedWidget {
   }) : super(key: key, child: child);
 
   /// The current pane display mode according to the current state.
-  final PaneDisplayMode? displayMode;
+  final PaneDisplayMode displayMode;
 
   /// Whether the minimal pane is open or not
   final bool minimalPaneOpen;
@@ -216,12 +218,14 @@ class InheritedNavigationView extends InheritedWidget {
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
     int? oldIndex,
+    bool? currentItemSelected,
   }) {
     return Builder(builder: (context) {
       final current = InheritedNavigationView.maybeOf(context);
       return InheritedNavigationView(
         key: key,
-        displayMode: displayMode ?? current?.displayMode,
+        displayMode:
+            displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
@@ -237,13 +241,13 @@ class InheritedNavigationView extends InheritedWidget {
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
         oldWidget.oldIndex != oldIndex ||
-        oldWidget.currentItemIndex != oldWidget.currentItemIndex;
+        oldWidget.currentItemIndex != currentItemIndex;
   }
 }
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
-class _PaneItemKeys extends InheritedWidget {
-  const _PaneItemKeys({
+class PaneItemKeys extends InheritedWidget {
+  const PaneItemKeys({
     Key? key,
     required Widget child,
     required this.keys,
@@ -254,12 +258,12 @@ class _PaneItemKeys extends InheritedWidget {
   /// Gets the item global key based on the index
   static GlobalKey of(int index, BuildContext context) {
     final reference =
-        context.dependOnInheritedWidgetOfExactType<_PaneItemKeys>()!;
+        context.dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;
     return reference.keys[index]!;
   }
 
   @override
-  bool updateShouldNotify(_PaneItemKeys oldWidget) {
+  bool updateShouldNotify(PaneItemKeys oldWidget) {
     return keys != oldWidget.keys;
   }
 }

@@ -35,9 +35,8 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: AnimatedDefaultTextStyle(
+        child: DefaultTextStyle(
           style: data.typography.body!,
-          duration: kThemeAnimationDuration,
           child: child,
         ),
       ),
@@ -120,7 +119,8 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   final Widget child;
 
   @override
-  _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
+  AnimatedWidgetBaseState<AnimatedFluentTheme> createState() =>
+      _AnimatedFluentThemeState();
 }
 
 class _AnimatedFluentThemeState
@@ -151,9 +151,21 @@ class _AnimatedFluentThemeState
 }
 
 extension BrightnessExtension on Brightness {
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isLight = FluentTheme.of(context).brightness.isLight;
+  /// ```
   bool get isLight => this == Brightness.light;
+
+  /// Whether this is light
+  ///
+  /// ```dart
+  /// final isDark = FluentTheme.of(context).brightness.isDark;
+  /// ```
   bool get isDark => this == Brightness.dark;
 
+  /// Gets the opposite brightness from this
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
 }
 
@@ -210,58 +222,7 @@ class ThemeData with Diagnosticable {
 
   final ButtonThemeData buttonTheme;
 
-  const ThemeData.raw({
-    required this.typography,
-    required this.accentColor,
-    required this.activeColor,
-    required this.inactiveColor,
-    required this.inactiveBackgroundColor,
-    required this.disabledColor,
-    required this.shadowColor,
-    required this.uncheckedColor,
-    required this.checkedColor,
-    required this.borderInputColor,
-    required this.fasterAnimationDuration,
-    required this.fastAnimationDuration,
-    required this.mediumAnimationDuration,
-    required this.slowAnimationDuration,
-    required this.animationCurve,
-    required this.brightness,
-    required this.visualDensity,
-    required this.scaffoldBackgroundColor,
-    required this.acrylicBackgroundColor,
-    required this.micaBackgroundColor,
-    required this.buttonTheme,
-    required this.checkboxTheme,
-    required this.chipTheme,
-    required this.toggleSwitchTheme,
-    required this.bottomNavigationTheme,
-    required this.iconTheme,
-    required this.splitButtonTheme,
-    required this.dialogTheme,
-    required this.tooltipTheme,
-    required this.dividerTheme,
-    required this.navigationPaneTheme,
-    required this.radioButtonTheme,
-    required this.toggleButtonTheme,
-    required this.sliderTheme,
-    required this.infoBarTheme,
-    required this.focusTheme,
-    required this.scrollbarTheme,
-    required this.snackbarTheme,
-    required this.pillButtonBarTheme,
-    required this.bottomSheetTheme,
-    required this.menuColor,
-    required this.cardColor,
-  });
-
-  static ThemeData light() {
-    return ThemeData(brightness: Brightness.light);
-  }
-
-  static ThemeData dark() {
-    return ThemeData(brightness: Brightness.dark);
-  }
+  final ResourceDictionary resources;
 
   factory ThemeData({
     Brightness? brightness,
@@ -307,32 +268,32 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
 
-    final bool isLight = brightness == Brightness.light;
+    final isLight = brightness == Brightness.light;
 
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= const Duration(milliseconds: 83);
     fastAnimationDuration ??= const Duration(milliseconds: 167);
     mediumAnimationDuration ??= const Duration(milliseconds: 250);
     slowAnimationDuration ??= const Duration(milliseconds: 358);
+    resources ??= isLight
+        ? const ResourceDictionary.light()
+        : const ResourceDictionary.dark();
     animationCurve ??= standardCurve;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
-    disabledColor ??=
-        isLight ? const Color(0xFF838383) : Colors.grey[80].withOpacity(0.6);
+    disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??=
-        isLight ? const Color(0xFFf9f9f9) : Colors.white.withOpacity(0.025);
-    acrylicBackgroundColor ??= isLight
-        ? const Color.fromARGB(204, 255, 255, 255)
-        : const Color(0x7F1e1e1e);
-    micaBackgroundColor ??=
-        isLight ? const Color(0xFFf3f3f3) : const Color(0xFF202020);
+    scaffoldBackgroundColor ??= resources.layerFillColorDefault;
+    acrylicBackgroundColor ??=
+        isLight ? const Color(0xFFfcfcfc) : const Color(0xFF2c2c2c);
+    micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)
         : const Color.fromRGBO(255, 255, 255, 0.786);
@@ -341,7 +302,7 @@ class ThemeData with Diagnosticable {
         ? const Color.fromRGBO(0, 0, 0, 0.4458)
         : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
-    cardColor ??= isLight ? const Color(0xFFfdfdfd) : const Color(0xFF323232);
+    cardColor ??= resources.cardBackgroundFillColorDefault;
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
@@ -362,18 +323,15 @@ class ThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPaneTheme ??= NavigationPaneThemeData.standard(
+    navigationPaneTheme = NavigationPaneThemeData.standard(
+      resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
       backgroundColor: micaBackgroundColor,
-      disabledColor: disabledColor,
-      highlightColor: accentColor.resolveFromReverseBrightness(
-        brightness,
-        level: brightness.isDark ? 2 : 0,
-      ),
+      highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
       inactiveColor: inactiveColor,
-    );
+    ).merge(navigationPaneTheme);
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
@@ -382,6 +340,7 @@ class ThemeData with Diagnosticable {
     bottomNavigationTheme ??= const BottomNavigationThemeData();
     snackbarTheme ??= const SnackbarThemeData();
     bottomSheetTheme ??= const BottomSheetThemeData();
+
     return ThemeData.raw(
       brightness: brightness,
       visualDensity: visualDensity,
@@ -425,13 +384,69 @@ class ThemeData with Diagnosticable {
       bottomSheetTheme: bottomSheetTheme,
       menuColor: menuColor,
       cardColor: cardColor,
+      resources: resources,
     );
+  }
+
+  const ThemeData.raw({
+    required this.typography,
+    required this.accentColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.inactiveBackgroundColor,
+    required this.disabledColor,
+    required this.shadowColor,
+    required this.uncheckedColor,
+    required this.checkedColor,
+    required this.borderInputColor,
+    required this.fasterAnimationDuration,
+    required this.fastAnimationDuration,
+    required this.mediumAnimationDuration,
+    required this.slowAnimationDuration,
+    required this.animationCurve,
+    required this.brightness,
+    required this.visualDensity,
+    required this.scaffoldBackgroundColor,
+    required this.acrylicBackgroundColor,
+    required this.micaBackgroundColor,
+    required this.buttonTheme,
+    required this.checkboxTheme,
+    required this.chipTheme,
+    required this.toggleSwitchTheme,
+    required this.bottomNavigationTheme,
+    required this.iconTheme,
+    required this.splitButtonTheme,
+    required this.dialogTheme,
+    required this.tooltipTheme,
+    required this.dividerTheme,
+    required this.navigationPaneTheme,
+    required this.radioButtonTheme,
+    required this.toggleButtonTheme,
+    required this.sliderTheme,
+    required this.infoBarTheme,
+    required this.focusTheme,
+    required this.scrollbarTheme,
+    required this.snackbarTheme,
+    required this.pillButtonBarTheme,
+    required this.bottomSheetTheme,
+    required this.menuColor,
+    required this.cardColor,
+    required this.resources,
+  });
+
+  static ThemeData light() {
+    return ThemeData(brightness: Brightness.light);
+  }
+
+  static ThemeData dark() {
+    return ThemeData(brightness: Brightness.dark);
   }
 
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
     return ThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
+      resources: ResourceDictionary.lerp(a.resources, b.resources, t),
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
       typography: Typography.lerp(a.typography, b.typography, t),
       activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
@@ -537,11 +552,12 @@ class ThemeData with Diagnosticable {
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
     SnackbarThemeData? snackbarTheme,
+    ResourceDictionary? resources,
   }) {
     return ThemeData.raw(
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
-      typography: typography ?? this.typography,
+      typography: this.typography.merge(typography),
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
@@ -589,6 +605,7 @@ class ThemeData with Diagnosticable {
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
       snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
+      resources: resources ?? this.resources,
     );
   }
 
@@ -606,26 +623,26 @@ class ThemeData with Diagnosticable {
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
-      ..add(ColorProperty('cardColor', cardColor));
-    properties.add(EnumProperty('brightness', brightness));
-    properties.add(DiagnosticsProperty<Duration>(
-      'slowAnimationDuration',
-      slowAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'mediumAnimationDuration',
-      mediumAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fastAnimationDuration',
-      fastAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fasterAnimationDuration',
-      fasterAnimationDuration,
-    ));
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
+      ..add(ColorProperty('cardColor', cardColor))
+      ..add(EnumProperty('brightness', brightness))
+      ..add(DiagnosticsProperty<Duration>(
+        'slowAnimationDuration',
+        slowAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'mediumAnimationDuration',
+        mediumAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fastAnimationDuration',
+        fastAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fasterAnimationDuration',
+        fasterAnimationDuration,
+      ))
+      ..add(
+        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+      );
   }
 }

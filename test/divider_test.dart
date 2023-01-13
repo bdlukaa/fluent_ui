@@ -9,7 +9,7 @@ void main() {
       wrapApp(child: const Center(child: Divider())),
     );
 
-    final RenderBox box = tester.firstRenderObject(find.byType(Divider));
+    final box = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(box.size.height, 1.0);
   });
 
@@ -18,7 +18,7 @@ void main() {
       wrapApp(child: const Center(child: Divider(direction: Axis.vertical))),
     );
 
-    final RenderBox box = tester.firstRenderObject(find.byType(Divider));
+    final box = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(box.size.width, 1.0);
   });
 
@@ -35,7 +35,7 @@ void main() {
       ),
     );
 
-    final RenderBox hBox = tester.firstRenderObject(find.byType(Divider));
+    final hBox = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(hBox.size.height, 4.0);
 
     await tester.pumpWidget(
@@ -49,7 +49,7 @@ void main() {
       ),
     );
 
-    final RenderBox vBox = tester.firstRenderObject(find.byType(Divider));
+    final vBox = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(vBox.size.width, 4.0);
   });
 }

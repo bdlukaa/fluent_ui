@@ -1,11 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// Mica is an opaque, dynamic material that incorporates theme
-/// and desktop wallpaper to paint the background of long-lived
-/// windows such as apps and settings. You can apply Mica to your
-/// application backdrop to delight users and create visual hierarchy,
-/// aiding productivity, by increasing clarity about which window
-/// is in focus.
+/// Mica is an opaque, dynamic material that incorporates theme and desktop
+/// wallpaper to paint the background of long-lived windows such as apps and
+/// settings. You can apply Mica to your application backdrop to delight users
+/// and create visual hierarchy, aiding productivity, by increasing clarity
+/// about which window is in focus. Mica is specifically designed for app
+/// performance as it only samples the desktop wallpaper once to create its
+/// visualization.
+///
+/// ![Mica Header Preview](https://docs.microsoft.com/en-us/windows/apps/design/style/images/materials/mica-header.png)
+///
+/// All fluent-widgets are developed to look good on a [Mica] surface, with
+/// support for all transparency effects.
 ///
 /// See also:
 ///
@@ -50,8 +56,8 @@ class Mica extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
-    final Color boxColor = backgroundColor ?? theme.micaBackgroundColor;
+    final theme = FluentTheme.of(context);
+    final boxColor = backgroundColor ?? theme.micaBackgroundColor;
     final Widget result = DecoratedBox(
       decoration: BoxDecoration(
         color: boxColor,
