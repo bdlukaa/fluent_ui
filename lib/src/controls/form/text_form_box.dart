@@ -104,6 +104,7 @@ class TextFormBox extends FormField<String> {
     bool scribbleEnabled = true,
     Color? highlightColor,
     Color? errorHighlightColor,
+    Color? unfocusedColor,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -193,6 +194,7 @@ class TextFormBox extends FormField<String> {
                   highlightColor: (field.errorText == null)
                       ? highlightColor
                       : errorHighlightColor ?? Colors.red,
+                  unfocusedColor: unfocusedColor,
                   dragStartBehavior: dragStartBehavior,
                   minHeight: minHeight,
                   padding: padding,

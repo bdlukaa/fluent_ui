@@ -484,6 +484,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             );
           }).toList(),
           placeholder: 'Search',
+          trailingIcon: IgnorePointer(
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(FluentIcons.search),
+            ),
+          ),
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: footerItems,

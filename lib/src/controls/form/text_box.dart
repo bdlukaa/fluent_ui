@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 5);
+const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5);
 
 enum OverlayVisibilityMode {
   never,
@@ -27,18 +27,6 @@ class _TextBoxSelectionGestureDetectorBuilder
   @override
   void onSingleTapUp(TapUpDetails details) {
     editableText.hideToolbar();
-    // Because TextSelectionGestureDetector listens to taps that happen on
-    // widgets in front of it, tapping the clear button will also trigger
-    // this handler. If the clear button widget recognizes the up event,
-    // then do not handle it.
-    if (_state._clearGlobalKey.currentContext != null) {
-      final renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject()! as RenderBox;
-      final localOffset = renderBox.globalToLocal(details.globalPosition);
-      if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
-        return;
-      }
-    }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
     _state.widget.onTap?.call();
@@ -131,7 +119,6 @@ class TextBox extends StatefulWidget {
     this.foregroundDecoration,
     this.highlightColor,
     this.unfocusedColor,
-    this.clearGlobalKey,
     this.selectionControls,
     this.mouseCursor,
     this.scribbleEnabled = true,
@@ -339,6 +326,9 @@ class TextBox extends StatefulWidget {
   /// The highlight color of the text box.
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
 
   /// The unfocused color of the highlight border.
@@ -506,8 +496,6 @@ class TextBox extends StatefulWidget {
 
   final ButtonThemeData? iconButtonThemeData;
 
-  final GlobalKey? clearGlobalKey;
-
   /// {@macro flutter.widgets.editableText.scribbleEnabled}
   final bool scribbleEnabled;
 
@@ -603,10 +591,6 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
-  final _localClearGlobalKey = GlobalKey(debugLabel: 'Clear Button key');
-  GlobalKey get _clearGlobalKey =>
-      widget.clearGlobalKey ?? _localClearGlobalKey;
-
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller!.value;

@@ -104,6 +104,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
+    this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
     this.cursorRadius,
@@ -141,6 +142,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.decoration,
     this.foregroundDecoration,
     this.highlightColor,
+    this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
     this.cursorRadius,
@@ -225,7 +227,16 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// The highlight color of the text box.
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
+
+  /// The unfocused color of the highlight border.
+  ///
+  /// See also:
+  ///   * [highlightColor], displayed when the field is focused
+  final Color? unfocusedColor;
 
   /// {@macro flutter.widgets.editableText.cursorWidth}
   final double cursorWidth;
@@ -571,12 +582,11 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     assert(debugCheckHasFluentLocalizations(context));
 
     final suffix = Row(mainAxisSize: MainAxisSize.min, children: [
-      if (widget.trailingIcon != null) widget.trailingIcon!,
       if (widget.clearButtonEnabled && controller.text.isNotEmpty)
         Padding(
           padding: const EdgeInsetsDirectional.only(start: 2.0),
           child: IconButton(
-            icon: const Icon(FluentIcons.chrome_close),
+            icon: const Icon(FluentIcons.chrome_close, size: 9.0),
             onPressed: () {
               controller.clear();
               widget.onChanged?.call(
@@ -589,6 +599,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             },
           ),
         ),
+      if (widget.trailingIcon != null) widget.trailingIcon!,
     ]);
 
     return CompositedTransformTarget(
@@ -657,6 +668,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 style: widget.style,
                 decoration: widget.decoration,
                 highlightColor: widget.highlightColor,
+                unfocusedColor: widget.unfocusedColor,
                 cursorColor: widget.cursorColor,
                 cursorHeight: widget.cursorHeight,
                 cursorRadius: widget.cursorRadius ?? const Radius.circular(2.0),
@@ -688,6 +700,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 decoration: widget.decoration,
                 foregroundDecoration: widget.foregroundDecoration,
                 highlightColor: widget.highlightColor,
+                unfocusedColor: widget.unfocusedColor,
                 cursorColor: widget.cursorColor,
                 cursorHeight: widget.cursorHeight,
                 cursorRadius: widget.cursorRadius,
