@@ -64,6 +64,10 @@ class NavigationView extends StatefulWidget {
   /// and the body of the navigation pane is dynamically determined or
   /// affected by the current route rather than just by the currently
   /// selected pane.
+  ///
+  /// If this is not null then this builder will be responsible for state
+  /// management of the child widget. One way to accomplish this is to
+  /// use an [IndexedStack].
   final NavigationContentBuilder? paneBodyBuilder;
 
   /// The navigation pane, that can be displayed either on the
