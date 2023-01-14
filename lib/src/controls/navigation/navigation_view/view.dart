@@ -214,7 +214,9 @@ class NavigationViewState extends State<NavigationView> {
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _oldIndex = oldWidget.pane?.selected ?? -1;
 
-      final item = widget.pane?.selectedItem.itemKey.currentContext;
+      final item = widget.pane?.selected == null
+          ? null
+          : widget.pane?.selectedItem.itemKey.currentContext;
 
       if (item != null) {
         final atEnd =
