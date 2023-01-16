@@ -1,6 +1,7 @@
 ## next
 
 - Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
+- Added support for Myanmar language
 
 ## 4.1.4
 

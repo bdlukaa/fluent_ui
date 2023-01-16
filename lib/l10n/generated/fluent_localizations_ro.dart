@@ -68,10 +68,12 @@ class FluentLocalizationsRo extends FluentLocalizations {
   String get copyActionTooltip => 'Copiați conținutul selectat în clipboard';
 
   @override
-  String get cutActionTooltip => 'Eliminați conținutul selectat și puneți-l în clipboard';
+  String get cutActionTooltip =>
+      'Eliminați conținutul selectat și puneți-l în clipboard';
 
   @override
-  String get pasteActionTooltip => 'Inserează conținutul clipboard-ului în locația curentă';
+  String get pasteActionTooltip =>
+      'Inserează conținutul clipboard-ului în locația curentă';
 
   @override
   String get selectAllActionTooltip => 'Selectați tot conținutul';

@@ -68,7 +68,8 @@ class FluentLocalizationsFa extends FluentLocalizations {
   String get copyActionTooltip => 'کپی کردن محتوای انتخاب شده در بریده‌دان';
 
   @override
-  String get cutActionTooltip => 'برداشتن محتوای انتخاب شده و قراردادن آن در بریده‌دان';
+  String get cutActionTooltip =>
+      'برداشتن محتوای انتخاب شده و قراردادن آن در بریده‌دان';
 
   @override
   String get pasteActionTooltip => 'درج کردن محتوای بریده‌دان در موقعیت فعلی';

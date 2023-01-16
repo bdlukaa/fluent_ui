@@ -68,7 +68,8 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get copyActionTooltip => 'Belgilangan kontent nusxasi olindi';
 
   @override
-  String get cutActionTooltip => 'O\'chirish va xotiraga olingan nusxani joylash';
+  String get cutActionTooltip =>
+      'O\'chirish va xotiraga olingan nusxani joylash';
 
   @override
   String get pasteActionTooltip => 'Mazkur joyga xotiradagi nusxani joylash';

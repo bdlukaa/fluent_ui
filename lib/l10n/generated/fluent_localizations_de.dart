@@ -65,13 +65,16 @@ class FluentLocalizationsDe extends FluentLocalizations {
   String get noResultsFoundLabel => 'Keine Ergebnisse gefunden';
 
   @override
-  String get copyActionTooltip => 'Ausgewählten Inhalt in die Zwischenablage kopieren';
+  String get copyActionTooltip =>
+      'Ausgewählten Inhalt in die Zwischenablage kopieren';
 
   @override
-  String get cutActionTooltip => 'Ausgewählten Inhalt entfernen und in die Zwischenablage legen';
+  String get cutActionTooltip =>
+      'Ausgewählten Inhalt entfernen und in die Zwischenablage legen';
 
   @override
-  String get pasteActionTooltip => 'Fügt den Inhalt der Zwischenablage an der aktuellen Stelle ein';
+  String get pasteActionTooltip =>
+      'Fügt den Inhalt der Zwischenablage an der aktuellen Stelle ein';
 
   @override
   String get selectAllActionTooltip => 'Alle Inhalte auswählen';
