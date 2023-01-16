@@ -27,6 +27,9 @@ enum TextChangedReason {
   cleared,
 }
 
+/// The default max height the auto suggest box popup can have
+const kAutoSuggestBoxPopupMaxHeight = 380.0;
+
 /// An item used in [AutoSuggestBox]
 class AutoSuggestBoxItem<T> {
   /// The value attached to this item
@@ -120,6 +123,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.enableKeyboardControls = true,
     this.enabled = true,
     this.inputFormatters,
+    this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
   })  : autovalidateMode = AutovalidateMode.disabled,
         validator = null,
         super(key: key);
@@ -160,6 +164,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.enableKeyboardControls = true,
     this.enabled = true,
     this.inputFormatters,
+    this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
   }) : super(key: key);
 
   /// The list of items to display to the user to pick
@@ -315,6 +320,13 @@ class AutoSuggestBox<T> extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.inputFormatters}
   final List<TextInputFormatter>? inputFormatters;
+
+  /// The max height the popup can assume.
+  ///
+  /// The suggestion popup can assume the space available below the text box but,
+  /// by default, it's limited to a 380px height. If the value provided is greater
+  /// than the available space, the box is limited to the available space.s
+  final double maxPopupHeight;
 
   @override
   State<AutoSuggestBox<T>> createState() => _AutoSuggestBoxState<T>();
@@ -476,7 +488,10 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       final screenHeight =
           mediaQuery.size.height - mediaQuery.viewPadding.bottom;
       final overlayY = globalOffset.dy + box.size.height;
-      final maxHeight = screenHeight - overlayY;
+      final maxHeight = (screenHeight - overlayY).clamp(
+        0.0,
+        widget.maxPopupHeight,
+      );
 
       Widget child = PositionedDirectional(
         width: box.size.width,
@@ -797,9 +812,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
     return FocusScope(
       node: widget.node,
       child: Container(
-        constraints: BoxConstraints(
-          maxHeight: widget.maxHeight.clamp(0, 380.0),
-        ),
+        constraints: BoxConstraints(maxHeight: widget.maxHeight),
         decoration: ShapeDecoration(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
