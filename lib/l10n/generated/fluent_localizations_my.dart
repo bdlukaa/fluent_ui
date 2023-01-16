@@ -1,8 +1,8 @@
 import 'fluent_localizations.dart';
 
-/// The translations for English (`en`).
-class FluentLocalizationsEn extends FluentLocalizations {
-  FluentLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Burmese (`my`).
+class FluentLocalizationsMy extends FluentLocalizations {
+  FluentLocalizationsMy([String locale = 'my']) : super(locale);
 
   @override
   String get backButtonTooltip => 'Back';

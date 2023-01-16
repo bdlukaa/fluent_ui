@@ -65,16 +65,13 @@ class FluentLocalizationsPt extends FluentLocalizations {
   String get noResultsFoundLabel => 'Nenhum resultado encontrado';
 
   @override
-  String get copyActionTooltip =>
-      'Copiar conteúdo selecionado para a área de transferência';
+  String get copyActionTooltip => 'Copiar conteúdo selecionado para a área de transferência';
 
   @override
-  String get cutActionTooltip =>
-      'Recortar o conteúdo selecionado e colocá-lo na área de transferência';
+  String get cutActionTooltip => 'Recortar o conteúdo selecionado e colocá-lo na área de transferência';
 
   @override
-  String get pasteActionTooltip =>
-      'Colar o conteúdo da área de transferência na posição atual';
+  String get pasteActionTooltip => 'Colar o conteúdo da área de transferência na posição atual';
 
   @override
   String get selectAllActionTooltip => 'Selecionar tudo';

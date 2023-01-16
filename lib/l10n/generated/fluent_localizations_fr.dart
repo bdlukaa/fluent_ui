@@ -65,16 +65,13 @@ class FluentLocalizationsFr extends FluentLocalizations {
   String get noResultsFoundLabel => 'Aucun résultat trouvé';
 
   @override
-  String get copyActionTooltip =>
-      'Copier le contenu sélectionné dans le presse-papier';
+  String get copyActionTooltip => 'Copier le contenu sélectionné dans le presse-papier';
 
   @override
-  String get cutActionTooltip =>
-      'Couper le contenu sélectionné et le mettre dans le presse-papier';
+  String get cutActionTooltip => 'Couper le contenu sélectionné et le mettre dans le presse-papier';
 
   @override
-  String get pasteActionTooltip =>
-      'Coller le contenu du presse-papier à la position actuelle';
+  String get pasteActionTooltip => 'Coller le contenu du presse-papier à la position actuelle';
 
   @override
   String get selectAllActionTooltip => 'Sélectionner tout le contenu';

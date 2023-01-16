@@ -68,12 +68,10 @@ class FluentLocalizationsId extends FluentLocalizations {
   String get copyActionTooltip => 'Salin konten yang dipilih ke clipboard';
 
   @override
-  String get cutActionTooltip =>
-      'Hapus konten yang dipilih dan letakkan di clipboard';
+  String get cutActionTooltip => 'Hapus konten yang dipilih dan letakkan di clipboard';
 
   @override
-  String get pasteActionTooltip =>
-      'Sisipkan konten clipboard di lokasi saat ini';
+  String get pasteActionTooltip => 'Sisipkan konten clipboard di lokasi saat ini';
 
   @override
   String get selectAllActionTooltip => 'Pilih semua konten';
