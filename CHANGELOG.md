@@ -2,6 +2,7 @@
 
 - Fix assertion in `NavigationViewState` if no pane was currently selected ([#678](https://github.com/bdlukaa/fluent_ui/issues/678))
 - Make `NavigationView.paneBodyBuilder` responsible for state management of the widget it returns, allowing `paneBodyBuilder` to return an `IndexedStack` (common use case) ([#679](https://github.com/bdlukaa/fluent_ui/issues/679))
+- Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
 
 ## 4.1.4
 
