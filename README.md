@@ -134,6 +134,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 
 - Arabic (@dmakwt)
 - Bahasa Indonesia (@ekasetiawans)
+- Belarusian (@superkeka)
 - Czech (@morning4coffe-dev)
 - Dutch (@h3x4d3c1m4l)
 - English

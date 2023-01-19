@@ -1,4 +1,9 @@
 {
+  "be": [
+    "am",
+    "pm"
+  ],
+
   "de": [
     "hour",
     "minute",
