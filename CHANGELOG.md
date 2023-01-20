@@ -1,9 +1,9 @@
-## (future)
+## 4.1.5
 
+- Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
 - Fix assertion in `NavigationViewState` if no pane was currently selected ([#678](https://github.com/bdlukaa/fluent_ui/issues/678))
 - Make `NavigationView.paneBodyBuilder` responsible for state management of the widget it returns, allowing `paneBodyBuilder` to return an `IndexedStack` (common use case) ([#679](https://github.com/bdlukaa/fluent_ui/issues/679))
-- Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
-- Added support for Belarusian language
+- Added support for Belarusian language ([#686](https://github.com/bdlukaa/fluent_ui/pull/686))
 
 ## 4.1.4
 
@@ -13,7 +13,7 @@
 - It's now possible to navigate through `AutoSuggestBox` items by long pressing arrow up and down keys
 - Do not clear focus scope after selecting an item in `AutoSuggestBox` ([#671](https://github.com/bdlukaa/fluent_ui/issues/671))
 - `AutoSuggestBox`'s `trailingIcon` now comes after the close button
-- **MINOR BREAK** `TextBox.clearGlobalKey` was remove, since it was not used
+- **MINOR BREAK** `TextBox.clearGlobalKey` was removed, since it was not used
 - Add `AutoSuggestBox.unfocusedColor` and `TextFormBox.unfocusedColor`
 - Implement `displayInfoBar`, which shows an info bar as an overlay ([#673](https://github.com/bdlukaa/fluent_ui/issues/673))
 - Implement `ThemeData.extensions` ([#674](https://github.com/bdlukaa/fluent_ui/issues/674))
