@@ -13,20 +13,40 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   final controller = FlyoutController();
 
   @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Flyouts v2')),
       children: [
+        description(
+          content: const Text(
+            'A flyout is a light dismiss container that can show arbitrary UI as '
+            'its content. Flyouts can contain other flyouts or context menus to '
+            'create a nested experience.',
+          ),
+        ),
         subtitle(content: const Text('Flyouts')),
-        Align(
-          alignment: Alignment.centerRight,
-          child: FlyoutAttach(
+        Row(children: [
+          FlyoutAttach(
             controller: controller,
             child: Button(
               child: const Text('Open Flyout'),
               onPressed: () {
                 controller.showFlyout(
-                  placementMode: FlyoutPlacementMode.topRight,
+                  placementMode: FlyoutPlacementMode.topCenter,
                   builder: (context) {
                     return const FlyoutContent(
                       child: Text(
@@ -40,7 +60,9 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
               },
             ),
           ),
-        ),
+          const SizedBox(width: 8.0),
+          Text(controller.isOpen ? 'Displaying' : ''),
+        ]),
       ],
     );
   }

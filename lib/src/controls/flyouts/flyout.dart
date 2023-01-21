@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 
 /// Defines constants that specify the preferred location for positioning a
 /// [Flyout] derived control relative to a visual element.
@@ -51,21 +52,15 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     required this.additionalOffset,
     required this.placementMode,
     required this.margin,
+    required this.shouldConstrainToRootBounds,
   });
 
-  /// The offset of the target the flyout is positioned near in the global
-  /// coordinate system.
   final Offset targetOffset;
-
   final Size targetSize;
-
-  /// The amount of vertical distance between the target and the displayed
-  /// flyout.
   final double additionalOffset;
-
   final FlyoutPlacementMode placementMode;
-
   final double margin;
+  final bool shouldConstrainToRootBounds;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
@@ -73,13 +68,17 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size screenSize, Size flyoutSize) {
-    print('$screenSize - $flyoutSize - $placementMode');
+    // print('$screenSize - $flyoutSize - $placementMode');
 
     double clampHorizontal(double x) {
+      if (!shouldConstrainToRootBounds) return x;
+
       return x.clamp(margin, screenSize.width - flyoutSize.width - margin);
     }
 
     double clampVertical(double y) {
+      if (!shouldConstrainToRootBounds) return y;
+
       return y.clamp(margin, screenSize.height - flyoutSize.height - margin);
     }
 
@@ -94,6 +93,10 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
     final horizontalY = clampVertical(
       targetOffset.dy - targetSize.height - flyoutSize.height / 4,
+    );
+
+    final centerX = clampHorizontal(
+      (targetOffset.dx + targetSize.width / 2) - (flyoutSize.width / 2.0),
     );
 
     switch (placementMode) {
@@ -116,15 +119,9 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
           topY,
         );
       case FlyoutPlacementMode.bottomCenter:
-        return Offset(
-          clampHorizontal(targetOffset.dx - flyoutSize.width / 4.0),
-          bottomY,
-        );
+        return Offset(centerX, bottomY);
       case FlyoutPlacementMode.topCenter:
-        return Offset(
-          clampHorizontal(targetOffset.dx - flyoutSize.width / 4.0),
-          topY,
-        );
+        return Offset(centerX, topY);
       case FlyoutPlacementMode.left:
         return Offset(
           clampHorizontal(
@@ -162,12 +159,10 @@ class FlyoutController with ChangeNotifier {
 
   /// Attaches this controller to a [FlyoutAttach] widget.
   ///
-  /// Throws an error if it's already attached
+  /// If already attached, the current state is detached and replaced by the
+  /// provided [state]
   void _attach(FlyoutAttachState state) {
-    assert(
-      !isAttached,
-      'This FlyoutController is already attached to a controller',
-    );
+    if (isAttached) _detach();
 
     _attachState = state;
   }
@@ -190,18 +185,50 @@ class FlyoutController with ChangeNotifier {
   ///  * [showFlyout], which opens the flyout
   bool get isOpen => _open;
 
+  /// Shows a flyout.
+  ///
+  /// If [barrierDismissible] is true, tapping outside of the flyout will close
+  /// it.
+  ///
+  /// [barrierColor] is the color of the barrier.
+  ///
+  /// When [dismissWithEsc] is true, the flyout can be dismissed by pressing the
+  /// ESC key.
+  ///
+  /// If [dismissOnPointerMoveAway] is enabled, the flyout is dismissed when the
+  /// cursor moves away from either the target or the flyout. It's disabled by
+  /// default.
+  ///
+  /// [placementMode] describes where the flyout will be placed. Defaults to top
+  /// center
+  ///
+  /// [shouldConstrainToRootBounds], when true, the flyout is limited to the
+  /// bounds of the closest [Navigator]. If false, the flyout may overflow the
+  /// screen.
+  ///
+  /// [additionalOffset] is the offset of the flyout around the attached target
+  ///
+  /// [margin] is the margin of the flyout to the root bounds
+  ///
+  /// If there isn't a [Navigator] in the tree, a [navigatorKey] can be used to
+  /// display the flyout. If null, [Navigator.of] is used.
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
-    FlyoutPlacementMode placementMode = FlyoutPlacementMode.right,
+    bool dismissWithEsc = true,
+    bool dismissOnPointerMoveAway = false,
+    FlyoutPlacementMode placementMode = FlyoutPlacementMode.topCenter,
+    bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
     double margin = 8.0,
+    Color? barrierColor,
+    NavigatorState? navigatorKey,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
 
     final context = _attachState!.context;
-    final navigator = Navigator.of(context);
+    final navigator = navigatorKey ?? Navigator.of(context);
     final navigatorBox = navigator.context.findRenderObject() as RenderBox;
 
     final targetBox = context.findRenderObject() as RenderBox;
@@ -209,39 +236,91 @@ class FlyoutController with ChangeNotifier {
     final targetOffset =
         targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
             Offset(0, targetSize.height);
-    // final targetRect = placementMode.calculatePosition(
-    //   screenSize,
-    //   targetOffset,
-    //   targetSize,
-    // );
 
     _open = true;
     notifyListeners();
 
+    final flyoutKey = GlobalKey();
+
     final result = await navigator.push<T>(PageRouteBuilder<T>(
       opaque: false,
+      transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (context, animation, secondary) {
-        return Stack(children: [
+        Widget box = Stack(children: [
           Positioned.fill(
             child: GestureDetector(
-              onTap: () {
-                if (barrierDismissible) navigator.pop();
-              },
+              behavior: HitTestBehavior.opaque,
+              onTap: barrierDismissible ? navigator.pop : null,
+              child: ColoredBox(
+                color: barrierColor ?? Colors.black.withOpacity(0.3),
+              ),
             ),
           ),
           Positioned.fill(
-            child: CustomSingleChildLayout(
-              delegate: _FlyoutPositionDelegate(
-                targetOffset: targetOffset,
-                targetSize: targetSize,
-                additionalOffset: additionalOffset,
-                placementMode: placementMode,
-                margin: margin,
+            child: SafeArea(
+              child: CustomSingleChildLayout(
+                delegate: _FlyoutPositionDelegate(
+                  targetOffset: targetOffset,
+                  targetSize: targetSize,
+                  additionalOffset: additionalOffset,
+                  placementMode: placementMode,
+                  margin: margin,
+                  shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+                ),
+                child: KeyedSubtree(
+                  key: flyoutKey,
+                  child: builder(context),
+                ),
               ),
-              child: builder(context),
             ),
           ),
         ]);
+
+        if (dismissOnPointerMoveAway) {
+          // TODO: additional offset should only be used on the side the flyout is used
+          final targetRect = (targetBox.localToGlobal(
+                    Offset.zero,
+                    ancestor: navigatorBox,
+                  ) -
+                  Offset(additionalOffset, additionalOffset)) &
+              Size(
+                targetSize.width + additionalOffset,
+                targetSize.height + additionalOffset,
+              );
+
+          box = MouseRegion(
+            onHover: (hover) {
+              final flyoutBox =
+                  flyoutKey.currentContext!.findRenderObject() as RenderBox;
+              final flyoutRect =
+                  flyoutBox.localToGlobal(Offset.zero) & flyoutBox.size;
+
+              if (!flyoutRect.contains(hover.position) &&
+                  !targetRect.contains(hover.localPosition)) {
+                navigator.pop();
+              }
+            },
+            child: box,
+          );
+        }
+
+        if (dismissWithEsc) {
+          box = Actions(
+            actions: {DismissIntent: _DismissAction(navigator.pop)},
+            child: FocusScope(
+              autofocus: true,
+              child: box,
+            ),
+          );
+        }
+
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            curve: Curves.ease,
+            parent: animation,
+          ),
+          child: box,
+        );
       },
     ));
 
@@ -249,6 +328,17 @@ class FlyoutController with ChangeNotifier {
     notifyListeners();
 
     return result;
+  }
+}
+
+class _DismissAction extends DismissAction {
+  _DismissAction(this.onDismiss);
+
+  final VoidCallback onDismiss;
+
+  @override
+  void invoke(covariant DismissIntent intent) {
+    onDismiss();
   }
 }
 
