@@ -124,7 +124,7 @@ To use the system's accent color, you can use the plugin [system_theme](https://
 import 'package:system_theme/system_theme.dart';
 
 ThemeData(
-  accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
+  accentColor: SystemTheme.accentColor.accent.toAccentColor(),
 )
 ```
 
