@@ -118,13 +118,13 @@ ThemeData(
 )
 ```
 
-To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 04/01/2021) Android, Web and Windows.
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 21/01/2023) Android, Web, MacOS, Windows, Xbox and Linux (GTK 3+).
 
 ```dart
 import 'package:system_theme/system_theme.dart';
 
 ThemeData(
-  accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
+  accentColor: SystemTheme.accentColor.accent.toAccentColor(),
 )
 ```
 
