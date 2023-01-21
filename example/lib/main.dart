@@ -10,6 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
+import 'routes/flyouts.dart' deferred as flyouts;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -64,6 +65,7 @@ void main() async {
 
   runApp(const MyApp());
 
+  DeferredWidget.preload(flyouts.loadLibrary);
   DeferredWidget.preload(forms.loadLibrary);
   DeferredWidget.preload(inputs.loadLibrary);
   DeferredWidget.preload(navigation.loadLibrary);
@@ -308,6 +310,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: DeferredWidget(
         surfaces.loadLibrary,
         () => surfaces.TooltipPage(),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.pop_expand),
+      title: const Text('Flyout 2'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => flyouts.Flyout2Screen(),
       ),
     ),
     PaneItem(
