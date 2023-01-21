@@ -38,21 +38,31 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
             'create a nested experience.',
           ),
         ),
-        subtitle(content: const Text('Flyouts')),
+        subtitle(content: const Text('A button with a flyout')),
         Row(children: [
           FlyoutAttach(
             controller: controller,
             child: Button(
-              child: const Text('Open Flyout'),
+              child: const Text('Clear cart'),
               onPressed: () {
                 controller.showFlyout(
                   placementMode: FlyoutPlacementMode.topCenter,
                   builder: (context) {
-                    return const FlyoutContent(
-                      child: Text(
-                        'This is a good FLYOUT content'
-                        '\nWITH MULTIPLE LINES'
-                        '\nAND VERY LONG LINES AHSBABASSABNAPSNPANPASNPA SABPASNSAPNASP',
+                    return FlyoutContent(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'All items will be removed. Do you want to continue?',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 12.0),
+                          Button(
+                            child: const Text('Yes, empty my cart'),
+                            onPressed: Navigator.of(context).pop,
+                          ),
+                        ],
                       ),
                     );
                   },

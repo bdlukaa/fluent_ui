@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 
 /// Defines constants that specify the preferred location for positioning a
 /// [Flyout] derived control relative to a visual element.
@@ -186,6 +185,9 @@ class FlyoutController with ChangeNotifier {
   bool get isOpen => _open;
 
   /// Shows a flyout.
+  ///
+  /// [builder] builds the flyout with the given context. Usually a [FlyoutContent]
+  /// is used
   ///
   /// If [barrierDismissible] is true, tapping outside of the flyout will close
   /// it.
