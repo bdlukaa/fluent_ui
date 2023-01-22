@@ -97,7 +97,7 @@ class DropDownButton extends StatefulWidget {
 
   /// The placement of the flyout.
   ///
-  /// [FlyoutPlacement.center] is used by default
+  /// [FlyoutPlacementMode.bottomCenter] is used by default
   final FlyoutPlacementMode placement;
 
   /// The menu shape

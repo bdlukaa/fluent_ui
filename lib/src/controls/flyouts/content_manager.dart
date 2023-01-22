@@ -64,7 +64,7 @@ class ContentSizeInfo extends InheritedWidget {
 
 typedef _MenuBuilder = Widget Function(
   BuildContext context,
-  Size rootSize,
+  BoxConstraints rootSize,
   Iterable<Widget> menus,
   Iterable<GlobalKey> keys,
 );
@@ -104,7 +104,7 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
     return LayoutBuilder(builder: (context, constraints) {
       return widget.builder(
         context,
-        constraints.biggest,
+        constraints,
         _menus.values,
         _menus.keys,
       );
