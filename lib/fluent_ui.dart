@@ -37,6 +37,7 @@ export 'l10n/generated/fluent_localizations.dart';
 
 export 'src/app.dart';
 
+export 'src/controls/flyouts/menu.dart';
 export 'src/controls/form/auto_suggest_box.dart';
 export 'src/controls/form/combo_box.dart';
 export 'src/controls/form/form_row.dart';

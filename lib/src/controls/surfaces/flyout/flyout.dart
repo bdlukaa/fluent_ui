@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 export 'controller.dart';
 
 part 'content.dart';
-part 'menu.dart';
 
 const kDefaultLongHoverDuration = Duration(milliseconds: 400);
 

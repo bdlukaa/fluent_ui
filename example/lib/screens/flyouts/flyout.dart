@@ -65,6 +65,15 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                               text: const Text('Other formats...'),
                               onPressed: () {},
                             ),
+                            MenuFlyoutSubItem(
+                              text: const Text('Another one'),
+                              items: [
+                                MenuFlyoutItem(
+                                  text: const Text('Other formats...'),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         MenuFlyoutItem(

@@ -1,4 +1,5 @@
-part of 'flyout.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Menu flyouts are used in menu and context menu scenarios to display a list
 /// of commands or options when requested by the user. A menu flyout shows a
@@ -193,50 +194,110 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
 
 class MenuFlyoutSubItem extends MenuFlyoutItem {
   MenuFlyoutSubItem({
-    Key? key,
-    Widget? leading,
-    required Widget text,
-    Widget? trailing = const Icon(FluentIcons.chevron_right),
+    super.key,
+    super.leading,
+    required super.text,
+    super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
-    this.openMode = FlyoutOpenMode.longHover,
-  }) : super(
-          key: key,
-          leading: leading,
-          text: text,
-          trailing: trailing,
-          onPressed: () {},
-        );
+  }) : super(onPressed: null);
 
   final List<MenuFlyoutItemInterface> items;
 
-  final FlyoutOpenMode openMode;
+  @override
+  Widget build(BuildContext context) {
+    return _MenuFlyoutSubItem(item: this, items: items);
+  }
+}
 
-  bool _open = false;
+typedef _MenuBuilder = Widget Function(
+  BuildContext context,
+  Iterable<Widget> menus,
+  Iterable<GlobalKey> keys,
+);
+
+class MenuInfoProvider extends StatefulWidget {
+  const MenuInfoProvider({
+    Key? key,
+    required this.builder,
+    required this.flyoutKey,
+    required this.additionalOffset,
+    required this.margin,
+  }) : super(key: key);
+
+  final GlobalKey flyoutKey;
+  final _MenuBuilder builder;
+  final double additionalOffset;
+  final double margin;
+
+  static MenuInfoProviderState of(BuildContext context) {
+    return context.findAncestorStateOfType<MenuInfoProviderState>()!;
+  }
+
+  @override
+  State<MenuInfoProvider> createState() => MenuInfoProviderState();
+}
+
+class MenuInfoProviderState extends State<MenuInfoProvider> {
+  final _menus = <GlobalKey, Widget>{};
+
+  void add(Widget menu, GlobalKey key) {
+    setState(() => _menus.addAll({key: menu}));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (context, setState) {
-      return Flyout(
-        openMode: openMode,
-        position: FlyoutPosition.side,
-        placement: FlyoutPlacement.end,
-        verticalOffset: 40.0,
-        horizontalOffset: 0.0,
-        content: (context) {
-          return MenuFlyout(
-            items: items,
-          );
-        },
-        onOpen: () => setState(() => _open = true),
-        onClose: () => setState(() => _open = false),
-        child: MenuFlyoutItem(
-          onPressed: () {},
-          text: text,
-          leading: leading,
-          trailing: trailing,
-          selected: _open,
-        ).build(context),
-      );
-    });
+    return widget.builder(context, _menus.values, _menus.keys);
+  }
+}
+
+class _MenuFlyoutSubItem extends StatefulWidget {
+  final MenuFlyoutItem item;
+  final List<MenuFlyoutItemInterface> items;
+
+  const _MenuFlyoutSubItem({
+    Key? key,
+    required this.item,
+    required this.items,
+  }) : super(key: key);
+
+  @override
+  State<_MenuFlyoutSubItem> createState() => __MenuFlyoutSubItemState();
+}
+
+class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
+  bool _showing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final menuInfo = MenuInfoProvider.of(context);
+
+    return MenuFlyoutItem(
+      key: widget.item.key,
+      text: widget.item.text,
+      leading: widget.item.leading,
+      selected: _showing,
+      trailing: widget.item.trailing,
+      onPressed: () {
+        final itemBox = context.findRenderObject() as RenderBox;
+        final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
+
+        final menuKey = GlobalKey();
+
+        // TODO: add a layout delegate
+        menuInfo.add(
+          Positioned(
+            key: menuKey,
+            top: itemRect.top,
+            left: itemRect.left + itemBox.size.width,
+            child: ContentManager(
+              content: (_) => MenuFlyout(
+                items: widget.items,
+              ),
+            ),
+          ),
+          menuKey,
+        );
+      },
+    ).build(context);
   }
 }

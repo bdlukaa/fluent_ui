@@ -249,70 +249,92 @@ class FlyoutController with ChangeNotifier {
       opaque: false,
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (context, animation, secondary) {
-        Widget box = Stack(children: [
-          Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: barrierDismissible ? navigator.pop : null,
-              child: ColoredBox(
-                color: barrierColor ?? Colors.black.withOpacity(0.3),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: SafeArea(
-              child: CustomSingleChildLayout(
-                delegate: _FlyoutPositionDelegate(
-                  targetOffset: targetOffset,
-                  targetSize: targetSize,
-                  placementMode: placementMode,
-                  margin: margin,
-                  shouldConstrainToRootBounds: shouldConstrainToRootBounds,
-                ),
-                child: Padding(
-                  key: flyoutKey,
-                  padding: _getAdditionalOffset(
-                    additionalOffset,
-                    placementMode,
+        Widget flyout = MenuInfoProvider(
+          flyoutKey: flyoutKey,
+          additionalOffset: additionalOffset,
+          margin: margin,
+          builder: (context, menus, keys) {
+            assert(menus.length == keys.length);
+
+            Widget box = Stack(children: [
+              if (barrierColor?.alpha != 0 && barrierDismissible)
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: barrierDismissible ? navigator.pop : null,
+                    child: ColoredBox(
+                      color: barrierColor ?? Colors.black.withOpacity(0.3),
+                    ),
                   ),
-                  child: ContentManager(content: builder),
+                ),
+              Positioned.fill(
+                child: SafeArea(
+                  child: CustomSingleChildLayout(
+                    delegate: _FlyoutPositionDelegate(
+                      targetOffset: targetOffset,
+                      targetSize: targetSize,
+                      placementMode: placementMode,
+                      margin: margin,
+                      shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+                    ),
+                    child: Padding(
+                      key: flyoutKey,
+                      padding: _getAdditionalOffset(
+                        additionalOffset,
+                        placementMode,
+                      ),
+                      child: ContentManager(content: builder),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ]);
+              ...menus,
+            ]);
 
-        final targetRect =
-            targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
-                targetSize;
+            final targetRect =
+                targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
+                    targetSize;
 
-        if (dismissOnPointerMoveAway) {
-          box = MouseRegion(
-            onHover: (hover) {
-              if (flyoutKey.currentContext == null) return;
+            if (dismissOnPointerMoveAway) {
+              box = MouseRegion(
+                onHover: (hover) {
+                  if (flyoutKey.currentContext == null) return;
 
-              // the flyout box needs to be fetched at each [onHover] because the
-              // flyout size may change (a MenuFlyout, for example)
-              final flyoutBox =
-                  flyoutKey.currentContext!.findRenderObject() as RenderBox;
-              final flyoutRect =
-                  flyoutBox.localToGlobal(Offset.zero) & flyoutBox.size;
+                  // the flyout box needs to be fetched at each [onHover] because the
+                  // flyout size may change (a MenuFlyout, for example)
+                  final flyoutBox =
+                      flyoutKey.currentContext!.findRenderObject() as RenderBox;
+                  final flyoutRect =
+                      flyoutBox.localToGlobal(Offset.zero) & flyoutBox.size;
+                  final menusRects = keys.map((key) {
+                    if (key.currentContext == null) return Rect.zero;
 
-              if (!flyoutRect.contains(hover.position) &&
-                  !targetRect.contains(hover.position)) {
-                navigator.pop();
-              }
-            },
-            child: box,
-          );
-        }
+                    final menuBox =
+                        key.currentContext!.findRenderObject() as RenderBox;
+                    return menuBox.localToGlobal(Offset.zero) & menuBox.size;
+                  });
+
+                  if (!flyoutRect.contains(hover.position) &&
+                      !targetRect.contains(hover.position) &&
+                      !menusRects
+                          .any((rect) => rect.contains(hover.position))) {
+                    navigator.pop();
+                  }
+                },
+                child: box,
+              );
+            }
+
+            return box;
+          },
+        );
 
         if (dismissWithEsc) {
-          box = Actions(
+          flyout = Actions(
             actions: {DismissIntent: _DismissAction(navigator.pop)},
             child: FocusScope(
               autofocus: true,
-              child: box,
+              child: flyout,
             ),
           );
         }
@@ -322,7 +344,7 @@ class FlyoutController with ChangeNotifier {
             curve: Curves.ease,
             parent: animation,
           ),
-          child: box,
+          child: flyout,
         );
       },
     ));
