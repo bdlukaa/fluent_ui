@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Defines constants that specify the preferred location for positioning a
 /// [Flyout] derived control relative to a visual element.
@@ -39,8 +40,8 @@ enum FlyoutPlacementMode {
   topRight;
 }
 
-/// A delegate for computing the layout of a flyout to be displayed above or
-/// bellow a target specified in the global coordinate system.
+/// A delegate for computing the layout of a flyout to be displayed according to
+/// a target specified in the global coordinate system.
 class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   /// Creates a delegate for computing the layout of a flyout.
   ///
@@ -48,7 +49,6 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   const _FlyoutPositionDelegate({
     required this.targetOffset,
     required this.targetSize,
-    required this.additionalOffset,
     required this.placementMode,
     required this.margin,
     required this.shouldConstrainToRootBounds,
@@ -56,7 +56,6 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
   final Offset targetOffset;
   final Size targetSize;
-  final double additionalOffset;
   final FlyoutPlacementMode placementMode;
   final double margin;
   final bool shouldConstrainToRootBounds;
@@ -67,28 +66,31 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size screenSize, Size flyoutSize) {
-    // print('$screenSize - $flyoutSize - $placementMode');
-
     double clampHorizontal(double x) {
       if (!shouldConstrainToRootBounds) return x;
 
-      return x.clamp(margin, screenSize.width - flyoutSize.width - margin);
+      return clampDouble(
+        x,
+        margin,
+        screenSize.width - flyoutSize.width - margin,
+      );
     }
 
     double clampVertical(double y) {
       if (!shouldConstrainToRootBounds) return y;
 
-      return y.clamp(margin, screenSize.height - flyoutSize.height - margin);
+      return clampDouble(
+        y,
+        margin,
+        screenSize.height - flyoutSize.height - margin,
+      );
     }
 
     final topY = clampVertical(
-      targetOffset.dy -
-          targetSize.height -
-          additionalOffset -
-          flyoutSize.height,
+      targetOffset.dy - targetSize.height - flyoutSize.height,
     );
 
-    final bottomY = clampVertical(targetOffset.dy + additionalOffset);
+    final bottomY = clampVertical(targetOffset.dy);
 
     final horizontalY = clampVertical(
       targetOffset.dy - targetSize.height - flyoutSize.height / 4,
@@ -124,14 +126,14 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
       case FlyoutPlacementMode.left:
         return Offset(
           clampHorizontal(
-            targetOffset.dx - flyoutSize.width - additionalOffset,
+            targetOffset.dx - flyoutSize.width,
           ),
           horizontalY,
         );
       case FlyoutPlacementMode.right:
         return Offset(
           clampHorizontal(
-            targetOffset.dx + targetSize.width + additionalOffset,
+            targetOffset.dx + targetSize.width,
           ),
           horizontalY,
         );
@@ -144,7 +146,6 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   @override
   bool shouldRelayout(_FlyoutPositionDelegate oldDelegate) {
     return targetOffset != oldDelegate.targetOffset ||
-        additionalOffset != oldDelegate.additionalOffset ||
         placementMode != oldDelegate.placementMode;
   }
 }
@@ -218,7 +219,7 @@ class FlyoutController with ChangeNotifier {
     required WidgetBuilder builder,
     bool barrierDismissible = true,
     bool dismissWithEsc = true,
-    bool dismissOnPointerMoveAway = false,
+    bool dismissOnPointerMoveAway = true,
     FlyoutPlacementMode placementMode = FlyoutPlacementMode.topCenter,
     bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
@@ -264,41 +265,41 @@ class FlyoutController with ChangeNotifier {
                 delegate: _FlyoutPositionDelegate(
                   targetOffset: targetOffset,
                   targetSize: targetSize,
-                  additionalOffset: additionalOffset,
                   placementMode: placementMode,
                   margin: margin,
                   shouldConstrainToRootBounds: shouldConstrainToRootBounds,
                 ),
-                child: KeyedSubtree(
+                child: Padding(
                   key: flyoutKey,
-                  child: builder(context),
+                  padding: _getAdditionalOffset(
+                    additionalOffset,
+                    placementMode,
+                  ),
+                  child: ContentManager(content: builder),
                 ),
               ),
             ),
           ),
         ]);
 
-        if (dismissOnPointerMoveAway) {
-          // TODO: additional offset should only be used on the side the flyout is used
-          final targetRect = (targetBox.localToGlobal(
-                    Offset.zero,
-                    ancestor: navigatorBox,
-                  ) -
-                  Offset(additionalOffset, additionalOffset)) &
-              Size(
-                targetSize.width + additionalOffset,
-                targetSize.height + additionalOffset,
-              );
+        final targetRect =
+            targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
+                targetSize;
 
+        if (dismissOnPointerMoveAway) {
           box = MouseRegion(
             onHover: (hover) {
+              if (flyoutKey.currentContext == null) return;
+
+              // the flyout box needs to be fetched at each [onHover] because the
+              // flyout size may change (a MenuFlyout, for example)
               final flyoutBox =
                   flyoutKey.currentContext!.findRenderObject() as RenderBox;
               final flyoutRect =
                   flyoutBox.localToGlobal(Offset.zero) & flyoutBox.size;
 
               if (!flyoutRect.contains(hover.position) &&
-                  !targetRect.contains(hover.localPosition)) {
+                  !targetRect.contains(hover.position)) {
                 navigator.pop();
               }
             },
@@ -330,6 +331,31 @@ class FlyoutController with ChangeNotifier {
     notifyListeners();
 
     return result;
+  }
+
+  EdgeInsets _getAdditionalOffset(
+    double additionalOffset,
+    FlyoutPlacementMode placementMode,
+  ) {
+    switch (placementMode) {
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.bottomLeft:
+      case FlyoutPlacementMode.bottomRight:
+        return EdgeInsets.only(top: additionalOffset);
+      case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.topLeft:
+      case FlyoutPlacementMode.topRight:
+        return EdgeInsets.only(bottom: additionalOffset);
+      case FlyoutPlacementMode.left:
+        return EdgeInsets.only(right: additionalOffset);
+      case FlyoutPlacementMode.right:
+        return EdgeInsets.only(left: additionalOffset);
+      case FlyoutPlacementMode.auto:
+      default:
+        throw Exception(
+          'Can not find the position of the additional offset on auto placement mode',
+        );
+    }
   }
 }
 

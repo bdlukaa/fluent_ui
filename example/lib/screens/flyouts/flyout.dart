@@ -46,25 +46,59 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
               child: const Text('Clear cart'),
               onPressed: () {
                 controller.showFlyout(
-                  placementMode: FlyoutPlacementMode.topCenter,
+                  placementMode: FlyoutPlacementMode.topLeft,
                   builder: (context) {
-                    return FlyoutContent(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'All items will be removed. Do you want to continue?',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 12.0),
-                          Button(
-                            child: const Text('Yes, empty my cart'),
-                            onPressed: Navigator.of(context).pop,
-                          ),
-                        ],
-                      ),
+                    return MenuFlyout(
+                      items: [
+                        MenuFlyoutSubItem(
+                          text: const Text('New'),
+                          items: [
+                            MenuFlyoutItem(
+                              text: const Text('Plain Text Document'),
+                              onPressed: () {},
+                            ),
+                            MenuFlyoutItem(
+                              text: const Text('Rich Text Document'),
+                              onPressed: () {},
+                            ),
+                            MenuFlyoutItem(
+                              text: const Text('Other formats...'),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Open'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Save'),
+                          onPressed: () {},
+                        ),
+                        const MenuFlyoutSeparator(),
+                        MenuFlyoutItem(
+                          text: const Text('Exit'),
+                          onPressed: () {},
+                        ),
+                      ],
                     );
+                    // return FlyoutContent(
+                    //   child: Column(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       const Text(
+                    //         'All items will be removed. Do you want to continue?',
+                    //         style: TextStyle(fontWeight: FontWeight.bold),
+                    //       ),
+                    //       const SizedBox(height: 12.0),
+                    //       Button(
+                    //         child: const Text('Yes, empty my cart'),
+                    //         onPressed: Navigator.of(context).pop,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // );
                   },
                 );
               },
