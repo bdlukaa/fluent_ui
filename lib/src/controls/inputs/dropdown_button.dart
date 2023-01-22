@@ -204,7 +204,10 @@ class _DropDownButtonState extends State<DropDownButton> {
   void showFlyout() async {
     widget.onOpen?.call();
     await flyoutController.showFlyout(
-      placementMode: widget.placement,
+      placementMode: FlyoutPlacementMode.auto,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: widget.placement,
+      ),
       additionalOffset: widget.verticalOffset,
       builder: (context) {
         return MenuFlyout(

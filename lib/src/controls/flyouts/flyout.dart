@@ -4,13 +4,16 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// Defines constants that specify the preferred location for positioning a
-/// [Flyout] derived control relative to a visual element.
+/// flyout derived control relative to a visual element.
 ///
 /// See also:
 ///
 ///  * <https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.primitives.flyoutplacementmode>
 enum FlyoutPlacementMode {
   /// Preferred location is determined automatically.
+  ///
+  /// If there is space below, [bottomCenter] is assigned;
+  /// If there is space above, [topCenter] is assigned.
   auto,
 
   /// Preferred location is below the target element.
@@ -101,6 +104,121 @@ enum FlyoutPlacementMode {
         );
     }
   }
+
+  FlyoutPlacementMode _assignAutoMode(
+    Offset targetOffset,
+    Size rootSize,
+    double margin,
+    FlyoutAutoConfiguration configuration,
+  ) {
+    assert(this == FlyoutPlacementMode.auto);
+
+    // as = available space
+
+    if (configuration.horizontal) {
+      final las = FlyoutPlacementMode.left
+          ._getAvailableSpace(targetOffset, rootSize, margin)
+          .biggest;
+      final ras = FlyoutPlacementMode.right
+          ._getAvailableSpace(targetOffset, rootSize, margin)
+          .biggest;
+
+      if (las.width > configuration.autoAvailableSpace &&
+          ras.width > configuration.autoAvailableSpace) {
+        return configuration.preferredMode;
+      } else if (las.width > configuration.autoAvailableSpace) {
+        return FlyoutPlacementMode.left;
+      } else if (ras.width > configuration.autoAvailableSpace) {
+        return FlyoutPlacementMode.right;
+      } else {
+        return configuration.preferredMode;
+      }
+    }
+
+    // preferred available space
+    // we perform this check before all the calculation to save computing time
+    final pas = configuration.preferredMode
+        ._getAvailableSpace(targetOffset, rootSize, margin)
+        .biggest;
+    if (pas.height > configuration.autoAvailableSpace) {
+      return configuration.preferredMode;
+    }
+
+    final isLeftPreferred = [
+      FlyoutPlacementMode.left,
+      FlyoutPlacementMode.topLeft,
+      FlyoutPlacementMode.bottomLeft,
+    ].contains(configuration.preferredMode);
+    final isCenterPreferred = [
+      FlyoutPlacementMode.topCenter,
+      FlyoutPlacementMode.bottomCenter
+    ].contains(configuration.preferredMode);
+    final isRightPreferred = [
+      FlyoutPlacementMode.right,
+      FlyoutPlacementMode.topRight,
+      FlyoutPlacementMode.bottomRight
+    ].contains(configuration.preferredMode);
+
+    final bas = FlyoutPlacementMode.bottomCenter
+        ._getAvailableSpace(
+          targetOffset,
+          rootSize,
+          margin,
+        )
+        .biggest;
+
+    if (bas.height > configuration.autoAvailableSpace) {
+      if (isLeftPreferred) return FlyoutPlacementMode.bottomLeft;
+      if (isCenterPreferred) return FlyoutPlacementMode.bottomCenter;
+      if (isRightPreferred) return FlyoutPlacementMode.bottomRight;
+    }
+
+    final tas = FlyoutPlacementMode.topCenter
+        ._getAvailableSpace(
+          targetOffset,
+          rootSize,
+          margin,
+        )
+        .biggest;
+
+    if (tas.height > configuration.autoAvailableSpace) {
+      if (isLeftPreferred) return FlyoutPlacementMode.topLeft;
+      if (isCenterPreferred) return FlyoutPlacementMode.topCenter;
+      if (isRightPreferred) return FlyoutPlacementMode.topRight;
+    }
+
+    return configuration.preferredMode;
+  }
+}
+
+class FlyoutAutoConfiguration {
+  /// The amount of necessary available space
+  final double autoAvailableSpace;
+
+  /// Whether the flyout should be displayed horizontally
+  ///
+  /// If true, [preferredMode] must be either .left or .right
+  final bool horizontal;
+
+  /// The preferred mode
+  final FlyoutPlacementMode preferredMode;
+
+  /// The configuration for flyout auto mode
+  FlyoutAutoConfiguration({
+    this.autoAvailableSpace = 100.0,
+    bool? horizontal,
+    required this.preferredMode,
+  })  : assert(preferredMode != FlyoutPlacementMode.auto),
+        assert(
+          horizontal != null && horizontal
+              ? preferredMode == FlyoutPlacementMode.left ||
+                  preferredMode == FlyoutPlacementMode.right
+              : true,
+          'If the mode horizontal, preferredMode must either be left or right',
+        ),
+        horizontal = horizontal ??
+            [FlyoutPlacementMode.left, FlyoutPlacementMode.right]
+                .contains(preferredMode);
 }
 
 /// A delegate for computing the layout of a flyout to be displayed according to
@@ -288,6 +406,9 @@ class FlyoutController with ChangeNotifier {
   /// [placementMode] describes where the flyout will be placed. Defaults to top
   /// center
   ///
+  /// If [placementMode] is auto, [autoAvailableSpace] is taken in consideration
+  /// to determine if the placement will be at the top or bottom.
+  ///
   /// [forceAvailableSpace] determines whether the flyout size should be forced
   /// the available space according to the attached target. Defaults to false
   ///
@@ -307,6 +428,7 @@ class FlyoutController with ChangeNotifier {
     bool dismissWithEsc = true,
     bool dismissOnPointerMoveAway = false,
     FlyoutPlacementMode placementMode = FlyoutPlacementMode.topCenter,
+    FlyoutAutoConfiguration? autoModeConfiguration,
     bool forceAvailableSpace = false,
     bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
@@ -343,8 +465,25 @@ class FlyoutController with ChangeNotifier {
           flyoutKey: flyoutKey,
           additionalOffset: additionalOffset,
           margin: margin,
-          builder: (context, menus, keys) {
+          builder: (context, rootSize, menus, keys) {
             assert(menus.length == keys.length);
+
+            if (placementMode == FlyoutPlacementMode.auto) {
+              assert(
+                autoModeConfiguration != null,
+                'autoModeConfiguration must be provided in order to set the automatic mode',
+              );
+
+              placementMode = placementMode._assignAutoMode(
+                targetOffset,
+                rootSize,
+                margin,
+                autoModeConfiguration ??
+                    FlyoutAutoConfiguration(
+                      preferredMode: FlyoutPlacementMode.topCenter,
+                    ),
+              );
+            }
 
             Widget box = Stack(children: [
               if (barrierColor?.alpha != 0 && barrierDismissible)
