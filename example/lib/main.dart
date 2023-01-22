@@ -320,14 +320,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         () => flyouts.Flyout2Screen(),
       ),
     ),
-    PaneItem(
-      icon: const Icon(FluentIcons.pop_expand),
-      title: const Text('Flyout'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.FlyoutPage(),
-      ),
-    ),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.pop_expand),
+    //   title: const Text('Flyout'),
+    //   body: DeferredWidget(
+    //     surfaces.loadLibrary,
+    //     () => surfaces.FlyoutPage(),
+    //   ),
+    // ),
     PaneItemHeader(header: const Text('Theming')),
     PaneItem(
       icon: const Icon(FluentIcons.color_solid),

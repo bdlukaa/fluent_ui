@@ -134,13 +134,13 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
 class MenuFlyoutItem extends MenuFlyoutItemInterface {
   /// Creates a menu flyout item
   MenuFlyoutItem({
-    Key? key,
+    super.key,
     this.leading,
     required this.text,
     this.trailing,
     required this.onPressed,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   final Widget? leading;
   final Widget text;
@@ -175,7 +175,7 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
 }
 
 class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
-  const MenuFlyoutSeparator({Key? key}) : super(key: key);
+  const MenuFlyoutSeparator({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -209,47 +209,6 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   }
 }
 
-typedef _MenuBuilder = Widget Function(
-  BuildContext context,
-  Iterable<Widget> menus,
-  Iterable<GlobalKey> keys,
-);
-
-class MenuInfoProvider extends StatefulWidget {
-  const MenuInfoProvider({
-    Key? key,
-    required this.builder,
-    required this.flyoutKey,
-    required this.additionalOffset,
-    required this.margin,
-  }) : super(key: key);
-
-  final GlobalKey flyoutKey;
-  final _MenuBuilder builder;
-  final double additionalOffset;
-  final double margin;
-
-  static MenuInfoProviderState of(BuildContext context) {
-    return context.findAncestorStateOfType<MenuInfoProviderState>()!;
-  }
-
-  @override
-  State<MenuInfoProvider> createState() => MenuInfoProviderState();
-}
-
-class MenuInfoProviderState extends State<MenuInfoProvider> {
-  final _menus = <GlobalKey, Widget>{};
-
-  void add(Widget menu, GlobalKey key) {
-    setState(() => _menus.addAll({key: menu}));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.builder(context, _menus.values, _menus.keys);
-  }
-}
-
 class _MenuFlyoutSubItem extends StatefulWidget {
   final MenuFlyoutItem item;
   final List<MenuFlyoutItemInterface> items;
@@ -272,7 +231,6 @@ class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
     final menuInfo = MenuInfoProvider.of(context);
 
     return MenuFlyoutItem(
-      key: widget.item.key,
       text: widget.item.text,
       leading: widget.item.leading,
       selected: _showing,

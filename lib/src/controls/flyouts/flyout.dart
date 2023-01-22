@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -38,6 +40,67 @@ enum FlyoutPlacementMode {
   /// Preferred location is above the target element, with the right edge of
   /// flyout aligned with right edge of the target element.
   topRight;
+
+  EdgeInsetsGeometry _getAdditionalOffsetPosition(double additionalOffset) {
+    switch (this) {
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.bottomLeft:
+      case FlyoutPlacementMode.bottomRight:
+        return EdgeInsets.only(top: additionalOffset);
+      case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.topLeft:
+      case FlyoutPlacementMode.topRight:
+        return EdgeInsets.only(bottom: additionalOffset);
+      case FlyoutPlacementMode.left:
+        return EdgeInsets.only(right: additionalOffset);
+      case FlyoutPlacementMode.right:
+        return EdgeInsets.only(left: additionalOffset);
+      case FlyoutPlacementMode.auto:
+      default:
+        throw Exception(
+          'Can not find the position of the additional offset on auto placement mode',
+        );
+    }
+  }
+
+  /// Gets the available space according to the flyout placement
+  BoxConstraints _getAvailableSpace(
+    Offset targetOffset,
+    Size rootSize,
+    double margin,
+  ) {
+    switch (this) {
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.bottomLeft:
+      case FlyoutPlacementMode.bottomRight:
+        return BoxConstraints(
+          maxWidth: rootSize.width,
+          maxHeight: rootSize.height - margin - targetOffset.dy,
+        );
+      case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.topLeft:
+      case FlyoutPlacementMode.topRight:
+        return BoxConstraints(
+          maxWidth: rootSize.width,
+          maxHeight: targetOffset.dy,
+        );
+      case FlyoutPlacementMode.left:
+        return BoxConstraints(
+          maxWidth: targetOffset.dx,
+          maxHeight: rootSize.height,
+        );
+      case FlyoutPlacementMode.right:
+        return BoxConstraints(
+          maxWidth: rootSize.width - targetOffset.dx,
+          maxHeight: rootSize.height,
+        );
+      case FlyoutPlacementMode.auto:
+      default:
+        throw Exception(
+          'Can not find the available space of auto mode',
+        );
+    }
+  }
 }
 
 /// A delegate for computing the layout of a flyout to be displayed according to
@@ -52,27 +115,44 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     required this.placementMode,
     required this.margin,
     required this.shouldConstrainToRootBounds,
+    required this.forceAvailableSpace,
   });
 
   final Offset targetOffset;
   final Size targetSize;
+
   final FlyoutPlacementMode placementMode;
   final double margin;
+
   final bool shouldConstrainToRootBounds;
 
-  @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      constraints.loosen();
+  final bool forceAvailableSpace;
 
   @override
-  Offset getPositionForChild(Size screenSize, Size flyoutSize) {
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    if (forceAvailableSpace) {
+      final availableSpace = placementMode
+          ._getAvailableSpace(targetOffset, constraints.biggest, margin)
+          .biggest;
+
+      return BoxConstraints(
+        maxWidth: math.min(availableSpace.width, constraints.biggest.width),
+        maxHeight: math.min(availableSpace.height, constraints.biggest.height),
+      );
+    }
+
+    return constraints.loosen();
+  }
+
+  @override
+  Offset getPositionForChild(Size rootSize, Size flyoutSize) {
     double clampHorizontal(double x) {
       if (!shouldConstrainToRootBounds) return x;
 
       return clampDouble(
         x,
         margin,
-        screenSize.width - flyoutSize.width - margin,
+        rootSize.width - flyoutSize.width - margin,
       );
     }
 
@@ -82,7 +162,10 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
       return clampDouble(
         y,
         margin,
-        screenSize.height - flyoutSize.height - margin,
+        (rootSize.height - flyoutSize.height - margin).clamp(
+          margin,
+          rootSize.height - margin,
+        ),
       );
     }
 
@@ -205,6 +288,9 @@ class FlyoutController with ChangeNotifier {
   /// [placementMode] describes where the flyout will be placed. Defaults to top
   /// center
   ///
+  /// [forceAvailableSpace] determines whether the flyout size should be forced
+  /// the available space according to the attached target. Defaults to false
+  ///
   /// [shouldConstrainToRootBounds], when true, the flyout is limited to the
   /// bounds of the closest [Navigator]. If false, the flyout may overflow the
   /// screen.
@@ -219,8 +305,9 @@ class FlyoutController with ChangeNotifier {
     required WidgetBuilder builder,
     bool barrierDismissible = true,
     bool dismissWithEsc = true,
-    bool dismissOnPointerMoveAway = true,
+    bool dismissOnPointerMoveAway = false,
     FlyoutPlacementMode placementMode = FlyoutPlacementMode.topCenter,
+    bool forceAvailableSpace = false,
     bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
     double margin = 8.0,
@@ -239,6 +326,9 @@ class FlyoutController with ChangeNotifier {
     final targetOffset =
         targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
             Offset(0, targetSize.height);
+    final targetRect =
+        targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
+            targetSize;
 
     _open = true;
     notifyListeners();
@@ -276,13 +366,12 @@ class FlyoutController with ChangeNotifier {
                       placementMode: placementMode,
                       margin: margin,
                       shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+                      forceAvailableSpace: forceAvailableSpace,
                     ),
                     child: Padding(
                       key: flyoutKey,
-                      padding: _getAdditionalOffset(
-                        additionalOffset,
-                        placementMode,
-                      ),
+                      padding: placementMode
+                          ._getAdditionalOffsetPosition(additionalOffset),
                       child: ContentManager(content: builder),
                     ),
                   ),
@@ -290,10 +379,6 @@ class FlyoutController with ChangeNotifier {
               ),
               ...menus,
             ]);
-
-            final targetRect =
-                targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
-                    targetSize;
 
             if (dismissOnPointerMoveAway) {
               box = MouseRegion(
@@ -353,31 +438,6 @@ class FlyoutController with ChangeNotifier {
     notifyListeners();
 
     return result;
-  }
-
-  EdgeInsets _getAdditionalOffset(
-    double additionalOffset,
-    FlyoutPlacementMode placementMode,
-  ) {
-    switch (placementMode) {
-      case FlyoutPlacementMode.bottomCenter:
-      case FlyoutPlacementMode.bottomLeft:
-      case FlyoutPlacementMode.bottomRight:
-        return EdgeInsets.only(top: additionalOffset);
-      case FlyoutPlacementMode.topCenter:
-      case FlyoutPlacementMode.topLeft:
-      case FlyoutPlacementMode.topRight:
-        return EdgeInsets.only(bottom: additionalOffset);
-      case FlyoutPlacementMode.left:
-        return EdgeInsets.only(right: additionalOffset);
-      case FlyoutPlacementMode.right:
-        return EdgeInsets.only(left: additionalOffset);
-      case FlyoutPlacementMode.auto:
-      default:
-        throw Exception(
-          'Can not find the position of the additional offset on auto placement mode',
-        );
-    }
   }
 }
 
