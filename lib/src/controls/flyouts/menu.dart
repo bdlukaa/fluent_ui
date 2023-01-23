@@ -23,7 +23,7 @@ class MenuFlyout extends StatefulWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints,
-    this.padding = const EdgeInsets.symmetric(vertical: 8.0),
+    this.padding = const EdgeInsets.only(top: 8.0),
   }) : super(key: key);
 
   /// {@template fluent_ui.flyouts.menu.items}
@@ -139,7 +139,6 @@ class _MenuFlyoutState extends State<MenuFlyout> {
               in keys.whereType<GlobalKey<__MenuFlyoutSubItemState>>()) {
             final state = subItem.currentState;
             if (state == null || subItem.currentContext == null) continue;
-            print(menuInfo.contains(state.menuKey));
             if (!state.isShowing(menuInfo)) continue;
 
             final itemBox =
@@ -262,6 +261,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
       padding: MenuFlyout.itemsPadding,
       child: FlyoutListTile(
         selected: selected,
+        showSelectedIndicator: false,
         icon: leading ??
             () {
               if (_useIconPlaceholder) return const Icon(null);
@@ -376,7 +376,7 @@ class _MenuFlyoutSubItem extends StatefulWidget {
 }
 
 class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
-  final menuKey = GlobalKey();
+  final menuKey = GlobalKey<_MenuFlyoutState>();
 
   Timer? showTimer;
 
@@ -418,14 +418,16 @@ class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
     final itemBox = context.findRenderObject() as RenderBox;
     final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
 
-    // TODO: add a layout delegate
     menuInfo.add(
-      Positioned(
-        key: menuKey,
-        top: itemRect.top,
-        left: itemRect.left + itemBox.size.width,
+      CustomSingleChildLayout(
+        delegate: _SubItemPositionDelegate(
+          parentRect: itemRect,
+          parentSize: itemBox.size,
+          margin: menuInfo.widget.margin,
+        ),
         child: ContentManager(
           content: (_) => MenuFlyout(
+            key: menuKey,
             items: widget.items,
           ),
         ),
@@ -436,9 +438,78 @@ class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
     setState(() {});
   }
 
+  /// Closes this menu and its children
   void close(MenuInfoProviderState menuInfo) {
+    if (menuKey.currentState != null) {
+      for (final child in menuKey.currentState!.keys
+          .whereType<GlobalKey<__MenuFlyoutSubItemState>>()) {
+        child.currentState?.close(menuInfo);
+      }
+    }
     menuInfo.remove(menuKey);
 
     setState(() {});
+  }
+}
+
+class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
+  final Rect parentRect;
+  final Size parentSize;
+  final double margin;
+
+  _SubItemPositionDelegate({
+    required this.parentRect,
+    required this.parentSize,
+    required this.margin,
+  });
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    return constraints.loosen();
+  }
+
+  @override
+  Offset getPositionForChild(Size rootSize, Size flyoutSize) {
+    var x = parentRect.left +
+        parentRect.size.width -
+        MenuFlyout.itemsPadding.horizontal / 2;
+
+    // if the flyout will overflow the screen on the right
+    final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
+
+    // if overflow x on the right, we check for some cases
+    //
+    // if the space available on the right is greater than the space available on
+    // the left, use the right.
+    //
+    // otherwise, we position the flyout at the end of the screen
+    if (willOverflowX) {
+      final rightX = parentRect.left -
+          flyoutSize.width +
+          MenuFlyout.itemsPadding.horizontal / 2;
+      if (rightX > margin) {
+        x = rightX;
+      } else {
+        x = clampDouble(
+          rootSize.width - flyoutSize.width - margin,
+          0,
+          rootSize.width,
+        );
+      }
+    }
+
+    var y = parentRect.top;
+    final willOverflowY = y + flyoutSize.height + margin > rootSize.height;
+
+    if (willOverflowY) {
+      y = parentRect.top + parentRect.height - flyoutSize.height;
+    }
+
+    return Offset(x, y);
+  }
+
+  @override
+  bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {
+    return true;
   }
 }

@@ -92,6 +92,7 @@ class FlyoutListTile extends StatelessWidget {
     this.semanticLabel,
     this.margin = const EdgeInsetsDirectional.only(bottom: 5.0),
     this.selected = false,
+    this.showSelectedIndicator = true,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
@@ -124,6 +125,8 @@ class FlyoutListTile extends StatelessWidget {
   final EdgeInsetsGeometry margin;
 
   final bool selected;
+
+  final bool showSelectedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +199,7 @@ class FlyoutListTile extends StatelessWidget {
                 ),
             ]),
           ),
-          if (selected)
+          if (selected && showSelectedIndicator)
             PositionedDirectional(
               top: 0,
               bottom: 0,
