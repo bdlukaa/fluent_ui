@@ -99,6 +99,14 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
     setState(() => _menus.addAll({key: menu}));
   }
 
+  void remove(GlobalKey key) {
+    if (contains(key)) setState(() => _menus.remove(key));
+  }
+
+  bool contains(GlobalKey key) {
+    return _menus.containsKey(key);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {

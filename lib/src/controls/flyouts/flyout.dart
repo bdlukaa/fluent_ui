@@ -191,7 +191,7 @@ enum FlyoutPlacementMode {
   }
 }
 
-extension DoubleExtension on double {
+extension on double {
   /// If negative, 0 is returned
   double _ensurePositive() {
     if (isNegative) return 0;
@@ -226,6 +226,7 @@ class FlyoutAutoConfiguration {
               : true,
           'If the mode horizontal, preferredMode must either be left or right',
         ),
+        assert(autoAvailableSpace == null || !autoAvailableSpace.isNegative),
         horizontal = horizontal ??
             [FlyoutPlacementMode.left, FlyoutPlacementMode.right]
                 .contains(preferredMode);
