@@ -10,7 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
-import 'routes/flyouts.dart' deferred as flyouts;
+import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -65,7 +65,7 @@ void main() async {
 
   runApp(const MyApp());
 
-  DeferredWidget.preload(flyouts.loadLibrary);
+  DeferredWidget.preload(popups.loadLibrary);
   DeferredWidget.preload(forms.loadLibrary);
   DeferredWidget.preload(inputs.loadLibrary);
   DeferredWidget.preload(navigation.loadLibrary);
@@ -265,14 +265,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ContentDialogPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
       body: DeferredWidget(
@@ -304,30 +296,31 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         () => surfaces.TilesPage(),
       ),
     ),
+    PaneItemHeader(header: const Text('Popups')),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => popups.ContentDialogPage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.TooltipPage(),
+        () => popups.TooltipPage(),
       ),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.pop_expand),
-      title: const Text('Flyout 2'),
+      title: const Text('Flyout'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => flyouts.Flyout2Screen(),
+        () => popups.Flyout2Screen(),
       ),
     ),
-    // PaneItem(
-    //   icon: const Icon(FluentIcons.pop_expand),
-    //   title: const Text('Flyout'),
-    //   body: DeferredWidget(
-    //     surfaces.loadLibrary,
-    //     () => surfaces.FlyoutPage(),
-    //   ),
-    // ),
     PaneItemHeader(header: const Text('Theming')),
     PaneItem(
       icon: const Icon(FluentIcons.color_solid),

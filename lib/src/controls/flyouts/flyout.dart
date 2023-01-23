@@ -434,8 +434,7 @@ class FlyoutController with ChangeNotifier {
   /// cursor moves away from either the target or the flyout. It's disabled by
   /// default.
   ///
-  /// [placementMode] describes where the flyout will be placed. Defaults to top
-  /// center
+  /// [placementMode] describes where the flyout will be placed. Defaults to auto
   ///
   /// If [placementMode] is auto, [autoModeConfiguration] is taken in consideration
   /// to determine the correct placement mode
@@ -458,7 +457,7 @@ class FlyoutController with ChangeNotifier {
     bool barrierDismissible = true,
     bool dismissWithEsc = true,
     bool dismissOnPointerMoveAway = false,
-    FlyoutPlacementMode placementMode = FlyoutPlacementMode.topCenter,
+    FlyoutPlacementMode placementMode = FlyoutPlacementMode.auto,
     FlyoutAutoConfiguration? autoModeConfiguration,
     bool forceAvailableSpace = false,
     bool shouldConstrainToRootBounds = true,
@@ -625,6 +624,15 @@ class FlyoutAttachState extends State<FlyoutAttach> {
   void initState() {
     super.initState();
     widget.controller._attach(this);
+  }
+
+  @override
+  void didUpdateWidget(covariant FlyoutAttach oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (!widget.controller.isAttached) {
+      widget.controller._attach(this);
+    }
   }
 
   @override
