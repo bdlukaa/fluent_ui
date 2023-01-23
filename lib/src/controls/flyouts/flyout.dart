@@ -75,25 +75,26 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.bottomLeft:
       case FlyoutPlacementMode.bottomRight:
         return BoxConstraints(
-          maxWidth: rootSize.width,
-          maxHeight: rootSize.height - margin - targetOffset.dy,
+          maxWidth: rootSize.width._ensurePositive(),
+          maxHeight:
+              (rootSize.height - margin - targetOffset.dy)._ensurePositive(),
         );
       case FlyoutPlacementMode.topCenter:
       case FlyoutPlacementMode.topLeft:
       case FlyoutPlacementMode.topRight:
         return BoxConstraints(
-          maxWidth: rootSize.width,
-          maxHeight: targetOffset.dy,
+          maxWidth: rootSize.width._ensurePositive(),
+          maxHeight: targetOffset.dy._ensurePositive(),
         );
       case FlyoutPlacementMode.left:
         return BoxConstraints(
-          maxWidth: targetOffset.dx,
-          maxHeight: rootSize.height,
+          maxWidth: targetOffset.dx._ensurePositive(),
+          maxHeight: rootSize.height._ensurePositive(),
         );
       case FlyoutPlacementMode.right:
         return BoxConstraints(
-          maxWidth: rootSize.width - targetOffset.dx,
-          maxHeight: rootSize.height,
+          maxWidth: (rootSize.width - targetOffset.dx)._ensurePositive(),
+          maxHeight: (rootSize.height)._ensurePositive(),
         );
       case FlyoutPlacementMode.auto:
       default:
@@ -187,6 +188,14 @@ enum FlyoutPlacementMode {
     }
 
     return configuration.preferredMode;
+  }
+}
+
+extension DoubleExtension on double {
+  /// If negative, 0 is returned
+  double _ensurePositive() {
+    if (isNegative) return 0;
+    return this;
   }
 }
 

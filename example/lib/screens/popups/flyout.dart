@@ -106,7 +106,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
               controller: controller,
               child: Button(
                 child: const Text('Clear cart'),
-                onPressed: () {
+                onPressed: () async {
                   controller.showFlyout(
                     autoModeConfiguration: FlyoutAutoConfiguration(
                       preferredMode: placementMode,
@@ -166,7 +166,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
               controller: menuController,
               child: Button(
                 child: const Text('Options'),
-                onPressed: () {
+                onPressed: () async {
                   menuController.showFlyout(
                     autoModeConfiguration: FlyoutAutoConfiguration(
                       preferredMode: placementMode,

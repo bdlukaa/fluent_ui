@@ -9,8 +9,8 @@ import 'package:flutter/foundation.dart';
 ///
 /// See also:
 ///
-///  * [Flyout]
-///  * [FlyoutContent]
+///  * [FlyoutController], which displays a flyout to the given target
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/menus>
 class MenuFlyout extends StatelessWidget {
   /// Creates a menu flyout.
   const MenuFlyout({
@@ -24,7 +24,18 @@ class MenuFlyout extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 8.0),
   }) : super(key: key);
 
-  final List<MenuFlyoutItemInterface> items;
+  /// {@template fluent_ui.flyouts.menu.items}
+  /// The colletion used to generate the content of the menu.
+  ///
+  /// See also:
+  ///
+  ///  * [MenuFlyoutItem], a single item in the list of items
+  ///  * [MenuFlyoutSeparator], which represents a horizontal line that
+  ///    separates items in a [MenuFlyout].
+  ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+  ///    sub-menu in a [MenuFlyout]
+  /// {@end-template}
+  final List<MenuFlyoutItemBase> items;
 
   /// The background color of the box.
   final Color? color;
@@ -105,17 +116,37 @@ class _MenuScrollBehavior extends FluentScrollBehavior {
       const ClampingScrollPhysics();
 }
 
-abstract class MenuFlyoutItemInterface {
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
+abstract class MenuFlyoutItemBase {
   final Key? key;
 
-  const MenuFlyoutItemInterface({this.key});
+  const MenuFlyoutItemBase({this.key});
 
   Widget build(BuildContext context);
 }
 
-class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
+/// Render any widget in the items list of a [MenuFlyout]
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
   final WidgetBuilder builder;
 
+  /// Creates a menu flyout item builder
   const MenuFlyoutItemBuilder({
     super.key,
     required this.builder,
@@ -129,9 +160,12 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemInterface {
 ///
 /// See also:
 ///
-///   * [MenuFlyout]
-///   * [Flyout]
-class MenuFlyoutItem extends MenuFlyoutItemInterface {
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+class MenuFlyoutItem extends MenuFlyoutItemBase {
   /// Creates a menu flyout item
   MenuFlyoutItem({
     super.key,
@@ -142,6 +176,15 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
     this.selected = false,
   });
 
+  /// Displayed before [text].
+  ///
+  /// Don't feel obligated to provide icons for commands that don't have a
+  /// standard visualization. Cryptic icons aren't helpful, create visual
+  /// clutter, and prevent users from focusing on the important menu items.
+  ///
+  /// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/contextmenu_rs2_icons.png)
+  ///
+  /// Usually an [Icon] widget,
   final Widget? leading;
   final Widget text;
   final Widget? trailing;
@@ -174,12 +217,22 @@ class MenuFlyoutItem extends MenuFlyoutItemInterface {
   }
 }
 
-class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
+/// Represents a horizontal line that separates items in a [MenuFlyout].
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+class MenuFlyoutSeparator extends MenuFlyoutItemBase {
+  /// Creates a menu flyout separator
   const MenuFlyoutSeparator({super.key});
 
   @override
   Widget build(BuildContext context) {
     final size = ContentSizeInfo.of(context).size;
+
     return SizedBox(
       width: size.width,
       child: const Padding(
@@ -192,16 +245,46 @@ class MenuFlyoutSeparator extends MenuFlyoutItemInterface {
   }
 }
 
+enum SubItemShowBehavior {
+  /// Whether the sub-menu will be shown on item press
+  press,
+
+  /// Whether the sub-menu will be shown on item hover
+  ///
+  /// This is the default behavior.
+  hover,
+}
+
+/// Represents a menu item that displays a sub-menu in a [MenuFlyout].
+///
+/// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/menu-bar-submenu.png)
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
 class MenuFlyoutSubItem extends MenuFlyoutItem {
+  /// Creates a menu flyout sub item
   MenuFlyoutSubItem({
     super.key,
     super.leading,
     required super.text,
     super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
+    this.showBehavior = SubItemShowBehavior.hover,
   }) : super(onPressed: null);
 
-  final List<MenuFlyoutItemInterface> items;
+  /// The colletion used to generate the content of the menu.
+  ///
+  /// {@macro fluent_ui.flyouts.menu.items}
+  final List<MenuFlyoutItemBase> items;
+
+  /// Represent which user action will show the sub-menu.
+  ///
+  /// Defaults to [SubItemShowBehavior.hover]
+  final SubItemShowBehavior showBehavior;
 
   @override
   Widget build(BuildContext context) {
@@ -210,8 +293,8 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 }
 
 class _MenuFlyoutSubItem extends StatefulWidget {
-  final MenuFlyoutItem item;
-  final List<MenuFlyoutItemInterface> items;
+  final MenuFlyoutSubItem item;
+  final List<MenuFlyoutItemBase> items;
 
   const _MenuFlyoutSubItem({
     Key? key,

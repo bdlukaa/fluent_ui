@@ -127,7 +127,7 @@ class DropDownButton extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<MenuFlyoutItemInterface>('items', items))
+      ..add(IterableProperty<MenuFlyoutItemBase>('items', items))
       ..add(DoubleProperty(
         'verticalOffset',
         verticalOffset,

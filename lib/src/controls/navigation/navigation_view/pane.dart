@@ -758,7 +758,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 }
 
-MenuFlyoutItemInterface _buildMenuPaneItem(
+MenuFlyoutItemBase _buildMenuPaneItem(
   BuildContext context,
   NavigationPaneItem item,
   ValueChanged<PaneItem> onPressed, {
@@ -787,7 +787,7 @@ MenuFlyoutItemInterface _buildMenuPaneItem(
   }
 }
 
-class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
+class _MenuFlyoutHeader extends MenuFlyoutItemBase {
   final PaneItemHeader header;
 
   const _MenuFlyoutHeader({required this.header});
@@ -802,7 +802,7 @@ class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
   }
 }
 
-class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
+class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItem({
     Key? key,
     required this.item,
@@ -889,7 +889,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
   }
 }
 
-class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemInterface {
+class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItemExpander({
     Key? key,
     required this.item,

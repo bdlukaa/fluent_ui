@@ -705,7 +705,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
               : FlyoutPlacementMode.bottomCenter,
           builder: (context) {
             return MenuFlyout(
-              items: widget.items.map<MenuFlyoutItemInterface>((item) {
+              items: widget.items.map<MenuFlyoutItemBase>((item) {
                 if (item is PaneItem) {
                   return _PaneItemExpanderMenuItem(
                     item: item,
@@ -878,7 +878,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 }
 
-class _PaneItemExpanderMenuItem extends MenuFlyoutItemInterface {
+class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
   const _PaneItemExpanderMenuItem({
     Key? key,
     required this.item,
