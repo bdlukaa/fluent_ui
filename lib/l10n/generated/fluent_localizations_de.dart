@@ -80,10 +80,10 @@ class FluentLocalizationsDe extends FluentLocalizations {
   String get selectAllActionTooltip => 'Alle Inhalte auswählen';
 
   @override
-  String get hour => 'hour';
+  String get hour => 'Stunde';
 
   @override
-  String get minute => 'minute';
+  String get minute => 'Minute';
 
   @override
   String get am => 'AM';
@@ -92,11 +92,11 @@ class FluentLocalizationsDe extends FluentLocalizations {
   String get pm => 'PM';
 
   @override
-  String get month => 'month';
+  String get month => 'Monat';
 
   @override
-  String get day => 'day';
+  String get day => 'Tag';
 
   @override
-  String get year => 'year';
+  String get year => 'Jahr';
 }
