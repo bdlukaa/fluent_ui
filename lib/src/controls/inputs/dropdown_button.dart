@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 8.0;
+const double _kVerticalOffset = 6.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
   size: 10,
@@ -71,7 +71,7 @@ class DropDownButton extends StatefulWidget {
 
   /// The space between the button and the flyout.
   ///
-  /// 8.0 is used by default
+  /// 6.0 is used by default
   final double verticalOffset;
 
   /// The items in the flyout. Must not be empty
@@ -209,6 +209,42 @@ class _DropDownButtonState extends State<DropDownButton> {
         preferredMode: widget.placement,
       ),
       additionalOffset: widget.verticalOffset,
+      transitionBuilder: (context, animation, placement, flyout) {
+        switch (placement) {
+          case FlyoutPlacementMode.bottomCenter:
+          case FlyoutPlacementMode.bottomLeft:
+          case FlyoutPlacementMode.bottomRight:
+            return ClipRect(
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: flyout,
+              ),
+            );
+          case FlyoutPlacementMode.topCenter:
+          case FlyoutPlacementMode.topLeft:
+          case FlyoutPlacementMode.topRight:
+            return ClipRect(
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: flyout,
+              ),
+            );
+          default:
+            return flyout;
+        }
+      },
       builder: (context) {
         return MenuFlyout(
           color: widget.menuColor,

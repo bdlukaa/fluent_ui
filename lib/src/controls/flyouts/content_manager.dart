@@ -29,14 +29,14 @@ class _ContentManagerState extends State<ContentManager> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: ContentSizeInfo(
-        size: size,
-        child: Builder(builder: (context) {
-          return widget.content(context);
-        }),
-      ),
+    return ContentSizeInfo(
+      size: size,
+      child: Builder(builder: (context) {
+        return KeyedSubtree(
+          key: key,
+          child: widget.content(context),
+        );
+      }),
     );
   }
 }
@@ -77,12 +77,14 @@ class MenuInfoProvider extends StatefulWidget {
     required this.flyoutKey,
     required this.additionalOffset,
     required this.margin,
+    required this.transitionDuration,
   }) : super(key: key);
 
   final GlobalKey flyoutKey;
   final _MenuBuilder builder;
   final double additionalOffset;
   final double margin;
+  final Duration transitionDuration;
 
   static MenuInfoProviderState of(BuildContext context) {
     return context.findAncestorStateOfType<MenuInfoProviderState>()!;
@@ -104,6 +106,7 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
   }
 
   bool contains(GlobalKey key) {
+    // print(_menus);
     return _menus.containsKey(key);
   }
 

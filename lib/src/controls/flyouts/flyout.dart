@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 
 /// Defines constants that specify the preferred location for positioning a
 /// flyout derived control relative to a visual element.
@@ -238,7 +239,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   /// Creates a delegate for computing the layout of a flyout.
   ///
   /// The arguments must not be null.
-  const _FlyoutPositionDelegate({
+  _FlyoutPositionDelegate({
     required this.targetOffset,
     required this.targetSize,
     required this.autoModeConfiguration,
@@ -275,15 +276,17 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     return constraints.loosen();
   }
 
+  FlyoutPlacementMode? autoPlacementMode;
+
   @override
   Offset getPositionForChild(Size rootSize, Size flyoutSize) {
-    var placementMode = this.placementMode;
+    autoPlacementMode = placementMode;
 
-    if (placementMode == FlyoutPlacementMode.auto) {
+    if (autoPlacementMode == FlyoutPlacementMode.auto) {
       final preferredMode =
           autoModeConfiguration?.preferredMode ?? FlyoutPlacementMode.topCenter;
 
-      placementMode = placementMode._assignAutoMode(
+      autoPlacementMode = autoPlacementMode!._assignAutoMode(
         targetOffset,
         rootSize,
         margin,
@@ -342,7 +345,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
       (targetOffset.dx + targetSize.width / 2) - (flyoutSize.width / 2.0),
     );
 
-    switch (placementMode) {
+    switch (autoPlacementMode!) {
       case FlyoutPlacementMode.bottomLeft:
         return Offset(clampHorizontal(targetOffset.dx), bottomY);
       case FlyoutPlacementMode.topLeft:
@@ -391,6 +394,13 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
         placementMode != oldDelegate.placementMode;
   }
 }
+
+typedef FlyoutTransitionBuilder = Widget Function(
+  BuildContext context,
+  Animation<double> animation,
+  FlyoutPlacementMode placement,
+  Widget child,
+);
 
 class FlyoutController with ChangeNotifier {
   FlyoutAttachState? _attachState;
@@ -462,6 +472,14 @@ class FlyoutController with ChangeNotifier {
   ///
   /// If there isn't a [Navigator] in the tree, a [navigatorKey] can be used to
   /// display the flyout. If null, [Navigator.of] is used.
+  ///
+  /// [transitionBuilder] builds the transition. By default, a slide-fade transition
+  /// is used on vertical directions; and a fade transition in horizontal directions.
+  /// The default fade animation can not be disabled.
+  ///
+  /// [transitionDuration] configures the duration of the transition animation.
+  /// By default, [ThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
+  /// to disable transitions at all
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -475,11 +493,18 @@ class FlyoutController with ChangeNotifier {
     double margin = 8.0,
     Color? barrierColor,
     NavigatorState? navigatorKey,
+    FlyoutTransitionBuilder? transitionBuilder,
+    Duration? transitionDuration,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
 
     final context = _attachState!.context;
+    assert(debugCheckHasFluentTheme(context));
+
+    final theme = FluentTheme.of(context);
+    transitionDuration ??= theme.fastAnimationDuration;
+
     final navigator = navigatorKey ?? Navigator.of(context);
     final navigatorBox = navigator.context.findRenderObject() as RenderBox;
 
@@ -499,12 +524,40 @@ class FlyoutController with ChangeNotifier {
 
     final result = await navigator.push<T>(PageRouteBuilder<T>(
       opaque: false,
-      transitionDuration: const Duration(milliseconds: 180),
+      transitionDuration: transitionDuration,
       pageBuilder: (context, animation, secondary) {
-        Widget flyout = MenuInfoProvider(
+        transitionBuilder ??= (context, animation, placementMode, flyout) {
+          switch (placementMode) {
+            case FlyoutPlacementMode.bottomCenter:
+            case FlyoutPlacementMode.bottomLeft:
+            case FlyoutPlacementMode.bottomRight:
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -0.05),
+                  end: const Offset(0, 0),
+                ).animate(animation),
+                child: flyout,
+              );
+            case FlyoutPlacementMode.topCenter:
+            case FlyoutPlacementMode.topLeft:
+            case FlyoutPlacementMode.topRight:
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.05),
+                  end: const Offset(0, 0),
+                ).animate(animation),
+                child: flyout,
+              );
+            default:
+              return flyout;
+          }
+        };
+
+        return MenuInfoProvider(
           flyoutKey: flyoutKey,
           additionalOffset: additionalOffset,
           margin: margin,
+          transitionDuration: transitionDuration!,
           builder: (context, rootSize, menus, keys) {
             assert(menus.length == keys.length);
 
@@ -535,7 +588,23 @@ class FlyoutController with ChangeNotifier {
                       key: flyoutKey,
                       padding: placementMode
                           ._getAdditionalOffsetPosition(additionalOffset),
-                      child: ContentManager(content: builder),
+                      child: ContentManager(content: (context) {
+                        final flyout = builder(context);
+                        final parentBox =
+                            context.findAncestorRenderObjectOfType<
+                                RenderCustomSingleChildLayoutBox>()!;
+                        final delegate =
+                            parentBox.delegate as _FlyoutPositionDelegate;
+
+                        final realPlacementMode = delegate.autoPlacementMode;
+
+                        return transitionBuilder!(
+                          context,
+                          animation,
+                          realPlacementMode ?? delegate.placementMode,
+                          flyout,
+                        );
+                      }),
                     ),
                   ),
                 ),
@@ -573,26 +642,24 @@ class FlyoutController with ChangeNotifier {
               );
             }
 
-            return box;
+            if (dismissWithEsc) {
+              box = Actions(
+                actions: {DismissIntent: _DismissAction(navigator.pop)},
+                child: FocusScope(
+                  autofocus: true,
+                  child: box,
+                ),
+              );
+            }
+
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                curve: Curves.ease,
+                parent: animation,
+              ),
+              child: box,
+            );
           },
-        );
-
-        if (dismissWithEsc) {
-          flyout = Actions(
-            actions: {DismissIntent: _DismissAction(navigator.pop)},
-            child: FocusScope(
-              autofocus: true,
-              child: flyout,
-            ),
-          );
-        }
-
-        return FadeTransition(
-          opacity: CurvedAnimation(
-            curve: Curves.ease,
-            parent: animation,
-          ),
-          child: flyout,
         );
       },
     ));
