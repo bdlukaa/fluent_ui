@@ -585,11 +585,13 @@ class FlyoutController with ChangeNotifier {
                       forceAvailableSpace: forceAvailableSpace,
                     ),
                     child: Padding(
-                      key: flyoutKey,
                       padding: placementMode
                           ._getAdditionalOffsetPosition(additionalOffset),
                       child: ContentManager(content: (context) {
-                        final flyout = builder(context);
+                        final flyout = KeyedSubtree(
+                          key: flyoutKey,
+                          child: builder(context),
+                        );
                         final parentBox =
                             context.findAncestorRenderObjectOfType<
                                 RenderCustomSingleChildLayoutBox>()!;

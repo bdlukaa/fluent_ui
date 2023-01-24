@@ -375,14 +375,28 @@ class _MenuFlyoutSubItem extends StatefulWidget {
   State<_MenuFlyoutSubItem> createState() => __MenuFlyoutSubItemState();
 }
 
-class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
+class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
+    with SingleTickerProviderStateMixin {
+  /// The animation controller responsible for the animation of the flyout
+  ///
+  /// The duration is defined at build time
+  late final transitionController = AnimationController(vsync: this);
+
   final menuKey = GlobalKey<_MenuFlyoutState>();
 
   Timer? showTimer;
 
   @override
+  void dispose() {
+    transitionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final menuInfo = MenuInfoProvider.of(context);
+
+    transitionController.duration = menuInfo.widget.transitionDuration;
 
     return MouseRegion(
       onEnter: (event) {
@@ -426,29 +440,37 @@ class __MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem> {
           margin: menuInfo.widget.margin,
         ),
         child: ContentManager(
-          content: (_) => MenuFlyout(
-            key: menuKey,
-            items: widget.items,
-          ),
+          content: (_) {
+            return FadeTransition(
+              opacity: transitionController,
+              child: MenuFlyout(
+                key: menuKey,
+                items: widget.items,
+              ),
+            );
+          },
         ),
       ),
       menuKey,
     );
 
+    transitionController.forward();
     setState(() {});
   }
 
   /// Closes this menu and its children
-  void close(MenuInfoProviderState menuInfo) {
-    if (menuKey.currentState != null) {
-      for (final child in menuKey.currentState!.keys
-          .whereType<GlobalKey<__MenuFlyoutSubItemState>>()) {
-        child.currentState?.close(menuInfo);
-      }
-    }
+  Future<void> close(MenuInfoProviderState menuInfo) async {
+    await Future.wait([
+      if (menuKey.currentState != null)
+        ...menuKey.currentState!.keys
+            .whereType<GlobalKey<__MenuFlyoutSubItemState>>()
+            .map((child) => child.currentState!.close(menuInfo)),
+      transitionController.reverse(),
+    ]);
+
     menuInfo.remove(menuKey);
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 }
 
