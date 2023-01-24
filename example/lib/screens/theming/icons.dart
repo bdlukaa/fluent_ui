@@ -13,7 +13,7 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
             TextSpan(
               text: copiedText,
               style: TextStyle(
-                color: Colors.blue.resolveFromReverseBrightness(
+                color: Colors.blue.defaultBrushFor(
                   FluentTheme.of(context).brightness,
                 ),
                 fontWeight: FontWeight.w500,

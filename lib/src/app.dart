@@ -423,7 +423,7 @@ class _FluentAppState extends State<FluentApp> {
             canvasColor: themeData.cardColor,
             textSelectionTheme: TextSelectionThemeData(
               selectionColor: themeData.accentColor
-                  .resolveFromBrightness(themeData.brightness)
+                  .defaultBrushFor(themeData.brightness)
                   .withOpacity(0.8),
               cursorColor: themeData.inactiveColor,
             ),

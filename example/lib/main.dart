@@ -434,9 +434,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           height: kOneLineTileHeight,
           child: ShaderMask(
             shaderCallback: (rect) {
-              final color = appTheme.color.resolveFromReverseBrightness(
+              final color = appTheme.color.defaultBrushFor(
                 theme.brightness,
-                level: theme.brightness == Brightness.light ? 0 : 2,
               );
               return LinearGradient(
                 colors: [

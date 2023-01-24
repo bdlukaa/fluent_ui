@@ -1,11 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// The content of the flyout.
+/// The content of the flyout
 ///
 /// See also:
 ///
-///   * [Flyout], which is a light dismiss container that can show arbitrary UI
-///     as its content
+///   * [FlyoutAttach], which the flyout is displayed attached to
 ///   * [FlyoutListTile], a list tile adapted to flyouts
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
@@ -20,22 +19,33 @@ class FlyoutContent extends StatelessWidget {
     this.constraints,
   }) : super(key: key);
 
+  /// The content of the flyout
   final Widget child;
 
   /// The background color of the box.
+  ///
+  /// If null, [ThemeData.menuColor] is used by default
   final Color? color;
 
   /// The shape to fill the [color] of the box.
   final ShapeBorder? shape;
 
   /// Empty space to inscribe around the [child]
+  ///
+  /// Defaults to 8.0 in all sides
   final EdgeInsetsGeometry padding;
 
-  /// The shadow color.
+  /// The color of the shadow. Not used if [elevation] is 0
+  ///
+  /// Defaults to black.
   final Color shadowColor;
 
   /// The z-coordinate relative to the box at which to place this physical
   /// object.
+  ///
+  /// See also:
+  ///
+  ///  * [shadowColor]
   final double elevation;
 
   /// Additional constraints to apply to the child.
@@ -45,6 +55,7 @@ class FlyoutContent extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+
     return PhysicalModel(
       elevation: elevation,
       color: Colors.transparent,
@@ -76,8 +87,8 @@ class FlyoutContent extends StatelessWidget {
 ///
 /// See also:
 ///
-///  * [Flyout]
-///  * [FlyoutContent]
+///  * [FlyoutAttach], which the flyout is displayed attached to
+///  * [FlyoutContent], the content of the flyout
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
   const FlyoutListTile({
@@ -207,9 +218,7 @@ class FlyoutListTile extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 6.0),
                 width: 2.5,
                 decoration: BoxDecoration(
-                  color: theme.accentColor.resolveFromReverseBrightness(
-                    theme.brightness,
-                  ),
+                  color: theme.accentColor.defaultBrushFor(theme.brightness),
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),

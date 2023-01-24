@@ -928,9 +928,8 @@ class _TextBoxState extends State<TextBox>
       shape: widget.foregroundDecoration?.shape,
     );
 
-    final selectionColor = theme.accentColor
-        .resolveFromReverseBrightness(theme.brightness)
-        .withOpacity(0.6);
+    final selectionColor =
+        theme.accentColor.defaultBrushFor(theme.brightness).withOpacity(0.6);
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
