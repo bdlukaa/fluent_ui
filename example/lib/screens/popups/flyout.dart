@@ -1,6 +1,8 @@
+import 'package:example/theme.dart';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 
 class Flyout2Screen extends StatefulWidget {
   const Flyout2Screen({Key? key}) : super(key: key);
@@ -15,6 +17,9 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
 
   final menuController = FlyoutController();
   final menuAttachKey = GlobalKey();
+
+  final contextController = FlyoutController();
+  final contextAttachKey = GlobalKey();
 
   bool barrierDismissible = true;
   bool dismissOnPointerMoveAway = false;
@@ -32,6 +37,8 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   @override
   void dispose() {
     controller.dispose();
+    menuController.dispose();
+    contextController.dispose();
     super.dispose();
   }
 
@@ -156,7 +163,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
           codeSnippet: '''FlyoutAttach(
   controller: controller,
   child: Button(
-    child: const Text('Clear cart'),
+    child: const Text('Options'),
     onPressed: () {},
   )
 )''',
@@ -242,6 +249,140 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
             const SizedBox(width: 8.0),
             Text(menuController.isOpen ? 'Displaying' : ''),
           ]),
+        ),
+        subtitle(content: const Text('Context Menus')),
+        description(
+          content: const Text(
+            'The command bar flyout lets you provide users with easy access '
+            'to common tasks by showing commands in a floating toolbar related'
+            ' to an element on your UI canvas.',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''final contextController = FlyoutController();
+
+return GestureDetector(
+  onSecondaryTapUp: (d) {
+    contextController.showFlyout(
+      barrierColor: Colors.black.withOpacity(0.1),
+      position: d.globalPosition,
+      builder: (context) {
+        return FlyoutContent(
+          child: SizedBox(
+            width: 130.0,
+            child: CommandBar(
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.add_favorite),
+                  label: const Text('Favorite'),
+                  onPressed: () {},
+                ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.copy),
+                  label: const Text('Copy'),
+                  onPressed: () {},
+                ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.share),
+                  label: const Text('Share'),
+                  onPressed: () {},
+                ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.save),
+                  label: const Text('Save'),
+                  onPressed: () {},
+                ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.delete),
+                  label: const Text('Delete'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  },
+  child: FlyoutAttach(
+    controller: contextController,
+    child: const FlutterLogo(size: 400.0),
+  ),
+);
+''',
+          child: GestureDetector(
+            onSecondaryTapUp: (d) {
+              contextController.showFlyout(
+                barrierColor: Colors.black.withOpacity(0.1),
+                position: d.globalPosition,
+                builder: (context) {
+                  return FlyoutContent(
+                    child: SizedBox(
+                      width: 130,
+                      child: CommandBar(
+                        isCompact: true,
+                        primaryItems: [
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.add_favorite),
+                            label: const Text('Favorite'),
+                            onPressed: () {},
+                          ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.copy),
+                            label: const Text('Copy'),
+                            onPressed: () {},
+                          ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.share),
+                            label: const Text('Share'),
+                            onPressed: () {},
+                          ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.save),
+                            label: const Text('Save'),
+                            onPressed: () {},
+                          ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.delete),
+                            label: const Text('Delete'),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  // return MenuFlyout(
+                  //   items: [
+                  //     MenuFlyoutItem(
+                  //       text: const Text('TEST'),
+                  //       onPressed: () {},
+                  //     ),
+                  //   ],
+                  // );
+                },
+              );
+            },
+            child: FlyoutAttach(
+              key: contextAttachKey,
+              controller: contextController,
+              child: ShaderMask(
+                shaderCallback: (rect) {
+                  final color = context.read<AppTheme>().color.defaultBrushFor(
+                        FluentTheme.of(context).brightness,
+                      );
+                  return LinearGradient(
+                    colors: [
+                      color,
+                      color,
+                    ],
+                  ).createShader(rect);
+                },
+                child: const FlutterLogo(
+                  size: 400.0,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

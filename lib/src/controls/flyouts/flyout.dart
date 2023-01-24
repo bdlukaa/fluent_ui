@@ -522,6 +522,9 @@ class FlyoutController with ChangeNotifier {
   /// [transitionDuration] configures the duration of the transition animation.
   /// By default, [ThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
   /// to disable transitions at all
+  ///
+  /// [position] lets you position the flyout anywhere on the screen, making it
+  /// possible to create context menus. If provided, [placementMode] is ignored.
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -537,6 +540,7 @@ class FlyoutController with ChangeNotifier {
     NavigatorState? navigatorKey,
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
+    Offset? position,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
@@ -614,45 +618,67 @@ class FlyoutController with ChangeNotifier {
                     ),
                   ),
                 ),
-              Positioned.fill(
-                child: SafeArea(
-                  child: CustomSingleChildLayout(
-                    delegate: _FlyoutPositionDelegate(
-                      targetOffset: targetOffset,
-                      targetSize: targetSize,
-                      autoModeConfiguration: autoModeConfiguration,
-                      placementMode: placementMode,
-                      margin: margin,
-                      shouldConstrainToRootBounds: shouldConstrainToRootBounds,
-                      forceAvailableSpace: forceAvailableSpace,
-                    ),
-                    child: Padding(
-                      padding: placementMode
-                          ._getAdditionalOffsetPosition(additionalOffset),
-                      child: ContentManager(content: (context) {
-                        final flyout = KeyedSubtree(
-                          key: flyoutKey,
-                          child: builder(context),
-                        );
-                        final parentBox =
-                            context.findAncestorRenderObjectOfType<
-                                RenderCustomSingleChildLayoutBox>()!;
-                        final delegate =
-                            parentBox.delegate as _FlyoutPositionDelegate;
+              if (position == null)
+                Positioned.fill(
+                  child: SafeArea(
+                    child: CustomSingleChildLayout(
+                      delegate: _FlyoutPositionDelegate(
+                        targetOffset: targetOffset,
+                        targetSize: targetSize,
+                        autoModeConfiguration: autoModeConfiguration,
+                        placementMode: placementMode,
+                        margin: margin,
+                        shouldConstrainToRootBounds:
+                            shouldConstrainToRootBounds,
+                        forceAvailableSpace: forceAvailableSpace,
+                      ),
+                      child: Padding(
+                        padding: placementMode
+                            ._getAdditionalOffsetPosition(additionalOffset),
+                        child: ContentManager(content: (context) {
+                          final flyout = KeyedSubtree(
+                            key: flyoutKey,
+                            child: builder(context),
+                          );
+                          final parentBox =
+                              context.findAncestorRenderObjectOfType<
+                                  RenderCustomSingleChildLayoutBox>()!;
+                          final delegate =
+                              parentBox.delegate as _FlyoutPositionDelegate;
 
-                        final realPlacementMode = delegate.autoPlacementMode;
+                          final realPlacementMode = delegate.autoPlacementMode;
 
-                        return transitionBuilder!(
-                          context,
-                          animation,
-                          realPlacementMode ?? delegate.placementMode,
-                          flyout,
-                        );
-                      }),
+                          return transitionBuilder!(
+                            context,
+                            animation,
+                            realPlacementMode ?? delegate.placementMode,
+                            flyout,
+                          );
+                        }),
+                      ),
                     ),
                   ),
+                )
+              else
+                Positioned(
+                  left: position.dx,
+                  top: position.dy,
+                  child: ContentManager(content: (context) {
+                    final flyout = KeyedSubtree(
+                      key: flyoutKey,
+                      child: builder(context),
+                    );
+
+                    return transitionBuilder!(
+                      context,
+                      animation,
+                      placementMode == FlyoutPlacementMode.auto
+                          ? FlyoutPlacementMode.bottomCenter
+                          : placementMode,
+                      flyout,
+                    );
+                  }),
                 ),
-              ),
               ...menus,
             ]);
 

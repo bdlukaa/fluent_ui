@@ -17,6 +17,7 @@ class FlyoutContent extends StatelessWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8,
     this.constraints,
+    this.useAcrylic = true,
   }) : super(key: key);
 
   /// The content of the flyout
@@ -51,32 +52,41 @@ class FlyoutContent extends StatelessWidget {
   /// Additional constraints to apply to the child.
   final BoxConstraints? constraints;
 
+  /// Whether the background will be an [Acrylic].
+  final bool useAcrylic;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
+    final resolvedShape = shape ??
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(
+            width: 0.25,
+            color: theme.inactiveBackgroundColor,
+          ),
+        );
+
     return PhysicalModel(
       elevation: elevation,
       color: Colors.transparent,
       shadowColor: shadowColor,
-      child: Container(
-        constraints: constraints,
-        decoration: ShapeDecoration(
-          color: color ?? theme.menuColor,
-          shape: shape ??
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6.0),
-                side: BorderSide(
-                  width: 0.25,
-                  color: theme.inactiveBackgroundColor,
-                ),
-              ),
-        ),
-        padding: padding,
-        child: DefaultTextStyle(
-          style: theme.typography.body ?? const TextStyle(),
-          child: child,
+      child: Acrylic(
+        tintAlpha: !useAcrylic ? 1.0 : null,
+        shape: resolvedShape,
+        child: Container(
+          constraints: constraints,
+          decoration: ShapeDecoration(
+            color: color ?? theme.menuColor.withOpacity(0.75),
+            shape: resolvedShape,
+          ),
+          padding: padding,
+          child: DefaultTextStyle(
+            style: theme.typography.body ?? const TextStyle(),
+            child: child,
+          ),
         ),
       ),
     );
