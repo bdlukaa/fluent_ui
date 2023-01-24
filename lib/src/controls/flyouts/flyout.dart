@@ -45,6 +45,47 @@ enum FlyoutPlacementMode {
   /// flyout aligned with right edge of the target element.
   topRight;
 
+  /// Resolves this placement with the current text [direction]
+  ///
+  /// Basic usage:
+  /// ```dart
+  /// controller.showFlyout(
+  ///   placementMode: FlyoutPlacementMode.bottomLeft.resolve(Directionality.of(context)),
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///  * [TextDirection], a direction in which text flows.
+  FlyoutPlacementMode resolve(TextDirection direction) {
+    assert(
+      this != FlyoutPlacementMode.auto,
+      'Can not resolve directionality of an auto placement',
+    );
+    final isRtl = direction == TextDirection.rtl;
+
+    switch (this) {
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.topCenter:
+        return this;
+      case FlyoutPlacementMode.bottomLeft:
+        return isRtl ? FlyoutPlacementMode.bottomRight : this;
+      case FlyoutPlacementMode.topLeft:
+        return isRtl ? FlyoutPlacementMode.topRight : this;
+      case FlyoutPlacementMode.left:
+        return isRtl ? FlyoutPlacementMode.right : this;
+      case FlyoutPlacementMode.bottomRight:
+        return isRtl ? FlyoutPlacementMode.bottomLeft : this;
+      case FlyoutPlacementMode.topRight:
+        return isRtl ? FlyoutPlacementMode.topLeft : this;
+      case FlyoutPlacementMode.right:
+        return isRtl ? FlyoutPlacementMode.left : this;
+      case FlyoutPlacementMode.auto:
+      default:
+        return this;
+    }
+  }
+
   EdgeInsetsGeometry _getAdditionalOffsetPosition(double additionalOffset) {
     switch (this) {
       case FlyoutPlacementMode.bottomCenter:
@@ -460,11 +501,12 @@ class FlyoutController with ChangeNotifier {
   /// to determine the correct placement mode
   ///
   /// [forceAvailableSpace] determines whether the flyout size should be forced
-  /// the available space according to the attached target. Defaults to false
+  /// the available space according to the attached target. It's useful when the
+  /// flyout is large but can not be on top of the target. Defaults to false
   ///
   /// [shouldConstrainToRootBounds], when true, the flyout is limited to the
   /// bounds of the closest [Navigator]. If false, the flyout may overflow the
-  /// screen.
+  /// screen on all sides. Defaults to `true`
   ///
   /// [additionalOffset] is the offset of the flyout around the attached target
   ///
