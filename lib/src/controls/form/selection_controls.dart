@@ -3,10 +3,106 @@
 // found in the LICENSE file.
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/rendering.dart';
 
+// The minimum padding from all edges of the selection toolbar to all edges of
+// the screen.
 const double _kToolbarScreenPadding = 8.0;
-const double _kToolbarWidth = 180.0;
+
+// These values were measured from a screenshot of TextEdit on macOS 10.15.7 on
+// a Macbook Pro.
+const double _kToolbarWidth = 222.0;
+const Radius _kToolbarBorderRadius = Radius.circular(4.0);
+const EdgeInsets _kToolbarPadding = EdgeInsets.symmetric(
+  vertical: 3.0,
+);
+
+class FluentTextSelectionToolbar extends StatelessWidget {
+  /// {@template flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
+  /// The [ContextMenuButtonItem]s that will be turned into the correct button
+  /// widgets for the current platform.
+  /// {@endtemplate}
+  final List<ContextMenuButtonItem>? buttonItems;
+
+  /// The children of the toolbar, typically buttons.
+  final List<Widget>? children;
+
+  /// {@template flutter.material.AdaptiveTextSelectionToolbar.anchors}
+  /// The location on which to anchor the menu.
+  /// {@endtemplate}
+  final TextSelectionToolbarAnchors anchors;
+
+  const FluentTextSelectionToolbar({
+    Key? key,
+    required this.buttonItems,
+    required this.children,
+    required this.anchors,
+  }) : super(key: key);
+
+  /// Create an instance of [FluentTextSelectionToolbar] with the default
+  /// children for an [EditableText].
+  ///
+  /// See also:
+  ///
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.new}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.editable}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.selectable}
+  FluentTextSelectionToolbar.editableText({
+    super.key,
+    required EditableTextState editableTextState,
+  })  : children = null,
+        buttonItems = editableTextState.contextMenuButtonItems,
+        anchors = editableTextState.contextMenuAnchors;
+
+  // Builds a toolbar just like the default Mac toolbar, with the right color
+  // background, padding, and rounded corners.
+  static Widget _defaultToolbarBuilder(BuildContext context, Widget child) {
+    final theme = FluentTheme.of(context);
+
+    return Container(
+      width: _kToolbarWidth,
+      decoration: const BoxDecoration(
+        // color: _kToolbarBackgroundColor.resolveFrom(context),
+        // border: Border.all(
+        //   color: _kToolbarBorderColor.resolveFrom(context),
+        // ),
+        borderRadius: BorderRadius.all(_kToolbarBorderRadius),
+      ),
+      child: Padding(
+        padding: _kToolbarPadding,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final paddingAbove =
+        MediaQuery.of(context).padding.top + _kToolbarScreenPadding;
+    final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        _kToolbarScreenPadding,
+        paddingAbove,
+        _kToolbarScreenPadding,
+        _kToolbarScreenPadding,
+      ),
+      child: CustomSingleChildLayout(
+        delegate: DesktopTextSelectionToolbarLayoutDelegate(
+          anchor: anchors.primaryAnchor - localAdjustment,
+        ),
+        child: _defaultToolbarBuilder(
+          context,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: children ?? [],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _FluentTextSelectionControls extends TextSelectionControls {
   /// Fluent has no text selection handles.
@@ -80,7 +176,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 }
 
-/// Text selection controls that loosely follows Fluent design conventions.
+// /// Text selection controls that loosely follows Fluent design conventions.
 final TextSelectionControls fluentTextSelectionControls =
     _FluentTextSelectionControls();
 

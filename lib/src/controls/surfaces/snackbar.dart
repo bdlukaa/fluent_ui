@@ -63,7 +63,7 @@ OverlayEntry showSnackbar(
       ),
     );
   });
-  Overlay.of(context)!.insert(entry);
+  Overlay.of(context).insert(entry);
   if (duration != null) {
     Future.delayed(duration).then((value) async {
       if (entry.mounted) {

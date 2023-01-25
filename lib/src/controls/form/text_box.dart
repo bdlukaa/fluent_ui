@@ -76,7 +76,6 @@ class TextBox extends StatefulWidget {
     this.textAlignVertical,
     this.readOnly = false,
     this.textDirection,
-    ToolbarOptions? toolbarOptions,
     this.showCursor,
     this.autofocus = false,
     this.obscuringCharacter = '•',
@@ -123,6 +122,7 @@ class TextBox extends StatefulWidget {
     this.mouseCursor,
     this.scribbleEnabled = true,
     this.enableIMEPersonalizedLearning = true,
+    this.contextMenuBuilder = _defaultContextMenuBuilder,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -155,18 +155,6 @@ class TextBox extends StatefulWidget {
         ),
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        toolbarOptions = toolbarOptions ??
-            (obscureText
-                ? const ToolbarOptions(
-                    selectAll: true,
-                    paste: true,
-                  )
-                : const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    selectAll: true,
-                    paste: true,
-                  )),
         super(key: key);
 
   /// Controls the text being edited.
@@ -343,13 +331,6 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.textAlign}
   final TextAlign textAlign;
 
-  /// Configuration of toolbar options.
-  ///
-  /// If not set, select all and paste will default to be enabled. Copy and cut
-  /// will be disabled if [obscureText] is true. If [readOnly] is true,
-  /// paste and cut will be disabled regardless.
-  final ToolbarOptions toolbarOptions;
-
   /// {@macro flutter.material.InputDecorator.textAlignVertical}
   final TextAlignVertical? textAlignVertical;
 
@@ -513,6 +494,22 @@ class TextBox extends StatefulWidget {
   /// stand for the text cursor, which is usually a blinking vertical line at
   /// the editing position.
   final MouseCursor? mouseCursor;
+
+  /// {@macro flutter.widgets.EditableText.contextMenuBuilder}
+  ///
+  /// If not provided, will build a default menu based on the platform.
+  ///
+  /// See also:
+  ///
+  ///  * [FluentTextSelectionToolbar], which is built by default.
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  static Widget _defaultContextMenuBuilder(
+      BuildContext context, EditableTextState editableTextState) {
+    return FluentTextSelectionToolbar.editableText(
+      editableTextState: editableTextState,
+    );
+  }
 
   @override
   State<TextBox> createState() => _TextBoxState();
@@ -941,7 +938,6 @@ class _TextBoxState extends State<TextBox>
             key: editableTextKey,
             controller: controller,
             readOnly: widget.readOnly,
-            toolbarOptions: widget.toolbarOptions,
             showCursor: widget.showCursor,
             showSelectionHandles: _showSelectionHandles,
             focusNode: _effectiveFocusNode,
@@ -995,6 +991,7 @@ class _TextBoxState extends State<TextBox>
             textDirection: widget.textDirection,
             clipBehavior: widget.clipBehavior,
             autofillClient: this,
+            contextMenuBuilder: widget.contextMenuBuilder,
           ),
         ),
       ),
