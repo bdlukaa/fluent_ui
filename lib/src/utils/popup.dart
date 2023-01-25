@@ -232,7 +232,7 @@ class _PopUpScrollBehavior extends ScrollBehavior {
   TargetPlatform getPlatform(BuildContext context) => defaultTargetPlatform;
 
   @override
-  Widget buildViewportChrome(context, child, axisDirection) => child;
+  Widget buildOverscrollIndicator(context, child, axisDirection) => child;
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) =>
