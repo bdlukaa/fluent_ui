@@ -260,7 +260,7 @@ class _StickyNavigationIndicatorState
       return;
     }
 
-    _old = (PageStorage.of(context)?.readState(
+    _old = (PageStorage.of(context).readState(
           context,
           identifier: 'oldIndex$itemIndex',
         ) as num?)
@@ -312,7 +312,7 @@ class _StickyNavigationIndicatorState
 
     _old = oldIndex;
     if (mounted) {
-      PageStorage.of(context)?.writeState(
+      PageStorage.of(context).writeState(
         context,
         _old,
         identifier: 'oldIndex$itemIndex',
