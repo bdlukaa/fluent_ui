@@ -74,6 +74,8 @@
   It's now possible to assign a custom transition to the flyout by providing `transitionBuilder` and `transitionDuration`. By default, a light slide-fade transition is used, but it can be highly customizable to fit your needs. It provides the current placement mode - since automatic mode may change it at layout time. `DropdownButton` uses it to create its slidethrough transition.
 
   `position` and `placement` were replaced by `placementMode`, which gives horizontal and vertical options of placement, at all screen alignments. It's also possible to use it in a right-to-left context by using `placementMode.resolve(Directionality.of(context))`
+
+  Use `position` to display the flyout anywhere in the screen. It's useful to create context menus
 - Added support for Flutter 3.7 ([#568](https://github.com/bdlukaa/fluent_ui/issues/568))
 - Added `TextBox.magnifierConfiguration`, `TextBox.spellCheckConfiguration` and `TextBox.onTapOutside`
 
