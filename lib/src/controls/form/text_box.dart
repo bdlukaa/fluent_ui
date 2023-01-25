@@ -93,6 +93,7 @@ class TextBox extends StatefulWidget {
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
+    this.onTapOutside,
     this.inputFormatters,
     this.enabled,
     this.cursorWidth = 1.5,
@@ -123,6 +124,8 @@ class TextBox extends StatefulWidget {
     this.scribbleEnabled = true,
     this.enableIMEPersonalizedLearning = true,
     this.contextMenuBuilder = _defaultContextMenuBuilder,
+    this.magnifierConfiguration,
+    this.spellCheckConfiguration,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -408,6 +411,9 @@ class TextBox extends StatefulWidget {
   ///    the user is done editing.
   final ValueChanged<String>? onSubmitted;
 
+  /// {@macro flutter.widgets.editableText.onTapOutside}
+  final TapRegionCallback? onTapOutside;
+
   /// {@macro flutter.widgets.editableText.inputFormatters}
   final List<TextInputFormatter>? inputFormatters;
 
@@ -497,7 +503,7 @@ class TextBox extends StatefulWidget {
 
   /// {@macro flutter.widgets.EditableText.contextMenuBuilder}
   ///
-  /// If not provided, will build a default menu based on the platform.
+  /// If not provided, will build a default fluent-styled menu.
   ///
   /// See also:
   ///
@@ -510,6 +516,36 @@ class TextBox extends StatefulWidget {
       editableTextState: editableTextState,
     );
   }
+
+  /// {@macro flutter.widgets.magnifier.TextMagnifierConfiguration.intro}
+  ///
+  /// {@macro flutter.widgets.magnifier.intro}
+  ///
+  /// {@macro flutter.widgets.magnifier.TextMagnifierConfiguration.details}
+  ///
+  /// By default, builds a [CupertinoTextMagnifier] on iOS and Android nothing on all other
+  /// platforms. If it is desired to suppress the magnifier, consider passing
+  /// [TextMagnifierConfiguration.disabled].
+  final TextMagnifierConfiguration? magnifierConfiguration;
+
+  /// {@macro flutter.widgets.EditableText.spellCheckConfiguration}
+  ///
+  /// If [SpellCheckConfiguration.misspelledTextStyle] is not specified in this
+  /// configuration, then [fluentMisspelledTextStyle] is used by default.
+  final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// The [TextStyle] used to indicate misspelled words in the Cupertino style.
+  ///
+  /// See also:
+  ///  * [SpellCheckConfiguration.misspelledTextStyle], the style configured to
+  ///    mark misspelled words with.
+  ///  * [TextField.materialMisspelledTextStyle], the style configured
+  ///    to mark misspelled words with in the Material style.
+  static final TextStyle fluentMisspelledTextStyle = TextStyle(
+    decoration: TextDecoration.underline,
+    decorationColor: Colors.red,
+    decorationStyle: TextDecorationStyle.dotted,
+  );
 
   @override
   State<TextBox> createState() => _TextBoxState();
@@ -929,6 +965,20 @@ class _TextBoxState extends State<TextBox>
         .resolveFromReverseBrightness(theme.brightness)
         .withOpacity(0.6);
 
+    // Set configuration as disabled if not otherwise specified. If specified,
+    // ensure that configuration uses Cupertino text style for misspelled words
+    // unless a custom style is specified.
+    // ignore: omit_local_variable_types
+    final SpellCheckConfiguration spellCheckConfiguration =
+        widget.spellCheckConfiguration != null &&
+                widget.spellCheckConfiguration !=
+                    const SpellCheckConfiguration.disabled()
+            ? widget.spellCheckConfiguration!.copyWith(
+                misspelledTextStyle:
+                    widget.spellCheckConfiguration!.misspelledTextStyle ??
+                        TextBox.fluentMisspelledTextStyle)
+            : const SpellCheckConfiguration.disabled();
+
     final Widget paddedEditable = Padding(
       padding: widget.padding,
       child: RepaintBoundary(
@@ -962,6 +1012,7 @@ class _TextBoxState extends State<TextBox>
             onSelectionChanged: _handleSelectionChanged,
             onEditingComplete: widget.onEditingComplete,
             onSubmitted: widget.onSubmitted,
+            onTapOutside: widget.onTapOutside,
             inputFormatters: formatters,
             rendererIgnoresPointer: true,
             cursorWidth: widget.cursorWidth,
@@ -992,6 +1043,9 @@ class _TextBoxState extends State<TextBox>
             clipBehavior: widget.clipBehavior,
             autofillClient: this,
             contextMenuBuilder: widget.contextMenuBuilder,
+            magnifierConfiguration: widget.magnifierConfiguration ??
+                TextMagnifierConfiguration.disabled,
+            spellCheckConfiguration: spellCheckConfiguration,
           ),
         ),
       ),

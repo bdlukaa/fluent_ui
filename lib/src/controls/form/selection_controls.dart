@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 // The minimum padding from all edges of the selection toolbar to all edges of
@@ -17,24 +19,15 @@ const EdgeInsets _kToolbarPadding = EdgeInsets.symmetric(
 );
 
 class FluentTextSelectionToolbar extends StatelessWidget {
-  /// {@template flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
-  /// The [ContextMenuButtonItem]s that will be turned into the correct button
-  /// widgets for the current platform.
-  /// {@endtemplate}
-  final List<ContextMenuButtonItem>? buttonItems;
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
+  final List<ContextMenuButtonItem> buttonItems;
 
-  /// The children of the toolbar, typically buttons.
-  final List<Widget>? children;
-
-  /// {@template flutter.material.AdaptiveTextSelectionToolbar.anchors}
-  /// The location on which to anchor the menu.
-  /// {@endtemplate}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.anchors}
   final TextSelectionToolbarAnchors anchors;
 
   const FluentTextSelectionToolbar({
     Key? key,
     required this.buttonItems,
-    required this.children,
     required this.anchors,
   }) : super(key: key);
 
@@ -50,15 +43,12 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   FluentTextSelectionToolbar.editableText({
     super.key,
     required EditableTextState editableTextState,
-  })  : children = null,
-        buttonItems = editableTextState.contextMenuButtonItems,
+  })  : buttonItems = editableTextState.contextMenuButtonItems,
         anchors = editableTextState.contextMenuAnchors;
 
   // Builds a toolbar just like the default Mac toolbar, with the right color
   // background, padding, and rounded corners.
   static Widget _defaultToolbarBuilder(BuildContext context, Widget child) {
-    final theme = FluentTheme.of(context);
-
     return Container(
       width: _kToolbarWidth,
       decoration: const BoxDecoration(
@@ -96,7 +86,15 @@ class FluentTextSelectionToolbar extends StatelessWidget {
           context,
           Column(
             mainAxisSize: MainAxisSize.min,
-            children: children ?? [],
+            children: buttonItems.map((item) {
+              return _FluentTextSelectionToolbarButton(
+                onPressed: item.onPressed,
+                icon: null,
+                shortcut: '',
+                tooltip: '',
+                text: item.label ?? '',
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -381,7 +379,9 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasFluentTheme(context));
     final mediaQuery = MediaQuery.of(context);
+    final theme = FluentTheme.of(context);
 
     final paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
     final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
@@ -403,6 +403,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           elevation: 4.0,
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
+            color: theme.menuColor.withOpacity(0.6),
             padding: const EdgeInsetsDirectional.only(
               top: 5.0,
               start: 5.0,
@@ -437,7 +438,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
   final String text;
   final IconData? icon;
   final String shortcut;
-  final String tooltip;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {

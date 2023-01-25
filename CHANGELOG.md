@@ -1,3 +1,8 @@
+## next
+
+- Added support for Flutter 3.7 ([#568](https://github.com/bdlukaa/fluent_ui/issues/568))
+- Added `TextBox.magnifierConfiguration`, `TextBox.spellCheckConfiguration` and `TextBox.onTapOutside`
+
 ## 4.1.5
 
 - Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
