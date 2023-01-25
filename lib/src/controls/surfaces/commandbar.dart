@@ -217,21 +217,28 @@ class _CommandBarState extends State<CommandBar> {
       ];
 
       void showSecondaryMenu() {
-        secondaryFlyoutController.showFlyout(builder: (context) {
-          return FlyoutContent(
-            constraints: const BoxConstraints(maxWidth: 250.0),
-            padding: const EdgeInsetsDirectional.only(top: 8.0),
-            child: ListView(
-              shrinkWrap: true,
-              children: allSecondaryItems.map((item) {
-                return item.build(
-                  context,
-                  CommandBarItemDisplayMode.inSecondary,
-                );
-              }).toList(),
+        secondaryFlyoutController.showFlyout(
+          autoModeConfiguration: FlyoutAutoConfiguration(
+            preferredMode: FlyoutPlacementMode.topRight.resolve(
+              Directionality.of(context),
             ),
-          );
-        });
+          ),
+          builder: (context) {
+            return FlyoutContent(
+              constraints: const BoxConstraints(maxWidth: 200.0),
+              padding: const EdgeInsetsDirectional.only(top: 8.0),
+              child: ListView(
+                shrinkWrap: true,
+                children: allSecondaryItems.map((item) {
+                  return item.build(
+                    context,
+                    CommandBarItemDisplayMode.inSecondary,
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        );
       }
 
       late CommandBarItem overflowItem;

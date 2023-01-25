@@ -285,6 +285,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     required this.targetSize,
     required this.autoModeConfiguration,
     required this.placementMode,
+    required this.defaultPreferred,
     required this.margin,
     required this.shouldConstrainToRootBounds,
     required this.forceAvailableSpace,
@@ -295,6 +296,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
   final FlyoutAutoConfiguration? autoModeConfiguration;
   final FlyoutPlacementMode placementMode;
+  final FlyoutPlacementMode defaultPreferred;
   final double margin;
 
   final bool shouldConstrainToRootBounds;
@@ -325,7 +327,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
     if (autoPlacementMode == FlyoutPlacementMode.auto) {
       final preferredMode =
-          autoModeConfiguration?.preferredMode ?? FlyoutPlacementMode.topCenter;
+          autoModeConfiguration?.preferredMode ?? defaultPreferred;
 
       autoPlacementMode = autoPlacementMode!._assignAutoMode(
         targetOffset,
@@ -618,67 +620,49 @@ class FlyoutController with ChangeNotifier {
                     ),
                   ),
                 ),
-              if (position == null)
-                Positioned.fill(
-                  child: SafeArea(
-                    child: CustomSingleChildLayout(
-                      delegate: _FlyoutPositionDelegate(
-                        targetOffset: targetOffset,
-                        targetSize: targetSize,
-                        autoModeConfiguration: autoModeConfiguration,
-                        placementMode: placementMode,
-                        margin: margin,
-                        shouldConstrainToRootBounds:
-                            shouldConstrainToRootBounds,
-                        forceAvailableSpace: forceAvailableSpace,
+              Positioned.fill(
+                child: SafeArea(
+                  child: CustomSingleChildLayout(
+                    delegate: _FlyoutPositionDelegate(
+                      targetOffset: position ?? targetOffset,
+                      targetSize: position == null ? targetSize : Size.zero,
+                      autoModeConfiguration: autoModeConfiguration,
+                      placementMode: placementMode,
+                      defaultPreferred: position == null
+                          ? FlyoutPlacementMode.topCenter
+                          : FlyoutPlacementMode.bottomLeft,
+                      margin: margin,
+                      shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+                      forceAvailableSpace: forceAvailableSpace,
+                    ),
+                    child: Padding(
+                      padding: placementMode._getAdditionalOffsetPosition(
+                        position == null ? additionalOffset : 0.0,
                       ),
-                      child: Padding(
-                        padding: placementMode
-                            ._getAdditionalOffsetPosition(additionalOffset),
-                        child: ContentManager(content: (context) {
-                          final flyout = KeyedSubtree(
-                            key: flyoutKey,
-                            child: builder(context),
-                          );
-                          final parentBox =
-                              context.findAncestorRenderObjectOfType<
-                                  RenderCustomSingleChildLayoutBox>()!;
-                          final delegate =
-                              parentBox.delegate as _FlyoutPositionDelegate;
+                      child: ContentManager(content: (context) {
+                        final flyout = KeyedSubtree(
+                          key: flyoutKey,
+                          child: builder(context),
+                        );
+                        final parentBox =
+                            context.findAncestorRenderObjectOfType<
+                                RenderCustomSingleChildLayoutBox>()!;
+                        final delegate =
+                            parentBox.delegate as _FlyoutPositionDelegate;
 
-                          final realPlacementMode = delegate.autoPlacementMode;
+                        final realPlacementMode = delegate.autoPlacementMode;
 
-                          return transitionBuilder!(
-                            context,
-                            animation,
-                            realPlacementMode ?? delegate.placementMode,
-                            flyout,
-                          );
-                        }),
-                      ),
+                        return transitionBuilder!(
+                          context,
+                          animation,
+                          realPlacementMode ?? delegate.placementMode,
+                          flyout,
+                        );
+                      }),
                     ),
                   ),
-                )
-              else
-                Positioned(
-                  left: position.dx,
-                  top: position.dy,
-                  child: ContentManager(content: (context) {
-                    final flyout = KeyedSubtree(
-                      key: flyoutKey,
-                      child: builder(context),
-                    );
-
-                    return transitionBuilder!(
-                      context,
-                      animation,
-                      placementMode == FlyoutPlacementMode.auto
-                          ? FlyoutPlacementMode.bottomCenter
-                          : placementMode,
-                      flyout,
-                    );
-                  }),
                 ),
+              ),
               ...menus,
             ]);
 
