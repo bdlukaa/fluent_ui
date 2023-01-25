@@ -1,3 +1,7 @@
+## next
+
+- Added a fix for Flutter 3.7 ([#693](https://github.com/bdlukaa/fluent_ui/issues/693)) & ([#568](https://github.com/bdlukaa/fluent_ui/issues/568))
+
 ## 4.1.5
 
 - Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
