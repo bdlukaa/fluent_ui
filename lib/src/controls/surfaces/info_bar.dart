@@ -88,7 +88,7 @@ Future<void> displayInfoBar(
     );
   });
 
-  Overlay.of(context)!.insert(entry);
+  Overlay.of(context).insert(entry);
 }
 
 // This file implements info bar into this library.

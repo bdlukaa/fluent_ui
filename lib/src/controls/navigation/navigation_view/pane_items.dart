@@ -654,7 +654,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _open = PageStorage.of(context)?.readState(
+    _open = PageStorage.of(context).readState(
           context,
           identifier: 'paneItemExpanderOpen$index',
         ) as bool? ??
@@ -688,7 +688,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen({bool doFlyout = true}) {
     setState(() => _open = !_open);
 
-    PageStorage.of(context)?.writeState(
+    PageStorage.of(context).writeState(
       context,
       _open,
       identifier: 'paneItemExpanderOpen$index',
@@ -762,7 +762,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
 
-    _open = PageStorage.of(context)?.readState(
+    _open = PageStorage.of(context).readState(
           context,
           identifier: 'paneItemExpanderOpen$index',
         ) as bool? ??

@@ -1203,7 +1203,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       controller.value = 1;
     } else {
       controller.forward();
-      PageStorage.of(context)?.writeState(
+      PageStorage.of(context).writeState(
         context,
         true,
         identifier: 'openModeOpen',

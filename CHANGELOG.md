@@ -74,6 +74,8 @@
   It's now possible to assign a custom transition to the flyout by providing `transitionBuilder` and `transitionDuration`. By default, a light slide-fade transition is used, but it can be highly customizable to fit your needs. It provides the current placement mode - since automatic mode may change it at layout time. `DropdownButton` uses it to create its slidethrough transition.
 
   `position` and `placement` were replaced by `placementMode`, which gives horizontal and vertical options of placement, at all screen alignments. It's also possible to use it in a right-to-left context by using `placementMode.resolve(Directionality.of(context))`
+- Added support for Flutter 3.7 ([#568](https://github.com/bdlukaa/fluent_ui/issues/568))
+- Added `TextBox.magnifierConfiguration`, `TextBox.spellCheckConfiguration` and `TextBox.onTapOutside`
 
 ## 4.1.5
 
@@ -81,6 +83,7 @@
 - Fix assertion in `NavigationViewState` if no pane was currently selected ([#678](https://github.com/bdlukaa/fluent_ui/issues/678))
 - Make `NavigationView.paneBodyBuilder` responsible for state management of the widget it returns, allowing `paneBodyBuilder` to return an `IndexedStack` (common use case) ([#679](https://github.com/bdlukaa/fluent_ui/issues/679))
 - Added support for Belarusian language ([#686](https://github.com/bdlukaa/fluent_ui/pull/686))
+- Added missing German translation for `minute`, `hour`, `day`, `month`, and `year` 
 
 ## 4.1.4
 

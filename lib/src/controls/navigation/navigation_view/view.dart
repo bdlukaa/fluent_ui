@@ -196,7 +196,7 @@ class NavigationViewState extends State<NavigationView> {
 
     _generateKeys();
 
-    _compactOverlayOpen = PageStorage.of(context)?.readState(
+    _compactOverlayOpen = PageStorage.of(context).readState(
           context,
           identifier: 'compactOverlayOpen',
         ) as bool? ??
@@ -272,7 +272,7 @@ class NavigationViewState extends State<NavigationView> {
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
     setState(() => _compactOverlayOpen = !_compactOverlayOpen);
-    PageStorage.of(context)?.writeState(
+    PageStorage.of(context).writeState(
       context,
       _compactOverlayOpen,
       identifier: 'compactOverlayOpen',
@@ -434,7 +434,7 @@ class NavigationViewState extends State<NavigationView> {
             _compactOverlayOpen = false;
           }
           if (displayMode != PaneDisplayMode.open) {
-            PageStorage.of(context)?.writeState(
+            PageStorage.of(context).writeState(
               context,
               false,
               identifier: 'openModeOpen',
@@ -457,7 +457,7 @@ class NavigationViewState extends State<NavigationView> {
             case PaneDisplayMode.compact:
 
               // Ensure the overlay state is correct
-              _compactOverlayOpen = PageStorage.of(context)?.readState(
+              _compactOverlayOpen = PageStorage.of(context).readState(
                     context,
                     identifier: 'compactOverlayOpen',
                   ) as bool? ??
@@ -608,7 +608,7 @@ class NavigationViewState extends State<NavigationView> {
                         pane: pane,
                         paneKey: _panelKey,
                         listKey: _listKey,
-                        initiallyOpen: PageStorage.of(context)?.readState(
+                        initiallyOpen: PageStorage.of(context).readState(
                               context,
                               identifier: 'openModeOpen',
                             ) as bool? ??
