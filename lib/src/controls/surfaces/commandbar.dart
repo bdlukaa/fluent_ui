@@ -207,10 +207,38 @@ class _CommandBarState extends State<CommandBar> {
     final builtItems =
         widget.primaryItems.map((item) => item.build(context, primaryMode));
     Widget? overflowWidget;
+
     if (widget.secondaryItems.isNotEmpty ||
         widget.overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
+      var allSecondaryItems = [
+        ...dynamicallyHiddenPrimaryItems
+            .map((index) => widget.primaryItems[index]),
+        ...widget.secondaryItems,
+      ];
+
       void showSecondaryMenu() {
-        secondaryFlyoutController.open();
+        secondaryFlyoutController.showFlyout(
+          autoModeConfiguration: FlyoutAutoConfiguration(
+            preferredMode: FlyoutPlacementMode.topRight.resolve(
+              Directionality.of(context),
+            ),
+          ),
+          builder: (context) {
+            return FlyoutContent(
+              constraints: const BoxConstraints(maxWidth: 200.0),
+              padding: const EdgeInsetsDirectional.only(top: 8.0),
+              child: ListView(
+                shrinkWrap: true,
+                children: allSecondaryItems.map((item) {
+                  return item.build(
+                    context,
+                    CommandBarItemDisplayMode.inSecondary,
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        );
       }
 
       late CommandBarItem overflowItem;
@@ -223,30 +251,12 @@ class _CommandBarState extends State<CommandBar> {
         );
       }
 
-      var allSecondaryItems = [
-        ...dynamicallyHiddenPrimaryItems
-            .map((index) => widget.primaryItems[index]),
-        ...widget.secondaryItems,
-      ];
       // It's useless if the first item is a separator
       if (allSecondaryItems.isNotEmpty &&
           allSecondaryItems.first is CommandBarSeparator) {
         allSecondaryItems.removeAt(0);
       }
-      overflowWidget = Flyout(
-        content: (context) => FlyoutContent(
-          constraints: const BoxConstraints(maxWidth: 250.0),
-          padding: const EdgeInsetsDirectional.only(top: 8.0),
-          child: ListView(
-            shrinkWrap: true,
-            children: allSecondaryItems
-                .map((item) => item.build(
-                      context,
-                      CommandBarItemDisplayMode.inSecondary,
-                    ))
-                .toList(),
-          ),
-        ),
+      overflowWidget = FlyoutTarget(
         controller: secondaryFlyoutController,
         child: overflowItem.build(context, primaryMode),
       );

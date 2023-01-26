@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 20.0;
+const double _kVerticalOffset = 6.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
   size: 10,
@@ -40,7 +40,7 @@ class DropDownButton extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.buttonStyle,
-    this.placement = FlyoutPlacement.center,
+    this.placement = FlyoutPlacementMode.bottomCenter,
     this.menuShape,
     this.menuColor,
     this.onOpen,
@@ -71,7 +71,7 @@ class DropDownButton extends StatefulWidget {
 
   /// The space between the button and the flyout.
   ///
-  /// 20.0 is used by default
+  /// 6.0 is used by default
   final double verticalOffset;
 
   /// The items in the flyout. Must not be empty
@@ -97,8 +97,8 @@ class DropDownButton extends StatefulWidget {
 
   /// The placement of the flyout.
   ///
-  /// [FlyoutPlacement.center] is used by default
-  final FlyoutPlacement placement;
+  /// [FlyoutPlacementMode.bottomCenter] is used by default
+  final FlyoutPlacementMode placement;
 
   /// The menu shape
   final ShapeBorder? menuShape;
@@ -127,7 +127,7 @@ class DropDownButton extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<MenuFlyoutItemInterface>('items', items))
+      ..add(IterableProperty<MenuFlyoutItemBase>('items', items))
       ..add(DoubleProperty(
         'verticalOffset',
         verticalOffset,
@@ -139,7 +139,7 @@ class DropDownButton extends StatefulWidget {
         defaultValue: false,
         ifFalse: 'do not close after click',
       ))
-      ..add(EnumProperty<FlyoutPlacement>('placement', placement))
+      ..add(EnumProperty<FlyoutPlacementMode>('placement', placement))
       ..add(DiagnosticsProperty<ShapeBorder>('menu shape', menuShape))
       ..add(ColorProperty('menu color', menuColor));
   }
@@ -178,20 +178,15 @@ class _DropDownButtonState extends State<DropDownButton> {
       widget.trailing ?? _kDefaultDropdownButtonTrailing,
     ]);
 
-    return Flyout(
-      placement: widget.placement,
-      position: FlyoutPosition.below,
+    return FlyoutTarget(
       controller: flyoutController,
-      verticalOffset: widget.verticalOffset,
-      onOpen: widget.onOpen,
-      onClose: widget.onClose,
       child: Builder(builder: (context) {
         return widget.buttonBuilder?.call(
               context,
-              widget.disabled ? null : flyoutController.open,
+              widget.disabled ? null : showFlyout,
             ) ??
             Button(
-              onPressed: widget.disabled ? null : flyoutController.open,
+              onPressed: widget.disabled ? null : showFlyout,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
               // ignore: deprecated_member_use_from_same_package
@@ -203,7 +198,54 @@ class _DropDownButtonState extends State<DropDownButton> {
               ),
             );
       }),
-      content: (context) {
+    );
+  }
+
+  void showFlyout() async {
+    widget.onOpen?.call();
+    await flyoutController.showFlyout(
+      placementMode: FlyoutPlacementMode.auto,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: widget.placement,
+      ),
+      additionalOffset: widget.verticalOffset,
+      transitionBuilder: (context, animation, placement, flyout) {
+        switch (placement) {
+          case FlyoutPlacementMode.bottomCenter:
+          case FlyoutPlacementMode.bottomLeft:
+          case FlyoutPlacementMode.bottomRight:
+            return ClipRect(
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: flyout,
+              ),
+            );
+          case FlyoutPlacementMode.topCenter:
+          case FlyoutPlacementMode.topLeft:
+          case FlyoutPlacementMode.topRight:
+            return ClipRect(
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: flyout,
+              ),
+            );
+          default:
+            return flyout;
+        }
+      },
+      builder: (context) {
         return MenuFlyout(
           color: widget.menuColor,
           shape: widget.menuShape,
@@ -211,7 +253,7 @@ class _DropDownButtonState extends State<DropDownButton> {
             if (widget.closeAfterClick) {
               return MenuFlyoutItem(
                 onPressed: () {
-                  flyoutController.close();
+                  Navigator.of(context).pop();
                   item.onPressed?.call();
                 },
                 key: item.key,
@@ -226,6 +268,7 @@ class _DropDownButtonState extends State<DropDownButton> {
         );
       },
     );
+    widget.onClose?.call();
   }
 }
 

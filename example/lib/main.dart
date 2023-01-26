@@ -10,6 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
+import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -64,6 +65,7 @@ void main() async {
 
   runApp(const MyApp());
 
+  DeferredWidget.preload(popups.loadLibrary);
   DeferredWidget.preload(forms.loadLibrary);
   DeferredWidget.preload(inputs.loadLibrary);
   DeferredWidget.preload(navigation.loadLibrary);
@@ -263,14 +265,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ContentDialogPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
       body: DeferredWidget(
@@ -302,12 +296,21 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         () => surfaces.TilesPage(),
       ),
     ),
+    PaneItemHeader(header: const Text('Popups')),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => popups.ContentDialogPage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.TooltipPage(),
+        () => popups.TooltipPage(),
       ),
     ),
     PaneItem(
@@ -315,7 +318,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Flyout'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.FlyoutPage(),
+        () => popups.Flyout2Screen(),
       ),
     ),
     PaneItemHeader(header: const Text('Theming')),
@@ -431,9 +434,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           height: kOneLineTileHeight,
           child: ShaderMask(
             shaderCallback: (rect) {
-              final color = appTheme.color.resolveFromReverseBrightness(
+              final color = appTheme.color.defaultBrushFor(
                 theme.brightness,
-                level: theme.brightness == Brightness.light ? 0 : 2,
               );
               return LinearGradient(
                 colors: [

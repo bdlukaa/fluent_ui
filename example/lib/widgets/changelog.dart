@@ -87,9 +87,9 @@ class _ChangelogState extends State<Changelog> {
                 m.Theme.of(context),
               ).copyWith(
                 a: TextStyle(
-                  color: theme.accentColor.resolveFromReverseBrightness(
+                  color: theme.accentColor.defaultBrushFor(
                     theme.brightness,
-                    level: 1,
+                    // level: 1,
                   ),
                 ),
               ),

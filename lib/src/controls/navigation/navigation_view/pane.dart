@@ -538,7 +538,9 @@ class _TopNavigationPane extends StatefulWidget {
 }
 
 class _TopNavigationPaneState extends State<_TopNavigationPane> {
+  final overflowKey = GlobalKey();
   final overflowController = FlyoutController();
+
   List<int> hiddenPaneItems = [];
   late List<int> _localItemHold;
   void generateLocalItemHold() {
@@ -676,29 +678,43 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         Expanded(
           child: DynamicOverflow(
             overflowWidgetAlignment: MainAxisAlignment.start,
-            overflowWidget: Flyout(
+            overflowWidget: FlyoutTarget(
+              key: overflowKey,
               controller: overflowController,
-              placement: FlyoutPlacement.end,
-              content: (context) => InheritedNavigationView(
-                displayMode: view.displayMode,
-                currentItemIndex: view.currentItemIndex,
-                minimalPaneOpen: view.minimalPaneOpen,
-                oldIndex: view.oldIndex,
-                pane: view.pane,
-                child: MenuFlyout(
-                  items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
-                    final item = widget.pane.items[i];
-                    return _buildMenuPaneItem(context, item, _onPressed);
-                  }).toList(),
-                ),
-              ),
+              // placement: FlyoutPlacement.end,
               child: PaneItem(
                 icon: const Icon(FluentIcons.more),
                 body: const SizedBox.shrink(),
               ).build(
                 context,
                 false,
-                overflowController.open,
+                () {
+                  overflowController.showFlyout(
+                    placementMode: FlyoutPlacementMode.bottomCenter,
+                    forceAvailableSpace: true,
+                    builder: (context) {
+                      return InheritedNavigationView(
+                        displayMode: view.displayMode,
+                        currentItemIndex: view.currentItemIndex,
+                        minimalPaneOpen: view.minimalPaneOpen,
+                        oldIndex: view.oldIndex,
+                        pane: view.pane,
+                        child: MenuFlyout(
+                          items: _localItemHold
+                              .sublist(hiddenPaneItems.first)
+                              .map((i) {
+                            final item = widget.pane.items[i];
+                            return _buildMenuPaneItem(
+                              context,
+                              item,
+                              _onPressed,
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  );
+                },
                 showTextOnTop: false,
                 displayMode: PaneDisplayMode.top,
               ),
@@ -742,7 +758,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 }
 
-MenuFlyoutItemInterface _buildMenuPaneItem(
+MenuFlyoutItemBase _buildMenuPaneItem(
   BuildContext context,
   NavigationPaneItem item,
   ValueChanged<PaneItem> onPressed, {
@@ -771,7 +787,7 @@ MenuFlyoutItemInterface _buildMenuPaneItem(
   }
 }
 
-class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
+class _MenuFlyoutHeader extends MenuFlyoutItemBase {
   final PaneItemHeader header;
 
   const _MenuFlyoutHeader({required this.header});
@@ -786,7 +802,7 @@ class _MenuFlyoutHeader extends MenuFlyoutItemInterface {
   }
 }
 
-class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
+class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItem({
     Key? key,
     required this.item,
@@ -873,7 +889,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemInterface {
   }
 }
 
-class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemInterface {
+class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItemExpander({
     Key? key,
     required this.item,
