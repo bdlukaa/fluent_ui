@@ -256,7 +256,7 @@ class _CommandBarState extends State<CommandBar> {
           allSecondaryItems.first is CommandBarSeparator) {
         allSecondaryItems.removeAt(0);
       }
-      overflowWidget = FlyoutAttach(
+      overflowWidget = FlyoutTarget(
         controller: secondaryFlyoutController,
         child: overflowItem.build(context, primaryMode),
       );

@@ -178,7 +178,7 @@ class _DropDownButtonState extends State<DropDownButton> {
       widget.trailing ?? _kDefaultDropdownButtonTrailing,
     ]);
 
-    return FlyoutAttach(
+    return FlyoutTarget(
       controller: flyoutController,
       child: Builder(builder: (context) {
         return widget.buttonBuilder?.call(

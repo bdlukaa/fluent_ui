@@ -678,7 +678,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         Expanded(
           child: DynamicOverflow(
             overflowWidgetAlignment: MainAxisAlignment.start,
-            overflowWidget: FlyoutAttach(
+            overflowWidget: FlyoutTarget(
               key: overflowKey,
               controller: overflowController,
               // placement: FlyoutPlacement.end,

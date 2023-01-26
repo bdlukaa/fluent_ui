@@ -100,7 +100,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
         ),
         subtitle(content: const Text('A button with a flyout')),
         CardHighlight(
-          codeSnippet: '''FlyoutAttach(
+          codeSnippet: '''FlyoutTarget(
   controller: controller,
   child: Button(
     child: const Text('Clear cart'),
@@ -108,7 +108,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   )
 )''',
           child: Row(children: [
-            FlyoutAttach(
+            FlyoutTarget(
               key: attachKey,
               controller: controller,
               child: Button(
@@ -160,7 +160,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''FlyoutAttach(
+          codeSnippet: '''FlyoutTarget(
   controller: controller,
   child: Button(
     child: const Text('Options'),
@@ -168,7 +168,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   )
 )''',
           child: Row(children: [
-            FlyoutAttach(
+            FlyoutTarget(
               key: menuAttachKey,
               controller: menuController,
               child: Button(
@@ -304,7 +304,7 @@ return GestureDetector(
       },
     );
   },
-  child: FlyoutAttach(
+  child: FlyoutTarget(
     controller: contextController,
     child: const FlutterLogo(size: 400.0),
   ),
@@ -351,18 +351,10 @@ return GestureDetector(
                       ),
                     ),
                   );
-                  // return MenuFlyout(
-                  //   items: [
-                  //     MenuFlyoutItem(
-                  //       text: const Text('TEST'),
-                  //       onPressed: () {},
-                  //     ),
-                  //   ],
-                  // );
                 },
               );
             },
-            child: FlyoutAttach(
+            child: FlyoutTarget(
               key: contextAttachKey,
               controller: contextController,
               child: ShaderMask(

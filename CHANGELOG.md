@@ -5,7 +5,7 @@
   Flyouts were reworked to match the design and behavior of native WinUI 3
 
   **BREAKING** Removed `Flyout` widget.
-  To replace it, `FlyoutAttach` and `FlyoutController` were created. `FlyoutAttach` works like a target, which the given `controller` will use to display the flyout
+  To replace it, `FlyoutTarget` and `FlyoutController` were created. `FlyoutTarget` works like a target, which the given `controller` will use to display the flyout
 
   ---
   Migration guide:
@@ -32,7 +32,7 @@
   ```dart
   final controller = FlyoutController();
 
-  FlyoutAttach(
+  FlyoutTarget(
     controller: controller,
     child: Button(
       onPressed: _showFlyout,

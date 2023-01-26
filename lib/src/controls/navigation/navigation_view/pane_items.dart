@@ -731,9 +731,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         softWrap: false,
                         maxLines: 1,
                         overflow: TextOverflow.fade,
-                        // textAlign: view.displayMode == PaneDisplayMode.top
-                        //     ? TextAlign.center
-                        //     : TextAlign.left,
                         child: item.header,
                       ),
                     );
@@ -868,7 +865,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         ]);
       case PaneDisplayMode.top:
       case PaneDisplayMode.compact:
-        return FlyoutAttach(
+        return FlyoutTarget(
           controller: flyoutController,
           child: item,
         );

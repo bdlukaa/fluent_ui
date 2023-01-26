@@ -235,10 +235,7 @@ enum FlyoutPlacementMode {
 
 extension on double {
   /// If negative, 0 is returned
-  double _ensurePositive() {
-    if (isNegative) return 0;
-    return this;
-  }
+  double _ensurePositive() => clampDouble(this, 0, double.infinity);
 }
 
 class FlyoutAutoConfiguration {
@@ -446,17 +443,17 @@ typedef FlyoutTransitionBuilder = Widget Function(
 );
 
 class FlyoutController with ChangeNotifier {
-  FlyoutAttachState? _attachState;
+  _FlyoutTargetState? _attachState;
   bool _open = false;
 
-  /// Whether this flyout controller is attached to any [FlyoutAttach]
+  /// Whether this flyout controller is attached to any [FlyoutTarget]
   bool get isAttached => _attachState != null;
 
-  /// Attaches this controller to a [FlyoutAttach] widget.
+  /// Attaches this controller to a [FlyoutTarget] widget.
   ///
   /// If already attached, the current state is detached and replaced by the
   /// provided [state]
-  void _attach(FlyoutAttachState state) {
+  void _attach(_FlyoutTargetState state) {
     if (isAttached) _detach();
 
     _attachState = state;
@@ -467,10 +464,10 @@ class FlyoutController with ChangeNotifier {
     _attachState = null;
   }
 
-  /// Makes sure the controller is attached to a [FlyoutAttach]. Usually used
+  /// Makes sure the controller is attached to a [FlyoutTarget]. Usually used
   /// when [_attachState] is necessary
   void _ensureAttached() {
-    assert(isAttached, 'This controller must be attached to a FlyoutAttach');
+    assert(isAttached, 'This controller must be attached to a FlyoutTarget');
   }
 
   /// Whether the flyout is open
@@ -736,21 +733,21 @@ class _DismissAction extends DismissAction {
   }
 }
 
-class FlyoutAttach extends StatefulWidget {
+class FlyoutTarget extends StatefulWidget {
   final FlyoutController controller;
   final Widget child;
 
-  const FlyoutAttach({
-    Key? key,
+  const FlyoutTarget({
+    super.key,
     required this.controller,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  State<FlyoutAttach> createState() => FlyoutAttachState();
+  State<FlyoutTarget> createState() => _FlyoutTargetState();
 }
 
-class FlyoutAttachState extends State<FlyoutAttach> {
+class _FlyoutTargetState extends State<FlyoutTarget> {
   @override
   void initState() {
     super.initState();
@@ -758,7 +755,7 @@ class FlyoutAttachState extends State<FlyoutAttach> {
   }
 
   @override
-  void didUpdateWidget(covariant FlyoutAttach oldWidget) {
+  void didUpdateWidget(covariant FlyoutTarget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (!widget.controller.isAttached) {

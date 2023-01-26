@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 /// See also:
 ///
-///   * [FlyoutAttach], which the flyout is displayed attached to
+///   * [FlyoutTarget], which the flyout is displayed attached to
 ///   * [FlyoutListTile], a list tile adapted to flyouts
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
@@ -33,7 +33,7 @@ class FlyoutContent extends StatelessWidget {
 
   /// Empty space to inscribe around the [child]
   ///
-  /// Defaults to 8.0 in all sides
+  /// Defaults to 8.0 on each side
   final EdgeInsetsGeometry padding;
 
   /// The color of the shadow. Not used if [elevation] is 0
@@ -97,7 +97,7 @@ class FlyoutContent extends StatelessWidget {
 ///
 /// See also:
 ///
-///  * [FlyoutAttach], which the flyout is displayed attached to
+///  * [FlyoutTarget], which the flyout is displayed attached to
 ///  * [FlyoutContent], the content of the flyout
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
