@@ -1,0 +1,127 @@
+{
+  "@@locale": "ro",
+  "backButtonTooltip": "Înapoi",
+  "@backButtonTooltip": {
+    "description": "Sfat pentru butonul de întoarcere [NavigationAppBar]."
+  },
+  "closeButtonLabel": "închide",
+  "@closeButtonLabel": {
+    "description": "Etichetă pentru \"închide\" butoane și elementele meniului."
+  },
+  "searchLabel": "Caută",
+  "@searchLabel": {
+    "description": "Etichetă pentru \"caută\" campurile de text."
+  },
+  "closeNavigationTooltip": "Închide Navigația",
+  "@closeNavigationTooltip": {
+    "description": "Sfat pentru butonul de navigație."
+  },
+  "openNavigationTooltip": "Deschide Navigația",
+  "@openNavigationTooltip": {
+    "description": "Sfat pentru butonul de navigație."
+  },
+  "clickToSearch": "Click pentru a caută",
+  "@clickToSearch": {
+    "description": "Sfat pentru butonul \"Apasă pentru a căuta\"."
+  },
+  "modalBarrierDismissLabel": "Respingeți",
+  "@modalBarrierDismissLabel": {
+    "description": "Eticheta citiți cu ajutorul instrumentelor de accesibilitate (TalkBack sau VoiceOver) pentru o barieră modală pentru a indica faptul că o atingere închide bariera. O barieră modală poate fi găsită, de exemplu, în spatele unei alerte sau a unei ferestre pop-up pentru a bloca interacțiunea utilizatorului cu elementele din spatele acesteia."
+  },
+  "minimizeWindowTooltip": "Minimizează",
+  "@minimizeWindowTooltip": {
+    "description": "Eticheta folosită de către butonul \"Minimizează\" pe desktop."
+  },
+  "restoreWindowTooltip": "Restabilește",
+  "@restoreWindowTooltip": {
+    "description": "Eticheta folosită de către butonul \"Restabilește\" pe desktop."
+  },
+  "closeWindowTooltip": "Închide",
+  "@closeWindowTooltip": {
+    "description": "Eticheta folosită de către butonul \"Închide\" pe desktop."
+  },
+  "dialogLabel": "Dialog",
+  "@dialogLabel": {
+    "description": "Eticheta dialogului."
+  },
+  "cutActionLabel": "Taie",
+  "@cutActionLabel": {
+    "description": "Eticheta pentru acțiunea de a tăia."
+  },
+  "copyActionLabel": "Copiază",
+  "@copyActionLabel": {
+    "description": "Eticheta pentru acțiunea de a copia."
+  },
+  "pasteActionLabel": "Lipește",
+  "@pasteActionLabel": {
+    "description": "Eticheta pentru butonul de a lipi."
+  },
+  "selectAllActionLabel": "Selectează totul",
+  "@selectAllActionLabel": {
+    "description": "Eticheta pentru butonul de a selecta totul."
+  },
+  "newTabLabel": "Adăugați o filă nouă",
+  "@newTabLabel": {
+    "description": "Eticheta folosită de butonul adaugă al lui [TabView]."
+  },
+  "closeTabLabelSuffix": "Închide filă",
+  "@closeTabLabelSuffix": {
+    "description": "Eticheta folosită de butonul închidere al lui [TabView]."
+  },
+  "scrollTabBackwardLabel": "Derulați înapoi lista cu file",
+  "@scrollTabBackwardLabel": {
+    "description": "Eticheta folosită de butonul derulează înapoi al lui [TabView]."
+  },
+  "scrollTabForwardLabel": "Derulați înainte lista cu file",
+  "@scrollTabForwardLabel": {
+    "description": "Eticheta folosită de butonul derulează înainte al lui [TabView]."
+  },
+  "noResultsFoundLabel": "Nici un rezultat gasit",
+  "@noResultsFoundLabel": {
+    "description": "Eticheta folosită de [AutoSuggestBox] când rezultatele nu pot fi găsite."
+  },
+  "copyActionTooltip": "Copiați conținutul selectat în clipboard",
+  "@copyActionTooltip": {
+    "description": "Sfat pentru acțiunea de copiere a controalelor de selecție ale textului."
+  },
+  "cutActionTooltip": "Eliminați conținutul selectat și puneți-l în clipboard",
+  "@cutActionTooltip": {
+    "description": "Sfat pentru acțiunea de tăiere a controalelor de selecție ale textului."
+  },
+  "pasteActionTooltip": "Inserează conținutul clipboard-ului în locația curentă",
+  "@pasteActionTooltip": {
+    "description": "Sfat pentru acțiunea de lipire pe controalele de selecție ale textului."
+  },
+  "selectAllActionTooltip": "Selectați tot conținutul",
+  "@selectAllActionTooltip": {
+    "description": "Sfat pentru acțiunea selectați tot din controalele de selecție ale textului."
+  },
+  "hour": "oră",
+  "@hour": {
+    "description": "Textul folosit de [TimePicker] pentru câmpul oră."
+  },
+  "minute": "minut",
+  "@minute": {
+    "description": "Textul folosit by [TimePicker] pentru câmpul minut."
+  },
+  "am": "AM",
+  "@am": {
+    "description": "Textul folosit de [TimePicker] pentru câmpul AM."
+  },
+  "pm": "PM",
+  "@pm": {
+    "description": "Textul folosit de [TimePicker] pentru câmpul PM."
+  },
+  "month": "lună",
+  "@month": {
+    "description": "Textul folosit de [DatePicker] pentru câmpul lună."
+  },
+  "day": "zi",
+  "@day": {
+    "description": "Textul folosit de [DatePicker] pentru câmpul zi."
+  },
+  "year": "an",
+  "@year": {
+    "description": "Textul folosit de [DatePicker] pentru câmpul an."
+  }
+}

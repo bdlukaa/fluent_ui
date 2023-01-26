@@ -1,12 +1,11 @@
-part of 'flyout.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
-/// The content of the flyout.
+/// The content of the flyout
 ///
 /// See also:
 ///
-///   * [Flyout], which is a light dismiss container that can show arbitrary UI
-///     as its content
-///   * [FlyoutListTile],
+///   * [FlyoutTarget], which the flyout is displayed attached to
+///   * [FlyoutListTile], a list tile adapted to flyouts
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
   const FlyoutContent({
@@ -18,54 +17,76 @@ class FlyoutContent extends StatelessWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8,
     this.constraints,
+    this.useAcrylic = true,
   }) : super(key: key);
 
+  /// The content of the flyout
   final Widget child;
 
   /// The background color of the box.
+  ///
+  /// If null, [ThemeData.menuColor] is used by default
   final Color? color;
 
   /// The shape to fill the [color] of the box.
   final ShapeBorder? shape;
 
   /// Empty space to inscribe around the [child]
+  ///
+  /// Defaults to 8.0 on each side
   final EdgeInsetsGeometry padding;
 
-  /// The shadow color.
+  /// The color of the shadow. Not used if [elevation] is 0
+  ///
+  /// Defaults to black.
   final Color shadowColor;
 
   /// The z-coordinate relative to the box at which to place this physical
   /// object.
+  ///
+  /// See also:
+  ///
+  ///  * [shadowColor]
   final double elevation;
 
   /// Additional constraints to apply to the child.
   final BoxConstraints? constraints;
 
+  /// Whether the background will be an [Acrylic].
+  final bool useAcrylic;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
+
+    final resolvedShape = shape ??
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(
+            width: 0.25,
+            color: theme.inactiveBackgroundColor,
+          ),
+        );
+
     return PhysicalModel(
       elevation: elevation,
       color: Colors.transparent,
       shadowColor: shadowColor,
-      child: Container(
-        constraints: constraints,
-        decoration: ShapeDecoration(
-          color: color ?? theme.menuColor,
-          shape: shape ??
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6.0),
-                side: BorderSide(
-                  width: 0.25,
-                  color: theme.inactiveBackgroundColor,
-                ),
-              ),
-        ),
-        padding: padding,
-        child: DefaultTextStyle(
-          style: theme.typography.body ?? const TextStyle(),
-          child: child,
+      child: Acrylic(
+        tintAlpha: !useAcrylic ? 1.0 : null,
+        shape: resolvedShape,
+        child: Container(
+          constraints: constraints,
+          decoration: ShapeDecoration(
+            color: color ?? theme.menuColor.withOpacity(0.75),
+            shape: resolvedShape,
+          ),
+          padding: padding,
+          child: DefaultTextStyle(
+            style: theme.typography.body ?? const TextStyle(),
+            child: child,
+          ),
         ),
       ),
     );
@@ -76,8 +97,8 @@ class FlyoutContent extends StatelessWidget {
 ///
 /// See also:
 ///
-///  * [Flyout]
-///  * [FlyoutContent]
+///  * [FlyoutTarget], which the flyout is displayed attached to
+///  * [FlyoutContent], the content of the flyout
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
   const FlyoutListTile({
@@ -90,8 +111,9 @@ class FlyoutListTile extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
-    this.margin = const EdgeInsets.only(bottom: 5.0),
+    this.margin = const EdgeInsetsDirectional.only(bottom: 5.0),
     this.selected = false,
+    this.showSelectedIndicator = true,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
@@ -125,10 +147,12 @@ class FlyoutListTile extends StatelessWidget {
 
   final bool selected;
 
+  final bool showSelectedIndicator;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = ContentSizeInfo.of(context).size;
+    final size = ContentSizeInfo.maybeOf(context)?.size;
 
     return HoverButton(
       key: key,
@@ -170,12 +194,13 @@ class FlyoutListTile extends StatelessWidget {
                   ),
                 ),
               Flexible(
-                fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+                fit: size == null || size.isEmpty
+                    ? FlexFit.loose
+                    : FlexFit.tight,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: DefaultTextStyle(
+                  child: DefaultTextStyle.merge(
                     style: TextStyle(
-                      inherit: false,
                       fontSize: 14.0,
                       letterSpacing: -0.15,
                       color: theme.inactiveColor,
@@ -185,9 +210,8 @@ class FlyoutListTile extends StatelessWidget {
                 ),
               ),
               if (trailing != null)
-                DefaultTextStyle(
+                DefaultTextStyle.merge(
                   style: TextStyle(
-                    inherit: false,
                     fontSize: 12.0,
                     color: theme.borderInputColor,
                     height: 0.7,
@@ -196,20 +220,17 @@ class FlyoutListTile extends StatelessWidget {
                 ),
             ]),
           ),
-          if (selected)
-            Positioned(
+          if (selected && showSelectedIndicator)
+            PositionedDirectional(
               top: 0,
               bottom: 0,
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 6.0),
                 width: 2.5,
                 decoration: BoxDecoration(
-                  color: theme.accentColor.resolveFromReverseBrightness(
-                    theme.brightness,
-                  ),
+                  color: theme.accentColor.defaultBrushFor(theme.brightness),
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: trailing!,
               ),
             ),
         ]);

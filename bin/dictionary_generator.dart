@@ -38,17 +38,18 @@ class ResourceDictionary with Diagnosticable {
 ///
 /// This only support the <Color> tag
 void main(List<String> args) async {
-  if (Directory.current.path.split(pathSeparator).last == "bin") {
-    print("Run the generator from the lib/ folder");
+  if (Directory.current.path.split(pathSeparator).last == 'bin') {
+    print('Run the generator from the lib/ folder');
     return;
   }
 
-  final StringBuffer dartFileBuffer = StringBuffer(fileHeader);
+  final dartFileBuffer = StringBuffer(fileHeader);
 
   // Generates
   void generateFor(String dictionary, String constructor) {
-    dartFileBuffer.writeln('\n  // Colors adapted for $constructor mode');
-    dartFileBuffer.writeln('  const ResourceDictionary.$constructor({');
+    dartFileBuffer
+      ..writeln('\n  // Colors adapted for $constructor mode')
+      ..writeln('  const ResourceDictionary.$constructor({');
     for (final resourceLine in dictionary.split('\n')) {
       if (resourceLine.trim().isEmpty) continue;
       final resourceName = () {
@@ -56,7 +57,7 @@ void main(List<String> args) async {
         return split[1];
       }();
 
-      String resourceHex = () {
+      var resourceHex = () {
         final result = resourceLine
             .replaceAll('<Color x:Key="$resourceName">', '')
             .replaceAll('</Color>', '')
@@ -74,7 +75,7 @@ void main(List<String> args) async {
         '    this.${resourceName.lowercaseFirst()} = const Color(0x$resourceHex),',
       );
     }
-    dartFileBuffer.writeln("  });");
+    dartFileBuffer.writeln('  });');
   }
 
   // generates abstract dictionary
@@ -105,7 +106,7 @@ void main(List<String> args) async {
     );
   }
 
-  dartFileBuffer.writeln("  });");
+  dartFileBuffer.writeln('  });');
 
   // generate default dictionary
   generateFor(defaultResourceDirectionary, 'dark');
@@ -114,9 +115,10 @@ void main(List<String> args) async {
   generateFor(lightResourceDictionary, 'light');
 
   // generate lerp method
-  dartFileBuffer.writeln(
-      '\n  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t,) {');
-  dartFileBuffer.writeln('    return ResourceDictionary.raw(');
+  dartFileBuffer
+    ..writeln(
+        '\n  static ResourceDictionary lerp(ResourceDictionary a, ResourceDictionary b, double t,) {')
+    ..writeln('    return ResourceDictionary.raw(');
   for (final resourceLine in defaultResourceDirectionary.split('\n')) {
     if (resourceLine.trim().isEmpty) continue;
     final resourceName = () {
@@ -129,15 +131,14 @@ void main(List<String> args) async {
       '      $resourceName: Color.lerp(a.$resourceName, b.$resourceName, t,)!,',
     );
   }
-  dartFileBuffer.writeln('    );');
-  dartFileBuffer.writeln('  }');
-
-  // generate debugFillProperties method
-
-  dartFileBuffer.writeln(
-      '\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {');
-  dartFileBuffer.writeln('    super.debugFillProperties(properties);');
-  dartFileBuffer.writeln('properties');
+  dartFileBuffer
+    ..writeln('    );')
+    ..writeln('  }')
+    // generate debugFillProperties method
+    ..writeln(
+        '\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {')
+    ..writeln('    super.debugFillProperties(properties);')
+    ..writeln('properties');
   for (final resourceLine in defaultResourceDirectionary.split('\n')) {
     if (resourceLine.trim().isEmpty) continue;
     final resourceName = () {
@@ -147,15 +148,15 @@ void main(List<String> args) async {
         .lowercaseFirst();
 
     dartFileBuffer.writeln(
-      '    ..add(ColorProperty(\'${resourceName.lowercaseFirst()}\', $resourceName))',
+      "    ..add(ColorProperty('${resourceName.lowercaseFirst()}', $resourceName))",
     );
   }
-  dartFileBuffer.writeln(';');
-  dartFileBuffer.writeln('  }');
+  dartFileBuffer
+    ..writeln(';')
+    ..writeln('  }')
+    ..writeln('}');
 
-  dartFileBuffer.writeln("}");
-
-  final outputFile = File("lib/src/styles/color_resources.dart");
+  final outputFile = File('lib/src/styles/color_resources.dart');
   final formatProcess = await Process.start(
     'flutter',
     ['format', outputFile.path],

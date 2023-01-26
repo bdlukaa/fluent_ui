@@ -56,8 +56,8 @@ class Mica extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
-    final Color boxColor = backgroundColor ?? theme.micaBackgroundColor;
+    final theme = FluentTheme.of(context);
+    final boxColor = backgroundColor ?? theme.micaBackgroundColor;
     final Widget result = DecoratedBox(
       decoration: BoxDecoration(
         color: boxColor,

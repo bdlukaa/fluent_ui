@@ -31,12 +31,13 @@ class NavigationIndicator extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty(
-      'curve',
-      curve,
-      defaultValue: Curves.linear,
-    ));
-    properties.add(ColorProperty('highlight color', color));
+    properties
+      ..add(DiagnosticsProperty(
+        'curve',
+        curve,
+        defaultValue: Curves.linear,
+      ))
+      ..add(ColorProperty('highlight color', color));
   }
 
   @override
@@ -51,7 +52,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     super.initState();
     fetch();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 
@@ -129,7 +130,8 @@ class EndNavigationIndicator extends NavigationIndicator {
   final Color unselectedColor;
 
   @override
-  _EndNavigationIndicatorState createState() => _EndNavigationIndicatorState();
+  NavigationIndicatorState<EndNavigationIndicator> createState() =>
+      _EndNavigationIndicatorState();
 }
 
 class _EndNavigationIndicatorState
@@ -139,7 +141,7 @@ class _EndNavigationIndicatorState
     if (selectedIndex.isNegative) return const SizedBox.shrink();
     assert(debugCheckHasFluentTheme(context));
 
-    final bool isTop = axis == Axis.vertical;
+    final isTop = axis == Axis.vertical;
     final theme = NavigationPaneTheme.of(context);
 
     return IgnorePointer(
@@ -192,7 +194,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   final double leftPadding;
 
   @override
-  _StickyNavigationIndicatorState createState() =>
+  NavigationIndicatorState<StickyNavigationIndicator> createState() =>
       _StickyNavigationIndicatorState();
 }
 
@@ -253,12 +255,12 @@ class _StickyNavigationIndicatorState
     animate();
   }
 
-  void animate() async {
+  Future<void> animate() async {
     if (!mounted) {
       return;
     }
 
-    _old = (PageStorage.of(context)?.readState(
+    _old = (PageStorage.of(context).readState(
           context,
           identifier: 'oldIndex$itemIndex',
         ) as num?)
@@ -310,7 +312,7 @@ class _StickyNavigationIndicatorState
 
     _old = oldIndex;
     if (mounted) {
-      PageStorage.of(context)?.writeState(
+      PageStorage.of(context).writeState(
         context,
         _old,
         identifier: 'oldIndex$itemIndex',
@@ -330,8 +332,8 @@ class _StickyNavigationIndicatorState
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
 
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final bool isHorizontal = axis == Axis.horizontal;
+    final theme = NavigationPaneTheme.of(context);
+    final isHorizontal = axis == Axis.horizontal;
 
     final decoration = BoxDecoration(
       color: widget.color ?? theme.highlightColor,
@@ -349,7 +351,7 @@ class _StickyNavigationIndicatorState
                   child: Container(width: 2.5, decoration: decoration),
                 )
               : Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: AlignmentDirectional.bottomCenter,
                   child: Container(height: 2.5, decoration: decoration),
                 ),
           builder: (context, child) {
@@ -361,8 +363,8 @@ class _StickyNavigationIndicatorState
             }
             return Padding(
               padding: isHorizontal
-                  ? EdgeInsets.only(
-                      left: () {
+                  ? EdgeInsetsDirectional.only(
+                      start: () {
                         final x = offsets![itemIndex].dx;
                         if (parent != null) {
                           final isOpen =

@@ -85,7 +85,7 @@ class ContentDialog extends StatelessWidget {
       FluentTheme.of(context).dialogTheme.merge(this.style),
     );
     return Align(
-      alignment: Alignment.center,
+      alignment: AlignmentDirectional.center,
       child: Container(
         constraints: constraints,
         decoration: style.decoration,
@@ -131,7 +131,7 @@ class ContentDialog extends StatelessWidget {
                   child: () {
                     if (actions!.length == 1) {
                       return Align(
-                        alignment: Alignment.centerRight,
+                        alignment: AlignmentDirectional.centerEnd,
                         child: actions!.first,
                       );
                     }
@@ -230,7 +230,7 @@ Future<T?> showDialog<T extends Object?>({
 }) {
   assert(debugCheckHasFluentLocalizations(context));
 
-  final CapturedThemes themes = InheritedTheme.capture(
+  final themes = InheritedTheme.capture(
     from: context,
     to: Navigator.of(
       context,
@@ -404,7 +404,7 @@ class ContentDialogThemeData {
         boxShadow: kElevationToShadow[6],
       ),
       padding: const EdgeInsets.all(20),
-      titlePadding: const EdgeInsets.only(bottom: 12),
+      titlePadding: const EdgeInsetsDirectional.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
         color: style.micaBackgroundColor,

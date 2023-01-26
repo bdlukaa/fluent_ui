@@ -5,6 +5,92 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
+typedef InfoBarPopupBuilder = Widget Function(
+  BuildContext context,
+  VoidCallback close,
+);
+
+/// Displays an InfoBar as a popup
+///
+/// [duration] is the duration that the popup will be in the screen
+///
+/// ```dart
+/// displayInfoBar(
+///   context,
+///   builder: (context, close) {
+///     return InfoBar(
+///       title: Text('Title'),
+///       action: IconButton(
+///         icon: const Icon(FluentIcons.clear),
+///         onPressed: close,
+///       ),
+///     );
+///   }
+/// )
+/// ```
+Future<void> displayInfoBar(
+  BuildContext context, {
+  required InfoBarPopupBuilder builder,
+  Duration duration = const Duration(seconds: 3),
+}) async {
+  assert(debugCheckHasOverlay(context));
+  assert(debugCheckHasFluentTheme(context));
+
+  final theme = FluentTheme.of(context);
+
+  late OverlayEntry entry;
+
+  var isFading = true;
+
+  var alreadyInitialized = false;
+
+  entry = OverlayEntry(builder: (context) {
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 24.0,
+            horizontal: 16.0,
+          ),
+          child: StatefulBuilder(builder: (context, setState) {
+            void close() async {
+              if (entry.mounted) setState(() => isFading = true);
+
+              await Future.delayed(theme.mediumAnimationDuration);
+
+              if (entry.mounted) entry.remove();
+            }
+
+            Future.delayed(theme.mediumAnimationDuration).then((_) {
+              if (entry.mounted && !alreadyInitialized) {
+                setState(() => isFading = false);
+              }
+
+              alreadyInitialized = true;
+            }).then((_) => Future.delayed(duration).then((_) => close()));
+
+            return AnimatedSwitcher(
+              duration: theme.mediumAnimationDuration,
+              switchInCurve: theme.animationCurve,
+              switchOutCurve: theme.animationCurve,
+              child: isFading
+                  ? const SizedBox.shrink()
+                  : PhysicalModel(
+                      color: Colors.transparent,
+                      elevation: 8.0,
+                      child: builder(context, close),
+                    ),
+            );
+          }),
+        ),
+      ),
+    );
+  });
+
+  Overlay.of(context).insert(entry);
+}
+
 // This file implements info bar into this library.
 // It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
 
@@ -103,7 +189,6 @@ class InfoBar extends StatelessWidget {
       if (this.content == null) return null;
       return DefaultTextStyle(
         style: theme.typography.body ?? const TextStyle(),
-        softWrap: true,
         child: this.content!,
       );
     }();
@@ -230,8 +315,7 @@ class InfoBarTheme extends InheritedTheme {
   /// InfoBarThemeData theme = InfoBarTheme.of(context);
   /// ```
   static InfoBarThemeData of(BuildContext context) {
-    final InfoBarTheme? theme =
-        context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
     return InfoBarThemeData.standard(FluentTheme.of(context)).merge(
       theme?.data ?? FluentTheme.of(context).infoBarTheme,
     );
@@ -299,7 +383,6 @@ class InfoBarThemeData with Diagnosticable {
           color: color,
           borderRadius: BorderRadius.circular(4.0),
           border: Border.all(
-            width: 1.0,
             color: style.resources.cardStrokeColorDefault,
           ),
         );

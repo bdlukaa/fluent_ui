@@ -2,10 +2,9 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter/rendering.dart';
 
 /// A slider is a control that lets the user select from a range of values by
 /// moving a thumb control along a track.
@@ -200,7 +199,7 @@ class Slider extends StatefulWidget {
   final MouseCursor mouseCursor;
 
   @override
-  _SliderState createState() => _SliderState();
+  State<Slider> createState() => _SliderState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -273,7 +272,6 @@ class _SliderState extends m.State<Slider> {
               thumbColor: style.thumbColor?.resolve(states),
               overlayShape: const m.RoundSliderOverlayShape(overlayRadius: 0),
               thumbShape: SliderThumbShape(
-                elevation: 1.0,
                 pressedElevation: 1.0,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
@@ -327,7 +325,6 @@ class _SliderState extends m.State<Slider> {
       onShowFocusHighlight: (v) => setState(() => _showFocusHighlight = v),
       child: FocusBorder(
         focused: _showFocusHighlight && (_focusNode.hasPrimaryFocus),
-        useStackApproach: true,
         child: child,
       ),
     );
@@ -351,11 +348,10 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    final double trackHeight = sliderTheme.trackHeight!;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
+    final trackHeight = sliderTheme.trackHeight!;
+    final trackLeft = offset.dx;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 
@@ -368,9 +364,10 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
     required Animation<double> enableAnimation,
     required TextDirection textDirection,
     required Offset thumbCenter,
+    Offset? secondaryOffset,
     bool isDiscrete = false,
     bool isEnabled = false,
-    double additionalActiveTrackHeight = 0,
+    double additionalActiveTrackHeight = 2,
   }) {
     return super.paint(
       context,
@@ -462,18 +459,18 @@ class SliderThumbShape extends m.SliderComponentShape {
     assert(sliderTheme.disabledThumbColor != null);
     assert(sliderTheme.thumbColor != null);
 
-    final Canvas canvas = context.canvas;
-    final Tween<double> radiusTween = Tween<double>(
+    final canvas = context.canvas;
+    final radiusTween = Tween<double>(
       begin: _disabledThumbRadius,
       end: enabledThumbRadius,
     );
-    final ColorTween colorTween = ColorTween(
+    final colorTween = ColorTween(
       begin: sliderTheme.disabledThumbColor,
       end: sliderTheme.thumbColor,
     );
 
-    final Color color = colorTween.evaluate(enableAnimation)!;
-    final double radius = radiusTween.evaluate(enableAnimation);
+    final color = colorTween.evaluate(enableAnimation)!;
+    final radius = radiusTween.evaluate(enableAnimation);
 
     if (!useBall) {
       canvas.drawLine(
@@ -487,29 +484,29 @@ class SliderThumbShape extends m.SliderComponentShape {
           ..strokeWidth = 8.0,
       );
     } else {
-      final Tween<double> elevationTween = Tween<double>(
+      final elevationTween = Tween<double>(
         begin: elevation,
         end: pressedElevation,
       );
-      final double evaluatedElevation =
-          elevationTween.evaluate(activationAnimation);
-      final Path path = Path()
+      final evaluatedElevation = elevationTween.evaluate(activationAnimation);
+      final path = Path()
         ..addArc(
             Rect.fromCenter(
                 center: center, width: 2 * radius, height: 2 * radius),
             0,
             math.pi * 2);
-      canvas.drawShadow(path, Colors.black, evaluatedElevation, true);
-      canvas.drawCircle(
-        center,
-        radius,
-        Paint()..color = borderColor,
-      );
-      canvas.drawCircle(
-        center,
-        radius * innerFactor,
-        Paint()..color = color,
-      );
+      canvas
+        ..drawShadow(path, Colors.black, evaluatedElevation, true)
+        ..drawCircle(
+          center,
+          radius,
+          Paint()..color = borderColor,
+        )
+        ..drawCircle(
+          center,
+          radius * innerFactor,
+          Paint()..color = color,
+        );
     }
   }
 }
@@ -663,11 +660,12 @@ class SliderThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin));
-    properties.add(DiagnosticsProperty('thumbColor', thumbColor));
-    properties.add(DiagnosticsProperty('activeColor', activeColor));
-    properties.add(DiagnosticsProperty('inactiveColor', inactiveColor));
-    properties.add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
+    properties
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
+      ..add(DiagnosticsProperty('thumbColor', thumbColor))
+      ..add(DiagnosticsProperty('activeColor', activeColor))
+      ..add(DiagnosticsProperty('inactiveColor', inactiveColor))
+      ..add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
   }
 }
 
@@ -718,8 +716,8 @@ class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
     required double textScaleFactor,
     required Size sizeWithOverflow,
   }) {
-    final Canvas canvas = context.canvas;
-    final double scale = activationAnimation.value;
+    final canvas = context.canvas;
+    final scale = activationAnimation.value;
     _pathPainter.paint(
       parentBox: parentBox,
       canvas: canvas,
@@ -770,13 +768,13 @@ class _RectangularSliderValueIndicatorPathPainter {
   }) {
     assert(!sizeWithOverflow.isEmpty);
 
-    const double edgePadding = 8.0;
-    final double rectangleWidth =
+    const edgePadding = 8.0;
+    final rectangleWidth =
         _upperRectangleWidth(labelPainter, scale, textScaleFactor);
 
     /// Value indicator draws on the Overlay and by using the global Offset
     /// we are making sure we use the bounds of the Overlay instead of the Slider.
-    final Offset globalCenter = parentBox.localToGlobal(center);
+    final globalCenter = parentBox.localToGlobal(center);
 
     // The rectangle must be shifted towards the center so that it minimizes the
     // chance of it rendering outside the bounds of the render box. If the shift
@@ -803,7 +801,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     double scale,
     double textScaleFactor,
   ) {
-    final double unscaledWidth =
+    final unscaledWidth =
         math.max(_minLabelWidth * textScaleFactor, labelPainter.width) +
             _labelPadding;
     return unscaledWidth * scale;
@@ -826,12 +824,12 @@ class _RectangularSliderValueIndicatorPathPainter {
     }
     assert(!sizeWithOverflow.isEmpty);
 
-    final double rectangleWidth = _upperRectangleWidth(
+    final rectangleWidth = _upperRectangleWidth(
       labelPainter,
       scale,
       textScaleFactor,
     );
-    final double horizontalShift = getHorizontalShift(
+    final horizontalShift = getHorizontalShift(
       parentBox: parentBox,
       center: center,
       labelPainter: labelPainter,
@@ -840,17 +838,17 @@ class _RectangularSliderValueIndicatorPathPainter {
       scale: scale,
     );
 
-    final double rectHeight = labelPainter.height + _labelPadding;
-    final Rect upperRect = Rect.fromLTWH(
+    final rectHeight = labelPainter.height + _labelPadding;
+    final upperRect = Rect.fromLTWH(
       -rectangleWidth / 2 + horizontalShift,
       -_triangleHeight - rectHeight,
       rectangleWidth,
       rectHeight,
     );
 
-    final Path trianglePath = Path()..close();
-    final Paint fillPaint = Paint()..color = backgroundPaintColor;
-    final RRect upperRRect = RRect.fromRectAndRadius(
+    final trianglePath = Path()..close();
+    final fillPaint = Paint()..color = backgroundPaintColor;
+    final upperRRect = RRect.fromRectAndRadius(
       upperRect,
       const Radius.circular(_upperRectRadius),
     );
@@ -858,27 +856,28 @@ class _RectangularSliderValueIndicatorPathPainter {
     canvas.save();
     // Prepare the canvas for the base of the tooltip, which is relative to the
     // center of the thumb.
-    final double verticalFactor = ltr ? 20.0 : 10.0;
-    canvas.translate(
-      center.dx +
-          (vertical
-              ? ltr
-                  ? -verticalFactor
-                  : verticalFactor * 2
-              : 0),
-      center.dy -
-          _bottomTipYOffset +
-          (vertical
-              ? ltr
-                  ? -verticalFactor
-                  : -verticalFactor * 2
-              : 0),
-    );
-    canvas.scale(scale, scale);
+    final verticalFactor = ltr ? 20.0 : 10.0;
+    canvas
+      ..translate(
+        center.dx +
+            (vertical
+                ? ltr
+                    ? -verticalFactor
+                    : verticalFactor * 2
+                : 0),
+        center.dy -
+            _bottomTipYOffset +
+            (vertical
+                ? ltr
+                    ? -verticalFactor
+                    : -verticalFactor * 2
+                : 0),
+      )
+      ..scale(scale, scale);
     // Rotate the label if it's vertical
     if (vertical) canvas.rotate((ltr ? 1 : -1) * math.pi / 2);
     if (strokePaintColor != null) {
-      final Paint strokePaint = Paint()
+      final strokePaint = Paint()
         ..color = strokePaintColor
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
@@ -887,13 +886,13 @@ class _RectangularSliderValueIndicatorPathPainter {
     canvas.drawPath(trianglePath, fillPaint);
 
     // The label text is centered within the value indicator.
-    final double bottomTipToUpperRectTranslateY =
+    final bottomTipToUpperRectTranslateY =
         -_preferredHalfHeight / 2 - upperRect.height;
     canvas.translate(0, bottomTipToUpperRectTranslateY);
-    final Offset boxCenter = Offset(horizontalShift, upperRect.height / 2);
-    final Offset halfLabelPainterOffset =
+    final boxCenter = Offset(horizontalShift, upperRect.height / 2);
+    final halfLabelPainterOffset =
         Offset(labelPainter.width / 2, labelPainter.height / 2);
-    final Offset labelOffset = boxCenter - halfLabelPainterOffset;
+    final labelOffset = boxCenter - halfLabelPainterOffset;
     labelPainter.paint(canvas, labelOffset);
     canvas.restore();
   }

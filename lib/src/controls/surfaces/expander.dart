@@ -11,25 +11,25 @@ enum ExpanderDirection {
   up,
 }
 
-/// The [Expander] control lets you show or hide less important content
-/// that's related to a piece of primary content that's always visible.
-/// Items contained in the Header are always visible. The user can expand
-/// and collapse the Content area, where secondary content is displayed,
-/// by interacting with the header. When the content area is expanded,
-/// it pushes other UI elements out of the way; it does not overlay other
-/// UI. The Expander can expand upwards or downwards.
+/// The [Expander] control lets you show or hide less important content that's
+/// related to a piece of primary content that's always visible. Items contained
+/// in the Header are always visible. The user can expand and collapse the Content
+/// area, where secondary content is displayed, by interacting with the header.
+/// When the content area is expanded, it pushes other UI elements out of the
+/// way; it does not overlay other UI. The Expander can expand upwards or
+/// downwards.
 ///
-/// Both the Header and Content areas can contain any content, from simple
-/// text to complex UI layouts. For example, you can use the control to show
-/// additional options for an item.
+/// Both the Header and Content areas can contain any content, from simple text
+/// to complex UI layouts. For example, you can use the control to show additional
+/// options for an item.
 ///
 /// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
-  /// Creates an expander
+  /// Creates a fluent-styled expander.
   const Expander({
     Key? key,
     this.leading,
@@ -52,14 +52,14 @@ class Expander extends StatefulWidget {
   ///
   /// See also:
   ///
-  ///  * [Icon]
-  ///  * [RadioButton]
-  ///  * [Checkbox]
+  ///  * [Icon], used to display graphic content
+  ///  * [RadioButton], used to select an exclusive option from a set of options
+  ///  * [Checkbox], used to select or deselect items within a list
   final Widget? leading;
 
   /// The expander header
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget header;
 
   /// The expander content
@@ -82,12 +82,14 @@ class Expander extends StatefulWidget {
   ///  * [ToggleSwitch]
   final Widget? trailing;
 
-  /// The expand-collapse animation duration. If null, defaults to
-  /// [FluentTheme.fastAnimationDuration]
+  /// The expand-collapse animation duration.
+  ///
+  /// If null, defaults to [ThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
-  /// The expand-collapse animation curve. If null, defaults to
-  /// [FluentTheme.animationCurve]
+  /// The expand-collapse animation curve.
+  ///
+  /// If null, defaults to [ThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The expand direction. Defaults to [ExpanderDirection.down]
@@ -111,20 +113,21 @@ class Expander extends StatefulWidget {
   /// The content color of the header
   final Color? contentBackgroundColor;
 
+  /// The shape of the header
   final ShapeBuilder? headerShape;
 
   @override
-  ExpanderState createState() => ExpanderState();
+  State<Expander> createState() => ExpanderState();
 }
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late ThemeData _theme;
 
-  bool? _open;
-  bool get open => _open ?? false;
-  set open(bool value) {
-    if (_open != value) _handlePressed();
+  late bool _isExpanded;
+  bool get isExpanded => _isExpanded;
+  set isExpanded(bool value) {
+    if (_isExpanded != value) _handlePressed();
   }
 
   late AnimationController _controller;
@@ -133,12 +136,9 @@ class ExpanderState extends State<Expander>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _open = PageStorage.of(context)?.readState(
-          context,
-          identifier: 'expanderOpen',
-        ) as bool? ??
+    _isExpanded = PageStorage.of(context).readState(context) as bool? ??
         widget.initiallyExpanded;
-    if (_open == true) {
+    if (_isExpanded == true) {
       _controller.value = 1;
     }
   }
@@ -147,34 +147,26 @@ class ExpanderState extends State<Expander>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _theme = FluentTheme.of(context);
-    if (_open == null) {
-      _open = !widget.initiallyExpanded;
-      open = widget.initiallyExpanded;
-    }
   }
 
   void _handlePressed() {
-    if (open) {
+    if (_isExpanded) {
       _controller.animateTo(
         0.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = false;
+      _isExpanded = false;
     } else {
       _controller.animateTo(
         1.0,
         duration: widget.animationDuration ?? _theme.fastAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
-      _open = true;
+      _isExpanded = true;
     }
-    PageStorage.of(context)?.writeState(
-      context,
-      open,
-      identifier: 'expanderOpen',
-    );
-    widget.onStateChanged?.call(open);
+    PageStorage.of(context).writeState(context, _isExpanded);
+    widget.onStateChanged?.call(_isExpanded);
     if (mounted) setState(() {});
   }
 
@@ -196,20 +188,21 @@ class ExpanderState extends State<Expander>
       // HEADER
       HoverButton(
         onPressed: _handlePressed,
+        hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
             height: widget.headerHeight,
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
-              shape: widget.headerShape?.call(open) ??
+              shape: widget.headerShape?.call(_isExpanded) ??
                   RoundedRectangleBorder(
                     side: BorderSide(
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
                       top: const Radius.circular(4.0),
-                      bottom: Radius.circular(open ? 0.0 : 4.0),
+                      bottom: Radius.circular(_isExpanded ? 0.0 : 4.0),
                     ),
                   ),
             ),
@@ -243,7 +236,7 @@ class ExpanderState extends State<Expander>
                           ButtonThemeData.uncheckedInputColor(_theme, states),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    alignment: Alignment.center,
+                    alignment: AlignmentDirectional.center,
                     child: widget.icon ??
                         RotationTransition(
                           turns: Tween<double>(begin: 0, end: 0.5)

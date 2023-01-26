@@ -8,6 +8,7 @@ class Card extends StatelessWidget {
     this.padding = const EdgeInsets.all(12.0),
     this.margin,
     this.backgroundColor,
+    this.borderColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
   }) : super(key: key);
 
@@ -15,15 +16,20 @@ class Card extends StatelessWidget {
   final Widget child;
 
   /// The padding around [child]
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   /// The margin around [child]
-  final EdgeInsets? margin;
+  final EdgeInsetsGeometry? margin;
 
   /// The card's background color.
   ///
   /// If null, [ThemeData.cardColor] is used
   final Color? backgroundColor;
+
+  /// The card's border color.
+  ///
+  /// If null, [ResourceDictionary.cardStrokeColorDefault] is used
+  final Color? borderColor;
 
   /// The rounded corners of this card
   ///
@@ -41,7 +47,7 @@ class Card extends StatelessWidget {
         color: backgroundColor ?? theme.cardColor,
         borderRadius: borderRadius,
         border: Border.all(
-          color: theme.resources.cardStrokeColorDefault,
+          color: borderColor ?? theme.resources.cardStrokeColorDefault,
         ),
       ),
       padding: padding,

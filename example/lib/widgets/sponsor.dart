@@ -104,7 +104,7 @@ class _Tier extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(right: 6.0, top: 9.0),
+                padding: EdgeInsetsDirectional.only(end: 6.0, top: 9.0),
                 child: Icon(FluentIcons.circle_fill, size: 4.0),
               ),
               Expanded(child: Text(benefit)),

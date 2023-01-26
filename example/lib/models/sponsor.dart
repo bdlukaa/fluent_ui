@@ -1,11 +1,6 @@
 /// Current sponsors of the project <3
 const sponsors = [
   Sponsor(
-    username: 'bariccattion',
-    imageUrl: 'https://avatars.githubusercontent.com/u/19714408?v=4',
-    name: 'Rafael Gongora Bariccatti',
-  ),
-  Sponsor(
     username: 'h3x4d3c1m4l',
     imageUrl: 'https://avatars.githubusercontent.com/u/2611894?v=4',
     name: 'Sander in \'t Hout',
@@ -19,11 +14,6 @@ const sponsors = [
     username: 'whiplashoo',
     imageUrl: 'https://avatars.githubusercontent.com/u/9117427?v=4',
     name: 'Minas Giannekas',
-  ),
-  Sponsor(
-    username: 'TimeLord2010',
-    imageUrl: 'https://avatars.githubusercontent.com/u/50129092?v=4',
-    name: 'Vinícius Velloso',
   ),
   Sponsor(
     username: 'henry2man',

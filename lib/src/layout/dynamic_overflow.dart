@@ -103,23 +103,24 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<Axis>('direction', direction));
-    properties.add(EnumProperty<MainAxisAlignment>('alignment', alignment));
-    properties.add(EnumProperty<CrossAxisAlignment>(
-        'crossAxisAlignment', crossAxisAlignment));
-    properties.add(EnumProperty<TextDirection>('textDirection', textDirection,
-        defaultValue: null));
-    properties.add(EnumProperty<VerticalDirection>(
-        'verticalDirection', verticalDirection));
-    properties.add(EnumProperty<Clip>('clipBehavior', clipBehavior));
-    properties.add(EnumProperty<MainAxisAlignment>(
-        'overflowWidgetAlignment', overflowWidgetAlignment));
-    properties.add(FlagProperty(
-      'alwaysDisplayOverflowWidget',
-      value: alwaysDisplayOverflowWidget,
-      ifTrue: 'always display overflow widget',
-      ifFalse: 'do not always display overflow widget',
-    ));
+    properties
+      ..add(EnumProperty<Axis>('direction', direction))
+      ..add(EnumProperty<MainAxisAlignment>('alignment', alignment))
+      ..add(EnumProperty<CrossAxisAlignment>(
+          'crossAxisAlignment', crossAxisAlignment))
+      ..add(EnumProperty<TextDirection>('textDirection', textDirection,
+          defaultValue: null))
+      ..add(EnumProperty<VerticalDirection>(
+          'verticalDirection', verticalDirection))
+      ..add(EnumProperty<Clip>('clipBehavior', clipBehavior))
+      ..add(EnumProperty<MainAxisAlignment>(
+          'overflowWidgetAlignment', overflowWidgetAlignment))
+      ..add(FlagProperty(
+        'alwaysDisplayOverflowWidget',
+        value: alwaysDisplayOverflowWidget,
+        ifTrue: 'always display overflow widget',
+        ifFalse: 'do not always display overflow widget',
+      ));
   }
 }
 
@@ -284,8 +285,8 @@ class RenderDynamicOverflow extends RenderBox
       case Axis.horizontal:
         // The min intrinsic width is the width of the last child, which must
         // be the renderbox of the "overflow widget"
-        double width = 0.0;
-        RenderBox? child = lastChild;
+        var width = 0.0;
+        var child = lastChild;
         if (child != null) {
           width = child.getMinIntrinsicWidth(double.infinity);
         }
@@ -302,9 +303,9 @@ class RenderDynamicOverflow extends RenderBox
         // The max intrinsic width is the width of all children, except
         // potentially the last child if we do not always display the
         // "overflow widget"
-        double width = 0.0;
-        double lastChildWidth = 0.0;
-        RenderBox? child = firstChild;
+        var width = 0.0;
+        var lastChildWidth = 0.0;
+        var child = firstChild;
         while (child != null) {
           lastChildWidth = child.getMaxIntrinsicWidth(double.infinity);
           width += lastChildWidth;
@@ -329,8 +330,8 @@ class RenderDynamicOverflow extends RenderBox
       case Axis.vertical:
         // The min intrinsic height is the height of the last child, which must
         // be the renderbox of the "overflow widget"
-        double height = 0.0;
-        RenderBox? child = lastChild;
+        var height = 0.0;
+        var child = lastChild;
         if (child != null) {
           height = child.getMinIntrinsicHeight(double.infinity);
         }
@@ -347,9 +348,9 @@ class RenderDynamicOverflow extends RenderBox
         // The max intrinsic height is the height of all children, except
         // potentially the last child if we do not always display the
         // "overflow widget"
-        double height = 0.0;
-        double lastChildHeight = 0.0;
-        RenderBox? child = firstChild;
+        var height = 0.0;
+        var lastChildHeight = 0.0;
+        var child = firstChild;
         while (child != null) {
           lastChildHeight = child.getMaxIntrinsicHeight(double.infinity);
           height += lastChildHeight;
@@ -398,7 +399,7 @@ class RenderDynamicOverflow extends RenderBox
 
   double _getChildCrossAxisOffset(
       bool flipCrossAxis, double crossAxisExtent, double childCrossAxisExtent) {
-    final double freeSpace = crossAxisExtent - childCrossAxisExtent;
+    final freeSpace = crossAxisExtent - childCrossAxisExtent;
     switch (crossAxisAlignment) {
       case CrossAxisAlignment.start:
         return flipCrossAxis ? freeSpace : 0.0;
@@ -408,10 +409,10 @@ class RenderDynamicOverflow extends RenderBox
         return freeSpace / 2.0;
       case CrossAxisAlignment.stretch:
         throw UnsupportedError(
-            "CrossAxisAlignment.stretch is not supported by DynamicOverflow");
+            'CrossAxisAlignment.stretch is not supported by DynamicOverflow');
       case CrossAxisAlignment.baseline:
         throw UnsupportedError(
-            "CrossAxisAlignment.baseline is not supported by DynamicOverflow");
+            'CrossAxisAlignment.baseline is not supported by DynamicOverflow');
     }
   }
 
@@ -427,7 +428,7 @@ class RenderDynamicOverflow extends RenderBox
   Size _computeDryLayout(BoxConstraints constraints,
       [ChildLayouter layoutChild = ChildLayoutHelper.dryLayoutChild]) {
     final BoxConstraints childConstraints;
-    double mainAxisLimit = 0.0;
+    var mainAxisLimit = 0.0;
     switch (direction) {
       case Axis.horizontal:
         childConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
@@ -440,22 +441,22 @@ class RenderDynamicOverflow extends RenderBox
     }
 
     // The last item is always the overflow item
-    double overflowItemMainAxisExtent = 0.0;
-    double overflowItemCrossAxisExtent = 0.0;
+    var overflowItemMainAxisExtent = 0.0;
+    var overflowItemCrossAxisExtent = 0.0;
     if (lastChild != null) {
-      final Size lastChildSize = layoutChild(lastChild!, childConstraints);
+      final lastChildSize = layoutChild(lastChild!, childConstraints);
       overflowItemMainAxisExtent = _getMainAxisExtent(lastChildSize);
       overflowItemCrossAxisExtent = _getCrossAxisExtent(lastChildSize);
     }
 
-    double mainAxisExtent = 0.0;
-    double crossAxisExtent = 0.0;
-    bool overflowed = false;
-    RenderBox? child = firstChild;
+    var mainAxisExtent = 0.0;
+    var crossAxisExtent = 0.0;
+    var overflowed = false;
+    var child = firstChild;
     while (child != null && child != lastChild) {
-      final Size childSize = layoutChild(child, childConstraints);
-      final double childMainAxisExtent = _getMainAxisExtent(childSize);
-      final double childCrossAxisExtent = _getCrossAxisExtent(childSize);
+      final childSize = layoutChild(child, childConstraints);
+      final childMainAxisExtent = _getMainAxisExtent(childSize);
+      final childCrossAxisExtent = _getCrossAxisExtent(childSize);
 
       // To keep things simpler, always include the extent of the overflow item
       // in the run limit calculation, even if it would not need to be displayed.
@@ -489,17 +490,17 @@ class RenderDynamicOverflow extends RenderBox
 
   @override
   void performLayout() {
-    final BoxConstraints constraints = this.constraints;
+    final constraints = this.constraints;
     assert(_debugHasNecessaryDirections);
-    RenderBox? child = firstChild;
+    var child = firstChild;
     if (child == null) {
       size = constraints.smallest;
       return;
     }
     final BoxConstraints childConstraints;
-    double mainAxisLimit = 0.0;
-    bool flipMainAxis = false;
-    bool flipCrossAxis = false;
+    var mainAxisLimit = 0.0;
+    var flipMainAxis = false;
+    var flipCrossAxis = false;
     switch (direction) {
       case Axis.horizontal:
         childConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
@@ -516,29 +517,29 @@ class RenderDynamicOverflow extends RenderBox
     }
 
     // The last item is always the overflow item
-    double overflowItemMainAxisExtent = 0.0;
-    double overflowItemCrossAxisExtent = 0.0;
+    var overflowItemMainAxisExtent = 0.0;
+    var overflowItemCrossAxisExtent = 0.0;
     if (lastChild != null) {
       lastChild!.layout(childConstraints, parentUsesSize: true);
       overflowItemMainAxisExtent = _getMainAxisExtent(lastChild!.size);
       overflowItemCrossAxisExtent = _getCrossAxisExtent(lastChild!.size);
     }
 
-    double mainAxisExtent = 0.0;
-    double crossAxisExtent = 0.0;
-    int childIndex = 0;
-    int visibleChildCount = 0;
-    bool overflowed = false;
-    bool overflowItemVisible = false;
+    var mainAxisExtent = 0.0;
+    var crossAxisExtent = 0.0;
+    var childIndex = 0;
+    var visibleChildCount = 0;
+    var overflowed = false;
+    var overflowItemVisible = false;
     // Indexes of hidden children. Never includes the index for the
     // overflow item.
-    List<int> hiddenChildren = [];
+    var hiddenChildren = <int>[];
     // First determine how many items will fit into the one run and
     // if there is any overflow.
     while (child != null && child != lastChild) {
       child.layout(childConstraints, parentUsesSize: true);
-      final double childMainAxisExtent = _getMainAxisExtent(child.size);
-      final double childCrossAxisExtent = _getCrossAxisExtent(child.size);
+      final childMainAxisExtent = _getMainAxisExtent(child.size);
+      final childCrossAxisExtent = _getCrossAxisExtent(child.size);
 
       // To keep things simpler, always include the extent of the overflow item
       // in the run limit calculation, even if it would not need to be displayed.
@@ -566,9 +567,8 @@ class RenderDynamicOverflow extends RenderBox
       }
 
       childIndex += 1;
-      final DynamicOverflowParentData childParentData =
-          child.parentData! as DynamicOverflowParentData;
-      childParentData._isHidden = overflowed;
+      final childParentData = (child.parentData! as DynamicOverflowParentData)
+        .._isHidden = overflowed;
       child = childParentData.nextSibling;
     }
     if (!overflowed && _alwaysDisplayOverflowWidget) {
@@ -577,9 +577,8 @@ class RenderDynamicOverflow extends RenderBox
       overflowItemVisible = true;
     }
     if (lastChild != null) {
-      final DynamicOverflowParentData overflowItemParentData =
-          lastChild!.parentData! as DynamicOverflowParentData;
-      overflowItemParentData._isHidden = !overflowItemVisible;
+      (lastChild!.parentData! as DynamicOverflowParentData)._isHidden =
+          !overflowItemVisible;
     }
     if (overflowItemVisible) {
       // The overflow item should be counted as visible so that spacing
@@ -587,8 +586,8 @@ class RenderDynamicOverflow extends RenderBox
       visibleChildCount += 1;
     }
 
-    double containerMainAxisExtent = 0.0;
-    double containerCrossAxisExtent = 0.0;
+    var containerMainAxisExtent = 0.0;
+    var containerCrossAxisExtent = 0.0;
 
     switch (direction) {
       case Axis.horizontal:
@@ -620,13 +619,13 @@ class RenderDynamicOverflow extends RenderBox
 
     // Calculate alignment parameters based on the axis extents.
 
-    double crossAxisOffset =
+    var crossAxisOffset =
         flipCrossAxis ? (containerCrossAxisExtent - crossAxisExtent) : 0;
 
     final double mainAxisFreeSpace =
         math.max(0.0, containerMainAxisExtent - mainAxisExtent);
-    double childLeadingSpace = 0.0;
-    double childBetweenSpace = 0.0;
+    var childLeadingSpace = 0.0;
+    var childBetweenSpace = 0.0;
 
     switch (alignment) {
       case MainAxisAlignment.start:
@@ -653,7 +652,7 @@ class RenderDynamicOverflow extends RenderBox
         break;
     }
 
-    double childMainPosition = flipMainAxis
+    var childMainPosition = flipMainAxis
         ? containerMainAxisExtent - childLeadingSpace
         : childLeadingSpace;
 
@@ -662,8 +661,7 @@ class RenderDynamicOverflow extends RenderBox
     // calculate proper positions given the desired alignment parameters.
     child = firstChild;
     while (child != null) {
-      final DynamicOverflowParentData childParentData =
-          child.parentData! as DynamicOverflowParentData;
+      final childParentData = child.parentData! as DynamicOverflowParentData;
 
       if (childParentData._isHidden) {
         // Hide the widget by setting its offset to outside of the
@@ -671,9 +669,9 @@ class RenderDynamicOverflow extends RenderBox
         childParentData.offset = _getOffset(
             containerMainAxisExtent + 100, containerCrossAxisExtent + 100);
       } else {
-        final double childMainAxisExtent = _getMainAxisExtent(child.size);
-        final double childCrossAxisExtent = _getCrossAxisExtent(child.size);
-        final double childCrossAxisOffset = _getChildCrossAxisOffset(
+        final childMainAxisExtent = _getMainAxisExtent(child.size);
+        final childCrossAxisExtent = _getCrossAxisExtent(child.size);
+        final childCrossAxisOffset = _getChildCrossAxisOffset(
             flipCrossAxis, crossAxisExtent, childCrossAxisExtent);
         if (flipMainAxis) {
           childMainPosition -= childMainAxisExtent;
@@ -683,8 +681,9 @@ class RenderDynamicOverflow extends RenderBox
           // it to be aligned at the "opposite side" as this looks visually
           // more consistent
           late double overflowChildMainPosition;
-          double endAlignedMainAxisPosition =
-              flipMainAxis ? 0 : containerMainAxisExtent - childMainAxisExtent;
+          var endAlignedMainAxisPosition = flipMainAxis
+              ? 0.0
+              : containerMainAxisExtent - childMainAxisExtent;
           switch (_overflowWidgetAlignment) {
             case MainAxisAlignment.start:
               // we're already in the right spot
@@ -717,14 +716,13 @@ class RenderDynamicOverflow extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    RenderBox? child = lastChild;
+    var child = lastChild;
     while (child != null) {
-      final DynamicOverflowParentData childParentData =
-          child.parentData! as DynamicOverflowParentData;
+      final childParentData = child.parentData! as DynamicOverflowParentData;
       // Hidden children cannot generate a hit
       if (!childParentData._isHidden) {
         // The x, y parameters have the top left of the node's box as the origin.
-        final bool isHit = result.addWithPaintOffset(
+        final isHit = result.addWithPaintOffset(
           offset: childParentData.offset,
           position: position,
           hitTest: (BoxHitTestResult result, Offset transformed) {
@@ -757,10 +755,9 @@ class RenderDynamicOverflow extends RenderBox
   }
 
   void _paintSkipHiddenChildren(PaintingContext context, Offset offset) {
-    RenderBox? child = firstChild;
+    var child = firstChild;
     while (child != null) {
-      final DynamicOverflowParentData childParentData =
-          child.parentData! as DynamicOverflowParentData;
+      final childParentData = child.parentData! as DynamicOverflowParentData;
       if (!childParentData._isHidden) {
         context.paintChild(child, childParentData.offset + offset);
       }
@@ -780,22 +777,23 @@ class RenderDynamicOverflow extends RenderBox
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<Axis>('direction', direction));
-    properties.add(EnumProperty<MainAxisAlignment>('alignment', alignment));
-    properties.add(EnumProperty<CrossAxisAlignment>(
-        'crossAxisAlignment', crossAxisAlignment));
-    properties.add(EnumProperty<TextDirection>('textDirection', textDirection,
-        defaultValue: null));
-    properties.add(EnumProperty<VerticalDirection>(
-        'verticalDirection', verticalDirection));
-    properties.add(EnumProperty<Clip>('clipBehavior', clipBehavior));
-    properties.add(EnumProperty<MainAxisAlignment>(
-        'overflowWidgetAlignment', overflowWidgetAlignment));
-    properties.add(FlagProperty(
-      'alwaysDisplayOverflowWidget',
-      value: alwaysDisplayOverflowWidget,
-      ifTrue: 'always display overflow widget',
-      ifFalse: 'do not always display overflow widget',
-    ));
+    properties
+      ..add(EnumProperty<Axis>('direction', direction))
+      ..add(EnumProperty<MainAxisAlignment>('alignment', alignment))
+      ..add(EnumProperty<CrossAxisAlignment>(
+          'crossAxisAlignment', crossAxisAlignment))
+      ..add(EnumProperty<TextDirection>('textDirection', textDirection,
+          defaultValue: null))
+      ..add(EnumProperty<VerticalDirection>(
+          'verticalDirection', verticalDirection))
+      ..add(EnumProperty<Clip>('clipBehavior', clipBehavior))
+      ..add(EnumProperty<MainAxisAlignment>(
+          'overflowWidgetAlignment', overflowWidgetAlignment))
+      ..add(FlagProperty(
+        'alwaysDisplayOverflowWidget',
+        value: alwaysDisplayOverflowWidget,
+        ifTrue: 'always display overflow widget',
+        ifFalse: 'do not always display overflow widget',
+      ));
   }
 }

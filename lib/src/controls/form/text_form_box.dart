@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 
 /// A [FormField] that contains a [TextBox].
 ///
@@ -50,7 +50,6 @@ class TextFormBox extends FormField<String> {
     TextAlignVertical? textAlignVertical,
     bool autofocus = false,
     bool readOnly = false,
-    ToolbarOptions? toolbarOptions,
     bool? showCursor,
     String obscuringCharacter = '•',
     bool obscureText = false,
@@ -104,6 +103,7 @@ class TextFormBox extends FormField<String> {
     bool scribbleEnabled = true,
     Color? highlightColor,
     Color? errorHighlightColor,
+    Color? unfocusedColor,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -127,7 +127,7 @@ class TextFormBox extends FormField<String> {
           validator: validator,
           autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
-            final _TextFormBoxState state = field as _TextFormBoxState;
+            final state = field as _TextFormBoxState;
 
             void onChangedHandler(String value) {
               field.didChange(value);
@@ -152,7 +152,6 @@ class TextFormBox extends FormField<String> {
                   textAlignVertical: textAlignVertical,
                   textCapitalization: textCapitalization,
                   autofocus: autofocus,
-                  toolbarOptions: toolbarOptions,
                   readOnly: readOnly,
                   showCursor: showCursor,
                   obscuringCharacter: obscuringCharacter,
@@ -193,6 +192,7 @@ class TextFormBox extends FormField<String> {
                   highlightColor: (field.errorText == null)
                       ? highlightColor
                       : errorHighlightColor ?? Colors.red,
+                  unfocusedColor: unfocusedColor,
                   dragStartBehavior: dragStartBehavior,
                   minHeight: minHeight,
                   padding: padding,
@@ -206,6 +206,7 @@ class TextFormBox extends FormField<String> {
                   scribbleEnabled: scribbleEnabled,
                   textDirection: textDirection,
                   selectionControls: selectionControls,
+                  initialValue: initialValue,
                 ),
               ),
             );

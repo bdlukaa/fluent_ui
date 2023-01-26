@@ -1,6 +1,6 @@
 name: fluent_ui
 description: Implements Windows UI in Flutter. Based on the official documentation
-version: 4.0.2
+version: 4.2.0
 homepage: https://github.com/bdlukaa/fluent_ui
 
 environment:
@@ -12,7 +12,11 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
+  # Used on date and time pickers
   intl: ^0.17.0
+
+  # Used on TabView
   scroll_pos: ^0.3.0
 
   # Used on icon generator

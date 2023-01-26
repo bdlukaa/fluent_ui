@@ -8,7 +8,7 @@ mixin PageMixin {
   Widget description({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
+        padding: const EdgeInsetsDirectional.only(bottom: 4.0),
         child: DefaultTextStyle(
           style: FluentTheme.of(context).typography.body!,
           child: content,
@@ -20,7 +20,7 @@ mixin PageMixin {
   Widget subtitle({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
+        padding: const EdgeInsetsDirectional.only(top: 14.0, bottom: 2.0),
         child: DefaultTextStyle(
           style: FluentTheme.of(context).typography.subtitle!,
           child: content,
@@ -49,7 +49,7 @@ abstract class Page extends StatelessWidget {
   Widget description({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
+        padding: const EdgeInsetsDirectional.only(bottom: 4.0),
         child: DefaultTextStyle(
           style: FluentTheme.of(context).typography.body!,
           child: content,
@@ -61,7 +61,7 @@ abstract class Page extends StatelessWidget {
   Widget subtitle({required Widget content}) {
     return Builder(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(top: 14.0, bottom: 2.0),
+        padding: const EdgeInsetsDirectional.only(top: 14.0, bottom: 2.0),
         child: DefaultTextStyle(
           style: FluentTheme.of(context).typography.subtitle!,
           child: content,

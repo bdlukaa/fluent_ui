@@ -21,7 +21,7 @@ class HorizontalScrollView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _HorizontalScrollViewState createState() => _HorizontalScrollViewState();
+  State<HorizontalScrollView> createState() => _HorizontalScrollViewState();
 }
 
 class _HorizontalScrollViewState extends State<HorizontalScrollView> {
@@ -57,9 +57,10 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
                     // jump beyond the boundaries and then "rebound" like jumpTo
                     // would do if used here).
                     _controller.animateTo(
-                        _controller.offset + event.scrollDelta.dy,
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.ease);
+                      _controller.offset + event.scrollDelta.dy,
+                      duration: const Duration(milliseconds: 100),
+                      curve: Curves.ease,
+                    );
                   }
                 });
               }

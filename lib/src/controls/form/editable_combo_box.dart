@@ -85,7 +85,6 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
     controller.selection = TextSelection(
       baseOffset: 0,
       extentOffset: controller.text.length,
-      affinity: TextAffinity.downstream,
     );
   }
 
@@ -206,8 +205,7 @@ class ComboboxFormField<T> extends FormField<T> {
           validator: validator,
           autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
           builder: (FormFieldState<T> field) {
-            final _ComboboxFormFieldState<T> state =
-                field as _ComboboxFormFieldState<T>;
+            final state = field as _ComboboxFormFieldState<T>;
 
             // An unfocusable Focus widget so that this widget can detect if its
             // descendants have focus or not.
@@ -259,8 +257,7 @@ class _ComboboxFormFieldState<T> extends FormFieldState<T> {
   @override
   void didChange(T? value) {
     super.didChange(value);
-    final ComboboxFormField<T> dropdownButtonFormField =
-        widget as ComboboxFormField<T>;
+    final dropdownButtonFormField = widget as ComboboxFormField<T>;
     assert(dropdownButtonFormField.onChanged != null);
     dropdownButtonFormField.onChanged!(value);
   }
@@ -333,8 +330,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
           validator: validator,
           autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
           builder: (FormFieldState<T> field) {
-            final _EditableComboboxFormFieldState<T> state =
-                field as _EditableComboboxFormFieldState<T>;
+            final state = field as _EditableComboboxFormFieldState<T>;
 
             // An unfocusable Focus widget so that this widget can detect if its
             // descendants have focus or not.
@@ -387,8 +383,7 @@ class _EditableComboboxFormFieldState<T> extends FormFieldState<T> {
   @override
   void didChange(T? value) {
     super.didChange(value);
-    final EditableComboboxFormField<T> dropdownButtonFormField =
-        widget as EditableComboboxFormField<T>;
+    final dropdownButtonFormField = widget as EditableComboboxFormField<T>;
     assert(dropdownButtonFormField.onChanged != null);
     dropdownButtonFormField.onChanged!(value);
   }

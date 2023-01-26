@@ -16,7 +16,7 @@ class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
   String? selectedCat;
   double fontSize = 20.0;
   bool disabled = false;
-  final comboboxKey = GlobalKey<ComboBoxState>();
+  final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
                     },
             ),
             Container(
-              margin: const EdgeInsets.only(top: 8.0),
+              margin: const EdgeInsetsDirectional.only(top: 8.0),
               height: 30,
               width: 100,
               color: colors[selectedColor],
@@ -110,7 +110,7 @@ ComboBox<String>(
               placeholder: const Text('Select a cat breed'),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 8.0),
+              margin: const EdgeInsetsDirectional.only(top: 8.0),
               height: 30,
               child: Text(selectedCat ?? ''),
             ),
@@ -198,7 +198,7 @@ ComboBox<String>(
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 8.0),
+              margin: const EdgeInsetsDirectional.only(top: 8.0),
               constraints: const BoxConstraints(minHeight: 50.0),
               child: Text(
                 'You can set the font size for this text',
@@ -298,7 +298,7 @@ EditableComboBox<int>(
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 8.0),
+              margin: const EdgeInsetsDirectional.only(top: 8.0),
               height: 30,
               width: 100,
               color: colors[selectedColor],
@@ -365,7 +365,7 @@ Form(
 // which will open and close the popup, respectively
 //
 // It is possible to use the key with ComboBox and EditableComboBox
-final comboboxKey = GlobalKey<ComboboxState>();
+final comboboxKey = GlobalKey<ComboboxState>(debugLabel: 'Combobox Key');
 
 ComboBox<String>(
   key: comboboxKey,

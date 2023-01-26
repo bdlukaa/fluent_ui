@@ -102,7 +102,7 @@ class Settings extends ScrollablePage {
       ...List.generate(ThemeMode.values.length, (index) {
         final mode = ThemeMode.values[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 8.0),
           child: RadioButton(
             checked: appTheme.mode == mode,
             onChanged: (value) {
@@ -129,7 +129,7 @@ class Settings extends ScrollablePage {
       ...List.generate(PaneDisplayMode.values.length, (index) {
         final mode = PaneDisplayMode.values[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 8.0),
           child: RadioButton(
             checked: appTheme.displayMode == mode,
             onChanged: (value) {
@@ -148,7 +148,7 @@ class Settings extends ScrollablePage {
       ...List.generate(NavigationIndicators.values.length, (index) {
         final mode = NavigationIndicators.values[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 8.0),
           child: RadioButton(
             checked: appTheme.indicator == mode,
             onChanged: (value) {
@@ -186,7 +186,7 @@ class Settings extends ScrollablePage {
         ...List.generate(currentWindowEffects.length, (index) {
           final mode = currentWindowEffects[index];
           return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
             child: RadioButton(
               checked: appTheme.windowEffect == mode,
               onChanged: (value) {
@@ -209,7 +209,7 @@ class Settings extends ScrollablePage {
       ...List.generate(TextDirection.values.length, (index) {
         final direction = TextDirection.values[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 8.0),
           child: RadioButton(
             checked: appTheme.textDirection == direction,
             onChanged: (value) {
@@ -237,7 +237,7 @@ class Settings extends ScrollablePage {
             final locale = supportedLocales[index];
 
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsetsDirectional.only(bottom: 8.0),
               child: RadioButton(
                 checked: currentLocale == locale,
                 onChanged: (value) {
@@ -275,7 +275,7 @@ class Settings extends ScrollablePage {
         child: Container(
           height: 40,
           width: 40,
-          alignment: Alignment.center,
+          alignment: AlignmentDirectional.center,
           child: appTheme.color == color
               ? Icon(
                   FluentIcons.check_mark,

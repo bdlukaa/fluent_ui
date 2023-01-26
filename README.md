@@ -16,7 +16,7 @@
   </div>
   <div>
     <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
-      <img src="https://img.shields.io/badge/web-example---?style=flat-square&color=e88d0c" />
+      <img src="https://img.shields.io/badge/documentation---?style=flat-square&color=e88d0c" />
     </a>
   </div>
   <br/>
@@ -27,6 +27,9 @@
   <p>
   Unofficial implementation of Fluent UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
   </p>
+  <h3>
+  Read the <a href="https://bdlukaa.github.io/fluent_ui/">documentation</a>
+  </h3>
 </div>
 
 <div align="center">
@@ -76,8 +79,6 @@ dependencies:
     git: https://github.com/bdlukaa/fluent_ui.git
 ```
 
-You can see the example app [here](https://bdlukaa.github.io/fluent_ui//)
-
 Finally, run `dart pub get` to download the package.
 
 Projects using this library should use the stable channel of Flutter
@@ -117,13 +118,13 @@ ThemeData(
 )
 ```
 
-To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 04/01/2021) Android, Web and Windows.
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 21/01/2023) Android, Web, MacOS, Windows, Xbox and Linux (GTK 3+).
 
 ```dart
 import 'package:system_theme/system_theme.dart';
 
 ThemeData(
-  accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
+  accentColor: SystemTheme.accentColor.accent.toAccentColor(),
 )
 ```
 
@@ -132,12 +133,16 @@ ThemeData(
 FluentUI widgets currently supports out-of-the-box an wide number of languages, including:
 
 - Arabic (@dmakwt)
-- English
+- Bahasa Indonesia (@ekasetiawans)
+- Belarusian (@superkeka)
+- Czech (@morning4coffe-dev)
 - Dutch (@h3x4d3c1m4l)
+- English
 - French (@WinXaito)
 - German (@larsb24)
 - Hebrew (@yehudakremer)
 - Hindi (@alexmercerind)
+- Hungarian (@RedyAu)
 - Italian (@patricknicolosi)
 - Japanese (@chari8)
 - Korean (@dubh3)
@@ -145,11 +150,13 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Persian (@xmine64)
 - Polish (@madik7)
 - Portuguese (@bdlukaa)
+- Romanian (@antoniocranga)
 - Russian (@raitonoberu)
 - Simplified Chinese (@zacksleo, @rk0cc)
 - Traditional Chinese (@zacksleo, @rk0cc)
 - Turkish (@timurturbil)
 - Spanish (@henry2man)
+- Ukranian (@vadimbarda)
 - Uzbek (@bobobekturdiyev)
 
 If a language is not supported, your app may crash. You can [add support for a new language](#contributing-new-localizations) or use a supported language. [Learn more](https://github.com/bdlukaa/fluent_ui/issues/371)

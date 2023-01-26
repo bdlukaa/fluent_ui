@@ -11,7 +11,7 @@ class ExpanderPage extends StatefulWidget {
 }
 
 class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
-  final expanderKey = GlobalKey<ExpanderState>();
+  final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
   bool crostOpen = false;
   List<String> crosts = [
@@ -31,7 +31,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
 
   @override
   Widget build(BuildContext context) {
-    final open = expanderKey.currentState?.open ?? false;
+    final open = expanderKey.currentState?.isExpanded ?? false;
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Expander')),
       children: [
@@ -78,7 +78,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                 children: crosts
                     .map(
                       (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsetsDirectional.only(bottom: 8.0),
                         child: RadioButton(
                           checked: crost == e,
                           onChanged: (selected) {
@@ -95,7 +95,8 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: sizes
                     .map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding:
+                              const EdgeInsetsDirectional.only(bottom: 8.0),
                           child: RadioButton(
                             checked: size == e,
                             onChanged: (selected) {
@@ -164,13 +165,14 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
                 checked: open,
                 onChanged: (v) {
                   setState(() {
-                    expanderKey.currentState?.open = v;
+                    expanderKey.currentState?.isExpanded = v;
                   });
                 },
                 content: Text(open ? 'Close' : 'Open'),
               ),
             ]),
-            codeSnippet: '''final expanderKey = GlobalKey<ExpanderState>();
+            codeSnippet:
+                '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
 Expander(
   key: expanderKey,

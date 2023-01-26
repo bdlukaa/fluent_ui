@@ -19,7 +19,6 @@ void main() {
                   color: Colors.black,
                   height: 300.0,
                 ),
-                resizeToAvoidBottomInset: true,
               ),
             ),
           ),

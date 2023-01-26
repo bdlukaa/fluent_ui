@@ -13,9 +13,9 @@ const primaryKeys = <String>[
 
 void main() {
   test('All accent colors are opaque and equal their primary color', () {
-    for (final AccentColor color in Colors.accentColors) {
+    for (final color in Colors.accentColors) {
       expect(color.value, color.normal.value);
-      for (final String key in primaryKeys) {
+      for (final key in primaryKeys) {
         expect(color[key]!.alpha, 0xFF);
       }
     }
@@ -24,7 +24,7 @@ void main() {
   });
 
   test('All grey variants are opaque', () {
-    int currentValue = 210;
+    var currentValue = 210;
     for (var i = currentValue; i > 0; i -= 10) {
       expect(Colors.grey[i].alpha, 0xFF);
     }

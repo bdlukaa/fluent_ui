@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('Fluent UI for Flutter Showcase App'),
-        commandBar: Row(children: [
+        commandBar: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Link(
             uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
             builder: (context, open) => Tooltip(
@@ -83,14 +83,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
                 height: 40,
                 width: 120,
                 child: Stack(children: [
-                  Container(width: 25, height: 50, color: Colors.blue.lightest),
-                  Positioned(
-                    right: 0,
-                    child: Container(
-                      width: 25,
-                      height: 50,
-                      color: Colors.blue.lightest,
-                    ),
+                  Container(
+                    width: 120,
+                    height: 50,
+                    color: theme.accentColor.lightest,
                   ),
                   const Positioned.fill(child: Acrylic(luminosityAlpha: 0.5)),
                 ]),

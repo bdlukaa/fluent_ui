@@ -10,6 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
+import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -64,6 +65,7 @@ void main() async {
 
   runApp(const MyApp());
 
+  DeferredWidget.preload(popups.loadLibrary);
   DeferredWidget.preload(forms.loadLibrary);
   DeferredWidget.preload(inputs.loadLibrary);
   DeferredWidget.preload(navigation.loadLibrary);
@@ -127,7 +129,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> with WindowListener {
@@ -135,13 +137,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   int index = 0;
 
-  final viewKey = GlobalKey();
-
-  final key = GlobalKey();
+  final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
+  final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
-  void resetSearch() => searchController.clear();
-  String get searchValue => searchController.text;
+
   final List<NavigationPaneItem> originalItems = [
     PaneItem(
       icon: const Icon(FluentIcons.home),
@@ -265,14 +265,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ContentDialogPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
       body: DeferredWidget(
@@ -312,12 +304,21 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         () => surfaces.TilesPage(),
       ),
     ),
+    PaneItemHeader(header: const Text('Popups')),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => popups.ContentDialogPage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.TooltipPage(),
+        () => popups.TooltipPage(),
       ),
     ),
     PaneItem(
@@ -325,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Flyout'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.FlyoutPage(),
+        () => popups.Flyout2Screen(),
       ),
     ),
     PaneItemHeader(header: const Text('Theming')),
@@ -377,28 +378,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
-  late List<NavigationPaneItem> items = originalItems;
 
   @override
   void initState() {
     windowManager.addListener(this);
-    searchController.addListener(() {
-      setState(() {
-        if (searchValue.isEmpty) {
-          items = originalItems;
-        } else {
-          items = [...originalItems, ...footerItems]
-              .whereType<PaneItem>()
-              .where((item) {
-                assert(item.title is Text);
-                final text = (item.title as Text).data!;
-                return text.toLowerCase().contains(searchValue.toLowerCase());
-              })
-              .toList()
-              .cast<NavigationPaneItem>();
-        }
-      });
-    });
     super.initState();
   }
 
@@ -451,37 +434,16 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ]),
       ),
       pane: NavigationPane(
-        selected: () {
-          // if not searching, return the current index
-          if (searchValue.isEmpty) return index;
-
-          final indexOnScreen = items.indexOf(
-            [...originalItems, ...footerItems]
-                .whereType<PaneItem>()
-                .elementAt(index),
-          );
-          if (indexOnScreen.isNegative) return null;
-          return indexOnScreen;
-        }(),
+        selected: index,
         onChanged: (i) {
-          // If searching, the values will have different indexes
-          if (searchValue.isNotEmpty) {
-            final equivalentIndex = [...originalItems, ...footerItems]
-                .whereType<PaneItem>()
-                .toList()
-                .indexOf(items[i] as PaneItem);
-            i = equivalentIndex;
-          }
-          resetSearch();
           setState(() => index = i);
         },
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
             shaderCallback: (rect) {
-              final color = appTheme.color.resolveFromReverseBrightness(
+              final color = appTheme.color.defaultBrushFor(
                 theme.brightness,
-                level: theme.brightness == Brightness.light ? 0 : 2,
               );
               return LinearGradient(
                 colors: [
@@ -508,15 +470,40 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        items: items,
-        autoSuggestBox: TextBox(
-          key: key,
-          controller: searchController,
-          placeholder: 'Search',
+        items: originalItems,
+        autoSuggestBox: AutoSuggestBox(
+          key: searchKey,
           focusNode: searchFocusNode,
+          controller: searchController,
+          unfocusedColor: Colors.transparent,
+          items: originalItems.whereType<PaneItem>().map((item) {
+            assert(item.title is Text);
+            final text = (item.title as Text).data!;
+
+            return AutoSuggestBoxItem(
+              label: text,
+              value: text,
+              onSelected: () async {
+                final itemIndex = NavigationPane(
+                  items: originalItems,
+                ).effectiveIndexOf(item);
+
+                setState(() => index = itemIndex);
+                await Future.delayed(const Duration(milliseconds: 17));
+                searchController.clear();
+              },
+            );
+          }).toList(),
+          placeholder: 'Search',
+          trailingIcon: IgnorePointer(
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(FluentIcons.search),
+            ),
+          ),
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
-        footerItems: searchValue.isNotEmpty ? [] : footerItems,
+        footerItems: footerItems,
       ),
       onOpenSearch: () {
         searchFocusNode.requestFocus();

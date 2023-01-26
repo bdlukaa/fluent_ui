@@ -1,3 +1,155 @@
+## 4.2.0
+
+- Flyouts rework ([#690](https://github.com/bdlukaa/fluent_ui/pull/690)):
+
+  Flyouts were reworked to match the design and behavior of native WinUI 3
+
+  **BREAKING** Removed `Flyout` widget.
+  To replace it, `FlyoutTarget` and `FlyoutController` were created. `FlyoutTarget` works like a target, which the given `controller` will use to display the flyout
+
+  ---
+  Migration guide:
+
+  Before:
+  ```dart
+  final controller = FlyoutController();
+
+  Flyout(
+    controller: controller,
+    placement: ...,
+    position: ...,
+    verticalOffset: ...,
+    onOpen: ...,
+    onClose: ...,
+    child: Button(
+      onPressed: controller,
+      child: Text('Tap me'),
+    ),
+  ),
+  ```
+
+  Now:
+  ```dart
+  final controller = FlyoutController();
+
+  FlyoutTarget(
+    controller: controller,
+    child: Button(
+      onPressed: _showFlyout,
+      child: Text('Tap me'),
+    ),
+  ),
+
+  void _showFlyout() async {
+    await controller.showFlyout(
+      barrierDismissible: ...,
+      dismissWithEsc: ..., // NEW
+      dismissOnPointerMoveAway: ..., // NEW
+      placementMode: ...,
+      autoModeConfiguration: ..., // NEW
+      forceAvailableSpace: ..., // NEW
+      shouldConstrainToRootBounds: ..., // NEW
+      additionalOffset: ...,
+      margin: ..., // NEW
+      barrierColor: ...,
+      navigatorKey: ..., // NEW
+      transitionBuilder: ..., // NEW
+      transitionDuration: ..., // NEW
+      builder: (context) => FlyoutContent(...),
+    ); 
+  }
+  ```
+  ---
+
+  Now, it's possible to dismiss the flyout by tapping the barrier (`barrierDismissible`), pressing the `ESC` keyboard key (`dismissWithEsc`) and by moving the cursor (pointer) away from the flyout (`dismissOnPointerMoveAway` - defaults to false);
+
+  Automatic mode is finally implemented, and it's the default mode. By setting `autoModeConfiguration`, it's possible to customize the preferred flyout placement. If flyout doesn't meet the placement conditions, it decides where it fits the best.
+
+  `forceAvailableSpace` determines whether the flyout size should be forced the available space according to the attached target. It's useful when the flyout is large but can not be on top of the target. `NavigationView`'s top navigation mode now uses it by default on pane items overflow.
+
+  `shouldConstrainToRootBounds` determines whether the flyout should fit the root bounds - usually the window bounds. If false, the flyout will be able to overflow the screen on all sides. Defaults to `true`
+
+  `margin` determines the margin of the flyout to the root. `additionalOffset` determines the margin of the flyout to the target.
+
+  It's now possible to assign a custom transition to the flyout by providing `transitionBuilder` and `transitionDuration`. By default, a light slide-fade transition is used, but it can be highly customizable to fit your needs. It provides the current placement mode - since automatic mode may change it at layout time. `DropdownButton` uses it to create its slidethrough transition.
+
+  `position` and `placement` were replaced by `placementMode`, which gives horizontal and vertical options of placement, at all screen alignments. It's also possible to use it in a right-to-left context by using `placementMode.resolve(Directionality.of(context))`
+
+  Use `position` to display the flyout anywhere in the screen. It's useful to create context menus
+- Added support for Flutter 3.7 ([#568](https://github.com/bdlukaa/fluent_ui/issues/568))
+- Added `TextBox.magnifierConfiguration`, `TextBox.spellCheckConfiguration` and `TextBox.onTapOutside`
+
+## 4.1.5
+
+- Add `AutoSuggestBox.maxPopupHeight` ([#677](https://github.com/bdlukaa/fluent_ui/issues/677))
+- Fix assertion in `NavigationViewState` if no pane was currently selected ([#678](https://github.com/bdlukaa/fluent_ui/issues/678))
+- Make `NavigationView.paneBodyBuilder` responsible for state management of the widget it returns, allowing `paneBodyBuilder` to return an `IndexedStack` (common use case) ([#679](https://github.com/bdlukaa/fluent_ui/issues/679))
+- Added support for Belarusian language ([#686](https://github.com/bdlukaa/fluent_ui/pull/686))
+- Added missing German translation for `minute`, `hour`, `day`, `month`, and `year` 
+
+## 4.1.4
+
+- Avoid overflow in `DatePicker` and `TimePicker` popup ([#663](https://github.com/bdlukaa/fluent_ui/issues/663))
+- Ensure sticky indicator is mounted before updating ([#670](https://github.com/bdlukaa/fluent_ui/issues/670))
+- Date and Time pickers popup are now positioned correctly in RTL mode ([#675](https://github.com/bdlukaa/fluent_ui/issues/675))
+- It's now possible to navigate through `AutoSuggestBox` items by long pressing arrow up and down keys
+- Do not clear focus scope after selecting an item in `AutoSuggestBox` ([#671](https://github.com/bdlukaa/fluent_ui/issues/671))
+- `AutoSuggestBox`'s `trailingIcon` now comes after the close button
+- **MINOR BREAK** `TextBox.clearGlobalKey` was removed, since it was not used
+- Add `AutoSuggestBox.unfocusedColor` and `TextFormBox.unfocusedColor`
+- Implement `displayInfoBar`, which shows an info bar as an overlay ([#673](https://github.com/bdlukaa/fluent_ui/issues/673))
+- Implement `ThemeData.extensions` ([#674](https://github.com/bdlukaa/fluent_ui/issues/674))
+
+## 4.1.3
+
+- `FlyoutListTile` can be used outside of a flyout ([#650](https://github.com/bdlukaa/fluent_ui/issues/650))
+- Add uk localization ([#647](https://github.com/bdlukaa/fluent_ui/pull/647))
+- Add swedish localization ([#655](https://github.com/bdlukaa/fluent_ui/pull/655))
+- Add `key` parameter to `NavigationPaneItem` and all its instances ([#656](https://github.com/bdlukaa/fluent_ui/issues/656))
+- Ensure `fontFamily` is inherit in some widgets ([654](https://github.com/bdlukaa/fluent_ui/issues/654))
+- Add `Flyout.navigatorKey` ([#538](https://github.com/bdlukaa/fluent_ui/issues/538))
+- Add `Card.borderColor` ([#643](https://github.com/bdlukaa/fluent_ui/issues/643))
+
+## 4.1.2
+
+- `PageHeader` now gives appropriate bounds to its `commandBar` ([#642](https://github.com/bdlukaa/fluent_ui/issues/642))
+- Ensure `NavigationView` body state is not lost when resizing window
+- Ensure `TabView`' tabs' state are not lost when changing selected tab ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
+- Do not block text field tap ([#343](https://github.com/bdlukaa/fluent_ui/issues/343))
+- Do not duplicate `trailing` in `FlyoutContent` ([#487](https://github.com/bdlukaa/fluent_ui/issues/487))
+
+## 4.1.1
+
+- Ensure acrylic is updated only if it's mounted ([#634](https://github.com/bdlukaa/fluent_ui/issues/634))
+- Ensure the provided `startYear` and `endYear` in `DateTime` are used properly ([#627](https://github.com/bdlukaa/fluent_ui/issues/627))
+- Fix left arrow key not moving to parent item on collapsed `TreeViewItem` ([#632](https://github.com/bdlukaa/fluent_ui/issues/632)) 
+- Added `NavigationPane.scrollBehavior` ([#640](https://github.com/bdlukaa/fluent_ui/issues/640))
+- Added `CommandBarCard.borderRadius` ([#641](https://github.com/bdlukaa/fluent_ui/issues/641))
+- Ensure combobox scroll controller has a client attached before using it ([#620](https://github.com/bdlukaa/fluent_ui/issues/620))
+- Correctly use `TextFormBox.initialValue`
+- Added `TreeViewState.toggleItem`, which toggles the item expanded state ([#493](https://github.com/bdlukaa/fluent_ui/issues/493))
+- Ensure `NavigationView` pane items are brought into view when selected
+
+## 4.1.0
+
+- Fixed `TreeView` selection state behavior for items that are not expanded ([#578](https://github.com/bdlukaa/fluent_ui/issues/578))
+- Added support for Romanian language ([#602](https://github.com/bdlukaa/fluent_ui/pull/602))
+- Ensure the body state in `NavigationView` is properly preserved ([#607](https://github.com/bdlukaa/fluent_ui/pull/607))
+- **BREAKING** Renamed `ExpanderState.open` to `ExpanderState.isExpanded`
+- The same identifier is no longer used for every `Expander` ([#596](https://github.com/bdlukaa/fluent_ui/issues/596))
+- Ensure the TabView scroll controller has clients before using it ([#615](https://github.com/bdlukaa/fluent_ui/issues/615))
+- TabView now waits a time to resize after closed ([#617](https://github.com/bdlukaa/fluent_ui/issues/617))
+- `ToggleButton` border width is uniform ([#610](https://github.com/bdlukaa/fluent_ui/issues/610))
+
+## 4.0.3+1
+
+- Update documentation
+
+## 4.0.3
+
+- `NavigationView` scrollbar can now be dragged ([#472](https://github.com/bdlukaa/fluent_ui/issues/472))
+- `PaneItemHeader` can now be used inside a `PaneItemExpander` ([#575](https://github.com/bdlukaa/fluent_ui/issues/575))
+- `InfoBadge` no longer overflows when transitioning from compact mode to open mode in `NavigationView` ([#588](https://github.com/bdlukaa/fluent_ui/issues/588))
 
 ## 4.0.2
 

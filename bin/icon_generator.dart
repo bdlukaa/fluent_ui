@@ -21,38 +21,38 @@ import 'package:recase/recase.dart';
 ///   on the `lib/` directory as PWD
 /// - Enjoy
 void main(List<String> args) async {
-  if (Directory.current.path.split(pathSeparator).last == "bin") {
-    print("Run the generator from the lib/ folder");
+  if (Directory.current.path.split(pathSeparator).last == 'bin') {
+    print('Run the generator from the lib/ folder');
     return;
   }
 
-  final File iconsFile = File("bin/fabric-icons.json");
-  final String iconsString = await iconsFile.readAsString();
-  final Map<String, dynamic> iconsJson = json.decode(iconsString);
-  final List<Glyph> glyphs = (iconsJson["glyphs"] as List<dynamic>)
+  final iconsFile = File('bin/fabric-icons.json');
+  final iconsString = await iconsFile.readAsString();
+  final iconsJson = json.decode(iconsString) as Map<String, dynamic>;
+  final glyphs = (iconsJson['glyphs'] as List<dynamic>)
       .map<Glyph>(mapToGlyph)
       .toSet()
-      .toList();
-  glyphs.sort((a, b) => a.name.compareTo(b.name));
+      .toList()
+    ..sort((a, b) => a.name.compareTo(b.name));
 
-  final StringBuffer dartFileBuffer = StringBuffer(fileHeader);
-  for (final Glyph glyph in glyphs) {
+  final dartFileBuffer = StringBuffer(fileHeader);
+  for (final glyph in glyphs) {
     dartFileBuffer.writeln(
       "  static const IconData ${glyph.name} = IconData(0x${glyph.codepoint}, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui',);\n",
     );
   }
 
   // NEW Map of all glyphs (adds iteration capabilities)
-  dartFileBuffer.writeln("  static const Map<String, IconData> allIcons = {");
-  for (final Glyph glyph in glyphs) {
+  dartFileBuffer.writeln('  static const Map<String, IconData> allIcons = {');
+  for (final glyph in glyphs) {
     dartFileBuffer.writeln(
       "    '${glyph.name}': ${glyph.name},",
     );
   }
-  dartFileBuffer.writeln("  };");
-
-  dartFileBuffer.writeln("}");
-  final outputFile = File("lib/src/icons.dart");
+  dartFileBuffer
+    ..writeln('  };')
+    ..writeln('}');
+  final outputFile = File('lib/src/icons.dart');
   final formatProcess = await Process.start(
     'flutter',
     ['format', outputFile.path],
@@ -63,9 +63,9 @@ void main(List<String> args) async {
 }
 
 Glyph mapToGlyph(dynamic item) {
-  final Map<String, dynamic> jsonItem = item as Map<String, dynamic>;
-  final String name = ReCase(jsonItem["name"]!).snakeCase;
-  final String codepoint = jsonItem["unicode"]!.toLowerCase();
+  final jsonItem = item as Map<String, dynamic>;
+  final name = ReCase(jsonItem['name']!).snakeCase;
+  final String codepoint = jsonItem['unicode']!.toLowerCase();
 
   return Glyph(
     name: sanitizeName(name),
@@ -80,18 +80,18 @@ Glyph mapToGlyph(dynamic item) {
 /// names that start with a number
 String sanitizeName(String name) {
   switch (name) {
-    case "switch":
-      return "switch_widget";
-    case "12_point_star":
-      return "twelve_point_star";
-    case "6_point_star":
-      return "six_point_star";
+    case 'switch':
+      return 'switch_widget';
+    case '12_point_star':
+      return 'twelve_point_star';
+    case '6_point_star':
+      return 'six_point_star';
     default:
       return name;
   }
 }
 
-String get pathSeparator => Platform.isWindows ? "\\" : "/";
+String get pathSeparator => Platform.isWindows ? '\\' : '/';
 
 const String fileHeader = """
 // GENERATED FILE, DO NOT EDIT

@@ -203,7 +203,7 @@ class _AcrylicChildren extends StatelessWidget {
         color: Colors.blue.lightest,
       ),
       Align(
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.center,
         child: Container(
           height: 152,
           width: 152,
@@ -211,7 +211,7 @@ class _AcrylicChildren extends StatelessWidget {
         ),
       ),
       Align(
-        alignment: Alignment.bottomRight,
+        alignment: AlignmentDirectional.bottomEnd,
         child: Container(
           height: 100,
           width: 80,

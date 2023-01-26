@@ -46,19 +46,20 @@ class ToggleButton extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'checked',
-      value: checked,
-      ifFalse: 'unchecked',
-    ));
-    properties.add(
-      ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
-    );
-    properties.add(DiagnosticsProperty<ToggleButtonThemeData>('style', style));
-    properties.add(StringProperty('semanticLabel', semanticLabel));
-    properties.add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
-    properties.add(
-        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
+    properties
+      ..add(FlagProperty(
+        'checked',
+        value: checked,
+        ifFalse: 'unchecked',
+      ))
+      ..add(
+        ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
+      )
+      ..add(DiagnosticsProperty<ToggleButtonThemeData>('style', style))
+      ..add(StringProperty('semanticLabel', semanticLabel))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
+      ..add(
+          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
   }
 
   @override
@@ -161,7 +162,7 @@ class ToggleButtonThemeData with Diagnosticable {
         shape: ButtonState.all(RoundedRectangleBorder(
           side: const BorderSide(
             color: Colors.transparent,
-            width: 1,
+            width: 0.33,
           ),
           borderRadius: BorderRadius.circular(4.0),
         )),

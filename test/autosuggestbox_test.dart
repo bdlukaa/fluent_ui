@@ -15,7 +15,7 @@ void main() {
           AutoSuggestBoxItem<String>(label: 'Three', value: 'three'),
         ],
         leadingIcon: const Icon(FluentIcons.number),
-        placeholder: "Numbers",
+        placeholder: 'Numbers',
       ),
     ));
     // Placeholder is shown
@@ -41,7 +41,7 @@ void main() {
                 AutoSuggestBoxItem<String>(label: 'Three', value: 'three'),
               ],
               leadingIcon: const Icon(FluentIcons.number),
-              placeholder: "Numbers",
+              placeholder: 'Numbers',
             ),
           ),
         ),

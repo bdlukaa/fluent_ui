@@ -268,52 +268,6 @@ class AccentColor extends ColorSwatch<String> {
     });
   }
 
-  static Color resolve(Color resolvable, BuildContext context) {
-    return (resolvable is AccentColor)
-        ? resolvable.resolveFrom(context)
-        : resolvable;
-  }
-
-  Color resolveFrom(BuildContext context, [Brightness? bright]) {
-    final ThemeData? theme = FluentTheme.maybeOf(context);
-    final brightness = bright ?? theme?.brightness ?? Brightness.light;
-    return resolveFromBrightness(brightness);
-  }
-
-  Color resolveFromBrightness(Brightness brightness, {int level = 0}) {
-    switch (brightness) {
-      case Brightness.light:
-        return level == 0
-            ? light
-            : level == 1
-                ? lighter
-                : lightest;
-      case Brightness.dark:
-        return level == 0
-            ? dark
-            : level == 1
-                ? darker
-                : darkest;
-    }
-  }
-
-  Color resolveFromReverseBrightness(Brightness brightness, {int level = 0}) {
-    switch (brightness) {
-      case Brightness.dark:
-        return level == 0
-            ? light
-            : level == 1
-                ? lighter
-                : lightest;
-      case Brightness.light:
-        return level == 0
-            ? dark
-            : level == 1
-                ? darker
-                : darkest;
-    }
-  }
-
   Color defaultBrushFor(Brightness brightness) {
     if (brightness.isDark) {
       return lighter;
@@ -393,18 +347,10 @@ extension ColorExtension on Color {
   Color lerpWith(Color color, double t) {
     return Color.lerp(this, color, t)!;
   }
-
-  Color resolve(BuildContext context) {
-    if (this is AccentColor) {
-      return AccentColor.resolve(this, context);
-    }
-    return this;
-  }
 }
 
 class ColorConst extends Color {
   const ColorConst.withOpacity(int value, double opacity)
-      : super(
-            ((((opacity * 0xff ~/ 1) & 0xff) << 24) | ((0x00ffffff & value))) &
-                0xFFFFFFFF);
+      : super(((((opacity * 0xff ~/ 1) & 0xff) << 24) | (0x00ffffff & value)) &
+            0xFFFFFFFF);
 }

@@ -145,7 +145,8 @@ class ListTile extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('shape', shape))
-      ..add(FlagProperty('selected', value: selected, defaultValue: false))
+      ..add(FlagProperty('selected',
+          value: selected, ifFalse: 'unselected', defaultValue: false))
       ..add(EnumProperty(
         'selectionMode',
         selectionMode,
@@ -184,7 +185,7 @@ class ListTile extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       builder: (context, states) {
-        final Color tileColor = () {
+        final tileColor = () {
           if (this.tileColor != null) {
             return this.tileColor!.resolve(states);
           }
@@ -210,20 +211,17 @@ class ListTile extends StatelessWidget {
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (title != null)
                     DefaultTextStyle(
                       style: (theme.typography.body ?? const TextStyle())
                           .copyWith(fontSize: 16),
-                      overflow: TextOverflow.clip,
                       child: title!,
                     ),
                   if (subtitle != null)
                     DefaultTextStyle(
                       style: theme.typography.caption ?? const TextStyle(),
-                      overflow: TextOverflow.clip,
                       child: subtitle!,
                     ),
                 ],
@@ -292,7 +290,7 @@ class ListTile extends StatelessWidget {
                                       .defaultBrushFor(theme.brightness)
                                   : Colors.transparent,
                             ),
-                            margin: const EdgeInsets.only(right: 8.0),
+                            margin: const EdgeInsetsDirectional.only(end: 8.0),
                           ),
                         ),
                       ),

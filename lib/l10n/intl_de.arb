@@ -23,5 +23,12 @@
   "copyActionTooltip": "Ausgewählten Inhalt in die Zwischenablage kopieren",
   "cutActionTooltip": "Ausgewählten Inhalt entfernen und in die Zwischenablage legen",
   "pasteActionTooltip": "Fügt den Inhalt der Zwischenablage an der aktuellen Stelle ein",
-  "selectAllActionTooltip": "Alle Inhalte auswählen"
+  "selectAllActionTooltip": "Alle Inhalte auswählen",
+  "hour": "Stunde",
+  "minute": "Minute",
+  "am": "AM",
+  "pm": "PM",
+  "month": "Monat",
+  "day": "Tag",
+  "year": "Jahr"
 }

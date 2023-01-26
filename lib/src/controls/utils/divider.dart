@@ -24,18 +24,19 @@ class Divider extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty(
-      'size',
-      size,
-      ifNull: 'indeterminate',
-      defaultValue: 1.0,
-    ));
-    properties.add(DiagnosticsProperty('style', style));
-    properties.add(EnumProperty(
-      'direction',
-      direction,
-      defaultValue: Axis.horizontal,
-    ));
+    properties
+      ..add(DoubleProperty(
+        'size',
+        size,
+        ifNull: 'indeterminate',
+        defaultValue: 1.0,
+      ))
+      ..add(DiagnosticsProperty('style', style))
+      ..add(EnumProperty(
+        'direction',
+        direction,
+        defaultValue: Axis.horizontal,
+      ));
   }
 
   @override
@@ -177,9 +178,10 @@ class DividerThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Decoration>('decoration', decoration));
-    properties.add(DiagnosticsProperty('horizontalMargin', horizontalMargin));
-    properties.add(DiagnosticsProperty('verticalMargin', verticalMargin));
-    properties.add(DoubleProperty('thickness', thickness, defaultValue: 1.0));
+    properties
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(DiagnosticsProperty('horizontalMargin', horizontalMargin))
+      ..add(DiagnosticsProperty('verticalMargin', verticalMargin))
+      ..add(DoubleProperty('thickness', thickness, defaultValue: 1.0));
   }
 }

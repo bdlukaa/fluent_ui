@@ -68,8 +68,8 @@ class Chip extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = ChipTheme.of(context);
-    final VisualDensity visualDensity = FluentTheme.of(context).visualDensity;
-    final double spacing = theme.spacing ?? _kChipSpacing;
+    final visualDensity = FluentTheme.of(context).visualDensity;
+    final spacing = theme.spacing ?? _kChipSpacing;
     return HoverButton(
       semanticLabel: semanticLabel,
       onPressed: onPressed,
@@ -179,8 +179,7 @@ class ChipTheme extends InheritedTheme {
   }
 
   static ChipThemeData _getInheritedChipThemeData(BuildContext context) {
-    final ChipTheme? theme =
-        context.dependOnInheritedWidgetOfExactType<ChipTheme>();
+    final theme = context.dependOnInheritedWidgetOfExactType<ChipTheme>();
     return theme?.data ?? FluentTheme.of(context).chipTheme;
   }
 
@@ -289,17 +288,16 @@ class ChipThemeData with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
-        'decoration', decoration));
-    properties.add(DiagnosticsProperty<ButtonState<Decoration?>?>(
-        'selectedDecoration', selectedDecoration));
     properties
-        .add(DoubleProperty('spacing', spacing, defaultValue: _kChipSpacing));
-    properties
-        .add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor));
-    properties.add(
-        DiagnosticsProperty<ButtonState<TextStyle?>?>('textStyle', textStyle));
-    properties.add(DiagnosticsProperty<ButtonState<TextStyle?>?>(
-        'selectedTextStyle', selectedTextStyle));
+      ..add(DiagnosticsProperty<ButtonState<Decoration?>?>(
+          'decoration', decoration))
+      ..add(DiagnosticsProperty<ButtonState<Decoration?>?>(
+          'selectedDecoration', selectedDecoration))
+      ..add(DoubleProperty('spacing', spacing, defaultValue: _kChipSpacing))
+      ..add(DiagnosticsProperty<ButtonState<MouseCursor>?>('cursor', cursor))
+      ..add(
+          DiagnosticsProperty<ButtonState<TextStyle?>?>('textStyle', textStyle))
+      ..add(DiagnosticsProperty<ButtonState<TextStyle?>?>(
+          'selectedTextStyle', selectedTextStyle));
   }
 }

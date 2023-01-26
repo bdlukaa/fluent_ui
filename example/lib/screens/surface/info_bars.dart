@@ -34,6 +34,35 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         ),
         subtitle(
           content: const Text(
+            'A InfoBar as a popup',
+          ),
+        ),
+        CardHighlight(
+          backgroundColor: FluentTheme.of(context).micaBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Button(
+              onPressed: () {
+                displayInfoBar(context, builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('You can not do that :/'),
+                    content: const Text(
+                        'A proper warning message of why the user can not do that :/'),
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                    severity: InfoBarSeverity.warning,
+                  );
+                });
+              },
+              child: const Text('Show InfoBar'),
+            ),
+          ),
+          codeSnippet: '''''',
+        ),
+        subtitle(
+          content: const Text(
             'A closable InfoBar with options to change its severity',
           ),
         ),
@@ -65,7 +94,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                   content: const Text('Is open'),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 10.0),
+                  margin: const EdgeInsetsDirectional.only(top: 10.0),
                   width: 150.0,
                   child: ComboBox<InfoBarSeverity>(
                     isExpanded: true,

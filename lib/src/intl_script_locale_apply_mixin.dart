@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 mixin IntlScriptLocaleApplyMixin on Diagnosticable {
   /// Return a default country code if [Locale] doesn't applied.
   static final Map<Locale, String> _defaultCountryCode = <Locale, String>{
-    const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'): "TW"
+    const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'): 'TW'
   };
 
   /// Get a [String] which recognizable for `intl` pakcage.
@@ -18,12 +18,12 @@ mixin IntlScriptLocaleApplyMixin on Diagnosticable {
     assert(_defaultCountryCode.keys
         .every((element) => element.scriptCode != null));
 
-    Locale locale = Localizations.localeOf(context);
-    Locale noCountryLocale = Locale.fromSubtags(
+    final locale = Localizations.localeOf(context);
+    final noCountryLocale = Locale.fromSubtags(
         languageCode: locale.languageCode, scriptCode: locale.scriptCode);
 
     if (_defaultCountryCode.containsKey(noCountryLocale)) {
-      return "${locale.languageCode}_${locale.countryCode ?? _defaultCountryCode[noCountryLocale]}";
+      return '${locale.languageCode}_${locale.countryCode ?? _defaultCountryCode[noCountryLocale]}';
     }
 
     return null;

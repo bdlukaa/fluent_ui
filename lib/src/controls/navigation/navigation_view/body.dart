@@ -14,7 +14,7 @@ class _NavigationBody extends StatefulWidget {
     // ignore: unused_element
     super.key,
     required this.itemKey,
-    required this.child,
+    this.paneBodyBuilder,
     this.transitionBuilder,
     // ignore: unused_element
     this.animationCurve,
@@ -24,7 +24,7 @@ class _NavigationBody extends StatefulWidget {
 
   final ValueKey<int>? itemKey;
 
-  final Widget child;
+  final NavigationContentBuilder? paneBodyBuilder;
 
   /// The transition builder.
   ///
@@ -77,12 +77,34 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
+  final _pageKey = GlobalKey<State<PageView>>();
+  PageController? _pageController;
+
+  PageController get pageController => _pageController!;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final view = InheritedNavigationView.of(context);
+    final selected = view.pane?.selected ?? 0;
+    MediaQuery.of(context);
+
+    _pageController ??= PageController(initialPage: selected);
+
+    if (pageController.hasClients) {
+      if (view.oldIndex != selected || pageController.page != selected) {
+        pageController.jumpToPage(selected);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.maybeOf(context);
+    final view = InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
-    return Container(
+
+    return ColoredBox(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
         switchInCurve: widget.animationCurve ?? Curves.ease,
@@ -98,33 +120,58 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
 
-          if (view != null) {
-            bool isTop = view.displayMode == PaneDisplayMode.top;
+          var isTop = view.displayMode == PaneDisplayMode.top;
 
-            if (isTop) {
-              // Other transtitions other than default is only applied to top nav
-              // when clicking overflow on topnav, transition is from bottom
-              // otherwise if prevItem is on left side of nextActualItem, transition is from left
-              //           if prevItem is on right side of nextActualItem, transition is from right
-              // click on Settings item is considered Default
-              return HorizontalSlidePageTransition(
-                animation: animation,
-                fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
-                child: child,
-              );
-            }
+          if (isTop) {
+            // Other transtitions other than default is only applied to top nav
+            // when clicking overflow on topnav, transition is from bottom
+            // otherwise if prevItem is on left side of nextActualItem, transition is from left
+            //           if prevItem is on right side of nextActualItem, transition is from right
+            // click on Settings item is considered Default
+            return HorizontalSlidePageTransition(
+              animation: animation,
+              fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
+              child: child,
+            );
           }
 
           return EntrancePageTransition(
             animation: animation,
-            vertical: true,
             child: child,
           );
         },
-        child: FocusTraversalGroup(
-          key: widget.itemKey,
-          child: widget.child,
-        ),
+        child: () {
+          final paneBodyBuilder = widget.paneBodyBuilder;
+          if (paneBodyBuilder != null) {
+            return FocusTraversalGroup(
+              child: paneBodyBuilder.call(view.pane?.selected != null
+                  ? view.pane?.selectedItem.body
+                  : null),
+            );
+          } else {
+            return KeyedSubtree(
+              key: widget.itemKey,
+              child: PageView.builder(
+                key: _pageKey,
+                physics: const NeverScrollableScrollPhysics(),
+                controller: pageController,
+                itemCount: view.pane!.effectiveItems.length,
+                itemBuilder: (context, index) {
+                  final isSelected = view.pane!.selected == index;
+                  final item = view.pane!.effectiveItems[index];
+
+                  return ExcludeFocus(
+                    key: item.bodyKey,
+                    excluding: !isSelected,
+                    child: FocusTraversalGroup(
+                      child: item.body,
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        }(),
       ),
     );
   }

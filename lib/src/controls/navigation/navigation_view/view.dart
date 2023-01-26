@@ -19,6 +19,8 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
 
+typedef NavigationContentBuilder = Widget Function(Widget? body);
+
 /// The NavigationView control provides top-level navigation for your app. It
 /// adapts to a variety of screen sizes and supports both top and left
 /// navigation styles.
@@ -56,14 +58,17 @@ class NavigationView extends StatefulWidget {
 
   /// Can be used to override the widget that is built from
   /// the [PaneItem.body]. Only used if [pane] is provided.
-  /// If nothing is selected, `selectedPaneItemBody` will be
-  /// null.
+  /// If nothing is selected, `body` will be null.
   ///
   /// This can be useful if you are using router-based navigation,
   /// and the body of the navigation pane is dynamically determined or
   /// affected by the current route rather than just by the currently
   /// selected pane.
-  final Widget Function(Widget? selectedPaneItemBody)? paneBodyBuilder;
+  ///
+  /// If this is not null then this builder will be responsible for state
+  /// management of the child widget. One way to accomplish this is to
+  /// use an [IndexedStack].
+  final NavigationContentBuilder? paneBodyBuilder;
 
   /// The navigation pane, that can be displayed either on the
   /// left, on the top, or above the body.
@@ -130,7 +135,7 @@ class NavigationView extends StatefulWidget {
   }
 
   @override
-  NavigationViewState createState() => NavigationViewState();
+  State<NavigationView> createState() => NavigationViewState();
 }
 
 class NavigationViewState extends State<NavigationView> {
@@ -186,13 +191,12 @@ class NavigationViewState extends State<NavigationView> {
     paneScrollController = widget.pane?.scrollController ??
         ScrollController(
           debugLabel: '${widget.runtimeType} scroll controller',
-          keepScrollOffset: true,
         );
     paneScrollController.addListener(_handleScrollControllerEvent);
 
     _generateKeys();
 
-    _compactOverlayOpen = PageStorage.of(context)?.readState(
+    _compactOverlayOpen = PageStorage.of(context).readState(
           context,
           identifier: 'compactOverlayOpen',
         ) as bool? ??
@@ -213,6 +217,22 @@ class NavigationViewState extends State<NavigationView> {
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _oldIndex = oldWidget.pane?.selected ?? -1;
+
+      final item = widget.pane?.selected == null
+          ? null
+          : widget.pane?.selectedItem.itemKey.currentContext;
+
+      if (item != null) {
+        final atEnd =
+            (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
+
+        Scrollable.ensureVisible(
+          item,
+          alignmentPolicy: atEnd
+              ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+              : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        );
+      }
     }
 
     if (oldWidget.pane?.effectiveItems.length !=
@@ -252,7 +272,7 @@ class NavigationViewState extends State<NavigationView> {
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
     setState(() => _compactOverlayOpen = !_compactOverlayOpen);
-    PageStorage.of(context)?.writeState(
+    PageStorage.of(context).writeState(
       context,
       _compactOverlayOpen,
       identifier: 'compactOverlayOpen',
@@ -266,14 +286,14 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasDirectionality(context));
 
-    final Brightness brightness = FluentTheme.of(context).brightness;
-    final NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
-    final FluentLocalizations localizations = FluentLocalizations.of(context);
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final brightness = FluentTheme.of(context).brightness;
+    final theme = NavigationPaneTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+    final mediaQuery = MediaQuery.of(context);
     final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
       top: widget.appBar?.finalHeight(context) ?? 0.0,
     );
-    final TextDirection direction = Directionality.of(context);
+    final direction = Directionality.of(context);
 
     Color? overlayBackgroundColor() {
       if (theme.backgroundColor == null) {
@@ -322,7 +342,7 @@ class NavigationViewState extends State<NavigationView> {
         /// - A left, icon-only, nav pane (compact) on medium window widths
         /// (641px to 1007px).
         /// - Only a menu button (minimal) on small window widths (640px or less).
-        double width = consts.biggest.width;
+        var width = consts.biggest.width;
         if (width.isInfinite) width = mediaQuery.size.width;
 
         if (width <= 640) {
@@ -337,7 +357,7 @@ class NavigationViewState extends State<NavigationView> {
       }
       assert(displayMode != PaneDisplayMode.auto);
 
-      Widget appBar = () {
+      var appBar = () {
         if (widget.appBar != null) {
           return _NavigationAppBar(
             appBar: widget.appBar!,
@@ -361,17 +381,12 @@ class NavigationViewState extends State<NavigationView> {
       late Widget paneResult;
       if (widget.pane != null) {
         final pane = widget.pane!;
-        final paneBodyBuilder = widget.paneBodyBuilder;
         final body = _NavigationBody(
           itemKey: ValueKey(pane.selected ?? -1),
           transitionBuilder: widget.transitionBuilder,
-          child: paneBodyBuilder != null
-              ? paneBodyBuilder(
-                  pane.selected != null ? pane.selectedItem.body : null)
-              : (pane.selected != null
-                  ? pane.selectedItem.body
-                  : const SizedBox.shrink()),
+          paneBodyBuilder: widget.paneBodyBuilder,
         );
+
         if (pane.customPane != null) {
           paneResult = Builder(builder: (context) {
             return PaneScrollConfiguration(
@@ -419,7 +434,7 @@ class NavigationViewState extends State<NavigationView> {
             _compactOverlayOpen = false;
           }
           if (displayMode != PaneDisplayMode.open) {
-            PageStorage.of(context)?.writeState(
+            PageStorage.of(context).writeState(
               context,
               false,
               identifier: 'openModeOpen',
@@ -442,17 +457,17 @@ class NavigationViewState extends State<NavigationView> {
             case PaneDisplayMode.compact:
 
               // Ensure the overlay state is correct
-              _compactOverlayOpen = PageStorage.of(context)?.readState(
+              _compactOverlayOpen = PageStorage.of(context).readState(
                     context,
                     identifier: 'compactOverlayOpen',
                   ) as bool? ??
                   _compactOverlayOpen;
 
-              double openSize =
+              var openSize =
                   pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-              final bool noOverlayRequired = consts.maxWidth / 2.5 > openSize;
-              final bool openedWithoutOverlay =
+              final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
+              final openedWithoutOverlay =
                   _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
               // print(
@@ -562,9 +577,8 @@ class NavigationViewState extends State<NavigationView> {
                         return Mica(
                           key: _overlayKey,
                           backgroundColor: overlayBackgroundColor(),
-                          elevation: 10.0,
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: EdgeInsetsDirectional.only(
                               top: appBarPadding.resolve(direction).top,
                             ),
                             child: _CompactNavigationPane(
@@ -594,7 +608,7 @@ class NavigationViewState extends State<NavigationView> {
                         pane: pane,
                         paneKey: _panelKey,
                         listKey: _listKey,
-                        initiallyOpen: PageStorage.of(context)?.readState(
+                        initiallyOpen: PageStorage.of(context).readState(
                               context,
                               identifier: 'openModeOpen',
                             ) as bool? ??
@@ -608,10 +622,10 @@ class NavigationViewState extends State<NavigationView> {
               break;
             case PaneDisplayMode.minimal:
               paneResult = Stack(children: [
-                Positioned(
+                PositionedDirectional(
                   top: widget.appBar?.finalHeight(context) ?? 0.0,
-                  left: 0.0,
-                  right: 0.0,
+                  start: 0.0,
+                  end: 0.0,
                   bottom: 0.0,
                   child: content,
                 ),
@@ -639,7 +653,6 @@ class NavigationViewState extends State<NavigationView> {
                       color: Colors.black,
                       child: Mica(
                         backgroundColor: overlayBackgroundColor(),
-                        elevation: 10.0,
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -696,7 +709,8 @@ class NavigationViewState extends State<NavigationView> {
       return PrimaryScrollController(
         controller: paneScrollController,
         child: ScrollConfiguration(
-          behavior: const NavigationViewScrollBehavior(),
+          behavior: widget.pane?.scrollBehavior ??
+              const NavigationViewScrollBehavior(),
           child: child,
         ),
       );
@@ -780,7 +794,7 @@ class NavigationAppBar with Diagnosticable {
         widget = leading!;
       } else if (automaticallyImplyLeading && imply) {
         final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-        final bool canPop = parentRoute?.canPop ?? false;
+        final canPop = parentRoute?.canPop ?? false;
 
         assert(debugCheckHasFluentLocalizations(context));
         assert(debugCheckHasFluentTheme(context));
@@ -842,14 +856,11 @@ class _NavigationAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-    assert(debugCheckHasDirectionality(context));
 
     final mediaQuery = MediaQuery.of(context);
-    final direction = Directionality.of(context);
 
-    final PaneDisplayMode displayMode =
-        InheritedNavigationView.maybeOf(context)?.displayMode ??
-            PaneDisplayMode.top;
+    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
@@ -865,7 +876,6 @@ class _NavigationAppBar extends StatelessWidget {
           child: DefaultTextStyle(
             style:
                 FluentTheme.of(context).typography.caption ?? const TextStyle(),
-            overflow: TextOverflow.clip,
             maxLines: 1,
             softWrap: false,
             child: appBar.title!,
@@ -890,7 +900,7 @@ class _NavigationAppBar extends StatelessWidget {
       case PaneDisplayMode.compact:
         result = Stack(children: [
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               leading,
               if (additionalLeading != null) additionalLeading!,
@@ -898,14 +908,13 @@ class _NavigationAppBar extends StatelessWidget {
             ]),
           ),
           if (appBar.actions != null)
-            Positioned.directional(
-              textDirection: direction,
+            PositionedDirectional(
               start: 0,
               end: 0.0,
               top: 0.0,
               bottom: 0.0,
               child: Align(
-                alignment: Alignment.topRight,
+                alignment: AlignmentDirectional.topEnd,
                 child: appBar.actions!,
               ),
             ),
@@ -919,7 +928,7 @@ class _NavigationAppBar extends StatelessWidget {
     return Container(
       color: appBar.backgroundColor,
       height: appBar.finalHeight(context),
-      padding: EdgeInsets.only(top: topPadding),
+      padding: EdgeInsetsDirectional.only(top: topPadding),
       child: result,
     );
   }
@@ -935,7 +944,7 @@ class NavigationViewScrollBehavior extends FluentScrollBehavior {
   @override
   Widget buildScrollbar(context, child, details) {
     return Scrollbar(
-      controller: PrimaryScrollController.of(context),
+      controller: details.controller,
       thumbVisibility: false,
       interactive: true,
       child: child,

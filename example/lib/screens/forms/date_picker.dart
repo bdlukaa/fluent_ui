@@ -31,7 +31,7 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
         subtitle(content: const Text('A simple DatePicker with a header')),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: DatePicker(
               header: 'Pick a date',
               selected: simpleTime,
@@ -49,7 +49,7 @@ DatePicker(
         subtitle(content: const Text('A DatePicker with year hidden')),
         CardHighlight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: DatePicker(
               selected: hiddenTime,
               onChanged: (v) => setState(() => hiddenTime = v),

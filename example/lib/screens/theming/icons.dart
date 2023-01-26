@@ -13,7 +13,7 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
             TextSpan(
               text: copiedText,
               style: TextStyle(
-                color: Colors.blue.resolveFromReverseBrightness(
+                color: Colors.blue.defaultBrushFor(
                   FluentTheme.of(context).brightness,
                 ),
                 fontWeight: FontWeight.w500,
@@ -31,7 +31,7 @@ class IconsPage extends StatefulWidget {
   const IconsPage({Key? key}) : super(key: key);
 
   @override
-  _IconsPageState createState() => _IconsPageState();
+  State<IconsPage> createState() => _IconsPageState();
 }
 
 class _IconsPageState extends State<IconsPage> {
@@ -82,9 +82,9 @@ class _IconsPageState extends State<IconsPage> {
         ),
       ),
       content: GridView.builder(
-        padding: EdgeInsets.only(
-          left: PageHeader.horizontalPadding(context),
-          right: PageHeader.horizontalPadding(context),
+        padding: EdgeInsetsDirectional.only(
+          start: PageHeader.horizontalPadding(context),
+          end: PageHeader.horizontalPadding(context),
         ),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
@@ -126,7 +126,7 @@ class _IconsPageState extends State<IconsPage> {
                         children: [
                           Icon(e.value, size: 40),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
+                            padding: const EdgeInsetsDirectional.only(top: 8.0),
                             child: Text(
                               snakeCasetoSentenceCase(e.key),
                               textAlign: TextAlign.center,

@@ -1,13 +1,12 @@
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import 'pickers/pickers.dart';
-
-const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 5);
+const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5);
 
 enum OverlayVisibilityMode {
   never,
@@ -28,19 +27,6 @@ class _TextBoxSelectionGestureDetectorBuilder
   @override
   void onSingleTapUp(TapUpDetails details) {
     editableText.hideToolbar();
-    // Because TextSelectionGestureDetector listens to taps that happen on
-    // widgets in front of it, tapping the clear button will also trigger
-    // this handler. If the clear button widget recognizes the up event,
-    // then do not handle it.
-    if (_state._clearGlobalKey.currentContext != null) {
-      final RenderBox renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject()! as RenderBox;
-      final Offset localOffset =
-          renderBox.globalToLocal(details.globalPosition);
-      if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
-        return;
-      }
-    }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
     _state.widget.onTap?.call();
@@ -90,7 +76,6 @@ class TextBox extends StatefulWidget {
     this.textAlignVertical,
     this.readOnly = false,
     this.textDirection,
-    ToolbarOptions? toolbarOptions,
     this.showCursor,
     this.autofocus = false,
     this.obscuringCharacter = '•',
@@ -108,6 +93,7 @@ class TextBox extends StatefulWidget {
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
+    this.onTapOutside,
     this.inputFormatters,
     this.enabled,
     this.cursorWidth = 1.5,
@@ -133,11 +119,13 @@ class TextBox extends StatefulWidget {
     this.foregroundDecoration,
     this.highlightColor,
     this.unfocusedColor,
-    this.clearGlobalKey,
     this.selectionControls,
     this.mouseCursor,
     this.scribbleEnabled = true,
     this.enableIMEPersonalizedLearning = true,
+    this.contextMenuBuilder = _defaultContextMenuBuilder,
+    this.magnifierConfiguration,
+    this.spellCheckConfiguration,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -170,18 +158,6 @@ class TextBox extends StatefulWidget {
         ),
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        toolbarOptions = toolbarOptions ??
-            (obscureText
-                ? const ToolbarOptions(
-                    selectAll: true,
-                    paste: true,
-                  )
-                : const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    selectAll: true,
-                    paste: true,
-                  )),
         super(key: key);
 
   /// Controls the text being edited.
@@ -341,6 +317,9 @@ class TextBox extends StatefulWidget {
   /// The highlight color of the text box.
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
 
   /// The unfocused color of the highlight border.
@@ -354,13 +333,6 @@ class TextBox extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.textAlign}
   final TextAlign textAlign;
-
-  /// Configuration of toolbar options.
-  ///
-  /// If not set, select all and paste will default to be enabled. Copy and cut
-  /// will be disabled if [obscureText] is true. If [readOnly] is true,
-  /// paste and cut will be disabled regardless.
-  final ToolbarOptions toolbarOptions;
 
   /// {@macro flutter.material.InputDecorator.textAlignVertical}
   final TextAlignVertical? textAlignVertical;
@@ -439,6 +411,9 @@ class TextBox extends StatefulWidget {
   ///    the user is done editing.
   final ValueChanged<String>? onSubmitted;
 
+  /// {@macro flutter.widgets.editableText.onTapOutside}
+  final TapRegionCallback? onTapOutside;
+
   /// {@macro flutter.widgets.editableText.inputFormatters}
   final List<TextInputFormatter>? inputFormatters;
 
@@ -508,8 +483,6 @@ class TextBox extends StatefulWidget {
 
   final ButtonThemeData? iconButtonThemeData;
 
-  final GlobalKey? clearGlobalKey;
-
   /// {@macro flutter.widgets.editableText.scribbleEnabled}
   final bool scribbleEnabled;
 
@@ -528,8 +501,54 @@ class TextBox extends StatefulWidget {
   /// the editing position.
   final MouseCursor? mouseCursor;
 
+  /// {@macro flutter.widgets.EditableText.contextMenuBuilder}
+  ///
+  /// If not provided, will build a default fluent-styled menu.
+  ///
+  /// See also:
+  ///
+  ///  * [FluentTextSelectionToolbar], which is built by default.
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  static Widget _defaultContextMenuBuilder(
+      BuildContext context, EditableTextState editableTextState) {
+    return FluentTextSelectionToolbar.editableText(
+      editableTextState: editableTextState,
+    );
+  }
+
+  /// {@macro flutter.widgets.magnifier.TextMagnifierConfiguration.intro}
+  ///
+  /// {@macro flutter.widgets.magnifier.intro}
+  ///
+  /// {@macro flutter.widgets.magnifier.TextMagnifierConfiguration.details}
+  ///
+  /// By default, builds a [CupertinoTextMagnifier] on iOS and Android nothing on all other
+  /// platforms. If it is desired to suppress the magnifier, consider passing
+  /// [TextMagnifierConfiguration.disabled].
+  final TextMagnifierConfiguration? magnifierConfiguration;
+
+  /// {@macro flutter.widgets.EditableText.spellCheckConfiguration}
+  ///
+  /// If [SpellCheckConfiguration.misspelledTextStyle] is not specified in this
+  /// configuration, then [fluentMisspelledTextStyle] is used by default.
+  final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// The [TextStyle] used to indicate misspelled words in the Cupertino style.
+  ///
+  /// See also:
+  ///  * [SpellCheckConfiguration.misspelledTextStyle], the style configured to
+  ///    mark misspelled words with.
+  ///  * [TextField.materialMisspelledTextStyle], the style configured
+  ///    to mark misspelled words with in the Material style.
+  static final TextStyle fluentMisspelledTextStyle = TextStyle(
+    decoration: TextDecoration.underline,
+    decorationColor: Colors.red,
+    decorationStyle: TextDecorationStyle.dotted,
+  );
+
   @override
-  _TextBoxState createState() => _TextBoxState();
+  State<TextBox> createState() => _TextBoxState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -605,10 +624,6 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin
     implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
-  final _localClearGlobalKey = GlobalKey();
-  GlobalKey get _clearGlobalKey =>
-      widget.clearGlobalKey ?? _localClearGlobalKey;
-
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller!.value;
@@ -649,8 +664,9 @@ class _TextBoxState extends State<TextBox>
             : TextEditingValue(text: widget.initialValue!),
       );
     }
-    _effectiveFocusNode.canRequestFocus = enabled;
-    _effectiveFocusNode.addListener(_handleFocusChanged);
+    _effectiveFocusNode
+      ..canRequestFocus = enabled
+      ..addListener(_handleFocusChanged);
   }
 
   void _handleFocusChanged() {
@@ -676,8 +692,8 @@ class _TextBoxState extends State<TextBox>
       _controller!.dispose();
       _controller = null;
     }
-    final bool isEnabled = widget.enabled ?? true;
-    final bool wasEnabled = oldWidget.enabled ?? true;
+    final isEnabled = widget.enabled ?? true;
+    final wasEnabled = oldWidget.enabled ?? true;
     if (wasEnabled && !isEnabled) {
       _effectiveFocusNode.unfocus();
     }
@@ -746,7 +762,7 @@ class _TextBoxState extends State<TextBox>
     if (cause == SelectionChangedCause.longPress) {
       _editableText.bringIntoView(selection.base);
     }
-    final bool willShowSelectionHandles = _shouldShowSelectionHandles(cause);
+    final willShowSelectionHandles = _shouldShowSelectionHandles(cause);
     if (willShowSelectionHandles != _showSelectionHandles) {
       setState(() {
         _showSelectionHandles = willShowSelectionHandles;
@@ -866,9 +882,8 @@ class _TextBoxState extends State<TextBox>
 
   @override
   TextInputConfiguration get textInputConfiguration {
-    final List<String>? autofillHints =
-        widget.autofillHints?.toList(growable: false);
-    final AutofillConfiguration autofillConfiguration = autofillHints != null
+    final autofillHints = widget.autofillHints?.toList(growable: false);
+    final autofillConfiguration = autofillHints != null
         ? AutofillConfiguration(
             uniqueIdentifier: autofillId,
             autofillHints: autofillHints,
@@ -886,12 +901,11 @@ class _TextBoxState extends State<TextBox>
     super.build(context);
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasFluentTheme(context));
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
     final textDirection = Directionality.of(context);
-    final TextEditingController controller = _effectiveController;
-    final List<TextInputFormatter> formatters =
-        widget.inputFormatters ?? <TextInputFormatter>[];
-    const Offset cursorOffset = Offset(0, -1);
+    final controller = _effectiveController;
+    final formatters = widget.inputFormatters ?? <TextInputFormatter>[];
+    const cursorOffset = Offset(0, -1);
     if (widget.maxLength != null) {
       formatters.add(LengthLimitingTextInputFormatter(
         widget.maxLength,
@@ -899,15 +913,15 @@ class _TextBoxState extends State<TextBox>
       ));
     }
 
-    final Color disabledColor = theme.resources.textFillColorDisabled;
+    final disabledColor = theme.resources.textFillColorDisabled;
     final defaultTextStyle = TextStyle(
       color: enabled ? theme.resources.textFillColorPrimary : disabledColor,
+      fontFamily: theme.typography.body?.fontFamily,
     );
-    final TextStyle textStyle = defaultTextStyle.merge(widget.style);
+    final textStyle = defaultTextStyle.merge(widget.style);
 
-    final Brightness keyboardAppearance =
-        widget.keyboardAppearance ?? theme.brightness;
-    final Color cursorColor = widget.cursorColor ?? theme.inactiveColor;
+    final keyboardAppearance = widget.keyboardAppearance ?? theme.brightness;
+    final cursorColor = widget.cursorColor ?? theme.inactiveColor;
 
     TextStyle placeholderStyle(Set<ButtonStates> states) {
       return textStyle
@@ -922,7 +936,7 @@ class _TextBoxState extends State<TextBox>
           .merge(widget.placeholderStyle);
     }
 
-    final BoxDecoration foregroundDecoration = BoxDecoration(
+    final foregroundDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(
           color: _effectiveFocusNode.hasFocus
@@ -947,9 +961,22 @@ class _TextBoxState extends State<TextBox>
       shape: widget.foregroundDecoration?.shape,
     );
 
-    final Color selectionColor = theme.accentColor
-        .resolveFromReverseBrightness(theme.brightness)
-        .withOpacity(0.6);
+    final selectionColor =
+        theme.accentColor.defaultBrushFor(theme.brightness).withOpacity(0.6);
+
+    // Set configuration as disabled if not otherwise specified. If specified,
+    // ensure that configuration uses Cupertino text style for misspelled words
+    // unless a custom style is specified.
+    // ignore: omit_local_variable_types
+    final SpellCheckConfiguration spellCheckConfiguration =
+        widget.spellCheckConfiguration != null &&
+                widget.spellCheckConfiguration !=
+                    const SpellCheckConfiguration.disabled()
+            ? widget.spellCheckConfiguration!.copyWith(
+                misspelledTextStyle:
+                    widget.spellCheckConfiguration!.misspelledTextStyle ??
+                        TextBox.fluentMisspelledTextStyle)
+            : const SpellCheckConfiguration.disabled();
 
     final Widget paddedEditable = Padding(
       padding: widget.padding,
@@ -960,7 +987,6 @@ class _TextBoxState extends State<TextBox>
             key: editableTextKey,
             controller: controller,
             readOnly: widget.readOnly,
-            toolbarOptions: widget.toolbarOptions,
             showCursor: widget.showCursor,
             showSelectionHandles: _showSelectionHandles,
             focusNode: _effectiveFocusNode,
@@ -985,6 +1011,7 @@ class _TextBoxState extends State<TextBox>
             onSelectionChanged: _handleSelectionChanged,
             onEditingComplete: widget.onEditingComplete,
             onSubmitted: widget.onSubmitted,
+            onTapOutside: widget.onTapOutside,
             inputFormatters: formatters,
             rendererIgnoresPointer: true,
             cursorWidth: widget.cursorWidth,
@@ -1014,14 +1041,17 @@ class _TextBoxState extends State<TextBox>
             textDirection: widget.textDirection,
             clipBehavior: widget.clipBehavior,
             autofillClient: this,
+            contextMenuBuilder: widget.contextMenuBuilder,
+            magnifierConfiguration: widget.magnifierConfiguration ??
+                TextMagnifierConfiguration.disabled,
+            spellCheckConfiguration: spellCheckConfiguration,
           ),
         ),
       ),
     );
 
-    final BorderRadius radius =
-        widget.decoration?.borderRadius?.resolve(textDirection) ??
-            BorderRadius.circular(4.0);
+    final radius = widget.decoration?.borderRadius?.resolve(textDirection) ??
+        BorderRadius.circular(4.0);
     final child = Semantics(
       enabled: enabled,
       onTap: !enabled
@@ -1038,13 +1068,13 @@ class _TextBoxState extends State<TextBox>
         ignoring: !enabled,
         child: HoverButton(
           focusEnabled: false,
-          onPressed: enabled ? () {} : null,
+          forceEnabled: enabled,
+          hitTestBehavior: HitTestBehavior.translucent,
           builder: (context, states) {
             return Container(
               decoration: BoxDecoration(
                 borderRadius: radius,
                 border: Border.all(
-                  width: 1,
                   color: theme.resources.controlStrokeColorDefault,
                 ),
                 color: _backgroundColor(states),

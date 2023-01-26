@@ -119,7 +119,8 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   final Widget child;
 
   @override
-  _AnimatedFluentThemeState createState() => _AnimatedFluentThemeState();
+  AnimatedWidgetBaseState<AnimatedFluentTheme> createState() =>
+      _AnimatedFluentThemeState();
 }
 
 class _AnimatedFluentThemeState
@@ -174,6 +175,7 @@ const standardCurve = Curves.easeInOut;
 @immutable
 class ThemeData with Diagnosticable {
   final Typography typography;
+  final Map<Object, ThemeExtension<dynamic>> extensions;
 
   final AccentColor accentColor;
   final Color activeColor;
@@ -223,61 +225,8 @@ class ThemeData with Diagnosticable {
 
   final ResourceDictionary resources;
 
-  const ThemeData.raw({
-    required this.typography,
-    required this.accentColor,
-    required this.activeColor,
-    required this.inactiveColor,
-    required this.inactiveBackgroundColor,
-    required this.disabledColor,
-    required this.shadowColor,
-    required this.uncheckedColor,
-    required this.checkedColor,
-    required this.borderInputColor,
-    required this.fasterAnimationDuration,
-    required this.fastAnimationDuration,
-    required this.mediumAnimationDuration,
-    required this.slowAnimationDuration,
-    required this.animationCurve,
-    required this.brightness,
-    required this.visualDensity,
-    required this.scaffoldBackgroundColor,
-    required this.acrylicBackgroundColor,
-    required this.micaBackgroundColor,
-    required this.buttonTheme,
-    required this.checkboxTheme,
-    required this.chipTheme,
-    required this.toggleSwitchTheme,
-    required this.bottomNavigationTheme,
-    required this.iconTheme,
-    required this.splitButtonTheme,
-    required this.dialogTheme,
-    required this.tooltipTheme,
-    required this.dividerTheme,
-    required this.navigationPaneTheme,
-    required this.radioButtonTheme,
-    required this.toggleButtonTheme,
-    required this.sliderTheme,
-    required this.infoBarTheme,
-    required this.focusTheme,
-    required this.scrollbarTheme,
-    required this.snackbarTheme,
-    required this.pillButtonBarTheme,
-    required this.bottomSheetTheme,
-    required this.menuColor,
-    required this.cardColor,
-    required this.resources,
-  });
-
-  static ThemeData light() {
-    return ThemeData(brightness: Brightness.light);
-  }
-
-  static ThemeData dark() {
-    return ThemeData(brightness: Brightness.dark);
-  }
-
   factory ThemeData({
+    Iterable<ThemeExtension<dynamic>>? extensions,
     Brightness? brightness,
     VisualDensity? visualDensity,
     Typography? typography,
@@ -324,8 +273,9 @@ class ThemeData with Diagnosticable {
     ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
+    extensions ??= [];
 
-    final bool isLight = brightness == Brightness.light;
+    final isLight = brightness == Brightness.light;
 
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
     fasterAnimationDuration ??= const Duration(milliseconds: 83);
@@ -396,6 +346,7 @@ class ThemeData with Diagnosticable {
 
     return ThemeData.raw(
       brightness: brightness,
+      extensions: _themeExtensionIterableToMap(extensions),
       visualDensity: visualDensity,
       fasterAnimationDuration: fasterAnimationDuration,
       fastAnimationDuration: fastAnimationDuration,
@@ -441,9 +392,65 @@ class ThemeData with Diagnosticable {
     );
   }
 
+  const ThemeData.raw({
+    required this.typography,
+    required this.extensions,
+    required this.accentColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.inactiveBackgroundColor,
+    required this.disabledColor,
+    required this.shadowColor,
+    required this.uncheckedColor,
+    required this.checkedColor,
+    required this.borderInputColor,
+    required this.fasterAnimationDuration,
+    required this.fastAnimationDuration,
+    required this.mediumAnimationDuration,
+    required this.slowAnimationDuration,
+    required this.animationCurve,
+    required this.brightness,
+    required this.visualDensity,
+    required this.scaffoldBackgroundColor,
+    required this.acrylicBackgroundColor,
+    required this.micaBackgroundColor,
+    required this.buttonTheme,
+    required this.checkboxTheme,
+    required this.chipTheme,
+    required this.toggleSwitchTheme,
+    required this.bottomNavigationTheme,
+    required this.iconTheme,
+    required this.splitButtonTheme,
+    required this.dialogTheme,
+    required this.tooltipTheme,
+    required this.dividerTheme,
+    required this.navigationPaneTheme,
+    required this.radioButtonTheme,
+    required this.toggleButtonTheme,
+    required this.sliderTheme,
+    required this.infoBarTheme,
+    required this.focusTheme,
+    required this.scrollbarTheme,
+    required this.snackbarTheme,
+    required this.pillButtonBarTheme,
+    required this.bottomSheetTheme,
+    required this.menuColor,
+    required this.cardColor,
+    required this.resources,
+  });
+
+  static ThemeData light() {
+    return ThemeData(brightness: Brightness.light);
+  }
+
+  static ThemeData dark() {
+    return ThemeData(brightness: Brightness.dark);
+  }
+
   static ThemeData lerp(ThemeData a, ThemeData b, double t) {
     return ThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
+      extensions: t < 0.5 ? a.extensions : b.extensions,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
       resources: ResourceDictionary.lerp(a.resources, b.resources, t),
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
@@ -508,8 +515,28 @@ class ThemeData with Diagnosticable {
     );
   }
 
+  /// Used to obtain a particular [ThemeExtension] from [extensions].
+  ///
+  /// Obtain with `FluentTheme.of(context).extension<MyThemeExtension>()`.
+  ///
+  /// See [extensions] for an interactive example.
+  T? extension<T>() => extensions[T] as T?;
+
+  /// Convert the [extensionsIterable] passed to [ThemeData.new] or [copyWith]
+  /// to the stored [extensions] map, where each entry's key consists of the extension's type.
+  static Map<Object, ThemeExtension<dynamic>> _themeExtensionIterableToMap(
+      Iterable<ThemeExtension<dynamic>> extensionsIterable) {
+    return Map<Object, ThemeExtension<dynamic>>.unmodifiable(<Object,
+        ThemeExtension<dynamic>>{
+      // Strangely, the cast is necessary for tests to run.
+      for (final ThemeExtension<dynamic> extension in extensionsIterable)
+        extension.type: extension as ThemeExtension<ThemeExtension<dynamic>>,
+    });
+  }
+
   ThemeData copyWith({
     Brightness? brightness,
+    Iterable<ThemeExtension<dynamic>>? extensions,
     VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
@@ -557,6 +584,9 @@ class ThemeData with Diagnosticable {
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
       typography: this.typography.merge(typography),
+      extensions: extensions != null
+          ? _themeExtensionIterableToMap(extensions)
+          : this.extensions,
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
@@ -622,26 +652,26 @@ class ThemeData with Diagnosticable {
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
-      ..add(ColorProperty('cardColor', cardColor));
-    properties.add(EnumProperty('brightness', brightness));
-    properties.add(DiagnosticsProperty<Duration>(
-      'slowAnimationDuration',
-      slowAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'mediumAnimationDuration',
-      mediumAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fastAnimationDuration',
-      fastAnimationDuration,
-    ));
-    properties.add(DiagnosticsProperty<Duration>(
-      'fasterAnimationDuration',
-      fasterAnimationDuration,
-    ));
-    properties.add(
-      DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-    );
+      ..add(ColorProperty('cardColor', cardColor))
+      ..add(EnumProperty('brightness', brightness))
+      ..add(DiagnosticsProperty<Duration>(
+        'slowAnimationDuration',
+        slowAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'mediumAnimationDuration',
+        mediumAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fastAnimationDuration',
+        fastAnimationDuration,
+      ))
+      ..add(DiagnosticsProperty<Duration>(
+        'fasterAnimationDuration',
+        fasterAnimationDuration,
+      ))
+      ..add(
+        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
+      );
   }
 }

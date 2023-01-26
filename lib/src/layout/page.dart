@@ -11,7 +11,7 @@ const double kPageDefaultVerticalPadding = 24.0;
 /// See also:
 ///
 ///   * [PageHeader], usually used on the [header] property
-class ScaffoldPage extends StatelessWidget {
+class ScaffoldPage extends StatefulWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({
     Key? key,
@@ -36,10 +36,10 @@ class ScaffoldPage extends StatelessWidget {
   })  : content = Builder(builder: (context) {
           return ListView(
             controller: scrollController,
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               bottom: kPageDefaultVerticalPadding,
-              left: PageHeader.horizontalPadding(context),
-              right: PageHeader.horizontalPadding(context),
+              start: PageHeader.horizontalPadding(context),
+              end: PageHeader.horizontalPadding(context),
             ),
             children: children,
           );
@@ -56,10 +56,10 @@ class ScaffoldPage extends StatelessWidget {
     this.resizeToAvoidBottomInset = true,
   })  : content = Builder(builder: (context) {
           return Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               bottom: kPageDefaultVerticalPadding,
-              left: PageHeader.horizontalPadding(context),
-              right: PageHeader.horizontalPadding(context),
+              start: PageHeader.horizontalPadding(context),
+              end: PageHeader.horizontalPadding(context),
             ),
             child: content,
           );
@@ -101,6 +101,9 @@ class ScaffoldPage extends StatelessWidget {
   final bool resizeToAvoidBottomInset;
 
   @override
+  State<ScaffoldPage> createState() => _ScaffoldPageState();
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
@@ -116,6 +119,10 @@ class ScaffoldPage extends StatelessWidget {
         ifFalse: 'do not resize',
       ));
   }
+}
+
+class _ScaffoldPageState extends State<ScaffoldPage> {
+  final _bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -126,31 +133,36 @@ class ScaffoldPage extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final view = InheritedNavigationView.maybeOf(context);
 
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: resizeToAvoidBottomInset ? mediaQuery.viewInsets.bottom : 0.0,
-      ),
-      child: Column(children: [
-        Expanded(
-          child: Container(
-            // we only show the scaffold background color if a [NavigationView] is
-            // not a parent widget of this page. this happens because, if a navigation
-            // view is not used, the page would be uncolored.
-            color: view == null ? theme.scaffoldBackgroundColor : null,
-            padding: EdgeInsets.only(
-              top: padding?.top ?? kPageDefaultVerticalPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (header != null) header!,
-                Expanded(child: content),
-              ],
+    return PageStorage(
+      bucket: _bucket,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(
+          bottom: widget.resizeToAvoidBottomInset
+              ? mediaQuery.viewInsets.bottom
+              : 0.0,
+        ),
+        child: Column(children: [
+          Expanded(
+            child: Container(
+              // we only show the scaffold background color if a [NavigationView] is
+              // not a parent widget of this page. this happens because, if a navigation
+              // view is not used, the page would be uncolored.
+              color: view == null ? theme.scaffoldBackgroundColor : null,
+              padding: EdgeInsetsDirectional.only(
+                top: widget.padding?.top ?? kPageDefaultVerticalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.header != null) widget.header!,
+                  Expanded(child: widget.content),
+                ],
+              ),
             ),
           ),
-        ),
-        if (bottomBar != null) bottomBar!,
-      ]),
+          if (widget.bottomBar != null) widget.bottomBar!,
+        ]),
+      ),
     );
   }
 }
@@ -196,8 +208,8 @@ class PageHeader extends StatelessWidget {
   static double horizontalPadding(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 640.0;
-    final double horizontalPadding =
+    final isSmallScreen = screenWidth < 640.0;
+    final horizontalPadding =
         isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;
     return horizontalPadding;
   }
@@ -210,10 +222,9 @@ class PageHeader extends StatelessWidget {
     final horizontalPadding = padding ?? PageHeader.horizontalPadding(context);
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: 18.0,
-        left: leading != null ? 0 : horizontalPadding,
-        right: horizontalPadding,
+        start: leading != null ? 0 : horizontalPadding,
       ),
       child: Row(children: [
         if (leading != null) leading!,
@@ -223,7 +234,19 @@ class PageHeader extends StatelessWidget {
             child: title ?? const SizedBox(),
           ),
         ),
-        if (commandBar != null) commandBar!,
+        SizedBox(width: horizontalPadding),
+        if (commandBar != null) ...[
+          Flexible(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 160.0),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: commandBar!,
+              ),
+            ),
+          ),
+          SizedBox(width: horizontalPadding),
+        ],
       ]),
     );
   }

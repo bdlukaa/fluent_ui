@@ -52,7 +52,7 @@ Widget PickerHighlightTile() {
     );
     return Positioned.fill(
       child: Container(
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.center,
         height: kOneLineTileHeight,
         padding: const EdgeInsets.all(6.0),
         child: ListTile(
@@ -91,7 +91,7 @@ class YesNoPickerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    ButtonStyle buttonStyle = ButtonStyle(
+    final buttonStyle = ButtonStyle(
       elevation: ButtonState.all(0.0),
       backgroundColor: ButtonState.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
@@ -188,7 +188,8 @@ class PickerNavigatorIndicator extends StatelessWidget {
           },
         ),
       },
-      onPressed: () {},
+      forceEnabled: true,
+      hitTestBehavior: HitTestBehavior.translucent,
       builder: (context, states) {
         final show = states.isHovering || states.isPressing || states.isFocused;
         return FocusBorder(
@@ -215,10 +216,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
               child: Stack(children: [
                 child,
                 if (show) ...[
-                  Positioned(
+                  PositionedDirectional(
                     top: 0,
-                    left: 0,
-                    right: 0,
+                    start: 0,
+                    end: 0,
                     height: kOneLineTileHeight,
                     child: Button(
                       focusable: false,
@@ -231,10 +232,10 @@ class PickerNavigatorIndicator extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
+                  PositionedDirectional(
                     bottom: 0,
-                    left: 0,
-                    right: 0,
+                    start: 0,
+                    end: 0,
                     height: kOneLineTileHeight,
                     child: Button(
                       focusable: false,
@@ -272,7 +273,7 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
 
     if (forward) {
       final currentItem = selectedItem;
-      int to = currentItem + 1;
+      var to = currentItem + 1;
       if (currentItem == amount - 1) to = 0;
 
       return animateToItem(
@@ -282,7 +283,7 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
       );
     } else {
       final currentItem = selectedItem;
-      int to = currentItem - 1;
+      var to = currentItem - 1;
       if (currentItem == 0) to = amount - 1;
 
       return animateToItem(
@@ -317,7 +318,7 @@ class Picker extends StatefulWidget {
 }
 
 class _PickerState extends State<Picker> {
-  final GlobalKey _childKey = GlobalKey();
+  late final GlobalKey _childKey = GlobalKey(debugLabel: '${widget.child} key');
 
   Future<void> open() {
     assert(
@@ -329,6 +330,7 @@ class _PickerState extends State<Picker> {
 
     final navigator = Navigator.of(context);
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
+
     return navigator.push(PageRouteBuilder(
       barrierColor: Colors.transparent,
       opaque: false,
@@ -344,7 +346,7 @@ class _PickerState extends State<Picker> {
         // value from the Win UI 3 Gallery
         final centeredOffset = widget.pickerHeight * 0.41;
         // the popup menu y is the [button y] - [y of highlight tile]
-        double y = childOffset.dy - centeredOffset;
+        var y = childOffset.dy - centeredOffset;
 
         // if the popup menu [y] + picker height overlaps the screen height, make
         // it to the bottom of the screen
@@ -370,6 +372,8 @@ class _PickerState extends State<Picker> {
         }();
 
         final view = Stack(children: [
+          // We can not use PositionedDirectional here
+          // See https://github.com/bdlukaa/fluent_ui/issues/675
           Positioned(
             left: x,
             top: y,
