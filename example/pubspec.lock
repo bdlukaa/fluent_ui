@@ -173,6 +173,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: f611d4396469c46db1c61e934a86e2a590ce02de2a6050d01f677879ce151f4a
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.1"
   html:
     dependency: transitive
     description:
@@ -229,6 +237,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: c0bbfe94d46aedf9b8b3e695cf3bd48c8e14b35e3b2c639e0aa7755d589ba946
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   macos_window_utils:
     dependency: transitive
     description:
@@ -532,4 +548,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.5 <4.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.3.0"
