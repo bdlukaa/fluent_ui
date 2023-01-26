@@ -1,4 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
+
+const kTeachingTipConstraints = BoxConstraints(
+  minHeight: 40.0,
+  maxHeight: 520.0,
+  minWidth: 320.0,
+  maxWidth: 336.0,
+);
 
 /// Displays a Fluent teaching tip at the desired position, with Fluent entrance
 /// and exit animations, modal barrier color, and modal barrier behavior
@@ -52,65 +61,77 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///  * [showGeneralDialog], which allows for customization of the dialog popup.
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 Future<T?> showTeachingTip<T extends Object?>({
-  required BuildContext context,
-  required Widget teachingTip,
+  required WidgetBuilder builder,
+  required FlyoutController flyoutController,
+  Alignment? nonTargetedAlignment,
+  FlyoutPlacementMode placementMode = FlyoutPlacementMode.auto,
   Duration? transitionDuration,
-  bool useRootNavigator = true,
-  RouteSettings? routeSettings,
-  String? barrierLabel,
+  FlyoutTransitionBuilder transitionBuilder =
+      TeachingTip.defaultTransitionBuilder,
   Color? barrierColor = Colors.transparent,
   bool barrierDismissible = true,
-  Offset? at,
 }) {
-  assert(debugCheckHasFluentLocalizations(context));
-
-  final CapturedThemes themes = InheritedTheme.capture(
-    from: context,
-    to: Navigator.of(
-      context,
-      rootNavigator: useRootNavigator,
-    ).context,
-  );
-
-  final alignment =
-      teachingTip is TeachingTip ? teachingTip.alignment : Alignment.center;
-
-  return Navigator.of(
-    context,
-    rootNavigator: useRootNavigator,
-  ).push<T>(FluentDialogRoute<T>(
-    context: context,
+  return flyoutController.showFlyout<T>(
+    placementMode: placementMode,
+    position: nonTargetedAlignment != null ? Offset.zero : null,
+    additionalOffset: 0.0,
+    transitionDuration: transitionDuration,
+    transitionBuilder: TeachingTip.defaultTransitionBuilder,
     builder: (context) {
-      final placementMargin = teachingTip is TeachingTip
-          ? teachingTip.placementMargin
-          : EdgeInsets.zero;
+      final teachingTip = builder(context);
 
-      return Align(
-        alignment: alignment,
-        child: Padding(
-          padding: placementMargin,
+      if (nonTargetedAlignment != null) {
+        return CustomSingleChildLayout(
+          delegate: _TeachingTipNonTargetedPositionDelegate(
+            alignment: nonTargetedAlignment,
+          ),
           child: teachingTip,
-        ),
-      );
+        );
+      }
+
+      return teachingTip;
     },
-    barrierColor: barrierColor,
-    barrierDismissible: barrierDismissible,
-    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
-    settings: routeSettings,
-    transitionBuilder: (context, animation, secondaryAnimation, child) {
-      return TeachingTip._defaultTransitionBuilder(
-        context,
-        animation,
-        secondaryAnimation,
-        Alignment.center,
-        child,
-      );
-    },
-    transitionDuration: transitionDuration ??
-        FluentTheme.maybeOf(context)?.fastAnimationDuration ??
-        const Duration(milliseconds: 300),
-    themes: themes,
-  ));
+  );
+}
+
+class _TeachingTipNonTargetedPositionDelegate
+    extends SingleChildLayoutDelegate {
+  final Alignment alignment;
+
+  const _TeachingTipNonTargetedPositionDelegate({
+    required this.alignment,
+  });
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    return constraints.loosen();
+  }
+
+  @override
+  Offset getPositionForChild(Size rootSize, Size flyoutSize) {
+    var pos = alignment.alongSize(rootSize);
+
+    if (alignment.x == 0.0) {
+      pos = pos - Offset(flyoutSize.width / 2, 0.0);
+    }
+
+    if (alignment.y == 0.0) {
+      pos = pos - Offset(0.0, flyoutSize.height / 2);
+    }
+
+    /// Hardcoded margin because the flyout will always overflow
+    const margin = 16.0;
+
+    return Offset(
+      clampDouble(pos.dx, margin, rootSize.width - flyoutSize.width),
+      clampDouble(pos.dy, 0.0, rootSize.height - flyoutSize.height - margin),
+    );
+  }
+
+  @override
+  bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {
+    return true;
+  }
 }
 
 /// A teaching tip is a semi-persistent and content-rich flyout that provides
@@ -134,8 +155,6 @@ class TeachingTip extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.buttons = const [],
-    this.alignment = Alignment.center,
-    this.placementMargin = EdgeInsets.zero,
   }) : super(key: key);
 
   /// The title of the teaching tip
@@ -150,23 +169,41 @@ class TeachingTip extends StatelessWidget {
 
   final List<Widget> buttons;
 
-  /// Where the teaching tip should be displayed
-  final Alignment alignment;
-
-  final EdgeInsetsGeometry placementMargin;
-
-  static Widget _defaultTransitionBuilder(
+  static Widget defaultTransitionBuilder(
     BuildContext context,
     Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Alignment alignment,
-    Widget child,
+    FlyoutPlacementMode placementMode,
+    Widget flyout,
   ) {
-    return ScaleTransition(
-      alignment: alignment,
-      scale: animation,
-      child: child,
-    );
+    switch (placementMode) {
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.bottomLeft:
+      case FlyoutPlacementMode.bottomRight:
+        return ScaleTransition(
+          // position: Tween<Offset>(
+          //   begin: const Offset(0, -0.05),
+          //   end: const Offset(0, 0),
+          // ).animate(animation),
+          alignment: Alignment.bottomCenter,
+          scale: CurvedAnimation(
+            curve: Curves.ease,
+            parent: animation,
+          ),
+          child: flyout,
+        );
+      case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.topLeft:
+      case FlyoutPlacementMode.topRight:
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.05),
+            end: const Offset(0, 0),
+          ).animate(animation),
+          child: flyout,
+        );
+      default:
+        return flyout;
+    }
   }
 
   @override
@@ -175,12 +212,7 @@ class TeachingTip extends StatelessWidget {
     final theme = FluentTheme.of(context);
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minHeight: 40.0,
-        maxHeight: 520.0,
-        minWidth: 320.0,
-        maxWidth: 336.0,
-      ),
+      constraints: kTeachingTipConstraints,
       child: Acrylic(
         elevation: 1.0,
         shadowColor: Colors.black,
@@ -190,7 +222,8 @@ class TeachingTip extends StatelessWidget {
             color: theme.resources.surfaceStrokeColorDefault,
           ),
         ),
-        child: Padding(
+        child: Container(
+          color: theme.menuColor.withOpacity(0.6),
           padding: const EdgeInsets.all(12.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -225,39 +258,6 @@ class TeachingTip extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TeachingTipTarget extends StatefulWidget {
-  const TeachingTipTarget({
-    Key? key,
-    required this.teachingTip,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget teachingTip;
-
-  final Widget child;
-
-  @override
-  State<TeachingTipTarget> createState() => TeachingTipTargetState();
-}
-
-class TeachingTipTargetState extends State<TeachingTipTarget> {
-  final _targetKey = GlobalKey();
-
-  void showTeachingTip() {
-    final box = _targetKey.currentContext!.findRenderObject() as RenderBox;
-    final offset = box.localToGlobal(Offset.zero);
-    print(offset);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: _targetKey,
-      child: widget.child,
     );
   }
 }

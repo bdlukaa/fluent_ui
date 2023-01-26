@@ -12,7 +12,15 @@ class TeachingTipPage extends StatefulWidget {
 }
 
 class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
-  final targetKey = GlobalKey<TeachingTipTargetState>();
+  final nonTargetedController = FlyoutController();
+  final targetedController = FlyoutController();
+
+  @override
+  void dispose() {
+    nonTargetedController.dispose();
+    targetedController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,38 +42,40 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           content: const Text('Show a non-targeted TeachingTip with buttons'),
         ),
         CardHighlight(
-          child: Button(
-            child: const Text('Show TeachingTip'),
-            onPressed: () {
-              showTeachingTip(
-                context: context,
-                teachingTip: TeachingTip(
-                  alignment: Alignment.bottomCenter,
-                  placementMargin: const EdgeInsets.all(20.0),
-                  title: const Text('Change themes without hassle'),
-                  subtitle: const Text(
-                    'It\'s easier to see control samples in both light and dark theme',
+          child: FlyoutTarget(
+            controller: nonTargetedController,
+            child: Button(
+              child: const Text('Show TeachingTip'),
+              onPressed: () {
+                showTeachingTip(
+                  flyoutController: nonTargetedController,
+                  nonTargetedAlignment: Alignment.bottomCenter,
+                  builder: (context) => TeachingTip(
+                    title: const Text('Change themes without hassle'),
+                    subtitle: const Text(
+                      'It\'s easier to see control samples in both light and dark theme',
+                    ),
+                    buttons: [
+                      Button(
+                        child: const Text('Toggle theme now'),
+                        onPressed: () {
+                          if (theme.brightness.isDark) {
+                            appTheme.mode = ThemeMode.light;
+                          } else {
+                            appTheme.mode = ThemeMode.dark;
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      Button(
+                        child: const Text('Got it'),
+                        onPressed: Navigator.of(context).pop,
+                      ),
+                    ],
                   ),
-                  buttons: [
-                    Button(
-                      child: const Text('Toggle theme now'),
-                      onPressed: () {
-                        if (theme.brightness.isDark) {
-                          appTheme.mode = ThemeMode.light;
-                        } else {
-                          appTheme.mode = ThemeMode.dark;
-                        }
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    Button(
-                      child: const Text('Got it'),
-                      onPressed: Navigator.of(context).pop,
-                    ),
-                  ],
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           codeSnippet: '''final teachingTip = TeachingTip(
   title: Text('Change themes without hassle'),
@@ -94,62 +104,65 @@ showTeachingTip(
   teachingTip: teachingTip,
 );''',
         ),
-        subtitle(
-          content: const Text('Show a targeted TeachingTip'),
-        ),
-        CardHighlight(
-          child: Row(
-            children: [
-              Button(
-                child: const Text('Show TeachingTip'),
-                onPressed: () => targetKey.currentState?.showTeachingTip(),
-              ),
-              const Spacer(),
-              TeachingTipTarget(
-                key: targetKey,
-                teachingTip: const TeachingTip(
-                  alignment: Alignment.bottomCenter,
-                  placementMargin: EdgeInsets.all(20.0),
-                  title: Text('Change themes without hassle'),
-                  subtitle: Text(
-                    'It\'s easier to see control samples in both light and dark theme',
-                  ),
-                ),
-                child: Container(
-                  height: 100,
-                  width: 200,
-                  color: theme.accentColor.defaultBrushFor(theme.brightness),
-                ),
-              ),
-            ],
-          ),
-          codeSnippet: '''final teachingTip = TeachingTip(
-  title: Text('Change themes without hassle'),
-  subtitle: Text(
-    'It's easier to see control samples in both light and dark theme',
-  ),
-  buttons: <Widget>[
-    Button(
-      child: const Text('Toggle theme now'),
-      onPressed: () {
-        // toggle theme here
+//         subtitle(
+//           content: const Text('Show a targeted TeachingTip'),
+//         ),
+//         CardHighlight(
+//           child: Row(
+//             children: [
+//               Button(
+//                 child: const Text('Show TeachingTip'),
+//                 onPressed: () {
+//                   targetKey.currentState?.showTeachingTip(builder: (context) {
+//                     return const TeachingTip(
+//                       alignment: Alignment.bottomCenter,
+//                       placementMargin: EdgeInsets.all(20.0),
+//                       title: Text('Change themes without hassle'),
+//                       subtitle: Text(
+//                         'It\'s easier to see control samples in both light and dark theme',
+//                       ),
+//                     );
+//                   });
+//                 },
+//               ),
+//               const Spacer(),
+//               TeachingTipTarget(
+//                 key: targetKey,
+//                 child: Container(
+//                   height: 100,
+//                   width: 200,
+//                   color: theme.accentColor.defaultBrushFor(theme.brightness),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           codeSnippet: '''final teachingTip = TeachingTip(
+//   title: Text('Change themes without hassle'),
+//   subtitle: Text(
+//     'It's easier to see control samples in both light and dark theme',
+//   ),
+//   buttons: <Widget>[
+//     Button(
+//       child: const Text('Toggle theme now'),
+//       onPressed: () {
+//         // toggle theme here
 
-        // then close the popup
-        Navigator.of(context).pop();
-      },
-    ),
-    Button(
-      child: const Text('Got it'),
-      onPressed: Navigator.of(context).pop,
-    ),
-  ],
-),
+//         // then close the popup
+//         Navigator.of(context).pop();
+//       },
+//     ),
+//     Button(
+//       child: const Text('Got it'),
+//       onPressed: Navigator.of(context).pop,
+//     ),
+//   ],
+// ),
 
-showTeachingTip(
-  context: context,
-  teachingTip: teachingTip,
-);''',
-        ),
+// showTeachingTip(
+//   context: context,
+//   teachingTip: teachingTip,
+// );''',
+//         ),
       ],
     );
   }

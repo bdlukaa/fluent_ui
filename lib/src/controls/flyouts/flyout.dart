@@ -351,10 +351,12 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     double clampHorizontal(double x) {
       if (!shouldConstrainToRootBounds) return x;
 
+      final max = rootSize.width - flyoutSize.width - margin;
+
       return clampDouble(
         x,
-        margin,
-        rootSize.width - flyoutSize.width - margin,
+        clampDouble(margin, double.negativeInfinity, max),
+        max,
       );
     }
 

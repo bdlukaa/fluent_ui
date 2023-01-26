@@ -289,14 +289,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.field_filled),
-      title: const Text('Teaching Tip'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.TeachingTipPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.tiles),
       title: const Text('Tiles'),
       body: DeferredWidget(
@@ -314,19 +306,27 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.hint_text),
-      title: const Text('Tooltip'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => popups.TooltipPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.pop_expand),
       title: const Text('Flyout'),
       body: DeferredWidget(
         surfaces.loadLibrary,
         () => popups.Flyout2Screen(),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.field_filled),
+      title: const Text('Teaching Tip'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => surfaces.TeachingTipPage(),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.hint_text),
+      title: const Text('Tooltip'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => popups.TooltipPage(),
       ),
     ),
     PaneItemHeader(header: const Text('Theming')),
