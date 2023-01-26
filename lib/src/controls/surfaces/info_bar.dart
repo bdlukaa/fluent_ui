@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
@@ -31,6 +30,7 @@ typedef InfoBarPopupBuilder = Widget Function(
 Future<void> displayInfoBar(
   BuildContext context, {
   required InfoBarPopupBuilder builder,
+  Alignment alignment = Alignment.bottomCenter,
   Duration duration = const Duration(seconds: 3),
 }) async {
   assert(debugCheckHasOverlay(context));
@@ -47,7 +47,7 @@ Future<void> displayInfoBar(
   entry = OverlayEntry(builder: (context) {
     return SafeArea(
       child: Align(
-        alignment: Alignment.bottomCenter,
+        alignment: alignment,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 24.0,
