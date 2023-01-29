@@ -13,6 +13,26 @@ class TeachingTipPage extends StatefulWidget {
 
 class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
   final nonTargetedController = FlyoutController();
+
+  static const alignments = {
+    'Bottom left': Alignment.bottomLeft,
+    'Bottom center': Alignment.bottomCenter,
+    'Bottom right': Alignment.bottomRight,
+    'Center': Alignment.center,
+    'Top left': Alignment.topLeft,
+    'Top center': Alignment.topCenter,
+    'Top right': Alignment.topRight,
+  };
+  static const placements = {
+    'Bottom left': FlyoutPlacementMode.bottomLeft,
+    'Bottom center': FlyoutPlacementMode.bottomCenter,
+    'Bottom right': FlyoutPlacementMode.bottomRight,
+    'Center': FlyoutPlacementMode.left,
+    'Top left': FlyoutPlacementMode.topLeft,
+    'Top center': FlyoutPlacementMode.topCenter,
+    'Top right': FlyoutPlacementMode.topRight,
+  };
+  late String alignment = 'Bottom center';
   final targetedController = FlyoutController();
 
   @override
@@ -42,41 +62,63 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           content: const Text('Show a non-targeted TeachingTip with buttons'),
         ),
         CardHighlight(
-          child: FlyoutTarget(
-            controller: nonTargetedController,
-            child: Button(
-              child: const Text('Show TeachingTip'),
-              onPressed: () {
-                showTeachingTip(
-                  flyoutController: nonTargetedController,
-                  nonTargetedAlignment: Alignment.bottomCenter,
-                  builder: (context) => TeachingTip(
-                    title: const Text('Change themes without hassle'),
-                    subtitle: const Text(
-                      'It\'s easier to see control samples in both light and dark theme',
+          child: Row(children: [
+            FlyoutTarget(
+              controller: nonTargetedController,
+              child: Button(
+                child: const Text('Show TeachingTip'),
+                onPressed: () {
+                  showTeachingTip(
+                    flyoutController: nonTargetedController,
+                    nonTargetedAlignment: alignments[alignment],
+                    placementMode: placements[alignment]!,
+                    builder: (context) => TeachingTip(
+                      title: const Text('Change themes without hassle'),
+                      subtitle: const Text(
+                        'It\'s easier to see control samples in both light and dark theme',
+                      ),
+                      buttons: [
+                        Button(
+                          child: const Text('Toggle theme now'),
+                          onPressed: () {
+                            if (theme.brightness.isDark) {
+                              appTheme.mode = ThemeMode.light;
+                            } else {
+                              appTheme.mode = ThemeMode.dark;
+                            }
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        Button(
+                          child: const Text('Got it'),
+                          onPressed: Navigator.of(context).pop,
+                        ),
+                      ],
                     ),
-                    buttons: [
-                      Button(
-                        child: const Text('Toggle theme now'),
-                        onPressed: () {
-                          if (theme.brightness.isDark) {
-                            appTheme.mode = ThemeMode.light;
-                          } else {
-                            appTheme.mode = ThemeMode.dark;
-                          }
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      Button(
-                        child: const Text('Got it'),
-                        onPressed: Navigator.of(context).pop,
-                      ),
-                    ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
+            const SizedBox(width: 18.0),
+            SizedBox(
+              width: 150.0,
+              child: ComboBox<String>(
+                placeholder: const Text('Alignment'),
+                items: List.generate(alignments.length, (index) {
+                  final entry = alignments.entries.elementAt(index);
+
+                  return ComboBoxItem(
+                    value: entry.key,
+                    child: Text(entry.key.uppercaseFirst()),
+                  );
+                }),
+                value: alignment,
+                onChanged: (a) {
+                  if (a != null) setState(() => alignment = a);
+                },
+              ),
+            ),
+          ]),
           codeSnippet: '''final teachingTip = TeachingTip(
   title: Text('Change themes without hassle'),
   subtitle: Text(

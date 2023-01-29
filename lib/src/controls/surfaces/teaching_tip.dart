@@ -175,35 +175,42 @@ class TeachingTip extends StatelessWidget {
     FlyoutPlacementMode placementMode,
     Widget flyout,
   ) {
+    late Alignment alignment;
     switch (placementMode) {
       case FlyoutPlacementMode.bottomCenter:
+        alignment = const Alignment(0.0, 0.75);
+        break;
       case FlyoutPlacementMode.bottomLeft:
+        alignment = const Alignment(-0.65, 0.75);
+        break;
       case FlyoutPlacementMode.bottomRight:
-        return ScaleTransition(
-          // position: Tween<Offset>(
-          //   begin: const Offset(0, -0.05),
-          //   end: const Offset(0, 0),
-          // ).animate(animation),
-          alignment: Alignment.bottomCenter,
-          scale: CurvedAnimation(
-            curve: Curves.ease,
-            parent: animation,
-          ),
-          child: flyout,
-        );
+        alignment = const Alignment(0.75, 0.75);
+        break;
       case FlyoutPlacementMode.topCenter:
+        alignment = const Alignment(0.0, -0.75);
+        break;
       case FlyoutPlacementMode.topLeft:
+        alignment = const Alignment(-0.65, -0.75);
+        break;
       case FlyoutPlacementMode.topRight:
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.05),
-            end: const Offset(0, 0),
-          ).animate(animation),
-          child: flyout,
-        );
+        alignment = const Alignment(0.75, -0.75);
+        break;
+      case FlyoutPlacementMode.left:
+      case FlyoutPlacementMode.right:
+        alignment = Alignment.center;
+        break;
       default:
         return flyout;
     }
+
+    return ScaleTransition(
+      alignment: alignment,
+      scale: CurvedAnimation(
+        curve: Curves.ease,
+        parent: animation,
+      ),
+      child: flyout,
+    );
   }
 
   @override
