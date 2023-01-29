@@ -20,7 +20,7 @@ import 'routes/theming.dart' deferred as theming;
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
-const String appTitle = 'Fluent UI Showcase for Flutter';
+const String appTitle = 'Win UI for Flutter';
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -65,12 +65,14 @@ void main() async {
 
   runApp(const MyApp());
 
-  DeferredWidget.preload(popups.loadLibrary);
-  DeferredWidget.preload(forms.loadLibrary);
-  DeferredWidget.preload(inputs.loadLibrary);
-  DeferredWidget.preload(navigation.loadLibrary);
-  DeferredWidget.preload(surfaces.loadLibrary);
-  DeferredWidget.preload(theming.loadLibrary);
+  Future.wait([
+    DeferredWidget.preload(popups.loadLibrary),
+    DeferredWidget.preload(forms.loadLibrary),
+    DeferredWidget.preload(inputs.loadLibrary),
+    DeferredWidget.preload(navigation.loadLibrary),
+    DeferredWidget.preload(surfaces.loadLibrary),
+    DeferredWidget.preload(theming.loadLibrary),
+  ]);
 }
 
 class MyApp extends StatelessWidget {
