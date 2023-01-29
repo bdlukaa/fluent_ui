@@ -758,6 +758,9 @@ class NavigationAppBar with Diagnosticable {
   /// The background color of this app bar.
   final Color? backgroundColor;
 
+  /// An alternative builder, that can be used to override the default AppBar style.
+  final NavigationAppBarBuilder? builder;
+
   /// Creates a fluent-styled app bar.
   const NavigationAppBar({
     this.key,
@@ -767,6 +770,7 @@ class NavigationAppBar with Diagnosticable {
     this.automaticallyImplyLeading = true,
     this.height = _kDefaultAppBarHeight,
     this.backgroundColor,
+    this.builder,
   });
 
   @override
@@ -842,6 +846,9 @@ class NavigationAppBar with Diagnosticable {
   }
 }
 
+typedef NavigationAppBarBuilder = Widget Function(BuildContext context,
+    Widget leading, Widget? additionalLeading, Widget title, Widget? actions);
+
 class _NavigationAppBar extends StatelessWidget {
   const _NavigationAppBar({
     Key? key,
@@ -886,42 +893,48 @@ class _NavigationAppBar extends StatelessWidget {
       }
     }();
     late Widget result;
-    switch (displayMode) {
-      case PaneDisplayMode.top:
-        result = Row(children: [
-          leading,
-          if (additionalLeading != null) additionalLeading!,
-          title,
-          if (appBar.actions != null) Expanded(child: appBar.actions!)
-        ]);
-        break;
-      case PaneDisplayMode.minimal:
-      case PaneDisplayMode.open:
-      case PaneDisplayMode.compact:
-        result = Stack(children: [
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              leading,
-              if (additionalLeading != null) additionalLeading!,
-              Flexible(child: title),
-            ]),
-          ),
-          if (appBar.actions != null)
-            PositionedDirectional(
-              start: 0,
-              end: 0.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: Align(
-                alignment: AlignmentDirectional.topEnd,
-                child: appBar.actions!,
-              ),
+
+    if (appBar.builder != null) {
+      result = appBar.builder!(
+          context, leading, additionalLeading, title, appBar.actions);
+    } else {
+      switch (displayMode) {
+        case PaneDisplayMode.top:
+          result = Row(children: [
+            leading,
+            if (additionalLeading != null) additionalLeading!,
+            title,
+            if (appBar.actions != null) Expanded(child: appBar.actions!)
+          ]);
+          break;
+        case PaneDisplayMode.minimal:
+        case PaneDisplayMode.open:
+        case PaneDisplayMode.compact:
+          result = Stack(children: [
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                leading,
+                if (additionalLeading != null) additionalLeading!,
+                Flexible(child: title),
+              ]),
             ),
-        ]);
-        break;
-      default:
-        return const SizedBox.shrink();
+            if (appBar.actions != null)
+              PositionedDirectional(
+                start: 0,
+                end: 0.0,
+                top: 0.0,
+                bottom: 0.0,
+                child: Align(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: appBar.actions!,
+                ),
+              ),
+          ]);
+          break;
+        default:
+          return const SizedBox.shrink();
+      }
     }
     final topPadding = mediaQuery.viewPadding.top;
 

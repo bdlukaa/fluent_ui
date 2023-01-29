@@ -1,3 +1,7 @@
+## next
+
+- The `NavigationAppBar` now allows custom layouts by providing a `builder`. ([#709](https://github.com/bdlukaa/fluent_ui/pull/709))
+
 ## 4.2.0
 
 - Flyouts rework ([#690](https://github.com/bdlukaa/fluent_ui/pull/690)):
