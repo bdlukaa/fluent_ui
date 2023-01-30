@@ -643,13 +643,11 @@ class FlyoutController with ChangeNotifier {
                       final realPlacementMode =
                           delegate.autoPlacementMode ?? delegate.placementMode;
                       final flyout = Padding(
+                        key: flyoutKey,
                         padding: realPlacementMode._getAdditionalOffsetPosition(
                           position == null ? additionalOffset : 0.0,
                         ),
-                        child: KeyedSubtree(
-                          key: flyoutKey,
-                          child: builder(context),
-                        ),
+                        child: builder(context),
                       );
 
                       return transitionBuilder!(
