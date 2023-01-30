@@ -243,7 +243,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
@@ -280,7 +280,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
 
     return SizedBox(
       width: size.width,
@@ -389,10 +389,10 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   void didUpdateWidget(_MenuFlyoutSubItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final menuInfo = MenuInfoProvider.of(context);
+    final parent = Flyout.of(context);
     if (transitionController.duration == null ||
-        transitionController.duration != menuInfo.widget.transitionDuration) {
-      transitionController.duration = menuInfo.widget.transitionDuration;
+        transitionController.duration != parent.transitionDuration) {
+      transitionController.duration = parent.transitionDuration;
     }
   }
 
@@ -438,15 +438,21 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
     final itemBox = context.findRenderObject() as RenderBox;
     final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
 
+    final parent = Flyout.of(context);
+
     menuInfo.add(
       CustomSingleChildLayout(
         delegate: _SubItemPositionDelegate(
           parentRect: itemRect,
           parentSize: itemBox.size,
-          margin: menuInfo.widget.margin,
+          margin: parent.margin,
         ),
-        child: ContentManager(
-          content: (_) {
+        child: Flyout(
+          rootFlyout: parent.rootFlyout,
+          additionalOffset: parent.additionalOffset,
+          margin: parent.margin,
+          transitionDuration: parent.transitionDuration,
+          builder: (context) {
             return FadeTransition(
               opacity: transitionController,
               child: MenuFlyout(

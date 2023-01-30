@@ -152,7 +152,7 @@ class FlyoutListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = ContentSizeInfo.maybeOf(context)?.size;
+    final size = Flyout.maybeOf(context)?.size;
 
     return HoverButton(
       key: key,

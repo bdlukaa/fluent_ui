@@ -818,7 +818,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
     final theme = NavigationPaneTheme.of(context);
 
     final titleText = item.title?.getProperty<String>() ?? '';
@@ -953,7 +953,7 @@ class _MenuFlyoutPaneItemExpanderState
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 

@@ -601,10 +601,6 @@ class FlyoutController with ChangeNotifier {
         };
 
         return MenuInfoProvider(
-          flyoutKey: flyoutKey,
-          additionalOffset: additionalOffset,
-          margin: margin,
-          transitionDuration: transitionDuration!,
           builder: (context, rootSize, menus, keys) {
             assert(menus.length == keys.length);
 
@@ -634,29 +630,38 @@ class FlyoutController with ChangeNotifier {
                       shouldConstrainToRootBounds: shouldConstrainToRootBounds,
                       forceAvailableSpace: forceAvailableSpace,
                     ),
-                    child: ContentManager(content: (context) {
-                      final parentBox = context.findAncestorRenderObjectOfType<
-                          RenderCustomSingleChildLayoutBox>()!;
-                      final delegate =
-                          parentBox.delegate as _FlyoutPositionDelegate;
+                    child: Flyout(
+                      rootFlyout: flyoutKey,
+                      additionalOffset: additionalOffset,
+                      margin: margin,
+                      transitionDuration: transitionDuration!,
+                      root: navigator,
+                      builder: (context) {
+                        final parentBox =
+                            context.findAncestorRenderObjectOfType<
+                                RenderCustomSingleChildLayoutBox>()!;
+                        final delegate =
+                            parentBox.delegate as _FlyoutPositionDelegate;
 
-                      final realPlacementMode =
-                          delegate.autoPlacementMode ?? delegate.placementMode;
-                      final flyout = Padding(
-                        key: flyoutKey,
-                        padding: realPlacementMode._getAdditionalOffsetPosition(
-                          position == null ? additionalOffset : 0.0,
-                        ),
-                        child: builder(context),
-                      );
+                        final realPlacementMode = delegate.autoPlacementMode ??
+                            delegate.placementMode;
+                        final flyout = Padding(
+                          key: flyoutKey,
+                          padding:
+                              realPlacementMode._getAdditionalOffsetPosition(
+                            position == null ? additionalOffset : 0.0,
+                          ),
+                          child: builder(context),
+                        );
 
-                      return transitionBuilder!(
-                        context,
-                        animation,
-                        realPlacementMode,
-                        flyout,
-                      );
-                    }),
+                        return transitionBuilder!(
+                          context,
+                          animation,
+                          realPlacementMode,
+                          flyout,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
