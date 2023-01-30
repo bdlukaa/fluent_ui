@@ -1,6 +1,8 @@
 ## next
 
 - Correctly calculate the padding around the flyout on automatic mode
+- Possibility to supply transparents colors to the barrier ([#702](https://github.com/bdlukaa/fluent_ui/issues/702))
+- Correctly assign the current pane mode to `PaneItemExpander` ([#707](https://github.com/bdlukaa/fluent_ui/issues/707))
 
 ## 4.2.0
 
