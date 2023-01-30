@@ -1,3 +1,7 @@
+## next
+
+- Correctly calculate the padding around the flyout on automatic mode
+
 ## 4.2.0
 
 - Flyouts rework ([#690](https://github.com/bdlukaa/fluent_ui/pull/690)):

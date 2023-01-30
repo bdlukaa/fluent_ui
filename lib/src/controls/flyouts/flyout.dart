@@ -351,10 +351,12 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     double clampHorizontal(double x) {
       if (!shouldConstrainToRootBounds) return x;
 
+      final max = rootSize.width - flyoutSize.width - margin;
+
       return clampDouble(
         x,
-        margin,
-        rootSize.width - flyoutSize.width - margin,
+        clampDouble(margin, double.negativeInfinity, max),
+        max,
       );
     }
 
@@ -607,7 +609,7 @@ class FlyoutController with ChangeNotifier {
             assert(menus.length == keys.length);
 
             Widget box = Stack(children: [
-              if (barrierColor?.alpha != 0 && barrierDismissible)
+              if (barrierDismissible)
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -632,31 +634,31 @@ class FlyoutController with ChangeNotifier {
                       shouldConstrainToRootBounds: shouldConstrainToRootBounds,
                       forceAvailableSpace: forceAvailableSpace,
                     ),
-                    child: Padding(
-                      padding: placementMode._getAdditionalOffsetPosition(
-                        position == null ? additionalOffset : 0.0,
-                      ),
-                      child: ContentManager(content: (context) {
-                        final flyout = KeyedSubtree(
+                    child: ContentManager(content: (context) {
+                      final parentBox = context.findAncestorRenderObjectOfType<
+                          RenderCustomSingleChildLayoutBox>()!;
+                      final delegate =
+                          parentBox.delegate as _FlyoutPositionDelegate;
+
+                      final realPlacementMode =
+                          delegate.autoPlacementMode ?? delegate.placementMode;
+                      final flyout = Padding(
+                        padding: realPlacementMode._getAdditionalOffsetPosition(
+                          position == null ? additionalOffset : 0.0,
+                        ),
+                        child: KeyedSubtree(
                           key: flyoutKey,
                           child: builder(context),
-                        );
-                        final parentBox =
-                            context.findAncestorRenderObjectOfType<
-                                RenderCustomSingleChildLayoutBox>()!;
-                        final delegate =
-                            parentBox.delegate as _FlyoutPositionDelegate;
+                        ),
+                      );
 
-                        final realPlacementMode = delegate.autoPlacementMode;
-
-                        return transitionBuilder!(
-                          context,
-                          animation,
-                          realPlacementMode ?? delegate.placementMode,
-                          flyout,
-                        );
-                      }),
-                    ),
+                      return transitionBuilder!(
+                        context,
+                        animation,
+                        realPlacementMode,
+                        flyout,
+                      );
+                    }),
                   ),
                 ),
               ),
