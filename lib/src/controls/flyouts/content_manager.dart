@@ -10,6 +10,7 @@ class Flyout extends StatefulWidget {
 
   final NavigatorState? root;
   final GlobalKey? rootFlyout;
+  final GlobalKey? menuKey;
 
   final double additionalOffset;
   final double margin;
@@ -22,6 +23,7 @@ class Flyout extends StatefulWidget {
     required this.builder,
     this.root,
     this.rootFlyout,
+    this.menuKey,
     this.additionalOffset = 0.0,
     this.margin = 0.0,
     this.transitionDuration = Duration.zero,
@@ -69,10 +71,14 @@ class FlyoutState extends State<Flyout> {
     super.initState();
   }
 
-  /// Closes the current flyout
+  /// Closes the current open flyout
   ///
-  /// If the current flyout is a submenu
+  /// If the current flyout is a sub menu, the submenu is closed
   void close() {
+    if (widget.menuKey != null) {
+      MenuInfoProvider.of(context).remove(widget.menuKey!);
+      return;
+    }
     final parent = Flyout.maybeOf(context);
 
     final navigatorKey = parent?.widget.root ?? widget.root;

@@ -304,6 +304,10 @@ enum SubItemShowBehavior {
   hover,
 }
 
+typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
+  BuildContext context,
+);
+
 /// Represents a menu item that displays a sub-menu in a [MenuFlyout].
 ///
 /// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/menu-bar-submenu.png)
@@ -323,7 +327,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
     this.showBehavior = SubItemShowBehavior.hover,
-    this.showHoverDelay = const Duration(milliseconds: 600),
+    this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
 
   /// It is the key of `_MenuFlyoutSubItem`, built in the `build` method. It
@@ -336,7 +340,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// The colletion used to generate the content of the menu.
   ///
   /// {@macro fluent_ui.flyouts.menu.items}
-  final List<MenuFlyoutItemBase> items;
+  final MenuItemsBuilder items;
 
   /// Represent which user action will show the sub-menu.
   ///
@@ -356,7 +360,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 
 class _MenuFlyoutSubItem extends StatefulWidget {
   final MenuFlyoutSubItem item;
-  final List<MenuFlyoutItemBase> items;
+  final MenuItemsBuilder items;
 
   const _MenuFlyoutSubItem({
     super.key,
@@ -411,7 +415,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
       },
     ).build(context);
 
-    if (widget.item.showBehavior != SubItemShowBehavior.hover) {
+    if (widget.item.showBehavior == SubItemShowBehavior.hover) {
       return MouseRegion(
         onEnter: (event) {
           showTimer = Timer(widget.item.showHoverDelay, () {
@@ -449,6 +453,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
         ),
         child: Flyout(
           rootFlyout: parent.rootFlyout,
+          menuKey: menuKey,
           additionalOffset: parent.additionalOffset,
           margin: parent.margin,
           transitionDuration: parent.transitionDuration,
@@ -457,7 +462,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
               opacity: transitionController,
               child: MenuFlyout(
                 key: menuKey,
-                items: widget.items,
+                items: widget.items(context),
               ),
             );
           },

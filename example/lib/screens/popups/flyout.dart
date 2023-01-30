@@ -187,57 +187,59 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                           MenuFlyoutItem(
                             leading: const Icon(FluentIcons.share),
                             text: const Text('Share'),
-                            onPressed: () {},
+                            onPressed: Flyout.of(context).close,
                           ),
                           MenuFlyoutItem(
                             leading: const Icon(FluentIcons.copy),
                             text: const Text('Copy'),
-                            onPressed: () {},
+                            onPressed: Flyout.of(context).close,
                           ),
                           MenuFlyoutItem(
                             leading: const Icon(FluentIcons.delete),
                             text: const Text('Delete'),
-                            onPressed: () {},
+                            onPressed: Flyout.of(context).close,
                           ),
                           const MenuFlyoutSeparator(),
                           MenuFlyoutItem(
                             text: const Text('Rename'),
-                            onPressed: () {},
+                            onPressed: Flyout.of(context).close,
                           ),
                           MenuFlyoutItem(
                             text: const Text('Select'),
-                            onPressed: () {},
+                            onPressed: Flyout.of(context).close,
                           ),
                           const MenuFlyoutSeparator(),
                           MenuFlyoutSubItem(
                             text: const Text('Send to'),
-                            items: [
-                              MenuFlyoutItem(
-                                text: const Text('Bluetooth'),
-                                onPressed: () {},
-                              ),
-                              MenuFlyoutItem(
-                                text: const Text('Desktop (shortcut)'),
-                                onPressed: () {},
-                              ),
-                              MenuFlyoutSubItem(
-                                text: const Text('Compressed file'),
-                                items: [
-                                  MenuFlyoutItem(
-                                    text: const Text('Compress and email'),
-                                    onPressed: () {},
-                                  ),
-                                  MenuFlyoutItem(
-                                    text: const Text('Compress to .7z'),
-                                    onPressed: () {},
-                                  ),
-                                  MenuFlyoutItem(
-                                    text: const Text('Compress to .zip'),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
-                            ],
+                            items: (context) {
+                              return [
+                                MenuFlyoutItem(
+                                  text: const Text('Bluetooth'),
+                                  onPressed: Flyout.of(context).close,
+                                ),
+                                MenuFlyoutItem(
+                                  text: const Text('Desktop (shortcut)'),
+                                  onPressed: Flyout.of(context).close,
+                                ),
+                                MenuFlyoutSubItem(
+                                  text: const Text('Compressed file'),
+                                  items: (context) => [
+                                    MenuFlyoutItem(
+                                      text: const Text('Compress and email'),
+                                      onPressed: Flyout.of(context).close,
+                                    ),
+                                    MenuFlyoutItem(
+                                      text: const Text('Compress to .7z'),
+                                      onPressed: Flyout.of(context).close,
+                                    ),
+                                    MenuFlyoutItem(
+                                      text: const Text('Compress to .zip'),
+                                      onPressed: Flyout.of(context).close,
+                                    ),
+                                  ],
+                                ),
+                              ];
+                            },
                           ),
                         ],
                       );
