@@ -98,7 +98,7 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
   final _menus = <GlobalKey, Widget>{};
 
   void add(Widget menu, GlobalKey key) {
-    setState(() => _menus.addAll({key: menu}));
+    setState(() => _menus[key] = menu);
   }
 
   void remove(GlobalKey key) {
@@ -106,7 +106,6 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
   }
 
   bool contains(GlobalKey key) {
-    // print(_menus);
     return _menus.containsKey(key);
   }
 

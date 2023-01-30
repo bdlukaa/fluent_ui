@@ -400,30 +400,34 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   Widget build(BuildContext context) {
     final menuInfo = MenuInfoProvider.of(context);
 
-    return MouseRegion(
-      onEnter: (event) {
-        showTimer = Timer(widget.item.showHoverDelay, () {
-          show(menuInfo);
-        });
+    final item = MenuFlyoutItem(
+      key: widget.item.key,
+      text: widget.item.text,
+      leading: widget.item.leading,
+      selected: isShowing(menuInfo),
+      trailing: widget.item.trailing,
+      onPressed: () {
+        show(menuInfo);
       },
-      onExit: (event) {
-        if (showTimer != null && showTimer!.isActive) {
-          showTimer!.cancel();
-        }
-      },
-      child: MenuFlyoutItem(
-        key: widget.item.key,
-        text: widget.item.text,
-        leading: widget.item.leading,
-        selected: isShowing(menuInfo),
-        trailing: widget.item.trailing,
-        onPressed: () {
-          if (widget.item.showBehavior != SubItemShowBehavior.press) return;
+    ).build(context);
 
-          show(menuInfo);
+    if (widget.item.showBehavior != SubItemShowBehavior.hover) {
+      return MouseRegion(
+        onEnter: (event) {
+          showTimer = Timer(widget.item.showHoverDelay, () {
+            show(menuInfo);
+          });
         },
-      ).build(context),
-    );
+        onExit: (event) {
+          if (showTimer != null && showTimer!.isActive) {
+            showTimer!.cancel();
+          }
+        },
+        child: item,
+      );
+    }
+
+    return item;
   }
 
   bool isShowing(MenuInfoProviderState menuInfo) {
