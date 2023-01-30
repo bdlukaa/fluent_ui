@@ -5,6 +5,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/card_highlight.dart';
 
+const kSplitButtonHeight = 32.0;
+const kSplitButtonWidth = 36.0;
+
 class ButtonPage extends StatefulWidget {
   const ButtonPage({Key? key}) : super(key: key);
 
@@ -21,6 +24,15 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   bool splitButtonDisabled = false;
   bool radioButtonDisabled = false;
   int radioButtonSelected = -1;
+
+  AccentColor splitButtonColor = Colors.red;
+  final splitButtonFlyout = FlyoutController();
+
+  @override
+  void dispose() {
+    splitButtonFlyout.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,31 +211,79 @@ ToggleButton(
         ),
         CardHighlight(
           child: Row(children: [
-            SplitButtonBar(
-              buttons: [
+            SizedBox(
+              height: 40.0,
+              child: SplitButtonBar(buttons: [
                 Button(
+                  style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
                   child: Container(
                     decoration: BoxDecoration(
                       color: splitButtonDisabled
-                          ? FluentTheme.of(context).accentColor.darker
-                          : FluentTheme.of(context).accentColor,
+                          ? splitButtonColor.secondaryBrushFor(
+                              FluentTheme.of(context).brightness,
+                            )
+                          : splitButtonColor,
                       borderRadius: const BorderRadiusDirectional.horizontal(
                         start: Radius.circular(4.0),
                       ),
                     ),
-                    height: 24,
-                    width: 24,
+                    height: kSplitButtonHeight,
+                    width: kSplitButtonWidth,
                   ),
                   onPressed: splitButtonDisabled ? null : () {},
                 ),
-                IconButton(
-                  icon: const SizedBox(
-                    // height: splitButtonHeight,
-                    child: Icon(FluentIcons.chevron_down, size: 10.0),
+                FlyoutTarget(
+                  controller: splitButtonFlyout,
+                  child: IconButton(
+                    icon: const SizedBox(
+                      height: kSplitButtonHeight - 13.0,
+                      width: kSplitButtonWidth - 13.0,
+                      child: Icon(FluentIcons.chevron_down, size: 8.0),
+                    ),
+                    onPressed: splitButtonDisabled
+                        ? null
+                        : () async {
+                            final color =
+                                await splitButtonFlyout.showFlyout<AccentColor>(
+                              autoModeConfiguration: FlyoutAutoConfiguration(
+                                preferredMode: FlyoutPlacementMode.bottomCenter,
+                              ),
+                              builder: (context) {
+                                return FlyoutContent(
+                                  constraints: BoxConstraints(maxWidth: 200.0),
+                                  child: Wrap(
+                                    runSpacing: 10.0,
+                                    spacing: 8.0,
+                                    children: Colors.accentColors.map((color) {
+                                      return Button(
+                                        autofocus: splitButtonColor == color,
+                                        style: ButtonStyle(
+                                          padding: ButtonState.all(
+                                            EdgeInsets.all(4.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(color);
+                                        },
+                                        child: Container(
+                                          height: 40.0,
+                                          width: 40.0,
+                                          color: color,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                );
+                              },
+                            );
+
+                            if (color != null) {
+                              setState(() => splitButtonColor = color);
+                            }
+                          },
                   ),
-                  onPressed: splitButtonDisabled ? null : () {},
                 ),
-              ],
+              ]),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -236,21 +296,78 @@ ToggleButton(
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''SplitButtonBar(
-  buttons: [
+          codeSnippet: '''SizedBox(
+  height: 40.0,
+  child: SplitButtonBar(buttons: [
     Button(
+      style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
       child: Container(
-        height: 24.0,
-        width: 24.0,
-        color: Colors.green,
+        decoration: BoxDecoration(
+          color: splitButtonDisabled
+              ? splitButtonColor.secondaryBrushFor(
+                  FluentTheme.of(context).brightness,
+                )
+              : splitButtonColor,
+          borderRadius: const BorderRadiusDirectional.horizontal(
+            start: Radius.circular(4.0),
+          ),
+        ),
+        height: kSplitButtonHeight,
+        width: kSplitButtonWidth,
       ),
-      onPressed: () {},
+      onPressed: splitButtonDisabled ? null : () {},
     ),
-    IconButton(
-      icon: const Icon(FluentIcons.chevron_down, size: 10.0),
-      onPressed: () {},
+    FlyoutTarget(
+      controller: splitButtonFlyout,
+      child: IconButton(
+        icon: const SizedBox(
+          height: kSplitButtonHeight - 13.0,
+          width: kSplitButtonWidth - 13.0,
+          child: Icon(FluentIcons.chevron_down, size: 8.0),
+        ),
+        onPressed: splitButtonDisabled
+            ? null
+            : () async {
+                final color = await splitButtonFlyout.showFlyout<AccentColor>(
+                  autoModeConfiguration: FlyoutAutoConfiguration(
+                    preferredMode: FlyoutPlacementMode.bottomCenter,
+                  ),
+                  builder: (context) {
+                    return FlyoutContent(
+                      constraints: BoxConstraints(maxWidth: 200.0),
+                      child: Wrap(
+                        runSpacing: 10.0,
+                        spacing: 8.0,
+                        children: Colors.accentColors.map((color) {
+                          return Button(
+                            autofocus: splitButtonColor == color,
+                            style: ButtonStyle(
+                              padding: ButtonState.all(
+                                EdgeInsets.all(4.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(color);
+                            },
+                            child: Container(
+                              height: 40.0,
+                              width: 40.0,
+                              color: color,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                );
+
+                if (color != null) {
+                  setState(() => splitButtonColor = color);
+                }
+              },
+      ),
     ),
-  ],
+  ]),
 )''',
         ),
         subtitle(content: const Text('RadioButton')),
