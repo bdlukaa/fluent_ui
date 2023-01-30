@@ -110,7 +110,6 @@ class MenuInfoProvider extends StatefulWidget {
   const MenuInfoProvider({Key? key, required this.builder}) : super(key: key);
 
   /// Gets the current state of the sub menus of the root flyout
-  @protected
   static MenuInfoProviderState of(BuildContext context) {
     return context.findAncestorStateOfType<MenuInfoProviderState>()!;
   }
