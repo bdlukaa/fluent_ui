@@ -1,3 +1,22 @@
+## next
+
+- Correctly calculate the padding around the flyout on automatic mode
+- Possibility to supply transparents colors to the barrier ([#702](https://github.com/bdlukaa/fluent_ui/issues/702))
+- Correctly assign the current pane mode to `PaneItemExpander` ([#707](https://github.com/bdlukaa/fluent_ui/issues/707))
+- `showFlyout.dismissOnPointerMoveAway` now takes the whole flyout box into consideration
+- **MINOR BREAKING** Replaced `ContentManager` and `ContentSizeInfo` with `Flyout`
+  Before:
+  ```dart
+  final size = ContentSizeInfo.of(context).size;
+  ```
+
+  Now:
+  ```dart
+  final size = Flyout.of(context).size;
+  ```
+
+  With it, it's also possible to have multiple info about the current open flyout. Sub-menus also have their own flyout instance. To close the current flyout, use `Flyout.of(context).close();`
+
 ## 4.2.0
 
 - Flyouts rework ([#690](https://github.com/bdlukaa/fluent_ui/pull/690)):

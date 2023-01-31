@@ -3,16 +3,18 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// A Split Button has two parts that can be invoked separately.
-/// One part behaves like a standard button and invokes an immediate action.
-/// The other part invokes a flyout that contains additional options that the
-/// user can choose from.
+/// A Split Button has two parts that can be invoked separately. One part
+/// behaves like a standard button and invokes an immediate action. The other
+/// part invokes a flyout that contains additional options that the user can
+/// choose from. Use a split button control when you want the user to be able to
+/// initiate an immediate action or choose from additional options independently.
 ///
-/// ![SplitButton Preview](https://github.com/bdlukaa/fluent_ui#split-button)
+/// ![SplitButton Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/split-button-rtb.png)
 ///
 /// See also:
-///   - [Button]
-///   - [IconButton]
+///
+///   * [Button], a button gives the user a way to trigger an immediate action.
+///   * [IconButton], a button with an icon
 class SplitButtonBar extends StatelessWidget {
   /// Creates a button bar with space in between the buttons.
   ///

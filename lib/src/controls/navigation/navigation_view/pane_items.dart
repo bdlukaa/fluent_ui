@@ -596,13 +596,19 @@ class PaneItemExpander extends PaneItem {
     bool? autofocus,
     int? itemIndex,
   }) {
+    final maybeBody = InheritedNavigationView.maybeOf(context);
+    final mode = displayMode ??
+        maybeBody?.displayMode ??
+        maybeBody?.pane?.displayMode ??
+        PaneDisplayMode.minimal;
+
     return KeyedSubtree(
       key: key,
       child: _PaneItemExpander(
         key: expanderKey,
         item: this,
         items: items,
-        displayMode: displayMode,
+        displayMode: mode,
         showTextOnTop: showTextOnTop,
         selected: selected,
         onPressed: onPressed,
@@ -626,7 +632,7 @@ class _PaneItemExpander extends StatefulWidget {
 
   final PaneItem item;
   final List<NavigationPaneItem> items;
-  final PaneDisplayMode? displayMode;
+  final PaneDisplayMode displayMode;
   final bool showTextOnTop;
   final bool selected;
   final VoidCallback? onPressed;
@@ -703,6 +709,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           placementMode: displayMode == PaneDisplayMode.compact
               ? FlyoutPlacementMode.right
               : FlyoutPlacementMode.bottomCenter,
+          forceAvailableSpace: true,
           builder: (context) {
             return MenuFlyout(
               items: widget.items.map<MenuFlyoutItemBase>((item) {
@@ -748,7 +755,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
       controller.forward();
     } else {
-      if (useFlyout && doFlyout) Navigator.of(context).pop();
+      if (useFlyout && doFlyout && flyoutController.isOpen) {
+        Navigator.of(context).pop();
+      }
       controller.reverse();
     }
   }
@@ -890,7 +899,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,

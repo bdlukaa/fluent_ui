@@ -243,7 +243,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
@@ -280,7 +280,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = ContentSizeInfo.of(context).size;
+    final size = Flyout.of(context).size;
 
     return SizedBox(
       width: size.width,
@@ -304,6 +304,10 @@ enum SubItemShowBehavior {
   hover,
 }
 
+typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
+  BuildContext context,
+);
+
 /// Represents a menu item that displays a sub-menu in a [MenuFlyout].
 ///
 /// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/menu-bar-submenu.png)
@@ -323,7 +327,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
     this.showBehavior = SubItemShowBehavior.hover,
-    this.showHoverDelay = const Duration(milliseconds: 600),
+    this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
 
   /// It is the key of `_MenuFlyoutSubItem`, built in the `build` method. It
@@ -336,7 +340,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// The colletion used to generate the content of the menu.
   ///
   /// {@macro fluent_ui.flyouts.menu.items}
-  final List<MenuFlyoutItemBase> items;
+  final MenuItemsBuilder items;
 
   /// Represent which user action will show the sub-menu.
   ///
@@ -356,7 +360,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 
 class _MenuFlyoutSubItem extends StatefulWidget {
   final MenuFlyoutSubItem item;
-  final List<MenuFlyoutItemBase> items;
+  final MenuItemsBuilder items;
 
   const _MenuFlyoutSubItem({
     super.key,
@@ -389,10 +393,10 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   void didUpdateWidget(_MenuFlyoutSubItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final menuInfo = MenuInfoProvider.of(context);
+    final parent = Flyout.of(context);
     if (transitionController.duration == null ||
-        transitionController.duration != menuInfo.widget.transitionDuration) {
-      transitionController.duration = menuInfo.widget.transitionDuration;
+        transitionController.duration != parent.transitionDuration) {
+      transitionController.duration = parent.transitionDuration;
     }
   }
 
@@ -400,30 +404,34 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   Widget build(BuildContext context) {
     final menuInfo = MenuInfoProvider.of(context);
 
-    return MouseRegion(
-      onEnter: (event) {
-        showTimer = Timer(widget.item.showHoverDelay, () {
-          show(menuInfo);
-        });
+    final item = MenuFlyoutItem(
+      key: widget.item.key,
+      text: widget.item.text,
+      leading: widget.item.leading,
+      selected: isShowing(menuInfo),
+      trailing: widget.item.trailing,
+      onPressed: () {
+        show(menuInfo);
       },
-      onExit: (event) {
-        if (showTimer != null && showTimer!.isActive) {
-          showTimer!.cancel();
-        }
-      },
-      child: MenuFlyoutItem(
-        key: widget.item.key,
-        text: widget.item.text,
-        leading: widget.item.leading,
-        selected: isShowing(menuInfo),
-        trailing: widget.item.trailing,
-        onPressed: () {
-          if (widget.item.showBehavior != SubItemShowBehavior.press) return;
+    ).build(context);
 
-          show(menuInfo);
+    if (widget.item.showBehavior == SubItemShowBehavior.hover) {
+      return MouseRegion(
+        onEnter: (event) {
+          showTimer = Timer(widget.item.showHoverDelay, () {
+            show(menuInfo);
+          });
         },
-      ).build(context),
-    );
+        onExit: (event) {
+          if (showTimer != null && showTimer!.isActive) {
+            showTimer!.cancel();
+          }
+        },
+        child: item,
+      );
+    }
+
+    return item;
   }
 
   bool isShowing(MenuInfoProviderState menuInfo) {
@@ -434,20 +442,27 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
     final itemBox = context.findRenderObject() as RenderBox;
     final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
 
+    final parent = Flyout.of(context);
+
     menuInfo.add(
       CustomSingleChildLayout(
         delegate: _SubItemPositionDelegate(
           parentRect: itemRect,
           parentSize: itemBox.size,
-          margin: menuInfo.widget.margin,
+          margin: parent.margin,
         ),
-        child: ContentManager(
-          content: (_) {
+        child: Flyout(
+          rootFlyout: parent.rootFlyout,
+          menuKey: menuKey,
+          additionalOffset: parent.additionalOffset,
+          margin: parent.margin,
+          transitionDuration: parent.transitionDuration,
+          builder: (context) {
             return FadeTransition(
               opacity: transitionController,
               child: MenuFlyout(
                 key: menuKey,
-                items: widget.items,
+                items: widget.items(context),
               ),
             );
           },
