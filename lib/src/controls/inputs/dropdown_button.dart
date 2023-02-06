@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 const double _kVerticalOffset = 6.0;
 const Widget _kDefaultDropdownButtonTrailing = Icon(
   FluentIcons.chevron_down,
-  size: 10,
+  size: 8.0,
 );
 
 typedef DropDownButtonBuilder = Widget Function(
@@ -44,6 +44,7 @@ class DropDownButton extends StatefulWidget {
     this.menuColor,
     this.onOpen,
     this.onClose,
+    this.transitionBuilder = _defaultTransitionBuilder,
   })  : assert(items.length > 0, 'You must provide at least one item'),
         super(key: key);
 
@@ -109,8 +110,71 @@ class DropDownButton extends StatefulWidget {
   /// Called when the flyout is closed
   final VoidCallback? onClose;
 
+  final FlyoutTransitionBuilder transitionBuilder;
+
   @override
   State<DropDownButton> createState() => DropDownButtonState();
+
+  static Widget _defaultTransitionBuilder(
+    context,
+    animation,
+    placement,
+    flyout,
+  ) {
+    assert(debugCheckHasDirectionality(context));
+    final textDirection = Directionality.of(context);
+
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        /// On the slide animation, we make use of a [ClipRect] to ensure
+        /// only the necessary parts of the widgets will be visible. Altough,
+        /// [ClipRect] clips all the borders of the widget, not only the necessary
+        /// parts, hiding any shadow the [flyout] may have. To avoid this issue,
+        /// we show the flyout independent when the animation is complated (1.0)
+        /// or dismissed (0.0)
+        if (animation.isCompleted || animation.isDismissed) return child!;
+
+        switch (placement) {
+          case FlyoutPlacementMode.bottomCenter:
+          case FlyoutPlacementMode.bottomLeft:
+          case FlyoutPlacementMode.bottomRight:
+            return ClipRect(
+              child: SlideTransition(
+                textDirection: textDirection,
+                position: Tween<Offset>(
+                  begin: const Offset(0, -1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: child,
+              ),
+            );
+          case FlyoutPlacementMode.topCenter:
+          case FlyoutPlacementMode.topLeft:
+          case FlyoutPlacementMode.topRight:
+            return ClipRect(
+              child: SlideTransition(
+                textDirection: textDirection,
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: const Offset(0, 0),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: FluentTheme.of(context).animationCurve,
+                )),
+                child: child,
+              ),
+            );
+          default:
+            return child!;
+        }
+      },
+      child: flyout,
+    );
+  }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -149,9 +213,9 @@ class DropDownButtonState extends State<DropDownButton> {
     Widget spacer = const SizedBox(width: 8.0),
   }) {
     return children
-        .expand((item) sync* {
+        .expand((child) sync* {
           yield spacer;
-          yield item;
+          yield child;
         })
         .skip(1)
         .toList();
@@ -162,14 +226,17 @@ class DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
 
+    final theme = FluentTheme.of(context);
+
     final buttonChildren = _space(<Widget>[
-      if (widget.leading != null)
-        IconTheme.merge(
-          data: const IconThemeData(size: 20.0),
-          child: widget.leading!,
-        ),
+      if (widget.leading != null) widget.leading!,
       if (widget.title != null) widget.title!,
-      widget.trailing ?? _kDefaultDropdownButtonTrailing,
+      IconTheme.merge(
+        data: IconThemeData(
+          color: theme.resources.textFillColorSecondary,
+        ),
+        child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
+      ),
     ]);
 
     return FlyoutTarget(
@@ -183,10 +250,13 @@ class DropDownButtonState extends State<DropDownButton> {
               onPressed: widget.disabled ? null : open,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: buttonChildren,
+              child: IconTheme.merge(
+                data: const IconThemeData(size: 20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: buttonChildren,
+                ),
               ),
             );
       }),
@@ -225,46 +295,10 @@ class DropDownButtonState extends State<DropDownButton> {
         preferredMode: widget.placement,
       ),
       additionalOffset: widget.verticalOffset,
-      forceAvailableSpace: true,
       barrierDismissible: barrierDismissible,
       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
       dismissWithEsc: dismissWithEsc,
-      transitionBuilder: (context, animation, placement, flyout) {
-        switch (placement) {
-          case FlyoutPlacementMode.bottomCenter:
-          case FlyoutPlacementMode.bottomLeft:
-          case FlyoutPlacementMode.bottomRight:
-            return ClipRect(
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -1),
-                  end: const Offset(0, 0),
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: FluentTheme.of(context).animationCurve,
-                )),
-                child: flyout,
-              ),
-            );
-          case FlyoutPlacementMode.topCenter:
-          case FlyoutPlacementMode.topLeft:
-          case FlyoutPlacementMode.topRight:
-            return ClipRect(
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0),
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: FluentTheme.of(context).animationCurve,
-                )),
-                child: flyout,
-              ),
-            );
-          default:
-            return flyout;
-        }
-      },
+      transitionBuilder: widget.transitionBuilder,
       builder: (context) {
         return MenuFlyout(
           color: widget.menuColor,

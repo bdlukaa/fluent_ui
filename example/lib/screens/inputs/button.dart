@@ -172,7 +172,7 @@ ToggleButton(
             ),
             SizedBox(width: 10.0),
             DropDownButton(
-              title: Icon(FluentIcons.edit_mail, size: 22.0),
+              title: Icon(FluentIcons.mail),
               items: [
                 MenuFlyoutItem(
                   leading: Icon(FluentIcons.send),
