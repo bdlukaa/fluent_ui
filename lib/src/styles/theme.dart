@@ -14,18 +14,18 @@ class FluentTheme extends StatelessWidget {
   }) : super(key: key);
 
   /// Specifies the color and typography values for descendant widgets.
-  final ThemeData data;
+  final FluentThemeData data;
 
   /// The widget below this widget in the tree.
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
-  static ThemeData of(BuildContext context) {
+  static FluentThemeData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()!.data;
   }
 
-  static ThemeData? maybeOf(BuildContext context) {
+  static FluentThemeData? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()?.data;
   }
 
@@ -51,7 +51,7 @@ class _FluentTheme extends InheritedTheme {
     required Widget child,
   }) : super(key: key, child: child);
 
-  final ThemeData data;
+  final FluentThemeData data;
 
   @override
   bool updateShouldNotify(covariant _FluentTheme oldWidget) =>
@@ -63,23 +63,23 @@ class _FluentTheme extends InheritedTheme {
   }
 }
 
-/// An interpolation between two [ThemeData]s.
+/// An interpolation between two [FluentThemeData]s.
 ///
-/// This class specializes the interpolation of [Tween<ThemeData>] to call the
-/// [ThemeData.lerp] method.
+/// This class specializes the interpolation of [Tween<FluentThemeData>] to call the
+/// [FluentThemeData.lerp] method.
 ///
 /// See [Tween] for a discussion on how to use interpolation objects.
-class ThemeDataTween extends Tween<ThemeData> {
-  /// Creates a [ThemeData] tween.
+class ThemeDataTween extends Tween<FluentThemeData> {
+  /// Creates a [FluentThemeData] tween.
   ///
   /// The [begin] and [end] properties must be non-null before the tween is
   /// first used, but the arguments can be null if the values are going to be
   /// filled in later.
-  ThemeDataTween({ThemeData? begin, ThemeData? end})
+  ThemeDataTween({FluentThemeData? begin, FluentThemeData? end})
       : super(begin: begin, end: end);
 
   @override
-  ThemeData lerp(double t) => ThemeData.lerp(begin!, end!, t);
+  FluentThemeData lerp(double t) => FluentThemeData.lerp(begin!, end!, t);
 }
 
 /// Animated version of [Theme] which automatically transitions the colors,
@@ -93,7 +93,7 @@ class ThemeDataTween extends Tween<ThemeData> {
 ///
 ///  * [FluentTheme], which [AnimatedFluentTheme] uses to actually apply the interpolated
 ///    theme.
-///  * [ThemeData], which describes the actual configuration of a theme.
+///  * [FluentThemeData], which describes the actual configuration of a theme.
 ///  * [FluentApp], which includes an [AnimatedFluentTheme] widget configured via
 ///    the [FluentApp.theme] argument.
 class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
@@ -111,7 +111,7 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   }) : super(key: key, curve: curve, duration: duration, onEnd: onEnd);
 
   /// Specifies the color and typography values for descendant widgets.
-  final ThemeData data;
+  final FluentThemeData data;
 
   /// The widget below this widget in the tree.
   ///
@@ -130,7 +130,7 @@ class _AnimatedFluentThemeState
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     _data = visitor(_data, widget.data,
-            (dynamic value) => ThemeDataTween(begin: value as ThemeData))!
+            (dynamic value) => ThemeDataTween(begin: value as FluentThemeData))!
         as ThemeDataTween;
   }
 
@@ -173,7 +173,7 @@ const standardCurve = Curves.easeInOut;
 
 /// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable
-class ThemeData with Diagnosticable {
+class FluentThemeData with Diagnosticable {
   final Typography typography;
   final Map<Object, ThemeExtension<dynamic>> extensions;
 
@@ -225,7 +225,7 @@ class ThemeData with Diagnosticable {
 
   final ResourceDictionary resources;
 
-  factory ThemeData({
+  factory FluentThemeData({
     Iterable<ThemeExtension<dynamic>>? extensions,
     Brightness? brightness,
     VisualDensity? visualDensity,
@@ -344,7 +344,7 @@ class ThemeData with Diagnosticable {
     snackbarTheme ??= const SnackbarThemeData();
     bottomSheetTheme ??= const BottomSheetThemeData();
 
-    return ThemeData.raw(
+    return FluentThemeData.raw(
       brightness: brightness,
       extensions: _themeExtensionIterableToMap(extensions),
       visualDensity: visualDensity,
@@ -392,7 +392,7 @@ class ThemeData with Diagnosticable {
     );
   }
 
-  const ThemeData.raw({
+  const FluentThemeData.raw({
     required this.typography,
     required this.extensions,
     required this.accentColor,
@@ -439,16 +439,16 @@ class ThemeData with Diagnosticable {
     required this.resources,
   });
 
-  static ThemeData light() {
-    return ThemeData(brightness: Brightness.light);
+  static FluentThemeData light() {
+    return FluentThemeData(brightness: Brightness.light);
   }
 
-  static ThemeData dark() {
-    return ThemeData(brightness: Brightness.dark);
+  static FluentThemeData dark() {
+    return FluentThemeData(brightness: Brightness.dark);
   }
 
-  static ThemeData lerp(ThemeData a, ThemeData b, double t) {
-    return ThemeData.raw(
+  static FluentThemeData lerp(FluentThemeData a, FluentThemeData b, double t) {
+    return FluentThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
       extensions: t < 0.5 ? a.extensions : b.extensions,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
@@ -522,7 +522,7 @@ class ThemeData with Diagnosticable {
   /// See [extensions] for an interactive example.
   T? extension<T>() => extensions[T] as T?;
 
-  /// Convert the [extensionsIterable] passed to [ThemeData.new] or [copyWith]
+  /// Convert the [extensionsIterable] passed to [FluentThemeData.new] or [copyWith]
   /// to the stored [extensions] map, where each entry's key consists of the extension's type.
   static Map<Object, ThemeExtension<dynamic>> _themeExtensionIterableToMap(
       Iterable<ThemeExtension<dynamic>> extensionsIterable) {
@@ -534,7 +534,7 @@ class ThemeData with Diagnosticable {
     });
   }
 
-  ThemeData copyWith({
+  FluentThemeData copyWith({
     Brightness? brightness,
     Iterable<ThemeExtension<dynamic>>? extensions,
     VisualDensity? visualDensity,
@@ -580,7 +580,7 @@ class ThemeData with Diagnosticable {
     SnackbarThemeData? snackbarTheme,
     ResourceDictionary? resources,
   }) {
-    return ThemeData.raw(
+    return FluentThemeData.raw(
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
       typography: this.typography.merge(typography),

@@ -85,7 +85,7 @@ class BottomNavigation extends StatelessWidget {
   final ValueChanged<int>? onChanged;
 
   /// Used to style this bottom navigation bar. If non-null,
-  /// it's mescled with [ThemeData.bottomNavigationTheme]
+  /// it's mescled with [FluentThemeData.bottomNavigationTheme]
   final BottomNavigationThemeData? style;
 
   bool get _disabled => onChanged == null;
@@ -212,7 +212,7 @@ class BottomNavigationTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.bottomNavigationTheme]
+  /// Defaults to [FluentThemeData.bottomNavigationTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -261,13 +261,13 @@ class BottomNavigationThemeData with Diagnosticable {
     this.inactiveColor,
   });
 
-  factory BottomNavigationThemeData.standard(ThemeData style) {
-    final isLight = style.brightness.isLight;
+  factory BottomNavigationThemeData.standard(FluentThemeData theme) {
+    final isLight = theme.brightness.isLight;
     return BottomNavigationThemeData(
       backgroundColor:
           isLight ? const Color(0xFFf8f8f8) : const Color(0xFF0c0c0c),
-      selectedColor: style.accentColor,
-      inactiveColor: style.disabledColor,
+      selectedColor: theme.accentColor,
+      inactiveColor: theme.disabledColor,
     );
   }
 

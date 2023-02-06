@@ -32,7 +32,7 @@ class Scrollbar extends RawScrollbar {
         );
 
   /// The style applied to the scroll bar. If non-null, it's mescled
-  /// with [ThemeData.scrollbarThemeData]
+  /// with [FluentThemeData.scrollbarThemeData]
   final ScrollbarThemeData? style;
 
   @override
@@ -229,7 +229,7 @@ class ScrollbarTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.scrollbarTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.scrollbarTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -357,7 +357,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.contractDelay,
   });
 
-  factory ScrollbarThemeData.standard(ThemeData theme) {
+  factory ScrollbarThemeData.standard(FluentThemeData theme) {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight

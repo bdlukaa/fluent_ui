@@ -150,7 +150,7 @@ class ToggleButtonThemeData with Diagnosticable {
     this.uncheckedButtonStyle,
   });
 
-  factory ToggleButtonThemeData.standard(ThemeData theme) {
+  factory ToggleButtonThemeData.standard(FluentThemeData theme) {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
         backgroundColor: ButtonState.resolveWith(

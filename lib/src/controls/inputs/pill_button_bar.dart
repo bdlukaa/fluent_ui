@@ -186,7 +186,7 @@ class PillButtonBarTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.pillButtonBarTheme]
+  /// Defaults to [FluentThemeData.pillButtonBarTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -238,7 +238,7 @@ class PillButtonBarThemeData with Diagnosticable {
     this.unselectedTextStyle,
   });
 
-  factory PillButtonBarThemeData.standard(ThemeData style) {
+  factory PillButtonBarThemeData.standard(FluentThemeData theme) {
     Color applyOpacity(Color color, Set<ButtonStates> states) {
       return color.withOpacity(
         states.isPressing
@@ -251,12 +251,12 @@ class PillButtonBarThemeData with Diagnosticable {
       );
     }
 
-    final isLight = style.brightness.isLight;
+    final isLight = theme.brightness.isLight;
     final unselectedColor =
-        isLight ? style.accentColor.dark : const Color(0xFF141414);
+        isLight ? theme.accentColor.dark : const Color(0xFF141414);
 
     return PillButtonBarThemeData(
-      backgroundColor: isLight ? style.accentColor : const Color(0xFF212121),
+      backgroundColor: isLight ? theme.accentColor : const Color(0xFF212121),
       selectedColor: ButtonState.resolveWith((states) {
         return applyOpacity(
             isLight ? Colors.white : const Color(0xFF404040), states);

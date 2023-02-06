@@ -33,7 +33,7 @@ class SplitButtonBar extends StatelessWidget {
   final List<Widget> buttons;
 
   /// The style applied to this button bar. If non-null, it's
-  /// merged with [ThemeData.splitButtonThemeData]
+  /// merged with [FluentThemeData.splitButtonThemeData]
   final SplitButtonThemeData? style;
 
   @override
@@ -121,7 +121,7 @@ class SplitButtonTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.splitButtonTheme]
+  /// Defaults to [FluentThemeData.splitButtonTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -168,7 +168,7 @@ class SplitButtonThemeData with Diagnosticable {
     this.actionButtonStyle,
   });
 
-  factory SplitButtonThemeData.standard(ThemeData style) {
+  factory SplitButtonThemeData.standard(FluentThemeData theme) {
     return SplitButtonThemeData(
       borderRadius: BorderRadius.circular(4),
       interval: 1,
