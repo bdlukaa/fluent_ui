@@ -116,11 +116,12 @@ class DropDownButton extends StatefulWidget {
   State<DropDownButton> createState() => DropDownButtonState();
 
   static Widget _defaultTransitionBuilder(
-    context,
-    animation,
-    placement,
-    flyout,
+    BuildContext context,
+    Animation<double> animation,
+    FlyoutPlacementMode placement,
+    Widget flyout,
   ) {
+    assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
     final textDirection = Directionality.of(context);
 
@@ -134,6 +135,10 @@ class DropDownButton extends StatefulWidget {
         /// we show the flyout independent when the animation is complated (1.0)
         /// or dismissed (0.0)
         if (animation.isCompleted || animation.isDismissed) return child!;
+
+        if (animation.status == AnimationStatus.reverse) {
+          return FadeTransition(opacity: animation, child: child!);
+        }
 
         switch (placement) {
           case FlyoutPlacementMode.bottomCenter:
