@@ -33,7 +33,7 @@ class DropDownButton extends StatefulWidget {
     required this.items,
     this.leading,
     this.title,
-    this.trailing,
+    this.trailing = _kDefaultDropdownButtonTrailing,
     this.verticalOffset = _kVerticalOffset,
     this.closeAfterClick = true,
     this.disabled = false,
@@ -233,17 +233,6 @@ class DropDownButtonState extends State<DropDownButton> {
 
     final theme = FluentTheme.of(context);
 
-    final buttonChildren = _space(<Widget>[
-      if (widget.leading != null) widget.leading!,
-      if (widget.title != null) widget.title!,
-      IconTheme.merge(
-        data: IconThemeData(
-          color: theme.resources.textFillColorSecondary,
-        ),
-        child: widget.trailing ?? _kDefaultDropdownButtonTrailing,
-      ),
-    ]);
-
     return FlyoutTarget(
       controller: _flyoutController,
       child: Builder(builder: (context) {
@@ -255,14 +244,41 @@ class DropDownButtonState extends State<DropDownButton> {
               onPressed: widget.disabled ? null : open,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
-              child: IconTheme.merge(
-                data: const IconThemeData(size: 20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: buttonChildren,
-                ),
-              ),
+              child: Builder(builder: (context) {
+                final state = HoverButton.of(context).states;
+
+                return IconTheme.merge(
+                  data: const IconThemeData(size: 20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: _space(<Widget>[
+                      if (widget.leading != null) widget.leading!,
+                      if (widget.title != null) widget.title!,
+                      if (widget.trailing != null)
+                        IconTheme.merge(
+                          data: IconThemeData(
+                            color: state.isDisabled
+                                ? theme.resources.textFillColorDisabled
+                                : state.isPressing
+                                    ? theme.resources.textFillColorTertiary
+                                    : state.isHovering
+                                        ? theme.resources.textFillColorSecondary
+                                        : theme.resources.textFillColorPrimary,
+                          ),
+                          child: AnimatedSlide(
+                            duration: theme.fastAnimationDuration,
+                            curve: Curves.easeInCirc,
+                            offset: state.isPressing
+                                ? const Offset(0, 0.1)
+                                : Offset.zero,
+                            child: widget.trailing!,
+                          ),
+                        ),
+                    ]),
+                  ),
+                );
+              }),
             );
       }),
     );

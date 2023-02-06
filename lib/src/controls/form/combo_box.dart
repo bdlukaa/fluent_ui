@@ -838,7 +838,7 @@ class ComboBox<T> extends StatefulWidget {
     this.icon = const Icon(FluentIcons.chevron_down),
     this.iconDisabledColor,
     this.iconEnabledColor,
-    this.iconSize = 8.0,
+    this.iconSize = 10.0,
     this.isExpanded = false,
     this.focusColor,
     this.focusNode,
@@ -1010,7 +1010,7 @@ class ComboBox<T> extends StatefulWidget {
 
   /// The size to use for the checkbox button's down arrow icon button.
   ///
-  /// Defaults to 8.0.
+  /// Defaults to 12.0
   final double iconSize;
 
   /// Set the combo box's inner contents to horizontally fill its parent.
@@ -1169,15 +1169,20 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     if (widget.onChanged != null) widget.onChanged!(newValue);
   }
 
-  Color get iconColor {
+  Color iconColor(BuildContext context) {
+    final res = FluentTheme.of(context).resources;
     if (isEnabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
 
-      return FluentTheme.of(context).resources.textFillColorTertiary;
-    } else {
-      if (widget.iconDisabledColor != null) return widget.iconDisabledColor!;
+      final state = HoverButton.of(context).states;
 
-      return FluentTheme.of(context).resources.textFillColorDisabled;
+      if (state.isPressing) {
+        return res.textFillColorTertiary;
+      }
+
+      return widget.iconEnabledColor ?? res.textFillColorSecondary;
+    } else {
+      return widget.iconDisabledColor ?? res.textFillColorDisabled;
     }
   }
 
@@ -1242,31 +1247,36 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       );
     }
 
-    Widget result = DefaultTextStyle(
-      style: isEnabled
-          ? textStyle!
-          : textStyle!.copyWith(color: theme.disabledColor),
-      child: Container(
-        padding: padding.resolve(Directionality.of(context)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.isExpanded)
-              Expanded(child: innerItemsWidget)
-            else
-              innerItemsWidget,
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
-              child: IconTheme.merge(
-                data: IconThemeData(color: iconColor, size: widget.iconSize),
-                child: widget.icon,
+    Widget result = Builder(builder: (context) {
+      return DefaultTextStyle(
+        style: isEnabled
+            ? textStyle!
+            : textStyle!.copyWith(color: theme.disabledColor),
+        child: Container(
+          padding: padding.resolve(Directionality.of(context)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (widget.isExpanded)
+                Expanded(child: innerItemsWidget)
+              else
+                innerItemsWidget,
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
+                child: IconTheme.merge(
+                  data: IconThemeData(
+                    color: iconColor(context),
+                    size: widget.iconSize,
+                  ),
+                  child: widget.icon,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
 
     return Semantics(
       button: true,

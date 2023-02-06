@@ -276,13 +276,13 @@ class ButtonThemeData with Diagnosticable {
   }) {
     final res = style.resources;
     if (states.isDisabled) {
-      if (transparentWhenDisabled) return res.controlAltFillColorTransparent;
+      if (transparentWhenDisabled) return res.subtleFillColorTransparent;
       return res.controlAltFillColorDisabled;
     }
-    if (states.isPressing) return res.controlAltFillColorQuarternary;
-    if (states.isHovering) return res.controlAltFillColorTertiary;
+    if (states.isPressing) return res.subtleFillColorTertiary;
+    if (states.isHovering) return res.subtleFillColorSecondary;
     return transparentWhenNone
-        ? res.controlAltFillColorTransparent
+        ? res.subtleFillColorTransparent
         : res.controlAltFillColorSecondary;
   }
 }

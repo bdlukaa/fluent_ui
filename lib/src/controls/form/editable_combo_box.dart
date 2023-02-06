@@ -131,13 +131,18 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
         expands: widget.isExpanded,
         enabled: isEnabled,
         unfocusedColor: Colors.transparent,
-        suffix: IconButton(
-          icon: IconTheme.merge(
-            data: IconThemeData(color: iconColor, size: widget.iconSize),
-            child: widget.icon,
-          ),
-          onPressed: openPopup,
-        ),
+        suffix: Builder(builder: (context) {
+          return IconButton(
+            icon: IconTheme.merge(
+              data: IconThemeData(
+                color: iconColor(context),
+                size: widget.iconSize,
+              ),
+              child: widget.icon,
+            ),
+            onPressed: openPopup,
+          );
+        }),
         onSubmitted: (text) {
           final newText = widget.onFieldSubmitted(text);
           _setText(newText);
