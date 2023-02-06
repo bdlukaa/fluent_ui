@@ -1,7 +1,7 @@
 ## next
 
 - Correctly calculate the padding around the flyout on automatic mode
-- Possibility to supply transparents colors to the barrier ([#702](https://github.com/bdlukaa/fluent_ui/issues/702))
+- Possibility to supply transparent colors to the barrier ([#702](https://github.com/bdlukaa/fluent_ui/issues/702))
 - Correctly assign the current pane mode to `PaneItemExpander` ([#707](https://github.com/bdlukaa/fluent_ui/issues/707))
 - `showFlyout.dismissOnPointerMoveAway` now takes the whole flyout box into consideration
 - **MINOR BREAKING** Replaced `ContentManager` and `ContentSizeInfo` with `Flyout`
@@ -29,7 +29,7 @@
 
   final isOpen = dropdownKey.currentState?.isOpen ?? false; // checks if the flyout is open
   ```
-- **BREAKING** Removed deprecated memebers: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
+- **BREAKING** Removed deprecated members: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
 
 ## 4.2.0
 
