@@ -16,6 +16,20 @@
   ```
 
   With it, it's also possible to have multiple info about the current open flyout. Sub-menus also have their own flyout instance. To close the current flyout, use `Flyout.of(context).close();`
+- Added option to open `DropDownButton` flyout programatically ([#723](https://github.com/bdlukaa/fluent_ui/issues/723))
+  ```dart
+  final dropdownKey = GlobalKey<DropDownButtonState>();
+
+  DropDownButton(
+    key: dropdownKey,
+    ...
+  );
+
+  dropdownKey.currentState?.open(...); // opens the flyout
+
+  final isOpen = dropdownKey.currentState?.isOpen ?? false; // checks if the flyout is open
+  ```
+- **BREAKING** Removed deprecated memebers: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
 
 ## 4.2.0
 
