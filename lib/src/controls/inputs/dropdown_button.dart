@@ -12,7 +12,7 @@ typedef DropDownButtonBuilder = Widget Function(
   VoidCallback? onOpen,
 );
 
-/// A `DropDownButton` is a button that shows a chevron as a visual indicator that
+/// A dropdown button is a button that shows a chevron as a visual indicator that
 /// it has an attached flyout that contains more options. It has the same
 /// behavior as a standard Button control with a flyout; only the appearance is
 /// different.
@@ -22,7 +22,7 @@ typedef DropDownButtonBuilder = Widget Function(
 /// See also:
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
-///  content. Used to back this button
+///     content. Used to back this button
 ///   * [ComboBox], a list of items that a user can select from
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
@@ -66,7 +66,9 @@ class DropDownButton extends StatefulWidget {
 
   /// Trailing show a content at the right of this widget.
   ///
-  /// If null, a chevron_down is displayed.
+  /// If null, a chevron_down icon is displayed.
+  ///
+  /// Usually an [Icon] widget
   final Widget? trailing;
 
   /// The space between the button and the flyout.
@@ -107,21 +109,13 @@ class DropDownButton extends StatefulWidget {
   final Color? menuColor;
 
   /// Called when the flyout is opened
-  ///
-  /// See also:
-  ///
-  ///  * [Flyout.onClose]
   final VoidCallback? onOpen;
 
   /// Called when the flyout is closed
-  ///
-  /// See also:
-  ///
-  ///  * [Flyout.onClose]
   final VoidCallback? onClose;
 
   @override
-  State<DropDownButton> createState() => _DropDownButtonState();
+  State<DropDownButton> createState() => DropDownButtonState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -145,13 +139,27 @@ class DropDownButton extends StatefulWidget {
   }
 }
 
-class _DropDownButtonState extends State<DropDownButton> {
-  final flyoutController = FlyoutController();
+class DropDownButtonState extends State<DropDownButton> {
+  final _flyoutController = FlyoutController();
 
   @override
   void dispose() {
-    flyoutController.dispose();
+    _flyoutController.dispose();
     super.dispose();
+  }
+
+  // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
+  List<Widget> _space(
+    Iterable<Widget> children, {
+    Widget spacer = const SizedBox(width: 8.0),
+  }) {
+    return children
+        .expand((item) sync* {
+          yield spacer;
+          yield item;
+        })
+        .skip(1)
+        .toList();
   }
 
   @override
@@ -159,16 +167,7 @@ class _DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
 
-    // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
-    List<Widget> space(Iterable<Widget> children) => children
-        .expand((item) sync* {
-          yield const SizedBox(width: 8.0);
-          yield item;
-        })
-        .skip(1)
-        .toList();
-
-    final buttonChildren = space(<Widget>[
+    final buttonChildren = _space(<Widget>[
       if (widget.leading != null)
         IconTheme.merge(
           data: const IconThemeData(size: 20.0),
@@ -179,14 +178,14 @@ class _DropDownButtonState extends State<DropDownButton> {
     ]);
 
     return FlyoutTarget(
-      controller: flyoutController,
+      controller: _flyoutController,
       child: Builder(builder: (context) {
         return widget.buttonBuilder?.call(
               context,
-              widget.disabled ? null : showFlyout,
+              widget.disabled ? null : open,
             ) ??
             Button(
-              onPressed: widget.disabled ? null : showFlyout,
+              onPressed: widget.disabled ? null : open,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
               // ignore: deprecated_member_use_from_same_package
@@ -201,9 +200,12 @@ class _DropDownButtonState extends State<DropDownButton> {
     );
   }
 
-  void showFlyout() async {
+  /// Opens the dropdown flyout
+  void open() async {
+    if (_flyoutController.isOpen) return;
+
     widget.onOpen?.call();
-    await flyoutController.showFlyout(
+    await _flyoutController.showFlyout(
       placementMode: FlyoutPlacementMode.auto,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
