@@ -59,7 +59,7 @@ class _NavigationBody extends StatefulWidget {
   /// is used by default.
   ///
   /// See also:
-  ///   * [ThemeData.fastAnimationDuration], the duration used by default.
+  ///   * [FluentThemeData.fastAnimationDuration], the duration used by default.
   final Duration? animationDuration;
 
   @override

@@ -113,7 +113,7 @@ Common controls use an accent color to convey state information. [Learn more](ht
 By default, the accent color is `Colors.blue`. However, you can also customize your app's accent color to reflect your brand:
 
 ```dart
-ThemeData(
+FluentThemeData(
   accentColor: Colors.blue,
 )
 ```
@@ -123,7 +123,7 @@ To use the system's accent color, you can use the plugin [system_theme](https://
 ```dart
 import 'package:system_theme/system_theme.dart';
 
-ThemeData(
+FluentThemeData(
   accentColor: SystemTheme.accentColor.accent.toAccentColor(),
 )
 ```

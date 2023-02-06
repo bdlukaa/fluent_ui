@@ -28,7 +28,7 @@ class CommandBarCard extends StatelessWidget {
 
   /// The card's background color.
   ///
-  /// If null, [ThemeData.cardColor] is used
+  /// If null, [FluentThemeData.cardColor] is used
   final Color? backgroundColor;
 
   @override

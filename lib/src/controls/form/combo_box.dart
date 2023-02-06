@@ -992,7 +992,7 @@ class ComboBox<T> extends StatefulWidget {
   /// }
   /// ```
   ///
-  /// Defaults to the [Typography.body] value of the closest [ThemeData]
+  /// Defaults to the [Typography.body] value of the closest [FluentThemeData]
   final TextStyle? style;
 
   /// The widget to use for the comobo box button's icon.

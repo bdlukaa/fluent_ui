@@ -69,13 +69,13 @@ class _FluentTheme extends InheritedTheme {
 /// [FluentThemeData.lerp] method.
 ///
 /// See [Tween] for a discussion on how to use interpolation objects.
-class ThemeDataTween extends Tween<FluentThemeData> {
+class FluentThemeDataTween extends Tween<FluentThemeData> {
   /// Creates a [FluentThemeData] tween.
   ///
   /// The [begin] and [end] properties must be non-null before the tween is
   /// first used, but the arguments can be null if the values are going to be
   /// filled in later.
-  ThemeDataTween({FluentThemeData? begin, FluentThemeData? end})
+  FluentThemeDataTween({FluentThemeData? begin, FluentThemeData? end})
       : super(begin: begin, end: end);
 
   @override
@@ -125,13 +125,13 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
 
 class _AnimatedFluentThemeState
     extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
-  ThemeDataTween? _data;
+  FluentThemeDataTween? _data;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     _data = visitor(_data, widget.data,
-            (dynamic value) => ThemeDataTween(begin: value as FluentThemeData))!
-        as ThemeDataTween;
+            (dynamic value) => FluentThemeDataTween(begin: value as FluentThemeData))!
+        as FluentThemeDataTween;
   }
 
   @override
@@ -145,7 +145,7 @@ class _AnimatedFluentThemeState
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder description) {
     super.debugFillProperties(description);
-    description.add(DiagnosticsProperty<ThemeDataTween>('data', _data,
+    description.add(DiagnosticsProperty<FluentThemeDataTween>('data', _data,
         showName: false, defaultValue: null));
   }
 }
