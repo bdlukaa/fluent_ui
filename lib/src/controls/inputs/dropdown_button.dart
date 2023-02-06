@@ -39,7 +39,6 @@ class DropDownButton extends StatefulWidget {
     this.disabled = false,
     this.focusNode,
     this.autofocus = false,
-    this.buttonStyle,
     this.placement = FlyoutPlacementMode.bottomCenter,
     this.menuShape,
     this.menuColor,
@@ -92,10 +91,6 @@ class DropDownButton extends StatefulWidget {
 
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
-
-  /// Customizes the button's appearance.
-  @Deprecated('buttonStyle was deprecated in 3.11.1. Use buttonBuilder instead')
-  final ButtonStyle? buttonStyle;
 
   /// The placement of the flyout.
   ///
@@ -188,8 +183,6 @@ class DropDownButtonState extends State<DropDownButton> {
               onPressed: widget.disabled ? null : open,
               autofocus: widget.autofocus,
               focusNode: widget.focusNode,
-              // ignore: deprecated_member_use_from_same_package
-              style: widget.buttonStyle,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,8 +193,29 @@ class DropDownButtonState extends State<DropDownButton> {
     );
   }
 
+  /// Whether the dropdown flyout is open
+  ///
+  /// See also:
+  ///
+  ///  * [FlyoutController.isOpen], which verifies if the flyout is open
+  bool get isOpen => _flyoutController.isOpen;
+
   /// Opens the dropdown flyout
-  void open() async {
+  ///
+  /// {@macro fluent_ui.flyouts.barrierDismissible}
+  ///
+  /// {@macro fluent_ui.flyouts.dismissWithEsc}
+  ///
+  /// {@macro fluent_ui.flyouts.dismissOnPointerMoveAway}
+  ///
+  /// See also:
+  ///
+  ///  * [FlyoutController.showFlyout], which is used to show the dropdown flyout
+  void open({
+    bool barrierDismissible = true,
+    bool dismissWithEsc = true,
+    bool dismissOnPointerMoveAway = false,
+  }) async {
     if (_flyoutController.isOpen) return;
 
     widget.onOpen?.call();
@@ -211,6 +225,10 @@ class DropDownButtonState extends State<DropDownButton> {
         preferredMode: widget.placement,
       ),
       additionalOffset: widget.verticalOffset,
+      forceAvailableSpace: true,
+      barrierDismissible: barrierDismissible,
+      dismissOnPointerMoveAway: dismissOnPointerMoveAway,
+      dismissWithEsc: dismissWithEsc,
       transitionBuilder: (context, animation, placement, flyout) {
         switch (placement) {
           case FlyoutPlacementMode.bottomCenter:
@@ -272,27 +290,4 @@ class DropDownButtonState extends State<DropDownButton> {
     );
     widget.onClose?.call();
   }
-}
-
-/// An item used by [DropDownButton].
-@Deprecated('DropDownButtonItem is deprecated. Use MenuFlyoutItem instead')
-class DropDownButtonItem extends MenuFlyoutItem {
-  /// Creates a drop down button item
-  DropDownButtonItem({
-    Key? key,
-    required VoidCallback? onTap,
-    Widget? leading,
-    Widget? title,
-    Widget? trailing,
-  })  : assert(
-          leading != null || title != null || trailing != null,
-          'You must provide at least one property: leading, title or trailing',
-        ),
-        super(
-          key: key,
-          leading: leading,
-          text: title ?? const SizedBox.shrink(),
-          trailing: trailing,
-          onPressed: onTap,
-        );
 }

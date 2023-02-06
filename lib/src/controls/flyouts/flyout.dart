@@ -444,6 +444,7 @@ typedef FlyoutTransitionBuilder = Widget Function(
   Widget child,
 );
 
+/// Controls the state of a flyout
 class FlyoutController with ChangeNotifier {
   _FlyoutTargetState? _attachState;
   bool _open = false;
@@ -484,17 +485,23 @@ class FlyoutController with ChangeNotifier {
   /// [builder] builds the flyout with the given context. Usually a [FlyoutContent]
   /// is used
   ///
+  /// {@template fluent_ui.flyouts.barrierDismissible}
   /// If [barrierDismissible] is true, tapping outside of the flyout will close
   /// it.
+  /// {@end-template}
   ///
   /// [barrierColor] is the color of the barrier.
   ///
+  /// {@template fluent_ui.flyouts.dismissWithEsc}
   /// When [dismissWithEsc] is true, the flyout can be dismissed by pressing the
   /// ESC key.
+  /// {@end-template}
   ///
+  /// {@template fluent_ui.flyouts.dismissOnPointerMoveAway}
   /// If [dismissOnPointerMoveAway] is enabled, the flyout is dismissed when the
   /// cursor moves away from either the target or the flyout. It's disabled by
   /// default.
+  /// {@end-template}
   ///
   /// [placementMode] describes where the flyout will be placed. Defaults to auto
   ///
