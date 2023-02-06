@@ -129,8 +129,11 @@ class _AnimatedFluentThemeState
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _data = visitor(_data, widget.data,
-            (dynamic value) => FluentThemeDataTween(begin: value as FluentThemeData))!
+    _data = visitor(
+            _data,
+            widget.data,
+            (dynamic value) =>
+                FluentThemeDataTween(begin: value as FluentThemeData))!
         as FluentThemeDataTween;
   }
 
@@ -170,6 +173,9 @@ extension BrightnessExtension on Brightness {
 }
 
 const standardCurve = Curves.easeInOut;
+
+@Deprecated('ThemeData is deprecated. Use FluentThemeData instead')
+typedef ThemeData = FluentThemeData;
 
 /// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable

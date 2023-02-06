@@ -43,7 +43,7 @@ class Mica extends StatelessWidget {
   final double elevation;
 
   /// The color to paint the background area with. If null,
-  /// [ThemeData.micaBackgroundColor] is used.
+  /// [FluentThemeData.micaBackgroundColor] is used.
   final Color? backgroundColor;
 
   /// The border radius applied to the area.
