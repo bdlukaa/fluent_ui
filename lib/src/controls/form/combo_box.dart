@@ -278,6 +278,8 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
     // in the first 0.25s.
     final route = widget.route;
 
+    final theme = FluentTheme.of(context);
+
     return FadeTransition(
       opacity: _fadeOpacity,
       child: CustomPaint(
@@ -288,8 +290,7 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
           // be retrieved at paint time (after layout), not at build time.
           getSelectedItemOffset: () => route.getItemOffset(route.selectedIndex),
           // elevation: route.elevation.toDouble(),
-          borderColor:
-              FluentTheme.of(context).resources.surfaceStrokeColorFlyout,
+          borderColor: theme.resources.surfaceStrokeColorFlyout,
           backgroundColor: widget.popupColor,
         ),
         child: ClipRRect(
@@ -304,34 +305,37 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
               borderRadius: BorderRadius.all(kComboBoxRadius),
             ),
             elevation: route.elevation.toDouble(),
-            child: Semantics(
-              scopesRoute: true,
-              namesRoute: true,
-              explicitChildNodes: true,
-              label: FluentLocalizations.of(context).dialogLabel,
-              child: DefaultTextStyle(
-                style: route.style,
-                child: ScrollConfiguration(
-                  behavior: const _ComboBoxScrollBehavior(),
-                  child: PrimaryScrollController(
-                    controller: widget.route.scrollController!,
-                    child: ListView.builder(
-                      primary: true,
-                      itemCount: route.items.length,
-                      padding: _kListPadding,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        Widget container = _ComboBoxItemContainer(
-                          child: _ComboBoxItemButton<T>(
-                            route: widget.route,
-                            padding: widget.padding,
-                            buttonRect: widget.buttonRect,
-                            constraints: widget.constraints,
-                            itemIndex: index,
-                          ),
-                        );
-                        return container;
-                      },
+            child: ColoredBox(
+              color: theme.menuColor.withOpacity(kMenuColorOpacity),
+              child: Semantics(
+                scopesRoute: true,
+                namesRoute: true,
+                explicitChildNodes: true,
+                label: FluentLocalizations.of(context).dialogLabel,
+                child: DefaultTextStyle(
+                  style: route.style,
+                  child: ScrollConfiguration(
+                    behavior: const _ComboBoxScrollBehavior(),
+                    child: PrimaryScrollController(
+                      controller: widget.route.scrollController!,
+                      child: ListView.builder(
+                        primary: true,
+                        itemCount: route.items.length,
+                        padding: _kListPadding,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          Widget container = _ComboBoxItemContainer(
+                            child: _ComboBoxItemButton<T>(
+                              route: widget.route,
+                              padding: widget.padding,
+                              buttonRect: widget.buttonRect,
+                              constraints: widget.constraints,
+                              itemIndex: index,
+                            ),
+                          );
+                          return container;
+                        },
+                      ),
                     ),
                   ),
                 ),

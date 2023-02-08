@@ -300,8 +300,9 @@ class FluentThemeData with Diagnosticable {
     disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??= resources.layerFillColorDefault;
-    acrylicBackgroundColor ??=
-        isLight ? const Color(0xFFfcfcfc) : const Color(0xFF2c2c2c);
+    acrylicBackgroundColor ??= isLight
+        ? resources.layerOnAcrylicFillColorDefault
+        : const Color(0xFF2c2c2c);
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     uncheckedColor ??= isLight
         ? const Color.fromRGBO(0, 0, 0, 0.6063)
