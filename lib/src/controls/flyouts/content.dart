@@ -25,7 +25,7 @@ class FlyoutContent extends StatelessWidget {
 
   /// The background color of the box.
   ///
-  /// If null, [ThemeData.menuColor] is used by default
+  /// If null, [FluentThemeData.menuColor] is used by default
   final Color? color;
 
   /// The shape to fill the [color] of the box.

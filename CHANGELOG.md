@@ -29,7 +29,8 @@
 
   final isOpen = dropdownKey.currentState?.isOpen ?? false; // checks if the flyout is open
   ```
-- **BREAKING** Removed deprecated members: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
+- **BREAKING** Removed deprecated memebers: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
+- `ThemeData` is depreacted. Use `FluentThemeData` instead ([#722](https://github.com/bdlukaa/fluent_ui/issues/722))
 
 ## 4.2.0
 

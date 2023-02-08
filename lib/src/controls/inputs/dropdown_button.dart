@@ -101,7 +101,7 @@ class DropDownButton extends StatefulWidget {
   /// The menu shape
   final ShapeBorder? menuShape;
 
-  /// The menu color. If null, [ThemeData.menuColor] is used
+  /// The menu color. If null, [FluentThemeData.menuColor] is used
   final Color? menuColor;
 
   /// Called when the flyout is opened

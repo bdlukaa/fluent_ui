@@ -60,7 +60,7 @@ void main() {
         m.Theme(
           data: m.ThemeData.light(),
           child: FluentApp(
-            theme: ThemeData.dark(),
+            theme: FluentThemeData.dark(),
             home: Builder(
               builder: (BuildContext context) {
                 return Column(

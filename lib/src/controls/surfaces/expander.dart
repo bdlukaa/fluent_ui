@@ -84,12 +84,12 @@ class Expander extends StatefulWidget {
 
   /// The expand-collapse animation duration.
   ///
-  /// If null, defaults to [ThemeData.fastAnimationDuration]
+  /// If null, defaults to [FluentThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
   /// The expand-collapse animation curve.
   ///
-  /// If null, defaults to [ThemeData.animationCurve]
+  /// If null, defaults to [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The expand direction. Defaults to [ExpanderDirection.down]
@@ -122,7 +122,7 @@ class Expander extends StatefulWidget {
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
-  late ThemeData _theme;
+  late FluentThemeData _theme;
 
   late bool _isExpanded;
   bool get isExpanded => _isExpanded;

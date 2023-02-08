@@ -204,7 +204,7 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
   Widget build(BuildContext context) => builder(context);
 }
 
-/// The standart flyout item used inside a [MenuFlyout]
+/// The standard flyout item used inside a [MenuFlyout]
 ///
 /// See also:
 ///

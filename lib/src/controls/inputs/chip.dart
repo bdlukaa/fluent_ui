@@ -164,7 +164,7 @@ class ChipTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.chipTheme]
+  /// Defaults to [FluentThemeData.chipTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -215,8 +215,8 @@ class ChipThemeData with Diagnosticable {
     this.textStyle,
   });
 
-  factory ChipThemeData.standard(ThemeData style) {
-    Color normalColor(Set<ButtonStates> states) => style.brightness.isLight
+  factory ChipThemeData.standard(FluentThemeData theme) {
+    Color normalColor(Set<ButtonStates> states) => theme.brightness.isLight
         ? states.isPressing
             ? const Color(0xFFc1c1c1)
             : states.isFocused || states.isHovering
@@ -238,18 +238,18 @@ class ChipThemeData with Diagnosticable {
       textStyle: ButtonState.resolveWith((states) {
         return TextStyle(
           color: states.isDisabled
-              ? style.disabledColor
+              ? theme.disabledColor
               : normalColor(states).basedOnLuminance(),
         );
       }),
       selectedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: ButtonThemeData.checkedInputColor(theme, states),
         );
       }),
       selectedTextStyle: ButtonState.resolveWith((states) {
-        return TextStyle(color: FilledButton.foregroundColor(style, states));
+        return TextStyle(color: FilledButton.foregroundColor(theme, states));
       }),
     );
   }

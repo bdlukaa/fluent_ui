@@ -57,7 +57,7 @@ class RatingBar extends StatefulWidget {
   /// The duration of the animation
   final Duration animationDuration;
 
-  /// The curve of the animation. If `null`, uses [ThemeData.animationCurve]
+  /// The curve of the animation. If `null`, uses [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The icon used in the bar. If `null`, uses [kRatingBarIcon]
@@ -69,10 +69,10 @@ class RatingBar extends StatefulWidget {
   /// The space between each icon
   final double starSpacing;
 
-  /// The color of the icons that are rated. If `null`, uses [ThemeData.accentColor]
+  /// The color of the icons that are rated. If `null`, uses [FluentThemeData.accentColor]
   final Color? ratedIconColor;
 
-  /// The color of the icons that are not rated. If `null`, uses [ThemeData.disabled]
+  /// The color of the icons that are not rated. If `null`, uses [FluentThemeData.disabled]
   final Color? unratedIconColor;
 
   /// Semantic label for the bar
@@ -326,10 +326,10 @@ class RatingIcon extends StatelessWidget {
   /// The icon.
   final IconData icon;
 
-  /// The color used by the rated part. If `null`, uses [ThemeData.accentColor]
+  /// The color used by the rated part. If `null`, uses [FluentThemeData.accentColor]
   final Color? ratedColor;
 
-  /// The color used by the unrated part. If `null`, uses [ThemeData.disabledColor]
+  /// The color used by the unrated part. If `null`, uses [FluentThemeData.disabledColor]
   final Color? unratedColor;
 
   /// The size of the icon

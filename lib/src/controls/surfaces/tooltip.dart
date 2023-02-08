@@ -51,7 +51,7 @@ class Tooltip extends StatefulWidget {
   final Widget? child;
 
   /// The style of the tooltip. If non-null, it's mescled with
-  /// [ThemeData.tooltipThemeData]
+  /// [FluentThemeData.tooltipThemeData]
   final TooltipThemeData? style;
 
   /// Whether the tooltip's [message] should be excluded from the
@@ -581,7 +581,7 @@ class TooltipTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [TooltipTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.tooltipTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.tooltipTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -644,7 +644,7 @@ class TooltipThemeData with Diagnosticable {
   ///
   /// The tooltip shape defaults to a rounded rectangle with a border radius of 4.0.
   /// Tooltips will also default to an opacity of 90% and with the color [Colors.grey]
-  /// if [ThemeData.brightness] is [Brightness.dark], and [Colors.white] if it is
+  /// if [FluentThemeData.brightness] is [Brightness.dark], and [Colors.white] if it is
   /// [Brightness.light].
   final Decoration? decoration;
 
@@ -678,7 +678,7 @@ class TooltipThemeData with Diagnosticable {
     this.textStyle,
   });
 
-  factory TooltipThemeData.standard(ThemeData style) {
+  factory TooltipThemeData.standard(FluentThemeData theme) {
     return TooltipThemeData(
       height: 32.0,
       verticalOffset: 24.0,
@@ -687,7 +687,7 @@ class TooltipThemeData with Diagnosticable {
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       showDuration: const Duration(milliseconds: 1500),
       waitDuration: const Duration(seconds: 1),
-      textStyle: style.typography.caption,
+      textStyle: theme.typography.caption,
       decoration: () {
         final radius = BorderRadius.circular(4.0);
         final shadow = [
@@ -697,7 +697,7 @@ class TooltipThemeData with Diagnosticable {
             blurRadius: 10.0,
           ),
         ];
-        if (style.brightness == Brightness.light) {
+        if (theme.brightness == Brightness.light) {
           return BoxDecoration(
             color: Colors.white,
             borderRadius: radius,

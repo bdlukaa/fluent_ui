@@ -528,7 +528,7 @@ class FlyoutController with ChangeNotifier {
   /// The default fade animation can not be disabled.
   ///
   /// [transitionDuration] configures the duration of the transition animation.
-  /// By default, [ThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
+  /// By default, [FluentThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
   /// to disable transitions at all
   ///
   /// [position] lets you position the flyout anywhere on the screen, making it

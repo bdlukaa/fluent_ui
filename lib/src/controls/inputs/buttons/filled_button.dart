@@ -52,7 +52,10 @@ class FilledButton extends Button {
     return super.defaultStyleOf(context).merge(def) ?? def;
   }
 
-  static Color backgroundColor(ThemeData theme, Set<ButtonStates> states) {
+  static Color backgroundColor(
+    FluentThemeData theme,
+    Set<ButtonStates> states,
+  ) {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
     } else if (states.isPressing) {
@@ -64,7 +67,8 @@ class FilledButton extends Button {
     }
   }
 
-  static Color foregroundColor(ThemeData theme, Set<ButtonStates> states) {
+  static Color foregroundColor(
+      FluentThemeData theme, Set<ButtonStates> states) {
     final res = theme.resources;
     if (states.isPressing) {
       return res.textOnAccentFillColorSecondary;
