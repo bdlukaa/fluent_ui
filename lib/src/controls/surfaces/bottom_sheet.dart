@@ -783,7 +783,7 @@ class BottomSheetTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [BottomSheetTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.bottomSheetTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.bottomSheetTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -819,11 +819,11 @@ class BottomSheetThemeData with Diagnosticable {
     this.elevation,
   });
 
-  factory BottomSheetThemeData.standard(ThemeData style) {
-    final isLight = style.brightness.isLight;
+  factory BottomSheetThemeData.standard(FluentThemeData theme) {
+    final isLight = theme.brightness.isLight;
     return BottomSheetThemeData(
       backgroundColor:
-          isLight ? style.scaffoldBackgroundColor : const Color(0xFF212121),
+          isLight ? theme.scaffoldBackgroundColor : const Color(0xFF212121),
       handleColor: isLight ? const Color(0xFF919191) : const Color(0xFF6e6e6e),
       elevation: 8.0,
       shape: const RoundedRectangleBorder(

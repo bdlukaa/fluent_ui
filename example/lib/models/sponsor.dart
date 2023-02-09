@@ -16,11 +16,6 @@ const sponsors = [
     name: 'Minas Giannekas',
   ),
   Sponsor(
-    username: 'TimeLord2010',
-    imageUrl: 'https://avatars.githubusercontent.com/u/50129092?v=4',
-    name: 'Vinícius Velloso',
-  ),
-  Sponsor(
     username: 'henry2man',
     imageUrl: 'https://avatars.githubusercontent.com/u/4610108?v=4',
     name: 'Enrique Cardona',

@@ -5,84 +5,82 @@ class FluentLocalizationsMy extends FluentLocalizations {
   FluentLocalizationsMy([String locale = 'my']) : super(locale);
 
   @override
-  String get backButtonTooltip => 'Back';
+  String get backButtonTooltip => 'နောက်သို့';
 
   @override
-  String get closeButtonLabel => 'Close';
+  String get closeButtonLabel => 'ပိတ်မည်';
 
   @override
-  String get searchLabel => 'Search';
+  String get searchLabel => 'ရှာမည်';
 
   @override
-  String get closeNavigationTooltip => 'Close Navigation';
+  String get closeNavigationTooltip => 'Navigation ကိုပိတ်မည်';
 
   @override
-  String get openNavigationTooltip => 'Open Navigation';
+  String get openNavigationTooltip => 'Navigation ကိုဖွင့်မည်';
 
   @override
-  String get clickToSearch => 'Click to search';
+  String get clickToSearch => 'ရှာရန်နှိပ်ပါ';
 
   @override
-  String get modalBarrierDismissLabel => 'Dismiss';
+  String get modalBarrierDismissLabel => 'ပယ်မည်';
 
   @override
-  String get minimizeWindowTooltip => 'Minimize';
+  String get minimizeWindowTooltip => 'လျှော့မည်';
 
   @override
-  String get restoreWindowTooltip => 'Restore';
+  String get restoreWindowTooltip => 'ပြန်ယူမည်';
 
   @override
-  String get closeWindowTooltip => 'Close';
+  String get closeWindowTooltip => 'ပိတ်မည်';
 
   @override
-  String get dialogLabel => 'Dialog';
+  String get dialogLabel => 'မျက်နှာပြင်';
 
   @override
-  String get cutActionLabel => 'Cut';
+  String get cutActionLabel => 'ဖြတ်မည်';
 
   @override
-  String get copyActionLabel => 'Copy';
+  String get copyActionLabel => 'ကူးယူမည်';
 
   @override
-  String get pasteActionLabel => 'Paste';
+  String get pasteActionLabel => 'ထည့်မည်';
 
   @override
-  String get selectAllActionLabel => 'Select all';
+  String get selectAllActionLabel => 'အားလုံးကိုရွေးမည်';
 
   @override
-  String get newTabLabel => 'Add new tab';
+  String get newTabLabel => 'Tab အသစ်ထည့်မည်';
 
   @override
-  String get closeTabLabelSuffix => 'Close tab';
+  String get closeTabLabelSuffix => 'Tab ကိုပိတ်မည်';
 
   @override
-  String get scrollTabBackwardLabel => 'Scroll tab list backward';
+  String get scrollTabBackwardLabel => 'နောက်သို့သွားမည်';
 
   @override
-  String get scrollTabForwardLabel => 'Scroll tab list forward';
+  String get scrollTabForwardLabel => 'ရှေ့သို့သွားမည်';
 
   @override
-  String get noResultsFoundLabel => 'No results found';
+  String get noResultsFoundLabel => 'ရလဒ်များမတွေ့ပါ';
 
   @override
-  String get copyActionTooltip => 'Copy the selected content to the clipboard';
+  String get copyActionTooltip => 'ကူးယူမည်';
 
   @override
-  String get cutActionTooltip =>
-      'Remove the selected content and put it in the clipboard';
+  String get cutActionTooltip => 'ဖျက်ပီးကူးထည့်မည်';
 
   @override
-  String get pasteActionTooltip =>
-      'Inserts the contents of the clipboard at the current location';
+  String get pasteActionTooltip => 'ထည့်မည်';
 
   @override
-  String get selectAllActionTooltip => 'Select all content';
+  String get selectAllActionTooltip => 'အားလုံးကိုရွေးမည်';
 
   @override
-  String get hour => 'hour';
+  String get hour => 'နာရီ';
 
   @override
-  String get minute => 'minute';
+  String get minute => 'မိနစ်';
 
   @override
   String get am => 'AM';
@@ -91,11 +89,11 @@ class FluentLocalizationsMy extends FluentLocalizations {
   String get pm => 'PM';
 
   @override
-  String get month => 'month';
+  String get month => 'လ';
 
   @override
-  String get day => 'day';
+  String get day => 'ရက်';
 
   @override
-  String get year => 'year';
+  String get year => 'နှစ်';
 }

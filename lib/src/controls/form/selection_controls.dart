@@ -2,11 +2,105 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/rendering.dart';
+// ignore_for_file: deprecated_member_use
 
+import 'package:fluent_ui/fluent_ui.dart';
+
+// The minimum padding from all edges of the selection toolbar to all edges of
+// the screen.
 const double _kToolbarScreenPadding = 8.0;
-const double _kToolbarWidth = 180.0;
+
+// These values were measured from a screenshot of TextEdit on macOS 10.15.7 on
+// a Macbook Pro.
+const double _kToolbarWidth = 222.0;
+const Radius _kToolbarBorderRadius = Radius.circular(4.0);
+const EdgeInsets _kToolbarPadding = EdgeInsets.symmetric(
+  vertical: 3.0,
+);
+
+class FluentTextSelectionToolbar extends StatelessWidget {
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
+  final List<ContextMenuButtonItem> buttonItems;
+
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.anchors}
+  final TextSelectionToolbarAnchors anchors;
+
+  const FluentTextSelectionToolbar({
+    Key? key,
+    required this.buttonItems,
+    required this.anchors,
+  }) : super(key: key);
+
+  /// Create an instance of [FluentTextSelectionToolbar] with the default
+  /// children for an [EditableText].
+  ///
+  /// See also:
+  ///
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.new}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.editable}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
+  /// {@macro flutter.material.AdaptiveTextSelectionToolbar.selectable}
+  FluentTextSelectionToolbar.editableText({
+    super.key,
+    required EditableTextState editableTextState,
+  })  : buttonItems = editableTextState.contextMenuButtonItems,
+        anchors = editableTextState.contextMenuAnchors;
+
+  // Builds a toolbar just like the default Mac toolbar, with the right color
+  // background, padding, and rounded corners.
+  static Widget _defaultToolbarBuilder(BuildContext context, Widget child) {
+    return Container(
+      width: _kToolbarWidth,
+      decoration: const BoxDecoration(
+        // color: _kToolbarBackgroundColor.resolveFrom(context),
+        // border: Border.all(
+        //   color: _kToolbarBorderColor.resolveFrom(context),
+        // ),
+        borderRadius: BorderRadius.all(_kToolbarBorderRadius),
+      ),
+      child: Padding(
+        padding: _kToolbarPadding,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final paddingAbove =
+        MediaQuery.of(context).padding.top + _kToolbarScreenPadding;
+    final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        _kToolbarScreenPadding,
+        paddingAbove,
+        _kToolbarScreenPadding,
+        _kToolbarScreenPadding,
+      ),
+      child: CustomSingleChildLayout(
+        delegate: DesktopTextSelectionToolbarLayoutDelegate(
+          anchor: anchors.primaryAnchor - localAdjustment,
+        ),
+        child: _defaultToolbarBuilder(
+          context,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: buttonItems.map((item) {
+              return _FluentTextSelectionToolbarButton(
+                onPressed: item.onPressed,
+                icon: null,
+                shortcut: '',
+                tooltip: '',
+                text: item.label ?? '',
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _FluentTextSelectionControls extends TextSelectionControls {
   /// Fluent has no text selection handles.
@@ -80,7 +174,7 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 }
 
-/// Text selection controls that loosely follows Fluent design conventions.
+// /// Text selection controls that loosely follows Fluent design conventions.
 final TextSelectionControls fluentTextSelectionControls =
     _FluentTextSelectionControls();
 
@@ -285,7 +379,9 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasFluentTheme(context));
     final mediaQuery = MediaQuery.of(context);
+    final theme = FluentTheme.of(context);
 
     final paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
     final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
@@ -307,6 +403,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           elevation: 4.0,
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
+            color: theme.menuColor.withOpacity(kMenuColorOpacity),
             padding: const EdgeInsetsDirectional.only(
               top: 5.0,
               start: 5.0,
@@ -341,7 +438,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
   final String text;
   final IconData? icon;
   final String shortcut;
-  final String tooltip;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {

@@ -59,7 +59,7 @@ class _NavigationBody extends StatefulWidget {
   /// is used by default.
   ///
   /// See also:
-  ///   * [ThemeData.fastAnimationDuration], the duration used by default.
+  ///   * [FluentThemeData.fastAnimationDuration], the duration used by default.
   final Duration? animationDuration;
 
   @override
@@ -140,27 +140,38 @@ class _NavigationBodyState extends State<_NavigationBody> {
             child: child,
           );
         },
-        child: KeyedSubtree(
-          key: widget.itemKey,
-          child: PageView.builder(
-            key: _pageKey,
-            physics: const NeverScrollableScrollPhysics(),
-            controller: pageController,
-            itemCount: view.pane!.effectiveItems.length,
-            itemBuilder: (context, index) {
-              final isSelected = view.pane!.selected == index;
-              final item = view.pane!.effectiveItems[index];
+        child: () {
+          final paneBodyBuilder = widget.paneBodyBuilder;
+          if (paneBodyBuilder != null) {
+            return FocusTraversalGroup(
+              child: paneBodyBuilder.call(view.pane?.selected != null
+                  ? view.pane?.selectedItem.body
+                  : null),
+            );
+          } else {
+            return KeyedSubtree(
+              key: widget.itemKey,
+              child: PageView.builder(
+                key: _pageKey,
+                physics: const NeverScrollableScrollPhysics(),
+                controller: pageController,
+                itemCount: view.pane!.effectiveItems.length,
+                itemBuilder: (context, index) {
+                  final isSelected = view.pane!.selected == index;
+                  final item = view.pane!.effectiveItems[index];
 
-              return ExcludeFocus(
-                key: item.bodyKey,
-                excluding: !isSelected,
-                child: FocusTraversalGroup(
-                  child: widget.paneBodyBuilder?.call(item.body) ?? item.body,
-                ),
-              );
-            },
-          ),
-        ),
+                  return ExcludeFocus(
+                    key: item.bodyKey,
+                    excluding: !isSelected,
+                    child: FocusTraversalGroup(
+                      child: item.body,
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        }(),
       ),
     );
   }

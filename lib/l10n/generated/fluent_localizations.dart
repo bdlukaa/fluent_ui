@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'fluent_localizations_ar.dart';
+import 'fluent_localizations_be.dart';
 import 'fluent_localizations_cs.dart';
 import 'fluent_localizations_de.dart';
 import 'fluent_localizations_en.dart';
@@ -118,6 +119,7 @@ abstract class FluentLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('ar'),
+    Locale('be'),
     Locale('cs'),
     Locale('de'),
     Locale('es'),
@@ -345,6 +347,7 @@ class _FluentLocalizationsDelegate
   @override
   bool isSupported(Locale locale) => <String>[
         'ar',
+        'be',
         'cs',
         'de',
         'en',
@@ -393,6 +396,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'ar':
       return FluentLocalizationsAr();
+    case 'be':
+      return FluentLocalizationsBe();
     case 'cs':
       return FluentLocalizationsCs();
     case 'de':

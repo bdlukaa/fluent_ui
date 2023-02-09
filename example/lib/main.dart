@@ -10,6 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
+import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -19,7 +20,7 @@ import 'routes/theming.dart' deferred as theming;
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
-const String appTitle = 'Fluent UI Showcase for Flutter';
+const String appTitle = 'Win UI for Flutter';
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -64,11 +65,14 @@ void main() async {
 
   runApp(const MyApp());
 
-  DeferredWidget.preload(forms.loadLibrary);
-  DeferredWidget.preload(inputs.loadLibrary);
-  DeferredWidget.preload(navigation.loadLibrary);
-  DeferredWidget.preload(surfaces.loadLibrary);
-  DeferredWidget.preload(theming.loadLibrary);
+  Future.wait([
+    DeferredWidget.preload(popups.loadLibrary),
+    DeferredWidget.preload(forms.loadLibrary),
+    DeferredWidget.preload(inputs.loadLibrary),
+    DeferredWidget.preload(navigation.loadLibrary),
+    DeferredWidget.preload(surfaces.loadLibrary),
+    DeferredWidget.preload(theming.loadLibrary),
+  ]);
 }
 
 class MyApp extends StatelessWidget {
@@ -85,7 +89,7 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           color: appTheme.color,
-          darkTheme: ThemeData(
+          darkTheme: FluentThemeData(
             brightness: Brightness.dark,
             accentColor: appTheme.color,
             visualDensity: VisualDensity.standard,
@@ -93,7 +97,7 @@ class MyApp extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
-          theme: ThemeData(
+          theme: FluentThemeData(
             accentColor: appTheme.color,
             visualDensity: VisualDensity.standard,
             focusTheme: FocusThemeData(
@@ -263,14 +267,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ContentDialogPage(),
-      ),
-    ),
-    PaneItem(
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
       body: DeferredWidget(
@@ -302,12 +298,21 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         () => surfaces.TilesPage(),
       ),
     ),
+    PaneItemHeader(header: const Text('Popups')),
+    PaneItem(
+      icon: const Icon(FluentIcons.comment_urgent),
+      title: const Text('ContentDialog'),
+      body: DeferredWidget(
+        surfaces.loadLibrary,
+        () => popups.ContentDialogPage(),
+      ),
+    ),
     PaneItem(
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.TooltipPage(),
+        () => popups.TooltipPage(),
       ),
     ),
     PaneItem(
@@ -315,7 +320,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Flyout'),
       body: DeferredWidget(
         surfaces.loadLibrary,
-        () => surfaces.FlyoutPage(),
+        () => popups.Flyout2Screen(),
       ),
     ),
     PaneItemHeader(header: const Text('Theming')),
@@ -431,9 +436,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           height: kOneLineTileHeight,
           child: ShaderMask(
             shaderCallback: (rect) {
-              final color = appTheme.color.resolveFromReverseBrightness(
+              final color = appTheme.color.defaultBrushFor(
                 theme.brightness,
-                level: theme.brightness == Brightness.light ? 0 : 2,
               );
               return LinearGradient(
                 colors: [
@@ -538,7 +542,7 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = FluentTheme.of(context);
+    final FluentThemeData theme = FluentTheme.of(context);
 
     return SizedBox(
       width: 138,

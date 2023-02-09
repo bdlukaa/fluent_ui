@@ -181,7 +181,7 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.radioButtonTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.radioButtonTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -214,12 +214,12 @@ class RadioButtonThemeData with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  factory RadioButtonThemeData.standard(ThemeData style) {
+  factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: ButtonThemeData.checkedInputColor(style, states),
+            color: ButtonThemeData.checkedInputColor(theme, states),
             width: !states.isDisabled
                 ? states.isHovering && !states.isPressing
                     ? 3.4
@@ -228,16 +228,16 @@ class RadioButtonThemeData with Diagnosticable {
           ),
           shape: BoxShape.circle,
           color: !states.isDisabled
-              ? style.brightness.isLight
+              ? theme.brightness.isLight
                   ? Colors.white
                   : Colors.black
-              : style.brightness.isLight
+              : theme.brightness.isLight
                   ? Colors.white
                   : const Color.fromRGBO(255, 255, 255, 0.5302),
         );
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
-        final backgroundColor = style.inactiveBackgroundColor;
+        final backgroundColor = theme.inactiveBackgroundColor;
         return BoxDecoration(
           color: states.isPressing
               ? backgroundColor
@@ -248,9 +248,9 @@ class RadioButtonThemeData with Diagnosticable {
             width: states.isPressing ? 4.5 : 1,
             color: !states.isDisabled
                 ? states.isPressing
-                    ? style.accentColor
-                    : style.borderInputColor
-                : style.brightness.isLight
+                    ? theme.accentColor
+                    : theme.borderInputColor
+                : theme.brightness.isLight
                     ? const Color.fromRGBO(0, 0, 0, 0.2169)
                     : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),

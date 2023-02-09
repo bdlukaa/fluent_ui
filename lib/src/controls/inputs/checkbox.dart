@@ -42,7 +42,7 @@ class Checkbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
 
   /// The style applied to the checkbox. If non-null, it's mescled
-  /// with [ThemeData.checkboxThemeData]
+  /// with [FluentThemeData.checkboxThemeData]
   final CheckboxThemeData? style;
 
   /// The content of the radio button.
@@ -195,7 +195,7 @@ class CheckboxTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.checkboxTheme]
+  /// Defaults to [FluentThemeData.checkboxTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -253,34 +253,34 @@ class CheckboxThemeData with Diagnosticable {
     this.thirdstateIconColor,
   });
 
-  factory CheckboxThemeData.standard(ThemeData style) {
+  factory CheckboxThemeData.standard(FluentThemeData theme) {
     final BorderRadiusGeometry radius = BorderRadius.circular(4.0);
     return CheckboxThemeData(
       checkedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: ButtonThemeData.checkedInputColor(theme, states),
         ),
       ),
       uncheckedDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
             color: states.isDisabled || states.isPressing
-                ? style.resources.controlStrongStrokeColorDisabled
-                : style.resources.controlStrongStrokeColorDefault,
+                ? theme.resources.controlStrongStrokeColorDisabled
+                : theme.resources.controlStrongStrokeColorDefault,
           ),
-          color: ButtonThemeData.uncheckedInputColor(style, states),
+          color: ButtonThemeData.uncheckedInputColor(theme, states),
           borderRadius: radius,
         ),
       ),
       thirdstateDecoration: ButtonState.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: ButtonThemeData.checkedInputColor(theme, states),
         ),
       ),
       checkedIconColor: ButtonState.resolveWith((states) {
-        return FilledButton.foregroundColor(style, states);
+        return FilledButton.foregroundColor(theme, states);
       }),
       uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,

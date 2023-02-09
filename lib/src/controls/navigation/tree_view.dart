@@ -888,6 +888,12 @@ class _TreeViewItem extends StatelessWidget {
           horizontal: 4.0,
         ),
         builder: (context, states) {
+          final itemForegroundColor = states.isDisabled
+              ? theme.resources.textFillColorDisabled
+              : states.isPressing
+                  ? theme.resources.textFillColorSecondary
+                  : theme.resources.textFillColorPrimary;
+
           return FocusBorder(
             focused: states.isFocused,
             child: Stack(children: [
@@ -967,7 +973,7 @@ class _TreeViewItem extends StatelessWidget {
                                       ? FluentIcons.chevron_right
                                       : FluentIcons.chevron_left,
                               size: 8.0,
-                              color: Colors.grey[80],
+                              color: itemForegroundColor,
                             ),
                           ),
                         )
@@ -976,7 +982,8 @@ class _TreeViewItem extends StatelessWidget {
                       // have the same indentation, regardless whether or not
                       // they are expandable.
                       const Padding(
-                          padding: EdgeInsetsDirectional.only(start: 24.0)),
+                        padding: EdgeInsetsDirectional.only(start: 24.0),
+                      ),
 
                     // Leading icon
                     if (item.leading != null)
@@ -987,7 +994,10 @@ class _TreeViewItem extends StatelessWidget {
                         ),
                         width: 20.0,
                         child: IconTheme.merge(
-                          data: const IconThemeData(size: 20.0),
+                          data: IconThemeData(
+                            size: 20.0,
+                            color: itemForegroundColor,
+                          ),
                           child: item.leading!,
                         ),
                       )
@@ -999,9 +1009,7 @@ class _TreeViewItem extends StatelessWidget {
                       child: DefaultTextStyle(
                         style: TextStyle(
                           fontSize: 12.0,
-                          color: theme.typography.body!.color!.withOpacity(
-                            states.isPressing ? 0.7 : 1.0,
-                          ),
+                          color: itemForegroundColor,
                         ),
                         child: item.content,
                       ),

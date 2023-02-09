@@ -63,7 +63,7 @@ OverlayEntry showSnackbar(
       ),
     );
   });
-  Overlay.of(context)!.insert(entry);
+  Overlay.of(context).insert(entry);
   if (duration != null) {
     Future.delayed(duration).then((value) async {
       if (entry.mounted) {
@@ -208,7 +208,7 @@ class SnackbarTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [SnackbarTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.snackbarTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.snackbarTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -242,15 +242,15 @@ class SnackbarThemeData with Diagnosticable {
     this.padding,
   });
 
-  factory SnackbarThemeData.standard(ThemeData style) {
+  factory SnackbarThemeData.standard(FluentThemeData theme) {
     return SnackbarThemeData(
       padding: EdgeInsets.symmetric(
-        vertical: 8.0 + style.visualDensity.vertical,
-        horizontal: 16.0 + style.visualDensity.horizontal,
+        vertical: 8.0 + theme.visualDensity.vertical,
+        horizontal: 16.0 + theme.visualDensity.horizontal,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
-        color: style.brightness == Brightness.light
+        color: theme.brightness == Brightness.light
             ? Colors.black
             : const Color(0xFF212121),
       ),

@@ -113,18 +113,18 @@ Common controls use an accent color to convey state information. [Learn more](ht
 By default, the accent color is `Colors.blue`. However, you can also customize your app's accent color to reflect your brand:
 
 ```dart
-ThemeData(
+FluentThemeData(
   accentColor: Colors.blue,
 )
 ```
 
-To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 04/01/2021) Android, Web and Windows.
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 21/01/2023) Android, Web, MacOS, Windows, Xbox and Linux (GTK 3+).
 
 ```dart
 import 'package:system_theme/system_theme.dart';
 
-ThemeData(
-  accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
+FluentThemeData(
+  accentColor: SystemTheme.accentColor.accent.toAccentColor(),
 )
 ```
 
@@ -134,6 +134,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 
 - Arabic (@dmakwt)
 - Bahasa Indonesia (@ekasetiawans)
+- Belarusian (@superkeka)
 - Czech (@morning4coffe-dev)
 - Dutch (@h3x4d3c1m4l)
 - English

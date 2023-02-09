@@ -58,10 +58,12 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+
       final localOffsets = pane.effectiveItems._getPaneItemsOffsets(
         pane.paneKey,
       );
-      if (mounted && (offsets != localOffsets)) {
+      if (offsets != localOffsets) {
         offsets = localOffsets;
       }
     });
@@ -260,7 +262,7 @@ class _StickyNavigationIndicatorState
       return;
     }
 
-    _old = (PageStorage.of(context)?.readState(
+    _old = (PageStorage.of(context).readState(
           context,
           identifier: 'oldIndex$itemIndex',
         ) as num?)
@@ -312,7 +314,7 @@ class _StickyNavigationIndicatorState
 
     _old = oldIndex;
     if (mounted) {
-      PageStorage.of(context)?.writeState(
+      PageStorage.of(context).writeState(
         context,
         _old,
         identifier: 'oldIndex$itemIndex',

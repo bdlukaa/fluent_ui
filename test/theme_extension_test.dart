@@ -5,7 +5,7 @@ void main() {
   testWidgets('ThemeExtension on FluentTheme', (WidgetTester tester) async {
     await tester.pumpWidget(
       FluentApp(
-        theme: ThemeData(
+        theme: FluentThemeData(
           extensions: [
             MyColors(
               success: Colors.green,

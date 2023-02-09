@@ -141,7 +141,7 @@ class ButtonTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.buttonTheme]
+  /// Defaults to [FluentThemeData.buttonTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -264,25 +264,26 @@ class ButtonThemeData with Diagnosticable {
   /// Defines the default color used for inputs when checked, such as checkbox,
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
-  static Color checkedInputColor(ThemeData theme, Set<ButtonStates> states) {
+  static Color checkedInputColor(
+      FluentThemeData theme, Set<ButtonStates> states) {
     return FilledButton.backgroundColor(theme, states);
   }
 
   static Color uncheckedInputColor(
-    ThemeData style,
+    FluentThemeData theme,
     Set<ButtonStates> states, {
     bool transparentWhenNone = false,
     bool transparentWhenDisabled = false,
   }) {
-    final res = style.resources;
+    final res = theme.resources;
     if (states.isDisabled) {
-      if (transparentWhenDisabled) return res.controlAltFillColorTransparent;
+      if (transparentWhenDisabled) return res.subtleFillColorTransparent;
       return res.controlAltFillColorDisabled;
     }
-    if (states.isPressing) return res.controlAltFillColorQuarternary;
-    if (states.isHovering) return res.controlAltFillColorTertiary;
+    if (states.isPressing) return res.subtleFillColorTertiary;
+    if (states.isHovering) return res.subtleFillColorSecondary;
     return transparentWhenNone
-        ? res.controlAltFillColorTransparent
+        ? res.subtleFillColorTransparent
         : res.controlAltFillColorSecondary;
   }
 }
