@@ -1,3 +1,9 @@
+## next
+
+- `TabView` macos shortcuts ([#728](https://github.com/bdlukaa/fluent_ui/issues/728))
+- `TabView` focus on children now works properly ([#648](https://github.com/bdlukaa/fluent_ui/issues/648))
+- `TabView` colors now follow the Win UI 3 theme resources ([#730](https://github.com/bdlukaa/fluent_ui/pull/730))
+
 ## 4.3.0
 
 - Correctly calculate the padding around the flyout on automatic mode
