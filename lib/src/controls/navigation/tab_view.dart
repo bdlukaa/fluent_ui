@@ -584,9 +584,12 @@ class _TabViewState extends State<TabView> {
       ),
       if (widget.tabs.isNotEmpty)
         Expanded(
-          child: IndexedStack(
-            index: widget.currentIndex,
-            children: widget.tabs.map((tab) => tab.body).toList(),
+          child: Focus(
+            autofocus: true,
+            child: IndexedStack(
+              index: widget.currentIndex,
+              children: widget.tabs.map((tab) => tab.body).toList(),
+            ),
           ),
         ),
     ]);
@@ -595,17 +598,33 @@ class _TabViewState extends State<TabView> {
         close(widget.currentIndex);
       }
 
+      // For more info, refer to [SingleActivator] docs
+      var ctrl = true;
+      var meta = false;
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+        ctrl = false;
+        meta = true;
+      }
+
       return FocusScope(
         autofocus: true,
         child: CallbackShortcuts(
           bindings: {
-            const SingleActivator(LogicalKeyboardKey.f4, control: true):
-                onClosePressed,
-            const SingleActivator(LogicalKeyboardKey.keyW, control: true):
-                onClosePressed,
-            const SingleActivator(LogicalKeyboardKey.keyT, control: true): () {
-              widget.onNewPressed?.call();
-            },
+            SingleActivator(
+              LogicalKeyboardKey.f4,
+              control: ctrl,
+              meta: meta,
+            ): onClosePressed,
+            SingleActivator(
+              LogicalKeyboardKey.keyW,
+              control: ctrl,
+              meta: meta,
+            ): onClosePressed,
+            SingleActivator(
+              LogicalKeyboardKey.keyT,
+              control: ctrl,
+              meta: meta,
+            ): () => widget.onNewPressed?.call(),
             ...Map.fromIterable(
               List<int>.generate(9, (index) => index),
               key: (i) {
@@ -620,7 +639,7 @@ class _TabViewState extends State<TabView> {
                   LogicalKeyboardKey.digit8,
                   LogicalKeyboardKey.digit9,
                 ];
-                return SingleActivator(digits[i], control: true);
+                return SingleActivator(digits[i], control: ctrl, meta: meta);
               },
               value: (index) {
                 return () {
