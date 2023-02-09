@@ -1,4 +1,4 @@
-## next
+## 4.3.0
 
 - Correctly calculate the padding around the flyout on automatic mode
 - Possibility to supply transparent colors to the barrier ([#702](https://github.com/bdlukaa/fluent_ui/issues/702))
