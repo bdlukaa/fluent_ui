@@ -601,7 +601,9 @@ class _TabViewState extends State<TabView> {
       // For more info, refer to [SingleActivator] docs
       var ctrl = true;
       var meta = false;
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      if (!kIsWeb &&
+          [TargetPlatform.iOS, TargetPlatform.macOS]
+              .contains(defaultTargetPlatform)) {
         ctrl = false;
         meta = true;
       }
