@@ -37,6 +37,7 @@
   ```
 - **BREAKING** Removed deprecated memebers: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
 - `ThemeData` is depreacted. Use `FluentThemeData` instead ([#722](https://github.com/bdlukaa/fluent_ui/issues/722))
+- Add myanmar localization
 
 ## 4.2.0
 
