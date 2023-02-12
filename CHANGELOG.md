@@ -4,6 +4,11 @@
 - `TabView` focus on children now works properly ([#648](https://github.com/bdlukaa/fluent_ui/issues/648))
 - `TabView` colors now follow the Win UI 3 theme resources ([#730](https://github.com/bdlukaa/fluent_ui/pull/730))
 - Add myanmar localization ([#682](https://github.com/bdlukaa/fluent_ui/pull/682))
+- `TextBox` rework:
+  - **BREAKING** Removed `.initialValue`. Use `TextEditingController.text` instead
+  - **BREAKING** Removed `.header` and `.headerStyle`. Use `InfoLabel` instead
+  - **BREAKING** Removed `.outsidePrefix`, `.outsidePrefixMode`, `.outsideSuffix`, `.outsideSuffixMode`
+  - **BREAKING** Removed `.minHeight` and `.iconButtonThemeData`
 
 ## 4.3.0
 

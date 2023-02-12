@@ -110,7 +110,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
-    this.cursorRadius,
+    this.cursorRadius = const Radius.circular(2.0),
     this.cursorWidth = 1.5,
     this.showCursor,
     this.keyboardAppearance,
@@ -149,7 +149,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
-    this.cursorRadius,
+    this.cursorRadius = const Radius.circular(2.0),
     this.cursorWidth = 1.5,
     this.showCursor,
     this.keyboardAppearance,
@@ -250,7 +250,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   final double? cursorHeight;
 
   /// {@macro flutter.widgets.editableText.cursorRadius}
-  final Radius? cursorRadius;
+  final Radius cursorRadius;
 
   /// The color of the cursor.
   ///
@@ -686,7 +686,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 unfocusedColor: widget.unfocusedColor,
                 cursorColor: widget.cursorColor,
                 cursorHeight: widget.cursorHeight,
-                cursorRadius: widget.cursorRadius ?? const Radius.circular(2.0),
+                cursorRadius: widget.cursorRadius,
                 cursorWidth: widget.cursorWidth,
                 showCursor: widget.showCursor,
                 scrollPadding: widget.scrollPadding,
