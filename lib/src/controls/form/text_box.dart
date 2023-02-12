@@ -11,7 +11,7 @@ const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5);
 /// Visibility of text field overlays based on the state of the current text entry.
 ///
 /// Used to toggle the visibility behavior of the optional decorating widgets
-/// surrounding the [EditableText] such as the clear text button.
+/// surrounding the [EditableText] such as the prefix widget.
 enum OverlayVisibilityMode {
   /// Overlay will never appear regardless of the text entry state.
   never,
@@ -43,18 +43,6 @@ class _TextBoxSelectionGestureDetectorBuilder
 
   @override
   void onSingleTapUp(TapUpDetails details) {
-    // Because TextSelectionGestureDetector listens to taps that happen on
-    // widgets in front of it, tapping the clear button will also trigger
-    // this handler. If the clear button widget recognizes the up event,
-    // then do not handle it.
-    if (_state._clearGlobalKey.currentContext != null) {
-      final renderBox = _state._clearGlobalKey.currentContext!
-          .findRenderObject()! as RenderBox;
-      final localOffset = renderBox.globalToLocal(details.globalPosition);
-      if (renderBox.hitTest(BoxHitTestResult(), position: localOffset)) {
-        return;
-      }
-    }
     super.onSingleTapUp(details);
     _state._requestKeyboard();
     _state.widget.onTap?.call();
@@ -124,7 +112,7 @@ class TextBox extends StatefulWidget {
   /// to [ui.BoxHeightStyle.tight] and [ui.BoxWidthStyle.tight] respectively and
   /// must not be null.
   ///
-  /// The [autocorrect], [autofocus], [clearButtonMode], [dragStartBehavior],
+  /// The [autocorrect], [autofocus], [dragStartBehavior],
   /// [expands], [obscureText], [prefixMode], [readOnly], [scrollPadding],
   /// [suffixMode], [textAlign], [selectionHeightStyle], [selectionWidthStyle],
   /// [enableSuggestions], and [enableIMEPersonalizedLearning] properties must
@@ -267,10 +255,9 @@ class TextBox extends StatefulWidget {
   ///   * [highlightColor], displayed when the field is focused
   final Color? unfocusedColor;
 
-  /// Padding around the text entry area between the [prefix] and [suffix]
-  /// or the clear button when [clearButtonMode] is not never.
+  /// Padding around the text entry area between the [prefix] and [suffix].
   ///
-  /// Defaults to a padding of 6 pixels on all sides and can be null.
+  /// Defaults to a padding of 10 pixels horizontally and 5 pixels vertically.
   final EdgeInsetsGeometry padding;
 
   /// A lighter colored placeholder hint that appears on the first line of the
@@ -440,8 +427,7 @@ class TextBox extends StatefulWidget {
   /// Disables the text field when false.
   ///
   /// Text fields in disabled states have a light grey background and don't
-  /// respond to touch events including the [prefix], [suffix] and the clear
-  /// button.
+  /// respond to touch events including the [prefix], [suffix].
   final bool? enabled;
 
   /// {@macro flutter.widgets.editableText.cursorWidth}
@@ -562,8 +548,6 @@ class TextBox extends StatefulWidget {
   /// See also:
   ///  * [SpellCheckConfiguration.misspelledTextStyle], the style configured to
   ///    mark misspelled words with.
-  ///  * [TextField.materialMisspelledTextStyle], the style configured
-  ///    to mark misspelled words with in the Material style.
   static final TextStyle fluentMisspelledTextStyle = TextStyle(
     decoration: TextDecoration.underline,
     decorationColor: Colors.red,
@@ -660,8 +644,6 @@ class TextBox extends StatefulWidget {
 class _TextBoxState extends State<TextBox>
     with RestorationMixin, AutomaticKeepAliveClientMixin<TextBox>
     implements TextSelectionGestureDetectorBuilderDelegate, AutofillClient {
-  final GlobalKey _clearGlobalKey = GlobalKey();
-
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller!.value;
