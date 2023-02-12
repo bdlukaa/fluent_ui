@@ -45,7 +45,7 @@ void showContentDialog(BuildContext context) async {
     builder: (context) => ContentDialog(
       title: const Text('Delete file permanently?'),
       content: const Text(
-        'If you delete this file, you won't be able to recover it. Do you want to delete it?',
+        'If you delete this file, you won\\'t be able to recover it. Do you want to delete it?',
       ),
       actions: [
         Button(
