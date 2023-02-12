@@ -927,7 +927,10 @@ class _TextBoxState extends State<TextBox>
             ),
           ),
           // First add the explicit suffix if the suffix visibility mode matches.
-          if (_showSuffixWidget(text)) widget.suffix!
+          if (_showSuffixWidget(text)) ...[
+            widget.suffix!,
+            const SizedBox(width: 4.0),
+          ]
         ]);
       },
     );
@@ -1000,10 +1003,13 @@ class _TextBoxState extends State<TextBox>
     final themeData = FluentTheme.of(context);
 
     final disabledColor = themeData.resources.textFillColorDisabled;
-    final textStyle = TextStyle(
-      color: enabled ? themeData.resources.textFillColorPrimary : disabledColor,
-      fontFamily: themeData.typography.body?.fontFamily,
-    ).merge(widget.style);
+    final textStyle = (themeData.typography.body ?? const TextStyle())
+        .merge(TextStyle(
+          color: enabled
+              ? themeData.resources.textFillColorPrimary
+              : disabledColor,
+        ))
+        .merge(widget.style);
 
     final keyboardAppearance =
         widget.keyboardAppearance ?? themeData.brightness;
@@ -1103,7 +1109,7 @@ class _TextBoxState extends State<TextBox>
     Color backgroundColor(Set<ButtonStates> states) {
       final res = FluentTheme.of(context).resources;
 
-      if (enabled) {
+      if (!enabled) {
         return res.controlFillColorDisabled;
       } else if (states.isPressing || states.isFocused) {
         return res.controlFillColorInputActive;
@@ -1124,7 +1130,7 @@ class _TextBoxState extends State<TextBox>
                     : themeData.resources.textFillColorSecondary,
             fontWeight: FontWeight.w400,
           )
-          .merge(textStyle.merge(widget.placeholderStyle));
+          .merge(widget.placeholderStyle);
     }
 
     final foregroundDecoration = BoxDecoration(

@@ -9,6 +9,7 @@
   - **BREAKING** Removed `.header` and `.headerStyle`. Use `InfoLabel` instead
   - **BREAKING** Removed `.outsidePrefix`, `.outsidePrefixMode`, `.outsideSuffix`, `.outsideSuffixMode`
   - **BREAKING** Removed `.minHeight` and `.iconButtonThemeData`
+  - `AutoSuggestBox` popup is now part of the text box tap region ([#698](https://github.com/bdlukaa/fluent_ui/issues/698))
 
 ## 4.3.0
 
