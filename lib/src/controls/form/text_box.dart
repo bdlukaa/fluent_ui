@@ -459,7 +459,7 @@ class TextBox extends StatefulWidget {
   ///
   /// This setting is only honored on iOS devices.
   ///
-  /// If null, defaults to [Brightness.light].
+  /// If null, defaults to the brightness of [FluentThemeData.brightness].
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
@@ -947,6 +947,7 @@ class _TextBoxState extends State<TextBox>
   Widget build(BuildContext context) {
     super.build(context); // See AutomaticKeepAliveClientMixin.
     assert(debugCheckHasDirectionality(context));
+    assert(debugCheckHasFluentTheme(context));
     final controller = _effectiveController;
 
     var textSelectionControls = widget.selectionControls;
@@ -1164,6 +1165,7 @@ class _TextBoxState extends State<TextBox>
           ignoring: !enabled,
           child: ClipRRect(
             borderRadius: radius,
+            clipBehavior: widget.clipBehavior,
             child: HoverButton(
               focusEnabled: false,
               forceEnabled: enabled,

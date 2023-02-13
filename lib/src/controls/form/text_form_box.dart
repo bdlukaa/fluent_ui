@@ -11,30 +11,36 @@ import 'package:flutter/services.dart';
 ///
 /// A [Form] ancestor is not required. The [Form] simply makes it easier to
 /// save, reset, or validate multiple fields at once. To use without a [Form],
-/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
-/// save or reset the form field.
+/// pass a `GlobalKey<FormFieldState>` (see [GlobalKey]) to the constructor and use
+/// [GlobalKey.currentState] to save or reset the form field.
 ///
 /// When a [controller] is specified, its [TextEditingController.text]
-/// defines the [initialValue]. If this [FormField] is part of a scrolling
+/// defines the initial value. If this [FormField] is part of a scrolling
 /// container that lazily constructs its children, like a [ListView] or a
 /// [CustomScrollView], then a [controller] should be specified.
 /// The controller's lifetime should be managed by a stateful widget ancestor
 /// of the scrolling container.
 ///
-/// If a [controller] is not specified, [initialValue] can be used to give
-/// the automatically generated controller an initial value.
+/// {@macro flutter.material.textfield.wantKeepAlive}
 ///
 /// Remember to call [TextEditingController.dispose] of the [TextEditingController]
-/// when it is no longer needed. This will ensure we discard any resources used
-/// by the object.
+/// when it is no longer needed. This will ensure any resources used by the object
+/// are discarded.
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
 ///   * [TextBox], which is the underlying text field without the [Form]
 ///    integration.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
 class TextFormBox extends FormField<String> {
-  /// Creates a text form box
+  /// Creates a [FormField] that contains a [TextBox].
+  ///
+  /// If [controller] is null, then a [TextEditingController] will be
+  /// constructed automatically and its `text` will be initialized to initial
+  /// value or the empty string.
+  ///
+  /// For documentation about the various parameters, see the [TextBox] class
+  /// and [TextBox.new], the constructor.
   TextFormBox({
     Key? key,
     this.controller,
@@ -63,6 +69,7 @@ class TextFormBox extends FormField<String> {
     EdgeInsetsGeometry padding = kTextBoxPadding,
     ValueChanged<String>? onChanged,
     GestureTapCallback? onTap,
+    TapRegionCallback? onTapOutside,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
     FormFieldSetter<String>? onSaved,
@@ -75,7 +82,7 @@ class TextFormBox extends FormField<String> {
     Color? cursorColor,
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
-    bool enableInteractiveSelection = true,
+    bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
     Iterable<String>? autofillHints,
@@ -100,8 +107,10 @@ class TextFormBox extends FormField<String> {
     Color? highlightColor,
     Color? errorHighlightColor,
     Color? unfocusedColor,
-  })  : assert(controller == null),
-        assert(obscuringCharacter.length == 1),
+    EditableTextContextMenuBuilder? contextMenuBuilder,
+    TextMagnifierConfiguration? magnifierConfiguration,
+    SpellCheckConfiguration? spellCheckConfiguration,
+  })  : assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
@@ -121,6 +130,7 @@ class TextFormBox extends FormField<String> {
           onSaved: onSaved,
           validator: validator,
           autovalidateMode: autovalidateMode,
+          enabled: enabled ?? true,
           builder: (FormFieldState<String> field) {
             final state = field as _TextFormBoxState;
 
@@ -131,11 +141,12 @@ class TextFormBox extends FormField<String> {
               }
             }
 
-            return FormRow(
-              padding: EdgeInsets.zero,
-              error: (field.errorText == null) ? null : Text(field.errorText!),
-              child: UnmanagedRestorationScope(
-                bucket: field.bucket,
+            return UnmanagedRestorationScope(
+              bucket: field.bucket,
+              child: FormRow(
+                padding: EdgeInsets.zero,
+                error:
+                    (field.errorText == null) ? null : Text(field.errorText!),
                 child: TextBox(
                   controller: state._effectiveController,
                   focusNode: focusNode,
@@ -152,8 +163,14 @@ class TextFormBox extends FormField<String> {
                   obscuringCharacter: obscuringCharacter,
                   obscureText: obscureText,
                   autocorrect: autocorrect,
-                  smartDashesType: smartDashesType,
-                  smartQuotesType: smartQuotesType,
+                  smartDashesType: smartDashesType ??
+                      (obscureText
+                          ? SmartDashesType.disabled
+                          : SmartDashesType.enabled),
+                  smartQuotesType: smartQuotesType ??
+                      (obscureText
+                          ? SmartQuotesType.disabled
+                          : SmartQuotesType.enabled),
                   enableSuggestions: enableSuggestions,
                   maxLines: maxLines,
                   minLines: minLines,
@@ -161,6 +178,7 @@ class TextFormBox extends FormField<String> {
                   maxLength: maxLength,
                   onChanged: onChangedHandler,
                   onTap: onTap,
+                  onTapOutside: onTapOutside,
                   onEditingComplete: onEditingComplete,
                   onSubmitted: onFieldSubmitted,
                   inputFormatters: inputFormatters,
@@ -197,6 +215,9 @@ class TextFormBox extends FormField<String> {
                   scribbleEnabled: scribbleEnabled,
                   textDirection: textDirection,
                   selectionControls: selectionControls,
+                  contextMenuBuilder: contextMenuBuilder,
+                  magnifierConfiguration: magnifierConfiguration,
+                  spellCheckConfiguration: spellCheckConfiguration,
                 ),
               ),
             );
