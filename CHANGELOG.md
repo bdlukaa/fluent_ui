@@ -5,6 +5,13 @@
 - `TabView` colors now follow the Win UI 3 theme resources ([#730](https://github.com/bdlukaa/fluent_ui/pull/730))
 - Add myanmar localization ([#682](https://github.com/bdlukaa/fluent_ui/pull/682))
 - Fix `ContentDialog` copy code ([#735](https://github.com/bdlukaa/fluent_ui/pull/735))
+- `TextBox` rework:
+  - **BREAKING** Removed `.initialValue`. Use `TextEditingController.text` instead
+  - **BREAKING** Removed `.header` and `.headerStyle`. Use `InfoLabel` instead
+  - **BREAKING** Removed `.outsidePrefix`, `.outsidePrefixMode`, `.outsideSuffix`, `.outsideSuffixMode`
+  - **BREAKING** Removed `.minHeight` and `.iconButtonThemeData`
+  - `AutoSuggestBox` popup is now part of the text box tap region ([#698](https://github.com/bdlukaa/fluent_ui/issues/698))
+  - `FluentTextSelectionToolbar` now follows global typography ([#712](https://github.com/bdlukaa/fluent_ui/issues/712))
 
 ## 4.3.0
 

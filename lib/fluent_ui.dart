@@ -28,7 +28,9 @@ export 'package:flutter/material.dart'
         TextSelectionTheme,
         TextSelectionThemeData,
         SelectableText,
-        ThemeExtension;
+        ThemeExtension,
+        TextMagnifier,
+        AdaptiveTextSelectionToolbar;
 export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:scroll_pos/scroll_pos.dart';
 

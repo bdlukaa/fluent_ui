@@ -448,6 +448,9 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
       builder: (context, states) {
         final theme = FluentTheme.of(context);
         final radius = BorderRadius.circular(4.0);
+
+        final body = theme.typography.body ?? const TextStyle();
+
         return Padding(
           padding: const EdgeInsetsDirectional.only(bottom: 5.0),
           child: FocusBorder(
@@ -481,21 +484,21 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                       padding: const EdgeInsetsDirectional.only(end: 10.0),
                       child: Text(
                         text,
-                        style: TextStyle(
+                        style: body.merge(TextStyle(
                           fontSize: 14.0,
                           letterSpacing: -0.15,
                           color: theme.inactiveColor,
-                        ),
+                        )),
                       ),
                     ),
                   ),
                   Text(
                     shortcut,
-                    style: TextStyle(
+                    style: body.merge(TextStyle(
                       fontSize: 12.0,
                       color: theme.borderInputColor,
                       height: 0.7,
-                    ),
+                    )),
                   ),
                 ]),
               ),
