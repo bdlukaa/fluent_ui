@@ -46,6 +46,23 @@
   ```
 - **BREAKING** Removed deprecated memebers: `DropDownButtonItem` and `DropDownButton.buttonStyle` ([#724](https://github.com/bdlukaa/fluent_ui/pull/724))
 - `ThemeData` is depreacted. Use `FluentThemeData` instead ([#722](https://github.com/bdlukaa/fluent_ui/issues/722))
+- **BREAKING** `MenuFlyoutSubItem.items` now requires a function
+  Before:
+  ```dart
+  MenuFlyoutSubItem(
+    items: [...]
+  ),
+  ```
+
+  After:
+  ```dart
+  MenuFlyoutSubItem(
+    items: (context) {
+      // You can call Flyout.of(context).close(), for example
+      return [...]
+    },
+  )
+  ```
 
 ## 4.2.0
 
