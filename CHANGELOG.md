@@ -12,6 +12,7 @@
   - **BREAKING** Removed `.minHeight` and `.iconButtonThemeData`
   - `AutoSuggestBox` popup is now part of the text box tap region ([#698](https://github.com/bdlukaa/fluent_ui/issues/698))
   - `FluentTextSelectionToolbar` now follows global typography ([#712](https://github.com/bdlukaa/fluent_ui/issues/712))
+- Attach flyout to target at build time ([#743](https://github.com/bdlukaa/fluent_ui/issues/743))
 
 ## 4.3.0
 

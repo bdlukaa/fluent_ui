@@ -457,6 +457,7 @@ class FlyoutController with ChangeNotifier {
   /// If already attached, the current state is detached and replaced by the
   /// provided [state]
   void _attach(_FlyoutTargetState state) {
+    if (_attachState == state) return;
     if (isAttached) _detach();
 
     _attachState = state;
@@ -745,10 +746,18 @@ class _DismissAction extends DismissAction {
   }
 }
 
+/// See also:
+///
+///  * [FlyoutController], the controller that displays a flyout attached to the
+///    given [child]
 class FlyoutTarget extends StatefulWidget {
+  /// The controller that displays a flyout attached to the given [child]
   final FlyoutController controller;
+
+  /// The flyout target widget. Flyouts are displayed attached to this
   final Widget child;
 
+  /// Creates a flyout target
   const FlyoutTarget({
     super.key,
     required this.controller,
@@ -761,28 +770,8 @@ class FlyoutTarget extends StatefulWidget {
 
 class _FlyoutTargetState extends State<FlyoutTarget> {
   @override
-  void initState() {
-    super.initState();
-    widget.controller._attach(this);
-  }
-
-  @override
-  void didUpdateWidget(covariant FlyoutTarget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (!widget.controller.isAttached) {
-      widget.controller._attach(this);
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.controller._detach();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    widget.controller._attach(this);
     return widget.child;
   }
 }
