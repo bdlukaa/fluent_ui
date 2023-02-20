@@ -161,8 +161,8 @@ class ContentDialog extends StatelessWidget {
   }
 }
 
-/// Displays a Material dialog above the current contents of the app, with
-/// Material entrance and exit animations, modal barrier color, and modal
+/// Displays a Fluent dialog above the current contents of the app, with
+/// Fluent entrance and exit animations, modal barrier color, and modal
 /// barrier behavior (dialog is dismissible with a tap on the barrier).
 ///
 /// This function takes a `builder` which typically builds a [Dialog] widget.
@@ -262,7 +262,7 @@ Future<T?> showDialog<T extends Object?>({
 /// onto the [Navigator] stack to enable state restoration. See
 /// [showDialog] for a state restoration app example.
 ///
-/// This function takes a `builder` which typically builds a [Dialog] widget.
+/// This function takes a `builder` which typically builds a [ContentDialog] widget.
 /// Content below the dialog is dimmed with a [ModalBarrier]. The widget
 /// returned by the `builder` does not share a context with the location that
 /// `showDialog` is originally called from. Use a [StatefulBuilder] or a
@@ -294,7 +294,7 @@ Future<T?> showDialog<T extends Object?>({
 ///  * [showDialog], which is a way to display a DialogRoute.
 ///  * [showGeneralDialog], which allows for customization of the dialog popup.
 class FluentDialogRoute<T> extends RawDialogRoute<T> {
-  /// A dialog route with Material entrance and exit animations,
+  /// A dialog route with Fluent entrance and exit animations,
   /// modal barrier color
   FluentDialogRoute({
     required WidgetBuilder builder,
