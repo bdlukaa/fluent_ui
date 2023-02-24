@@ -1,4 +1,4 @@
-## next
+## 4.4.0
 
 - `TabView` macos shortcuts ([#728](https://github.com/bdlukaa/fluent_ui/issues/728))
 - `TabView` focus on children now works properly ([#648](https://github.com/bdlukaa/fluent_ui/issues/648))
