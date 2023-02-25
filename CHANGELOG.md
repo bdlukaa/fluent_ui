@@ -1,3 +1,7 @@
+## [next]
+
+- Add `TextFormBox.initialValue` ([#749](https://github.com/bdlukaa/fluent_ui/issues/749))
+
 ## 4.4.0
 
 - `TabView` macos shortcuts ([#728](https://github.com/bdlukaa/fluent_ui/issues/728))

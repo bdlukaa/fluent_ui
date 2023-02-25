@@ -15,11 +15,14 @@ import 'package:flutter/services.dart';
 /// [GlobalKey.currentState] to save or reset the form field.
 ///
 /// When a [controller] is specified, its [TextEditingController.text]
-/// defines the initial value. If this [FormField] is part of a scrolling
+/// defines the [initialValue]. If this [FormField] is part of a scrolling
 /// container that lazily constructs its children, like a [ListView] or a
 /// [CustomScrollView], then a [controller] should be specified.
 /// The controller's lifetime should be managed by a stateful widget ancestor
 /// of the scrolling container.
+///
+/// If a [controller] is not specified, [initialValue] can be used to give
+/// the automatically generated controller an initial value.
 ///
 /// {@macro flutter.material.textfield.wantKeepAlive}
 ///
@@ -35,15 +38,17 @@ import 'package:flutter/services.dart';
 class TextFormBox extends FormField<String> {
   /// Creates a [FormField] that contains a [TextBox].
   ///
-  /// If [controller] is null, then a [TextEditingController] will be
-  /// constructed automatically and its `text` will be initialized to initial
-  /// value or the empty string.
+  /// When a [controller] is specified, [initialValue] must be null (the
+  /// default). If [controller] is null, then a [TextEditingController]
+  /// will be constructed automatically and its `text` will be initialized
+  /// to [initialValue] or the empty string.
   ///
   /// For documentation about the various parameters, see the [TextBox] class
   /// and [TextBox.new], the constructor.
   TextFormBox({
     Key? key,
     this.controller,
+    String? initialValue,
     FocusNode? focusNode,
     TextInputType? keyboardType,
     TextCapitalization textCapitalization = TextCapitalization.none,
@@ -110,7 +115,8 @@ class TextFormBox extends FormField<String> {
     EditableTextContextMenuBuilder? contextMenuBuilder,
     TextMagnifierConfiguration? magnifierConfiguration,
     SpellCheckConfiguration? spellCheckConfiguration,
-  })  : assert(obscuringCharacter.length == 1),
+  })  : assert(initialValue == null || controller == null),
+        assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
@@ -126,7 +132,8 @@ class TextFormBox extends FormField<String> {
         assert(maxLength == null || maxLength > 0),
         super(
           key: key,
-          initialValue: controller?.text,
+          initialValue:
+              controller != null ? controller.text : (initialValue ?? ''),
           onSaved: onSaved,
           validator: validator,
           autovalidateMode: autovalidateMode,
