@@ -1,8 +1,7 @@
 part of 'view.dart';
 
-ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
+ButtonState<Color?> kDefaultPaneItemColor(BuildContext context, bool isTop) {
   return ButtonState.resolveWith((states) {
-    // By default, if it's top, do not show any color
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
     if (states.isPressing) {
@@ -12,10 +11,6 @@ ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
     } else {
       return res.subtleFillColorTransparent;
     }
-    // return ButtonThemeData.uncheckedInputColor(
-    //   FluentTheme.of(context),
-    //   states,
-    // );
   });
 }
 

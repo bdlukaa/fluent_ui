@@ -1,6 +1,7 @@
 ## [next]
 
 - Add `TextFormBox.initialValue` ([#749](https://github.com/bdlukaa/fluent_ui/issues/749))
+- Add `PaneItem.enabled` ([#748](https://github.com/bdlukaa/fluent_ui/discussions/748))
 
 ## 4.4.0
 
