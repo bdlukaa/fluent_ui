@@ -10,9 +10,6 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/home.dart';
-import 'screens/settings.dart';
-
 import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
@@ -350,31 +347,33 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }),
     PaneItemHeader(header: const Text('Popups')),
     PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => popups.ContentDialogPage(),
-      ),
-    ),
+        key: const Key('/popups/content_dialog'),
+        icon: const Icon(FluentIcons.comment_urgent),
+        title: const Text('ContentDialog'),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (router.location != '/popups/content_dialog') {
+            router.pushNamed('popups_content_dialog');
+          }
+        }),
     PaneItem(
-        key: const Key('/surfaces/tooltip'),
+        key: const Key('/popups/tooltip'),
         icon: const Icon(FluentIcons.hint_text),
         title: const Text('Tooltip'),
         body: const SizedBox.shrink(),
         onTap: () {
-          if (router.location != '/surfaces/tooltip') {
-            router.pushNamed('surfaces_tooltip');
+          if (router.location != '/popups/tooltip') {
+            router.pushNamed('popups_tooltip');
           }
         }),
     PaneItem(
-        key: const Key('/surfaces/flyout'),
+        key: const Key('/popups/flyout'),
         icon: const Icon(FluentIcons.pop_expand),
         title: const Text('Flyout'),
         body: const SizedBox.shrink(),
         onTap: () {
-          if (router.location != '/surfaces/flyout') {
-            router.pushNamed('surfaces_flyout');
+          if (router.location != '/popups/flyout') {
+            router.pushNamed('popups_flyout');
           }
         }),
     PaneItemHeader(header: const Text('Theming')),
@@ -926,16 +925,6 @@ final router = GoRouter(
           ),
         ),
 
-        /// ContentDialog
-        GoRoute(
-          path: '/surfaces/content_dialog',
-          name: 'surfaces_content_dialog',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.ContentDialogPage(),
-          ),
-        ),
-
         /// Expander
         GoRoute(
           path: '/surfaces/expander',
@@ -976,10 +965,21 @@ final router = GoRouter(
           ),
         ),
 
+        /// Popups
+        /// ContentDialog
+        GoRoute(
+          path: '/popups/content_dialog',
+          name: 'popups_content_dialog',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.ContentDialogPage(),
+          ),
+        ),
+
         /// Tooltip
         GoRoute(
-          path: '/surfaces/tooltip',
-          name: 'surfaces_tooltip',
+          path: '/popups/tooltip',
+          name: 'popups_tooltip',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.TooltipPage(),
@@ -988,8 +988,8 @@ final router = GoRouter(
 
         /// Flyout
         GoRoute(
-          path: '/surfaces/flyout',
-          name: 'surfaces_flyout',
+          path: '/popups/flyout',
+          name: 'popups_flyout',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.Flyout2Screen(),
