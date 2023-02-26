@@ -19,7 +19,10 @@ part 'style.dart';
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
 
-typedef NavigationContentBuilder = Widget Function(Widget? body);
+typedef NavigationContentBuilder = Widget Function(
+  PaneItem? item,
+  Widget? body,
+);
 
 /// The NavigationView control provides top-level navigation for your app. It
 /// adapts to a variety of screen sizes and supports both top and left

@@ -1,22 +1,21 @@
+import 'package:example/screens/home.dart';
+import 'package:example/screens/settings.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/home.dart';
-import 'screens/settings.dart';
-
-import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
+import 'routes/popups.dart' deferred as popups;
 import 'routes/surfaces.dart' deferred as surfaces;
 import 'routes/theming.dart' deferred as theming;
-
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
@@ -77,6 +76,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  // private navigators
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
       create: (_) => AppTheme(),
       builder: (context, _) {
         final appTheme = context.watch<AppTheme>();
-        return FluentApp(
+        return FluentApp.router(
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
@@ -119,8 +119,9 @@ class MyApp extends StatelessWidget {
               ),
             );
           },
-          initialRoute: '/',
-          routes: {'/': (context) => const MyHomePage()},
+          routeInformationParser: router.routeInformationParser,
+          routerDelegate: router.routerDelegate,
+          routeInformationProvider: router.routeInformationProvider,
         );
       },
     );
@@ -128,7 +129,16 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({
+    Key? key,
+    required this.child,
+    required this.shellContext,
+    required this.state,
+  }) : super(key: key);
+
+  final Widget child;
+  final BuildContext? shellContext;
+  final GoRouterState state;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -137,7 +147,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with WindowListener {
   bool value = false;
 
-  int index = 0;
+  // int index = 0;
 
   final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
   final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
@@ -146,223 +156,308 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   final List<NavigationPaneItem> originalItems = [
     PaneItem(
+      key: const Key('/'),
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
-      body: const HomePage(),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/') router.pushNamed('home');
+      },
     ),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
+      key: const Key('/inputs/buttons'),
       icon: const Icon(FluentIcons.button_control),
       title: const Text('Button'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.ButtonPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/inputs/buttons') {
+          router.pushNamed('inputs_buttons');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/inputs/checkbox'),
       icon: const Icon(FluentIcons.checkbox_composite),
       title: const Text('Checkbox'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.CheckBoxPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/inputs/checkbox') {
+          router.pushNamed('inputs_checkbox');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/inputs/slider'),
       icon: const Icon(FluentIcons.slider),
       title: const Text('Slider'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.SliderPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/inputs/slider') {
+          router.pushNamed('inputs_slider');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/inputs/toggle_switch'),
       icon: const Icon(FluentIcons.toggle_left),
       title: const Text('ToggleSwitch'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.ToggleSwitchPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/inputs/toggle_switch') {
+          router.pushNamed('inputs_toggle_switch');
+        }
+      },
     ),
     PaneItemHeader(header: const Text('Form')),
     PaneItem(
+      key: const Key('/forms/text_box'),
       icon: const Icon(FluentIcons.text_field),
       title: const Text('TextBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.TextBoxPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/text_box') {
+          router.pushNamed('forms_text_box');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/forms/auto_suggest_box'),
       icon: const Icon(FluentIcons.page_list),
       title: const Text('AutoSuggestBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.AutoSuggestBoxPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/auto_suggest_box') {
+          router.pushNamed('forms_auto_suggest_box');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/forms/combobox'),
       icon: const Icon(FluentIcons.combobox),
       title: const Text('ComboBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.ComboBoxPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/combobox') {
+          router.pushNamed('forms_combobox');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/forms/time_picker'),
       icon: const Icon(FluentIcons.time_picker),
       title: const Text('TimePicker'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.TimePickerPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/time_picker') {
+          router.pushNamed('forms_time_picker');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/forms/date_picker'),
       icon: const Icon(FluentIcons.date_time),
       title: const Text('DatePicker'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.DatePickerPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/date_picker') {
+          router.pushNamed('forms_date_picker');
+        }
+      },
     ),
     PaneItemHeader(header: const Text('Navigation')),
     PaneItem(
+      key: const Key('/navigation/nav_view'),
       icon: const Icon(FluentIcons.navigation_flipper),
       title: const Text('NavigationView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.NavigationViewPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/navigation/nav_view') {
+          router.pushNamed('navigation_nav_view');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/navigation/tab_view'),
       icon: const Icon(FluentIcons.table_header_row),
       title: const Text('TabView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.TabViewPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/navigation/tab_view') {
+          router.pushNamed('navigation_tab_view');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/navigation/tree_view'),
       icon: const Icon(FluentIcons.bulleted_tree_list),
       title: const Text('TreeView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.TreeViewPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/navigation/tree_view') {
+          router.pushNamed('navigation_tree_view');
+        }
+      },
     ),
     PaneItemHeader(header: const Text('Surfaces')),
     PaneItem(
+      key: const Key('/surfaces/acrylic'),
       icon: const Icon(FluentIcons.un_set_color),
       title: const Text('Acrylic'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.AcrylicPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/acrylic') {
+          router.pushNamed('surfaces_acrylic');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/surfaces/command_bar'),
       icon: const Icon(FluentIcons.customize_toolbar),
       title: const Text('CommandBar'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.CommandBarsPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/command_bar') {
+          router.pushNamed('surfaces_command_bar');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/surfaces/expander'),
       icon: const Icon(FluentIcons.expand_all),
       title: const Text('Expander'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ExpanderPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/expander') {
+          router.pushNamed('surfaces_expander');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/surfaces/info_bar'),
       icon: const Icon(FluentIcons.info_solid),
       title: const Text('InfoBar'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.InfoBarsPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/info_bar') {
+          router.pushNamed('surfaces_info_bar');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/surfaces/progress_indicators'),
       icon: const Icon(FluentIcons.progress_ring_dots),
       title: const Text('Progress Indicators'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ProgressIndicatorsPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/progress_indicators') {
+          router.pushNamed('surfaces_progress_indicators');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/surfaces/tiles'),
       icon: const Icon(FluentIcons.tiles),
       title: const Text('Tiles'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.TilesPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/surfaces/tiles') {
+          router.pushNamed('surfaces_tiles');
+        }
+      },
     ),
     PaneItemHeader(header: const Text('Popups')),
     PaneItem(
+      key: const Key('/popups/content_dialog'),
       icon: const Icon(FluentIcons.comment_urgent),
       title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => popups.ContentDialogPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/popups/content_dialog') {
+          router.pushNamed('popups_content_dialog');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/popups/tooltip'),
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => popups.TooltipPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/popups/tooltip') {
+          router.pushNamed('popups_tooltip');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/popups/flyout'),
       icon: const Icon(FluentIcons.pop_expand),
       title: const Text('Flyout'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => popups.Flyout2Screen(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/popups/flyout') {
+          router.pushNamed('popups_flyout');
+        }
+      },
     ),
     PaneItemHeader(header: const Text('Theming')),
     PaneItem(
+      key: const Key('/theming/colors'),
       icon: const Icon(FluentIcons.color_solid),
       title: const Text('Colors'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.ColorsPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/theming/colors') {
+          router.pushNamed('theming_colors');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/theming/typography'),
       icon: const Icon(FluentIcons.font_color_a),
       title: const Text('Typography'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.TypographyPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/theming/typography') {
+          router.pushNamed('theming_typography');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/theming/icons'),
       icon: const Icon(FluentIcons.icon_sets_flag),
       title: const Text('Icons'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.IconsPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/theming/icons') {
+          router.pushNamed('theming_icons');
+        }
+      },
     ),
     PaneItem(
+      key: const Key('/theming/reveal_focus'),
       icon: const Icon(FluentIcons.focus),
       title: const Text('Reveal Focus'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.RevealFocusPage(),
-      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/theming/reveal_focus') {
+          router.pushNamed('theming_reveal_focus');
+        }
+      },
     ),
   ];
   final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
     PaneItem(
+      key: const Key('/settings'),
       icon: const Icon(FluentIcons.settings),
       title: const Text('Settings'),
-      body: Settings(),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/settings') {
+          router.pushNamed('settings');
+        }
+      },
     ),
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
@@ -387,14 +482,84 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     super.dispose();
   }
 
+  int _calculateSelectedIndex(BuildContext context) {
+    final location = router.location;
+    int indexOriginal = originalItems
+        .where((element) => element.key != null)
+        .toList()
+        .indexWhere((element) => element.key == Key(location));
+
+    if (indexOriginal == -1) {
+      int indexFooter = footerItems
+          .where((element) => element.key != null)
+          .toList()
+          .indexWhere((element) => element.key == Key(location));
+      if (indexFooter == -1) {
+        return 0;
+      }
+      return originalItems
+              .where((element) => element.key != null)
+              .toList()
+              .length +
+          indexFooter;
+    } else {
+      return indexOriginal;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = FluentLocalizations.of(context);
+
     final appTheme = context.watch<AppTheme>();
     final theme = FluentTheme.of(context);
+    if (widget.shellContext != null) {
+      if (router.canPop() == false) {
+        setState(() {});
+      }
+    }
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
+        leading: () {
+          final enabled = widget.shellContext != null && router.canPop();
+
+          final onPressed = enabled
+              ? () {
+                  if (router.canPop()) {
+                    context.pop();
+                    setState(() {});
+                  }
+                }
+              : null;
+          return NavigationPaneTheme(
+            data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
+              unselectedIconColor: ButtonState.resolveWith((states) {
+                if (states.isDisabled) {
+                  return ButtonThemeData.buttonColor(context, states);
+                }
+                return ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  states,
+                ).basedOnLuminance();
+              }),
+            )),
+            child: Builder(
+              builder: (context) => PaneItem(
+                icon: const Center(child: Icon(FluentIcons.back, size: 12.0)),
+                title: Text(localizations.backButtonTooltip),
+                body: const SizedBox.shrink(),
+                enabled: enabled,
+              ).build(
+                context,
+                false,
+                onPressed,
+                displayMode: PaneDisplayMode.compact,
+              ),
+            ),
+          );
+        }(),
         title: () {
           if (kIsWeb) {
             return const Align(
@@ -427,11 +592,16 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           if (!kIsWeb) const WindowButtons(),
         ]),
       ),
+      paneBodyBuilder: (item, child) {
+        final name =
+            item?.key is ValueKey ? (item!.key as ValueKey).value : null;
+        return FocusTraversalGroup(
+          key: ValueKey('body$name'),
+          child: widget.child,
+        );
+      },
       pane: NavigationPane(
-        selected: index,
-        onChanged: (i) {
-          setState(() => index = i);
-        },
+        selected: _calculateSelectedIndex(context),
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
@@ -473,28 +643,22 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           items: originalItems.whereType<PaneItem>().map((item) {
             assert(item.title is Text);
             final text = (item.title as Text).data!;
-
             return AutoSuggestBoxItem(
               label: text,
               value: text,
-              onSelected: () async {
-                final itemIndex = NavigationPane(
-                  items: originalItems,
-                ).effectiveIndexOf(item);
-
-                setState(() => index = itemIndex);
-                await Future.delayed(const Duration(milliseconds: 17));
+              onSelected: () {
+                item.onTap?.call();
                 searchController.clear();
               },
             );
           }).toList(),
-          placeholder: 'Search',
           trailingIcon: IgnorePointer(
             child: IconButton(
               onPressed: () {},
               icon: const Icon(FluentIcons.search),
             ),
           ),
+          placeholder: 'Search',
         ),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: footerItems,
@@ -589,3 +753,292 @@ class _LinkPaneItemAction extends PaneItem {
     );
   }
 }
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+final router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      builder: (context, state, child) {
+        return MyHomePage(
+          child: child,
+          shellContext: _shellNavigatorKey.currentContext,
+          state: state,
+        );
+      },
+      routes: [
+        /// Home
+        GoRoute(
+          path: '/',
+          name: 'home',
+          builder: (context, state) => const HomePage(),
+        ),
+
+        /// Settings
+        GoRoute(
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => Settings(),
+        ),
+
+        /// /// Input
+        /// Buttons
+        GoRoute(
+          path: '/inputs/buttons',
+          name: 'inputs_buttons',
+          builder: (context, state) => DeferredWidget(
+            inputs.loadLibrary,
+            () => inputs.ButtonPage(),
+          ),
+        ),
+
+        /// Checkbox
+        GoRoute(
+          path: '/inputs/checkbox',
+          name: 'inputs_checkbox',
+          builder: (context, state) => DeferredWidget(
+            inputs.loadLibrary,
+            () => inputs.CheckBoxPage(),
+          ),
+        ),
+
+        /// Slider
+        GoRoute(
+          path: '/inputs/slider',
+          name: 'inputs_slider',
+          builder: (context, state) => DeferredWidget(
+            inputs.loadLibrary,
+            () => inputs.SliderPage(),
+          ),
+        ),
+
+        /// ToggleSwitch
+        GoRoute(
+          path: '/inputs/toggle_switch',
+          name: 'inputs_toggle_switch',
+          builder: (context, state) => DeferredWidget(
+            inputs.loadLibrary,
+            () => inputs.ToggleSwitchPage(),
+          ),
+        ),
+
+        /// /// Form
+        /// TextBox
+        GoRoute(
+          path: '/forms/text_box',
+          name: 'forms_text_box',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.TextBoxPage(),
+          ),
+        ),
+
+        /// AutoSuggestBox
+        GoRoute(
+          path: '/forms/auto_suggest_box',
+          name: 'forms_auto_suggest_box',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.AutoSuggestBoxPage(),
+          ),
+        ),
+
+        /// ComboBox
+        GoRoute(
+          path: '/forms/combobox',
+          name: 'forms_combobox',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.ComboBoxPage(),
+          ),
+        ),
+
+        /// TimePicker
+        GoRoute(
+          path: '/forms/time_picker',
+          name: 'forms_time_picker',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.TimePickerPage(),
+          ),
+        ),
+
+        /// DatePicker
+        GoRoute(
+          path: '/forms/date_picker',
+          name: 'forms_date_picker',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.DatePickerPage(),
+          ),
+        ),
+
+        /// /// Navigation
+        /// NavigationView
+        GoRoute(
+          path: '/navigation/navigation_view',
+          name: 'navigation_nav_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.NavigationViewPage(),
+          ),
+        ),
+
+        /// TabView
+        GoRoute(
+          path: '/navigation/tab_view',
+          name: 'navigation_tab_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.TabViewPage(),
+          ),
+        ),
+
+        /// TreeView
+        GoRoute(
+          path: '/navigation/tree_view',
+          name: 'navigation_tree_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.TreeViewPage(),
+          ),
+        ),
+
+        /// /// Surfaces
+        /// Acrylic
+        GoRoute(
+          path: '/surfaces/acrylic',
+          name: 'surfaces_acrylic',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.AcrylicPage(),
+          ),
+        ),
+
+        /// CommandBar
+        GoRoute(
+          path: '/surfaces/command_bar',
+          name: 'surfaces_command_bar',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.CommandBarsPage(),
+          ),
+        ),
+
+        /// Expander
+        GoRoute(
+          path: '/surfaces/expander',
+          name: 'surfaces_expander',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.ExpanderPage(),
+          ),
+        ),
+
+        /// InfoBar
+        GoRoute(
+          path: '/surfaces/info_bar',
+          name: 'surfaces_info_bar',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.InfoBarsPage(),
+          ),
+        ),
+
+        /// Progress Indicators
+        GoRoute(
+          path: '/surfaces/progress_indicators',
+          name: 'surfaces_progress_indicators',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.ProgressIndicatorsPage(),
+          ),
+        ),
+
+        /// Tiles
+        GoRoute(
+          path: '/surfaces/tiles',
+          name: 'surfaces_tiles',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.TilesPage(),
+          ),
+        ),
+
+        /// Popups
+        /// ContentDialog
+        GoRoute(
+          path: '/popups/content_dialog',
+          name: 'popups_content_dialog',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.ContentDialogPage(),
+          ),
+        ),
+
+        /// Tooltip
+        GoRoute(
+          path: '/popups/tooltip',
+          name: 'popups_tooltip',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.TooltipPage(),
+          ),
+        ),
+
+        /// Flyout
+        GoRoute(
+          path: '/popups/flyout',
+          name: 'popups_flyout',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.Flyout2Screen(),
+          ),
+        ),
+
+        /// /// Theming
+        /// Colors
+        GoRoute(
+          path: '/theming/colors',
+          name: 'theming_colors',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.ColorsPage(),
+          ),
+        ),
+
+        /// Typography
+        GoRoute(
+          path: '/theming/typography',
+          name: 'theming_typography',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.TypographyPage(),
+          ),
+        ),
+
+        /// Icons
+        GoRoute(
+          path: '/theming/icons',
+          name: 'theming_icons',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.IconsPage(),
+          ),
+        ),
+
+        /// Reveal Focus
+        GoRoute(
+          path: '/theming/reveal_focus',
+          name: 'theming_reveal_focus',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.RevealFocusPage(),
+          ),
+        ),
+      ],
+    ),
+  ],
+);

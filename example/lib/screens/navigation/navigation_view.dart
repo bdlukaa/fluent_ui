@@ -17,7 +17,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
   int topIndex = 0;
 
   PaneDisplayMode displayMode = PaneDisplayMode.open;
-  String pageTransition = 'default';
+  String pageTransition = 'Default';
   static const List<String> pageTransitions = [
     'Default',
     'Entrance',
