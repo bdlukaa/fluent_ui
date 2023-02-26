@@ -10,6 +10,9 @@ const double kBlurAmount = 30.0;
 
 const double kDefaultAcrylicAlpha = 0.8;
 
+/// The default opacity of the [FluentThemeData.menuColor]
+const double kMenuColorOpacity = 0.65;
+
 /// Acrylic is a type of Brush that creates a translucent texture.
 /// You can apply acrylic to app surfaces to add depth and help
 /// establish a visual hierarchy.

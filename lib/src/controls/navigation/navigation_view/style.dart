@@ -1,8 +1,7 @@
 part of 'view.dart';
 
-ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
+ButtonState<Color?> kDefaultPaneItemColor(BuildContext context, bool isTop) {
   return ButtonState.resolveWith((states) {
-    // By default, if it's top, do not show any color
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
     if (states.isPressing) {
@@ -12,10 +11,6 @@ ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
     } else {
       return res.subtleFillColorTransparent;
     }
-    // return ButtonThemeData.uncheckedInputColor(
-    //   FluentTheme.of(context),
-    //   states,
-    // );
   });
 }
 
@@ -59,7 +54,7 @@ class NavigationPaneTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [NavigationPaneTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.navigationPaneTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.navigationPaneTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -86,7 +81,7 @@ class NavigationPaneTheme extends InheritedTheme {
 /// The theme data used by [NavigationView]. The default theme
 /// data used is [NavigationPaneThemeData.standard].
 class NavigationPaneThemeData with Diagnosticable {
-  /// The pane background color. If null, [ThemeData.micaBackgroundColor]
+  /// The pane background color. If null, [FluentThemeData.micaBackgroundColor]
   /// is used.
   final Color? backgroundColor;
 
@@ -94,7 +89,7 @@ class NavigationPaneThemeData with Diagnosticable {
   /// is used
   final ButtonState<Color?>? tileColor;
 
-  /// The highlight color used on the tiles. If null, [ThemeData.accentColor]
+  /// The highlight color used on the tiles. If null, [FluentThemeData.accentColor]
   /// is used.
   final Color? highlightColor;
 

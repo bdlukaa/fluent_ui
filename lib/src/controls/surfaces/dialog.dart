@@ -70,7 +70,7 @@ class ContentDialog extends StatelessWidget {
   final List<Widget>? actions;
 
   /// The style used by this dialog. If non-null, it's merged with
-  /// [ThemeData.dialogTheme]
+  /// [FluentThemeData.dialogTheme]
   final ContentDialogThemeData? style;
 
   /// The constraints of the dialog. It defaults to `BoxConstraints(maxWidth: 368)`
@@ -396,10 +396,10 @@ class ContentDialogThemeData {
     this.bodyStyle,
   });
 
-  factory ContentDialogThemeData.standard(ThemeData style) {
+  factory ContentDialogThemeData.standard(FluentThemeData theme) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
-        color: style.menuColor,
+        color: theme.menuColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: kElevationToShadow[6],
       ),
@@ -407,14 +407,14 @@ class ContentDialogThemeData {
       titlePadding: const EdgeInsetsDirectional.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
-        color: style.micaBackgroundColor,
+        color: theme.micaBackgroundColor,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
         // boxShadow: kElevationToShadow[1],
       ),
       actionsPadding: const EdgeInsets.all(20),
       barrierColor: Colors.grey[200].withOpacity(0.8),
-      titleStyle: style.typography.title,
-      bodyStyle: style.typography.body,
+      titleStyle: theme.typography.title,
+      bodyStyle: theme.typography.body,
     );
   }
 

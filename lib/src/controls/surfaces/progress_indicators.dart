@@ -45,11 +45,11 @@ class ProgressBar extends StatefulWidget {
   final String? semanticLabel;
 
   /// The background color of the progress bar. If null,
-  /// [ThemeData.inactiveColor] is used
+  /// [FluentThemeData.inactiveColor] is used
   final Color? backgroundColor;
 
   /// The active color of the progress bar. If null,
-  /// [ThemeData.accentColor] is used
+  /// [FluentThemeData.accentColor] is used
   final Color? activeColor;
 
   @override
@@ -297,11 +297,11 @@ class ProgressRing extends StatefulWidget {
   final String? semanticLabel;
 
   /// The background color of the progress ring. If null,
-  /// [ThemeData.inactiveColor] is used
+  /// [FluentThemeData.inactiveColor] is used
   final Color? backgroundColor;
 
   /// The active color of the progress ring. If null,
-  /// [ThemeData.accentColor] is used
+  /// [FluentThemeData.accentColor] is used
   final Color? activeColor;
 
   /// Whether the indicator spins backwards or not. Defaults to false

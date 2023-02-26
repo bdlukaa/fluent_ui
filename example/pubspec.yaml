@@ -1,5 +1,5 @@
 name: example
-description: Showcase App for Fluent UI package for Flutter
+description: Showcase App for Windows UI for Flutter
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -33,10 +33,29 @@ dev_dependencies:
     sdk: flutter
   flutter_native_splash: ^2.1.6
   flutter_lints: ^1.0.4
+  flutter_launcher_icons: "^0.11.0"
 
 flutter:
   uses-material-design: true
 
 flutter_native_splash:
-  color: "#42a5f5"
-  image: web/assets/flutter_logo.png
+  color: "#000000"
+  image: assets/logo.png
+
+flutter_icons:
+  android: false
+  ios: false
+  image_path: "assets/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/logo.png"
+    background_color: "202020"
+    theme_color: "0175C2"
+  windows:
+    generate: true
+    image_path: "assets/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/logo.png"

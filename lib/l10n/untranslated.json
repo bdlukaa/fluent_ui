@@ -24,6 +24,11 @@
     "year"
   ],
 
+  "my": [
+    "am",
+    "pm"
+  ],
+
   "pl": [
     "hour",
     "minute",

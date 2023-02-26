@@ -241,8 +241,8 @@ class ListTile extends StatelessWidget {
               minWidth: 88.0,
             ),
             margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-            child: ContentManager(content: (context) {
-              final tileHeight = ContentSizeInfo.of(context).size.height;
+            child: Flyout(builder: (context) {
+              final tileHeight = Flyout.of(context).size.height;
               return Row(children: [
                 if (selectionMode == ListTileSelectionMode.none)
                   placeholder

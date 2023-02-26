@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/foundation.dart';
 
-/// The typography applied to a [ThemeData]. It implements Windows' [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+/// The typography applied to a [FluentThemeData]. It implements Windows' [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
 ///
 /// | Do                                                  | Don't                                                                             |
 /// | :-------------------------------------------------- | :-------------------------------------------------------------------------------- |

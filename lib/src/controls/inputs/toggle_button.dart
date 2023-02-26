@@ -31,7 +31,7 @@ class ToggleButton extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   /// The style of the button.
-  /// This style is merged with [ThemeData.toggleButtonThemeData]
+  /// This style is merged with [FluentThemeData.toggleButtonThemeData]
   final ToggleButtonThemeData? style;
 
   /// The semantics label of the button
@@ -116,7 +116,7 @@ class ToggleButtonTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [ToggleButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.toggleButtonTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.toggleButtonTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -150,7 +150,7 @@ class ToggleButtonThemeData with Diagnosticable {
     this.uncheckedButtonStyle,
   });
 
-  factory ToggleButtonThemeData.standard(ThemeData theme) {
+  factory ToggleButtonThemeData.standard(FluentThemeData theme) {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
         backgroundColor: ButtonState.resolveWith(

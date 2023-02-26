@@ -28,7 +28,9 @@ export 'package:flutter/material.dart'
         TextSelectionTheme,
         TextSelectionThemeData,
         SelectableText,
-        ThemeExtension;
+        ThemeExtension,
+        TextMagnifier,
+        AdaptiveTextSelectionToolbar;
 export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:scroll_pos/scroll_pos.dart';
 
@@ -37,6 +39,10 @@ export 'l10n/generated/fluent_localizations.dart';
 
 export 'src/app.dart';
 
+export 'src/controls/flyouts/content.dart';
+export 'src/controls/flyouts/content_manager.dart';
+export 'src/controls/flyouts/flyout.dart';
+export 'src/controls/flyouts/menu.dart';
 export 'src/controls/form/auto_suggest_box.dart';
 export 'src/controls/form/combo_box.dart';
 export 'src/controls/form/form_row.dart';
@@ -72,7 +78,6 @@ export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/commandbar.dart';
 export 'src/controls/surfaces/dialog.dart';
 export 'src/controls/surfaces/expander.dart';
-export 'src/controls/surfaces/flyout/flyout.dart';
 export 'src/controls/surfaces/info_bar.dart';
 export 'src/controls/surfaces/list_tile.dart';
 export 'src/controls/surfaces/progress_indicators.dart';
@@ -102,4 +107,3 @@ export 'src/styles/typography.dart';
 export 'src/utils.dart';
 export 'src/utils/horizontal_scroll_view.dart';
 export 'src/utils/label.dart';
-export 'src/utils/popup.dart' show showMenu, ContentManager, ContentSizeInfo;

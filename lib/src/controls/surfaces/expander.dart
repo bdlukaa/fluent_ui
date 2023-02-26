@@ -84,12 +84,12 @@ class Expander extends StatefulWidget {
 
   /// The expand-collapse animation duration.
   ///
-  /// If null, defaults to [ThemeData.fastAnimationDuration]
+  /// If null, defaults to [FluentThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
   /// The expand-collapse animation curve.
   ///
-  /// If null, defaults to [ThemeData.animationCurve]
+  /// If null, defaults to [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The expand direction. Defaults to [ExpanderDirection.down]
@@ -122,7 +122,7 @@ class Expander extends StatefulWidget {
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
-  late ThemeData _theme;
+  late FluentThemeData _theme;
 
   late bool _isExpanded;
   bool get isExpanded => _isExpanded;
@@ -153,15 +153,14 @@ class ExpanderState extends State<Expander>
     if (_isExpanded) {
       _controller.animateTo(
         0.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _isExpanded = false;
     } else {
       _controller.animateTo(
         1.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? _theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
       );
       _isExpanded = true;
     }
@@ -232,20 +231,40 @@ class ExpanderState extends State<Expander>
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
-                      color:
-                          ButtonThemeData.uncheckedInputColor(_theme, states),
+                      color: ButtonThemeData.uncheckedInputColor(
+                        _theme,
+                        states,
+                        transparentWhenNone: true,
+                      ),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                     alignment: AlignmentDirectional.center,
                     child: widget.icon ??
                         RotationTransition(
-                          turns: Tween<double>(begin: 0, end: 0.5)
-                              .animate(_controller),
-                          child: Icon(
-                            _isDown
-                                ? FluentIcons.chevron_down
-                                : FluentIcons.chevron_up,
-                            size: 10,
+                          turns: Tween<double>(
+                            begin: 0,
+                            end: 0.5,
+                          ).animate(CurvedAnimation(
+                            parent: _controller,
+                            curve: Interval(
+                              0.5,
+                              1.0,
+                              curve: widget.animationCurve ??
+                                  _theme.animationCurve,
+                            ),
+                          )),
+                          child: AnimatedSlide(
+                            duration: theme.fastAnimationDuration,
+                            curve: Curves.easeInCirc,
+                            offset: states.isPressing
+                                ? const Offset(0, 0.1)
+                                : Offset.zero,
+                            child: Icon(
+                              _isDown
+                                  ? FluentIcons.chevron_down
+                                  : FluentIcons.chevron_up,
+                              size: 8.0,
+                            ),
                           ),
                         ),
                   ),
@@ -256,7 +275,14 @@ class ExpanderState extends State<Expander>
         },
       ),
       SizeTransition(
-        sizeFactor: _controller,
+        sizeFactor: CurvedAnimation(
+          curve: Interval(
+            0.0,
+            0.5,
+            curve: widget.animationCurve ?? _theme.animationCurve,
+          ),
+          parent: _controller,
+        ),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16.0),

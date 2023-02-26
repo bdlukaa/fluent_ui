@@ -25,7 +25,7 @@ class FocusBorder extends StatelessWidget {
   final bool focused;
 
   /// The style of this focus border. If non-null, this
-  /// is mescled with [ThemeData.focusThemeData]
+  /// is mescled with [FluentThemeData.focusThemeData]
   final FocusThemeData? style;
 
   /// Whether the border should be rendered outside of the

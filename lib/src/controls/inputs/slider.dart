@@ -175,7 +175,7 @@ class Slider extends StatefulWidget {
   /// If null, the slider is continuous.
   final int? divisions;
 
-  /// The style used in this slider. It's mescled with [ThemeData.sliderThemeData]
+  /// The style used in this slider. It's mescled with [FluentThemeData.sliderThemeData]
   final SliderThemeData? style;
 
   /// A label to show above the slider, or at the left
@@ -550,7 +550,7 @@ class SliderTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [SliderTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.sliderTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.sliderTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -601,25 +601,25 @@ class SliderThemeData with Diagnosticable {
     this.useThumbBall,
   });
 
-  factory SliderThemeData.standard(ThemeData style) {
+  factory SliderThemeData.standard(FluentThemeData theme) {
     final def = SliderThemeData(
       thumbColor: ButtonState.resolveWith(
-        (states) => ButtonThemeData.checkedInputColor(style, states),
+        (states) => ButtonThemeData.checkedInputColor(theme, states),
       ),
       activeColor: ButtonState.resolveWith(
-        (states) => ButtonThemeData.checkedInputColor(style, states),
+        (states) => ButtonThemeData.checkedInputColor(theme, states),
       ),
       inactiveColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
-          return style.resources.controlStrongFillColorDisabled;
+          return theme.resources.controlStrongFillColorDisabled;
         } else {
-          return style.resources.controlStrongFillColorDefault;
+          return theme.resources.controlStrongFillColorDefault;
         }
       }),
       margin: EdgeInsets.zero,
       useThumbBall: true,
-      labelBackgroundColor: style.resources.controlFillColorDefault,
-      labelForegroundColor: style.resources.textFillColorPrimary,
+      labelBackgroundColor: theme.resources.controlFillColorDefault,
+      labelForegroundColor: theme.resources.textFillColorPrimary,
       trackHeight: ButtonState.all(3.75),
     );
 

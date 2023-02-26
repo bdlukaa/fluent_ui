@@ -281,7 +281,7 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.toggleSwitchTheme]
+  /// Defaults to [FluentThemeData.toggleSwitchTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -338,7 +338,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     this.uncheckedDecoration,
   });
 
-  factory ToggleSwitchThemeData.standard(ThemeData style) {
+  factory ToggleSwitchThemeData.standard(FluentThemeData theme) {
     final defaultThumbDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(100),
     );
@@ -350,7 +350,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     return ToggleSwitchThemeData(
       checkedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: ButtonThemeData.checkedInputColor(theme, states),
           border: Border.all(
             color: Colors.transparent,
           ),
@@ -359,32 +359,32 @@ class ToggleSwitchThemeData with Diagnosticable {
       uncheckedDecoration: ButtonState.resolveWith((states) {
         return defaultDecoration.copyWith(
           color: states.isNone
-              ? style.resources.subtleFillColorTransparent
-              : ButtonThemeData.uncheckedInputColor(style, states),
+              ? theme.resources.subtleFillColorTransparent
+              : ButtonThemeData.uncheckedInputColor(theme, states),
           border: Border.all(
             color: !states.isDisabled
-                ? style.borderInputColor
-                : style.brightness.isLight
+                ? theme.borderInputColor
+                : theme.brightness.isLight
                     ? const Color.fromRGBO(0, 0, 0, 0.2169)
                     : const Color.fromRGBO(255, 255, 255, 0.1581),
           ),
         );
       }),
       margin: const EdgeInsets.all(4),
-      animationDuration: style.fasterAnimationDuration,
-      animationCurve: style.animationCurve,
+      animationDuration: theme.fasterAnimationDuration,
+      animationCurve: theme.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
           color: states.isDisabled
-              ? style.resources.textOnAccentFillColorDisabled
-              : style.resources.textOnAccentFillColorPrimary,
+              ? theme.resources.textOnAccentFillColorDisabled
+              : theme.resources.textOnAccentFillColorPrimary,
         );
       }),
       uncheckedThumbDecoration: ButtonState.resolveWith((states) {
         return defaultThumbDecoration.copyWith(
           color: states.isDisabled
-              ? style.resources.textFillColorDisabled
-              : style.resources.textFillColorSecondary,
+              ? theme.resources.textFillColorDisabled
+              : theme.resources.textFillColorSecondary,
         );
       }),
     );

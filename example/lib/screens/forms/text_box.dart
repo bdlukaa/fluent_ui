@@ -36,11 +36,13 @@ class TextBoxPage extends ScrollablePage {
       subtitle(
         content: const Text('A TextBox with a header and placeholder text'),
       ),
-      const CardHighlight(
-        child: TextBox(
-          header: 'Enter your name:',
-          placeholder: 'Name',
-          expands: false,
+      CardHighlight(
+        child: InfoLabel(
+          label: 'Enter your name:',
+          child: const TextBox(
+            placeholder: 'Name',
+            expands: false,
+          ),
         ),
         codeSnippet: '''TextBox(
   header: 'Enter your name:',
