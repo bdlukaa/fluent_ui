@@ -10,10 +10,10 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'routes/popups.dart' deferred as popups;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
+import 'routes/popups.dart' deferred as popups;
 import 'routes/surfaces.dart' deferred as surfaces;
 import 'routes/theming.dart' deferred as theming;
 import 'theme.dart';
@@ -979,7 +979,7 @@ final router = GoRouter(
           name: 'popups_content_dialog',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => popups.ContentDialogPage(),
+            () => const popups.ContentDialogPage(),
           ),
         ),
 
@@ -999,7 +999,7 @@ final router = GoRouter(
           name: 'popups_flyout',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => popups.Flyout2Screen(),
+            () => const popups.Flyout2Screen(),
           ),
         ),
 
