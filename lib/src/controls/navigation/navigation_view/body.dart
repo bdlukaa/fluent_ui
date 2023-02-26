@@ -143,10 +143,13 @@ class _NavigationBodyState extends State<_NavigationBody> {
         child: () {
           final paneBodyBuilder = widget.paneBodyBuilder;
           if (paneBodyBuilder != null) {
-            return FocusTraversalGroup(
-              child: paneBodyBuilder.call(view.pane?.selected != null
-                  ? view.pane?.selectedItem.body
-                  : null),
+            return paneBodyBuilder.call(
+              view.pane?.selected != null ? view.pane!.selectedItem : null,
+              view.pane?.selected != null
+                  ? FocusTraversalGroup(
+                      child: view.pane!.selectedItem.body,
+                    )
+                  : null,
             );
           } else {
             return KeyedSubtree(

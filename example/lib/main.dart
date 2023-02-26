@@ -122,8 +122,6 @@ class MyApp extends StatelessWidget {
           routeInformationParser: router.routeInformationParser,
           routerDelegate: router.routerDelegate,
           routeInformationProvider: router.routeInformationProvider,
-          /*initialRoute: '/',
-          routes: {'/': (context) => const MyHomePage()},*/
         );
       },
     );
@@ -131,10 +129,16 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.widget, required this.shellContext})
-      : super(key: key);
-  final Widget widget;
+  const MyHomePage({
+    Key? key,
+    required this.child,
+    required this.shellContext,
+    required this.state,
+  }) : super(key: key);
+
+  final Widget child;
   final BuildContext? shellContext;
+  final GoRouterState state;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -584,14 +588,16 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           if (!kIsWeb) const WindowButtons(),
         ]),
       ),
-      paneBodyBuilder: (wdgt) {
-        return widget.widget;
+      paneBodyBuilder: (item, child) {
+        final name =
+            item?.key is ValueKey ? (item!.key as ValueKey).value : null;
+        return FocusTraversalGroup(
+          key: ValueKey('body$name'),
+          child: widget.child,
+        );
       },
       pane: NavigationPane(
         selected: _calculateSelectedIndex(context),
-        /* onChanged: (i) {
-          setState(() => index = i);
-        },*/
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
@@ -760,10 +766,11 @@ final router = GoRouter(
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (context, state, widget) {
+      builder: (context, state, child) {
         return MyHomePage(
-          widget: widget,
+          child: child,
           shellContext: _shellNavigatorKey.currentContext,
+          state: state,
         );
       },
       routes: [
