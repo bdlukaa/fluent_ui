@@ -154,6 +154,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Russian (@raitonoberu)
 - Simplified Chinese (@zacksleo, @rk0cc)
 - Traditional Chinese (@zacksleo, @rk0cc)
+- Thai (@lines-of-codes)
 - Turkish (@timurturbil)
 - Spanish (@henry2man)
 - Ukranian (@vadimbarda)
