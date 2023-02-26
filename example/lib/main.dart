@@ -979,7 +979,7 @@ final router = GoRouter(
           name: 'popups_content_dialog',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => const popups.ContentDialogPage(),
+            () => popups.ContentDialogPage(),
           ),
         ),
 
@@ -999,7 +999,7 @@ final router = GoRouter(
           name: 'popups_flyout',
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => const popups.Flyout2Screen(),
+            () => popups.Flyout2Screen(),
           ),
         ),
 

@@ -2,7 +2,26 @@
 
 - Add `TextFormBox.initialValue` ([#749](https://github.com/bdlukaa/fluent_ui/issues/749))
 - Add `PaneItem.enabled` ([#748](https://github.com/bdlukaa/fluent_ui/discussions/748))
-- Add Thai localization
+- Add Thai localization ([#750](https://github.com/bdlukaa/fluent_ui/pull/750))
+- `FocusTraversalGroup` is no longer added above `paneBodyBuilder` ([#700](https://github.com/bdlukaa/fluent_ui/pull/700))
+- **BREAKING** `NavigationView.paneBodyBuilder` now takes two arguments ([#700](https://github.com/bdlukaa/fluent_ui/pull/700))
+  Before:
+  ```dart
+  NavigationView(
+    paneBodyBuilder: (child) {
+      return child;
+    }
+  ),
+  ```
+
+  Now:
+  ```dart
+  NavigationView(
+    paneBodyBuilder: (item, child) {
+      return child;
+    }
+  )
+  ```
 
 ## 4.4.0
 
