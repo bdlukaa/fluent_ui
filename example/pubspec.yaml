@@ -27,6 +27,7 @@ dependencies:
     git:
       url: https://github.com/YehudaKremer/flutter_syntax_view.git
   go_router: ^6.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

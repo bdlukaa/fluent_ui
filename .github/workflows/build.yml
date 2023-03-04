@@ -1,0 +1,60 @@
+name: Fluent UI for Flutter Client
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+build_windows:
+    name: Windows Client
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "master"
+          cache: true
+      - run: git config --system core.longpaths true
+      - run: flutter pub get
+      - run: flutter build windows --verbose
+
+
+  build_linux:
+    name: Linux Client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+
+      - run: sudo apt-get update -y
+      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "master"
+          cache: true
+      - run: flutter pub get
+      - run: flutter build linux --verbose
+
+  build_macOS:
+    name: macOS Client
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "master"
+          architecture: x64
+      - run: flutter pub get
+      - run: flutter build macos --verbose

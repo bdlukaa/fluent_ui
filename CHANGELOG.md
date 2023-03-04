@@ -1,13 +1,7 @@
 ## [next]
+
 - Dynamically adding/removing items in NavigationPane ([#744](https://github.com/bdlukaa/fluent_ui/issues/744))
-  ```dart
-  if (_itemKeys.length != widget.pane?.effectiveItems.length) {
-    if (widget.pane?.effectiveItems.length != null) {
-      _generateKeys();
-    }
-  }
-  ```
-- Fix example application was showing 2 WindowsIcons on changing transparency and maximizing
+- Fix example application was showing window icons twice on transparency change and maximizing
 - Add `TextFormBox.initialValue` ([#749](https://github.com/bdlukaa/fluent_ui/issues/749))
 - Add `PaneItem.enabled` ([#748](https://github.com/bdlukaa/fluent_ui/discussions/748))
 - Add Thai localization ([#750](https://github.com/bdlukaa/fluent_ui/pull/750))
