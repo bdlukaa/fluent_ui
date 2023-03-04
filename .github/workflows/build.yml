@@ -2,7 +2,7 @@ name: Fluent UI for Flutter Client
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
   workflow_dispatch:
 
