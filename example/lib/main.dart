@@ -47,6 +47,7 @@ void main() async {
 
   if (isDesktop) {
     await flutter_acrylic.Window.initialize();
+    await flutter_acrylic.Window.hideWindowControls();
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(
