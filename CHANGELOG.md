@@ -1,4 +1,5 @@
 ## [next]
+
 - Dynamically adding/removing items in NavigationPane ([#744](https://github.com/bdlukaa/fluent_ui/issues/744))
   ```dart
   if (_itemKeys.length != widget.pane?.effectiveItems.length) {
@@ -30,6 +31,9 @@
     }
   )
   ```
+- Use correct height and padding on `TextBox`
+- Updated `TextBox` cursor to match the native implementation
+- `TextBox` state is now updated correctly when focused
 
 ## 4.4.0
 
