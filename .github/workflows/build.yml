@@ -20,10 +20,9 @@ jobs:
         with:
           channel: "stable"
           cache: true
-      - run: cd example
       - run: git config --system core.longpaths true
       - run: flutter pub get
-      - run: flutter build windows --verbose
+      - run: flutter build windows example/lib/main.dart --verbose
 
   # build_linux:
   #   name: Linux Client
