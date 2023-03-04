@@ -244,6 +244,12 @@ class NavigationViewState extends State<NavigationView> {
         _generateKeys();
       }
     }
+
+    if (_itemKeys.length != widget.pane?.effectiveItems.length) {
+      if (widget.pane?.effectiveItems.length != null) {
+        _generateKeys();
+      }
+    }
   }
 
   void _generateKeys() {
