@@ -31,9 +31,9 @@
     }
   )
   ```
-- Use correct height and padding on `TextBox`
-- Updated `TextBox` cursor to match the native implementation
-- `TextBox` state is now updated correctly when focused
+- Use correct height and padding on `TextBox` ([#754](https://github.com/bdlukaa/fluent_ui/pull/754))
+- Updated `TextBox` cursor to match the native implementation ([#754](https://github.com/bdlukaa/fluent_ui/pull/754))
+- `TextBox` state is now updated correctly when focused ([#754](https://github.com/bdlukaa/fluent_ui/pull/754))
 
 ## 4.4.0
 

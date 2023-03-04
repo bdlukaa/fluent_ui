@@ -20,9 +20,8 @@ class TextBoxPage extends ScrollablePage {
         'uniform, plaintext format.\n\n'
         'TextBox has a number of features that can simplify text entry. It comes '
         'with a familiar, built-in context menu with support for copying and '
-        'pasting text. The "clear all" button lets a user quickly delete all '
-        'text that has been entered. It also has spell checking capabilities '
-        'built in and enabled by default.',
+        'pasting text. It also has spell checking capabilities built in and '
+        'enabled by default.',
       ),
       subtitle(content: const Text('A simple TextBox')),
       CardHighlight(
