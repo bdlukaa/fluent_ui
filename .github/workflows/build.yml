@@ -6,7 +6,8 @@ on:
   pull_request:
   workflow_dispatch:
 
-build_windows:
+jobs:
+  build_windows:
     name: Windows Client
     runs-on: windows-latest
     steps:
@@ -22,7 +23,6 @@ build_windows:
       - run: git config --system core.longpaths true
       - run: flutter pub get
       - run: flutter build windows --verbose
-
 
   build_linux:
     name: Linux Client
