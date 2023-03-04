@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-const kTextBoxPadding = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5);
+const kTextBoxPadding = EdgeInsetsDirectional.fromSTEB(10, 5, 6, 6);
 
 /// Visibility of text field overlays based on the state of the current text entry.
 ///
@@ -170,7 +170,7 @@ class TextBox extends StatefulWidget {
     this.onTapOutside,
     this.inputFormatters,
     this.enabled,
-    this.cursorWidth = 1.5,
+    this.cursorWidth = 1,
     this.cursorHeight,
     this.cursorRadius = const Radius.circular(2.0),
     this.cursorColor,
@@ -257,7 +257,7 @@ class TextBox extends StatefulWidget {
 
   /// Padding around the text entry area between the [prefix] and [suffix].
   ///
-  /// Defaults to a padding of 10 pixels horizontally and 5 pixels vertically.
+  /// Defaults to [kTextBoxPadding]
   final EdgeInsetsGeometry padding;
 
   /// A lighter colored placeholder hint that appears on the first line of the
@@ -566,7 +566,11 @@ class TextBox extends StatefulWidget {
       ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
           defaultValue: null))
       ..add(DiagnosticsProperty<BoxDecoration>('decoration', decoration))
-      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+        'padding',
+        padding,
+        defaultValue: kTextBoxPadding,
+      ))
       ..add(StringProperty('placeholder', placeholder))
       ..add(
           DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle))
@@ -601,7 +605,7 @@ class TextBox extends StatefulWidget {
       ..add(EnumProperty<MaxLengthEnforcement>(
           'maxLengthEnforcement', maxLengthEnforcement,
           defaultValue: null))
-      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0))
+      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 1.0))
       ..add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null))
       ..add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
           defaultValue: null))
@@ -974,7 +978,7 @@ class _TextBoxState extends State<TextBox>
     }
 
     final enabled = widget.enabled ?? true;
-    const cursorOffset = Offset(0, -1);
+    const cursorOffset = Offset(0, 0);
     final formatters = <TextInputFormatter>[
       ...?widget.inputFormatters,
       if (widget.maxLength != null)
@@ -1171,6 +1175,15 @@ class _TextBoxState extends State<TextBox>
               forceEnabled: enabled,
               hitTestBehavior: HitTestBehavior.translucent,
               builder: (context, states) {
+                // Since we manage focus outside of the HoverButton (see focusEnabled: false)
+                // we need to add the focused state when the field is focused
+                //
+                // widgets below this can call `HoverButton.of(context).states.isFocused`
+                // and have the correct value
+                if (_effectiveFocusNode.hasFocus) {
+                  states = {...states, ButtonStates.focused};
+                }
+
                 return DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: radius,
@@ -1193,10 +1206,11 @@ class _TextBoxState extends State<TextBox>
                     image: widget.decoration?.image,
                     shape: widget.decoration?.shape,
                   ),
-                  child: AnimatedContainer(
-                    duration: themeData.fasterAnimationDuration,
-                    curve: themeData.animationCurve,
+                  child: Container(
                     foregroundDecoration: foregroundDecoration,
+                    constraints: const BoxConstraints(
+                      minHeight: 32.0,
+                    ),
                     child:
                         _selectionGestureDetectorBuilder.buildGestureDetector(
                       behavior: HitTestBehavior.translucent,

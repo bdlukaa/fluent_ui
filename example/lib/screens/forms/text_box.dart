@@ -20,16 +20,20 @@ class TextBoxPage extends ScrollablePage {
         'uniform, plaintext format.\n\n'
         'TextBox has a number of features that can simplify text entry. It comes '
         'with a familiar, built-in context menu with support for copying and '
-        'pasting text. The "clear all" button lets a user quickly delete all '
-        'text that has been entered. It also has spell checking capabilities '
-        'built in and enabled by default.',
+        'pasting text. It also has spell checking capabilities built in and '
+        'enabled by default.',
       ),
       subtitle(content: const Text('A simple TextBox')),
       CardHighlight(
         child: Row(children: const [
           Expanded(child: TextBox()),
           SizedBox(width: 10.0),
-          Expanded(child: TextBox(enabled: false, placeholder: 'Disabled'))
+          Expanded(
+            child: TextBox(
+              enabled: false,
+              placeholder: 'Disabled TextBox',
+            ),
+          )
         ]),
         codeSnippet: '''TextBox()''',
       ),
@@ -44,11 +48,13 @@ class TextBoxPage extends ScrollablePage {
             expands: false,
           ),
         ),
-        codeSnippet: '''TextBox(
-  header: 'Enter your name:',
-  placeholder: 'Name',
-  expands: false,
-),''',
+        codeSnippet: '''InfoLabel(
+  label: 'Enter your name:',
+  child: const TextBox(
+    placeholder: 'Name',
+    expands: false,
+  ),
+)''',
       ),
       subtitle(
         content: const Text('A read-only TextBox with various properties set'),
@@ -60,7 +66,7 @@ class TextBoxPage extends ScrollablePage {
           style: TextStyle(
             fontFamily: 'Arial',
             fontSize: 24.0,
-            letterSpacing: 8,
+            letterSpacing: 8.0,
             color: Color(0xFF5178BE),
             fontStyle: FontStyle.italic,
           ),
@@ -71,7 +77,7 @@ class TextBoxPage extends ScrollablePage {
   style: TextStyle(
     fontFamily: 'Arial,
     fontSize: 24.0,
-    letterSpacing: 8,
+    letterSpacing: 8.0,
     color: Color(0xFF5178BE),
     fontStyle: FontStyle.italic,
   ),
