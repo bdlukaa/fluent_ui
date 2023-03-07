@@ -1,4 +1,4 @@
-## [next]
+## 4.4.1
 
 - Dynamically adding/removing items in NavigationPane ([#744](https://github.com/bdlukaa/fluent_ui/issues/744))
 - Fix example application was showing window icons twice on transparency change and maximizing
