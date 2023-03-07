@@ -21,8 +21,12 @@ jobs:
           channel: "stable"
           cache: true
       - run: git config --system core.longpaths true
-      - run: flutter pub get
-      - run: flutter build windows example/lib/main.dart --verbose
+      - name: Flutter Pub Get
+        run: flutter pub get
+        working-directory: ./example
+      - name: Build for Windows
+        run: flutter build windows example/lib/main.dart --verbose
+        working-directory: ./example
 
   # build_linux:
   #   name: Linux Client
@@ -44,19 +48,21 @@ jobs:
   #     - run: flutter pub get
   #     - run: flutter build linux --verbose
 
-  # build_macOS:
-  #   name: macOS Client
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         submodules: recursive
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: "stable"
-  #         architecture: x64
-  #     - run: cd example
-  #     - run: flutter pub get
-  #     - run: flutter build macos --verbose
+  build_macOS:
+    name: macOS Client
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          architecture: x64
+      - name: Flutter Pub Get
+        run: flutter pub get
+      - name: Flutter Build macOS
+        run: flutter build macos --verbose
+        working-directory: ./example
