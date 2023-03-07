@@ -25,7 +25,7 @@ jobs:
         run: flutter pub get
         working-directory: ./example
       - name: Build for Windows
-        run: flutter build windows example/lib/main.dart --verbose
+        run: flutter build windows --verbose
         working-directory: ./example
 
   # build_linux:
