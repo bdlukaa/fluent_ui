@@ -45,8 +45,8 @@
 - [Motivation](#motivation)
 - [Installation](#installation)
   - [Badge](#badge)
-- [Accent color](#accent-color)
-- [Localization](#Localization)
+  - [Accent color](#accent-color)
+- [Localization](#localization)
 - [Contribution](#contribution)
   - [Contributing new localizations](#contributing-new-localizations)
   - [Acknowledgements](#acknowledgements)
@@ -140,6 +140,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - English
 - French (@WinXaito)
 - German (@larsb24)
+- Greek (@pana-g)
 - Hebrew (@yehudakremer)
 - Hindi (@alexmercerind)
 - Hungarian (@RedyAu)
