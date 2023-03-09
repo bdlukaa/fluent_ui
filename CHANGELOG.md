@@ -1,3 +1,7 @@
+## [next]
+
+- Add Greek localization ([#761](https://github.com/bdlukaa/fluent_ui/pull/761))
+
 ## 4.4.1
 
 - Dynamically adding/removing items in NavigationPane ([#744](https://github.com/bdlukaa/fluent_ui/issues/744))
