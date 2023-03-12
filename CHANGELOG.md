@@ -1,5 +1,6 @@
 ## [next]
 
+- Add source code for Surfaces/CommandBar in example application
 - Add Greek localization ([#761](https://github.com/bdlukaa/fluent_ui/pull/761))
 
 ## 4.4.1
