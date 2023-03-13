@@ -2,6 +2,14 @@
 
 - Add source code for Surfaces/CommandBar in example application
 - Add Greek localization ([#761](https://github.com/bdlukaa/fluent_ui/pull/761))
+- Add `NavigationState.compactOverlayOpen` ([#758](https://github.com/bdlukaa/fluent_ui/issues/758)):
+  ```dart
+  final key = GlobalKey<NavigationState>();
+
+  NavigationView(key: key);
+
+  final isCompactModeOpen = key.currentState?.compactOverlayOpen ?? false;
+  ```
 - `TabView` lazy loading ([#751](https://github.com/bdlukaa/fluent_ui/issues/751))
 
 ## 4.4.1
