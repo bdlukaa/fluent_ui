@@ -2,6 +2,7 @@
 
 - Add source code for Surfaces/CommandBar in example application
 - Add Greek localization ([#761](https://github.com/bdlukaa/fluent_ui/pull/761))
+- `TabView` lazy loading ([#751](https://github.com/bdlukaa/fluent_ui/issues/751))
 
 ## 4.4.1
 
