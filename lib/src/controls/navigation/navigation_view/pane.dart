@@ -1270,7 +1270,16 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                       Expanded(
                         child: Align(
                           alignment: AlignmentDirectional.centerStart,
-                          child: widget.pane.header!,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 8.0,
+                            ),
+                            child: DefaultTextStyle(
+                              style: theme.itemHeaderTextStyle ??
+                                  const TextStyle(),
+                              child: widget.pane.header!,
+                            ),
+                          ),
                         ),
                       ),
                     ]);

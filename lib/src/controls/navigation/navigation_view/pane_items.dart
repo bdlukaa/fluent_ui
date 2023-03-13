@@ -201,7 +201,9 @@ class PaneItem extends NavigationPaneItem {
             case PaneDisplayMode.compact:
               return Container(
                 key: itemKey,
-                height: 36.0,
+                constraints: const BoxConstraints(
+                  minHeight: kPaneItemMinHeight,
+                ),
                 alignment: AlignmentDirectional.center,
                 child: Padding(
                   padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -232,9 +234,11 @@ class PaneItem extends NavigationPaneItem {
               );
             case PaneDisplayMode.minimal:
             case PaneDisplayMode.open:
-              return SizedBox(
+              return ConstrainedBox(
                 key: itemKey,
-                height: 36.0,
+                constraints: const BoxConstraints(
+                  minHeight: kPaneItemMinHeight,
+                ),
                 child: Row(children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
@@ -475,10 +479,12 @@ class PaneItemHeader extends NavigationPaneItem {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     final view = InheritedNavigationView.of(context);
+
     return KeyedSubtree(
       key: key,
-      child: Padding(
+      child: Container(
         key: itemKey,
+        constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
         padding: (theme.iconPadding ?? EdgeInsets.zero).add(
           view.displayMode == PaneDisplayMode.top
               ? EdgeInsets.zero

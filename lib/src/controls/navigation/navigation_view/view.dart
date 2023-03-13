@@ -18,6 +18,8 @@ part 'style.dart';
 ///
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
+const double kPaneItemMinHeight = 40.0;
+const double kPaneItemHeaderMinHeight = 4.0;
 
 typedef NavigationContentBuilder = Widget Function(
   PaneItem? item,
