@@ -586,9 +586,9 @@ class _TabViewState extends State<TabView> {
         Expanded(
           child: Focus(
             autofocus: true,
-            child: IndexedStack(
+            child: _TabBody(
               index: widget.currentIndex,
-              children: widget.tabs.map((tab) => tab.body).toList(),
+              tabs: widget.tabs,
             ),
           ),
         ),
@@ -662,6 +662,67 @@ class _TabViewState extends State<TabView> {
       );
     }
     return tabBar;
+  }
+}
+
+class _TabBody extends StatefulWidget {
+  final int index;
+  final List<Tab> tabs;
+
+  const _TabBody({
+    Key? key,
+    required this.index,
+    required this.tabs,
+  }) : super(key: key);
+
+  @override
+  State<_TabBody> createState() => __TabBodyState();
+}
+
+class __TabBodyState extends State<_TabBody> {
+  final _pageKey = GlobalKey<State<PageView>>();
+  PageController? _pageController;
+  PageController get pageController => _pageController!;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MediaQuery.of(context);
+
+    _pageController ??= PageController(initialPage: widget.index);
+  }
+
+  @override
+  void didUpdateWidget(_TabBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (pageController.hasClients) {
+      if (oldWidget.index != widget.index ||
+          pageController.page != widget.index) {
+        pageController.jumpToPage(widget.index);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      key: _pageKey,
+      physics: const NeverScrollableScrollPhysics(),
+      controller: pageController,
+      itemCount: widget.tabs.length,
+      itemBuilder: (context, index) {
+        final isSelected = widget.index == index;
+        final item = widget.tabs[index];
+
+        return ExcludeFocus(
+          key: ValueKey(index),
+          excluding: !isSelected,
+          child: FocusTraversalGroup(
+            child: item.body,
+          ),
+        );
+      },
+    );
   }
 }
 

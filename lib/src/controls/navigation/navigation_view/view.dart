@@ -18,6 +18,8 @@ part 'style.dart';
 ///
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50.0;
+const double kPaneItemMinHeight = 40.0;
+const double kPaneItemHeaderMinHeight = 4.0;
 
 typedef NavigationContentBuilder = Widget Function(
   PaneItem? item,
@@ -160,7 +162,7 @@ class NavigationViewState extends State<NavigationView> {
 
   bool _minimalPaneOpen = false;
 
-  /// Whether the minimal pane is open
+  /// Whether the minimal pane is open.
   ///
   /// Always false if the current display mode is not minimal.
   bool get minimalPaneOpen => _minimalPaneOpen;
@@ -173,6 +175,17 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   late bool _compactOverlayOpen;
+
+  /// Whether the compact pane is open.
+  ///
+  /// Always false if the current display mode is not open nor compact
+  bool get compactOverlayOpen {
+    if ([PaneDisplayMode.open, PaneDisplayMode.compact].contains(displayMode)) {
+      return _compactOverlayOpen;
+    }
+
+    return false;
+  }
 
   int _oldIndex = 0;
 

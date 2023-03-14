@@ -133,12 +133,14 @@ class _NavigationViewPageState extends State<NavigationViewPage>
               onChanged: (index) => setState(() => topIndex = index),
               displayMode: displayMode,
               indicator: indicators[indicator],
+              header: const Text('Pane Header'),
               items: [
                 PaneItem(
                   icon: const Icon(FluentIcons.home),
                   title: const Text('Home'),
                   body: const _NavigationBodyItem(),
                 ),
+                PaneItemSeparator(),
                 PaneItem(
                   icon: const Icon(FluentIcons.issue_tracking),
                   title: const Text('Track orders'),
