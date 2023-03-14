@@ -561,16 +561,25 @@ class FlyoutController with ChangeNotifier {
     transitionDuration ??= theme.fastAnimationDuration;
 
     final navigator = navigatorKey ?? Navigator.of(context);
-    final navigatorBox = navigator.context.findRenderObject() as RenderBox;
 
-    final targetBox = context.findRenderObject() as RenderBox;
-    final targetSize = targetBox.size;
-    final targetOffset =
-        targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
-            Offset(0, targetSize.height);
-    final targetRect =
-        targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
-            targetSize;
+    final Offset targetOffset;
+    final Size targetSize;
+    final Rect targetRect;
+
+    if (position != null) {
+      targetOffset = position;
+      targetSize = Size.zero;
+      targetRect = Rect.zero;
+    } else {
+      final navigatorBox = navigator.context.findRenderObject() as RenderBox;
+
+      final targetBox = context.findRenderObject() as RenderBox;
+      targetSize = targetBox.size;
+      targetOffset = targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
+              Offset(0, targetSize.height);
+      targetRect = targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
+              targetSize;
+    }
 
     _open = true;
     notifyListeners();
@@ -627,7 +636,7 @@ class FlyoutController with ChangeNotifier {
                 child: SafeArea(
                   child: CustomSingleChildLayout(
                     delegate: _FlyoutPositionDelegate(
-                      targetOffset: position ?? targetOffset,
+                      targetOffset: targetOffset,
                       targetSize: position == null ? targetSize : Size.zero,
                       autoModeConfiguration: autoModeConfiguration,
                       placementMode: placementMode,
