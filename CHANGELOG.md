@@ -1,6 +1,7 @@
 ## [next]
 
 - Add Greek localization ([#761](https://github.com/bdlukaa/fluent_ui/pull/761))
+- Do not calculate the position of the flyout if this one is provided as a parameter. ([#764](https://github.com/bdlukaa/fluent_ui/issues/764))
 
 ## 4.4.1
 
