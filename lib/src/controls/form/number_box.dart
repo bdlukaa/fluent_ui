@@ -54,9 +54,13 @@ class NumberBox extends StatefulWidget {
   /// is empty.
   final int? value;
 
-  /// Event fired when the value of the number box is changed.
-  /// Note: only when the user click on a button (for increment, decrement or
-  /// clear the content) and when the focus is lost.
+  /// Called when the value of the number box change.
+  /// The callback is fired only if the user click on a button or the focus is
+  /// lost.
+  ///
+  /// If the [onChanged] callback is null then the number box widget will
+  /// be disabled, i.e. its buttons will be displayed in grey and it will not
+  /// respond to input.
   final ValueChanged<int?>? onChanged;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -235,11 +239,11 @@ class _NumberBoxState extends State<NumberBox> {
         textFieldSuffix.addAll([
           IconButton(
             icon: const Icon(FluentIcons.chevron_up),
-            onPressed: _incrementSmall,
+            onPressed: widget.onChanged != null ? _incrementSmall : null,
           ),
           IconButton(
             icon: const Icon(FluentIcons.chevron_down),
-            onPressed: _decrementSmall,
+            onPressed: widget.onChanged != null ? _decrementSmall : null,
           ),
         ]);
         break;
@@ -254,6 +258,7 @@ class _NumberBoxState extends State<NumberBox> {
       key: _textBoxKey,
       focusNode: focusNode,
       controller: controller,
+      enabled: widget.onChanged != null,
       suffix: textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
     );
 
