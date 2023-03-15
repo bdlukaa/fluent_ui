@@ -20,7 +20,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
 
   int? numberBoxValue = 0;
 
-  void _valueChanged(int? newValue){
+  void _valueChanged(int? newValue) {
     setState(() {
       numberBoxValue = newValue;
     });
@@ -63,7 +63,6 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
 ),
 ''',
         ),
-
         subtitle(
           content: const Text(
             'A NumberBox in compact mode',
@@ -71,7 +70,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
         CardHighlight(
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NumberBox(
               value: numberBoxValue,
               onChanged: _valueChanged,
@@ -88,33 +87,4 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
       ],
     );
   }
-
-  Map<String, Color> colors = {
-    'Blue': Colors.blue,
-    'Green': Colors.green,
-    'Red': Colors.red,
-    'Yellow': Colors.yellow,
-    'Grey': Colors.grey,
-    'Magenta': Colors.magenta,
-    'Orange': Colors.orange,
-    'Purple': Colors.purple,
-    'Teal': Colors.teal,
-  };
-
-  static const fontSizes = <double>[
-    8,
-    9,
-    10,
-    11,
-    12,
-    14,
-    16,
-    18,
-    20,
-    24,
-    28,
-    36,
-    48,
-    72,
-  ];
 }
