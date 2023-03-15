@@ -107,9 +107,9 @@ class _NumberBoxState extends State<NumberBox> {
     }
 
     if (oldWidget.value != widget.value) {
-      if(widget.value != null){
+      if (widget.value != null) {
         _updateController(widget.value!);
-      }else{
+      } else {
         controller.text = '';
       }
     }

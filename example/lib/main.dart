@@ -873,7 +873,7 @@ final router = GoRouter(
           name: 'forms_numberbox',
           builder: (context, state) => DeferredWidget(
             forms.loadLibrary,
-                () => forms.NumberBoxPage(),
+            () => forms.NumberBoxPage(),
           ),
         ),
 
