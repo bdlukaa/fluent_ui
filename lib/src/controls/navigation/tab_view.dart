@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -238,11 +239,15 @@ class _TabViewState extends State<TabView> {
   @override
   void didUpdateWidget(TabView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.tabs.length != oldWidget.tabs.length) {
+    print(scrollController.total);
+    print('${widget.tabs.length} // ${oldWidget.tabs.length}');
+    if (widget.tabs.length != scrollController.itemCount) {
+      print('SET ITEM COUNT TO: ${widget.tabs.length}');
       scrollController.itemCount = widget.tabs.length;
     }
     if (widget.currentIndex != oldWidget.currentIndex &&
         scrollController.hasClients) {
+      print('SCROLL TO ITEM: ${widget.currentIndex}');
       scrollController.scrollToItem(widget.currentIndex);
     }
   }
@@ -448,17 +453,20 @@ class _TabViewState extends State<TabView> {
                       ? (PointerSignalEvent e) {
                           if (e is PointerScrollEvent &&
                               scrollController.hasClients) {
-                            if (e.scrollDelta.dy > 0) {
-                              scrollController.forward(
-                                align: false,
-                                animate: false,
-                              );
-                            } else {
-                              scrollController.backward(
-                                align: false,
-                                animate: false,
-                              );
-                            }
+                            GestureBinding.instance.pointerSignalResolver
+                                .register(e, (PointerSignalEvent event) {
+                              if (e.scrollDelta.dy > 0) {
+                                scrollController.forward(
+                                  align: false,
+                                  animate: false,
+                                );
+                              } else {
+                                scrollController.backward(
+                                  align: false,
+                                  animate: false,
+                                );
+                              }
+                            });
                           }
                         }
                       : null,
@@ -507,9 +515,9 @@ class _TabViewState extends State<TabView> {
                       !scrollController.canBackward
                           ? () {
                               if (direction == TextDirection.ltr) {
-                                scrollController.backward();
+                                scrollController.backward(align: false);
                               } else {
-                                scrollController.forward();
+                                scrollController.forward(align: false);
                               }
                             }
                           : null,
@@ -531,9 +539,9 @@ class _TabViewState extends State<TabView> {
                       !scrollController.canForward
                           ? () {
                               if (direction == TextDirection.ltr) {
-                                scrollController.forward();
+                                scrollController.forward(align: false);
                               } else {
-                                scrollController.backward();
+                                scrollController.backward(align: false);
                               }
                             }
                           : null,
@@ -682,6 +690,7 @@ class _TabBody extends StatefulWidget {
 class __TabBodyState extends State<_TabBody> {
   final _pageKey = GlobalKey<State<PageView>>();
   PageController? _pageController;
+
   PageController get pageController => _pageController!;
 
   @override
