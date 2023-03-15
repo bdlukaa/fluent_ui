@@ -6,27 +6,82 @@ const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
 
 enum SpinButtonPlacementMode {
+  /// Two buttons will be added as a suffix of the number box field. A button
+  /// for increment the value and a button for decrement the value.
   inline,
+
+  /// An overlay is open when the widget has the focus with a "up" and a
+  /// "down" buttons are added for increment or decrement the value
+  /// of the number box.
   compact,
+
+  /// No buttons are added to the text field.
+  none,
 }
 
+/// A fluent design input form for numbers.
+///
+/// A NumberBox lets the user enter a number. If the user input a wrong value
+/// (a NaN value), the previous valid value is used.
+///
+///
+/// The value can be changed in several ways:
+///   - by input a new value in the text field
+///   - with increment/decrement buttons (only with modes
+///     [SpinButtonPlacementMode.inline] or [SpinButtonPlacementMode.compact]).
+///   - by use the wheel scroll on the number box when he have the focus
+///   - with the shortcut [LogicalKeyboardKey.pageUp] and
+///     [LogicalKeyboardKey.pageDown].
+///
+/// Modes:
+///  [SpinButtonPlacementMode.inline] : Show two icons as a suffix of the text
+///  field. With for increment the value and one for decrement the value.
+///  [SpinButtonPlacementMode.compact] : Without the focus, it's appears like
+///  a normal text field. But when the widget has the focus, an overlay is
+///  visible with a button for increment the value and another for decrement
+///  the value.
+///  [SpinButtonPlacementMode.none] : Don't show any additional button on the
+///  text field.
+///
+/// If the parameter [clearButton] is enabled, an additional icon is shown
+/// for clear the value when the widget has the focus.
+///
+/// See also:
+///
+///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box
 class NumberBox extends StatefulWidget {
+  /// The value of the number box. When this value is null, the number box field
+  /// is empty.
   final int? value;
+
+  /// Event fired when the value of the number box is changed.
+  /// Note: only when the user click on a button (for increment, decrement or
+  /// clear the content) and when the focus is lost.
   final ValueChanged<int?>? onChanged;
-  final String placeholderText;
-  final SpinButtonPlacementMode mode;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
+  /// Display modes for the Number Box.
+  final SpinButtonPlacementMode mode;
+
+  /// When false, it disable the suffix button with a cross for remove the
+  /// content of the number box.
   final bool clearButton;
 
+  /// The value that is incremented or decremented when the user click on the
+  /// buttons or when he scroll on the number box.
   final int smallChange;
+
+  /// The value that is incremented when the user click on the shortcut
+  /// [LogicalKeyboardKey.pageUp] and decremented when the user lick on the
+  /// shortcut [LogicalKeyboardKey.pageDown].
   final int largeChange;
 
   const NumberBox({
     super.key,
     required this.value,
     required this.onChanged,
-    this.placeholderText = '',
     this.focusNode,
     this.mode = SpinButtonPlacementMode.compact,
     this.clearButton = true,
@@ -45,6 +100,8 @@ class _NumberBoxState extends State<NumberBox> {
   OverlayEntry? _entry;
 
   bool _hasPrimaryFocus = false;
+
+  late int? previousValidValue = widget.value;
 
   final controller = TextEditingController();
 
@@ -165,37 +222,40 @@ class _NumberBoxState extends State<NumberBox> {
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
-
-    if (widget.mode == SpinButtonPlacementMode.inline) {
-      child = TextBox(
-        focusNode: focusNode,
-        controller: controller,
-        suffix: Row(
-          children: [
-            if (widget.clearButton && _hasPrimaryFocus)
-              IconButton(
-                icon: const Icon(FluentIcons.clear),
-                onPressed: _clearValue,
-              ),
-            IconButton(
-              icon: const Icon(FluentIcons.chevron_up),
-              onPressed: _incrementSmall,
-            ),
-            IconButton(
-              icon: const Icon(FluentIcons.chevron_down),
-              onPressed: _decrementSmall,
-            ),
-          ],
+    final textFieldSuffix = <Widget>[
+      if(widget.clearButton && _hasPrimaryFocus)
+        IconButton(
+          icon: const Icon(FluentIcons.clear),
+          onPressed: _clearValue,
         ),
-      );
-    } else {
-      child = TextBox(
-        key: _textBoxKey,
-        focusNode: focusNode,
-        controller: controller,
-      );
+    ];
+
+    switch(widget.mode){
+      case SpinButtonPlacementMode.inline:
+        textFieldSuffix.addAll([
+          IconButton(
+            icon: const Icon(FluentIcons.chevron_up),
+            onPressed: _incrementSmall,
+          ),
+          IconButton(
+            icon: const Icon(FluentIcons.chevron_down),
+            onPressed: _decrementSmall,
+          ),
+        ]);
+        break;
+      case SpinButtonPlacementMode.compact:
+        textFieldSuffix.add(const SizedBox(width: kNumberBoxOverlayWidth));
+        break;
+      case SpinButtonPlacementMode.none:
+        break;
     }
+
+    final child = TextBox(
+      key: _textBoxKey,
+      focusNode: focusNode,
+      controller: controller,
+      suffix: textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
+    );
 
     return CompositedTransformTarget(
       link: _layerLink,
@@ -269,7 +329,12 @@ class _NumberBoxState extends State<NumberBox> {
   }
 
   void _updateValue() {
-    final value = int.tryParse(controller.text);
+    int? value;
+    if(controller.text.isNotEmpty){
+      value = int.tryParse(controller.text) ?? previousValidValue;
+      controller.text = value.toString();
+    }
+    previousValidValue = value;
 
     if (widget.onChanged != null) {
       widget.onChanged!(value);
