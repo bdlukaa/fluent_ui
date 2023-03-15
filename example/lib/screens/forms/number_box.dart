@@ -50,7 +50,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NumberBox(
               value: numberBoxValue,
-              onChanged: _valueChanged,
+              onChanged: disabled ? null : _valueChanged,
               mode: SpinButtonPlacementMode.inline,
             ),
           ]),
@@ -68,17 +68,39 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
         CardHighlight(
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NumberBox(
               value: numberBoxValue,
-              onChanged: _valueChanged,
+              onChanged: disabled ? null : _valueChanged,
               mode: SpinButtonPlacementMode.compact,
             ),
           ]),
           codeSnippet: '''NumberBox(
   value: numberBoxValue,
-  onChanged: _valueChanged,
+  onChanged: disabled ? null : _valueChanged,
   mode: SpinButtonPlacementMode.compact,
+),
+''',
+        ),
+
+        subtitle(
+          content: const Text(
+            'A NumberBox in none mode',
+          ),
+        ),
+        CardHighlight(
+          child:
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberBox(
+              value: numberBoxValue,
+              onChanged: disabled ? null : _valueChanged,
+              mode: SpinButtonPlacementMode.none,
+            ),
+          ]),
+          codeSnippet: '''NumberBox(
+  value: numberBoxValue,
+  onChanged: disabled ? null : _valueChanged,
+  mode: SpinButtonPlacementMode.none,
 ),
 ''',
         ),
