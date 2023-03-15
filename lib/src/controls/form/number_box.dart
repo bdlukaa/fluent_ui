@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
+const kNumberBoxOverlayWidth = 60.0;
+const kNumberBoxOverlayHeight = 100.0;
+
 enum SpinButtonPlacementMode {
   inline,
   compact,
@@ -124,18 +127,17 @@ class _NumberBoxState extends State<NumberBox> {
       final box = boxContext.findRenderObject() as RenderBox;
 
       Widget child = PositionedDirectional(
-        width: 60,
+        width: kNumberBoxOverlayWidth,
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(box.size.width - 60, box.size.height / 2 - 50),
+          offset: Offset(box.size.width - kNumberBoxOverlayWidth, box.size.height / 2 - kNumberBoxOverlayHeight/2),
           child: SizedBox(
-            width: 60,
+            width: kNumberBoxOverlayWidth,
             child: FluentTheme(
               data: FluentTheme.of(context),
               child: TextFieldTapRegion(
-                child: _NumberBoxMenu(
-                  // node: overlayNode,
+                child: _NumberBoxCompactOverlay(
                   onIncrement: _incrementSmall,
                   onDecrement: _decrementSmall,
                 ),
@@ -176,10 +178,10 @@ class _NumberBoxState extends State<NumberBox> {
               ),
             IconButton(
                 icon: const Icon(FluentIcons.chevron_up),
-                onPressed: _incrementSmall),
+                onPressed: _incrementSmall,),
             IconButton(
                 icon: const Icon(FluentIcons.chevron_down),
-                onPressed: _decrementSmall),
+                onPressed: _decrementSmall,),
           ],
         ),
       );
@@ -254,12 +256,11 @@ class _NumberBoxState extends State<NumberBox> {
   }
 }
 
-class _NumberBoxMenu extends StatelessWidget {
+class _NumberBoxCompactOverlay extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
-  const _NumberBoxMenu({
-    super.key,
+  const _NumberBoxCompactOverlay({
     required this.onIncrement,
     required this.onDecrement,
   });
@@ -275,8 +276,8 @@ class _NumberBoxMenu extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            height: 100,
-            width: 50,
+            height: kNumberBoxOverlayHeight,
+            width: kNumberBoxOverlayWidth,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).menuColor,
               border: Border.all(
