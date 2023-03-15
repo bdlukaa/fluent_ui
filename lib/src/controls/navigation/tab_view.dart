@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -239,15 +238,11 @@ class _TabViewState extends State<TabView> {
   @override
   void didUpdateWidget(TabView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print(scrollController.total);
-    print('${widget.tabs.length} // ${oldWidget.tabs.length}');
     if (widget.tabs.length != scrollController.itemCount) {
-      print('SET ITEM COUNT TO: ${widget.tabs.length}');
       scrollController.itemCount = widget.tabs.length;
     }
     if (widget.currentIndex != oldWidget.currentIndex &&
         scrollController.hasClients) {
-      print('SCROLL TO ITEM: ${widget.currentIndex}');
       scrollController.scrollToItem(widget.currentIndex);
     }
   }
