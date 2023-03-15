@@ -18,6 +18,14 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   bool disabled = false;
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
+  int? numberBoxValue = 0;
+
+  void _valueChanged(int? newValue){
+    setState(() {
+      numberBoxValue = newValue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -32,55 +40,50 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
       ),
       children: [
-        const Text(
-          'Use a number box to select a number. '
-          'The selection can be applied in compact or in inline mode.'
-        ),
+        const Text('Use a number box to select a number. '
+            'The selection can be applied in compact or in inline mode.'),
         subtitle(
           content: const Text(
-            'A NumberBox',
+            'A NumberBox in inline mode',
           ),
         ),
         CardHighlight(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                NumberBox(value: 0, onChanged: null),
-            /*ComboBox<String>(
-              isExpanded: false,
-              popupColor: colors[selectedColor],
-              value: selectedColor,
-              items: colors.entries.map((e) {
-                return ComboBoxItem(
-                  child: Text(e.key),
-                  value: e.key,
-                );
-              }).toList(),
-              onChanged: disabled
-                  ? null
-                  : (color) {
-                      setState(() => selectedColor = color);
-                    },
+            NumberBox(
+              value: numberBoxValue,
+              onChanged: _valueChanged,
+              mode: SpinButtonPlacementMode.inline,
             ),
-            Container(
-              margin: const EdgeInsetsDirectional.only(top: 8.0),
-              height: 30,
-              width: 100,
-              color: colors[selectedColor],
-            ),*/
           ]),
-          codeSnippet: '''// Green by default
-Color selectedColor = 'Green';
+          codeSnippet: '''NumberBox(
+  value: numberBoxValue,
+  onChanged: _valueChanged,
+  mode: SpinButtonPlacementMode.inline,
+),
+''',
+        ),
 
-ComboBox<String>(
-  value: selectedColor,
-  items: colors.entries.map((e) {
-    return ComboBoxItem(
-      child: Text(e.key),
-      value: e.key,
-    );
-  }).toList(),
-  onChanged: disabled ? null : (color) => setState(() => selectedColor = color),
-),''',
+        subtitle(
+          content: const Text(
+            'A NumberBox in compact mode',
+          ),
+        ),
+        CardHighlight(
+          child:
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberBox(
+              value: numberBoxValue,
+              onChanged: _valueChanged,
+              mode: SpinButtonPlacementMode.compact,
+            ),
+          ]),
+          codeSnippet: '''NumberBox(
+  value: numberBoxValue,
+  onChanged: _valueChanged,
+  mode: SpinButtonPlacementMode.compact,
+),
+''',
         ),
       ],
     );

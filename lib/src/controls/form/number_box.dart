@@ -36,7 +36,6 @@ class NumberBox extends StatefulWidget {
 
 class _NumberBoxState extends State<NumberBox> {
   FocusNode? _internalNode;
-
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
 
   OverlayEntry? _entry;
@@ -44,8 +43,6 @@ class _NumberBoxState extends State<NumberBox> {
   bool _hasPrimaryFocus = false;
 
   final controller = TextEditingController();
-
-  bool clearBox = false;
 
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey(
@@ -70,6 +67,7 @@ class _NumberBoxState extends State<NumberBox> {
 
   @override
   void dispose() {
+    _dismissOverlay();
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     super.dispose();
@@ -81,10 +79,16 @@ class _NumberBoxState extends State<NumberBox> {
         _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
       });
 
-      if (_hasPrimaryFocus && _entry == null) {
-        _insertOverlay();
-      } else if (!_hasPrimaryFocus && _entry != null) {
-        _dismissOverlay();
+      if (widget.mode == SpinButtonPlacementMode.compact) {
+        if (_hasPrimaryFocus && _entry == null) {
+          _insertOverlay();
+        } else if (!_hasPrimaryFocus && _entry != null) {
+          _dismissOverlay();
+        }
+      }
+
+      if (!_hasPrimaryFocus) {
+        _updateValue();
       }
     }
   }
@@ -92,6 +96,7 @@ class _NumberBoxState extends State<NumberBox> {
   @override
   void didUpdateWidget(NumberBox oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (widget.focusNode != oldWidget.focusNode) {
       oldWidget.focusNode?.removeListener(_handleFocusChanged);
       if (widget.focusNode == null) {
@@ -99,6 +104,14 @@ class _NumberBoxState extends State<NumberBox> {
       }
       _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
       focusNode!.addListener(_handleFocusChanged);
+    }
+
+    if (oldWidget.value != widget.value) {
+      if(widget.value != null){
+        _updateController(widget.value!);
+      }else{
+        controller.text = '';
+      }
     }
   }
 
@@ -156,8 +169,7 @@ class _NumberBoxState extends State<NumberBox> {
         controller: controller,
         suffix: Row(
           children: [
-            if (widget.clearButton &&
-                _hasPrimaryFocus /* && controller.text.isNotEmpty*/)
+            if (widget.clearButton && _hasPrimaryFocus)
               IconButton(
                 icon: const Icon(FluentIcons.clear),
                 onPressed: _clearValue,
@@ -195,37 +207,47 @@ class _NumberBoxState extends State<NumberBox> {
   }
 
   void _clearValue() {
-    _updateValue(null, false);
+    controller.text = '';
+    _updateValue();
   }
 
   void _incrementSmall() {
-    _updateValue(
-        (int.tryParse(controller.text) ?? 0) + widget.smallChange, true);
+    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+        widget.smallChange;
+    _updateController(value);
+    _updateValue();
   }
 
   void _decrementSmall() {
-    _updateValue(
-        (int.tryParse(controller.text) ?? 0) - widget.smallChange, true);
+    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+        widget.smallChange;
+    _updateController(value);
+    _updateValue();
   }
 
   void _incrementLarge() {
-    _updateValue(
-        (int.tryParse(controller.text) ?? 0) + widget.largeChange, true);
+    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+        widget.largeChange;
+    _updateController(value);
+    _updateValue();
   }
 
   void _decrementLarge() {
-    _updateValue(
-        (int.tryParse(controller.text) ?? 0) - widget.largeChange, true);
+    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+        widget.largeChange;
+    _updateController(value);
+    _updateValue();
   }
 
-  void _updateValue(int? value, bool bt) {
-    if (value == null && controller.text.isNotEmpty) {
-      controller.clear();
-    } else if (value != null && controller.text != value.toString()) {
-      controller
-        ..text = value.toString()
-        ..selection = TextSelection.collapsed(offset: controller.text.length);
-    }
+  void _updateController(int value) {
+    controller
+      ..text = value.toString()
+      ..selection = TextSelection.collapsed(offset: controller.text.length);
+  }
+
+  void _updateValue() {
+    final value = int.tryParse(controller.text);
+
     if (widget.onChanged != null) {
       widget.onChanged!(value);
     }
