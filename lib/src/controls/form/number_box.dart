@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
@@ -131,7 +132,8 @@ class _NumberBoxState extends State<NumberBox> {
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(box.size.width - kNumberBoxOverlayWidth, box.size.height / 2 - kNumberBoxOverlayHeight/2),
+          offset: Offset(box.size.width - kNumberBoxOverlayWidth,
+              box.size.height / 2 - kNumberBoxOverlayHeight / 2),
           child: SizedBox(
             width: kNumberBoxOverlayWidth,
             child: FluentTheme(
@@ -177,11 +179,13 @@ class _NumberBoxState extends State<NumberBox> {
                 onPressed: _clearValue,
               ),
             IconButton(
-                icon: const Icon(FluentIcons.chevron_up),
-                onPressed: _incrementSmall,),
+              icon: const Icon(FluentIcons.chevron_up),
+              onPressed: _incrementSmall,
+            ),
             IconButton(
-                icon: const Icon(FluentIcons.chevron_down),
-                onPressed: _decrementSmall,),
+              icon: const Icon(FluentIcons.chevron_down),
+              onPressed: _decrementSmall,
+            ),
           ],
         ),
       );
@@ -201,9 +205,26 @@ class _NumberBoxState extends State<NumberBox> {
             return KeyEventResult.ignored;
           }
 
+          if (event.logicalKey == LogicalKeyboardKey.pageUp) {
+            _incrementLarge();
+          } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
+            _decrementLarge();
+          }
+
           return KeyEventResult.ignored;
         },
-        child: child,
+        child: Listener(
+          onPointerSignal: (event) {
+            if (event is PointerScrollEvent) {
+              if (event.scrollDelta.direction < 0) {
+                _incrementSmall();
+              } else {
+                _decrementSmall();
+              }
+            }
+          },
+          child: child,
+        ),
       ),
     );
   }
