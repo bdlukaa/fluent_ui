@@ -68,7 +68,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
         CardHighlight(
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NumberBox(
               value: numberBoxValue,
               onChanged: disabled ? null : _valueChanged,
@@ -82,7 +82,6 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
 ),
 ''',
         ),
-
         subtitle(
           content: const Text(
             'A NumberBox in none mode',
@@ -90,7 +89,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
         CardHighlight(
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NumberBox(
               value: numberBoxValue,
               onChanged: disabled ? null : _valueChanged,

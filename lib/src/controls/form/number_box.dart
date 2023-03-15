@@ -227,14 +227,14 @@ class _NumberBoxState extends State<NumberBox> {
   @override
   Widget build(BuildContext context) {
     final textFieldSuffix = <Widget>[
-      if(widget.clearButton && _hasPrimaryFocus)
+      if (widget.clearButton && _hasPrimaryFocus)
         IconButton(
           icon: const Icon(FluentIcons.clear),
           onPressed: _clearValue,
         ),
     ];
 
-    switch(widget.mode){
+    switch (widget.mode) {
       case SpinButtonPlacementMode.inline:
         textFieldSuffix.addAll([
           IconButton(
@@ -259,7 +259,8 @@ class _NumberBoxState extends State<NumberBox> {
       focusNode: focusNode,
       controller: controller,
       enabled: widget.onChanged != null,
-      suffix: textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
+      suffix:
+          textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
     );
 
     return CompositedTransformTarget(
@@ -335,7 +336,7 @@ class _NumberBoxState extends State<NumberBox> {
 
   void _updateValue() {
     int? value;
-    if(controller.text.isNotEmpty){
+    if (controller.text.isNotEmpty) {
       value = int.tryParse(controller.text) ?? previousValidValue;
       controller.text = value.toString();
     }
