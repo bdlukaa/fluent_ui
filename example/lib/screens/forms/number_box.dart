@@ -2,8 +2,6 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'auto_suggest_box.dart';
-
 class NumberBoxPage extends StatefulWidget {
   const NumberBoxPage({Key? key}) : super(key: key);
 
