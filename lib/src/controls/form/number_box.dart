@@ -99,6 +99,7 @@ class NumberBox extends StatefulWidget {
 
 class _NumberBoxState extends State<NumberBox> {
   FocusNode? _internalNode;
+
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
 
   OverlayEntry? _entry;
@@ -281,12 +282,17 @@ class _NumberBoxState extends State<NumberBox> {
         },
         child: Listener(
           onPointerSignal: (event) {
-            if (event is PointerScrollEvent) {
-              if (event.scrollDelta.direction < 0) {
-                _incrementSmall();
-              } else {
-                _decrementSmall();
-              }
+            if (_hasPrimaryFocus && event is PointerScrollEvent) {
+              GestureBinding.instance.pointerSignalResolver.register(event,
+                  (PointerSignalEvent event) {
+                if (event is PointerScrollEvent) {
+                  if (event.scrollDelta.direction < 0) {
+                    _incrementSmall();
+                  } else {
+                    _decrementSmall();
+                  }
+                }
+              });
             }
           },
           child: child,
