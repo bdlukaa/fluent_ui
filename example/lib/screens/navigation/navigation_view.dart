@@ -129,6 +129,8 @@ class _NavigationViewPageState extends State<NavigationViewPage>
               title: Text('NavigationView'),
             ),
             pane: NavigationPane(
+              // This procedure cannot be done in mobile due to its logic of
+              // work, but there is a render flex error here in small screens.
               selected: topIndex,
               onChanged: (index) => setState(() => topIndex = index),
               displayMode: displayMode,

@@ -14,6 +14,12 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
   String? selectedCat;
   Cat? selectedObjectCat;
   bool enabled = true;
+  bool smallScreenWidth = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    smallScreenWidth = MediaQuery.of(context).size.width <= 400;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +41,10 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
         subtitle(content: const Text('A basic AutoSuggestBox')),
         CardHighlight(
           child: Row(children: [
+            // Either Expanded widget or just hard coded size like this
             SizedBox(
-              width: 350.0,
+              // width: 350.0,
+              width: smallScreenWidth ? 250 : 350.0,
               child: AutoSuggestBox<String>(
                 enabled: enabled,
                 items: cats
@@ -99,7 +107,7 @@ const cats = <String>[
         CardHighlight(
           child: Row(children: [
             SizedBox(
-              width: 350.0,
+              width: smallScreenWidth ? 250 : 350.0,
               child: AutoSuggestBox<Cat>(
                 enabled: enabled,
                 items: objectCats

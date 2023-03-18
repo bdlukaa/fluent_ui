@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/screens/home.dart';
 import 'package:example/screens/settings.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
@@ -147,7 +149,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with WindowListener {
   bool value = false;
-
+  bool smallScreenWidth = false;
+  bool isMobile = false;
   // int index = 0;
 
   final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
@@ -473,6 +476,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   void initState() {
     windowManager.addListener(this);
     super.initState();
+    isMobile = Platform.isAndroid && Platform.isIOS;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    smallScreenWidth = MediaQuery.of(context).size.width <= 400;
   }
 
   @override
@@ -523,44 +533,52 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       key: viewKey,
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
-        leading: () {
-          final enabled = widget.shellContext != null && router.canPop();
+        leading: smallScreenWidth
+            ? null
+            : () {
+                final enabled = widget.shellContext != null && router.canPop();
 
-          final onPressed = enabled
-              ? () {
-                  if (router.canPop()) {
-                    context.pop();
-                    setState(() {});
-                  }
-                }
-              : null;
-          return NavigationPaneTheme(
-            data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-              unselectedIconColor: ButtonState.resolveWith((states) {
-                if (states.isDisabled) {
-                  return ButtonThemeData.buttonColor(context, states);
-                }
-                return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context),
-                  states,
-                ).basedOnLuminance();
-              }),
-            )),
-            child: Builder(
-              builder: (context) => PaneItem(
-                icon: const Center(child: Icon(FluentIcons.back, size: 12.0)),
-                title: Text(localizations.backButtonTooltip),
-                body: const SizedBox.shrink(),
-                enabled: enabled,
-              ).build(
-                context,
-                false,
-                onPressed,
-                displayMode: PaneDisplayMode.compact,
-              ),
-            ),
-          );
-        }(),
+                final onPressed = enabled
+                    ? () {
+                        if (router.canPop()) {
+                          context.pop();
+                          setState(() {});
+                        }
+                      }
+                    : null;
+                return NavigationPaneTheme(
+                  data: NavigationPaneTheme.of(context).merge(
+                    NavigationPaneThemeData(
+                      unselectedIconColor: ButtonState.resolveWith((states) {
+                        if (states.isDisabled) {
+                          return ButtonThemeData.buttonColor(context, states);
+                        }
+                        return ButtonThemeData.uncheckedInputColor(
+                          FluentTheme.of(context),
+                          states,
+                        ).basedOnLuminance();
+                      }),
+                    ),
+                  ),
+                  //
+                  child: smallScreenWidth
+                      ? const SizedBox.shrink()
+                      : Builder(
+                          builder: (context) => PaneItem(
+                            icon: const Center(
+                                child: Icon(FluentIcons.back, size: 12.0)),
+                            title: Text(localizations.backButtonTooltip),
+                            body: const SizedBox.shrink(),
+                            enabled: enabled,
+                          ).build(
+                            context,
+                            false,
+                            onPressed,
+                            displayMode: PaneDisplayMode.compact,
+                          ),
+                        ),
+                );
+              }(),
         title: () {
           if (kIsWeb) {
             return const Align(
@@ -568,16 +586,19 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               child: Text(appTitle),
             );
           }
-          return const DragToMoveArea(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            ),
-          );
+          return smallScreenWidth
+              ? null
+              : const DragToMoveArea(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(appTitle),
+                  ),
+                );
         }(),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
+            padding:
+                EdgeInsetsDirectional.only(end: 8.0, top: isMobile ? 10 : 0),
             child: ToggleSwitch(
               content: const Text('Dark Mode'),
               checked: FluentTheme.of(context).brightness.isDark,
@@ -590,7 +611,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               },
             ),
           ),
-          if (!kIsWeb) const WindowButtons(),
+          if (!kIsWeb && !isMobile) const WindowButtons(),
         ]),
       ),
       paneBodyBuilder: (item, child) {
