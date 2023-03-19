@@ -439,10 +439,14 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   }
 
   void show(MenuInfoProviderState menuInfo) {
-    final itemBox = context.findRenderObject() as RenderBox;
-    final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
-
     final parent = Flyout.of(context);
+
+    final itemBox = context.findRenderObject() as RenderBox;
+    final itemRect = itemBox.localToGlobal(
+          Offset.zero,
+          ancestor: parent.widget.root?.context.findRenderObject(),
+        ) &
+        itemBox.size;
 
     menuInfo.add(
       CustomSingleChildLayout(
@@ -457,6 +461,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
           additionalOffset: parent.additionalOffset,
           margin: parent.margin,
           transitionDuration: parent.transitionDuration,
+          root: parent.widget.root,
           builder: (context) {
             return FadeTransition(
               opacity: transitionController,

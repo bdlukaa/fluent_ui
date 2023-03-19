@@ -755,10 +755,10 @@ class _LinkPaneItemAction extends PaneItem {
   }
 }
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final router = GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,

@@ -1,3 +1,4 @@
+import 'package:example/main.dart';
 import 'package:example/theme.dart';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
@@ -121,6 +122,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                     barrierDismissible: barrierDismissible,
                     dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                     dismissWithEsc: dismissWithEsc,
+                    navigatorKey: rootNavigatorKey.currentState,
                     builder: (context) {
                       return FlyoutContent(
                         child: Column(
@@ -181,6 +183,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                     barrierDismissible: barrierDismissible,
                     dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                     dismissWithEsc: dismissWithEsc,
+                    navigatorKey: rootNavigatorKey.currentState,
                     builder: (context) {
                       return MenuFlyout(
                         items: [
@@ -262,12 +265,23 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
         ),
         CardHighlight(
           codeSnippet: '''final contextController = FlyoutController();
+final contextAttachKey = GlobalKey();
 
 return GestureDetector(
   onSecondaryTapUp: (d) {
+
+    // This calculates the position of the flyout according to the parent navigator
+    final targetContext = contextAttachKey.currentContext;
+    if (targetContext == null) return;
+    final box = targetContext.findRenderObject() as RenderBox;
+    final position = box.localToGlobal(
+      d.localPosition,
+      ancestor: Navigator.of(context).context.findRenderObject(),
+    );
+
     contextController.showFlyout(
       barrierColor: Colors.black.withOpacity(0.1),
-      position: d.globalPosition,
+      position: position,
       builder: (context) {
         return FlyoutContent(
           child: SizedBox(
@@ -307,6 +321,7 @@ return GestureDetector(
     );
   },
   child: FlyoutTarget(
+    key: contextAttachKey,
     controller: contextController,
     child: const FlutterLogo(size: 400.0),
   ),
@@ -314,9 +329,18 @@ return GestureDetector(
 ''',
           child: GestureDetector(
             onSecondaryTapUp: (d) {
+              final targetContext = contextAttachKey.currentContext;
+              if (targetContext == null) return;
+
+              final box = targetContext.findRenderObject() as RenderBox;
+              final position = box.localToGlobal(
+                d.localPosition,
+                ancestor: Navigator.of(context).context.findRenderObject(),
+              );
+
               contextController.showFlyout(
                 barrierColor: Colors.black.withOpacity(0.1),
-                position: d.globalPosition,
+                position: position,
                 builder: (context) {
                   return FlyoutContent(
                     child: SizedBox(
