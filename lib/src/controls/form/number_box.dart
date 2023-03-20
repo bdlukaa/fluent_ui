@@ -94,7 +94,7 @@ class NumberBox extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _NumberBoxState();
+  State<NumberBox> createState() => _NumberBoxState();
 }
 
 class _NumberBoxState extends State<NumberBox> {
@@ -227,6 +227,8 @@ class _NumberBoxState extends State<NumberBox> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+
     final textFieldSuffix = <Widget>[
       if (widget.clearButton && _hasPrimaryFocus)
         IconButton(
@@ -259,6 +261,7 @@ class _NumberBoxState extends State<NumberBox> {
       key: _textBoxKey,
       focusNode: focusNode,
       controller: controller,
+      keyboardType: TextInputType.number,
       enabled: widget.onChanged != null,
       suffix:
           textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
@@ -268,7 +271,7 @@ class _NumberBoxState extends State<NumberBox> {
       link: _layerLink,
       child: Focus(
         onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) {
+          if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
             return KeyEventResult.ignored;
           }
 
@@ -276,9 +279,15 @@ class _NumberBoxState extends State<NumberBox> {
             _incrementLarge();
           } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
             _decrementLarge();
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            _incrementSmall();
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            _decrementSmall();
+          } else {
+            return KeyEventResult.ignored;
           }
 
-          return KeyEventResult.ignored;
+          return KeyEventResult.handled;
         },
         child: Listener(
           onPointerSignal: (event) {
