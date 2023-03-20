@@ -73,7 +73,7 @@ class TabView extends StatefulWidget {
     this.header,
     this.footer,
     this.closeDelayDuration = const Duration(milliseconds: 400),
-    @Deprecated('this value is no longer used and will be removed in the next major release.')
+    @Deprecated('This property is no longer used and will be removed in the next major release.')
         this.wheelScroll = false,
   }) : super(key: key);
 
@@ -128,7 +128,7 @@ class TabView extends StatefulWidget {
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
 
-  @Deprecated('this value is no longer used and will be removed in the'
+  @Deprecated('This property is no longer used and will be removed in the'
       ' next major release.')
   final bool wheelScroll;
 
