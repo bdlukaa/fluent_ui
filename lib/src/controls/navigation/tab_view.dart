@@ -65,7 +65,6 @@ class TabView extends StatefulWidget {
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
-    this.wheelScroll = false,
     this.scrollController,
     this.minTabWidth = _kMinTileWidth,
     this.maxTabWidth = _kMaxTileWidth,
@@ -74,6 +73,8 @@ class TabView extends StatefulWidget {
     this.header,
     this.footer,
     this.closeDelayDuration = const Duration(milliseconds: 400),
+    @Deprecated('This property is no longer used and will be removed in the next major release.')
+        this.wheelScroll = false,
   }) : super(key: key);
 
   /// The index of the tab to be displayed
@@ -127,11 +128,8 @@ class TabView extends StatefulWidget {
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
 
-  // TODO: remove this property when https://github.com/flutter/flutter/issues/75180
-  // is fixed
-  /// Indicate if the mouse wheel should scroll the TabView
-  ///
-  /// Defaults to `false`.
+  @Deprecated('This property is no longer used and will be removed in the'
+      ' next major release.')
   final bool wheelScroll;
 
   /// Indicates the close button visibility mode
@@ -238,7 +236,7 @@ class _TabViewState extends State<TabView> {
   @override
   void didUpdateWidget(TabView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.tabs.length != oldWidget.tabs.length) {
+    if (widget.tabs.length != scrollController.itemCount) {
       scrollController.itemCount = widget.tabs.length;
     }
     if (widget.currentIndex != oldWidget.currentIndex &&
@@ -444,24 +442,25 @@ class _TabViewState extends State<TabView> {
                         .clamp(widget.minTabWidth, widget.maxTabWidth);
 
                 final Widget listView = Listener(
-                  onPointerSignal: widget.wheelScroll
-                      ? (PointerSignalEvent e) {
-                          if (e is PointerScrollEvent &&
-                              scrollController.hasClients) {
-                            if (e.scrollDelta.dy > 0) {
-                              scrollController.forward(
-                                align: false,
-                                animate: false,
-                              );
-                            } else {
-                              scrollController.backward(
-                                align: false,
-                                animate: false,
-                              );
-                            }
-                          }
+                  onPointerSignal: (PointerSignalEvent e) {
+                    if (e is PointerScrollEvent &&
+                        scrollController.hasClients) {
+                      GestureBinding.instance.pointerSignalResolver.register(e,
+                          (PointerSignalEvent event) {
+                        if (e.scrollDelta.dy > 0) {
+                          scrollController.forward(
+                            align: false,
+                            animate: false,
+                          );
+                        } else {
+                          scrollController.backward(
+                            align: false,
+                            animate: false,
+                          );
                         }
-                      : null,
+                      });
+                    }
+                  },
                   child: Localizations.override(
                     context: context,
                     delegates: const [
@@ -507,9 +506,9 @@ class _TabViewState extends State<TabView> {
                       !scrollController.canBackward
                           ? () {
                               if (direction == TextDirection.ltr) {
-                                scrollController.backward();
+                                scrollController.backward(align: false);
                               } else {
-                                scrollController.forward();
+                                scrollController.forward(align: false);
                               }
                             }
                           : null,
@@ -531,9 +530,9 @@ class _TabViewState extends State<TabView> {
                       !scrollController.canForward
                           ? () {
                               if (direction == TextDirection.ltr) {
-                                scrollController.forward();
+                                scrollController.forward(align: false);
                               } else {
-                                scrollController.backward();
+                                scrollController.backward(align: false);
                               }
                             }
                           : null,
@@ -682,6 +681,7 @@ class _TabBody extends StatefulWidget {
 class __TabBodyState extends State<_TabBody> {
   final _pageKey = GlobalKey<State<PageView>>();
   PageController? _pageController;
+
   PageController get pageController => _pageController!;
 
   @override
