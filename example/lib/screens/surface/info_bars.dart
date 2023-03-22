@@ -59,7 +59,18 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
               child: const Text('Show InfoBar'),
             ),
           ),
-          codeSnippet: '''''',
+          codeSnippet: '''displayInfoBar(context, builder: (context, close) {
+  return InfoBar(
+    title: const Text('You can not do that :/'),
+    content: const Text(
+        'A proper warning message of why the user can not do that :/'),
+    action: IconButton(
+      icon: const Icon(FluentIcons.clear),
+      onPressed: close,
+    ),
+    severity: InfoBarSeverity.warning,
+  );
+}''',
         ),
         subtitle(
           content: const Text(
