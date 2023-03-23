@@ -82,6 +82,57 @@ class NumberBox extends StatefulWidget {
   /// shortcut [LogicalKeyboardKey.pageDown].
   final int largeChange;
 
+  /// A widget displayed at the start of the text box
+  ///
+  /// Usually an [IconButton] or [Icon]
+  final Widget? leadingIcon;
+
+  /// {@macro flutter.widgets.editableText.autofocus}
+  final bool autofocus;
+
+  /// {@macro flutter.widgets.editableText.inputFormatters}
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// The text shown when the text box is empty
+  ///
+  /// See also:
+  ///
+  ///  * [TextBox.placeholder]
+  final String? placeholder;
+
+  /// The style of [placeholder]
+  ///
+  /// See also:
+  ///
+  ///  * [TextBox.placeholderStyle]
+  final TextStyle? placeholderStyle;
+
+  /// {@macro flutter.widgets.editableText.cursorWidth}
+  final double cursorWidth;
+
+  /// {@macro flutter.widgets.editableText.cursorRadius}
+  final Radius cursorRadius;
+
+  /// {@macro flutter.widgets.editableText.cursorHeight}
+  final double? cursorHeight;
+
+  /// The color of the cursor.
+  ///
+  /// The cursor indicates the current location of text insertion point in
+  /// the field.
+  final Color? cursorColor;
+
+  /// {@macro flutter.widgets.editableText.showCursor}
+  final bool? showCursor;
+
+  /// The highlight color of the text box.
+  ///
+  /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
+  final Color? highlightColor;
+
   const NumberBox({
     super.key,
     required this.value,
@@ -91,6 +142,17 @@ class NumberBox extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
+    this.leadingIcon,
+    this.autofocus = false,
+    this.inputFormatters,
+    this.placeholder,
+    this.placeholderStyle,
+    this.cursorWidth = 1.5,
+    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorHeight,
+    this.cursorColor,
+    this.showCursor,
+    this.highlightColor,
   });
 
   @override
@@ -259,6 +321,16 @@ class _NumberBoxState extends State<NumberBox> {
 
     final child = TextBox(
       key: _textBoxKey,
+      autofocus: widget.autofocus,
+      inputFormatters: widget.inputFormatters,
+      placeholder: widget.placeholder,
+      placeholderStyle: widget.placeholderStyle,
+      cursorColor: widget.cursorColor,
+      cursorHeight: widget.cursorHeight,
+      cursorRadius: widget.cursorRadius,
+      cursorWidth: widget.cursorWidth,
+      highlightColor: widget.highlightColor,
+      prefix: widget.leadingIcon,
       focusNode: focusNode,
       controller: controller,
       keyboardType: TextInputType.number,
