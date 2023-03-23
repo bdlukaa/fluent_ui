@@ -1,6 +1,7 @@
 ## [next]
 
 - Add `NumberBox` widget. ([#560](https://github.com/bdlukaa/fluent_ui/issues/560) [#771](https://github.com/bdlukaa/fluent_ui/pull/771))
+- Fix `TabView` scroll (the item count was not correctly set) and now the scroll event is not propagated to the parent. ([#772](https://github.com/bdlukaa/fluent_ui/pull/772))
 - Do not calculate the position of the flyout if the `position` parameter is provided. ([#764](https://github.com/bdlukaa/fluent_ui/issues/764))
 - Add source code for Surfaces/CommandBar in example application ([#766](https://github.com/bdlukaa/fluent_ui/pull/766))
 - Do not enforce a max height on `PaneItem` ([#762](https://github.com/bdlukaa/fluent_ui/issues/762))
