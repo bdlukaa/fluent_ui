@@ -156,10 +156,10 @@ class NumberBox extends StatefulWidget {
   });
 
   @override
-  State<NumberBox> createState() => _NumberBoxState();
+  State<NumberBox> createState() => NumberBoxState();
 }
 
-class _NumberBoxState extends State<NumberBox> {
+class NumberBoxState extends State<NumberBox> {
   FocusNode? _internalNode;
 
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
