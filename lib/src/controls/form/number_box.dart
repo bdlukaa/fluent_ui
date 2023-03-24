@@ -82,6 +82,14 @@ class NumberBox extends StatefulWidget {
   /// shortcut [LogicalKeyboardKey.pageDown].
   final int largeChange;
 
+  /// The maximum value that can be set. Any means to change the value will
+  /// limit the upper bound to this value. Set to [null] to remove the limit.
+  final int? max;
+
+  /// The minimum value that can be set. Any means to change the value will
+  /// limit the lower bound to this value. Set to [null] to remove the limit.
+  final int? min;
+
   /// A widget displayed at the start of the text box
   ///
   /// Usually an [IconButton] or [Icon]
@@ -142,6 +150,8 @@ class NumberBox extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
+    this.min,
+    this.max,
     this.leadingIcon,
     this.autofocus = false,
     this.inputFormatters,
@@ -415,7 +425,21 @@ class NumberBoxState extends State<NumberBox> {
     _updateValue();
   }
 
+  int _constrainValue(int value) {
+    if (widget.min != null && widget.min! > value) {
+      return widget.min!;
+    }
+
+    if (widget.max != null && widget.max! < value) {
+      return widget.max!;
+    }
+
+    return value;
+  }
+
   void _updateController(int value) {
+    value = _constrainValue(value);
+
     controller
       ..text = value.toString()
       ..selection = TextSelection.collapsed(offset: controller.text.length);
@@ -427,6 +451,7 @@ class NumberBoxState extends State<NumberBox> {
       value = int.tryParse(controller.text) ?? previousValidValue;
       controller.text = value.toString();
     }
+
     previousValidValue = value;
 
     if (widget.onChanged != null) {

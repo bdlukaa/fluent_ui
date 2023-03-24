@@ -103,6 +103,29 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
 ),
 ''',
         ),
+        subtitle(
+          content: const Text(
+            'A constrained NumberBox',
+          ),
+        ),
+        CardHighlight(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberBox(
+              value: numberBoxValue,
+              onChanged: disabled ? null : _valueChanged,
+              min: 0,
+              max: 100,
+            ),
+          ]),
+          codeSnippet: '''NumberBox(
+  value: numberBoxValue,
+  onChanged: disabled ? null : _valueChanged,
+  min: 0,
+  max: 100,
+),
+''',
+        ),
       ],
     );
   }
