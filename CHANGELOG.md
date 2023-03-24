@@ -22,6 +22,7 @@
 - `TabView` lazy loading ([#751](https://github.com/bdlukaa/fluent_ui/issues/751))
 - Added Bangla localization ([#786](https://github.com/bdlukaa/fluent_ui/pull/786))
 - Correctly position the flyouts on a multi navigator context ([#780](https://github.com/bdlukaa/fluent_ui/pull/780))
+- Allow all kinds of menu flyout widgets on `DropDownButton` ([#775](https://github.com/bdlukaa/fluent_ui/issues/775))
 
 ## 4.4.1
 
