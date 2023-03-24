@@ -144,6 +144,29 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
         subtitle(
           content: const Text(
+            'A NumberBox mathematical expressions',
+          ),
+        ),
+        CardHighlight(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberBox(
+              value: numberBoxValueMinMax,
+              onChanged: disabled ? null : _valueChangedMinMax,
+              allowExpressions: true,
+              mode: SpinButtonPlacementMode.inline,
+            ),
+          ]),
+          codeSnippet: '''NumberBox(
+  value: numberBoxValueMinMax,
+  onChanged: disabled ? null : _valueChangedMinMax,
+  allowExpressions: true,
+  mode: SpinButtonPlacementMode.inline,
+),
+''',
+        ),
+        subtitle(
+          content: const Text(
             'A NumberBox with double value',
           ),
         ),

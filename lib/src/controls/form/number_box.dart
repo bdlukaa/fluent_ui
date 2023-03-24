@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
@@ -98,6 +99,10 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// If max is null, there is no upper limit.
   final num? max;
 
+  /// When true, if something else than a number is specified, the content of
+  /// the text field is interpreted as an expressions when the focus is lost.
+  final bool allowExpressions;
+
   /// A widget displayed at the start of the text box
   ///
   /// Usually an [IconButton] or [Icon]
@@ -161,6 +166,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.precision = 2,
     this.min,
     this.max,
+    this.allowExpressions = false,
     this.leadingIcon,
     this.autofocus = false,
     this.inputFormatters,
@@ -407,28 +413,28 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   }
 
   void _incrementSmall() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
     _updateController(value);
     _updateValue();
   }
 
   void _decrementSmall() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
     _updateController(value);
     _updateValue();
   }
 
   void _incrementLarge() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
     _updateController(value);
     _updateValue();
   }
 
   void _decrementLarge() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
     _updateController(value);
     _updateValue();
@@ -443,7 +449,18 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   void _updateValue() {
     num? value;
     if (controller.text.isNotEmpty) {
-      value = num.tryParse(controller.text) ?? previousValidValue;
+      value = num.tryParse(controller.text);
+      if (value == null && widget.allowExpressions) {
+        try {
+          value = Parser()
+              .parse(controller.text)
+              .evaluate(EvaluationType.REAL, ContextModel());
+        } catch (_) {
+          value = previousValidValue;
+        }
+      } else {
+        value ??= previousValidValue;
+      }
 
       if (value != null && widget.max != null && value > widget.max!) {
         value = widget.max;
