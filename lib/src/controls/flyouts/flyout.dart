@@ -575,12 +575,16 @@ class FlyoutController with ChangeNotifier {
 
       final targetBox = context.findRenderObject() as RenderBox;
       targetSize = targetBox.size;
-      targetOffset =
-          targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
-              Offset(0, targetSize.height);
-      targetRect =
-          targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
-              targetSize;
+      targetOffset = targetBox.localToGlobal(
+            Offset.zero,
+            ancestor: navigatorBox,
+          ) +
+          Offset(0, targetSize.height);
+      targetRect = targetBox.localToGlobal(
+            Offset.zero,
+            ancestor: navigatorBox,
+          ) &
+          targetSize;
     }
 
     _open = true;
