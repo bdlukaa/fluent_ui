@@ -366,16 +366,19 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   void _createNewEntry() {
     final overlayState = Overlay.of(
       context,
+      rootOverlay: true,
       debugRequiredFor: widget,
     );
 
     final box = context.findRenderObject()! as RenderBox;
-    var target = box.localToGlobal(
-      box.size.center(Offset.zero),
-      ancestor: overlayState.context.findRenderObject(),
-    );
+    Offset target;
     if (_mouseIsConnected && widget.useMousePosition && mousePosition != null) {
       target = mousePosition!;
+    } else {
+      target = box.localToGlobal(
+        box.size.center(Offset.zero),
+        ancestor: overlayState.context.findRenderObject(),
+      );
     }
 
     // We create this widget outside of the overlay entry's builder to prevent
@@ -800,6 +803,7 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
   /// direction, the tooltip will be displayed in the opposite direction.
   final bool preferBelow;
 
+  /// Whether the tooltip is in horizontal mode
   final bool horizontal;
 
   @override
