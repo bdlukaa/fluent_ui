@@ -49,10 +49,10 @@ enum SpinButtonPlacementMode {
 /// See also:
 ///
 ///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box
-class NumberBox extends StatefulWidget {
+class NumberBox<T extends num> extends StatefulWidget {
   /// The value of the number box. When this value is null, the number box field
   /// is empty.
-  final int? value;
+  final T? value;
 
   /// Called when the value of the number box change.
   /// The callback is fired only if the user click on a button or the focus is
@@ -61,7 +61,7 @@ class NumberBox extends StatefulWidget {
   /// If the [onChanged] callback is null then the number box widget will
   /// be disabled, i.e. its buttons will be displayed in grey and it will not
   /// respond to input.
-  final ValueChanged<int?>? onChanged;
+  final ValueChanged<T?>? onChanged;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -75,12 +75,12 @@ class NumberBox extends StatefulWidget {
 
   /// The value that is incremented or decremented when the user click on the
   /// buttons or when he scroll on the number box.
-  final int smallChange;
+  final num smallChange;
 
   /// The value that is incremented when the user click on the shortcut
   /// [LogicalKeyboardKey.pageUp] and decremented when the user lick on the
   /// shortcut [LogicalKeyboardKey.pageDown].
-  final int largeChange;
+  final num largeChange;
 
   /// A widget displayed at the start of the text box
   ///
@@ -156,10 +156,10 @@ class NumberBox extends StatefulWidget {
   });
 
   @override
-  State<NumberBox> createState() => NumberBoxState();
+  State<NumberBox<T>> createState() => NumberBoxState<T>();
 }
 
-class NumberBoxState extends State<NumberBox> {
+class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
@@ -168,7 +168,7 @@ class NumberBoxState extends State<NumberBox> {
 
   bool _hasPrimaryFocus = false;
 
-  late int? previousValidValue = widget.value;
+  late num? previousValidValue = widget.value;
 
   final controller = TextEditingController();
 
@@ -222,7 +222,7 @@ class NumberBoxState extends State<NumberBox> {
   }
 
   @override
-  void didUpdateWidget(NumberBox oldWidget) {
+  void didUpdateWidget(NumberBox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.focusNode != oldWidget.focusNode) {
@@ -415,22 +415,28 @@ class NumberBoxState extends State<NumberBox> {
     _updateValue();
   }
 
-  void _updateController(int value) {
+  void _updateController(num value) {
     controller
       ..text = value.toString()
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
   void _updateValue() {
-    int? value;
+    num? value;
     if (controller.text.isNotEmpty) {
-      value = int.tryParse(controller.text) ?? previousValidValue;
+      value = num.tryParse(controller.text) ?? previousValidValue;
+      if(T == int){
+        value = value?.toInt();
+      }else{
+        value = value?.toDouble();
+      }
+
       controller.text = value.toString();
     }
     previousValidValue = value;
 
     if (widget.onChanged != null) {
-      widget.onChanged!(value);
+      widget.onChanged!(value as T?);
     }
   }
 }
