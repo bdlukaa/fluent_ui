@@ -130,7 +130,6 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               tabWidthBehavior: tabWidthBehavior,
               closeButtonVisibility: closeButtonVisibilityMode,
               showScrollButtons: showScrollButtons,
-              wheelScroll: wheelScroll,
               onNewPressed: () {
                 setState(() {
                   final index = tabs!.length + 1;

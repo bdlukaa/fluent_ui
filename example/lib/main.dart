@@ -245,6 +245,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       },
     ),
     PaneItem(
+      key: const Key('/forms/numberbox'),
+      icon: const Icon(FluentIcons.number),
+      title: const Text('NumberBox'),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/numberbox') {
+          router.pushNamed('forms_numberbox');
+        }
+      },
+    ),
+    PaneItem(
       key: const Key('/forms/time_picker'),
       icon: const Icon(FluentIcons.time_picker),
       title: const Text('TimePicker'),
@@ -853,6 +864,16 @@ final router = GoRouter(
           builder: (context, state) => DeferredWidget(
             forms.loadLibrary,
             () => forms.ComboBoxPage(),
+          ),
+        ),
+
+        /// NumberBox
+        GoRoute(
+          path: '/forms/numberbox',
+          name: 'forms_numberbox',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.NumberBoxPage(),
           ),
         ),
 

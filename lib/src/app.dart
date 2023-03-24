@@ -85,6 +85,7 @@ class FluentApp extends StatefulWidget {
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
+        routerConfig = null,
         super(key: key);
 
   /// Creates a [FluentApp] that uses the [Router] instead of a [Navigator].
@@ -94,13 +95,14 @@ class FluentApp extends StatefulWidget {
     this.darkTheme,
     this.themeMode,
     this.routeInformationProvider,
-    required this.routeInformationParser,
-    required this.routerDelegate,
+    this.routeInformationParser,
+    this.routerDelegate,
     BackButtonDispatcher? backButtonDispatcher,
+    this.routerConfig,
     this.builder,
     this.title = '',
     this.onGenerateTitle,
-    required Color this.color,
+    this.color,
     this.locale,
     this.localizationsDelegates,
     this.localeListResolutionCallback,
@@ -116,8 +118,8 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })  : assert(routeInformationParser != null && routerDelegate != null,
-            'The routeInformationParser and routerDelegate cannot be null.'),
+  })  : assert(routeInformationParser != null && routerDelegate != null ||
+            routerConfig != null),
         assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
         backButtonDispatcher =
@@ -215,6 +217,9 @@ class FluentApp extends StatefulWidget {
 
   /// {@macro flutter.widgets.widgetsApp.backButtonDispatcher}
   final BackButtonDispatcher? backButtonDispatcher;
+
+  /// {@macro flutter.widgets.widgetsApp.routerConfig}
+  final RouterConfig<Object>? routerConfig;
 
   /// {@macro flutter.widgets.widgetsApp.builder}
   ///
@@ -379,7 +384,8 @@ class _FluentAppState extends State<FluentApp> {
     yield GlobalWidgetsLocalizations.delegate;
   }
 
-  bool get _usesRouter => widget.routerDelegate != null;
+  bool get _usesRouter =>
+      widget.routerDelegate != null || widget.routerConfig != null;
 
   @override
   Widget build(BuildContext context) {
@@ -459,8 +465,9 @@ class _FluentAppState extends State<FluentApp> {
       return WidgetsApp.router(
         key: GlobalObjectKey(this),
         routeInformationProvider: widget.routeInformationProvider,
-        routeInformationParser: widget.routeInformationParser!,
-        routerDelegate: widget.routerDelegate!,
+        routeInformationParser: widget.routeInformationParser,
+        routerDelegate: widget.routerDelegate,
+        routerConfig: widget.routerConfig,
         backButtonDispatcher: widget.backButtonDispatcher,
         builder: _builder,
         title: widget.title,

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'fluent_localizations_ar.dart';
 import 'fluent_localizations_be.dart';
+import 'fluent_localizations_bn.dart';
 import 'fluent_localizations_cs.dart';
 import 'fluent_localizations_de.dart';
 import 'fluent_localizations_el.dart';
@@ -122,6 +123,7 @@ abstract class FluentLocalizations {
     Locale('en'),
     Locale('ar'),
     Locale('be'),
+    Locale('bn'),
     Locale('cs'),
     Locale('de'),
     Locale('el'),
@@ -352,6 +354,7 @@ class _FluentLocalizationsDelegate
   bool isSupported(Locale locale) => <String>[
         'ar',
         'be',
+        'bn',
         'cs',
         'de',
         'el',
@@ -404,6 +407,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsAr();
     case 'be':
       return FluentLocalizationsBe();
+    case 'bn':
+      return FluentLocalizationsBn();
     case 'cs':
       return FluentLocalizationsCs();
     case 'de':
