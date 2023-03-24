@@ -100,7 +100,7 @@ class FluentApp extends StatefulWidget {
     this.builder,
     this.title = '',
     this.onGenerateTitle,
-    required Color this.color,
+    this.color,
     this.locale,
     this.localizationsDelegates,
     this.localeListResolutionCallback,
