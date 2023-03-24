@@ -1,5 +1,6 @@
 ## [next]
 
+- Add support for `routerConfig` to `FluentApp.router` ([#781](https://github.com/bdlukaa/fluent_ui/issues/781))
 - Add source code for `Show InfoBar` in example application. ([#785](https://github.com/bdlukaa/fluent_ui/pull/785))
 - Make `color` optional in `FluentApp.router`. ([#782](https://github.com/bdlukaa/fluent_ui/issues/782))
 - Fix `TabView` scroll (the item count was not correctly set) and now the scroll event is not propagated to the parent. ([#772](https://github.com/bdlukaa/fluent_ui/pull/772))
