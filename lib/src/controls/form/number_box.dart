@@ -432,9 +432,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     num? value;
     if (controller.text.isNotEmpty) {
       value = num.tryParse(controller.text) ?? previousValidValue;
-      if(T == int){
+      if (T == int) {
         value = value?.toInt();
-      }else{
+      } else {
         value = value?.toDouble();
       }
 
@@ -447,9 +447,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     }
   }
 
-  String? format(num? value){
-    if(value == null) return null;
-    if(value is int){
+  String? format(num? value) {
+    if (value == null) return null;
+    if (value is int) {
       return value.toString();
     }
     final mul = pow(10, widget.precision);

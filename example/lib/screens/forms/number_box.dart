@@ -17,10 +17,17 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
   int? numberBoxValue = 0;
+  double? numberBoxValueDouble = 0;
 
   void _valueChanged(int? newValue) {
     setState(() {
       numberBoxValue = newValue;
+    });
+  }
+
+  void _valueChangedDouble(double? newValue) {
+    setState(() {
+      numberBoxValueDouble = newValue;
     });
   }
 
@@ -99,6 +106,29 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           codeSnippet: '''NumberBox(
   value: numberBoxValue,
   onChanged: disabled ? null : _valueChanged,
+  mode: SpinButtonPlacementMode.none,
+),
+''',
+        ),
+        subtitle(
+          content: const Text(
+            'A NumberBox with double value',
+          ),
+        ),
+        CardHighlight(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberBox(
+              value: numberBoxValueDouble,
+              onChanged: disabled ? null : _valueChangedDouble,
+              smallChange: 0.1,
+              mode: SpinButtonPlacementMode.none,
+            ),
+          ]),
+          codeSnippet: '''NumberBox(
+  value: numberBoxValueDouble,
+  onChanged: disabled ? null : _valueChangedDouble,
+  smallChange: 0.1,
   mode: SpinButtonPlacementMode.none,
 ),
 ''',
