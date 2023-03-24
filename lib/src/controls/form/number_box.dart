@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
@@ -489,7 +490,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       return value.toString();
     }
     final mul = pow(10, widget.precision);
-    return ((value * mul).roundToDouble() / mul).toString();
+    return NumberFormat().format(((value * mul).roundToDouble() / mul).toString());
   }
 }
 
