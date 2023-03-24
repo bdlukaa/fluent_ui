@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -82,6 +84,10 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// shortcut [LogicalKeyboardKey.pageDown].
   final num largeChange;
 
+  /// The precision indicates the number of digits that's accepted for double
+  /// value.
+  final int precision;
+
   /// A widget displayed at the start of the text box
   ///
   /// Usually an [IconButton] or [Icon]
@@ -142,6 +148,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
+    this.precision = 2,
     this.leadingIcon,
     this.autofocus = false,
     this.inputFormatters,
@@ -417,7 +424,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void _updateController(num value) {
     controller
-      ..text = value.toString()
+      ..text = format(value) ?? ''
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
@@ -431,13 +438,22 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         value = value?.toDouble();
       }
 
-      controller.text = value.toString();
+      controller.text = format(value) ?? '';
     }
     previousValidValue = value;
 
     if (widget.onChanged != null) {
       widget.onChanged!(value as T?);
     }
+  }
+
+  String? format(num? value){
+    if(value == null) return null;
+    if(value is int){
+      return value.toString();
+    }
+    final mul = pow(10, widget.precision);
+    return ((value * mul).roundToDouble() / mul).toString();
   }
 }
 
