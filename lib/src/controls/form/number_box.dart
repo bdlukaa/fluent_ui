@@ -88,6 +88,16 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// value.
   final int precision;
 
+  /// The minimum value allowed. If the user input a value below than min,
+  /// the value is replaced by min.
+  /// If min is null, there is lowest limit.
+  final num? min;
+
+  /// The maximum value allowed. If the user input a value greater than max,
+  /// the value is replaced by max.
+  /// If max is null, there is no upper limit.
+  final num? max;
+
   /// A widget displayed at the start of the text box
   ///
   /// Usually an [IconButton] or [Icon]
@@ -149,6 +159,8 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.smallChange = 1,
     this.largeChange = 10,
     this.precision = 2,
+    this.min,
+    this.max,
     this.leadingIcon,
     this.autofocus = false,
     this.inputFormatters,
@@ -432,6 +444,13 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     num? value;
     if (controller.text.isNotEmpty) {
       value = num.tryParse(controller.text) ?? previousValidValue;
+
+      if (value != null && widget.max != null && value > widget.max!) {
+        value = widget.max;
+      } else if (value != null && widget.min != null && value < widget.min!) {
+        value = widget.min;
+      }
+
       if (T == int) {
         value = value?.toInt();
       } else {
