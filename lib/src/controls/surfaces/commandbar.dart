@@ -3,16 +3,26 @@ import 'package:flutter/foundation.dart';
 
 /// A card with appropriate margins, padding, and elevation for it to
 /// contain one or more [CommandBar]s.
+///
+/// See also:
+///
+///  * [Card], the root widget of this widget
+///  * [CommandBar], a widget that has a series of commands
 class CommandBarCard extends StatelessWidget {
+  /// Creates a command bar card.
   const CommandBarCard({
-    Key? key,
+    super.key,
     required this.child,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
+    this.borderColor,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
+  /// The content of the card.
+  ///
+  /// Usually a [CommandBar]
   final Widget child;
 
   /// The margin around [child]
@@ -26,6 +36,11 @@ class CommandBarCard extends StatelessWidget {
   /// A circular border with a 4.0 radius is used by default
   final BorderRadiusGeometry borderRadius;
 
+  /// The card's border color.
+  ///
+  /// If null, [ResourceDictionary.cardStrokeColorDefault] is used
+  final Color? borderColor;
+
   /// The card's background color.
   ///
   /// If null, [FluentThemeData.cardColor] is used
@@ -33,14 +48,13 @@ class CommandBarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: margin,
-      child: Card(
-        padding: padding,
-        backgroundColor: backgroundColor,
-        borderRadius: borderRadius,
-        child: child,
-      ),
+    return Card(
+      margin: margin,
+      padding: padding,
+      backgroundColor: backgroundColor,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      child: child,
     );
   }
 }
@@ -69,7 +83,8 @@ enum CommandBarOverflowBehavior {
 /// functionality to trigger an action (e.g., a clickable button), and
 /// it will call the given callback when the action is triggered.
 typedef CommandBarActionItemBuilder = CommandBarItem Function(
-    VoidCallback onPressed);
+  VoidCallback onPressed,
+);
 
 /// Command bars provide quick access to common tasks. This could be
 /// application-level or page-level commands.
@@ -141,8 +156,9 @@ class CommandBar extends StatefulWidget {
 
   final bool _isExpanded;
 
+  /// Creates a command bar.
   const CommandBar({
-    Key? key,
+    super.key,
     required this.primaryItems,
     this.secondaryItems = const [],
     this.overflowItemBuilder,
@@ -152,15 +168,14 @@ class CommandBar extends StatefulWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.overflowItemAlignment = MainAxisAlignment.end,
-  })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
-        super(key: key);
+  }) : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap;
 
   @override
   State<CommandBar> createState() => _CommandBarState();
 }
 
 class _CommandBarState extends State<CommandBar> {
-  final FlyoutController secondaryFlyoutController = FlyoutController();
+  final secondaryFlyoutController = FlyoutController();
   List<int> dynamicallyHiddenPrimaryItems = [];
 
   @override
@@ -351,17 +366,19 @@ class _CommandBarState extends State<CommandBar> {
           : CommandBarItemDisplayMode.inPrimary;
       return _buildForPrimaryMode(context, displayMode);
     } else {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth > widget.compactBreakpointWidth!) {
-            return _buildForPrimaryMode(
-                context, CommandBarItemDisplayMode.inPrimary);
-          } else {
-            return _buildForPrimaryMode(
-                context, CommandBarItemDisplayMode.inPrimaryCompact);
-          }
-        },
-      );
+      return LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth > widget.compactBreakpointWidth!) {
+          return _buildForPrimaryMode(
+            context,
+            CommandBarItemDisplayMode.inPrimary,
+          );
+        } else {
+          return _buildForPrimaryMode(
+            context,
+            CommandBarItemDisplayMode.inPrimaryCompact,
+          );
+        }
+      });
     }
   }
 }
@@ -388,14 +405,14 @@ enum CommandBarItemDisplayMode {
   /// Flyout as a drop down of the "more" button).
   ///
   /// Normally you would want to render an item in this visual context as a
-  /// [TappableListTile].
+  /// [ListTile].
   inSecondary,
 }
 
-/// An individual control displayed within a [CommandBar]. Sub-class this
-/// to build a new type of widget that appears inside of a command bar.
-/// It knows how to build an appropriate widget for the given
-/// [CommandBarItemDisplayMode] during build time.
+/// An individual control displayed within a [CommandBar]. Sub-class this to
+/// build a new type of widget that appears inside of a command bar. It knows
+/// how to build an appropriate widget for the given [CommandBarItemDisplayMode]
+/// during build time.
 abstract class CommandBarItem with Diagnosticable {
   final Key? key;
 
@@ -424,10 +441,10 @@ class CommandBarBuilderItem extends CommandBarItem {
   final CommandBarItem wrappedItem;
 
   const CommandBarBuilderItem({
-    Key? key,
+    super.key,
     required this.builder,
     required this.wrappedItem,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
@@ -438,18 +455,17 @@ class CommandBarBuilderItem extends CommandBarItem {
   }
 }
 
-/// A widget to help render items that will appear on the primary
-/// (horizontal) area of a command bar. This widget ensures that
-/// the child widget has the proper margin so the item has the proper
-/// minimum height and width expected of a control within the
-/// primary command area of a [CommandBar].
+/// A convenience widget to help render items that will appear on the primary
+/// (horizontal) area of a command bar. This widget ensures the child widget has
+/// the proper margin so the item has the proper minimum height and width
+/// expected of a control within the primary command area of a [CommandBar].
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
   const CommandBarItemInPrimary({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -476,11 +492,16 @@ class CommandBarButton extends CommandBarItem {
   final Widget? trailing;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Creates a command bar button
   const CommandBarButton({
-    Key? key,
+    super.key,
     this.icon,
     this.label,
     this.subtitle,
@@ -489,7 +510,7 @@ class CommandBarButton extends CommandBarItem {
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
@@ -515,18 +536,15 @@ class CommandBarButton extends CommandBarItem {
               );
             }),
           ),
-          icon: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (showIcon)
-                IconTheme.merge(
-                  data: const IconThemeData(size: 16),
-                  child: icon!,
-                ),
-              if (showIcon && showLabel) const SizedBox(width: 10),
-              if (showLabel) label!,
-            ],
-          ),
+          icon: Row(mainAxisSize: MainAxisSize.min, children: [
+            if (showIcon)
+              IconTheme.merge(
+                data: const IconThemeData(size: 16),
+                child: icon!,
+              ),
+            if (showIcon && showLabel) const SizedBox(width: 10),
+            if (showLabel) label!,
+          ]),
         );
       case CommandBarItemDisplayMode.inSecondary:
         return Padding(
@@ -549,15 +567,17 @@ class CommandBarButton extends CommandBarItem {
 /// under the hood, consequently uses the closest [DividerThemeData].
 ///
 /// See also:
+///
 ///   * [CommandBar], which is a collection of [CommandBarItem]s.
 ///   * [CommandBarButton], an item for a button with an icon and/or label.
+///   * [Divider], used to render the separator
 class CommandBarSeparator extends CommandBarItem {
   /// Creates a command bar item separator.
   const CommandBarSeparator({
-    Key? key,
+    super.key,
     this.color,
     this.thickness,
-  }) : super(key: key);
+  });
 
   /// Override the color used by the [Divider].
   final Color? color;

@@ -77,9 +77,21 @@ class DropDownButton extends StatefulWidget {
   final double verticalOffset;
 
   /// The items in the flyout. Must not be empty
-  final List<MenuFlyoutItem> items;
+  ///
+  /// See also:
+  ///
+  ///  * [MenuFlyout], which displays a list of commands or options
+  ///  * [MenuFlyoutItem], a single item in the list of items
+  ///  * [MenuFlyoutSeparator], which represents a horizontal line that
+  ///    separates items in a [MenuFlyout].
+  ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+  ///    sub-menu in a [MenuFlyout]
+  ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
+  final List<MenuFlyoutItemBase> items;
 
   /// Whether the flyout will be closed after an item is tapped.
+  ///
+  /// This is only effective on items that are [MenuFlyoutItem]
   ///
   /// Defaults to `true`
   final bool closeAfterClick;
@@ -325,7 +337,7 @@ class DropDownButtonState extends State<DropDownButton> {
           color: widget.menuColor,
           shape: widget.menuShape,
           items: widget.items.map((item) {
-            if (widget.closeAfterClick) {
+            if (widget.closeAfterClick && item is MenuFlyoutItem) {
               return MenuFlyoutItem(
                 onPressed: () {
                   Navigator.of(context).pop();

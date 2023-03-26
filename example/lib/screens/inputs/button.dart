@@ -166,6 +166,7 @@ ToggleButton(
               title: Text('Email'),
               items: [
                 MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+                MenuFlyoutSeparator(),
                 MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
                 MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
               ],
@@ -196,6 +197,7 @@ ToggleButton(
   title: Text('Email'),
   items: [
     MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+    MenuFlyoutSeparator(),
     MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
     MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
   ],

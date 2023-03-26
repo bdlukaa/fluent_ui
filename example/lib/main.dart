@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
-import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'routes/forms.dart' deferred as forms;
@@ -42,8 +41,6 @@ void main() async {
       ].contains(defaultTargetPlatform)) {
     SystemTheme.accentColor.load();
   }
-
-  setPathUrlStrategy();
 
   if (isDesktop) {
     await flutter_acrylic.Window.initialize();
