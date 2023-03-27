@@ -92,7 +92,7 @@ class NumberBox<T extends num> extends StatefulWidget {
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
-  /// If min is null, there is lowest limit.
+  /// If min is null, there is no lowest limit.
   final num? min;
 
   /// The maximum value allowed. If the user input a value greater than max,
@@ -101,7 +101,11 @@ class NumberBox<T extends num> extends StatefulWidget {
   final num? max;
 
   /// When true, if something else than a number is specified, the content of
-  /// the text field is interpreted as an expressions when the focus is lost.
+  /// the text box is interpreted as a math expression when the focus is lost.
+  ///
+  /// See also:
+  ///
+  ///   * <https://pub.dev/packages/math_expressions>
   final bool allowExpressions;
 
   /// A widget displayed at the start of the text box
@@ -490,7 +494,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       return value.toString();
     }
     final mul = pow(10, widget.precision);
-    return NumberFormat().format(((value * mul).roundToDouble() / mul).toString());
+    return NumberFormat()
+        .format(((value * mul).roundToDouble() / mul).toString());
   }
 }
 
