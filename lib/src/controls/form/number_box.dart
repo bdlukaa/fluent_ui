@@ -246,7 +246,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       }
 
       if (!_hasPrimaryFocus) {
-        _updateValue();
+        updateValue();
       }
     }
   }
@@ -266,7 +266,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
     if (oldWidget.value != widget.value) {
       if (widget.value != null) {
-        _updateController(widget.value!);
+        updateController(widget.value!);
       } else {
         controller.text = '';
       }
@@ -294,8 +294,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
               data: FluentTheme.of(context),
               child: TextFieldTapRegion(
                 child: _NumberBoxCompactOverlay(
-                  onIncrement: _incrementSmall,
-                  onDecrement: _decrementSmall,
+                  onIncrement: incrementSmall,
+                  onDecrement: decrementSmall,
                 ),
               ),
             ),
@@ -334,11 +334,11 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         textFieldSuffix.addAll([
           IconButton(
             icon: const Icon(FluentIcons.chevron_up),
-            onPressed: widget.onChanged != null ? _incrementSmall : null,
+            onPressed: widget.onChanged != null ? incrementSmall : null,
           ),
           IconButton(
             icon: const Icon(FluentIcons.chevron_down),
-            onPressed: widget.onChanged != null ? _decrementSmall : null,
+            onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
         ]);
         break;
@@ -378,13 +378,13 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           }
 
           if (event.logicalKey == LogicalKeyboardKey.pageUp) {
-            _incrementLarge();
+            incrementLarge();
           } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
-            _decrementLarge();
+            decrementLarge();
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _incrementSmall();
+            incrementSmall();
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _decrementSmall();
+            decrementSmall();
           } else {
             return KeyEventResult.ignored;
           }
@@ -398,9 +398,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
                   (PointerSignalEvent event) {
                 if (event is PointerScrollEvent) {
                   if (event.scrollDelta.direction < 0) {
-                    _incrementSmall();
+                    incrementSmall();
                   } else {
-                    _decrementSmall();
+                    decrementSmall();
                   }
                 }
               });
@@ -414,44 +414,44 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void _clearValue() {
     controller.text = '';
-    _updateValue();
+    updateValue();
   }
 
-  void _incrementSmall() {
+  void incrementSmall() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
-    _updateController(value);
-    _updateValue();
+    updateController(value);
+    updateValue();
   }
 
-  void _decrementSmall() {
+  void decrementSmall() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
-    _updateController(value);
-    _updateValue();
+    updateController(value);
+    updateValue();
   }
 
-  void _incrementLarge() {
+  void incrementLarge() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
-    _updateController(value);
-    _updateValue();
+    updateController(value);
+    updateValue();
   }
 
-  void _decrementLarge() {
+  void decrementLarge() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
-    _updateController(value);
-    _updateValue();
+    updateController(value);
+    updateValue();
   }
 
-  void _updateController(num value) {
+  void updateController(num value) {
     controller
       ..text = format(value) ?? ''
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
-  void _updateValue() {
+  void updateValue() {
     num? value;
     if (controller.text.isNotEmpty) {
       value = num.tryParse(controller.text);
