@@ -271,6 +271,11 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         controller.text = '';
       }
     }
+
+    if ((oldWidget.min != widget.min && widget.min != null) ||
+        (oldWidget.max != widget.max && widget.max != null)) {
+      updateValue();
+    }
   }
 
   void _insertOverlay() {
