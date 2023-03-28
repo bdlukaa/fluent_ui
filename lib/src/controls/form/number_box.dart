@@ -466,6 +466,12 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           value = Parser()
               .parse(controller.text)
               .evaluate(EvaluationType.REAL, ContextModel());
+          // If the value is infinite or not a number, we reset the value with
+          // the previous valid value. For example, if the user tap 1024^200
+          // (the result is too big), the condition value.isInfinite is true.
+          if (value!.isInfinite || value.isNaN) {
+            value = previousValidValue;
+          }
         } catch (_) {
           value = previousValidValue;
         }
@@ -500,8 +506,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       return value.toString();
     }
     final mul = pow(10, widget.precision);
-    return NumberFormat()
-        .format(((value * mul).roundToDouble() / mul).toString());
+    return NumberFormat().format((value * mul).roundToDouble() / mul);
   }
 }
 
