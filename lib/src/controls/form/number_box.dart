@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
@@ -49,10 +53,10 @@ enum SpinButtonPlacementMode {
 /// See also:
 ///
 ///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box
-class NumberBox extends StatefulWidget {
+class NumberBox<T extends num> extends StatefulWidget {
   /// The value of the number box. When this value is null, the number box field
   /// is empty.
-  final int? value;
+  final T? value;
 
   /// Called when the value of the number box change.
   /// The callback is fired only if the user click on a button or the focus is
@@ -61,7 +65,7 @@ class NumberBox extends StatefulWidget {
   /// If the [onChanged] callback is null then the number box widget will
   /// be disabled, i.e. its buttons will be displayed in grey and it will not
   /// respond to input.
-  final ValueChanged<int?>? onChanged;
+  final ValueChanged<T?>? onChanged;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -75,12 +79,34 @@ class NumberBox extends StatefulWidget {
 
   /// The value that is incremented or decremented when the user click on the
   /// buttons or when he scroll on the number box.
-  final int smallChange;
+  final num smallChange;
 
   /// The value that is incremented when the user click on the shortcut
   /// [LogicalKeyboardKey.pageUp] and decremented when the user lick on the
   /// shortcut [LogicalKeyboardKey.pageDown].
-  final int largeChange;
+  final num largeChange;
+
+  /// The precision indicates the number of digits that's accepted for double
+  /// value.
+  final int precision;
+
+  /// The minimum value allowed. If the user input a value below than min,
+  /// the value is replaced by min.
+  /// If min is null, there is no lowest limit.
+  final num? min;
+
+  /// The maximum value allowed. If the user input a value greater than max,
+  /// the value is replaced by max.
+  /// If max is null, there is no upper limit.
+  final num? max;
+
+  /// When true, if something else than a number is specified, the content of
+  /// the text box is interpreted as a math expression when the focus is lost.
+  ///
+  /// See also:
+  ///
+  ///   * <https://pub.dev/packages/math_expressions>
+  final bool allowExpressions;
 
   /// A widget displayed at the start of the text box
   ///
@@ -142,6 +168,10 @@ class NumberBox extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
+    this.precision = 2,
+    this.min,
+    this.max,
+    this.allowExpressions = false,
     this.leadingIcon,
     this.autofocus = false,
     this.inputFormatters,
@@ -156,10 +186,10 @@ class NumberBox extends StatefulWidget {
   });
 
   @override
-  State<NumberBox> createState() => NumberBoxState();
+  State<NumberBox<T>> createState() => NumberBoxState<T>();
 }
 
-class NumberBoxState extends State<NumberBox> {
+class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
@@ -168,7 +198,7 @@ class NumberBoxState extends State<NumberBox> {
 
   bool _hasPrimaryFocus = false;
 
-  late int? previousValidValue = widget.value;
+  late num? previousValidValue = widget.value;
 
   final controller = TextEditingController();
 
@@ -198,6 +228,7 @@ class NumberBoxState extends State<NumberBox> {
     _dismissOverlay();
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -216,13 +247,13 @@ class NumberBoxState extends State<NumberBox> {
       }
 
       if (!_hasPrimaryFocus) {
-        _updateValue();
+        updateValue();
       }
     }
   }
 
   @override
-  void didUpdateWidget(NumberBox oldWidget) {
+  void didUpdateWidget(NumberBox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.focusNode != oldWidget.focusNode) {
@@ -240,6 +271,11 @@ class NumberBoxState extends State<NumberBox> {
       } else {
         controller.text = '';
       }
+    }
+
+    if ((oldWidget.min != widget.min && widget.min != null) ||
+        (oldWidget.max != widget.max && widget.max != null)) {
+      updateValue();
     }
   }
 
@@ -264,8 +300,8 @@ class NumberBoxState extends State<NumberBox> {
               data: FluentTheme.of(context),
               child: TextFieldTapRegion(
                 child: _NumberBoxCompactOverlay(
-                  onIncrement: _incrementSmall,
-                  onDecrement: _decrementSmall,
+                  onIncrement: incrementSmall,
+                  onDecrement: decrementSmall,
                 ),
               ),
             ),
@@ -304,11 +340,11 @@ class NumberBoxState extends State<NumberBox> {
         textFieldSuffix.addAll([
           IconButton(
             icon: const Icon(FluentIcons.chevron_up),
-            onPressed: widget.onChanged != null ? _incrementSmall : null,
+            onPressed: widget.onChanged != null ? incrementSmall : null,
           ),
           IconButton(
             icon: const Icon(FluentIcons.chevron_down),
-            onPressed: widget.onChanged != null ? _decrementSmall : null,
+            onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
         ]);
         break;
@@ -348,13 +384,13 @@ class NumberBoxState extends State<NumberBox> {
           }
 
           if (event.logicalKey == LogicalKeyboardKey.pageUp) {
-            _incrementLarge();
+            incrementLarge();
           } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
-            _decrementLarge();
+            decrementLarge();
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _incrementSmall();
+            incrementSmall();
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _decrementSmall();
+            decrementSmall();
           } else {
             return KeyEventResult.ignored;
           }
@@ -368,9 +404,9 @@ class NumberBoxState extends State<NumberBox> {
                   (PointerSignalEvent event) {
                 if (event is PointerScrollEvent) {
                   if (event.scrollDelta.direction < 0) {
-                    _incrementSmall();
+                    incrementSmall();
                   } else {
-                    _decrementSmall();
+                    decrementSmall();
                   }
                 }
               });
@@ -384,54 +420,88 @@ class NumberBoxState extends State<NumberBox> {
 
   void _clearValue() {
     controller.text = '';
-    _updateValue();
+    updateValue();
   }
 
-  void _incrementSmall() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+  void incrementSmall() {
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
     _updateController(value);
-    _updateValue();
+    updateValue();
   }
 
-  void _decrementSmall() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+  void decrementSmall() {
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
     _updateController(value);
-    _updateValue();
+    updateValue();
   }
 
-  void _incrementLarge() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) +
+  void incrementLarge() {
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
     _updateController(value);
-    _updateValue();
+    updateValue();
   }
 
-  void _decrementLarge() {
-    final value = (int.tryParse(controller.text) ?? widget.value ?? 0) -
+  void decrementLarge() {
+    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
     _updateController(value);
-    _updateValue();
+    updateValue();
   }
 
-  void _updateController(int value) {
+  void _updateController(num value) {
     controller
-      ..text = value.toString()
+      ..text = _format(value) ?? ''
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
-  void _updateValue() {
-    int? value;
+  void updateValue() {
+    num? value;
     if (controller.text.isNotEmpty) {
-      value = int.tryParse(controller.text) ?? previousValidValue;
-      controller.text = value.toString();
+      value = num.tryParse(controller.text);
+      if (value == null && widget.allowExpressions) {
+        try {
+          value = Parser()
+              .parse(controller.text)
+              .evaluate(EvaluationType.REAL, ContextModel());
+        } catch (_) {
+          value = previousValidValue;
+        }
+      } else {
+        value ??= previousValidValue;
+      }
+
+      if (value != null && widget.max != null && value > widget.max!) {
+        value = widget.max;
+      } else if (value != null && widget.min != null && value < widget.min!) {
+        value = widget.min;
+      }
+
+      if (T == int) {
+        value = value?.toInt();
+      } else {
+        value = value?.toDouble();
+      }
+
+      controller.text = _format(value) ?? '';
     }
     previousValidValue = value;
 
     if (widget.onChanged != null) {
-      widget.onChanged!(value);
+      widget.onChanged!(value as T?);
     }
+  }
+
+  String? _format(num? value) {
+    if (value == null) return null;
+    if (value is int) {
+      return value.toString();
+    }
+    final mul = pow(10, widget.precision);
+    return NumberFormat()
+        .format(((value * mul).roundToDouble() / mul).toString());
   }
 }
 
