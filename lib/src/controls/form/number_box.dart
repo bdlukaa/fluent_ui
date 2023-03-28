@@ -228,6 +228,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     _dismissOverlay();
     focusNode!.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -266,7 +267,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
     if (oldWidget.value != widget.value) {
       if (widget.value != null) {
-        updateController(widget.value!);
+        _updateController(widget.value!);
       } else {
         controller.text = '';
       }
@@ -425,34 +426,34 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   void incrementSmall() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
-    updateController(value);
+    _updateController(value);
     updateValue();
   }
 
   void decrementSmall() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
-    updateController(value);
+    _updateController(value);
     updateValue();
   }
 
   void incrementLarge() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
-    updateController(value);
+    _updateController(value);
     updateValue();
   }
 
   void decrementLarge() {
     final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
-    updateController(value);
+    _updateController(value);
     updateValue();
   }
 
-  void updateController(num value) {
+  void _updateController(num value) {
     controller
-      ..text = format(value) ?? ''
+      ..text = _format(value) ?? ''
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
@@ -484,7 +485,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         value = value?.toDouble();
       }
 
-      controller.text = format(value) ?? '';
+      controller.text = _format(value) ?? '';
     }
     previousValidValue = value;
 
@@ -493,7 +494,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     }
   }
 
-  String? format(num? value) {
+  String? _format(num? value) {
     if (value == null) return null;
     if (value is int) {
       return value.toString();

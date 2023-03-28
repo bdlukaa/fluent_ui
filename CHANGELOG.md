@@ -1,8 +1,6 @@
 ## [next]
 
-- Add `NumberBox` widget. ([#560](https://github.com/bdlukaa/fluent_ui/issues/560) [#771](https://github.com/bdlukaa/fluent_ui/pull/771))
-- Add `min`/`max` properties to the `NumberBox` widget. ([#789](https://github.com/bdlukaa/fluent_ui/pull/789))
-- Allow `NumberBox` Widget to accept int and double values and mathematical expressions. ([#789](https://github.com/bdlukaa/fluent_ui/pull/789))
+- Add `NumberBox` widget. ([#560](https://github.com/bdlukaa/fluent_ui/issues/560) [#771](https://github.com/bdlukaa/fluent_ui/pull/771) [#789](https://github.com/bdlukaa/fluent_ui/pull/789))
 - Add support for `routerConfig` to `FluentApp.router` ([#781](https://github.com/bdlukaa/fluent_ui/issues/781))
 - Add source code for `Show InfoBar` in example application. ([#785](https://github.com/bdlukaa/fluent_ui/pull/785))
 - Make `color` optional in `FluentApp.router`. ([#782](https://github.com/bdlukaa/fluent_ui/issues/782))
