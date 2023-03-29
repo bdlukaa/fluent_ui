@@ -74,6 +74,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   // private navigators
 
   @override
@@ -249,6 +250,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       onTap: () {
         if (router.location != '/forms/numberbox') {
           router.pushNamed('forms_numberbox');
+        }
+      },
+    ),
+    PaneItem(
+      key: const Key('/forms/passwordbox'),
+      icon: const Icon(FluentIcons.password_field),
+      title: const Text('PasswordBox'),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/forms/passwordbox') {
+          router.pushNamed('forms_passwordbox');
         }
       },
     ),
@@ -871,6 +883,15 @@ final router = GoRouter(
           builder: (context, state) => DeferredWidget(
             forms.loadLibrary,
             () => forms.NumberBoxPage(),
+          ),
+        ),
+
+        GoRoute(
+          path: '/forms/passwordbox',
+          name: 'forms_passwordbox',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.PasswordBoxPage(),
           ),
         ),
 
