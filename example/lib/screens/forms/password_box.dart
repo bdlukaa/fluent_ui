@@ -18,7 +18,8 @@ class PasswordBoxPage extends ScrollablePage {
         ' is obfuscated by default and a button in the suffix allow the user to '
         'show briefly the password in plain text.',
       ),
-      subtitle(content: const Text('A simple PasswordBox')),
+      subtitle(
+          content: const Text('A simple PasswordBox in peek mode (default)')),
       CardHighlight(
         child: Row(children: const [
           Expanded(child: PasswordBox()),
@@ -31,6 +32,44 @@ class PasswordBoxPage extends ScrollablePage {
           )
         ]),
         codeSnippet: '''PasswordBox()''',
+      ),
+      subtitle(content: const Text('A simple PasswordBox in peekAlways mode')),
+      CardHighlight(
+        child: Row(children: const [
+          Expanded(
+              child: PasswordBox(
+            revealMode: PasswordRevealMode.peekAlways,
+          )),
+        ]),
+        codeSnippet: '''PasswordBox(
+  revealMode: PasswordRevealMode.peekAlways,
+)''',
+      ),
+      subtitle(
+          content: const Text(
+              'A simple PasswordBox in visible (left) and hidden (right) mode')),
+      CardHighlight(
+        child: Row(children: const [
+          Expanded(
+              child: PasswordBox(
+            revealMode: PasswordRevealMode.visible,
+            placeholder: 'Visible Password',
+          )),
+          SizedBox(width: 10.0),
+          Expanded(
+            child: PasswordBox(
+              revealMode: PasswordRevealMode.hidden,
+              placeholder: 'Hidden Password',
+            ),
+          )
+        ]),
+        codeSnippet: '''PasswordBox(
+  revealMode: PasswordRevealMode.visible,
+);
+
+PasswordBox(
+  revealMode: PasswordRevealMode.hidden,
+);''',
       ),
     ];
   }
