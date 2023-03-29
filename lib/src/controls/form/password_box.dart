@@ -173,7 +173,7 @@ class _PasswordBoxState extends State<PasswordBox> {
   @override
   void initState() {
     if (widget.focusNode == null) {
-      _internalNode ??= FocusNode(debugLabel: '${widget.runtimeType}');
+      _internalNode = FocusNode(debugLabel: '${widget.runtimeType}');
     }
     if (widget.controller == null) {
       _internalController = TextEditingController();
