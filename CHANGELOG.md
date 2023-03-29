@@ -3,6 +3,8 @@
 - Add `NumberBox` widget. ([#560](https://github.com/bdlukaa/fluent_ui/issues/560) [#771](https://github.com/bdlukaa/fluent_ui/pull/771) [#789](https://github.com/bdlukaa/fluent_ui/pull/789))
 - Add support for `routerConfig` to `FluentApp.router` ([#781](https://github.com/bdlukaa/fluent_ui/issues/781))
 - Add source code for `Show InfoBar` in example application. ([#785](https://github.com/bdlukaa/fluent_ui/pull/785))
+- Add parameters `onTapDown` and `onTapUp` on all buttons. ([#TODO](https://github.com/bdlukaa/fluent_ui/pull/TODO))
+   - **Breaking: if you use the abstract class `BaseButton`, these two parameters are now required** 
 - Make `color` optional in `FluentApp.router`. ([#782](https://github.com/bdlukaa/fluent_ui/issues/782))
 - Fix `TabView` scroll (the item count was not correctly set) and now the scroll event is not propagated to the parent. ([#772](https://github.com/bdlukaa/fluent_ui/pull/772))
 - Do not calculate the position of the flyout if the `position` parameter is provided. ([#764](https://github.com/bdlukaa/fluent_ui/issues/764))

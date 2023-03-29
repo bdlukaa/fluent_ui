@@ -8,6 +8,8 @@ class IconButton extends BaseButton {
     required Widget icon,
     required VoidCallback? onPressed,
     VoidCallback? onLongPress,
+    VoidCallback? onTapDown,
+    VoidCallback? onTapUp,
     FocusNode? focusNode,
     bool autofocus = false,
     ButtonStyle? style,
@@ -20,6 +22,8 @@ class IconButton extends BaseButton {
           autofocus: autofocus,
           onLongPress: onLongPress,
           onPressed: onPressed,
+          onTapDown: onTapDown,
+          onTapUp: onTapUp,
           style: style,
           focusable: focusable,
         );
