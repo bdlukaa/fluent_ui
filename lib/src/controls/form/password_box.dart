@@ -119,6 +119,7 @@ class PasswordBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.obscuringCharacter}
   final String obscuringCharacter;
 
+  /// Creates a password box
   const PasswordBox({
     super.key,
     this.controller,
@@ -150,11 +151,11 @@ class _PasswordBoxState extends State<PasswordBox> {
   bool focusCanPeek = true;
   bool textCanPeek = false;
 
-  late final TextEditingController controller =
-      widget.controller ?? TextEditingController();
+  TextEditingController? _internalController;
+  TextEditingController? get controller =>
+      widget.controller ?? _internalController;
 
   FocusNode? _internalNode;
-
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
 
   bool get _isVisible =>
@@ -172,17 +173,24 @@ class _PasswordBoxState extends State<PasswordBox> {
   @override
   void initState() {
     if (widget.focusNode == null) {
-      _internalNode ??= _createFocusNode();
+      _internalNode ??= FocusNode(debugLabel: '${widget.runtimeType}');
     }
-    controller.addListener(_handleTextChange);
+    if (widget.controller == null) {
+      _internalController = TextEditingController();
+    }
+    controller!.addListener(_handleTextChange);
     focusNode!.addListener(_handleFocusChange);
     super.initState();
   }
 
   @override
   void dispose() {
-    controller.dispose();
-    focusNode!.dispose();
+    if (widget.controller == null) {
+      controller!.dispose();
+    }
+    if (widget.focusNode != null) {
+      focusNode!.dispose();
+    }
     super.dispose();
   }
 
@@ -198,19 +206,19 @@ class _PasswordBoxState extends State<PasswordBox> {
   }
 
   void _handleTextChange() {
-    if (controller.text.isEmpty) {
+    if (controller!.text.isEmpty) {
       // If the text box is empty, then we ignore if the focus has been
       // lost or not previously.
       focusCanPeek = true;
     }
 
-    if (controller.text.isNotEmpty && !textCanPeek) {
+    if (controller!.text.isNotEmpty && !textCanPeek) {
       // If the text box is not empty, the reveal button must be visible
       // (it will be only if focusCanPeek is true !)
       setState(() {
         textCanPeek = true;
       });
-    } else if (controller.text.isEmpty && textCanPeek) {
+    } else if (controller!.text.isEmpty && textCanPeek) {
       // If the text box is empty, the reveal button must be hidden.
       setState(() {
         textCanPeek = false;
@@ -219,18 +227,13 @@ class _PasswordBoxState extends State<PasswordBox> {
   }
 
   void _handleFocusChange() {
-    if (!focusNode!.hasFocus && controller.text.isNotEmpty) {
+    if (!focusNode!.hasFocus && controller!.text.isNotEmpty) {
       // If the focus is lost and the text box is not empty, then the reveal
       // button must not be hidden.
       setState(() {
         focusCanPeek = false;
       });
     }
-  }
-
-  // Only used if needed to create _internalNode.
-  FocusNode _createFocusNode() {
-    return FocusNode(debugLabel: '${widget.runtimeType}');
   }
 
   @override
@@ -243,24 +246,26 @@ class _PasswordBoxState extends State<PasswordBox> {
       placeholderStyle: widget.placeholderStyle,
       obscureText: !_isVisible,
       suffix: _canPeek
-          ? IconButton(
-              icon: const Icon(FluentIcons.red_eye),
-              // todo: half eye icon, like WinUI3 ?
-              onPressed: null,
-              onTapDown: widget.enabled
-                  ? () {
-                      setState(() {
-                        peek = true;
-                      });
-                    }
-                  : null,
-              onTapUp: widget.enabled
-                  ? () {
-                      setState(() {
-                        peek = false;
-                      });
-                    }
-                  : null,
+          ? SmallIconButton(
+              child: IconButton(
+                icon: const Icon(FluentIcons.red_eye),
+                // todo: half eye icon, like WinUI3 ?
+                onPressed: null,
+                onTapDown: widget.enabled
+                    ? () {
+                        setState(() {
+                          peek = true;
+                        });
+                      }
+                    : null,
+                onTapUp: widget.enabled
+                    ? () {
+                        setState(() {
+                          peek = false;
+                        });
+                      }
+                    : null,
+              ),
             )
           : null,
       onEditingComplete: widget.onEditingComplete,
