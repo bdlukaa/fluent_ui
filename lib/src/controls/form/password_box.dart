@@ -113,6 +113,12 @@ class PasswordBox extends StatefulWidget {
   ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
 
+  /// {@macro flutter.widgets.editableText.readOnly}
+  final bool readOnly;
+
+  /// {@macro flutter.widgets.editableText.obscuringCharacter}
+  final String obscuringCharacter;
+
   const PasswordBox({
     super.key,
     this.controller,
@@ -131,6 +137,8 @@ class PasswordBox extends StatefulWidget {
     this.cursorColor,
     this.showCursor,
     this.highlightColor,
+    this.readOnly = false,
+    this.obscuringCharacter = '•',
   });
 
   @override
@@ -264,6 +272,8 @@ class _PasswordBoxState extends State<PasswordBox> {
       cursorHeight: widget.cursorHeight,
       cursorColor: widget.cursorColor,
       highlightColor: widget.highlightColor,
+      readOnly: widget.readOnly,
+      obscuringCharacter: widget.obscuringCharacter,
     );
   }
 }
