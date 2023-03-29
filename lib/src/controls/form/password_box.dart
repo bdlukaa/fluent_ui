@@ -178,6 +178,17 @@ class _PasswordBoxState extends State<PasswordBox> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant PasswordBox oldWidget) {
+    if (oldWidget.revealMode == PasswordRevealMode.peekAlways &&
+        widget.revealMode == PasswordRevealMode.peek) {
+      // if the mode change, we consider that the first focus is gone.
+      focusCanPeek = false;
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
   void _handleTextChange() {
     if (controller.text.isEmpty) {
       // If the text box is empty, then we ignore if the focus has been
