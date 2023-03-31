@@ -17,6 +17,8 @@ class Button extends BaseButton {
     required Widget child,
     required VoidCallback? onPressed,
     VoidCallback? onLongPress,
+    VoidCallback? onTapDown,
+    VoidCallback? onTapUp,
     FocusNode? focusNode,
     bool autofocus = false,
     ButtonStyle? style,
@@ -28,6 +30,8 @@ class Button extends BaseButton {
           autofocus: autofocus,
           onLongPress: onLongPress,
           onPressed: onPressed,
+          onTapDown: onTapDown,
+          onTapUp: onTapUp,
           style: style,
           focusable: focusable,
         );
