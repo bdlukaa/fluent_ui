@@ -31,6 +31,66 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     'End': const EndNavigationIndicator(),
   };
 
+  List<NavigationPaneItem> items = [
+    PaneItem(
+      icon: const Icon(FluentIcons.home),
+      title: const Text('Home'),
+      body: const _NavigationBodyItem(),
+    ),
+    PaneItemSeparator(),
+    PaneItem(
+      icon: const Icon(FluentIcons.issue_tracking),
+      title: const Text('Track orders'),
+      infoBadge: const InfoBadge(source: Text('8')),
+      body: const _NavigationBodyItem(
+        header: 'Badging',
+        content: Text(
+          'Badging is a non-intrusive and intuitive way to display '
+          'notifications or bring focus to an area within an app - '
+          'whether that be for notifications, indicating new content, '
+          'or showing an alert. An InfoBadge is a small piece of UI '
+          'that can be added into an app and customized to display a '
+          'number, icon, or a simple dot.',
+        ),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.disable_updates),
+      title: const Text('Disabled Item'),
+      body: const _NavigationBodyItem(),
+      enabled: false,
+    ),
+    PaneItemExpander(
+      icon: const Icon(FluentIcons.account_management),
+      title: const Text('Account'),
+      body: const _NavigationBodyItem(
+        header: 'PaneItemExpander',
+        content: Text(
+          'Some apps may have a more complex hierarchical structure '
+          'that requires more than just a flat list of navigation '
+          'items. You may want to use top-level navigation items to '
+          'display categories of pages, with children items displaying '
+          'specific pages. It is also useful if you have hub-style '
+          'pages that only link to other pages. For these kinds of '
+          'cases, you should create a hierarchical NavigationView.',
+        ),
+      ),
+      items: [
+        PaneItemHeader(header: const Text('Apps')),
+        PaneItem(
+          icon: const Icon(FluentIcons.mail),
+          title: const Text('Mail'),
+          body: const _NavigationBodyItem(),
+        ),
+        PaneItem(
+          icon: const Icon(FluentIcons.calendar),
+          title: const Text('Calendar'),
+          body: const _NavigationBodyItem(),
+        ),
+      ],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -134,70 +194,30 @@ class _NavigationViewPageState extends State<NavigationViewPage>
               displayMode: displayMode,
               indicator: indicators[indicator],
               header: const Text('Pane Header'),
-              items: [
-                PaneItem(
-                  icon: const Icon(FluentIcons.home),
-                  title: const Text('Home'),
-                  body: const _NavigationBodyItem(),
-                ),
-                PaneItemSeparator(),
-                PaneItem(
-                  icon: const Icon(FluentIcons.issue_tracking),
-                  title: const Text('Track orders'),
-                  infoBadge: const InfoBadge(source: Text('8')),
-                  body: const _NavigationBodyItem(
-                    header: 'Badging',
-                    content: Text(
-                      'Badging is a non-intrusive and intuitive way to display '
-                      'notifications or bring focus to an area within an app - '
-                      'whether that be for notifications, indicating new content, '
-                      'or showing an alert. An InfoBadge is a small piece of UI '
-                      'that can be added into an app and customized to display a '
-                      'number, icon, or a simple dot.',
-                    ),
-                  ),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.disable_updates),
-                  title: const Text('Disabled Item'),
-                  body: const _NavigationBodyItem(),
-                  enabled: false,
-                ),
-                PaneItemExpander(
-                  icon: const Icon(FluentIcons.account_management),
-                  title: const Text('Account'),
-                  body: const _NavigationBodyItem(
-                    header: 'PaneItemExpander',
-                    content: Text(
-                      'Some apps may have a more complex hierarchical structure '
-                      'that requires more than just a flat list of navigation '
-                      'items. You may want to use top-level navigation items to '
-                      'display categories of pages, with children items displaying '
-                      'specific pages. It is also useful if you have hub-style '
-                      'pages that only link to other pages. For these kinds of '
-                      'cases, you should create a hierarchical NavigationView.',
-                    ),
-                  ),
-                  items: [
-                    PaneItemHeader(header: const Text('Apps')),
-                    PaneItem(
-                      icon: const Icon(FluentIcons.mail),
-                      title: const Text('Mail'),
-                      body: const _NavigationBodyItem(),
-                    ),
-                    PaneItem(
-                      icon: const Icon(FluentIcons.calendar),
-                      title: const Text('Calendar'),
-                      body: const _NavigationBodyItem(),
-                    ),
-                  ],
-                ),
-              ],
+              items: items,
               footerItems: [
                 PaneItem(
                   icon: const Icon(FluentIcons.settings),
                   title: const Text('Settings'),
                   body: const _NavigationBodyItem(),
+                ),
+                PaneItemAction(
+                  icon: const Icon(FluentIcons.add),
+                  title: const Text('Add New Item'),
+                  onTap: () {
+                    items.add(
+                      PaneItem(
+                        icon: const Icon(FluentIcons.new_folder),
+                        title: const Text('New Item'),
+                        body: const Center(
+                          child: Text(
+                            'This is a newly added Item',
+                          ),
+                        ),
+                      ),
+                    );
+                    setState(() {});
+                  },
                 ),
               ],
             ),
@@ -228,7 +248,73 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                   },
           ),
         ),
-        codeSnippet: '''NavigationView(
+        codeSnippet: '''
+// Do not define the `items` inside the `Widget Build` function
+// otherwise on running `setstate`, new item can not be added.
+
+List<NavigationPaneItem> items = [
+    PaneItem(
+      icon: const Icon(FluentIcons.home),
+      title: const Text('Home'),
+      body: const _NavigationBodyItem(),
+    ),
+    PaneItemSeparator(),
+    PaneItem(
+      icon: const Icon(FluentIcons.issue_tracking),
+      title: const Text('Track orders'),
+      infoBadge: const InfoBadge(source: Text('8')),
+      body: const _NavigationBodyItem(
+        header: 'Badging',
+        content: Text(
+          'Badging is a non-intrusive and intuitive way to display '
+          'notifications or bring focus to an area within an app - '
+          'whether that be for notifications, indicating new content, '
+          'or showing an alert. An InfoBadge is a small piece of UI '
+          'that can be added into an app and customized to display a '
+          'number, icon, or a simple dot.',
+        ),
+      ),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.disable_updates),
+      title: const Text('Disabled Item'),
+      body: const _NavigationBodyItem(),
+      enabled: false,
+    ),
+    PaneItemExpander(
+      icon: const Icon(FluentIcons.account_management),
+      title: const Text('Account'),
+      body: const _NavigationBodyItem(
+        header: 'PaneItemExpander',
+        content: Text(
+          'Some apps may have a more complex hierarchical structure '
+          'that requires more than just a flat list of navigation '
+          'items. You may want to use top-level navigation items to '
+          'display categories of pages, with children items displaying '
+          'specific pages. It is also useful if you have hub-style '
+          'pages that only link to other pages. For these kinds of '
+          'cases, you should create a hierarchical NavigationView.',
+        ),
+      ),
+      items: [
+        PaneItemHeader(header: const Text('Apps')),
+        PaneItem(
+          icon: const Icon(FluentIcons.mail),
+          title: const Text('Mail'),
+          body: const _NavigationBodyItem(),
+        ),
+        PaneItem(
+          icon: const Icon(FluentIcons.calendar),
+          title: const Text('Calendar'),
+          body: const _NavigationBodyItem(),
+        ),
+      ],
+    ),
+  ];
+
+// Return the NavigationView from `Widegt Build` function
+
+NavigationView(
   appBar: const NavigationAppBar(
     title: Text('NavigationView'),
   ),
@@ -236,34 +322,31 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     selected: topIndex,
     onChanged: (index) => setState(() => topIndex = index),
     displayMode: displayMode,
-    items: [
+    items: items,
+    footerItems: [
       PaneItem(
-        icon: const Icon(FluentIcons.home),
-        title: const Text('Home'),
-        body: BodyItem(),
+        icon: const Icon(FluentIcons.settings),
+        title: const Text('Settings'),
+        body: const _NavigationBodyItem(),
       ),
-      PaneItem(
-        icon: const Icon(FluentIcons.issue_tracking),
-        title: const Text('Track an order'),
-        infoBadge: const InfoBadge(source: Text('8')),
-        body: BodyItem(),
-      ),
-      PaneItemExpander(
-        icon: const Icon(FluentIcons.account_management),
-        title: const Text('Account'),
-        body: BodyItem(),
-        items: [
-          PaneItem(
-            icon: const Icon(FluentIcons.mail),
-            title: const Text('Mail'),
-            body: BodyItem(),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.calendar),
-            title: const Text('Calendar'),
-            body: BodyItem(),
-          ),
-        ],
+      PaneItemAction(
+        icon: const Icon(FluentIcons.add),
+        title: const Text('Add New Item'),
+        onTap: () {
+          // Your Logic to Add New `NavigationPaneItem`
+          items.add(
+            PaneItem(
+              icon: const Icon(FluentIcons.new_folder),
+              title: const Text('New Item'),
+              body: const Center(
+                child: Text(
+                  'This is a newly added Item',
+                ),
+              ),
+            ),
+          );
+          setState(() {});
+        },
       ),
     ],
   ),
