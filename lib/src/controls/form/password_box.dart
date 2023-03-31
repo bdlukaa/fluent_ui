@@ -28,13 +28,18 @@ enum PasswordRevealMode {
 
 /// A fluent design input form for password.
 ///
-/// A PasswordBox lets the user enter a password. There is multiple mode to
-/// indicate if the password must be hidden, visible or if a reveal button is
-/// shown.
+/// A password box is a text input box that conceals the characters typed into
+/// it for the purpose of privacy. A password box looks like a text box, except
+/// that it renders placeholder characters in place of the text that has been
+/// entered. You can configure the placeholder character.
+///
+/// ![PasswordBox](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/passwordbox-focus-typing.png)
 ///
 /// See also:
 ///
-///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box>
+///  * [PasswordRevealMode], the different modes that the password box can have
+///  * [TextBox], the underlaying widget that renders the text box
 class PasswordBox extends StatefulWidget {
   /// Controls the text being edited.
   ///
@@ -44,7 +49,7 @@ class PasswordBox extends StatefulWidget {
   /// Disables the text field when false.
   ///
   /// Text fields in disabled states have a light grey background and don't
-  /// respond to touch events including the [prefix], [suffix].
+  /// respond to touch events.
   final bool enabled;
 
   /// {@macro flutter.widgets.editableText.onEditingComplete}
@@ -185,9 +190,12 @@ class _PasswordBoxState extends State<PasswordBox> {
 
   @override
   void dispose() {
+    controller!.removeListener(_handleTextChange);
     if (widget.controller == null) {
       controller!.dispose();
     }
+
+    focusNode!.removeListener(_handleFocusChange);
     if (widget.focusNode != null) {
       focusNode!.dispose();
     }
@@ -196,6 +204,26 @@ class _PasswordBoxState extends State<PasswordBox> {
 
   @override
   void didUpdateWidget(covariant PasswordBox oldWidget) {
+    if (oldWidget.controller == null && widget.controller != null) {
+      _internalController?.dispose();
+      _internalController = null;
+      controller!.addListener(_handleTextChange);
+    } else if (oldWidget.controller != null && widget.controller == null) {
+      oldWidget.controller!.removeListener(_handleTextChange);
+      _internalController = TextEditingController();
+      controller!.addListener(_handleTextChange);
+    }
+
+    if (oldWidget.focusNode == null && widget.focusNode != null) {
+      _internalNode?.dispose();
+      _internalNode = null;
+      focusNode!.addListener(_handleFocusChange);
+    } else if (oldWidget.focusNode != null && widget.focusNode == null) {
+      oldWidget.focusNode!.removeListener(_handleFocusChange);
+      _internalNode = FocusNode(debugLabel: '${widget.runtimeType}');
+      focusNode!.addListener(_handleFocusChange);
+    }
+
     if (oldWidget.revealMode == PasswordRevealMode.peekAlways &&
         widget.revealMode == PasswordRevealMode.peek) {
       // if the mode change, we consider that the first focus is gone.
