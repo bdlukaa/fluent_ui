@@ -1,3 +1,9 @@
+## [next]
+
+- Add parameters `onTapDown` and `onTapUp` on all buttons. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
+   - **Breaking: if you use the abstract class `BaseButton`, these two parameters are now required** 
+- Add `PasswordBox` widget. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
+
 ## 4.4.2
 
 - Add `NumberBox` widget. ([#560](https://github.com/bdlukaa/fluent_ui/issues/560) [#771](https://github.com/bdlukaa/fluent_ui/pull/771) [#789](https://github.com/bdlukaa/fluent_ui/pull/789))

@@ -47,6 +47,7 @@ export 'src/controls/form/auto_suggest_box.dart';
 export 'src/controls/form/combo_box.dart';
 export 'src/controls/form/form_row.dart';
 export 'src/controls/form/number_box.dart';
+export 'src/controls/form/password_box.dart';
 export 'src/controls/form/pickers/date_picker.dart';
 export 'src/controls/form/pickers/time_picker.dart';
 export 'src/controls/form/selection_controls.dart';

@@ -238,16 +238,20 @@ class _HoverButtonState extends State<HoverButton> {
         if (mounted) setState(() => _pressing = false);
       },
       onLongPress: enabled ? widget.onLongPress : null,
-      onLongPressStart: (_) {
-        if (!enabled) return;
-        widget.onLongPressStart?.call();
-        if (mounted) setState(() => _pressing = true);
-      },
-      onLongPressEnd: (_) {
-        if (!enabled) return;
-        widget.onLongPressEnd?.call();
-        if (mounted) setState(() => _pressing = false);
-      },
+      onLongPressStart: widget.onLongPressStart != null
+          ? (_) {
+              if (!enabled) return;
+              widget.onLongPressStart?.call();
+              if (mounted) setState(() => _pressing = true);
+            }
+          : null,
+      onLongPressEnd: widget.onLongPressEnd != null
+          ? (_) {
+              if (!enabled) return;
+              widget.onLongPressEnd?.call();
+              if (mounted) setState(() => _pressing = false);
+            }
+          : null,
       onHorizontalDragStart: widget.onHorizontalDragStart,
       onHorizontalDragUpdate: widget.onHorizontalDragUpdate,
       onHorizontalDragEnd: widget.onHorizontalDragEnd,
