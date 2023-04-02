@@ -4,6 +4,7 @@
    - **Breaking: if you use the abstract class `BaseButton`, these two parameters are now required** 
 - Add `PasswordBox` widget. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
 - Improve example in Navigation/NavigationView in app. ([#796](https://github.com/bdlukaa/fluent_ui/pull/796))
+- Added Tamil language localization.
 
 ## 4.4.2
 
