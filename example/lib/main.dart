@@ -419,6 +419,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }
       },
     ),
+    PaneItem(
+      key: const Key('/popups/snackbar'),
+      icon: const Icon(FluentIcons.arrange_send_backward),
+      title: const Text('SnackBar'),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/popups/snackbar') {
+          router.pushNamed('popups_snackbar');
+        }
+      },
+    ),
     PaneItemHeader(header: const Text('Theming')),
     PaneItem(
       key: const Key('/theming/colors'),
@@ -1033,6 +1044,16 @@ final router = GoRouter(
           builder: (context, state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.Flyout2Screen(),
+          ),
+        ),
+
+        /// SnackBar
+        GoRoute(
+          path: '/popups/snackbar',
+          name: 'popups_snackbar',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.SnackBarPage(),
           ),
         ),
 
