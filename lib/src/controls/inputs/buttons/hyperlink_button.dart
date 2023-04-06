@@ -8,9 +8,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 ///   * [OutlinedButton], an outlined button
 ///   * [FilledButton], a colored button
-class TextButton extends BaseButton {
+///   * <https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.hyperlinkbutton>
+///   * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/HyperlinkButton_themeresources.xaml>
+class HyperlinkButton extends BaseButton {
   /// Creates a text-button.
-  const TextButton({
+  const HyperlinkButton({
     Key? key,
     required Widget child,
     required VoidCallback? onPressed,
@@ -38,14 +40,36 @@ class TextButton extends BaseButton {
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+
     return ButtonStyle(
-      backgroundColor: ButtonState.all(Colors.transparent),
+      backgroundColor: ButtonState.resolveWith((states) {
+        if (states.isDisabled) {
+          return theme.resources.subtleFillColorDisabled;
+        } else if (states.isPressing) {
+          return theme.resources.subtleFillColorTertiary;
+        } else if (states.isHovering) {
+          return theme.resources.subtleFillColorSecondary;
+        } else {
+          return theme.resources.subtleFillColorTransparent;
+        }
+      }),
+      shape: ButtonState.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+      ),
       padding: ButtonState.all(const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 8.0,
       )),
       foregroundColor: ButtonState.resolveWith((states) {
-        return FilledButton.backgroundColor(theme, states);
+        if (states.isDisabled) {
+          return theme.disabledColor;
+        } else if (states.isPressing) {
+          return theme.accentColor.tertiaryBrushFor(theme.brightness);
+        } else if (states.isHovering) {
+          return theme.accentColor.secondaryBrushFor(theme.brightness);
+        } else {
+          return theme.accentColor;
+        }
       }),
       textStyle: ButtonState.all(const TextStyle(
         fontWeight: FontWeight.w600,
@@ -57,6 +81,6 @@ class TextButton extends BaseButton {
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ButtonTheme.of(context).textButtonStyle;
+    return ButtonTheme.of(context).hyperlinkButtonStyle;
   }
 }

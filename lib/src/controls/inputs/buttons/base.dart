@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 ///
 ///   * <https://developer.microsoft.com/en-us/fluentui#/controls/android/button>
 ///   * <https://developer.microsoft.com/en-us/fluentui#/controls/web/button>
-///   * [TextButton], a borderless button with mainly text-based content
+///   * [HyperlinkButton], a borderless button with mainly text-based content
 ///   * [OutlinedButton], an outlined button
 ///   * [FilledButton], a colored button
 abstract class BaseButton extends StatefulWidget {

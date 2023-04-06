@@ -423,7 +423,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-/// A [TextButton] for the Fluent desktop text selection toolbar.
+/// A button for the Fluent desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
     Key? key,

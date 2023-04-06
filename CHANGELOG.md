@@ -1,10 +1,12 @@
-## [Next]
+## [next]
 
 - Add parameters `onTapDown` and `onTapUp` on all buttons. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
    - **Breaking: if you use the abstract class `BaseButton`, these two parameters are now required** 
 - Add `PasswordBox` widget. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
 - Improve example in Navigation/NavigationView in app. ([#796](https://github.com/bdlukaa/fluent_ui/pull/796))
 - Added Tamil language localization. ([#798](https://github.com/bdlukaa/fluent_ui/pull/798))
+- **BREAKING CHANGE** `TextButton` is renamed to `HyperlinkButton`
+- **BREAKING CHANGE** `ButtonThemeData.textButtonStyle` is renamed to `ButtonThemeData.hyperlinkButtonStyle`
 
 ## 4.4.2
 

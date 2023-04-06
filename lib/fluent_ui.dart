@@ -58,7 +58,7 @@ export 'src/controls/inputs/buttons/button.dart';
 export 'src/controls/inputs/buttons/filled_button.dart';
 export 'src/controls/inputs/buttons/icon_button.dart';
 export 'src/controls/inputs/buttons/outlined_button.dart';
-export 'src/controls/inputs/buttons/text_button.dart';
+export 'src/controls/inputs/buttons/hyperlink_button.dart';
 export 'src/controls/inputs/buttons/theme.dart';
 export 'src/controls/inputs/checkbox.dart';
 export 'src/controls/inputs/chip.dart';
