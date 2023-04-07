@@ -468,7 +468,8 @@ class _FluentAppState extends State<FluentApp> {
         routeInformationParser: widget.routeInformationParser,
         routerDelegate: widget.routerDelegate,
         routerConfig: widget.routerConfig,
-        backButtonDispatcher: widget.backButtonDispatcher,
+        backButtonDispatcher:
+            widget.routerConfig == null ? widget.backButtonDispatcher : null,
         builder: _builder,
         title: widget.title,
         onGenerateTitle: widget.onGenerateTitle,
