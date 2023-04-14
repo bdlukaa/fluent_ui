@@ -7,7 +7,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 /// See also:
 ///
 ///   * [FilledButton], a colored button
-///   * [TextButton], a borderless button with mainly text-based content
+///   * [HyperlinkButton], a borderless button with mainly text-based content
 class OutlinedButton extends BaseButton {
   const OutlinedButton({
     Key? key,

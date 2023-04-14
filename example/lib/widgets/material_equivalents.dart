@@ -49,8 +49,8 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
         ),
       ],
       [
-        const Text('TextButton'),
-        TextButton(
+        const Text('HyperlinkButton'),
+        HyperlinkButton(
           child: const Text('Content'),
           onPressed: () {},
         ),

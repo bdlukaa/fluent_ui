@@ -176,14 +176,14 @@ class ButtonTheme extends InheritedTheme {
 class ButtonThemeData with Diagnosticable {
   final ButtonStyle? defaultButtonStyle;
   final ButtonStyle? filledButtonStyle;
-  final ButtonStyle? textButtonStyle;
+  final ButtonStyle? hyperlinkButtonStyle;
   final ButtonStyle? outlinedButtonStyle;
   final ButtonStyle? iconButtonStyle;
 
   const ButtonThemeData({
     this.defaultButtonStyle,
     this.filledButtonStyle,
-    this.textButtonStyle,
+    this.hyperlinkButtonStyle,
     this.outlinedButtonStyle,
     this.iconButtonStyle,
   });
@@ -191,7 +191,7 @@ class ButtonThemeData with Diagnosticable {
   const ButtonThemeData.all(ButtonStyle? style)
       : defaultButtonStyle = style,
         filledButtonStyle = style,
-        textButtonStyle = style,
+        hyperlinkButtonStyle = style,
         outlinedButtonStyle = style,
         iconButtonStyle = style;
 
@@ -208,7 +208,7 @@ class ButtonThemeData with Diagnosticable {
     return ButtonThemeData(
       outlinedButtonStyle: style.outlinedButtonStyle ?? outlinedButtonStyle,
       filledButtonStyle: style.filledButtonStyle ?? filledButtonStyle,
-      textButtonStyle: style.textButtonStyle ?? textButtonStyle,
+      hyperlinkButtonStyle: style.hyperlinkButtonStyle ?? hyperlinkButtonStyle,
       defaultButtonStyle: style.defaultButtonStyle ?? defaultButtonStyle,
       iconButtonStyle: style.iconButtonStyle ?? iconButtonStyle,
     );
@@ -222,8 +222,8 @@ class ButtonThemeData with Diagnosticable {
           'outlinedButtonStyle', outlinedButtonStyle))
       ..add(DiagnosticsProperty<ButtonStyle>(
           'filledButtonStyle', filledButtonStyle))
-      ..add(
-          DiagnosticsProperty<ButtonStyle>('textButtonStyle', textButtonStyle))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'hyperlinkButtonStyle', hyperlinkButtonStyle))
       ..add(DiagnosticsProperty<ButtonStyle>(
           'defaultButtonStyle', defaultButtonStyle))
       ..add(
