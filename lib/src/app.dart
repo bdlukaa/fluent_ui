@@ -97,7 +97,7 @@ class FluentApp extends StatefulWidget {
     this.routeInformationProvider,
     this.routeInformationParser,
     this.routerDelegate,
-    BackButtonDispatcher? backButtonDispatcher,
+    this.backButtonDispatcher,
     this.routerConfig,
     this.builder,
     this.title = '',
@@ -118,12 +118,28 @@ class FluentApp extends StatefulWidget {
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
     this.useInheritedMediaQuery = false,
-  })  : assert(routeInformationParser != null && routerDelegate != null ||
-            routerConfig != null),
+  })  : assert(() {
+          if (routerConfig != null) {
+            assert(
+              (routeInformationProvider ??
+                      routeInformationParser ??
+                      routerDelegate ??
+                      backButtonDispatcher) ==
+                  null,
+              'If the routerConfig is provided, all the other router delegates must not be provided',
+            );
+            return true;
+          }
+          assert(routerDelegate != null,
+              'Either one of routerDelegate or routerConfig must be provided');
+          assert(
+            routeInformationProvider == null || routeInformationParser != null,
+            'If routeInformationProvider is provided, routeInformationParser must also be provided',
+          );
+          return true;
+        }()),
         assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
-        backButtonDispatcher =
-            backButtonDispatcher ?? RootBackButtonDispatcher(),
         navigatorKey = null,
         onGenerateRoute = null,
         home = null,
