@@ -1,6 +1,6 @@
 ## [Next]
 
-- Remove default value of `backButtonDispatcher` using `FluentApp.router`.
+- Remove default value of `backButtonDispatcher` when using `FluentApp.router`.
 - Add parameters `onTapDown` and `onTapUp` on all buttons. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
    - **Breaking: if you use the abstract class `BaseButton`, these two parameters are now required** 
 - Add `PasswordBox` widget. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
