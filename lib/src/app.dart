@@ -97,7 +97,7 @@ class FluentApp extends StatefulWidget {
     this.routeInformationProvider,
     this.routeInformationParser,
     this.routerDelegate,
-    BackButtonDispatcher? backButtonDispatcher,
+    this.backButtonDispatcher,
     this.routerConfig,
     this.builder,
     this.title = '',
@@ -122,8 +122,6 @@ class FluentApp extends StatefulWidget {
             routerConfig != null),
         assert(supportedLocales.isNotEmpty),
         navigatorObservers = null,
-        backButtonDispatcher =
-            backButtonDispatcher ?? RootBackButtonDispatcher(),
         navigatorKey = null,
         onGenerateRoute = null,
         home = null,
@@ -468,8 +466,7 @@ class _FluentAppState extends State<FluentApp> {
         routeInformationParser: widget.routeInformationParser,
         routerDelegate: widget.routerDelegate,
         routerConfig: widget.routerConfig,
-        backButtonDispatcher:
-            widget.routerConfig == null ? widget.backButtonDispatcher : null,
+        backButtonDispatcher: widget.backButtonDispatcher,
         builder: _builder,
         title: widget.title,
         onGenerateTitle: widget.onGenerateTitle,
