@@ -9,27 +9,25 @@ import 'package:flutter/gestures.dart';
 class Scrollbar extends RawScrollbar {
   /// Creates a fluent-styled scrollbar that wraps the given [child].
   ///
-  /// The [child], or a descendant of the [child], should be a
-  /// source of [ScrollNotification] notifications, typically a
-  /// [Scrollable] widget.
+  /// The [child], or a descendant of the [child], should be a source of
+  /// [ScrollNotification] notifications, typically a [Scrollable] widget.
+  ///
+  /// The [child], [fadeDuration], [pressDuration], and [timeToFade] arguments
+  /// must not be null.
   const Scrollbar({
-    Key? key,
-    required Widget child,
-    ScrollController? controller,
-    bool thumbVisibility = true,
+    super.key,
+    required super.child,
+    super.controller,
+    super.thumbVisibility = true,
     this.style,
-    Duration fadeDuration = const Duration(milliseconds: 300),
-    Duration timeToFade = const Duration(milliseconds: 600),
-    bool? interactive,
-  }) : super(
-          key: key,
-          child: child,
-          thumbVisibility: thumbVisibility,
-          controller: controller,
-          timeToFade: timeToFade,
-          fadeDuration: fadeDuration,
-          interactive: interactive,
-        );
+    super.fadeDuration = const Duration(milliseconds: 300),
+    super.timeToFade = const Duration(milliseconds: 600),
+    super.interactive,
+    super.notificationPredicate,
+    super.scrollbarOrientation,
+    super.pressDuration,
+    super.minOverscrollLength,
+  });
 
   /// The style applied to the scroll bar. If non-null, it's mescled
   /// with [FluentThemeData.scrollbarThemeData]
@@ -124,6 +122,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
+      ..minOverscrollLength =
+          widget.minOverscrollLength ?? _scrollbarTheme.minThumbLength ?? 48.0
       ..padding = Tween<EdgeInsets>(
             begin:
                 _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,

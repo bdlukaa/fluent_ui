@@ -7,6 +7,7 @@
 - Improve example in Navigation/NavigationView in app. ([#796](https://github.com/bdlukaa/fluent_ui/pull/796))
 - Added Tamil language localization. ([#798](https://github.com/bdlukaa/fluent_ui/pull/798))
 - **BREAKING CHANGE** `TextButton` is renamed to `HyperlinkButton` and `ButtonThemeData.textButtonStyle` is renamed to `ButtonThemeData.hyperlinkButtonStyle` ([#802](https://github.com/bdlukaa/fluent_ui/pull/802))
+- Added `.notificationPredicate`, `.scrollbarOrientation`, `.pressDuration` and `.minOverscrollLength` to `Scrollbar` ([#809](https://github.com/bdlukaa/fluent_ui/issues/809))
 
 ## 4.4.2
 
