@@ -8,6 +8,7 @@
 - Added Tamil language localization. ([#798](https://github.com/bdlukaa/fluent_ui/pull/798))
 - **BREAKING CHANGE** `TextButton` is renamed to `HyperlinkButton` and `ButtonThemeData.textButtonStyle` is renamed to `ButtonThemeData.hyperlinkButtonStyle` ([#802](https://github.com/bdlukaa/fluent_ui/pull/802))
 - Added `.notificationPredicate`, `.scrollbarOrientation`, `.pressDuration` and `.minOverscrollLength` to `Scrollbar` ([#809](https://github.com/bdlukaa/fluent_ui/issues/809))
+- Rebuild the `TreeView` elements on item invocation ([#810](https://github.com/bdlukaa/fluent_ui/issues/810))
 
 ## 4.4.2
 

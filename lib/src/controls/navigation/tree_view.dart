@@ -446,13 +446,16 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 ///
 /// Used by [TreeView.onSelectionChanged]
 typedef TreeViewSelectionChangedCallback = Future<void> Function(
-    Iterable<TreeViewItem> selectedItems)?;
+  Iterable<TreeViewItem> selectedItems,
+)?;
 
 /// A callback that receives a notification that an item has been invoked.
 ///
 /// Used by [TreeView.onItemInvoked]
 typedef TreeViewItemInvoked = Future<void> Function(
-    TreeViewItem item, TreeViewItemInvokeReason reason);
+  TreeViewItem item,
+  TreeViewItemInvokeReason reason,
+);
 
 /// A callback that receives a notification that an item
 /// received a secondary tap.
@@ -629,6 +632,14 @@ class TreeView extends StatefulWidget {
 class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   late List<TreeViewItem> _items;
 
+  /// Performs a build of all the items in the tree view.
+  ///
+  /// This is useful when an item needs to be updated outside of the built-in
+  /// callbacks.
+  ///
+  /// This operation is expensive and should be used with caution.
+  void buildItems() => _buildItems();
+
   /// Builds all the items based on the items provided by the [widget]
   void _buildItems() {
     if (widget.selectionMode != TreeViewSelectionMode.single) {
@@ -752,20 +763,19 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
               },
               onExpandToggle: () async {
                 await _invokeItem(item, TreeViewItemInvokeReason.expandToggle);
+
                 if (item.collapsable) {
                   if (item.lazy) {
                     // Triggers a loading indicator.
-                    setState(() {
-                      item.loading = true;
-                    });
+                    setState(() => item.loading = true);
                   }
 
-                  if (widget.onItemExpandToggle != null) {
-                    await widget.onItemExpandToggle!(item, !item.expanded);
-                  }
-                  if (item.onExpandToggle != null) {
-                    await item.onExpandToggle!(item, !item.expanded);
-                  }
+                  await Future.wait([
+                    if (widget.onItemExpandToggle != null)
+                      widget.onItemExpandToggle!(item, !item.expanded),
+                    if (item.onExpandToggle != null)
+                      item.onExpandToggle!(item, !item.expanded),
+                  ]);
 
                   // Remove the loading indicator.
                   // Toggle the expand icon.
@@ -789,11 +799,15 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   Future<void> _invokeItem(
     TreeViewItem item,
     TreeViewItemInvokeReason reason,
-  ) {
-    return Future.wait([
+  ) async {
+    if (widget.onItemInvoked == null && item.onInvoked == null) return;
+
+    await Future.wait([
       if (widget.onItemInvoked != null) widget.onItemInvoked!(item, reason),
       if (item.onInvoked != null) item.onInvoked!(item, reason),
     ]);
+
+    _buildItems();
   }
 
   /// Toggles the [item] expanded state
