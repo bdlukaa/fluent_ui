@@ -1,4 +1,7 @@
-## 4.5.0
+## 4.5.1
+ - support intl v 0.17 to v 1
+
+# 4.5.0
 
 - **MINOR BREAKING** Remove default value of `backButtonDispatcher` when using `FluentApp.router` ([#803](https://github.com/bdlukaa/fluent_ui/pull/803))
 - Add parameters `onTapDown` and `onTapUp` on all buttons. ([#795](https://github.com/bdlukaa/fluent_ui/pull/795))
