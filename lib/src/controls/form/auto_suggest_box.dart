@@ -608,9 +608,6 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 controller.text,
                 TextChangedReason.cleared,
               );
-              focusNode.unfocus(
-                disposition: UnfocusDisposition.previouslyFocusedChild,
-              );
             },
           ),
         ),
