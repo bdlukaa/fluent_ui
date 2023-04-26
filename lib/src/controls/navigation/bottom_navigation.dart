@@ -38,6 +38,7 @@ class BottomNavigationItem {
 /// ![BottomNavigation Preview](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_bottomnavigation_01_dark.png?text=DarkMode)
 ///
 /// See also:
+///
 ///   * [BottomNavigationItem], the items used by this widget
 ///   * [BottomNavigationThemeData], used to style this widget
 ///   * [ScaffoldPage], used to layout pages
@@ -99,7 +100,7 @@ class BottomNavigation extends StatelessWidget {
       elevation: 8.0,
       shadowColor: FluentTheme.of(context).shadowColor,
       child: Container(
-        height: _kBottomNavigationHeight,
+        constraints: const BoxConstraints(minHeight: _kBottomNavigationHeight),
         color: style.backgroundColor,
         child: Row(
           children: items.map((item) {
