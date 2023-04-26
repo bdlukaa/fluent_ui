@@ -696,18 +696,28 @@ class FlyoutController with ChangeNotifier {
                 onHover: (hover) {
                   if (flyoutKey.currentContext == null) return;
 
+                  final navigatorBox =
+                      navigator.context.findRenderObject() as RenderBox;
+
                   // the flyout box needs to be fetched at each [onHover] because the
                   // flyout size may change (a MenuFlyout, for example)
                   final flyoutBox =
                       flyoutKey.currentContext!.findRenderObject() as RenderBox;
-                  final flyoutRect =
-                      flyoutBox.localToGlobal(Offset.zero) & flyoutBox.size;
+                  final flyoutRect = flyoutBox.localToGlobal(
+                        Offset.zero,
+                        ancestor: navigatorBox,
+                      ) &
+                      flyoutBox.size;
                   final menusRects = keys.map((key) {
                     if (key.currentContext == null) return Rect.zero;
 
                     final menuBox =
                         key.currentContext!.findRenderObject() as RenderBox;
-                    return menuBox.localToGlobal(Offset.zero) & menuBox.size;
+                    return menuBox.localToGlobal(
+                          Offset.zero,
+                          ancestor: navigatorBox,
+                        ) &
+                        menuBox.size;
                   });
 
                   if (!flyoutRect.contains(hover.position) &&

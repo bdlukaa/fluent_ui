@@ -94,6 +94,7 @@ class _MenuFlyoutState extends State<MenuFlyout> {
         .any((item) => item.leading != null);
 
     final menuInfo = MenuInfoProvider.of(context);
+    final parent = Flyout.maybeOf(context);
 
     Widget content = FlyoutContent(
       color: widget.color,
@@ -136,7 +137,11 @@ class _MenuFlyoutState extends State<MenuFlyout> {
 
             final itemBox =
                 subItem.currentContext!.findRenderObject() as RenderBox;
-            final itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
+            final itemRect = itemBox.localToGlobal(
+                  Offset.zero,
+                  ancestor: parent?.widget.root?.context.findRenderObject(),
+                ) &
+                itemBox.size;
 
             if (!itemRect.contains(event.position)) {
               state.close(menuInfo);

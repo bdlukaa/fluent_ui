@@ -476,13 +476,24 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   }
 
   void _insertOverlay() {
+    final overlayState = Overlay.of(
+      context,
+      rootOverlay: true,
+      debugRequiredFor: widget,
+    );
+
     _entry = OverlayEntry(builder: (context) {
       assert(debugCheckHasMediaQuery(context));
 
       final boxContext = _textBoxKey.currentContext;
       if (boxContext == null) return const SizedBox.shrink();
       final box = boxContext.findRenderObject() as RenderBox;
-      final globalOffset = box.localToGlobal(Offset.zero);
+
+      // ancestor is not necessary here because we are not dealing with routes, but overlays
+      final globalOffset = box.localToGlobal(
+        Offset.zero,
+        ancestor: overlayState.context.findRenderObject(),
+      );
 
       final mediaQuery = MediaQuery.of(context);
       final screenHeight =
@@ -545,7 +556,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     });
 
     if (_textBoxKey.currentContext != null) {
-      Overlay.of(context).insert(_entry!);
+      overlayState.insert(_entry!);
       if (mounted) setState(() {});
     }
   }
