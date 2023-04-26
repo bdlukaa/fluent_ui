@@ -41,9 +41,8 @@ class IconButton extends BaseButton {
         : SmallIconButton.of(context) != null;
     return ButtonStyle(
       iconSize: ButtonState.all(isIconSmall ? 11.0 : null),
-      padding: ButtonState.all(isSmall
-          ? const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)
-          : const EdgeInsets.all(8.0)),
+      padding: ButtonState.all(
+          isSmall ? kDefaultButtonPadding : const EdgeInsets.all(8.0)),
       backgroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
           return ButtonThemeData.buttonColor(context, states);

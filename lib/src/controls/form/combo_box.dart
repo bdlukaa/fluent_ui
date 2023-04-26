@@ -12,8 +12,8 @@ const double _kMenuItemBottomPadding = 6.0;
 const double kComboBoxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
 const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsetsDirectional.only(
-  start: 12.0,
-  end: 8.0,
+  start: 11.0,
+  end: 15.0,
 );
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsets _kListPadding = EdgeInsets.only(top: _kMenuItemBottomPadding);
@@ -842,7 +842,7 @@ class ComboBox<T> extends StatefulWidget {
     this.icon = const Icon(FluentIcons.chevron_down),
     this.iconDisabledColor,
     this.iconEnabledColor,
-    this.iconSize = 10.0,
+    this.iconSize = 8.0,
     this.isExpanded = false,
     this.focusColor,
     this.focusNode,
@@ -1267,7 +1267,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
               else
                 innerItemsWidget,
               Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
                 child: IconTheme.merge(
                   data: IconThemeData(
                     color: iconColor(context),

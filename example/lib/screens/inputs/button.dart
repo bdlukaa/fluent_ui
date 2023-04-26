@@ -2,6 +2,7 @@
 
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:url_launcher/link.dart';
 
 import '../../widgets/card_highlight.dart';
 
@@ -19,6 +20,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   bool simpleDisabled = false;
   bool filledDisabled = false;
   bool iconDisabled = false;
+  bool iconSmall = false;
   bool toggleDisabled = false;
   bool toggleState = false;
   bool splitButtonDisabled = false;
@@ -91,30 +93,88 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
         ),
+        subtitle(content: const Text('Hyperlink Button')),
+        const Text(
+          'Hyperlinks navigate the user to another part of the app, to another '
+          'app, or launch a specific uniform resource identifier (URI) using a '
+          'separate browser app.',
+        ),
+        CardHighlight(
+          child: Link(
+            uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
+            builder: (context, open) {
+              return HyperlinkButton(
+                child: Text('Fluent UI homepage'),
+                onPressed: open,
+              );
+            },
+          ),
+          codeSnippet: '''Link( // from the url_launcher package
+  uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
+  builder: (Context, open) {
+    return HyperlinkButton(
+      child: Text('Fluent UI homepage'),
+      onPressed: open,
+    );
+  },
+)''',
+        ),
         subtitle(
           content: const Text('A Button with graphical content (IconButton)'),
         ),
         CardHighlight(
           child: Row(children: [
-            IconButton(
-              icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
-              onPressed: iconDisabled ? null : () {},
-            ),
+            () {
+              final button = IconButton(
+                icon: Icon(
+                  FluentIcons.graph_symbol,
+                  size: iconSmall ? 20.0 : 24.0,
+                ),
+                onPressed: iconDisabled ? null : () {},
+              );
+
+              if (iconSmall) return SmallIconButton(child: button);
+
+              return button;
+            }(),
             const Spacer(),
-            ToggleSwitch(
-              checked: iconDisabled,
-              onChanged: (v) {
-                setState(() {
-                  iconDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Checkbox(
+                checked: iconSmall,
+                onChanged: (v) {
+                  setState(() {
+                    iconSmall = v ?? !iconSmall;
+                  });
+                },
+                content: const Text('Small'),
+              ),
+              const SizedBox(height: 4.0),
+              Checkbox(
+                checked: iconDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    iconDisabled = v ?? !iconDisabled;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ]),
           ]),
-          codeSnippet: '''IconButton(
+          codeSnippet: () {
+            if (iconSmall) {
+              return '''SmallIconButton(
+  child: IconButton(
+    icon: const Icon(FluentIcons.graph_symbol, size: 20.0),
+    onPressed: disabled ? null : () => debugPrint('pressed button'),
+  ),
+)''';
+            }
+
+            return '''IconButton(
   icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
+)''';
+          }(),
         ),
         subtitle(
             content: const Text('A simple ToggleButton with text content')),

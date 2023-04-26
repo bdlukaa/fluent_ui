@@ -951,6 +951,7 @@ class _TreeViewItem extends StatelessWidget {
                     if (selectionMode == TreeViewSelectionMode.multiple)
                       Padding(
                         padding: EdgeInsetsDirectional.only(
+                          start: 8.0,
                           end: narrowSpacing ? 0.0 : _whiteSpace,
                         ),
                         child: Checkbox(

@@ -370,7 +370,6 @@ class ToggleSwitchThemeData with Diagnosticable {
           ),
         );
       }),
-      margin: const EdgeInsets.all(4),
       animationDuration: theme.fasterAnimationDuration,
       animationCurve: theme.animationCurve,
       checkedThumbDecoration: ButtonState.resolveWith((states) {
