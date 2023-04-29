@@ -248,50 +248,53 @@ class DropDownButtonState extends State<DropDownButton> {
     return FlyoutTarget(
       controller: _flyoutController,
       child: Builder(builder: (context) {
-        return widget.buttonBuilder?.call(
-              context,
-              widget.disabled ? null : open,
-            ) ??
-            Button(
-              onPressed: widget.disabled ? null : open,
-              autofocus: widget.autofocus,
-              focusNode: widget.focusNode,
-              child: Builder(builder: (context) {
-                final state = HoverButton.of(context).states;
+        if (widget.buttonBuilder != null) {
+          return widget.buttonBuilder!(
+            context,
+            widget.disabled ? null : open,
+          );
+        }
 
-                return IconTheme.merge(
-                  data: const IconThemeData(size: 20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _space(<Widget>[
-                      if (widget.leading != null) widget.leading!,
-                      if (widget.title != null) widget.title!,
-                      if (widget.trailing != null)
-                        IconTheme.merge(
-                          data: IconThemeData(
-                            color: state.isDisabled
-                                ? theme.resources.textFillColorDisabled
-                                : state.isPressing
-                                    ? theme.resources.textFillColorTertiary
-                                    : state.isHovering
-                                        ? theme.resources.textFillColorSecondary
-                                        : theme.resources.textFillColorPrimary,
-                          ),
-                          child: AnimatedSlide(
-                            duration: theme.fastAnimationDuration,
-                            curve: Curves.easeInCirc,
-                            offset: state.isPressing
-                                ? const Offset(0, 0.1)
-                                : Offset.zero,
-                            child: widget.trailing!,
-                          ),
-                        ),
-                    ]),
-                  ),
-                );
-              }),
+        return Button(
+          onPressed: widget.disabled ? null : open,
+          autofocus: widget.autofocus,
+          focusNode: widget.focusNode,
+          child: Builder(builder: (context) {
+            final state = HoverButton.of(context).states;
+
+            return IconTheme.merge(
+              data: const IconThemeData(size: 20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _space(<Widget>[
+                  if (widget.leading != null) widget.leading!,
+                  if (widget.title != null) widget.title!,
+                  if (widget.trailing != null)
+                    IconTheme.merge(
+                      data: IconThemeData(
+                        color: state.isDisabled
+                            ? theme.resources.textFillColorDisabled
+                            : state.isPressing
+                                ? theme.resources.textFillColorTertiary
+                                : state.isHovering
+                                    ? theme.resources.textFillColorSecondary
+                                    : theme.resources.textFillColorPrimary,
+                      ),
+                      child: AnimatedSlide(
+                        duration: theme.fastAnimationDuration,
+                        curve: Curves.easeInCirc,
+                        offset: state.isPressing
+                            ? const Offset(0, 0.1)
+                            : Offset.zero,
+                        child: widget.trailing!,
+                      ),
+                    ),
+                ]),
+              ),
             );
+          }),
+        );
       }),
     );
   }

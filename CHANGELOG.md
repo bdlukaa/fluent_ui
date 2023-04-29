@@ -1,6 +1,9 @@
 ## [next]
 
 - Do not unfocus the auto suggest box on clear ([#816](https://github.com/bdlukaa/fluent_ui/issues/816))
+- Review all the inputs margins and inputs ([#799](https://github.com/bdlukaa/fluent_ui/pull/799))
+- `HyperlinkButton` now uses the correct color in dark mode ([#817](https://github.com/bdlukaa/fluent_ui/pull/817))
+- `DatePicker`, `TimePicker` and all other overlay widgets are now positioned correctly if there are multiple navigators ([#817](https://github.com/bdlukaa/fluent_ui/pull/817))
 
 ## 4.5.0
 

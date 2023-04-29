@@ -325,10 +325,15 @@ class _PickerState extends State<Picker> {
       _childKey.currentContext != null,
       'The child must have been built at least once',
     );
-    final box = _childKey.currentContext!.findRenderObject() as RenderBox;
-    final childOffset = box.localToGlobal(Offset.zero);
 
     final navigator = Navigator.of(context);
+
+    final box = _childKey.currentContext!.findRenderObject() as RenderBox;
+    final childOffset = box.localToGlobal(
+      Offset.zero,
+      ancestor: navigator.context.findRenderObject(),
+    );
+
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
 
     return navigator.push(PageRouteBuilder(

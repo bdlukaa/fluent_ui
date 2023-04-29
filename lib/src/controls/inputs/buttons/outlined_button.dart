@@ -39,10 +39,7 @@ class OutlinedButton extends BaseButton {
     final theme = FluentTheme.of(context);
 
     return ButtonStyle(
-      padding: ButtonState.all(const EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 6.0,
-      )),
+      padding: ButtonState.all(kDefaultButtonPadding),
       shape: ButtonState.all(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.0),
       )),

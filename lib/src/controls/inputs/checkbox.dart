@@ -133,7 +133,7 @@ class Checkbox extends StatelessWidget {
         if (content != null) {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
-            const SizedBox(width: 6.0),
+            const SizedBox(width: 8.0),
             content!,
           ]);
         }
@@ -284,7 +284,6 @@ class CheckboxThemeData with Diagnosticable {
       }),
       uncheckedIconColor: ButtonState.all(Colors.transparent),
       icon: FluentIcons.check_mark,
-      margin: const EdgeInsets.all(4.0),
     );
   }
 

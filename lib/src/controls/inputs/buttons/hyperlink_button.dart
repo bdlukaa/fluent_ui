@@ -59,10 +59,7 @@ class HyperlinkButton extends BaseButton {
       shape: ButtonState.all(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       ),
-      padding: ButtonState.all(const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 8.0,
-      )),
+      padding: ButtonState.all(kDefaultButtonPadding),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
           return theme.disabledColor;
@@ -71,7 +68,7 @@ class HyperlinkButton extends BaseButton {
         } else if (states.isHovering) {
           return theme.accentColor.secondaryBrushFor(theme.brightness);
         } else {
-          return theme.accentColor;
+          return theme.accentColor.defaultBrushFor(theme.brightness);
         }
       }),
       textStyle: ButtonState.all(const TextStyle(

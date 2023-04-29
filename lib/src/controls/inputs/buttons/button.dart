@@ -1,5 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+const kDefaultButtonPadding = EdgeInsetsDirectional.only(
+  start: 11.0,
+  top: 5.0,
+  end: 11.0,
+  bottom: 6.0,
+);
+
 /// A button gives the user a way to trigger an immediate action.
 ///
 /// ![Button Example](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/button.png)
@@ -41,17 +48,8 @@ class Button extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     return ButtonStyle(
-      // elevation: ButtonState.resolveWith((states) {
-      //   if (states.isPressing) return 0.0;
-      //   return 0.3;
-      // }),
       shadowColor: ButtonState.all(theme.shadowColor),
-      padding: ButtonState.all(const EdgeInsetsDirectional.only(
-        start: 11.0,
-        top: 5.0,
-        end: 11.0,
-        bottom: 5.0,
-      )),
+      padding: ButtonState.all(kDefaultButtonPadding),
       shape: ButtonState.resolveWith((states) {
         return RoundedRectangleBorder(
           side: BorderSide(
