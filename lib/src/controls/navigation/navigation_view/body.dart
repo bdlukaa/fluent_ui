@@ -189,14 +189,14 @@ class _NavigationBodyState extends State<_NavigationBody> {
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.displayMode,
     this.minimalPaneOpen = false,
     this.pane,
     this.oldIndex = 0,
     this.currentItemIndex = -1,
-  }) : super(key: key, child: child);
+  });
 
   /// The current pane display mode according to the current state.
   final PaneDisplayMode displayMode;
@@ -262,10 +262,10 @@ class InheritedNavigationView extends InheritedWidget {
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
 class PaneItemKeys extends InheritedWidget {
   const PaneItemKeys({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.keys,
-  }) : super(key: key, child: child);
+  });
 
   final Map<int, GlobalKey> keys;
 

@@ -42,7 +42,7 @@ typedef NavigationContentBuilder = Widget Function(
 class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
   const NavigationView({
-    Key? key,
+    super.key,
     this.appBar,
     this.pane,
     this.content,
@@ -51,12 +51,11 @@ class NavigationView extends StatefulWidget {
     this.onOpenSearch,
     this.transitionBuilder,
     this.paneBodyBuilder,
-  })  : assert(
+  }) : assert(
           (pane != null && content == null) ||
               (pane == null && content != null),
           'Either pane or content must be provided',
-        ),
-        super(key: key);
+        );
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
@@ -866,10 +865,9 @@ class NavigationAppBar with Diagnosticable {
 
 class _NavigationAppBar extends StatelessWidget {
   const _NavigationAppBar({
-    Key? key,
     required this.appBar,
     required this.additionalLeading,
-  }) : super(key: key);
+  });
 
   final NavigationAppBar appBar;
   final Widget? additionalLeading;

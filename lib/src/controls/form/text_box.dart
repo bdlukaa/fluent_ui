@@ -36,9 +36,8 @@ enum OverlayVisibilityMode {
 class _TextBoxSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
   _TextBoxSelectionGestureDetectorBuilder({
-    required _TextBoxState state,
-  })  : _state = state,
-        super(delegate: state);
+    required _TextBoxState super.delegate,
+  }) : _state = delegate;
 
   final _TextBoxState _state;
 
@@ -681,7 +680,7 @@ class _TextBoxState extends State<TextBox>
   void initState() {
     super.initState();
     _selectionGestureDetectorBuilder = _TextBoxSelectionGestureDetectorBuilder(
-      state: this,
+      delegate: this,
     );
     if (widget.controller == null) {
       _createLocalController();

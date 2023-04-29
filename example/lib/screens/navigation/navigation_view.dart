@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/page.dart';
 
 class NavigationViewPage extends StatefulWidget {
-  const NavigationViewPage({Key? key}) : super(key: key);
+  const NavigationViewPage({super.key});
 
   @override
   State<NavigationViewPage> createState() => _NavigationViewPageState();
@@ -358,10 +358,9 @@ NavigationView(
 
 class _NavigationBodyItem extends StatelessWidget {
   const _NavigationBodyItem({
-    Key? key,
     this.header,
     this.content,
-  }) : super(key: key);
+  });
 
   final String? header;
   final Widget? content;

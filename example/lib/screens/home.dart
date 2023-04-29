@@ -8,7 +8,7 @@ import '../widgets/page.dart';
 import '../widgets/sponsor.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -228,10 +228,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
 
 class SponsorButton extends StatelessWidget {
   const SponsorButton({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.username,
-  }) : super(key: key);
+  });
 
   final String imageUrl;
   final String username;

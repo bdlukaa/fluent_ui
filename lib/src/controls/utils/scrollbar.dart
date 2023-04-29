@@ -199,10 +199,10 @@ class ScrollbarTheme extends InheritedTheme {
   /// Creates a scrollbar theme that controls the configurations for
   /// [Scrollbar].
   const ScrollbarTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;

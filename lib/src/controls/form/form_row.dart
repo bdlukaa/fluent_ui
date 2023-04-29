@@ -9,13 +9,13 @@ const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
 
 class FormRow extends StatelessWidget {
   const FormRow({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = _kDefaultPadding,
     this.helper,
     this.error,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   final EdgeInsetsGeometry padding;
 

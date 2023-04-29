@@ -91,7 +91,7 @@ class AutoSuggestBoxItem<T> {
 class AutoSuggestBox<T> extends StatefulWidget {
   /// Creates a fluent-styled auto suggest box.
   const AutoSuggestBox({
-    Key? key,
+    super.key,
     required this.items,
     this.controller,
     this.onChanged,
@@ -125,12 +125,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.inputFormatters,
     this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
   })  : autovalidateMode = AutovalidateMode.disabled,
-        validator = null,
-        super(key: key);
+        validator = null;
 
   /// Creates a fluent-styled auto suggest form box.
   const AutoSuggestBox.form({
-    Key? key,
+    super.key,
     required this.items,
     this.controller,
     this.onChanged,
@@ -165,7 +164,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.enabled = true,
     this.inputFormatters,
     this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
-  }) : super(key: key);
+  });
 
   /// The list of items to display to the user to pick
   final List<AutoSuggestBoxItem<T>> items;
@@ -744,7 +743,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
 class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   const _AutoSuggestBoxOverlay({
-    Key? key,
+    super.key,
     required this.items,
     required this.controller,
     required this.onSelected,
@@ -754,7 +753,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
     required this.sorter,
     required this.maxHeight,
     required this.noResultsFoundBuilder,
-  }) : super(key: key);
+  });
 
   final List<AutoSuggestBoxItem<T>> items;
   final TextEditingController controller;
@@ -888,11 +887,10 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
 
 class _AutoSuggestBoxOverlayTile extends StatefulWidget {
   const _AutoSuggestBoxOverlayTile({
-    Key? key,
     required this.text,
     this.selected = false,
     this.onSelected,
-  }) : super(key: key);
+  });
 
   final Widget text;
   final VoidCallback? onSelected;

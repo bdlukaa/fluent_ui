@@ -32,7 +32,7 @@ typedef ToggleSwitchThumbBuilder = Widget Function(
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.style,
@@ -43,7 +43,7 @@ class ToggleSwitch extends StatefulWidget {
     this.thumbBuilder,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// Whether this toggle switch is checked
   final bool checked;
@@ -218,11 +218,11 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
 
 class DefaultToggleSwitchThumb extends StatelessWidget {
   const DefaultToggleSwitchThumb({
-    Key? key,
+    super.key,
     required this.checked,
     required this.style,
     required this.states,
-  }) : super(key: key);
+  });
 
   final bool checked;
   final ToggleSwitchThemeData? style;
@@ -255,10 +255,10 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// Creates a button theme that controls how descendant [ToggleSwitch]es should
   /// look like.
   const ToggleSwitchTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   final ToggleSwitchThemeData data;
 

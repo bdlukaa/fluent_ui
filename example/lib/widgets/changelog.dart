@@ -11,7 +11,7 @@ import 'deferred_widget.dart';
 List<String>? changelog;
 
 class Changelog extends StatefulWidget {
-  const Changelog({Key? key}) : super(key: key);
+  const Changelog({super.key});
 
   @override
   State<Changelog> createState() => _ChangelogState();

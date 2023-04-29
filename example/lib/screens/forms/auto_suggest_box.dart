@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class AutoSuggestBoxPage extends StatefulWidget {
-  const AutoSuggestBoxPage({Key? key}) : super(key: key);
+  const AutoSuggestBoxPage({super.key});
 
   @override
   State<AutoSuggestBoxPage> createState() => _AutoSuggestBoxPageState();

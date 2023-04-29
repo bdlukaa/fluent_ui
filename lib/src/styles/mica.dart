@@ -22,14 +22,13 @@ class Mica extends StatelessWidget {
   ///
   /// [elevation] must be non-negative.
   const Mica({
-    Key? key,
+    super.key,
     required this.child,
     this.elevation = 0,
     this.backgroundColor,
     this.borderRadius,
     this.shape = BoxShape.rectangle,
-  })  : assert(elevation >= 0.0),
-        super(key: key);
+  }) : assert(elevation >= 0.0);
 
   /// The widget below this widget in the tree.
   ///

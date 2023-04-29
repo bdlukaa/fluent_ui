@@ -20,23 +20,21 @@ enum _ChipType {
 class Chip extends StatelessWidget {
   /// Creates a normal chip.
   const Chip({
-    Key? key,
+    super.key,
     this.image,
     this.text,
     this.onPressed,
     this.semanticLabel,
-  })  : _type = _ChipType.normal,
-        super(key: key);
+  }) : _type = _ChipType.normal;
 
   /// Creates a selected chip
   const Chip.selected({
-    Key? key,
+    super.key,
     this.image,
     this.text,
     this.onPressed,
     this.semanticLabel,
-  })  : _type = _ChipType.selected,
-        super(key: key);
+  }) : _type = _ChipType.selected;
 
   /// The chip image. It's rendered before [text]
   ///
@@ -137,10 +135,10 @@ class ChipTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [Chip].
   const ChipTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   /// The properties for descendant [Chip] widgets.
   final ChipThemeData data;

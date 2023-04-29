@@ -71,7 +71,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // private navigators
 
@@ -127,11 +127,11 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
-    Key? key,
+    super.key,
     required this.child,
     required this.shellContext,
     required this.state,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final BuildContext? shellContext;
@@ -721,7 +721,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 }
 
 class WindowButtons extends StatelessWidget {
-  const WindowButtons({Key? key}) : super(key: key);
+  const WindowButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

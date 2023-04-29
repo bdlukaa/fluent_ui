@@ -4,30 +4,23 @@ enum IconButtonMode { tiny, small, large }
 
 class IconButton extends BaseButton {
   const IconButton({
-    Key? key,
+    super.key,
     required Widget icon,
-    required VoidCallback? onPressed,
-    VoidCallback? onLongPress,
-    VoidCallback? onTapDown,
-    VoidCallback? onTapUp,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    ButtonStyle? style,
+    required super.onPressed,
+    super.onLongPress,
+    super.onTapDown,
+    super.onTapUp,
+    super.focusNode,
+    super.autofocus = false,
+    super.style,
+    super.focusable = true,
     this.iconButtonMode,
-    bool focusable = true,
-  }) : super(
-          key: key,
-          child: icon,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          onLongPress: onLongPress,
-          onPressed: onPressed,
-          onTapDown: onTapDown,
-          onTapUp: onTapUp,
-          style: style,
-          focusable: focusable,
-        );
+  }) : super(child: icon);
 
+  /// How this icon button will behave.
+  ///
+  /// If null, this may be affected by a [SmallIconButton] in the tree, if any.
+  /// If null and without a [SmallIconButton], defaults to large.
   final IconButtonMode? iconButtonMode;
 
   @override
@@ -71,11 +64,14 @@ class IconButton extends BaseButton {
   }
 }
 
+/// Makes its icon button children small.
+///
+/// See also:
+///
+///  * [IconButton], which turns small when wrapped in this.
 class SmallIconButton extends InheritedWidget {
-  const SmallIconButton({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+  /// Creates a small icon button.
+  const SmallIconButton({super.key, required super.child});
 
   static SmallIconButton? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SmallIconButton>();

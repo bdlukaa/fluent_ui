@@ -3,7 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:example/widgets/page.dart';
 
 class TilesPage extends StatefulWidget {
-  const TilesPage({Key? key}) : super(key: key);
+  const TilesPage({super.key});
 
   @override
   State<TilesPage> createState() => _TilesPageState();

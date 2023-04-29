@@ -6,7 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/card_highlight.dart';
 
 class ProgressIndicatorsPage extends StatefulWidget {
-  const ProgressIndicatorsPage({Key? key}) : super(key: key);
+  const ProgressIndicatorsPage({super.key});
 
   @override
   State<ProgressIndicatorsPage> createState() => _ProgressIndicatorsPageState();

@@ -21,11 +21,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 class InfoBadge extends StatelessWidget {
   /// Creates an info badge.
   const InfoBadge({
-    Key? key,
+    super.key,
     this.source,
     this.color,
     this.foregroundColor,
-  }) : super(key: key);
+  });
 
   /// The source of the badge.
   ///

@@ -5,7 +5,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TabViewPage extends StatefulWidget {
-  const TabViewPage({Key? key}) : super(key: key);
+  const TabViewPage({super.key});
 
   @override
   State<TabViewPage> createState() => _TabViewPageState();

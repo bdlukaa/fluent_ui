@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TimePickerPage extends StatefulWidget {
-  const TimePickerPage({Key? key}) : super(key: key);
+  const TimePickerPage({super.key});
 
   @override
   State<TimePickerPage> createState() => _TimePickerPageState();

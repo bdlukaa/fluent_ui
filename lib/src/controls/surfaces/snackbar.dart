@@ -85,11 +85,11 @@ OverlayEntry showSnackbar(
 class Snackbar extends StatefulWidget {
   /// Creates a snackbar.
   const Snackbar({
-    Key? key,
+    super.key,
     required this.content,
     this.action,
     this.extended = false,
-  }) : super(key: key);
+  });
 
   /// The content of the snackbar.
   ///
@@ -178,10 +178,10 @@ class SnackbarTheme extends InheritedTheme {
   /// Creates a info bar theme that controls the configurations for
   /// [Snackbar].
   const SnackbarTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Snackbar] widgets.
   final SnackbarThemeData data;

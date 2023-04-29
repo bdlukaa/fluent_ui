@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TreeViewPage extends StatefulWidget {
-  const TreeViewPage({Key? key}) : super(key: key);
+  const TreeViewPage({super.key});
 
   @override
   State<TreeViewPage> createState() => _TreeViewPageState();

@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/page.dart';
 
 class InfoBarsPage extends StatefulWidget {
-  const InfoBarsPage({Key? key}) : super(key: key);
+  const InfoBarsPage({super.key});
 
   @override
   State<InfoBarsPage> createState() => _InfoBarsPageState();

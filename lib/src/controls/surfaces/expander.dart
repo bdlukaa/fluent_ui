@@ -31,7 +31,7 @@ enum ExpanderDirection {
 class Expander extends StatefulWidget {
   /// Creates a fluent-styled expander.
   const Expander({
-    Key? key,
+    super.key,
     this.leading,
     required this.header,
     required this.content,
@@ -46,7 +46,7 @@ class Expander extends StatefulWidget {
     this.headerBackgroundColor,
     this.contentBackgroundColor,
     this.headerShape,
-  }) : super(key: key);
+  });
 
   /// The leading widget.
   ///

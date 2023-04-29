@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class DatePickerPage extends StatefulWidget {
-  const DatePickerPage({Key? key}) : super(key: key);
+  const DatePickerPage({super.key});
 
   @override
   State<DatePickerPage> createState() => _DatePickerPageState();

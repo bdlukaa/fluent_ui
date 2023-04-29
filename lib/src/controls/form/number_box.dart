@@ -522,7 +522,7 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10),
+      padding: const EdgeInsetsDirectional.only(start: 10),
       child: PhysicalModel(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),

@@ -56,7 +56,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
   final DynamicOverflowChangedCallback? overflowChangedCallback;
 
   DynamicOverflow({
-    Key? key,
+    super.key,
     this.direction = Axis.horizontal,
     this.alignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -68,7 +68,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
     this.overflowChangedCallback,
     required List<Widget> children,
     required Widget overflowWidget,
-  }) : super(key: key, children: [...children, overflowWidget]);
+  }) : super(children: [...children, overflowWidget]);
 
   @override
   RenderDynamicOverflow createRenderObject(BuildContext context) {

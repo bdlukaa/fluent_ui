@@ -20,15 +20,14 @@ class ProgressBar extends StatefulWidget {
   ///
   /// [strokeWidth] must be equal or greater than 0
   const ProgressBar({
-    Key? key,
+    super.key,
     this.value,
     this.strokeWidth = 4.5,
     this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
   })  : assert(value == null || value >= 0 && value <= 100),
-        assert(strokeWidth >= 0),
-        super(key: key);
+        assert(strokeWidth >= 0);
 
   /// The current value of the indicator. If non-null, produces
   /// the following:
@@ -272,15 +271,14 @@ class ProgressRing extends StatefulWidget {
   ///
   /// [strokeWidth] must be equal or greater than 0
   const ProgressRing({
-    Key? key,
+    super.key,
     this.value,
     this.strokeWidth = 4.5,
     this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
     this.backwards = false,
-  })  : assert(value == null || value >= 0 && value <= 100),
-        super(key: key);
+  }) : assert(value == null || value >= 0 && value <= 100);
 
   /// The current value of the indicator. If non-null, produces
   /// the following:

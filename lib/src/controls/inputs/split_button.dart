@@ -21,11 +21,10 @@ class SplitButtonBar extends StatelessWidget {
   /// It provides a [ButtonThemeData] above each button to make them
   /// fell natural within the bar.
   const SplitButtonBar({
-    Key? key,
+    super.key,
     required this.buttons,
     this.style,
-  })  : assert(buttons.length == 2, 'There must 2 buttons'),
-        super(key: key);
+  }) : assert(buttons.length == 2, 'There must 2 buttons');
 
   /// The buttons in this button bar. Must be only two buttons
   ///
@@ -95,10 +94,10 @@ class SplitButtonTheme extends InheritedTheme {
   /// Creates a button theme that controls how descendant [SplitButtonBar]s should
   /// look like.
   const SplitButtonTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   final SplitButtonThemeData data;
 

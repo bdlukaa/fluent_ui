@@ -298,8 +298,8 @@ class _DatePickerState extends State<DatePicker> {
       pickerContent: (context) {
         return _DatePickerContentPopUp(
           date: date,
-          dayController: _dayController!,
-          monthController: _monthController!,
+          dayController: _dayController,
+          monthController: _monthController,
           onCancel: () => widget.onCancel?.call(),
           onChanged: (date) => widget.onChanged?.call(date),
           showDay: widget.showDay,
@@ -307,7 +307,7 @@ class _DatePickerState extends State<DatePicker> {
           showYear: widget.showYear,
           startDate: widget.startDate,
           endDate: widget.endDate,
-          yearController: _yearController!,
+          yearController: _yearController,
           locale: widget.locale,
           fieldOrder: fieldOrder,
         );
@@ -439,7 +439,6 @@ class _DatePickerState extends State<DatePicker> {
 
 class _DatePickerContentPopUp extends StatefulWidget {
   const _DatePickerContentPopUp({
-    Key? key,
     required this.showMonth,
     required this.showDay,
     required this.showYear,
@@ -453,7 +452,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.endDate,
     required this.locale,
     required this.fieldOrder,
-  }) : super(key: key);
+  });
 
   final bool showMonth;
   final bool showDay;

@@ -166,12 +166,12 @@ class ColorsPage extends ScrollablePage {
 
 class ColorBlock extends StatelessWidget {
   const ColorBlock({
-    Key? key,
+    super.key,
     required this.name,
     required this.color,
     this.variant,
     required this.clipboard,
-  }) : super(key: key);
+  });
 
   final String name;
   final Color color;

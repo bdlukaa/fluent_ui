@@ -79,10 +79,10 @@ class YesNoPickerControl extends StatelessWidget {
   /// - continue
   /// - cancel
   const YesNoPickerControl({
-    Key? key,
+    super.key,
     required this.onChanged,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   final VoidCallback onChanged;
   final VoidCallback onCancel;
@@ -141,11 +141,11 @@ class YesNoPickerControl extends StatelessWidget {
 class PickerNavigatorIndicator extends StatelessWidget {
   /// Creates a picker navigator indicator
   const PickerNavigatorIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onBackward,
     required this.onForward,
-  }) : super(key: key);
+  });
 
   /// The content of the widget.
   ///
@@ -303,11 +303,11 @@ typedef PickerBuilder = Widget Function(
 class Picker extends StatefulWidget {
   /// Creates a picker flyout
   const Picker({
-    Key? key,
+    super.key,
     required this.child,
     required this.pickerContent,
     required this.pickerHeight,
-  }) : super(key: key);
+  });
 
   final PickerBuilder child;
   final WidgetBuilder pickerContent;

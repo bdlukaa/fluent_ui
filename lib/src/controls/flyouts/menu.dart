@@ -23,7 +23,7 @@ class MenuFlyout extends StatefulWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints,
-    this.padding = const EdgeInsets.only(top: 8.0),
+    this.padding = const EdgeInsetsDirectional.only(top: 8.0),
   });
 
   /// {@template fluent_ui.flyouts.menu.items}

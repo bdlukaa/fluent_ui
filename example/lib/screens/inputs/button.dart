@@ -10,7 +10,7 @@ const kSplitButtonHeight = 32.0;
 const kSplitButtonWidth = 36.0;
 
 class ButtonPage extends StatefulWidget {
-  const ButtonPage({Key? key}) : super(key: key);
+  const ButtonPage({super.key});
 
   @override
   State<ButtonPage> createState() => _ButtonPageState();

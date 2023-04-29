@@ -50,7 +50,7 @@ class FluentApp extends StatefulWidget {
   ///
   /// The boolean arguments, [routes], and [navigatorObservers], must not be null.
   const FluentApp({
-    Key? key,
+    super.key,
     this.navigatorKey,
     this.onGenerateRoute,
     this.onGenerateInitialRoutes,
@@ -85,12 +85,11 @@ class FluentApp extends StatefulWidget {
         routeInformationParser = null,
         routerDelegate = null,
         backButtonDispatcher = null,
-        routerConfig = null,
-        super(key: key);
+        routerConfig = null;
 
   /// Creates a [FluentApp] that uses the [Router] instead of a [Navigator].
   FluentApp.router({
-    Key? key,
+    super.key,
     this.theme,
     this.darkTheme,
     this.themeMode,
@@ -146,8 +145,7 @@ class FluentApp extends StatefulWidget {
         onGenerateInitialRoutes = null,
         onUnknownRoute = null,
         routes = null,
-        initialRoute = null,
-        super(key: key);
+        initialRoute = null;
 
   /// Default visual properties, like colors fonts and shapes, for this app's
   /// fluent widgets.

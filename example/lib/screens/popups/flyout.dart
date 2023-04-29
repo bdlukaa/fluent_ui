@@ -6,7 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 
 class Flyout2Screen extends StatefulWidget {
-  const Flyout2Screen({Key? key}) : super(key: key);
+  const Flyout2Screen({super.key});
 
   @override
   State<Flyout2Screen> createState() => _Flyout2ScreenState();

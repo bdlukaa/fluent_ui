@@ -29,7 +29,7 @@ import 'package:flutter/rendering.dart';
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.style,
@@ -37,7 +37,7 @@ class RadioButton extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// Whether this radio button is checked.
   final bool checked;
@@ -150,10 +150,10 @@ class RadioButtonTheme extends InheritedTheme {
   /// Creates a radio button theme that controls the configurations for
   /// [RadioButton].
   const RadioButtonTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;

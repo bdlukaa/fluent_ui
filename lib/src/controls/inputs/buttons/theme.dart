@@ -114,10 +114,10 @@ class ButtonTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [Button].
   const ButtonTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   /// The properties for descendant [Button] widgets.
   final ButtonThemeData data;

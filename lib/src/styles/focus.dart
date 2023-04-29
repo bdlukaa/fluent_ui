@@ -10,13 +10,13 @@ import 'package:flutter/foundation.dart';
 class FocusBorder extends StatelessWidget {
   /// Creates a focus border.
   const FocusBorder({
-    Key? key,
+    super.key,
     required this.child,
     this.focused = true,
     this.style,
     this.renderOutside,
     this.useStackApproach = true,
-  }) : super(key: key);
+  });
 
   /// The child that will receive the border
   final Widget child;
@@ -119,10 +119,10 @@ class FocusBorder extends StatelessWidget {
 
 class FocusTheme extends InheritedWidget {
   const FocusTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final FocusThemeData data;
 

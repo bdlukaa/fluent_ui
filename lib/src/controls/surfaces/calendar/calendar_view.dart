@@ -15,7 +15,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///   - [TimePicker]
 ///   - [CalendarDatePicker]
 class CalendarView extends StatelessWidget {
-  const CalendarView({Key? key}) : super(key: key);
+  const CalendarView({super.key});
 
   @override
   Widget build(BuildContext context) {

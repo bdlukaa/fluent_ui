@@ -35,14 +35,13 @@ class PillButtonBar extends StatelessWidget {
   ///
   /// [selected] must be in the range of 0 to [items.length]
   const PillButtonBar({
-    Key? key,
+    super.key,
     required this.items,
     required this.selected,
     this.onChanged,
     this.controller,
   })  : assert(items.length >= 2),
-        assert(selected >= 0 && selected < items.length),
-        super(key: key);
+        assert(selected >= 0 && selected < items.length);
 
   /// The items of the bar. There must be at least 2 items in the list
   final List<PillButtonBarItem> items;
@@ -91,11 +90,10 @@ class PillButtonBar extends StatelessWidget {
 
 class _PillButtonBarItem extends StatelessWidget {
   const _PillButtonBarItem({
-    Key? key,
     required this.item,
     this.selected = false,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final PillButtonBarItem item;
   final bool selected;
@@ -159,10 +157,10 @@ class PillButtonBarTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [PillButtonBar].
   const PillButtonBarTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   /// The properties for descendant [PillButtonBar] widgets.
   final PillButtonBarThemeData data;

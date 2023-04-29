@@ -20,7 +20,7 @@ const double kMenuColorOpacity = 0.65;
 /// ![Acrylic Example](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/acrylic_lighttheme_base.png)
 class Acrylic extends StatefulWidget {
   const Acrylic({
-    Key? key,
+    super.key,
     this.tint,
     this.child,
     this.tintAlpha,
@@ -29,7 +29,7 @@ class Acrylic extends StatefulWidget {
     this.shape,
     this.shadowColor,
     this.elevation = 0.0,
-  }) : super(key: key);
+  });
 
   /// The tint to apply to the acrylic layers.
   ///
@@ -179,7 +179,7 @@ class _AcrylicState extends State<Acrylic> {
 
 class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
   const AnimatedAcrylic({
-    Key? key,
+    super.key,
     this.tint,
     this.child,
     this.tintAlpha,
@@ -188,9 +188,9 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
     this.shape,
     this.shadowColor,
     this.elevation = 0.0,
-    Curve curve = Curves.linear,
-    required Duration duration,
-  }) : super(key: key, curve: curve, duration: duration);
+    super.curve,
+    required super.duration,
+  });
 
   /// The tint to apply to the acrylic layers.
   ///
@@ -354,8 +354,8 @@ class _AcrylicInheritedWidget extends InheritedWidget {
 
   const _AcrylicInheritedWidget({
     required this.state,
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   @override
   bool updateShouldNotify(_AcrylicInheritedWidget old) {
@@ -366,7 +366,7 @@ class _AcrylicInheritedWidget extends InheritedWidget {
 class _AcrylicGuts extends StatelessWidget {
   final Widget child;
 
-  const _AcrylicGuts({required this.child, Key? key}) : super(key: key);
+  const _AcrylicGuts({required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -574,10 +574,7 @@ class _NoiseTextureCacher {
 }
 
 class DisableAcrylic extends InheritedWidget {
-  const DisableAcrylic({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+  const DisableAcrylic({super.key, required super.child});
 
   static DisableAcrylic? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<DisableAcrylic>();

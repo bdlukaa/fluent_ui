@@ -14,26 +14,26 @@ const double kPageDefaultVerticalPadding = 24.0;
 class ScaffoldPage extends StatefulWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({
-    Key? key,
+    super.key,
     this.header,
     this.content = const SizedBox.expand(),
     this.bottomBar,
     this.padding,
     this.resizeToAvoidBottomInset = true,
-  }) : super(key: key);
+  });
 
   /// Creates a scrollable page
   ///
   /// The default horizontal and vertical padding is added automatically
   ScaffoldPage.scrollable({
-    Key? key,
+    super.key,
     this.header,
     this.bottomBar,
     this.padding,
     ScrollController? scrollController,
     required List<Widget> children,
     this.resizeToAvoidBottomInset = true,
-  })  : content = Builder(builder: (context) {
+  }) : content = Builder(builder: (context) {
           return ListView(
             controller: scrollController,
             padding: EdgeInsetsDirectional.only(
@@ -43,18 +43,17 @@ class ScaffoldPage extends StatefulWidget {
             ),
             children: children,
           );
-        }),
-        super(key: key);
+        });
 
   /// Creates a page with padding applied to [content]
   ScaffoldPage.withPadding({
-    Key? key,
+    super.key,
     this.header,
     this.bottomBar,
     this.padding,
     required Widget content,
     this.resizeToAvoidBottomInset = true,
-  })  : content = Builder(builder: (context) {
+  }) : content = Builder(builder: (context) {
           return Padding(
             padding: EdgeInsetsDirectional.only(
               bottom: kPageDefaultVerticalPadding,
@@ -63,8 +62,7 @@ class ScaffoldPage extends StatefulWidget {
             ),
             child: content,
           );
-        }),
-        super(key: key);
+        });
 
   /// The content of this page. The content area is where most of the information
   /// for the selected nav category is displayed.
@@ -177,12 +175,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 class PageHeader extends StatelessWidget {
   /// Creates a page header.
   const PageHeader({
-    Key? key,
+    super.key,
     this.leading,
     this.title,
     this.commandBar,
     this.padding,
-  }) : super(key: key);
+  });
 
   /// The widget displayed before the [title]
   ///

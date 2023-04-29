@@ -18,7 +18,7 @@ import 'package:intl/intl.dart';
 class TimePicker extends StatefulWidget {
   /// Creates a time picker.
   const TimePicker({
-    Key? key,
+    super.key,
     required this.selected,
     this.onChanged,
     this.onCancel,
@@ -30,7 +30,7 @@ class TimePicker extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.minuteIncrement = 1,
-  }) : super(key: key);
+  });
 
   /// The current date selected date.
   ///
@@ -312,7 +312,6 @@ class _TimePickerState extends State<TimePicker>
 
 class _TimePickerContentPopup extends StatefulWidget {
   const _TimePickerContentPopup({
-    Key? key,
     required this.date,
     required this.onChanged,
     required this.onCancel,
@@ -321,7 +320,7 @@ class _TimePickerContentPopup extends StatefulWidget {
     required this.amPmController,
     required this.use24Format,
     required this.minuteIncrement,
-  }) : super(key: key);
+  });
 
   final FixedExtentScrollController hourController;
   final FixedExtentScrollController minuteController;

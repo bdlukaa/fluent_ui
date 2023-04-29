@@ -26,10 +26,10 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   final TextSelectionToolbarAnchors anchors;
 
   const FluentTextSelectionToolbar({
-    Key? key,
+    super.key,
     required this.buttonItems,
     required this.anchors,
-  }) : super(key: key);
+  });
 
   /// Create an instance of [FluentTextSelectionToolbar] with the default
   /// children for an [EditableText].
@@ -181,7 +181,6 @@ final TextSelectionControls fluentTextSelectionControls =
 // Generates the child that's passed into FluentTextSelectionToolbar.
 class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   const _FluentTextSelectionControlsToolbar({
-    Key? key,
     required this.clipboardStatus,
     required this.endpoints,
     required this.globalEditableRegion,
@@ -192,7 +191,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.selectionMidpoint,
     required this.textLineHeight,
     required this.lastSecondaryTapDownPosition,
-  }) : super(key: key);
+  });
 
   final ClipboardStatusNotifier? clipboardStatus;
   final List<TextSelectionPoint> endpoints;
@@ -364,11 +363,9 @@ class _FluentTextSelectionControlsToolbarState
 class _FluentTextSelectionToolbar extends StatelessWidget {
   /// Creates an instance of _FluentTextSelectionToolbar.
   const _FluentTextSelectionToolbar({
-    Key? key,
     required this.anchor,
     required this.children,
-  })  : assert(children.length > 0),
-        super(key: key);
+  }) : assert(children.length > 0);
 
   /// The point at which the toolbar will attempt to position itself as closely
   /// as possible.
@@ -426,13 +423,12 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
 /// A button for the Fluent desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
-    Key? key,
     required this.onPressed,
     required this.text,
     required this.icon,
     required this.shortcut,
     required this.tooltip,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final String text;

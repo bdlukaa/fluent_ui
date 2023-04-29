@@ -56,7 +56,7 @@ class TabView extends StatefulWidget {
   ///
   /// [maxTabWidth] must be non-negative
   const TabView({
-    Key? key,
+    super.key,
     required this.currentIndex,
     this.onChanged,
     required this.tabs,
@@ -75,7 +75,7 @@ class TabView extends StatefulWidget {
     this.closeDelayDuration = const Duration(milliseconds: 400),
     @Deprecated('This property is no longer used and will be removed in the next major release.')
         this.wheelScroll = false,
-  }) : super(key: key);
+  });
 
   /// The index of the tab to be displayed
   final int currentIndex;
@@ -668,11 +668,7 @@ class _TabBody extends StatefulWidget {
   final int index;
   final List<Tab> tabs;
 
-  const _TabBody({
-    Key? key,
-    required this.index,
-    required this.tabs,
-  }) : super(key: key);
+  const _TabBody({required this.index, required this.tabs});
 
   @override
   State<_TabBody> createState() => __TabBodyState();
@@ -772,7 +768,7 @@ class Tab {
 class _Tab extends StatefulWidget {
   const _Tab(
     this.tab, {
-    Key? key,
+    super.key,
     this.onPressed,
     required this.selected,
     required this.onClose,
@@ -781,7 +777,7 @@ class _Tab extends StatefulWidget {
     this.animationCurve = Curves.linear,
     required this.visibilityMode,
     required this.tabWidthBehavior,
-  }) : super(key: key);
+  });
 
   final Tab tab;
   final bool selected;

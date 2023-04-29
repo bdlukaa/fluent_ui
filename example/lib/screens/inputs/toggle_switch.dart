@@ -3,7 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:example/widgets/card_highlight.dart';
 
 class ToggleSwitchPage extends StatefulWidget {
-  const ToggleSwitchPage({Key? key}) : super(key: key);
+  const ToggleSwitchPage({super.key});
 
   @override
   State<ToggleSwitchPage> createState() => _ToggleSwitchPageState();

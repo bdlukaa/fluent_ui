@@ -28,7 +28,7 @@ typedef DropDownButtonBuilder = Widget Function(
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
   const DropDownButton({
-    Key? key,
+    super.key,
     this.buttonBuilder,
     required this.items,
     this.leading,
@@ -45,8 +45,7 @@ class DropDownButton extends StatefulWidget {
     this.onOpen,
     this.onClose,
     this.transitionBuilder = _defaultTransitionBuilder,
-  })  : assert(items.length > 0, 'You must provide at least one item'),
-        super(key: key);
+  }) : assert(items.length > 0, 'You must provide at least one item');
 
   /// A builder for the button. If null, a [Button] with [leading], [title] and
   /// [trailing] is used.

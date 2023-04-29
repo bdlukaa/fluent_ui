@@ -4,11 +4,11 @@ import 'package:flutter_syntax_view/flutter_syntax_view.dart';
 
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
-    Key? key,
+    super.key,
     this.backgroundColor,
     required this.child,
     required this.codeSnippet,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final String codeSnippet;

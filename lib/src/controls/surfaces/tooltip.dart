@@ -22,7 +22,7 @@ class Tooltip extends StatefulWidget {
   ///
   /// Wrap any widget in a [Tooltip] to show a message on mouse hover
   const Tooltip({
-    Key? key,
+    super.key,
     this.message,
     this.richMessage,
     this.child,
@@ -32,9 +32,10 @@ class Tooltip extends StatefulWidget {
     this.displayHorizontally = false,
     this.triggerMode,
     this.enableFeedback,
-  })  : assert((message == null) != (richMessage == null),
-            'Either `message` or `richMessage` must be specified'),
-        super(key: key);
+  }) : assert(
+          (message == null) != (richMessage == null),
+          'Either `message` or `richMessage` must be specified',
+        );
 
   /// The text to display in the tooltip.
   ///
@@ -554,10 +555,10 @@ class TooltipTheme extends InheritedTheme {
   /// Creates a tooltip theme that controls the configurations for
   /// [Tooltip].
   const TooltipTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Tooltip] widgets.
   final TooltipThemeData data;
@@ -841,7 +842,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 
 class _TooltipOverlay extends StatelessWidget {
   const _TooltipOverlay({
-    Key? key,
     required this.height,
     required this.richMessage,
     this.padding,
@@ -853,7 +853,7 @@ class _TooltipOverlay extends StatelessWidget {
     required this.verticalOffset,
     required this.preferBelow,
     this.displayHorizontally = false,
-  }) : super(key: key);
+  });
 
   final InlineSpan richMessage;
   final double height;

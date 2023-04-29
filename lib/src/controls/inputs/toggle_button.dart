@@ -11,7 +11,7 @@ import 'package:flutter/rendering.dart';
 class ToggleButton extends StatelessWidget {
   /// Creates a toggle button
   const ToggleButton({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.child,
@@ -19,7 +19,7 @@ class ToggleButton extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// The content of the button
   final Widget? child;
@@ -85,10 +85,10 @@ class ToggleButtonTheme extends InheritedTheme {
   /// Creates a toggle button theme that controls the configurations for
   /// [ToggleButton].
   const ToggleButtonTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [ToggleButton] widgets.
   final ToggleButtonThemeData data;

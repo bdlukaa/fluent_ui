@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class NumberBoxPage extends StatefulWidget {
-  const NumberBoxPage({Key? key}) : super(key: key);
+  const NumberBoxPage({super.key});
 
   @override
   State<NumberBoxPage> createState() => _NumberBoxPageState();

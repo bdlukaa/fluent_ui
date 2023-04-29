@@ -804,12 +804,11 @@ class _MenuFlyoutHeader extends MenuFlyoutItemBase {
 
 class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItem({
-    Key? key,
     required this.item,
     required this.onPressed,
     this.trailing = const SizedBox.shrink(),
     this.padding,
-  }) : super(key: key);
+  });
 
   final PaneItem item;
   final VoidCallback? onPressed;
@@ -891,11 +890,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
 
 class _MenuFlyoutPaneItemExpander extends MenuFlyoutItemBase {
   _MenuFlyoutPaneItemExpander({
-    Key? key,
     required this.item,
     required this.onPressed,
     required this.onItemPressed,
-  }) : super(key: key);
+  });
 
   final PaneItemExpander item;
   final VoidCallback? onPressed;

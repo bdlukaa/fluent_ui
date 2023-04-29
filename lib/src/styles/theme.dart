@@ -8,10 +8,10 @@ class FluentTheme extends StatelessWidget {
   ///
   /// The [data] and [child] arguments must not be null.
   const FluentTheme({
-    Key? key,
+    super.key,
     required this.data,
     required this.child,
-  }) : super(key: key);
+  });
 
   /// Specifies the color and typography values for descendant widgets.
   final FluentThemeData data;
@@ -46,10 +46,9 @@ class FluentTheme extends StatelessWidget {
 
 class _FluentTheme extends InheritedTheme {
   const _FluentTheme({
-    Key? key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final FluentThemeData data;
 
@@ -75,8 +74,7 @@ class FluentThemeDataTween extends Tween<FluentThemeData> {
   /// The [begin] and [end] properties must be non-null before the tween is
   /// first used, but the arguments can be null if the values are going to be
   /// filled in later.
-  FluentThemeDataTween({FluentThemeData? begin, FluentThemeData? end})
-      : super(begin: begin, end: end);
+  FluentThemeDataTween({super.begin, super.end});
 
   @override
   FluentThemeData lerp(double t) => FluentThemeData.lerp(begin!, end!, t);
@@ -102,13 +100,13 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   /// By default, the theme transition uses a linear curve. The [data] and
   /// [child] arguments must not be null.
   const AnimatedFluentTheme({
-    Key? key,
+    super.key,
     required this.data,
-    Curve curve = Curves.linear,
-    Duration duration = kThemeAnimationDuration,
-    VoidCallback? onEnd,
+    super.curve,
+    super.duration = kThemeAnimationDuration,
+    super.onEnd,
     required this.child,
-  }) : super(key: key, curve: curve, duration: duration, onEnd: onEnd);
+  });
 
   /// Specifies the color and typography values for descendant widgets.
   final FluentThemeData data;

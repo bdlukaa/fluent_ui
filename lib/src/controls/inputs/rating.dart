@@ -23,7 +23,7 @@ class RatingBar extends StatefulWidget {
   ///
   /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
-    Key? key,
+    super.key,
     required this.rating,
     this.onChanged,
     this.amount = 5,
@@ -40,8 +40,7 @@ class RatingBar extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.down,
   })  : assert(rating >= 0 && rating <= amount),
         assert(starSpacing >= 0),
-        assert(amount > 0),
-        super(key: key);
+        assert(amount > 0);
 
   /// The amount of stars in the bar. The default amount is 5
   final int amount;
@@ -311,14 +310,13 @@ enum _SliderAdjustmentType {
 
 class RatingIcon extends StatelessWidget {
   const RatingIcon({
-    Key? key,
+    super.key,
     required this.rating,
     this.ratedColor,
     this.unratedColor,
     this.icon = kRatingBarIcon,
     this.size,
-  })  : assert(rating >= 0.0 && rating <= 1.0),
-        super(key: key);
+  }) : assert(rating >= 0.0 && rating <= 1.0);
 
   /// The rating of the icon. Must be more or equal to 0 and less or equal than 1.0
   final double rating;

@@ -28,7 +28,7 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
 }
 
 class IconsPage extends StatefulWidget {
-  const IconsPage({Key? key}) : super(key: key);
+  const IconsPage({super.key});
 
   @override
   State<IconsPage> createState() => _IconsPageState();

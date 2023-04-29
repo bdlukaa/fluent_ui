@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 class Divider extends StatelessWidget {
   /// Creates a divider.
   const Divider({
-    Key? key,
+    super.key,
     this.direction = Axis.horizontal,
     this.style,
     this.size,
-  }) : super(key: key);
+  });
 
   /// The current direction of the slider. Uses [Axis.horizontal] by default
   final Axis direction;
@@ -63,10 +63,10 @@ class DividerTheme extends InheritedTheme {
   /// Creates a divider theme that controls the configurations for
   /// [Divider].
   const DividerTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;

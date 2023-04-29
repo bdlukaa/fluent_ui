@@ -42,7 +42,6 @@ class _BottomSheet extends StatefulWidget {
   /// Typically, bottom sheets are created implicitly by [showBottomSheet],
   /// for modal bottom sheets.
   const _BottomSheet({
-    Key? key,
     this.animationController,
     this.enableDrag = true,
     this.onDragStart,
@@ -52,8 +51,7 @@ class _BottomSheet extends StatefulWidget {
     this.shape,
     required this.onClosing,
     required this.builder,
-  })  : assert(elevation == null || elevation >= 0.0),
-        super(key: key);
+  }) : assert(elevation == null || elevation >= 0.0);
 
   /// The animation controller that controls the bottom sheet's entrance and
   /// exit animations.
@@ -252,14 +250,14 @@ class _ModalBottomSheetLayout extends SingleChildLayoutDelegate {
 
 class _ModalBottomSheet<T> extends StatefulWidget {
   const _ModalBottomSheet({
-    Key? key,
+    super.key,
     this.route,
     this.backgroundColor,
     this.elevation,
     this.shape,
     this.isScrollControlled = false,
     this.enableDrag = true,
-  }) : super(key: key);
+  });
 
   final _ModalBottomSheetRoute<T>? route;
   final bool isScrollControlled;
@@ -366,9 +364,9 @@ class _ModalBottomSheetRoute<T> extends PopupRoute<T> {
     this.isDismissible = true,
     this.enableDrag = true,
     required this.isScrollControlled,
-    RouteSettings? settings,
+    super.settings,
     this.transitionAnimationController,
-  }) : super(settings: settings);
+  });
 
   final WidgetBuilder? builder;
   final CapturedThemes capturedThemes;
@@ -620,7 +618,7 @@ class _BottomSheetScrollBehavior extends ScrollBehavior {
 class BottomSheet extends StatelessWidget {
   /// Creates a bottom sheet.
   const BottomSheet({
-    Key? key,
+    super.key,
     this.header,
     this.showHandle = true,
     this.showDivider,
@@ -636,8 +634,7 @@ class BottomSheet extends StatelessWidget {
         assert(minChildSize >= 0.0),
         assert(maxChildSize <= 1.0),
         assert(minChildSize <= initialChildSize),
-        assert(initialChildSize <= maxChildSize),
-        super(key: key);
+        assert(initialChildSize <= maxChildSize);
 
   /// Whether the handle should be displayed by the bottom sheet.
   /// Defaults to true
@@ -752,10 +749,10 @@ class BottomSheetTheme extends InheritedTheme {
   /// Creates a info bar theme that controls the configurations for
   /// [BottomSheet].
   const BottomSheetTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [BottomSheet] widgets.
   final BottomSheetThemeData data;

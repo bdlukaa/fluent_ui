@@ -502,7 +502,7 @@ class TreeView extends StatefulWidget {
   ///
   /// [items] must not be empty
   const TreeView({
-    Key? key,
+    super.key,
     required this.items,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
@@ -520,8 +520,7 @@ class TreeView extends StatefulWidget {
     this.narrowSpacing = false,
     this.includePartiallySelectedItems = false,
     this.deselectParentWhenChildrenDeselected = true,
-  })  : assert(items.length > 0, 'There must be at least one item'),
-        super(key: key);
+  }) : assert(items.length > 0, 'There must be at least one item');
 
   /// The items of the tree view.
   ///
@@ -824,7 +823,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
 
 class _TreeViewItem extends StatelessWidget {
   const _TreeViewItem({
-    Key? key,
+    super.key,
     required this.item,
     required this.selectionMode,
     required this.onSelect,
@@ -833,7 +832,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.onInvoked,
     required this.loadingWidgetFallback,
     required this.narrowSpacing,
-  }) : super(key: key);
+  });
 
   final TreeViewItem item;
   final TreeViewSelectionMode selectionMode;

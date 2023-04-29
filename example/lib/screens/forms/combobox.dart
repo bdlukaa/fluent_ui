@@ -5,7 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'auto_suggest_box.dart';
 
 class ComboBoxPage extends StatefulWidget {
-  const ComboBoxPage({Key? key}) : super(key: key);
+  const ComboBoxPage({super.key});
 
   @override
   State<ComboBoxPage> createState() => _ComboBoxPageState();

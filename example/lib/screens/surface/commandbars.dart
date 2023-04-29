@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/page.dart';
 
 class CommandBarsPage extends StatefulWidget {
-  const CommandBarsPage({Key? key}) : super(key: key);
+  const CommandBarsPage({super.key});
 
   @override
   State<CommandBarsPage> createState() => _CommandBarsPageState();

@@ -52,13 +52,13 @@ const kDefaultContentDialogConstraints = BoxConstraints(
 class ContentDialog extends StatelessWidget {
   /// Creates a content dialog.
   const ContentDialog({
-    Key? key,
+    super.key,
     this.title,
     this.content,
     this.actions,
     this.style,
     this.constraints = kDefaultContentDialogConstraints,
-  }) : super(key: key);
+  });
 
   /// The title of the dialog. Usually, a [Text] widget
   final Widget? title;
@@ -300,14 +300,14 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     required WidgetBuilder builder,
     required BuildContext context,
     CapturedThemes? themes,
-    bool barrierDismissible = false,
-    Color? barrierColor = const Color(0x8A000000),
+    super.barrierDismissible,
+    super.barrierColor = const Color(0x8A000000),
     String? barrierLabel,
-    Duration transitionDuration = const Duration(milliseconds: 250),
-    RouteTransitionsBuilder? transitionBuilder = _defaultTransitionBuilder,
-    RouteSettings? settings,
+    super.transitionDuration,
+    super.transitionBuilder = _defaultTransitionBuilder,
+    super.settings,
   }) : super(
-          pageBuilder: (BuildContext context, animation, secondaryAnimation) {
+          pageBuilder: (context, animation, secondaryAnimation) {
             final pageChild = Builder(builder: builder);
             final dialog = themes?.wrap(pageChild) ?? pageChild;
             return SafeArea(
@@ -320,13 +320,8 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
               ),
             );
           },
-          barrierDismissible: barrierDismissible,
           barrierLabel: barrierLabel ??
               FluentLocalizations.of(context).modalBarrierDismissLabel,
-          barrierColor: barrierColor,
-          transitionDuration: transitionDuration,
-          transitionBuilder: transitionBuilder,
-          settings: settings,
         );
 
   static Widget _defaultTransitionBuilder(

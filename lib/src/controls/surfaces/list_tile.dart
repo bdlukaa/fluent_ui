@@ -30,7 +30,7 @@ enum ListTileSelectionMode {
 class ListTile extends StatelessWidget {
   /// A fluent-styled list tile
   const ListTile({
-    Key? key,
+    super.key,
     this.tileColor,
     this.shape = kDefaultListTileShape,
     this.leading,
@@ -46,12 +46,11 @@ class ListTile extends StatelessWidget {
         ),
         selected = false,
         selectionMode = ListTileSelectionMode.none,
-        onSelectionChange = null,
-        super(key: key);
+        onSelectionChange = null;
 
   /// A selectable list tile.
   const ListTile.selectable({
-    Key? key,
+    super.key,
     this.tileColor,
     this.shape = kDefaultListTileShape,
     this.leading,
@@ -64,11 +63,10 @@ class ListTile extends StatelessWidget {
     this.selected = false,
     this.selectionMode = ListTileSelectionMode.single,
     this.onSelectionChange,
-  })  : assert(
+  }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
-        ),
-        super(key: key);
+        );
 
   /// The background color of the button.
   ///

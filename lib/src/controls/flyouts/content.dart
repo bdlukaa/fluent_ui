@@ -9,7 +9,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
   const FlyoutContent({
-    Key? key,
+    super.key,
     required this.child,
     this.color,
     this.shape,
@@ -18,7 +18,7 @@ class FlyoutContent extends StatelessWidget {
     this.elevation = 8,
     this.constraints,
     this.useAcrylic = true,
-  }) : super(key: key);
+  });
 
   /// The content of the flyout
   final Widget child;
@@ -102,7 +102,7 @@ class FlyoutContent extends StatelessWidget {
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
   const FlyoutListTile({
-    Key? key,
+    super.key,
     this.onPressed,
     this.tooltip,
     this.icon,
@@ -114,7 +114,7 @@ class FlyoutListTile extends StatelessWidget {
     this.margin = const EdgeInsetsDirectional.only(bottom: 5.0),
     this.selected = false,
     this.showSelectedIndicator = true,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
 

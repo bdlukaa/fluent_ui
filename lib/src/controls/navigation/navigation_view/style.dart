@@ -23,10 +23,10 @@ class NavigationPaneTheme extends InheritedTheme {
   /// Creates a navigation pane theme that controls the configurations for
   /// [NavigationPane].
   const NavigationPaneTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [NavigationPane] widgets.
   final NavigationPaneThemeData data;

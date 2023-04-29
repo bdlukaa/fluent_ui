@@ -175,7 +175,7 @@ class ComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   ComboboxFormField({
-    Key? key,
+    super.key,
     required List<ComboBoxItem<T>>? items,
     ComboBoxBuilder? selectedItemBuilder,
     T? value,
@@ -194,9 +194,9 @@ class ComboboxFormField<T> extends FormField<T> {
     FocusNode? focusNode,
     bool autofocus = false,
     Color? popupColor,
-    FormFieldSetter<T>? onSaved,
-    FormFieldValidator<T>? validator,
-    AutovalidateMode? autovalidateMode,
+    super.onSaved,
+    super.validator,
+    super.autovalidateMode = AutovalidateMode.disabled,
     double? menuMaxHeight,
     bool? enableFeedback,
     AlignmentGeometry alignment = AlignmentDirectional.centerStart,
@@ -204,11 +204,7 @@ class ComboboxFormField<T> extends FormField<T> {
     // When adding new arguments, consider adding similar arguments to
     // ComboBox.
   }) : super(
-          key: key,
-          onSaved: onSaved,
           initialValue: value,
-          validator: validator,
-          autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
           builder: (FormFieldState<T> field) {
             final state = field as _ComboboxFormFieldState<T>;
 
@@ -299,10 +295,11 @@ class EditableComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   EditableComboboxFormField({
-    Key? key,
+    super.key,
     required List<ComboBoxItem<T>>? items,
     ComboBoxBuilder? selectedItemBuilder,
-    T? value,
+    super.initialValue,
+    @Deprecated('Use initialValue instead') T? value,
     Widget? placeholder,
     Widget? disabledPlaceholder,
     required this.onChanged,
@@ -318,9 +315,9 @@ class EditableComboboxFormField<T> extends FormField<T> {
     FocusNode? focusNode,
     bool autofocus = false,
     Color? popupColor,
-    FormFieldSetter<T>? onSaved,
-    FormFieldValidator<T>? validator,
-    AutovalidateMode? autovalidateMode,
+    super.onSaved,
+    super.validator,
+    super.autovalidateMode = AutovalidateMode.disabled,
     double? menuMaxHeight,
     bool? enableFeedback,
     AlignmentGeometry alignment = AlignmentDirectional.centerStart,
@@ -328,54 +325,46 @@ class EditableComboboxFormField<T> extends FormField<T> {
     required SubmitEditableCombobox onFieldSubmitted,
     // When adding new arguments, consider adding similar arguments to
     // EditableComboBox.
-  }) : super(
-          key: key,
-          onSaved: onSaved,
-          initialValue: value,
-          validator: validator,
-          autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
-          builder: (FormFieldState<T> field) {
-            final state = field as _EditableComboboxFormFieldState<T>;
+  }) : super(builder: (FormFieldState<T> field) {
+          final state = field as _EditableComboboxFormFieldState<T>;
 
-            // An unfocusable Focus widget so that this widget can detect if its
-            // descendants have focus or not.
-            return Focus(
-              canRequestFocus: false,
-              skipTraversal: true,
-              child: Builder(builder: (BuildContext context) {
-                return FormRow(
-                  padding: EdgeInsets.zero,
-                  error:
-                      field.errorText != null ? Text(field.errorText!) : null,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: EditableComboBox<T>(
-                      items: items,
-                      selectedItemBuilder: selectedItemBuilder,
-                      value: state.value,
-                      placeholder: placeholder,
-                      disabledPlaceholder: disabledPlaceholder,
-                      onChanged: onChanged == null ? null : state.didChange,
-                      onTap: onTap,
-                      elevation: elevation,
-                      style: style,
-                      icon: icon,
-                      iconDisabledColor: iconDisabledColor,
-                      iconEnabledColor: iconEnabledColor,
-                      iconSize: iconSize,
-                      isExpanded: isExpanded,
-                      focusColor: focusColor,
-                      focusNode: focusNode,
-                      autofocus: autofocus,
-                      popupColor: popupColor,
-                      onFieldSubmitted: onFieldSubmitted,
-                    ),
+          // An unfocusable Focus widget so that this widget can detect if its
+          // descendants have focus or not.
+          return Focus(
+            canRequestFocus: false,
+            skipTraversal: true,
+            child: Builder(builder: (BuildContext context) {
+              return FormRow(
+                padding: EdgeInsets.zero,
+                error: field.errorText != null ? Text(field.errorText!) : null,
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: EditableComboBox<T>(
+                    items: items,
+                    selectedItemBuilder: selectedItemBuilder,
+                    value: state.value,
+                    placeholder: placeholder,
+                    disabledPlaceholder: disabledPlaceholder,
+                    onChanged: onChanged == null ? null : state.didChange,
+                    onTap: onTap,
+                    elevation: elevation,
+                    style: style,
+                    icon: icon,
+                    iconDisabledColor: iconDisabledColor,
+                    iconEnabledColor: iconEnabledColor,
+                    iconSize: iconSize,
+                    isExpanded: isExpanded,
+                    focusColor: focusColor,
+                    focusNode: focusNode,
+                    autofocus: autofocus,
+                    popupColor: popupColor,
+                    onFieldSubmitted: onFieldSubmitted,
                   ),
-                );
-              }),
-            );
-          },
-        );
+                ),
+              );
+            }),
+          );
+        });
 
   /// {@macro flutter.material.dropdownButton.onChanged}
   final ValueChanged<T?>? onChanged;

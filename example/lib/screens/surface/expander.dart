@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/card_highlight.dart';
 
 class ExpanderPage extends StatefulWidget {
-  const ExpanderPage({Key? key}) : super(key: key);
+  const ExpanderPage({super.key});
 
   @override
   State<ExpanderPage> createState() => _ExpanderPageState();

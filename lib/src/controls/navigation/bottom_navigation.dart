@@ -49,14 +49,13 @@ class BottomNavigation extends StatelessWidget {
   ///
   /// [index] must be in the range of 0 to [items.length]
   const BottomNavigation({
-    Key? key,
+    super.key,
     required this.items,
     required this.index,
     this.onChanged,
     this.style,
   })  : assert(items.length >= 2),
-        assert(index >= 0 && index < items.length),
-        super(key: key);
+        assert(index >= 0 && index < items.length);
 
   /// The items displayed by this widget. There must be at least 2
   /// items in the list.
@@ -121,12 +120,12 @@ class BottomNavigation extends StatelessWidget {
 
 class _BottomNavigationItem extends StatelessWidget {
   const _BottomNavigationItem({
-    Key? key,
+    super.key,
     required this.item,
     required this.selected,
     required this.style,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final BottomNavigationItem item;
   final bool selected;
@@ -186,10 +185,10 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [BottomNavigation].
   const BottomNavigationTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   /// The properties for descendant [BottomNavigation] widgets.
   final BottomNavigationThemeData data;

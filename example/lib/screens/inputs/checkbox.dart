@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class CheckBoxPage extends StatefulWidget {
-  const CheckBoxPage({Key? key}) : super(key: key);
+  const CheckBoxPage({super.key});
 
   @override
   State<CheckBoxPage> createState() => _CheckBoxPageState();

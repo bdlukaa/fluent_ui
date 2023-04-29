@@ -12,22 +12,17 @@ import 'package:fluent_ui/fluent_ui.dart';
 class FilledButton extends Button {
   /// Creates a filled button
   const FilledButton({
-    Key? key,
-    required Widget child,
-    required VoidCallback? onPressed,
-    VoidCallback? onLongPress,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    ButtonStyle? style,
-  }) : super(
-          key: key,
-          child: child,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          onLongPress: onLongPress,
-          onPressed: onPressed,
-          style: style,
-        );
+    super.key,
+    required super.child,
+    required super.onPressed,
+    super.onLongPress,
+    super.onTapDown,
+    super.onTapUp,
+    super.focusNode,
+    super.autofocus = false,
+    super.style,
+    super.focusable = true,
+  });
 
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {

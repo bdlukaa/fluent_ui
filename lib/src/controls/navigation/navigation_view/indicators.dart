@@ -13,7 +13,7 @@ class NavigationIndicator extends StatefulWidget {
     this.curve = Curves.linear,
     this.color,
     this.duration = kIndicatorAnimationDuration,
-  }) : super();
+  });
 
   /// The curve used on the animation, if any
   ///
@@ -123,13 +123,13 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
 /// The end navigation indicator
 class EndNavigationIndicator extends NavigationIndicator {
-  const EndNavigationIndicator({
-    Color? color,
-    this.unselectedColor = Colors.transparent,
-  }) : super(color: color);
-
   /// The color of the indicator when the item is not selected
   final Color unselectedColor;
+
+  const EndNavigationIndicator({
+    super.color,
+    this.unselectedColor = Colors.transparent,
+  });
 
   @override
   NavigationIndicatorState<EndNavigationIndicator> createState() =>
@@ -176,12 +176,12 @@ class _EndNavigationIndicatorState
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
-    Curve curve = Curves.easeIn,
-    Color? color,
-    Duration duration = kIndicatorAnimationDuration,
+    super.curve,
+    super.color,
+    super.duration,
     this.topPadding = 12.0,
     this.leftPadding = 10.0,
-  }) : super(curve: curve, color: color, duration: duration);
+  });
 
   /// The padding used on both horizontal sides of the indicator when the
   /// current display mode is top.

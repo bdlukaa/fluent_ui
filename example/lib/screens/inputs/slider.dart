@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class SliderPage extends StatefulWidget {
-  const SliderPage({Key? key}) : super(key: key);
+  const SliderPage({super.key});
 
   @override
   State<SliderPage> createState() => _SliderPageState();

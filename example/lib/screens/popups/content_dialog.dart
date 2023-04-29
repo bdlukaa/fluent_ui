@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class ContentDialogPage extends StatefulWidget {
-  const ContentDialogPage({Key? key}) : super(key: key);
+  const ContentDialogPage({super.key});
 
   @override
   State<ContentDialogPage> createState() => _ContentDialogPageState();

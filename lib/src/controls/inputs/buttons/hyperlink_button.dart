@@ -16,28 +16,17 @@ typedef TextButton = HyperlinkButton;
 class HyperlinkButton extends BaseButton {
   /// Creates a text-button.
   const HyperlinkButton({
-    Key? key,
-    required Widget child,
-    required VoidCallback? onPressed,
-    VoidCallback? onLongPress,
-    VoidCallback? onTapDown,
-    VoidCallback? onTapUp,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    ButtonStyle? style,
-    bool focusable = true,
-  }) : super(
-          key: key,
-          child: child,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          onLongPress: onLongPress,
-          onPressed: onPressed,
-          onTapDown: onTapDown,
-          onTapUp: onTapUp,
-          style: style,
-          focusable: focusable,
-        );
+    super.key,
+    required super.child,
+    required super.onPressed,
+    super.onLongPress,
+    super.onTapDown,
+    super.onTapUp,
+    super.focusNode,
+    super.autofocus = false,
+    super.style,
+    super.focusable = true,
+  });
 
   @override
   ButtonStyle defaultStyleOf(BuildContext context) {

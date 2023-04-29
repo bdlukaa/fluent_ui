@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 
 class MaterialEquivalents extends StatefulWidget {
-  const MaterialEquivalents({Key? key}) : super(key: key);
+  const MaterialEquivalents({super.key});
 
   @override
   State<MaterialEquivalents> createState() => _MaterialEquivalentsState();

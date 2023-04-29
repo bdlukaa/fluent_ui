@@ -14,11 +14,11 @@ class HorizontalScrollView extends StatefulWidget {
   final bool mouseWheelScrolls;
 
   const HorizontalScrollView({
-    Key? key,
+    super.key,
     required this.child,
     this.scrollPhysics,
     this.mouseWheelScrolls = true,
-  }) : super(key: key);
+  });
 
   @override
   State<HorizontalScrollView> createState() => _HorizontalScrollViewState();
