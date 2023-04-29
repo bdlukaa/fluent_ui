@@ -4,6 +4,22 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+abstract class ControllableFormBox extends FormField<String> {
+  final TextEditingController? controller;
+
+  const ControllableFormBox({
+    required super.builder,
+    super.autovalidateMode,
+    super.enabled,
+    super.initialValue,
+    super.key,
+    super.onSaved,
+    super.restorationId,
+    super.validator,
+    this.controller,
+  });
+}
+
 /// A [FormField] that contains a [TextBox].
 ///
 /// This is a convenience widget that wraps a [TextBox] widget in a
@@ -35,7 +51,7 @@ import 'package:flutter/services.dart';
 ///   * [TextBox], which is the underlying text field without the [Form]
 ///    integration.
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
-class TextFormBox extends FormField<String> {
+class TextFormBox extends ControllableFormBox {
   /// Creates a [FormField] that contains a [TextBox].
   ///
   /// When a [controller] is specified, [initialValue] must be null (the
@@ -46,8 +62,8 @@ class TextFormBox extends FormField<String> {
   /// For documentation about the various parameters, see the [TextBox] class
   /// and [TextBox.new], the constructor.
   TextFormBox({
-    Key? key,
-    this.controller,
+    super.key,
+    super.controller,
     String? initialValue,
     FocusNode? focusNode,
     TextInputType? keyboardType,
@@ -77,10 +93,10 @@ class TextFormBox extends FormField<String> {
     TapRegionCallback? onTapOutside,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
+    super.onSaved,
+    super.validator,
     List<TextInputFormatter>? inputFormatters,
-    bool? enabled,
+    super.enabled = true,
     double cursorWidth = 2.0,
     double? cursorHeight,
     Radius cursorRadius = const Radius.circular(2.0),
@@ -91,7 +107,7 @@ class TextFormBox extends FormField<String> {
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
     Iterable<String>? autofillHints,
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
+    super.autovalidateMode = AutovalidateMode.disabled,
     String? placeholder,
     TextStyle? placeholderStyle,
     ScrollController? scrollController,
@@ -131,15 +147,11 @@ class TextFormBox extends FormField<String> {
             'Obscured fields cannot be multiline.'),
         assert(maxLength == null || maxLength > 0),
         super(
-          key: key,
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
-          onSaved: onSaved,
-          validator: validator,
-          autovalidateMode: autovalidateMode,
-          enabled: enabled ?? true,
           builder: (FormFieldState<String> field) {
-            final state = field as _TextFormBoxState;
+            final theme = FluentTheme.of(field.context);
+            final state = field as TextFormBoxState;
 
             void onChangedHandler(String value) {
               field.didChange(value);
@@ -209,7 +221,8 @@ class TextFormBox extends FormField<String> {
                   suffixMode: suffixMode,
                   highlightColor: (field.errorText == null)
                       ? highlightColor
-                      : errorHighlightColor ?? Colors.red,
+                      : errorHighlightColor ??
+                          Colors.red.defaultBrushFor(theme.brightness),
                   unfocusedColor: unfocusedColor,
                   dragStartBehavior: dragStartBehavior,
                   padding: padding,
@@ -231,20 +244,18 @@ class TextFormBox extends FormField<String> {
           },
         );
 
-  final TextEditingController? controller;
-
   @override
-  FormFieldState<String> createState() => _TextFormBoxState();
+  FormFieldState<String> createState() => TextFormBoxState();
 }
 
-class _TextFormBoxState extends FormFieldState<String> {
+class TextFormBoxState extends FormFieldState<String> {
   TextEditingController? _controller;
 
   TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   @override
-  TextFormBox get widget => super.widget as TextFormBox;
+  ControllableFormBox get widget => super.widget as ControllableFormBox;
 
   @override
   void initState() {
@@ -257,7 +268,7 @@ class _TextFormBoxState extends FormFieldState<String> {
   }
 
   @override
-  void didUpdateWidget(TextFormBox oldWidget) {
+  void didUpdateWidget(ControllableFormBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller?.removeListener(_handleControllerChanged);

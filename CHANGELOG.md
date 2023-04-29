@@ -4,6 +4,7 @@
 - Review all the inputs margins and inputs ([#799](https://github.com/bdlukaa/fluent_ui/pull/799))
 - `HyperlinkButton` now uses the correct color in dark mode ([#817](https://github.com/bdlukaa/fluent_ui/pull/817))
 - `DatePicker`, `TimePicker` and all other overlay widgets are now positioned correctly if there are multiple navigators ([#817](https://github.com/bdlukaa/fluent_ui/pull/817))
+- Added `PasswordFormBox` ([#811](https://github.com/bdlukaa/fluent_ui/issues/811))
 
 ## 4.5.0
 

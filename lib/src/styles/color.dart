@@ -277,19 +277,11 @@ class AccentColor extends ColorSwatch<String> {
   }
 
   Color secondaryBrushFor(Brightness brightness) {
-    if (brightness.isDark) {
-      return lighter.withOpacity(0.9);
-    } else {
-      return dark.withOpacity(0.9);
-    }
+    return defaultBrushFor(brightness).withOpacity(0.9);
   }
 
   Color tertiaryBrushFor(Brightness brightness) {
-    if (brightness.isDark) {
-      return lighter.withOpacity(0.8);
-    } else {
-      return dark.withOpacity(0.8);
-    }
+    return defaultBrushFor(brightness).withOpacity(0.8);
   }
 }
 

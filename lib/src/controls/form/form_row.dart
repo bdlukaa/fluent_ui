@@ -29,6 +29,8 @@ class FormRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return Padding(
       padding: padding,
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -46,8 +48,8 @@ class FormRow extends StatelessWidget {
             margin: const EdgeInsetsDirectional.only(top: 2.0),
             alignment: AlignmentDirectional.centerStart,
             child: DefaultTextStyle(
-              style: const TextStyle(
-                color: Colors.warningPrimaryColor,
+              style: TextStyle(
+                color: Colors.red.defaultBrushFor(theme.brightness),
                 fontWeight: FontWeight.w500,
               ),
               child: error!,
