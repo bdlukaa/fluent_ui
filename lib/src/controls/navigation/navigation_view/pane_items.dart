@@ -7,7 +7,9 @@ class NavigationPaneItem with Diagnosticable {
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns
-  final GlobalKey itemKey = GlobalKey();
+  late final GlobalKey itemKey = GlobalKey(
+    debugLabel: 'NavigationPaneItem key; $runtimeType',
+  );
 
   final Key? key;
 
@@ -35,7 +37,7 @@ class PaneItem extends NavigationPaneItem {
   ///
   ///   * [body], which this is assigned to
   ///   * [_NavigationBody], which assigns this to every pane body
-  GlobalKey bodyKey = GlobalKey();
+  GlobalKey bodyKey = GlobalKey(debugLabel: 'PaneItem bodyKey');
 
   /// Creates a pane item.
   PaneItem({
@@ -483,7 +485,7 @@ class PaneItemHeader extends NavigationPaneItem {
     return KeyedSubtree(
       key: key,
       child: Container(
-        key: itemKey,
+        // key: itemKey,
         constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
         padding: (theme.iconPadding ?? EdgeInsets.zero).add(
           view.displayMode == PaneDisplayMode.top

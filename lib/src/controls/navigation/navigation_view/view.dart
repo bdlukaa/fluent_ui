@@ -273,7 +273,7 @@ class NavigationViewState extends State<NavigationView> {
           List.generate(widget.pane!.effectiveItems.length, (i) => i),
           List.generate(
             widget.pane!.effectiveItems.length,
-            (_) => GlobalKey(),
+            (i) => GlobalKey(debugLabel: 'NavigationView item key#$i'),
           ),
         ),
       );

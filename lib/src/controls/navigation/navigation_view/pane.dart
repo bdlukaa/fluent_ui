@@ -98,7 +98,8 @@ class NavigationPane with Diagnosticable {
 
   final Key? key;
 
-  final GlobalKey paneKey = GlobalKey();
+  // TODO(bdlukaa): docs
+  final GlobalKey paneKey = GlobalKey(debugLabel: 'NavigationPane paneKey');
 
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
@@ -538,7 +539,7 @@ class _TopNavigationPane extends StatefulWidget {
 }
 
 class _TopNavigationPaneState extends State<_TopNavigationPane> {
-  final overflowKey = GlobalKey();
+  final overflowKey = GlobalKey(debugLabel: 'TopNavigationPane overflowKey');
   final overflowController = FlyoutController();
 
   List<int> hiddenPaneItems = [];
@@ -681,7 +682,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
             overflowWidget: FlyoutTarget(
               key: overflowKey,
               controller: overflowController,
-              // placement: FlyoutPlacement.end,
               child: PaneItem(
                 icon: const Icon(FluentIcons.more),
                 body: const SizedBox.shrink(),
