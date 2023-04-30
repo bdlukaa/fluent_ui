@@ -98,8 +98,10 @@ class NavigationPane with Diagnosticable {
 
   final Key? key;
 
-  // TODO(bdlukaa): docs
-  final GlobalKey paneKey = GlobalKey(debugLabel: 'NavigationPane paneKey');
+  /// The key for the pane view
+  late final GlobalKey paneKey = GlobalKey(
+    debugLabel: 'NavigationPane paneKey#$displayMode',
+  );
 
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
@@ -559,6 +561,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
 
   void _onPressed(PaneItem item) {
     widget.pane.changeTo(item);
+    if (overflowController.isOpen) {
+      Navigator.of(context).pop();
+    }
   }
 
   Widget _buildItem(
@@ -770,7 +775,7 @@ MenuFlyoutItemBase _buildMenuPaneItem(
     return _MenuFlyoutPaneItemExpander(
       item: item,
       onPressed: () => onPressed(item),
-      onItemPressed: (item) => onPressed(item),
+      onItemPressed: onPressed,
     );
   } else if (item is PaneItem) {
     return _MenuFlyoutPaneItem(
@@ -824,7 +829,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
     final baseStyle = item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
     return HoverButton(
-      onPressed: onPressed,
+      onPressed: () {
+        item.onTap?.call();
+        onPressed?.call();
+      },
       builder: (context, states) {
         var textStyle = () {
           var style = theme.unselectedTextStyle?.resolve(states);
