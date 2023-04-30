@@ -6,6 +6,7 @@
 - `DatePicker`, `TimePicker` and all other overlay widgets are now positioned correctly if there are multiple navigators ([#817](https://github.com/bdlukaa/fluent_ui/pull/817))
 - Added `PasswordFormBox` ([#811](https://github.com/bdlukaa/fluent_ui/issues/811))
 - `DateTime.startYear` and `DateTime.endYear` are now deprecated. Use `DateTime.startDate` and `DateTime.endDate` instead. ([#687](https://github.com/bdlukaa/fluent_ui/issues/687))
+- Added `.decoration`, `.foregroundDecoration`, `.highlightColor`, `.unfocusedColor`, `.keyboardAppearance`, `.textAlign`, `.textAlignVertical` to `PasswordBox` ([#820](https://github.com/bdlukaa/fluent_ui/issues/820))
 
 ## 4.5.0
 

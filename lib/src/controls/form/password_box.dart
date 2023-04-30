@@ -113,14 +113,49 @@ class PasswordBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.showCursor}
   final bool? showCursor;
 
-  /// The highlight color of the text box
-  final Color? highlightColor;
-
   /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
 
   /// {@macro flutter.widgets.editableText.obscuringCharacter}
   final String obscuringCharacter;
+
+  /// Controls the [BoxDecoration] of the box behind the text input.
+  ///
+  /// Defaults to having a rounded rectangle grey border and can be null to have
+  /// no box decoration.
+  final BoxDecoration? decoration;
+
+  /// Controls the [BoxDecoration] of the box in front of the text input.
+  ///
+  /// If [highlightColor] is provided, this must not be provided
+  final BoxDecoration? foregroundDecoration;
+
+  /// The highlight color of the text box.
+  ///
+  /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
+  /// See also:
+  ///  * [unfocusedColor], displayed when the field is not focused
+  final Color? highlightColor;
+
+  /// The unfocused color of the highlight border.
+  ///
+  /// See also:
+  ///   * [highlightColor], displayed when the field is focused
+  final Color? unfocusedColor;
+
+  /// The appearance of the keyboard.
+  ///
+  /// This setting is only honored on iOS devices.
+  ///
+  /// If null, defaults to the brightness of [FluentThemeData.brightness].
+  final Brightness? keyboardAppearance;
+
+  /// {@macro flutter.widgets.editableText.textAlign}
+  final TextAlign textAlign;
+
+  /// {@macro flutter.material.InputDecorator.textAlignVertical}
+  final TextAlignVertical? textAlignVertical;
 
   /// Creates a password box
   const PasswordBox({
@@ -141,9 +176,15 @@ class PasswordBox extends StatefulWidget {
     this.cursorHeight,
     this.cursorColor,
     this.showCursor,
-    this.highlightColor,
     this.readOnly = false,
     this.obscuringCharacter = '•',
+    this.decoration,
+    this.foregroundDecoration,
+    this.unfocusedColor,
+    this.highlightColor,
+    this.keyboardAppearance,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
   });
 
   @override
@@ -304,9 +345,17 @@ class _PasswordBoxState extends State<PasswordBox> {
       cursorRadius: widget.cursorRadius,
       cursorHeight: widget.cursorHeight,
       cursorColor: widget.cursorColor,
-      highlightColor: widget.highlightColor,
+      showCursor: widget.showCursor,
       readOnly: widget.readOnly,
       obscuringCharacter: widget.obscuringCharacter,
+      decoration: widget.decoration,
+      foregroundDecoration: widget.foregroundDecoration,
+      highlightColor: widget.highlightColor,
+      unfocusedColor: widget.unfocusedColor,
+      keyboardType: _isVisible ? TextInputType.visiblePassword : null,
+      keyboardAppearance: widget.keyboardAppearance,
+      textAlign: widget.textAlign,
+      textAlignVertical: widget.textAlignVertical,
     );
   }
 }

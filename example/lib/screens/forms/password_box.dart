@@ -38,9 +38,10 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
         CardHighlight(
           child: Row(children: [
             Expanded(
-                child: PasswordBox(
-              enabled: !disabled,
-            )),
+              child: PasswordBox(
+                enabled: !disabled,
+              ),
+            ),
           ]),
           codeSnippet: '''PasswordBox()''',
         ),
@@ -67,11 +68,12 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
         CardHighlight(
           child: Row(children: [
             Expanded(
-                child: PasswordBox(
-              enabled: !disabled,
-              revealMode: PasswordRevealMode.visible,
-              placeholder: 'Visible Password',
-            )),
+              child: PasswordBox(
+                enabled: !disabled,
+                revealMode: PasswordRevealMode.visible,
+                placeholder: 'Visible Password',
+              ),
+            ),
             const SizedBox(width: 10.0),
             Expanded(
               child: PasswordBox(
@@ -129,7 +131,7 @@ PasswordBox(
 
               return null;
             },
-            // revealMode: revealMode,
+            revealMode: revealMode,
           ),
           codeSnippet: '''PasswordBox(
   autovalidateMode: AutovalidateMode.always,
