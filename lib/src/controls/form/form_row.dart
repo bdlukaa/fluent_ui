@@ -38,7 +38,7 @@ class FormRow extends StatelessWidget {
         if (helper != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: textStyle!,
               child: helper!,
             ),
@@ -47,7 +47,7 @@ class FormRow extends StatelessWidget {
           Container(
             margin: const EdgeInsetsDirectional.only(top: 2.0),
             alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: TextStyle(
                 color: Colors.red.defaultBrushFor(theme.brightness),
                 fontWeight: FontWeight.w500,

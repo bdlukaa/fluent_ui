@@ -718,8 +718,8 @@ class BottomSheet extends StatelessWidget {
                     horizontal: 16.0,
                     vertical: 12.0,
                   ),
-                  child: DefaultTextStyle(
-                    style: FluentTheme.of(context).typography.caption!,
+                  child: DefaultTextStyle.merge(
+                    style: FluentTheme.of(context).typography.caption,
                     textAlign: TextAlign.center,
                     child: description!,
                   ),

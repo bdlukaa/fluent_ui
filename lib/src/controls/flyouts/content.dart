@@ -83,8 +83,8 @@ class FlyoutContent extends StatelessWidget {
             shape: resolvedShape,
           ),
           padding: padding,
-          child: DefaultTextStyle(
-            style: theme.typography.body ?? const TextStyle(),
+          child: DefaultTextStyle.merge(
+            style: theme.typography.body,
             child: child,
           ),
         ),

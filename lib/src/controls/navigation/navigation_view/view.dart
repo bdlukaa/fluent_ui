@@ -893,9 +893,8 @@ class _NavigationAppBar extends StatelessWidget {
           padding: (theme.iconPadding ?? EdgeInsets.zero).add(
             const EdgeInsetsDirectional.only(start: 6.0),
           ),
-          child: DefaultTextStyle(
-            style:
-                FluentTheme.of(context).typography.caption ?? const TextStyle(),
+          child: DefaultTextStyle.merge(
+            style: FluentTheme.of(context).typography.caption,
             maxLines: 1,
             softWrap: false,
             child: appBar.title!,

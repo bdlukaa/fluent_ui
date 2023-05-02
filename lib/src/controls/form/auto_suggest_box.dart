@@ -934,8 +934,8 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
           parent: controller,
           curve: Curves.easeOut,
         )),
-        child: DefaultTextStyle(
-          style: theme.typography.body ?? const TextStyle(),
+        child: DefaultTextStyle.merge(
+          style: theme.typography.body,
           child: widget.text,
         ),
       ),

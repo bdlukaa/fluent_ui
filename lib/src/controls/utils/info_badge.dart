@@ -74,7 +74,7 @@ class InfoBadge extends StatelessWidget {
       ),
       child: source == null
           ? null
-          : DefaultTextStyle(
+          : DefaultTextStyle.merge(
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: foregroundColor,

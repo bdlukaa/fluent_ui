@@ -130,7 +130,7 @@ class _PillButtonBarItem extends StatelessWidget {
               horizontal: _kButtonsSpacing + visualDensity.horizontal,
               vertical: _kButtonsSpacing + visualDensity.vertical,
             ),
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: (selected
                       ? theme.selectedTextStyle
                       : theme.unselectedTextStyle) ??
