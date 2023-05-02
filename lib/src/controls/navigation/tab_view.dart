@@ -423,7 +423,7 @@ class _TabViewState extends State<TabView> {
             if (widget.header != null)
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 12.0),
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: headerFooterTextStyle,
                   child: widget.header!,
                 ),
@@ -573,7 +573,7 @@ class _TabViewState extends State<TabView> {
             if (widget.footer != null)
               Padding(
                 padding: const EdgeInsetsDirectional.only(start: 12.0),
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: headerFooterTextStyle,
                   child: widget.footer!,
                 ),
@@ -905,7 +905,7 @@ class __TabState extends State<_Tab>
             ),
             child: () {
               final result = ClipRect(
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: (theme.typography.body ?? const TextStyle()).copyWith(
                     fontSize: 12.0,
                     fontWeight: widget.selected ? FontWeight.w600 : null,

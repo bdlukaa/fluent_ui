@@ -149,7 +149,7 @@ class _BottomNavigationItem extends StatelessWidget {
             if (item.title != null)
               Padding(
                 padding: const EdgeInsetsDirectional.only(top: 1.0),
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: FluentTheme.of(context).typography.caption!.copyWith(
                         color: selected
                             ? style.selectedColor

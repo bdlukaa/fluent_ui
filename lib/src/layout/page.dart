@@ -227,7 +227,7 @@ class PageHeader extends StatelessWidget {
       child: Row(children: [
         if (leading != null) leading!,
         Expanded(
-          child: DefaultTextStyle(
+          child: DefaultTextStyle.merge(
             style: theme.typography.title!,
             child: title ?? const SizedBox(),
           ),

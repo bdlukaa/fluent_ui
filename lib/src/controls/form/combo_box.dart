@@ -314,7 +314,7 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
                 namesRoute: true,
                 explicitChildNodes: true,
                 label: FluentLocalizations.of(context).dialogLabel,
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: route.style,
                   child: ScrollConfiguration(
                     behavior: const _ComboBoxScrollBehavior(),
@@ -1221,7 +1221,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       }
 
       placeholderIndex = items.length;
-      items.add(DefaultTextStyle(
+      items.add(DefaultTextStyle.merge(
         style: textStyle!.copyWith(color: theme.disabledColor),
         child: IgnorePointer(
           ignoringSemantics: false,
@@ -1251,7 +1251,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
 
     Widget result = Builder(builder: (context) {
-      return DefaultTextStyle(
+      return DefaultTextStyle.merge(
         style: isEnabled
             ? textStyle!
             : textStyle!.copyWith(color: theme.disabledColor),

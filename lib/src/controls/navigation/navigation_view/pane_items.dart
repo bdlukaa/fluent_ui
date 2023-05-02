@@ -492,8 +492,8 @@ class PaneItemHeader extends NavigationPaneItem {
               ? EdgeInsets.zero
               : theme.headerPadding ?? EdgeInsets.zero,
         ),
-        child: DefaultTextStyle(
-          style: theme.itemHeaderTextStyle ?? const TextStyle(),
+        child: DefaultTextStyle.merge(
+          style: theme.itemHeaderTextStyle,
           softWrap: false,
           maxLines: 1,
           overflow: TextOverflow.fade,
@@ -751,9 +751,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         vertical: 8.0,
                       ),
                       margin: const EdgeInsetsDirectional.only(bottom: 4.0),
-                      child: DefaultTextStyle(
-                        style: navigationTheme.itemHeaderTextStyle ??
-                            const TextStyle(),
+                      child: DefaultTextStyle.merge(
+                        style: navigationTheme.itemHeaderTextStyle,
                         softWrap: false,
                         maxLines: 1,
                         overflow: TextOverflow.fade,
