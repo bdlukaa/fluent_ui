@@ -824,7 +824,10 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
   Widget build(BuildContext context) {
     final size = Flyout.of(context).size;
     final theme = NavigationPaneTheme.of(context);
+    final fluentTheme = FluentTheme.of(context);
+    final view = InheritedNavigationView.of(context);
 
+    final selected = view.pane?.isSelected(item) ?? false;
     final titleText = item.title?.getProperty<String>() ?? '';
     final baseStyle = item.title?.getProperty<TextStyle>() ?? const TextStyle();
 
@@ -872,6 +875,24 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
             transparentWhenDisabled: true,
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: kDefaultListTilePadding.vertical,
+                ),
+                child: Container(
+                  height: 30 * 0.7,
+                  width: 3.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.0),
+                    color: selected
+                        ? fluentTheme.accentColor
+                            .defaultBrushFor(fluentTheme.brightness)
+                        : Colors.transparent,
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: theme.iconPadding ?? EdgeInsets.zero,
               child: IconTheme.merge(
