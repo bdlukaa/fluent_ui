@@ -103,8 +103,8 @@ class ContentDialog extends StatelessWidget {
                     if (title != null)
                       Padding(
                         padding: style.titlePadding ?? EdgeInsets.zero,
-                        child: DefaultTextStyle(
-                          style: style.titleStyle ?? const TextStyle(),
+                        child: DefaultTextStyle.merge(
+                          style: style.titleStyle,
                           child: title!,
                         ),
                       ),
@@ -112,8 +112,8 @@ class ContentDialog extends StatelessWidget {
                       Flexible(
                         child: Padding(
                           padding: style.bodyPadding ?? EdgeInsets.zero,
-                          child: DefaultTextStyle(
-                            style: style.bodyStyle ?? const TextStyle(),
+                          child: DefaultTextStyle.merge(
+                            style: style.bodyStyle,
                             child: content!,
                           ),
                         ),

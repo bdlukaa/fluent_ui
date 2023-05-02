@@ -1020,7 +1020,7 @@ class _TreeViewItem extends StatelessWidget {
 
                     // Item content
                     Expanded(
-                      child: DefaultTextStyle(
+                      child: DefaultTextStyle.merge(
                         style: TextStyle(
                           fontSize: 12.0,
                           color: itemForegroundColor,

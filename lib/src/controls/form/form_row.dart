@@ -38,7 +38,7 @@ class FormRow extends StatelessWidget {
         if (helper != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: textStyle!,
               child: helper!,
             ),

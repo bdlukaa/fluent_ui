@@ -212,13 +212,13 @@ class ListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (title != null)
-                    DefaultTextStyle(
+                    DefaultTextStyle.merge(
                       style: (theme.typography.body ?? const TextStyle())
                           .copyWith(fontSize: 16),
                       child: title!,
                     ),
                   if (subtitle != null)
-                    DefaultTextStyle(
+                    DefaultTextStyle.merge(
                       style: theme.typography.caption ?? const TextStyle(),
                       child: subtitle!,
                     ),

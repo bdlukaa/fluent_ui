@@ -199,8 +199,10 @@ class _BaseButtonState extends State<BaseButton> {
               child: AnimatedDefaultTextStyle(
                 duration: FluentTheme.of(context).fastAnimationDuration,
                 curve: FluentTheme.of(context).animationCurve,
-                style: (resolvedTextStyle ?? const TextStyle())
-                    .copyWith(color: resolvedForegroundColor),
+                style: DefaultTextStyle.of(context).style.merge(
+                      (resolvedTextStyle ?? const TextStyle())
+                          .copyWith(color: resolvedForegroundColor),
+                    ),
                 textAlign: TextAlign.center,
                 child: widget.child,
               ),

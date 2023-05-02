@@ -139,7 +139,7 @@ class SnackbarState extends State<Snackbar>
         constraints: const BoxConstraints(maxWidth: 300.0, minWidth: 32.0),
         decoration: theme.decoration,
         padding: theme.padding,
-        child: DefaultTextStyle(
+        child: DefaultTextStyle.merge(
           style: TextStyle(color: theme.decoration?.color?.basedOnLuminance()),
           child: Flex(
             direction: widget.extended ? Axis.vertical : Axis.horizontal,

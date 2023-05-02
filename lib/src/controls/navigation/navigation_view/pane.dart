@@ -1272,9 +1272,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                             padding: const EdgeInsetsDirectional.only(
                               start: 8.0,
                             ),
-                            child: DefaultTextStyle(
-                              style: theme.itemHeaderTextStyle ??
-                                  const TextStyle(),
+                            child: DefaultTextStyle.merge(
+                              style: theme.itemHeaderTextStyle,
                               child: widget.pane.header!,
                             ),
                           ),

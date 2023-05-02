@@ -180,14 +180,14 @@ class InfoBar extends StatelessWidget {
     final closeIcon = style.closeIcon;
     final title = Padding(
       padding: const EdgeInsetsDirectional.only(end: 6.0),
-      child: DefaultTextStyle(
+      child: DefaultTextStyle.merge(
         style: theme.typography.bodyStrong ?? const TextStyle(),
         child: this.title,
       ),
     );
     final content = () {
       if (this.content == null) return null;
-      return DefaultTextStyle(
+      return DefaultTextStyle.merge(
         style: theme.typography.body ?? const TextStyle(),
         child: this.content!,
       );
