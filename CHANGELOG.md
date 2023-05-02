@@ -8,6 +8,7 @@
 - `DateTime.startYear` and `DateTime.endYear` are now deprecated. Use `DateTime.startDate` and `DateTime.endDate` instead. ([#687](https://github.com/bdlukaa/fluent_ui/issues/687))
 - Added `.decoration`, `.foregroundDecoration`, `.highlightColor`, `.unfocusedColor`, `.keyboardAppearance`, `.textAlign`, `.textAlignVertical` to `PasswordBox` ([#820](https://github.com/bdlukaa/fluent_ui/issues/820))
 - Do not block text style inheritance in widgets ([#823](https://github.com/bdlukaa/fluent_ui/pull/823))
+- `NavigationView` now works correctly in top mode ([#821](https://github.com/bdlukaa/fluent_ui/pull/821))
 
 ## 4.5.0
 
