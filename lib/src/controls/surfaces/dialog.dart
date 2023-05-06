@@ -81,9 +81,8 @@ class ContentDialog extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final style = ContentDialogThemeData.standard(FluentTheme.of(
       context,
-    )).merge(
-      FluentTheme.of(context).dialogTheme.merge(this.style),
-    );
+    )).merge(FluentTheme.of(context).dialogTheme.merge(this.style));
+
     return Align(
       alignment: AlignmentDirectional.center,
       child: Container(
@@ -161,11 +160,11 @@ class ContentDialog extends StatelessWidget {
   }
 }
 
-/// Displays a Material dialog above the current contents of the app, with
-/// Material entrance and exit animations, modal barrier color, and modal
-/// barrier behavior (dialog is dismissible with a tap on the barrier).
+/// Displays a Fluent dialog above the current contents of the app, with fluent
+/// entrance and exit animations, modal barrier color, and modal barrier
+/// behavior (dialog is dismissible with a tap on the barrier).
 ///
-/// This function takes a `builder` which typically builds a [Dialog] widget.
+/// This function takes a `builder` which typically builds a [ContentDialog] widget.
 /// Content below the dialog is dimmed with a [ModalBarrier]. The widget
 /// returned by the `builder` does not share a context with the location that
 /// `showDialog` is originally called from. Use a [StatefulBuilder] or a
@@ -227,6 +226,7 @@ Future<T?> showDialog<T extends Object?>({
   String? barrierLabel,
   Color? barrierColor = const Color(0x8A000000),
   bool barrierDismissible = false,
+  bool dismissWithEsc = true,
 }) {
   assert(debugCheckHasFluentLocalizations(context));
 
@@ -247,6 +247,7 @@ Future<T?> showDialog<T extends Object?>({
     barrierColor: barrierColor,
     barrierDismissible: barrierDismissible,
     barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
+    dismissWithEsc: dismissWithEsc,
     settings: routeSettings,
     transitionBuilder: transitionBuilder,
     transitionDuration: transitionDuration ??
@@ -294,7 +295,7 @@ Future<T?> showDialog<T extends Object?>({
 ///  * [showDialog], which is a way to display a DialogRoute.
 ///  * [showGeneralDialog], which allows for customization of the dialog popup.
 class FluentDialogRoute<T> extends RawDialogRoute<T> {
-  /// A dialog route with Material entrance and exit animations,
+  /// A dialog route with Fluent entrance and exit animations,
   /// modal barrier color
   FluentDialogRoute({
     required WidgetBuilder builder,
@@ -306,13 +307,16 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     super.transitionDuration,
     super.transitionBuilder = _defaultTransitionBuilder,
     super.settings,
+    bool dismissWithEsc = true,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) {
             final pageChild = Builder(builder: builder);
             final dialog = themes?.wrap(pageChild) ?? pageChild;
             return SafeArea(
               child: Actions(
-                actions: {DismissIntent: _DismissAction(context)},
+                actions: {
+                  if (dismissWithEsc) DismissIntent: _DismissAction(context),
+                },
                 child: FocusScope(
                   autofocus: true,
                   child: dialog,

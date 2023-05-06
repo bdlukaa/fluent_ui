@@ -9,6 +9,7 @@
 - Added `.decoration`, `.foregroundDecoration`, `.highlightColor`, `.unfocusedColor`, `.keyboardAppearance`, `.textAlign`, `.textAlignVertical` to `PasswordBox` ([#820](https://github.com/bdlukaa/fluent_ui/issues/820))
 - Do not block text style inheritance in widgets ([#823](https://github.com/bdlukaa/fluent_ui/pull/823))
 - `NavigationView` now works correctly in top mode ([#821](https://github.com/bdlukaa/fluent_ui/pull/821))
+- Add `showDialog.dismissWithEsc` ([#826](https://github.com/bdlukaa/fluent_ui/issues/826))
 
 ## 4.5.0
 
