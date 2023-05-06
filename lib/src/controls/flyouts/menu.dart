@@ -76,7 +76,7 @@ class _MenuFlyoutState extends State<MenuFlyout> {
           return GlobalKey<_MenuFlyoutSubItemState>();
         }
 
-        return GlobalKey();
+        return GlobalKey(debugLabel: 'MenuFlyout key#$item');
       }).toList();
     }
   }

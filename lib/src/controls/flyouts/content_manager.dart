@@ -43,7 +43,7 @@ class Flyout extends StatefulWidget {
 }
 
 class FlyoutState extends State<Flyout> {
-  final _key = GlobalKey();
+  final _key = GlobalKey(debugLabel: 'FlyoutState key');
 
   /// The current size of the flyout
   Size size = Size.zero;
