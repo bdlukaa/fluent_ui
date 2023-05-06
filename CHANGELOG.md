@@ -1,4 +1,4 @@
-## [next]
+## 4.5.1
 
 - Do not unfocus the auto suggest box on clear ([#816](https://github.com/bdlukaa/fluent_ui/issues/816))
 - Review all the inputs margins and inputs ([#799](https://github.com/bdlukaa/fluent_ui/pull/799))
