@@ -105,7 +105,7 @@ class ColorsPage extends ScrollablePage {
       InfoLabel(
         label: 'All Shades',
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: const [
+          const Row(children: [
             ColorBlock(
               name: 'Black',
               color: Colors.black,

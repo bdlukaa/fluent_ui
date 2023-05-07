@@ -51,11 +51,11 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
           'to app surfaces to add depth and help establish a visual hierarchy.',
         ),
         subtitle(content: const Text('Default background acrylic brush.')),
-        Card(
+        const Card(
           child: SizedBox(
             height: 300,
             width: 500,
-            child: Stack(children: const [
+            child: Stack(children: [
               _AcrylicChildren(),
               Positioned.fill(
                 child: Padding(

@@ -1,3 +1,7 @@
+## 4.6.0 - Flutter 3.10
+
+- **BREAKING** Removed `FluentApp.useInheritedMediaQuery`
+
 ## 4.5.1
 
 - Do not unfocus the auto suggest box on clear ([#816](https://github.com/bdlukaa/fluent_ui/issues/816))

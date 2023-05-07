@@ -25,9 +25,9 @@ class SponsorDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Row(
+      content: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Expanded(
             child: _Tier(
               name: 'Royal Secretary',
