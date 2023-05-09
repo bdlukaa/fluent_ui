@@ -1,6 +1,7 @@
 ## 4.6.0 - Flutter 3.10
 
 - **BREAKING** Removed `FluentApp.useInheritedMediaQuery`
+- Upgrade the `scroll_pos` dependency (from @WinXaito) to version v0.4.0 ([#831](https://github.com/bdlukaa/fluent_ui/pull/831))
 
 ## 4.5.1
 
