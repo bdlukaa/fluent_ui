@@ -15,6 +15,14 @@ class ProgressIndicatorsPage extends StatefulWidget {
 class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
     with PageMixin {
   double determinateValue = Random().nextDouble() * 100;
+  bool smallScreenWidth = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    smallScreenWidth = MediaQuery.of(context).size.width <= 400;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -58,19 +66,33 @@ ProgressRing(),''',
           ),
         ),
         CardHighlight(
-            child: Row(children: [
-              ProgressBar(value: determinateValue),
-              const SizedBox(width: 20.0),
-              ProgressRing(value: determinateValue),
-              const Spacer(),
-              InfoLabel(
-                label: 'Progress: ${determinateValue.toInt()}',
-                child: Slider(
-                  value: determinateValue,
-                  onChanged: (v) => setState(() => determinateValue = v),
-                ),
-              ),
-            ]),
+            child: smallScreenWidth
+                ? Wrap(children: [
+                    ProgressBar(value: determinateValue),
+                    const SizedBox(width: 20.0),
+                    ProgressRing(value: determinateValue),
+                    // const Spacer(),
+                    InfoLabel(
+                      label: 'Progress: ${determinateValue.toInt()}',
+                      child: Slider(
+                        value: determinateValue,
+                        onChanged: (v) => setState(() => determinateValue = v),
+                      ),
+                    ),
+                  ])
+                : Row(children: [
+                    ProgressBar(value: determinateValue),
+                    const SizedBox(width: 20.0),
+                    ProgressRing(value: determinateValue),
+                    const Spacer(),
+                    InfoLabel(
+                      label: 'Progress: ${determinateValue.toInt()}',
+                      child: Slider(
+                        value: determinateValue,
+                        onChanged: (v) => setState(() => determinateValue = v),
+                      ),
+                    ),
+                  ]),
             codeSnippet: '''// determinate progress bar
 ProgressBar(value: ${determinateValue.toInt()}),
 
