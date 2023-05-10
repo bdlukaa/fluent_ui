@@ -1,6 +1,8 @@
 ## next
 
 - Upgrade the `scroll_pos` dependency (from @WinXaito) to version v0.4.0 ([#831](https://github.com/bdlukaa/fluent_ui/pull/831))
+- Added support for Urdu language ([#832](https://github.com/bdlukaa/fluent_ui/pull/832))
+
 
 ## 4.5.1
 
