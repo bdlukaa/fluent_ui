@@ -1,3 +1,8 @@
+## next
+
+- Upgrade the `scroll_pos` dependency (from @WinXaito) to version v0.4.0 ([#831](https://github.com/bdlukaa/fluent_ui/pull/831))
+- Added support for Urdu language ([#832](https://github.com/bdlukaa/fluent_ui/pull/832))
+
 ## 4.5.1
 
 - Do not unfocus the auto suggest box on clear ([#816](https://github.com/bdlukaa/fluent_ui/issues/816))
@@ -10,7 +15,6 @@
 - Do not block text style inheritance in widgets ([#823](https://github.com/bdlukaa/fluent_ui/pull/823))
 - `NavigationView` now works correctly in top mode ([#821](https://github.com/bdlukaa/fluent_ui/pull/821))
 - Add `showDialog.dismissWithEsc` ([#826](https://github.com/bdlukaa/fluent_ui/issues/826))
-- Added support for Urdu language
 
 ## 4.5.0
 
