@@ -35,9 +35,9 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
             'completion time is unknown.',
           ),
         ),
-        CardHighlight(
+        const CardHighlight(
           child: RepaintBoundary(
-            child: Row(children: const [
+            child: Row(children: [
               ProgressBar(),
               SizedBox(width: 20.0),
               ProgressRing(),

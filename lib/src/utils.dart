@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -78,8 +77,8 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
 ///
 /// [width] is the width of the current screen. If not provided,
 /// [SingletonFlutterWindow.physicalSize] is used
-bool is10footScreen([double? width]) {
-  width ??= ui.window.physicalSize.width;
+bool is10footScreen(BuildContext context) {
+  final width = View.of(context).physicalSize.width;
   return width >= 11520;
 }
 

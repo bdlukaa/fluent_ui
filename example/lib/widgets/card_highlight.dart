@@ -76,7 +76,7 @@ class _CardHighlightState extends State<CardHighlight>
                           color: theme.resources.textOnAccentFillColorPrimary,
                           size: 18,
                         )
-                      : Row(children: const [
+                      : const Row(children: [
                           Icon(FluentIcons.copy),
                           SizedBox(width: 6.0),
                           Text('Copy')

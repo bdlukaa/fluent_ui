@@ -24,8 +24,8 @@ class TextBoxPage extends ScrollablePage {
         'enabled by default.',
       ),
       subtitle(content: const Text('A simple TextBox')),
-      CardHighlight(
-        child: Row(children: const [
+      const CardHighlight(
+        child: Row(children: [
           Expanded(child: TextBox()),
           SizedBox(width: 10.0),
           Expanded(
