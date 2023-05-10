@@ -127,7 +127,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.5.1"
+    version: "4.6.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -587,5 +587,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=3.0.0-0 <4.0.0"
-  flutter: ">=3.7.0"
+  dart: ">=3.0.0-0 <=3.0.0"
+  flutter: ">=3.10.0"
