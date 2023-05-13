@@ -4,7 +4,7 @@ version: 4.6.0
 homepage: https://github.com/bdlukaa/fluent_ui
 
 environment:
-   sdk: ">=2.17.0 <=4.0.0"
+   sdk: ">=3.0.0 <=4.0.0"
    flutter: ">=3.10.0"
 
 
@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter
 
   # Used on date and time pickers
-  intl: '>=0.17.0 <= 1.0.0'
+  intl: '>=0.18.0 <= 1.0.0'
 
   # Used on TabView
   scroll_pos: ^0.4.0
