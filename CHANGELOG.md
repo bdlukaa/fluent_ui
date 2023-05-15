@@ -1,3 +1,7 @@
+## 4.6.1
+
+- Fix incompatibilities with Flutter 3.10
+
 ## 4.6.0 - Flutter 3.10
 
 - **BREAKING** Removed `FluentApp.useInheritedMediaQuery`
