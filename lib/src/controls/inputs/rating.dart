@@ -177,7 +177,7 @@ class _RatingBarState extends State<RatingBar> {
     }
 
     switch (intent) {
-      case _AdjustSliderIntent.right():
+      case _AdjustSliderIntent.right:
         switch (directionality) {
           case TextDirection.rtl:
             decrease();
@@ -187,7 +187,7 @@ class _RatingBarState extends State<RatingBar> {
             break;
         }
         break;
-      case _AdjustSliderIntent.left():
+      case _AdjustSliderIntent.left:
         switch (directionality) {
           case TextDirection.rtl:
             increase();
@@ -197,10 +197,10 @@ class _RatingBarState extends State<RatingBar> {
             break;
         }
         break;
-      case _AdjustSliderIntent.up():
+      case _AdjustSliderIntent.up:
         increase();
         break;
-      case _AdjustSliderIntent.down():
+      case _AdjustSliderIntent.down:
         decrease();
         break;
     }
