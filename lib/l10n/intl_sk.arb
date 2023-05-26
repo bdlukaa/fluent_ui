@@ -1,0 +1,127 @@
+{
+  "@@locale": "sk",
+  "backButtonTooltip": "Naspäť",
+  "@backButtonTooltip": {
+    "description": "The tooltip for the back button on [NavigationAppBar]."
+  },
+  "closeButtonLabel": "Zavrieť",
+  "@closeButtonLabel": {
+    "description": "Label for \"close\" buttons and menu items."
+  },
+  "searchLabel": "Hľadať",
+  "@searchLabel": {
+    "description": "Label for \"search\" text fields."
+  },
+  "closeNavigationTooltip": "Zavrieť navigáciu",
+  "@closeNavigationTooltip": {
+    "description": "The tooltip for the toggle navigation button."
+  },
+  "openNavigationTooltip": "Otvoriť navigation",
+  "@openNavigationTooltip": {
+    "description": "The tooltip for the toogle navigation button."
+  },
+  "clickToSearch": "Kliknite pre vyhľadávanie",
+  "@clickToSearch": {
+    "description": "The tooltip for the \"Click to Search\" button."
+  },
+  "modalBarrierDismissLabel": "Zavrieť",
+  "@modalBarrierDismissLabel": {
+    "description": "Label read out by accessibility tools (TalkBack or VoiceOver) for a modal barrier to indicate that a tap dismisses the barrier. A modal barrier can for example be found behind an alert or popup to block user interaction with elements behind it."
+  },
+  "minimizeWindowTooltip": "Minimalizovať",
+  "@minimizeWindowTooltip": {
+    "description": "The tooltip used by the \"Minimize\" button on desktop windows."
+  },
+  "restoreWindowTooltip": "Obnoviť",
+  "@restoreWindowTooltip": {
+    "description": "The tooltip used by the \"Restore\" button on desktop windows."
+  },
+  "closeWindowTooltip": "Zavrieť",
+  "@closeWindowTooltip": {
+    "description": "The tooltip used by the \"Close\" button on desktop windows."
+  },
+  "dialogLabel": "Dialóg",
+  "@dialogLabel": {
+    "description": "The dialog label."
+  },
+  "cutActionLabel": "Vystrihnúť",
+  "@cutActionLabel": {
+    "description": "The label for the cut action on the text selection controls."
+  },
+  "copyActionLabel": "Kopírovať",
+  "@copyActionLabel": {
+    "description": "The label for the copy action on the text selection controls."
+  },
+  "pasteActionLabel": "Prilepiť",
+  "@pasteActionLabel": {
+    "description": "The label for the paste button on the text selection controls."
+  },
+  "selectAllActionLabel": "Vybrať všetko",
+  "@selectAllActionLabel": {
+    "description": "The label for the select all button on the text selection controls."
+  },
+  "newTabLabel": "Pridať novú záložku",
+  "@newTabLabel": {
+    "description": "The label used by [TabView]'s new button."
+  },
+  "closeTabLabelSuffix": "Zavrieť záložku",
+  "@closeTabLabelSuffix": {
+    "description": "The label used by [TabView]'s close button."
+  },
+  "scrollTabBackwardLabel": "Posunúť zoznam kariet dozadu",
+  "@scrollTabBackwardLabel": {
+    "description": "The label used by [TabView]'s scroll backward button."
+  },
+  "scrollTabForwardLabel": "Posunúť zoznam kariet dopredu",
+  "@scrollTabForwardLabel": {
+    "description": "The label used by [TabView]'s scroll forward button."
+  },
+  "noResultsFoundLabel": "Neboli nájdené žiadne výsledky",
+  "@noResultsFoundLabel": {
+    "description": "The label used by [AutoSuggestBox] when the results can't be found."
+  },
+  "copyActionTooltip": "Kopírovať vybraný obsah do schránky",
+  "@copyActionTooltip": {
+    "description": "The tooltip for the copy action on the text selection controls."
+  },
+  "cutActionTooltip": "Vystrihnúť vybraný obsah a dať ho do schránky",
+  "@cutActionTooltip": {
+    "description": "The tooltip for the cut action on the text selection controls."
+  },
+  "pasteActionTooltip": "Prilepiť obsah schránky na aktuálnu pozíciu",
+  "@pasteActionTooltip": {
+    "description": "The tooltip for the paste action on the text selection controls."
+  },
+  "selectAllActionTooltip": "Vybrať všetok obsah",
+  "@selectAllActionTooltip": {
+    "description": "The tooltip for the select all action on the text selection controls."
+  },
+  "hour": "hodina",
+  "@hour": {
+    "description": "The text used by [TimePicker] for the hour field."
+  },
+  "minute": "minúta",
+  "@minute": {
+    "description": "The text used by [TimePicker] for the minute field."
+  },
+  "am": "AM",
+  "@am": {
+    "description": "The text used by [TimePicker] for the AM field."
+  },
+  "pm": "PM",
+  "@pm": {
+    "description": "The text used by [TimePicker] for the PM field."
+  },
+  "month": "mesiac",
+  "@month": {
+    "description": "The text used by [DatePicker] for the month field"
+  },
+  "day": "deň",
+  "@day": {
+    "description": "The text used by [DatePicker] for the day field"
+  },
+  "year": "rok",
+  "@year": {
+    "description": "The text used by [DatePicker] for the year field"
+  }
+}
