@@ -5,84 +5,85 @@ class FluentLocalizationsUr extends FluentLocalizations {
   FluentLocalizationsUr([String locale = 'ur']) : super(locale);
 
   @override
-  String get backButtonTooltip => 'Back';
+  String get backButtonTooltip => 'آگے';
 
   @override
-  String get closeButtonLabel => 'Close';
+  String get closeButtonLabel => 'بند';
 
   @override
-  String get searchLabel => 'Search';
+  String get searchLabel => 'تلاش کریں';
 
   @override
-  String get closeNavigationTooltip => 'Close Navigation';
+  String get closeNavigationTooltip => 'نیویگیشن بند کریں۔';
 
   @override
-  String get openNavigationTooltip => 'Open Navigation';
+  String get openNavigationTooltip => 'نیویگیشن کھولیں۔';
 
   @override
-  String get clickToSearch => 'Click to search';
+  String get clickToSearch => 'تلاش کرنے کے لیے کلک کریں۔';
 
   @override
-  String get modalBarrierDismissLabel => 'Dismiss';
+  String get modalBarrierDismissLabel => 'برطرف کریں';
 
   @override
-  String get minimizeWindowTooltip => 'Minimize';
+  String get minimizeWindowTooltip => 'کم سے کم کریں';
 
   @override
-  String get restoreWindowTooltip => 'Restore';
+  String get restoreWindowTooltip => 'بحال کریں';
 
   @override
-  String get closeWindowTooltip => 'Close';
+  String get closeWindowTooltip => 'بند کریں';
 
   @override
-  String get dialogLabel => 'Dialog';
+  String get dialogLabel => 'ڈائیلاگ';
 
   @override
-  String get cutActionLabel => 'Cut';
+  String get cutActionLabel => 'کاپی کریں';
 
   @override
-  String get copyActionLabel => 'Copy';
+  String get copyActionLabel => 'کاپی کریں';
 
   @override
-  String get pasteActionLabel => 'Paste';
+  String get pasteActionLabel => 'پیسٹ کریں';
 
   @override
-  String get selectAllActionLabel => 'Select all';
+  String get selectAllActionLabel => 'سب کچھ منتخب کریں';
 
   @override
-  String get newTabLabel => 'Add new tab';
+  String get newTabLabel => 'نیا ٹیب کھولیں۔';
 
   @override
-  String get closeTabLabelSuffix => 'Close tab';
+  String get closeTabLabelSuffix => 'بند کریں';
 
   @override
-  String get scrollTabBackwardLabel => 'Scroll tab list backward';
+  String get scrollTabBackwardLabel =>
+      'ٹیب کی فہرست کو پیچھے کی طرف اسکرول کریں۔';
 
   @override
-  String get scrollTabForwardLabel => 'Scroll tab list forward';
+  String get scrollTabForwardLabel => 'ٹیب کی فہرست کو آگے اسکرول کریں۔';
 
   @override
-  String get noResultsFoundLabel => 'No results found';
+  String get noResultsFoundLabel => 'کوئی نتائج نہیں ملے۔';
 
   @override
-  String get copyActionTooltip => 'Copy the selected content to the clipboard';
+  String get copyActionTooltip => 'منتخب کردہ مواد کو کلپ بورڈ میں کاپی کریں۔';
 
   @override
   String get cutActionTooltip =>
-      'Remove the selected content and put it in the clipboard';
+      'منتخب کردہ مواد کو ہٹائیں اور اسے کلپ بورڈ میں رکھیں';
 
   @override
   String get pasteActionTooltip =>
-      'Inserts the contents of the clipboard at the current location';
+      'کلپ بورڈ کے مواد کو موجودہ مقام پر داخل کریں۔';
 
   @override
-  String get selectAllActionTooltip => 'Select all content';
+  String get selectAllActionTooltip => 'تمام مواد کو منتخب کریں۔';
 
   @override
-  String get hour => 'hour';
+  String get hour => 'گھنٹہ';
 
   @override
-  String get minute => 'minute';
+  String get minute => 'منٹ';
 
   @override
   String get am => 'AM';
@@ -91,11 +92,11 @@ class FluentLocalizationsUr extends FluentLocalizations {
   String get pm => 'PM';
 
   @override
-  String get month => 'month';
+  String get month => 'مہینہ';
 
   @override
-  String get day => 'day';
+  String get day => 'دِن';
 
   @override
-  String get year => 'year';
+  String get year => 'سال';
 }
