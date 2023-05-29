@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
@@ -73,8 +72,9 @@ class TabView extends StatefulWidget {
     this.header,
     this.footer,
     this.closeDelayDuration = const Duration(milliseconds: 400),
-    @Deprecated('This property is no longer used and will be removed in the next major release.')
-        this.wheelScroll = false,
+    @Deprecated(
+        'This property is no longer used and will be removed in the next major release.')
+    this.wheelScroll = false,
   });
 
   /// The index of the tab to be displayed
