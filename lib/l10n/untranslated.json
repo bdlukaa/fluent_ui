@@ -3,10 +3,7 @@
     "am",
     "pm"
   ],
-  "bn": [
-    "am",
-    "pm"
-  ],
+
   "ko": [
     "hour",
     "minute",
@@ -16,6 +13,7 @@
     "day",
     "year"
   ],
+
   "ms": [
     "hour",
     "minute",
@@ -25,10 +23,12 @@
     "day",
     "year"
   ],
+
   "my": [
     "am",
     "pm"
   ],
+
   "pl": [
     "hour",
     "minute",
@@ -38,6 +38,7 @@
     "day",
     "year"
   ],
+
   "ru": [
     "hour",
     "minute",
@@ -47,15 +48,12 @@
     "day",
     "year"
   ],
-  "ur": [
-   
-    "am",
-    "pm"
-  ],
+
   "uk": [
     "am",
     "pm"
   ],
+
   "uz": [
     "am",
     "pm"

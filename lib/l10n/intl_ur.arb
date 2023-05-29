@@ -2,7 +2,7 @@
   "@@locale": "ur",
   "backButtonTooltip": "آگے",
   "closeButtonLabel": "بند",
-  "searchLabel": "تلاش کریں,
+  "searchLabel": "تلاش کریں",
   "closeNavigationTooltip": "نیویگیشن بند کریں۔",
   "openNavigationTooltip": "نیویگیشن کھولیں۔",
   "clickToSearch": "تلاش کرنے کے لیے کلک کریں۔",
@@ -13,7 +13,7 @@
   "dialogLabel": "ڈائیلاگ",
   "cutActionLabel": "کاپی کریں",
   "copyActionLabel": "کاپی کریں",
-  "pasteActionLabel": "پیسٹ کریں"،
+  "pasteActionLabel": "پیسٹ کریں",
   "selectAllActionLabel": "سب کچھ منتخب کریں",
   "newTabLabel": "نیا ٹیب کھولیں۔",
   "closeTabLabelSuffix": "بند کریں",
@@ -30,5 +30,5 @@
   "pm": "PM",
   "month": "مہینہ",
   "day": "دِن",
-  "year": "سال",
+  "year": "سال"
 }
