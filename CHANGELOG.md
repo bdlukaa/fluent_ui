@@ -1,4 +1,4 @@
-## [next]
+## 4.6.2
 
 - Fix Urdu localization ([#849](https://github.com/bdlukaa/fluent_ui/issues/849))
 
