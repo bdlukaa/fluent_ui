@@ -1,6 +1,6 @@
 ## [next]
 
-- Add Slovak localizationdart format
+- Add Slovak localization
 
 ## 4.6.2
 
