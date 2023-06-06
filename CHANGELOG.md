@@ -1,6 +1,8 @@
 ## [next]
 
 - Add Slovak localization
+- Complete implementation of `DatePicker` and `TimePicker`'s `intl` localization with proper scripting language.
+  - Original implementation of `TimePicker` which released in [4.0.0-pre.3](#400-pre3---top-navigation-and-auto-suggestions---13082022) is replaced.
 
 ## 4.6.2
 

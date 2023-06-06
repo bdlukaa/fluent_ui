@@ -247,7 +247,7 @@ class _TimePickerState extends State<TimePicker> {
                             finalHour = hour;
                           }
 
-                          return scriptRecognizer
+                          return fluentScriptRecognizer
                               .dateFormatWithPatternFromContext(
                                   context, DateFormat.H)
                               .format(DateTime(
@@ -268,7 +268,7 @@ class _TimePickerState extends State<TimePicker> {
                       child: Text(
                         widget.selected == null
                             ? localizations.minute
-                            : scriptRecognizer
+                            : fluentScriptRecognizer
                                 .dateFormatWithPatternFromContext(
                                     context, DateFormat.m)
                                 .format(DateTime(
