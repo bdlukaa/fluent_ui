@@ -247,13 +247,15 @@ class _TimePickerState extends State<TimePicker> {
                             finalHour = hour;
                           }
 
-                          return scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.H)
+                          return scriptRecognizer
+                              .dateFormatWithPatternFromContext(
+                                  context, DateFormat.H)
                               .format(DateTime(
-                            0, // year
-                            0, // month
-                            0, // day
-                            finalHour,
-                          ));
+                                0, // year
+                                0, // month
+                                0, // day
+                                finalHour,
+                              ));
                         }(),
                         textAlign: TextAlign.center,
                       ),
@@ -266,13 +268,16 @@ class _TimePickerState extends State<TimePicker> {
                       child: Text(
                         widget.selected == null
                             ? localizations.minute
-                            : scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.m) .format(DateTime(
-                                0, // year
-                                0, // month
-                                0, // day
-                                0, // hour,
-                                time.minute,
-                              )),
+                            : scriptRecognizer
+                                .dateFormatWithPatternFromContext(
+                                    context, DateFormat.m)
+                                .format(DateTime(
+                                  0, // year
+                                  0, // month
+                                  0, // day
+                                  0, // hour,
+                                  time.minute,
+                                )),
                         textAlign: TextAlign.center,
                       ),
                     ),

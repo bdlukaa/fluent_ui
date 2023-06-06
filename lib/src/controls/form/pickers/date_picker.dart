@@ -345,7 +345,8 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.month
-                      : DateFormat(DateFormat.STANDALONE_MONTH, scriptRecognizer.resolve(locale))
+                      : DateFormat(DateFormat.STANDALONE_MONTH,
+                              scriptRecognizer.resolve(locale))
                           .format(widget.selected!)
                           .uppercaseFirst(),
                   locale: locale,
@@ -361,11 +362,14 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.day
-                      : scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.d).format(DateTime(
-                          0,
-                          0,
-                          widget.selected!.day,
-                        )),
+                      : scriptRecognizer
+                          .dateFormatWithPatternFromContext(
+                              context, DateFormat.d)
+                          .format(DateTime(
+                            0,
+                            0,
+                            widget.selected!.day,
+                          )),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -379,9 +383,12 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.year
-                      : scriptRecognizer.dateFormatWithPatternFromContext(context,DateFormat.y).format(DateTime(
-                          widget.selected!.year,
-                        )),
+                      : scriptRecognizer
+                          .dateFormatWithPatternFromContext(
+                              context, DateFormat.y)
+                          .format(DateTime(
+                            widget.selected!.year,
+                          )),
                   textAlign: TextAlign.center,
                 ),
               ),
