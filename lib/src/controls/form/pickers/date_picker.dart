@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
+import 'package:fluent_ui/src/script_recognizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -344,7 +345,7 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.month
-                      : DateFormat(DateFormat.STANDALONE_MONTH, '$locale')
+                      : DateFormat(DateFormat.STANDALONE_MONTH, scriptRecognizer.resolve(locale))
                           .format(widget.selected!)
                           .uppercaseFirst(),
                   locale: locale,
@@ -360,7 +361,7 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.day
-                      : DateFormat.d().format(DateTime(
+                      : scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.d).format(DateTime(
                           0,
                           0,
                           widget.selected!.day,
@@ -378,7 +379,7 @@ class _DatePickerState extends State<DatePicker> {
                 child: Text(
                   widget.selected == null
                       ? localizations.year
-                      : DateFormat.y().format(DateTime(
+                      : scriptRecognizer.dateFormatWithPatternFromContext(context,DateFormat.y).format(DateTime(
                           widget.selected!.year,
                         )),
                   textAlign: TextAlign.center,
@@ -529,7 +530,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       Expanded(
         flex: 2,
         child: () {
-          final formatter = DateFormat.MMMM(locale.toString());
+          final formatter = DateFormat.MMMM(scriptRecognizer.resolve(locale));
           // MONTH
           return PickerNavigatorIndicator(
             onBackward: () {
@@ -597,7 +598,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         child: () {
           // DAY
           final daysInMonth = _getDaysInMonth(localDate.month, localDate.year);
-          final formatter = DateFormat.d(locale.toString());
+          final formatter = DateFormat.d(scriptRecognizer.resolve(locale));
           return PickerNavigatorIndicator(
             onBackward: () {
               widget.dayController.navigateSides(
@@ -660,7 +661,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       Expanded(
         child: () {
           final years = widget.endDate.year - widget.startDate.year;
-          final formatter = DateFormat.y(locale.toString());
+          final formatter = DateFormat.y(scriptRecognizer.resolve(locale));
           // YEAR
           return PickerNavigatorIndicator(
             onBackward: () {

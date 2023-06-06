@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
-import 'package:fluent_ui/src/intl_script_locale_apply_mixin.dart';
+import 'package:fluent_ui/src/script_recognizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -110,8 +110,7 @@ class TimePicker extends StatefulWidget {
   }
 }
 
-class _TimePickerState extends State<TimePicker>
-    with IntlScriptLocaleApplyMixin {
+class _TimePickerState extends State<TimePicker> {
   late DateTime time;
 
   final GlobalKey _buttonKey = GlobalKey(debugLabel: 'Time Picker button key');
@@ -248,7 +247,7 @@ class _TimePickerState extends State<TimePicker>
                             finalHour = hour;
                           }
 
-                          return DateFormat.H(getIntlLocale(context))
+                          return scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.H)
                               .format(DateTime(
                             0, // year
                             0, // month
@@ -267,7 +266,7 @@ class _TimePickerState extends State<TimePicker>
                       child: Text(
                         widget.selected == null
                             ? localizations.minute
-                            : DateFormat.m().format(DateTime(
+                            : scriptRecognizer.dateFormatWithPatternFromContext(context, DateFormat.m) .format(DateTime(
                                 0, // year
                                 0, // month
                                 0, // day
