@@ -245,6 +245,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
+  intl_script_recognizer:
+    dependency: transitive
+    description:
+      name: intl_script_recognizer
+      sha256: a8ae1208abe9da2aedebbd5de5f4b235d22b11f8afd17bc76f077ff20e5a63dc
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   js:
     dependency: transitive
     description:
