@@ -537,7 +537,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       Expanded(
         flex: 2,
         child: () {
-          final formatter = DateFormat.MMMM(fluentScriptRecognizer.resolve(locale));
+          final formatter =
+              DateFormat.MMMM(fluentScriptRecognizer.resolve(locale));
           // MONTH
           return PickerNavigatorIndicator(
             onBackward: () {
@@ -605,7 +606,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
         child: () {
           // DAY
           final daysInMonth = _getDaysInMonth(localDate.month, localDate.year);
-          final formatter = DateFormat.d(fluentScriptRecognizer.resolve(locale));
+          final formatter =
+              DateFormat.d(fluentScriptRecognizer.resolve(locale));
           return PickerNavigatorIndicator(
             onBackward: () {
               widget.dayController.navigateSides(
@@ -668,7 +670,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       Expanded(
         child: () {
           final years = widget.endDate.year - widget.startDate.year;
-          final formatter = DateFormat.y(fluentScriptRecognizer.resolve(locale));
+          final formatter =
+              DateFormat.y(fluentScriptRecognizer.resolve(locale));
           // YEAR
           return PickerNavigatorIndicator(
             onBackward: () {
