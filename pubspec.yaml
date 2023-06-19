@@ -16,7 +16,7 @@ dependencies:
 
   # Used on date and time pickers
   intl: ^0.18.0
-  intl_script_recognizer: ^2.3.0
+  intl_script_recognizer: ^2.3.1
 
   # Used on TabView
   scroll_pos: ^0.4.0
