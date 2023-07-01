@@ -156,6 +156,10 @@ class CommandBar extends StatefulWidget {
 
   final bool _isExpanded;
 
+  /// The direction of the command bar. The default is [Axis.horizontal].
+  /// If [direction] is [Axis.vertical], we recomment setting [isCompact] to true.
+  final Axis direction;
+
   /// Creates a command bar.
   const CommandBar({
     super.key,
@@ -164,11 +168,13 @@ class CommandBar extends StatefulWidget {
     this.overflowItemBuilder,
     this.overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow,
     this.compactBreakpointWidth,
-    this.isCompact,
+    bool? isCompact,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.overflowItemAlignment = MainAxisAlignment.end,
-  }) : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap;
+    this.direction = Axis.horizontal,
+  })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
+        isCompact = isCompact ?? direction == Axis.vertical;
 
   @override
   State<CommandBar> createState() => _CommandBarState();
@@ -277,11 +283,14 @@ class _CommandBarState extends State<CommandBar> {
       );
     }
 
+    var listBuilder =
+        widget.direction == Axis.horizontal ? Row.new : Column.new;
+
     late Widget w;
     switch (widget.overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
         w = HorizontalScrollView(
-          child: Row(
+          child: listBuilder.call(
             mainAxisAlignment: widget.mainAxisAlignment,
             crossAxisAlignment: widget.crossAxisAlignment,
             children: [
@@ -292,7 +301,7 @@ class _CommandBarState extends State<CommandBar> {
         );
         break;
       case CommandBarOverflowBehavior.noWrap:
-        w = Row(
+        w = listBuilder.call(
           mainAxisAlignment: widget.mainAxisAlignment,
           crossAxisAlignment: widget.crossAxisAlignment,
           children: [
@@ -303,6 +312,7 @@ class _CommandBarState extends State<CommandBar> {
         break;
       case CommandBarOverflowBehavior.wrap:
         w = Wrap(
+          direction: widget.direction,
           alignment: _getWrapAlignment(),
           crossAxisAlignment: _getWrapCrossAlignment(),
           children: [
@@ -341,7 +351,7 @@ class _CommandBarState extends State<CommandBar> {
         w = SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
-          child: Row(
+          child: listBuilder.call(
             mainAxisAlignment: widget.mainAxisAlignment,
             crossAxisAlignment: widget.crossAxisAlignment,
             children: [
@@ -353,7 +363,7 @@ class _CommandBarState extends State<CommandBar> {
         break;
     }
     if (widget._isExpanded) {
-      w = Row(children: [Expanded(child: w)]);
+      w = listBuilder.call(children: [Expanded(child: w)]);
     }
     return w;
   }
