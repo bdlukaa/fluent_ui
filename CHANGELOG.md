@@ -1,6 +1,7 @@
 ## [next]
 
 - Add Slovak localization
+- Add direction to CommandBar to support verticality.
 
 ## 4.6.2
 
