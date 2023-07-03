@@ -2,6 +2,8 @@
 
 - Add Slovak localization
 - Add direction to CommandBar to support verticality.
+- Add direction to CommandBarSeparator to support horizontally.
+- Add direction to HorizontalScrollView to support verticality.
 
 ## 4.6.2
 

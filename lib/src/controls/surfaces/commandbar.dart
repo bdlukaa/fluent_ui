@@ -289,7 +289,10 @@ class _CommandBarState extends State<CommandBar> {
     late Widget w;
     switch (widget.overflowBehavior) {
       case CommandBarOverflowBehavior.scrolling:
+        // Take care of the widget is not only scrolls horizontally,
+        // it depends on the direction of the command bar
         w = HorizontalScrollView(
+          scrollDirection: widget.direction,
           child: listBuilder.call(
             mainAxisAlignment: widget.mainAxisAlignment,
             crossAxisAlignment: widget.crossAxisAlignment,
@@ -324,6 +327,7 @@ class _CommandBarState extends State<CommandBar> {
       case CommandBarOverflowBehavior.dynamicOverflow:
         assert(overflowWidget != null);
         w = DynamicOverflow(
+          direction: widget.direction,
           alignment: widget.mainAxisAlignment,
           crossAxisAlignment: widget.crossAxisAlignment,
           alwaysDisplayOverflowWidget: widget.secondaryItems.isNotEmpty,
@@ -349,7 +353,7 @@ class _CommandBarState extends State<CommandBar> {
         break;
       case CommandBarOverflowBehavior.clip:
         w = SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+          scrollDirection: widget.direction,
           physics: const NeverScrollableScrollPhysics(),
           child: listBuilder.call(
             mainAxisAlignment: widget.mainAxisAlignment,
@@ -587,6 +591,7 @@ class CommandBarSeparator extends CommandBarItem {
     super.key,
     this.color,
     this.thickness,
+    this.direction = Axis.vertical,
   });
 
   /// Override the color used by the [Divider].
@@ -595,6 +600,10 @@ class CommandBarSeparator extends CommandBarItem {
   /// Override the separator thickness.
   final double? thickness;
 
+  /// The direction of the separator. Defaults to [Axis.vertical].
+  /// This attribute is opposite to [CommandBar. direction].
+  final Axis direction;
+
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
     switch (displayMode) {
@@ -602,9 +611,12 @@ class CommandBarSeparator extends CommandBarItem {
       case CommandBarItemDisplayMode.inPrimaryCompact:
         return CommandBarItemInPrimary(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 28),
+            constraints: BoxConstraints(
+              minHeight: direction == Axis.vertical ? 28 : 0,
+              minWidth: direction == Axis.horizontal ? 28 : 0,
+            ),
             child: Divider(
-              direction: Axis.vertical,
+              direction: direction,
               style: DividerThemeData(
                 thickness: thickness,
                 decoration: color != null ? BoxDecoration(color: color) : null,
