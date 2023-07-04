@@ -52,7 +52,8 @@ class NavigationView extends StatefulWidget {
     this.transitionBuilder,
     this.paneBodyBuilder,
   }) : assert(
-          (pane != null && content == null) || (pane == null && content != null),
+          (pane != null && content == null) ||
+              (pane == null && content != null),
           'Either pane or content must be provided',
         );
 
@@ -225,25 +226,32 @@ class NavigationViewState extends State<NavigationView> {
   void didUpdateWidget(NavigationView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.pane?.scrollController != paneScrollController) {
-      paneScrollController = widget.pane?.scrollController ?? paneScrollController;
+      paneScrollController =
+          widget.pane?.scrollController ?? paneScrollController;
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _oldIndex = oldWidget.pane?.selected ?? -1;
 
-      final item = widget.pane?.selected == null ? null : widget.pane?.selectedItem.itemKey.currentContext;
+      final item = widget.pane?.selected == null
+          ? null
+          : widget.pane?.selectedItem.itemKey.currentContext;
 
       if (item != null) {
-        final atEnd = (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
+        final atEnd =
+            (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
 
         Scrollable.ensureVisible(
           item,
-          alignmentPolicy: atEnd ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+          alignmentPolicy: atEnd
+              ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+              : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
         );
       }
     }
 
-    if (oldWidget.pane?.effectiveItems.length != widget.pane?.effectiveItems.length) {
+    if (oldWidget.pane?.effectiveItems.length !=
+        widget.pane?.effectiveItems.length) {
       if (widget.pane?.effectiveItems.length != null) {
         _generateKeys();
       }
@@ -322,7 +330,9 @@ class NavigationViewState extends State<NavigationView> {
     Widget? paneNavigationButton() {
       final minimalLeading = PaneItem(
         title: Text(
-          !minimalPaneOpen ? localizations.openNavigationTooltip : localizations.closeNavigationTooltip,
+          !minimalPaneOpen
+              ? localizations.openNavigationTooltip
+              : localizations.closeNavigationTooltip,
         ),
         icon: const Icon(FluentIcons.global_nav_button),
         body: const SizedBox.shrink(),
@@ -374,7 +384,9 @@ class NavigationViewState extends State<NavigationView> {
             appBar: widget.appBar!,
             additionalLeading: () {
               if (widget.pane != null) {
-                return displayMode == PaneDisplayMode.minimal ? paneNavigationButton() : null;
+                return displayMode == PaneDisplayMode.minimal
+                    ? paneNavigationButton()
+                    : null;
               }
             }(),
           );
@@ -416,7 +428,8 @@ class NavigationViewState extends State<NavigationView> {
           final contentShape = widget.contentShape ??
               RoundedRectangleBorder(
                 side: BorderSide(
-                  color: FluentTheme.of(context).resources.cardStrokeColorDefault,
+                  color:
+                      FluentTheme.of(context).resources.cardStrokeColorDefault,
                 ),
                 borderRadius: displayMode == PaneDisplayMode.top
                     ? BorderRadius.zero
@@ -471,10 +484,12 @@ class NavigationViewState extends State<NavigationView> {
                   ) as bool? ??
                   _compactOverlayOpen;
 
-              var openSize = pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+              var openSize =
+                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
               final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
-              final openedWithoutOverlay = _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
+              final openedWithoutOverlay =
+                  _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
               // print(
               //     'open: $_compactOverlayOpen - without overlay:$openedWithoutOverlay - storage: ${PageStorage.of(context)?.readState(
@@ -494,7 +509,8 @@ class NavigationViewState extends State<NavigationView> {
                               key: _overlayKey,
                               backgroundColor: theme.backgroundColor,
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 1.0),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 1.0),
                                 child: _OpenNavigationPane(
                                   theme: theme,
                                   pane: pane,
@@ -528,7 +544,8 @@ class NavigationViewState extends State<NavigationView> {
                   Padding(
                     padding: EdgeInsetsDirectional.only(
                       top: appBarPadding.resolve(direction).top,
-                      start: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
+                      start: pane.size?.compactWidth ??
+                          kCompactNavigationPaneWidth,
                     ),
                     child: content,
                   ),
@@ -625,7 +642,8 @@ class NavigationViewState extends State<NavigationView> {
               ]);
               break;
             case PaneDisplayMode.minimal:
-              var openSize = pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+              var openSize =
+                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
               paneResult = Stack(children: [
                 PositionedDirectional(
@@ -715,7 +733,8 @@ class NavigationViewState extends State<NavigationView> {
       return PrimaryScrollController(
         controller: paneScrollController,
         child: ScrollConfiguration(
-          behavior: widget.pane?.scrollBehavior ?? const NavigationViewScrollBehavior(),
+          behavior: widget.pane?.scrollBehavior ??
+              const NavigationViewScrollBehavior(),
           child: child,
         ),
       );
@@ -863,7 +882,8 @@ class _NavigationAppBar extends StatelessWidget {
 
     final mediaQuery = MediaQuery.of(context);
 
-    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ?? PaneDisplayMode.top;
+    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
@@ -890,7 +910,12 @@ class _NavigationAppBar extends StatelessWidget {
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
-        result = Row(children: [leading, if (additionalLeading != null) additionalLeading!, title, if (appBar.actions != null) Expanded(child: appBar.actions!)]);
+        result = Row(children: [
+          leading,
+          if (additionalLeading != null) additionalLeading!,
+          title,
+          if (appBar.actions != null) Expanded(child: appBar.actions!)
+        ]);
         break;
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
