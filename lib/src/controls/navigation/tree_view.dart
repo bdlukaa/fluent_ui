@@ -953,12 +953,16 @@ class _TreeViewItem extends StatelessWidget {
                           start: 8.0,
                           end: narrowSpacing ? 0.0 : _whiteSpace,
                         ),
-                        child: Checkbox(
-                          checked: item.selected,
-                          onChanged: (value) {
-                            onSelect();
-                            onInvoked(TreeViewItemInvokeReason.selectionToggle);
-                          },
+                        child: ExcludeFocus(
+                          child: Checkbox(
+                            checked: item.selected,
+                            onChanged: (value) {
+                              onSelect();
+                              onInvoked(
+                                TreeViewItemInvokeReason.selectionToggle,
+                              );
+                            },
+                          ),
                         ),
                       ),
 
