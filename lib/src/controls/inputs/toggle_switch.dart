@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef ToggleSwitchThumbBuilder = Widget Function(
+typedef ToggleSwitchKnobBuilder = Widget Function(
   BuildContext context,
   Set<ButtonStates> states,
 );
@@ -38,8 +38,8 @@ class ToggleSwitch extends StatefulWidget {
     this.content,
     this.leadingContent = false,
     this.semanticLabel,
-    this.thumb,
-    this.thumbBuilder,
+    this.knob,
+    this.knobBuilder,
     this.focusNode,
     this.autofocus = false,
   });
@@ -54,22 +54,22 @@ class ToggleSwitch extends StatefulWidget {
   /// If this callback is null, the switch is considered disabled.
   final ValueChanged<bool>? onChanged;
 
-  /// The thumb of the switch
+  /// The knob of the switch
   ///
-  /// [DefaultToggleSwitchThumb] is used by default
+  /// [DefaultToggleSwitchKnob] is used by default
   ///
   /// See also:
   ///
-  ///   * [thumbBuilder], which builds the thumb based on the current state
-  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
-  final Widget? thumb;
+  ///   * [knobBuilder], which builds the knob based on the current state
+  ///   * [DefaultToggleSwitchKnob], used when both [knob] and [knobBuilder] are null
+  final Widget? knob;
 
-  /// Build the thumb of the switch based on the current state
+  /// Build the knob of the switch based on the current state
   ///
   /// See also:
-  ///   * [thumb], a static thumb
-  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
-  final ToggleSwitchThumbBuilder? thumbBuilder;
+  ///   * [knob], a static knob
+  ///   * [DefaultToggleSwitchKnob], used when both [knob] and [knobBuilder] are null
+  final ToggleSwitchKnobBuilder? knobBuilder;
 
   /// The style of the toggle switch
   final ToggleSwitchThemeData? style;
@@ -185,9 +185,9 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           decoration: widget.checked
               ? style.checkedDecoration?.resolve(states)
               : style.uncheckedDecoration?.resolve(states),
-          child: widget.thumb ??
-              widget.thumbBuilder?.call(context, states) ??
-              DefaultToggleSwitchThumb(
+          child: widget.knob ??
+              widget.knobBuilder?.call(context, states) ??
+              DefaultToggleSwitchKnob(
                 checked: widget.checked,
                 style: style,
                 states: _dragging ? {ButtonStates.pressing} : states,
@@ -229,8 +229,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   }
 }
 
-class DefaultToggleSwitchThumb extends StatelessWidget {
-  const DefaultToggleSwitchThumb({
+class DefaultToggleSwitchKnob extends StatelessWidget {
+  const DefaultToggleSwitchKnob({
     super.key,
     required this.checked,
     required this.style,
@@ -258,8 +258,8 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
           (states.isHovering ? 2.0 : 0.0) +
           (states.isPressing ? 5.0 : 0),
       decoration: checked
-          ? style?.checkedThumbDecoration?.resolve(states)
-          : style?.uncheckedThumbDecoration?.resolve(states),
+          ? style?.checkedKnobDecoration?.resolve(states)
+          : style?.uncheckedKnobDecoration?.resolve(states),
     );
   }
 }
@@ -328,11 +328,11 @@ class ToggleSwitchTheme extends InheritedTheme {
 
 @immutable
 class ToggleSwitchThemeData with Diagnosticable {
-  /// The decoration of the thumb when the switch is checked
-  final ButtonState<Decoration?>? checkedThumbDecoration;
+  /// The decoration of the knob when the switch is checked
+  final ButtonState<Decoration?>? checkedKnobDecoration;
 
-  /// The decoration of the thumb when the switch is unchecked
-  final ButtonState<Decoration?>? uncheckedThumbDecoration;
+  /// The decoration of the knob when the switch is unchecked
+  final ButtonState<Decoration?>? uncheckedKnobDecoration;
 
   /// The decoration of the switch when the it is checked
   final ButtonState<Decoration?>? checkedDecoration;
@@ -361,15 +361,15 @@ class ToggleSwitchThemeData with Diagnosticable {
     this.margin,
     this.animationDuration,
     this.animationCurve,
-    this.checkedThumbDecoration,
-    this.uncheckedThumbDecoration,
+    this.checkedKnobDecoration,
+    this.uncheckedKnobDecoration,
     this.checkedDecoration,
     this.uncheckedDecoration,
     this.foregroundColor,
   });
 
   factory ToggleSwitchThemeData.standard(FluentThemeData theme) {
-    final defaultThumbDecoration = BoxDecoration(
+    final defaultKnobDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(100),
     );
 
@@ -409,15 +409,15 @@ class ToggleSwitchThemeData with Diagnosticable {
       }),
       animationDuration: theme.fasterAnimationDuration,
       animationCurve: Curves.fastOutSlowIn,
-      checkedThumbDecoration: ButtonState.resolveWith((states) {
-        return defaultThumbDecoration.copyWith(
+      checkedKnobDecoration: ButtonState.resolveWith((states) {
+        return defaultKnobDecoration.copyWith(
           color: states.isDisabled
               ? theme.resources.textOnAccentFillColorDisabled
               : theme.resources.textOnAccentFillColorPrimary,
         );
       }),
-      uncheckedThumbDecoration: ButtonState.resolveWith((states) {
-        return defaultThumbDecoration.copyWith(
+      uncheckedKnobDecoration: ButtonState.resolveWith((states) {
+        return defaultKnobDecoration.copyWith(
           color: states.isDisabled
               ? theme.resources.textFillColorDisabled
               : theme.resources.textFillColorSecondary,
@@ -437,10 +437,10 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
-      checkedThumbDecoration: ButtonState.lerp(a?.checkedThumbDecoration,
-          b?.checkedThumbDecoration, t, Decoration.lerp),
-      uncheckedThumbDecoration: ButtonState.lerp(a?.uncheckedThumbDecoration,
-          b?.uncheckedThumbDecoration, t, Decoration.lerp),
+      checkedKnobDecoration: ButtonState.lerp(a?.checkedKnobDecoration,
+          b?.checkedKnobDecoration, t, Decoration.lerp),
+      uncheckedKnobDecoration: ButtonState.lerp(a?.uncheckedKnobDecoration,
+          b?.uncheckedKnobDecoration, t, Decoration.lerp),
       checkedDecoration: ButtonState.lerp(
           a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
       uncheckedDecoration: ButtonState.lerp(
@@ -456,10 +456,10 @@ class ToggleSwitchThemeData with Diagnosticable {
       padding: style?.padding ?? padding,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
-      checkedThumbDecoration:
-          style?.checkedThumbDecoration ?? checkedThumbDecoration,
-      uncheckedThumbDecoration:
-          style?.uncheckedThumbDecoration ?? uncheckedThumbDecoration,
+      checkedKnobDecoration:
+          style?.checkedKnobDecoration ?? checkedKnobDecoration,
+      uncheckedKnobDecoration:
+          style?.uncheckedKnobDecoration ?? uncheckedKnobDecoration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
       foregroundColor: style?.foregroundColor ?? foregroundColor,
@@ -484,12 +484,12 @@ class ToggleSwitchThemeData with Diagnosticable {
         uncheckedDecoration,
       ))
       ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-        'checkedThumbDecoration',
-        checkedThumbDecoration,
+        'checkedKnobDecoration',
+        checkedKnobDecoration,
       ))
       ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-        'uncheckedThumbDecoration',
-        uncheckedThumbDecoration,
+        'uncheckedKnobDecoration',
+        uncheckedKnobDecoration,
       ))
       ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
   }
