@@ -231,9 +231,7 @@ class RadioButtonThemeData with Diagnosticable {
   factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
       foregroundColor: ButtonState.resolveWith((states) {
-        return states.isDisabled
-            ? theme.resources.textFillColorDisabled
-            : theme.resources.textFillColorPrimary;
+        return states.isDisabled ? theme.resources.textFillColorDisabled : null;
       }),
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(

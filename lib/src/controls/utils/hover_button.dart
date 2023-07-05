@@ -327,6 +327,21 @@ abstract class ButtonState<T> {
     if (a == null && b == null) return null;
     return _LerpProperties<T>(a, b, t, lerpFunction);
   }
+
+  static T forStates<T>(
+    Set<ButtonStates> states, {
+    required T disabled,
+    required T pressed,
+    required T hovering,
+    required T focused,
+    required T none,
+  }) {
+    if (states.contains(ButtonStates.disabled)) return disabled;
+    if (states.contains(ButtonStates.pressing)) return pressed;
+    if (states.contains(ButtonStates.hovering)) return hovering;
+    if (states.contains(ButtonStates.focused)) return focused;
+    return none;
+  }
 }
 
 class _ButtonState<T> extends ButtonState<T> {
