@@ -10,6 +10,7 @@
 - Added `CheckboxThemeData.foregroundColor`, `RadioButtonThemeData.foregroundColor` and `ToggleSwitchThemeData.foregroundColor`, which, by default, reacts if the inputs are disabled or not ([#861](https://github.com/bdlukaa/fluent_ui/issues/861))
 - `ToggleSwitch` correctly behaves as disabled when `onChanged` is `null` ([`4b5afb5`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/4b5afb50ece212889917ba89d407fe45151ceff6)) 
 - Add `PaneItemExpander.initiallyExpanded` ([#864](https://github.com/bdlukaa/fluent_ui/issues/864))
+- Add `NumberFormBox` ([#862](https://github.com/bdlukaa/fluent_ui/issues/862))
 
 ## 4.6.2
 

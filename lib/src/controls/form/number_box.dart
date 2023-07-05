@@ -566,3 +566,121 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
     );
   }
 }
+
+/// A [FormField] that contains a [NumberBox].
+///
+/// This is a convenience widget that wraps a [NumberBox] widget in a
+/// [FormField].
+///
+/// A [Form] ancestor is not required. The [Form] simply makes it easier to
+/// save, reset, or validate multiple fields at once. To use without a [Form],
+/// pass a `GlobalKey<FormFieldState>` (see [GlobalKey]) to the constructor and use
+/// [GlobalKey.currentState] to save or reset the form field.
+///
+/// When a [controller] is specified, its [TextEditingController.text]
+/// defines the [initialValue]. If this [FormField] is part of a scrolling
+/// container that lazily constructs its children, like a [ListView] or a
+/// [CustomScrollView], then a [controller] should be specified.
+/// The controller's lifetime should be managed by a stateful widget ancestor
+/// of the scrolling container.
+///
+/// If a [controller] is not specified, [initialValue] can be used to give
+/// the automatically generated controller an initial value.
+///
+/// {@macro flutter.material.textfield.wantKeepAlive}
+///
+/// Remember to call [TextEditingController.dispose] of the [TextEditingController]
+/// when it is no longer needed. This will ensure any resources used by the object
+/// are discarded.
+///
+/// See also:
+///
+///   * [NumberBox], which is the underlying number box without the [Form]
+///    integration.
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/number-box>
+class NumberFormBox<T extends num> extends ControllableFormBox {
+  /// Creates a [FormField] that contains a [NumberBox].
+  ///
+  /// When a [controller] is specified, [initialValue] must be null (the
+  /// default). If [controller] is null, then a [TextEditingController]
+  /// will be constructed automatically and its `text` will be initialized
+  /// to [initialValue] or the empty string.
+  ///
+  /// For documentation about the various parameters, see the [NumberBox] class
+  /// and [NumberBox.new], the constructor.
+  NumberFormBox({
+    super.key,
+    super.autovalidateMode,
+    super.initialValue,
+    super.onSaved,
+    super.restorationId,
+    super.validator,
+    ValueChanged<T?>? onChanged,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    bool? showCursor,
+    double cursorWidth = 2.0,
+    double? cursorHeight,
+    Radius cursorRadius = const Radius.circular(2.0),
+    Color? cursorColor,
+    Color? highlightColor,
+    Color? errorHighlightColor,
+    String? placeholder,
+    TextStyle? placeholderStyle,
+    Widget? leadingIcon,
+    List<TextInputFormatter>? inputFormatters,
+    T? value,
+    bool allowExpressions = false,
+    bool clearButton = true,
+    num largeChange = 10,
+    num smallChange = 1,
+    num? max,
+    num? min,
+    int precision = 2,
+    SpinButtonPlacementMode mode = SpinButtonPlacementMode.compact,
+  }) : super(builder: (FormFieldState<String> field) {
+          final theme = FluentTheme.of(field.context);
+          void onChangedHandler(T? value) {
+            field.didChange(value.toString());
+            onChanged?.call(value);
+          }
+
+          return UnmanagedRestorationScope(
+            bucket: field.bucket,
+            child: FormRow(
+              padding: EdgeInsets.zero,
+              error: (field.errorText == null) ? null : Text(field.errorText!),
+              child: NumberBox<T>(
+                focusNode: focusNode,
+                autofocus: autofocus,
+                showCursor: showCursor,
+                cursorColor: cursorColor,
+                cursorHeight: cursorHeight,
+                cursorRadius: cursorRadius,
+                cursorWidth: cursorWidth,
+                onChanged: onChanged == null ? null : onChangedHandler,
+                highlightColor: (field.errorText == null)
+                    ? highlightColor
+                    : errorHighlightColor ??
+                        Colors.red.defaultBrushFor(theme.brightness),
+                placeholder: placeholder,
+                placeholderStyle: placeholderStyle,
+                leadingIcon: leadingIcon,
+                value: value,
+                max: max,
+                min: min,
+                allowExpressions: allowExpressions,
+                clearButton: clearButton,
+                largeChange: largeChange,
+                smallChange: smallChange,
+                precision: precision,
+                inputFormatters: inputFormatters,
+                mode: mode,
+              ),
+            ),
+          );
+        });
+
+  @override
+  FormFieldState<String> createState() => TextFormBoxState();
+}
