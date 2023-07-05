@@ -2,19 +2,22 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-/// A check box is used to select or deselect action items. It can
-/// be used for a single item or for a list of multiple items that
-/// a user can choose from. The control has three selection states:
-/// unselected, selected, and indeterminate. Use the indeterminate
-/// state when a collection of sub-choices have both unselected and
-/// selected states.
+/// A check box is used to select or deselect action items. It can be used for a
+/// single item or for a list of multiple items that a user can choose from. The
+/// control has three selection states: unselected, selected, and indeterminate.
+/// Use the indeterminate state when a collection of sub-choices have both
+/// unselected and selected states.
 ///
-/// ![Checkbox Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/templates-checkbox-states-default.png)
+/// ![Checkbox Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
 ///
 /// See also:
-/// - [ToggleSwitch](https://pub.dev/packages/fluent_ui#toggle-switches)
-/// - [RadioButton](https://pub.dev/packages/fluent_ui#radio-buttons)
-/// - [ToggleButton]
+///
+///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/checkbox>
+///   * [ToggleSwitch], which represents a physical switch that allows users to
+/// turn things on or off
+///   * [RadioButton], let users select one option from a collection of two or
+/// more mutually exclusive, visible options
+///   * [ToggleButton], a button that can be on or off.
 class Checkbox extends StatelessWidget {
   /// Creates a checkbox.
   const Checkbox({

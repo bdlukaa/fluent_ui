@@ -7,19 +7,18 @@ typedef ToggleSwitchThumbBuilder = Widget Function(
   Set<ButtonStates> states,
 );
 
-/// The toggle switch represents a physical switch that allows users to
-/// turn things on or off, like a light switch. Use toggle switch controls
-/// to present users with two mutually exclusive options (such as on/off),
-/// where choosing an option provides immediate results.
+/// The toggle switch represents a physical switch that allows users to turn
+/// things on or off, like a light switch. Use toggle switch controls to present
+/// users with two mutually exclusive options (such as on/off), where choosing
+/// an option provides immediate results.
 ///
-/// Use a toggle switch for binary operations that take effect right after
-/// the user flips the toggle switch
+/// Use a toggle switch for binary operations that take effect right after the
+/// user flips the toggle switch
 ///
 /// ![ToggleSwitch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 ///
-/// Think of the toggle switch as a physical power switch for a device: you
-/// flip it on or off when you want to enable or disable the action performed
-/// by the device.
+/// Think of the toggle switch as a physical power switch for a device: you flip
+/// it on or off when you want to enable or disable the action performed by the device.
 ///
 /// See also:
 ///
@@ -60,6 +59,7 @@ class ToggleSwitch extends StatefulWidget {
   /// [DefaultToggleSwitchThumb] is used by default
   ///
   /// See also:
+  ///
   ///   * [thumbBuilder], which builds the thumb based on the current state
   ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
   final Widget? thumb;
@@ -122,7 +122,9 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   Alignment? _alignment;
 
   void _handleAlignmentChanged(
-      Offset localPosition, double sliderGestureWidth) {
+    Offset localPosition,
+    double sliderGestureWidth,
+  ) {
     setState(() {
       _alignment = Alignment(
         (localPosition.dx / sliderGestureWidth).clamp(-1, 1),
