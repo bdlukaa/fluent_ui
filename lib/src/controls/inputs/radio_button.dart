@@ -248,13 +248,13 @@ class RadioButtonThemeData with Diagnosticable {
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
-          color: states.isDisabled
-              ? theme.resources.controlAltFillColorDisabled
-              : states.isPressing
-                  ? theme.resources.controlAltFillColorQuarternary
-                  : states.isHovering
-                      ? theme.resources.controlAltFillColorTertiary
-                      : theme.resources.controlAltFillColorSecondary,
+          color: ButtonState.forStates(
+            states,
+            disabled: theme.resources.controlAltFillColorDisabled,
+            pressed: theme.resources.controlAltFillColorQuarternary,
+            hovering: theme.resources.controlAltFillColorTertiary,
+            none: theme.resources.controlAltFillColorSecondary,
+          ),
           border: Border.all(
             width: states.isPressing ? 4.5 : 1,
             color: states.isDisabled

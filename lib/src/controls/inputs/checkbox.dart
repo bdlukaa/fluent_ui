@@ -311,7 +311,6 @@ class CheckboxThemeData with Diagnosticable {
           color: ButtonState.forStates(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
-            focused: theme.resources.controlAltFillColorQuarternary,
             pressed: theme.resources.controlAltFillColorQuarternary,
             hovering: theme.resources.controlAltFillColorTertiary,
             none: theme.resources.controlAltFillColorSecondary,
@@ -422,7 +421,7 @@ class CheckboxThemeData with Diagnosticable {
         DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
       )
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
-      ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
+      ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
   }
 }
 
