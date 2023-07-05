@@ -642,6 +642,9 @@ class NavigationViewState extends State<NavigationView> {
               ]);
               break;
             case PaneDisplayMode.minimal:
+              var openSize =
+                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+
               paneResult = Stack(children: [
                 PositionedDirectional(
                   top: widget.appBar?.finalHeight(context) ?? 0.0,
@@ -666,8 +669,8 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
-                  width: kOpenNavigationPaneWidth,
+                  start: minimalPaneOpen ? 0.0 : -openSize,
+                  width: openSize,
                   height: mediaQuery.size.height,
                   child: PaneScrollConfiguration(
                     child: ColoredBox(

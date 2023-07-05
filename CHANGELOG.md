@@ -1,6 +1,8 @@
 ## [next]
 
 - Add Slovak localization
+- Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
+- Add `AutoSuggestBoxItem.semanticsLabel` ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
 - Add direction to CommandBar to support verticality.
 - Add direction to CommandBarSeparator to support horizontally.
 - Add direction to HorizontalScrollView to support verticality.
