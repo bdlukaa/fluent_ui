@@ -53,6 +53,11 @@ class AutoSuggestBoxItem<T> {
   /// Called when this item is selected
   final VoidCallback? onSelected;
 
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  ///
+  /// If not provided, [label] is used
+  final String? semanticLabel;
+
   bool _selected = false;
 
   /// Creates an auto suggest box item
@@ -62,6 +67,7 @@ class AutoSuggestBoxItem<T> {
     this.child,
     this.onFocusChange,
     this.onSelected,
+    this.semanticLabel,
   });
 
   @override
@@ -869,6 +875,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                       final item = sortedItems[index];
                       return _AutoSuggestBoxOverlayTile(
                         text: item.child ?? Text(item.label),
+                        semanticLabel: item.semanticLabel ?? item.label,
                         selected: item._selected || widget.node.hasFocus,
                         onSelected: () => widget.onSelected(item),
                       );
@@ -890,11 +897,13 @@ class _AutoSuggestBoxOverlayTile extends StatefulWidget {
     required this.text,
     this.selected = false,
     this.onSelected,
+    this.semanticLabel,
   });
 
   final Widget text;
   final VoidCallback? onSelected;
   final bool selected;
+  final String? semanticLabel;
 
   @override
   State<_AutoSuggestBoxOverlayTile> createState() =>
@@ -926,6 +935,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
     final theme = FluentTheme.of(context);
 
     return ListTile.selectable(
+      semanticLabel: widget.semanticLabel,
       title: EntrancePageTransition(
         animation: Tween<double>(
           begin: 0.75,
