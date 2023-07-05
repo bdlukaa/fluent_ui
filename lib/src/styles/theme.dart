@@ -301,7 +301,6 @@ class FluentThemeData with Diagnosticable {
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
-    ;
     focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
