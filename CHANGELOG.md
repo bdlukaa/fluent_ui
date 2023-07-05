@@ -3,6 +3,12 @@
 - Add Slovak localization
 - Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
 - Add `AutoSuggestBoxItem.semanticsLabel` ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
+- Add `ButtonState.forStates`, a helper function to quickly resolve values for each button state ([#875](https://github.com/bdlukaa/fluent_ui/pull/875))
+- Slider label color is solid ([#847](https://github.com/bdlukaa/fluent_ui/issues/847))
+- **BREAKING** Removed `.disabledColor`, `uncheckedColor`, `.checkedColor` and `.borderInputColor` from `FluentThemeData`. Use the values from theme resources instead ([`1295b6`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/a195b58f4440c3c0febc595ba6f0b730a950a0d5))
+- **BREAKING** To match the native implementation, `ToggleSwitch.thumb` and `.thumbBuilder` have been renamed to `.knob` and `.knobBuilder`, respectively. `DefaultToggleSwitchThumb` was renamed to `DefaultToggleSwitchKnob` ([e15e89d](https://github.com/bdlukaa/fluent_ui/pull/875/commits/e15e89d4140635796c105cf79a51f9ebc54cdfe6))
+- Added `CheckboxThemeData.foregroundColor`, `RadioButtonThemeData.foregroundColor` and `ToggleSwitchThemeData.foregroundColor`, which, by default, reacts if the inputs are disabled or not ([#861](https://github.com/bdlukaa/fluent_ui/issues/861))
+- `ToggleSwitch` correctly behaves as disabled when `onChanged` is `null` ([`4b5afb5`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/4b5afb50ece212889917ba89d407fe45151ceff6)) 
 
 ## 4.6.2
 

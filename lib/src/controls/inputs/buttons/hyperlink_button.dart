@@ -51,7 +51,7 @@ class HyperlinkButton extends BaseButton {
       padding: ButtonState.all(kDefaultButtonPadding),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
-          return theme.disabledColor;
+          return theme.resources.controlFillColorDisabled;
         } else if (states.isPressing) {
           return theme.accentColor.tertiaryBrushFor(theme.brightness);
         } else if (states.isHovering) {

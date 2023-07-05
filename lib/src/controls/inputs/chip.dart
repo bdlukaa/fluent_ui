@@ -236,7 +236,7 @@ class ChipThemeData with Diagnosticable {
       textStyle: ButtonState.resolveWith((states) {
         return TextStyle(
           color: states.isDisabled
-              ? theme.disabledColor
+              ? theme.resources.textFillColorDisabled
               : normalColor(states).basedOnLuminance(),
         );
       }),

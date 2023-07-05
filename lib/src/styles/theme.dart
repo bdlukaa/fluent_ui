@@ -185,11 +185,7 @@ class FluentThemeData with Diagnosticable {
   final Color activeColor;
   final Color inactiveColor;
   final Color inactiveBackgroundColor;
-  final Color disabledColor;
   final Color shadowColor;
-  final Color uncheckedColor;
-  final Color checkedColor;
-  final Color borderInputColor;
   final Color scaffoldBackgroundColor;
   final Color acrylicBackgroundColor;
   final Color micaBackgroundColor;
@@ -239,14 +235,10 @@ class FluentThemeData with Diagnosticable {
     Color? activeColor,
     Color? inactiveColor,
     Color? inactiveBackgroundColor,
-    Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
-    Color? uncheckedColor,
-    Color? checkedColor,
-    Color? borderInputColor,
     Color? menuColor,
     Color? cardColor,
     Duration? fasterAnimationDuration,
@@ -295,20 +287,12 @@ class FluentThemeData with Diagnosticable {
     inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
-    disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??= resources.layerFillColorDefault;
     acrylicBackgroundColor ??= isLight
         ? resources.layerOnAcrylicFillColorDefault
         : const Color(0xFF2c2c2c);
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
-    uncheckedColor ??= isLight
-        ? const Color.fromRGBO(0, 0, 0, 0.6063)
-        : const Color.fromRGBO(255, 255, 255, 0.786);
-    checkedColor ??= isLight ? Colors.white : Colors.black;
-    borderInputColor ??= isLight
-        ? const Color.fromRGBO(0, 0, 0, 0.4458)
-        : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= resources.cardBackgroundFillColorDefault;
     typography = Typography.fromBrightness(brightness: brightness)
@@ -362,14 +346,10 @@ class FluentThemeData with Diagnosticable {
       activeColor: activeColor,
       inactiveColor: inactiveColor,
       inactiveBackgroundColor: inactiveBackgroundColor,
-      disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
-      uncheckedColor: uncheckedColor,
-      checkedColor: checkedColor,
-      borderInputColor: borderInputColor,
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
@@ -404,11 +384,7 @@ class FluentThemeData with Diagnosticable {
     required this.activeColor,
     required this.inactiveColor,
     required this.inactiveBackgroundColor,
-    required this.disabledColor,
     required this.shadowColor,
-    required this.uncheckedColor,
-    required this.checkedColor,
-    required this.borderInputColor,
     required this.fasterAnimationDuration,
     required this.fastAnimationDuration,
     required this.mediumAnimationDuration,
@@ -464,7 +440,6 @@ class FluentThemeData with Diagnosticable {
       inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
       inactiveBackgroundColor:
           Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
-      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
       scaffoldBackgroundColor:
           Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
       acrylicBackgroundColor:
@@ -472,9 +447,6 @@ class FluentThemeData with Diagnosticable {
       micaBackgroundColor:
           Color.lerp(a.micaBackgroundColor, b.micaBackgroundColor, t)!,
       shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
-      uncheckedColor: Color.lerp(a.uncheckedColor, b.uncheckedColor, t)!,
-      checkedColor: Color.lerp(a.checkedColor, b.checkedColor, t)!,
-      borderInputColor: Color.lerp(a.borderInputColor, b.borderInputColor, t)!,
       cardColor: Color.lerp(a.cardColor, b.cardColor, t)!,
       fasterAnimationDuration:
           lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
@@ -548,14 +520,10 @@ class FluentThemeData with Diagnosticable {
     Color? activeColor,
     Color? inactiveColor,
     Color? inactiveBackgroundColor,
-    Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
-    Color? uncheckedColor,
-    Color? checkedColor,
-    Color? borderInputColor,
     Color? menuColor,
     Color? cardColor,
     Duration? fasterAnimationDuration,
@@ -596,12 +564,8 @@ class FluentThemeData with Diagnosticable {
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
       shadowColor: shadowColor ?? this.shadowColor,
-      uncheckedColor: uncheckedColor ?? this.uncheckedColor,
-      checkedColor: checkedColor ?? this.checkedColor,
-      borderInputColor: borderInputColor ?? this.borderInputColor,
       inactiveBackgroundColor:
           inactiveBackgroundColor ?? this.inactiveBackgroundColor,
-      disabledColor: disabledColor ?? this.disabledColor,
       scaffoldBackgroundColor:
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
       acrylicBackgroundColor:
@@ -651,7 +615,6 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('activeColor', activeColor))
       ..add(ColorProperty('inactiveColor', inactiveColor))
       ..add(ColorProperty('inactiveBackgroundColor', inactiveBackgroundColor))
-      ..add(ColorProperty('disabledColor', disabledColor))
       ..add(ColorProperty('shadowColor', shadowColor))
       ..add(ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor))
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
