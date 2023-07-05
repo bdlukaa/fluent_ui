@@ -36,6 +36,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
       body: const _NavigationBodyItem(),
+      onTap: () => debugPrint('Tapped home'),
     ),
     PaneItemSeparator(),
     PaneItem(
@@ -53,12 +54,14 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           'number, icon, or a simple dot.',
         ),
       ),
+      onTap: () => debugPrint('Tapped track orders'),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.disable_updates),
       title: const Text('Disabled Item'),
       body: const _NavigationBodyItem(),
       enabled: false,
+      onTap: () => debugPrint('Tapped disabled'),
     ),
     PaneItemExpander(
       icon: const Icon(FluentIcons.account_management),
@@ -76,17 +79,20 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           'cases, you should create a hierarchical NavigationView.',
         ),
       ),
+      onTap: () => debugPrint('Tapped account'),
       items: [
         PaneItemHeader(header: const Text('Apps')),
         PaneItem(
           icon: const Icon(FluentIcons.mail),
           title: const Text('Mail'),
           body: const _NavigationBodyItem(),
+          onTap: () => debugPrint('Tapped mail'),
         ),
         PaneItem(
           icon: const Icon(FluentIcons.calendar),
           title: const Text('Calendar'),
           body: const _NavigationBodyItem(),
+          onTap: () => debugPrint('Tapped calendar'),
         ),
       ],
     ),
