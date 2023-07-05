@@ -492,7 +492,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                     shortcut,
                     style: body.merge(TextStyle(
                       fontSize: 12.0,
-                      color: theme.borderInputColor,
+                      color: theme.resources.controlStrokeColorDefault,
                       height: 0.7,
                     )),
                   ),

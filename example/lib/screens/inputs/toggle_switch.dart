@@ -66,8 +66,12 @@ ToggleSwitch(
             ),
             if (secondValue)
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: ProgressRing(),
+                padding: EdgeInsetsDirectional.only(start: 24.0),
+                child: SizedBox(
+                  height: 30.0,
+                  width: 30.0,
+                  child: ProgressRing(),
+                ),
               )
           ]),
           codeSnippet: '''bool checked = false;

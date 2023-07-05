@@ -388,9 +388,9 @@ class _PasswordBoxState extends State<PasswordBox> {
 ///
 /// See also:
 ///
-///   * [PasswordBox], which is the underlying text field without the [Form]
+///   * [PasswordBox], which is the underlying password box without the [Form]
 ///    integration.
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/password-box>
 class PasswordFormBox extends ControllableFormBox {
   /// Creates a [FormField] that contains a [PasswordBox].
   ///
