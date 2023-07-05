@@ -362,7 +362,9 @@ class _TabViewState extends State<TabView> {
         style: ButtonStyle(
           foregroundColor: ButtonState.resolveWith((states) {
             if (states.isDisabled || states.isNone) {
-              return FluentTheme.of(context).disabledColor;
+              return FluentTheme.of(context)
+                  .resources
+                  .controlAltFillColorDisabled;
             } else {
               return FluentTheme.of(context).inactiveColor;
             }

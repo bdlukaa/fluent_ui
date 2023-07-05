@@ -1222,7 +1222,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
 
       placeholderIndex = items.length;
       items.add(DefaultTextStyle.merge(
-        style: textStyle!.copyWith(color: theme.disabledColor),
+        style: textStyle!.copyWith(
+          color: theme.resources.textFillColorDisabled,
+        ),
         child: IgnorePointer(
           ignoringSemantics: false,
           child: displayedHint,
@@ -1254,7 +1256,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       return DefaultTextStyle.merge(
         style: isEnabled
             ? textStyle!
-            : textStyle!.copyWith(color: theme.disabledColor),
+            : textStyle!.copyWith(
+                color: theme.resources.textFillColorDisabled,
+              ),
         child: Container(
           padding: padding.resolve(Directionality.of(context)),
           child: Row(

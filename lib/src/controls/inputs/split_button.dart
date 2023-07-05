@@ -60,7 +60,8 @@ class SplitButtonBar extends StatelessWidget {
               shape: ButtonState.all(
                 RoundedRectangleBorder(
                   side: BorderSide(
-                    color: theme.disabledColor.withOpacity(0.75),
+                    color: theme.resources.controlFillColorDisabled
+                        .withOpacity(0.75),
                     width: 0.1,
                   ),
                   borderRadius: BorderRadiusDirectional.horizontal(

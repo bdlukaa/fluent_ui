@@ -257,11 +257,12 @@ class RadioButtonThemeData with Diagnosticable {
           ),
           border: Border.all(
             width: states.isPressing ? 4.5 : 1,
-            color: states.isDisabled
-                ? theme.resources.textFillColorDisabled
-                : states.isPressing
-                    ? theme.accentColor.defaultBrushFor(theme.brightness)
-                    : theme.borderInputColor,
+            color: ButtonState.forStates(
+              states,
+              disabled: theme.resources.textFillColorDisabled,
+              pressed: theme.accentColor.defaultBrushFor(theme.brightness),
+              none: theme.resources.textFillColorTertiary,
+            ),
           ),
           shape: BoxShape.circle,
         );
