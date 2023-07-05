@@ -15,6 +15,11 @@ typedef OnChangeAutoSuggestBox<T> = void Function(
   TextChangedReason reason,
 );
 
+typedef AutoSuggestBoxItemBuilder<T> = Widget Function(
+  BuildContext context,
+  AutoSuggestBoxItem<T> item,
+);
+
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
   userInput,
@@ -102,6 +107,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.itemBuilder,
     this.noResultsFoundBuilder,
     this.sorter,
     this.leadingIcon,
@@ -140,6 +146,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onSelected,
+    this.itemBuilder,
     this.noResultsFoundBuilder,
     this.sorter,
     this.leadingIcon,
@@ -183,6 +190,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
 
   /// Called when the user selected a value.
   final ValueChanged<AutoSuggestBoxItem<T>>? onSelected;
+
+  /// A callback function that builds the items in the overlay.
+  ///
+  /// Use [noResultsFoundBuilder] to build the overlay when no item is provided
+  final AutoSuggestBoxItemBuilder? itemBuilder;
 
   /// Widget to be displayed when none of the items fit the [sorter]
   final WidgetBuilder? noResultsFoundBuilder;
@@ -524,6 +536,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                 node: overlayNode,
                 controller: controller,
                 items: widget.items,
+                itemBuilder: widget.itemBuilder,
                 focusStream: _focusStreamController.stream,
                 itemsStream: _dynamicItemsController.stream,
                 sorter: sorter,
@@ -751,6 +764,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   const _AutoSuggestBoxOverlay({
     super.key,
     required this.items,
+    required this.itemBuilder,
     required this.controller,
     required this.onSelected,
     required this.node,
@@ -762,6 +776,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   });
 
   final List<AutoSuggestBoxItem<T>> items;
+  final AutoSuggestBoxItemBuilder<T>? itemBuilder;
   final TextEditingController controller;
   final ValueChanged<AutoSuggestBoxItem<T>> onSelected;
   final FocusScopeNode node;
@@ -873,12 +888,13 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                     itemCount: sortedItems.length,
                     itemBuilder: (context, index) {
                       final item = sortedItems[index];
-                      return _AutoSuggestBoxOverlayTile(
-                        text: item.child ?? Text(item.label),
-                        semanticLabel: item.semanticLabel ?? item.label,
-                        selected: item._selected || widget.node.hasFocus,
-                        onSelected: () => widget.onSelected(item),
-                      );
+                      return widget.itemBuilder?.call(context, item) ??
+                          _AutoSuggestBoxOverlayTile(
+                            text: item.child ?? Text(item.label),
+                            semanticLabel: item.semanticLabel ?? item.label,
+                            selected: item._selected || widget.node.hasFocus,
+                            onSelected: () => widget.onSelected(item),
+                          );
                     },
                   );
                 }
