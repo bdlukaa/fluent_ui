@@ -843,12 +843,20 @@ class _TreeViewItem extends StatelessWidget {
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
+  void _onCheckboxInvoked() {
+    onSelect();
+    onInvoked(
+      TreeViewItemInvokeReason.selectionToggle,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!item._visible) return const SizedBox.shrink();
     final theme = FluentTheme.of(context);
     final selected = item.selected ?? false;
     final direction = Directionality.of(context);
+
     return GestureDetector(
       onSecondaryTapDown: onSecondaryTap,
       child: HoverButton(
@@ -893,6 +901,7 @@ class _TreeViewItem extends StatelessWidget {
             : () {
                 onInvoked(TreeViewItemInvokeReason.pressed);
               },
+        onFocusTap: _onCheckboxInvoked,
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -901,11 +910,12 @@ class _TreeViewItem extends StatelessWidget {
           horizontal: 4.0,
         ),
         builder: (context, states) {
-          final itemForegroundColor = states.isDisabled
-              ? theme.resources.textFillColorDisabled
-              : states.isPressing
-                  ? theme.resources.textFillColorSecondary
-                  : theme.resources.textFillColorPrimary;
+          final itemForegroundColor = ButtonState.forStates<Color>(
+            states,
+            disabled: theme.resources.textFillColorDisabled,
+            pressed: theme.resources.textFillColorSecondary,
+            none: theme.resources.textFillColorPrimary,
+          );
 
           return FocusBorder(
             focused: states.isFocused,
@@ -956,12 +966,7 @@ class _TreeViewItem extends StatelessWidget {
                         child: ExcludeFocus(
                           child: Checkbox(
                             checked: item.selected,
-                            onChanged: (value) {
-                              onSelect();
-                              onInvoked(
-                                TreeViewItemInvokeReason.selectionToggle,
-                              );
-                            },
+                            onChanged: (value) => _onCheckboxInvoked(),
                           ),
                         ),
                       ),

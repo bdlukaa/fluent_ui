@@ -27,6 +27,7 @@ class HoverButton extends StatefulWidget {
     this.onHorizontalDragStart,
     this.onHorizontalDragUpdate,
     this.onHorizontalDragEnd,
+    this.onFocusTap,
     this.onFocusChange,
     this.autofocus = false,
     this.actionsEnabled = true,
@@ -58,6 +59,12 @@ class HoverButton extends StatefulWidget {
   final GestureDragStartCallback? onHorizontalDragStart;
   final GestureDragUpdateCallback? onHorizontalDragUpdate;
   final GestureDragEndCallback? onHorizontalDragEnd;
+
+  /// When the button is focused and is actioned, with either the enter or space
+  /// keys
+  ///
+  /// [focusEnabled] must not be `false` for this to work
+  final VoidCallback? onFocusTap;
 
   final ButtonStateWidgetBuilder builder;
 
@@ -144,6 +151,7 @@ class _HoverButtonState extends State<HoverButton> {
     Future<void> handleActionTap() async {
       if (!enabled) return;
       setState(() => _pressing = true);
+      widget.onFocusTap?.call();
       widget.onPressed?.call();
       await Future.delayed(const Duration(milliseconds: 100));
       if (mounted) setState(() => _pressing = false);
