@@ -63,6 +63,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     PaneItemExpander(
       icon: const Icon(FluentIcons.account_management),
       title: const Text('Account'),
+      initiallyExpanded: true,
       body: const _NavigationBodyItem(
         header: 'PaneItemExpander',
         content: Text(

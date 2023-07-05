@@ -596,12 +596,17 @@ class PaneItemExpander extends PaneItem {
     super.tileColor,
     super.selectedTileColor,
     super.onTap,
+    this.initiallyExpanded = false,
   }) : assert(
           items.any((item) => item is PaneItemExpander) == false,
           'There can not be nested PaneItemExpanders',
         );
 
   final List<NavigationPaneItem> items;
+
+  /// Whether the item is initially expanded. Defaults to false
+  final bool initiallyExpanded;
+
   static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
 
   @override
@@ -632,6 +637,7 @@ class PaneItemExpander extends PaneItem {
         selected: selected,
         onPressed: onPressed,
         onItemPressed: onItemPressed,
+        initiallyExpanded: initiallyExpanded,
       ),
     );
   }
@@ -647,6 +653,7 @@ class _PaneItemExpander extends StatefulWidget {
     required this.selected,
     required this.onPressed,
     required this.onItemPressed,
+    required this.initiallyExpanded,
   });
 
   final PaneItem item;
@@ -656,6 +663,7 @@ class _PaneItemExpander extends StatefulWidget {
   final bool selected;
   final VoidCallback? onPressed;
   final ValueChanged<PaneItem>? onItemPressed;
+  final bool initiallyExpanded;
 
   static const leadingPadding = EdgeInsetsDirectional.only(start: 28.0);
 
@@ -666,9 +674,7 @@ class _PaneItemExpander extends StatefulWidget {
 class __PaneItemExpanderState extends State<_PaneItemExpander>
     with SingleTickerProviderStateMixin {
   final flyoutController = FlyoutController();
-  bool get useFlyout {
-    return widget.displayMode != PaneDisplayMode.open;
-  }
+  bool get useFlyout => widget.displayMode != PaneDisplayMode.open;
 
   late bool _open;
   late final AnimationController controller = AnimationController(
@@ -683,7 +689,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           context,
           identifier: 'paneItemExpanderOpen$index',
         ) as bool? ??
-        false;
+        widget.initiallyExpanded;
 
     if (_open) {
       controller.value = 1;
