@@ -125,7 +125,17 @@ class RadioButton extends StatelessWidget {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
             const SizedBox(width: 6.0),
-            Flexible(child: content!),
+            Flexible(
+              child: DefaultTextStyle.merge(
+                style: TextStyle(color: style.foregroundColor?.resolve(state)),
+                child: IconTheme.merge(
+                  data: IconThemeData(
+                    color: style.foregroundColor?.resolve(state),
+                  ),
+                  child: content!,
+                ),
+              ),
+            ),
           ]);
         }
         return Semantics(
@@ -149,11 +159,7 @@ class RadioButton extends StatelessWidget {
 class RadioButtonTheme extends InheritedTheme {
   /// Creates a radio button theme that controls the configurations for
   /// [RadioButton].
-  const RadioButtonTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const RadioButtonTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;
@@ -206,16 +212,29 @@ class RadioButtonTheme extends InheritedTheme {
 
 @immutable
 class RadioButtonThemeData with Diagnosticable {
+  /// The decoration of the radio button when it's checked.
   final ButtonState<BoxDecoration?>? checkedDecoration;
+
+  /// The decoration of the radio button when it's unchecked.
   final ButtonState<BoxDecoration?>? uncheckedDecoration;
 
+  /// The color of the radio button's content.
+  final ButtonState<Color?>? foregroundColor;
+
+  /// Creates a theme that can be used for [RadioButtonTheme]
   const RadioButtonThemeData({
     this.checkedDecoration,
     this.uncheckedDecoration,
+    this.foregroundColor,
   });
 
   factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
+      foregroundColor: ButtonState.resolveWith((states) {
+        return states.isDisabled
+            ? theme.resources.textFillColorDisabled
+            : theme.resources.textFillColorPrimary;
+      }),
       checkedDecoration: ButtonState.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
@@ -227,32 +246,25 @@ class RadioButtonThemeData with Diagnosticable {
                 : 4.0,
           ),
           shape: BoxShape.circle,
-          color: !states.isDisabled
-              ? theme.brightness.isLight
-                  ? Colors.white
-                  : Colors.black
-              : theme.brightness.isLight
-                  ? Colors.white
-                  : const Color.fromRGBO(255, 255, 255, 0.5302),
+          color: theme.resources.textOnAccentFillColorPrimary,
         );
       }),
       uncheckedDecoration: ButtonState.resolveWith((states) {
-        final backgroundColor = theme.inactiveBackgroundColor;
         return BoxDecoration(
-          color: states.isPressing
-              ? backgroundColor
-              : states.isHovering
-                  ? backgroundColor.withOpacity(0.8)
-                  : backgroundColor.withOpacity(0.0),
+          color: states.isDisabled
+              ? theme.resources.controlAltFillColorDisabled
+              : states.isPressing
+                  ? theme.resources.controlAltFillColorQuarternary
+                  : states.isHovering
+                      ? theme.resources.controlAltFillColorTertiary
+                      : theme.resources.controlAltFillColorSecondary,
           border: Border.all(
             width: states.isPressing ? 4.5 : 1,
-            color: !states.isDisabled
-                ? states.isPressing
-                    ? theme.accentColor
-                    : theme.borderInputColor
-                : theme.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: states.isDisabled
+                ? theme.resources.textFillColorDisabled
+                : states.isPressing
+                    ? theme.accentColor.defaultBrushFor(theme.brightness)
+                    : theme.borderInputColor,
           ),
           shape: BoxShape.circle,
         );
@@ -261,12 +273,17 @@ class RadioButtonThemeData with Diagnosticable {
   }
 
   static RadioButtonThemeData lerp(
-      RadioButtonThemeData? a, RadioButtonThemeData? b, double t) {
+    RadioButtonThemeData? a,
+    RadioButtonThemeData? b,
+    double t,
+  ) {
     return RadioButtonThemeData(
       checkedDecoration: ButtonState.lerp(
           a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
       uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
           b?.uncheckedDecoration, t, BoxDecoration.lerp),
+      foregroundColor: ButtonState.lerp(
+          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
 
@@ -274,6 +291,7 @@ class RadioButtonThemeData with Diagnosticable {
     return RadioButtonThemeData(
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
+      foregroundColor: style?.foregroundColor ?? foregroundColor,
     );
   }
 
@@ -284,6 +302,7 @@ class RadioButtonThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
           'checkedDecoration', checkedDecoration))
       ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-          'uncheckedDecoration', uncheckedDecoration));
+          'uncheckedDecoration', uncheckedDecoration))
+      ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
   }
 }
