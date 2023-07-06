@@ -368,7 +368,7 @@ class _CommandBarState extends State<CommandBar> {
               if (overflowWidget != null) overflowWidget,
             ],
           ),
-        );
+        ).hideVerticalScrollbar(context);
         break;
     }
     if (widget._isExpanded) {

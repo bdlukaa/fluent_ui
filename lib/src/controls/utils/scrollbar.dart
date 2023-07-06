@@ -529,3 +529,20 @@ class ScrollbarThemeData with Diagnosticable {
       ));
   }
 }
+
+/// Provider an extension method to hide vertical scrollbar.
+/// May this can help [SingleChildScrollView] looks better.
+extension ScrollViewExtension on SingleChildScrollView {
+  /// Use [ScrollConfiguration] as wrapper to hide vertical scrollbar.
+  Widget hideVerticalScrollbar(
+    BuildContext context, {
+    ScrollBehavior? behavior,
+  }) {
+    behavior ??= ScrollConfiguration.of(context);
+    var showScrollbar = scrollDirection != Axis.vertical;
+    return ScrollConfiguration(
+      behavior: behavior.copyWith(scrollbars: showScrollbar),
+      child: this,
+    );
+  }
+}

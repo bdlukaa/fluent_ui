@@ -79,7 +79,7 @@ class _HorizontalScrollViewState extends State<HorizontalScrollView> {
         physics: widget.scrollPhysics ?? const ClampingScrollPhysics(),
         controller: _controller,
         child: widget.child,
-      ),
+      ).hideVerticalScrollbar(context),
     );
   }
 }
