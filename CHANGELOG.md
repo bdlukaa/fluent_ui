@@ -15,6 +15,7 @@
 - Navigating through the `Combobox` items on web now works properly ([#757](https://github.com/bdlukaa/fluent_ui/issues/757))
 - `TreeViewItem`, if selection mode is `single`, gets selected when focused with the keyboard ([#835](https://github.com/bdlukaa/fluent_ui/issues/835))
 - In multiple selection mode, `TreeView`'s built-in checkbox now doesn't receive focus. It can now be focused by invoking it with the keyboard ([#877](https://github.com/bdlukaa/fluent_ui/pull/877))
+- Enabled click on `DatePicker` and `TimePicker` ([#6](https://github.com/bdlukaa/fluent_ui/issues/6))
 
 ## 4.6.2
 
