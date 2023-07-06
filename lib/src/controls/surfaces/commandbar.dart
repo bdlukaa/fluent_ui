@@ -157,7 +157,8 @@ class CommandBar extends StatefulWidget {
   final bool _isExpanded;
 
   /// The direction of the command bar. The default is [Axis.horizontal].
-  /// If [direction] is [Axis.vertical], we recomment setting [isCompact] to true.
+  /// If [direction] is [Axis.vertical], we recomment setting [isCompact] to true,
+  /// and [crossAxisAlignment] to [CrossAxisAlignment.start].
   final Axis direction;
 
   /// Creates a command bar.
@@ -170,11 +171,15 @@ class CommandBar extends StatefulWidget {
     this.compactBreakpointWidth,
     bool? isCompact,
     this.mainAxisAlignment = MainAxisAlignment.start,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
+    CrossAxisAlignment? crossAxisAlignment,
     this.overflowItemAlignment = MainAxisAlignment.end,
     this.direction = Axis.horizontal,
   })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
-        isCompact = isCompact ?? direction == Axis.vertical;
+        isCompact = isCompact ?? direction == Axis.vertical,
+        crossAxisAlignment = crossAxisAlignment ??
+            (direction == Axis.vertical
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center);
 
   @override
   State<CommandBar> createState() => _CommandBarState();
