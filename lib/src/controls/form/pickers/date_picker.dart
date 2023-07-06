@@ -514,6 +514,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
@@ -556,13 +557,20 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   final month = months.elementAt(index);
                   final text =
                       formatter.format(DateTime(1, month)).uppercaseFirst();
+                  final selected = month == localDate.month;
                   return ListTile(
+                    onPressed: selected
+                        ? null
+                        : () {
+                            widget.monthController.animateToItem(
+                              index,
+                              duration: theme.mediumAnimationDuration,
+                              curve: theme.animationCurve,
+                            );
+                          },
                     title: Text(
                       text,
-                      style: kPickerPopupTextStyle(
-                        context,
-                        month == localDate.month,
-                      ),
+                      style: kPickerPopupTextStyle(context, selected),
                       locale: locale,
                     ),
                   );
@@ -619,24 +627,28 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               diameterRatio: kPickerDiameterRatio,
               physics: const FixedExtentScrollPhysics(),
               childDelegate: ListWheelChildLoopingListDelegate(
-                children: List<Widget>.generate(
-                  daysInMonth,
-                  (day) {
-                    day++;
-                    return SizedBox(
-                      height: kOneLineTileHeight,
-                      child: Center(
-                        child: Text(
-                          formatter.format(DateTime(0, 0, day)),
-                          style: kPickerPopupTextStyle(
-                            context,
-                            day == localDate.day,
-                          ),
-                        ),
+                children: List<Widget>.generate(daysInMonth, (index) {
+                  final day = index++;
+                  final selected = day == localDate.day;
+                  return ListTile(
+                    onPressed: selected
+                        ? null
+                        : () {
+                            widget.dayController.animateToItem(
+                              day,
+                              duration: theme.mediumAnimationDuration,
+                              curve: theme.animationCurve,
+                            );
+                          },
+                    title: Center(
+                      child: Text(
+                        formatter.format(DateTime(0, 0, day)),
+                        style: kPickerPopupTextStyle(context, selected),
+                        textAlign: TextAlign.center,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }),
               ),
               onSelectedItemChanged: (index) {
                 handleDateChanged(DateTime(
@@ -702,16 +714,20 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               },
               children: List.generate(years, (index) {
                 final realYear = widget.startDate.year + index;
-                return SizedBox(
-                  height: kOneLineTileHeight,
-                  child: Center(
-                    child: Text(
-                      formatter.format(DateTime(realYear)),
-                      style: kPickerPopupTextStyle(
-                        context,
-                        realYear == localDate.year,
-                      ),
-                    ),
+                final selected = realYear == localDate.year;
+                return ListTile(
+                  onPressed: selected
+                      ? null
+                      : () {
+                          widget.yearController.animateToItem(
+                            index,
+                            duration: theme.mediumAnimationDuration,
+                            curve: theme.animationCurve,
+                          );
+                        },
+                  title: Text(
+                    formatter.format(DateTime(realYear)),
+                    style: kPickerPopupTextStyle(context, selected),
                   ),
                 );
               }),

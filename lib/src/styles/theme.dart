@@ -181,6 +181,9 @@ class FluentThemeData with Diagnosticable {
   final Typography typography;
   final Map<Object, ThemeExtension<dynamic>> extensions;
 
+  /// The accent color.
+  ///
+  /// Defaults to [Colors.blue]
   final AccentColor accentColor;
   final Color activeColor;
   final Color inactiveColor;
@@ -298,11 +301,7 @@ class FluentThemeData with Diagnosticable {
     typography = Typography.fromBrightness(brightness: brightness)
         .merge(typography)
         .apply(fontFamily: fontFamily);
-    focusTheme = FocusThemeData.standard(
-      glowColor: accentColor.withOpacity(0.15),
-      primaryBorderColor: inactiveColor,
-      secondaryBorderColor: scaffoldBackgroundColor,
-    ).merge(focusTheme);
+    focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
     chipTheme ??= const ChipThemeData();

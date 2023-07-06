@@ -210,6 +210,30 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
       );
     }
 
+    if (kIsWeb) {
+      child = Focus(
+        onKeyEvent: (node, event) {
+          if (!(event is KeyDownEvent || event is KeyRepeatEvent)) {
+            return KeyEventResult.ignored;
+          }
+
+          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            // if nothing is selected, select the first
+            FocusScope.of(context).nextFocus();
+            return KeyEventResult.handled;
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            // if nothing is selected, select the last
+            FocusScope.of(context).previousFocus();
+            return KeyEventResult.handled;
+          } else {
+            return KeyEventResult.ignored;
+          }
+        },
+        canRequestFocus: false,
+        child: child,
+      );
+    }
+
     return Padding(
       padding:
           const EdgeInsetsDirectional.only(bottom: _kMenuItemBottomPadding),

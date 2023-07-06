@@ -23,6 +23,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
     color: isSelected
         ? theme.resources.textOnAccentFillColorPrimary
         : theme.resources.textFillColorPrimary,
+    fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
   );
 }
 
@@ -54,7 +55,10 @@ Widget PickerHighlightTile() {
       child: Container(
         alignment: AlignmentDirectional.center,
         height: kOneLineTileHeight,
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsetsDirectional.symmetric(
+          vertical: 6.0,
+          horizontal: 2.0,
+        ),
         child: ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
