@@ -18,6 +18,7 @@
 - Enabled click on `DatePicker` and `TimePicker` ([#6](https://github.com/bdlukaa/fluent_ui/issues/6))
 - `DatePicker.endDate.year` is taken into account when displaying the years ([#874](https://github.com/bdlukaa/fluent_ui/issues/874))
 - `DatePicker`'s day field is now correctly selected
+- `DatePicker` and `TimePicker` are correctly fit into the navigator bounds
 
 ## 4.6.2
 

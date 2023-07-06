@@ -338,6 +338,8 @@ class _PickerState extends State<Picker> {
       ancestor: navigator.context.findRenderObject(),
     );
 
+    final rootBox = navigator.context.findRenderObject() as RenderBox;
+
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
 
     return navigator.push(PageRouteBuilder(
@@ -346,10 +348,9 @@ class _PickerState extends State<Picker> {
       barrierDismissible: true,
       fullscreenDialog: true,
       pageBuilder: (context, primary, __) {
-        assert(debugCheckHasMediaQuery(context));
         assert(debugCheckHasFluentTheme(context));
 
-        final screenHeight = MediaQuery.of(context).size.height;
+        final rootHeight = rootBox.size.height;
 
         // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
         // value from the Win UI 3 Gallery
@@ -359,13 +360,17 @@ class _PickerState extends State<Picker> {
 
         // if the popup menu [y] + picker height overlaps the screen height, make
         // it to the bottom of the screen
-        if (y + widget.pickerHeight > screenHeight) {
-          y = screenHeight - widget.pickerHeight;
+        if (y + widget.pickerHeight > rootHeight) {
+          const bottomMargin = 8.0;
+          y = rootHeight - widget.pickerHeight - bottomMargin;
+          // y = 0;
           // if the popup menu [y] is off screen on the top, make it to the top of
           // the screen
         } else if (y < 0) {
           y = 0;
         }
+
+        y = y.clamp(0.0, rootHeight);
 
         final theme = FluentTheme.of(context);
 
