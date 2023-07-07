@@ -17,10 +17,10 @@
 - In multiple selection mode, `TreeView`'s built-in checkbox now doesn't receive focus. It can now be focused by invoking it with the keyboard ([#877](https://github.com/bdlukaa/fluent_ui/pull/877))
 - Enabled click on `DatePicker` and `TimePicker` ([#6](https://github.com/bdlukaa/fluent_ui/issues/6))
 - `DatePicker.endDate.year` is taken into account when displaying the years ([#874](https://github.com/bdlukaa/fluent_ui/issues/874))
-- `DatePicker`'s day field is now correctly selected
-- `DatePicker` and `TimePicker` are correctly fit into the navigator bounds
+- `DatePicker`'s day field is now correctly selected ([d152dc](https://github.com/bdlukaa/fluent_ui/commit/d152dc9cdd0dcd9fe6436e1c1f1f88bc97abef1e))
+- `DatePicker` and `TimePicker` are correctly fit into the navigator bounds ([711390](https://github.com/bdlukaa/fluent_ui/commit/711390d7bcc8f17ced8f62130875e13097dd3a22))
 - Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
-- Improved overall `Semantics`. Now, not every input is treated as a button
+- Improved overall `Semantics`. Now, not every input is treated as a button ([2fee45](https://github.com/bdlukaa/fluent_ui/commit/2fee459de612fd562c18ca1924ba835ebb665d7e))
 
 ## 4.6.2
 
