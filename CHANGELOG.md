@@ -1,4 +1,4 @@
-## [next]
+## 4.7.0
 
 - Add Slovak localization ([#850](https://github.com/bdlukaa/fluent_ui/issues/850))
 - Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
@@ -22,7 +22,7 @@
 - Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
 - Improved overall `Semantics`. Now, not every input is treated as a button ([2fee45](https://github.com/bdlukaa/fluent_ui/commit/2fee459de612fd562c18ca1924ba835ebb665d7e))
 - Deprecated all mobile widgets: `BottomSheet`, `Snackbar`, `Chip` and `PillButtonBar` - and all their related widgets. ([c1cfe491](https://github.com/bdlukaa/fluent_ui/commit/c1cfe491ba0388af540803c8e4a0bb9a049a873f))
-- Removed previously deprecated fields ([ee601649](https://github.com/bdlukaa/fluent_ui/commit/ee6016490dc50d217cc2709e4500cc8748fa0e1d)): 
+- **BREAKING** Removed previously deprecated fields ([ee601649](https://github.com/bdlukaa/fluent_ui/commit/ee6016490dc50d217cc2709e4500cc8748fa0e1d)): 
   - `EditableComboboxFormField.value`. Use `EditableComboboxFormField.initialValue` instead
   - `DatePicker.startYear`. Use `DatePicker.startDate` instead
   - `DatePicker.endYear`. Use `DatePicker.endDate` instead
