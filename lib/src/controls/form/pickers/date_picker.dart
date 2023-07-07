@@ -62,20 +62,14 @@ class DatePicker extends StatefulWidget {
     this.showYear = true,
     DateTime? startDate,
     DateTime? endDate,
-    @Deprecated('Use startDate instead') int? startYear,
-    @Deprecated('Use endDate instead') int? endYear,
     this.contentPadding = kPickerContentPadding,
     this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
     this.locale,
     this.fieldOrder,
-  })  : startDate = startDate == null && startYear != null
-            ? DateTime(startYear)
-            : startDate ?? DateTime.now().subtract(kYearDuration * 100),
-        endDate = endDate == null && endYear != null
-            ? DateTime(endYear)
-            : endDate ?? DateTime.now().add(kYearDuration * 25);
+  })  : startDate = startDate ?? DateTime.now().subtract(kYearDuration * 100),
+        endDate = endDate ?? DateTime.now().add(kYearDuration * 25);
 
   /// The current date selected date.
   ///

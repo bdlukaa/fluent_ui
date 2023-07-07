@@ -172,9 +172,6 @@ extension BrightnessExtension on Brightness {
 
 const standardCurve = Curves.easeInOut;
 
-@Deprecated('ThemeData is deprecated. Use FluentThemeData instead')
-typedef ThemeData = FluentThemeData;
-
 /// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable
 class FluentThemeData with Diagnosticable {

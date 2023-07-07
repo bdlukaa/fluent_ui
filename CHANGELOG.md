@@ -21,7 +21,14 @@
 - `DatePicker` and `TimePicker` are correctly fit into the navigator bounds ([711390](https://github.com/bdlukaa/fluent_ui/commit/711390d7bcc8f17ced8f62130875e13097dd3a22))
 - Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
 - Improved overall `Semantics`. Now, not every input is treated as a button ([2fee45](https://github.com/bdlukaa/fluent_ui/commit/2fee459de612fd562c18ca1924ba835ebb665d7e))
-- Deprecated all mobile widgets: `BottomSheet`, `Snackbar`, `Chip` and `PillButtonBar` - and all their related widgets.
+- Deprecated all mobile widgets: `BottomSheet`, `Snackbar`, `Chip` and `PillButtonBar` - and all their related widgets. ([c1cfe491](https://github.com/bdlukaa/fluent_ui/commit/c1cfe491ba0388af540803c8e4a0bb9a049a873f))
+- Removed previously deprecated fields:
+  - `EditableComboboxFormField.value`. Use `EditableComboboxFormField.initialValue` instead
+  - `DatePicker.startYear`. Use `DatePicker.startDate` instead
+  - `DatePicker.endYear`. Use `DatePicker.endDate` instead
+  - `TextButton`. Use `HyperlinkButton` instead
+  - `TabView.wheelScroll`. It is no longer used
+  - `ThemeData`. Use `FluentThemeData` instead
 
 ## 4.6.2
 
