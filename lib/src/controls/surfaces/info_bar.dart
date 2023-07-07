@@ -415,9 +415,7 @@ class InfoBarThemeData with Diagnosticable {
       actionStyle: ButtonStyle(
         padding: ButtonState.all(const EdgeInsets.all(6)),
       ),
-      closeButtonStyle: ButtonStyle(
-        iconSize: ButtonState.all(16.0),
-      ),
+      closeButtonStyle: ButtonStyle(iconSize: ButtonState.all(16.0)),
     );
   }
 

@@ -484,7 +484,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       link: 'https://github.com/bdlukaa/fluent_ui',
       body: const SizedBox.shrink(),
     ),
-    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
+    // TODO: Scrollbar, RatingBar
   ];
 
   @override

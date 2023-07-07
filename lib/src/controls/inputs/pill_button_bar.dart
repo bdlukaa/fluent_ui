@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -10,6 +12,9 @@ const double _kMinButtonWidth = 56.0;
 const double _kMaxButtonHeight = _kMinHeight;
 
 /// The item used by [PillButtonBar]
+@Deprecated(
+  'PillButtonBar is deprecated, use CommandBar instead. This was deprecated in 4.7.0',
+)
 class PillButtonBarItem {
   /// The text
   final Widget text;
@@ -30,6 +35,9 @@ class PillButtonBarItem {
 ///
 ///   * [PillButtonBarItem], the item used by pill button bar
 ///   * [PillButtonBarTheme], used to style the pill button bar
+@Deprecated(
+  'PillButtonBar is deprecated, use CommandBar instead. This was deprecated in 4.7.0',
+)
 class PillButtonBar extends StatelessWidget {
   /// Creates a pill button bar.
   ///
@@ -153,6 +161,9 @@ class _PillButtonBarItem extends StatelessWidget {
 ///
 /// Values specified here are used for [PillButtonBar] properties that are not
 /// given an explicit non-null value.
+@Deprecated(
+  'PillButtonBar is deprecated, use CommandBar instead. This was deprecated in 4.7.0',
+)
 class PillButtonBarTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [PillButtonBar].
