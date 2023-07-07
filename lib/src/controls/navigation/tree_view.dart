@@ -2,6 +2,43 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+/// A callback that receives a notification that the selection state of
+/// a TreeView has changed.
+///
+/// Used by [TreeView.onSelectionChanged]
+typedef TreeViewSelectionChangedCallback = Future<void> Function(
+  Iterable<TreeViewItem> selectedItems,
+);
+
+/// A callback that receives a notification that an item has been invoked.
+///
+/// Used by [TreeView.onItemInvoked]
+typedef TreeViewItemInvoked = Future<void> Function(
+  TreeViewItem item,
+  TreeViewItemInvokeReason reason,
+);
+
+/// A callback that receives a notification that an item
+/// received a secondary tap.
+///
+/// Used by [TreeView.onSecondaryTap]
+typedef TreeViewItemOnSecondaryTap = void Function(
+  TreeViewItem item,
+  TapDownDetails details,
+);
+
+/// A callback that receives a notification that the expansion state of an
+/// item has been toggled.
+///
+/// Used by [TreeView.onItemExpandToggle]
+typedef TreeViewItemOnExpandToggle = Future<void> Function(
+  TreeViewItem item,
+  bool getsExpanded,
+);
+
+typedef TreeViewItemGesturesCallback = Map<Type, GestureRecognizerFactory>
+    Function(TreeViewItem item);
+
 const double _whiteSpace = 8.0;
 
 /// Default loading indicator used by [TreeView]
@@ -115,8 +152,7 @@ class TreeViewItem with Diagnosticable {
   ///
   /// This callback is executed __after__ the global
   /// [TreeView.onItemInvoked]-callback.
-  final Future<void> Function(
-      TreeViewItem item, TreeViewItemInvokeReason reason)? onInvoked;
+  final TreeViewItemInvoked? onInvoked;
 
   /// Called when this item's expansion state is toggled.
   ///
@@ -124,8 +160,14 @@ class TreeViewItem with Diagnosticable {
   ///
   /// This callback is executed __after__ the global
   /// [TreeView.onItemExpandToggle]-callback.
-  final Future<void> Function(TreeViewItem item, bool getsExpanded)?
-      onExpandToggle;
+  final TreeViewItemOnExpandToggle? onExpandToggle;
+
+  /// The gestures that this item will respond to.
+  ///
+  /// See also:
+  ///
+  ///   * [TreeView.gesturesBuilder], which builds gestures for each item
+  final Map<Type, GestureRecognizerFactory> gestures;
 
   /// The background color of this item.
   ///
@@ -158,7 +200,7 @@ class TreeViewItem with Diagnosticable {
   /// Whether this item children is loaded lazily
   final bool lazy;
 
-  /// Creates a tab view item
+  /// Creates a tree view item.
   TreeViewItem({
     this.key,
     this.leading,
@@ -170,6 +212,7 @@ class TreeViewItem with Diagnosticable {
     this.selected = false,
     this.onInvoked,
     this.onExpandToggle,
+    this.gestures = const {},
     this.backgroundColor,
     this.autofocus = false,
     FocusNode? focusNode,
@@ -441,40 +484,6 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }
 }
 
-/// A callback that receives a notification that the selection state of
-/// a TreeView has changed.
-///
-/// Used by [TreeView.onSelectionChanged]
-typedef TreeViewSelectionChangedCallback = Future<void> Function(
-  Iterable<TreeViewItem> selectedItems,
-)?;
-
-/// A callback that receives a notification that an item has been invoked.
-///
-/// Used by [TreeView.onItemInvoked]
-typedef TreeViewItemInvoked = Future<void> Function(
-  TreeViewItem item,
-  TreeViewItemInvokeReason reason,
-);
-
-/// A callback that receives a notification that an item
-/// received a secondary tap.
-///
-/// Used by [TreeView.onSecondaryTap]
-typedef TreeViewItemOnSecondaryTap = void Function(
-  TreeViewItem item,
-  TapDownDetails details,
-);
-
-/// A callback that receives a notification that the expansion state of an
-/// item has been toggled.
-///
-/// Used by [TreeView.onItemExpandToggle]
-typedef TreeViewItemOnExpandToggle = Future<void> Function(
-  TreeViewItem item,
-  bool getsExpanded,
-);
-
 /// The `TreeView` control enables a hierarchical list with expanding and
 /// collapsing nodes that contain nested items. It can be used to illustrate a
 /// folder structure or nested relationships in your UI.
@@ -509,6 +518,7 @@ class TreeView extends StatefulWidget {
     this.onItemInvoked,
     this.onItemExpandToggle,
     this.onSecondaryTap,
+    this.gesturesBuilder,
     this.loadingWidget = kTreeViewLoadingIndicator,
     this.shrinkWrap = true,
     this.scrollPrimary,
@@ -560,12 +570,17 @@ class TreeView extends StatefulWidget {
   /// The item tapped and [TapDownDetails] are passed to the callback.
   final TreeViewItemOnSecondaryTap? onSecondaryTap;
 
+  /// A callback that receives a notification that the gestures for an item
+  ///
+  /// This is called alongside [TreeViewItem.gestures]
+  final TreeViewItemGesturesCallback? gesturesBuilder;
+
   /// Called when the selection changes. The items that are currently
   /// selected will be passed to the callback. This could be empty
   /// if nothing is now selected. If [TreeView.selectionMode] is
   /// [TreeViewSelectionMode.single] then it will contain exactly
   /// zero or one items.
-  final TreeViewSelectionChangedCallback onSelectionChanged;
+  final TreeViewSelectionChangedCallback? onSelectionChanged;
 
   /// If true, will include items that are in an indeterminute (partially
   /// selected) state in the list of selected items in the
@@ -604,11 +619,19 @@ class TreeView extends StatefulWidget {
   /// Defaults to true.
   final bool addRepaintBoundaries;
 
-  /// Whether or not to give the internal [ListView] a prototypeItem
-  /// based on the first item in the tree view. Set this to true
-  /// to allow the ListView to more efficiently calculate the maximum
-  /// scrolling extent, and it will force the vertical size of each
-  /// item to be the same size as the first item in the tree view.
+  /// Whether or not to give the internal [ListView] a prototype item based on
+  /// the first item in the tree view. Set this to true to allow the ListView to
+  /// more efficiently calculate the maximum scrolling extent, and it will force
+  /// the vertical size of each item to be the same size as the first item in
+  /// the tree view.
+  ///
+  /// {@macro flutter.widgets.list_view.prototypeItem}
+  ///
+  /// Defaults to false.
+  ///
+  /// See also:
+  ///
+  ///  * [ListView.prototypeItem]
   final bool usePrototypeItem;
 
   /// Whether or not to have narrow spacing between the contents of each item.
@@ -710,6 +733,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                     item: _items.first,
                     selectionMode: widget.selectionMode,
                     narrowSpacing: widget.narrowSpacing,
+                    gestures: const {},
                     onInvoked: (_) {},
                     onSelect: () {},
                     onSecondaryTap: (details) {},
@@ -728,6 +752,11 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                 narrowSpacing: widget.narrowSpacing,
                 onSecondaryTap: (details) {
                   widget.onSecondaryTap?.call(item, details);
+                },
+                gestures: {
+                  ...item.gestures,
+                  if (widget.gesturesBuilder != null)
+                    ...widget.gesturesBuilder!(item),
                 },
                 onSelect: () async {
                   final onSelectionChanged = widget.onSelectionChanged;
@@ -763,7 +792,9 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                 },
                 onExpandToggle: () async {
                   await _invokeItem(
-                      item, TreeViewItemInvokeReason.expandToggle);
+                    item,
+                    TreeViewItemInvokeReason.expandToggle,
+                  );
 
                   if (item.collapsable) {
                     if (item.lazy) {
@@ -831,6 +862,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.selectionMode,
     required this.onSelect,
     required this.onSecondaryTap,
+    required this.gestures,
     required this.onExpandToggle,
     required this.onInvoked,
     required this.loadingWidgetFallback,
@@ -841,6 +873,7 @@ class _TreeViewItem extends StatelessWidget {
   final TreeViewSelectionMode selectionMode;
   final VoidCallback onSelect;
   final GestureTapDownCallback onSecondaryTap;
+  final Map<Type, GestureRecognizerFactory> gestures;
   final VoidCallback onExpandToggle;
   final void Function(TreeViewItemInvokeReason reason) onInvoked;
   final Widget loadingWidgetFallback;
@@ -862,6 +895,8 @@ class _TreeViewItem extends StatelessWidget {
     return GestureDetector(
       onSecondaryTapDown: onSecondaryTap,
       child: HoverButton(
+        hitTestBehavior: HitTestBehavior.translucent,
+        gestures: gestures,
         shortcuts: item.isExpandable
             ? {
                 const SingleActivator(LogicalKeyboardKey.arrowLeft):

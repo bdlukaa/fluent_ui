@@ -19,6 +19,7 @@
 - `DatePicker.endDate.year` is taken into account when displaying the years ([#874](https://github.com/bdlukaa/fluent_ui/issues/874))
 - `DatePicker`'s day field is now correctly selected
 - `DatePicker` and `TimePicker` are correctly fit into the navigator bounds
+- Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
 
 ## 4.6.2
 
