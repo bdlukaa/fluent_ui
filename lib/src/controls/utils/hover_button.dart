@@ -308,7 +308,6 @@ class _HoverButtonState extends State<HoverButton> {
     w = MergeSemantics(
       child: Semantics(
         label: widget.semanticLabel,
-        button: true,
         enabled: enabled,
         focusable: enabled && node.canRequestFocus,
         focused: node.hasFocus,

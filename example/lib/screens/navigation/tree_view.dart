@@ -169,8 +169,7 @@ TreeView(
   onSecondaryTap: (item, details) async {
     debugPrint('onSecondaryTap $item at ${details.globalPosition}');
   },
-)
-''',
+)''',
         ),
         subtitle(content: const Text('A TreeView with custom gestures')),
         description(

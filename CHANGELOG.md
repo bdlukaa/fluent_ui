@@ -20,6 +20,7 @@
 - `DatePicker`'s day field is now correctly selected
 - `DatePicker` and `TimePicker` are correctly fit into the navigator bounds
 - Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
+- Improved overall `Semantics`. Now, not every input is treated as a button
 
 ## 4.6.2
 

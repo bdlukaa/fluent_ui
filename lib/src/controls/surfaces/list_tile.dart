@@ -236,6 +236,7 @@ class ListTile extends StatelessWidget {
         );
 
         return Semantics(
+          container: true,
           selected:
               selectionMode == ListTileSelectionMode.none ? null : selected,
           child: FocusBorder(

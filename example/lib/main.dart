@@ -760,14 +760,17 @@ class _LinkPaneItemAction extends PaneItem {
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => super.build(
-        context,
-        selected,
-        followLink,
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        itemIndex: itemIndex,
-        autofocus: autofocus,
+      builder: (context, followLink) => Semantics(
+        link: true,
+        child: super.build(
+          context,
+          selected,
+          followLink,
+          displayMode: displayMode,
+          showTextOnTop: showTextOnTop,
+          itemIndex: itemIndex,
+          autofocus: autofocus,
+        ),
       ),
     );
   }

@@ -82,6 +82,8 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///
 /// {@macro flutter.widgets.editableText.showCaretOnScreen}
 ///
+/// {@macro flutter.widgets.editableText.accessibility}
+///
 /// See also:
 ///
 ///  * [EditableText], which is the raw text editing control at the heart of a
