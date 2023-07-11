@@ -24,6 +24,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   bool toggleDisabled = false;
   bool toggleState = false;
   bool splitButtonDisabled = false;
+  bool splitButtonState = false;
   bool radioButtonDisabled = false;
   int radioButtonSelected = -1;
 
@@ -325,18 +326,20 @@ ToggleButton(
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
                 child: Text(
-                  'SplitButton with text content',
+                  'A toggleable SplitButton with text content',
                   style: theme.typography.caption,
                 ),
               ),
               SplitButton(
                 enabled: !splitButtonDisabled,
+                checked: splitButtonState,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('Choose color'),
                 ),
                 onInvoked: () {
                   debugPrint('Invoked split button primary action');
+                  setState(() => splitButtonState = !splitButtonState);
                 },
                 flyout: splitButtonFlyout,
               ),

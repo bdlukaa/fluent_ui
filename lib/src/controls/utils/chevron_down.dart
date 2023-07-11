@@ -10,11 +10,15 @@ class ChevronDown extends StatelessWidget {
   /// The icon to be displayed
   final IconData icon;
 
+  /// The color of the icon
+  final Color? iconColor;
+
   /// Creates a chevron down icon.
   const ChevronDown({
     super.key,
     this.iconSize = 8.0,
     this.icon = FluentIcons.chevron_down,
+    this.iconColor,
   });
 
   @override
@@ -28,7 +32,7 @@ class ChevronDown extends StatelessWidget {
         begin: 1,
         end: states == null || !states.isPressing ? 1 : 0.9,
       ),
-      child: Icon(icon, size: iconSize),
+      child: Icon(icon, size: iconSize, color: iconColor),
       builder: (context, value, child) {
         return Opacity(
           opacity: value.clamp(0.0, 1.0),

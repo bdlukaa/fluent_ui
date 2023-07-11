@@ -73,6 +73,9 @@ class SplitButton extends StatefulWidget {
   /// Whether the button is enabled
   final bool enabled;
 
+  /// Whether the split button is checked
+  final bool checked;
+
   /// Creates a split button
   const SplitButton({
     super.key,
@@ -81,6 +84,7 @@ class SplitButton extends StatefulWidget {
     required this.flyout,
     this.onInvoked,
     this.enabled = true,
+    this.checked = false,
   });
 
   @override
@@ -126,7 +130,9 @@ class SplitButtonState extends State<SplitButton> {
           borderRadius: radius,
           color: theme.resources.controlFillColorDefault,
           border: Border.all(
-            color: theme.resources.controlStrokeColorDefault,
+            color: widget.checked
+                ? theme.resources.subtleFillColorTransparent
+                : theme.resources.controlStrokeColorDefault,
           ),
         ),
         child: ClipRRect(
@@ -138,17 +144,34 @@ class SplitButtonState extends State<SplitButton> {
                 builder: (context, states) {
                   return DecoratedBox(
                     decoration: BoxDecoration(
-                      color: ButtonThemeData.buttonColor(
-                        context,
-                        widget.enabled &&
-                                widget.onInvoked == null &&
-                                states.isDisabled
-                            ? {}
-                            : states,
-                        transparentWhenNone: true,
+                      color: widget.checked
+                          ? ButtonThemeData.checkedInputColor(theme, states)
+                          : ButtonThemeData.buttonColor(
+                              context,
+                              widget.enabled &&
+                                      widget.onInvoked == null &&
+                                      states.isDisabled
+                                  ? {}
+                                  : states,
+                              transparentWhenNone: true,
+                            ),
+                    ),
+                    child: DefaultTextStyle.merge(
+                      style: widget.checked
+                          ? TextStyle(
+                              color:
+                                  FilledButton.foregroundColor(theme, states),
+                            )
+                          : null,
+                      child: IconTheme.merge(
+                        data: IconThemeData(
+                          color: widget.checked
+                              ? FilledButton.foregroundColor(theme, states)
+                              : null,
+                        ),
+                        child: widget.child,
                       ),
                     ),
-                    child: widget.child,
                   );
                 },
               ),
@@ -167,13 +190,15 @@ class SplitButtonState extends State<SplitButton> {
                     return FlyoutTarget(
                       controller: flyoutController,
                       child: Container(
-                        color: ButtonThemeData.buttonColor(
-                          context,
-                          flyoutController.isOpen
-                              ? {ButtonStates.pressing}
-                              : states,
-                          transparentWhenNone: true,
-                        ),
+                        color: widget.checked
+                            ? ButtonThemeData.checkedInputColor(theme, states)
+                            : ButtonThemeData.buttonColor(
+                                context,
+                                flyoutController.isOpen
+                                    ? {ButtonStates.pressing}
+                                    : states,
+                                transparentWhenNone: true,
+                              ),
                         padding: const EdgeInsetsDirectional.symmetric(
                           horizontal: 12.0,
                         ),
@@ -181,7 +206,11 @@ class SplitButtonState extends State<SplitButton> {
                         child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 100),
                           opacity: flyoutController.isOpen ? 0.5 : 1,
-                          child: const ChevronDown(),
+                          child: ChevronDown(
+                            iconColor: widget.checked
+                                ? FilledButton.foregroundColor(theme, states)
+                                : null,
+                          ),
                         ),
                       ),
                     );
