@@ -38,11 +38,6 @@ enum DatePickerField {
   year,
 }
 
-// There is a known issue with clicking in the popup and select the date.
-// The current workaround is very hacky and doesn't work very well with the
-// current implementation. TODO: Fix clicking on ListWheelScrollView
-// https://github.com/flutter/flutter/issues/38803
-
 /// The date picker gives you a standardized way to let users pick a localized
 /// date value using touch, mouse, or keyboard input.
 ///
@@ -67,20 +62,14 @@ class DatePicker extends StatefulWidget {
     this.showYear = true,
     DateTime? startDate,
     DateTime? endDate,
-    @Deprecated('Use startDate instead') int? startYear,
-    @Deprecated('Use endDate instead') int? endYear,
     this.contentPadding = kPickerContentPadding,
     this.popupHeight = kPickerPopupHeight,
     this.focusNode,
     this.autofocus = false,
     this.locale,
     this.fieldOrder,
-  })  : startDate = startDate == null && startYear != null
-            ? DateTime(startYear)
-            : startDate ?? DateTime.now().subtract(kYearDuration * 100),
-        endDate = endDate == null && endYear != null
-            ? DateTime(endYear)
-            : endDate ?? DateTime.now().add(kYearDuration * 25);
+  })  : startDate = startDate ?? DateTime.now().subtract(kYearDuration * 100),
+        endDate = endDate ?? DateTime.now().add(kYearDuration * 25);
 
   /// The current date selected date.
   ///
@@ -218,7 +207,7 @@ class _DatePickerState extends State<DatePicker> {
   int get endYear => widget.endDate.year;
 
   int get currentYear {
-    return List.generate(endYear - startYear, (index) {
+    return List.generate(endYear - startYear + 1, (index) {
       return startYear + index;
     }).firstWhere((v) => v == date.year, orElse: () => 0);
   }
@@ -558,6 +547,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   final text =
                       formatter.format(DateTime(1, month)).uppercaseFirst();
                   final selected = month == localDate.month;
+
                   return ListTile(
                     onPressed: selected
                         ? null
@@ -628,9 +618,11 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
               physics: const FixedExtentScrollPhysics(),
               childDelegate: ListWheelChildLoopingListDelegate(
                 children: List<Widget>.generate(daysInMonth, (index) {
-                  final day = index++;
+                  final day = index + 1;
                   final selected = day == localDate.day;
+
                   return ListTile(
+                    key: ValueKey(day),
                     onPressed: selected
                         ? null
                         : () {
@@ -642,13 +634,18 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                           },
                     title: Center(
                       child: Text(
-                        formatter.format(DateTime(0, 0, day)),
+                        // '$day',
+                        formatter.format(DateTime(
+                          localDate.year,
+                          localDate.month,
+                          day,
+                        )),
                         style: kPickerPopupTextStyle(context, selected),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   );
-                }),
+                }, growable: false),
               ),
               onSelectedItemChanged: (index) {
                 handleDateChanged(DateTime(
@@ -671,7 +668,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     final yearWidget = [
       Expanded(
         child: () {
-          final years = widget.endDate.year - widget.startDate.year;
+          final years = widget.endDate.year - widget.startDate.year + 1;
           final formatter = DateFormat.y(locale.toString());
           // YEAR
           return PickerNavigatorIndicator(

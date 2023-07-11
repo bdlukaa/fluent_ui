@@ -299,7 +299,6 @@ class EditableComboboxFormField<T> extends FormField<T> {
     required List<ComboBoxItem<T>>? items,
     ComboBoxBuilder? selectedItemBuilder,
     super.initialValue,
-    @Deprecated('Use initialValue instead') T? value,
     Widget? placeholder,
     Widget? disabledPlaceholder,
     required this.onChanged,

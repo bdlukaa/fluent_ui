@@ -95,6 +95,7 @@ class RadioButton extends StatelessWidget {
       autofocus: autofocus,
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      semanticLabel: semanticLabel,
       builder: (context, state) {
         final decoration = (checked
                 ? style.checkedDecoration?.resolve(state)
@@ -138,12 +139,8 @@ class RadioButton extends StatelessWidget {
           ]);
         }
         return Semantics(
-          label: semanticLabel,
-          selected: checked,
-          child: FocusBorder(
-            focused: state.isFocused,
-            child: child,
-          ),
+          checked: checked,
+          child: FocusBorder(focused: state.isFocused, child: child),
         );
       },
     );

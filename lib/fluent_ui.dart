@@ -83,6 +83,7 @@ export 'src/controls/surfaces/list_tile.dart';
 export 'src/controls/surfaces/progress_indicators.dart';
 export 'src/controls/surfaces/snackbar.dart';
 export 'src/controls/surfaces/tooltip.dart';
+export 'src/controls/utils/chevron_down.dart';
 export 'src/controls/utils/divider.dart';
 export 'src/controls/utils/hover_button.dart';
 export 'src/controls/utils/info_badge.dart';

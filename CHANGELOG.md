@@ -1,6 +1,10 @@
 ## [next]
 
-- Add Slovak localization
+- **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+
+## 4.7.0
+
+- Add Slovak localization ([#850](https://github.com/bdlukaa/fluent_ui/issues/850))
 - Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
 - Add `AutoSuggestBoxItem.semanticsLabel` ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
 - Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
@@ -17,6 +21,19 @@
 - `TreeViewItem`, if selection mode is `single`, gets selected when focused with the keyboard ([#835](https://github.com/bdlukaa/fluent_ui/issues/835))
 - In multiple selection mode, `TreeView`'s built-in checkbox now doesn't receive focus. It can now be focused by invoking it with the keyboard ([#877](https://github.com/bdlukaa/fluent_ui/pull/877))
 - Enabled click on `DatePicker` and `TimePicker` ([#6](https://github.com/bdlukaa/fluent_ui/issues/6))
+- `DatePicker.endDate.year` is taken into account when displaying the years ([#874](https://github.com/bdlukaa/fluent_ui/issues/874))
+- `DatePicker`'s day field is now correctly selected ([d152dc](https://github.com/bdlukaa/fluent_ui/commit/d152dc9cdd0dcd9fe6436e1c1f1f88bc97abef1e))
+- `DatePicker` and `TimePicker` are correctly fit into the navigator bounds ([711390](https://github.com/bdlukaa/fluent_ui/commit/711390d7bcc8f17ced8f62130875e13097dd3a22))
+- Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
+- Improved overall `Semantics`. Now, not every input is treated as a button ([2fee45](https://github.com/bdlukaa/fluent_ui/commit/2fee459de612fd562c18ca1924ba835ebb665d7e))
+- Deprecated all mobile widgets: `BottomSheet`, `Snackbar`, `Chip` and `PillButtonBar` - and all their related widgets. ([c1cfe491](https://github.com/bdlukaa/fluent_ui/commit/c1cfe491ba0388af540803c8e4a0bb9a049a873f))
+- **BREAKING** Removed previously deprecated fields ([ee601649](https://github.com/bdlukaa/fluent_ui/commit/ee6016490dc50d217cc2709e4500cc8748fa0e1d)): 
+  - `EditableComboboxFormField.value`. Use `EditableComboboxFormField.initialValue` instead
+  - `DatePicker.startYear`. Use `DatePicker.startDate` instead
+  - `DatePicker.endYear`. Use `DatePicker.endDate` instead
+  - `TextButton`. Use `HyperlinkButton` instead
+  - `TabView.wheelScroll`. It is no longer used
+  - `ThemeData`. Use `FluentThemeData` instead
 
 ## 4.6.2
 

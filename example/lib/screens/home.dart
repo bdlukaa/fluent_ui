@@ -29,11 +29,14 @@ class _HomePageState extends State<HomePage> with PageMixin {
         commandBar: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Link(
             uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-            builder: (context, open) => Tooltip(
-              message: 'Source code',
-              child: IconButton(
-                icon: const Icon(FluentIcons.open_source, size: 24.0),
-                onPressed: open,
+            builder: (context, open) => Semantics(
+              link: true,
+              child: Tooltip(
+                message: 'Source code',
+                child: IconButton(
+                  icon: const Icon(FluentIcons.open_source, size: 24.0),
+                  onPressed: open,
+                ),
               ),
             ),
           ),
@@ -179,12 +182,15 @@ class _HomePageState extends State<HomePage> with PageMixin {
             ...sponsors.map((sponsor) {
               return Link(
                 uri: Uri.parse('https://www.github.com/${sponsor.username}'),
-                builder: (context, open) {
-                  return IconButton(
-                    onPressed: open,
-                    icon: SponsorButton(
-                      imageUrl: sponsor.imageUrl,
-                      username: sponsor.username ?? sponsor.name,
+                builder: (context, followLink) {
+                  return Semantics(
+                    link: true,
+                    child: IconButton(
+                      onPressed: followLink,
+                      icon: SponsorButton(
+                        imageUrl: sponsor.imageUrl,
+                        username: sponsor.username ?? sponsor.name,
+                      ),
                     ),
                   );
                 },

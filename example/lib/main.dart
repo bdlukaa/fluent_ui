@@ -484,7 +484,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       link: 'https://github.com/bdlukaa/fluent_ui',
       body: const SizedBox.shrink(),
     ),
-    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
+    // TODO: Scrollbar, RatingBar
   ];
 
   @override
@@ -760,14 +760,17 @@ class _LinkPaneItemAction extends PaneItem {
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => super.build(
-        context,
-        selected,
-        followLink,
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        itemIndex: itemIndex,
-        autofocus: autofocus,
+      builder: (context, followLink) => Semantics(
+        link: true,
+        child: super.build(
+          context,
+          selected,
+          followLink,
+          displayMode: displayMode,
+          showTextOnTop: showTextOnTop,
+          itemIndex: itemIndex,
+          autofocus: autofocus,
+        ),
       ),
     );
   }
