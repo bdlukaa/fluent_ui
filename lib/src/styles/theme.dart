@@ -215,7 +215,6 @@ class FluentThemeData with Diagnosticable {
   final RadioButtonThemeData radioButtonTheme;
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
-  final SplitButtonThemeData splitButtonTheme;
   final SnackbarThemeData snackbarTheme;
   final ToggleButtonThemeData toggleButtonTheme;
   final ToggleSwitchThemeData toggleSwitchTheme;
@@ -253,7 +252,6 @@ class FluentThemeData with Diagnosticable {
     ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
-    SplitButtonThemeData? splitButtonTheme,
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
@@ -307,7 +305,6 @@ class FluentThemeData with Diagnosticable {
     iconTheme ??= isLight
         ? const IconThemeData(color: Colors.black, size: 18.0)
         : const IconThemeData(color: Colors.white, size: 18.0);
-    splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
@@ -359,7 +356,6 @@ class FluentThemeData with Diagnosticable {
       radioButtonTheme: radioButtonTheme,
       scrollbarTheme: scrollbarTheme,
       sliderTheme: sliderTheme,
-      splitButtonTheme: splitButtonTheme,
       toggleButtonTheme: toggleButtonTheme,
       toggleSwitchTheme: toggleSwitchTheme,
       tooltipTheme: tooltipTheme,
@@ -397,7 +393,6 @@ class FluentThemeData with Diagnosticable {
     required this.toggleSwitchTheme,
     required this.bottomNavigationTheme,
     required this.iconTheme,
-    required this.splitButtonTheme,
     required this.dialogTheme,
     required this.tooltipTheme,
     required this.dividerTheme,
@@ -460,8 +455,6 @@ class FluentThemeData with Diagnosticable {
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
           a.toggleSwitchTheme, b.toggleSwitchTheme, t),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
-      splitButtonTheme:
-          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
       dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
       tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
       dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
@@ -534,7 +527,6 @@ class FluentThemeData with Diagnosticable {
     ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
-    SplitButtonThemeData? splitButtonTheme,
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
@@ -594,7 +586,6 @@ class FluentThemeData with Diagnosticable {
       radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
       sliderTheme: this.sliderTheme.merge(sliderTheme),
-      splitButtonTheme: this.splitButtonTheme.merge(splitButtonTheme),
       toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
