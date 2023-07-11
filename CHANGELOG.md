@@ -1,3 +1,7 @@
+## [next]
+
+- **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+
 ## 4.7.0
 
 - Add Slovak localization ([#850](https://github.com/bdlukaa/fluent_ui/issues/850))
