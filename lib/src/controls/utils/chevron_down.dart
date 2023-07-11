@@ -7,8 +7,15 @@ class ChevronDown extends StatelessWidget {
   /// The icon size
   final double iconSize;
 
+  /// The icon to be displayed
+  final IconData icon;
+
   /// Creates a chevron down icon.
-  const ChevronDown({super.key, this.iconSize = 8.0});
+  const ChevronDown({
+    super.key,
+    this.iconSize = 8.0,
+    this.icon = FluentIcons.chevron_down,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,7 @@ class ChevronDown extends StatelessWidget {
         begin: 1,
         end: states == null || !states.isPressing ? 1 : 0.9,
       ),
-      child: Icon(FluentIcons.chevron_down, size: iconSize),
+      child: Icon(icon, size: iconSize),
       builder: (context, value, child) {
         return Opacity(
           opacity: value.clamp(0.0, 1.0),
