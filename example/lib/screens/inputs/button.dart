@@ -330,7 +330,7 @@ ToggleButton(
                   style: theme.typography.caption,
                 ),
               ),
-              SplitButton(
+              SplitButton.toggle(
                 enabled: !splitButtonDisabled,
                 checked: splitButtonState,
                 child: Padding(
@@ -357,6 +357,7 @@ ToggleButton(
           ]),
           codeSnippet: '''final splitButtonKey = GlobalKey<SplitButtonState>();
 
+// To create a toggle button, use the [SplitButton.toggle] constructor
 SplitButton(
   key: splitButtonKey,
   enabled: !disabled,

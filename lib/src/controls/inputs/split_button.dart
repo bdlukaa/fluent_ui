@@ -6,6 +6,12 @@ typedef SplitButtonSecondaryBuilder = Widget Function(
   FlyoutController flyoutController,
 );
 
+enum _SplitButtonType {
+  normal,
+
+  toggle
+}
+
 /// Represents a button with two parts that can be invoked separately. One part
 /// behaves like a standard button and the other part invokes a flyout.
 ///
@@ -30,6 +36,9 @@ typedef SplitButtonSecondaryBuilder = Widget Function(
 ///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-split-button>
 ///   * [DropDownButton], a button that displays a dropdown menu
 class SplitButton extends StatefulWidget {
+  /// The type of the button
+  final _SplitButtonType _type;
+
   /// The primary widget to be displayed
   final Widget child;
 
@@ -84,8 +93,19 @@ class SplitButton extends StatefulWidget {
     required this.flyout,
     this.onInvoked,
     this.enabled = true,
-    this.checked = false,
-  });
+  })  : _type = _SplitButtonType.normal,
+        checked = false;
+
+  /// Creates a split toggle button
+  const SplitButton.toggle({
+    super.key,
+    required this.child,
+    required this.checked,
+    this.secondaryBuilder,
+    required this.flyout,
+    this.onInvoked,
+    this.enabled = true,
+  }) : _type = _SplitButtonType.toggle;
 
   @override
   State<SplitButton> createState() => SplitButtonState();
@@ -117,6 +137,10 @@ class SplitButtonState extends State<SplitButton> {
     if (mounted) setState(() {});
   }
 
+  void _updateFocusHighlight(bool focused) {
+    setState(() => _showFocusHighlight = focused);
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -141,6 +165,9 @@ class SplitButtonState extends State<SplitButton> {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               HoverButton(
                 onPressed: widget.enabled ? widget.onInvoked : null,
+                onFocusChange: _updateFocusHighlight,
+                focusEnabled: widget._type == _SplitButtonType.toggle ||
+                    widget.secondaryBuilder != null,
                 builder: (context, states) {
                   return DecoratedBox(
                     decoration: BoxDecoration(
@@ -185,7 +212,8 @@ class SplitButtonState extends State<SplitButton> {
               if (widget.secondaryBuilder == null)
                 HoverButton(
                   onPressed: widget.enabled ? showFlyout : null,
-                  onFocusChange: (v) => setState(() => _showFocusHighlight = v),
+                  onFocusChange: _updateFocusHighlight,
+                  focusEnabled: widget._type == _SplitButtonType.normal,
                   builder: (context, states) {
                     return FlyoutTarget(
                       controller: flyoutController,
