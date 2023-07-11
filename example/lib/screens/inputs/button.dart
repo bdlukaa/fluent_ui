@@ -28,16 +28,11 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   int radioButtonSelected = -1;
 
   AccentColor splitButtonColor = Colors.red;
-  final splitButtonFlyout = FlyoutController();
-
-  @override
-  void dispose() {
-    splitButtonFlyout.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Button')),
       children: [
@@ -276,80 +271,94 @@ ToggleButton(
         ),
         CardHighlight(
           child: Row(children: [
-            SizedBox(
-              height: 40.0,
-              child: SplitButtonBar(buttons: [
-                Button(
-                  style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: splitButtonDisabled
-                          ? splitButtonColor.secondaryBrushFor(
-                              FluentTheme.of(context).brightness,
-                            )
-                          : splitButtonColor,
-                      borderRadius: const BorderRadiusDirectional.horizontal(
-                        start: Radius.circular(4.0),
-                      ),
-                    ),
-                    height: kSplitButtonHeight,
-                    width: kSplitButtonWidth,
-                  ),
-                  onPressed: splitButtonDisabled ? null : () {},
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Text(
+                  'SplitButton with custom content',
+                  style: theme.typography.caption,
                 ),
-                FlyoutTarget(
-                  controller: splitButtonFlyout,
-                  child: IconButton(
-                    icon: const SizedBox(
-                      height: kSplitButtonHeight - 13.0,
-                      width: kSplitButtonWidth - 13.0,
-                      child: Icon(FluentIcons.chevron_down, size: 8.0),
+              ),
+              SplitButton(
+                enabled: !splitButtonDisabled,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: splitButtonDisabled
+                        ? splitButtonColor.secondaryBrushFor(theme.brightness)
+                        : splitButtonColor,
+                    borderRadius: const BorderRadiusDirectional.horizontal(
+                      start: Radius.circular(4.0),
                     ),
-                    onPressed: splitButtonDisabled
-                        ? null
-                        : () async {
-                            final color =
-                                await splitButtonFlyout.showFlyout<AccentColor>(
-                              autoModeConfiguration: FlyoutAutoConfiguration(
-                                preferredMode: FlyoutPlacementMode.bottomCenter,
-                              ),
-                              builder: (context) {
-                                return FlyoutContent(
-                                  constraints: BoxConstraints(maxWidth: 200.0),
-                                  child: Wrap(
-                                    runSpacing: 10.0,
-                                    spacing: 8.0,
-                                    children: Colors.accentColors.map((color) {
-                                      return Button(
-                                        autofocus: splitButtonColor == color,
-                                        style: ButtonStyle(
-                                          padding: ButtonState.all(
-                                            EdgeInsets.all(4.0),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(color);
-                                        },
-                                        child: Container(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          color: color,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                );
-                              },
-                            );
-
-                            if (color != null) {
-                              setState(() => splitButtonColor = color);
-                            }
-                          },
+                  ),
+                  height: kSplitButtonHeight,
+                  width: kSplitButtonWidth,
+                ),
+                flyout: FlyoutContent(
+                  constraints: BoxConstraints(maxWidth: 200.0),
+                  child: Wrap(
+                    runSpacing: 10.0,
+                    spacing: 8.0,
+                    children: Colors.accentColors.map((color) {
+                      return Button(
+                        autofocus: splitButtonColor == color,
+                        style: ButtonStyle(
+                          padding: ButtonState.all(
+                            EdgeInsets.all(4.0),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() => splitButtonColor = color);
+                          Navigator.of(context).pop(color);
+                        },
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          color: color,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
-              ]),
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
+                child: Text(
+                  'SplitButton with text content',
+                  style: theme.typography.caption,
+                ),
+              ),
+              SplitButton(
+                enabled: !splitButtonDisabled,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Choose color'),
+                ),
+                flyout: FlyoutContent(
+                  constraints: BoxConstraints(maxWidth: 200.0),
+                  child: Wrap(
+                    runSpacing: 10.0,
+                    spacing: 8.0,
+                    children: Colors.accentColors.map((color) {
+                      return Button(
+                        autofocus: splitButtonColor == color,
+                        style: ButtonStyle(
+                          padding: ButtonState.all(EdgeInsets.all(4.0)),
+                        ),
+                        onPressed: () {
+                          setState(() => splitButtonColor = color);
+                          Navigator.of(context).pop(color);
+                        },
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          color: color,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ]),
             const Spacer(),
             ToggleSwitch(
               checked: splitButtonDisabled,
@@ -369,9 +378,7 @@ ToggleButton(
       child: Container(
         decoration: BoxDecoration(
           color: splitButtonDisabled
-              ? splitButtonColor.secondaryBrushFor(
-                  FluentTheme.of(context).brightness,
-                )
+              ? splitButtonColor.secondaryBrushFor(theme.brightness)
               : splitButtonColor,
           borderRadius: const BorderRadiusDirectional.horizontal(
             start: Radius.circular(4.0),
