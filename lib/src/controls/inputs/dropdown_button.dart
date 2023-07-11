@@ -322,6 +322,7 @@ class DropDownButtonState extends State<DropDownButton> {
 
     widget.onOpen?.call();
     await _flyoutController.showFlyout(
+      barrierColor: Colors.transparent,
       placementMode: FlyoutPlacementMode.auto,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
