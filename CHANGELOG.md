@@ -1,5 +1,6 @@
 ## [next]
 
+- Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
 - **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
 
 ## 4.7.0
@@ -7,7 +8,6 @@
 - Add Slovak localization ([#850](https://github.com/bdlukaa/fluent_ui/issues/850))
 - Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
 - Add `AutoSuggestBoxItem.semanticsLabel` ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
-- Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
 - Add `ButtonState.forStates`, a helper function to quickly resolve values for each button state ([#875](https://github.com/bdlukaa/fluent_ui/pull/875))
 - Slider label color is solid ([#847](https://github.com/bdlukaa/fluent_ui/issues/847))
 - **BREAKING** Removed `.disabledColor`, `uncheckedColor`, `.checkedColor` and `.borderInputColor` from `FluentThemeData`. Use the values from theme resources instead ([`1295b6`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/a195b58f4440c3c0febc595ba6f0b730a950a0d5))
