@@ -1,7 +1,4 @@
-import 'dart:ui' show lerpDouble;
-
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 
 class SplitButton extends StatefulWidget {
   final Widget child;
@@ -43,6 +40,7 @@ class _SplitButtonState extends State<SplitButton> {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: radius,
+          color: theme.resources.controlFillColorDefault,
           border: Border.all(
             color: theme.resources.controlStrokeColorDefault,
           ),
@@ -61,8 +59,10 @@ class _SplitButtonState extends State<SplitButton> {
               ),
               HoverButton(
                 onPressed: widget.enabled
-                    ? () {
-                        flyoutController.showFlyout(
+                    ? () async {
+                        setState(() {});
+                        await flyoutController.showFlyout(
+                          barrierColor: Colors.transparent,
                           autoModeConfiguration: FlyoutAutoConfiguration(
                             preferredMode: FlyoutPlacementMode.bottomCenter,
                           ),
@@ -70,6 +70,7 @@ class _SplitButtonState extends State<SplitButton> {
                             return widget.flyout;
                           },
                         );
+                        if (mounted) setState(() {});
                       }
                     : null,
                 onFocusChange: (v) => setState(() => _showFocusHighlight = v),
@@ -77,14 +78,20 @@ class _SplitButtonState extends State<SplitButton> {
                   return FlyoutTarget(
                     controller: flyoutController,
                     child: Container(
-                      color: ButtonThemeData.buttonColor(context, states),
+                      color: ButtonThemeData.buttonColor(
+                        context,
+                        flyoutController.isOpen
+                            ? {ButtonStates.pressing}
+                            : states,
+                      ),
                       padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 12.0,
                       ),
                       alignment: Alignment.center,
-                      child: const Icon(
-                        FluentIcons.chevron_down,
-                        size: 8.0,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 100),
+                        opacity: flyoutController.isOpen ? 0.5 : 1,
+                        child: const ChevronDown(),
                       ),
                     ),
                   );

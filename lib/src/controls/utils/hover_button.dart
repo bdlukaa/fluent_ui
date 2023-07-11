@@ -7,6 +7,28 @@ typedef ButtonStateWidgetBuilder = Widget Function(
   Set<ButtonStates> state,
 );
 
+class _HoverButtonInherited extends InheritedWidget {
+  const _HoverButtonInherited({
+    required super.child,
+    required this.states,
+  });
+
+  final Set<ButtonStates> states;
+
+  static _HoverButtonInherited of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_HoverButtonInherited>()!;
+  }
+
+  static _HoverButtonInherited? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_HoverButtonInherited>();
+  }
+
+  @override
+  bool updateShouldNotify(_HoverButtonInherited oldWidget) {
+    return states != oldWidget.states;
+  }
+}
+
 /// Base widget for any widget that requires input.
 class HoverButton extends StatefulWidget {
   /// Creates a hover button.
@@ -143,8 +165,12 @@ class HoverButton extends StatefulWidget {
   @override
   State<HoverButton> createState() => _HoverButtonState();
 
-  static _HoverButtonState of(BuildContext context) {
-    return context.findAncestorStateOfType<_HoverButtonState>()!;
+  static _HoverButtonInherited of(BuildContext context) {
+    return _HoverButtonInherited.of(context);
+  }
+
+  static _HoverButtonInherited? maybeOf(BuildContext context) {
+    return _HoverButtonInherited.maybeOf(context);
   }
 }
 
@@ -315,6 +341,11 @@ class _HoverButtonState extends State<HoverButton> {
       ),
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
+
+    w = _HoverButtonInherited(
+      states: states,
+      child: w,
+    );
     return w;
   }
 }
