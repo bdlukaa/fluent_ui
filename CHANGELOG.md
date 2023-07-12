@@ -2,6 +2,7 @@
 
 - Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
 - **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+- Removed automatically added padding from `NavigationView`s internal `ListView`s ([#884](https://github.com/bdlukaa/fluent_ui/issues/884), [#885](https://github.com/bdlukaa/fluent_ui/issues/885))
 
 ## 4.7.0
 
