@@ -1327,6 +1327,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                 shrinkWrap: true,
                 key: widget.listKey,
                 primary: true,
+                padding: EdgeInsets.zero,
                 children: widget.pane.items.map((item) {
                   return _OpenNavigationPane.buildItem(
                     context,
@@ -1340,6 +1341,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
             ListView(
               primary: false,
               shrinkWrap: true,
+              padding: MediaQuery.of(context).padding.copyWith(top: 0.0),
               physics: const NeverScrollableScrollPhysics(),
               children: widget.pane.footerItems.map((item) {
                 return _OpenNavigationPane.buildItem(
