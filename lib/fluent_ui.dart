@@ -69,6 +69,7 @@ export 'src/controls/inputs/split_button.dart';
 export 'src/controls/inputs/toggle_button.dart';
 export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/navigation/bottom_navigation.dart';
+export 'src/controls/navigation/breadcrumb_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view.dart';
 export 'src/controls/navigation/tree_view.dart';
