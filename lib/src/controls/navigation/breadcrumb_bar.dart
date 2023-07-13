@@ -21,10 +21,13 @@ class BreadcrumbBar extends StatefulWidget {
   final List<BreadcrumbItem> items;
   final Widget overflowButton;
 
+  final ValueChanged<BreadcrumbItem>? onChanged;
+
   const BreadcrumbBar({
     super.key,
     required this.items,
     required this.overflowButton,
+    this.onChanged,
   });
 
   @override
@@ -34,22 +37,44 @@ class BreadcrumbBar extends StatefulWidget {
 class _BreadcrumbBarState extends State<BreadcrumbBar> {
   @override
   Widget build(BuildContext context) {
+    const chevron = Padding(
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 6.0),
+      child: Icon(FluentIcons.chevron_right, size: 8.0, color: Colors.white),
+    );
+
     return _BreadcrumbBar(
-      overflowButton: widget.overflowButton,
+      overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
+        widget.overflowButton,
+        chevron,
+      ]),
       children: List.generate(widget.items.length, (index) {
         final item = widget.items[index];
 
+        final label = HoverButton(
+          onPressed:
+              widget.onChanged == null ? null : () => widget.onChanged!(item),
+          builder: (context, states) {
+            final foregroundColor =
+                ButtonThemeData.buttonForegroundColor(context, states);
+
+            return DefaultTextStyle.merge(
+              style: TextStyle(color: foregroundColor),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foregroundColor),
+                child: item.label,
+              ),
+            );
+          },
+        );
+
         if (index == widget.items.length - 1) {
-          return item.label;
+          return label;
         }
 
-        return Row(mainAxisSize: MainAxisSize.min, children: [
-          item.label,
-          const Padding(
-            padding: EdgeInsetsDirectional.symmetric(horizontal: 4.0),
-            child: Icon(FluentIcons.chevron_right, size: 12.0),
-          ),
-        ]);
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [label, chevron],
+        );
       }),
     );
   }
@@ -93,7 +118,9 @@ class RenderBreadcrumbBar extends RenderBox
     final childConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
     final overflowButton = firstChild!
       ..layout(childConstraints, parentUsesSize: true);
+
     var maxExtent = 0.0;
+    var height = 0.0;
 
     var child = lastChild;
     var childIndex = childCount - 1;
@@ -102,14 +129,13 @@ class RenderBreadcrumbBar extends RenderBox
       final childParentData = child.parentData as _BreadcrumbChild;
       child.layout(childConstraints, parentUsesSize: true);
 
+      if (child.size.height > height) height = child.size.height;
+
       if (maxExtent + child.size.width > constraints.maxWidth) {
         debugPrint('$childIndex item overflowed');
-        // childParentData.offset = Offset(0, 100);
         overflowedIndexes.add(childIndex);
       } else {
-        // childParentData.offset = Offset(maxExtent, 0);
         maxExtent += child.size.width;
-        // print(child.size.width);
       }
 
       child = childParentData.previousSibling;
@@ -118,30 +144,46 @@ class RenderBreadcrumbBar extends RenderBox
 
     if (overflowedIndexes.isNotEmpty) {
       maxExtent += overflowButton.size.width;
+      if (overflowButton.size.height > height) {
+        height = overflowButton.size.height;
+      }
+
+      // Adds the offset to the parentData
+      child = firstChild;
+      childIndex = 0;
+      var currentOffsetX = 0.0;
+      while (child != null) {
+        final childParentData = child.parentData as _BreadcrumbChild;
+        final freeSpace = height - child.size.height;
+
+        if (!overflowedIndexes.contains(childIndex) ||
+            child == overflowButton) {
+          childParentData.offset = Offset(currentOffsetX, freeSpace / 2);
+          currentOffsetX += child.size.width;
+        }
+
+        child = childParentData.nextSibling;
+        childIndex++;
+      }
     }
 
     size = Size(
       maxExtent.clamp(constraints.maxWidth, constraints.maxWidth),
-      100.0,
+      height,
     );
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    var offsetX = 0.0;
-    if (overflowedIndexes.isNotEmpty) {
-      final overflowButton = firstChild!;
-      context.paintChild(overflowButton, offset);
-      offsetX += overflowButton.size.width;
-    }
-
-    var childIndex = 1;
-    var child = (firstChild?.parentData as _BreadcrumbChild?)?.nextSibling;
+    var childIndex = 0;
+    var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _BreadcrumbChild;
+      if (child == firstChild && overflowedIndexes.isNotEmpty) {
+        context.paintChild(child, childParentData.offset);
+      }
       if (!overflowedIndexes.contains(childIndex)) {
-        context.paintChild(child, Offset(offsetX, 0.0) + offset);
-        offsetX += child.size.width;
+        context.paintChild(child, childParentData.offset);
       }
       child = childParentData.nextSibling;
       childIndex++;
@@ -156,11 +198,11 @@ class RenderBreadcrumbBar extends RenderBox
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     var child = lastChild;
-    var index = childCount;
+    var index = childCount - 1;
     while (child != null) {
       final childParentData = child.parentData! as _BreadcrumbChild;
       // Hidden children cannot generate a hit
-      if (!overflowedIndexes.contains(index) || (child == firstChild)) {
+      if (child == firstChild || !overflowedIndexes.contains(index)) {
         // The x, y parameters have the top left of the node's box as the origin.
         final isHit = result.addWithPaintOffset(
           offset: childParentData.offset,

@@ -16,6 +16,9 @@ class BreadcrumbBarPage extends StatelessWidget with PageMixin {
               debugPrint('statement');
             },
           ),
+          onChanged: (item) {
+            debugPrint('${item.value} pressed');
+          },
           items: const [
             BreadcrumbItem(label: Text('Home'), value: 0),
             BreadcrumbItem(label: Text('Documents'), value: 0),
