@@ -35,12 +35,6 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
       header: const PageHeader(title: Text('BreadcrumbBar')),
       children: [
         BreadcrumbBar(
-          overflowButton: IconButton(
-            icon: const Icon(FluentIcons.more),
-            onPressed: () {
-              debugPrint('statement');
-            },
-          ),
           onChanged: (item) {
             debugPrint('${item.value} pressed');
             setState(() {

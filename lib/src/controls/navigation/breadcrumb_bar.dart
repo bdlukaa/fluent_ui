@@ -31,22 +31,72 @@ class BreadcrumbItem {
 
 class BreadcrumbBar extends StatefulWidget {
   final List<BreadcrumbItem> items;
-  final Widget overflowButton;
+  final Widget Function(
+    BuildContext context,
+    VoidCallback openFlyout,
+  ) overflowButtonBuilder;
 
   final ValueChanged<BreadcrumbItem>? onChanged;
 
   const BreadcrumbBar({
     super.key,
     required this.items,
-    required this.overflowButton,
+    this.overflowButtonBuilder = _defaultOverflowButtonBuilder,
     this.onChanged,
   });
+
+  static Widget _defaultOverflowButtonBuilder(
+    BuildContext context,
+    VoidCallback openFlyout,
+  ) {
+    return IconButton(
+      icon: const Icon(FluentIcons.more),
+      onPressed: openFlyout,
+    );
+  }
 
   @override
   State<BreadcrumbBar> createState() => _BreadcrumbBarState();
 }
 
 class _BreadcrumbBarState extends State<BreadcrumbBar> {
+  final flyoutController = FlyoutController();
+
+  Set<int> overflowedIndexes = {};
+
+  void _showFlyout() {
+    final overflowedItems = () sync* {
+      for (var i = 0; i < widget.items.length; i++) {
+        // [overflowedIndexes] include the 0 index that represents the overflow
+        // button. We add + 1 to the index count because the 0 index can not be
+        // included in the flyout items, otherwise the items will be displayed
+        // in both the flyout and in the breadcrumb bar
+        if (overflowedIndexes.contains(i + 1)) yield widget.items[i];
+      }
+    }();
+    flyoutController.showFlyout(
+      barrierColor: Colors.transparent,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: FlyoutPlacementMode.bottomCenter,
+      ),
+      builder: (context) {
+        return MenuFlyout(
+          items: overflowedItems.map((item) {
+            return MenuFlyoutItem(
+              text: item.label,
+              onPressed: widget.onChanged == null
+                  ? null
+                  : () {
+                      widget.onChanged!(item);
+                      Navigator.of(context).pop();
+                    },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const chevron = Padding(
@@ -56,8 +106,14 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
 
     return _BreadcrumbBar(
       items: widget.items,
+      onIndexOverflow: (value) {
+        overflowedIndexes = value;
+      },
       overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
-        widget.overflowButton,
+        FlyoutTarget(
+          controller: flyoutController,
+          child: widget.overflowButtonBuilder(context, _showFlyout),
+        ),
         chevron,
       ]),
       children: List.generate(widget.items.length, (index) {
@@ -98,17 +154,18 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
 class _BreadcrumbBar extends MultiChildRenderObjectWidget {
   final Widget overflowButton;
   final List<BreadcrumbItem> items;
+  final ValueChanged<Set<int>> onIndexOverflow;
 
   _BreadcrumbBar({
-    super.key,
     required List<Widget> children,
     required this.overflowButton,
     required this.items,
+    required this.onIndexOverflow,
   }) : super(children: [overflowButton, ...children]);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBreadcrumbBar(items: items);
+    return RenderBreadcrumbBar(items: items, onIndexOverflow: onIndexOverflow);
   }
 
   @override
@@ -116,7 +173,9 @@ class _BreadcrumbBar extends MultiChildRenderObjectWidget {
     BuildContext context,
     covariant RenderBreadcrumbBar renderObject,
   ) {
-    renderObject.items = items;
+    renderObject
+      ..items = items
+      ..onIndexOverflow = onIndexOverflow;
   }
 }
 
@@ -127,14 +186,26 @@ class RenderBreadcrumbBar extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _BreadcrumbChild>,
         RenderBoxContainerDefaultsMixin<RenderBox, _BreadcrumbChild> {
-  RenderBreadcrumbBar({required List<BreadcrumbItem> items}) : _items = items;
+  RenderBreadcrumbBar({
+    required List<BreadcrumbItem> items,
+    required ValueChanged<Set<int>> onIndexOverflow,
+  })  : _items = items,
+        _onIndexOverflow = onIndexOverflow;
+
+  ValueChanged<Set<int>> _onIndexOverflow;
+  ValueChanged<Set<int>> get onIndexOverflow => _onIndexOverflow;
+  set onIndexOverflow(ValueChanged<Set<int>> value) {
+    if (_onIndexOverflow != value) {
+      _onIndexOverflow = value;
+      markNeedsLayout();
+    }
+  }
 
   List<BreadcrumbItem> _items;
   List<BreadcrumbItem> get items => _items;
   set items(List<BreadcrumbItem> value) {
     if (_items != value) {
       _items = value;
-      print('relayout');
       markNeedsLayout();
     }
   }
@@ -162,7 +233,6 @@ class RenderBreadcrumbBar extends RenderBox
       if (child.size.height > height) height = child.size.height;
 
       if (maxExtent + child.size.width > constraints.maxWidth) {
-        debugPrint('$childIndex item overflowed');
         overflowedIndexes.add(childIndex);
 
         if (overflowedIndexes.length == 1) {
@@ -211,6 +281,8 @@ class RenderBreadcrumbBar extends RenderBox
         child = childParentData.nextSibling;
       }
     }
+
+    onIndexOverflow(overflowedIndexes);
 
     size = Size(
       maxExtent.clamp(constraints.maxWidth, constraints.maxWidth),
