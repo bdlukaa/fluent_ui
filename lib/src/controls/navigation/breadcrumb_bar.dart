@@ -17,31 +17,63 @@ class BreadcrumbItem {
   });
 }
 
-class BreadcrumbBar extends MultiChildRenderObjectWidget {
+class BreadcrumbBar extends StatefulWidget {
   final List<BreadcrumbItem> items;
   final Widget overflowButton;
 
-  BreadcrumbBar({
+  const BreadcrumbBar({
     super.key,
     required this.items,
     required this.overflowButton,
-  }) : super(
-          children: [
-            overflowButton,
-            ...items.map((e) => e.label),
-          ],
-        );
+  });
+
+  @override
+  State<BreadcrumbBar> createState() => _BreadcrumbBarState();
+}
+
+class _BreadcrumbBarState extends State<BreadcrumbBar> {
+  @override
+  Widget build(BuildContext context) {
+    return _BreadcrumbBar(
+      overflowButton: widget.overflowButton,
+      children: List.generate(widget.items.length, (index) {
+        final item = widget.items[index];
+
+        if (index == widget.items.length - 1) {
+          return item.label;
+        }
+
+        return Row(mainAxisSize: MainAxisSize.min, children: [
+          item.label,
+          const Padding(
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 4.0),
+            child: Icon(FluentIcons.chevron_right, size: 12.0),
+          ),
+        ]);
+      }),
+    );
+  }
+}
+
+class _BreadcrumbBar extends MultiChildRenderObjectWidget {
+  final Widget overflowButton;
+
+  _BreadcrumbBar({
+    super.key,
+    required List<Widget> children,
+    required this.overflowButton,
+  }) : super(children: [overflowButton, ...children]);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBreadcrumbBar(items: items);
+    return RenderBreadcrumbBar();
   }
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant RenderBreadcrumbBar renderObject) {
-    renderObject.items = items;
-  }
+    BuildContext context,
+    covariant RenderBreadcrumbBar renderObject,
+  ) {}
 }
 
 class _BreadcrumbChild extends ContainerBoxParentData<RenderBox>
@@ -51,9 +83,7 @@ class RenderBreadcrumbBar extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _BreadcrumbChild>,
         RenderBoxContainerDefaultsMixin<RenderBox, _BreadcrumbChild> {
-  List<BreadcrumbItem> items;
-
-  RenderBreadcrumbBar({required this.items});
+  RenderBreadcrumbBar();
 
   Set<int> overflowedIndexes = {};
 
@@ -73,7 +103,7 @@ class RenderBreadcrumbBar extends RenderBox
       child.layout(childConstraints, parentUsesSize: true);
 
       if (maxExtent + child.size.width > constraints.maxWidth) {
-        print('$childIndex item overflowed');
+        debugPrint('$childIndex item overflowed');
         // childParentData.offset = Offset(0, 100);
         overflowedIndexes.add(childIndex);
       } else {
