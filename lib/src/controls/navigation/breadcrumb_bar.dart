@@ -15,6 +15,18 @@ class BreadcrumbItem {
     required this.label,
     required this.value,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BreadcrumbItem &&
+        other.label == label &&
+        other.value == value;
+  }
+
+  @override
+  int get hashCode => label.hashCode ^ value.hashCode;
 }
 
 class BreadcrumbBar extends StatefulWidget {
@@ -43,6 +55,7 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
     );
 
     return _BreadcrumbBar(
+      items: widget.items,
       overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
         widget.overflowButton,
         chevron,
@@ -52,10 +65,15 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
 
         final label = HoverButton(
           onPressed:
-              widget.onChanged == null ? null : () => widget.onChanged!(item),
+              // we do not want to enable click on the last item
+              widget.onChanged == null || index == widget.items.length - 1
+                  ? null
+                  : () => widget.onChanged!(item),
           builder: (context, states) {
-            final foregroundColor =
-                ButtonThemeData.buttonForegroundColor(context, states);
+            final foregroundColor = ButtonThemeData.buttonForegroundColor(
+              context,
+              states.isDisabled ? {} : states,
+            );
 
             return DefaultTextStyle.merge(
               style: TextStyle(color: foregroundColor),
@@ -71,10 +89,7 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
           return label;
         }
 
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [label, chevron],
-        );
+        return Row(mainAxisSize: MainAxisSize.min, children: [label, chevron]);
       }),
     );
   }
@@ -82,23 +97,27 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
 
 class _BreadcrumbBar extends MultiChildRenderObjectWidget {
   final Widget overflowButton;
+  final List<BreadcrumbItem> items;
 
   _BreadcrumbBar({
     super.key,
     required List<Widget> children,
     required this.overflowButton,
+    required this.items,
   }) : super(children: [overflowButton, ...children]);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBreadcrumbBar();
+    return RenderBreadcrumbBar(items: items);
   }
 
   @override
   void updateRenderObject(
     BuildContext context,
     covariant RenderBreadcrumbBar renderObject,
-  ) {}
+  ) {
+    renderObject.items = items;
+  }
 }
 
 class _BreadcrumbChild extends ContainerBoxParentData<RenderBox>
@@ -108,18 +127,29 @@ class RenderBreadcrumbBar extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _BreadcrumbChild>,
         RenderBoxContainerDefaultsMixin<RenderBox, _BreadcrumbChild> {
-  RenderBreadcrumbBar();
+  RenderBreadcrumbBar({required List<BreadcrumbItem> items}) : _items = items;
+
+  List<BreadcrumbItem> _items;
+  List<BreadcrumbItem> get items => _items;
+  set items(List<BreadcrumbItem> value) {
+    if (_items != value) {
+      _items = value;
+      print('relayout');
+      markNeedsLayout();
+    }
+  }
 
   Set<int> overflowedIndexes = {};
 
   @override
   void performLayout() {
     overflowedIndexes.clear();
+
     final childConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
     final overflowButton = firstChild!
       ..layout(childConstraints, parentUsesSize: true);
 
-    var maxExtent = 0.0;
+    var maxExtent = overflowButton.size.width;
     var height = 0.0;
 
     var child = lastChild;
@@ -134,6 +164,10 @@ class RenderBreadcrumbBar extends RenderBox
       if (maxExtent + child.size.width > constraints.maxWidth) {
         debugPrint('$childIndex item overflowed');
         overflowedIndexes.add(childIndex);
+
+        if (overflowedIndexes.length == 1) {
+          maxExtent += overflowButton.size.width;
+        }
       } else {
         maxExtent += child.size.width;
       }
@@ -143,7 +177,6 @@ class RenderBreadcrumbBar extends RenderBox
     }
 
     if (overflowedIndexes.isNotEmpty) {
-      maxExtent += overflowButton.size.width;
       if (overflowButton.size.height > height) {
         height = overflowButton.size.height;
       }
@@ -165,6 +198,18 @@ class RenderBreadcrumbBar extends RenderBox
         child = childParentData.nextSibling;
         childIndex++;
       }
+    } else {
+      child = (firstChild!.parentData as _BreadcrumbChild).nextSibling;
+      var currentOffsetX = 0.0;
+      while (child != null) {
+        final childParentData = child.parentData as _BreadcrumbChild;
+        final freeSpace = height - child.size.height;
+
+        childParentData.offset = Offset(currentOffsetX, freeSpace / 2);
+        currentOffsetX += child.size.width;
+
+        child = childParentData.nextSibling;
+      }
     }
 
     size = Size(
@@ -179,12 +224,12 @@ class RenderBreadcrumbBar extends RenderBox
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _BreadcrumbChild;
-      if (child == firstChild && overflowedIndexes.isNotEmpty) {
+
+      if ((child == firstChild && overflowedIndexes.isNotEmpty) ||
+          (child != firstChild && !overflowedIndexes.contains(childIndex))) {
         context.paintChild(child, childParentData.offset);
       }
-      if (!overflowedIndexes.contains(childIndex)) {
-        context.paintChild(child, childParentData.offset);
-      }
+
       child = childParentData.nextSibling;
       childIndex++;
     }
@@ -201,6 +246,9 @@ class RenderBreadcrumbBar extends RenderBox
     var index = childCount - 1;
     while (child != null) {
       final childParentData = child.parentData! as _BreadcrumbChild;
+
+      if (child == firstChild && overflowedIndexes.isEmpty) break;
+
       // Hidden children cannot generate a hit
       if (child == firstChild || !overflowedIndexes.contains(index)) {
         // The x, y parameters have the top left of the node's box as the origin.
