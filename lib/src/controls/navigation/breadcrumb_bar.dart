@@ -162,9 +162,16 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
 
   @override
   Widget build(BuildContext context) {
-    const chevron = Padding(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 6.0),
-      child: Icon(FluentIcons.chevron_right, size: 8.0, color: Colors.white),
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
+    final chevron = Padding(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
+      child: Icon(
+        FluentIcons.chevron_right,
+        size: 8.0,
+        color: theme.resources.textFillColorPrimary,
+      ),
     );
 
     return _BreadcrumbBar(

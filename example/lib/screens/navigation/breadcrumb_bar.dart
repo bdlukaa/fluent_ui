@@ -60,7 +60,29 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
             },
             items: _items,
           ),
-          codeSnippet: '''codeSnippet''',
+          codeSnippet: '''final _items = <BreadcrumbItem<int>>[
+  BreadcrumbItem(label: Text('Home'), value: 0),
+  BreadcrumbItem(label: Text('Documents'), value: 1),
+  BreadcrumbItem(label: Text('Design'), value: 2),
+  BreadcrumbItem(label: Text('Northwind'), value: 3),
+  BreadcrumbItem(label: Text('Images'), value: 4),
+  BreadcrumbItem(label: Text('Folder1'), value: 5),
+  BreadcrumbItem(label: Text('Folder2'), value: 6),
+  BreadcrumbItem(label: Text('Folder3'), value: 7),
+  BreadcrumbItem(label: Text('Folder4'), value: 8),
+  BreadcrumbItem(label: Text('Folder5'), value: 9),
+  BreadcrumbItem(label: Text('Folder6'), value: 10),
+];
+
+BreadcrumbBar<int>(
+  items: _items,
+  onItemPressed: (item) {
+    setState(() {
+      final index = _items.indexOf(item);
+      _items.removeRange(index + 1, _items.length);
+    });
+  },
+),''',
         ),
       ],
     );
