@@ -163,28 +163,31 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
+    final textDirection = Directionality.of(context);
+
+    final isReversed = textDirection == TextDirection.rtl;
+    final items = isReversed ? widget.items.reversed.toList() : widget.items;
 
     final chevron = Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
       child: Icon(
-        FluentIcons.chevron_right,
+        textDirection == TextDirection.ltr
+            ? FluentIcons.chevron_right
+            : FluentIcons.chevron_left,
         size: 8.0,
         color: theme.resources.textFillColorPrimary,
       ),
     );
 
     return _BreadcrumbBar(
-      items: widget.items,
+      items: items,
+      textDirection: textDirection,
       onIndexOverflow: (value) {
-        // [overflowedIndexes] include the 0 index that represents the overflow
-        // button. We add + 1 to the index count because the 0 index can not be
-        // included in the flyout items, otherwise the items will be displayed
-        // in both the flyout and in the breadcrumb bar
-        _overflowedIndexes = value
-            .map((index) => index - 1)
-            .where((index) => !index.isNegative)
-            .toSet();
+        _overflowedIndexes = value.map((index) {
+          return items.indexOf(widget.items[index]);
+        }).toSet();
       },
       overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
         FlyoutTarget(
@@ -193,13 +196,13 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
         ),
         chevron,
       ]),
-      children: List.generate(widget.items.length, (index) {
-        final item = widget.items[index];
+      children: List.generate(items.length, (index) {
+        final item = items[index];
 
         final label = HoverButton(
           onPressed:
               // we do not want to enable click on the last item
-              widget.onItemPressed == null || index == widget.items.length - 1
+              widget.onItemPressed == null || item == widget.items.last
                   ? null
                   : () => widget.onItemPressed!(item),
           builder: (context, states) {
@@ -218,9 +221,9 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
           },
         );
 
-        if (index == widget.items.length - 1) {
-          return label;
-        }
+        // the last item does not have a chevron
+        final isLastItem = isReversed ? index == 0 : index == items.length - 1;
+        if (isLastItem) return label;
 
         return Row(mainAxisSize: MainAxisSize.min, children: [label, chevron]);
       }),
@@ -232,17 +235,27 @@ class _BreadcrumbBar extends MultiChildRenderObjectWidget {
   final Widget overflowButton;
   final List<BreadcrumbItem> items;
   final ValueChanged<Set<int>> onIndexOverflow;
+  final TextDirection textDirection;
 
   _BreadcrumbBar({
     required List<Widget> children,
     required this.overflowButton,
     required this.items,
     required this.onIndexOverflow,
-  }) : super(children: [overflowButton, ...children]);
+    required this.textDirection,
+  }) : super(
+          children: textDirection == TextDirection.ltr
+              ? [overflowButton, ...children]
+              : [...children, overflowButton],
+        );
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderBreadcrumbBar(items: items, onIndexOverflow: onIndexOverflow);
+    return RenderBreadcrumbBar(
+      items: items,
+      onIndexOverflow: onIndexOverflow,
+      textDirection: textDirection,
+    );
   }
 
   @override
@@ -252,12 +265,15 @@ class _BreadcrumbBar extends MultiChildRenderObjectWidget {
   ) {
     renderObject
       ..items = items
-      ..onIndexOverflow = onIndexOverflow;
+      ..onIndexOverflow = onIndexOverflow
+      ..textDirection = textDirection;
   }
 }
 
 class _BreadcrumbChild extends ContainerBoxParentData<RenderBox>
-    with ContainerParentDataMixin<RenderBox> {}
+    with ContainerParentDataMixin<RenderBox> {
+  bool _overflow = false;
+}
 
 class RenderBreadcrumbBar extends RenderBox
     with
@@ -266,8 +282,10 @@ class RenderBreadcrumbBar extends RenderBox
   RenderBreadcrumbBar({
     required List<BreadcrumbItem> items,
     required ValueChanged<Set<int>> onIndexOverflow,
+    required TextDirection textDirection,
   })  : _items = items,
-        _onIndexOverflow = onIndexOverflow;
+        _onIndexOverflow = onIndexOverflow,
+        _textDirection = textDirection;
 
   ValueChanged<Set<int>> _onIndexOverflow;
   ValueChanged<Set<int>> get onIndexOverflow => _onIndexOverflow;
@@ -287,76 +305,127 @@ class RenderBreadcrumbBar extends RenderBox
     }
   }
 
-  Set<int> overflowedIndexes = {};
+  TextDirection _textDirection;
+  TextDirection get textDirection => _textDirection;
+  set textDirection(TextDirection value) {
+    if (_textDirection != value) {
+      _textDirection = value;
+      markNeedsLayout();
+    }
+  }
+
+  RenderBox get overflowButton {
+    switch (textDirection) {
+      case TextDirection.ltr:
+        return firstChild!;
+      case TextDirection.rtl:
+        return lastChild!;
+    }
+  }
+
+  Set<int> get overflowedIndexes {
+    final indexes = <int>{};
+    loopOverChildren((child, childIndex) {
+      if (child == overflowButton) return;
+
+      final childParentData = child.parentData as _BreadcrumbChild;
+      if (childParentData._overflow) {
+        if (textDirection == TextDirection.ltr) {
+          indexes.add(childIndex - 1);
+        } else {
+          indexes.add(childIndex);
+        }
+      }
+    });
+    return indexes;
+  }
+
+  void loopOverChildren(
+    void Function(RenderBox child, int childIndex) callback, [
+    bool? reversed,
+  ]) {
+    final isReversed = reversed ?? textDirection == TextDirection.rtl;
+    var child = isReversed ? lastChild : firstChild;
+    var childIndex = isReversed ? childCount - 1 : 0;
+
+    while (child != null) {
+      callback(child, childIndex);
+
+      final childParentData = child.parentData as _BreadcrumbChild;
+      if (isReversed) {
+        child = childParentData.previousSibling;
+        childIndex--;
+      } else {
+        child = childParentData.nextSibling;
+        childIndex++;
+      }
+    }
+  }
 
   @override
   void performLayout() {
-    overflowedIndexes.clear();
-
     final childConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
-    final overflowButton = firstChild!
-      ..layout(childConstraints, parentUsesSize: true);
+    overflowButton.layout(childConstraints, parentUsesSize: true);
 
     var maxExtent = overflowButton.size.width;
+    var realExtent = 0.0; // the extent of only the rendered items;
     var height = 0.0;
 
-    var child = lastChild;
-    var childIndex = childCount - 1;
-    while (child != null) {
-      if (child == overflowButton) break;
+    var hasOverflowed = false;
+    loopOverChildren((child, childIndex) {
       final childParentData = child.parentData as _BreadcrumbChild;
-      child.layout(childConstraints, parentUsesSize: true);
+      if (child != overflowButton) {
+        child.layout(childConstraints, parentUsesSize: true);
 
-      if (child.size.height > height) height = child.size.height;
+        if (child.size.height > height) height = child.size.height;
 
-      if (maxExtent + child.size.width > constraints.maxWidth) {
-        overflowedIndexes.add(childIndex);
-
-        if (overflowedIndexes.length == 1) {
-          maxExtent += overflowButton.size.width;
+        if (maxExtent + child.size.width > constraints.maxWidth) {
+          childParentData._overflow = true;
+          if (!hasOverflowed) {
+            hasOverflowed = true;
+            realExtent += overflowButton.size.width;
+          }
+        } else {
+          childParentData._overflow = false;
+          realExtent += child.size.width;
         }
-      } else {
+        // Add to the extent even if the child is hidden to avoid children
+        // behind this to be displayed
         maxExtent += child.size.width;
       }
+    }, textDirection == TextDirection.ltr);
 
-      child = childParentData.previousSibling;
-      childIndex--;
-    }
+    if (!hasOverflowed) maxExtent -= overflowButton.size.width;
 
-    if (overflowedIndexes.isNotEmpty) {
+    var currentOffsetX = (textDirection == TextDirection.rtl
+        ? constraints.maxWidth - realExtent // align to the end
+        : 0.0);
+    if (hasOverflowed) {
       if (overflowButton.size.height > height) {
         height = overflowButton.size.height;
       }
 
       // Adds the offset to the parentData
-      child = firstChild;
-      childIndex = 0;
-      var currentOffsetX = 0.0;
-      while (child != null) {
+      loopOverChildren((child, childIndex) {
         final childParentData = child.parentData as _BreadcrumbChild;
         final freeSpace = height - child.size.height;
 
-        if (!overflowedIndexes.contains(childIndex) ||
-            child == overflowButton) {
+        if (!childParentData._overflow || child == overflowButton) {
           childParentData.offset = Offset(currentOffsetX, freeSpace / 2);
           currentOffsetX += child.size.width;
         }
-
-        child = childParentData.nextSibling;
-        childIndex++;
-      }
+      }, false);
     } else {
-      child = (firstChild!.parentData as _BreadcrumbChild).nextSibling;
-      var currentOffsetX = 0.0;
-      while (child != null) {
+      loopOverChildren((child, childIndex) {
         final childParentData = child.parentData as _BreadcrumbChild;
-        final freeSpace = height - child.size.height;
 
-        childParentData.offset = Offset(currentOffsetX, freeSpace / 2);
-        currentOffsetX += child.size.width;
+        if (child != overflowButton) {
+          final freeSpace = height - child.size.height;
 
-        child = childParentData.nextSibling;
-      }
+          childParentData.offset = Offset(currentOffsetX, freeSpace / 2);
+          currentOffsetX += child.size.width;
+        }
+      }, false);
     }
 
     onIndexOverflow(overflowedIndexes);
@@ -369,18 +438,16 @@ class RenderBreadcrumbBar extends RenderBox
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    var childIndex = 0;
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _BreadcrumbChild;
 
-      if ((child == firstChild && overflowedIndexes.isNotEmpty) ||
-          (child != firstChild && !overflowedIndexes.contains(childIndex))) {
+      if ((child == overflowButton && overflowedIndexes.isNotEmpty) ||
+          (child != overflowButton && !childParentData._overflow)) {
         context.paintChild(child, offset + childParentData.offset);
       }
 
       child = childParentData.nextSibling;
-      childIndex++;
     }
   }
 
@@ -391,29 +458,30 @@ class RenderBreadcrumbBar extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    var child = lastChild;
-    var index = childCount - 1;
-    while (child != null) {
+    var hit = false;
+    loopOverChildren((child, index) {
+      if (hit) return;
+
       final childParentData = child.parentData! as _BreadcrumbChild;
 
-      if (child == firstChild && overflowedIndexes.isEmpty) break;
-
-      // Hidden children cannot generate a hit
-      if (child == firstChild || !overflowedIndexes.contains(index)) {
-        // The x, y parameters have the top left of the node's box as the origin.
-        final isHit = result.addWithPaintOffset(
-          offset: childParentData.offset,
-          position: position,
-          hitTest: (BoxHitTestResult result, Offset transformed) {
-            assert(transformed == position - childParentData.offset);
-            return child!.hitTest(result, position: transformed);
-          },
-        );
-        if (isHit) return true;
+      if (!(child == overflowButton && overflowedIndexes.isEmpty)) {
+        // Hidden children cannot generate a hit
+        if (child == overflowButton || !childParentData._overflow) {
+          // The x, y parameters have the top left of the node's box as the origin.
+          final isHit = result.addWithPaintOffset(
+            offset: childParentData.offset,
+            position: position,
+            hitTest: (BoxHitTestResult result, Offset transformed) {
+              assert(transformed == position - childParentData.offset);
+              return child.hitTest(result, position: transformed);
+            },
+          );
+          if (isHit) {
+            hit = true;
+          }
+        }
       }
-      child = childParentData.previousSibling;
-      index--;
-    }
-    return false;
+    });
+    return hit;
   }
 }
