@@ -35,7 +35,7 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
       header: const PageHeader(title: Text('BreadcrumbBar')),
       children: [
         BreadcrumbBar(
-          onChanged: (item) {
+          onItemPressed: (item) {
             debugPrint('${item.value} pressed');
             setState(() {
               _items.removeLast();

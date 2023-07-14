@@ -1,20 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
-class BreadcrumbItem {
+class BreadcrumbItem<T> {
   /// The label of the item
   ///
   /// Usually a [Text] widget
   final Widget label;
 
   /// The value of the item
-  final dynamic value;
+  final T value;
 
   /// Creates a [BreadcrumbItem]
-  const BreadcrumbItem({
-    required this.label,
-    required this.value,
-  });
+  const BreadcrumbItem({required this.label, required this.value});
 
   @override
   bool operator ==(Object other) {
@@ -29,22 +26,69 @@ class BreadcrumbItem {
   int get hashCode => label.hashCode ^ value.hashCode;
 }
 
-class BreadcrumbBar extends StatefulWidget {
-  final List<BreadcrumbItem> items;
+/// A BreadcrumbBar provides the direct path of pages or folders to the current
+/// location. It is often used for situations where the user's navigation trail
+/// (in a file system or menu system) needs to be persistently visible and the
+/// user may need to go back to a previous location.
+///
+/// ![BreadcrumbBar showcase](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/breadcrumbbar-default.gif)
+///
+/// See also:
+///
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar>
+///  * [BreadcrumbItem], which is used to represent an item in the bar.
+class BreadcrumbBar<T> extends StatefulWidget {
+  /// The items rendered in the bar.
+  ///
+  /// If the items overflow the available space, a overflow button will be shown.
+  final List<BreadcrumbItem<T>> items;
+
+  /// Overrides the default overflow button builder.
+  ///
+  /// Use the [openFlyout] argument to open the overflow flyout.
+  ///
+  /// ```dart
+  /// BreadcrumbBar(
+  ///   ...,
+  ///   overflowButtonBuilder: (context, openFlyout) {
+  ///     return IconButton(
+  ///       icon: const Icon(FluentIcons.more),
+  ///       onPressed: openFlyout,
+  ///     );
+  ///   },
+  /// )
+  /// ```
+  ///
+  /// If a custom behavior is needed, use a global key to access the
+  /// [FlyoutController] and show the flyout:
+  ///
+  /// ```dart
+  /// final key = GlobalKey<BreadcrumbBarState>();
+  ///
+  /// BreadcrumbBar(
+  ///   key: key,
+  ///   ...,
+  /// )
+  ///
+  /// key.currentState.flyoutController.showFlyout(...);
+  /// ```
   final Widget Function(
     BuildContext context,
     VoidCallback openFlyout,
   ) overflowButtonBuilder;
 
-  final ValueChanged<BreadcrumbItem>? onChanged;
+  /// Called when an item is pressed.
+  final ValueChanged<BreadcrumbItem<T>>? onItemPressed;
 
+  /// Creates a breadcrumb bar.
   const BreadcrumbBar({
     super.key,
     required this.items,
     this.overflowButtonBuilder = _defaultOverflowButtonBuilder,
-    this.onChanged,
+    this.onItemPressed,
   });
 
+  /// The default overflow button builder.
   static Widget _defaultOverflowButtonBuilder(
     BuildContext context,
     VoidCallback openFlyout,
@@ -56,22 +100,23 @@ class BreadcrumbBar extends StatefulWidget {
   }
 
   @override
-  State<BreadcrumbBar> createState() => _BreadcrumbBarState();
+  State<BreadcrumbBar> createState() => BreadcrumbBarState();
 }
 
-class _BreadcrumbBarState extends State<BreadcrumbBar> {
+class BreadcrumbBarState extends State<BreadcrumbBar> {
+  /// The controller used to show the overflow flyout.
   final flyoutController = FlyoutController();
 
-  Set<int> overflowedIndexes = {};
+  Set<int> _overflowedIndexes = {};
 
-  void _showFlyout() {
+  /// The indexes of the overflowed items.
+  Set<int> get overflowedIndexes => _overflowedIndexes;
+
+  /// Display the default overflow flyout.
+  void showFlyout() {
     final overflowedItems = () sync* {
       for (var i = 0; i < widget.items.length; i++) {
-        // [overflowedIndexes] include the 0 index that represents the overflow
-        // button. We add + 1 to the index count because the 0 index can not be
-        // included in the flyout items, otherwise the items will be displayed
-        // in both the flyout and in the breadcrumb bar
-        if (overflowedIndexes.contains(i + 1)) yield widget.items[i];
+        if (overflowedIndexes.contains(i)) yield widget.items[i];
       }
     }();
     flyoutController.showFlyout(
@@ -84,10 +129,10 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
           items: overflowedItems.map((item) {
             return MenuFlyoutItem(
               text: item.label,
-              onPressed: widget.onChanged == null
+              onPressed: widget.onItemPressed == null
                   ? null
                   : () {
-                      widget.onChanged!(item);
+                      widget.onItemPressed!(item);
                       Navigator.of(context).pop();
                     },
             );
@@ -95,6 +140,12 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    flyoutController.dispose();
+    super.dispose();
   }
 
   @override
@@ -107,12 +158,19 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
     return _BreadcrumbBar(
       items: widget.items,
       onIndexOverflow: (value) {
-        overflowedIndexes = value;
+        // [overflowedIndexes] include the 0 index that represents the overflow
+        // button. We add + 1 to the index count because the 0 index can not be
+        // included in the flyout items, otherwise the items will be displayed
+        // in both the flyout and in the breadcrumb bar
+        _overflowedIndexes = value
+            .map((index) => index - 1)
+            .where((index) => !index.isNegative)
+            .toSet();
       },
       overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
         FlyoutTarget(
           controller: flyoutController,
-          child: widget.overflowButtonBuilder(context, _showFlyout),
+          child: widget.overflowButtonBuilder(context, showFlyout),
         ),
         chevron,
       ]),
@@ -122,9 +180,9 @@ class _BreadcrumbBarState extends State<BreadcrumbBar> {
         final label = HoverButton(
           onPressed:
               // we do not want to enable click on the last item
-              widget.onChanged == null || index == widget.items.length - 1
+              widget.onItemPressed == null || index == widget.items.length - 1
                   ? null
-                  : () => widget.onChanged!(item),
+                  : () => widget.onItemPressed!(item),
           builder: (context, states) {
             final foregroundColor = ButtonThemeData.buttonForegroundColor(
               context,
