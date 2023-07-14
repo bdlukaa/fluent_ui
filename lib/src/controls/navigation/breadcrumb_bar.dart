@@ -93,17 +93,29 @@ class BreadcrumbBar<T> extends StatefulWidget {
     BuildContext context,
     VoidCallback openFlyout,
   ) {
-    return IconButton(
-      icon: const Icon(FluentIcons.more),
+    return HoverButton(
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: 4.0),
       onPressed: openFlyout,
+      builder: (context, states) {
+        final foregroundColor = ButtonThemeData.buttonForegroundColor(
+          context,
+          states,
+        );
+
+        return Icon(
+          FluentIcons.more,
+          color: foregroundColor,
+          size: 12.0,
+        );
+      },
     );
   }
 
   @override
-  State<BreadcrumbBar> createState() => BreadcrumbBarState();
+  State<BreadcrumbBar<T>> createState() => BreadcrumbBarState();
 }
 
-class BreadcrumbBarState extends State<BreadcrumbBar> {
+class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
   /// The controller used to show the overflow flyout.
   final flyoutController = FlyoutController();
 
@@ -357,7 +369,7 @@ class RenderBreadcrumbBar extends RenderBox
 
       if ((child == firstChild && overflowedIndexes.isNotEmpty) ||
           (child != firstChild && !overflowedIndexes.contains(childIndex))) {
-        context.paintChild(child, childParentData.offset);
+        context.paintChild(child, offset + childParentData.offset);
       }
 
       child = childParentData.nextSibling;

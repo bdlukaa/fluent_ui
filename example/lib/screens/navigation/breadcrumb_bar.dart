@@ -1,3 +1,4 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -9,7 +10,7 @@ class BreadcrumbBarPage extends StatefulWidget {
 }
 
 class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
-  static const items = [
+  static const items = <BreadcrumbItem<int>>[
     BreadcrumbItem(label: Text('Home'), value: 0),
     BreadcrumbItem(label: Text('Documents'), value: 1),
     BreadcrumbItem(label: Text('Design'), value: 2),
@@ -34,20 +35,32 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('BreadcrumbBar')),
       children: [
-        BreadcrumbBar(
-          onItemPressed: (item) {
-            debugPrint('${item.value} pressed');
-            setState(() {
-              _items.removeLast();
-            });
-            // setState(() {
-            //   final index = _items.indexOf(item);
-            //   for (int i = items.length - 1; i >= index + 1; i--) {
-            //     _items.removeAt(i);
-            //   }
-            // });
-          },
-          items: _items,
+        description(
+          content: const Text(
+            'The BreadcrumbBar control provides a commmon horizontal layout to '
+            'display the trail of navigation taken to the current location. '
+            'Resize to see the nodes crumble, starting at the root.',
+          ),
+        ),
+        subtitle(content: const Text('A BreadcrumbBar control')),
+        CardHighlight(
+          header: Row(children: [
+            const Expanded(child: Text('Source code')),
+            Button(
+              child: const Text('Reset sample'),
+              onPressed: resetItems,
+            ),
+          ]),
+          child: BreadcrumbBar<int>(
+            onItemPressed: (item) {
+              setState(() {
+                final index = _items.indexOf(item);
+                _items.removeRange(index + 1, _items.length);
+              });
+            },
+            items: _items,
+          ),
+          codeSnippet: '''codeSnippet''',
         ),
       ],
     );
