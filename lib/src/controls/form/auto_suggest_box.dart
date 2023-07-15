@@ -501,6 +501,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
     _entry = OverlayEntry(builder: (context) {
       assert(debugCheckHasMediaQuery(context));
+      assert(debugCheckHasFluentTheme(context));
 
       final boxContext = _textBoxKey.currentContext;
       if (boxContext == null) return const SizedBox.shrink();
@@ -948,6 +949,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
     return ListTile.selectable(

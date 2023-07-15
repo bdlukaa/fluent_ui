@@ -282,6 +282,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   void _insertOverlay() {
     _entry = OverlayEntry(builder: (context) {
       assert(debugCheckHasMediaQuery(context));
+      assert(debugCheckHasFluentTheme(context));
 
       final boxContext = _textBoxKey.currentContext;
       if (boxContext == null) return const SizedBox.shrink();
@@ -521,6 +522,8 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 10),
       child: PhysicalModel(
@@ -639,6 +642,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     int precision = 2,
     SpinButtonPlacementMode mode = SpinButtonPlacementMode.compact,
   }) : super(builder: (FormFieldState<String> field) {
+          assert(debugCheckHasFluentTheme(field.context));
           final theme = FluentTheme.of(field.context);
           void onChangedHandler(T? value) {
             field.didChange(value.toString());

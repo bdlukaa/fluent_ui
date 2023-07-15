@@ -1,6 +1,8 @@
 part of 'view.dart';
 
 ButtonState<Color?> kDefaultPaneItemColor(BuildContext context, bool isTop) {
+  assert(debugCheckHasFluentTheme(context));
+
   return ButtonState.resolveWith((states) {
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;

@@ -533,6 +533,7 @@ class CommandBarButton extends CommandBarItem {
 
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
+    assert(debugCheckHasFluentTheme(context));
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:

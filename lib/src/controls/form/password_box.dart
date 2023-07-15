@@ -428,6 +428,7 @@ class PasswordFormBox extends ControllableFormBox {
     TextStyle? placeholderStyle,
     Widget? leadingIcon,
   }) : super(builder: (FormFieldState<String> field) {
+          assert(debugCheckHasFluentTheme(field.context));
           final theme = FluentTheme.of(field.context);
           void onChangedHandler(String value) {
             field.didChange(value);

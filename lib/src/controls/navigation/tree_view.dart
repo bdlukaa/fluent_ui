@@ -886,6 +886,8 @@ class _TreeViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+
     if (!item._visible) return const SizedBox.shrink();
 
     final theme = FluentTheme.of(context);
