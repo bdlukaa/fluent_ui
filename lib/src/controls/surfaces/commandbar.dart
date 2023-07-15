@@ -379,6 +379,9 @@ class _CommandBarState extends State<CommandBar> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
+
     if (widget.compactBreakpointWidth == null) {
       final displayMode = (widget.isCompact ?? false)
           ? CommandBarItemDisplayMode.inPrimaryCompact

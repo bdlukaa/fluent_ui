@@ -1222,6 +1222,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
 
