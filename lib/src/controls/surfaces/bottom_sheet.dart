@@ -303,7 +303,6 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-    final mediaQuery = MediaQuery.of(context);
     final localizations = FluentLocalizations.of(context);
     final routeLabel = _getRouteLabel(localizations);
 
@@ -328,7 +327,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
         // Disable the initial animation when accessible navigation is on so
         // that the semantics are added to the tree at the correct time.
         final animationValue = animationCurve.transform(
-          mediaQuery.accessibleNavigation
+          MediaQuery.accessibleNavigationOf(context)
               ? 1.0
               : widget.route!.animation!.value,
         );

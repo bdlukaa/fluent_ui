@@ -67,8 +67,9 @@ class FluentTextSelectionToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasMediaQuery(context));
     final paddingAbove =
-        MediaQuery.of(context).padding.top + _kToolbarScreenPadding;
+        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding;
     final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
 
     return Padding(
@@ -266,12 +267,10 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     assert(debugCheckHasMediaQuery(context));
-    final mediaQuery = MediaQuery.of(context);
-
     final midpointAnchor = Offset(
       (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
-        mediaQuery.padding.left,
-        mediaQuery.size.width - mediaQuery.padding.right,
+        MediaQuery.paddingOf(context).left,
+        MediaQuery.sizeOf(context).width - MediaQuery.paddingOf(context).right,
       ),
       widget.selectionMidpoint.dy - widget.globalEditableRegion.top,
     );
@@ -377,10 +376,10 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentTheme(context));
-    final mediaQuery = MediaQuery.of(context);
     final theme = FluentTheme.of(context);
 
-    final paddingAbove = mediaQuery.padding.top + _kToolbarScreenPadding;
+    final paddingAbove =
+        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding;
     final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
 
     final radius = BorderRadius.circular(6.0);
