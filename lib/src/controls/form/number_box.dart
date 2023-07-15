@@ -327,6 +327,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasOverlay(context));
 
     final textFieldSuffix = <Widget>[
       if (widget.clearButton && _hasPrimaryFocus)
