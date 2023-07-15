@@ -318,6 +318,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }
       },
     ),
+    PaneItem(
+      key: const Key('/navigation/breadcrumb_bar'),
+      icon: const Icon(FluentIcons.breadcrumb),
+      title: const Text('BreadcrumbBar'),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/navigation/breadcrumb_bar') {
+          router.pushNamed('navigation_breadcrumb_bar');
+        }
+      },
+    ),
     PaneItemHeader(header: const Text('Surfaces')),
     PaneItem(
       key: const Key('/surfaces/acrylic'),
@@ -944,6 +955,16 @@ final router = GoRouter(
           builder: (context, state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.TreeViewPage(),
+          ),
+        ),
+
+        /// BreadcrumbBar
+        GoRoute(
+          path: '/navigation/breadcrumb_bar',
+          name: 'navigation_breadcrumb_bar',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.BreadcrumbBarPage(),
           ),
         ),
 

@@ -6,10 +6,12 @@ class CardHighlight extends StatefulWidget {
   const CardHighlight({
     super.key,
     this.backgroundColor,
+    this.header,
     required this.child,
     required this.codeSnippet,
   });
 
+  final Widget? header;
   final Widget child;
   final String codeSnippet;
 
@@ -92,9 +94,9 @@ class _CardHighlightState extends State<CardHighlight>
                 ),
               )
             : null,
-        header: const Text('Source code'),
+        header: widget.header ?? const Text('Source code'),
         content: SyntaxView(
-          code: widget.codeSnippet,
+          code: widget.codeSnippet.replaceAll('  ', '    '),
           syntaxTheme: theme.brightness.isDark
               ? SyntaxTheme.vscodeDark()
               : SyntaxTheme.vscodeLight(),
