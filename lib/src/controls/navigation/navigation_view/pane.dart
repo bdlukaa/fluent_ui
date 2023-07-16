@@ -344,7 +344,7 @@ class NavigationPane with Diagnosticable {
 /// NavigationView(
 ///   pane: NavigationPane(
 ///     size: NavigationPaneSize(
-///       openWidth: MediaQuery.of(context).size.width / 5,
+///       openWidth: MediaQuery.sizeOf(context).width / 5,
 ///       openMinWidth: 250,
 ///       openMaxWidth: 320,
 ///     ),
@@ -822,6 +822,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final size = Flyout.of(context).size;
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);

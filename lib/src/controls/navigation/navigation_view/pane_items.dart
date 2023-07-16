@@ -922,6 +922,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final size = Flyout.of(context).size;
     return Container(

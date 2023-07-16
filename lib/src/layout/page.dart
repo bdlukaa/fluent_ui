@@ -127,7 +127,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasMediaQuery(context));
 
-    final mediaQuery = MediaQuery.of(context);
     final theme = FluentTheme.of(context);
     final view = InheritedNavigationView.maybeOf(context);
 
@@ -136,7 +135,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       child: Padding(
         padding: EdgeInsetsDirectional.only(
           bottom: widget.resizeToAvoidBottomInset
-              ? mediaQuery.viewInsets.bottom
+              ? MediaQuery.viewInsetsOf(context).bottom
               : 0.0,
         ),
         child: Column(children: [
@@ -205,7 +204,7 @@ class PageHeader extends StatelessWidget {
   /// Gets the horizontal padding applied to the header based on the screen width
   static double horizontalPadding(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final isSmallScreen = screenWidth < 640.0;
     final horizontalPadding =
         isSmallScreen ? 12.0 : kPageDefaultVerticalPadding;

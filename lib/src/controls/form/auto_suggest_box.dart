@@ -501,6 +501,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
     _entry = OverlayEntry(builder: (context) {
       assert(debugCheckHasMediaQuery(context));
+      assert(debugCheckHasFluentTheme(context));
 
       final boxContext = _textBoxKey.currentContext;
       if (boxContext == null) return const SizedBox.shrink();
@@ -512,9 +513,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         ancestor: overlayState.context.findRenderObject(),
       );
 
-      final mediaQuery = MediaQuery.of(context);
-      final screenHeight =
-          mediaQuery.size.height - mediaQuery.viewPadding.bottom;
+      final screenHeight = MediaQuery.sizeOf(context).height -
+          MediaQuery.viewPaddingOf(context).bottom;
       final overlayY = globalOffset.dy + box.size.height;
       final maxHeight = (screenHeight - overlayY).clamp(
         0.0,
@@ -948,6 +948,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
     return ListTile.selectable(

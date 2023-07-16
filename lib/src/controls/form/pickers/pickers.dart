@@ -349,6 +349,7 @@ class _PickerState extends State<Picker> {
       fullscreenDialog: true,
       pageBuilder: (context, primary, __) {
         assert(debugCheckHasFluentTheme(context));
+        assert(debugCheckHasMediaQuery(context));
 
         final rootHeight = rootBox.size.height;
 
@@ -376,7 +377,7 @@ class _PickerState extends State<Picker> {
 
         // If the screen is smaller than 260, we ensure the popup will fit in the
         // screen. https://github.com/bdlukaa/fluent_ui/issues/544
-        final minWidth = min(260.0, MediaQuery.of(context).size.width);
+        final minWidth = min(260.0, MediaQuery.sizeOf(context).width);
         final width = max(box.size.width, minWidth);
         final x = () {
           if (box.size.width > minWidth) return childOffset.dx;

@@ -93,7 +93,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasMediaQuery(context));
     final direction = Directionality.of(context);
-    final viewPadding = MediaQuery.of(context).padding;
+    final viewPadding = MediaQuery.viewPaddingOf(context);
     final animation = _hoverAnimationController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)

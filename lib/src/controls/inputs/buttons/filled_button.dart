@@ -33,6 +33,7 @@ class FilledButton extends Button {
 
   @override
   ButtonStyle defaultStyleOf(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
     final def = ButtonStyle(

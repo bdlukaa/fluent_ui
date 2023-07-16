@@ -678,8 +678,6 @@ class __TabBodyState extends State<_TabBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MediaQuery.of(context);
-
     _pageController ??= PageController(initialPage: widget.index);
   }
 
