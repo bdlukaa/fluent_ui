@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
+import 'package:flutter/foundation.dart';
 
 typedef ShapeBuilder = ShapeBorder Function(bool open);
 
