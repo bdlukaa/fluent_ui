@@ -42,7 +42,6 @@ class Expander extends StatefulWidget {
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
-    this.headerHeight = 48.0,
     this.headerBackgroundColor,
     this.contentBackgroundColor,
     this.headerShape,
@@ -101,11 +100,6 @@ class Expander extends StatefulWidget {
   /// A callback called when the current state is changed. `true` when
   /// open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
-
-  /// The height of the header.
-  ///
-  /// Defaults to 48.0
-  final double headerHeight;
 
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
@@ -190,7 +184,9 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            height: widget.headerHeight,
+            constraints: const BoxConstraints(
+              minHeight: 42.0,
+            ),
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
@@ -200,8 +196,8 @@ class ExpanderState extends State<Expander>
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
-                      top: const Radius.circular(4.0),
-                      bottom: Radius.circular(_isExpanded ? 0.0 : 4.0),
+                      top: const Radius.circular(6.0),
+                      bottom: Radius.circular(_isExpanded ? 0.0 : 6.0),
                     ),
                   ),
             ),
@@ -229,16 +225,18 @@ class ExpanderState extends State<Expander>
                 child: FocusBorder(
                   focused: states.isFocused,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 10.0,
+                    ),
                     decoration: BoxDecoration(
                       color: ButtonThemeData.uncheckedInputColor(
                         _theme,
                         states,
                         transparentWhenNone: true,
                       ),
-                      borderRadius: BorderRadius.circular(4.0),
+                      borderRadius: BorderRadius.circular(6.0),
                     ),
-                    alignment: AlignmentDirectional.center,
                     child: widget.icon ??
                         RotationTransition(
                           turns: Tween<double>(
@@ -293,7 +291,7 @@ class ExpanderState extends State<Expander>
             color: widget.contentBackgroundColor ??
                 theme.resources.cardBackgroundFillColorSecondary,
             borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(4.0)),
+                const BorderRadius.vertical(bottom: Radius.circular(6.0)),
           ),
           child: widget.content,
         ),
