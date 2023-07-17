@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/src/foundation/diagnostics.dart';
 
 typedef ShapeBuilder = ShapeBorder Function(bool open);
 
@@ -78,7 +79,7 @@ class Expander extends StatefulWidget {
   ///
   /// See also:
   ///
-  ///  * [ToggleSwitch]
+  ///  * [ToggleSwitch], used to toggle a setting between two states
   final Widget? trailing;
 
   /// The expand-collapse animation duration.
@@ -91,14 +92,19 @@ class Expander extends StatefulWidget {
   /// If null, defaults to [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
-  /// The expand direction. Defaults to [ExpanderDirection.down]
+  /// The expand direction.
+  ///
+  /// Defaults to [ExpanderDirection.down]
   final ExpanderDirection direction;
 
-  /// Whether the [Expander] is initially expanded. Defaults to `false`
+  /// Whether the [Expander] is initially expanded.
+  ///
+  /// Defaults to `false`
   final bool initiallyExpanded;
 
-  /// A callback called when the current state is changed. `true` when
-  /// open and `false` when closed.
+  /// A callback called when the current state is changed.
+  ///
+  /// `true` when open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
 
   /// The background color of the header.
@@ -109,6 +115,27 @@ class Expander extends StatefulWidget {
 
   /// The shape of the header
   final ShapeBuilder? headerShape;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<Duration>(
+        'animationDuration',
+        animationDuration,
+      ))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty<ExpanderDirection>(
+        'direction',
+        direction,
+        defaultValue: ExpanderDirection.down,
+      ))
+      ..add(DiagnosticsProperty<bool>(
+        'initiallyExpanded',
+        initiallyExpanded,
+        defaultValue: false,
+      ));
+  }
 
   @override
   State<Expander> createState() => ExpanderState();
