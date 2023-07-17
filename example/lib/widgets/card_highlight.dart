@@ -36,22 +36,22 @@ class _CardHighlightState extends State<CardHighlight>
     final theme = FluentTheme.of(context);
 
     return Column(children: [
-      Card(
+      Mica(
         backgroundColor: widget.backgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4.0)),
-        child: SizedBox(
-          width: double.infinity,
-          child: Align(
-            alignment: AlignmentDirectional.topStart,
-            child: widget.child,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: widget.child,
+            ),
           ),
         ),
       ),
       Expander(
         key: expanderKey,
-        headerShape: (open) => const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
         onStateChanged: (state) {
           // this is done because [onStateChanges] is called while the [Expander]
           // is updating. By using this, we schedule the rebuilt of this widget
@@ -95,11 +95,16 @@ class _CardHighlightState extends State<CardHighlight>
               )
             : null,
         header: widget.header ?? const Text('Source code'),
-        content: SyntaxView(
-          code: widget.codeSnippet.replaceAll('  ', '    '),
-          syntaxTheme: theme.brightness.isDark
-              ? SyntaxTheme.vscodeDark()
-              : SyntaxTheme.vscodeLight(),
+        content: ClipRRect(
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(6.0),
+          ),
+          child: SyntaxView(
+            code: widget.codeSnippet.replaceAll('  ', '    '),
+            syntaxTheme: theme.brightness.isDark
+                ? SyntaxTheme.vscodeDark()
+                : SyntaxTheme.vscodeLight(),
+          ),
         ),
       ),
     ]);
