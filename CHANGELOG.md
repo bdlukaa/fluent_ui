@@ -5,6 +5,7 @@
 - Implement `BreadcrumbBar` ([#878](https://github.com/bdlukaa/fluent_ui/issues/878))
 - Ensure all widgets use the correct debug checks ([#883](https://github.com/bdlukaa/fluent_ui/issues/883))
 - `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
+- Added `Expander.contentPadding` and `Expander.contentShape` ([#891](https://github.com/bdlukaa/fluent_ui/issues/891))
 
 ## 4.7.0
 

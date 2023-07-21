@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-typedef ShapeBuilder = ShapeBorder Function(bool open);
+typedef ExpanderShapeBuilder = ShapeBorder Function(bool open);
 
 /// The expander direction
 enum ExpanderDirection {
@@ -44,8 +44,10 @@ class Expander extends StatefulWidget {
     this.initiallyExpanded = false,
     this.onStateChanged,
     this.headerBackgroundColor,
-    this.contentBackgroundColor,
     this.headerShape,
+    this.contentBackgroundColor,
+    this.contentPadding = const EdgeInsets.all(16.0),
+    this.contentShape,
   });
 
   /// The leading widget.
@@ -71,11 +73,12 @@ class Expander extends StatefulWidget {
   /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
   final Widget content;
 
-  /// The icon of the toggle button.
+  /// The expander icon. If null, defaults to a chevron down or up, depending on
+  /// the direction.
   final Widget? icon;
 
   /// The trailing widget. It's positioned at the right of [header]
-  /// and at the left of [icon].
+  /// and before [icon].
   ///
   /// See also:
   ///
@@ -110,11 +113,21 @@ class Expander extends StatefulWidget {
   /// The background color of the header.
   final ButtonState<Color>? headerBackgroundColor;
 
-  /// The content color of the header
+  /// The shape of the header.
+  ///
+  /// Use the `open` property to determine whether the expander is open or not.
+  final ExpanderShapeBuilder? headerShape;
+
+  /// The content color of the content.
   final Color? contentBackgroundColor;
 
-  /// The shape of the header
-  final ShapeBuilder? headerShape;
+  /// The padding of the content.
+  final EdgeInsetsGeometry? contentPadding;
+
+  /// The shape of the content
+  ///
+  /// Use the `open` property to determine whether the expander is open or not.
+  final ExpanderShapeBuilder? contentShape;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -134,6 +147,12 @@ class Expander extends StatefulWidget {
         'initiallyExpanded',
         initiallyExpanded,
         defaultValue: false,
+      ))
+      ..add(ColorProperty('contentBackgroundColor', contentBackgroundColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+        'contentPadding',
+        contentPadding,
+        defaultValue: const EdgeInsets.all(16.0),
       ));
   }
 
@@ -310,15 +329,18 @@ class ExpanderState extends State<Expander>
         ),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.resources.cardStrokeColorDefault,
-            ),
+          padding: widget.contentPadding,
+          decoration: ShapeDecoration(
+            shape: widget.contentShape?.call(_isExpanded) ??
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: theme.resources.cardStrokeColorDefault,
+                  ),
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(6.0)),
+                ),
             color: widget.contentBackgroundColor ??
                 theme.resources.cardBackgroundFillColorSecondary,
-            borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(6.0)),
           ),
           child: widget.content,
         ),
