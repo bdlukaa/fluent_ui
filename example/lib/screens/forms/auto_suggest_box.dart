@@ -34,6 +34,33 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
         ),
         subtitle(content: const Text('A basic AutoSuggestBox')),
         CardHighlight(
+          codeSnippet: '''
+String? selectedCat;
+
+AutoSuggestBox<String>(
+  items: cats.map((cat) {
+    return AutoSuggestBoxItem<String>(
+      value: cat,
+      label: cat,
+      onFocusChange: (focused) {
+        if (focused) { 
+          debugPrint('Focused \$cat');
+        }
+      }
+    );
+  }).toList(),
+  onSelected: (item) {
+    setState(() => selected = item);
+  },
+),
+
+const cats = <String>[
+  'Abyssinian',
+  'Aegean',
+  'American Bobtail',
+  'American Curl',
+  ...
+];''',
           child: Row(children: [
             SizedBox(
               width: 350.0,
@@ -62,33 +89,6 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
               ),
             ),
           ]),
-          codeSnippet: '''
-String? selectedCat;
-
-AutoSuggestBox<String>(
-  items: cats.map((cat) {
-    return AutoSuggestBoxItem<String>(
-      value: cat,
-      label: cat,
-      onFocusChange: (focused) {
-        if (focused) { 
-          debugPrint('Focused \$cat');
-        }
-      }
-    );
-  }).toList(),
-  onSelected: (item) {
-    setState(() => selected = item);
-  },
-),
-
-const cats = <String>[
-  'Abyssinian',
-  'Aegean',
-  'American Bobtail',
-  'American Curl',
-  ...
-];''',
         ),
         const Text(
           'The control can be used with a custom value class. With this feature,'
@@ -97,38 +97,6 @@ const cats = <String>[
         subtitle(
             content: const Text('A AutoSuggestBox with a custom type "Cat"')),
         CardHighlight(
-          child: Row(children: [
-            SizedBox(
-              width: 350.0,
-              child: AutoSuggestBox<Cat>(
-                enabled: enabled,
-                items: objectCats
-                    .map<AutoSuggestBoxItem<Cat>>(
-                      (cat) => AutoSuggestBoxItem<Cat>(
-                        value: cat,
-                        label: cat.name,
-                        onFocusChange: (focused) {
-                          if (focused) {
-                            debugPrint('Focused $cat');
-                          }
-                        },
-                      ),
-                    )
-                    .toList(),
-                onSelected: (item) {
-                  setState(() => selectedObjectCat = item.value);
-                },
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: Text(selectedObjectCat != null
-                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
-                    : ''),
-              ),
-            ),
-          ]),
           codeSnippet: '''
 class Cat {
   final int id;
@@ -168,6 +136,38 @@ const objectCats = [
   Cat(6, 'American Shorthair', true),
   ...
 ];''',
+          child: Row(children: [
+            SizedBox(
+              width: 350.0,
+              child: AutoSuggestBox<Cat>(
+                enabled: enabled,
+                items: objectCats
+                    .map<AutoSuggestBoxItem<Cat>>(
+                      (cat) => AutoSuggestBoxItem<Cat>(
+                        value: cat,
+                        label: cat.name,
+                        onFocusChange: (focused) {
+                          if (focused) {
+                            debugPrint('Focused $cat');
+                          }
+                        },
+                      ),
+                    )
+                    .toList(),
+                onSelected: (item) {
+                  setState(() => selectedObjectCat = item.value);
+                },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
+                child: Text(selectedObjectCat != null
+                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
+                    : ''),
+              ),
+            ),
+          ]),
         ),
       ],
     );

@@ -37,6 +37,21 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
         ),
         subtitle(content: const Text('Basic ListView with selectable tiles')),
         CardHighlight(
+          codeSnippet: '''String selectedContact = '';
+
+const contacts = ['Kendall', 'Collins', ...];
+
+ListView.builder(
+  itemCount: contacts.length,
+  itemBuilder: (context, index) {
+    final contact = contacts[index];
+    return ListTile.selectable(
+      title: Text(contact),
+      selected: selectedContact == contact,
+      onSelectionChange: (v) => setState(() => selectedContact = contact),
+    );
+  } 
+),''',
           child: Container(
             height: 400,
             width: 350,
@@ -61,7 +76,12 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
               },
             ),
           ),
-          codeSnippet: '''String selectedContact = '';
+        ),
+        subtitle(
+          content: const Text('ListViewItems with many properties applied'),
+        ),
+        CardHighlight(
+          codeSnippet: '''List<String> selectedContacts = [];
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -71,16 +91,20 @@ ListView.builder(
     final contact = contacts[index];
     return ListTile.selectable(
       title: Text(contact),
-      selected: selectedContact == contact,
-      onSelectionChange: (v) => setState(() => selectedContact = contact),
+      selected: selectedContacts.contains(contact),
+      selectionMode: ListTileSelectionMode.multiple,
+      onSelectionChange: (selected) {
+        setState(() {
+          if (selected) {
+            selectedContacts.add(contact);
+          } else {
+            selectedContacts.remove(contact);
+          }
+        });
+      },
     );
   } 
 ),''',
-        ),
-        subtitle(
-          content: const Text('ListViewItems with many properties applied'),
-        ),
-        CardHighlight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               height: 400,
@@ -117,7 +141,12 @@ ListView.builder(
               ),
             ),
           ]),
-          codeSnippet: '''List<String> selectedContacts = [];
+        ),
+        subtitle(
+          content: const Text('ListViewItems with images'),
+        ),
+        CardHighlight(
+          codeSnippet: '''String selectedContact = '';
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -126,26 +155,24 @@ ListView.builder(
   itemBuilder: (context, index) {
     final contact = contacts[index];
     return ListTile.selectable(
+      leading: SizedBox(
+        height: 100,
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: ColoredBox(
+            color: Colors.accentColors[index ~/ 20],
+            child: const Placeholder(),
+          ),
+        ),
+      ),
       title: Text(contact),
-      selected: selectedContacts.contains(contact),
-      selectionMode: ListTileSelectionMode.multiple,
-      onSelectionChange: (selected) {
-        setState(() {
-          if (selected) {
-            selectedContacts.add(contact);
-          } else {
-            selectedContacts.remove(contact);
-          }
-        });
-      },
+      subtitle: const Text('With a custom subtitle'),
+      selectionMode: ListTileSelectionMode.single,
+      selected: selectedContact == contact,
+      onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
   } 
 ),''',
-        ),
-        subtitle(
-          content: const Text('ListViewItems with images'),
-        ),
-        CardHighlight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               height: 400,
@@ -188,33 +215,6 @@ ListView.builder(
               ),
             ),
           ]),
-          codeSnippet: '''String selectedContact = '';
-
-const contacts = ['Kendall', 'Collins', ...];
-
-ListView.builder(
-  itemCount: contacts.length,
-  itemBuilder: (context, index) {
-    final contact = contacts[index];
-    return ListTile.selectable(
-      leading: SizedBox(
-        height: 100,
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: ColoredBox(
-            color: Colors.accentColors[index ~/ 20],
-            child: const Placeholder(),
-          ),
-        ),
-      ),
-      title: Text(contact),
-      subtitle: const Text('With a custom subtitle'),
-      selectionMode: ListTileSelectionMode.single,
-      selected: selectedContact == contact,
-      onSelectionChange: (v) => setState(() => selectedContact = contact),
-    );
-  } 
-),''',
         ),
       ],
     );
@@ -303,4 +303,4 @@ Hayden
 Cook
 Tailwind Traders''';
 
-late List<String> contacts = _contactsList.split('\n');
+List<String> contacts = _contactsList.split('\n');

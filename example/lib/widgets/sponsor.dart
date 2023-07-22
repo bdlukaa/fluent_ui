@@ -61,11 +61,11 @@ class SponsorDialog extends StatelessWidget {
         Link(
           uri: Uri.parse('https://www.patreon.com/bdlukaa'),
           builder: (context, open) => FilledButton(
+            onPressed: open,
             child: Semantics(
               link: true,
               child: const Text('Become a Sponsor'),
             ),
-            onPressed: open,
           ),
         ),
       ],

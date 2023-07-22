@@ -34,6 +34,13 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple DatePicker with a header')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  header: 'Pick a date',
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+),''',
           child: SizedBox(
             width: double.infinity,
             child: Wrap(
@@ -79,16 +86,16 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
               ],
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-DatePicker(
-  header: 'Pick a date',
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-),''',
         ),
         subtitle(content: const Text('A DatePicker with year hidden')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  showYear: false,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: DatePicker(
@@ -97,13 +104,6 @@ DatePicker(
               showYear: false,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-DatePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  showYear: false,
-),''',
         ),
       ],
     );

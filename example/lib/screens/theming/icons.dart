@@ -97,7 +97,7 @@ class _IconsPageState extends State<IconsPage> {
             onPressed: () async {
               final copyText = 'FluentIcons.${e.key}';
               await FlutterClipboard.copy(copyText);
-              showCopiedSnackbar(context, copyText);
+              if (context.mounted) showCopiedSnackbar(context, copyText);
             },
             cursor: SystemMouseCursors.copy,
             builder: (context, states) {

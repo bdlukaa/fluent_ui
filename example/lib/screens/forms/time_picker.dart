@@ -31,6 +31,12 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple TimePicker')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -38,12 +44,6 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
               onChanged: (time) => setState(() => simpleTime = time),
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-),''',
         ),
         subtitle(
           content: const Text(
@@ -51,6 +51,14 @@ TimePicker(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: 'Arrival time',
+  minuteIncrement: 15,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -60,14 +68,6 @@ TimePicker(
               minuteIncrement: 15,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-        
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  header: 'Arrival time',
-  minuteIncrement: 15,
-),''',
         ),
         subtitle(
           content: const Text(
@@ -75,6 +75,14 @@ TimePicker(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: '24 hour clock',
+  hourFormat: HourFormat.HH,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -84,14 +92,6 @@ TimePicker(
               hourFormat: HourFormat.HH,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-        
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  header: '24 hour clock',
-  hourFormat: HourFormat.HH,
-),''',
         ),
       ],
     );

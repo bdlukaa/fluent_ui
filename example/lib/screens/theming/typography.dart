@@ -45,30 +45,30 @@ class _TypographyPageState extends State<TypographyPage> {
               value: color,
               items: [
                 ComboBoxItem(
+                  value: Colors.white,
                   child: Row(children: [
                     buildColorBox(Colors.white),
                     const SizedBox(width: 10.0),
                     const Text('White'),
                   ]),
-                  value: Colors.white,
                 ),
                 ComboBoxItem(
+                  value: const Color(0xE4000000),
                   child: Row(children: [
                     buildColorBox(const Color(0xE4000000)),
                     const SizedBox(width: 10.0),
                     const Text('Black'),
                   ]),
-                  value: const Color(0xE4000000),
                 ),
                 ...List.generate(Colors.accentColors.length, (index) {
                   final color = Colors.accentColors[index];
                   return ComboBoxItem(
+                    value: color,
                     child: Row(children: [
                       buildColorBox(color),
                       const SizedBox(width: 10.0),
                       Text(accentColorNames[index + 1]),
                     ]),
-                    value: color,
                   );
                 }),
               ],

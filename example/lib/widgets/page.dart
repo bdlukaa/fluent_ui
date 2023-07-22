@@ -89,8 +89,8 @@ abstract class ScrollablePage extends Page {
       key: PageStorageKey(_pageIndex),
       scrollController: scrollController,
       header: buildHeader(context),
-      children: buildScrollable(context),
       bottomBar: buildBottomBar(context),
+      children: buildScrollable(context),
     );
   }
 }

@@ -135,8 +135,8 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                             ),
                             const SizedBox(height: 12.0),
                             Button(
-                              child: const Text('Yes, empty my cart'),
                               onPressed: Flyout.of(context).close,
+                              child: const Text('Yes, empty my cart'),
                             ),
                           ],
                         ),

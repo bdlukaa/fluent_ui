@@ -18,6 +18,13 @@ class TooltipPage extends ScrollablePage {
       ),
       subtitle(content: const Text('Button with a simple tooltip')),
       CardHighlight(
+        codeSnippet: '''Tooltip(
+  message: 'Simple ToolTip',
+  child: Button(
+    child: const Text('Button with a simple tooltip'),
+    onPressed: () {},
+  ),
+),''',
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: Tooltip(
@@ -28,13 +35,6 @@ class TooltipPage extends ScrollablePage {
             ),
           ),
         ),
-        codeSnippet: '''Tooltip(
-  message: 'Simple ToolTip',
-  child: Button(
-    child: const Text('Button with a simple tooltip'),
-    onPressed: () {},
-  ),
-),''',
       ),
       subtitle(
         content: const Text(
@@ -42,6 +42,16 @@ class TooltipPage extends ScrollablePage {
         ),
       ),
       CardHighlight(
+        codeSnippet: '''Tooltip(
+  message: 'Horizontal ToolTip',
+  displayHorizontally: true,
+  useMousePosition: false,
+  style: const TooltipThemeData(preferBelow: true),
+  child: IconButton(
+    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    onPressed: () {},
+  ),
+),''',
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: Tooltip(
@@ -55,16 +65,6 @@ class TooltipPage extends ScrollablePage {
             ),
           ),
         ),
-        codeSnippet: '''Tooltip(
-  message: 'Horizontal ToolTip',
-  displayHorizontally: true,
-  useMousePosition: false,
-  style: const TooltipThemeData(preferBelow: true),
-  child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
-    onPressed: () {},
-  ),
-),''',
       ),
     ];
   }

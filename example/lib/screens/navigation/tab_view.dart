@@ -74,8 +74,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                     value: tabWidthBehavior,
                     items: TabWidthBehavior.values.map((behavior) {
                       return ComboBoxItem(
-                        child: Text(behavior.name),
                         value: behavior,
+                        child: Text(behavior.name),
                       );
                     }).toList(),
                     onChanged: (behavior) {
@@ -95,8 +95,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                     value: closeButtonVisibilityMode,
                     items: CloseButtonVisibilityMode.values.map((mode) {
                       return ComboBoxItem(
-                        child: Text(mode.name),
                         value: mode,
+                        child: Text(mode.name),
                       );
                     }).toList(),
                     onChanged: (mode) {
@@ -121,39 +121,6 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          child: SizedBox(
-            height: 400,
-            child: TabView(
-              tabs: tabs!,
-              currentIndex: currentIndex,
-              onChanged: (index) => setState(() => currentIndex = index),
-              tabWidthBehavior: tabWidthBehavior,
-              closeButtonVisibility: closeButtonVisibilityMode,
-              showScrollButtons: showScrollButtons,
-              onNewPressed: () {
-                setState(() {
-                  final index = tabs!.length + 1;
-                  final tab = generateTab(index);
-                  tabs!.add(tab);
-                });
-              },
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final item = tabs!.removeAt(oldIndex);
-                  tabs!.insert(newIndex, item);
-
-                  if (currentIndex == newIndex) {
-                    currentIndex = oldIndex;
-                  } else if (currentIndex == oldIndex) {
-                    currentIndex = newIndex;
-                  }
-                });
-              },
-            ),
-          ),
           codeSnippet: '''int currentIndex = 0;
 List<Tab> tabs = [];
 
@@ -209,6 +176,39 @@ TabView(
     });
   },
 )''',
+          child: SizedBox(
+            height: 400,
+            child: TabView(
+              tabs: tabs!,
+              currentIndex: currentIndex,
+              onChanged: (index) => setState(() => currentIndex = index),
+              tabWidthBehavior: tabWidthBehavior,
+              closeButtonVisibility: closeButtonVisibilityMode,
+              showScrollButtons: showScrollButtons,
+              onNewPressed: () {
+                setState(() {
+                  final index = tabs!.length + 1;
+                  final tab = generateTab(index);
+                  tabs!.add(tab);
+                });
+              },
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = tabs!.removeAt(oldIndex);
+                  tabs!.insert(newIndex, item);
+
+                  if (currentIndex == newIndex) {
+                    currentIndex = oldIndex;
+                  } else if (currentIndex == oldIndex) {
+                    currentIndex = newIndex;
+                  }
+                });
+              },
+            ),
+          ),
         ),
       ],
     );
