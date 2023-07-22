@@ -318,6 +318,17 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }
       },
     ),
+    PaneItem(
+      key: const Key('/navigation/breadcrumb_bar'),
+      icon: const Icon(FluentIcons.breadcrumb),
+      title: const Text('BreadcrumbBar'),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (router.location != '/navigation/breadcrumb_bar') {
+          router.pushNamed('navigation_breadcrumb_bar');
+        }
+      },
+    ),
     PaneItemHeader(header: const Text('Surfaces')),
     PaneItem(
       key: const Key('/surfaces/acrylic'),
@@ -484,7 +495,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       link: 'https://github.com/bdlukaa/fluent_ui',
       body: const SizedBox.shrink(),
     ),
-    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
+    // TODO: Scrollbar, RatingBar
   ];
 
   @override
@@ -760,14 +771,17 @@ class _LinkPaneItemAction extends PaneItem {
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => super.build(
-        context,
-        selected,
-        followLink,
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        itemIndex: itemIndex,
-        autofocus: autofocus,
+      builder: (context, followLink) => Semantics(
+        link: true,
+        child: super.build(
+          context,
+          selected,
+          followLink,
+          displayMode: displayMode,
+          showTextOnTop: showTextOnTop,
+          itemIndex: itemIndex,
+          autofocus: autofocus,
+        ),
       ),
     );
   }
@@ -941,6 +955,16 @@ final router = GoRouter(
           builder: (context, state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.TreeViewPage(),
+          ),
+        ),
+
+        /// BreadcrumbBar
+        GoRoute(
+          path: '/navigation/breadcrumb_bar',
+          name: 'navigation_breadcrumb_bar',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.BreadcrumbBarPage(),
           ),
         ),
 

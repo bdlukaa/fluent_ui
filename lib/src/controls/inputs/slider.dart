@@ -578,7 +578,10 @@ class SliderThemeData with Diagnosticable {
   final ButtonState<double?>? thumbRadius;
   final ButtonState<double?>? trackHeight;
 
+  /// The color of the label background
   final Color? labelBackgroundColor;
+
+  /// The color of the label text
   final Color? labelForegroundColor;
 
   final bool? useThumbBall;
@@ -617,7 +620,7 @@ class SliderThemeData with Diagnosticable {
       }),
       margin: EdgeInsets.zero,
       useThumbBall: true,
-      labelBackgroundColor: theme.resources.controlFillColorDefault,
+      labelBackgroundColor: theme.resources.controlSolidFillColorDefault,
       labelForegroundColor: theme.resources.textFillColorPrimary,
       trackHeight: ButtonState.all(3.75),
     );

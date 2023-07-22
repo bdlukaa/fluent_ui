@@ -17,6 +17,9 @@ enum _ChipType {
 /// See also:
 ///
 ///   * [Button], a widget similar to [Chip], but adapted to larger screens
+@Deprecated(
+  'Chip is deprecated, use Button instead. This was deprecated in 4.7.0',
+)
 class Chip extends StatelessWidget {
   /// Creates a normal chip.
   const Chip({
@@ -127,23 +130,23 @@ class Chip extends StatelessWidget {
 }
 
 /// An inherited widget that defines the configuration for
-/// [Chip]s in this widget's subtree.
+/// Chips in this widget's subtree.
 ///
-/// Values specified here are used for [Chip] properties that are not
+/// Values specified here are used for Chip properties that are not
 /// given an explicit non-null value.
 class ChipTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
-  /// [Chip].
+  /// Chip.
   const ChipTheme({
     super.key,
     required super.child,
     required this.data,
   });
 
-  /// The properties for descendant [Chip] widgets.
+  /// The properties for descendant Chip widgets.
   final ChipThemeData data;
 
-  /// Creates a button theme that controls how descendant [Chip]s should
+  /// Creates a button theme that controls how descendant Chips should
   /// look like, and merges in the current button theme, if any.
   static Widget merge({
     Key? key,
@@ -236,7 +239,7 @@ class ChipThemeData with Diagnosticable {
       textStyle: ButtonState.resolveWith((states) {
         return TextStyle(
           color: states.isDisabled
-              ? theme.disabledColor
+              ? theme.resources.textFillColorDisabled
               : normalColor(states).basedOnLuminance(),
         );
       }),

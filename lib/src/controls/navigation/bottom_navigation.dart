@@ -267,7 +267,7 @@ class BottomNavigationThemeData with Diagnosticable {
       backgroundColor:
           isLight ? const Color(0xFFf8f8f8) : const Color(0xFF0c0c0c),
       selectedColor: theme.accentColor,
-      inactiveColor: theme.disabledColor,
+      inactiveColor: theme.resources.controlFillColorDisabled,
     );
   }
 

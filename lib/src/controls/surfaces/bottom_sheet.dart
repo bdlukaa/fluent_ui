@@ -303,7 +303,6 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-    final mediaQuery = MediaQuery.of(context);
     final localizations = FluentLocalizations.of(context);
     final routeLabel = _getRouteLabel(localizations);
 
@@ -328,7 +327,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
         // Disable the initial animation when accessible navigation is on so
         // that the semantics are added to the tree at the correct time.
         final animationValue = animationCurve.transform(
-          mediaQuery.accessibleNavigation
+          MediaQuery.accessibleNavigationOf(context)
               ? 1.0
               : widget.route!.animation!.value,
         );
@@ -502,8 +501,8 @@ class _BottomSheetSuspendedCurve extends ParametricCurve<double> {
 /// parameter to true.
 ///
 /// The `useRootNavigator` parameter ensures that the root navigator is used to
-/// display the [BottomSheet] when set to `true`. This is useful in the case
-/// that a modal [BottomSheet] needs to be displayed above all other content
+/// display the BottomSheet when set to `true`. This is useful in the case
+/// that a modal BottomSheet needs to be displayed above all other content
 /// but the caller is inside another [Navigator].
 ///
 /// The [isDismissible] parameter specifies whether the bottom sheet will be
@@ -569,7 +568,7 @@ class _BottomSheetSuspendedCurve extends ParametricCurve<double> {
 /// {@end-tool}
 /// See also:
 ///
-///  * [BottomSheet], a helper widget that implements the fluent ui bottom and top
+///  * BottomSheet, a helper widget that implements the fluent ui bottom and top
 ///    sheet
 ///  * [DraggableScrollableSheet], which allows you to create a bottom sheet
 ///    that grows and then becomes scrollable once it reaches its maximum size.
@@ -615,6 +614,7 @@ class _BottomSheetScrollBehavior extends ScrollBehavior {
   }
 }
 
+@Deprecated('BottomSheet is deprecated. This was deprecated in 4.7.0')
 class BottomSheet extends StatelessWidget {
   /// Creates a bottom sheet.
   const BottomSheet({
@@ -741,23 +741,23 @@ class BottomSheet extends StatelessWidget {
 }
 
 /// An inherited widget that defines the configuration for
-/// [BottomSheet]s in this widget's subtree.
+/// BottomSheets in this widget's subtree.
 ///
-/// Values specified here are used for [BottomSheet] properties that are not
+/// Values specified here are used for BottomSheet properties that are not
 /// given an explicit non-null value.
 class BottomSheetTheme extends InheritedTheme {
   /// Creates a info bar theme that controls the configurations for
-  /// [BottomSheet].
+  /// BottomSheet.
   const BottomSheetTheme({
     super.key,
     required this.data,
     required super.child,
   });
 
-  /// The properties for descendant [BottomSheet] widgets.
+  /// The properties for descendant BottomSheet widgets.
   final BottomSheetThemeData data;
 
-  /// Creates a button theme that controls how descendant [BottomSheet]s should
+  /// Creates a button theme that controls how descendant BottomSheets should
   /// look like, and merges in the current toggle button theme, if any.
   static Widget merge({
     Key? key,

@@ -310,7 +310,6 @@ class NavigationViewState extends State<NavigationView> {
     final brightness = FluentTheme.of(context).brightness;
     final theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
-    final mediaQuery = MediaQuery.of(context);
     final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
       top: widget.appBar?.finalHeight(context) ?? 0.0,
     );
@@ -364,7 +363,7 @@ class NavigationViewState extends State<NavigationView> {
         /// (641px to 1007px).
         /// - Only a menu button (minimal) on small window widths (640px or less).
         var width = consts.biggest.width;
-        if (width.isInfinite) width = mediaQuery.size.width;
+        if (width.isInfinite) width = MediaQuery.sizeOf(context).width;
 
         if (width <= 640) {
           _autoDisplayMode = PaneDisplayMode.minimal;
@@ -642,6 +641,9 @@ class NavigationViewState extends State<NavigationView> {
               ]);
               break;
             case PaneDisplayMode.minimal:
+              var openSize =
+                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+
               paneResult = Stack(children: [
                 PositionedDirectional(
                   top: widget.appBar?.finalHeight(context) ?? 0.0,
@@ -666,9 +668,9 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   duration: theme.animationDuration ?? Duration.zero,
                   curve: theme.animationCurve ?? Curves.linear,
-                  start: minimalPaneOpen ? 0.0 : -kOpenNavigationPaneWidth,
-                  width: kOpenNavigationPaneWidth,
-                  height: mediaQuery.size.height,
+                  start: minimalPaneOpen ? 0.0 : -openSize,
+                  width: openSize,
+                  height: MediaQuery.sizeOf(context).height,
                   child: PaneScrollConfiguration(
                     child: ColoredBox(
                       color: Colors.black,
@@ -856,8 +858,7 @@ class NavigationAppBar with Diagnosticable {
 
   double finalHeight(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
-    final mediaQuery = MediaQuery.of(context);
-    final topPadding = mediaQuery.viewPadding.top;
+    final topPadding = MediaQuery.viewPaddingOf(context).top;
 
     return height + topPadding;
   }
@@ -876,8 +877,6 @@ class _NavigationAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
-
-    final mediaQuery = MediaQuery.of(context);
 
     final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
@@ -942,7 +941,7 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-    final topPadding = mediaQuery.viewPadding.top;
+    final topPadding = MediaQuery.viewPaddingOf(context).top;
 
     return Container(
       color: appBar.backgroundColor,

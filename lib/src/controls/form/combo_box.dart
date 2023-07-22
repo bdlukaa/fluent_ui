@@ -210,6 +210,30 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
       );
     }
 
+    if (kIsWeb) {
+      child = Focus(
+        onKeyEvent: (node, event) {
+          if (!(event is KeyDownEvent || event is KeyRepeatEvent)) {
+            return KeyEventResult.ignored;
+          }
+
+          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            // if nothing is selected, select the first
+            FocusScope.of(context).nextFocus();
+            return KeyEventResult.handled;
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            // if nothing is selected, select the last
+            FocusScope.of(context).previousFocus();
+            return KeyEventResult.handled;
+          } else {
+            return KeyEventResult.ignored;
+          }
+        },
+        canRequestFocus: false,
+        child: child,
+      );
+    }
+
     return Padding(
       padding:
           const EdgeInsetsDirectional.only(bottom: _kMenuItemBottomPadding),
@@ -1198,6 +1222,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
 
@@ -1222,7 +1247,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
 
       placeholderIndex = items.length;
       items.add(DefaultTextStyle.merge(
-        style: textStyle!.copyWith(color: theme.disabledColor),
+        style: textStyle!.copyWith(
+          color: theme.resources.textFillColorDisabled,
+        ),
         child: IgnorePointer(
           ignoringSemantics: false,
           child: displayedHint,
@@ -1254,7 +1281,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       return DefaultTextStyle.merge(
         style: isEnabled
             ? textStyle!
-            : textStyle!.copyWith(color: theme.disabledColor),
+            : textStyle!.copyWith(
+                color: theme.resources.textFillColorDisabled,
+              ),
         child: Container(
           padding: padding.resolve(Directionality.of(context)),
           child: Row(

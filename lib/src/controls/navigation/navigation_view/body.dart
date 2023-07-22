@@ -87,7 +87,6 @@ class _NavigationBodyState extends State<_NavigationBody> {
     super.didChangeDependencies();
     final view = InheritedNavigationView.of(context);
     final selected = view.pane?.selected ?? 0;
-    MediaQuery.of(context);
 
     _pageController ??= PageController(initialPage: selected);
 

@@ -150,6 +150,7 @@ class TextFormBox extends ControllableFormBox {
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
           builder: (FormFieldState<String> field) {
+            assert(debugCheckHasFluentTheme(field.context));
             final theme = FluentTheme.of(field.context);
             final state = field as TextFormBoxState;
 

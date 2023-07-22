@@ -1,6 +1,7 @@
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/gestures.dart';
 
 class TreeViewPage extends StatefulWidget {
   const TreeViewPage({super.key});
@@ -33,7 +34,6 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
           child: TreeView(
             key: treeViewKey,
             selectionMode: TreeViewSelectionMode.multiple,
-            shrinkWrap: true,
             items: items,
             onItemInvoked: (item, reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
@@ -107,21 +107,15 @@ TreeView(
         ),
         subtitle(content: const Text('A TreeView with lazy-loading items')),
         CardHighlight(
-          child: Column(
-            children: [
-              TreeView(
-                shrinkWrap: true,
-                items: lazyItems,
-                onItemInvoked: (item, reason) async =>
-                    debugPrint('onItemInvoked(reason=$reason): $item'),
-                onSelectionChanged: (selectedItems) async => debugPrint(
-                    'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-                onSecondaryTap: (item, details) async {
-                  debugPrint(
-                      'onSecondaryTap $item at ${details.globalPosition}');
-                },
-              ),
-            ],
+          child: TreeView(
+            items: lazyItems,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
           ),
           codeSnippet: r'''final lazyItems = [
   TreeViewItem(
@@ -170,12 +164,60 @@ TreeView(
   items: lazyItems,
   onItemInvoked: (item) async => debugPrint('onItemInvoked: $item'),
   onSelectionChanged: (selectedItems) async => debugPrint(
-    'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+    'onSelectionChanged: ${selectedItems.map((i) => i.value)}',
+  ),
   onSecondaryTap: (item, details) async {
     debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-          },
-)
-''',
+  },
+)''',
+        ),
+        subtitle(content: const Text('A TreeView with custom gestures')),
+        description(
+          content: const Text(
+            'In the example below, a double tap gesture recognizer is added to '
+            'every item in the tree view.\n'
+            'This can be done by passing a GestureRecognizer to the gesturesBuilder'
+            'callback, whether it is built-in or custom.',
+          ),
+        ),
+        CardHighlight(
+          child: TreeView(
+            items: items,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
+            gesturesBuilder: (item) {
+              return <Type, GestureRecognizerFactory>{
+                DoubleTapGestureRecognizer:
+                    GestureRecognizerFactoryWithHandlers<
+                        DoubleTapGestureRecognizer>(
+                  () => DoubleTapGestureRecognizer(),
+                  (DoubleTapGestureRecognizer instance) {
+                    instance.onDoubleTap =
+                        () => debugPrint('onDoubleTap $item');
+                  },
+                ),
+              };
+            },
+          ),
+          codeSnippet: r'''TreeView(
+  ...,
+  gesturesBuilder: (item) {
+    return <Type, GestureRecognizerFactory>{
+      DoubleTapGestureRecognizer: GestureRecognizerFactoryWithHandlers<DoubleTapGestureRecognizer>(
+        () => DoubleTapGestureRecognizer(),
+        (DoubleTapGestureRecognizer instance) {
+          instance.onDoubleTap =
+            () => debugPrint('onDoubleTap $item');
+        },
+      ),
+    };
+  },
+),''',
         ),
       ],
     );

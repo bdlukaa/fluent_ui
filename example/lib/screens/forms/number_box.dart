@@ -165,11 +165,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
 ),
 ''',
         ),
-        subtitle(
-          content: const Text(
-            'A NumberBox with double value',
-          ),
-        ),
+        subtitle(content: const Text('A NumberBox with double value')),
         CardHighlight(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -185,6 +181,33 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   onChanged: disabled ? null : _valueChangedDouble,
   smallChange: 0.1,
   mode: SpinButtonPlacementMode.none,
+),
+''',
+        ),
+        subtitle(content: const Text('A NumberFormBox')),
+        CardHighlight(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NumberFormBox(
+              value: numberBoxValue,
+              onChanged: disabled ? null : _valueChanged,
+              autovalidateMode: AutovalidateMode.always,
+              validator: (v) {
+                if (v == null || int.tryParse(v) == null) {
+                  return 'Provide a valid number';
+                }
+
+                if (int.parse(v) > 10) {
+                  return 'Provide a number smaller than 10';
+                }
+
+                return null;
+              },
+            ),
+          ]),
+          codeSnippet: '''NumberFormBox(
+  value: numberBoxValue,
+  onChanged: disabled ? null : _valueChanged,
 ),
 ''',
         ),
