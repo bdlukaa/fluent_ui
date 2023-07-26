@@ -213,7 +213,7 @@ class FlyoutListTile extends StatelessWidget {
                 DefaultTextStyle.merge(
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: theme.borderInputColor,
+                    color: theme.resources.controlStrokeColorDefault,
                     height: 0.7,
                   ),
                   child: trailing!,

@@ -2,10 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 const double _kVerticalOffset = 6.0;
-const Widget _kDefaultDropdownButtonTrailing = Icon(
-  FluentIcons.chevron_down,
-  size: 8.0,
-);
+const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 
 typedef DropDownButtonBuilder = Widget Function(
   BuildContext context,
@@ -325,6 +322,7 @@ class DropDownButtonState extends State<DropDownButton> {
 
     widget.onOpen?.call();
     await _flyoutController.showFlyout(
+      barrierColor: Colors.transparent,
       placementMode: FlyoutPlacementMode.auto,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,

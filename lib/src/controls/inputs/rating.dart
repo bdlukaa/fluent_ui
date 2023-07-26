@@ -217,6 +217,7 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed

@@ -72,9 +72,6 @@ class TabView extends StatefulWidget {
     this.header,
     this.footer,
     this.closeDelayDuration = const Duration(milliseconds: 400),
-    @Deprecated(
-        'This property is no longer used and will be removed in the next major release.')
-    this.wheelScroll = false,
   });
 
   /// The index of the tab to be displayed
@@ -127,10 +124,6 @@ class TabView extends StatefulWidget {
   ///
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
-
-  @Deprecated('This property is no longer used and will be removed in the'
-      ' next major release.')
-  final bool wheelScroll;
 
   /// Indicates the close button visibility mode
   final CloseButtonVisibilityMode closeButtonVisibility;
@@ -362,7 +355,9 @@ class _TabViewState extends State<TabView> {
         style: ButtonStyle(
           foregroundColor: ButtonState.resolveWith((states) {
             if (states.isDisabled || states.isNone) {
-              return FluentTheme.of(context).disabledColor;
+              return FluentTheme.of(context)
+                  .resources
+                  .controlAltFillColorDisabled;
             } else {
               return FluentTheme.of(context).inactiveColor;
             }
@@ -683,8 +678,6 @@ class __TabBodyState extends State<_TabBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MediaQuery.of(context);
-
     _pageController ??= PageController(initialPage: widget.index);
   }
 

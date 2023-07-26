@@ -232,7 +232,11 @@ class ButtonThemeData with Diagnosticable {
 
   /// Defines the default color used by [Button]s using the current brightness
   /// and state.
-  static Color buttonColor(BuildContext context, Set<ButtonStates> states) {
+  static Color buttonColor(
+    BuildContext context,
+    Set<ButtonStates> states, {
+    bool transparentWhenNone = false,
+  }) {
     final res = FluentTheme.of(context).resources;
     if (states.isPressing) {
       return res.controlFillColorTertiary;
@@ -241,7 +245,9 @@ class ButtonThemeData with Diagnosticable {
     } else if (states.isDisabled) {
       return res.controlFillColorDisabled;
     }
-    return res.controlFillColorDefault;
+    return transparentWhenNone
+        ? res.subtleFillColorTransparent
+        : res.controlFillColorDefault;
   }
 
   /// Defines the default foregournd color used by [Button]s using the current brightness

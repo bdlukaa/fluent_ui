@@ -23,6 +23,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
     color: isSelected
         ? theme.resources.textOnAccentFillColorPrimary
         : theme.resources.textFillColorPrimary,
+    fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
   );
 }
 
@@ -54,7 +55,10 @@ Widget PickerHighlightTile() {
       child: Container(
         alignment: AlignmentDirectional.center,
         height: kOneLineTileHeight,
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsetsDirectional.symmetric(
+          vertical: 6.0,
+          horizontal: 2.0,
+        ),
         child: ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
@@ -334,6 +338,8 @@ class _PickerState extends State<Picker> {
       ancestor: navigator.context.findRenderObject(),
     );
 
+    final rootBox = navigator.context.findRenderObject() as RenderBox;
+
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
 
     return navigator.push(PageRouteBuilder(
@@ -342,10 +348,10 @@ class _PickerState extends State<Picker> {
       barrierDismissible: true,
       fullscreenDialog: true,
       pageBuilder: (context, primary, __) {
-        assert(debugCheckHasMediaQuery(context));
         assert(debugCheckHasFluentTheme(context));
+        assert(debugCheckHasMediaQuery(context));
 
-        final screenHeight = MediaQuery.of(context).size.height;
+        final rootHeight = rootBox.size.height;
 
         // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
         // value from the Win UI 3 Gallery
@@ -355,19 +361,23 @@ class _PickerState extends State<Picker> {
 
         // if the popup menu [y] + picker height overlaps the screen height, make
         // it to the bottom of the screen
-        if (y + widget.pickerHeight > screenHeight) {
-          y = screenHeight - widget.pickerHeight;
+        if (y + widget.pickerHeight > rootHeight) {
+          const bottomMargin = 8.0;
+          y = rootHeight - widget.pickerHeight - bottomMargin;
+          // y = 0;
           // if the popup menu [y] is off screen on the top, make it to the top of
           // the screen
         } else if (y < 0) {
           y = 0;
         }
 
+        y = y.clamp(0.0, rootHeight);
+
         final theme = FluentTheme.of(context);
 
         // If the screen is smaller than 260, we ensure the popup will fit in the
         // screen. https://github.com/bdlukaa/fluent_ui/issues/544
-        final minWidth = min(260.0, MediaQuery.of(context).size.width);
+        final minWidth = min(260.0, MediaQuery.sizeOf(context).width);
         final width = max(box.size.width, minWidth);
         final x = () {
           if (box.size.width > minWidth) return childOffset.dx;

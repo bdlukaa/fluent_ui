@@ -36,7 +36,7 @@ class OutlinedButton extends BaseButton {
       foregroundColor: ButtonState.all(theme.inactiveColor),
       backgroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
-          return theme.disabledColor.withOpacity(0.30);
+          return theme.resources.controlFillColorDisabled.withOpacity(0.30);
         } else if (states.isPressing) {
           return theme.inactiveColor.withOpacity(0.25);
         } else if (states.isHovering) {

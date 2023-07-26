@@ -427,30 +427,34 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 child: ListWheelScrollView.useDelegate(
                   controller: widget.hourController,
                   childDelegate: ListWheelChildLoopingListDelegate(
-                    children: List.generate(
-                      hoursAmount,
-                      (index) {
-                        final hour = index + 1;
-                        final realHour = () {
-                          if (!widget.use24Format && localDate.hour > 12) {
-                            return hour + 12;
-                          }
-                          return hour;
-                        }();
-                        return SizedBox(
-                          height: kOneLineTileHeight,
-                          child: Center(
-                            child: Text(
-                              '$hour',
-                              style: kPickerPopupTextStyle(
-                                context,
-                                localDate.hour == realHour,
-                              ),
-                            ),
+                    children: List.generate(hoursAmount, (index) {
+                      final hour = index + 1;
+                      final realHour = () {
+                        if (!widget.use24Format && localDate.hour > 12) {
+                          return hour + 12;
+                        }
+                        return hour;
+                      }();
+                      final selected = localDate.hour == realHour;
+
+                      return ListTile(
+                        onPressed: selected
+                            ? null
+                            : () {
+                                widget.hourController.animateToItem(
+                                  index,
+                                  duration: theme.mediumAnimationDuration,
+                                  curve: theme.animationCurve,
+                                );
+                              },
+                        title: Center(
+                          child: Text(
+                            '$hour',
+                            style: kPickerPopupTextStyle(context, selected),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    }),
                   ),
                   itemExtent: kOneLineTileHeight,
                   diameterRatio: kPickerDiameterRatio,
@@ -498,15 +502,21 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                       60 ~/ widget.minuteIncrement,
                       (index) {
                         final minute = index * widget.minuteIncrement;
-                        return SizedBox(
-                          height: kOneLineTileHeight,
-                          child: Center(
+                        final selected = minute == localDate.minute;
+                        return ListTile(
+                          onPressed: selected
+                              ? null
+                              : () {
+                                  widget.minuteController.animateToItem(
+                                    index,
+                                    duration: theme.mediumAnimationDuration,
+                                    curve: theme.animationCurve,
+                                  );
+                                },
+                          title: Center(
                             child: Text(
                               '$minute',
-                              style: kPickerPopupTextStyle(
-                                context,
-                                minute == localDate.minute,
-                              ),
+                              style: kPickerPopupTextStyle(context, selected),
                             ),
                           ),
                         );
@@ -555,30 +565,46 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                     itemExtent: kOneLineTileHeight,
                     physics: const FixedExtentScrollPhysics(),
                     children: [
-                      SizedBox(
-                        height: kOneLineTileHeight,
-                        child: Center(
-                          child: Text(
-                            localizations.am,
-                            style: kPickerPopupTextStyle(
-                              context,
-                              localDate.hour < 12,
+                      () {
+                        final selected = localDate.hour < 12;
+                        return ListTile(
+                          onPressed: selected
+                              ? null
+                              : () {
+                                  widget.amPmController.animateToItem(
+                                    0,
+                                    duration: theme.mediumAnimationDuration,
+                                    curve: theme.animationCurve,
+                                  );
+                                },
+                          title: Center(
+                            child: Text(
+                              localizations.am,
+                              style: kPickerPopupTextStyle(context, selected),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: kOneLineTileHeight,
-                        child: Center(
-                          child: Text(
-                            localizations.pm,
-                            style: kPickerPopupTextStyle(
-                              context,
-                              localDate.hour >= 12,
+                        );
+                      }(),
+                      () {
+                        final selected = localDate.hour >= 12;
+                        return ListTile(
+                          onPressed: selected
+                              ? null
+                              : () {
+                                  widget.amPmController.animateToItem(
+                                    1,
+                                    duration: theme.mediumAnimationDuration,
+                                    curve: theme.animationCurve,
+                                  );
+                                },
+                          title: Center(
+                            child: Text(
+                              localizations.pm,
+                              style: kPickerPopupTextStyle(context, selected),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }(),
                     ],
                     onSelectedItemChanged: (index) {
                       // setState(() {});

@@ -487,6 +487,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       return widget.child ?? const SizedBox();
     }
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
     final tooltipTheme = TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;

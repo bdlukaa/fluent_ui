@@ -29,6 +29,7 @@ class FormRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
     return Padding(

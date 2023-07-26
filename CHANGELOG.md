@@ -1,8 +1,45 @@
 ## [next]
 
-- Add Slovak localization
+- Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
+- **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+- Implement `BreadcrumbBar` ([#878](https://github.com/bdlukaa/fluent_ui/issues/878))
+- Ensure all widgets use the correct debug checks ([#883](https://github.com/bdlukaa/fluent_ui/issues/883))
+- `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
+- Added `Expander.contentPadding` and `Expander.contentShape` ([#891](https://github.com/bdlukaa/fluent_ui/issues/891))
 - Complete implementation of `DatePicker` and `TimePicker`'s `intl` localization with proper scripting language.
   - Remove original implementation of `TimePicker` in [#445](https://github.com/bdlukaa/fluent_ui/pull/445) which cover `hour` only.
+
+## 4.7.0
+
+- Add Slovak localization ([#850](https://github.com/bdlukaa/fluent_ui/issues/850))
+- Add `AutoSuggestBox.itemBuilder` callback builder, which builds the items inside the overlay ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
+- Add `AutoSuggestBoxItem.semanticsLabel` ([#869](https://github.com/bdlukaa/fluent_ui/issues/869))
+- Add `ButtonState.forStates`, a helper function to quickly resolve values for each button state ([#875](https://github.com/bdlukaa/fluent_ui/pull/875))
+- Slider label color is solid ([#847](https://github.com/bdlukaa/fluent_ui/issues/847))
+- **BREAKING** Removed `.disabledColor`, `uncheckedColor`, `.checkedColor` and `.borderInputColor` from `FluentThemeData`. Use the values from theme resources instead ([`1295b6`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/a195b58f4440c3c0febc595ba6f0b730a950a0d5))
+- **BREAKING** To match the native implementation, `ToggleSwitch.thumb` and `.thumbBuilder` have been renamed to `.knob` and `.knobBuilder`, respectively. `DefaultToggleSwitchThumb` was renamed to `DefaultToggleSwitchKnob` ([e15e89d](https://github.com/bdlukaa/fluent_ui/pull/875/commits/e15e89d4140635796c105cf79a51f9ebc54cdfe6))
+- Added `CheckboxThemeData.foregroundColor`, `RadioButtonThemeData.foregroundColor` and `ToggleSwitchThemeData.foregroundColor`, which, by default, reacts if the inputs are disabled or not ([#861](https://github.com/bdlukaa/fluent_ui/issues/861))
+- `ToggleSwitch` correctly behaves as disabled when `onChanged` is `null` ([`4b5afb5`](https://github.com/bdlukaa/fluent_ui/pull/875/commits/4b5afb50ece212889917ba89d407fe45151ceff6)) 
+- Add `PaneItemExpander.initiallyExpanded` ([#864](https://github.com/bdlukaa/fluent_ui/issues/864))
+- Add `NumberFormBox` ([#862](https://github.com/bdlukaa/fluent_ui/issues/862))
+- `PaneItem.onTap` from `PaneItemExpander.items`, when displayed in popup, are now correctly invoked ([#859](https://github.com/bdlukaa/fluent_ui/issues/859))
+- Navigating through the `Combobox` items on web now works properly ([#757](https://github.com/bdlukaa/fluent_ui/issues/757))
+- `TreeViewItem`, if selection mode is `single`, gets selected when focused with the keyboard ([#835](https://github.com/bdlukaa/fluent_ui/issues/835))
+- In multiple selection mode, `TreeView`'s built-in checkbox now doesn't receive focus. It can now be focused by invoking it with the keyboard ([#877](https://github.com/bdlukaa/fluent_ui/pull/877))
+- Enabled click on `DatePicker` and `TimePicker` ([#6](https://github.com/bdlukaa/fluent_ui/issues/6))
+- `DatePicker.endDate.year` is taken into account when displaying the years ([#874](https://github.com/bdlukaa/fluent_ui/issues/874))
+- `DatePicker`'s day field is now correctly selected ([d152dc](https://github.com/bdlukaa/fluent_ui/commit/d152dc9cdd0dcd9fe6436e1c1f1f88bc97abef1e))
+- `DatePicker` and `TimePicker` are correctly fit into the navigator bounds ([711390](https://github.com/bdlukaa/fluent_ui/commit/711390d7bcc8f17ced8f62130875e13097dd3a22))
+- Add `TreeView.gesturesBuilder` and `TreeViewItem.gestures` ([#851](https://github.com/bdlukaa/fluent_ui/issues/851))
+- Improved overall `Semantics`. Now, not every input is treated as a button ([2fee45](https://github.com/bdlukaa/fluent_ui/commit/2fee459de612fd562c18ca1924ba835ebb665d7e))
+- Deprecated all mobile widgets: `BottomSheet`, `Snackbar`, `Chip` and `PillButtonBar` - and all their related widgets. ([c1cfe491](https://github.com/bdlukaa/fluent_ui/commit/c1cfe491ba0388af540803c8e4a0bb9a049a873f))
+- **BREAKING** Removed previously deprecated fields ([ee601649](https://github.com/bdlukaa/fluent_ui/commit/ee6016490dc50d217cc2709e4500cc8748fa0e1d)): 
+  - `EditableComboboxFormField.value`. Use `EditableComboboxFormField.initialValue` instead
+  - `DatePicker.startYear`. Use `DatePicker.startDate` instead
+  - `DatePicker.endYear`. Use `DatePicker.endDate` instead
+  - `TextButton`. Use `HyperlinkButton` instead
+  - `TabView.wheelScroll`. It is no longer used
+  - `ThemeData`. Use `FluentThemeData` instead
 
 ## 4.6.2
 

@@ -1,8 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-@Deprecated('Deprecated in 4.4.3. Use HypelinkButton instead')
-typedef TextButton = HyperlinkButton;
-
 /// A borderless button with mainly text-based content
 ///
 /// {@macro fluent_ui.buttons.base}
@@ -51,7 +48,7 @@ class HyperlinkButton extends BaseButton {
       padding: ButtonState.all(kDefaultButtonPadding),
       foregroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {
-          return theme.disabledColor;
+          return theme.resources.controlFillColorDisabled;
         } else if (states.isPressing) {
           return theme.accentColor.tertiaryBrushFor(theme.brightness);
         } else if (states.isHovering) {

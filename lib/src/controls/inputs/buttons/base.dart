@@ -132,7 +132,7 @@ class _BaseButtonState extends State<BaseButton> {
       return widgetValue ?? themeValue ?? defaultValue;
     }
 
-    final Widget result = HoverButton(
+    return HoverButton(
       autofocus: widget.autofocus,
       focusNode: widget.focusNode,
       onPressed: widget.onPressed,
@@ -209,15 +209,13 @@ class _BaseButtonState extends State<BaseButton> {
             ),
           ),
         );
-        return FocusBorder(focused: states.isFocused, child: result);
+        return Semantics(
+          container: true,
+          button: true,
+          enabled: widget.enabled,
+          child: FocusBorder(focused: states.isFocused, child: result),
+        );
       },
-    );
-
-    return Semantics(
-      container: true,
-      button: true,
-      enabled: widget.enabled,
-      child: result,
     );
   }
 }

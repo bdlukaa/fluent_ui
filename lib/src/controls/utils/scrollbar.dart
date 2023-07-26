@@ -93,7 +93,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasMediaQuery(context));
     final direction = Directionality.of(context);
-    final viewPadding = MediaQuery.of(context).padding;
+    final viewPadding = MediaQuery.viewPaddingOf(context);
     final animation = _hoverAnimationController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)
@@ -527,5 +527,22 @@ class ScrollbarThemeData with Diagnosticable {
           vertical: 4.0,
         ),
       ));
+  }
+}
+
+/// Provider an extension method to hide vertical scrollbar.
+/// May this can help [SingleChildScrollView] looks better.
+extension ScrollViewExtension on SingleChildScrollView {
+  /// Use [ScrollConfiguration] as wrapper to hide vertical scrollbar.
+  Widget hideVerticalScrollbar(
+    BuildContext context, {
+    ScrollBehavior? behavior,
+  }) {
+    behavior ??= ScrollConfiguration.of(context);
+    var showScrollbar = scrollDirection != Axis.vertical;
+    return ScrollConfiguration(
+      behavior: behavior.copyWith(scrollbars: showScrollbar),
+      child: this,
+    );
   }
 }
