@@ -679,7 +679,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       Expanded(
         child: () {
           final years = widget.endDate.year - widget.startDate.year + 1;
-          final formatter = DateFormat.y(fluentScriptRecognizer.resolve(locale));
+          final formatter =
+              DateFormat.y(fluentScriptRecognizer.resolve(locale));
           // YEAR
           return PickerNavigatorIndicator(
             onBackward: () {
