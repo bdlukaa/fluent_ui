@@ -293,9 +293,10 @@ class FluentThemeData with Diagnosticable {
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= resources.cardBackgroundFillColorDefault;
-    typography = Typography.fromBrightness(brightness: brightness)
-        .merge(typography)
-        .apply(fontFamily: fontFamily);
+    typography = Typography.fromBrightness(
+      brightness: brightness,
+      color: resources.textFillColorPrimary,
+    ).merge(typography).apply(fontFamily: fontFamily);
     focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
