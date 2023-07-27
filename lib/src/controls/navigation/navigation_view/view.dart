@@ -306,6 +306,11 @@ class NavigationViewState extends State<NavigationView> {
     assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasDirectionality(context));
+    assert(
+      widget.content != null || widget.pane != null,
+      'Either pane or '
+      'content must be provided',
+    );
 
     final brightness = FluentTheme.of(context).brightness;
     final theme = NavigationPaneTheme.of(context);
@@ -711,8 +716,9 @@ class NavigationViewState extends State<NavigationView> {
           Expanded(child: widget.content!),
         ]);
       } else {
-        throw 'Either pane or content must be provided';
+        return const SizedBox.shrink();
       }
+
       return Mica(
         backgroundColor: theme.backgroundColor,
         child: InheritedNavigationView(
@@ -734,7 +740,11 @@ class NavigationViewState extends State<NavigationView> {
         child: ScrollConfiguration(
           behavior: widget.pane?.scrollBehavior ??
               const NavigationViewScrollBehavior(),
-          child: child,
+          child: MediaQuery.removePadding(
+            context: context,
+            removeTop: widget.appBar != null,
+            child: child,
+          ),
         ),
       );
     });
@@ -856,10 +866,12 @@ class NavigationAppBar with Diagnosticable {
     });
   }
 
+  /// Determines the height of this app bar based on its height and the top
+  /// padding from the system.
+  @visibleForTesting
   double finalHeight(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
-    final topPadding = MediaQuery.viewPaddingOf(context).top;
-
+    final topPadding = MediaQuery.paddingOf(context).top;
     return height + topPadding;
   }
 }
@@ -941,7 +953,7 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-    final topPadding = MediaQuery.viewPaddingOf(context).top;
+    final topPadding = MediaQuery.paddingOf(context).top;
 
     return Container(
       color: appBar.backgroundColor,
