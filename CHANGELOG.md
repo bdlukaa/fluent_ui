@@ -7,6 +7,7 @@
 - `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
 - Added `Expander.contentPadding` and `Expander.contentShape` ([#891](https://github.com/bdlukaa/fluent_ui/issues/891))
 - Tooltips are dismissed as soon as the mouse leaves ([#898](https://github.com/bdlukaa/fluent_ui/issues/898))
+- Added `FluentThemeData.selectionColor`, which defaults to the accent color normal shade ([#897](https://github.com/bdlukaa/fluent_ui/issues/897))
 
 ## 4.7.0
 

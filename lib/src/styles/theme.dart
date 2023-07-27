@@ -191,6 +191,7 @@ class FluentThemeData with Diagnosticable {
   final Color micaBackgroundColor;
   final Color menuColor;
   final Color cardColor;
+  final Color selectionColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -240,6 +241,7 @@ class FluentThemeData with Diagnosticable {
     Color? shadowColor,
     Color? menuColor,
     Color? cardColor,
+    Color? selectionColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -293,6 +295,7 @@ class FluentThemeData with Diagnosticable {
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= resources.cardBackgroundFillColorDefault;
+    selectionColor ??= accentColor.normal;
     typography = Typography.fromBrightness(
       brightness: brightness,
       color: resources.textFillColorPrimary,
@@ -367,6 +370,7 @@ class FluentThemeData with Diagnosticable {
       menuColor: menuColor,
       cardColor: cardColor,
       resources: resources,
+      selectionColor: selectionColor,
     );
   }
 
@@ -410,6 +414,7 @@ class FluentThemeData with Diagnosticable {
     required this.menuColor,
     required this.cardColor,
     required this.resources,
+    required this.selectionColor,
   });
 
   static FluentThemeData light() {
@@ -479,6 +484,7 @@ class FluentThemeData with Diagnosticable {
       bottomSheetTheme:
           BottomSheetThemeData.lerp(a.bottomSheetTheme, b.bottomSheetTheme, t),
       menuColor: Color.lerp(a.menuColor, b.menuColor, t)!,
+      selectionColor: Color.lerp(a.selectionColor, b.selectionColor, t)!,
     );
   }
 
@@ -516,6 +522,7 @@ class FluentThemeData with Diagnosticable {
     Color? shadowColor,
     Color? menuColor,
     Color? cardColor,
+    Color? selectionColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
@@ -562,6 +569,7 @@ class FluentThemeData with Diagnosticable {
       micaBackgroundColor: micaBackgroundColor ?? this.micaBackgroundColor,
       menuColor: menuColor ?? this.menuColor,
       cardColor: cardColor ?? this.cardColor,
+      selectionColor: selectionColor ?? this.selectionColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
@@ -609,6 +617,7 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
       ..add(ColorProperty('cardColor', cardColor))
+      ..add(ColorProperty('selectionColor', selectionColor))
       ..add(EnumProperty('brightness', brightness))
       ..add(DiagnosticsProperty<Duration>(
         'slowAnimationDuration',
