@@ -550,6 +550,7 @@ class FlyoutController with ChangeNotifier {
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
     Offset? position,
+    RouteSettings? settings,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
@@ -595,6 +596,9 @@ class FlyoutController with ChangeNotifier {
     final result = await navigator.push<T>(PageRouteBuilder<T>(
       opaque: false,
       transitionDuration: transitionDuration,
+      reverseTransitionDuration: transitionDuration,
+      settings: settings,
+      fullscreenDialog: true,
       pageBuilder: (context, animation, secondary) {
         transitionBuilder ??= (context, animation, placementMode, flyout) {
           switch (placementMode) {
