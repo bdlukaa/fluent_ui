@@ -9,9 +9,7 @@ void main() {
       await tester.pumpWidget(FluentApp(
         builder: (context, child) {
           return MediaQuery(
-            data: const MediaQueryData(
-              viewPadding: EdgeInsets.only(top: 27.0),
-            ),
+            data: const MediaQueryData(padding: EdgeInsets.only(top: 27.0)),
             child: child!,
           );
         },

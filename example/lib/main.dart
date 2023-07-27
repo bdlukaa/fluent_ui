@@ -130,12 +130,10 @@ class MyHomePage extends StatefulWidget {
     super.key,
     required this.child,
     required this.shellContext,
-    required this.state,
   });
 
   final Widget child;
   final BuildContext? shellContext;
-  final GoRouterState state;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -669,7 +667,6 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
     builder: (context, state, child) {
       return MyHomePage(
         shellContext: _shellNavigatorKey.currentContext,
-        state: state,
         child: child,
       );
     },

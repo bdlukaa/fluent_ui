@@ -430,6 +430,7 @@ class _FluentAppState extends State<FluentApp> {
     final themeData = theme(context);
     final mTheme = context.findAncestorWidgetOfExactType<m.Theme>();
 
+    var colorValue = 900;
     return m.AnimatedTheme(
       data: mTheme?.data ??
           m.ThemeData(
@@ -437,7 +438,8 @@ class _FluentAppState extends State<FluentApp> {
               primarySwatch: m.MaterialColor(
                 themeData.accentColor.value,
                 themeData.accentColor.swatch.map((key, color) {
-                  return MapEntry(color.value, color);
+                  colorValue -= 100;
+                  return MapEntry(colorValue, color);
                 }),
               ),
               primaryColorDark: themeData.accentColor.darker,
