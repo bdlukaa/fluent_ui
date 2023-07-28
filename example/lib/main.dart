@@ -226,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     PaneItemHeader(header: const Text('Navigation')),
     PaneItem(
-      key: const ValueKey('/navigation/nav_view'),
+      key: const ValueKey('/navigation/navigation_view'),
       icon: const Icon(FluentIcons.navigation_flipper),
       title: const Text('NavigationView'),
       body: const SizedBox.shrink(),
