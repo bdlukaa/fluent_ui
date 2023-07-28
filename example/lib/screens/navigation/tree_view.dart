@@ -31,18 +31,6 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
           content: const Text('A TreeView with Multi-selection enabled'),
         ),
         CardHighlight(
-          child: TreeView(
-            key: treeViewKey,
-            selectionMode: TreeViewSelectionMode.multiple,
-            items: items,
-            onItemInvoked: (item, reason) async =>
-                debugPrint('onItemInvoked(reason=$reason): $item'),
-            onSelectionChanged: (selectedItems) async => debugPrint(
-                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-            onSecondaryTap: (item, details) async {
-              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-            },
-          ),
           codeSnippet: r'''final items = [
   TreeViewItem(
     content: const Text('Personal Documents'),
@@ -104,11 +92,10 @@ TreeView(
   },
 )
 ''',
-        ),
-        subtitle(content: const Text('A TreeView with lazy-loading items')),
-        CardHighlight(
           child: TreeView(
-            items: lazyItems,
+            key: treeViewKey,
+            selectionMode: TreeViewSelectionMode.multiple,
+            items: items,
             onItemInvoked: (item, reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
             onSelectionChanged: (selectedItems) async => debugPrint(
@@ -117,6 +104,9 @@ TreeView(
               debugPrint('onSecondaryTap $item at ${details.globalPosition}');
             },
           ),
+        ),
+        subtitle(content: const Text('A TreeView with lazy-loading items')),
+        CardHighlight(
           codeSnippet: r'''final lazyItems = [
   TreeViewItem(
     content: const Text('Item with lazy loading'),
@@ -170,6 +160,16 @@ TreeView(
     debugPrint('onSecondaryTap $item at ${details.globalPosition}');
   },
 )''',
+          child: TreeView(
+            items: lazyItems,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
+          ),
         ),
         subtitle(content: const Text('A TreeView with custom gestures')),
         description(
@@ -181,6 +181,20 @@ TreeView(
           ),
         ),
         CardHighlight(
+          codeSnippet: r'''TreeView(
+  ...,
+  gesturesBuilder: (item) {
+    return <Type, GestureRecognizerFactory>{
+      DoubleTapGestureRecognizer: GestureRecognizerFactoryWithHandlers<DoubleTapGestureRecognizer>(
+        () => DoubleTapGestureRecognizer(),
+        (DoubleTapGestureRecognizer instance) {
+          instance.onDoubleTap =
+            () => debugPrint('onDoubleTap $item');
+        },
+      ),
+    };
+  },
+),''',
           child: TreeView(
             items: items,
             onItemInvoked: (item, reason) async =>
@@ -204,20 +218,6 @@ TreeView(
               };
             },
           ),
-          codeSnippet: r'''TreeView(
-  ...,
-  gesturesBuilder: (item) {
-    return <Type, GestureRecognizerFactory>{
-      DoubleTapGestureRecognizer: GestureRecognizerFactoryWithHandlers<DoubleTapGestureRecognizer>(
-        () => DoubleTapGestureRecognizer(),
-        (DoubleTapGestureRecognizer instance) {
-          instance.onDoubleTap =
-            () => debugPrint('onDoubleTap $item');
-        },
-      ),
-    };
-  },
-),''',
         ),
       ],
     );

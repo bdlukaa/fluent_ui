@@ -61,8 +61,8 @@ class _HomePageState extends State<HomePage> with PageMixin {
                   value: comboboxValue,
                   items: ['Item 1', 'Item 2']
                       .map((e) => ComboBoxItem(
-                            child: Text(e),
                             value: e,
+                            child: Text(e),
                           ))
                       .toList(),
                   isExpanded: true,

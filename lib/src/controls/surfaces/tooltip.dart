@@ -9,13 +9,14 @@ import 'package:flutter/rendering.dart';
 /// A tooltip is a popup that contains additional information about another
 /// control or object. Tooltips display automatically when the user moves focus
 /// to, presses and holds, or hovers the pointer over the associated control.
-/// The tooltip disappears when the user moves focus from, stops pressing on,
-/// or stops hovering the pointer over the associated control (unless the
-/// pointer is moving towards the tooltip).
+/// The tooltip disappears when the user moves focus from, stops pressing on, or
+/// stops hovering the pointer over the associated control (unless the pointer
+/// is moving towards the tooltip).
 ///
 /// ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
 ///
 /// See also:
+///
 ///   * [Flyout], which creates a popup with interactive content
 class Tooltip extends StatefulWidget {
   /// Creates a tooltip.
@@ -152,7 +153,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       TooltipTriggerMode.longPress;
   static const bool _defaultEnableFeedback = true;
 
-  late double height;
   late EdgeInsetsGeometry padding;
   late EdgeInsetsGeometry margin;
   late Decoration decoration;
@@ -207,40 +207,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     _visible = TooltipVisibility.of(context);
   }
 
-  // https://material.io/components/tooltips#specs
-  double _getDefaultTooltipHeight() {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.macOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return 24.0;
-      default:
-        return 32.0;
-    }
-  }
-
-  EdgeInsets _getDefaultPadding() {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.macOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return const EdgeInsets.symmetric(horizontal: 8.0);
-      default:
-        return const EdgeInsets.symmetric(horizontal: 16.0);
-    }
-  }
-
-  double _getDefaultFontSize() {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.macOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return 10.0;
-      default:
-        return 14.0;
-    }
-  }
-
   // Forces a rebuild if a mouse has been added or removed.
   void _handleMouseTrackerChange() {
     if (!mounted) {
@@ -264,10 +230,11 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _dismissTooltip({bool immediately = false}) {
+  void _dismissTooltip({bool immediately = false}) async {
     _showTimer?.cancel();
     _showTimer = null;
     if (immediately) {
+      await _controller.reverse();
       _removeEntry();
       return;
     }
@@ -322,7 +289,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       Overlay.of(context, debugRequiredFor: widget).insert(_entry!);
     }
     SemanticsService.tooltip(_tooltipMessage);
-    _controller.forward();
+    _controller.forward(from: 0.0);
   }
 
   /// Shows the tooltip if it is not already visible.
@@ -349,7 +316,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       return false; // Already visible.
     }
     _createNewEntry();
-    _controller.forward();
+    _controller.forward(from: 0);
     return true;
   }
 
@@ -389,7 +356,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       textDirection: Directionality.of(context),
       child: _TooltipOverlay(
         richMessage: widget.richMessage ?? TextSpan(text: widget.message),
-        height: height,
         padding: padding,
         margin: margin,
         decoration: decoration,
@@ -404,7 +370,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         displayHorizontally: widget.displayHorizontally,
       ),
     );
-    _entry = OverlayEntry(builder: (BuildContext context) => overlay);
+    _entry = OverlayEntry(builder: (_) => overlay);
     _isConcealed = false;
     overlayState.insert(_entry!);
     SemanticsService.tooltip(_tooltipMessage);
@@ -488,21 +454,21 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     }
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
+
     final theme = FluentTheme.of(context);
     final tooltipTheme = TooltipTheme.of(context).merge(widget.style);
     final TextStyle defaultTextStyle;
     final BoxDecoration defaultDecoration;
-    defaultTextStyle = theme.typography.body!.copyWith(
-      color: theme.brightness == Brightness.dark ? Colors.black : Colors.white,
-      fontSize: _getDefaultFontSize(),
-    );
+    defaultTextStyle = theme.typography.body!;
     defaultDecoration = BoxDecoration(
       color: theme.menuColor,
-      borderRadius: const BorderRadius.all(Radius.circular(4)),
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      border: Border.all(
+        color: theme.resources.surfaceStrokeColorFlyout,
+      ),
     );
 
-    height = tooltipTheme.height ?? _getDefaultTooltipHeight();
-    padding = tooltipTheme.padding ?? _getDefaultPadding();
+    padding = tooltipTheme.padding ?? EdgeInsets.zero;
     margin = tooltipTheme.margin ?? _defaultMargin;
     verticalOffset = tooltipTheme.verticalOffset ?? _defaultVerticalOffset;
     preferBelow = tooltipTheme.preferBelow ?? _defaultPreferBelow;
@@ -537,7 +503,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
           onHover: (event) {
             mousePosition = event.position;
           },
-          onExit: (_) => _handleMouseExit(),
+          onExit: (_) => _handleMouseExit(immediately: true),
           child: result,
         );
       }
@@ -689,7 +655,16 @@ class TooltipThemeData with Diagnosticable {
       verticalOffset: 24.0,
       preferBelow: false,
       margin: EdgeInsets.zero,
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: () {
+        switch (defaultTargetPlatform) {
+          case TargetPlatform.macOS:
+          case TargetPlatform.linux:
+          case TargetPlatform.windows:
+            return const EdgeInsetsDirectional.fromSTEB(8, 5, 8, 7);
+          default:
+            return const EdgeInsets.symmetric(horizontal: 16.0);
+        }
+      }(),
       showDuration: const Duration(milliseconds: 1500),
       waitDuration: const Duration(seconds: 1),
       textStyle: theme.typography.caption,
@@ -843,7 +818,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 
 class _TooltipOverlay extends StatelessWidget {
   const _TooltipOverlay({
-    required this.height,
     required this.richMessage,
     this.padding,
     this.margin,
@@ -857,7 +831,6 @@ class _TooltipOverlay extends StatelessWidget {
   });
 
   final InlineSpan richMessage;
-  final double height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
@@ -870,25 +843,22 @@ class _TooltipOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
     Widget result = IgnorePointer(
       child: FadeTransition(
         opacity: animation,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: height),
-          child: DefaultTextStyle.merge(
-            style: FluentTheme.of(context).typography.body!,
-            child: Container(
-              decoration: decoration,
-              padding: padding,
-              margin: margin,
-              child: Center(
-                widthFactor: 1.0,
-                heightFactor: 1.0,
-                child: Text.rich(
-                  richMessage,
-                  style: textStyle,
-                ),
-              ),
+        child: DefaultTextStyle.merge(
+          style: theme.typography.body!,
+          child: Container(
+            decoration: decoration,
+            padding: padding,
+            margin: margin,
+            child: Center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Text.rich(richMessage, style: textStyle),
             ),
           ),
         ),

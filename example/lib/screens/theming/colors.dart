@@ -130,9 +130,9 @@ class ColorsPage extends ScrollablePage {
           ),
           const SizedBox(height: 10),
           Wrap(
-            children: accent,
             runSpacing: 10,
             spacing: 10,
+            children: accent,
           ),
         ]),
       ),
@@ -186,6 +186,7 @@ class ColorBlock extends StatelessWidget {
       child: HoverButton(
         onPressed: () async {
           await FlutterClipboard.copy(clipboard);
+          // ignore: use_build_context_synchronously
           showCopiedSnackbar(context, clipboard);
         },
         cursor: SystemMouseCursors.copy,

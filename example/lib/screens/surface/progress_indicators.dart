@@ -36,6 +36,11 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
           ),
         ),
         const CardHighlight(
+          codeSnippet: '''// indeterminate progress bar
+ProgressBar(),
+
+// indeterminate progress ring
+ProgressRing(),''',
           child: RepaintBoundary(
             child: Row(children: [
               ProgressBar(),
@@ -43,11 +48,6 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
               ProgressRing(),
             ]),
           ),
-          codeSnippet: '''// indeterminate progress bar
-ProgressBar(),
-
-// indeterminate progress ring
-ProgressRing(),''',
         ),
         subtitle(content: const Text('Determinate Progress Indicators')),
         description(
@@ -58,6 +58,11 @@ ProgressRing(),''',
           ),
         ),
         CardHighlight(
+            codeSnippet: '''// determinate progress bar
+ProgressBar(value: ${determinateValue.toInt()}),
+
+// determinate progress ring
+ProgressRing(value: ${determinateValue.toInt()}),''',
             child: Row(children: [
               ProgressBar(value: determinateValue),
               const SizedBox(width: 20.0),
@@ -70,12 +75,7 @@ ProgressRing(),''',
                   onChanged: (v) => setState(() => determinateValue = v),
                 ),
               ),
-            ]),
-            codeSnippet: '''// determinate progress bar
-ProgressBar(value: ${determinateValue.toInt()}),
-
-// determinate progress ring
-ProgressRing(value: ${determinateValue.toInt()}),'''),
+            ])),
       ],
     );
   }

@@ -72,10 +72,14 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           content: const Text('A button that initiates an immediate action.'),
         ),
         CardHighlight(
+          codeSnippet: '''Button(
+  child: const Text('Standard Button'),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''',
           child: Row(children: [
             Button(
-              child: const Text('Standard Button'),
               onPressed: simpleDisabled ? null : () {},
+              child: const Text('Standard Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -88,17 +92,17 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''Button(
-  child: const Text('Standard Button'),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
         ),
         subtitle(content: const Text('Accent Style applied to Button')),
         CardHighlight(
+          codeSnippet: '''FilledButton(
+  child: const Text('Filled Button'),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''',
           child: Row(children: [
             FilledButton(
-              child: const Text('Filled Button'),
               onPressed: filledDisabled ? null : () {},
+              child: const Text('Filled Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -111,10 +115,6 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''FilledButton(
-  child: const Text('Filled Button'),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
         ),
         subtitle(content: const Text('Hyperlink Button')),
         const Text(
@@ -123,18 +123,6 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           'separate browser app.',
         ),
         CardHighlight(
-          child: Link(
-            uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-            builder: (context, open) {
-              return HyperlinkButton(
-                child: Semantics(
-                  link: true,
-                  child: Text('Fluent UI homepage'),
-                ),
-                onPressed: open,
-              );
-            },
-          ),
           codeSnippet: '''Link( // from the url_launcher package
   uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
   builder: (Context, open) {
@@ -144,11 +132,38 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
     );
   },
 )''',
+          child: Link(
+            uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
+            builder: (context, open) {
+              return HyperlinkButton(
+                onPressed: open,
+                child: Semantics(
+                  link: true,
+                  child: Text('Fluent UI homepage'),
+                ),
+              );
+            },
+          ),
         ),
         subtitle(
           content: const Text('A Button with graphical content (IconButton)'),
         ),
         CardHighlight(
+          codeSnippet: () {
+            if (iconSmall) {
+              return '''SmallIconButton(
+  child: IconButton(
+    icon: const Icon(FluentIcons.graph_symbol, size: 20.0),
+    onPressed: disabled ? null : () => debugPrint('pressed button'),
+  ),
+)''';
+            }
+
+            return '''IconButton(
+  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''';
+          }(),
           child: Row(children: [
             () {
               final button = IconButton(
@@ -186,21 +201,6 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               ),
             ]),
           ]),
-          codeSnippet: () {
-            if (iconSmall) {
-              return '''SmallIconButton(
-  child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 20.0),
-    onPressed: disabled ? null : () => debugPrint('pressed button'),
-  ),
-)''';
-            }
-
-            return '''IconButton(
-  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''';
-          }(),
         ),
         subtitle(
             content: const Text('A simple ToggleButton with text content')),
@@ -211,9 +211,15 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           ),
         ),
         CardHighlight(
+          codeSnippet: '''bool checked = false;
+
+ToggleButton(
+  child: const Text('Toggle Button'),
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+)''',
           child: Row(children: [
             ToggleButton(
-              child: const Text('Toggle Button'),
               checked: toggleState,
               onChanged: toggleDisabled
                   ? null
@@ -222,6 +228,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
                         toggleState = v;
                       });
                     },
+              child: const Text('Toggle Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -234,19 +241,21 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''bool checked = false;
-
-ToggleButton(
-  child: const Text('Toggle Button'),
-  checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
-)''',
         ),
         subtitle(content: const Text('DropDownButton')),
         const Text(
           'A control that drops down a flyout of choices from which one can be chosen',
         ),
         CardHighlight(
+          codeSnippet: '''DropDownButton(
+  title: Text('Email'),
+  items: [
+    MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+    MenuFlyoutSeparator(),
+    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+    MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
+  ],
+)''',
           child: Row(children: [
             DropDownButton(
               title: Text('Email'),
@@ -279,15 +288,6 @@ ToggleButton(
               ],
             ),
           ]),
-          codeSnippet: '''DropDownButton(
-  title: Text('Email'),
-  items: [
-    MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
-    MenuFlyoutSeparator(),
-    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
-    MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
-  ],
-)''',
         ),
         subtitle(content: const Text('SplitButton')),
         description(
@@ -298,63 +298,6 @@ ToggleButton(
           ),
         ),
         CardHighlight(
-          child: Row(children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Text(
-                  'SplitButton with custom content',
-                  style: theme.typography.caption,
-                ),
-              ),
-              SplitButton(
-                enabled: !splitButtonDisabled,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: splitButtonDisabled
-                        ? splitButtonColor.secondaryBrushFor(theme.brightness)
-                        : splitButtonColor,
-                    borderRadius: const BorderRadiusDirectional.horizontal(
-                      start: Radius.circular(4.0),
-                    ),
-                  ),
-                  height: _kSplitButtonHeight,
-                  width: _kSplitButtonWidth,
-                ),
-                flyout: splitButtonFlyout,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
-                child: Text(
-                  'A toggleable SplitButton with text content',
-                  style: theme.typography.caption,
-                ),
-              ),
-              SplitButton.toggle(
-                enabled: !splitButtonDisabled,
-                checked: splitButtonState,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Choose color'),
-                ),
-                onInvoked: () {
-                  debugPrint('Invoked split button primary action');
-                  setState(() => splitButtonState = !splitButtonState);
-                },
-                flyout: splitButtonFlyout,
-              ),
-            ]),
-            const Spacer(),
-            ToggleSwitch(
-              checked: splitButtonDisabled,
-              onChanged: (v) {
-                setState(() {
-                  splitButtonDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
           codeSnippet: '''final splitButtonKey = GlobalKey<SplitButtonState>();
 
 // To create a toggle button, use the [SplitButton.toggle] constructor
@@ -404,6 +347,63 @@ SplitButton(
 // Show the flyout programmatically
 splitButtonKey.currentState?.showFlyout();
 ''',
+          child: Row(children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Text(
+                  'SplitButton with custom content',
+                  style: theme.typography.caption,
+                ),
+              ),
+              SplitButton(
+                enabled: !splitButtonDisabled,
+                flyout: splitButtonFlyout,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: splitButtonDisabled
+                        ? splitButtonColor.secondaryBrushFor(theme.brightness)
+                        : splitButtonColor,
+                    borderRadius: const BorderRadiusDirectional.horizontal(
+                      start: Radius.circular(4.0),
+                    ),
+                  ),
+                  height: _kSplitButtonHeight,
+                  width: _kSplitButtonWidth,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
+                child: Text(
+                  'A toggleable SplitButton with text content',
+                  style: theme.typography.caption,
+                ),
+              ),
+              SplitButton.toggle(
+                enabled: !splitButtonDisabled,
+                checked: splitButtonState,
+                onInvoked: () {
+                  debugPrint('Invoked split button primary action');
+                  setState(() => splitButtonState = !splitButtonState);
+                },
+                flyout: splitButtonFlyout,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Choose color'),
+                ),
+              ),
+            ]),
+            const Spacer(),
+            ToggleSwitch(
+              checked: splitButtonDisabled,
+              onChanged: (v) {
+                setState(() {
+                  splitButtonDisabled = v;
+                });
+              },
+              content: const Text('Disabled'),
+            ),
+          ]),
         ),
         subtitle(content: const Text('RadioButton')),
         description(
@@ -415,6 +415,20 @@ splitButtonKey.currentState?.showFlyout();
           ),
         ),
         CardHighlight(
+          codeSnippet: '''int? selected;
+
+Column(
+  children: List.generate(3, (index) {
+    return RadioButton(
+      checked: selected == index,
+      onChanged: (checked) {
+        if (checked) {
+          setState(() => selected = index);
+        }
+      }
+    );
+  }),
+)''',
           child: Row(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,20 +466,6 @@ splitButtonKey.currentState?.showFlyout();
               content: const Text('Disabled'),
             )
           ]),
-          codeSnippet: '''int? selected;
-
-Column(
-  children: List.generate(3, (index) {
-    return RadioButton(
-      checked: selected == index,
-      onChanged: (checked) {
-        if (checked) {
-          setState(() => selected = index);
-        }
-      }
-    );
-  }),
-)''',
         ),
       ],
     );

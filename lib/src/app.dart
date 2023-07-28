@@ -430,16 +430,32 @@ class _FluentAppState extends State<FluentApp> {
     final themeData = theme(context);
     final mTheme = context.findAncestorWidgetOfExactType<m.Theme>();
 
+    var colorValue = 900;
     return m.AnimatedTheme(
       data: mTheme?.data ??
           m.ThemeData(
+            colorScheme: m.ColorScheme.fromSwatch(
+              primarySwatch: m.MaterialColor(
+                themeData.accentColor.value,
+                themeData.accentColor.swatch.map((key, color) {
+                  colorValue -= 100;
+                  return MapEntry(colorValue, color);
+                }),
+              ),
+              primaryColorDark: themeData.accentColor.darker,
+              accentColor: themeData.accentColor,
+              errorColor: themeData.resources.systemFillColorCritical,
+              backgroundColor: themeData.resources.controlFillColorDefault,
+              cardColor: themeData.resources.cardBackgroundFillColorDefault,
+              brightness: themeData.brightness,
+            ),
             extensions: themeData.extensions.values,
             brightness: themeData.brightness,
             canvasColor: themeData.cardColor,
+            shadowColor: themeData.shadowColor,
+            disabledColor: themeData.resources.controlFillColorDisabled,
             textSelectionTheme: TextSelectionThemeData(
-              selectionColor: themeData.accentColor
-                  .defaultBrushFor(themeData.brightness)
-                  .withOpacity(0.8),
+              selectionColor: themeData.selectionColor,
               cursorColor: themeData.inactiveColor,
             ),
           ),

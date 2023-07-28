@@ -47,19 +47,10 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
           header: Row(children: [
             const Expanded(child: Text('Source code')),
             Button(
-              child: const Text('Reset sample'),
               onPressed: resetItems,
+              child: const Text('Reset sample'),
             ),
           ]),
-          child: BreadcrumbBar<int>(
-            onItemPressed: (item) {
-              setState(() {
-                final index = _items.indexOf(item);
-                _items.removeRange(index + 1, _items.length);
-              });
-            },
-            items: _items,
-          ),
           codeSnippet: '''final _items = <BreadcrumbItem<int>>[
   BreadcrumbItem(label: Text('Home'), value: 0),
   BreadcrumbItem(label: Text('Documents'), value: 1),
@@ -83,6 +74,15 @@ BreadcrumbBar<int>(
     });
   },
 ),''',
+          child: BreadcrumbBar<int>(
+            onItemPressed: (item) {
+              setState(() {
+                final index = _items.indexOf(item);
+                _items.removeRange(index + 1, _items.length);
+              });
+            },
+            items: _items,
+          ),
         ),
       ],
     );

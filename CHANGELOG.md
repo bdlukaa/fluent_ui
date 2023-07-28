@@ -6,6 +6,10 @@
 - Ensure all widgets use the correct debug checks ([#883](https://github.com/bdlukaa/fluent_ui/issues/883))
 - `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
 - Added `Expander.contentPadding` and `Expander.contentShape` ([#891](https://github.com/bdlukaa/fluent_ui/issues/891))
+- Tooltips are dismissed as soon as the mouse leaves ([#898](https://github.com/bdlukaa/fluent_ui/issues/898))
+- Added `FluentThemeData.selectionColor`, which defaults to the accent color normal shade ([#897](https://github.com/bdlukaa/fluent_ui/issues/897))
+- Flyout reverse transition duration is properly set ([#893](https://github.com/bdlukaa/fluent_ui/issues/893))
+- Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
 - Complete implementation of `DatePicker` and `TimePicker`'s `intl` localization with proper scripting language.
   - Remove original implementation of `TimePicker` in [#445](https://github.com/bdlukaa/fluent_ui/pull/445) which cover `hour` only.
 

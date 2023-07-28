@@ -137,12 +137,6 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
         ),
         subtitle(content: const Text('Simple command bar (no wrapping)')),
         CardHighlight(
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.noWrap,
-            primaryItems: [
-              ...simpleCommandBarItems,
-            ],
-          ),
           codeSnippet: '''
 /// Define list of CommandBarItem
 final simpleCommandBarItems = <CommandBarItem>[
@@ -193,17 +187,16 @@ CommandBar(
   ],
 );
 ''',
-        ),
-        subtitle(
-            content: const Text('Simple command bar (no wrapping) (vertical)')),
-        CardHighlight(
           child: CommandBar(
-            direction: Axis.vertical,
             overflowBehavior: CommandBarOverflowBehavior.noWrap,
             primaryItems: [
               ...simpleCommandBarItems,
             ],
           ),
+        ),
+        subtitle(
+            content: const Text('Simple command bar (no wrapping) (vertical)')),
+        CardHighlight(
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -217,6 +210,13 @@ CommandBar(
   ],
 );
 ''',
+          child: CommandBar(
+            direction: Axis.vertical,
+            overflowBehavior: CommandBarOverflowBehavior.noWrap,
+            primaryItems: [
+              ...simpleCommandBarItems,
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
@@ -224,15 +224,6 @@ CommandBar(
           ),
         ),
         CardHighlight(
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.wrap,
-            compactBreakpointWidth: 600,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-            ],
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -247,6 +238,15 @@ CommandBar(
   ],
 );
 ''',
+          child: CommandBar(
+            overflowBehavior: CommandBarOverflowBehavior.wrap,
+            compactBreakpointWidth: 600,
+            primaryItems: [
+              ...simpleCommandBarItems,
+              const CommandBarSeparator(),
+              ...moreCommandBarItems,
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
@@ -254,19 +254,6 @@ CommandBar(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              overflowBehavior: CommandBarOverflowBehavior.wrap,
-              compactBreakpointWidth: 600,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(direction: Axis.horizontal),
-                ...moreCommandBarItems,
-              ],
-            ),
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -285,6 +272,19 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBar(
+              direction: Axis.vertical,
+              overflowBehavior: CommandBarOverflowBehavior.wrap,
+              compactBreakpointWidth: 600,
+              primaryItems: [
+                ...simpleCommandBarItems,
+                const CommandBarSeparator(direction: Axis.horizontal),
+                ...moreCommandBarItems,
+              ],
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -292,20 +292,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 230),
-            child: CommandBarCard(
-              child: CommandBar(
-                overflowBehavior: CommandBarOverflowBehavior.clip,
-                isCompact: true,
-                primaryItems: [
-                  ...simpleCommandBarItems,
-                  const CommandBarSeparator(),
-                  ...moreCommandBarItems,
-                ],
-              ),
-            ),
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -325,18 +311,10 @@ ConstrainedBox(
   ),
 );
 ''',
-        ),
-        subtitle(
-          content: const Text(
-            'Carded compact command bar with many items (clipped) (vertical)',
-          ),
-        ),
-        CardHighlight(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
+            constraints: const BoxConstraints(maxWidth: 230),
             child: CommandBarCard(
               child: CommandBar(
-                direction: Axis.vertical,
                 overflowBehavior: CommandBarOverflowBehavior.clip,
                 isCompact: true,
                 primaryItems: [
@@ -347,6 +325,13 @@ ConstrainedBox(
               ),
             ),
           ),
+        ),
+        subtitle(
+          content: const Text(
+            'Carded compact command bar with many items (clipped) (vertical)',
+          ),
+        ),
+        CardHighlight(
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -367,6 +352,21 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBarCard(
+              child: CommandBar(
+                direction: Axis.vertical,
+                overflowBehavior: CommandBarOverflowBehavior.clip,
+                isCompact: true,
+                primaryItems: [
+                  ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...moreCommandBarItems,
+                ],
+              ),
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -374,18 +374,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBarCard(
-            child: CommandBar(
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-                const CommandBarSeparator(),
-                ...evenMoreCommandBarItems,
-              ],
-            ),
-          ),
           codeSnippet: '''
 /// Create different lists of CommandBarItem
 /// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
@@ -403,6 +391,18 @@ CommandBarCard(
   ),
 );
 ''',
+          child: CommandBarCard(
+            child: CommandBar(
+              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+              primaryItems: [
+                ...simpleCommandBarItems,
+                const CommandBarSeparator(),
+                ...moreCommandBarItems,
+                const CommandBarSeparator(),
+                ...evenMoreCommandBarItems,
+              ],
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -410,22 +410,6 @@ CommandBarCard(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBarCard(
-              child: CommandBar(
-                direction: Axis.vertical,
-                overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-                primaryItems: [
-                  ...simpleCommandBarItems,
-                  const CommandBarSeparator(),
-                  ...moreCommandBarItems,
-                  const CommandBarSeparator(),
-                  ...evenMoreCommandBarItems,
-                ],
-              ),
-            ),
-          ),
           codeSnippet: '''
 /// Create different lists of CommandBarItem
 /// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
@@ -447,6 +431,22 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBarCard(
+              child: CommandBar(
+                direction: Axis.vertical,
+                overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+                primaryItems: [
+                  ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...moreCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...evenMoreCommandBarItems,
+                ],
+              ),
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -454,18 +454,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBar(
-            mainAxisAlignment: MainAxisAlignment.end,
-            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-            compactBreakpointWidth: 900,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-              const CommandBarSeparator(),
-              ...evenMoreCommandBarItems,
-            ],
-          ),
           codeSnippet: '''
 /// Create different lists of CommandBarItem
 /// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
@@ -484,6 +472,18 @@ CommandBar(
   ],
 );
 ''',
+          child: CommandBar(
+            mainAxisAlignment: MainAxisAlignment.end,
+            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+            compactBreakpointWidth: 900,
+            primaryItems: [
+              ...simpleCommandBarItems,
+              const CommandBarSeparator(),
+              ...moreCommandBarItems,
+              const CommandBarSeparator(),
+              ...evenMoreCommandBarItems,
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
@@ -491,22 +491,6 @@ CommandBar(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.end,
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              compactBreakpointWidth: 900,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-                const CommandBarSeparator(),
-                ...evenMoreCommandBarItems,
-              ],
-            ),
-          ),
           codeSnippet: '''
 /// Create different lists of CommandBarItem
 /// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
@@ -529,6 +513,22 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBar(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.end,
+              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+              compactBreakpointWidth: 900,
+              primaryItems: [
+                ...simpleCommandBarItems,
+                const CommandBarSeparator(),
+                ...moreCommandBarItems,
+                const CommandBarSeparator(),
+                ...evenMoreCommandBarItems,
+              ],
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -536,16 +536,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBar(
-            mainAxisAlignment: MainAxisAlignment.end,
-            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-            ],
-            secondaryItems: evenMoreCommandBarItems,
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -561,6 +551,16 @@ CommandBar(
   secondaryItems: evenMoreCommandBarItems,
 );
 ''',
+          child: CommandBar(
+            mainAxisAlignment: MainAxisAlignment.end,
+            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+            primaryItems: [
+              ...simpleCommandBarItems,
+              const CommandBarSeparator(),
+              ...moreCommandBarItems,
+            ],
+            secondaryItems: evenMoreCommandBarItems,
+          ),
         ),
         subtitle(
           content: const Text(
@@ -568,20 +568,6 @@ CommandBar(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.end,
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-              ],
-              secondaryItems: evenMoreCommandBarItems,
-            ),
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -601,6 +587,20 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBar(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.end,
+              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+              primaryItems: [
+                ...simpleCommandBarItems,
+                const CommandBarSeparator(),
+                ...moreCommandBarItems,
+              ],
+              secondaryItems: evenMoreCommandBarItems,
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -608,11 +608,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.wrap,
-            primaryItems: simpleCommandBarItems,
-            secondaryItems: moreCommandBarItems,
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -623,6 +618,11 @@ CommandBar(
   secondaryItems: moreCommandBarItems,
 );
 ''',
+          child: CommandBar(
+            overflowBehavior: CommandBarOverflowBehavior.wrap,
+            primaryItems: simpleCommandBarItems,
+            secondaryItems: moreCommandBarItems,
+          ),
         ),
         subtitle(
           content: const Text(
@@ -630,15 +630,6 @@ CommandBar(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              overflowBehavior: CommandBarOverflowBehavior.wrap,
-              primaryItems: simpleCommandBarItems,
-              secondaryItems: moreCommandBarItems,
-            ),
-          ),
           codeSnippet: '''
 /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
 /// Used as following
@@ -653,6 +644,15 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: CommandBar(
+              direction: Axis.vertical,
+              overflowBehavior: CommandBarOverflowBehavior.wrap,
+              primaryItems: simpleCommandBarItems,
+              secondaryItems: moreCommandBarItems,
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -660,32 +660,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBarCard(
-            child: Row(
-              children: [
-                Expanded(
-                  child: CommandBar(
-                    overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                    primaryItems: [
-                      ...simpleCommandBarItems,
-                      const CommandBarSeparator(),
-                      ...moreCommandBarItems,
-                    ],
-                  ),
-                ),
-                // End-aligned button(s)
-                CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  primaryItems: [
-                    CommandBarButton(
-                      icon: const Icon(FluentIcons.refresh),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           codeSnippet: '''
 CommandBarCard(
     child: Row(children: [
@@ -713,6 +687,32 @@ CommandBarCard(
   ),
 );
 ''',
+          child: CommandBarCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: CommandBar(
+                    overflowBehavior: CommandBarOverflowBehavior.scrolling,
+                    primaryItems: [
+                      ...simpleCommandBarItems,
+                      const CommandBarSeparator(),
+                      ...moreCommandBarItems,
+                    ],
+                  ),
+                ),
+                // End-aligned button(s)
+                CommandBar(
+                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
+                  primaryItems: [
+                    CommandBarButton(
+                      icon: const Icon(FluentIcons.refresh),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -720,37 +720,6 @@ CommandBarCard(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230, maxWidth: 48),
-            child: CommandBarCard(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CommandBar(
-                      direction: Axis.vertical,
-                      overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                      primaryItems: [
-                        ...simpleCommandBarItems,
-                        const CommandBarSeparator(direction: Axis.horizontal),
-                        ...moreCommandBarItems,
-                      ],
-                    ),
-                  ),
-                  // End-aligned button(s)
-                  CommandBar(
-                    direction: Axis.vertical,
-                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                    primaryItems: [
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.refresh),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
           codeSnippet: '''
 ConstrainedBox(
   constraints: const BoxConstraints(maxHeight: 230, maxWidth: 48),
@@ -784,6 +753,37 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 230, maxWidth: 48),
+            child: CommandBarCard(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: CommandBar(
+                      direction: Axis.vertical,
+                      overflowBehavior: CommandBarOverflowBehavior.scrolling,
+                      primaryItems: [
+                        ...simpleCommandBarItems,
+                        const CommandBarSeparator(direction: Axis.horizontal),
+                        ...moreCommandBarItems,
+                      ],
+                    ),
+                  ),
+                  // End-aligned button(s)
+                  CommandBar(
+                    direction: Axis.vertical,
+                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
+                    primaryItems: [
+                      CommandBarButton(
+                        icon: const Icon(FluentIcons.refresh),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -791,35 +791,6 @@ ConstrainedBox(
           ),
         ),
         CardHighlight(
-          child: CommandBarCard(
-            child: Row(
-              children: [
-                Expanded(
-                  child: CommandBar(
-                    overflowBehavior:
-                        CommandBarOverflowBehavior.dynamicOverflow,
-                    overflowItemAlignment: MainAxisAlignment.end,
-                    primaryItems: [
-                      ...simpleCommandBarItems,
-                      const CommandBarSeparator(),
-                      ...moreCommandBarItems,
-                    ],
-                    secondaryItems: evenMoreCommandBarItems,
-                  ),
-                ),
-                // End-aligned button(s)
-                CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  primaryItems: [
-                    CommandBarButton(
-                      icon: const Icon(FluentIcons.refresh),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           codeSnippet: '''
 CommandBarCard(
   child: Row(
@@ -850,6 +821,35 @@ CommandBarCard(
   ),
 );
 ''',
+          child: CommandBarCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: CommandBar(
+                    overflowBehavior:
+                        CommandBarOverflowBehavior.dynamicOverflow,
+                    overflowItemAlignment: MainAxisAlignment.end,
+                    primaryItems: [
+                      ...simpleCommandBarItems,
+                      const CommandBarSeparator(),
+                      ...moreCommandBarItems,
+                    ],
+                    secondaryItems: evenMoreCommandBarItems,
+                  ),
+                ),
+                // End-aligned button(s)
+                CommandBar(
+                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
+                  primaryItems: [
+                    CommandBarButton(
+                      icon: const Icon(FluentIcons.refresh),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
         subtitle(
           content: const Text(
@@ -857,40 +857,6 @@ CommandBarCard(
           ),
         ),
         CardHighlight(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 330),
-            child: CommandBarCard(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CommandBar(
-                      direction: Axis.vertical,
-                      overflowBehavior:
-                          CommandBarOverflowBehavior.dynamicOverflow,
-                      overflowItemAlignment: MainAxisAlignment.end,
-                      primaryItems: [
-                        ...simpleCommandBarItems,
-                        const CommandBarSeparator(direction: Axis.horizontal),
-                        ...moreCommandBarItems,
-                      ],
-                      secondaryItems: evenMoreCommandBarItems,
-                    ),
-                  ),
-                  // End-aligned button(s)
-                  CommandBar(
-                    direction: Axis.vertical,
-                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                    primaryItems: [
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.refresh),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
           codeSnippet: '''
 ConstrainedBox(
   constraints: const BoxConstraints(maxHeight: 330),
@@ -927,6 +893,40 @@ ConstrainedBox(
   ),
 );
 ''',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 330),
+            child: CommandBarCard(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: CommandBar(
+                      direction: Axis.vertical,
+                      overflowBehavior:
+                          CommandBarOverflowBehavior.dynamicOverflow,
+                      overflowItemAlignment: MainAxisAlignment.end,
+                      primaryItems: [
+                        ...simpleCommandBarItems,
+                        const CommandBarSeparator(direction: Axis.horizontal),
+                        ...moreCommandBarItems,
+                      ],
+                      secondaryItems: evenMoreCommandBarItems,
+                    ),
+                  ),
+                  // End-aligned button(s)
+                  CommandBar(
+                    direction: Axis.vertical,
+                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
+                    primaryItems: [
+                      CommandBarButton(
+                        icon: const Icon(FluentIcons.refresh),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ],
     );
