@@ -620,6 +620,8 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   /// Whether a [TextFormBox] is used instead of a [TextBox]
   bool get useForm => widget.validator != null;
 
+  double? width;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -693,68 +695,83 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             return KeyEventResult.ignored;
           }
         },
-        child: useForm
-            ? TextFormBox(
-                key: _textBoxKey,
-                controller: controller,
-                focusNode: focusNode,
-                autofocus: widget.autofocus,
-                placeholder: widget.placeholder,
-                placeholderStyle: widget.placeholderStyle,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                prefix: widget.leadingIcon,
-                suffix: suffix,
-                onChanged: _onChanged,
-                onFieldSubmitted: (text) => _onSubmitted(),
-                style: widget.style,
-                decoration: widget.decoration,
-                highlightColor: widget.highlightColor,
-                unfocusedColor: widget.unfocusedColor,
-                cursorColor: widget.cursorColor,
-                cursorHeight: widget.cursorHeight,
-                cursorRadius: widget.cursorRadius,
-                cursorWidth: widget.cursorWidth,
-                showCursor: widget.showCursor,
-                scrollPadding: widget.scrollPadding,
-                selectionHeightStyle: widget.selectionHeightStyle,
-                selectionWidthStyle: widget.selectionWidthStyle,
-                validator: widget.validator,
-                autovalidateMode: widget.autovalidateMode,
-                textInputAction: widget.textInputAction,
-                keyboardAppearance: widget.keyboardAppearance,
-                enabled: widget.enabled,
-                inputFormatters: widget.inputFormatters,
-              )
-            : TextBox(
-                key: _textBoxKey,
-                controller: controller,
-                focusNode: focusNode,
-                autofocus: widget.autofocus,
-                placeholder: widget.placeholder,
-                placeholderStyle: widget.placeholderStyle,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                prefix: widget.leadingIcon,
-                suffix: suffix,
-                onChanged: _onChanged,
-                onSubmitted: (text) => _onSubmitted(),
-                style: widget.style,
-                decoration: widget.decoration,
-                foregroundDecoration: widget.foregroundDecoration,
-                highlightColor: widget.highlightColor,
-                unfocusedColor: widget.unfocusedColor,
-                cursorColor: widget.cursorColor,
-                cursorHeight: widget.cursorHeight,
-                cursorRadius: widget.cursorRadius,
-                cursorWidth: widget.cursorWidth,
-                showCursor: widget.showCursor,
-                scrollPadding: widget.scrollPadding,
-                selectionHeightStyle: widget.selectionHeightStyle,
-                selectionWidthStyle: widget.selectionWidthStyle,
-                textInputAction: widget.textInputAction,
-                keyboardAppearance: widget.keyboardAppearance,
-                enabled: widget.enabled,
-                inputFormatters: widget.inputFormatters,
-              ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          width ??= constraints.maxWidth;
+          if (width! != constraints.maxWidth) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (_entry != null && _entry!.mounted) {
+                _entry!.remove();
+                _entry = null;
+                _showOverlay();
+              }
+            });
+            width = constraints.maxWidth;
+          }
+
+          if (useForm) {
+            return TextFormBox(
+              key: _textBoxKey,
+              controller: controller,
+              focusNode: focusNode,
+              autofocus: widget.autofocus,
+              placeholder: widget.placeholder,
+              placeholderStyle: widget.placeholderStyle,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              prefix: widget.leadingIcon,
+              suffix: suffix,
+              onChanged: _onChanged,
+              onFieldSubmitted: (text) => _onSubmitted(),
+              style: widget.style,
+              decoration: widget.decoration,
+              highlightColor: widget.highlightColor,
+              unfocusedColor: widget.unfocusedColor,
+              cursorColor: widget.cursorColor,
+              cursorHeight: widget.cursorHeight,
+              cursorRadius: widget.cursorRadius,
+              cursorWidth: widget.cursorWidth,
+              showCursor: widget.showCursor,
+              scrollPadding: widget.scrollPadding,
+              selectionHeightStyle: widget.selectionHeightStyle,
+              selectionWidthStyle: widget.selectionWidthStyle,
+              validator: widget.validator,
+              autovalidateMode: widget.autovalidateMode,
+              textInputAction: widget.textInputAction,
+              keyboardAppearance: widget.keyboardAppearance,
+              enabled: widget.enabled,
+              inputFormatters: widget.inputFormatters,
+            );
+          }
+          return TextBox(
+            key: _textBoxKey,
+            controller: controller,
+            focusNode: focusNode,
+            autofocus: widget.autofocus,
+            placeholder: widget.placeholder,
+            placeholderStyle: widget.placeholderStyle,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            prefix: widget.leadingIcon,
+            suffix: suffix,
+            onChanged: _onChanged,
+            onSubmitted: (text) => _onSubmitted(),
+            style: widget.style,
+            decoration: widget.decoration,
+            foregroundDecoration: widget.foregroundDecoration,
+            highlightColor: widget.highlightColor,
+            unfocusedColor: widget.unfocusedColor,
+            cursorColor: widget.cursorColor,
+            cursorHeight: widget.cursorHeight,
+            cursorRadius: widget.cursorRadius,
+            cursorWidth: widget.cursorWidth,
+            showCursor: widget.showCursor,
+            scrollPadding: widget.scrollPadding,
+            selectionHeightStyle: widget.selectionHeightStyle,
+            selectionWidthStyle: widget.selectionWidthStyle,
+            textInputAction: widget.textInputAction,
+            keyboardAppearance: widget.keyboardAppearance,
+            enabled: widget.enabled,
+            inputFormatters: widget.inputFormatters,
+          );
+        }),
       ),
     );
   }
