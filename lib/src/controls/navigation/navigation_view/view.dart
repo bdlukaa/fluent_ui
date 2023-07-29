@@ -678,7 +678,7 @@ class NavigationViewState extends State<NavigationView> {
                   height: MediaQuery.sizeOf(context).height,
                   child: PaneScrollConfiguration(
                     child: ColoredBox(
-                      color: Colors.black,
+                      color: theme.popupBackgroundColor ?? Colors.black,
                       child: Mica(
                         backgroundColor: overlayBackgroundColor(),
                         child: Container(

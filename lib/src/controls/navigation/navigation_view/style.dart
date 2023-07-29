@@ -87,6 +87,10 @@ class NavigationPaneThemeData with Diagnosticable {
   /// is used.
   final Color? backgroundColor;
 
+  /// The minimal pane background color. If null, [Colors.black]
+  /// is used.
+  final Color? popupBackgroundColor;
+
   /// The color of the tiles. If null, [ButtonThemeData.uncheckedInputColor]
   /// is used
   final ButtonState<Color?>? tileColor;
@@ -115,6 +119,7 @@ class NavigationPaneThemeData with Diagnosticable {
 
   const NavigationPaneThemeData({
     this.backgroundColor,
+    this.popupBackgroundColor,
     this.tileColor,
     this.highlightColor,
     this.labelPadding,
@@ -201,6 +206,7 @@ class NavigationPaneThemeData with Diagnosticable {
           EdgeInsetsGeometry.lerp(a?.headerPadding, b?.headerPadding, t),
       tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      popupBackgroundColor: Color.lerp(a?.popupBackgroundColor, b?.popupBackgroundColor, t),
       itemHeaderTextStyle:
           TextStyle.lerp(a?.itemHeaderTextStyle, b?.itemHeaderTextStyle, t),
       selectedTextStyle: ButtonState.lerp(
@@ -229,6 +235,7 @@ class NavigationPaneThemeData with Diagnosticable {
       headerPadding: style?.headerPadding ?? headerPadding,
       tileColor: style?.tileColor ?? tileColor,
       backgroundColor: style?.backgroundColor ?? backgroundColor,
+      popupBackgroundColor: style?.popupBackgroundColor ?? popupBackgroundColor,
       itemHeaderTextStyle: style?.itemHeaderTextStyle ?? itemHeaderTextStyle,
       selectedTextStyle: style?.selectedTextStyle ?? selectedTextStyle,
       unselectedTextStyle: style?.unselectedTextStyle ?? unselectedTextStyle,
@@ -249,6 +256,7 @@ class NavigationPaneThemeData with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('tileColor', tileColor))
       ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ColorProperty('popupBackgroundColor', popupBackgroundColor))
       ..add(ColorProperty('highlightColor', highlightColor))
       ..add(
           DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding))
