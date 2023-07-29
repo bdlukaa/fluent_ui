@@ -45,7 +45,7 @@ class NavigationIndicator extends StatefulWidget {
 }
 
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
-  List<Offset>? offsets;
+  Iterable<Offset>? offsets;
 
   @override
   void initState() {
@@ -367,7 +367,7 @@ class _StickyNavigationIndicatorState
               padding: isHorizontal
                   ? EdgeInsetsDirectional.only(
                       start: () {
-                        final x = offsets![itemIndex].dx;
+                        final x = offsets!.elementAt(itemIndex).dx;
                         if (parent != null) {
                           final isOpen =
                               parent!.expanderKey.currentState?._open ?? false;
@@ -377,7 +377,7 @@ class _StickyNavigationIndicatorState
 
                           final parentIndex =
                               pane.effectiveItems.indexOf(parent!);
-                          final parentX = offsets![parentIndex].dx;
+                          final parentX = offsets!.elementAt(parentIndex).dx;
                           return parentX;
                         }
                         return x;

@@ -983,7 +983,7 @@ base class _PaneItemExpanderItem
 
 extension _ItemsExtension on List<NavigationPaneItem> {
   /// Get the all the item offets in this list
-  List<Offset> _getPaneItemsOffsets(
+  Iterable<Offset> _getPaneItemsOffsets(
     GlobalKey<State<StatefulWidget>> paneKey,
   ) {
     return map((e) {
@@ -998,7 +998,7 @@ extension _ItemsExtension on List<NavigationPaneItem> {
       final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
       final position = paneBox.globalToLocal(globalPosition);
       return position;
-    }).toList();
+    });
   }
 }
 
