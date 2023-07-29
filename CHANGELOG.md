@@ -11,6 +11,7 @@
 - Flyout reverse transition duration is properly set ([#893](https://github.com/bdlukaa/fluent_ui/issues/893))
 - Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
 - `NavigationAppBar.title` is expanded to fit the entire width on top mode ([#902](https://github.com/bdlukaa/fluent_ui/issues/902))
+- `AutoSuggestBox` does not duplicate focus ([#894](https://github.com/bdlukaa/fluent_ui/issues/894))
 
 ## 4.7.0
 

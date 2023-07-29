@@ -648,6 +648,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: Focus(
+        skipTraversal: true,
         onKeyEvent: (node, event) {
           if (!(event is KeyDownEvent || event is KeyRepeatEvent) ||
               !widget.enableKeyboardControls) {
