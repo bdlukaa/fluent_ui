@@ -637,7 +637,7 @@ class NavigationViewState extends State<NavigationView> {
                               context,
                               identifier: 'openModeOpen',
                             ) as bool? ??
-                            false,
+                            mounted,
                       ),
                     ),
                     Expanded(child: content),
