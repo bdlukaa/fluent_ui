@@ -10,6 +10,7 @@
 - Added `FluentThemeData.selectionColor`, which defaults to the accent color normal shade ([#897](https://github.com/bdlukaa/fluent_ui/issues/897))
 - Flyout reverse transition duration is properly set ([#893](https://github.com/bdlukaa/fluent_ui/issues/893))
 - Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
+- `NavigationAppBar.title` is expanded to fit the entire width on top mode ([#902](https://github.com/bdlukaa/fluent_ui/issues/902))
 
 ## 4.7.0
 
