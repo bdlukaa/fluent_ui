@@ -1,12 +1,21 @@
 name: fluent_ui
 description: Implements Windows UI in Flutter. Based on the official documentation
-version: 4.7.0
-homepage: https://github.com/bdlukaa/fluent_ui
+version: 4.7.1
+homepage: https://bdlukaa.github.io/fluent_ui/#/
+repository: https://github.com/bdlukaa/fluent_ui
+issue_tracker: https://github.com/bdlukaa/fluent_ui/issues
 
 environment:
-   sdk: ">=3.0.0 <4.0.0"
-   flutter: ">=3.10.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
+topics:
+  - windows
+  - fluent_ui
+  - desktop
+  - ui
+  - widgets
+  - colors
 
 dependencies:
   flutter:
@@ -24,13 +33,13 @@ dependencies:
   recase: ^4.0.0
 
   # Used on NumberBox
-  math_expressions: ^2.3.1
+  math_expressions: ^2.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
-  intl_utils: ^2.7.0
+  flutter_lints: ^2.0.2
+  intl_utils: ^2.8.3
 
 flutter:
   generate: true
