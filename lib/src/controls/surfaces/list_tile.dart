@@ -41,6 +41,7 @@ class ListTile extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
+    this.cursor,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -65,6 +66,7 @@ class ListTile extends StatelessWidget {
     this.selectionMode = ListTileSelectionMode.single,
     this.onSelectionChange,
     this.semanticLabel,
+    this.cursor,
   }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -140,8 +142,17 @@ class ListTile extends StatelessWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  // {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
+  /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
+
+  /// Mouse Cursor to display
+  ///
+  /// If null, [MouseCursor.defer] is used by default
+  ///
+  /// See also cursors like:
+  ///
+  ///  * [SystemMouseCursors.click], which turns the mouse cursor to click
+  final MouseCursor? cursor;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -187,6 +198,7 @@ class ListTile extends StatelessWidget {
           onPressed ?? (onSelectionChange != null ? _onSelectionChange : null),
       focusNode: focusNode,
       autofocus: autofocus,
+      cursor: cursor,
       semanticLabel: semanticLabel,
       builder: (context, states) {
         final tileColor = () {

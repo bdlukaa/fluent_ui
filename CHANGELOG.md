@@ -1,3 +1,7 @@
+## [next]
+
+- Exposing the cursor attribute on the ListTile widget
+
 ## 4.7.1
 
 - Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
