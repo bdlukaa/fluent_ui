@@ -312,24 +312,12 @@ class NavigationViewState extends State<NavigationView> {
       'content must be provided',
     );
 
-    final brightness = FluentTheme.of(context).brightness;
     final theme = NavigationPaneTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
       top: widget.appBar?.finalHeight(context) ?? 0.0,
     );
     final direction = Directionality.of(context);
-
-    Color? overlayBackgroundColor() {
-      if (theme.backgroundColor == null) {
-        if (brightness.isDark) {
-          return const Color(0xFF202020);
-        } else {
-          return const Color(0xFFf7f7f7);
-        }
-      }
-      return theme.backgroundColor;
-    }
 
     Widget? paneNavigationButton() {
       final minimalLeading = PaneItem(
@@ -573,7 +561,7 @@ class NavigationViewState extends State<NavigationView> {
                         return ClipRect(
                           child: Mica(
                             key: _overlayKey,
-                            backgroundColor: overlayBackgroundColor(),
+                            backgroundColor: theme.overlayBackgroundColor,
                             elevation: 10.0,
                             child: Container(
                               decoration: BoxDecoration(
@@ -601,7 +589,7 @@ class NavigationViewState extends State<NavigationView> {
                       } else {
                         return Mica(
                           key: _overlayKey,
-                          backgroundColor: overlayBackgroundColor(),
+                          backgroundColor: theme.overlayBackgroundColor,
                           child: Padding(
                             padding: EdgeInsetsDirectional.only(
                               top: appBarPadding.resolve(direction).top,
@@ -651,6 +639,15 @@ class NavigationViewState extends State<NavigationView> {
 
               paneResult = Stack(children: [
                 PositionedDirectional(
+                  top: 0,
+                  start: 0,
+                  end: 0,
+                  height: widget.appBar?.finalHeight(context) ?? 0.0,
+                  child: ColoredBox(
+                    color: FluentTheme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+                PositionedDirectional(
                   top: widget.appBar?.finalHeight(context) ?? 0.0,
                   start: 0.0,
                   end: 0.0,
@@ -677,27 +674,24 @@ class NavigationViewState extends State<NavigationView> {
                   width: openSize,
                   height: MediaQuery.sizeOf(context).height,
                   child: PaneScrollConfiguration(
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: Mica(
-                        backgroundColor: overlayBackgroundColor(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color(0xFF6c6c6c),
-                              width: 0.15,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
+                    child: Mica(
+                      backgroundColor: theme.overlayBackgroundColor,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFF6c6c6c),
+                            width: 0.15,
                           ),
-                          margin: const EdgeInsets.symmetric(vertical: 1.0),
-                          padding: appBarPadding,
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            onItemSelected: () => minimalPaneOpen = false,
-                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 1.0),
+                        padding: appBarPadding,
+                        child: _OpenNavigationPane(
+                          theme: theme,
+                          pane: pane,
+                          paneKey: _panelKey,
+                          listKey: _listKey,
+                          onItemSelected: () => minimalPaneOpen = false,
                         ),
                       ),
                     ),

@@ -3,6 +3,7 @@
 - Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
 - Added `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
 - Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
+- Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
 
 ## 4.7.1
 

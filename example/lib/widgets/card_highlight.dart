@@ -37,7 +37,8 @@ class _CardHighlightState extends State<CardHighlight>
 
     return Column(children: [
       Mica(
-        backgroundColor: widget.backgroundColor,
+        backgroundColor: widget.backgroundColor ??
+            theme.resources.controlAltFillColorQuarternary,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4.0)),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -95,6 +96,13 @@ class _CardHighlightState extends State<CardHighlight>
               )
             : null,
         header: widget.header ?? const Text('Source code'),
+        headerShape: (open) {
+          return const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.zero,
+            ),
+          );
+        },
         content: ClipRRect(
           borderRadius: const BorderRadius.vertical(
             bottom: Radius.circular(6.0),
