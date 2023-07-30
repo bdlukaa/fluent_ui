@@ -147,7 +147,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   static const Duration _fadeInDuration = Duration(milliseconds: 150);
   static const Duration _fadeOutDuration = Duration(milliseconds: 75);
   static const Duration _defaultShowDuration = Duration(milliseconds: 1500);
-  static const Duration _defaultHoverShowDuration = Duration(milliseconds: 100);
+  static const Duration _defaultHoverShowDuration = Duration.zero;
   static const Duration _defaultWaitDuration = Duration.zero;
   static const TooltipTriggerMode _defaultTriggerMode =
       TooltipTriggerMode.longPress;
@@ -234,7 +234,6 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     _showTimer?.cancel();
     _showTimer = null;
     if (immediately) {
-      await _controller.reverse();
       _removeEntry();
       return;
     }
@@ -327,6 +326,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   }
 
   void _handleMouseExit({bool immediately = false}) {
+    mousePosition = null;
     // If the tip is currently covered, we can just remove it without waiting.
     _dismissTooltip(immediately: _isConcealed || immediately);
   }
@@ -477,7 +477,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     textStyle = tooltipTheme.textStyle ?? defaultTextStyle;
     waitDuration = tooltipTheme.waitDuration ?? _defaultWaitDuration;
     showDuration = tooltipTheme.showDuration ?? _defaultShowDuration;
-    hoverShowDuration = tooltipTheme.showDuration ?? _defaultHoverShowDuration;
+    hoverShowDuration = _defaultHoverShowDuration;
     triggerMode = widget.triggerMode ?? _defaultTriggerMode;
     enableFeedback = widget.enableFeedback ?? _defaultEnableFeedback;
 
@@ -503,7 +503,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
           onHover: (event) {
             mousePosition = event.position;
           },
-          onExit: (_) => _handleMouseExit(immediately: true),
+          onExit: (_) => _handleMouseExit(),
           child: result,
         );
       }

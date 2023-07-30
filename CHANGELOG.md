@@ -1,7 +1,8 @@
 ## [next]
 
-- Exposing the cursor attribute on the ListTile widget
+- Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
 - Added `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
+- Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
 
 ## 4.7.1
 
