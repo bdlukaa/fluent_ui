@@ -786,6 +786,13 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
           () => navigation.NavigationViewPage(),
         ),
       ),
+      GoRoute(
+        path: '/navigation_view',
+        builder: (context, state) => DeferredWidget(
+          navigation.loadLibrary,
+          () => navigation.NavigationViewShellRoute(),
+        ),
+      ),
 
       /// TabView
       GoRoute(

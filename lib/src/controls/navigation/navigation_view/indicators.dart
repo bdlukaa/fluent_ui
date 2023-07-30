@@ -45,7 +45,7 @@ class NavigationIndicator extends StatefulWidget {
 }
 
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
-  List<Offset>? offsets;
+  Iterable<Offset>? offsets;
 
   @override
   void initState() {
@@ -180,7 +180,8 @@ class StickyNavigationIndicator extends NavigationIndicator {
     super.color,
     super.duration,
     this.topPadding = 12.0,
-    this.leftPadding = 10.0,
+    this.leftPadding = kPaneItemMinHeight * 0.3,
+    this.indicatorSize = 2.75,
   });
 
   /// The padding used on both horizontal sides of the indicator when the
@@ -194,6 +195,11 @@ class StickyNavigationIndicator extends NavigationIndicator {
   ///
   /// Defaults to 10.0
   final double leftPadding;
+
+  /// The size of the indicator.
+  ///
+  /// Defaults to 2.0
+  final double indicatorSize;
 
   @override
   NavigationIndicatorState<StickyNavigationIndicator> createState() =>
@@ -350,11 +356,17 @@ class _StickyNavigationIndicatorState
           child: isHorizontal
               ? Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: Container(width: 2.5, decoration: decoration),
+                  child: Container(
+                    width: widget.indicatorSize,
+                    decoration: decoration,
+                  ),
                 )
               : Align(
                   alignment: AlignmentDirectional.bottomCenter,
-                  child: Container(height: 2.5, decoration: decoration),
+                  child: Container(
+                    height: widget.indicatorSize,
+                    decoration: decoration,
+                  ),
                 ),
           builder: (context, child) {
             if (!isSelected) {
@@ -367,7 +379,7 @@ class _StickyNavigationIndicatorState
               padding: isHorizontal
                   ? EdgeInsetsDirectional.only(
                       start: () {
-                        final x = offsets![itemIndex].dx;
+                        final x = offsets!.elementAt(itemIndex).dx;
                         if (parent != null) {
                           final isOpen =
                               parent!.expanderKey.currentState?._open ?? false;
@@ -377,7 +389,7 @@ class _StickyNavigationIndicatorState
 
                           final parentIndex =
                               pane.effectiveItems.indexOf(parent!);
-                          final parentX = offsets![parentIndex].dx;
+                          final parentX = offsets!.elementAt(parentIndex).dx;
                           return parentX;
                         }
                         return x;

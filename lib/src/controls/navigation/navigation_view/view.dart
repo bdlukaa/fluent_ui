@@ -637,7 +637,7 @@ class NavigationViewState extends State<NavigationView> {
                               context,
                               identifier: 'openModeOpen',
                             ) as bool? ??
-                            false,
+                            mounted,
                       ),
                     ),
                     Expanded(child: content),
@@ -918,11 +918,14 @@ class _NavigationAppBar extends StatelessWidget {
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
-        result = Row(children: [
-          leading,
-          if (additionalLeading != null) additionalLeading!,
-          title,
-          if (appBar.actions != null) Expanded(child: appBar.actions!)
+        result = Stack(children: [
+          Row(children: [
+            leading,
+            if (additionalLeading != null) additionalLeading!,
+            Expanded(child: title),
+          ]),
+          if (appBar.actions != null)
+            PositionedDirectional(end: 0, child: appBar.actions!),
         ]);
         break;
       case PaneDisplayMode.minimal:

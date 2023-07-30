@@ -1,7 +1,11 @@
 ## [next]
 
+- Exposing the cursor attribute on the ListTile widget
+
+## 4.7.1
+
 - Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
-- **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+- Deprecated `SplitButtonBar` and its related widgets. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
 - Implement `BreadcrumbBar` ([#878](https://github.com/bdlukaa/fluent_ui/issues/878))
 - Ensure all widgets use the correct debug checks ([#883](https://github.com/bdlukaa/fluent_ui/issues/883))
 - `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
@@ -10,7 +14,9 @@
 - Added `FluentThemeData.selectionColor`, which defaults to the accent color normal shade ([#897](https://github.com/bdlukaa/fluent_ui/issues/897))
 - Flyout reverse transition duration is properly set ([#893](https://github.com/bdlukaa/fluent_ui/issues/893))
 - Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
-- Exposing the cursor attribute on the ListTile widget
+- `NavigationAppBar.title` is expanded to fit the entire width on top mode ([#902](https://github.com/bdlukaa/fluent_ui/issues/902))
+- `AutoSuggestBox` does not duplicate focus ([#894](https://github.com/bdlukaa/fluent_ui/issues/894))
+- `StickyNavigationIndicator` look-and-feel updated to match the native implementation ([#380b49c](https://github.com/bdlukaa/fluent_ui/commits/380b49c50f3652bdd1494edfe08617838d64d57a))
 
 ## 4.7.0
 
