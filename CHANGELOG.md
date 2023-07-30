@@ -1,6 +1,7 @@
 ## [next]
 
 - Exposing the cursor attribute on the ListTile widget
+- Added `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
 
 ## 4.7.1
 
