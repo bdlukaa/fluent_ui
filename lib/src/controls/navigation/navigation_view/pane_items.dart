@@ -989,16 +989,20 @@ extension _ItemsExtension on List<NavigationPaneItem> {
     return map((e) {
       // Gets the item global position
       final itemContext = e.itemKey.currentContext;
-      if (itemContext == null) return Offset.zero;
+      if (itemContext == null || !itemContext.mounted) return Offset.zero;
       final box = itemContext.findRenderObject()! as RenderBox;
       final globalPosition = box.localToGlobal(Offset.zero);
       // And then convert it to the local position
       final paneContext = paneKey.currentContext;
-      if (paneContext == null) return Offset.zero;
+      if (paneContext == null || !paneContext.mounted) return Offset.zero;
       final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
       final position = paneBox.globalToLocal(globalPosition);
       return position;
-    });
+    })
+        // Calling .toList here ensures that all the pane items positions are
+        // calculated. Without it, a lazy Iterable would be returned resulting
+        // in RenderObject bugs due to the widget not being in the tree
+        .toList();
   }
 }
 
