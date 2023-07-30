@@ -12,6 +12,7 @@
 - Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
 - `NavigationAppBar.title` is expanded to fit the entire width on top mode ([#902](https://github.com/bdlukaa/fluent_ui/issues/902))
 - `AutoSuggestBox` does not duplicate focus ([#894](https://github.com/bdlukaa/fluent_ui/issues/894))
+- `StickyNavigationIndicator` look-and-feel updated to match the native implementation ([#380b49c](https://github.com/bdlukaa/fluent_ui/commits/380b49c50f3652bdd1494edfe08617838d64d57a))
 
 ## 4.7.0
 
