@@ -11,11 +11,9 @@ environment:
 
 topics:
   - windows
-  - fluent_ui
   - desktop
   - ui
   - widgets
-  - colors
 
 dependencies:
   flutter:
