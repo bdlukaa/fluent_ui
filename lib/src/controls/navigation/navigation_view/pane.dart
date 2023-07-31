@@ -665,7 +665,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.of(context);
+    final view = _InheritedNavigationView.of(context);
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
@@ -698,11 +698,11 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                     placementMode: FlyoutPlacementMode.bottomCenter,
                     forceAvailableSpace: true,
                     builder: (context) {
-                      return InheritedNavigationView(
+                      return _InheritedNavigationView(
                         displayMode: view.displayMode,
                         currentItemIndex: view.currentItemIndex,
                         minimalPaneOpen: view.minimalPaneOpen,
-                        oldIndex: view.oldIndex,
+                        previousItemIndex: view.previousItemIndex,
                         pane: view.pane,
                         child: MenuFlyout(
                           items: _localItemHold
@@ -826,7 +826,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
     final size = Flyout.of(context).size;
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
-    final view = InheritedNavigationView.of(context);
+    final view = _InheritedNavigationView.of(context);
 
     final selected = view.pane?.isSelected(item) ?? false;
     final titleText = item.title?.getProperty<String>() ?? '';
@@ -1037,6 +1037,7 @@ class _CompactNavigationPane extends StatelessWidget {
     this.listKey,
     this.onToggle,
     this.onOpenSearch,
+    this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
@@ -1044,10 +1045,11 @@ class _CompactNavigationPane extends StatelessWidget {
   final GlobalKey? listKey;
   final VoidCallback? onToggle;
   final VoidCallback? onOpenSearch;
+  final VoidCallback? onAnimationEnd;
 
   static Widget _buildItem(BuildContext context, NavigationPaneItem item) {
     assert(debugCheckHasFluentTheme(context));
-    final pane = InheritedNavigationView.of(context).pane!;
+    final pane = _InheritedNavigationView.of(context).pane!;
     if (item is PaneItemHeader) {
       // Item Header is not visible on compact pane
       return const SizedBox();
@@ -1092,6 +1094,7 @@ class _CompactNavigationPane extends StatelessWidget {
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
+      onEnd: onAnimationEnd,
       child: Align(
         key: pane.paneKey,
         alignment: AlignmentDirectional.topCenter,
@@ -1160,6 +1163,7 @@ class _OpenNavigationPane extends StatefulWidget {
     this.onToggle,
     this.onItemSelected,
     this.initiallyOpen = false,
+    this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
@@ -1169,6 +1173,7 @@ class _OpenNavigationPane extends StatefulWidget {
   final VoidCallback? onItemSelected;
   final NavigationPaneThemeData theme;
   final bool initiallyOpen;
+  final VoidCallback? onAnimationEnd;
 
   static Widget buildItem(
     BuildContext context,
@@ -1277,6 +1282,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
       curve: theme.animationCurve ?? Curves.linear,
       key: widget.paneKey,
       width: paneWidth,
+      onEnd: widget.onAnimationEnd,
       child: LayoutBuilder(builder: (context, constraints) {
         final width = constraints.maxWidth;
         return Column(

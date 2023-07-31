@@ -85,13 +85,14 @@ class _NavigationBodyState extends State<_NavigationBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final view = InheritedNavigationView.of(context);
+    final view = _InheritedNavigationView.of(context);
     final selected = view.pane?.selected ?? 0;
 
     _pageController ??= PageController(initialPage: selected);
 
     if (pageController.hasClients) {
-      if (view.oldIndex != selected || pageController.page != selected) {
+      if (view.previousItemIndex != selected ||
+          pageController.page != selected) {
         pageController.jumpToPage(selected);
       }
     }
@@ -100,7 +101,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.of(context);
+    final view = _InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
 
     return ColoredBox(
@@ -129,7 +130,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             // click on Settings item is considered Default
             return HorizontalSlidePageTransition(
               animation: animation,
-              fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
+              fromLeft: view.previousItemIndex < (view.pane?.selected ?? 0),
               child: child,
             );
           }
@@ -185,16 +186,17 @@ class _NavigationBodyState extends State<_NavigationBody> {
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-class InheritedNavigationView extends InheritedWidget {
+class _InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
-  const InheritedNavigationView({
+  const _InheritedNavigationView({
     super.key,
     required super.child,
     required this.displayMode,
     this.minimalPaneOpen = false,
     this.pane,
-    this.oldIndex = 0,
+    this.previousItemIndex = 0,
     this.currentItemIndex = -1,
+    this.isTransitioning = false,
   });
 
   /// The current pane display mode according to the current state.
@@ -206,20 +208,25 @@ class InheritedNavigationView extends InheritedWidget {
   /// The current navigation pane, if any
   final NavigationPane? pane;
 
-  /// The old index selected index. Usually used by [NavigationIndicator]s to
-  /// display the animation from the old item to the new one.
-  final int oldIndex;
+  /// The previous index selected index.
+  ///
+  /// Usually used by a [NavigationIndicator]s to display the animation from the
+  /// old item to the new one.
+  final int previousItemIndex;
 
   /// Used by [NavigationIndicator] to know what's the current index of the
   /// item
   final int currentItemIndex;
 
-  static InheritedNavigationView? maybeOf(BuildContext context) {
+  /// Whether the navigation panes are transitioning or not.
+  final bool isTransitioning;
+
+  static _InheritedNavigationView? maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>();
+        .dependOnInheritedWidgetOfExactType<_InheritedNavigationView>();
   }
 
-  static InheritedNavigationView of(BuildContext context) {
+  static _InheritedNavigationView of(BuildContext context) {
     return maybeOf(context)!;
   }
 
@@ -230,31 +237,34 @@ class InheritedNavigationView extends InheritedWidget {
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
-    int? oldIndex,
+    int? previousItemIndex,
     bool? currentItemSelected,
+    bool? isTransitioning,
   }) {
     return Builder(builder: (context) {
-      final current = InheritedNavigationView.maybeOf(context);
-      return InheritedNavigationView(
+      final current = _InheritedNavigationView.maybeOf(context);
+      return _InheritedNavigationView(
         key: key,
         displayMode:
             displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
-        oldIndex: oldIndex ?? current?.oldIndex ?? 0,
+        previousItemIndex: previousItemIndex ?? current?.previousItemIndex ?? 0,
+        isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
         child: child,
       );
     });
   }
 
   @override
-  bool updateShouldNotify(InheritedNavigationView oldWidget) {
+  bool updateShouldNotify(covariant _InheritedNavigationView oldWidget) {
     return oldWidget.displayMode != displayMode ||
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
-        oldWidget.oldIndex != oldIndex ||
-        oldWidget.currentItemIndex != currentItemIndex;
+        oldWidget.previousItemIndex != previousItemIndex ||
+        oldWidget.currentItemIndex != currentItemIndex ||
+        oldWidget.isTransitioning != isTransitioning;
   }
 }
 

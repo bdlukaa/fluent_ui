@@ -70,7 +70,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   NavigationPane get pane {
-    return InheritedNavigationView.of(context).pane!;
+    return _InheritedNavigationView.of(context).pane!;
   }
 
   int get selectedIndex {
@@ -82,7 +82,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   Axis get axis {
-    if (InheritedNavigationView.maybeOf(context)?.displayMode ==
+    if (_InheritedNavigationView.maybeOf(context)?.displayMode ==
         PaneDisplayMode.top) {
       return Axis.vertical;
     }
@@ -90,11 +90,11 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get itemIndex {
-    return InheritedNavigationView.of(context).currentItemIndex;
+    return _InheritedNavigationView.of(context).currentItemIndex;
   }
 
-  int get oldIndex {
-    return InheritedNavigationView.of(context).oldIndex;
+  int get previousItemIndex {
+    return _InheritedNavigationView.of(context).previousItemIndex;
   }
 
   PaneItem get item {
@@ -198,6 +198,9 @@ class StickyNavigationIndicator extends NavigationIndicator {
 
   /// The size of the indicator.
   ///
+  /// On top display mode, this represents the height of the indicator. On other
+  /// display modes, this represents the width of the indicator.
+  ///
   /// Defaults to 2.0
   final double indicatorSize;
 
@@ -251,11 +254,11 @@ class _StickyNavigationIndicatorState
     if (itemIndex.isNegative) return false;
 
     if (itemIndex == selectedIndex) return true;
-    return itemIndex == oldIndex && _old != oldIndex;
+    return itemIndex == previousItemIndex && _old != previousItemIndex;
   }
 
-  bool get isAbove => oldIndex < selectedIndex;
-  bool get isBelow => oldIndex > selectedIndex;
+  bool get isAbove => previousItemIndex < selectedIndex;
+  bool get isBelow => previousItemIndex > selectedIndex;
 
   @override
   void didChangeDependencies() {
@@ -270,13 +273,13 @@ class _StickyNavigationIndicatorState
 
     _old = (PageStorage.of(context).readState(
           context,
-          identifier: 'oldIndex$itemIndex',
+          identifier: 'previousItemIndex$itemIndex',
         ) as num?)
             ?.toInt() ??
         _old;
 
     // do not perform the animation twice
-    if (_old == oldIndex) {
+    if (_old == previousItemIndex) {
       return;
     }
 
@@ -318,12 +321,12 @@ class _StickyNavigationIndicatorState
       }
     }
 
-    _old = oldIndex;
+    _old = previousItemIndex;
     if (mounted) {
       PageStorage.of(context).writeState(
         context,
         _old,
-        identifier: 'oldIndex$itemIndex',
+        identifier: 'previousItemIndex$itemIndex',
       );
       setState(() {});
     }

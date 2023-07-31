@@ -131,7 +131,7 @@ class PaneItem extends NavigationPaneItem {
     int? itemIndex,
     bool? autofocus,
   }) {
-    final maybeBody = InheritedNavigationView.maybeOf(context);
+    final maybeBody = _InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -365,7 +365,7 @@ class PaneItem extends NavigationPaneItem {
           return Stack(children: [
             button,
             Positioned.fill(
-              child: InheritedNavigationView.merge(
+              child: _InheritedNavigationView.merge(
                 currentItemIndex: index,
                 currentItemSelected: selected,
                 child: KeyedSubtree(
@@ -480,7 +480,7 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    final view = InheritedNavigationView.of(context);
+    final view = _InheritedNavigationView.of(context);
 
     return KeyedSubtree(
       key: key,
@@ -620,7 +620,7 @@ class PaneItemExpander extends PaneItem {
     bool? autofocus,
     int? itemIndex,
   }) {
-    final maybeBody = InheritedNavigationView.maybeOf(context);
+    final maybeBody = _InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -711,7 +711,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   int get index {
-    final body = InheritedNavigationView.of(context);
+    final body = _InheritedNavigationView.of(context);
 
     return body.pane?.effectiveIndexOf(widget.item) ?? 0;
   }
@@ -726,7 +726,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     );
     if (_open) {
       if (useFlyout && doFlyout) {
-        final body = InheritedNavigationView.of(context);
+        final body = _InheritedNavigationView.of(context);
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
@@ -791,7 +791,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = InheritedNavigationView.of(context);
+    final body = _InheritedNavigationView.of(context);
 
     _open = PageStorage.of(context).readState(
           context,
