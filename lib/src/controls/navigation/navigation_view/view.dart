@@ -95,7 +95,10 @@ class NavigationView extends StatefulWidget {
   /// The body content is not clipped on when the display mode is [PaneDisplayMode.minimal]
   final ShapeBorder? contentShape;
 
-  /// Called when the search button is tapped
+  /// Called when the search button is tapped.
+  ///
+  /// This callback is invoked when [NavigationPane.autoSuggestBoxReplacement]
+  /// is tapped.
   final VoidCallback? onOpenSearch;
 
   /// The transition builder.
@@ -619,7 +622,7 @@ class NavigationViewState extends State<NavigationView> {
                       } else {
                         return Mica(
                           key: _overlayKey,
-                          backgroundColor: theme.overlayBackgroundColor,
+                          backgroundColor: theme.backgroundColor,
                           child: Padding(
                             padding: EdgeInsetsDirectional.only(
                               top: appBarPadding.resolve(direction).top,

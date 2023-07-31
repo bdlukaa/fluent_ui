@@ -1108,7 +1108,6 @@ class _CompactNavigationPane extends StatelessWidget {
                 pane,
                 onPressed: () {
                   onToggle?.call();
-                  onOpenSearch?.call();
                 },
                 padding: showReplacement ? EdgeInsets.zero : topPadding,
               );
@@ -1127,6 +1126,7 @@ class _CompactNavigationPane extends StatelessWidget {
                 false,
                 () {
                   onToggle?.call();
+                  onOpenSearch?.call();
                 },
               ),
             ),

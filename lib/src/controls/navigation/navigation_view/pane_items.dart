@@ -110,10 +110,10 @@ class PaneItem extends NavigationPaneItem {
 
   /// Whether this pane item is disabled.
   ///
-  /// A pane item can be disabled for many reasons, such as a page not being available
-  /// in the current moment.
+  /// A pane item can be disabled for many reasons, such as a page not being
+  /// available in the current moment.
   ///
-  /// If true, [onTap] is ignored.
+  /// If false, [onTap] is ignored.
   ///
   /// See also:
   ///
@@ -137,8 +137,9 @@ class PaneItem extends NavigationPaneItem {
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
     assert(mode != PaneDisplayMode.auto);
-
     assert(debugCheckHasFluentTheme(context));
+
+    final isTransitioning = maybeBody?.isTransitioning ?? false;
 
     final theme = NavigationPaneTheme.of(context);
     final titleText = title?.getProperty<String>() ?? '';
@@ -149,12 +150,13 @@ class PaneItem extends NavigationPaneItem {
     final isMinimal = mode == PaneDisplayMode.minimal;
     final isCompact = mode == PaneDisplayMode.compact;
 
-    final onItemTapped = (onPressed == null && onTap == null) || !enabled
-        ? null
-        : () {
-            onPressed?.call();
-            onTap?.call();
-          };
+    final onItemTapped =
+        (onPressed == null && onTap == null) || !enabled || isTransitioning
+            ? null
+            : () {
+                onPressed?.call();
+                onTap?.call();
+              };
 
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
@@ -236,7 +238,7 @@ class PaneItem extends NavigationPaneItem {
               );
             case PaneDisplayMode.minimal:
             case PaneDisplayMode.open:
-              final shouldShowTrailing = !(maybeBody?.isTransitioning ?? false);
+              final shouldShowTrailing = !isTransitioning;
 
               return ConstrainedBox(
                 key: itemKey,
