@@ -1,11 +1,12 @@
 ## [next]
 
 - Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
-- Added `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
-- Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
+- Add `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
 - Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
-- Do not show `PaneItem.infoBadge` and `PaneItem.trailing` while the pane is transitioning ([#906](https://github.com/bdlukaa/fluent_ui/issues/906))
+- fix: Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
+- fix: Do not show `PaneItem.infoBadge` and `PaneItem.trailing` while the pane is transitioning ([#906](https://github.com/bdlukaa/fluent_ui/issues/906))
 - fix: `NavigationView.onOpenSearch` is called when `autoSuggestBoxReplacement` is pressed
+- fix: `AutoSuggestBox` overlay is now only displayed after the user started typing
 
 ## 4.7.1
 

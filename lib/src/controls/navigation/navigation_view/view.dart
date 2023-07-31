@@ -204,6 +204,21 @@ class NavigationViewState extends State<NavigationView> {
     return false;
   }
 
+  set compactOverlayOpen(bool value) {
+    if (value == _compactOverlayOpen) return;
+    if ([PaneDisplayMode.open, PaneDisplayMode.compact].contains(displayMode)) {
+      setState(() {
+        _compactOverlayOpen = value;
+        _isTransitioning = true;
+      });
+      PageStorage.of(context).writeState(
+        context,
+        _compactOverlayOpen,
+        identifier: 'compactOverlayOpen',
+      );
+    }
+  }
+
   int _previousItemIndex = 0;
 
   PaneDisplayMode? _autoDisplayMode;
@@ -310,15 +325,7 @@ class NavigationViewState extends State<NavigationView> {
 
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
-    setState(() {
-      _compactOverlayOpen = !_compactOverlayOpen;
-      _isTransitioning = true;
-    });
-    PageStorage.of(context).writeState(
-      context,
-      _compactOverlayOpen,
-      identifier: 'compactOverlayOpen',
-    );
+    compactOverlayOpen = !compactOverlayOpen;
   }
 
   /// Whether the navigation pane is currently transitioning

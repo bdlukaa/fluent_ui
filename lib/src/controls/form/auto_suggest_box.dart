@@ -473,7 +473,7 @@ class _AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     final hasFocus = focusNode.hasFocus;
     if (!hasFocus) {
       _dismissOverlay();
-    } else {
+    } else if (controller.text.isNotEmpty) {
       _showOverlay();
     }
     setState(() {});

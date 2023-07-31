@@ -540,37 +540,44 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           }
         }(),
         items: originalItems,
-        autoSuggestBox: AutoSuggestBox(
-          key: searchKey,
-          focusNode: searchFocusNode,
-          controller: searchController,
-          unfocusedColor: Colors.transparent,
-          items: originalItems.whereType<PaneItem>().map((item) {
-            assert(item.title is Text);
-            final text = (item.title as Text).data!;
-            return AutoSuggestBoxItem(
-              label: text,
-              value: text,
-              onSelected: () {
-                item.onTap?.call();
-                searchController.clear();
-              },
-            );
-          }).toList(),
-          trailingIcon: IgnorePointer(
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(FluentIcons.search),
+        autoSuggestBox: Builder(builder: (context) {
+          return AutoSuggestBox(
+            key: searchKey,
+            focusNode: searchFocusNode,
+            controller: searchController,
+            unfocusedColor: Colors.transparent,
+            items: originalItems.whereType<PaneItem>().map((item) {
+              assert(item.title is Text);
+              final text = (item.title as Text).data!;
+              return AutoSuggestBoxItem(
+                label: text,
+                value: text,
+                onSelected: () {
+                  item.onTap?.call();
+                  searchController.clear();
+                  searchFocusNode.unfocus();
+                  final view = NavigationView.of(context);
+                  if (view.compactOverlayOpen) {
+                    view.compactOverlayOpen = false;
+                  } else if (view.minimalPaneOpen) {
+                    view.minimalPaneOpen = false;
+                  }
+                },
+              );
+            }).toList(),
+            trailingIcon: IgnorePointer(
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(FluentIcons.search),
+              ),
             ),
-          ),
-          placeholder: 'Search',
-        ),
+            placeholder: 'Search',
+          );
+        }),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: footerItems,
       ),
-      onOpenSearch: () {
-        searchFocusNode.requestFocus();
-      },
+      onOpenSearch: searchFocusNode.requestFocus,
     );
   }
 
