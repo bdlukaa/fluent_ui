@@ -1308,6 +1308,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane>
                             ),
                             child: DefaultTextStyle.merge(
                               style: theme.itemHeaderTextStyle,
+                              maxLines: 1,
                               child: widget.pane.header!,
                             ),
                           ),

@@ -371,8 +371,6 @@ class NavigationViewState extends State<NavigationView> {
       return minimalLeading;
     }
 
-    print(_isTransitioning);
-
     return LayoutBuilder(builder: (context, consts) {
       var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
 

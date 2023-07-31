@@ -236,6 +236,8 @@ class PaneItem extends NavigationPaneItem {
               );
             case PaneDisplayMode.minimal:
             case PaneDisplayMode.open:
+              final shouldShowTrailing = !(maybeBody?.isTransitioning ?? false);
+
               return ConstrainedBox(
                 key: itemKey,
                 constraints: const BoxConstraints(
@@ -250,16 +252,18 @@ class PaneItem extends NavigationPaneItem {
                     ),
                   ),
                   Expanded(child: textResult),
-                  if (infoBadge != null)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 8.0),
-                      child: infoBadge!,
-                    ),
-                  if (trailing != null)
-                    IconTheme.merge(
-                      data: const IconThemeData(size: 16.0),
-                      child: trailing!,
-                    ),
+                  if (shouldShowTrailing) ...[
+                    if (infoBadge != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 8.0),
+                        child: infoBadge!,
+                      ),
+                    if (trailing != null)
+                      IconTheme.merge(
+                        data: const IconThemeData(size: 16.0),
+                        child: trailing!,
+                      ),
+                  ],
                 ]),
               );
             case PaneDisplayMode.top:
