@@ -5,8 +5,8 @@
 - Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
 - fix: Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
 - fix: Do not show `PaneItem.infoBadge` and `PaneItem.trailing` while the pane is transitioning ([#906](https://github.com/bdlukaa/fluent_ui/issues/906))
-- fix: `NavigationView.onOpenSearch` is called when `autoSuggestBoxReplacement` is pressed
-- fix: `AutoSuggestBox` overlay is now only displayed after the user started typing
+- fix: `NavigationView.onOpenSearch` is called when `autoSuggestBoxReplacement` is pressed ([c251600](https://github.com/bdlukaa/fluent_ui/commits/c25160091928b26467473fb654a79efd6da6df98))
+- fix: `AutoSuggestBox` overlay is now only displayed after the user started typing ([d95970a](https://github.com/bdlukaa/fluent_ui/commits/d95970a230b433f76085880b7f09f38e22c813b5))
 
 ## 4.7.1
 
