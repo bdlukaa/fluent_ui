@@ -6481,8 +6481,20 @@ class FluentIcons {
     fontPackage: 'fluent_ui',
   );
 
+  static const IconData wifi = IconData(
+    0xe703,
+    fontFamily: 'FluentIcons',
+    fontPackage: 'fluent_ui',
+  );
+
   static const IconData internet_sharing = IconData(
     0xe704,
+    fontFamily: 'FluentIcons',
+    fontPackage: 'fluent_ui',
+  );
+
+  static const IconData bluetooth = IconData(
+    0xe705,
     fontFamily: 'FluentIcons',
     fontPackage: 'fluent_ui',
   );
