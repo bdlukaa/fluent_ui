@@ -477,18 +477,21 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           );
         }(),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
-            child: ToggleSwitch(
-              content: const Text('Dark Mode'),
-              checked: FluentTheme.of(context).brightness.isDark,
-              onChanged: (v) {
-                if (v) {
-                  appTheme.mode = ThemeMode.dark;
-                } else {
-                  appTheme.mode = ThemeMode.light;
-                }
-              },
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8.0),
+              child: ToggleSwitch(
+                content: const Text('Dark Mode'),
+                checked: FluentTheme.of(context).brightness.isDark,
+                onChanged: (v) {
+                  if (v) {
+                    appTheme.mode = ThemeMode.dark;
+                  } else {
+                    appTheme.mode = ThemeMode.light;
+                  }
+                },
+              ),
             ),
           ),
           if (!kIsWeb) const WindowButtons(),
@@ -537,37 +540,44 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           }
         }(),
         items: originalItems,
-        autoSuggestBox: AutoSuggestBox(
-          key: searchKey,
-          focusNode: searchFocusNode,
-          controller: searchController,
-          unfocusedColor: Colors.transparent,
-          items: originalItems.whereType<PaneItem>().map((item) {
-            assert(item.title is Text);
-            final text = (item.title as Text).data!;
-            return AutoSuggestBoxItem(
-              label: text,
-              value: text,
-              onSelected: () {
-                item.onTap?.call();
-                searchController.clear();
-              },
-            );
-          }).toList(),
-          trailingIcon: IgnorePointer(
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(FluentIcons.search),
+        autoSuggestBox: Builder(builder: (context) {
+          return AutoSuggestBox(
+            key: searchKey,
+            focusNode: searchFocusNode,
+            controller: searchController,
+            unfocusedColor: Colors.transparent,
+            items: originalItems.whereType<PaneItem>().map((item) {
+              assert(item.title is Text);
+              final text = (item.title as Text).data!;
+              return AutoSuggestBoxItem(
+                label: text,
+                value: text,
+                onSelected: () {
+                  item.onTap?.call();
+                  searchController.clear();
+                  searchFocusNode.unfocus();
+                  final view = NavigationView.of(context);
+                  if (view.compactOverlayOpen) {
+                    view.compactOverlayOpen = false;
+                  } else if (view.minimalPaneOpen) {
+                    view.minimalPaneOpen = false;
+                  }
+                },
+              );
+            }).toList(),
+            trailingIcon: IgnorePointer(
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(FluentIcons.search),
+              ),
             ),
-          ),
-          placeholder: 'Search',
-        ),
+            placeholder: 'Search',
+          );
+        }),
         autoSuggestBoxReplacement: const Icon(FluentIcons.search),
         footerItems: footerItems,
       ),
-      onOpenSearch: () {
-        searchFocusNode.requestFocus();
-      },
+      onOpenSearch: searchFocusNode.requestFocus,
     );
   }
 
@@ -784,6 +794,13 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         builder: (context, state) => DeferredWidget(
           navigation.loadLibrary,
           () => navigation.NavigationViewPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/navigation_view',
+        builder: (context, state) => DeferredWidget(
+          navigation.loadLibrary,
+          () => navigation.NavigationViewShellRoute(),
         ),
       ),
 

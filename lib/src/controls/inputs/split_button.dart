@@ -1,5 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+@Deprecated(
+  'SplitButtonBar is deprecated. Use SplitButton instead. '
+  'This was deprecated in 4.7.1',
+)
+typedef SplitButtonBar = SplitButton;
+
 typedef SplitButtonSecondaryBuilder = Widget Function(
   BuildContext context,
   VoidCallback showFlyout,

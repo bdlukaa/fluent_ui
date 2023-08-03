@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -63,6 +65,47 @@ class TooltipPage extends ScrollablePage {
               icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
               onPressed: () {},
             ),
+          ),
+        ),
+      ),
+      subtitle(
+        content: const Text(
+          'Multiple tooltips next to each other',
+        ),
+      ),
+      const Text('This usually happen on a CommandBar inside an app bar.'),
+      CardHighlight(
+        codeSnippet: '''Tooltip(
+  message: 'Horizontal ToolTip',
+  displayHorizontally: true,
+  useMousePosition: false,
+  style: const TooltipThemeData(preferBelow: true),
+  child: IconButton(
+    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    onPressed: () {},
+  ),
+),''',
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Row(
+            children: List.generate(4, (index) {
+              final icons = FluentIcons.allIcons.values;
+              return Tooltip(
+                message: 'Message',
+                useMousePosition: false,
+                style: const TooltipThemeData(
+                  preferBelow: true,
+                  waitDuration: Duration(),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    icons.elementAt(Random().nextInt(icons.length)),
+                    size: 20.0,
+                  ),
+                  onPressed: () {},
+                ),
+              );
+            }),
           ),
         ),
       ),

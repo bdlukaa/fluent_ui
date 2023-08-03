@@ -1,5 +1,8 @@
 import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../../widgets/page.dart';
 
@@ -185,6 +188,29 @@ class _NavigationViewPageState extends State<NavigationViewPage>
             ),
           ),
         ),
+        InfoLabel(
+          label: '',
+          child: Button(
+            onPressed: () {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).push(FluentPageRoute(builder: (context) {
+                return const NavigationViewShellRoute();
+              }));
+            },
+            child: const Text('Open in a new screen'),
+          ),
+        ),
+        InfoLabel(
+          label: '',
+          child: Button(
+            onPressed: () {
+              context.go('/navigation_view');
+            },
+            child: const Text('Open in a new shell route'),
+          ),
+        ),
       ]),
       subtitle(content: Text(title)),
       description(content: Text(desc)),
@@ -360,6 +386,39 @@ NavigationView(
         ),
       ),
     ];
+  }
+}
+
+class NavigationViewShellRoute extends StatelessWidget {
+  const NavigationViewShellRoute({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationView(
+      appBar: NavigationAppBar(
+        title: () {
+          const title = Text('NavigationView');
+
+          if (kIsWeb) return title;
+
+          return const DragToMoveArea(child: title);
+        }(),
+        leading: IconButton(
+          icon: const Icon(FluentIcons.back),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      content: const ScaffoldPage(
+        header: PageHeader(
+          title: Text('New Page'),
+        ),
+        content: Center(
+          child: Text('This is a new page'),
+        ),
+      ),
+    );
   }
 }
 

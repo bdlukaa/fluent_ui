@@ -1,6 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// All the fluent colors
+/// A set of predefined colors used by Fluent UI widgets.
+///
+/// ![Colors used in fluent_ui widgets](https://learn.microsoft.com/en-us/windows/apps/design/style/images/color/windows-controls.svg)
+///
+/// See also:
+///
+///   * <https://learn.microsoft.com/en-us/windows/apps/design/style/color>
+///   * [Colors], which defines all the colors provided by this library.
+///   * [AccentColor], which defines a color that can have multiple shades.
 class Colors {
   /// The transparent color. This should not be used in animations
   /// because it'll cause a weird effect.
@@ -12,31 +20,32 @@ class Colors {
   /// The grey color.
   ///
   /// It's a shaded color with the following available shades:
-  ///   - 220
-  ///   - 210
-  ///   - 200
-  ///   - 190
-  ///   - 180
-  ///   - 170
-  ///   - 160
-  ///   - 150
-  ///   - 140
-  ///   - 130
-  ///   - 120
-  ///   - 110
-  ///   - 100
-  ///   - 90
-  ///   - 80
-  ///   - 70
-  ///   - 60
-  ///   - 50
-  ///   - 40
-  ///   - 30
-  ///   - 20
-  ///   - 10
+  ///   * 220
+  ///   * 210
+  ///   * 200
+  ///   * 190
+  ///   * 180
+  ///   * 170
+  ///   * 160
+  ///   * 150
+  ///   * 140
+  ///   * 130
+  ///   * 120
+  ///   * 110
+  ///   * 100
+  ///   * 90
+  ///   * 80
+  ///   * 70
+  ///   * 60
+  ///   * 50
+  ///   * 40
+  ///   * 30
+  ///   * 20
+  ///   * 10
   ///
-  /// To use any of these shades, call `Colors.grey[SHADE]`,
-  /// where `SHADE` is the number of the shade you want
+  /// To use any of these shades, call `Colors.grey[SHADE]`, where `SHADE` is
+  /// the number of the shade you want. For example, the darkest shade is
+  /// `Colors.grey[220]`.
   static const ShadedColor grey = ShadedColor(
     0xFF323130, // grey160
     <int, Color>{
@@ -192,19 +201,18 @@ class ShadedColor extends ColorSwatch<int> {
 /// access the color variant you want easily. These shades may not be accessible
 /// on every accent color.
 ///
-/// This library already provides some accent colors by default:
+/// The [fluent_ui] library already provides some accent colors by default:
 ///
-/// - [Colors.yellow]
-/// - [Colors.orange]
-/// - [Colors.red]
-/// - [Colors.magenta]
-/// - [Colors.purple]
-/// - [Colors.blue]
-/// - [Colors.teal]
-/// - [Colors.green]
+///   * [Colors.yellow]
+///   * [Colors.orange]
+///   * [Colors.red]
+///   * [Colors.magenta]
+///   * [Colors.purple]
+///   * [Colors.blue]
+///   * [Colors.teal]
+///   * [Colors.green]
 ///
-/// Use [Colors.accentColors] to get all the accent colors provided
-/// by default.
+/// Use [Colors.accentColors] to get all the accent colors provided by default.
 class AccentColor extends ColorSwatch<String> {
   /// The default shade for this color. This can't be null
   final String primary;
@@ -250,6 +258,7 @@ class AccentColor extends ColorSwatch<String> {
   /// The lighest shade of the color
   Color get lightest => swatch['lightest'] ?? lighter.withOpacity(0.7);
 
+  /// Lerp between two accent colors.
   static AccentColor lerp(AccentColor a, AccentColor b, double t) {
     final darkest = Color.lerp(a.darkest, b.darkest, t);
     final darker = Color.lerp(a.darker, b.darker, t);
@@ -257,6 +266,7 @@ class AccentColor extends ColorSwatch<String> {
     final light = Color.lerp(a.light, b.light, t);
     final lighter = Color.lerp(a.lighter, b.lighter, t);
     final lightest = Color.lerp(a.lightest, b.lightest, t);
+
     return AccentColor.swatch({
       if (darkest != null) 'darkest': darkest,
       if (darker != null) 'darker': darker,
@@ -268,6 +278,10 @@ class AccentColor extends ColorSwatch<String> {
     });
   }
 
+  /// Get the default brush for this accent color based on the brightness.
+  ///
+  /// See also:
+  ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color defaultBrushFor(Brightness brightness) {
     if (brightness.isDark) {
       return lighter;
@@ -276,10 +290,18 @@ class AccentColor extends ColorSwatch<String> {
     }
   }
 
+  /// Get the secondary brush for this accent color based on the brightness.
+  ///
+  /// See also:
+  ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color secondaryBrushFor(Brightness brightness) {
     return defaultBrushFor(brightness).withOpacity(0.9);
   }
 
+  /// Get the tertiary brush for this accent color based on the brightness.
+  ///
+  /// See also:
+  ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color tertiaryBrushFor(Brightness brightness) {
     return defaultBrushFor(brightness).withOpacity(0.8);
   }

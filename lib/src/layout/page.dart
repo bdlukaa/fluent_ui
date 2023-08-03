@@ -128,7 +128,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     assert(debugCheckHasMediaQuery(context));
 
     final theme = FluentTheme.of(context);
-    final view = InheritedNavigationView.maybeOf(context);
+    final view = NavigationView.maybeOf(context);
 
     return PageStorage(
       bucket: _bucket,

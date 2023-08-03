@@ -1,7 +1,19 @@
 ## [next]
 
+- Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
+- Add `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
+- Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
+- fix: Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
+- fix: Do not show `PaneItem.infoBadge` and `PaneItem.trailing` while the pane is transitioning ([#906](https://github.com/bdlukaa/fluent_ui/issues/906))
+- fix: `NavigationView.onOpenSearch` is called when `autoSuggestBoxReplacement` is pressed ([c251600](https://github.com/bdlukaa/fluent_ui/commits/c25160091928b26467473fb654a79efd6da6df98))
+- fix: `AutoSuggestBox` overlay is now only displayed after the user started typing ([d95970a](https://github.com/bdlukaa/fluent_ui/commits/d95970a230b433f76085880b7f09f38e22c813b5))
+- Complete implementation of `DatePicker` and `TimePicker`'s `intl` localization with proper scripting language.
+  - Remove original implementation of `TimePicker` in [#445](https://github.com/bdlukaa/fluent_ui/pull/445) which cover `hour` only.
+
+## 4.7.1
+
 - Add vertical support to `CommandBar`. ([#872](https://github.com/bdlukaa/fluent_ui/pull/872))
-- **BREAKING** Removed `SplitButtonBar` and its related widget. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
+- Deprecated `SplitButtonBar` and its related widgets. Use `SplitButton` or `SplitButton.toggle` instead ([#882](https://github.com/bdlukaa/fluent_ui/pull/882), [#411](https://github.com/bdlukaa/fluent_ui/issues/411))
 - Implement `BreadcrumbBar` ([#878](https://github.com/bdlukaa/fluent_ui/issues/878))
 - Ensure all widgets use the correct debug checks ([#883](https://github.com/bdlukaa/fluent_ui/issues/883))
 - `Expander` header is sized dynamically ([#523](https://github.com/bdlukaa/fluent_ui/issues/523))
@@ -10,8 +22,9 @@
 - Added `FluentThemeData.selectionColor`, which defaults to the accent color normal shade ([#897](https://github.com/bdlukaa/fluent_ui/issues/897))
 - Flyout reverse transition duration is properly set ([#893](https://github.com/bdlukaa/fluent_ui/issues/893))
 - Remove view padding when app bar is provided ([#884](https://github.com/bdlukaa/fluent_ui/issues/884))
-- Complete implementation of `DatePicker` and `TimePicker`'s `intl` localization with proper scripting language.
-  - Remove original implementation of `TimePicker` in [#445](https://github.com/bdlukaa/fluent_ui/pull/445) which cover `hour` only.
+- `NavigationAppBar.title` is expanded to fit the entire width on top mode ([#902](https://github.com/bdlukaa/fluent_ui/issues/902))
+- `AutoSuggestBox` does not duplicate focus ([#894](https://github.com/bdlukaa/fluent_ui/issues/894))
+- `StickyNavigationIndicator` look-and-feel updated to match the native implementation ([#380b49c](https://github.com/bdlukaa/fluent_ui/commits/380b49c50f3652bdd1494edfe08617838d64d57a))
 
 ## 4.7.0
 

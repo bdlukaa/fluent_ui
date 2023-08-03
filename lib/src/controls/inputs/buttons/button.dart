@@ -14,8 +14,8 @@ const kDefaultButtonPadding = EdgeInsetsDirectional.only(
 /// See also:
 ///
 ///   * [ToggleButton], a button that can be on and off.
-///   * [SplitButtonBar], A button with two sides. One side initiates
-///     an action, and the other side opens a menu.
+///   * [SplitButton], A button with two parts. One part initiates an action,
+///     and the other side opens a menu.
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons>
 class Button extends BaseButton {
   /// Creates a button.

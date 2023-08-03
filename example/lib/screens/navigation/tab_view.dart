@@ -22,11 +22,12 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   bool wheelScroll = false;
 
   Tab generateTab(int index) {
+    final allIcons = FluentIcons.allIcons.values;
     late Tab tab;
     tab = Tab(
       text: Text('Document $index'),
       semanticLabel: 'Document #$index',
-      icon: const FlutterLogo(),
+      icon: Icon(allIcons.elementAt(Random().nextInt(allIcons.length))),
       body: Container(
         color:
             Colors.accentColors[Random().nextInt(Colors.accentColors.length)],
@@ -45,6 +46,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   @override
   Widget build(BuildContext context) {
     tabs ??= List.generate(3, generateTab);
+    final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TabView')),
       children: [
@@ -53,6 +55,59 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
           'respective content. TabViews are useful for displaying several pages '
           '(or documents) of content while giving a user the capability to '
           'rearrange, open, or close new tabs.',
+        ),
+        subtitle(content: const Text('Keyboarding support')),
+        RichText(
+          text: () {
+            const lineBreakSpan = TextSpan(text: '\n');
+            const topicSpan = TextSpan(
+              text: '  •  ',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            );
+            TextSpan shortcutSpan(String text) {
+              return TextSpan(
+                text: text,
+                style: TextStyle(
+                  color: theme.accentColor.defaultBrushFor(theme.brightness),
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            }
+
+            return TextSpan(children: [
+              TextSpan(children: [
+                topicSpan,
+                shortcutSpan('Ctrl + T'),
+                const TextSpan(text: ' opens a new tab'),
+                lineBreakSpan
+              ]),
+              TextSpan(children: [
+                topicSpan,
+                shortcutSpan('Ctrl + W'),
+                const TextSpan(text: ' or '),
+                shortcutSpan('Ctrl + F4'),
+                const TextSpan(text: ' closes the selected tab'),
+                lineBreakSpan
+              ]),
+              TextSpan(children: [
+                topicSpan,
+                shortcutSpan('Ctrl + 1'),
+                const TextSpan(text: ' + '),
+                shortcutSpan('Ctrl + 8'),
+                const TextSpan(text: ' selects that number tab'),
+                lineBreakSpan
+              ]),
+              TextSpan(children: [
+                topicSpan,
+                shortcutSpan('Ctrl + 9'),
+                const TextSpan(text: ' selects the last tab'),
+              ]),
+            ]);
+          }(),
+          //         '''  •  Ctrl + T opens a new tab
+          // •  Ctrl + W or Ctrl + F4 closes the selected tab
+          // •  Ctrl 1 + Ctrl 8 selects that number tab
+          // •  Ctrl 9 selects the last tab''',
         ),
         subtitle(
           content: const Text(
