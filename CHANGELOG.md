@@ -1,5 +1,5 @@
 ## [next]
-
+- Add Wifi and Bluetooth icons
 - Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
 - Add `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
 - Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
