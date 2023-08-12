@@ -42,10 +42,10 @@ class _CardHighlightState extends State<CardHighlight>
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4.0)),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: Align(
-              alignment: AlignmentDirectional.topStart,
+          child: Align(
+            alignment: AlignmentDirectional.topStart,
+            child: SizedBox(
+              width: double.infinity,
               child: widget.child,
             ),
           ),

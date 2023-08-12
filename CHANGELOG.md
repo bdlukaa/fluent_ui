@@ -1,13 +1,17 @@
 ## [next]
 
-* fix: `StickyNavigationIndicator` now doesn't stop if another item interrupts the ongoing animation
+* feat: Expose `AutoSuggestBoxState` ([#912](https://github.com/bdlukaa/fluent_ui/issues/912))
+  With it, you can now control the `AutoSuggestBox` state, such as opening and closing the overlay. Use the `.dismissOverlay` method to close the overlay and `.showOverlay` to display it.
+
+  Use the `AutoSuggestBox.onOverlayVisibilityChanged` callback to listen to overlay visibility changes.
+* fix: `StickyNavigationIndicator` now doesn't stop if another item interrupts the ongoing animation ([36b82b](https://github.com/bdlukaa/fluent_ui/commits/36b82b80ec300e9f7314dd19be82985f3557c3c9))
 
 ## 4.7.2
 
-- Add Wifi and Bluetooth icons ([#909](https://github.com/bdlukaa/fluent_ui/pull/909))
-- Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
-- Add `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
-- Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
+- feat: Add Wifi and Bluetooth icons ([#909](https://github.com/bdlukaa/fluent_ui/pull/909))
+- feat: Add `ListTile.cursor` ([#901](https://github.com/bdlukaa/fluent_ui/pull/901))
+- feat: Add `Tab.disabled` ([#904](https://github.com/bdlukaa/fluent_ui/issues/904))
+- feat: Add `NavigationPaneThemeData.overlayBackgroundColor`, which is displayed on overlays, such as minimal and compact pane overlays ([#903](https://github.com/bdlukaa/fluent_ui/pull/903))
 - fix: Correctly remove tooltip as soon as the mouse leaves the widget ([#905](https://github.com/bdlukaa/fluent_ui/issues/905))
 - fix: Do not show `PaneItem.infoBadge` and `PaneItem.trailing` while the pane is transitioning ([#906](https://github.com/bdlukaa/fluent_ui/issues/906))
 - fix: `NavigationView.onOpenSearch` is called when `autoSuggestBoxReplacement` is pressed ([c251600](https://github.com/bdlukaa/fluent_ui/commits/c25160091928b26467473fb654a79efd6da6df98))

@@ -15,6 +15,10 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
   Cat? selectedObjectCat;
   bool enabled = true;
 
+  final asgbKey = GlobalKey<AutoSuggestBoxState>(
+    debugLabel: 'Manually controlled AutoSuggestBox',
+  );
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -40,6 +44,7 @@ String? selectedCat;
 AutoSuggestBox<String>(
   items: cats.map((cat) {
     return AutoSuggestBoxItem<String>(
+      placeholder: 'Type a cat name',
       value: cat,
       label: cat,
       onFocusChange: (focused) {
@@ -65,6 +70,7 @@ const cats = <String>[
             SizedBox(
               width: 350.0,
               child: AutoSuggestBox<String>(
+                placeholder: 'Type a cat name',
                 enabled: enabled,
                 items: cats
                     .map<AutoSuggestBoxItem<String>>(
@@ -90,12 +96,14 @@ const cats = <String>[
             ),
           ]),
         ),
-        const Text(
-          'The control can be used with a custom value class. With this feature,'
-          ' AutoSuggestBox can be used as a replacement of a ComboBox.',
-        ),
         subtitle(
             content: const Text('A AutoSuggestBox with a custom type "Cat"')),
+        description(
+          content: const Text(
+            'The control can be used with a custom value class. With this feature,'
+            ' AutoSuggestBox can be used as a replacement of a ComboBox.',
+          ),
+        ),
         CardHighlight(
           codeSnippet: '''
 class Cat {
@@ -168,6 +176,97 @@ const objectCats = [
               ),
             ),
           ]),
+        ),
+        subtitle(content: const Text('An AutoSuggestBox with manual control')),
+        description(
+          content: const Text(
+            'To manually control an AutoSuggestBox, you can use '
+            'the "GlobalKey<AutoSuggestBoxState>" to get the "AutoSuggestBoxState" '
+            'instance. With this instance, you can call the "showOverlay" and '
+            '"dismissOverlay" methods to show and hide the overlay. To check if '
+            'the overlay is visible, you can use the "isOverlayVisible" property',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''final asgbKey = GlobalKey<AutoSuggestBoxState>(
+  debugLabel: 'Manually controlled AutoSuggestBox',
+);
+
+AutoSuggestBox<String>(
+  key: asgbKey,
+  items: cats.map((cat) {
+    return ...;
+  }).toList(),
+  onSelected: (item) { ... },
+  // Listen to the overlay visibility changes
+  onOverlayVisibilityChanged: (visible) { debugPrint('\$visible'); },
+),
+
+// To toggle the overlay state, first check if it's visible
+final isOverlayVisible = asgbKey.currentState?.isOverlayVisible ?? false;
+if (isOverlayVisible) {
+  // Call the dismissOverlay method to hide the overlay
+  asgbKey.currentState?.dismissOverlay();
+} else {
+  // Call the showOverlay method to show the overlay
+  asgbKey.currentState?.showOverlay();
+}
+''',
+          child: Wrap(
+            runAlignment: WrapAlignment.spaceBetween,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(
+                  width: 350.0,
+                  child: AutoSuggestBox<String>(
+                    key: asgbKey,
+                    enabled: enabled,
+                    items: cats
+                        .map<AutoSuggestBoxItem<String>>(
+                          (cat) => AutoSuggestBoxItem<String>(
+                            value: cat,
+                            label: cat,
+                            onFocusChange: (focused) {
+                              if (focused) debugPrint('Focused $cat');
+                            },
+                          ),
+                        )
+                        .toList(),
+                    onSelected: (item) {
+                      setState(() => selectedCat = item.value);
+                    },
+                    onOverlayVisibilityChanged: (_) => setState(() {}),
+                  ),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(start: 8.0),
+                    child: Text(selectedCat ?? ''),
+                  ),
+                ),
+              ]),
+              ToggleButton(
+                checked: asgbKey.currentState?.isOverlayVisible ?? false,
+                onChanged: (_) {
+                  final asgbState = asgbKey.currentState;
+                  if (asgbState == null) return;
+
+                  if (asgbState.isOverlayVisible) {
+                    asgbState.dismissOverlay();
+                  } else {
+                    asgbState.showOverlay();
+                  }
+                  setState(() {});
+                },
+                child: Text(
+                  asgbKey.currentState?.isOverlayVisible ?? false
+                      ? 'Hide overlay'
+                      : 'Show overlay',
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
