@@ -685,7 +685,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
       GoRoute(path: '/', builder: (context, state) => const HomePage()),
 
       /// Settings
-      GoRoute(path: '/settings', builder: (context, state) => Settings()),
+      GoRoute(path: '/settings', builder: (context, state) => const Settings()),
 
       /// /// Input
       /// Buttons

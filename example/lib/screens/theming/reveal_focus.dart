@@ -5,10 +5,10 @@ import 'package:fluent_ui/fluent_ui.dart' hide Page;
 
 import '../../widgets/page.dart';
 
-class RevealFocusPage extends Page {
-  final FocusNode focus = FocusNode();
-
+class RevealFocusPage extends StatelessWidget with PageMixin {
   RevealFocusPage({super.key});
+
+  final FocusNode focus = FocusNode();
 
   @override
   Widget build(BuildContext context) {

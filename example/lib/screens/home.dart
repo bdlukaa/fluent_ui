@@ -180,21 +180,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
           runSpacing: 10.0,
           children: <Widget>[
             ...sponsors.map((sponsor) {
-              return Link(
-                uri: Uri.parse('https://www.github.com/${sponsor.username}'),
-                builder: (context, followLink) {
-                  return Semantics(
-                    link: true,
-                    child: IconButton(
-                      onPressed: followLink,
-                      icon: SponsorButton(
-                        imageUrl: sponsor.imageUrl,
-                        username: sponsor.username ?? sponsor.name,
-                      ),
-                    ),
-                  );
-                },
-              );
+              return sponsor.build();
             }),
             IconButton(
               onPressed: () {
@@ -224,6 +210,14 @@ class _HomePageState extends State<HomePage> with PageMixin {
               ]),
             ),
           ],
+        ),
+        Text('CONTRIBUTORS', style: theme.typography.bodyStrong),
+        Wrap(
+          spacing: 10.0,
+          runSpacing: 10.0,
+          children: contributors.map((contributor) {
+            return contributor.build();
+          }).toList(),
         ),
         subtitle(content: const Text('Equivalents with the material library')),
         const MaterialEquivalents(),
