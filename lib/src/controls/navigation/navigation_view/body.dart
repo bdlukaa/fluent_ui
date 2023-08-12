@@ -164,9 +164,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
                   final item = view.pane!.effectiveItems[index];
 
                   return ExcludeFocus(
-                    key: item.bodyKey,
                     excluding: !isSelected,
                     child: FocusTraversalGroup(
+                      policy: WidgetOrderTraversalPolicy(),
                       child: item.body,
                     ),
                   );

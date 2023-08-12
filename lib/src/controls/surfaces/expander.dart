@@ -342,7 +342,10 @@ class ExpanderState extends State<Expander>
             color: widget.contentBackgroundColor ??
                 theme.resources.cardBackgroundFillColorSecondary,
           ),
-          child: widget.content,
+          child: ExcludeFocus(
+            excluding: !_isExpanded,
+            child: widget.content,
+          ),
         ),
       ),
     ];

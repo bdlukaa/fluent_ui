@@ -6,6 +6,8 @@
   Use the `AutoSuggestBox.onOverlayVisibilityChanged` callback to listen to overlay visibility changes.
 * fix: `StickyNavigationIndicator` now doesn't stop if another item interrupts the ongoing animation ([36b82b](https://github.com/bdlukaa/fluent_ui/commits/36b82b80ec300e9f7314dd19be82985f3557c3c9))
 * fix: Render `Combobox`'s elevation outside of the clipper ([#896](https://github.com/bdlukaa/fluent_ui/discussions/896))
+* fix: Do not make items exclusive on `NavigationView`'s body ([#913](https://github.com/bdlukaa/fluent_ui/issues/913))
+* fix: `Expander.content` has now its focus excluded when closed
 
 ## 4.7.2
 

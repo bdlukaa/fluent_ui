@@ -31,14 +31,6 @@ class NavigationPaneItem with Diagnosticable {
 ///   * [PaneItemAction], the item used for execute an action on click
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItem extends NavigationPaneItem {
-  /// The key used for the body content
-  ///
-  /// See also:
-  ///
-  ///   * [body], which this is assigned to
-  ///   * [_NavigationBody], which assigns this to every pane body
-  GlobalKey bodyKey = GlobalKey(debugLabel: 'PaneItem bodyKey');
-
   /// Creates a pane item.
   PaneItem({
     super.key,
