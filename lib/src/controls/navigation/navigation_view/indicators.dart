@@ -293,13 +293,13 @@ class _StickyNavigationIndicatorState
             ),
           );
           upAnimation = null;
-          await downController.forward(from: 0.0);
+          downController.forward(from: 0.0);
         } else {
           upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: upController),
           );
           downAnimation = null;
-          await upController.reverse(from: 1.0);
+          upController.reverse(from: 1.0);
         }
       } else if (isAbove) {
         if (isSelected) {
@@ -310,13 +310,13 @@ class _StickyNavigationIndicatorState
             ),
           );
           downAnimation = null;
-          await upController.forward(from: 0.0);
+          upController.forward(from: 0.0);
         } else {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: downController),
           );
           upAnimation = null;
-          await downController.reverse(from: 1.0);
+          downController.reverse(from: 1.0);
         }
       }
     }

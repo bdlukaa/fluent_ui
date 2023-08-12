@@ -1,3 +1,7 @@
+## [next]
+
+* fix: `StickyNavigationIndicator` now doesn't stop if another item interrupts the ongoing animation
+
 ## 4.7.2
 
 - Add Wifi and Bluetooth icons ([#909](https://github.com/bdlukaa/fluent_ui/pull/909))
