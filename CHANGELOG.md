@@ -8,6 +8,7 @@
 * fix: Render `Combobox`'s elevation outside of the clipper ([#896](https://github.com/bdlukaa/fluent_ui/discussions/896))
 * fix: Do not make items exclusive on `NavigationView`'s body ([#913](https://github.com/bdlukaa/fluent_ui/issues/913))
 * fix: `Expander.content` has now its focus excluded when closed
+* fix: Fixed compile errors with Flutter 3.13.0 stable
 
 ## 4.7.2
 

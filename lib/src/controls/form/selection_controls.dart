@@ -126,11 +126,8 @@ class _FluentTextSelectionControls extends TextSelectionControls {
       clipboardStatus: clipboardStatus,
       endpoints: endpoints,
       globalEditableRegion: globalEditableRegion,
-      handleCut:
-          canCut(delegate) ? () => handleCut(delegate) : null,
-      handleCopy: canCopy(delegate)
-          ? () => handleCopy(delegate)
-          : null,
+      handleCut: canCut(delegate) ? () => handleCut(delegate) : null,
+      handleCopy: canCopy(delegate) ? () => handleCopy(delegate) : null,
       handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
       handleSelectAll:
           canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
@@ -239,8 +236,7 @@ class _FluentTextSelectionControlsToolbarState
       }
       _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
-      if (widget.handlePaste != null) {
-      }
+      if (widget.handlePaste != null) {}
     }
   }
 
