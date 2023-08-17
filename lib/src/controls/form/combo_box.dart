@@ -1255,7 +1255,6 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
           color: theme.resources.textFillColorDisabled,
         ),
         child: IgnorePointer(
-          ignoringSemantics: false,
           child: displayedHint,
         ),
       ));
