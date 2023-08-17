@@ -1,4 +1,4 @@
-## [next]
+## 4.7.3
 
 * feat: Expose `AutoSuggestBoxState` ([#912](https://github.com/bdlukaa/fluent_ui/issues/912))
   With it, you can now control the `AutoSuggestBox` state, such as opening and closing the overlay. Use the `.dismissOverlay` method to close the overlay and `.showOverlay` to display it.
