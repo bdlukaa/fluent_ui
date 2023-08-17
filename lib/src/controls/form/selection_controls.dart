@@ -236,7 +236,6 @@ class _FluentTextSelectionControlsToolbarState
       }
       _clipboardStatus = widget.clipboardStatus;
       _clipboardStatus!.addListener(_onChangedClipboardStatus);
-      if (widget.handlePaste != null) {}
     }
   }
 
