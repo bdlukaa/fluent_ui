@@ -1,3 +1,7 @@
+## [next]
+
+* fix: tap on `DatePicker` day does not skip a day ([#914](https://github.com/bdlukaa/fluent_ui/issues/914))
+
 ## 4.7.3
 
 * feat: Expose `AutoSuggestBoxState` ([#912](https://github.com/bdlukaa/fluent_ui/issues/912))

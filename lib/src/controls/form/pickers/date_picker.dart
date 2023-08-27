@@ -627,7 +627,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                         ? null
                         : () {
                             widget.dayController.animateToItem(
-                              day,
+                              index,
                               duration: theme.mediumAnimationDuration,
                               curve: theme.animationCurve,
                             );
