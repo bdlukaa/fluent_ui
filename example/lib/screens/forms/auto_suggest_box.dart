@@ -236,7 +236,10 @@ if (isOverlayVisible) {
                     onSelected: (item) {
                       setState(() => selectedCat = item.value);
                     },
-                    onOverlayVisibilityChanged: (_) => setState(() {}),
+                    onOverlayVisibilityChanged: (visible) {
+                      debugPrint('Overlay is visible: $visible');
+                      setState(() {});
+                    },
                   ),
                 ),
                 Flexible(

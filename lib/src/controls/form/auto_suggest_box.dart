@@ -514,7 +514,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   }
 
   /// Whether the overlay is currently visible.
-  bool get isOverlayVisible => _entry != null && (_entry?.mounted ?? false);
+  bool get isOverlayVisible => _entry != null;
 
   void _insertOverlay() {
     final overlayState = Overlay.of(
