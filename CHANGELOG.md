@@ -5,6 +5,7 @@
 * fix: expose more `TextField` properties on `NumberBox` ([#933](https://github.com/bdlukaa/fluent_ui/discussions/933))
 * fix: expose more `TextField` properties on `PasswordBox` ([#925](https://github.com/bdlukaa/fluent_ui/issues/925))
 * fix: `AutoSuggestBox.onOverlayVisibilityChanged` now results in the correct state ([#926](https://github.com/bdlukaa/fluent_ui/issues/926))
+* fix: `MenuFlyoutSubItem` inherits the acrylic data from `MenuFlyout` ([#932](https://github.com/bdlukaa/fluent_ui/issues/932))
 
 ## 4.7.3
 
