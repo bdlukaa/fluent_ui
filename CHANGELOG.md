@@ -2,6 +2,7 @@
 
 * fix: tap on `DatePicker` day does not skip a day ([#914](https://github.com/bdlukaa/fluent_ui/issues/914))
 * fix: ensure `PaneItemExpander`'s flyout is attached before using it ([#857](https://github.com/bdlukaa/fluent_ui/issues/857))
+* fix: expose more `TextField` properties on `NumberBox` ([#933](https://github.com/bdlukaa/fluent_ui/discussions/933))
 
 ## 4.7.3
 

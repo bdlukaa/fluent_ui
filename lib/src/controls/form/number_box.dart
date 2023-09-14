@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
@@ -159,6 +160,64 @@ class NumberBox<T extends num> extends StatefulWidget {
   ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
 
+  /// The unfocused color of the highlight border.
+  ///
+  /// See also:
+  ///   * [highlightColor], displayed when the field is focused
+  final Color? unfocusedColor;
+
+  /// The style to use for the text being edited.
+  ///
+  /// Also serves as a base for the [placeholder] text's style.
+  ///
+  /// Defaults to the standard font style from [FluentTheme] if null.
+  final TextStyle? style;
+
+  /// {@macro flutter.widgets.editableText.textAlign}
+  final TextAlign? textAlign;
+
+  /// {@macro flutter.widgets.editableText.keyboardType}
+  final TextInputType? keyboardType;
+
+  /// Controls how tall the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxHeightStyle] for details on available styles.
+  final ui.BoxHeightStyle selectionHeightStyle;
+
+  /// Controls how wide the selection highlight boxes are computed to be.
+  ///
+  /// See [ui.BoxWidthStyle] for details on available styles.
+  final ui.BoxWidthStyle selectionWidthStyle;
+
+  /// The appearance of the keyboard.
+  ///
+  /// This setting is only honored on iOS devices.
+  ///
+  /// If null, defaults to the brightness of [FluentThemeData.brightness].
+  final Brightness? keyboardAppearance;
+
+  /// {@macro flutter.widgets.editableText.scrollPadding}
+  final EdgeInsets scrollPadding;
+
+  /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
+  final bool enableInteractiveSelection;
+
+  /// {@macro flutter.widgets.editableText.selectionControls}
+  final TextSelectionControls? selectionControls;
+
+  /// {@macro flutter.widgets.scrollable.dragStartBehavior}
+  final DragStartBehavior dragStartBehavior;
+
+  /// {@macro flutter.widgets.editableText.scrollController}
+  final ScrollController? scrollController;
+
+  /// {@macro flutter.widgets.editableText.scrollPhysics}
+  final ScrollPhysics? scrollPhysics;
+
+  /// {@macro flutter.widgets.editableText.textDirection}
+  final TextDirection? textDirection;
+
+  /// Creates a number box.
   const NumberBox({
     super.key,
     required this.value,
@@ -183,6 +242,20 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.cursorColor,
     this.showCursor,
     this.highlightColor,
+    this.unfocusedColor,
+    this.style,
+    this.textAlign,
+    this.keyboardType = TextInputType.number,
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.enableInteractiveSelection = true,
+    this.keyboardAppearance,
+    this.scrollController,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPhysics,
+    this.selectionControls,
+    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
+    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.textDirection,
   });
 
   @override
@@ -363,6 +436,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       inputFormatters: widget.inputFormatters,
       placeholder: widget.placeholder,
       placeholderStyle: widget.placeholderStyle,
+      showCursor: widget.showCursor,
       cursorColor: widget.cursorColor,
       cursorHeight: widget.cursorHeight,
       cursorRadius: widget.cursorRadius,
@@ -371,10 +445,23 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       prefix: widget.leadingIcon,
       focusNode: focusNode,
       controller: controller,
-      keyboardType: TextInputType.number,
+      keyboardType: widget.keyboardType,
       enabled: widget.onChanged != null,
       suffix:
           textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
+      unfocusedColor: widget.unfocusedColor,
+      style: widget.style,
+      textAlign: widget.textAlign ?? TextAlign.start,
+      keyboardAppearance: widget.keyboardAppearance,
+      scrollPadding: widget.scrollPadding,
+      scrollController: widget.scrollController,
+      scrollPhysics: widget.scrollPhysics,
+      dragStartBehavior: widget.dragStartBehavior,
+      enableInteractiveSelection: widget.enableInteractiveSelection,
+      selectionControls: widget.selectionControls,
+      selectionHeightStyle: widget.selectionHeightStyle,
+      selectionWidthStyle: widget.selectionWidthStyle,
+      textDirection: widget.textDirection,
     );
 
     return CompositedTransformTarget(
