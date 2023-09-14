@@ -451,6 +451,8 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   void show(MenuInfoProviderState menuInfo) {
     final parent = Flyout.of(context);
 
+    final menuFlyout = context.findAncestorWidgetOfExactType<MenuFlyout>();
+
     final itemBox = context.findRenderObject() as RenderBox;
     final itemRect = itemBox.localToGlobal(
           Offset.zero,
@@ -477,6 +479,12 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
               opacity: transitionController,
               child: MenuFlyout(
                 key: menuKey,
+                color: menuFlyout?.color,
+                constraints: menuFlyout?.constraints,
+                elevation: menuFlyout?.elevation ?? 8.0,
+                padding: menuFlyout?.padding,
+                shadowColor: menuFlyout?.shadowColor ?? Colors.black,
+                shape: menuFlyout?.shape,
                 items: widget.items(context),
               ),
             );
