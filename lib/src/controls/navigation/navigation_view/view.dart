@@ -367,7 +367,7 @@ class NavigationViewState extends State<NavigationView> {
               ? localizations.openNavigationTooltip
               : localizations.closeNavigationTooltip,
         ),
-        icon: const Icon(FluentIcons.global_nav_button),
+        icon: Icon(theme.paneNavigationButtonIcon),
         body: const SizedBox.shrink(),
       ).build(
         context,

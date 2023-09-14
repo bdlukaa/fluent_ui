@@ -7,6 +7,7 @@
 * fix: `AutoSuggestBox.onOverlayVisibilityChanged` now results in the correct state ([#926](https://github.com/bdlukaa/fluent_ui/issues/926))
 * fix: `MenuFlyoutSubItem` inherits the acrylic data from `MenuFlyout` ([#932](https://github.com/bdlukaa/fluent_ui/issues/932))
 * fix: `MenuFlyoutSubItem` inhertis its `MenuFlyout` parent decoration data ([#931](https://github.com/bdlukaa/fluent_ui/issues/931)) 
+* feat: Expose `paneNavigationButtonIcon` on `NavigationPaneThemeData` ([#929](https://github.com/bdlukaa/fluent_ui/issues/929))
 
 ## 4.7.3
 

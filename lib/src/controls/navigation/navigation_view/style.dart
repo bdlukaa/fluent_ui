@@ -115,6 +115,8 @@ class NavigationPaneThemeData with Diagnosticable {
   final ButtonState<Color?>? selectedIconColor;
   final ButtonState<Color?>? unselectedIconColor;
 
+  final IconData? paneNavigationButtonIcon;
+
   final Duration? animationDuration;
   final Curve? animationCurve;
 
@@ -135,6 +137,7 @@ class NavigationPaneThemeData with Diagnosticable {
     this.animationCurve,
     this.selectedIconColor,
     this.unselectedIconColor,
+    this.paneNavigationButtonIcon,
   });
 
   factory NavigationPaneThemeData.standard({
@@ -192,6 +195,7 @@ class NavigationPaneThemeData with Diagnosticable {
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
       headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
+      paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );
   }
 
@@ -228,6 +232,8 @@ class NavigationPaneThemeData with Diagnosticable {
           a?.selectedIconColor, b?.selectedIconColor, t, Color.lerp),
       unselectedIconColor: ButtonState.lerp(
           a?.unselectedIconColor, b?.unselectedIconColor, t, Color.lerp),
+      paneNavigationButtonIcon:
+          t < 0.5 ? a?.paneNavigationButtonIcon : b?.paneNavigationButtonIcon,
     );
   }
 
@@ -251,6 +257,8 @@ class NavigationPaneThemeData with Diagnosticable {
       animationDuration: style?.animationDuration ?? animationDuration,
       selectedIconColor: style?.selectedIconColor ?? selectedIconColor,
       unselectedIconColor: style?.unselectedIconColor ?? unselectedIconColor,
+      paneNavigationButtonIcon:
+          style?.paneNavigationButtonIcon ?? paneNavigationButtonIcon,
     );
   }
 
@@ -275,6 +283,8 @@ class NavigationPaneThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('selectedTopTextStyle', selectedTextStyle))
       ..add(DiagnosticsProperty('unselectedTopTextStyle', unselectedTextStyle))
       ..add(DiagnosticsProperty('selectedIconColor', selectedIconColor))
-      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
+      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor))
+      ..add(IconDataProperty(
+          'paneNavigationButtonIcon', paneNavigationButtonIcon));
   }
 }
