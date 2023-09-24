@@ -530,7 +530,7 @@ class TreeView extends StatefulWidget {
     this.narrowSpacing = false,
     this.includePartiallySelectedItems = false,
     this.deselectParentWhenChildrenDeselected = true,
-  }) : assert(items.length > 0, 'There must be at least one item');
+  });
 
   /// The items of the tree view.
   ///
@@ -645,9 +645,22 @@ class TreeView extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(EnumProperty('selectionMode', selectionMode,
-          defaultValue: TreeViewSelectionMode.none))
-      ..add(IterableProperty<TreeViewItem>('items', items));
+      ..add(EnumProperty(
+        'selectionMode',
+        selectionMode,
+        defaultValue: TreeViewSelectionMode.none,
+      ))
+      ..add(IterableProperty<TreeViewItem>('items', items))
+      ..add(FlagProperty(
+        'includePartiallySelectedItems',
+        value: includePartiallySelectedItems,
+        defaultValue: false,
+      ))
+      ..add(FlagProperty(
+        'narrowSpacing',
+        value: narrowSpacing,
+        defaultValue: false,
+      ));
   }
 }
 

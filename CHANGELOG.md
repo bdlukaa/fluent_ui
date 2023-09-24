@@ -1,3 +1,7 @@
+## [next]
+
+* fix: do not enforce a tree view item on `TreeView` ([#934](https://github.com/bdlukaa/fluent_ui/issues/934))
+
 ## 4.7.4
 
 * fix: tap on `DatePicker` day does not skip a day ([#914](https://github.com/bdlukaa/fluent_ui/issues/914))
