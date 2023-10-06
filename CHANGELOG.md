@@ -1,3 +1,9 @@
+## [next]
+
+* fix: items not aligned centered in listtile ([#939](https://github.com/bdlukaa/fluent_ui/issues/939))
+  + added `itemsAlignment` to listTile constructor (defaults to `CrossAxisAlignment.center`)
+* add: added `itemsPadding` to listTile constructor (defaults to `kDefaultListTilePadding`)
+
 ## 4.7.5
 
 * fix: do not enforce a tree view item on `TreeView` ([#934](https://github.com/bdlukaa/fluent_ui/issues/934))
