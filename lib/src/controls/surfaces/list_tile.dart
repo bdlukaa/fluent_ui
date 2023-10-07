@@ -42,6 +42,8 @@ class ListTile extends StatelessWidget {
     this.autofocus = false,
     this.semanticLabel,
     this.cursor,
+    this.contentAlignment = CrossAxisAlignment.center,
+    this.contentPadding = kDefaultListTilePadding,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -67,6 +69,8 @@ class ListTile extends StatelessWidget {
     this.onSelectionChange,
     this.semanticLabel,
     this.cursor,
+    this.contentAlignment = CrossAxisAlignment.center,
+    this.contentPadding = kDefaultListTilePadding,
   }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -154,6 +158,16 @@ class ListTile extends StatelessWidget {
   ///  * [SystemMouseCursors.click], which turns the mouse cursor to click
   final MouseCursor? cursor;
 
+  /// How the children should be placed along the cross axis in a flex layout.
+  ///
+  /// Defaults to CrossAxisAlignment.center
+  final CrossAxisAlignment contentAlignment;
+
+  /// Padding applied to list tile content
+  ///
+  /// Defaults to [kDefaultListTilePadding]
+  final EdgeInsetsGeometry contentPadding;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -217,7 +231,7 @@ class ListTile extends StatelessWidget {
         const placeholder = SizedBox(width: 12.0);
 
         final tile = Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: contentAlignment,
           children: [
             if (leading != null)
               Padding(
@@ -299,7 +313,7 @@ class ListTile extends StatelessWidget {
                         builder: (context, height, child) => Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                              vertical: kDefaultListTilePadding.vertical,
+                              vertical: contentPadding.vertical,
                             ),
                             child: Container(
                               height: height * 0.7,
@@ -322,7 +336,7 @@ class ListTile extends StatelessWidget {
                     placeholder,
                   Expanded(
                     child: Padding(
-                      padding: kDefaultListTilePadding,
+                      padding: contentPadding,
                       child: tile,
                     ),
                   ),
