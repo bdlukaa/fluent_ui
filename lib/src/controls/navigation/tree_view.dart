@@ -983,9 +983,11 @@ class _TreeViewItem extends StatelessWidget {
             child: Stack(children: [
               // Indentation and selection indicator for single selection mode.
               Container(
-                height: selectionMode == TreeViewSelectionMode.multiple
-                    ? 28.0
-                    : 26.0,
+                constraints: BoxConstraints(
+                  minHeight: selectionMode == TreeViewSelectionMode.multiple
+                      ? 28.0
+                      : 26.0,
+                ),
                 padding: EdgeInsetsDirectional.only(
                   start: selectionMode == TreeViewSelectionMode.multiple
                       ? !narrowSpacing
@@ -1044,7 +1046,6 @@ class _TreeViewItem extends StatelessWidget {
                           // chevron's (max) width.
                           width: 24,
                           // The hitbox fills the available height.
-                          height: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(5.0),
