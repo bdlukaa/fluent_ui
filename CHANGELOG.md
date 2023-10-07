@@ -1,8 +1,8 @@
 ## [next]
 
 * fix: items not aligned centered in listtile ([#939](https://github.com/bdlukaa/fluent_ui/issues/939))
-  + added `itemsAlignment` to listTile constructor (defaults to `CrossAxisAlignment.center`)
-* add: added `itemsPadding` to listTile constructor (defaults to `kDefaultListTilePadding`)
+  + added `contentAlignment` to `ListTile`
+* Added `contentPadding` to `ListTile`
 
 ## 4.7.5
 
