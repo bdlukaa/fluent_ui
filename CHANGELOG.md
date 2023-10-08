@@ -1,4 +1,4 @@
-## [next]
+## 4.7.6
 
 * fix: items not aligned centered in `ListTile`. Added `ListTile.contentAlignment` and `ListTile.contentPadding` ([#939](https://github.com/bdlukaa/fluent_ui/issues/939))
 * fix: `TreeViewItem` no longer enforces a max height ([#937](https://github.com/bdlukaa/fluent_ui/issues/937))
