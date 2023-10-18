@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Asserts that the given context has a [FluentTheme] ancestor.
 ///
@@ -76,7 +77,7 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
 /// Check if the current screen is 10 foot long or bigger.
 ///
 /// [width] is the width of the current screen. If not provided,
-/// [SingletonFlutterWindow.physicalSize] is used
+/// [FlutterView.physicalSize] is used
 bool is10footScreen(BuildContext context) {
   final width = View.of(context).physicalSize.width;
   return width >= 11520;
@@ -152,5 +153,14 @@ extension StringExtension on String {
   String lowercaseFirst() {
     final first = substring(0, 1);
     return first.toLowerCase() + substring(1);
+  }
+}
+
+extension OffsetExtension on Offset {
+  Offset clamp(Offset min, Offset max) {
+    return Offset(
+      clampDouble(dx, min.dx, max.dx),
+      clampDouble(dy, min.dy, max.dy),
+    );
   }
 }

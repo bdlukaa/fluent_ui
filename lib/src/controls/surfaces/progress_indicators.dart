@@ -176,7 +176,13 @@ class _ProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    size = Size(size.width - strokeWidth / 2, size.height - strokeWidth / 2);
+
     void drawLine(Offset xy1, Offset xy2, Color color) {
+      xy1 += Offset(strokeWidth / 2, 0);
+      xy1 = xy1.clamp(Offset.zero, Offset(size.width, size.height));
+      xy2 = xy2.clamp(xy1, Offset(size.width, size.height));
+
       canvas.drawLine(
         xy1,
         xy2,
@@ -442,9 +448,14 @@ class _RingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Since the indicator is drawn as a stroke, the offset and size need to be
+    // adapted so that the stroke will be drawn inside the paint area.
+    final offset = Offset(strokeWidth / 2, strokeWidth / 2);
+    size = Size(size.width - strokeWidth, size.height - strokeWidth);
+
     // Background line
     canvas.drawArc(
-      Offset.zero & size,
+      offset & size,
       _startAngle,
       100,
       false,
@@ -460,7 +471,7 @@ class _RingPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
     if (value == null) {
       canvas.drawArc(
-        Offset.zero & size,
+        offset & size,
         ((backwards ? -startAngle : startAngle) - 90) * _deg2Rad,
         sweepAngle * _deg2Rad,
         false,
@@ -468,7 +479,7 @@ class _RingPainter extends CustomPainter {
       );
     } else {
       canvas.drawArc(
-        Offset.zero & size,
+        offset & size,
         _startAngle,
         (value! / 100).clamp(0, 1) * _sweep,
         false,

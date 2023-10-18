@@ -76,7 +76,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
                 child: InfoLabel(
                   label: 'Progress',
                   child: const SizedBox(
-                      height: 30, width: 30, child: ProgressRing()),
+                    height: 30,
+                    width: 30,
+                    child: ProgressRing(),
+                  ),
                 ),
               ),
             ),

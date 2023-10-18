@@ -1,3 +1,7 @@
+## [next]
+
+* fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
+
 ## 4.7.6
 
 * fix: items not aligned centered in `ListTile`. Added `ListTile.contentAlignment` and `ListTile.contentPadding` ([#939](https://github.com/bdlukaa/fluent_ui/issues/939))
