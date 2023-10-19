@@ -1,3 +1,7 @@
+## 4.7.7
+- Add a support for Cupertino Loclizations from GlobalCupertinoLocalizations, this can help fix some errors when using offical adaptive widgets and other cupertino widgets
+- Now we will use CupertinoScrollbar() widget for iOS and macOS
+
 ## [next]
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
