@@ -354,10 +354,10 @@ class _TabViewState extends State<TabView> {
         onPressed: onPressed,
         style: ButtonStyle(
           foregroundColor: ButtonState.resolveWith((states) {
-            if (states.isDisabled || states.isNone) {
+            if (states.isDisabled) {
               return FluentTheme.of(context)
                   .resources
-                  .controlAltFillColorDisabled;
+                  .accentTextFillColorDisabled;
             } else {
               return FluentTheme.of(context).inactiveColor;
             }
