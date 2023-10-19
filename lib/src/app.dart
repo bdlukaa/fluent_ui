@@ -384,19 +384,28 @@ class _FluentAppState extends State<FluentApp> {
     _heroController = HeroController();
   }
 
-  // Combine the Localizations for Material with the ones contributed
-  // by the localizationsDelegates parameter, if any. Only the first delegate
-  // of a particular LocalizationsDelegate.type is loaded so the
-  // localizationsDelegate parameter can be used to override
-  // _FluentLocalizationsDelegate.
+  /// Combine the Localizations for Material, Cupertino with the ones contributed
+  /// by the localizationsDelegates parameter, if any. Only the first delegate
+  /// of a particular LocalizationsDelegate.type is loaded so the
+  /// localizationsDelegate parameter can be used to override
+  /// _FluentLocalizationsDelegate.
+  ///
+  /// The default value for the localizationsDelegates
+  /// ```
+  ///  FluentLocalizations.delegate,
+  ///  DefaultMaterialLocalizations.delegate,
+  ///  DefaultCupertinoLocalizations.delegate,
+  ///  DefaultWidgetsLocalizations.delegate
+  /// ```
   Iterable<LocalizationsDelegate<dynamic>> get _localizationsDelegates sync* {
-    if (widget.localizationsDelegates != null) {
-      yield* widget.localizationsDelegates!;
+    final localizationsDelegates = widget.localizationsDelegates;
+    if (localizationsDelegates != null) {
+      yield* localizationsDelegates;
     }
     yield FluentLocalizations.delegate;
     yield GlobalMaterialLocalizations.delegate;
-    yield GlobalWidgetsLocalizations.delegate;
     yield GlobalCupertinoLocalizations.delegate;
+    yield GlobalWidgetsLocalizations.delegate;
   }
 
   bool get _usesRouter =>
@@ -564,6 +573,9 @@ class _FluentAppState extends State<FluentApp> {
 /// See also:
 ///
 ///  * [ScrollBehavior], the default scrolling behavior extended by this class.
+/// By default we will use [CupertinoScrollbar] for iOS and macOS platforms
+/// for windows and Linux [Scrollbar]
+/// for Android and Fuchsia we will return the child
 class FluentScrollBehavior extends ScrollBehavior {
   /// Creates a FluentScrollBehavior that decorates [Scrollable]s with
   /// [Scrollbar]s based on the current platform and provided [ScrollableDetails].
