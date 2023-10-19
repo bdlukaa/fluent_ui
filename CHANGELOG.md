@@ -1,6 +1,6 @@
 ## 4.7.7
 - Add a support for Cupertino Loclizations from GlobalCupertinoLocalizations, this can help fix some errors when using offical adaptive widgets and other cupertino widgets
-- Now we will use CupertinoScrollbar() widget for iOS and macOS
+- Now, By default we will use CupertinoScrollbar() widget for iOS and macOS, you can change this in the scrollBehavior to fit your needs if needed.
 
 ## [next]
 
