@@ -1,6 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart' show CupertinoScrollbar;
 import 'package:flutter/material.dart' as m;
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    show
+        GlobalMaterialLocalizations,
+        GlobalWidgetsLocalizations,
+        GlobalCupertinoLocalizations;
 
 /// An application that uses fluent design.
 ///
@@ -391,6 +396,7 @@ class _FluentAppState extends State<FluentApp> {
     yield FluentLocalizations.delegate;
     yield GlobalMaterialLocalizations.delegate;
     yield GlobalWidgetsLocalizations.delegate;
+    yield GlobalCupertinoLocalizations.delegate;
   }
 
   bool get _usesRouter =>
@@ -572,8 +578,13 @@ class FluentScrollBehavior extends ScrollBehavior {
         return child;
       case Axis.vertical:
         switch (getPlatform(context)) {
-          case TargetPlatform.linux:
           case TargetPlatform.macOS:
+          case TargetPlatform.iOS:
+            return CupertinoScrollbar(
+              controller: details.controller,
+              child: child,
+            );
+          case TargetPlatform.linux:
           case TargetPlatform.windows:
             return Scrollbar(
               controller: details.controller,
@@ -581,7 +592,6 @@ class FluentScrollBehavior extends ScrollBehavior {
             );
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:
-          case TargetPlatform.iOS:
             return child;
         }
     }
