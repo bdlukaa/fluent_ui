@@ -25,7 +25,7 @@ dependencies:
   intl: '>=0.18.0 <= 1.0.0'
 
   # Used on TabView
-  scroll_pos: '>=0.5.0'
+  scroll_pos: '>=0.5.0 < 1.0.0'
 
   # Used on icon generator
   recase: ^4.0.0
