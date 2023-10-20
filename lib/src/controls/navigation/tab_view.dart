@@ -354,10 +354,10 @@ class _TabViewState extends State<TabView> {
         onPressed: onPressed,
         style: ButtonStyle(
           foregroundColor: ButtonState.resolveWith((states) {
-            if (states.isDisabled || states.isNone) {
+            if (states.isDisabled) {
               return FluentTheme.of(context)
                   .resources
-                  .controlAltFillColorDisabled;
+                  .accentTextFillColorDisabled;
             } else {
               return FluentTheme.of(context).inactiveColor;
             }
@@ -498,7 +498,7 @@ class _TabViewState extends State<TabView> {
                     child: _buttonTabBuilder(
                       context,
                       const Icon(FluentIcons.caret_left_solid8, size: 8),
-                      !scrollController.canBackward
+                      scrollController.canBackward
                           ? () {
                               if (direction == TextDirection.ltr) {
                                 scrollController.backward(align: false);
@@ -522,7 +522,7 @@ class _TabViewState extends State<TabView> {
                     child: _buttonTabBuilder(
                       context,
                       const Icon(FluentIcons.caret_right_solid8, size: 8),
-                      !scrollController.canForward
+                      scrollController.canForward
                           ? () {
                               if (direction == TextDirection.ltr) {
                                 scrollController.forward(align: false);
