@@ -2,6 +2,7 @@
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
 * fix: `TabView` buttons was only rendered on hover. Now the buttons (add and scroll buttons) are always rendered.
+* fix: `ComboboxItem` correctly apply foreground color. Added `ComboboxItem.enabled` ([#949](https://github.com/bdlukaa/fluent_ui/issues/949))
 
 ## 4.7.6
 
