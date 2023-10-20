@@ -1,13 +1,11 @@
 ## [next]
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
-<<<<<<< HEAD
 * Add a support for Cupertino Loclizations from GlobalCupertinoLocalizations, this can help fix some errors when using offical adaptive widgets and other cupertino widgets
+* Upgrade the `scroll_pos` dependecy to the latest version which is 0.5.0
 * Now, By default we will use CupertinoScrollbar() widget for iOS and macOS, you can change this in the scrollBehavior to fit your needs if needed.
-=======
 * fix: `TabView` buttons was only rendered on hover. Now the buttons (add and scroll buttons) are always rendered.
 * fix: `ComboboxItem` correctly apply foreground color. Added `ComboboxItem.enabled` ([#949](https://github.com/bdlukaa/fluent_ui/issues/949))
->>>>>>> upstream/master
 
 ## 4.7.6
 
