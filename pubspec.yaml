@@ -28,7 +28,7 @@ dependencies:
   scroll_pos: '>=0.5.0 < 1.0.0'
 
   # Used on icon generator
-  recase: ^4.0.0
+  recase: ^4.1.0
 
   # Used on NumberBox
   math_expressions: ^2.4.0

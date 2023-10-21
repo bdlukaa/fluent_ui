@@ -3,6 +3,8 @@
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
 * fix: `TabView` buttons was only rendered on hover. Now the buttons (add and scroll buttons) are always rendered.
 * fix: `ComboboxItem` correctly apply foreground color. Added `ComboboxItem.enabled` ([#949](https://github.com/bdlukaa/fluent_ui/issues/949))
+* Add a support for Cupertino Loclizations from GlobalCupertinoLocalizations, this can help fix some errors when using offical adaptive widgets and other cupertino widgets
+* Upgrade the `scroll_pos` dependecy to the latest version which is 0.5.0
 
 ## 4.7.6
 
