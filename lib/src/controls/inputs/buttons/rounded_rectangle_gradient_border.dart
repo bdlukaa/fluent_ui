@@ -3,12 +3,33 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 class RoundedRectangleGradientBorder extends ShapeBorder {
+
+  /// the gradient used to paint the border.
   final Gradient gradient;
 
+  /// The radii for each corner.
   final BorderRadiusGeometry borderRadius;
 
+  /// The width of this side of the border, in logical pixels.
   final double width;
 
+  /// The relative position of the stroke on a [BorderSide] in an
+  /// [OutlinedBorder] or [Border].
+  ///
+  /// Values typically range from -1.0 ([strokeAlignInside], inside border,
+  /// default) to 1.0 ([strokeAlignOutside], outside border), without any
+  /// bound constraints (e.g., a value of -2.0 is not typical, but allowed).
+  /// A value of 0 ([strokeAlignCenter]) will center the border on the edge
+  /// of the widget.
+  ///
+  /// When set to [strokeAlignInside], the stroke is drawn completely inside
+  /// the widget. For [strokeAlignCenter] and [strokeAlignOutside], a property
+  /// such as [Container.clipBehavior] can be used in an outside widget to clip
+  /// it. If [Container.decoration] has a border, the container may incorporate
+  /// [width] as additional padding:
+  /// - [strokeAlignInside] provides padding with full [width].
+  /// - [strokeAlignCenter] provides padding with half [width].
+  /// - [strokeAlignOutside] provides zero padding, as stroke is drawn entirely outside.
   final double strokeAlign;
 
   /// The border is drawn fully inside of the border path.
