@@ -4,6 +4,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart' show Color, ColorProperty;
 
 class ResourceDictionary with Diagnosticable {
@@ -41,11 +42,13 @@ class ResourceDictionary with Diagnosticable {
   final Color controlOnImageFillColorDisabled;
   final Color accentFillColorDisabled;
   final Color controlStrokeColorDefault;
+  final LinearGradient controlBorderGradient;
   final Color controlStrokeColorSecondary;
   final Color controlStrokeColorOnAccentDefault;
   final Color controlStrokeColorOnAccentSecondary;
   final Color controlStrokeColorOnAccentTertiary;
   final Color controlStrokeColorOnAccentDisabled;
+  final LinearGradient accentControlBorderGradient;
   final Color controlStrokeColorForStrongFillWhenOnImage;
   final Color cardStrokeColorDefault;
   final Color cardStrokeColorDefaultSolid;
@@ -122,11 +125,13 @@ class ResourceDictionary with Diagnosticable {
     required this.controlOnImageFillColorDisabled,
     required this.accentFillColorDisabled,
     required this.controlStrokeColorDefault,
+    required this.controlBorderGradient,
     required this.controlStrokeColorSecondary,
     required this.controlStrokeColorOnAccentDefault,
     required this.controlStrokeColorOnAccentSecondary,
     required this.controlStrokeColorOnAccentTertiary,
     required this.controlStrokeColorOnAccentDisabled,
+    required this.accentControlBorderGradient,
     required this.controlStrokeColorForStrongFillWhenOnImage,
     required this.cardStrokeColorDefault,
     required this.cardStrokeColorDefaultSolid,
@@ -204,11 +209,23 @@ class ResourceDictionary with Diagnosticable {
     this.controlOnImageFillColorDisabled = const Color(0xFF1e1e1e),
     this.accentFillColorDisabled = const Color(0x28ffffff),
     this.controlStrokeColorDefault = const Color(0x12ffffff),
+    this.controlBorderGradient = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0x16FFFFFF), Color(0x11FFFFFF)],
+      stops: [0.0, 0.10],
+    ),
     this.controlStrokeColorSecondary = const Color(0x18ffffff),
     this.controlStrokeColorOnAccentDefault = const Color(0x14ffffff),
     this.controlStrokeColorOnAccentSecondary = const Color(0x23000000),
     this.controlStrokeColorOnAccentTertiary = const Color(0x37000000),
     this.controlStrokeColorOnAccentDisabled = const Color(0x33000000),
+    this.accentControlBorderGradient = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0x13FFFFFF), Color(0x22FFFFFF)],
+      stops: [0.90, 1.0],
+    ),
     this.controlStrokeColorForStrongFillWhenOnImage = const Color(0x6b000000),
     this.cardStrokeColorDefault = const Color(0x19000000),
     this.cardStrokeColorDefaultSolid = const Color(0xFF1c1c1c),
@@ -286,8 +303,20 @@ class ResourceDictionary with Diagnosticable {
     this.controlOnImageFillColorDisabled = const Color(0x00ffffff),
     this.accentFillColorDisabled = const Color(0x37000000),
     this.controlStrokeColorDefault = const Color(0x0f000000),
+    this.controlBorderGradient = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0x0F000000), Color(0x29000000)],
+      stops: [0.90, 1.0],
+    ),
     this.controlStrokeColorSecondary = const Color(0x29000000),
     this.controlStrokeColorOnAccentDefault = const Color(0x14ffffff),
+    this.accentControlBorderGradient = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0x13FFFFFF), Color(0x66000000)],
+      stops: [0.90, 1.0],
+    ),
     this.controlStrokeColorOnAccentSecondary = const Color(0x66000000),
     this.controlStrokeColorOnAccentTertiary = const Color(0x37000000),
     this.controlStrokeColorOnAccentDisabled = const Color(0x0f000000),
@@ -509,6 +538,11 @@ class ResourceDictionary with Diagnosticable {
         b.controlStrokeColorDefault,
         t,
       )!,
+      controlBorderGradient: LinearGradient.lerp(
+        a.controlBorderGradient,
+        b.controlBorderGradient,
+        t,
+      )!,
       controlStrokeColorSecondary: Color.lerp(
         a.controlStrokeColorSecondary,
         b.controlStrokeColorSecondary,
@@ -532,6 +566,11 @@ class ResourceDictionary with Diagnosticable {
       controlStrokeColorOnAccentDisabled: Color.lerp(
         a.controlStrokeColorOnAccentDisabled,
         b.controlStrokeColorOnAccentDisabled,
+        t,
+      )!,
+      accentControlBorderGradient: LinearGradient.lerp(
+        a.accentControlBorderGradient,
+        b.accentControlBorderGradient,
         t,
       )!,
       controlStrokeColorForStrongFillWhenOnImage: Color.lerp(

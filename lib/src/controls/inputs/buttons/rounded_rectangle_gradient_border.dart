@@ -3,9 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 class RoundedRectangleGradientBorder extends ShapeBorder {
-
   /// the gradient used to paint the border.
   final Gradient gradient;
+
+  /// The style of this side of the border. Default to [BorderStyle.solid]
+  ///
+  /// To omit a side, set [style] to [BorderStyle.none]. This skips
+  /// painting the border, but the border still has a [width].
+  final BorderStyle style;
 
   /// The radii for each corner.
   final BorderRadiusGeometry borderRadius;
@@ -56,6 +61,7 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
     required this.borderRadius,
     required this.width,
     this.strokeAlign = strokeAlignInside,
+    this.style = BorderStyle.solid,
   });
 
   /// Get the amount of the stroke width that lies inside of the [BorderSide].
@@ -118,12 +124,22 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    final Paint paint = Paint();
-    paint.shader = gradient.createShader(rect);
-    final RRect borderRect = borderRadius.resolve(textDirection).toRRect(rect);
-    final RRect inner = borderRect.deflate(strokeInset);
-    final RRect outer = borderRect.inflate(strokeOutset);
-    canvas.drawDRRect(outer, inner, paint);
+    switch (style) {
+      case BorderStyle.none:
+        {
+          break;
+        }
+      case BorderStyle.solid:
+        {
+          final paint = Paint();
+          paint.shader = gradient.createShader(rect);
+          final RRect borderRect =
+              borderRadius.resolve(textDirection).toRRect(rect);
+          final RRect inner = borderRect.deflate(strokeInset);
+          final RRect outer = borderRect.inflate(strokeOutset);
+          canvas.drawDRRect(outer, inner, paint);
+        }
+    }
   }
 
   /// Returns a copy of this RoundedRectangleBorder with the given fields
@@ -150,15 +166,17 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
         other.gradient == gradient &&
         other.width == width &&
         other.borderRadius == borderRadius &&
+        other.style == style &&
         other.strokeAlign == strokeAlign;
   }
 
   @override
-  int get hashCode => Object.hash(gradient, width, borderRadius, strokeAlign);
+  int get hashCode =>
+      Object.hash(gradient, width, borderRadius, strokeAlign, style);
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign)';
+    return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
   }
 }
 

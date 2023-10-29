@@ -1,5 +1,6 @@
 // import 'package:flutter/material.dart' as m;
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/inputs/buttons/rounded_rectangle_gradient_border.dart';
 import 'package:flutter/foundation.dart';
 
 /// {@template fluent_ui.buttons.base}
@@ -161,11 +162,13 @@ class _BaseButtonState extends State<BaseButton> {
         final resolvedPadding = resolve<EdgeInsetsGeometry?>(
                 (ButtonStyle? style) => style?.padding) ??
             EdgeInsets.zero;
-        final resolvedBorder =
-            resolve<BorderSide?>((ButtonStyle? style) => style?.border);
+        // final resolvedBorder =
+        //     resolve<BorderSide?>((ButtonStyle? style) => style?.border);
         final resolvedShape =
-            resolve<OutlinedBorder?>((ButtonStyle? style) => style?.shape) ??
-                const RoundedRectangleBorder();
+            resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
+                const RoundedRectangleGradientBorder(
+                  gradient: LinearGradient(colors: []), borderRadius: BorderRadius.zero, width: 0.0
+                );
 
         final padding = resolvedPadding
             .add(EdgeInsets.symmetric(
@@ -187,7 +190,7 @@ class _BaseButtonState extends State<BaseButton> {
             duration: FluentTheme.of(context).fasterAnimationDuration,
             curve: FluentTheme.of(context).animationCurve,
             decoration: ShapeDecoration(
-              shape: resolvedShape.copyWith(side: resolvedBorder),
+              shape: resolvedShape,
               color: resolvedBackgroundColor,
             ),
             padding: padding,

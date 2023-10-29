@@ -1,6 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/inputs/buttons/rounded_rectangle_gradient_border.dart';
 import 'package:flutter/foundation.dart';
 
 class ButtonStyle with Diagnosticable {
@@ -30,7 +31,7 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<BorderSide?>? border;
 
-  final ButtonState<OutlinedBorder?>? shape;
+  final ButtonState<ShapeBorder?>? shape;
 
   final ButtonState<double?>? iconSize;
 
@@ -69,7 +70,7 @@ class ButtonStyle with Diagnosticable {
         return BorderSide.lerp(a, b, t);
       }),
       shape: ButtonState.lerp(a?.shape, b?.shape, t, (a, b, t) {
-        return ShapeBorder.lerp(a, b, t) as OutlinedBorder;
+        return ShapeBorder.lerp(a, b, t) as RoundedRectangleGradientBorder;
       }),
       iconSize: ButtonState.lerp(
         a?.iconSize,

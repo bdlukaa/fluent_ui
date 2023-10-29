@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+import 'rounded_rectangle_gradient_border.dart';
+
 /// A colored button.
 ///
 /// {@macro fluent_ui.buttons.base}
@@ -43,6 +45,20 @@ class FilledButton extends Button {
       foregroundColor: ButtonState.resolveWith(
         (states) => foregroundColor(theme, states),
       ),
+      shape: ButtonState.resolveWith((states) {
+        return states.isPressing || states.isDisabled
+            ? RoundedRectangleBorder(
+                side: BorderSide(
+                  color: theme.resources.controlStrokeColorOnAccentDefault,
+                ),
+                borderRadius: BorderRadius.circular(4.0),
+              )
+            : RoundedRectangleGradientBorder(
+                gradient: theme.resources.accentControlBorderGradient,
+                borderRadius: BorderRadius.circular(4.0),
+                width: 1.0,
+              );
+      }),
     );
 
     return super.defaultStyleOf(context).merge(def) ?? def;

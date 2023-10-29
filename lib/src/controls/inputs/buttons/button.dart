@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/src/controls/inputs/buttons/rounded_rectangle_gradient_border.dart';
 
 const kDefaultButtonPadding = EdgeInsetsDirectional.only(
   start: 11.0,
@@ -40,15 +41,18 @@ class Button extends BaseButton {
       shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(kDefaultButtonPadding),
       shape: ButtonState.resolveWith((states) {
-        return RoundedRectangleBorder(
-          side: BorderSide(
-            color: states.isPressing || states.isDisabled
-                ? theme.resources.controlStrokeColorDefault
-                : theme.resources.controlStrokeColorSecondary,
-            width: 0.33,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-        );
+        return states.isPressing || states.isDisabled
+            ? RoundedRectangleBorder(
+                side: BorderSide(
+                  color: theme.resources.controlStrokeColorDefault,
+                ),
+                borderRadius: BorderRadius.circular(4.0),
+              )
+            : RoundedRectangleGradientBorder(
+                gradient: theme.resources.controlBorderGradient,
+                borderRadius: BorderRadius.circular(4.0),
+                width: 1.0,
+              );
       }),
       backgroundColor: ButtonState.resolveWith((states) {
         return ButtonThemeData.buttonColor(context, states);
