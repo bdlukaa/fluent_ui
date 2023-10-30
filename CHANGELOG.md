@@ -1,4 +1,4 @@
-## [next]
+## 4.7.7
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
 * fix: `TabView` buttons was only rendered on hover. Now the buttons (add and scroll buttons) are always rendered.
