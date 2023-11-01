@@ -11,7 +11,6 @@ class ButtonStyle with Diagnosticable {
     this.shadowColor,
     this.elevation,
     this.padding,
-    this.border,
     this.shape,
     this.iconSize,
   });
@@ -28,8 +27,6 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<EdgeInsetsGeometry?>? padding;
 
-  final ButtonState<BorderSide?>? border;
-
   final ButtonState<ShapeBorder?>? shape;
 
   final ButtonState<double?>? iconSize;
@@ -43,7 +40,6 @@ class ButtonStyle with Diagnosticable {
       shadowColor: other.shadowColor ?? shadowColor,
       elevation: other.elevation ?? elevation,
       padding: other.padding ?? padding,
-      border: other.border ?? border,
       shape: other.shape ?? shape,
       iconSize: other.iconSize ?? iconSize,
     );
@@ -62,12 +58,6 @@ class ButtonStyle with Diagnosticable {
       elevation: ButtonState.lerp(a?.elevation, b?.elevation, t, lerpDouble),
       padding:
           ButtonState.lerp(a?.padding, b?.padding, t, EdgeInsetsGeometry.lerp),
-      border: ButtonState.lerp(a?.border, b?.border, t, (a, b, t) {
-        if (a == null && b == null) return null;
-        if (a == null) return b;
-        if (b == null) return a;
-        return BorderSide.lerp(a, b, t);
-      }),
       shape: ButtonState.lerp(a?.shape, b?.shape, t, ShapeBorder.lerp),
       iconSize: ButtonState.lerp(a?.iconSize, b?.iconSize, t, lerpDouble),
     );
@@ -80,8 +70,7 @@ class ButtonStyle with Diagnosticable {
     ButtonState<Color?>? shadowColor,
     ButtonState<double?>? elevation,
     ButtonState<EdgeInsetsGeometry?>? padding,
-    ButtonState<BorderSide?>? border,
-    ButtonState<OutlinedBorder?>? shape,
+    ButtonState<ShapeBorder?>? shape,
     ButtonState<double?>? iconSize,
   }) {
     return ButtonStyle(
@@ -91,7 +80,6 @@ class ButtonStyle with Diagnosticable {
       shadowColor: shadowColor ?? this.shadowColor,
       elevation: elevation ?? this.elevation,
       padding: padding ?? this.padding,
-      border: border ?? this.border,
       shape: shape ?? this.shape,
       iconSize: iconSize ?? this.iconSize,
     );

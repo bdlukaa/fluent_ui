@@ -161,11 +161,9 @@ class _BaseButtonState extends State<BaseButton> {
         final resolvedPadding = resolve<EdgeInsetsGeometry?>(
                 (ButtonStyle? style) => style?.padding) ??
             EdgeInsets.zero;
-        // final resolvedBorder =
-        //     resolve<BorderSide?>((ButtonStyle? style) => style?.border);
         final resolvedShape =
             resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
-                const RoundedRectangleGradientBorder();
+                const RoundedRectangleBorder();
 
         final padding = resolvedPadding
             .add(EdgeInsets.symmetric(
