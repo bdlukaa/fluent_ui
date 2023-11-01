@@ -1,17 +1,8 @@
-## 1st
-* Create new class `RoundedRectangleGradientBorder` extends `ShapeBorder`, it can be used everywhere `RoundedRectangleBorder` can be used.
-
-## 2nd
-* Add some documentation on `gardient`, `strokeAlign`, ...
-
-## 3rd
-* Add `style` property. Same with `RoundedRectangleBorder`, used `BorderStyle.solid` as default. To omit the border, use `BorderStyle.none`.
-* in `base.dart`, `_BaseButtonState`, `build` method: Remove `resolvedBorder`. Because we don't need `BorderSide` in `RoundedRectangelGradientBorder`; Change `OutlinedBorder` to `ShapeBorder` so it can support `RoundedRectangelGradientBorder`; 
-* in `color_resources.dart`. Add `controlBorderGradient`, `accentControlBorderGradient`. The first is used by Button when rest or hover, while the second is used by FilledButton when rest or hover; When they're disabled or pressed, the gradient change to color with opacity. With that change, it looks like being pressed in Light Mode. In Dark Mode, the gradient is just like normol color with opacity. It seems that we don't neet apply gradient border when Dark Mode is used. 
-* These changes are test in example app. Work as thought. **I modified the `lerp` method in `ButtonStyle` by simply changing `OutlinedBorder` to `RoundedRectangleGradientBorder`. I don't kown how it works, so I can't test it. I am not sure it will work.**
-* **Changes in `Button` produses a bug in `ToggleButton`. When state change between pressed and rest, the high changed. It seems to use different border when state changes, I couldn't find where the style set, so I don't kown how to fix it.**
-
 ## [next]
+
+* Create new class `RoundedRectangleGradientBorder`
+
+## 4.7.7
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))
 * fix: `TabView` buttons was only rendered on hover. Now the buttons (add and scroll buttons) are always rendered.
