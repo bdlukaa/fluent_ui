@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+/// A border that paints a gradient.
 class RoundedRectangleGradientBorder extends ShapeBorder {
   /// the gradient used to paint the border.
   final Gradient gradient;
@@ -179,6 +180,6 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
+    return '${objectRuntimeType(this, 'RoundedRectangleGradientBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
   }
 }
