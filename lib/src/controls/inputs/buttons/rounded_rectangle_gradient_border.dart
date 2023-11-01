@@ -98,8 +98,8 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    final RRect borderRect = borderRadius.resolve(textDirection).toRRect(rect);
-    final RRect adjustedRect = borderRect.deflate(strokeInset);
+    final borderRect = borderRadius.resolve(textDirection).toRRect(rect);
+    final adjustedRect = borderRect.deflate(strokeInset);
     return Path()..addRRect(adjustedRect);
   }
 
@@ -126,19 +126,14 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
     switch (style) {
       case BorderStyle.none:
-        {
-          break;
-        }
+        break;
       case BorderStyle.solid:
-        {
-          final paint = Paint();
-          paint.shader = gradient.createShader(rect);
-          final RRect borderRect =
-              borderRadius.resolve(textDirection).toRRect(rect);
-          final RRect inner = borderRect.deflate(strokeInset);
-          final RRect outer = borderRect.inflate(strokeOutset);
-          canvas.drawDRRect(outer, inner, paint);
-        }
+        final paint = Paint()..shader = gradient.createShader(rect);
+        final borderRect = borderRadius.resolve(textDirection).toRRect(rect);
+        final inner = borderRect.deflate(strokeInset);
+        final outer = borderRect.inflate(strokeOutset);
+        canvas.drawDRRect(outer, inner, paint);
+        break;
     }
   }
 
@@ -179,53 +174,3 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
     return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
   }
 }
-
-/// the border used by filledButton when it is rest or hovered
-const restAndHoveredFilledButtonBorder = RoundedRectangleGradientBorder(
-  gradient: LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color.fromRGBO(255, 255, 255, 0.08),
-      Color.fromRGBO(0, 0, 0, 0.40)
-    ],
-    stops: [0.90, 1.0],
-  ),
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-  width: 1.0,
-);
-
-/// the border used by filledButton when it is pressed
-const pressedFilledButtonBorder = RoundedRectangleBorder(
-  side: BorderSide(color: Color.fromRGBO(255, 255, 255, 0.08)),
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-);
-
-/// the border used by filledButton when it is disabled
-const disabledFilledButtonBorder = RoundedRectangleBorder(
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-);
-
-/// the border used by standardButton when it is rest or hovered
-const restAndHoveredStandardButtonBorder = RoundedRectangleGradientBorder(
-  gradient: LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [Color.fromRGBO(0, 0, 0, 0.0578), Color.fromRGBO(0, 0, 0, 0.1622)],
-    stops: [0.90, 1.0],
-  ),
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-  width: 1.0,
-);
-
-/// the border used by standardButton when it is pressed
-const pressedStandardButtonBorder = RoundedRectangleBorder(
-  side: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.0578)),
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-);
-
-/// the border used by standardButton when it is hovered
-const disabledStandardButtonBorder = RoundedRectangleBorder(
-  side: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.0578)),
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-);

@@ -4,8 +4,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart' show Color, ColorProperty;
+import 'package:flutter/widgets.dart'
+    show Color, ColorProperty, LinearGradient, Alignment;
 
 class ResourceDictionary with Diagnosticable {
   final Color textFillColorPrimary;
