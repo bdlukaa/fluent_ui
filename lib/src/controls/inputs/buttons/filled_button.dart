@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'rounded_rectangle_gradient_border.dart';
@@ -55,20 +57,15 @@ class FilledButton extends Button {
               )
             : RoundedRectangleGradientBorder(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
+                  begin: const Alignment(0.0, -2),
                   end: Alignment.bottomCenter,
                   colors: [
                     theme.resources.controlStrokeColorOnAccentSecondary,
                     theme.resources.controlStrokeColorOnAccentDefault,
                   ],
-                  stops: const [0.90, 1.0],
+                  stops: const [0.33, 1.0],
+                  transform: const GradientRotation(pi),
                 ),
-                // gradient: const LinearGradient(
-                //   begin: Alignment.topCenter,
-                //   end: Alignment.bottomCenter,
-                //   colors: [Color(0x13FFFFFF), Color(0x66000000)],
-                //   stops: [0.90, 1.0],
-                // ),
                 borderRadius: BorderRadius.circular(4.0),
               );
       }),

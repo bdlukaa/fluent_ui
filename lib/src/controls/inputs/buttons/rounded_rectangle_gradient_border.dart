@@ -131,7 +131,11 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
       case BorderStyle.none:
         break;
       case BorderStyle.solid:
-        final paint = Paint()..shader = gradient.createShader(rect);
+        final paint = Paint()
+          ..shader = gradient.createShader(
+            rect,
+            textDirection: textDirection,
+          );
         final borderRect = borderRadius.resolve(textDirection).toRRect(rect);
         final inner = borderRect.deflate(strokeInset);
         final outer = borderRect.inflate(strokeOutset);
@@ -142,11 +146,12 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
 
   /// Returns a copy of this RoundedRectangleBorder with the given fields
   /// replaced with the new values.
-  RoundedRectangleGradientBorder copyWith(
-      {required Gradient gradient,
-      required BorderRadiusGeometry borderRadius,
-      required double width,
-      required double strokeAlign}) {
+  RoundedRectangleGradientBorder copyWith({
+    required Gradient gradient,
+    required BorderRadiusGeometry borderRadius,
+    required double width,
+    required double strokeAlign,
+  }) {
     return RoundedRectangleGradientBorder(
       gradient: gradient,
       width: width,
@@ -175,22 +180,5 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
-  }
-}
-
-/// A [GradientScale] that scales the gradient around its bounding box.
-@immutable
-class GradientScale extends GradientTransform {
-  /// Constructs a [GradientScale].
-  const GradientScale(this.scaleX, this.scaleY, [this.centerY]);
-
-  final double? scaleX;
-  final double? scaleY;
-  final double? centerY;
-
-  @override
-  Matrix4 transform(Rect bounds, {TextDirection? textDirection}) {
-    return Matrix4.diagonal3Values(scaleX ?? 1.0, scaleY ?? 1.0, 1.0)
-      ..setTranslationRaw(0, centerY ?? 0, 0);
   }
 }
