@@ -99,6 +99,7 @@ export 'src/styles/color_resources.dart';
 export 'src/styles/focus.dart';
 export 'src/styles/mica.dart';
 export 'src/styles/motion/page_transitions.dart';
+export 'src/styles/rounded_rectangle_gradient_border.dart';
 export 'src/styles/theme.dart';
 export 'src/styles/typography.dart';
 export 'src/utils.dart';

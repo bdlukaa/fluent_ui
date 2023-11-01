@@ -3,8 +3,6 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-import 'rounded_rectangle_gradient_border.dart';
-
 class ButtonStyle with Diagnosticable {
   const ButtonStyle({
     this.textStyle,
