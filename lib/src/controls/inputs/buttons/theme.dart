@@ -3,6 +3,8 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+import 'rounded_rectangle_gradient_border.dart';
+
 class ButtonStyle with Diagnosticable {
   const ButtonStyle({
     this.textStyle,
@@ -258,6 +260,30 @@ class ButtonThemeData with Diagnosticable {
       return res.textFillColorDisabled;
     }
     return res.textFillColorPrimary;
+  }
+
+  static ShapeBorder shapeBorder(
+      BuildContext context, Set<ButtonStates> states) {
+    final theme = FluentTheme.of(context);
+    return states.isPressing || states.isDisabled
+        ? RoundedRectangleBorder(
+            side: BorderSide(
+              color: theme.resources.controlStrokeColorDefault,
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          )
+        : RoundedRectangleGradientBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            gradient: LinearGradient(
+              begin: const Alignment(0, 0),
+              end: const Alignment(0.0, 3),
+              colors: [
+                theme.resources.controlStrokeColorSecondary,
+                theme.resources.controlStrokeColorDefault,
+              ],
+              stops: const [0.3, 1.0],
+            ),
+          );
   }
 
   /// Defines the default color used for inputs when checked, such as checkbox,
