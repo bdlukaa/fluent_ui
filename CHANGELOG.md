@@ -1,6 +1,6 @@
 ## [next]
 
-* Create new class `RoundedRectangleGradientBorder`
+* Correctly paint buttons borders ([#956](https://github.com/bdlukaa/fluent_ui/pull/956))
 
 ## 4.7.7
 
