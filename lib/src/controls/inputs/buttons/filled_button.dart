@@ -48,26 +48,7 @@ class FilledButton extends Button {
         (states) => foregroundColor(theme, states),
       ),
       shape: ButtonState.resolveWith((states) {
-        return states.isPressing || states.isDisabled
-            ? RoundedRectangleBorder(
-                side: BorderSide(
-                  color: theme.resources.controlFillColorTransparent,
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-              )
-            : RoundedRectangleGradientBorder(
-                gradient: LinearGradient(
-                  begin: const Alignment(0.0, -2),
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    theme.resources.controlStrokeColorOnAccentSecondary,
-                    theme.resources.controlStrokeColorOnAccentDefault,
-                  ],
-                  stops: const [0.33, 1.0],
-                  transform: const GradientRotation(pi),
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-              );
+        return shapeBorder(theme, states);
       }),
     );
 
@@ -100,5 +81,29 @@ class FilledButton extends Button {
       return res.textOnAccentFillColorDisabled;
     }
     return res.textOnAccentFillColorPrimary;
+  }
+
+  static ShapeBorder shapeBorder(
+      FluentThemeData theme, Set<ButtonStates> states) {
+    return states.isPressing || states.isDisabled
+        ? RoundedRectangleBorder(
+            side: BorderSide(
+              color: theme.resources.controlFillColorTransparent,
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          )
+        : RoundedRectangleGradientBorder(
+            gradient: LinearGradient(
+              begin: const Alignment(0.0, -2),
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.resources.controlStrokeColorOnAccentSecondary,
+                theme.resources.controlStrokeColorOnAccentDefault,
+              ],
+              stops: const [0.33, 1.0],
+              transform: const GradientRotation(pi),
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          );
   }
 }

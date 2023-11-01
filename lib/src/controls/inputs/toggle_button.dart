@@ -159,13 +159,9 @@ class ToggleButtonThemeData with Diagnosticable {
             states,
           ),
         ),
-        shape: ButtonState.all(RoundedRectangleBorder(
-          side: const BorderSide(
-            color: Colors.transparent,
-            width: 0.33,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-        )),
+        shape: ButtonState.resolveWith(
+          (states) => FilledButton.shapeBorder(theme, states),
+        ),
         foregroundColor: ButtonState.resolveWith(
           (states) => FilledButton.foregroundColor(
             theme,
