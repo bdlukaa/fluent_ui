@@ -49,14 +49,27 @@ class FilledButton extends Button {
         return states.isPressing || states.isDisabled
             ? RoundedRectangleBorder(
                 side: BorderSide(
-                  color: theme.resources.controlStrokeColorOnAccentDefault,
+                  color: theme.resources.controlFillColorTransparent,
                 ),
                 borderRadius: BorderRadius.circular(4.0),
               )
             : RoundedRectangleGradientBorder(
-                gradient: theme.resources.accentControlBorderGradient,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    theme.resources.controlStrokeColorOnAccentSecondary,
+                    theme.resources.controlStrokeColorOnAccentDefault,
+                  ],
+                  stops: const [0.90, 1.0],
+                ),
+                // gradient: const LinearGradient(
+                //   begin: Alignment.topCenter,
+                //   end: Alignment.bottomCenter,
+                //   colors: [Color(0x13FFFFFF), Color(0x66000000)],
+                //   stops: [0.90, 1.0],
+                // ),
                 borderRadius: BorderRadius.circular(4.0),
-                width: 1.0,
               );
       }),
     );

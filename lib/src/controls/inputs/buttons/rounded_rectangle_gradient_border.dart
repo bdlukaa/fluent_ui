@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 
 class RoundedRectangleGradientBorder extends ShapeBorder {
   /// the gradient used to paint the border.
@@ -56,10 +56,11 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   /// This is a constant for use with [strokeAlign].
   static const double strokeAlignOutside = 1.0;
 
+  /// Creates a rounded rectangle border.
   const RoundedRectangleGradientBorder({
-    required this.gradient,
-    required this.borderRadius,
-    required this.width,
+    this.gradient = const LinearGradient(colors: []),
+    this.borderRadius = BorderRadius.zero,
+    this.width = 1.0,
     this.strokeAlign = strokeAlignInside,
     this.style = BorderStyle.solid,
   });
@@ -115,7 +116,9 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
       canvas.drawRect(rect, paint);
     } else {
       canvas.drawRRect(
-          borderRadius.resolve(textDirection).toRRect(rect), paint);
+        borderRadius.resolve(textDirection).toRRect(rect),
+        paint,
+      );
     }
   }
 
@@ -172,5 +175,22 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'RoundedRectangleBorder')}($gradient, $width, $borderRadius, $strokeAlign, $style)';
+  }
+}
+
+/// A [GradientScale] that scales the gradient around its bounding box.
+@immutable
+class GradientScale extends GradientTransform {
+  /// Constructs a [GradientScale].
+  const GradientScale(this.scaleX, this.scaleY, [this.centerY]);
+
+  final double? scaleX;
+  final double? scaleY;
+  final double? centerY;
+
+  @override
+  Matrix4 transform(Rect bounds, {TextDirection? textDirection}) {
+    return Matrix4.diagonal3Values(scaleX ?? 1.0, scaleY ?? 1.0, 1.0)
+      ..setTranslationRaw(0, centerY ?? 0, 0);
   }
 }

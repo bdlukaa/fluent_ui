@@ -166,9 +166,7 @@ class _BaseButtonState extends State<BaseButton> {
         //     resolve<BorderSide?>((ButtonStyle? style) => style?.border);
         final resolvedShape =
             resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
-                const RoundedRectangleGradientBorder(
-                  gradient: LinearGradient(colors: []), borderRadius: BorderRadius.zero, width: 0.0
-                );
+                const RoundedRectangleGradientBorder();
 
         final padding = resolvedPadding
             .add(EdgeInsets.symmetric(

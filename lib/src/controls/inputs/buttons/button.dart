@@ -49,9 +49,16 @@ class Button extends BaseButton {
                 borderRadius: BorderRadius.circular(4.0),
               )
             : RoundedRectangleGradientBorder(
-                gradient: theme.resources.controlBorderGradient,
                 borderRadius: BorderRadius.circular(4.0),
-                width: 1.0,
+                gradient: LinearGradient(
+                  begin: const Alignment(0, 0),
+                  end: const Alignment(0.0, 3),
+                  colors: [
+                    theme.resources.controlStrokeColorSecondary,
+                    theme.resources.controlStrokeColorDefault,
+                  ],
+                  stops: const [0.3, 1.0],
+                ),
               );
       }),
       backgroundColor: ButtonState.resolveWith((states) {
