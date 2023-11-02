@@ -31,8 +31,8 @@ class OutlinedButton extends BaseButton {
       padding: ButtonState.all(kDefaultButtonPadding),
       shape: ButtonState.all(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.0),
+        side: BorderSide(color: theme.inactiveColor),
       )),
-      border: ButtonState.all(BorderSide(color: theme.inactiveColor)),
       foregroundColor: ButtonState.all(theme.inactiveColor),
       backgroundColor: ButtonState.resolveWith((states) {
         if (states.isDisabled) {

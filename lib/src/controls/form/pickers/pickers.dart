@@ -103,7 +103,7 @@ class YesNoPickerControl extends StatelessWidget {
           states,
         ),
       ),
-      border: ButtonState.all(BorderSide.none),
+      shape: ButtonState.all(const RoundedRectangleBorder()),
     );
 
     return FocusTheme(
@@ -205,7 +205,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
               )),
               backgroundColor:
                   ButtonState.all(FluentTheme.of(context).menuColor),
-              border: ButtonState.all(BorderSide.none),
+              shape: ButtonState.all(const RoundedRectangleBorder()),
               elevation: ButtonState.all(0.0),
               iconSize: ButtonState.resolveWith((states) {
                 if (states.isPressing) {

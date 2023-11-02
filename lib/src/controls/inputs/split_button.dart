@@ -151,22 +151,17 @@ class SplitButtonState extends State<SplitButton> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final radius = BorderRadius.circular(6.0);
+    final radius = BorderRadius.circular(4.0);
 
     return FocusBorder(
       focused: _showFocusHighlight,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: radius,
-          color: theme.resources.controlFillColorDefault,
-          border: Border.all(
-            color: widget.checked
-                ? theme.resources.subtleFillColorTransparent
-                : theme.resources.controlStrokeColorDefault,
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: radius,
+      child: ClipRRect(
+        borderRadius: radius,
+        child: DecoratedBox(
+          decoration: ShapeDecoration(
+              shape: widget.checked
+                  ? FilledButton.shapeBorder(theme, {ButtonStates.none})
+                  : ButtonThemeData.shapeBorder(context, {ButtonStates.none})),
           child: IntrinsicHeight(
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               HoverButton(
@@ -178,7 +173,7 @@ class SplitButtonState extends State<SplitButton> {
                   return DecoratedBox(
                     decoration: BoxDecoration(
                       color: widget.checked
-                          ? ButtonThemeData.checkedInputColor(theme, states)
+                          ? FilledButton.backgroundColor(theme, states)
                           : ButtonThemeData.buttonColor(
                               context,
                               widget.enabled &&

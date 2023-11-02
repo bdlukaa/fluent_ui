@@ -11,7 +11,6 @@ class ButtonStyle with Diagnosticable {
     this.shadowColor,
     this.elevation,
     this.padding,
-    this.border,
     this.shape,
     this.iconSize,
   });
@@ -28,9 +27,7 @@ class ButtonStyle with Diagnosticable {
 
   final ButtonState<EdgeInsetsGeometry?>? padding;
 
-  final ButtonState<BorderSide?>? border;
-
-  final ButtonState<OutlinedBorder?>? shape;
+  final ButtonState<ShapeBorder?>? shape;
 
   final ButtonState<double?>? iconSize;
 
@@ -43,7 +40,6 @@ class ButtonStyle with Diagnosticable {
       shadowColor: other.shadowColor ?? shadowColor,
       elevation: other.elevation ?? elevation,
       padding: other.padding ?? padding,
-      border: other.border ?? border,
       shape: other.shape ?? shape,
       iconSize: other.iconSize ?? iconSize,
     );
@@ -62,21 +58,8 @@ class ButtonStyle with Diagnosticable {
       elevation: ButtonState.lerp(a?.elevation, b?.elevation, t, lerpDouble),
       padding:
           ButtonState.lerp(a?.padding, b?.padding, t, EdgeInsetsGeometry.lerp),
-      border: ButtonState.lerp(a?.border, b?.border, t, (a, b, t) {
-        if (a == null && b == null) return null;
-        if (a == null) return b;
-        if (b == null) return a;
-        return BorderSide.lerp(a, b, t);
-      }),
-      shape: ButtonState.lerp(a?.shape, b?.shape, t, (a, b, t) {
-        return ShapeBorder.lerp(a, b, t) as OutlinedBorder;
-      }),
-      iconSize: ButtonState.lerp(
-        a?.iconSize,
-        b?.iconSize,
-        t,
-        lerpDouble,
-      ),
+      shape: ButtonState.lerp(a?.shape, b?.shape, t, ShapeBorder.lerp),
+      iconSize: ButtonState.lerp(a?.iconSize, b?.iconSize, t, lerpDouble),
     );
   }
 
@@ -87,8 +70,7 @@ class ButtonStyle with Diagnosticable {
     ButtonState<Color?>? shadowColor,
     ButtonState<double?>? elevation,
     ButtonState<EdgeInsetsGeometry?>? padding,
-    ButtonState<BorderSide?>? border,
-    ButtonState<OutlinedBorder?>? shape,
+    ButtonState<ShapeBorder?>? shape,
     ButtonState<double?>? iconSize,
   }) {
     return ButtonStyle(
@@ -98,7 +80,6 @@ class ButtonStyle with Diagnosticable {
       shadowColor: shadowColor ?? this.shadowColor,
       elevation: elevation ?? this.elevation,
       padding: padding ?? this.padding,
-      border: border ?? this.border,
       shape: shape ?? this.shape,
       iconSize: iconSize ?? this.iconSize,
     );
@@ -265,6 +246,30 @@ class ButtonThemeData with Diagnosticable {
       return res.textFillColorDisabled;
     }
     return res.textFillColorPrimary;
+  }
+
+  static ShapeBorder shapeBorder(
+      BuildContext context, Set<ButtonStates> states) {
+    final theme = FluentTheme.of(context);
+    return states.isPressing || states.isDisabled
+        ? RoundedRectangleBorder(
+            side: BorderSide(
+              color: theme.resources.controlStrokeColorDefault,
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          )
+        : RoundedRectangleGradientBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            gradient: LinearGradient(
+              begin: const Alignment(0, 0),
+              end: const Alignment(0.0, 3),
+              colors: [
+                theme.resources.controlStrokeColorSecondary,
+                theme.resources.controlStrokeColorDefault,
+              ],
+              stops: const [0.3, 1.0],
+            ),
+          );
   }
 
   /// Defines the default color used for inputs when checked, such as checkbox,

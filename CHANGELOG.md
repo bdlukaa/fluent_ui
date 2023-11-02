@@ -1,3 +1,26 @@
+## [next]
+
+* Correctly paint buttons borders ([#956](https://github.com/bdlukaa/fluent_ui/pull/956))
+* **MINOR BREAKING** Removed `ButtonStyle.border`. Use `ButtonStyle.shape` instead:
+  Before:
+  ```dart
+  Button(
+    style: ButtonStyle(
+      border: ButtonState.all(BorderSide(...)),
+    ),
+  ),
+  ```
+
+  Now:
+  ```dart
+  Button(
+    style: ButtonStyle(
+      shape: ButtonState.all(RoundedRectangleBorder(...)),
+    ),
+  ),
+  
+  ```
+
 ## 4.7.7
 
 * fix: `ProgressRing` and `ProgressBar` now fit correctly the parent bounds ([#942](https://github.com/bdlukaa/fluent_ui/issues/942))

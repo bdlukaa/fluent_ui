@@ -40,15 +40,7 @@ class Button extends BaseButton {
       shadowColor: ButtonState.all(theme.shadowColor),
       padding: ButtonState.all(kDefaultButtonPadding),
       shape: ButtonState.resolveWith((states) {
-        return RoundedRectangleBorder(
-          side: BorderSide(
-            color: states.isPressing || states.isDisabled
-                ? theme.resources.controlStrokeColorDefault
-                : theme.resources.controlStrokeColorSecondary,
-            width: 0.33,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-        );
+        return ButtonThemeData.shapeBorder(context, states);
       }),
       backgroundColor: ButtonState.resolveWith((states) {
         return ButtonThemeData.buttonColor(context, states);
