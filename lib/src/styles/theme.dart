@@ -204,19 +204,15 @@ class FluentThemeData with Diagnosticable {
 
   final NavigationPaneThemeData navigationPaneTheme;
   final BottomNavigationThemeData bottomNavigationTheme;
-  final BottomSheetThemeData bottomSheetTheme;
   final CheckboxThemeData checkboxTheme;
-  final ChipThemeData chipTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
   final FocusThemeData focusTheme;
   final IconThemeData iconTheme;
   final InfoBarThemeData infoBarTheme;
-  final PillButtonBarThemeData pillButtonBarTheme;
   final RadioButtonThemeData radioButtonTheme;
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
-  final SnackbarThemeData snackbarTheme;
   final ToggleButtonThemeData toggleButtonTheme;
   final ToggleSwitchThemeData toggleSwitchTheme;
   final TooltipThemeData tooltipTheme;
@@ -248,10 +244,8 @@ class FluentThemeData with Diagnosticable {
     Duration? slowAnimationDuration,
     Curve? animationCurve,
     BottomNavigationThemeData? bottomNavigationTheme,
-    BottomSheetThemeData? bottomSheetTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
-    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     ContentDialogThemeData? dialogTheme,
@@ -262,10 +256,8 @@ class FluentThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
-    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
-    SnackbarThemeData? snackbarTheme,
     ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
@@ -303,7 +295,6 @@ class FluentThemeData with Diagnosticable {
     focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
-    chipTheme ??= const ChipThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= isLight
@@ -324,11 +315,8 @@ class FluentThemeData with Diagnosticable {
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
-    pillButtonBarTheme ??= const PillButtonBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
     bottomNavigationTheme ??= const BottomNavigationThemeData();
-    snackbarTheme ??= const SnackbarThemeData();
-    bottomSheetTheme ??= const BottomSheetThemeData();
 
     return FluentThemeData.raw(
       brightness: brightness,
@@ -350,7 +338,6 @@ class FluentThemeData with Diagnosticable {
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
-      chipTheme: chipTheme,
       dialogTheme: dialogTheme,
       dividerTheme: dividerTheme,
       focusTheme: focusTheme,
@@ -364,9 +351,6 @@ class FluentThemeData with Diagnosticable {
       toggleSwitchTheme: toggleSwitchTheme,
       tooltipTheme: tooltipTheme,
       typography: typography,
-      snackbarTheme: snackbarTheme,
-      pillButtonBarTheme: pillButtonBarTheme,
-      bottomSheetTheme: bottomSheetTheme,
       menuColor: menuColor,
       cardColor: cardColor,
       resources: resources,
@@ -394,7 +378,6 @@ class FluentThemeData with Diagnosticable {
     required this.micaBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
-    required this.chipTheme,
     required this.toggleSwitchTheme,
     required this.bottomNavigationTheme,
     required this.iconTheme,
@@ -408,9 +391,6 @@ class FluentThemeData with Diagnosticable {
     required this.infoBarTheme,
     required this.focusTheme,
     required this.scrollbarTheme,
-    required this.snackbarTheme,
-    required this.pillButtonBarTheme,
-    required this.bottomSheetTheme,
     required this.menuColor,
     required this.cardColor,
     required this.resources,
@@ -457,7 +437,6 @@ class FluentThemeData with Diagnosticable {
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
-      chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
           a.toggleSwitchTheme, b.toggleSwitchTheme, t),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
@@ -477,12 +456,6 @@ class FluentThemeData with Diagnosticable {
           ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
       bottomNavigationTheme: BottomNavigationThemeData.lerp(
           a.bottomNavigationTheme, b.bottomNavigationTheme, t),
-      snackbarTheme:
-          SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
-      pillButtonBarTheme: PillButtonBarThemeData.lerp(
-          a.pillButtonBarTheme, b.pillButtonBarTheme, t),
-      bottomSheetTheme:
-          BottomSheetThemeData.lerp(a.bottomSheetTheme, b.bottomSheetTheme, t),
       menuColor: Color.lerp(a.menuColor, b.menuColor, t)!,
       selectionColor: Color.lerp(a.selectionColor, b.selectionColor, t)!,
     );
@@ -530,9 +503,7 @@ class FluentThemeData with Diagnosticable {
     Curve? animationCurve,
     ButtonThemeData? buttonTheme,
     BottomNavigationThemeData? bottomNavigationTheme,
-    BottomSheetThemeData? bottomSheetTheme,
     CheckboxThemeData? checkboxTheme,
-    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     ContentDialogThemeData? dialogTheme,
@@ -543,10 +514,8 @@ class FluentThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
-    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
-    SnackbarThemeData? snackbarTheme,
     ResourceDictionary? resources,
   }) {
     return FluentThemeData.raw(
@@ -582,15 +551,12 @@ class FluentThemeData with Diagnosticable {
       buttonTheme: this.buttonTheme.merge(buttonTheme),
       bottomNavigationTheme:
           this.bottomNavigationTheme.merge(bottomNavigationTheme),
-      bottomSheetTheme: this.bottomSheetTheme.merge(bottomSheetTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
-      chipTheme: this.chipTheme.merge(chipTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
       focusTheme: this.focusTheme.merge(focusTheme),
       iconTheme: this.iconTheme.merge(iconTheme),
       infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
-      pillButtonBarTheme: this.pillButtonBarTheme.merge(pillButtonBarTheme),
       navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
@@ -598,7 +564,6 @@ class FluentThemeData with Diagnosticable {
       toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
-      snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
       resources: resources ?? this.resources,
     );
   }

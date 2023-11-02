@@ -18,8 +18,12 @@
       shape: ButtonState.all(RoundedRectangleBorder(...)),
     ),
   ),
-  
   ```
+* **BREAKING** Removed `Chip` and its related widgets.
+* **BREAKING** Removed `PillButtonBar` and its related widgets. Use `CommandBar` instead.
+* **BREAKING** Removed `SplitButtonBar`. Use `SplitButton` instead.
+* **BREAKING** Removed `BottomSheet` and its related widgets and functions.
+* **BREAKING** Removed `Snackbar`, `showSnackbar` and their related widgets. Use `InfoBar` and `displayInfoBar` instead.
 
 ## 4.7.7
 

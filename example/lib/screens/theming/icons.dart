@@ -1,10 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-void showCopiedSnackbar(BuildContext context, String copiedText) {
-  showSnackbar(
+Future<void> showCopiedSnackbar(BuildContext context, String copiedText) {
+  return displayInfoBar(
     context,
-    InfoBar(
+    builder: (context, close) => InfoBar(
       title: RichText(
         text: TextSpan(
           text: 'Copied ',
