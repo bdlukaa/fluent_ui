@@ -159,9 +159,8 @@ class DatePicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    final selected = this.selected ?? DateTime.now();
     properties
-      ..add(DiagnosticsProperty('selected', selected))
+      ..add(DiagnosticsProperty<DateTime>('selected', selected, ifNull: 'now'))
       ..add(FlagProperty(
         'showMonth',
         value: showMonth,

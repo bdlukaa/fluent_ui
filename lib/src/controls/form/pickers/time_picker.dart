@@ -86,7 +86,7 @@ class TimePicker extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<DateTime>('selected', selected))
+      ..add(DiagnosticsProperty<DateTime>('selected', selected, ifNull: 'now'))
       ..add(EnumProperty<HourFormat>(
         'hourFormat',
         hourFormat,

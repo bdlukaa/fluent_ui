@@ -138,6 +138,44 @@ class Tooltip extends StatefulWidget {
 
   @override
   State<Tooltip> createState() => _TooltipState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('message', message))
+      ..add(DiagnosticsProperty<InlineSpan>('richMessage', richMessage))
+      ..add(DiagnosticsProperty<TooltipThemeData>('style', style))
+      ..add(FlagProperty(
+        'excludeFromSemantics',
+        value: excludeFromSemantics,
+        ifTrue: 'excluded',
+        defaultValue: false,
+      ))
+      ..add(FlagProperty(
+        'useMousePosition',
+        value: useMousePosition,
+        ifFalse: 'use child position',
+        defaultValue: true,
+      ))
+      ..add(FlagProperty(
+        'displayHorizontally',
+        value: displayHorizontally,
+        ifTrue: 'display horizontally',
+        defaultValue: false,
+      ))
+      ..add(EnumProperty<TooltipTriggerMode>(
+        'triggerMode',
+        triggerMode,
+        defaultValue: _TooltipState._defaultTriggerMode,
+      ))
+      ..add(FlagProperty(
+        'enableFeedback',
+        value: enableFeedback,
+        ifFalse: 'feedback disabled',
+        defaultValue: true,
+      ));
+  }
 }
 
 class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {

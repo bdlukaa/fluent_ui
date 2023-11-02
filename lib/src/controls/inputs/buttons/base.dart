@@ -82,6 +82,7 @@ abstract class BaseButton extends StatefulWidget {
   /// Usually a [Text] widget
   final Widget child;
 
+  /// Whether this button can be focused.
   final bool focusable;
 
   @protected

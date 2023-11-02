@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 ///   * [Checkbox], which is used to select or deselect action items
 ///   * [ToggleSwitch], which use used to turn things on and off
 class ToggleButton extends StatelessWidget {
-  /// Creates a toggle button
+  /// Creates a toggle button.
   const ToggleButton({
     super.key,
     required this.checked,
@@ -46,11 +46,7 @@ class ToggleButton extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty(
-        'checked',
-        value: checked,
-        ifFalse: 'unchecked',
-      ))
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
       ..add(
         ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
       )

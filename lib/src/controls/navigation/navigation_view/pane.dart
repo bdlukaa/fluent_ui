@@ -199,16 +199,27 @@ class NavigationPane with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(EnumProperty('displayMode', displayMode))
-      ..add(IterableProperty('items', items))
-      ..add(IterableProperty('footerItems', footerItems))
-      ..add(IntProperty('selected', selected))
+      ..add(EnumProperty<PaneDisplayMode>(
+        'displayMode',
+        displayMode,
+        defaultValue: PaneDisplayMode.auto,
+      ))
+      ..add(IterableProperty<NavigationPaneItem>(
+        'items',
+        items,
+        defaultValue: [],
+      ))
+      ..add(IterableProperty<NavigationPaneItem>(
+        'footerItems',
+        footerItems,
+        defaultValue: [],
+      ))
+      ..add(IntProperty('selected', selected, ifNull: 'none'))
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
       ..add(DiagnosticsProperty<ScrollController>(
-        'scrollController',
-        scrollController,
-      ))
-      ..add(DiagnosticsProperty<NavigationPaneSize>('size', size));
+          'scrollController', scrollController))
+      ..add(DiagnosticsProperty<NavigationPaneSize>('size', size))
+      ..add(ObjectFlagProperty<Widget>.has('autoSuggestBox', autoSuggestBox));
   }
 
   /// Changes the selected item to [item].

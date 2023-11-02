@@ -3,8 +3,8 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// A focus border creates an animated border around a widget
-/// whenever it has the application primary focus.
+/// A focus border creates an animated border around a widget whenever it has
+/// the application primary focus.
 ///
 /// ![FocusBorder Preview](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/header-reveal-focus.svg)
 class FocusBorder extends StatelessWidget {
@@ -24,27 +24,23 @@ class FocusBorder extends StatelessWidget {
   /// Whether to show the border. Defaults to true
   final bool focused;
 
-  /// The style of this focus border. If non-null, this
-  /// is mescled with [FluentThemeData.focusThemeData]
+  /// The style of this focus border.
+  ///
+  /// If non-null, this is mescled with [FluentThemeData.focusTheme]
   final FocusThemeData? style;
 
-  /// Whether the border should be rendered outside of the
-  /// box or not. If null, [FocusThemeData.renderOutside]
-  /// is used.
+  /// Whether the border should be rendered outside of the box or not.
+  ///
+  /// If null, [FocusThemeData.renderOutside] is used.
   final bool? renderOutside;
 
-  /// Whether wrapping the widget in a stack is the approach
-  /// that is goind to be used to render the box. If false,
-  /// a transparent border is created around the [child] as a
-  /// placeholder, and the real border is only displayed when
+  /// Whether wrapping the widget in a stack is the approach that is going to be
+  /// used to render the box. If false, a transparent border is created around
+  /// the [child] as a placeholder, and the real border is only displayed when
   /// [focused] is true.
   ///
-  /// Using the stack approach is recommended for widgets that
-  /// have a defined size (height and width). You should not use
-  /// it with widgets that require dragging.
-  ///
-  /// This property is disabled by default on the following widgets:
-  ///   - [Slider]
+  /// Using the stack approach is recommended for widgets that have a defined
+  /// size. You should not use it with widgets that require dragging.
   final bool useStackApproach;
 
   @override

@@ -111,6 +111,12 @@ class Snackbar extends StatefulWidget {
 
   @override
   State<Snackbar> createState() => SnackbarState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('extended', extended));
+  }
 }
 
 class SnackbarState extends State<Snackbar>

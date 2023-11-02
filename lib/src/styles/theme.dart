@@ -620,23 +620,13 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('selectionColor', selectionColor))
       ..add(EnumProperty('brightness', brightness))
       ..add(DiagnosticsProperty<Duration>(
-        'slowAnimationDuration',
-        slowAnimationDuration,
-      ))
+          'slowAnimationDuration', slowAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'mediumAnimationDuration',
-        mediumAnimationDuration,
-      ))
+          'mediumAnimationDuration', mediumAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'fastAnimationDuration',
-        fastAnimationDuration,
-      ))
+          'fastAnimationDuration', fastAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'fasterAnimationDuration',
-        fasterAnimationDuration,
-      ))
-      ..add(
-        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-      );
+          'fasterAnimationDuration', fasterAnimationDuration))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
   }
 }

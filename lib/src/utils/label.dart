@@ -29,13 +29,15 @@ class InfoLabel extends StatelessWidget {
   /// The widget to apply the label.
   final Widget? child;
 
-  /// Whether to render [header] above [child] or on the side of it.
+  /// Whether to render the [label] above [child] or on its side.
   final bool isHeader;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<InlineSpan>('label', label));
+    properties
+      ..add(DiagnosticsProperty<InlineSpan>('label', label))
+      ..add(FlagProperty('isHeader', value: isHeader, ifFalse: 'isSide'));
   }
 
   @override

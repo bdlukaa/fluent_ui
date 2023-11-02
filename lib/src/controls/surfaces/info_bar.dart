@@ -137,7 +137,7 @@ class InfoBar extends StatelessWidget {
   final InfoBarSeverity severity;
 
   /// The style applied to this info bar. If non-null, it's
-  /// mescled with [FluentThemeData.infoBarThemeData]
+  /// mescled with [FluentThemeData.infoBarTheme]
   final InfoBarThemeData? style;
 
   final Widget title;
@@ -163,8 +163,23 @@ class InfoBar extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty('long', value: isLong, ifFalse: 'short'))
-      ..add(EnumProperty('severity', severity))
+      ..add(FlagProperty(
+        'long',
+        value: isLong,
+        ifFalse: 'short',
+        defaultValue: false,
+      ))
+      ..add(FlagProperty(
+        'isIconVisible',
+        value: isIconVisible,
+        ifFalse: 'icon not visible',
+        defaultValue: true,
+      ))
+      ..add(EnumProperty<InfoBarSeverity>(
+        'severity',
+        severity,
+        defaultValue: InfoBarSeverity.info,
+      ))
       ..add(ObjectFlagProperty.has('onClose', onClose))
       ..add(DiagnosticsProperty('style', style, ifNull: 'no style'));
   }
@@ -173,9 +188,11 @@ class InfoBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final style = InfoBarTheme.of(context).merge(this.style);
+
     final icon = isIconVisible ? style.icon?.call(severity) : null;
     final closeIcon = style.closeIcon;
     final title = Padding(

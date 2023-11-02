@@ -240,7 +240,7 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
       ..add(DoubleProperty('blurAmount', blurAmount))
       ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
       ..add(ColorProperty('shadowColor', shadowColor))
-      ..add(DoubleProperty('elevation', elevation));
+      ..add(DoubleProperty('elevation', elevation, defaultValue: 0.0));
   }
 
   @override

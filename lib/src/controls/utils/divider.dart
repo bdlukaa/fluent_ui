@@ -12,10 +12,12 @@ class Divider extends StatelessWidget {
     this.size,
   });
 
-  /// The current direction of the slider. Uses [Axis.horizontal] by default
+  /// The current direction of the slider.
+  ///
+  /// Uses [Axis.horizontal] by default
   final Axis direction;
 
-  /// The `style` of the divider. It's mescled with [FluentThemeData.dividerThemeData]
+  /// The `style` of the divider. It's mescled with [FluentThemeData.dividerTheme]
   final DividerThemeData? style;
 
   /// The size of the divider. The opposite of the [DividerThemeData.thickness]

@@ -160,7 +160,7 @@ class ListTile extends StatelessWidget {
 
   /// How the children should be placed along the cross axis in a flex layout.
   ///
-  /// Defaults to CrossAxisAlignment.center
+  /// Defaults to [CrossAxisAlignment.center]
   final CrossAxisAlignment contentAlignment;
 
   /// Padding applied to list tile content
@@ -172,9 +172,17 @@ class ListTile extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('shape', shape))
-      ..add(FlagProperty('selected',
-          value: selected, ifFalse: 'unselected', defaultValue: false))
+      ..add(DiagnosticsProperty<ShapeBorder>(
+        'shape',
+        shape,
+        defaultValue: kDefaultListTileShape,
+      ))
+      ..add(FlagProperty(
+        'selected',
+        value: selected,
+        ifFalse: 'unselected',
+        defaultValue: false,
+      ))
       ..add(EnumProperty(
         'selectionMode',
         selectionMode,
@@ -185,6 +193,16 @@ class ListTile extends StatelessWidget {
         value: onPressed != null || onSelectionChange != null,
         defaultValue: false,
         ifFalse: 'disabled',
+      ))
+      ..add(EnumProperty<CrossAxisAlignment>(
+        'contentAlignment',
+        contentAlignment,
+        defaultValue: CrossAxisAlignment.center,
+      ))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+        'contentPadding',
+        contentPadding,
+        defaultValue: kDefaultListTilePadding,
       ));
   }
 

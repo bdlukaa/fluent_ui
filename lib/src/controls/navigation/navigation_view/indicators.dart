@@ -32,12 +32,13 @@ class NavigationIndicator extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty(
-        'curve',
-        curve,
-        defaultValue: Curves.linear,
-      ))
-      ..add(ColorProperty('highlight color', color));
+      ..add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear))
+      ..add(ColorProperty('highlight color', color))
+      ..add(DiagnosticsProperty<Duration>(
+        'duration',
+        duration,
+        defaultValue: kIndicatorAnimationDuration,
+      ));
   }
 
   @override
