@@ -62,13 +62,15 @@ Future<void> displayInfoBar(
               if (entry.mounted) entry.remove();
             }
 
-            Future.delayed(theme.mediumAnimationDuration).then((_) {
-              if (entry.mounted && !alreadyInitialized) {
-                setState(() => isFading = false);
-              }
+            if (!alreadyInitialized) {
+              Future.delayed(theme.mediumAnimationDuration).then((_) {
+                if (entry.mounted && !alreadyInitialized) {
+                  setState(() => isFading = false);
+                }
 
-              alreadyInitialized = true;
-            }).then((_) => Future.delayed(duration).then((_) => close()));
+                alreadyInitialized = true;
+              }).then((_) => Future.delayed(duration).then((_) => close()));
+            }
 
             return AnimatedSwitcher(
               duration: theme.mediumAnimationDuration,

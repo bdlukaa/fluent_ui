@@ -24,6 +24,7 @@
 * **BREAKING** Removed `SplitButtonBar`. Use `SplitButton` instead.
 * **BREAKING** Removed `BottomSheet` and its related widgets and functions.
 * **BREAKING** Removed `Snackbar`, `showSnackbar` and their related widgets. Use `InfoBar` and `displayInfoBar` instead.
+* fix: do not close `InfoBar` twice ([#955](https://github.com/bdlukaa/fluent_ui/issues/955))
 
 ## 4.7.7
 
