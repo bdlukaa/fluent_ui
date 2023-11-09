@@ -73,8 +73,8 @@ void main() {
       expect(comboBoxItems, findsNWidgets(3));
 
       final comboBoxItem1 = find.byKey(const ValueKey('0'));
-      final comboBoxItem2 = find.byKey(const ValueKey('2'));
-      final comboBoxItem3 = find.byKey(const ValueKey('1'));
+      final comboBoxItem2 = find.byKey(const ValueKey('1'));
+      final comboBoxItem3 = find.byKey(const ValueKey('2'));
 
       expect(comboBoxItem1, findsOneWidget);
       expect(comboBoxItem2, findsOneWidget);
