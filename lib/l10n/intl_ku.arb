@@ -1,0 +1,127 @@
+{
+  "@@locale": "ku",
+  "backButtonTooltip": "گەڕانەوە",
+  "@backButtonTooltip": {
+    "description": "ئامۆژگاری ئامراز بۆ دوگمەی پشتەوە داگیرساوە [NavigationAppBar]."
+  },
+  "closeButtonLabel": "داخستن",
+  "@closeButtonLabel": {
+    "description": "ناوی دوگمەکانی \"close\" و بابەتە مینیوەکان."
+  },
+  "searchLabel": "گەڕان",
+  "@searchLabel": {
+    "description": "ناوی بۆ بواری دەقی \"search\" دابنێ."
+  },
+  "closeNavigationTooltip": "داخستنی گەشتکردن",
+  "@closeNavigationTooltip": {
+    "description": "ئامرازی دوگمەی گۆڕینی گەشتکردن."
+  },
+  "openNavigationTooltip": "گەشتکردن بکەرەوە",
+  "@openNavigationTooltip": {
+    "description": "ئامرازی دوگمەی گەشتکردن بە ئامرازەکان."
+  },
+  "clickToSearch": "بۆ گەڕان کلیک بکە",
+  "@clickToSearch": {
+    "description": "ئامرازی ئامۆژگاری بۆ دوگمەی \"Click to Search\" بکە."
+  },
+  "modalBarrierDismissLabel": "بەلاوە نان",
+  "@modalBarrierDismissLabel": {
+    "description": "ناوی بخوێنەرەوە لەلایەن ئامرازەکانی دەستڕاگەیشتن (TalkBack یان VoiceOver) بۆ بەربەستێکی مۆداڵی بۆ ئەوەی ئاماژە بەوە بکات کە پەنجەدانێک بەربەستەکە ڕەتدەکاتەوە. بۆ نموونە دەتوانرێت بەربەستێکی مۆداڵی لە پشت ئاگادارکردنەوە یان پەلەوەرییەکەوە بدۆزرێتەوە بۆ ڕێگریکردن لە کارلێکی بەکارهێنەر لەگەڵ توخمەکانی پشتیەوە."
+  },
+  "minimizeWindowTooltip": "کەمکردنەوە",
+  "@minimizeWindowTooltip": {
+    "description": "ئەو ئامرازە کە لەلایەن دوگمەی \"Minimize\" لەسەر پەنجەرەی سەر مێز بەکاردێت."
+  },
+  "restoreWindowTooltip": "گەڕاندنەوە",
+  "@restoreWindowTooltip": {
+    "description": "ئەو ئامرازە کە لەلایەن دوگمەی \"Restore\" لەسەر پەنجەرەی سەر مێز بەکاردێت."
+  },
+  "closeWindowTooltip": "داخستن",
+  "@closeWindowTooltip": {
+    "description": "ئەو ئامرازە کە لەلایەن دوگمەی \"Close\" لەسەر پەنجەرەی سەر مێز بەکاردێت."
+  },
+  "dialogLabel": "دیالۆگ",
+  "@dialogLabel": {
+    "description": "ناوی دیالۆگەکە."
+  },
+  "cutActionLabel": "بڕین",
+  "@cutActionLabel": {
+    "description": "ناوی کردارەکەی بڕین لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "copyActionLabel": "کۆپی بکە",
+  "@copyActionLabel": {
+    "description": "ناوی کردارەکەی کۆپیکردن لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "pasteActionLabel": "هەویر بکە",
+  "@pasteActionLabel": {
+    "description": "ناوی دوگمەی لێدان لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "selectAllActionLabel": "دیاری کردنی هەموو",
+  "@selectAllActionLabel": {
+    "description": "ناوی دوگمەی هەڵبژاردنی هەموو لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "newTabLabel": "تابێکی نوێ زیاد بکە",
+  "@newTabLabel": {
+    "description": "ئەو لیبێڵەی کە دوگمەی نوێی [TabView] بەکاری دەهێنێت."
+  },
+  "closeTabLabelSuffix": "تابی داخستنی",
+  "@closeTabLabelSuffix": {
+    "description": "ئەو لیبێڵەی کە دوگمەی داخستنی [TabView] بەکاری دەهێنێت."
+  },
+  "scrollTabBackwardLabel": "لیستی تابەکان بەرەو دواوە بچۆ",
+  "@scrollTabBackwardLabel": {
+    "description": "ئەو لیبێڵەی کە دوگمەی سکڕۆڵ بۆ دواوەی [TabView] بەکاریدەهێنێت."
+  },
+  "scrollTabForwardLabel": "لیستی تابەکان بەرەو پێشەوە بچۆ",
+  "@scrollTabForwardLabel": {
+    "description": "ئەو لیبێڵەی کە دوگمەی سکڕۆڵ بۆ پێشەوەی [TabView] بەکاریدەهێنێت."
+  },
+  "noResultsFoundLabel": "هیچ ئه‌نجامێك نه‌دۆزرایه‌وه‌",
+  "@noResultsFoundLabel": {
+    "description": "ئەو لیبێڵەی کە لەلایەن [AutoSuggestBox] بەکاردەهێنرێت کاتێک ئەنجامەکان نادۆزرێتەوە."
+  },
+  "copyActionTooltip": "ناوەڕۆکی هەڵبژێردراو کۆپی بکە بۆ کلیپبۆرد",
+  "@copyActionTooltip": {
+    "description": "ئامرازی کرداری کۆپیکردن لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "cutActionTooltip": "ناوەڕۆکی هەڵبژێردراوەکە دەربهێنە و بیخە ناو کلیپبۆردەکەوە",
+  "@cutActionTooltip": {
+    "description": "ئامرازی کرداری بڕین لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "pasteActionTooltip": "ناوەڕۆکی کلیپبۆردەکە لە شوێنی ئێستادا دەخاتە ناوەوە",
+  "@pasteActionTooltip": {
+    "description": "ئامرازی کرداری لێدان لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "selectAllActionTooltip": "هەموو ناوەڕۆکەکان هەڵبژێرە",
+  "@selectAllActionTooltip": {
+    "description": "ئامرازی هەڵبژاردنی کردار لەسەر کۆنتڕۆڵەکانی هەڵبژاردنی دەق."
+  },
+  "hour": "کاتژمێر",
+  "@hour": {
+    "description": "ئەو دەقەیەی کە لەلایەن [TimePicker] بۆ بواری کاتژمێر بەکارهاتووە."
+  },
+  "minute": "خولەک",
+  "@minute": {
+    "description": "ئەو دەقەیەی کە لەلایەن [TimePicker] بۆ بواری خولەک بەکارهاتووە."
+  },
+  "am": "ب",
+  "@am": {
+    "description": "ئەو دەقەیەی کە لەلایەن [TimePicker] بۆ بواری AM بەکارهاتووە."
+  },
+  "pm": "ئ",
+  "@pm": {
+    "description": "ئەو دەقەیەی کە لەلایەن [TimePicker] بۆ بواری PM بەکارهاتووە."
+  },
+  "month": "مانگ",
+  "@month": {
+    "description": "ئەو دەقەیەی کە لەلایەن [DatePicker] بۆ مەیدانی مانگەکە بەکارهاتووە"
+  },
+  "day": "ڕۆژ",
+  "@day": {
+    "description": "ئەو دەقەیەی کە لەلایەن [DatePicker] بۆ مەیدانی ڕۆژەکە بەکارهاتووە"
+  },
+  "year": "ساڵ",
+  "@year": {
+    "description": "ئەو دەقەیەی کە لەلایەن [DatePicker] بۆ بواری ساڵ بەکارهاتووە"
+  }
+}
