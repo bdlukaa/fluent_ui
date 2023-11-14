@@ -337,24 +337,53 @@ class DropDownButtonState extends State<DropDownButton> {
           color: widget.menuColor,
           shape: widget.menuShape,
           items: widget.items.map((item) {
-            if (widget.closeAfterClick && item is MenuFlyoutItem) {
-              return MenuFlyoutItem(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  item.onPressed?.call();
-                },
-                key: item.key,
-                leading: item.leading,
-                text: item.text,
-                trailing: item.trailing,
-                selected: item.selected,
-              );
+            if (item is MenuFlyoutSubItem) {
+              return _buildMenuFlyoutISubItem(item);
             }
+
+            if (widget.closeAfterClick && item is MenuFlyoutItem) {
+              return _buildMenuFlyoutItem(item, context);
+            }
+
             return item;
           }).toList(),
         );
       },
     );
     widget.onClose?.call();
+  }
+
+  MenuFlyoutSubItem _buildMenuFlyoutISubItem(MenuFlyoutSubItem item) {
+    return MenuFlyoutSubItem(
+      key: item.key,
+      text: item.text,
+      items: (context) => item.items.call(context).map((item) {
+        if (widget.closeAfterClick && item is MenuFlyoutItem) {
+          return _buildMenuFlyoutItem(item, context);
+        }
+        return item;
+      }).toList(),
+      leading: item.leading,
+      trailing: item.trailing,
+      showBehavior: item.showBehavior,
+      showHoverDelay: item.showHoverDelay,
+    );
+  }
+
+  MenuFlyoutItem _buildMenuFlyoutItem(
+    MenuFlyoutItem item,
+    BuildContext context,
+  ) {
+    return MenuFlyoutItem(
+      onPressed: () {
+        Navigator.of(context).pop();
+        item.onPressed?.call();
+      },
+      key: item.key,
+      leading: item.leading,
+      text: item.text,
+      trailing: item.trailing,
+      selected: item.selected,
+    );
   }
 }
