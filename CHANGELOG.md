@@ -25,6 +25,7 @@
 * **BREAKING** Removed `BottomSheet` and its related widgets and functions.
 * **BREAKING** Removed `Snackbar`, `showSnackbar` and their related widgets. Use `InfoBar` and `displayInfoBar` instead.
 * fix: do not close `InfoBar` twice ([#955](https://github.com/bdlukaa/fluent_ui/issues/955))
+* fix: MenuFlyoutSubItem was not displaying when hovered or pressing over in a DropdownButton.
 
 ## 4.7.7
 
