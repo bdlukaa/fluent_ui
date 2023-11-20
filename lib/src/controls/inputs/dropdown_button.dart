@@ -32,6 +32,7 @@ class DropDownButton extends StatefulWidget {
     this.title,
     this.trailing = _kDefaultDropdownButtonTrailing,
     this.verticalOffset = _kVerticalOffset,
+    this.closeAfterClick = true,
     this.disabled = false,
     this.focusNode,
     this.autofocus = false,
@@ -83,6 +84,13 @@ class DropDownButton extends StatefulWidget {
   ///    sub-menu in a [MenuFlyout]
   ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
   final List<MenuFlyoutItemBase> items;
+
+  /// Whether the flyout will be closed after an item is tapped.
+  ///
+  /// This is only effective on items that are [MenuFlyoutItem]
+  ///
+  /// Defaults to `true`
+  final bool closeAfterClick;
 
   /// If `true`, the button won't be clickable.
   final bool disabled;
@@ -190,6 +198,12 @@ class DropDownButton extends StatefulWidget {
         'verticalOffset',
         verticalOffset,
         defaultValue: _kVerticalOffset,
+      ))
+      ..add(FlagProperty(
+        'close after click',
+        value: closeAfterClick,
+        defaultValue: false,
+        ifFalse: 'do not close after click',
       ))
       ..add(EnumProperty<FlyoutPlacementMode>('placement', placement))
       ..add(DiagnosticsProperty<ShapeBorder>('menu shape', menuShape))
@@ -322,10 +336,52 @@ class DropDownButtonState extends State<DropDownButton> {
         return MenuFlyout(
           color: widget.menuColor,
           shape: widget.menuShape,
-          items: widget.items,
+          items: widget.items.map((item) => transformItem(item, context)).toList(),
         );
       },
     );
     widget.onClose?.call();
+  }
+
+  MenuFlyoutItemBase transformItem(
+    MenuFlyoutItemBase item,
+    BuildContext context,
+  ) {
+    if (item is MenuFlyoutSubItem) {
+      return _createSubMenuItem(item);
+    } else if (widget.closeAfterClick && item is MenuFlyoutItem) {
+      return _createMenuItem(item, context);
+    } else {
+      return item;
+    }
+  }
+
+  MenuFlyoutSubItem _createSubMenuItem(MenuFlyoutSubItem item) {
+    return MenuFlyoutSubItem(
+      key: item.key,
+      text: item.text,
+      items: (context) => item.items
+          .call(context)
+          .map((item) => transformItem(item, context))
+          .toList(),
+      leading: item.leading,
+      trailing: item.trailing,
+      showBehavior: item.showBehavior,
+      showHoverDelay: item.showHoverDelay,
+    );
+  }
+
+  MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
+    return MenuFlyoutItem(
+      onPressed: () {
+        Navigator.of(context).pop();
+        item.onPressed?.call();
+      },
+      key: item.key,
+      leading: item.leading,
+      text: item.text,
+      trailing: item.trailing,
+      selected: item.selected,
+    );
   }
 }
