@@ -332,21 +332,35 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     // TODO: Scrollbar, RatingBar
   ].map<NavigationPaneItem>((e) {
-    if (e is PaneItem) {
+    PaneItem buildPaneItem(PaneItem item) {
       return PaneItem(
+        key: item.key,
+        icon: item.icon,
+        title: item.title,
+        body: item.body,
+        onTap: () {
+          final path = (item.key as ValueKey).value;
+          if (GoRouterState.of(context).uri.toString() != path) {
+            context.go(path);
+          }
+          item.onTap?.call();
+        },
+      );
+    }
+
+    if (e is PaneItemExpander) {
+      return PaneItemExpander(
         key: e.key,
         icon: e.icon,
         title: e.title,
         body: e.body,
-        onTap: () {
-          final path = (e.key as ValueKey).value;
-          if (GoRouterState.of(context).uri.toString() != path) {
-            context.go(path);
-          }
-          e.onTap?.call();
-        },
+        items: e.items.map((item) {
+          if (item is PaneItem) return buildPaneItem(item);
+          return item;
+        }).toList(),
       );
     }
+    if (e is PaneItem) return buildPaneItem(e);
     return e;
   }).toList();
   late final List<NavigationPaneItem> footerItems = [
@@ -546,7 +560,22 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             focusNode: searchFocusNode,
             controller: searchController,
             unfocusedColor: Colors.transparent,
-            items: originalItems.whereType<PaneItem>().map((item) {
+            // also need to include sub items from [PaneItemExpander] items
+            items: <PaneItem>[
+              ...originalItems
+                  .whereType<PaneItemExpander>()
+                  .expand<PaneItem>((item) {
+                return [
+                  item,
+                  ...item.items.whereType<PaneItem>(),
+                ];
+              }),
+              ...originalItems
+                  .where(
+                    (item) => item is PaneItem && item is! PaneItemExpander,
+                  )
+                  .cast<PaneItem>(),
+            ].map((item) {
               assert(item.title is Text);
               final text = (item.title as Text).data!;
               return AutoSuggestBoxItem(
