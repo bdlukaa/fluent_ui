@@ -331,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: const SizedBox.shrink(),
     ),
     // TODO: Scrollbar, RatingBar
-  ].map((e) {
+  ].map<NavigationPaneItem>((e) {
     if (e is PaneItem) {
       return PaneItem(
         key: e.key,
