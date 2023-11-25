@@ -1,4 +1,4 @@
-## [next]
+## 4.8.0
 
 * Correctly paint buttons borders ([#956](https://github.com/bdlukaa/fluent_ui/pull/956))
 * **MINOR BREAKING** Removed `ButtonStyle.border`. Use `ButtonStyle.shape` instead:
