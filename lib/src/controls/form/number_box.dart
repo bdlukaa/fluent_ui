@@ -66,7 +66,14 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// If the [onChanged] callback is null then the number box widget will
   /// be disabled, i.e. its buttons will be displayed in grey and it will not
   /// respond to input.
+  ///
+  /// See also:
+  ///
+  ///   * [onChanging], called when the text of the number box change.
   final ValueChanged<T?>? onChanged;
+
+  /// Called when the text of the number box change.
+  final ValueChanged<String>? onTextChange;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -222,6 +229,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.onTextChange,
     this.focusNode,
     this.mode = SpinButtonPlacementMode.compact,
     this.clearButton = true,
@@ -462,6 +470,11 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       selectionHeightStyle: widget.selectionHeightStyle,
       selectionWidthStyle: widget.selectionWidthStyle,
       textDirection: widget.textDirection,
+      onSubmitted: (_) => updateValue(),
+      onEditingComplete: updateValue,
+      onTap: updateValue,
+      onTapOutside: (_) => updateValue(),
+      onChanged: widget.onTextChange,
     );
 
     return CompositedTransformTarget(
