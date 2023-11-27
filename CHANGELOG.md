@@ -2,6 +2,7 @@
 
 * feat: Added `NavigationPane.toggleable` ([#973](https://github.com/bdlukaa/fluent_ui/issues/973))
 * feat: `NumberBox.onTextChange` ([#972](https://github.com/bdlukaa/fluent_ui/issues/972))
+* fix: `TextBox.expands` correctly expands on unbounded areas ([#960](https://github.com/bdlukaa/fluent_ui/issues/960))
 
 ## 4.8.0
 
