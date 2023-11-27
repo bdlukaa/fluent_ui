@@ -136,7 +136,7 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.right:
         return BoxConstraints(
           maxWidth: (rootSize.width - targetOffset.dx)._ensurePositive(),
-          maxHeight: (rootSize.height)._ensurePositive(),
+          maxHeight: rootSize.height._ensurePositive(),
         );
       case FlyoutPlacementMode.auto:
       default:
@@ -489,20 +489,20 @@ class FlyoutController with ChangeNotifier {
   /// {@template fluent_ui.flyouts.barrierDismissible}
   /// If [barrierDismissible] is true, tapping outside of the flyout will close
   /// it.
-  /// {@end-template}
+  /// {@endtemplate}
   ///
   /// [barrierColor] is the color of the barrier.
   ///
   /// {@template fluent_ui.flyouts.dismissWithEsc}
   /// When [dismissWithEsc] is true, the flyout can be dismissed by pressing the
   /// ESC key.
-  /// {@end-template}
+  /// {@endtemplate}
   ///
   /// {@template fluent_ui.flyouts.dismissOnPointerMoveAway}
   /// If [dismissOnPointerMoveAway] is enabled, the flyout is dismissed when the
   /// cursor moves away from either the target or the flyout. It's disabled by
   /// default.
-  /// {@end-template}
+  /// {@endtemplate}
   ///
   /// [placementMode] describes where the flyout will be placed. Defaults to auto
   ///

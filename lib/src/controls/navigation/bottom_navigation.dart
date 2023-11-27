@@ -81,7 +81,7 @@ class BottomNavigation extends StatelessWidget {
   ///   onChanged: (i) => setState(() => index = i),
   /// )
   /// ```
-  /// {@end-tool}
+  /// {@endtool}
   final ValueChanged<int>? onChanged;
 
   /// Used to style this bottom navigation bar. If non-null,
