@@ -336,7 +336,8 @@ class DropDownButtonState extends State<DropDownButton> {
         return MenuFlyout(
           color: widget.menuColor,
           shape: widget.menuShape,
-          items: widget.items.map((item) => transformItem(item, context)).toList(),
+          items:
+              widget.items.map((item) => transformItem(item, context)).toList(),
         );
       },
     );
