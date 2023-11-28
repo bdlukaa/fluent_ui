@@ -656,11 +656,13 @@ class TreeView extends StatefulWidget {
         'includePartiallySelectedItems',
         value: includePartiallySelectedItems,
         defaultValue: false,
+        ifFalse: 'only fully selected items',
       ))
       ..add(FlagProperty(
         'narrowSpacing',
         value: narrowSpacing,
         defaultValue: false,
+        ifTrue: 'narrow spacing',
       ));
   }
 }

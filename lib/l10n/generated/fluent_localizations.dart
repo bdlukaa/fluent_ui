@@ -22,6 +22,7 @@ import 'fluent_localizations_id.dart';
 import 'fluent_localizations_it.dart';
 import 'fluent_localizations_ja.dart';
 import 'fluent_localizations_ko.dart';
+import 'fluent_localizations_ku.dart';
 import 'fluent_localizations_ms.dart';
 import 'fluent_localizations_my.dart';
 import 'fluent_localizations_nl.dart';
@@ -140,6 +141,7 @@ abstract class FluentLocalizations {
     Locale('it'),
     Locale('ja'),
     Locale('ko'),
+    Locale('ku'),
     Locale('ms'),
     Locale('my'),
     Locale('nl'),
@@ -375,6 +377,7 @@ class _FluentLocalizationsDelegate
         'it',
         'ja',
         'ko',
+        'ku',
         'ms',
         'my',
         'nl',
@@ -446,6 +449,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsJa();
     case 'ko':
       return FluentLocalizationsKo();
+    case 'ku':
+      return FluentLocalizationsKu();
     case 'ms':
       return FluentLocalizationsMs();
     case 'my':

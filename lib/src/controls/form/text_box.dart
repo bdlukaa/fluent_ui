@@ -1216,8 +1216,6 @@ class _TextBoxState extends State<TextBox>
                       behavior: HitTestBehavior.translucent,
                       child: Align(
                         alignment: Alignment(-1.0, _textAlignVertical.y),
-                        widthFactor: 1.0,
-                        heightFactor: 1.0,
                         child: SmallIconButton(
                           child: _addTextDependentAttachments(
                             paddedEditable,

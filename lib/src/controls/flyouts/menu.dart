@@ -36,7 +36,7 @@ class MenuFlyout extends StatefulWidget {
   ///    separates items in a [MenuFlyout].
   ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
   ///    sub-menu in a [MenuFlyout]
-  /// {@end-template}
+  /// {@endtemplate}
   final List<MenuFlyoutItemBase> items;
 
   /// The background color of the box.

@@ -85,6 +85,7 @@ class NavigationPane with Diagnosticable {
     this.autoSuggestBox,
     this.autoSuggestBoxReplacement,
     this.displayMode = PaneDisplayMode.auto,
+    this.toggleable = true,
     this.customPane,
     this.menuButton,
     this.scrollController,
@@ -106,6 +107,12 @@ class NavigationPane with Diagnosticable {
   /// Use this property to customize how the pane will be displayed.
   /// [PaneDisplayMode.auto] is used by default.
   final PaneDisplayMode displayMode;
+
+  /// Whether the pane can be toggled or not.
+  ///
+  /// This is used when [displayMode] is [PaneDisplayMode.compact]. If false,
+  /// the pane will always be closed.
+  final bool toggleable;
 
   /// Creates a Custom pane that will be used
   final NavigationPaneWidget? customPane;

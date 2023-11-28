@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 /// {@template fluent_ui.buttons.base}
 /// Buttons give people a way to trigger an action. They’re typically found in
 /// forms, dialog panels, and dialogs.
-/// {@end-template}
+/// {@endtemplate}
 ///
 /// See also:
 ///

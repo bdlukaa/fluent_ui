@@ -545,7 +545,9 @@ class NavigationViewState extends State<NavigationView> {
                                   pane: pane,
                                   paneKey: _panelKey,
                                   listKey: _listKey,
-                                  onToggle: toggleCompactOpenMode,
+                                  onToggle: pane.toggleable
+                                      ? toggleCompactOpenMode
+                                      : null,
                                   initiallyOpen: true,
                                   onAnimationEnd: _animationEndCallback,
                                 ),
@@ -558,7 +560,9 @@ class NavigationViewState extends State<NavigationView> {
                                 pane: pane,
                                 paneKey: _panelKey,
                                 listKey: _listKey,
-                                onToggle: toggleCompactOpenMode,
+                                onToggle: pane.toggleable
+                                    ? toggleCompactOpenMode
+                                    : null,
                                 onOpenSearch: widget.onOpenSearch,
                                 onAnimationEnd: _animationEndCallback,
                               ),
