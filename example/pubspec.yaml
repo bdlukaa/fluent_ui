@@ -28,6 +28,7 @@ dependencies:
       url: https://github.com/YehudaKremer/flutter_syntax_view.git
   go_router: ^10.0.0
   intl: ^0.18.0
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_syntax_view/flutter_syntax_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
@@ -118,10 +119,8 @@ class _CardHighlightState extends State<CardHighlight>
                 bottom: Radius.circular(6.0),
               ),
               child: SyntaxView(
-                code: widget.codeSnippet.replaceAll('  ', '    '),
-                syntaxTheme: theme.brightness.isDark
-                    ? SyntaxTheme.vscodeDark()
-                    : SyntaxTheme.vscodeLight(),
+                code: widget.codeSnippet,
+                syntaxTheme: getSyntaxTheme(theme),
               ),
             ),
           ),
@@ -167,3 +166,15 @@ const fluentHighlightTheme = {
   'strong': TextStyle(fontWeight: FontWeight.bold),
   'emphasis': TextStyle(fontStyle: FontStyle.italic),
 };
+
+SyntaxTheme getSyntaxTheme(FluentThemeData theme) {
+  final syntaxTheme = theme.brightness.isDark
+      ? SyntaxTheme.vscodeDark()
+      : SyntaxTheme.vscodeLight();
+
+  syntaxTheme.baseStyle = GoogleFonts.firaCode(
+    textStyle: syntaxTheme.baseStyle,
+  );
+
+  return syntaxTheme;
+}
