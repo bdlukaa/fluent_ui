@@ -1,3 +1,7 @@
+## [next]
+
+* fix: The `MenuFlyoutSubItem` in the `DropDownButton` was not displaying when hovered or pressed. ([#964](https://github.com/bdlukaa/fluent_ui/pull/964))
+
 ## 4.8.1
 
 * feat: Added `NavigationPane.toggleable` ([#973](https://github.com/bdlukaa/fluent_ui/issues/973))
