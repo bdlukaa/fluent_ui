@@ -102,12 +102,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                 shortcutSpan('Ctrl + 9'),
                 const TextSpan(text: ' selects the last tab'),
               ]),
-            ]);
+            ], style: theme.typography.body);
           }(),
-          //         '''  •  Ctrl + T opens a new tab
-          // •  Ctrl + W or Ctrl + F4 closes the selected tab
-          // •  Ctrl 1 + Ctrl 8 selects that number tab
-          // •  Ctrl 9 selects the last tab''',
         ),
         subtitle(
           content: const Text(
