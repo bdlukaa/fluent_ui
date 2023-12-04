@@ -62,7 +62,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
   readOnly: true,
   placeholder: 'I am super excited to be here',
   style: TextStyle(
-    fontFamily: 'Arial,
+    fontFamily: 'Arial',
     fontSize: 24.0,
     letterSpacing: 8.0,
     color: Color(0xFF5178BE),
