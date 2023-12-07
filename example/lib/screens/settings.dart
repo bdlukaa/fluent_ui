@@ -181,8 +181,13 @@ class _SettingsState extends State<Settings> with PageMixin {
         if (kIsWindowEffectsSupported) ...[
           biggerSpacer,
           Text(
-            'Window Transparency (${defaultTargetPlatform.toString().replaceAll('TargetPlatform.', '')})',
+            'Window Transparency',
             style: FluentTheme.of(context).typography.subtitle,
+          ),
+          description(
+            content: Text(
+              'Running on ${defaultTargetPlatform.toString().replaceAll('TargetPlatform.', '')}',
+            ),
           ),
           spacer,
           ...List.generate(currentWindowEffects.length, (index) {
@@ -205,8 +210,10 @@ class _SettingsState extends State<Settings> with PageMixin {
           }),
         ],
         biggerSpacer,
-        Text('Text Direction',
-            style: FluentTheme.of(context).typography.subtitle),
+        Text(
+          'Text Direction',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
         spacer,
         ...List.generate(TextDirection.values.length, (index) {
           final direction = TextDirection.values[index];
@@ -228,7 +235,14 @@ class _SettingsState extends State<Settings> with PageMixin {
             ),
           );
         }).reversed,
+        biggerSpacer,
         Text('Locale', style: FluentTheme.of(context).typography.subtitle),
+        description(
+          content: const Text(
+            'The locale used by the fluent_ui widgets, such as TimePicker and '
+            'DatePicker. This does not reflect the language of this showcase app.',
+          ),
+        ),
         spacer,
         Wrap(
           spacing: 15.0,

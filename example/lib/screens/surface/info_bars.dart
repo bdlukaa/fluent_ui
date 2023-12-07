@@ -39,7 +39,8 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         ),
         CardHighlight(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
-          codeSnippet: '''displayInfoBar(context, builder: (context, close) {
+          codeSnippet:
+              '''await displayInfoBar(context, builder: (context, close) {
   return InfoBar(
     title: const Text('You can not do that :/'),
     content: const Text(
@@ -50,12 +51,12 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
     ),
     severity: InfoBarSeverity.warning,
   );
-}''',
+});''',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Button(
-              onPressed: () {
-                displayInfoBar(context, builder: (context, close) {
+              onPressed: () async {
+                await displayInfoBar(context, builder: (context, close) {
                   return InfoBar(
                     title: const Text('You can not do that :/'),
                     content: const Text(
