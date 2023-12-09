@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
 /// Defines constants that specify the preferred location for positioning a
@@ -534,6 +535,11 @@ class FlyoutController with ChangeNotifier {
   ///
   /// [position] lets you position the flyout anywhere on the screen, making it
   /// possible to create context menus. If provided, [placementMode] is ignored.
+  ///
+  /// [barrierRecognizer] is a gesture recognizer that will be added to the
+  /// barrier. It's useful when the flyout is used as a context menu and the
+  /// barrier should be dismissed when the user clicks outside of the flyout.
+  /// If this is provided, [barrierDismissible] is ignored.
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -551,6 +557,7 @@ class FlyoutController with ChangeNotifier {
     Duration? transitionDuration,
     Offset? position,
     RouteSettings? settings,
+    GestureRecognizer? barrierRecognizer,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
@@ -631,15 +638,27 @@ class FlyoutController with ChangeNotifier {
           builder: (context, rootSize, menus, keys) {
             assert(menus.length == keys.length);
 
+            final barrier = ColoredBox(
+              color: barrierColor ?? Colors.black.withOpacity(0.3),
+            );
+
             Widget box = Stack(children: [
-              if (barrierDismissible)
+              if (barrierRecognizer != null)
+                Positioned.fill(
+                  child: Listener(
+                    behavior: HitTestBehavior.opaque,
+                    onPointerDown: (event) {
+                      barrierRecognizer.addPointer(event);
+                    },
+                    child: barrier,
+                  ),
+                )
+              else if (barrierDismissible)
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: barrierDismissible ? navigator.pop : null,
-                    child: ColoredBox(
-                      color: barrierColor ?? Colors.black.withOpacity(0.3),
-                    ),
+                    child: barrier,
                   ),
                 ),
               Positioned.fill(

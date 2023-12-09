@@ -3,6 +3,7 @@ import 'package:example/theme.dart';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 class Flyout2Screen extends StatefulWidget {
@@ -435,47 +436,69 @@ return GestureDetector(
                 ancestor: Navigator.of(context).context.findRenderObject(),
               );
 
-              contextController.showFlyout(
-                barrierColor: Colors.black.withOpacity(0.1),
-                position: position,
-                builder: (context) {
-                  return FlyoutContent(
-                    child: SizedBox(
-                      width: 130,
-                      child: CommandBar(
-                        isCompact: true,
-                        primaryItems: [
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.add_favorite),
-                            label: const Text('Favorite'),
-                            onPressed: () {},
-                          ),
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.copy),
-                            label: const Text('Copy'),
-                            onPressed: () {},
-                          ),
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.share),
-                            label: const Text('Share'),
-                            onPressed: () {},
-                          ),
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.save),
-                            label: const Text('Save'),
-                            onPressed: () {},
-                          ),
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.delete),
-                            label: const Text('Delete'),
-                            onPressed: () {},
-                          ),
-                        ],
+              void showFlyout(Offset position) {
+                print(position);
+                contextController.showFlyout(
+                  barrierColor: Colors.black.withOpacity(0.1),
+                  position: position,
+                  barrierRecognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.of(context).pop();
+                    }
+                    ..onSecondaryTapUp = (d) {
+                      Navigator.of(context).pop();
+
+                      final box = Navigator.of(context)
+                          .context
+                          .findRenderObject() as RenderBox;
+                      final position = box.localToGlobal(
+                        d.localPosition,
+                        ancestor: box,
+                      );
+
+                      showFlyout(position);
+                    },
+                  builder: (context) {
+                    return FlyoutContent(
+                      child: SizedBox(
+                        width: 130,
+                        child: CommandBar(
+                          isCompact: true,
+                          primaryItems: [
+                            CommandBarButton(
+                              icon: const Icon(FluentIcons.add_favorite),
+                              label: const Text('Favorite'),
+                              onPressed: () {},
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(FluentIcons.copy),
+                              label: const Text('Copy'),
+                              onPressed: () {},
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(FluentIcons.share),
+                              label: const Text('Share'),
+                              onPressed: () {},
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(FluentIcons.save),
+                              label: const Text('Save'),
+                              onPressed: () {},
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(FluentIcons.delete),
+                              label: const Text('Delete'),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              }
+
+              showFlyout(position);
             },
             child: FlyoutTarget(
               key: contextAttachKey,
