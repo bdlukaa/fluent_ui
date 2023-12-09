@@ -392,6 +392,7 @@ class PaneItem extends NavigationPaneItem {
     ButtonState<Color?>? tileColor,
     ButtonState<Color?>? selectedTileColor,
     VoidCallback? onTap,
+    bool? enabled,
   }) {
     return PaneItem(
       title: title ?? this.title,
@@ -405,6 +406,7 @@ class PaneItem extends NavigationPaneItem {
       tileColor: tileColor ?? this.tileColor,
       selectedTileColor: selectedTileColor ?? this.selectedTileColor,
       onTap: onTap ?? this.onTap,
+      enabled: enabled ?? this.enabled,
     );
   }
 }

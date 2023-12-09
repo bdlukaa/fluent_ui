@@ -1,6 +1,7 @@
 ## [next]
 
 * fix: The `MenuFlyoutSubItem` in the `DropDownButton` was not displaying when hovered or pressed. ([#964](https://github.com/bdlukaa/fluent_ui/pull/964))
+* fix: Added `enabled` to `PaneItem.copyWith` ([#980](https://github.com/bdlukaa/fluent_ui/issues/980))
 
 ## 4.8.1
 
