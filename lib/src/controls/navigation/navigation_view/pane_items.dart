@@ -797,7 +797,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         "The items of PaneItemExpander can not be empty");
     assert(body.pane!.selected != null,
         "The selected of NavigationPane can not be null");
-    
+
     _open = PageStorage.of(context).readState(
           context,
           identifier: 'paneItemExpanderOpen$index',
