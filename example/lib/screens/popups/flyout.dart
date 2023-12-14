@@ -437,7 +437,6 @@ return GestureDetector(
               );
 
               void showFlyout(Offset position) {
-                print(position);
                 contextController.showFlyout(
                   barrierColor: Colors.black.withOpacity(0.1),
                   position: position,
