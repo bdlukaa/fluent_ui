@@ -793,6 +793,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = _InheritedNavigationView.of(context);
 
+    assert(body.pane!.selected != null,
+        'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!');
+
     _open = PageStorage.of(context).readState(
           context,
           identifier: 'paneItemExpanderOpen$index',
