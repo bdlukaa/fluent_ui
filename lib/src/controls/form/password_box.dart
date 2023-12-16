@@ -119,16 +119,28 @@ class PasswordBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.obscuringCharacter}
   final String obscuringCharacter;
 
-  /// Controls the [BoxDecoration] of the box behind the text input.
+  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == true].
   ///
   /// Defaults to having a rounded rectangle grey border and can be null to have
   /// no box decoration.
-  final BoxDecoration? decoration;
+  final BoxDecoration? focusedDecoration;
 
-  /// Controls the [BoxDecoration] of the box in front of the text input.
+
+  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
+  ///
+  /// Defaults to having a rounded rectangle grey border and can be null to have
+  /// no box decoration.
+  final BoxDecoration? unFocusedDecoration;
+
+  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == true].
   ///
   /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? foregroundDecoration;
+  final BoxDecoration? focusedForegroundDecoration;
+
+  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
+  ///
+  /// If [highlightColor] is provided, this must not be provided
+  final BoxDecoration? unFocusedForegroundDecoration;
 
   /// The highlight color of the text box.
   ///
@@ -199,8 +211,10 @@ class PasswordBox extends StatefulWidget {
     this.showCursor,
     this.readOnly = false,
     this.obscuringCharacter = '•',
-    this.decoration,
-    this.foregroundDecoration,
+    this.focusedDecoration,
+    this.unFocusedDecoration,
+    this.focusedForegroundDecoration,
+    this.unFocusedForegroundDecoration,
     this.unfocusedColor,
     this.highlightColor,
     this.keyboardAppearance,
@@ -374,8 +388,10 @@ class _PasswordBoxState extends State<PasswordBox> {
       showCursor: widget.showCursor,
       readOnly: widget.readOnly,
       obscuringCharacter: widget.obscuringCharacter,
-      decoration: widget.decoration,
-      foregroundDecoration: widget.foregroundDecoration,
+      focusedDecoration: widget.focusedDecoration,
+      unFocusedDecoration: widget.unFocusedDecoration,
+      focusedForegroundDecoration: widget.focusedForegroundDecoration,
+      unFocusedForegroundDecoration: widget.unFocusedForegroundDecoration,
       highlightColor: widget.highlightColor,
       unfocusedColor: widget.unfocusedColor,
       keyboardType: _isVisible ? TextInputType.visiblePassword : null,
