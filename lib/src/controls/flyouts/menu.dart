@@ -240,11 +240,23 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   ///
   /// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/contextmenu_rs2_icons.png)
   ///
-  /// Usually an [Icon] widget,
+  /// Usually an [Icon] widget.
   final Widget? leading;
+
+  /// The text displayed in this item.
+  ///
+  /// Usually a [Text] widget.
   final Widget text;
+
+  /// Displayed after [text].
+  ///
+  /// Usually an [Icon] widget.
   final Widget? trailing;
+
+  /// Called when the item is pressed.
   final VoidCallback? onPressed;
+
+  /// Whether this item is selected or not.
   final bool selected;
 
   bool _useIconPlaceholder = false;
@@ -270,7 +282,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
         ),
         onPressed: () {
           onPressed?.call();
-          Navigator.maybePop(context);
+          Navigator.of(context).maybePop();
         },
       ),
     );
