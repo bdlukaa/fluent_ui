@@ -1,6 +1,7 @@
 ## [next]
 
 * fix: `ScaffoldPage.padding` is correctly applied ([#986](https://github.com/bdlukaa/fluent_ui/issues/986))
+* fix: `SliderThemeData.labelForegroundColor` is correctly applied ([#1000](https://github.com/bdlukaa/fluent_ui/issues/1000))
 
 ## 4.8.2
 

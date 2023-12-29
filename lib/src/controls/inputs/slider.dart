@@ -244,7 +244,6 @@ class _SliderState extends m.State<Slider> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
-    final theme = FluentTheme.of(context);
     final style = SliderTheme.of(context).merge(widget.style);
     final direction = Directionality.of(context);
 
@@ -270,6 +269,9 @@ class _SliderState extends m.State<Slider> {
               showValueIndicator: m.ShowValueIndicator.always,
               thumbColor: style.thumbColor?.resolve(states),
               overlayShape: const m.RoundSliderOverlayShape(overlayRadius: 0),
+              valueIndicatorTextStyle: TextStyle(
+                color: style.labelForegroundColor,
+              ),
               thumbShape: SliderThumbShape(
                 pressedElevation: 1.0,
                 useBall: style.useThumbBall ?? true,
@@ -281,10 +283,10 @@ class _SliderState extends m.State<Slider> {
                 disabledThumbRadius: style.thumbRadius?.resolve(states),
               ),
               valueIndicatorShape: _RectangularSliderValueIndicatorShape(
+                strokeColor: style.labelBackgroundColor,
                 backgroundColor: style.labelBackgroundColor,
                 vertical: widget.vertical,
                 ltr: direction == TextDirection.ltr,
-                strokeColor: theme.resources.controlSolidFillColorDefault,
               ),
               trackHeight: style.trackHeight?.resolve(states),
               trackShape: _CustomTrackShape(),
@@ -642,6 +644,8 @@ class SliderThemeData with Diagnosticable {
           ButtonState.lerp(a.inactiveColor, b.inactiveColor, t, Color.lerp),
       labelBackgroundColor:
           Color.lerp(a.labelBackgroundColor, b.labelBackgroundColor, t),
+      labelForegroundColor:
+          Color.lerp(a.labelForegroundColor, b.labelForegroundColor, t),
       useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
     );
   }
@@ -654,6 +658,7 @@ class SliderThemeData with Diagnosticable {
       activeColor: style?.activeColor ?? activeColor,
       inactiveColor: style?.inactiveColor ?? inactiveColor,
       labelBackgroundColor: style?.labelBackgroundColor ?? labelBackgroundColor,
+      labelForegroundColor: style?.labelForegroundColor ?? labelForegroundColor,
       useThumbBall: style?.useThumbBall ?? useThumbBall,
       trackHeight: style?.trackHeight ?? trackHeight,
     );
@@ -667,7 +672,8 @@ class SliderThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('thumbColor', thumbColor))
       ..add(DiagnosticsProperty('activeColor', activeColor))
       ..add(DiagnosticsProperty('inactiveColor', inactiveColor))
-      ..add(ColorProperty('labelBackgroundColor', labelBackgroundColor));
+      ..add(ColorProperty('labelBackgroundColor', labelBackgroundColor))
+      ..add(ColorProperty('labelForegroundColor', labelForegroundColor));
   }
 }
 
