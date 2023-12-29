@@ -324,6 +324,9 @@ NavigationView(
             appBar: const NavigationAppBar(
               title: Text('NavigationView'),
             ),
+            onDisplayModeChanged: (mode) {
+              debugPrint('Changed to $mode');
+            },
             pane: NavigationPane(
               selected: topIndex,
               onChanged: (index) => setState(() => topIndex = index),

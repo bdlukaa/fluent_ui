@@ -51,6 +51,7 @@ class NavigationView extends StatefulWidget {
     this.onOpenSearch,
     this.transitionBuilder,
     this.paneBodyBuilder,
+    this.onDisplayModeChanged,
   }) : assert(
           (pane != null && content == null) ||
               (pane == null && content != null),
@@ -123,6 +124,21 @@ class NavigationView extends StatefulWidget {
   ///  * <https://docs.microsoft.com/en-us/windows/apps/design/motion/page-transitions>
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
 
+  /// Called when the display mode changes.
+  ///
+  /// This is called when the user clicks on the pane toggle button, or when
+  /// the display mode is set to [PaneDisplayMode.auto] and the window size
+  /// changes.
+  ///
+  /// If the display mode is set to compact, this listens to changes on the
+  /// toggle button and resizes. If the pane is closed, [PaneDisplayMode.compact]
+  /// is returned. If the pane is open, [PaneDisplayMode.open] is returned.
+  ///
+  /// If the display mode is set to minimal, this is called when the pane is opened
+  /// or closed. If the pane is closed, [PaneDisplayMode.minimal] is returned.
+  /// If the pane is open, [PaneDisplayMode.open] is returned.
+  final ValueChanged<PaneDisplayMode>? onDisplayModeChanged;
+
   /// Gets the current navigation view state.
   ///
   /// This is the same as using a `GlobalKey<NavigationViewState>`
@@ -186,6 +202,9 @@ class NavigationViewState extends State<NavigationView> {
   set minimalPaneOpen(bool open) {
     if (displayMode == PaneDisplayMode.minimal) {
       setState(() => _minimalPaneOpen = open);
+      widget.onDisplayModeChanged?.call(
+        open ? PaneDisplayMode.open : PaneDisplayMode.minimal,
+      );
     } else {
       setState(() => _minimalPaneOpen = false);
     }
@@ -326,6 +345,9 @@ class NavigationViewState extends State<NavigationView> {
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
     compactOverlayOpen = !compactOverlayOpen;
+    widget.onDisplayModeChanged?.call(
+      compactOverlayOpen ? PaneDisplayMode.open : PaneDisplayMode.compact,
+    );
   }
 
   /// Whether the navigation pane is currently transitioning
@@ -400,15 +422,20 @@ class NavigationViewState extends State<NavigationView> {
         var width = consts.biggest.width;
         if (width.isInfinite) width = MediaQuery.sizeOf(context).width;
 
+        PaneDisplayMode autoDisplayMode;
         if (width <= 640) {
-          _autoDisplayMode = PaneDisplayMode.minimal;
+          autoDisplayMode = PaneDisplayMode.minimal;
         } else if (width >= 1008) {
-          _autoDisplayMode = PaneDisplayMode.open;
-        } else if (width > 640) {
-          _autoDisplayMode = PaneDisplayMode.compact;
+          autoDisplayMode = PaneDisplayMode.open;
+        } else {
+          autoDisplayMode = PaneDisplayMode.compact;
         }
 
-        displayMode = _autoDisplayMode!;
+        if (autoDisplayMode != _autoDisplayMode) {
+          widget.onDisplayModeChanged?.call(autoDisplayMode);
+        }
+
+        displayMode = _autoDisplayMode = autoDisplayMode;
       }
       assert(displayMode != PaneDisplayMode.auto);
 
