@@ -135,11 +135,14 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           child: Link(
             uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
             builder: (context, open) {
-              return HyperlinkButton(
-                onPressed: open,
-                child: Semantics(
-                  link: true,
-                  child: Text('Fluent UI homepage'),
+              return Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: HyperlinkButton(
+                  onPressed: open,
+                  child: Semantics(
+                    link: true,
+                    child: Text('Fluent UI homepage'),
+                  ),
                 ),
               );
             },
