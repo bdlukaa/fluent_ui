@@ -1,9 +1,11 @@
 ## 4.8.4
 
-* feat: added Croatian localization support
+* feat: Added Croatian localization support ([#1004](https://github.com/bdlukaa/fluent_ui/pull/1004))
+* feat: Added Vietnamese localization support ([#1005](https://github.com/bdlukaa/fluent_ui/pull/1005))
 
 ## 4.8.3
 
+* fix: Offer a more clear exception info in `PaneItemExpander` ([#990]https://github.com/bdlukaa/fluent_ui/pull/990)
 * fix: `ScaffoldPage.padding` is correctly applied ([#986](https://github.com/bdlukaa/fluent_ui/issues/986))
 * fix: `SliderThemeData.labelForegroundColor` is correctly applied ([#1000](https://github.com/bdlukaa/fluent_ui/issues/1000))
 * feat: `NavigationView.onDisplayModeChanged` ([#998](https://github.com/bdlukaa/fluent_ui/issues/998))
