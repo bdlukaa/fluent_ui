@@ -303,14 +303,12 @@ class FluentThemeData with Diagnosticable {
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPaneTheme = NavigationPaneThemeData.standard(
+    navigationPaneTheme = NavigationPaneThemeData.fromResources(
       resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
-      backgroundColor: micaBackgroundColor,
       highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
-      inactiveColor: inactiveColor,
     ).merge(navigationPaneTheme);
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();

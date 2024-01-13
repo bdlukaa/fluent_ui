@@ -140,14 +140,15 @@ class NavigationPaneThemeData with Diagnosticable {
     this.paneNavigationButtonIcon,
   });
 
-  factory NavigationPaneThemeData.standard({
+  /// The default navigation pane theme data.
+  ///
+  /// This is initialized on [FluentThemeData] with the required properties.
+  factory NavigationPaneThemeData.fromResources({
     required ResourceDictionary resources,
     required Duration animationDuration,
     required Curve animationCurve,
-    required Color backgroundColor,
     required Color highlightColor,
     required Typography typography,
-    required Color inactiveColor,
   }) {
     return NavigationPaneThemeData(
       animationDuration: animationDuration,

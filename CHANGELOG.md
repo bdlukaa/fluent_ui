@@ -1,3 +1,7 @@
+## [next]
+
+* **MINOR BREAKING** Renamed `NavigationPaneThemeData.standard` to `NavigationPaneThemeData.fromResources`, and removed the `backgroundColor` and `inactiveColor` properties ([#1008](https://github.com/bdlukaa/fluent_ui/issues/1008))
+
 ## 4.8.4
 
 * feat: Added Croatian localization support ([#1004](https://github.com/bdlukaa/fluent_ui/pull/1004))
