@@ -1,4 +1,4 @@
-## [next]
+## 4.8.5
 
 * **MINOR BREAKING** Renamed `NavigationPaneThemeData.standard` to `NavigationPaneThemeData.fromResources`, and removed the `backgroundColor` and `inactiveColor` properties ([#1008](https://github.com/bdlukaa/fluent_ui/issues/1008))
 * fix: Adjust `Slider` animation ([#1006](https://github.com/bdlukaa/fluent_ui/issues/1006))
@@ -10,7 +10,7 @@
 
 ## 4.8.3
 
-* fix: Offer a more clear exception info in `PaneItemExpander` ([#990]https://github.com/bdlukaa/fluent_ui/pull/990)
+* fix: Offer a more clear exception info in `PaneItemExpander` ([#990](https://github.com/bdlukaa/fluent_ui/pull/990))
 * fix: `ScaffoldPage.padding` is correctly applied ([#986](https://github.com/bdlukaa/fluent_ui/issues/986))
 * fix: `SliderThemeData.labelForegroundColor` is correctly applied ([#1000](https://github.com/bdlukaa/fluent_ui/issues/1000))
 * feat: `NavigationView.onDisplayModeChanged` ([#998](https://github.com/bdlukaa/fluent_ui/issues/998))
