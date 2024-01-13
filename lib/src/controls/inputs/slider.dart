@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -21,7 +22,7 @@ import 'package:flutter/rendering.dart';
 ///   * [RatingBar], that allows users to view and set ratings
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
-  /// Creates a Slider
+  /// Creates a fluent-styled slider.
   const Slider({
     super.key,
     required this.value,
@@ -174,11 +175,23 @@ class Slider extends StatefulWidget {
   /// If null, the slider is continuous.
   final int? divisions;
 
-  /// The style used in this slider. It's mescled with [FluentThemeData.sliderThemeData]
+  /// The style used in this slider.
+  ///
+  /// If provided, it's merged with [FluentThemeData.sliderTheme]. If not,
+  /// the theme slider theme is used.
+  ///
+  /// See also:
+  ///
+  ///   * [SliderTheme] and [SliderThemeData], which define the style for a
+  ///     slider.
   final SliderThemeData? style;
 
-  /// A label to show above the slider, or at the left
-  /// of the slider if [vertical] is `true` when the slider is active.
+  /// A label to show close to the slider.
+  ///
+  /// It is displayed above the slider if [vertical] is false, and at the left
+  /// of the slider if [vertical] is true.
+  ///
+  /// It is only shown if the slider is active.
   final String? label;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -187,11 +200,10 @@ class Slider extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
-  /// Whether the slider is vertical or not
+  /// Whether the slider is vertical or not.
   ///
-  /// Use a vertical slider if the slider represents a
-  /// real-world value that is normally shown vertically
-  /// (such as temperature).
+  /// Use a vertical slider if the slider represents a real-world value that is
+  /// normally shown vertically (such as temperature).
   final bool vertical;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.mouseCursor}
@@ -215,11 +227,15 @@ class Slider extends StatefulWidget {
   }
 }
 
-class _SliderState extends m.State<Slider> {
-  bool _showFocusHighlight = false;
+class _SliderState extends State<Slider> {
+  final materialSliderKey = GlobalKey<State<m.Slider>>();
 
   late FocusNode _focusNode;
   bool _sliding = false;
+  bool _showFocusHighlight = false;
+
+  static const showLabelDuration = Duration(milliseconds: 400);
+  Timer? _overlayTimer;
 
   @override
   void initState() {
@@ -237,13 +253,28 @@ class _SliderState extends m.State<Slider> {
     _focusNode.removeListener(_handleFocusChanged);
     // Only dispose the focus node manually created
     if (widget.focusNode == null) _focusNode.dispose();
+    _overlayTimer?.cancel();
     super.dispose();
+  }
+
+  void _showLabelOverlay() {
+    final sliderState = materialSliderKey.currentState as dynamic;
+    sliderState.showValueIndicator();
+    (sliderState.overlayController as AnimationController).forward();
+    (sliderState.valueIndicatorController as AnimationController).forward();
+  }
+
+  void _hideLabelOverlay() {
+    final sliderState = materialSliderKey.currentState as dynamic;
+    (sliderState.overlayController as AnimationController).reverse();
+    (sliderState.valueIndicatorController as AnimationController).reverse();
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
+    final theme = FluentTheme.of(context);
     final style = SliderTheme.of(context).merge(widget.style);
     final direction = Directionality.of(context);
 
@@ -255,7 +286,7 @@ class _SliderState extends m.State<Slider> {
       builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
         child: TweenAnimationBuilder<double>(
-          duration: FluentTheme.of(context).fastAnimationDuration,
+          duration: theme.fastAnimationDuration,
           tween: Tween<double>(
             begin: 1.0,
             end: states.isPressing || _sliding
@@ -276,9 +307,7 @@ class _SliderState extends m.State<Slider> {
                 pressedElevation: 1.0,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
-                borderColor: FluentTheme.of(context)
-                    .resources
-                    .controlSolidFillColorDefault,
+                borderColor: theme.resources.controlSolidFillColorDefault,
                 enabledThumbRadius: style.thumbRadius?.resolve(states) ?? 10.0,
                 disabledThumbRadius: style.thumbRadius?.resolve(states),
               ),
@@ -299,6 +328,7 @@ class _SliderState extends m.State<Slider> {
             child: child!,
           ),
           child: m.Slider(
+            key: materialSliderKey,
             value: widget.value,
             max: widget.max,
             min: widget.min,
@@ -328,6 +358,17 @@ class _SliderState extends m.State<Slider> {
         focused: _showFocusHighlight && (_focusNode.hasPrimaryFocus),
         child: child,
       ),
+    );
+    child = MouseRegion(
+      onEnter: (event) {
+        _overlayTimer = Timer(showLabelDuration, _showLabelOverlay);
+      },
+      onExit: (event) {
+        _overlayTimer?.cancel();
+        _overlayTimer = null;
+        _hideLabelOverlay();
+      },
+      child: child,
     );
     if (widget.vertical) {
       return RotatedBox(
@@ -478,7 +519,7 @@ class SliderThumbShape extends m.SliderComponentShape {
         center - const Offset(0, 6),
         center + const Offset(0, 6),
         Paint()
-          ..color = color
+          ..color = color.withOpacity(activationAnimation.value)
           ..style = PaintingStyle.stroke
           ..strokeJoin = StrokeJoin.round
           ..strokeCap = StrokeCap.round
@@ -832,6 +873,10 @@ class _RectangularSliderValueIndicatorPathPainter {
     }
     assert(!sizeWithOverflow.isEmpty);
 
+    final opacity = scale;
+    // the animation should not scale, only fade
+    scale = 1.0;
+
     final rectangleWidth = _upperRectangleWidth(
       labelPainter,
       scale,
@@ -855,7 +900,8 @@ class _RectangularSliderValueIndicatorPathPainter {
     );
 
     final trianglePath = Path()..close();
-    final fillPaint = Paint()..color = backgroundPaintColor;
+    final fillPaint = Paint()
+      ..color = backgroundPaintColor.withOpacity(opacity);
     final upperRRect = RRect.fromRectAndRadius(
       upperRect,
       const Radius.circular(_upperRectRadius),
@@ -886,7 +932,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     if (vertical) canvas.rotate((ltr ? 1 : -1) * math.pi / 2);
     if (strokePaintColor != null) {
       final strokePaint = Paint()
-        ..color = strokePaintColor
+        ..color = strokePaintColor.withOpacity(opacity)
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
       canvas.drawPath(trianglePath, strokePaint);
@@ -901,7 +947,16 @@ class _RectangularSliderValueIndicatorPathPainter {
     final halfLabelPainterOffset =
         Offset(labelPainter.width / 2, labelPainter.height / 2);
     final labelOffset = boxCenter - halfLabelPainterOffset;
-    labelPainter.paint(canvas, labelOffset);
+
+    final span = labelPainter.text as TextSpan;
+    labelPainter
+      ..text = TextSpan(
+        text: span.text,
+        style: span.style
+            ?.copyWith(color: span.style?.color?.withOpacity(opacity)),
+      )
+      ..paint(canvas, labelOffset);
+
     canvas.restore();
   }
 }

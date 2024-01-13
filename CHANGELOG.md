@@ -1,6 +1,7 @@
 ## [next]
 
 * **MINOR BREAKING** Renamed `NavigationPaneThemeData.standard` to `NavigationPaneThemeData.fromResources`, and removed the `backgroundColor` and `inactiveColor` properties ([#1008](https://github.com/bdlukaa/fluent_ui/issues/1008))
+* fix: Adjust `Slider` animation ([#1006](https://github.com/bdlukaa/fluent_ui/issues/1006))
 
 ## 4.8.4
 
