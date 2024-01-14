@@ -1,3 +1,7 @@
+## [next]
+
+* fix: Pop the menu flyout before than calling the close callback ([#1009](https://github.com/bdlukaa/fluent_ui/issues/1009))
+
 ## 4.8.5
 
 * **MINOR BREAKING** Renamed `NavigationPaneThemeData.standard` to `NavigationPaneThemeData.fromResources`, and removed the `backgroundColor` and `inactiveColor` properties ([#1008](https://github.com/bdlukaa/fluent_ui/issues/1008))

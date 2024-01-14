@@ -281,8 +281,8 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
           child: trailing ?? const SizedBox.shrink(),
         ),
         onPressed: () {
-          onPressed?.call();
           Navigator.of(context).maybePop();
+          onPressed?.call();
         },
       ),
     );
