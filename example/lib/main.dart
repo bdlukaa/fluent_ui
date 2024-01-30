@@ -493,21 +493,14 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             controller: searchController,
             unfocusedColor: Colors.transparent,
             // also need to include sub items from [PaneItemExpander] items
-            items: <PaneItem>[
-              ...paneItems
-                  .whereType<PaneItemExpander>()
-                  .expand<PaneItem>((item) {
-                return [
-                  item,
-                  ...item.items.whereType<PaneItem>(),
-                ];
-              }),
-              ...paneItems
-                  .where(
-                    (item) => item is PaneItem && item is! PaneItemExpander,
-                  )
-                  .cast<PaneItem>(),
-            ].map((item) {
+            items: paneItems.followedBy(footerItems).expand<PaneItem>((item) {
+              if (item is PaneItemExpander) {
+                return item.items.whereType<PaneItem>();
+              } else if (item is PaneItem) {
+                return [item];
+              }
+              return [];
+            }).map((item) {
               assert(item.title is Text);
               final text = (item.title as Text).data!;
               return AutoSuggestBoxItem(
