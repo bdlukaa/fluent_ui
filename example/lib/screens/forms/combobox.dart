@@ -223,7 +223,7 @@ EditableComboBox<int>(
                 placeholder: const Text('Font size'),
                 onFieldSubmitted: (text) {
                   try {
-                    final newSize = int.parse(text);
+                    final newSize = double.parse(text);
 
                     if (newSize < 8 || newSize > 100) {
                       throw UnsupportedError(

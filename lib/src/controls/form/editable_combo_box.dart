@@ -32,6 +32,8 @@ class EditableComboBox<T> extends ComboBox<T> {
     super.style,
     super.value,
     required this.onFieldSubmitted,
+    this.textController,
+    this.onTextChanged,
     // When adding new arguments, consider adding similar arguments to
     // EditableComboboxFormField.
   });
@@ -51,6 +53,29 @@ class EditableComboBox<T> extends ComboBox<T> {
   /// ```
   final SubmitEditableCombobox onFieldSubmitted;
 
+  /// The text controller attached to the text field.
+  ///
+  /// If not provided, a new controller will be created.
+  final TextEditingController? textController;
+
+  /// Called when the text field text is changed.
+  ///
+  /// In the following example, everytime the user types a character, the text
+  /// is printed to the console.
+  ///
+  /// ```dart
+  /// EditableComboBox(
+  ///   onTextChanged: (text) {
+  ///     print(text);
+  ///   },
+  /// ),
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///   * [onChanged], which is called when the selected value changes.
+  final ValueChanged<String>? onTextChanged;
+
   @override
   State<ComboBox<T>> createState() => _EditableComboboxState<T>();
 }
@@ -59,12 +84,13 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
   @override
   EditableComboBox<T> get widget => super.widget as EditableComboBox<T>;
 
-  late final TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: '${widget.value}');
+    controller = widget.textController ?? TextEditingController();
+    _setText('${widget.value}');
   }
 
   @override
@@ -101,8 +127,21 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
   }
 
   @override
+  void didUpdateWidget(covariant EditableComboBox<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.textController == null && widget.textController != null) {
+      controller.dispose();
+      controller = widget.textController!;
+      _setText('${widget.value}');
+    } else if (oldWidget.textController != null &&
+        widget.textController == null) {
+      controller = TextEditingController(text: '${widget.value}');
+    }
+  }
+
+  @override
   void dispose() {
-    controller.dispose();
+    if (widget.textController == null) controller.dispose();
     super.dispose();
   }
 
@@ -147,6 +186,7 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
           final newText = widget.onFieldSubmitted(text);
           _setText(newText);
         },
+        onChanged: widget.onTextChanged,
       ),
     );
   }
