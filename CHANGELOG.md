@@ -1,7 +1,8 @@
 ## [next]
 
 * fix: Pop the menu flyout before than calling the close callback ([#1009](https://github.com/bdlukaa/fluent_ui/issues/1009))
-* fix: Button child is now automatically centered ([#1011](https://github.com/bdlukaa/fluent_ui/issues/1011))
+* fix: `Button.child` is now automatically centered ([#1011](https://github.com/bdlukaa/fluent_ui/issues/1011))
+* fix: Adjust `Button`'s foreground color when hovered and pressed ([#1012](https://github.com/bdlukaa/fluent_ui/issues/1012))
 
 ## 4.8.5
 
