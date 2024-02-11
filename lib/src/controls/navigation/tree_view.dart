@@ -146,6 +146,10 @@ class TreeViewItem with Diagnosticable {
   /// item is going to be one of the selected items
   bool? selected;
 
+  /// Whether the current item is disabled.
+  ///
+  bool? disabled;
+
   /// Called when this item is invoked
   ///
   /// This item is passed to the callback.
@@ -210,6 +214,7 @@ class TreeViewItem with Diagnosticable {
     this.collapsable = true,
     bool? expanded,
     this.selected = false,
+    this.disabled = false,
     this.onInvoked,
     this.onExpandToggle,
     this.gestures = const {},
@@ -1031,7 +1036,9 @@ class _TreeViewItem extends StatelessWidget {
                       child: ExcludeFocus(
                         child: Checkbox(
                           checked: item.selected,
-                          onChanged: (value) => _onCheckboxInvoked(),
+                          onChanged: item.disabled ?? false
+                              ? null
+                              : (value) => _onCheckboxInvoked(),
                         ),
                       ),
                     ),

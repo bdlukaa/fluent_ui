@@ -122,7 +122,7 @@ TreeView(
 
       // Do your fetching...
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // ...and add the fetched nodes.
       item.children.addAll([
         TreeViewItem(
@@ -231,6 +231,7 @@ TreeView(
         TreeViewItem(
           content: const Text('Home Remodel'),
           value: 'home_remodel',
+          disabled: true,
           children: [
             TreeViewItem(
               content: const Text('Contractor Contact Info'),
