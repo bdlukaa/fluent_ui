@@ -148,7 +148,7 @@ class TreeViewItem with Diagnosticable {
 
   /// Whether the current item is disabled.
   ///
-  bool? disabled;
+  bool disabled;
 
   /// Called when this item is invoked
   ///
