@@ -1,3 +1,6 @@
+## next
+* fix: A child of `Button` has an unbound height constraint. ([#1039](https://github.com/bdlukaa/fluent_ui/issues/1039))
+
 ## 4.8.6
 
 * fix: Pop the menu flyout before than calling the close callback ([#1009](https://github.com/bdlukaa/fluent_ui/issues/1009))
