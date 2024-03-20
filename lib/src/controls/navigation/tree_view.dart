@@ -227,25 +227,30 @@ class TreeViewItem with Diagnosticable {
   /// its child items. Useful if you want to have multiple trees with the
   /// same items, but with different UX states (e.g., selection, visibility,
   /// etc.).
-  TreeViewItem.from(TreeViewItem source)
-      : this(
-          key: source.key,
-          leading: source.leading,
-          content: source.content,
-          value: source.value,
-          children: source.children.map(TreeViewItem.from).toList(),
-          collapsable: source.collapsable,
-          expanded: source.expanded,
-          selected: source.selected,
-          onInvoked: source.onInvoked,
-          onExpandToggle: source.onExpandToggle,
-          backgroundColor: source.backgroundColor,
-          autofocus: source.autofocus,
-          focusNode: source.focusNode,
-          semanticLabel: source.semanticLabel,
-          loadingWidget: source.loadingWidget,
-          lazy: source.lazy,
-        );
+  factory TreeViewItem.from(TreeViewItem source) {
+    final newItem = TreeViewItem(
+      key: source.key,
+      leading: source.leading,
+      content: source.content,
+      value: source.value,
+      children: source.children.map(TreeViewItem.from).toList(),
+      collapsable: source.collapsable,
+      expanded: source.expanded,
+      selected: source.selected,
+      onInvoked: source.onInvoked,
+      onExpandToggle: source.onExpandToggle,
+      backgroundColor: source.backgroundColor,
+      autofocus: source.autofocus,
+      focusNode: source.focusNode,
+      semanticLabel: source.semanticLabel,
+      loadingWidget: source.loadingWidget,
+      lazy: source.lazy,
+    );
+    for (final c in newItem.children) {
+      c._parent = newItem;
+    }
+    return newItem;
+  }
 
   /// Whether this node is expandable
   bool get isExpandable {
@@ -428,7 +433,7 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     if (isNotEmpty) {
       final list = <TreeViewItem>[];
       final anyExpandableSiblings = any((i) => i.isExpandable);
-      for (final item in [...this]) {
+      for (final item in this) {
         item
           .._parent = parent
           .._anyExpandableSiblings = anyExpandableSiblings;
