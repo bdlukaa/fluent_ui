@@ -61,6 +61,7 @@ class TabView extends StatefulWidget {
     required this.tabs,
     this.onNewPressed,
     this.addIconData = FluentIcons.add,
+    this.addIconBuilder,
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
@@ -91,6 +92,9 @@ class TabView extends StatefulWidget {
 
   /// The icon of the new button
   final IconData addIconData;
+  
+  /// The builder for the add icon
+  final Widget Function(Widget)? addIconBuilder;
 
   /// Whether the following shortcuts are enabled:
   ///
@@ -562,7 +566,10 @@ class _TabViewState extends State<TabView> {
                       ),
                       child: _buttonTabBuilder(
                         context,
-                        Icon(widget.addIconData, size: 12.0),
+                        widget.addIconBuilder?.call(
+                          Icon(widget.addIconData, size: 12.0),
+                        ) ??
+                            Icon(widget.addIconData, size: 12.0),
                         widget.onNewPressed!,
                         localizations.newTabLabel,
                       ),
