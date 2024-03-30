@@ -1,3 +1,6 @@
+## [next]
+* feat: Added `addIconBuilder` to `TabView`.
+
 ## 4.8.6
 
 * fix: Pop the menu flyout before than calling the close callback ([#1009](https://github.com/bdlukaa/fluent_ui/issues/1009))
