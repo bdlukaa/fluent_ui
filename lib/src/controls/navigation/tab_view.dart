@@ -567,8 +567,8 @@ class _TabViewState extends State<TabView> {
                       child: _buttonTabBuilder(
                         context,
                         widget.addIconBuilder?.call(
-                          Icon(widget.addIconData, size: 12.0),
-                        ) ??
+                              Icon(widget.addIconData, size: 12.0),
+                            ) ??
                             Icon(widget.addIconData, size: 12.0),
                         widget.onNewPressed!,
                         localizations.newTabLabel,
