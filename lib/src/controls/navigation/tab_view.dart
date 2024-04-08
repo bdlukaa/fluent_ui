@@ -93,8 +93,12 @@ class TabView extends StatefulWidget {
   /// The icon of the new button
   final IconData addIconData;
   
-  /// The builder for the add icon
-  final Widget Function(Widget)? addIconBuilder;
+  /// The builder for the add icon. 
+  ///
+  /// This does not build the add button, only its icon.
+  ///
+  /// When null, the add icon is rendered.
+  final Widget Function(Widget addIcon)? addIconBuilder;
 
   /// Whether the following shortcuts are enabled:
   ///

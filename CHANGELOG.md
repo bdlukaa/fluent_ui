@@ -1,5 +1,5 @@
 ## [next]
-* feat: Added `addIconBuilder` to `TabView`.
+* feat: Added `addIconBuilder` to `TabView` ([#1047](https://github.com/bdlukaa/fluent_ui/pull/1047))
 
 ## 4.8.6
 
