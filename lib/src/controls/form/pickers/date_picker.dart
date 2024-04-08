@@ -68,8 +68,13 @@ class DatePicker extends StatefulWidget {
     this.autofocus = false,
     this.locale,
     this.fieldOrder,
+    this.fieldFlex,
   })  : startDate = startDate ?? DateTime.now().subtract(kYearDuration * 100),
-        endDate = endDate ?? DateTime.now().add(kYearDuration * 25);
+        endDate = endDate ?? DateTime.now().add(kYearDuration * 25),
+        assert(
+          fieldFlex == null || fieldFlex.length == 3,
+          'fieldFlex must be null or have a length of 3',
+        );
 
   /// The current date selected date.
   ///
@@ -152,6 +157,16 @@ class DatePicker extends StatefulWidget {
   ///  * [getDateOrderFromLocale], which returns the order of the fields based
   ///    on the current locale
   final List<DatePickerField>? fieldOrder;
+
+  /// The flex of the fields.
+  ///
+  /// if null, the flex is base on the current locale.
+  ///
+  /// See also:
+  ///
+  /// * [getDateFlexFromLocale], which returns the flex of the fields based
+  ///   on the current locale
+  final List<int>? fieldFlex;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -268,6 +283,7 @@ class _DatePickerState extends State<DatePicker> {
     final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
     final fieldOrder = widget.fieldOrder ?? getDateOrderFromLocale(locale);
+    final fieldFlex = widget.fieldFlex ?? getDateFlexFromLocale(locale);
     assert(fieldOrder.isNotEmpty);
     assert(
       fieldOrder.where((f) => f == DatePickerField.month).length <= 1,
@@ -298,6 +314,7 @@ class _DatePickerState extends State<DatePicker> {
           yearController: _yearController,
           locale: widget.locale,
           fieldOrder: fieldOrder,
+          fieldFlex: fieldFlex,
         );
       },
       pickerHeight: widget.popupHeight,
@@ -326,7 +343,7 @@ class _DatePickerState extends State<DatePicker> {
 
           final monthWidgets = [
             Expanded(
-              flex: 2,
+              flex: fieldFlex[fieldOrder.indexOf(DatePickerField.month)],
               child: Padding(
                 padding: widget.contentPadding,
                 child: Text(
@@ -343,6 +360,7 @@ class _DatePickerState extends State<DatePicker> {
 
           final dayWidget = [
             Expanded(
+              flex: fieldFlex[fieldOrder.indexOf(DatePickerField.day)],
               child: Text(
                 widget.selected == null
                     ? localizations.day
@@ -358,6 +376,7 @@ class _DatePickerState extends State<DatePicker> {
 
           final yearWidgets = [
             Expanded(
+              flex: fieldFlex[fieldOrder.indexOf(DatePickerField.year)],
               child: Text(
                 widget.selected == null
                     ? localizations.year
@@ -434,6 +453,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
     required this.endDate,
     required this.locale,
     required this.fieldOrder,
+    required this.fieldFlex,
   });
 
   final bool showMonth;
@@ -449,6 +469,7 @@ class _DatePickerContentPopUp extends StatefulWidget {
   final DateTime endDate;
   final Locale? locale;
   final List<DatePickerField> fieldOrder;
+  final List<int> fieldFlex;
 
   @override
   State<_DatePickerContentPopUp> createState() =>
@@ -510,7 +531,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     final months = monthsInCurrentYear;
     final monthWidget = [
       Expanded(
-        flex: 2,
+        flex:
+            widget.fieldFlex[widget.fieldOrder.indexOf(DatePickerField.month)],
         child: () {
           final formatter = DateFormat.MMMM(locale.toString());
           // MONTH
@@ -585,6 +607,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
 
     final dayWidget = [
       Expanded(
+        flex: widget.fieldFlex[widget.fieldOrder.indexOf(DatePickerField.day)],
         child: () {
           // DAY
           final daysInMonth = _getDaysInMonth(localDate.month, localDate.year);
@@ -661,6 +684,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
 
     final yearWidget = [
       Expanded(
+        flex: widget.fieldFlex[widget.fieldOrder.indexOf(DatePickerField.year)],
         child: () {
           final years = widget.endDate.year - widget.startDate.year + 1;
           final formatter = DateFormat.y(locale.toString());
@@ -809,4 +833,15 @@ List<DatePickerField> getDateOrderFromLocale(Locale? locale) {
   if (['zh', 'ko', 'jp'].contains(lang)) return ymd;
 
   return dmy;
+}
+
+/// Get the date flex based on the current locale.
+/// The flex is used to determine the width of the fields.
+List<int> getDateFlexFromLocale(Locale? locale) {
+  final lang = locale?.languageCode;
+  if (locale?.countryCode?.toLowerCase() == 'us') return const [2, 1, 1];
+
+  if (['zh', 'ko'].contains(lang)) return const [1, 1, 1];
+
+  return [1, 2, 1];
 }
