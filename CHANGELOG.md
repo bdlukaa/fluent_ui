@@ -1,3 +1,6 @@
+## NEXT
+* feat: Added `fieldFlex` to the DatePicker to control the width.
+
 ## 4.8.6
 
 * fix: Pop the menu flyout before than calling the close callback ([#1009](https://github.com/bdlukaa/fluent_ui/issues/1009))
