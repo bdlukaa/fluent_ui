@@ -1,4 +1,4 @@
-## next
+## 4.8.7
 
 * fix: A child of `Button` has an unbound height constraint. ([#1039](https://github.com/bdlukaa/fluent_ui/issues/1039))
 * feat: Added `DatePicker.fieldFlex` to control the width proportion of each field. ([#1053](https://github.com/bdlukaa/fluent_ui/pull/1053))

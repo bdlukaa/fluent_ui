@@ -143,7 +143,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.8.6"
+    version: "4.8.7"
   flutter:
     dependency: "direct main"
     description: flutter
