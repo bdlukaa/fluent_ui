@@ -1,5 +1,7 @@
-## NEXT
-* feat: Added `fieldFlex` to the DatePicker to control the width.
+## next
+
+* feat: Added `DatePicker.fieldFlex` to control the width proportion of each field.
+* fix: `Slider` thumb is correct rendered when it's on the edges.
 
 ## 4.8.6
 
