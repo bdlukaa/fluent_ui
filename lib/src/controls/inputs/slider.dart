@@ -382,6 +382,8 @@ class _SliderState extends State<Slider> {
 
 /// This is used to remove the padding the Material Slider adds automatically
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
+  static const double _trackSidePadding = 10.0;
+
   @override
   Rect getPreferredRect({
     required RenderBox parentBox,
@@ -391,9 +393,9 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
     bool isDiscrete = false,
   }) {
     final trackHeight = sliderTheme.trackHeight!;
-    final trackLeft = offset.dx;
+    final trackLeft = offset.dx + _trackSidePadding;
     final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final trackWidth = parentBox.size.width;
+    final trackWidth = parentBox.size.width - (2 * _trackSidePadding);
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 
