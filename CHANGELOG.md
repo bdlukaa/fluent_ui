@@ -1,5 +1,8 @@
-## [next]
-* feat: Added `addIconBuilder` to `TabView` ([#1047](https://github.com/bdlukaa/fluent_ui/pull/1047))
+## next
+
+* feat: Added `DatePicker.fieldFlex` to control the width proportion of each field.
+* fix: `Slider` thumb is correct rendered when it's on the edges.
+* feat: Added `TabView.addIconBuilder` ([#1047](https://github.com/bdlukaa/fluent_ui/pull/1047))
 
 ## 4.8.6
 
