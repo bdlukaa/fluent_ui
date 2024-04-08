@@ -1,7 +1,8 @@
 ## next
 
-* feat: Added `DatePicker.fieldFlex` to control the width proportion of each field.
-* fix: `Slider` thumb is correct rendered when it's on the edges.
+* fix: A child of `Button` has an unbound height constraint. ([#1039](https://github.com/bdlukaa/fluent_ui/issues/1039))
+* feat: Added `DatePicker.fieldFlex` to control the width proportion of each field. ([#1053](https://github.com/bdlukaa/fluent_ui/pull/1053))
+* fix: `Slider` thumb is correct rendered when it's on the edges. ([#1046](https://github.com/bdlukaa/fluent_ui/pull/1046)
 * feat: Added `TabView.addIconBuilder` ([#1047](https://github.com/bdlukaa/fluent_ui/pull/1047))
 
 ## 4.8.6

@@ -214,10 +214,10 @@ class _BaseButtonState extends State<BaseButton> {
                     ),
                 textAlign: TextAlign.center,
                 // used to align the child without expanding the button
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [widget.child],
+                child: Center(
+                  heightFactor: 1,
+                  widthFactor: 1,
+                  child: widget.child,
                 ),
               ),
             ),
