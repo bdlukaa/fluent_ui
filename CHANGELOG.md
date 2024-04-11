@@ -1,3 +1,6 @@
+## NEXT
+* fix: Scroll issue in `DatePicker`. ([#1054](https://github.com/bdlukaa/fluent_ui/issues/1054))
+
 ## 4.8.7
 
 * fix: A child of `Button` has an unbound height constraint. ([#1039](https://github.com/bdlukaa/fluent_ui/issues/1039))
