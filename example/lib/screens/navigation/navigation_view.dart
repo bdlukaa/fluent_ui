@@ -206,7 +206,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           label: '',
           child: Button(
             onPressed: () {
-              context.go('/navigation_view');
+              context.push('/navigation_view');
             },
             child: const Text('Open in a new shell route'),
           ),
