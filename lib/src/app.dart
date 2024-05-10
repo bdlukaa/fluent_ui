@@ -6,6 +6,14 @@ import 'package:flutter_localizations/flutter_localizations.dart'
         GlobalMaterialLocalizations,
         GlobalWidgetsLocalizations,
         GlobalCupertinoLocalizations;
+import 'package:flutter/rendering.dart' as debug
+    show
+        debugPaintSizeEnabled,
+        debugPaintBaselinesEnabled,
+        debugPaintPointersEnabled,
+        debugPaintLayerBordersEnabled,
+        debugRepaintRainbowEnabled,
+        debugRepaintTextRainbowEnabled;
 
 /// An application that uses fluent design.
 ///
@@ -78,6 +86,12 @@ class FluentApp extends StatefulWidget {
     this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
     this.debugShowCheckedModeBanner = true,
+    this.debugPaintSizeEnabled = false,
+    this.debugPaintBaselinesEnabled = false,
+    this.debugPaintPointersEnabled = false,
+    this.debugPaintLayerBordersEnabled = false,
+    this.debugRepaintRainbowEnabled = false,
+    this.debugRepaintTextRainbowEnabled = false,
     this.shortcuts,
     this.actions,
     this.theme,
@@ -116,6 +130,12 @@ class FluentApp extends StatefulWidget {
     this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
     this.debugShowCheckedModeBanner = true,
+    this.debugPaintSizeEnabled = false,
+    this.debugPaintBaselinesEnabled = false,
+    this.debugPaintPointersEnabled = false,
+    this.debugPaintLayerBordersEnabled = false,
+    this.debugRepaintRainbowEnabled = false,
+    this.debugRepaintTextRainbowEnabled = false,
     this.shortcuts,
     this.actions,
     this.restorationScopeId,
@@ -298,6 +318,24 @@ class FluentApp extends StatefulWidget {
 
   /// {@macro flutter.widgets.widgetsApp.debugShowCheckedModeBanner}
   final bool debugShowCheckedModeBanner;
+
+  /// {@macro flutter.rending.debugPaintSizeEnabled}
+  final bool debugPaintSizeEnabled;
+
+  /// {@macro flutter.rending.debugPaintBaselinesEnabled}
+  final bool debugPaintBaselinesEnabled;
+
+  /// {@macro flutter.rending.debugPaintPointersEnabled}
+  final bool debugPaintPointersEnabled;
+
+  /// {@macro flutter.rending.debugPaintLayerBordersEnabled}
+  final bool debugPaintLayerBordersEnabled;
+
+  /// {@macro flutter.rending.debugRepaintRainbowEnabled}
+  final bool debugRepaintRainbowEnabled;
+
+  /// {@macro flutter.rending.debugRepaintTextRainbowEnabled}
+  final bool debugRepaintTextRainbowEnabled;
 
   /// {@macro flutter.widgets.widgetsApp.shortcuts}
   /// {@tool snippet}
@@ -500,6 +538,17 @@ class _FluentAppState extends State<FluentApp> {
   }
 
   Widget _buildApp(BuildContext context) {
+    assert(() {
+      debug.debugPaintSizeEnabled = widget.debugPaintSizeEnabled;
+      debug.debugPaintBaselinesEnabled = widget.debugPaintBaselinesEnabled;
+      debug.debugPaintPointersEnabled = widget.debugPaintPointersEnabled;
+      debug.debugPaintLayerBordersEnabled =
+          widget.debugPaintLayerBordersEnabled;
+      debug.debugRepaintRainbowEnabled = widget.debugRepaintRainbowEnabled;
+      debug.debugRepaintTextRainbowEnabled =
+          widget.debugRepaintTextRainbowEnabled;
+      return true;
+    }());
     final fluentColor = widget.color ?? Colors.blue;
     if (_usesRouter) {
       return WidgetsApp.router(

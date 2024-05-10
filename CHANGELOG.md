@@ -1,4 +1,6 @@
 ## NEXT
+
+* feat: Add debug rending to highlight UI features during development.
 * fix: Scroll issue in `DatePicker`. ([#1054](https://github.com/bdlukaa/fluent_ui/issues/1054))
 
 ## 4.8.7
