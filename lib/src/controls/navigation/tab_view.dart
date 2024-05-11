@@ -92,8 +92,8 @@ class TabView extends StatefulWidget {
 
   /// The icon of the new button
   final IconData addIconData;
-  
-  /// The builder for the add icon. 
+
+  /// The builder for the add icon.
   ///
   /// This does not build the add button, only its icon.
   ///
