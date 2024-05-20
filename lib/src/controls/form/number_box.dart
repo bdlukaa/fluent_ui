@@ -230,6 +230,9 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
   final TextInputAction? textInputAction;
 
+  /// {@macro flutter.widgets.editableText.onEditingComplete}
+  final VoidCallback? onEditingComplete;
+
   /// Creates a number box.
   const NumberBox({
     super.key,
@@ -271,6 +274,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.textDirection,
     this.textInputAction,
+    this.onEditingComplete,
   });
 
   @override
@@ -480,6 +484,12 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       onSubmitted: (_) => updateValue(),
       onTap: updateValue,
       onTapOutside: (_) => updateValue(),
+      onEditingComplete: widget.onEditingComplete != null
+          ? () {
+              updateValue();
+              widget.onEditingComplete!();
+            }
+          : null,
       onChanged: widget.onTextChange,
       textInputAction: widget.textInputAction,
     );
