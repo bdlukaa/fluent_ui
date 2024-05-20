@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Flutter
-        uses: subosito/flutter-action@master
+        uses: subosito/flutter-action@main
         with:
           channel: stable
 
