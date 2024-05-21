@@ -1,5 +1,6 @@
 ## NEXT
 * fix: Scroll issue in `DatePicker`. ([#1054](https://github.com/bdlukaa/fluent_ui/issues/1054))
+* feat: Add `NumberBox.textInputAction` and `NumberBox.onEditingComplete` ([#1063](https://github.com/bdlukaa/fluent_ui/pull/1063))
 
 ## 4.8.7
 

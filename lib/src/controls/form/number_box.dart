@@ -224,6 +224,15 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.textDirection}
   final TextDirection? textDirection;
 
+  /// The type of action button to use for the keyboard.
+  ///
+  /// Defaults to [TextInputAction.newline] if [keyboardType] is
+  /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
+  final TextInputAction? textInputAction;
+
+  /// {@macro flutter.widgets.editableText.onEditingComplete}
+  final VoidCallback? onEditingComplete;
+
   /// Creates a number box.
   const NumberBox({
     super.key,
@@ -264,6 +273,8 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.textDirection,
+    this.textInputAction,
+    this.onEditingComplete,
   });
 
   @override
@@ -273,7 +284,7 @@ class NumberBox<T extends num> extends StatefulWidget {
 class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
-  FocusNode? get focusNode => widget.focusNode ?? _internalNode;
+  FocusNode get focusNode => (widget.focusNode ?? _internalNode)!;
 
   OverlayEntry? _entry;
 
@@ -295,28 +306,28 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.focusNode == null) {
       _internalNode ??= _createFocusNode();
     }
-    focusNode!.addListener(_handleFocusChanged);
+    focusNode.addListener(_handleFocusChanged);
 
     controller.text = widget.value?.toString() ?? '';
-    super.initState();
   }
 
   @override
   void dispose() {
     _dismissOverlay();
-    focusNode!.removeListener(_handleFocusChanged);
+    focusNode.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     controller.dispose();
     super.dispose();
   }
 
   void _handleFocusChanged() {
-    if (_hasPrimaryFocus != focusNode!.hasPrimaryFocus) {
+    if (_hasPrimaryFocus != focusNode.hasPrimaryFocus) {
       setState(() {
-        _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
+        _hasPrimaryFocus = focusNode.hasPrimaryFocus;
       });
 
       if (widget.mode == SpinButtonPlacementMode.compact) {
@@ -342,8 +353,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       if (widget.focusNode == null) {
         _internalNode ??= _createFocusNode();
       }
-      _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
-      focusNode!.addListener(_handleFocusChanged);
+      _hasPrimaryFocus = focusNode.hasPrimaryFocus;
+      focusNode.addListener(_handleFocusChanged);
     }
 
     if (oldWidget.value != widget.value) {
@@ -471,10 +482,16 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       selectionWidthStyle: widget.selectionWidthStyle,
       textDirection: widget.textDirection,
       onSubmitted: (_) => updateValue(),
-      onEditingComplete: updateValue,
       onTap: updateValue,
       onTapOutside: (_) => updateValue(),
+      onEditingComplete: widget.onEditingComplete != null
+          ? () {
+              updateValue();
+              widget.onEditingComplete!();
+            }
+          : null,
       onChanged: widget.onTextChange,
+      textInputAction: widget.textInputAction,
     );
 
     return CompositedTransformTarget(
@@ -487,17 +504,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
           if (event.logicalKey == LogicalKeyboardKey.pageUp) {
             incrementLarge();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
             decrementLarge();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             incrementSmall();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
             decrementSmall();
-          } else {
-            return KeyEventResult.ignored;
+            return KeyEventResult.handled;
           }
 
-          return KeyEventResult.handled;
+          return KeyEventResult.ignored;
         },
         child: Listener(
           onPointerSignal: (event) {
