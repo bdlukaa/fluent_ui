@@ -287,6 +287,16 @@ NavigationView(
   ),
   pane: NavigationPane(
     selected: topIndex,
+    onItemPressed: (index) {
+      // Do anything you want to do, such as:
+      if (index == topIndex) {
+        if (displayMode == PaneDisplayMode.open) {
+          setState(() => this.displayMode = PaneDisplayMode.compact);
+        } else if (displayMode == PaneDisplayMode.compact) {
+          setState(() => this.displayMode = PaneDisplayMode.open);
+        }
+      }
+    },
     onChanged: (index) => setState(() => topIndex = index),
     displayMode: displayMode,
     items: items,
@@ -329,6 +339,16 @@ NavigationView(
             },
             pane: NavigationPane(
               selected: topIndex,
+              onItemPressed: (index) {
+                // Do anything you want to do, such as:
+                if (index == topIndex) {
+                  if (displayMode == PaneDisplayMode.open) {
+                    setState(() => this.displayMode = PaneDisplayMode.compact);
+                  } else if (displayMode == PaneDisplayMode.compact) {
+                    setState(() => this.displayMode = PaneDisplayMode.open);
+                  }
+                }
+              },
               onChanged: (index) => setState(() => topIndex = index),
               displayMode: displayMode,
               indicator: indicators[indicator],
