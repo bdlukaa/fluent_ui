@@ -184,7 +184,7 @@ class NavigationPane with Diagnosticable {
   /// Called when the current index changes.
   final ValueChanged<int>? onChanged;
 
-  /// Called when the item is clicked.
+  /// Called when an item is pressed.
   final ValueChanged<int>? onItemPressed;
 
   /// The scroll controller used by the pane when [displayMode] is
