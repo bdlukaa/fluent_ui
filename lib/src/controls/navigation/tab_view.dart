@@ -777,13 +777,13 @@ class Tab with Diagnosticable {
   /// The body of the view attached to this tab
   final Widget body;
 
-  /// The color of the tab.
+  /// The background color of the tab.
   final Color? backgroundColor;
 
-  /// The color of the selected tab.
+  /// The background color of the tab, if [selected] is `true`.
   final Color? selectedBackgroundColor;
 
-  /// The  outline color of the tab.
+  /// The outline color of the tab.
   final Color? outlineColor;
 
   /// Whether the tab is disabled or not. If true, the tab will be greyed out
