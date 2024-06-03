@@ -741,8 +741,8 @@ class Tab with Diagnosticable {
     this.icon = const SizedBox.shrink(),
     required this.text,
     required this.body,
-    this.color,
-    this.selectedColor,
+    this.backgroundColor,
+    this.selectedBackgroundColor,
     this.outlineColor,
     this.closeIcon = FluentIcons.chrome_close,
     this.onClosed,
@@ -778,10 +778,10 @@ class Tab with Diagnosticable {
   final Widget body;
 
   /// The color of the tab.
-  final Color? color;
+  final Color? backgroundColor;
 
   /// The color of the selected tab.
-  final Color? selectedColor;
+  final Color? selectedBackgroundColor;
 
   /// The  outline color of the tab.
   final Color? outlineColor;
@@ -941,9 +941,10 @@ class __TabState extends State<_Tab>
             decoration: BoxDecoration(
               borderRadius: borderRadius,
               // if selected, the background is painted by _TabPainter
-              color: widget.selected
-                  ? widget.tab.selectedColor
-                  : widget.tab.color ?? backgroundColor,
+              color: (widget.selected
+                      ? widget.tab.selectedBackgroundColor
+                      : widget.tab.backgroundColor) ??
+                  backgroundColor,
             ),
             child: () {
               final result = ClipRect(
