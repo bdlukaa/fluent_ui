@@ -92,8 +92,8 @@ class TabView extends StatefulWidget {
 
   /// The icon of the new button
   final IconData addIconData;
-  
-  /// The builder for the add icon. 
+
+  /// The builder for the add icon.
   ///
   /// This does not build the add button, only its icon.
   ///
@@ -741,6 +741,9 @@ class Tab with Diagnosticable {
     this.icon = const SizedBox.shrink(),
     required this.text,
     required this.body,
+    this.backgroundColor,
+    this.selectedBackgroundColor,
+    this.outlineColor,
     this.closeIcon = FluentIcons.chrome_close,
     this.onClosed,
     this.semanticLabel,
@@ -773,6 +776,15 @@ class Tab with Diagnosticable {
 
   /// The body of the view attached to this tab
   final Widget body;
+
+  /// The background color of the tab.
+  final Color? backgroundColor;
+
+  /// The background color of the tab, if [selected] is `true`.
+  final Color? selectedBackgroundColor;
+
+  /// The outline color of the tab.
+  final Color? outlineColor;
 
   /// Whether the tab is disabled or not. If true, the tab will be greyed out
   final bool disabled;
@@ -928,9 +940,11 @@ class __TabState extends State<_Tab>
                   ),
             decoration: BoxDecoration(
               borderRadius: borderRadius,
-
               // if selected, the background is painted by _TabPainter
-              color: widget.selected ? null : backgroundColor,
+              color: (widget.selected
+                      ? widget.tab.selectedBackgroundColor
+                      : widget.tab.backgroundColor) ??
+                  backgroundColor,
             ),
             child: () {
               final result = ClipRect(
@@ -1021,7 +1035,7 @@ class __TabState extends State<_Tab>
         }
         if (widget.selected) {
           child = CustomPaint(
-            painter: _TabPainter(backgroundColor),
+            painter: _TabPainter(backgroundColor, widget.tab.outlineColor),
             child: child,
           );
         }
@@ -1041,8 +1055,9 @@ class __TabState extends State<_Tab>
 
 class _TabPainter extends CustomPainter {
   final Color color;
+  final Color? outlineColor;
 
-  const _TabPainter(this.color);
+  const _TabPainter(this.color, this.outlineColor);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1062,6 +1077,15 @@ class _TabPainter extends CustomPainter {
         size.width + radius,
         size.height,
       );
+
+    if (outlineColor != null) {
+      final outlinePaint = Paint()
+        ..color = outlineColor!
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0;
+
+      canvas.drawPath(path, outlinePaint);
+    }
     canvas.drawPath(path, Paint()..color = color);
   }
 
