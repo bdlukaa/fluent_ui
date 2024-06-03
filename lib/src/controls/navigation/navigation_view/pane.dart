@@ -78,6 +78,7 @@ class NavigationPane with Diagnosticable {
     this.key,
     this.selected,
     this.onChanged,
+    this.onItemPressed,
     this.size,
     this.header,
     this.items = const [],
@@ -183,6 +184,9 @@ class NavigationPane with Diagnosticable {
   /// Called when the current index changes.
   final ValueChanged<int>? onChanged;
 
+  /// Called when an item is pressed.
+  final ValueChanged<int>? onItemPressed;
+
   /// The scroll controller used by the pane when [displayMode] is
   /// [PaneDisplayMode.compact] and [PaneDisplayMode.open].
   ///
@@ -223,6 +227,8 @@ class NavigationPane with Diagnosticable {
       ))
       ..add(IntProperty('selected', selected, ifNull: 'none'))
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(ObjectFlagProperty('onItemPressed', onItemPressed,
+          ifNull: 'disabled'))
       ..add(DiagnosticsProperty<ScrollController>(
           'scrollController', scrollController))
       ..add(DiagnosticsProperty<NavigationPaneSize>('size', size))
@@ -232,6 +238,7 @@ class NavigationPane with Diagnosticable {
   /// Changes the selected item to [item].
   void changeTo(NavigationPaneItem item) {
     final index = effectiveIndexOf(item);
+    if (!index.isNegative) onItemPressed?.call(index);
     if (selected != index && !index.isNegative) onChanged?.call(index);
   }
 
@@ -333,6 +340,7 @@ class NavigationPane with Diagnosticable {
         other.autoSuggestBoxReplacement == autoSuggestBoxReplacement &&
         other.selected == selected &&
         other.onChanged == onChanged &&
+        other.onItemPressed == onItemPressed &&
         other.scrollController == scrollController &&
         other.indicator == indicator;
   }
@@ -351,6 +359,7 @@ class NavigationPane with Diagnosticable {
         autoSuggestBoxReplacement.hashCode ^
         selected.hashCode ^
         onChanged.hashCode ^
+        onItemPressed.hashCode ^
         scrollController.hashCode ^
         indicator.hashCode;
   }
