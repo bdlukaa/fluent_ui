@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'fluent_localizations_ar.dart';
 import 'fluent_localizations_be.dart';
 import 'fluent_localizations_bn.dart';
+import 'fluent_localizations_ca.dart';
 import 'fluent_localizations_cs.dart';
 import 'fluent_localizations_de.dart';
 import 'fluent_localizations_el.dart';
@@ -17,6 +18,7 @@ import 'fluent_localizations_fa.dart';
 import 'fluent_localizations_fr.dart';
 import 'fluent_localizations_he.dart';
 import 'fluent_localizations_hi.dart';
+import 'fluent_localizations_hr.dart';
 import 'fluent_localizations_hu.dart';
 import 'fluent_localizations_id.dart';
 import 'fluent_localizations_it.dart';
@@ -129,6 +131,7 @@ abstract class FluentLocalizations {
     Locale('ar'),
     Locale('be'),
     Locale('bn'),
+    Locale('ca'),
     Locale('cs'),
     Locale('de'),
     Locale('el'),
@@ -137,6 +140,7 @@ abstract class FluentLocalizations {
     Locale('fr'),
     Locale('he'),
     Locale('hi'),
+    Locale('hr'),
     Locale('hu'),
     Locale('id'),
     Locale('it'),
@@ -365,6 +369,7 @@ class _FluentLocalizationsDelegate
         'ar',
         'be',
         'bn',
+        'ca',
         'cs',
         'de',
         'el',
@@ -374,6 +379,7 @@ class _FluentLocalizationsDelegate
         'fr',
         'he',
         'hi',
+        'hr',
         'hu',
         'id',
         'it',
@@ -424,6 +430,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsBe();
     case 'bn':
       return FluentLocalizationsBn();
+    case 'ca':
+      return FluentLocalizationsCa();
     case 'cs':
       return FluentLocalizationsCs();
     case 'de':
@@ -442,6 +450,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsHe();
     case 'hi':
       return FluentLocalizationsHi();
+    case 'hr':
+      return FluentLocalizationsHr();
     case 'hu':
       return FluentLocalizationsHu();
     case 'id':
