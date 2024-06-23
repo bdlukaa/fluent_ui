@@ -230,6 +230,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
     this.trailing,
     required this.onPressed,
     this.selected = false,
+    this.closeAfterClick = true,
   });
 
   /// Displayed before [text].
@@ -254,10 +255,17 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   final Widget? trailing;
 
   /// Called when the item is pressed.
+  ///
+  /// If `null`, the item will be marked as disabled.
   final VoidCallback? onPressed;
 
   /// Whether this item is selected or not.
   final bool selected;
+
+  /// Whether to close the menu after the item is clicked.
+  ///
+  /// Defaults to `true`.
+  final bool closeAfterClick;
 
   bool _useIconPlaceholder = false;
 
@@ -283,7 +291,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
         onPressed: onPressed == null
             ? null
             : () {
-                Navigator.of(context).maybePop();
+                if (closeAfterClick) Navigator.of(context).maybePop();
                 onPressed?.call();
               },
       ),
@@ -437,6 +445,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
       leading: widget.item.leading,
       selected: isShowing(menuInfo),
       trailing: widget.item.trailing,
+      closeAfterClick: false,
       onPressed: () {
         show(menuInfo);
       },

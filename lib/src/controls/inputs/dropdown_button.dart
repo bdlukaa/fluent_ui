@@ -349,7 +349,7 @@ class DropDownButtonState extends State<DropDownButton> {
   ) {
     if (item is MenuFlyoutSubItem) {
       return _createSubMenuItem(item);
-    } else if (widget.closeAfterClick && item is MenuFlyoutItem) {
+    } else if (item is MenuFlyoutItem) {
       return _createMenuItem(item, context);
     } else {
       return item;
@@ -360,8 +360,8 @@ class DropDownButtonState extends State<DropDownButton> {
     return MenuFlyoutSubItem(
       key: item.key,
       text: item.text,
-      items: (context) => item.items
-          .call(context)
+      items: (context) => item
+          .items(context)
           .map((item) => transformItem(item, context))
           .toList(),
       leading: item.leading,
@@ -374,9 +374,9 @@ class DropDownButtonState extends State<DropDownButton> {
   MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
     return MenuFlyoutItem(
       onPressed: () {
-        Navigator.of(context).pop();
         item.onPressed?.call();
       },
+      closeAfterClick: widget.closeAfterClick,
       key: item.key,
       leading: item.leading,
       text: item.text,
