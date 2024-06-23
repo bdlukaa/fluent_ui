@@ -309,7 +309,7 @@ FlyoutTarget(
                         ),
                         MenuFlyoutItem(
                           text: const Text('Select'),
-                          onPressed: Flyout.of(context).close,
+                          onPressed: null,
                         ),
                         const MenuFlyoutSeparator(),
                         MenuFlyoutSubItem(

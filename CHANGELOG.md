@@ -3,7 +3,8 @@
 * feat: Add `NumberBox.textInputAction` and `NumberBox.onEditingComplete` ([#1063](https://github.com/bdlukaa/fluent_ui/pull/1063))
 * feat: Add `Tab.color`, `Tab.selectedColor` and `Tab.outlineColor` to TabView  ([#1068](https://github.com/bdlukaa/fluent_ui/pull/1068))
 * feat: Added `NavigationView.onItemPressed` callback, called when the item is on tap ([#1067](https://github.com/bdlukaa/fluent_ui/pull/1067))
-* **BREAKING** feat: Removed `ButtonState`, `ButtonStates` and their related classes. Use `WidgetStateProperty`, `WidgetState` instead.
+* fix: Mark `MenuFlyoutItem` as disabled when `.onPressed` is `null` ([#1074](https://github.com/bdlukaa/fluent_ui/issues/1074))
+* **BREAKING** feat: Removed `ButtonState`, `ButtonStates` and their related classes. Use `WidgetStateProperty`, `WidgetState` instead. ([#1075](https://github.com/bdlukaa/fluent_ui/issues/1075))
   Before:
 
   ```dart

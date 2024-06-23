@@ -280,10 +280,12 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
           data: const IconThemeData(size: 12.0),
           child: trailing ?? const SizedBox.shrink(),
         ),
-        onPressed: () {
-          Navigator.of(context).maybePop();
-          onPressed?.call();
-        },
+        onPressed: onPressed == null
+            ? null
+            : () {
+                Navigator.of(context).maybePop();
+                onPressed?.call();
+              },
       ),
     );
   }
