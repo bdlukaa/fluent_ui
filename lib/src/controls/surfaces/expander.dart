@@ -111,7 +111,7 @@ class Expander extends StatefulWidget {
   final ValueChanged<bool>? onStateChanged;
 
   /// The background color of the header.
-  final ButtonState<Color>? headerBackgroundColor;
+  final WidgetStateProperty<Color>? headerBackgroundColor;
 
   /// The shape of the header.
   ///

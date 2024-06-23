@@ -29,7 +29,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
 
 Decoration kPickerDecorationBuilder(
   BuildContext context,
-  Set<ButtonStates> states,
+  Set<WidgetState> states,
 ) {
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
@@ -63,7 +63,7 @@ Widget PickerHighlightTile() {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
-          tileColor: ButtonState.all(highlightTileColor),
+          tileColor: WidgetStatePropertyAll(highlightTileColor),
         ),
       ),
     );
@@ -96,14 +96,14 @@ class YesNoPickerControl extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
 
     final buttonStyle = ButtonStyle(
-      elevation: ButtonState.all(0.0),
-      backgroundColor: ButtonState.resolveWith(
+      elevation: WidgetStatePropertyAll(0.0),
+      backgroundColor: WidgetStateProperty.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
           FluentTheme.of(context),
           states,
         ),
       ),
-      shape: ButtonState.all(const RoundedRectangleBorder()),
+      shape: WidgetStatePropertyAll(const RoundedRectangleBorder()),
     );
 
     return FocusTheme(
@@ -200,14 +200,14 @@ class PickerNavigatorIndicator extends StatelessWidget {
           focused: states.isFocused,
           child: ButtonTheme.merge(
             data: ButtonThemeData.all(ButtonStyle(
-              padding: ButtonState.all(const EdgeInsets.symmetric(
+              padding: WidgetStatePropertyAll(const EdgeInsets.symmetric(
                 vertical: 10.0,
               )),
               backgroundColor:
-                  ButtonState.all(FluentTheme.of(context).menuColor),
-              shape: ButtonState.all(const RoundedRectangleBorder()),
-              elevation: ButtonState.all(0.0),
-              iconSize: ButtonState.resolveWith((states) {
+                  WidgetStatePropertyAll(FluentTheme.of(context).menuColor),
+              shape: WidgetStatePropertyAll(const RoundedRectangleBorder()),
+              elevation: WidgetStatePropertyAll(0.0),
+              iconSize: WidgetStateProperty.resolveWith((states) {
                 if (states.isPressing) {
                   return 8.0;
                 } else {

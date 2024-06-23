@@ -79,7 +79,7 @@ class ListTile extends StatelessWidget {
   /// The background color of the button.
   ///
   /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
-  final ButtonState<Color>? tileColor;
+  final WidgetStateProperty<Color>? tileColor;
 
   /// The tile shape.
   ///
@@ -240,7 +240,7 @@ class ListTile extends StatelessWidget {
 
           return ButtonThemeData.uncheckedInputColor(
             theme,
-            selected ? {ButtonStates.hovering} : states,
+            selected ? {WidgetState.hovered} : states,
             transparentWhenNone: true,
             transparentWhenDisabled: true,
           );

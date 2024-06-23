@@ -28,13 +28,13 @@ class OutlinedButton extends BaseButton {
     final theme = FluentTheme.of(context);
 
     return ButtonStyle(
-      padding: ButtonState.all(kDefaultButtonPadding),
-      shape: ButtonState.all(RoundedRectangleBorder(
+      padding: WidgetStatePropertyAll(kDefaultButtonPadding),
+      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.0),
         side: BorderSide(color: theme.inactiveColor),
       )),
-      foregroundColor: ButtonState.all(theme.inactiveColor),
-      backgroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStatePropertyAll(theme.inactiveColor),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.controlFillColorDisabled.withOpacity(0.30);
         } else if (states.isPressing) {
@@ -45,7 +45,7 @@ class OutlinedButton extends BaseButton {
           return Colors.transparent;
         }
       }),
-      textStyle: ButtonState.all(const TextStyle(
+      textStyle: WidgetStatePropertyAll(const TextStyle(
         fontSize: 13.0,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,

@@ -165,7 +165,7 @@ class FlyoutListTile extends StatelessWidget {
         final radius = BorderRadius.circular(4.0);
 
         if (selected) {
-          states = {ButtonStates.hovering};
+          states = {WidgetState.hovered};
         }
 
         Widget content = Stack(children: [

@@ -154,8 +154,8 @@ class SplitButtonState extends State<SplitButton> {
         child: DecoratedBox(
           decoration: ShapeDecoration(
               shape: widget.checked
-                  ? FilledButton.shapeBorder(theme, {ButtonStates.none})
-                  : ButtonThemeData.shapeBorder(context, {ButtonStates.none})),
+                  ? FilledButton.shapeBorder(theme, {})
+                  : ButtonThemeData.shapeBorder(context, {})),
           child: IntrinsicHeight(
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               HoverButton(
@@ -218,7 +218,7 @@ class SplitButtonState extends State<SplitButton> {
                             : ButtonThemeData.buttonColor(
                                 context,
                                 flyoutController.isOpen
-                                    ? {ButtonStates.pressing}
+                                    ? {WidgetState.pressed}
                                     : states,
                                 transparentWhenNone: true,
                               ),

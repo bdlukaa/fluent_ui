@@ -366,7 +366,7 @@ class _TabViewState extends State<TabView> {
         icon: Center(child: icon),
         onPressed: onPressed,
         style: ButtonStyle(
-          foregroundColor: ButtonState.resolveWith((states) {
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.isDisabled) {
               return FluentTheme.of(context)
                   .resources
@@ -375,14 +375,14 @@ class _TabViewState extends State<TabView> {
               return FluentTheme.of(context).inactiveColor;
             }
           }),
-          backgroundColor: ButtonState.resolveWith((states) {
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.isDisabled || states.isNone) return Colors.transparent;
             return ButtonThemeData.uncheckedInputColor(
               FluentTheme.of(context),
               states,
             );
           }),
-          padding: ButtonState.all(EdgeInsets.zero),
+          padding: WidgetStatePropertyAll(EdgeInsets.zero),
         ),
       ),
     );
@@ -881,7 +881,8 @@ class __TabState extends State<_Tab>
       onPressed: widget.tab.disabled ? null : widget.onPressed,
       builder: (context, states) {
         // https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TabView/TabView_themeresources.xaml#L15-L19
-        final foregroundColor = ButtonState.resolveWith<Color>((states) {
+        final foregroundColor =
+            WidgetStateProperty.resolveWith<Color>((states) {
           if (widget.selected) {
             return res.textFillColorPrimary;
           } else if (states.isPressing) {
@@ -896,7 +897,8 @@ class __TabState extends State<_Tab>
         }).resolve(states);
 
         /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TabView/TabView_themeresources.xaml#L10-L14
-        final backgroundColor = ButtonState.resolveWith<Color>((states) {
+        final backgroundColor =
+            WidgetStateProperty.resolveWith<Color>((states) {
           if (widget.selected) {
             return res.solidBackgroundFillColorTertiary;
           } else if (states.isPressing) {

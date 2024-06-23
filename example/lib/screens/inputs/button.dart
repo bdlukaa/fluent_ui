@@ -44,7 +44,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           return IconButton(
             autofocus: splitButtonColor == color,
             style: ButtonStyle(
-              padding: ButtonState.all(
+              padding: WidgetStatePropertyAll(
                 EdgeInsets.all(4.0),
               ),
             ),
@@ -343,7 +343,7 @@ SplitButton(
         return Button(
           autofocus: splitButtonColor == color,
           style: ButtonStyle(
-            padding: ButtonState.all(
+            padding: WidgetStatePropertyAll(
               EdgeInsets.all(4.0),
             ),
           ),

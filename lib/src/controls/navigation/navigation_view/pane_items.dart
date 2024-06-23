@@ -91,11 +91,11 @@ class PaneItem extends NavigationPaneItem {
 
   /// The color of the tile when unselected.
   /// If null, [NavigationPaneThemeData.tileColor] is used
-  final ButtonState<Color?>? tileColor;
+  final WidgetStateProperty<Color?>? tileColor;
 
   /// The color of the tile when unselected.
   /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
-  final ButtonState<Color?>? selectedTileColor;
+  final WidgetStateProperty<Color?>? selectedTileColor;
 
   /// Called when the item is tapped, regardless of selected or not
   final VoidCallback? onTap;
@@ -303,7 +303,7 @@ class PaneItem extends NavigationPaneItem {
                 final tileColor = this.tileColor ??
                     theme.tileColor ??
                     kDefaultPaneItemColor(context, isTop);
-                final newStates = states.toSet()..remove(ButtonStates.disabled);
+                final newStates = states.toSet()..remove(WidgetState.disabled);
                 if (selected && selectedTileColor != null) {
                   return selectedTileColor!.resolve(newStates);
                 }
@@ -311,8 +311,8 @@ class PaneItem extends NavigationPaneItem {
                   selected
                       ? {
                           states.isHovering
-                              ? ButtonStates.pressing
-                              : ButtonStates.hovering,
+                              ? WidgetState.pressed
+                              : WidgetState.hovered,
                         }
                       : newStates,
                 );
@@ -389,8 +389,8 @@ class PaneItem extends NavigationPaneItem {
     FocusNode? focusNode,
     bool? autofocus,
     MouseCursor? mouseCursor,
-    ButtonState<Color?>? tileColor,
-    ButtonState<Color?>? selectedTileColor,
+    WidgetStateProperty<Color?>? tileColor,
+    WidgetStateProperty<Color?>? selectedTileColor,
     VoidCallback? onTap,
     bool? enabled,
   }) {

@@ -332,7 +332,7 @@ class _DatePickerState extends State<DatePicker> {
           await open();
         },
         builder: (context, states) {
-          if (states.isDisabled) states = <ButtonStates>{};
+          if (states.isDisabled) states = <WidgetState>{};
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(

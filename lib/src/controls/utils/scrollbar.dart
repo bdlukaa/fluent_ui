@@ -62,26 +62,26 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.didChangeDependencies();
   }
 
-  ButtonStates get _currentState {
+  Set<WidgetState> get _currentState {
     if (_dragIsActive) {
-      return ButtonStates.pressing;
+      return {WidgetState.pressed};
     } else if (_hoverIsActive) {
-      return ButtonStates.hovering;
+      return {WidgetState.hovered};
     } else {
-      return ButtonStates.none;
+      return {};
     }
   }
 
-  Color _trackColor(ButtonStates state) {
-    if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+  Color _trackColor(Set<WidgetState> state) {
+    if (state.containsAll({WidgetState.hovered, WidgetState.pressed})) {
       return _scrollbarTheme.backgroundColor ?? Colors.transparent;
     }
     return Colors.transparent;
   }
 
-  Color _thumbColor(ButtonStates state) {
+  Color _thumbColor(Set<WidgetState> state) {
     Color? color;
-    if (state == ButtonStates.pressing) {
+    if (state.contains(WidgetState.pressed)) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;

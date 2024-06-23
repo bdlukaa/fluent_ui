@@ -33,10 +33,10 @@ class IconButton extends BaseButton {
         ? iconButtonMode != IconButtonMode.large
         : SmallIconButton.of(context) != null;
     return ButtonStyle(
-      iconSize: ButtonState.all(isIconSmall ? 11.0 : null),
-      padding: ButtonState.all(
+      iconSize: WidgetStatePropertyAll(isIconSmall ? 11.0 : null),
+      padding: WidgetStatePropertyAll(
           isSmall ? kDefaultButtonPadding : const EdgeInsets.all(8.0)),
-      backgroundColor: ButtonState.resolveWith((states) {
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return ButtonThemeData.buttonColor(context, states);
         } else {
@@ -47,11 +47,11 @@ class IconButton extends BaseButton {
           );
         }
       }),
-      foregroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) return theme.resources.textFillColorDisabled;
         return null;
       }),
-      shape: ButtonState.all(RoundedRectangleBorder(
+      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       )),
     );

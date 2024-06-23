@@ -278,7 +278,7 @@ class _SliderState extends State<Slider> {
     final style = SliderTheme.of(context).merge(widget.style);
     final direction = Directionality.of(context);
 
-    final disabledState = {ButtonStates.disabled};
+    final disabledState = {WidgetState.disabled};
     Widget child = HoverButton(
       onPressed: widget.onChanged == null ? null : () {},
       margin: style.margin ?? EdgeInsets.zero,
@@ -619,9 +619,9 @@ class SliderTheme extends InheritedTheme {
 
 @immutable
 class SliderThemeData with Diagnosticable {
-  final ButtonState<Color?>? thumbColor;
-  final ButtonState<double?>? thumbRadius;
-  final ButtonState<double?>? trackHeight;
+  final WidgetStateProperty<Color?>? thumbColor;
+  final WidgetStateProperty<double?>? thumbRadius;
+  final WidgetStateProperty<double?>? trackHeight;
 
   /// The color of the label background
   final Color? labelBackgroundColor;
@@ -631,8 +631,8 @@ class SliderThemeData with Diagnosticable {
 
   final bool? useThumbBall;
 
-  final ButtonState<Color?>? activeColor;
-  final ButtonState<Color?>? inactiveColor;
+  final WidgetStateProperty<Color?>? activeColor;
+  final WidgetStateProperty<Color?>? inactiveColor;
 
   final EdgeInsetsGeometry? margin;
 
@@ -650,13 +650,13 @@ class SliderThemeData with Diagnosticable {
 
   factory SliderThemeData.standard(FluentThemeData theme) {
     final def = SliderThemeData(
-      thumbColor: ButtonState.resolveWith(
+      thumbColor: WidgetStateProperty.resolveWith(
         (states) => ButtonThemeData.checkedInputColor(theme, states),
       ),
-      activeColor: ButtonState.resolveWith(
+      activeColor: WidgetStateProperty.resolveWith(
         (states) => ButtonThemeData.checkedInputColor(theme, states),
       ),
-      inactiveColor: ButtonState.resolveWith((states) {
+      inactiveColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.controlStrongFillColorDisabled;
         } else {
@@ -667,7 +667,7 @@ class SliderThemeData with Diagnosticable {
       useThumbBall: true,
       labelBackgroundColor: theme.resources.controlSolidFillColorDefault,
       labelForegroundColor: theme.resources.textFillColorPrimary,
-      trackHeight: ButtonState.all(3.75),
+      trackHeight: WidgetStatePropertyAll(3.75),
     );
 
     return def;
@@ -676,15 +676,16 @@ class SliderThemeData with Diagnosticable {
   static SliderThemeData lerp(SliderThemeData a, SliderThemeData b, double t) {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
-      thumbColor: ButtonState.lerp(a.thumbColor, b.thumbColor, t, Color.lerp),
-      thumbRadius:
-          ButtonState.lerp(a.thumbRadius, b.thumbRadius, t, lerpDouble),
-      trackHeight:
-          ButtonState.lerp(a.trackHeight, b.trackHeight, t, lerpDouble),
-      activeColor:
-          ButtonState.lerp(a.activeColor, b.activeColor, t, Color.lerp),
-      inactiveColor:
-          ButtonState.lerp(a.inactiveColor, b.inactiveColor, t, Color.lerp),
+      thumbColor: WidgetStateProperty.lerp<Color?>(
+          a.thumbColor, b.thumbColor, t, Color.lerp),
+      thumbRadius: WidgetStateProperty.lerp<double?>(
+          a.thumbRadius, b.thumbRadius, t, lerpDouble),
+      trackHeight: WidgetStateProperty.lerp<double?>(
+          a.trackHeight, b.trackHeight, t, lerpDouble),
+      activeColor: WidgetStateProperty.lerp<Color?>(
+          a.activeColor, b.activeColor, t, Color.lerp),
+      inactiveColor: WidgetStateProperty.lerp<Color?>(
+          a.inactiveColor, b.inactiveColor, t, Color.lerp),
       labelBackgroundColor:
           Color.lerp(a.labelBackgroundColor, b.labelBackgroundColor, t),
       labelForegroundColor:

@@ -174,7 +174,7 @@ class TreeViewItem with Diagnosticable {
   /// See also:
   ///
   ///   * [ButtonThemeData.uncheckedInputColor], which is used by default
-  final ButtonState<Color>? backgroundColor;
+  final WidgetStateProperty<Color>? backgroundColor;
 
   /// Whether this item is visible or not. Used to not lose the item state while
   /// it's not on the screen
@@ -979,7 +979,7 @@ class _TreeViewItem extends StatelessWidget {
         semanticLabel: item.semanticLabel,
         margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
         builder: (context, states) {
-          final itemForegroundColor = ButtonState.forStates<Color>(
+          final itemForegroundColor = WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.textFillColorDisabled,
             pressed: theme.resources.textFillColorSecondary,
@@ -1017,9 +1017,9 @@ class _TreeViewItem extends StatelessWidget {
                         ].contains(selectionMode)
                             ? states
                             : selected && (states.isPressing || states.isNone)
-                                ? {ButtonStates.hovering}
+                                ? {WidgetState.hovered}
                                 : selected && states.isHovering
-                                    ? {ButtonStates.pressing}
+                                    ? {WidgetState.pressed}
                                     : states,
                         transparentWhenNone: true,
                       ),

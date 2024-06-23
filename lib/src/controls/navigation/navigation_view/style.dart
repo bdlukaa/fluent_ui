@@ -1,9 +1,10 @@
 part of 'view.dart';
 
-ButtonState<Color?> kDefaultPaneItemColor(BuildContext context, bool isTop) {
+WidgetStateProperty<Color?> kDefaultPaneItemColor(
+    BuildContext context, bool isTop) {
   assert(debugCheckHasFluentTheme(context));
 
-  return ButtonState.resolveWith((states) {
+  return WidgetStateProperty.resolveWith((states) {
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
     if (states.isPressing) {
@@ -93,7 +94,7 @@ class NavigationPaneThemeData with Diagnosticable {
   /// The color of the tiles.
   ///
   /// If null, [ButtonThemeData.uncheckedInputColor] is used
-  final ButtonState<Color?>? tileColor;
+  final WidgetStateProperty<Color?>? tileColor;
 
   /// The highlight color used on the tiles.
   ///
@@ -108,12 +109,12 @@ class NavigationPaneThemeData with Diagnosticable {
   final EdgeInsetsGeometry? headerPadding;
 
   final TextStyle? itemHeaderTextStyle;
-  final ButtonState<TextStyle?>? selectedTextStyle;
-  final ButtonState<TextStyle?>? unselectedTextStyle;
-  final ButtonState<TextStyle?>? selectedTopTextStyle;
-  final ButtonState<TextStyle?>? unselectedTopTextStyle;
-  final ButtonState<Color?>? selectedIconColor;
-  final ButtonState<Color?>? unselectedIconColor;
+  final WidgetStateProperty<TextStyle?>? selectedTextStyle;
+  final WidgetStateProperty<TextStyle?>? unselectedTextStyle;
+  final WidgetStateProperty<TextStyle?>? selectedTopTextStyle;
+  final WidgetStateProperty<TextStyle?>? unselectedTopTextStyle;
+  final WidgetStateProperty<Color?>? selectedIconColor;
+  final WidgetStateProperty<Color?>? unselectedIconColor;
 
   final IconData? paneNavigationButtonIcon;
 
@@ -157,7 +158,7 @@ class NavigationPaneThemeData with Diagnosticable {
       overlayBackgroundColor: resources.systemFillColorSolidNeutralBackground,
       highlightColor: highlightColor,
       itemHeaderTextStyle: typography.bodyStrong,
-      selectedTextStyle: ButtonState.resolveWith((states) {
+      selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressing
               ? resources.textFillColorSecondary
@@ -166,7 +167,7 @@ class NavigationPaneThemeData with Diagnosticable {
                   : resources.textFillColorPrimary,
         );
       }),
-      unselectedTextStyle: ButtonState.resolveWith((states) {
+      unselectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressing
               ? resources.textFillColorSecondary
@@ -175,7 +176,7 @@ class NavigationPaneThemeData with Diagnosticable {
                   : resources.textFillColorPrimary,
         );
       }),
-      selectedTopTextStyle: ButtonState.resolveWith((states) {
+      selectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressing
               ? resources.textFillColorTertiary
@@ -184,7 +185,7 @@ class NavigationPaneThemeData with Diagnosticable {
                   : resources.textFillColorPrimary,
         );
       }),
-      unselectedTopTextStyle: ButtonState.resolveWith((states) {
+      unselectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressing
               ? resources.textFillColorSecondary
@@ -211,27 +212,28 @@ class NavigationPaneThemeData with Diagnosticable {
           EdgeInsetsGeometry.lerp(a?.labelPadding, b?.labelPadding, t),
       headerPadding:
           EdgeInsetsGeometry.lerp(a?.headerPadding, b?.headerPadding, t),
-      tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
+      tileColor: WidgetStateProperty.lerp<Color?>(
+          a?.tileColor, b?.tileColor, t, Color.lerp),
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       overlayBackgroundColor:
           Color.lerp(a?.overlayBackgroundColor, b?.overlayBackgroundColor, t),
       itemHeaderTextStyle:
           TextStyle.lerp(a?.itemHeaderTextStyle, b?.itemHeaderTextStyle, t),
-      selectedTextStyle: ButtonState.lerp(
+      selectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
-      unselectedTextStyle: ButtonState.lerp(
+      unselectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
-      selectedTopTextStyle: ButtonState.lerp(
+      selectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
-      unselectedTopTextStyle: ButtonState.lerp(
+      unselectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
       highlightColor: Color.lerp(a?.highlightColor, b?.highlightColor, t),
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
-      selectedIconColor: ButtonState.lerp(
+      selectedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.selectedIconColor, b?.selectedIconColor, t, Color.lerp),
-      unselectedIconColor: ButtonState.lerp(
+      unselectedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.unselectedIconColor, b?.unselectedIconColor, t, Color.lerp),
       paneNavigationButtonIcon:
           t < 0.5 ? a?.paneNavigationButtonIcon : b?.paneNavigationButtonIcon,

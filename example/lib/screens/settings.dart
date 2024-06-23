@@ -279,8 +279,8 @@ class _SettingsState extends State<Settings> with PageMixin {
           appTheme.color = color;
         },
         style: ButtonStyle(
-          padding: ButtonState.all(EdgeInsets.zero),
-          backgroundColor: ButtonState.resolveWith((states) {
+          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.isPressing) {
               return color.light;
             } else if (states.isHovering) {

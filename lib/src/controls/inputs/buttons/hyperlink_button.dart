@@ -31,7 +31,7 @@ class HyperlinkButton extends BaseButton {
     final theme = FluentTheme.of(context);
 
     return ButtonStyle(
-      backgroundColor: ButtonState.resolveWith((states) {
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.subtleFillColorDisabled;
         } else if (states.isPressing) {
@@ -42,11 +42,11 @@ class HyperlinkButton extends BaseButton {
           return theme.resources.subtleFillColorTransparent;
         }
       }),
-      shape: ButtonState.all(
+      shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       ),
-      padding: ButtonState.all(kDefaultButtonPadding),
-      foregroundColor: ButtonState.resolveWith((states) {
+      padding: WidgetStatePropertyAll(kDefaultButtonPadding),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.controlFillColorDisabled;
         } else if (states.isPressing) {
@@ -57,7 +57,7 @@ class HyperlinkButton extends BaseButton {
           return theme.accentColor.defaultBrushFor(theme.brightness);
         }
       }),
-      textStyle: ButtonState.all(const TextStyle(
+      textStyle: WidgetStatePropertyAll(const TextStyle(
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
       )),

@@ -907,7 +907,7 @@ class NavigationAppBar with Diagnosticable {
         final onPressed = canPop ? () => Navigator.maybePop(context) : null;
         widget = NavigationPaneTheme(
           data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-            unselectedIconColor: ButtonState.resolveWith((states) {
+            unselectedIconColor: WidgetStateProperty.resolveWith((states) {
               if (states.isDisabled) {
                 return ButtonThemeData.buttonColor(context, states);
               }

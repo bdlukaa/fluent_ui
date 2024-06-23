@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/rendering.dart';
 
-typedef ButtonStateWidgetBuilder = Widget Function(
+typedef WidgetStateWidgetBuilder = Widget Function(
   BuildContext,
-  Set<ButtonStates> state,
+  Set<WidgetState> state,
 );
 
 class _HoverButtonInherited extends InheritedWidget {
@@ -13,7 +13,7 @@ class _HoverButtonInherited extends InheritedWidget {
     required this.states,
   });
 
-  final Set<ButtonStates> states;
+  final Set<WidgetState> states;
 
   static _HoverButtonInherited of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_HoverButtonInherited>()!;
@@ -98,7 +98,7 @@ class HoverButton extends StatefulWidget {
   /// [focusEnabled] must not be `false` for this to work
   final VoidCallback? onFocusTap;
 
-  final ButtonStateWidgetBuilder builder;
+  final WidgetStateWidgetBuilder builder;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -250,13 +250,13 @@ class _HoverButtonState extends State<HoverButton> {
       widget.onHorizontalDragUpdate != null ||
       widget.onHorizontalDragEnd != null;
 
-  Set<ButtonStates> get states {
-    if (!enabled) return {ButtonStates.disabled};
+  Set<WidgetState> get states {
+    if (!enabled) return {WidgetState.disabled};
 
     return {
-      if (_pressing) ButtonStates.pressing,
-      if (_hovering) ButtonStates.hovering,
-      if (_shouldShowFocus) ButtonStates.focused,
+      if (_pressing) WidgetState.pressed,
+      if (_hovering) WidgetState.hovered,
+      if (_shouldShowFocus) WidgetState.focused,
     };
   }
 
@@ -350,94 +350,120 @@ class _HoverButtonState extends State<HoverButton> {
   }
 }
 
-enum ButtonStates { disabled, hovering, pressing, focused, none }
+// // enum ButtonStates {
+// //   disabled,
+// //   hovering,
+// //   pressing,
+// //   focused,
+// //   none,
+// // }
 
-// typedef ButtonState<T> = T Function(Set<ButtonStates>);
+// /// Signature for the function that returns a value of type `T` based on a given
+// /// set of states.
+// typedef ButtonStateResolver<T> = T Function(Set<ButtonStates> states);
 
-/// Signature for the function that returns a value of type `T` based on a given
-/// set of states.
-typedef ButtonStateResolver<T> = T Function(Set<ButtonStates> states);
+// abstract class ButtonState<T> {
+//   T resolve(Set<ButtonStates> states);
 
-abstract class ButtonState<T> {
-  T resolve(Set<ButtonStates> states);
+//   static ButtonState<T> all<T>(T value) => _AllButtonState(value);
 
-  static ButtonState<T> all<T>(T value) => _AllButtonState(value);
+//   static ButtonState<T> resolveWith<T>(ButtonStateResolver<T> callback) {
+//     return _ButtonState(callback);
+//   }
 
-  static ButtonState<T> resolveWith<T>(ButtonStateResolver<T> callback) {
-    return _ButtonState(callback);
-  }
+//   static ButtonState<T?>? lerp<T>(
+//     ButtonState<T?>? a,
+//     ButtonState<T?>? b,
+//     double t,
+//     T? Function(T?, T?, double) lerpFunction,
+//   ) {
+//     if (a == null && b == null) return null;
+//     return _LerpProperties<T>(a, b, t, lerpFunction);
+//   }
 
-  static ButtonState<T?>? lerp<T>(
-    ButtonState<T?>? a,
-    ButtonState<T?>? b,
-    double t,
-    T? Function(T?, T?, double) lerpFunction,
-  ) {
-    if (a == null && b == null) return null;
-    return _LerpProperties<T>(a, b, t, lerpFunction);
-  }
+//   static T forStates<T>(
+//     Set<ButtonStates> states, {
+//     required T disabled,
+//     required T none,
+//     T? pressed,
+//     T? hovering,
+//     T? focused,
+//   }) {
+//     if (states.contains(WidgetState.disabled)) return disabled;
+//     if (pressed != null && states.contains(WidgetState.pressed)) {
+//       return pressed;
+//     }
+//     if (hovering != null && states.contains(WidgetState.hovered)) {
+//       return hovering;
+//     }
+//     if (states.contains(WidgetState.focused)) {
+//       return focused ?? pressed ?? none;
+//     }
+
+//     return none;
+//   }
+// }
+
+// class _ButtonState<T> extends ButtonState<T> {
+//   _ButtonState(this._resolve);
+
+//   final ButtonStateResolver<T> _resolve;
+
+//   @override
+//   T resolve(Set<ButtonStates> states) => _resolve(states);
+// }
+
+// class _AllButtonState<T> extends ButtonState<T> {
+//   _AllButtonState(this._value);
+
+//   final T _value;
+
+//   @override
+//   T resolve(states) => _value;
+// }
+
+// class _LerpProperties<T> implements ButtonState<T?> {
+//   const _LerpProperties(this.a, this.b, this.t, this.lerpFunction);
+
+//   final ButtonState<T?>? a;
+//   final ButtonState<T?>? b;
+//   final double t;
+//   final T? Function(T?, T?, double) lerpFunction;
+
+//   @override
+//   T? resolve(Set<ButtonStates> states) {
+//     final resolvedA = a?.resolve(states);
+//     final resolvedB = b?.resolve(states);
+//     return lerpFunction(resolvedA, resolvedB, t);
+//   }
+// }
+
+extension WidgetStateExtension on Set<WidgetState> {
+  bool get isFocused => contains(WidgetState.focused);
+  bool get isDisabled => contains(WidgetState.disabled);
+  bool get isPressing => contains(WidgetState.pressed);
+  bool get isHovering => contains(WidgetState.hovered);
+  bool get isNone => isEmpty;
 
   static T forStates<T>(
-    Set<ButtonStates> states, {
+    Set<WidgetState> states, {
     required T disabled,
     required T none,
     T? pressed,
     T? hovering,
     T? focused,
   }) {
-    if (states.contains(ButtonStates.disabled)) return disabled;
-    if (pressed != null && states.contains(ButtonStates.pressing)) {
+    if (states.contains(WidgetState.disabled)) return disabled;
+    if (pressed != null && states.contains(WidgetState.pressed)) {
       return pressed;
     }
-    if (hovering != null && states.contains(ButtonStates.hovering)) {
+    if (hovering != null && states.contains(WidgetState.hovered)) {
       return hovering;
     }
-    if (states.contains(ButtonStates.focused)) {
+    if (states.contains(WidgetState.focused)) {
       return focused ?? pressed ?? none;
     }
 
     return none;
   }
-}
-
-class _ButtonState<T> extends ButtonState<T> {
-  _ButtonState(this._resolve);
-
-  final ButtonStateResolver<T> _resolve;
-
-  @override
-  T resolve(Set<ButtonStates> states) => _resolve(states);
-}
-
-class _AllButtonState<T> extends ButtonState<T> {
-  _AllButtonState(this._value);
-
-  final T _value;
-
-  @override
-  T resolve(states) => _value;
-}
-
-class _LerpProperties<T> implements ButtonState<T?> {
-  const _LerpProperties(this.a, this.b, this.t, this.lerpFunction);
-
-  final ButtonState<T?>? a;
-  final ButtonState<T?>? b;
-  final double t;
-  final T? Function(T?, T?, double) lerpFunction;
-
-  @override
-  T? resolve(Set<ButtonStates> states) {
-    final resolvedA = a?.resolve(states);
-    final resolvedB = b?.resolve(states);
-    return lerpFunction(resolvedA, resolvedB, t);
-  }
-}
-
-extension ButtonStatesExtension on Set<ButtonStates> {
-  bool get isFocused => contains(ButtonStates.focused);
-  bool get isDisabled => contains(ButtonStates.disabled);
-  bool get isPressing => contains(ButtonStates.pressing);
-  bool get isHovering => contains(ButtonStates.hovering);
-  bool get isNone => isEmpty;
 }

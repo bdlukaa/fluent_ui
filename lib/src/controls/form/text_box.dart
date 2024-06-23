@@ -1093,7 +1093,7 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    Color backgroundColor(Set<ButtonStates> states) {
+    Color backgroundColor(Set<WidgetState> states) {
       final res = FluentTheme.of(context).resources;
 
       if (!enabled) {
@@ -1107,7 +1107,7 @@ class _TextBoxState extends State<TextBox>
       }
     }
 
-    TextStyle placeholderStyle(Set<ButtonStates> states) {
+    TextStyle placeholderStyle(Set<WidgetState> states) {
       return textStyle
           .copyWith(
             color: !enabled
@@ -1181,7 +1181,7 @@ class _TextBoxState extends State<TextBox>
                 // widgets below this can call `HoverButton.of(context).states.isFocused`
                 // and have the correct value
                 if (_effectiveFocusNode.hasFocus) {
-                  states = {...states, ButtonStates.focused};
+                  states = {...states, WidgetState.focused};
                 }
 
                 return DecoratedBox(
