@@ -2,6 +2,7 @@
 
 * fix: ¹ `DropDownButton.closeAfterClick` is now correctly applied. ² Added `MenuFlyoutItem.closeAfterClick`, which defaults to `true`. ([#1016](https://github.com/bdlukaa/fluent_ui/issues/1016))
 * fix: `MenuFlyoutSubItem` does not close when pressed ([#1037](https://github.com/bdlukaa/fluent_ui/issues/1037))
+* fix: Make `ScaffoldPage` opaque ([#1048](https://github.com/bdlukaa/fluent_ui/issues/1048))
 * fix: Scroll issue in `DatePicker`. ([#1054](https://github.com/bdlukaa/fluent_ui/issues/1054))
 * feat: Add `NumberBox.textInputAction` and `NumberBox.onEditingComplete` ([#1063](https://github.com/bdlukaa/fluent_ui/pull/1063))
 * fix: `NumberBox` does not calls a rebuild when it is already building ([#1064](https://github.com/bdlukaa/fluent_ui/issues/1064))

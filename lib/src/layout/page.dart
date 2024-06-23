@@ -132,37 +132,40 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final theme = FluentTheme.of(context);
     final view = NavigationView.maybeOf(context);
 
-    return PageStorage(
-      bucket: _bucket,
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(
-          bottom: widget.resizeToAvoidBottomInset
-              ? MediaQuery.viewInsetsOf(context).bottom
-              : 0.0,
-        ),
-        child: Column(children: [
-          Expanded(
-            child: Container(
-              // we only show the scaffold background color if a [NavigationView] is
-              // not a parent widget of this page. this happens because, if a navigation
-              // view is not used, the page would be uncolored.
-              color: view == null ? theme.scaffoldBackgroundColor : null,
-              padding: widget.padding == null
-                  ? const EdgeInsetsDirectional.only(
-                      top: kPageDefaultVerticalPadding,
-                    )
-                  : EdgeInsetsDirectional.only(top: widget.padding!.top),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.header != null) widget.header!,
-                  Expanded(child: widget.content),
-                ],
+    return ColoredBox(
+      color: Colors.transparent,
+      child: PageStorage(
+        bucket: _bucket,
+        child: Padding(
+          padding: EdgeInsetsDirectional.only(
+            bottom: widget.resizeToAvoidBottomInset
+                ? MediaQuery.viewInsetsOf(context).bottom
+                : 0.0,
+          ),
+          child: Column(children: [
+            Expanded(
+              child: Container(
+                // we only show the scaffold background color if a [NavigationView] is
+                // not a parent widget of this page. this happens because, if a navigation
+                // view is not used, the page would be uncolored.
+                color: view == null ? theme.scaffoldBackgroundColor : null,
+                padding: widget.padding == null
+                    ? const EdgeInsetsDirectional.only(
+                        top: kPageDefaultVerticalPadding,
+                      )
+                    : EdgeInsetsDirectional.only(top: widget.padding!.top),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.header != null) widget.header!,
+                    Expanded(child: widget.content),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (widget.bottomBar != null) widget.bottomBar!,
-        ]),
+            if (widget.bottomBar != null) widget.bottomBar!,
+          ]),
+        ),
       ),
     );
   }

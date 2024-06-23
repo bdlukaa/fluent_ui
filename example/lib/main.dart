@@ -711,7 +711,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         child: child,
       );
     },
-    routes: [
+    routes: <GoRoute>[
       /// Home
       GoRoute(path: '/', builder: (context, state) => const HomePage()),
 
