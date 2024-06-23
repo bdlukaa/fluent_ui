@@ -245,7 +245,7 @@ class RadioButtonThemeData with Diagnosticable {
       }),
       uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return BoxDecoration(
-          color: WidgetStateExtension.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,
@@ -254,7 +254,7 @@ class RadioButtonThemeData with Diagnosticable {
           ),
           border: Border.all(
             width: states.isPressed ? 4.5 : 1,
-            color: WidgetStateExtension.forStates(
+            color: WidgetStateExtension.forStates<Color>(
               states,
               disabled: theme.resources.textFillColorDisabled,
               pressed: theme.accentColor.defaultBrushFor(theme.brightness),

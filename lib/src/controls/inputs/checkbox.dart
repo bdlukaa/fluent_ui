@@ -308,7 +308,7 @@ class CheckboxThemeData with Diagnosticable {
                 ? theme.resources.controlStrongStrokeColorDisabled
                 : theme.resources.controlStrongStrokeColorDefault,
           ),
-          color: WidgetStateExtension.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,

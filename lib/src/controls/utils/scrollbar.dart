@@ -73,7 +73,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Color _trackColor(Set<WidgetState> state) {
-    if (state.containsAll({WidgetState.hovered, WidgetState.pressed})) {
+    if (state.isAllOf({WidgetState.hovered, WidgetState.pressed})) {
       return _scrollbarTheme.backgroundColor ?? Colors.transparent;
     }
     return Colors.transparent;
@@ -81,7 +81,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 
   Color _thumbColor(Set<WidgetState> state) {
     Color? color;
-    if (state.contains(WidgetState.pressed)) {
+    if (state.isPressed) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;

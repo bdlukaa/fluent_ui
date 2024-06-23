@@ -390,7 +390,7 @@ class ToggleSwitchThemeData with Diagnosticable {
       }),
       uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: WidgetStateExtension.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,
@@ -398,7 +398,7 @@ class ToggleSwitchThemeData with Diagnosticable {
             none: theme.resources.controlAltFillColorSecondary,
           ),
           border: Border.all(
-            color: WidgetStateExtension.forStates(
+            color: WidgetStateExtension.forStates<Color>(
               states,
               disabled: theme.resources.controlStrongFillColorDisabled,
               none: theme.resources.controlStrongFillColorDefault,
