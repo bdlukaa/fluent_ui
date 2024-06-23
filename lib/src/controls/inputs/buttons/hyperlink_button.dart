@@ -34,9 +34,9 @@ class HyperlinkButton extends BaseButton {
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.subtleFillColorDisabled;
-        } else if (states.isPressing) {
+        } else if (states.isPressed) {
           return theme.resources.subtleFillColorTertiary;
-        } else if (states.isHovering) {
+        } else if (states.isHovered) {
           return theme.resources.subtleFillColorSecondary;
         } else {
           return theme.resources.subtleFillColorTransparent;
@@ -45,19 +45,19 @@ class HyperlinkButton extends BaseButton {
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       ),
-      padding: WidgetStatePropertyAll(kDefaultButtonPadding),
+      padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return theme.resources.controlFillColorDisabled;
-        } else if (states.isPressing) {
+        } else if (states.isPressed) {
           return theme.accentColor.tertiaryBrushFor(theme.brightness);
-        } else if (states.isHovering) {
+        } else if (states.isHovered) {
           return theme.accentColor.secondaryBrushFor(theme.brightness);
         } else {
           return theme.accentColor.defaultBrushFor(theme.brightness);
         }
       }),
-      textStyle: WidgetStatePropertyAll(const TextStyle(
+      textStyle: const WidgetStatePropertyAll(TextStyle(
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
       )),

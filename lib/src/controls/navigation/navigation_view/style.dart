@@ -7,9 +7,9 @@ WidgetStateProperty<Color?> kDefaultPaneItemColor(
   return WidgetStateProperty.resolveWith((states) {
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.subtleFillColorTertiary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.subtleFillColorSecondary;
     } else {
       return res.subtleFillColorTransparent;
@@ -160,7 +160,7 @@ class NavigationPaneThemeData with Diagnosticable {
       itemHeaderTextStyle: typography.bodyStrong,
       selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled
@@ -169,7 +169,7 @@ class NavigationPaneThemeData with Diagnosticable {
       }),
       unselectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled
@@ -178,16 +178,16 @@ class NavigationPaneThemeData with Diagnosticable {
       }),
       selectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorTertiary
-              : states.isHovering
+              : states.isHovered
                   ? resources.textFillColorSecondary
                   : resources.textFillColorPrimary,
         );
       }),
       unselectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled

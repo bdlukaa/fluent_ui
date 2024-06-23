@@ -310,7 +310,7 @@ class PaneItem extends NavigationPaneItem {
                 return tileColor.resolve(
                   selected
                       ? {
-                          states.isHovering
+                          states.isHovered
                               ? WidgetState.pressed
                               : WidgetState.hovered,
                         }

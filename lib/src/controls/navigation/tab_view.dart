@@ -382,7 +382,7 @@ class _TabViewState extends State<TabView> {
               states,
             );
           }),
-          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
         ),
       ),
     );
@@ -885,9 +885,9 @@ class __TabState extends State<_Tab>
             WidgetStateProperty.resolveWith<Color>((states) {
           if (widget.selected) {
             return res.textFillColorPrimary;
-          } else if (states.isPressing) {
+          } else if (states.isPressed) {
             return res.textFillColorSecondary;
-          } else if (states.isHovering) {
+          } else if (states.isHovered) {
             return res.textFillColorPrimary;
           } else if (states.isDisabled) {
             return res.textFillColorDisabled;
@@ -901,9 +901,9 @@ class __TabState extends State<_Tab>
             WidgetStateProperty.resolveWith<Color>((states) {
           if (widget.selected) {
             return res.solidBackgroundFillColorTertiary;
-          } else if (states.isPressing) {
+          } else if (states.isPressed) {
             return res.layerOnMicaBaseAltFillColorDefault;
-          } else if (states.isHovering) {
+          } else if (states.isHovered) {
             return res.layerOnMicaBaseAltFillColorSecondary;
           } else if (states.isDisabled) {
             return res.layerOnMicaBaseAltFillColorTransparent;
@@ -991,7 +991,7 @@ class __TabState extends State<_Tab>
                                   CloseButtonVisibilityMode.always ||
                               (widget.visibilityMode ==
                                       CloseButtonVisibilityMode.onHover &&
-                                  states.isHovering)))
+                                  states.isHovered)))
                         Padding(
                           padding: const EdgeInsetsDirectional.only(start: 4.0),
                           child: FocusTheme(

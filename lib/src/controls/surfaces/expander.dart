@@ -300,7 +300,7 @@ class ExpanderState extends State<Expander>
                           child: AnimatedSlide(
                             duration: theme.fastAnimationDuration,
                             curve: Curves.easeInCirc,
-                            offset: states.isPressing
+                            offset: states.isPressed
                                 ? const Offset(0, 0.1)
                                 : Offset.zero,
                             child: Icon(

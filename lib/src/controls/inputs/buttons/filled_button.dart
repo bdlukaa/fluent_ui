@@ -59,9 +59,9 @@ class FilledButton extends Button {
   ) {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
-    } else if (states.isPressing) {
+    } else if (states.isPressed) {
       return theme.accentColor.tertiaryBrushFor(theme.brightness);
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return theme.accentColor.secondaryBrushFor(theme.brightness);
     } else {
       return theme.accentColor.defaultBrushFor(theme.brightness);
@@ -70,9 +70,9 @@ class FilledButton extends Button {
 
   static Color foregroundColor(FluentThemeData theme, Set<WidgetState> states) {
     final res = theme.resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.textOnAccentFillColorSecondary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.textOnAccentFillColorPrimary;
     } else if (states.isDisabled) {
       return res.textOnAccentFillColorDisabled;
@@ -82,7 +82,7 @@ class FilledButton extends Button {
 
   static ShapeBorder shapeBorder(
       FluentThemeData theme, Set<WidgetState> states) {
-    return states.isPressing || states.isDisabled
+    return states.isPressed || states.isDisabled
         ? RoundedRectangleBorder(
             side: BorderSide(
               color: theme.resources.controlFillColorTransparent,

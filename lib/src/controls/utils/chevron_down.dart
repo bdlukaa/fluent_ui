@@ -30,7 +30,7 @@ class ChevronDown extends StatelessWidget {
       curve: Curves.ease,
       tween: Tween(
         begin: 1,
-        end: states == null || !states.isPressing ? 1 : 0.9,
+        end: states == null || !states.isPressed ? 1 : 0.9,
       ),
       child: Icon(icon, size: iconSize, color: iconColor),
       builder: (context, value, child) {

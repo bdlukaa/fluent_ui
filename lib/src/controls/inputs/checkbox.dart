@@ -304,7 +304,7 @@ class CheckboxThemeData with Diagnosticable {
       uncheckedDecoration: WidgetStateProperty.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
-            color: states.isDisabled || states.isPressing
+            color: states.isDisabled || states.isPressed
                 ? theme.resources.controlStrongStrokeColorDisabled
                 : theme.resources.controlStrongStrokeColorDefault,
           ),
@@ -332,7 +332,7 @@ class CheckboxThemeData with Diagnosticable {
       checkedIconColor: WidgetStateProperty.resolveWith((states) {
         return FilledButton.foregroundColor(theme, states);
       }),
-      uncheckedIconColor: WidgetStatePropertyAll(Colors.transparent),
+      uncheckedIconColor: const WidgetStatePropertyAll(Colors.transparent),
       icon: FluentIcons.check_mark,
     );
   }

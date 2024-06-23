@@ -1098,9 +1098,9 @@ class _TextBoxState extends State<TextBox>
 
       if (!enabled) {
         return res.controlFillColorDisabled;
-      } else if (states.isPressing || states.isFocused) {
+      } else if (states.isPressed || states.isFocused) {
         return res.controlFillColorInputActive;
-      } else if (states.isHovering) {
+      } else if (states.isHovered) {
         return res.controlFillColorSecondary;
       } else {
         return res.controlFillColorDefault;
@@ -1112,7 +1112,7 @@ class _TextBoxState extends State<TextBox>
           .copyWith(
             color: !enabled
                 ? disabledColor
-                : (states.isPressing || states.isFocused)
+                : (states.isPressed || states.isFocused)
                     ? themeData.resources.textFillColorTertiary
                     : themeData.resources.textFillColorSecondary,
             fontWeight: FontWeight.w400,

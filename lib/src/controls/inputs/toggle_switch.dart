@@ -247,16 +247,15 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
-      margin: states.isHovering
+      margin: states.isHovered
           ? const EdgeInsets.all(1.0 + checkedFactor)
           : const EdgeInsets.symmetric(
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
       height: 18.0,
-      width: 12.0 +
-          (states.isHovering ? 2.0 : 0.0) +
-          (states.isPressing ? 5.0 : 0),
+      width:
+          12.0 + (states.isHovered ? 2.0 : 0.0) + (states.isPressed ? 5.0 : 0),
       decoration: checked
           ? style?.checkedKnobDecoration?.resolve(states)
           : style?.uncheckedKnobDecoration?.resolve(states),

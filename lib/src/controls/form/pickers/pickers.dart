@@ -96,14 +96,14 @@ class YesNoPickerControl extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
 
     final buttonStyle = ButtonStyle(
-      elevation: WidgetStatePropertyAll(0.0),
+      elevation: const WidgetStatePropertyAll(0.0),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
           FluentTheme.of(context),
           states,
         ),
       ),
-      shape: WidgetStatePropertyAll(const RoundedRectangleBorder()),
+      shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
     );
 
     return FocusTheme(
@@ -195,20 +195,20 @@ class PickerNavigatorIndicator extends StatelessWidget {
       forceEnabled: true,
       hitTestBehavior: HitTestBehavior.translucent,
       builder: (context, states) {
-        final show = states.isHovering || states.isPressing || states.isFocused;
+        final show = states.isHovered || states.isPressed || states.isFocused;
         return FocusBorder(
           focused: states.isFocused,
           child: ButtonTheme.merge(
             data: ButtonThemeData.all(ButtonStyle(
-              padding: WidgetStatePropertyAll(const EdgeInsets.symmetric(
+              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(
                 vertical: 10.0,
               )),
               backgroundColor:
                   WidgetStatePropertyAll(FluentTheme.of(context).menuColor),
-              shape: WidgetStatePropertyAll(const RoundedRectangleBorder()),
-              elevation: WidgetStatePropertyAll(0.0),
+              shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
+              elevation: const WidgetStatePropertyAll(0.0),
               iconSize: WidgetStateProperty.resolveWith((states) {
-                if (states.isPressing) {
+                if (states.isPressed) {
                   return 8.0;
                 } else {
                   return 10.0;

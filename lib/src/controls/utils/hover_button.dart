@@ -350,101 +350,45 @@ class _HoverButtonState extends State<HoverButton> {
   }
 }
 
-// // enum ButtonStates {
-// //   disabled,
-// //   hovering,
-// //   pressing,
-// //   focused,
-// //   none,
-// // }
+@Deprecated('Use WidgetState instead. Will be removed in the next version')
+typedef ButtonStates = WidgetState;
 
-// /// Signature for the function that returns a value of type `T` based on a given
-// /// set of states.
-// typedef ButtonStateResolver<T> = T Function(Set<ButtonStates> states);
-
-// abstract class ButtonState<T> {
-//   T resolve(Set<ButtonStates> states);
-
-//   static ButtonState<T> all<T>(T value) => _AllButtonState(value);
-
-//   static ButtonState<T> resolveWith<T>(ButtonStateResolver<T> callback) {
-//     return _ButtonState(callback);
-//   }
-
-//   static ButtonState<T?>? lerp<T>(
-//     ButtonState<T?>? a,
-//     ButtonState<T?>? b,
-//     double t,
-//     T? Function(T?, T?, double) lerpFunction,
-//   ) {
-//     if (a == null && b == null) return null;
-//     return _LerpProperties<T>(a, b, t, lerpFunction);
-//   }
-
-//   static T forStates<T>(
-//     Set<ButtonStates> states, {
-//     required T disabled,
-//     required T none,
-//     T? pressed,
-//     T? hovering,
-//     T? focused,
-//   }) {
-//     if (states.contains(WidgetState.disabled)) return disabled;
-//     if (pressed != null && states.contains(WidgetState.pressed)) {
-//       return pressed;
-//     }
-//     if (hovering != null && states.contains(WidgetState.hovered)) {
-//       return hovering;
-//     }
-//     if (states.contains(WidgetState.focused)) {
-//       return focused ?? pressed ?? none;
-//     }
-
-//     return none;
-//   }
-// }
-
-// class _ButtonState<T> extends ButtonState<T> {
-//   _ButtonState(this._resolve);
-
-//   final ButtonStateResolver<T> _resolve;
-
-//   @override
-//   T resolve(Set<ButtonStates> states) => _resolve(states);
-// }
-
-// class _AllButtonState<T> extends ButtonState<T> {
-//   _AllButtonState(this._value);
-
-//   final T _value;
-
-//   @override
-//   T resolve(states) => _value;
-// }
-
-// class _LerpProperties<T> implements ButtonState<T?> {
-//   const _LerpProperties(this.a, this.b, this.t, this.lerpFunction);
-
-//   final ButtonState<T?>? a;
-//   final ButtonState<T?>? b;
-//   final double t;
-//   final T? Function(T?, T?, double) lerpFunction;
-
-//   @override
-//   T? resolve(Set<ButtonStates> states) {
-//     final resolvedA = a?.resolve(states);
-//     final resolvedB = b?.resolve(states);
-//     return lerpFunction(resolvedA, resolvedB, t);
-//   }
-// }
+@Deprecated(
+  'Use WidgetStateProperty instead. Will be removed in the next version',
+)
+typedef ButtonState<T> = WidgetStateProperty<T>;
 
 extension WidgetStateExtension on Set<WidgetState> {
+  /// Checks whether the widget is focused.
   bool get isFocused => contains(WidgetState.focused);
+
+  /// Checks whether the widget is disabled.
   bool get isDisabled => contains(WidgetState.disabled);
-  bool get isPressing => contains(WidgetState.pressed);
-  bool get isHovering => contains(WidgetState.hovered);
+
+  /// Checks whether the widget is pressed.
+  bool get isPressed => contains(WidgetState.pressed);
+  @Deprecated('Use isPressed instead. Will be removed in the next version')
+  bool get isPressing => isPressed;
+
+  /// Checks whether the widget is hovered.
+  bool get isHovered => contains(WidgetState.hovered);
+  @Deprecated('Use isHovered instead. Will be removed in the next version')
+  bool get isHovering => isHovered;
+
+  /// Checks whether the widget is in its default state.
   bool get isNone => isEmpty;
 
+  /// Checks whether the widget is in any of the provided states.
+  bool isAnyOf(Iterable<WidgetState> states) {
+    return any((state) => states.contains(state));
+  }
+
+  /// Checks whether the widget is in all of the provided states.
+  bool isAllOf(Iterable<WidgetState> states) {
+    return containsAll(states);
+  }
+
+  /// Returns the value for the provided states.
   static T forStates<T>(
     Set<WidgetState> states, {
     required T disabled,

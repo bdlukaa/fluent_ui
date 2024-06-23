@@ -234,7 +234,7 @@ class RadioButtonThemeData with Diagnosticable {
           border: Border.all(
             color: ButtonThemeData.checkedInputColor(theme, states),
             width: !states.isDisabled
-                ? states.isHovering && !states.isPressing
+                ? states.isHovered && !states.isPressed
                     ? 3.4
                     : 5.0
                 : 4.0,
@@ -253,7 +253,7 @@ class RadioButtonThemeData with Diagnosticable {
             none: theme.resources.controlAltFillColorSecondary,
           ),
           border: Border.all(
-            width: states.isPressing ? 4.5 : 1,
+            width: states.isPressed ? 4.5 : 1,
             color: WidgetStateExtension.forStates(
               states,
               disabled: theme.resources.textFillColorDisabled,

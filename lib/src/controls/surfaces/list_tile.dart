@@ -323,7 +323,7 @@ class ListTile extends StatelessWidget {
                         tween: Tween<double>(
                           begin: 0.0,
                           end: selected
-                              ? states.isPressing
+                              ? states.isPressed
                                   ? tileHeight * 0.3
                                   : tileHeight
                               : 0.0,

@@ -289,9 +289,9 @@ class _SliderState extends State<Slider> {
           duration: theme.fastAnimationDuration,
           tween: Tween<double>(
             begin: 1.0,
-            end: states.isPressing || _sliding
+            end: states.isPressed || _sliding
                 ? 0.45
-                : states.isHovering
+                : states.isHovered
                     ? 0.66
                     : 0.5,
           ),
@@ -667,7 +667,7 @@ class SliderThemeData with Diagnosticable {
       useThumbBall: true,
       labelBackgroundColor: theme.resources.controlSolidFillColorDefault,
       labelForegroundColor: theme.resources.textFillColorPrimary,
-      trackHeight: WidgetStatePropertyAll(3.75),
+      trackHeight: const WidgetStatePropertyAll(3.75),
     );
 
     return def;

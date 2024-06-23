@@ -222,9 +222,9 @@ class ButtonThemeData with Diagnosticable {
     bool transparentWhenNone = false,
   }) {
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.controlFillColorTertiary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.controlFillColorSecondary;
     } else if (states.isDisabled) {
       return res.controlFillColorDisabled;
@@ -241,7 +241,7 @@ class ButtonThemeData with Diagnosticable {
     Set<WidgetState> states,
   ) {
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.textFillColorSecondary;
     } else if (states.isDisabled) {
       return res.textFillColorDisabled;
@@ -252,7 +252,7 @@ class ButtonThemeData with Diagnosticable {
   static ShapeBorder shapeBorder(
       BuildContext context, Set<WidgetState> states) {
     final theme = FluentTheme.of(context);
-    if (states.isPressing || states.isDisabled) {
+    if (states.isPressed || states.isDisabled) {
       return RoundedRectangleBorder(
         side: BorderSide(
           color: theme.resources.controlStrokeColorDefault,
@@ -294,8 +294,8 @@ class ButtonThemeData with Diagnosticable {
       if (transparentWhenDisabled) return res.subtleFillColorTransparent;
       return res.controlAltFillColorDisabled;
     }
-    if (states.isPressing) return res.subtleFillColorTertiary;
-    if (states.isHovering) return res.subtleFillColorSecondary;
+    if (states.isPressed) return res.subtleFillColorTertiary;
+    if (states.isHovered) return res.subtleFillColorSecondary;
     return transparentWhenNone
         ? res.subtleFillColorTransparent
         : res.controlAltFillColorSecondary;

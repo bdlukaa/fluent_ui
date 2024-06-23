@@ -271,16 +271,16 @@ class DropDownButtonState extends State<DropDownButton> {
                       data: IconThemeData(
                         color: state.isDisabled
                             ? theme.resources.textFillColorDisabled
-                            : state.isPressing
+                            : state.isPressed
                                 ? theme.resources.textFillColorTertiary
-                                : state.isHovering
+                                : state.isHovered
                                     ? theme.resources.textFillColorSecondary
                                     : theme.resources.textFillColorPrimary,
                       ),
                       child: AnimatedSlide(
                         duration: theme.fastAnimationDuration,
                         curve: Curves.easeInCirc,
-                        offset: state.isPressing
+                        offset: state.isPressed
                             ? const Offset(0, 0.1)
                             : Offset.zero,
                         child: widget.trailing!,
@@ -323,7 +323,6 @@ class DropDownButtonState extends State<DropDownButton> {
     widget.onOpen?.call();
     await _flyoutController.showFlyout(
       barrierColor: Colors.transparent,
-      placementMode: FlyoutPlacementMode.auto,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
       ),

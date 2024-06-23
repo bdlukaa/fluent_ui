@@ -1016,9 +1016,9 @@ class _TreeViewItem extends StatelessWidget {
                           TreeViewSelectionMode.none
                         ].contains(selectionMode)
                             ? states
-                            : selected && (states.isPressing || states.isNone)
+                            : selected && (states.isPressed || states.isNone)
                                 ? {WidgetState.hovered}
-                                : selected && states.isHovering
+                                : selected && states.isHovered
                                     ? {WidgetState.pressed}
                                     : states,
                         transparentWhenNone: true,
