@@ -1,6 +1,7 @@
 ## NEXT
 * fix: Scroll issue in `DatePicker`. ([#1054](https://github.com/bdlukaa/fluent_ui/issues/1054))
 * feat: Add `NumberBox.textInputAction` and `NumberBox.onEditingComplete` ([#1063](https://github.com/bdlukaa/fluent_ui/pull/1063))
+* fix: `NumberBox` does not calls a rebuild when it is already building ([#1064](https://github.com/bdlukaa/fluent_ui/issues/1064))
 * feat: Add `Tab.color`, `Tab.selectedColor` and `Tab.outlineColor` to TabView  ([#1068](https://github.com/bdlukaa/fluent_ui/pull/1068))
 * feat: Added `NavigationView.onItemPressed` callback, called when the item is on tap ([#1067](https://github.com/bdlukaa/fluent_ui/pull/1067))
 * fix: Mark `MenuFlyoutItem` as disabled when `.onPressed` is `null` ([#1074](https://github.com/bdlukaa/fluent_ui/issues/1074))

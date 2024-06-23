@@ -358,16 +358,18 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     }
 
     if (oldWidget.value != widget.value) {
-      if (widget.value != null) {
-        _updateController(widget.value!);
-      } else {
-        controller.text = '';
-      }
-    }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.value != null) {
+          _updateController(widget.value!);
+        } else {
+          controller.text = '';
+        }
 
-    if ((oldWidget.min != widget.min && widget.min != null) ||
-        (oldWidget.max != widget.max && widget.max != null)) {
-      updateValue();
+        if ((oldWidget.min != widget.min && widget.min != null) ||
+            (oldWidget.max != widget.max && widget.max != null)) {
+          updateValue();
+        }
+      });
     }
   }
 
