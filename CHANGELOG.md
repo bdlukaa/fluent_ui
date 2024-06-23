@@ -3,6 +3,55 @@
 * feat: Add `NumberBox.textInputAction` and `NumberBox.onEditingComplete` ([#1063](https://github.com/bdlukaa/fluent_ui/pull/1063))
 * feat: Add `Tab.color`, `Tab.selectedColor` and `Tab.outlineColor` to TabView  ([#1068](https://github.com/bdlukaa/fluent_ui/pull/1068))
 * feat: Added `NavigationView.onItemPressed` callback, called when the item is on tap ([#1067](https://github.com/bdlukaa/fluent_ui/pull/1067))
+* **BREAKING** feat: Removed `ButtonState`, `ButtonStates` and their related classes. Use `WidgetStateProperty`, `WidgetState` instead.
+  Before:
+
+  ```dart
+  Button(
+    style: ButtonStyle(
+      shape: ButtonState.all(RoundedRectangleBorder(...)),
+      backgroundColor: ButtonState.resolveWith((states) {
+        if (states.isPressed) {
+          return Colors.blue.shade900;
+        }
+        return Colors.blue;
+      }),
+      foregroundColor: ButtonState.resolveWith((states) {
+        return ButtonState.forStates<Color>(
+          states,
+          disabled: Colors.grey,
+          hovered: Colors.white.withOpacity(0.8),
+          pressed: Colors.white.withOpacity(0.6),
+        );
+      }),
+    ),
+  ),
+  ```
+
+  After:
+
+  ```dart
+  Button(
+    style: ButtonStyle(
+      shape: WidgetStatePropertyAll(RoundedRectangleBorder(...)),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.isPressed) {
+          return Colors.blue.shade900;
+        }
+        return Colors.blue;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        return WidgetStateExtension.forStates<Color>(
+          states,
+          disabled: Colors.grey,
+          hovered: Colors.white.withOpacity(0.8),
+          pressed: Colors.white.withOpacity(0.6),
+        );
+      }),
+    ),
+  ),
+  
+  ```
 
 ## 4.8.7
 
