@@ -9,6 +9,7 @@
 * feat: Add `Tab.color`, `Tab.selectedColor` and `Tab.outlineColor` to TabView  ([#1068](https://github.com/bdlukaa/fluent_ui/pull/1068))
 * feat: Added `NavigationView.onItemPressed` callback, called when the item is on tap ([#1067](https://github.com/bdlukaa/fluent_ui/pull/1067))
 * fix: Mark `MenuFlyoutItem` as disabled when `.onPressed` is `null` ([#1074](https://github.com/bdlukaa/fluent_ui/issues/1074))
+* fix: Do not dismiss Scrollbar if it is still being pressed ([#1077](https://github.com/bdlukaa/fluent_ui/issues/1077))
 * **BREAKING** feat: Removed `ButtonState`, `ButtonStates` and their related classes. Use `WidgetStateProperty`, `WidgetState` instead. ([#1075](https://github.com/bdlukaa/fluent_ui/issues/1075))
   Before:
 
