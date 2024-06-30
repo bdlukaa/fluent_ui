@@ -60,7 +60,8 @@ class TabView extends StatefulWidget {
     this.onChanged,
     required this.tabs,
     this.onNewPressed,
-    this.addIconData = FluentIcons.add,
+    this.addIconData,
+    this.newTabIcon = const Icon(FluentIcons.add),
     this.addIconBuilder,
     this.shortcutsEnabled = true,
     this.onReorder,
@@ -91,13 +92,24 @@ class TabView extends StatefulWidget {
   final VoidCallback? onNewPressed;
 
   /// The icon of the new button
-  final IconData addIconData;
+  @Deprecated(
+    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
+  )
+  final IconData? addIconData;
+
+  /// The icon of the "Add new tab" button.
+  ///
+  /// Defaults to an [Icon] with [FluentIcons.add].
+  final Icon newTabIcon;
 
   /// The builder for the add icon.
   ///
   /// This does not build the add button, only its icon.
   ///
   /// When null, the add icon is rendered.
+  @Deprecated(
+    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
+  )
   final Widget Function(Widget addIcon)? addIconBuilder;
 
   /// Whether the following shortcuts are enabled:
@@ -106,24 +118,29 @@ class TabView extends StatefulWidget {
   ///   * `Ctrl + F4` or `Ctrl + W` to close the current tab
   ///   * `Ctrl + 1` to ` Ctrl + 8` to navigate through tabs
   ///   * `Ctrl + 9` to navigate to the last tab
+  ///
+  /// Defaults to `true`.
   final bool shortcutsEnabled;
 
-  /// Called when the tabs are reordered. If null,
-  /// reordering is disabled. It's disabled by default.
+  /// Called when the tabs are reordered.
+  ///
+  /// If null, reordering is disabled. It's disabled by default.
   final ReorderCallback? onReorder;
 
   /// The min width a tab can have. Must not be negative.
   ///
-  /// Default to 80 logical pixels
+  /// Defaults to 80 logical pixels.
   final double minTabWidth;
 
   /// The max width a tab can have. Must not be negative.
   ///
-  /// Defaults to 240 logical pixels
+  /// Defaults to 240 logical pixels.
   final double maxTabWidth;
 
   /// Whether the buttons that scroll forward or backward
-  /// should be displayed, if necessary. Defaults to true
+  /// should be displayed, if necessary.
+  ///
+  /// Defaults to `true`.
   final bool showScrollButtons;
 
   /// The [ScrollPosController] used to move tabview to right and left when the
@@ -132,20 +149,24 @@ class TabView extends StatefulWidget {
   /// If null, a [ScrollPosController] is created internally.
   final ScrollPosController? scrollController;
 
-  /// Indicates the close button visibility mode
+  /// Indicates the close button visibility mode.
+  ///
+  /// Defaults to [CloseButtonVisibilityMode.always].
   final CloseButtonVisibilityMode closeButtonVisibility;
 
-  /// Indicates how a tab will size itself
+  /// Indicates how a tab will size itself.
+  ///
+  /// Defaults to [TabWidthBehavior.equal].
   final TabWidthBehavior tabWidthBehavior;
 
   /// Displayed before all the tabs and buttons.
   ///
-  /// Usually a [Text]
+  /// Usually a [Text].
   final Widget? header;
 
   /// Displayed after all the tabs and buttons.
   ///
-  /// Usually a [Text] widget
+  /// Usually a [Text] widget.
   final Widget? footer;
 
   /// The delay duration to animate the tab after it's closed. Only applied when
@@ -157,8 +178,9 @@ class TabView extends StatefulWidget {
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
 
-  /// Whether reordering is enabled or not. To enable it,
-  /// make sure [widget.onReorder] is not null.
+  /// Whether reordering is enabled or not.
+  ///
+  /// To enable it, ensure [onReorder] is not null.
   bool get isReorderEnabled => onReorder != null;
 
   @override
@@ -174,7 +196,13 @@ class TabView extends StatefulWidget {
         value: showNewButton,
         ifFalse: 'no new button',
       ))
+      // ignore: deprecated_member_use_from_same_package
       ..add(IconDataProperty('addIconData', addIconData))
+      ..add(DiagnosticsProperty<Widget>(
+        'newTabIcon',
+        newTabIcon,
+        defaultValue: const Icon(FluentIcons.add),
+      ))
       ..add(ObjectFlagProperty(
         'onChanged',
         onChanged,
@@ -570,10 +598,23 @@ class _TabViewState extends State<TabView> {
                       ),
                       child: _buttonTabBuilder(
                         context,
-                        widget.addIconBuilder?.call(
-                              Icon(widget.addIconData, size: 12.0),
-                            ) ??
-                            Icon(widget.addIconData, size: 12.0),
+                        () {
+                          Widget icon;
+                          // ignore: deprecated_member_use_from_same_package
+                          if (widget.addIconData != null) {
+                            // ignore: deprecated_member_use_from_same_package
+                            icon = Icon(widget.addIconData, size: 12.0);
+                          } else {
+                            icon = widget.newTabIcon;
+                          }
+                          icon = IconTheme.merge(
+                            data: const IconThemeData(size: 12.0),
+                            child: icon,
+                          );
+
+                          // ignore: deprecated_member_use_from_same_package
+                          return widget.addIconBuilder?.call(icon) ?? icon;
+                        }(),
                         widget.onNewPressed!,
                         localizations.newTabLabel,
                       ),

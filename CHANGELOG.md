@@ -82,6 +82,7 @@
   ```
 
   Explore the `TabState` reference to see all the available methods you can override.
+* feat: Deprecate `TabView.addIconData` and `TabView.addIconBuilder`. Use `TabView.newTabIcon` instead.
 
 ## 4.8.7
 
