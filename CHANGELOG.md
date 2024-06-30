@@ -1,4 +1,4 @@
-## NEXT
+## 4.9.0
 
 * fix: ¹ `DropDownButton.closeAfterClick` is now correctly applied. ² Added `MenuFlyoutItem.closeAfterClick`, which defaults to `true`. ([#1016](https://github.com/bdlukaa/fluent_ui/issues/1016))
 * fix: `MenuFlyoutSubItem` does not close when pressed ([#1037](https://github.com/bdlukaa/fluent_ui/issues/1037))
