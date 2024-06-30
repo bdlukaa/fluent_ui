@@ -83,6 +83,7 @@
 
   Explore the `TabState` reference to see all the available methods you can override.
 * feat: Deprecate `TabView.addIconData` and `TabView.addIconBuilder`. Use `TabView.newTabIcon` instead.
+* fix: `TabView.closeDelayDuration` default value is now 1 second.
 
 ## 4.8.7
 

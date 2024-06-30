@@ -73,7 +73,7 @@ class TabView extends StatefulWidget {
     this.tabWidthBehavior = TabWidthBehavior.equal,
     this.header,
     this.footer,
-    this.closeDelayDuration = const Duration(milliseconds: 400),
+    this.closeDelayDuration = const Duration(seconds: 1),
   });
 
   /// The index of the tab to be displayed
@@ -237,6 +237,7 @@ class TabView extends StatefulWidget {
       ..add(DiagnosticsProperty<Duration>(
         'closeDelayDuration',
         closeDelayDuration,
+        defaultValue: const Duration(seconds: 1),
       ))
       ..add(DoubleProperty('minTabWidth', minTabWidth, defaultValue: 80.0))
       ..add(DoubleProperty('maxTabWidth', maxTabWidth, defaultValue: 240.0));
@@ -321,7 +322,6 @@ class _TabViewState extends State<TabView> {
       }
 
       setState(() => lockedTabWidth = tabWidth);
-
       createTimer();
     }
   }
@@ -389,7 +389,7 @@ class _TabViewState extends State<TabView> {
   ) {
     final item = SizedBox(
       width: _kButtonWidth,
-      height: 24.0,
+      height: 28.0,
       child: IconButton(
         icon: Center(child: icon),
         onPressed: onPressed,
