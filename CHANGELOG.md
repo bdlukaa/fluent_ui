@@ -9,7 +9,6 @@
 * feat: Add `Tab.color`, `Tab.selectedColor` and `Tab.outlineColor` to TabView  ([#1068](https://github.com/bdlukaa/fluent_ui/pull/1068))
 * feat: Added `NavigationView.onItemPressed` callback, called when the item is on tap ([#1067](https://github.com/bdlukaa/fluent_ui/pull/1067))
 * fix: Mark `MenuFlyoutItem` as disabled when `.onPressed` is `null` ([#1074](https://github.com/bdlukaa/fluent_ui/issues/1074))
-* fix: Do not dismiss Scrollbar if it is still being pressed ([#1077](https://github.com/bdlukaa/fluent_ui/issues/1077))
 * **BREAKING** feat: Removed `ButtonState`, `ButtonStates` and their related classes. Use `WidgetStateProperty`, `WidgetState` instead. ([#1075](https://github.com/bdlukaa/fluent_ui/issues/1075))
   Before:
 
@@ -57,8 +56,32 @@
       }),
     ),
   ),
-  
   ```
+* fix: Do not dismiss Scrollbar if it is still being pressed ([#1077](https://github.com/bdlukaa/fluent_ui/issues/1077))
+* feat: Make `Tab` a widget that can be overridable ([#1050](https://github.com/bdlukaa/fluent_ui/issues/1050))
+  To create a custom Tab, you can now extend `Tab`:
+
+  ```dart
+  class MyCustomTab extends Tab {
+    MyCustomTab({super.key, required super.text, required super.body});
+
+    @override
+    State<Tab> createState() => MyCustomTabState();
+  }
+
+  class MyCustomTabState extends TabState {
+    @override
+    Widget build(BuildContext context) {
+      super.build(context);
+      return ColoredBox(
+        color: Colors.red,
+        child: super.build(context),
+      );
+    }
+  }
+  ```
+
+  Explore the `TabState` reference to see all the available methods you can override.
 
 ## 4.8.7
 
