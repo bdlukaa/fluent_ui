@@ -629,7 +629,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       return value.toString();
     }
     final mul = pow(10, widget.precision);
-    return NumberFormat().format((value * mul).roundToDouble() / mul);
+    final pattern = '#.${List.filled(widget.precision, '#').join()}';
+    return NumberFormat(pattern).format((value * mul).roundToDouble() / mul);
   }
 }
 
