@@ -1,3 +1,8 @@
+## next
+
+- fix: `NumberBox` format not work when precision bigger then 4.
+- feat: Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` to Numberbox.
+
 ## 4.9.0
 
 * fix: ¹ `DropDownButton.closeAfterClick` is now correctly applied. ² Added `MenuFlyoutItem.closeAfterClick`, which defaults to `true`. ([#1016](https://github.com/bdlukaa/fluent_ui/issues/1016))
