@@ -1,3 +1,6 @@
+## NEXT
+* fix: Resolved issue where `PaneItem` within `PaneItemExpander` remained accessible in `NavigationPane` compact mode ([#1081](https://github.com/bdlukaa/fluent_ui/issues/1081))
+
 ## 4.9.0
 
 * fix: ¹ `DropDownButton.closeAfterClick` is now correctly applied. ² Added `MenuFlyoutItem.closeAfterClick`, which defaults to `true`. ([#1016](https://github.com/bdlukaa/fluent_ui/issues/1016))
