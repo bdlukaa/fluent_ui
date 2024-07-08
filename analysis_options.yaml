@@ -2,27 +2,3 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    library_private_types_in_public_api: false
-    prefer_single_quotes: true
-    sort_child_properties_last: true
-    directives_ordering: true
-    sized_box_for_whitespace: true
-    use_colored_box: true 
-    use_decorated_box: true
-    avoid_unnecessary_containers: true
-    omit_local_variable_types: true
-    prefer_contains: true
-    unnecessary_await_in_return: true
-    unnecessary_parenthesis: true
-    unnecessary_to_list_in_spreads: true
-    use_build_context_synchronously: true
-    use_to_and_as_if_applicable: true
-    unnecessary_lambdas: true
-    exhaustive_cases: true
-    cascade_invocations: true
-    avoid_redundant_argument_values: true
-    use_rethrow_when_possible: true
-    sort_unnamed_constructors_first: true
-    tighten_type_of_initializing_formals: true
-    prefer_iterable_whereType: true
-    await_only_futures: true

@@ -123,7 +123,7 @@ class PaneItem extends NavigationPaneItem {
     int? itemIndex,
     bool? autofocus,
   }) {
-    final maybeBody = _InheritedNavigationView.maybeOf(context);
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -363,7 +363,7 @@ class PaneItem extends NavigationPaneItem {
           return Stack(children: [
             button,
             Positioned.fill(
-              child: _InheritedNavigationView.merge(
+              child: InheritedNavigationView.merge(
                 currentItemIndex: index,
                 currentItemSelected: selected,
                 child: KeyedSubtree(
@@ -480,7 +480,7 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    final view = _InheritedNavigationView.of(context);
+    final view = InheritedNavigationView.of(context);
 
     return KeyedSubtree(
       key: key,
@@ -560,7 +560,7 @@ class PaneItemAction extends PaneItem {
   }
 }
 
-typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
+typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 
 /// Hierhical navigation item used on [NavigationView]
 ///
@@ -580,7 +580,7 @@ typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 ///  * [PaneItemSeparator], used to group navigation items
 ///  * [PaneItemHeader], used to label groups of items.
 class PaneItemExpander extends PaneItem {
-  final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
+  final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
 
   PaneItemExpander({
     super.key,
@@ -620,7 +620,7 @@ class PaneItemExpander extends PaneItem {
     bool? autofocus,
     int? itemIndex,
   }) {
-    final maybeBody = _InheritedNavigationView.maybeOf(context);
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -711,7 +711,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   int get index {
-    final body = _InheritedNavigationView.of(context);
+    final body = InheritedNavigationView.of(context);
 
     return body.pane?.effectiveIndexOf(widget.item) ?? 0;
   }
@@ -726,7 +726,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     );
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
-        final body = _InheritedNavigationView.of(context);
+        final body = InheritedNavigationView.of(context);
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
@@ -791,7 +791,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = _InheritedNavigationView.of(context);
+    final body = InheritedNavigationView.of(context);
 
     assert(body.pane!.selected != null,
         'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!');

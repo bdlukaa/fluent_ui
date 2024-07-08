@@ -7,24 +7,25 @@ typedef WidgetStateWidgetBuilder = Widget Function(
   Set<WidgetState> state,
 );
 
-class _HoverButtonInherited extends InheritedWidget {
-  const _HoverButtonInherited({
+class HoverButtonInherited extends InheritedWidget {
+  const HoverButtonInherited({
+    super.key,
     required super.child,
     required this.states,
   });
 
   final Set<WidgetState> states;
 
-  static _HoverButtonInherited of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_HoverButtonInherited>()!;
+  static HoverButtonInherited of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>()!;
   }
 
-  static _HoverButtonInherited? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_HoverButtonInherited>();
+  static HoverButtonInherited? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>();
   }
 
   @override
-  bool updateShouldNotify(_HoverButtonInherited oldWidget) {
+  bool updateShouldNotify(HoverButtonInherited oldWidget) {
     return states != oldWidget.states;
   }
 }
@@ -165,12 +166,12 @@ class HoverButton extends StatefulWidget {
   @override
   State<HoverButton> createState() => _HoverButtonState();
 
-  static _HoverButtonInherited of(BuildContext context) {
-    return _HoverButtonInherited.of(context);
+  static HoverButtonInherited of(BuildContext context) {
+    return HoverButtonInherited.of(context);
   }
 
-  static _HoverButtonInherited? maybeOf(BuildContext context) {
-    return _HoverButtonInherited.maybeOf(context);
+  static HoverButtonInherited? maybeOf(BuildContext context) {
+    return HoverButtonInherited.maybeOf(context);
   }
 }
 
@@ -342,7 +343,7 @@ class _HoverButtonState extends State<HoverButton> {
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
 
-    w = _HoverButtonInherited(
+    w = HoverButtonInherited(
       states: states,
       child: w,
     );

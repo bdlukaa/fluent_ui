@@ -153,9 +153,9 @@ class NavigationView extends StatefulWidget {
   /// Get useful info about the current navigation view.
   ///
   /// As a normal user, you will rarely need this information.
-  static _InheritedNavigationView dataOf(BuildContext context) {
+  static InheritedNavigationView dataOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_InheritedNavigationView>()!;
+        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>()!;
   }
 
   @override
@@ -792,7 +792,7 @@ class NavigationViewState extends State<NavigationView> {
 
       return Mica(
         backgroundColor: theme.backgroundColor,
-        child: _InheritedNavigationView(
+        child: InheritedNavigationView(
           displayMode: _compactOverlayOpen ? PaneDisplayMode.open : displayMode,
           minimalPaneOpen: minimalPaneOpen,
           pane: widget.pane,
@@ -962,9 +962,8 @@ class _NavigationAppBar extends StatelessWidget {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
 
-    final displayMode =
-        _InheritedNavigationView.maybeOf(context)?.displayMode ??
-            PaneDisplayMode.top;
+    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
+        PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {
