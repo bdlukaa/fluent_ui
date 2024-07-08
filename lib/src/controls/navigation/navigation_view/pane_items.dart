@@ -927,13 +927,26 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final navigationTheme = NavigationPaneTheme.of(context);
     final size = Flyout.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
       child: HoverButton(
-        onPressed: onPressed,
+        onPressed: item.enabled ? onPressed : null,
+        forceEnabled: item.enabled,
         builder: (context, states) {
+          final textStyle = (isSelected
+                  ? navigationTheme.selectedTextStyle?.resolve(states)
+                  : navigationTheme.unselectedTextStyle?.resolve(states)) ??
+              const TextStyle();
+          final iconTheme = IconThemeData(
+            color: textStyle.color ??
+                (isSelected
+                    ? navigationTheme.selectedIconColor?.resolve(states)
+                    : navigationTheme.unselectedIconColor?.resolve(states)),
+            size: textStyle.fontSize ?? 16.0,
+          );
           return Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -951,11 +964,17 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 12.0),
-                child: item.icon,
+                child: IconTheme.merge(
+                  data: iconTheme,
+                  child: item.icon,
+                ),
               ),
               Flexible(
                 fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
-                child: item.title ?? const SizedBox.shrink(),
+                child: DefaultTextStyle(
+                  style: textStyle,
+                  child: item.title ?? const SizedBox.shrink(),
+                ),
               ),
               if (item.infoBadge != null)
                 Padding(
