@@ -100,22 +100,29 @@ class NumberBox<T extends num> extends StatefulWidget {
   final num largeChange;
 
   /// The precision indicates the number of digits that's accepted for double
-  /// value. If precision set,pattern, formatter and format must be null. Default is 2.
+  /// value. 
+  ///
+  /// If set, [pattern], [formatter] and [format] must be `null`. 
+  ///
+  /// Default is 2.
   final int? precision;
 
-  // The parttern for the number box. The pattern is used to format the number
-  // when the user input a value. If pattern set,precision, formatter and format must be
-  // null.
+  /// The parttern for the number box. The pattern is used to format the number
+  /// when the user inputs a value.
+  ///
+  /// If set, [precision], [formatter] and [format] must be `null`. 
   final String? pattern;
 
-  // The formatter for the number box. The formatter is used to format the
-  // number when the user input a value. If formatter set,precision, pattern and format
-  // must be null.
+  /// The formatter for the number box. The formatter is used to format the
+  /// number when the user inputs a value.
+  ///
+  /// If set, [pattern], [precision] and [format] must be `null`. 
   final Formatter? formatter;
 
   /// The format function for the number box. The format function is used to
-  /// format the number when the user input a value. If format set,precision,
-  /// pattern and formatter must be null.
+  /// format the number when the user input a value.
+  ///
+  /// If set, [pattern], [formatter] and [precision] must be `null`. 
   final FormatFunction? format;
 
   /// The minimum value allowed. If the user input a value below than min,
