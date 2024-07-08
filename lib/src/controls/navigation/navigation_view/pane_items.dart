@@ -937,9 +937,9 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
         forceEnabled: item.enabled,
         builder: (context, states) {
           final textStyle = (isSelected
-              ? navigationTheme.selectedTextStyle?.resolve(states)
-              : navigationTheme.unselectedTextStyle?.resolve(states))
-              ?? const TextStyle();
+                  ? navigationTheme.selectedTextStyle?.resolve(states)
+                  : navigationTheme.unselectedTextStyle?.resolve(states)) ??
+              const TextStyle();
           final iconTheme = IconThemeData(
             color: textStyle.color ??
                 (isSelected
