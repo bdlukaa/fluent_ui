@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Slovak (`sk`).
 class FluentLocalizationsSk extends FluentLocalizations {
-  FluentLocalizationsSk([String locale = 'sk']) : super(locale);
+  FluentLocalizationsSk([super.locale = 'sk']);
 
   @override
   String get backButtonTooltip => 'Naspäť';

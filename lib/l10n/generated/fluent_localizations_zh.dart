@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Chinese (`zh`).
 class FluentLocalizationsZh extends FluentLocalizations {
-  FluentLocalizationsZh([String locale = 'zh']) : super(locale);
+  FluentLocalizationsZh([super.locale = 'zh']);
 
   @override
   String get backButtonTooltip => '返回';

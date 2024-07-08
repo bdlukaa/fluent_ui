@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Uzbek (`uz`).
 class FluentLocalizationsUz extends FluentLocalizations {
-  FluentLocalizationsUz([String locale = 'uz']) : super(locale);
+  FluentLocalizationsUz([super.locale = 'uz']);
 
   @override
   String get backButtonTooltip => 'Ortga';

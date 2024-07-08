@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Croatian (`hr`).
 class FluentLocalizationsHr extends FluentLocalizations {
-  FluentLocalizationsHr([String locale = 'hr']) : super(locale);
+  FluentLocalizationsHr([super.locale = 'hr']);
 
   @override
   String get backButtonTooltip => 'Natrag';

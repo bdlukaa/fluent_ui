@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Arabic (`ar`).
 class FluentLocalizationsAr extends FluentLocalizations {
-  FluentLocalizationsAr([String locale = 'ar']) : super(locale);
+  FluentLocalizationsAr([super.locale = 'ar']);
 
   @override
   String get backButtonTooltip => 'رجوع';

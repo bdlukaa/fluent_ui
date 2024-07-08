@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Japanese (`ja`).
 class FluentLocalizationsJa extends FluentLocalizations {
-  FluentLocalizationsJa([String locale = 'ja']) : super(locale);
+  FluentLocalizationsJa([super.locale = 'ja']);
 
   @override
   String get backButtonTooltip => '戻る';

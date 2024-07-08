@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Hindi (`hi`).
 class FluentLocalizationsHi extends FluentLocalizations {
-  FluentLocalizationsHi([String locale = 'hi']) : super(locale);
+  FluentLocalizationsHi([super.locale = 'hi']);
 
   @override
   String get backButtonTooltip => 'वापस';

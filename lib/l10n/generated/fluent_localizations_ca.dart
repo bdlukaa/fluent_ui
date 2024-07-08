@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Catalan Valencian (`ca`).
 class FluentLocalizationsCa extends FluentLocalizations {
-  FluentLocalizationsCa([String locale = 'ca']) : super(locale);
+  FluentLocalizationsCa([super.locale = 'ca']);
 
   @override
   String get backButtonTooltip => 'Tornar';

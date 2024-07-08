@@ -1014,9 +1014,9 @@ extension ItemExtension on Widget {
     if (this is Text) {
       final title = this as Text;
       switch (T) {
-        case String:
+        case const (String):
           return (title.data ?? title.textSpan?.toPlainText()) as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           return (title.textSpan ??
               TextSpan(
                 text: title.data ?? '',
@@ -1024,59 +1024,59 @@ extension ItemExtension on Widget {
                     title.getProperty<TextStyle>()?.merge(def as TextStyle?) ??
                         def as TextStyle?,
               )) as T?;
-        case TextStyle:
+        case const (TextStyle):
           return title.style as T?;
-        case TextAlign:
+        case const (TextAlign):
           return title.textAlign as T?;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return title.textHeightBehavior as T?;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return title.textWidthBasis as T?;
       }
     } else if (this is RichText) {
       final title = this as RichText;
       switch (T) {
-        case String:
+        case const (String):
           return title.text.toPlainText() as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           if (T is InlineSpan) {
             final span = title.text;
             span.style?.merge(def as TextStyle?);
             return span as T;
           }
           return title.text as T;
-        case TextStyle:
+        case const (TextStyle):
           return (title.text.style as T?) ?? def as T?;
-        case TextAlign:
+        case const (TextAlign):
           return title.textAlign as T?;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return title.textHeightBehavior as T?;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return title.textWidthBasis as T?;
       }
     } else if (this is Icon) {
       final title = this as Icon;
       switch (T) {
-        case String:
+        case const (String):
           if (title.icon?.codePoint == null) return null;
           return String.fromCharCode(title.icon!.codePoint) as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           return TextSpan(
             text: String.fromCharCode(title.icon!.codePoint),
             style: title.getProperty<TextStyle>(),
           ) as T?;
-        case TextStyle:
+        case const (TextStyle):
           return TextStyle(
             color: title.color,
             fontSize: title.size,
             fontFamily: title.icon?.fontFamily,
             package: title.icon?.fontPackage,
           ) as T?;
-        case TextAlign:
+        case const (TextAlign):
           return null;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return null;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return null;
       }
     }

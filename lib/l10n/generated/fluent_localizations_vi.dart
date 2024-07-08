@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Vietnamese (`vi`).
 class FluentLocalizationsVi extends FluentLocalizations {
-  FluentLocalizationsVi([String locale = 'vi']) : super(locale);
+  FluentLocalizationsVi([super.locale = 'vi']);
 
   @override
   String get backButtonTooltip => 'Quay lại';

@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Korean (`ko`).
 class FluentLocalizationsKo extends FluentLocalizations {
-  FluentLocalizationsKo([String locale = 'ko']) : super(locale);
+  FluentLocalizationsKo([super.locale = 'ko']);
 
   @override
   String get backButtonTooltip => '뒤로';

@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Burmese (`my`).
 class FluentLocalizationsMy extends FluentLocalizations {
-  FluentLocalizationsMy([String locale = 'my']) : super(locale);
+  FluentLocalizationsMy([super.locale = 'my']);
 
   @override
   String get backButtonTooltip => 'နောက်သို့';

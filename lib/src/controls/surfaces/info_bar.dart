@@ -434,7 +434,8 @@ class InfoBarThemeData with Diagnosticable {
       actionStyle: const ButtonStyle(
         padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
       ),
-      closeButtonStyle: const ButtonStyle(iconSize: WidgetStatePropertyAll(16.0)),
+      closeButtonStyle:
+          const ButtonStyle(iconSize: WidgetStatePropertyAll(16.0)),
     );
   }
 

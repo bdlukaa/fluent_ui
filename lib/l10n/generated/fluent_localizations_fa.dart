@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Persian (`fa`).
 class FluentLocalizationsFa extends FluentLocalizations {
-  FluentLocalizationsFa([String locale = 'fa']) : super(locale);
+  FluentLocalizationsFa([super.locale = 'fa']);
 
   @override
   String get backButtonTooltip => 'برگشت';

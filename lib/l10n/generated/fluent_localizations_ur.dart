@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Urdu (`ur`).
 class FluentLocalizationsUr extends FluentLocalizations {
-  FluentLocalizationsUr([String locale = 'ur']) : super(locale);
+  FluentLocalizationsUr([super.locale = 'ur']);
 
   @override
   String get backButtonTooltip => 'آگے';

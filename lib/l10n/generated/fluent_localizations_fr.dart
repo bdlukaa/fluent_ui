@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for French (`fr`).
 class FluentLocalizationsFr extends FluentLocalizations {
-  FluentLocalizationsFr([String locale = 'fr']) : super(locale);
+  FluentLocalizationsFr([super.locale = 'fr']);
 
   @override
   String get backButtonTooltip => 'Retour';

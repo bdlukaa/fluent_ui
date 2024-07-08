@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Dutch Flemish (`nl`).
 class FluentLocalizationsNl extends FluentLocalizations {
-  FluentLocalizationsNl([String locale = 'nl']) : super(locale);
+  FluentLocalizationsNl([super.locale = 'nl']);
 
   @override
   String get backButtonTooltip => 'Terug';
