@@ -1,7 +1,6 @@
 ## next
 
-- fix: `NumberBox` format not work when precision bigger then 4.
-- feat: Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` to Numberbox.
+- feat: ¹ `NumberBox` now supports precision greater than 4. ² Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` ([#1080](https://github.com/bdlukaa/fluent_ui/pull/1080))
 
 ## 4.9.0
 
