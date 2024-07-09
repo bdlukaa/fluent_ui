@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Russian (`ru`).
 class FluentLocalizationsRu extends FluentLocalizations {
-  FluentLocalizationsRu([String locale = 'ru']) : super(locale);
+  FluentLocalizationsRu([super.locale = 'ru']);
 
   @override
   String get backButtonTooltip => 'Назад';

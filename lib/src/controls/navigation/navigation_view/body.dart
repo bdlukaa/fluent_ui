@@ -85,7 +85,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final view = _InheritedNavigationView.of(context);
+    final view = InheritedNavigationView.of(context);
     final selected = view.pane?.selected ?? 0;
 
     _pageController ??= PageController(initialPage: selected);
@@ -101,7 +101,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = _InheritedNavigationView.of(context);
+    final view = InheritedNavigationView.of(context);
     final theme = FluentTheme.of(context);
 
     return ColoredBox(
@@ -186,9 +186,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-class _InheritedNavigationView extends InheritedWidget {
+class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
-  const _InheritedNavigationView({
+  const InheritedNavigationView({
     super.key,
     required super.child,
     required this.displayMode,
@@ -221,12 +221,12 @@ class _InheritedNavigationView extends InheritedWidget {
   /// Whether the navigation panes are transitioning or not.
   final bool isTransitioning;
 
-  static _InheritedNavigationView? maybeOf(BuildContext context) {
+  static InheritedNavigationView? maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_InheritedNavigationView>();
+        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>();
   }
 
-  static _InheritedNavigationView of(BuildContext context) {
+  static InheritedNavigationView of(BuildContext context) {
     return maybeOf(context)!;
   }
 
@@ -242,8 +242,8 @@ class _InheritedNavigationView extends InheritedWidget {
     bool? isTransitioning,
   }) {
     return Builder(builder: (context) {
-      final current = _InheritedNavigationView.maybeOf(context);
-      return _InheritedNavigationView(
+      final current = InheritedNavigationView.maybeOf(context);
+      return InheritedNavigationView(
         key: key,
         displayMode:
             displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
@@ -258,7 +258,7 @@ class _InheritedNavigationView extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(covariant _InheritedNavigationView oldWidget) {
+  bool updateShouldNotify(covariant InheritedNavigationView oldWidget) {
     return oldWidget.displayMode != displayMode ||
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||

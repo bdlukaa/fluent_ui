@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for German (`de`).
 class FluentLocalizationsDe extends FluentLocalizations {
-  FluentLocalizationsDe([String locale = 'de']) : super(locale);
+  FluentLocalizationsDe([super.locale = 'de']);
 
   @override
   String get backButtonTooltip => 'Zurück';

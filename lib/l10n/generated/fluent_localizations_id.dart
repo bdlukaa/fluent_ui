@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Indonesian (`id`).
 class FluentLocalizationsId extends FluentLocalizations {
-  FluentLocalizationsId([String locale = 'id']) : super(locale);
+  FluentLocalizationsId([super.locale = 'id']);
 
   @override
   String get backButtonTooltip => 'Kembali';

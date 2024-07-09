@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Spanish Castilian (`es`).
 class FluentLocalizationsEs extends FluentLocalizations {
-  FluentLocalizationsEs([String locale = 'es']) : super(locale);
+  FluentLocalizationsEs([super.locale = 'es']);
 
   @override
   String get backButtonTooltip => 'Volver';

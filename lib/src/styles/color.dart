@@ -187,8 +187,7 @@ class Colors {
 }
 
 class ShadedColor extends ColorSwatch<int> {
-  const ShadedColor(int primary, Map<int, Color> swatch)
-      : super(primary, swatch);
+  const ShadedColor(super.primary, super.swatch);
 
   @override
   Color operator [](int index) {

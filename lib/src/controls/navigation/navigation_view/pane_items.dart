@@ -123,7 +123,7 @@ class PaneItem extends NavigationPaneItem {
     int? itemIndex,
     bool? autofocus,
   }) {
-    final maybeBody = _InheritedNavigationView.maybeOf(context);
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -363,7 +363,7 @@ class PaneItem extends NavigationPaneItem {
           return Stack(children: [
             button,
             Positioned.fill(
-              child: _InheritedNavigationView.merge(
+              child: InheritedNavigationView.merge(
                 currentItemIndex: index,
                 currentItemSelected: selected,
                 child: KeyedSubtree(
@@ -480,7 +480,7 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    final view = _InheritedNavigationView.of(context);
+    final view = InheritedNavigationView.of(context);
 
     return KeyedSubtree(
       key: key,
@@ -560,7 +560,7 @@ class PaneItemAction extends PaneItem {
   }
 }
 
-typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
+typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 
 /// Hierhical navigation item used on [NavigationView]
 ///
@@ -580,7 +580,7 @@ typedef _PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 ///  * [PaneItemSeparator], used to group navigation items
 ///  * [PaneItemHeader], used to label groups of items.
 class PaneItemExpander extends PaneItem {
-  final _PaneItemExpanderKey expanderKey = _PaneItemExpanderKey();
+  final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
 
   PaneItemExpander({
     super.key,
@@ -620,7 +620,7 @@ class PaneItemExpander extends PaneItem {
     bool? autofocus,
     int? itemIndex,
   }) {
-    final maybeBody = _InheritedNavigationView.maybeOf(context);
+    final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -711,7 +711,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   int get index {
-    final body = _InheritedNavigationView.of(context);
+    final body = InheritedNavigationView.of(context);
 
     return body.pane?.effectiveIndexOf(widget.item) ?? 0;
   }
@@ -726,7 +726,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     );
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
-        final body = _InheritedNavigationView.of(context);
+        final body = InheritedNavigationView.of(context);
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
@@ -791,7 +791,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = _InheritedNavigationView.of(context);
+    final body = InheritedNavigationView.of(context);
 
     assert(body.pane!.selected != null,
         'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!');
@@ -927,13 +927,26 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final navigationTheme = NavigationPaneTheme.of(context);
     final size = Flyout.of(context).size;
     return Container(
       width: size.isEmpty ? null : size.width,
       padding: MenuFlyout.itemsPadding,
       child: HoverButton(
-        onPressed: onPressed,
+        onPressed: item.enabled ? onPressed : null,
+        forceEnabled: item.enabled,
         builder: (context, states) {
+          final textStyle = (isSelected
+                  ? navigationTheme.selectedTextStyle?.resolve(states)
+                  : navigationTheme.unselectedTextStyle?.resolve(states)) ??
+              const TextStyle();
+          final iconTheme = IconThemeData(
+            color: textStyle.color ??
+                (isSelected
+                    ? navigationTheme.selectedIconColor?.resolve(states)
+                    : navigationTheme.unselectedIconColor?.resolve(states)),
+            size: textStyle.fontSize ?? 16.0,
+          );
           return Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -951,11 +964,17 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 12.0),
-                child: item.icon,
+                child: IconTheme.merge(
+                  data: iconTheme,
+                  child: item.icon,
+                ),
               ),
               Flexible(
                 fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
-                child: item.title ?? const SizedBox.shrink(),
+                child: DefaultTextStyle(
+                  style: textStyle,
+                  child: item.title ?? const SizedBox.shrink(),
+                ),
               ),
               if (item.infoBadge != null)
                 Padding(
@@ -1014,9 +1033,9 @@ extension ItemExtension on Widget {
     if (this is Text) {
       final title = this as Text;
       switch (T) {
-        case String:
+        case const (String):
           return (title.data ?? title.textSpan?.toPlainText()) as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           return (title.textSpan ??
               TextSpan(
                 text: title.data ?? '',
@@ -1024,59 +1043,59 @@ extension ItemExtension on Widget {
                     title.getProperty<TextStyle>()?.merge(def as TextStyle?) ??
                         def as TextStyle?,
               )) as T?;
-        case TextStyle:
+        case const (TextStyle):
           return title.style as T?;
-        case TextAlign:
+        case const (TextAlign):
           return title.textAlign as T?;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return title.textHeightBehavior as T?;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return title.textWidthBasis as T?;
       }
     } else if (this is RichText) {
       final title = this as RichText;
       switch (T) {
-        case String:
+        case const (String):
           return title.text.toPlainText() as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           if (T is InlineSpan) {
             final span = title.text;
             span.style?.merge(def as TextStyle?);
             return span as T;
           }
           return title.text as T;
-        case TextStyle:
+        case const (TextStyle):
           return (title.text.style as T?) ?? def as T?;
-        case TextAlign:
+        case const (TextAlign):
           return title.textAlign as T?;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return title.textHeightBehavior as T?;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return title.textWidthBasis as T?;
       }
     } else if (this is Icon) {
       final title = this as Icon;
       switch (T) {
-        case String:
+        case const (String):
           if (title.icon?.codePoint == null) return null;
           return String.fromCharCode(title.icon!.codePoint) as T?;
-        case InlineSpan:
+        case const (InlineSpan):
           return TextSpan(
             text: String.fromCharCode(title.icon!.codePoint),
             style: title.getProperty<TextStyle>(),
           ) as T?;
-        case TextStyle:
+        case const (TextStyle):
           return TextStyle(
             color: title.color,
             fontSize: title.size,
             fontFamily: title.icon?.fontFamily,
             package: title.icon?.fontPackage,
           ) as T?;
-        case TextAlign:
+        case const (TextAlign):
           return null;
-        case TextHeightBehavior:
+        case const (TextHeightBehavior):
           return null;
-        case TextWidthBasis:
+        case const (TextWidthBasis):
           return null;
       }
     }

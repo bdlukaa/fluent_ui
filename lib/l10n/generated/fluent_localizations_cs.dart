@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Czech (`cs`).
 class FluentLocalizationsCs extends FluentLocalizations {
-  FluentLocalizationsCs([String locale = 'cs']) : super(locale);
+  FluentLocalizationsCs([super.locale = 'cs']);
 
   @override
   String get backButtonTooltip => 'Zpět';

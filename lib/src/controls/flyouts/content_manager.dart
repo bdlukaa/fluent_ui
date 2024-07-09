@@ -96,7 +96,7 @@ class FlyoutState extends State<Flyout> {
   }
 }
 
-typedef _MenuBuilder = Widget Function(
+typedef MenuBuilder = Widget Function(
   BuildContext context,
   BoxConstraints rootSize,
   Iterable<Widget> menus,
@@ -104,7 +104,7 @@ typedef _MenuBuilder = Widget Function(
 );
 
 class MenuInfoProvider extends StatefulWidget {
-  final _MenuBuilder builder;
+  final MenuBuilder builder;
 
   @protected
   const MenuInfoProvider({super.key, required this.builder});

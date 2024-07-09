@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Hungarian (`hu`).
 class FluentLocalizationsHu extends FluentLocalizations {
-  FluentLocalizationsHu([String locale = 'hu']) : super(locale);
+  FluentLocalizationsHu([super.locale = 'hu']);
 
   @override
   String get backButtonTooltip => 'Vissza';

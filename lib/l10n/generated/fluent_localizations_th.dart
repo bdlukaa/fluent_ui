@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Thai (`th`).
 class FluentLocalizationsTh extends FluentLocalizations {
-  FluentLocalizationsTh([String locale = 'th']) : super(locale);
+  FluentLocalizationsTh([super.locale = 'th']);
 
   @override
   String get backButtonTooltip => 'กลับ';

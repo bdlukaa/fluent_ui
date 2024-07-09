@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Kurdish (`ku`).
 class FluentLocalizationsKu extends FluentLocalizations {
-  FluentLocalizationsKu([String locale = 'ku']) : super(locale);
+  FluentLocalizationsKu([super.locale = 'ku']);
 
   @override
   String get backButtonTooltip => 'گەڕانەوە';

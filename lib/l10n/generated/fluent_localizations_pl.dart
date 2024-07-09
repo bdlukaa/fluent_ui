@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Polish (`pl`).
 class FluentLocalizationsPl extends FluentLocalizations {
-  FluentLocalizationsPl([String locale = 'pl']) : super(locale);
+  FluentLocalizationsPl([super.locale = 'pl']);
 
   @override
   String get backButtonTooltip => 'Wstecz';

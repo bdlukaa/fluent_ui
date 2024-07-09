@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Swedish (`sv`).
 class FluentLocalizationsSv extends FluentLocalizations {
-  FluentLocalizationsSv([String locale = 'sv']) : super(locale);
+  FluentLocalizationsSv([super.locale = 'sv']);
 
   @override
   String get backButtonTooltip => 'Tillbaka';
