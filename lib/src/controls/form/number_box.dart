@@ -9,9 +9,9 @@ import 'package:math_expressions/math_expressions.dart';
 const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
 
-typedef FormatFunction = String? Function(num? number);
+typedef NumberBoxFormatFunction = String? Function(num? number);
 
-abstract interface class Formatter {
+abstract interface class NumberBoxFormatter {
   String format(dynamic number);
 }
 
@@ -100,9 +100,9 @@ class NumberBox<T extends num> extends StatefulWidget {
   final num largeChange;
 
   /// The precision indicates the number of digits that's accepted for double
-  /// value. 
+  /// value.
   ///
-  /// If set, [pattern], [formatter] and [format] must be `null`. 
+  /// If set, [pattern], [formatter] and [format] must be `null`.
   ///
   /// Default is 2.
   final int? precision;
@@ -110,20 +110,20 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// The parttern for the number box. The pattern is used to format the number
   /// when the user inputs a value.
   ///
-  /// If set, [precision], [formatter] and [format] must be `null`. 
+  /// If set, [precision], [formatter] and [format] must be `null`.
   final String? pattern;
 
   /// The formatter for the number box. The formatter is used to format the
   /// number when the user inputs a value.
   ///
-  /// If set, [pattern], [precision] and [format] must be `null`. 
-  final Formatter? formatter;
+  /// If set, [pattern], [precision] and [format] must be `null`.
+  final NumberBoxFormatter? formatter;
 
   /// The format function for the number box. The format function is used to
   /// format the number when the user input a value.
   ///
-  /// If set, [pattern], [formatter] and [precision] must be `null`. 
-  final FormatFunction? format;
+  /// If set, [pattern], [formatter] and [precision] must be `null`.
+  final NumberBoxFormatFunction? format;
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
@@ -343,7 +343,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   // use dynamic to simulate duck typing
   late final dynamic _formatter;
-  late final FormatFunction _format;
+  late final NumberBoxFormatFunction _format;
 
   final controller = TextEditingController();
 
