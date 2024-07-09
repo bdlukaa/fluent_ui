@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -9,6 +8,12 @@ import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
+
+typedef NumberBoxFormatFunction = String? Function(num? number);
+
+abstract interface class NumberBoxFormatter {
+  String format(dynamic number);
+}
 
 enum SpinButtonPlacementMode {
   /// Two buttons will be added as a suffix of the number box field. A button
@@ -96,7 +101,29 @@ class NumberBox<T extends num> extends StatefulWidget {
 
   /// The precision indicates the number of digits that's accepted for double
   /// value.
-  final int precision;
+  ///
+  /// If set, [pattern], [formatter] and [format] must be `null`.
+  ///
+  /// Default is 2.
+  final int? precision;
+
+  /// The parttern for the number box. The pattern is used to format the number
+  /// when the user inputs a value.
+  ///
+  /// If set, [precision], [formatter] and [format] must be `null`.
+  final String? pattern;
+
+  /// The formatter for the number box. The formatter is used to format the
+  /// number when the user inputs a value.
+  ///
+  /// If set, [pattern], [precision] and [format] must be `null`.
+  final NumberBoxFormatter? formatter;
+
+  /// The format function for the number box. The format function is used to
+  /// format the number when the user input a value.
+  ///
+  /// If set, [pattern], [formatter] and [precision] must be `null`.
+  final NumberBoxFormatFunction? format;
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
@@ -244,7 +271,10 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
-    this.precision = 2,
+    this.precision,
+    this.pattern,
+    this.formatter,
+    this.format,
     this.min,
     this.max,
     this.allowExpressions = false,
@@ -275,7 +305,26 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.textDirection,
     this.textInputAction,
     this.onEditingComplete,
-  });
+  }) : assert((precision != null &&
+                pattern == null &&
+                formatter == null &&
+                format == null) ||
+            (precision == null &&
+                pattern != null &&
+                formatter == null &&
+                format == null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter != null &&
+                format == null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter == null &&
+                format != null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter == null &&
+                format == null));
 
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();
@@ -291,6 +340,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   bool _hasPrimaryFocus = false;
 
   late num? previousValidValue = widget.value;
+
+  // use dynamic to simulate duck typing
+  late final dynamic _formatter;
+  late final NumberBoxFormatFunction _format;
 
   final controller = TextEditingController();
 
@@ -312,6 +365,32 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     }
     focusNode.addListener(_handleFocusChanged);
 
+    if (widget.precision == null &&
+        widget.pattern == null &&
+        widget.formatter == null) {
+      _formatter = NumberFormat('#.${List.filled(2, '#').join()}') as dynamic;
+    }
+    if (widget.precision != null) {
+      final pattern = '#.${List.filled(widget.precision!, '#').join()}';
+      _formatter = NumberFormat(pattern) as dynamic;
+    }
+    if (widget.pattern != null) {
+      _formatter = NumberFormat(widget.pattern) as dynamic;
+    }
+    if (widget.formatter != null) {
+      _formatter = widget.formatter!;
+    }
+    if (widget.format != null) {
+      _format = widget.format!;
+    } else {
+      _format = (num? value) {
+        if (value == null) return null;
+        if (value is int) {
+          return value.toString();
+        }
+        return _formatter.format(value);
+      };
+    }
     controller.text = widget.value?.toString() ?? '';
   }
 
@@ -621,15 +700,6 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     if (widget.onChanged != null) {
       widget.onChanged!(value as T?);
     }
-  }
-
-  String? _format(num? value) {
-    if (value == null) return null;
-    if (value is int) {
-      return value.toString();
-    }
-    final mul = pow(10, widget.precision);
-    return NumberFormat().format((value * mul).roundToDouble() / mul);
   }
 }
 
