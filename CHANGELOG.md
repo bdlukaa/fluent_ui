@@ -3,6 +3,7 @@
 - feat: ¹ `NumberBox` now supports precision greater than 4. ² Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` ([#1080](https://github.com/bdlukaa/fluent_ui/pull/1080))
 * fix: Resolved issue where `PaneItem` within `PaneItemExpander` remained accessible in `NavigationPane` compact mode ([#1081](https://github.com/bdlukaa/fluent_ui/issues/1081))
 * fix: Correct number of days on `DatePicker` popup ([#1049](https://github.com/bdlukaa/fluent_ui/issues/1049))
+* feat: Create `PaneItemWidgetAdapter` ([#1087](https://github.com/bdlukaa/fluent_ui/issues/1087))
 
 ## 4.9.0
 

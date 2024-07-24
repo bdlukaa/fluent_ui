@@ -6,7 +6,7 @@ class NavigationPaneItem with Diagnosticable {
   ///
   /// See also:
   ///
-  ///   * [PaneItem.build], which assigns
+  ///   * [PaneItem.build], which assigns this to its children
   late final GlobalKey itemKey = GlobalKey(
     debugLabel: 'NavigationPaneItem key; $runtimeType',
   );
@@ -1000,6 +1000,46 @@ base class _PaneItemExpanderItem
   @override
   String toString() {
     return '$parent : $expanderItem : $siblings';
+  }
+}
+
+/// Display a widget as a PaneItem without addressing an index to it.
+///
+/// See also:
+///
+///   * [PaneItem], the item used by [NavigationView] to render tiles
+///   * [PaneItemSeparator], used to group navigation items
+///   * [PaneItemAction], the item used for execute an action on click
+///   * [PaneItemExpander], which creates hierhical navigation
+class PaneItemWidgetAdapter extends NavigationPaneItem {
+  /// Creates a pane header.
+  PaneItemWidgetAdapter({
+    super.key,
+    required this.child,
+    this.applyPadding = true,
+  });
+
+  /// The child.
+  final Widget child;
+
+  final bool applyPadding;
+
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneTheme.of(context);
+    final view = InheritedNavigationView.of(context);
+
+    return Padding(
+      key: key,
+      padding: applyPadding
+          ? (theme.iconPadding ?? EdgeInsets.zero).add(
+              view.displayMode == PaneDisplayMode.top
+                  ? EdgeInsets.zero
+                  : theme.headerPadding ?? EdgeInsets.zero,
+            )
+          : EdgeInsets.zero,
+      child: child,
+    );
   }
 }
 

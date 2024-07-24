@@ -99,6 +99,21 @@ class _NavigationViewPageState extends State<NavigationViewPage>
         ),
       ],
     ),
+    PaneItemWidgetAdapter(
+      child: Builder(builder: (context) {
+        if (NavigationView.of(context).displayMode == PaneDisplayMode.compact) {
+          return const FlutterLogo();
+        }
+        return ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200.0),
+          child: const Row(children: [
+            FlutterLogo(),
+            SizedBox(width: 6.0),
+            Text('This is a custom widget'),
+          ]),
+        );
+      }),
+    ),
   ];
 
   @override
@@ -220,64 +235,84 @@ class _NavigationViewPageState extends State<NavigationViewPage>
 // otherwise on running `setstate`, new item can not be added.
 
 List<NavigationPaneItem> items = [
-    PaneItem(
-      icon: const Icon(FluentIcons.home),
-      title: const Text('Home'),
-      body: const _NavigationBodyItem(),
-    ),
-    PaneItemSeparator(),
-    PaneItem(
-      icon: const Icon(FluentIcons.issue_tracking),
-      title: const Text('Track orders'),
-      infoBadge: const InfoBadge(source: Text('8')),
-      body: const _NavigationBodyItem(
-        header: 'Badging',
-        content: Text(
-          'Badging is a non-intrusive and intuitive way to display '
-          'notifications or bring focus to an area within an app - '
-          'whether that be for notifications, indicating new content, '
-          'or showing an alert. An InfoBadge is a small piece of UI '
-          'that can be added into an app and customized to display a '
-          'number, icon, or a simple dot.',
-        ),
+  PaneItem(
+    icon: const Icon(FluentIcons.home),
+    title: const Text('Home'),
+    body: const _NavigationBodyItem(),
+  ),
+  PaneItemSeparator(),
+  PaneItem(
+    icon: const Icon(FluentIcons.issue_tracking),
+    title: const Text('Track orders'),
+    infoBadge: const InfoBadge(source: Text('8')),
+    body: const _NavigationBodyItem(
+      header: 'Badging',
+      content: Text(
+        'Badging is a non-intrusive and intuitive way to display '
+        'notifications or bring focus to an area within an app - '
+        'whether that be for notifications, indicating new content, '
+        'or showing an alert. An InfoBadge is a small piece of UI '
+        'that can be added into an app and customized to display a '
+        'number, icon, or a simple dot.',
       ),
     ),
-    PaneItem(
-      icon: const Icon(FluentIcons.disable_updates),
-      title: const Text('Disabled Item'),
-      body: const _NavigationBodyItem(),
-      enabled: false,
-    ),
-    PaneItemExpander(
-      icon: const Icon(FluentIcons.account_management),
-      title: const Text('Account'),
-      body: const _NavigationBodyItem(
-        header: 'PaneItemExpander',
-        content: Text(
-          'Some apps may have a more complex hierarchical structure '
-          'that requires more than just a flat list of navigation '
-          'items. You may want to use top-level navigation items to '
-          'display categories of pages, with children items displaying '
-          'specific pages. It is also useful if you have hub-style '
-          'pages that only link to other pages. For these kinds of '
-          'cases, you should create a hierarchical NavigationView.',
-        ),
+  ),
+  PaneItem(
+    icon: const Icon(FluentIcons.disable_updates),
+    title: const Text('Disabled Item'),
+    body: const _NavigationBodyItem(),
+    enabled: false,
+  ),
+  PaneItemExpander(
+    icon: const Icon(FluentIcons.account_management),
+    title: const Text('Account'),
+    body: const _NavigationBodyItem(
+      header: 'PaneItemExpander',
+      content: Text(
+        'Some apps may have a more complex hierarchical structure '
+        'that requires more than just a flat list of navigation '
+        'items. You may want to use top-level navigation items to '
+        'display categories of pages, with children items displaying '
+        'specific pages. It is also useful if you have hub-style '
+        'pages that only link to other pages. For these kinds of '
+        'cases, you should create a hierarchical NavigationView.',
       ),
-      items: [
-        PaneItemHeader(header: const Text('Apps')),
-        PaneItem(
-          icon: const Icon(FluentIcons.mail),
-          title: const Text('Mail'),
-          body: const _NavigationBodyItem(),
-        ),
-        PaneItem(
-          icon: const Icon(FluentIcons.calendar),
-          title: const Text('Calendar'),
-          body: const _NavigationBodyItem(),
-        ),
-      ],
     ),
-  ];
+    items: [
+      PaneItemHeader(header: const Text('Apps')),
+      PaneItem(
+        icon: const Icon(FluentIcons.mail),
+        title: const Text('Mail'),
+        body: const _NavigationBodyItem(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.calendar),
+        title: const Text('Calendar'),
+        body: const _NavigationBodyItem(),
+      ),
+    ],
+  ),
+  PaneItemWidgetAdapter(
+    child: Builder(builder: (context) {
+      // Build the widget depending on the current display mode.
+      //
+      // This already returns the resolved auto display mode.
+      if (NavigationView.of(context).displayMode == PaneDisplayMode.compact) {
+        return const FlutterLogo();
+      }
+      return ConstrainedBox(
+        // Constraints are required for top display mode, otherwise the Row will
+        // expand to the available space.
+        constraints: const BoxConstraints(maxWidth: 200.0),
+        child: const Row(children: [
+          FlutterLogo(),
+          SizedBox(width: 6.0),
+          Text('This is a custom widget'),
+        ]),
+      );
+    }),
+  ),
+];
 
 // Return the NavigationView from `Widegt Build` function
 
