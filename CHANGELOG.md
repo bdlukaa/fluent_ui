@@ -4,6 +4,7 @@
 * fix: Resolved issue where `PaneItem` within `PaneItemExpander` remained accessible in `NavigationPane` compact mode ([#1081](https://github.com/bdlukaa/fluent_ui/issues/1081))
 * fix: Correct number of days on `DatePicker` popup ([#1049](https://github.com/bdlukaa/fluent_ui/issues/1049))
 * feat: Create `PaneItemWidgetAdapter` ([#1087](https://github.com/bdlukaa/fluent_ui/issues/1087))
+* feat: Add `maxWidth` to `TooltipThemeData` for optional wrapping of long tooltips ([#1094](https://github.com/bdlukaa/fluent_ui/issues/1094))
 
 ## 4.9.0
 
