@@ -1,4 +1,4 @@
-## next
+## 4.9.1
 
 - feat: ¹ `NumberBox` now supports precision greater than 4. ² Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` ([#1080](https://github.com/bdlukaa/fluent_ui/pull/1080))
 * fix: Resolved issue where `PaneItem` within `PaneItemExpander` remained accessible in `NavigationPane` compact mode ([#1081](https://github.com/bdlukaa/fluent_ui/issues/1081))
