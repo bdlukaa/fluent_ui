@@ -1,3 +1,7 @@
+## 4.9.2
+
+- feat: `NavigationAppBar` `leading` widget is now a minimum of `kCompactNavigationPaneWidth` width instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
+
 ## 4.9.1
 
 - feat: ¹ `NumberBox` now supports precision greater than 4. ² Add `NumberBox.pattern`, `NumberBox.formatter`, `NumberBox.format` ([#1080](https://github.com/bdlukaa/fluent_ui/pull/1080))
