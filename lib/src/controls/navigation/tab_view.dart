@@ -73,6 +73,7 @@ class TabView extends StatefulWidget {
     this.tabWidthBehavior = TabWidthBehavior.equal,
     this.header,
     this.footer,
+    this.stripBuilder,
     this.closeDelayDuration = const Duration(seconds: 1),
   });
 
@@ -168,6 +169,9 @@ class TabView extends StatefulWidget {
   ///
   /// Usually a [Text] widget.
   final Widget? footer;
+
+  /// The builder for the strip that contains the tabs.
+  final Widget Function(BuildContext context, Widget strip)? stripBuilder;
 
   /// The delay duration to animate the tab after it's closed. Only applied when
   /// [tabWidthBehavior] is [TabWidthBehavior.equal].
@@ -517,6 +521,7 @@ class _TabViewState extends State<TabView> {
                       itemBuilder: (context, index) {
                         return _tabBuilder(context, index, preferredTabWidth);
                       },
+                      dragStartBehavior: DragStartBehavior.down,
                     ),
                   ),
                 );
@@ -577,7 +582,7 @@ class _TabViewState extends State<TabView> {
                   );
                 }
 
-                return Row(children: [
+                final strip = Row(children: [
                   if (showScrollButtons)
                     direction == TextDirection.ltr
                         ? backwardButton()
@@ -620,6 +625,12 @@ class _TabViewState extends State<TabView> {
                       ),
                     ),
                 ]);
+
+                if (widget.stripBuilder != null) {
+                  return widget.stripBuilder!(context, strip);
+                }
+
+                return strip;
               }),
             ),
             if (widget.footer != null)
