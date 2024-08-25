@@ -933,7 +933,10 @@ class NavigationAppBar with Diagnosticable {
       } else {
         return const SizedBox.shrink();
       }
-      widget = SizedBox(width: kCompactNavigationPaneWidth, child: widget);
+      widget = ConstrainedBox(
+          constraints:
+              const BoxConstraints(minWidth: kCompactNavigationPaneWidth),
+          child: widget);
       return widget;
     });
   }
