@@ -311,11 +311,13 @@ class Picker extends StatefulWidget {
     required this.child,
     required this.pickerContent,
     required this.pickerHeight,
+    this.autoOpen = false,
   });
 
   final PickerBuilder child;
   final WidgetBuilder pickerContent;
   final double pickerHeight;
+  final bool autoOpen;
 
   @override
   State<Picker> createState() => _PickerState();
@@ -323,6 +325,16 @@ class Picker extends StatefulWidget {
 
 class _PickerState extends State<Picker> {
   late final GlobalKey _childKey = GlobalKey(debugLabel: '${widget.child} key');
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoOpen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        open();
+      });
+    }
+  }
 
   Future<void> open() {
     assert(

@@ -50,6 +50,7 @@ class TimePicker extends StatefulWidget {
     this.autofocus = false,
     this.minuteIncrement = 1,
     this.locale,
+    this.autoOpen = false,
   });
 
   /// The current date selected date.
@@ -101,6 +102,11 @@ class TimePicker extends StatefulWidget {
   ///
   /// If null, the system locale will be used.
   final Locale? locale;
+
+  /// When first loaded, automatically open the panel.
+  ///
+  /// Defaults to false
+  final bool autoOpen;
 
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
@@ -227,6 +233,7 @@ class _TimePickerState extends State<TimePicker>
           locale: locale,
         );
       },
+      autoOpen: widget.autoOpen,
       child: (context, open) => HoverButton(
         focusNode: widget.focusNode,
         autofocus: widget.autofocus,

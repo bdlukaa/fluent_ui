@@ -13,6 +13,7 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
   DateTime? simpleTime;
   DateTime? hiddenTime;
   DateTime? flexTime;
+  DateTime? autoOpenTime;
 
   bool showYear = true;
   bool showMonth = true;
@@ -121,6 +122,24 @@ DatePicker(
               selected: flexTime,
               fieldFlex: const [2, 3, 2],
               onChanged: (v) => setState(() => flexTime = v),
+            ),
+          ),
+        ),
+        subtitle(content: const Text('A DatePicker with panel auto open.')),
+        CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  autoOpen: true,
+),''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DatePicker(
+              selected: autoOpenTime,
+              onChanged: (v) => setState(() => autoOpenTime = v),
+              autoOpen: true,
             ),
           ),
         ),

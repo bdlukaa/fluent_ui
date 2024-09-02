@@ -2,6 +2,7 @@
 
 - feat: `NavigationAppBar` `leading` widget is now a minimum of `kCompactNavigationPaneWidth` width instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
 - feat: Add `TabView.stripBuilder` ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
+- feat: [Picker] add `autoOpen` allow open panel auto when the widget is built. ([#1112](https://github.com/bdlukaa/fluent_ui/pull/1112))
 
 ## 4.9.1
 

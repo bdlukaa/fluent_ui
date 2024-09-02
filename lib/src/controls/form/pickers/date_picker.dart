@@ -69,6 +69,7 @@ class DatePicker extends StatefulWidget {
     this.locale,
     this.fieldOrder,
     this.fieldFlex,
+    this.autoOpen = false,
   })  : startDate = startDate ?? DateTime.now().subtract(kYearDuration * 100),
         endDate = endDate ?? DateTime.now().add(kYearDuration * 25),
         assert(
@@ -167,6 +168,11 @@ class DatePicker extends StatefulWidget {
   /// * [getDateFlexFromLocale], which returns the flex of the fields based
   ///   on the current locale
   final List<int>? fieldFlex;
+
+  /// When first loaded, automatically open the panel.
+  ///
+  /// Defaults to false
+  final bool autoOpen;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -317,6 +323,7 @@ class _DatePickerState extends State<DatePicker> {
           fieldFlex: fieldFlex,
         );
       },
+      autoOpen: widget.autoOpen,
       pickerHeight: widget.popupHeight,
       child: (context, open) => HoverButton(
         autofocus: widget.autofocus,

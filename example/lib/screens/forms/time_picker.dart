@@ -13,6 +13,7 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
   DateTime? simpleTime;
   DateTime? arrivalTime;
   DateTime? hhTime;
+  DateTime? autoOpenTime;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +91,28 @@ TimePicker(
               selected: hhTime,
               onChanged: (v) => setState(() => hhTime = v),
               hourFormat: HourFormat.HH,
+            ),
+          ),
+        ),
+        subtitle(
+          content: const Text(
+            'A TimePicker with panel auto open.',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  autoOpen: true,
+),''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TimePicker(
+              selected: autoOpenTime,
+              onChanged: (v) => setState(() => autoOpenTime = v),
+              autoOpen: true,
             ),
           ),
         ),
