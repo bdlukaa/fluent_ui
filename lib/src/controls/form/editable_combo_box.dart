@@ -164,6 +164,7 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
         return KeyEventResult.ignored;
       },
       child: TextBox(
+        style: widget.style,
         focusNode: focusNode,
         autofocus: widget.autofocus,
         controller: controller,
