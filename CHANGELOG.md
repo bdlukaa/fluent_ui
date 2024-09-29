@@ -4,6 +4,7 @@
 - feat: Add `TabView.stripBuilder` ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
 - fix : The EditableComboBox is missing the part that applies the style to the TextBox, so add it.
 - feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
+* fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
 
 ## 4.9.1
 
