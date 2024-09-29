@@ -270,7 +270,7 @@ ToggleButton(
   items: [
     MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
     MenuFlyoutSeparator(),
-    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+    MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
     MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
   ],
 )''',
@@ -280,7 +280,7 @@ ToggleButton(
               items: [
                 MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
                 MenuFlyoutSeparator(),
-                MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+                MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
                 MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
               ],
             ),

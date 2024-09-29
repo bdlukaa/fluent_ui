@@ -373,9 +373,7 @@ class DropDownButtonState extends State<DropDownButton> {
 
   MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
     return MenuFlyoutItem(
-      onPressed: () {
-        item.onPressed?.call();
-      },
+      onPressed: item.onPressed,
       closeAfterClick: widget.closeAfterClick,
       key: item.key,
       leading: item.leading,
