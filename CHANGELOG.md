@@ -1,11 +1,9 @@
 ## 4.9.3
 
-- fix : The EditableComboBox is missing the part that applies the style to the TextBox, so add it.
-
-## 4.9.2
-
 - feat: `NavigationAppBar` `leading` widget is now a minimum of `kCompactNavigationPaneWidth` width instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
 - feat: Add `TabView.stripBuilder` ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
+- fix : The EditableComboBox is missing the part that applies the style to the TextBox, so add it.
+- feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
 
 ## 4.9.1
 
