@@ -6,7 +6,7 @@
 - feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
 * fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
 * fix: Correctly disable `DropDownButton` items if `onPressed` is not provided ([#1116](https://github.com/bdlukaa/fluent_ui/issues/1116#issuecomment-2347153074))
-* feat: Add `ToggleMenuFlyoutItem` ([#1108](https://github.com/bdlukaa/fluent_ui/issues/1108))
+* feat: Add `ToggleMenuFlyoutItem` and `RadioMenuFlyoutItem` ([#1108](https://github.com/bdlukaa/fluent_ui/issues/1108))
 
 ## 4.9.1
 

@@ -363,13 +363,82 @@ FlyoutTarget(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''''',
+          codeSnippet: '''final itemsController = FlyoutController();
+final itemsAttachKey = GlobalKey();
+
+FlyoutTarget(
+  controller: itemsController,
+  child: Button(
+    child: const Text('Show options'),
+    onPressed: () {
+      itemsController.showFlyout(
+        autoModeConfiguration: FlyoutAutoConfiguration(
+          preferredMode: $placementMode,
+        ),
+        barrierDismissible: $barrierDismissible,
+        dismissOnPointerMoveAway: $dismissOnPointerMoveAway,
+        dismissWithEsc: $dismissWithEsc,
+        navigatorKey: rootNavigatorKey.currentState,
+        builder: (context) {
+          var repeat = true;
+          var shuffle = false;
+
+          var radioIndex = 1;
+          return StatefulBuilder(builder: (context, setState) {
+            return MenuFlyout(items: [
+              MenuFlyoutItem(
+                text: const Text('Reset'),
+                onPressed: () {
+                  setState(() {
+                    repeat = false;
+                    shuffle = false;
+                  });
+                },
+              ),
+              const MenuFlyoutSeparator(),
+              ToggleMenuFlyoutItem(
+                text: const Text('Repeat'),
+                value: repeat,
+                onChanged: (v) {
+                  setState(() => repeat = v);
+                },
+              ),
+              ToggleMenuFlyoutItem(
+                text: const Text('Shuffle'),
+                value: shuffle,
+                onChanged: (v) {
+                  setState(() => shuffle = v);
+                },
+              ),
+              const MenuFlyoutSeparator(),
+              ...List.generate(3, (index) {
+                return RadioMenuFlyoutItem(
+                  text: Text([
+                    'Small icons',
+                    'Medium icons',
+                    'Large icons',
+                  ][index]),
+                  value: index,
+                  groupValue: radioIndex,
+                  onChanged: (v) {
+                    setState(() => radioIndex = index);
+                  },
+                );
+              }),
+            ]);
+          });
+        },
+      );
+    },
+  )
+)
+''',
           child: Row(children: [
             FlyoutTarget(
               key: itemsAttachKey,
               controller: itemsController,
               child: Button(
-                child: const Text('Options'),
+                child: const Text('Show options'),
                 onPressed: () {
                   itemsController.showFlyout(
                     autoModeConfiguration: FlyoutAutoConfiguration(
@@ -382,6 +451,8 @@ FlyoutTarget(
                     builder: (context) {
                       var repeat = true;
                       var shuffle = false;
+
+                      var radioIndex = 1;
                       return StatefulBuilder(builder: (context, setState) {
                         return MenuFlyout(items: [
                           MenuFlyoutItem(
@@ -408,6 +479,21 @@ FlyoutTarget(
                               setState(() => shuffle = v);
                             },
                           ),
+                          const MenuFlyoutSeparator(),
+                          ...List.generate(3, (index) {
+                            return RadioMenuFlyoutItem(
+                              text: Text([
+                                'Small icons',
+                                'Medium icons',
+                                'Large icons',
+                              ][index]),
+                              value: index,
+                              groupValue: radioIndex,
+                              onChanged: (v) {
+                                setState(() => radioIndex = index);
+                              },
+                            );
+                          }),
                         ]);
                       });
                     },
