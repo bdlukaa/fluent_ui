@@ -330,6 +330,38 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
   }
 }
 
+/// Represents a menu item that can be toggled on and off in a [MenuFlyout].
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+class ToggleMenuFlyoutItem extends MenuFlyoutItem {
+  /// The value of the toggle item.
+  final bool value;
+
+  /// Called when the value of the toggle item changes.
+  final ValueChanged<bool>? onChanged;
+
+  /// Creates a menu flyout item that can be toggled on and off.
+  ToggleMenuFlyoutItem({
+    required super.text,
+    super.trailing,
+    required this.value,
+    required this.onChanged,
+  }) : super(
+          leading: Icon(
+            value ? FluentIcons.check_mark : null,
+            size: 12.0,
+          ),
+          onPressed: onChanged == null ? null : () => onChanged(!value),
+        );
+}
+
 enum SubItemShowBehavior {
   /// Whether the sub-menu will be shown on item press
   press,
