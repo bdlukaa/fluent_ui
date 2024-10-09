@@ -1,8 +1,8 @@
-## 4.9.3
+## 4.9.2
 
-- feat: `NavigationAppBar` `leading` widget is now a minimum of `kCompactNavigationPaneWidth` width instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
+- feat: `NavigationAppBar.leading` now has a minimum width of `kCompactNavigationPaneWidth` instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
 - feat: Add `TabView.stripBuilder` ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
-- fix : The EditableComboBox is missing the part that applies the style to the TextBox, so add it.
+- fix: Correctly apply `EditableComboBox.style` ([#1121](https://github.com/bdlukaa/fluent_ui/pull/1121))
 - feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
 * fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
 * fix: Correctly disable `DropDownButton` items if `onPressed` is not provided ([#1116](https://github.com/bdlukaa/fluent_ui/issues/1116#issuecomment-2347153074))
