@@ -1,3 +1,7 @@
+## [next]
+
+- fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
+
 ## 4.9.2
 
 - feat: `NavigationAppBar.leading` now has a minimum width of `kCompactNavigationPaneWidth` instead of being fixed to this width ([#1103](https://github.com/bdlukaa/fluent_ui/pull/1103))
