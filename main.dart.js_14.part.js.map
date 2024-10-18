@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_14.part.js",
+  "sourceRoot": "",
+  "sources": ["../../../../lib/src/layout/page.dart","/opt/hostedtoolcache/flutter/3.24.3-stable/x64/packages/flutter/lib/src/widgets/basic.dart","/opt/hostedtoolcache/flutter/3.24.3-stable/x64/packages/flutter/lib/src/painting/edge_insets.dart"],
+  "names": ["ScaffoldPage.withPadding","ScaffoldPage.withPadding.<anonymous function>","","only"],
+  "mappings": "A;;;;GAiDEA,MAAwBA;AAAxBA,gBCu8OMA,SDh8O0BA,wBAPhCA,AAiBQA,C;;;;;;;EAVwBC,IAKEA,gBACFA;AALxBA,OCw1DFA,SC3uCAA,uBFtmBWA,QAEVA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "4PAwDiBES;qLACAAS;AAEqBCuB;"
+  }
+}
