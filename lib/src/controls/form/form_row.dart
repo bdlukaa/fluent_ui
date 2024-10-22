@@ -52,7 +52,7 @@ class FormRow extends StatelessWidget {
               color: Colors.red.defaultBrushFor(theme.brightness),
               fontWeight: FontWeight.w500,
             ),
-            child: error == null ? Text("") : error,
+            child: error == null ? Text("") : error!,
           ),
         ),
           
