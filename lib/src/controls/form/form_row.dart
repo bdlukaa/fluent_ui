@@ -44,18 +44,18 @@ class FormRow extends StatelessWidget {
               child: helper!,
             ),
           ),
-        if (error != null)
-          Container(
-            margin: const EdgeInsetsDirectional.only(top: 2.0),
-            alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                color: Colors.red.defaultBrushFor(theme.brightness),
-                fontWeight: FontWeight.w500,
-              ),
-              child: error!,
+        Container(
+          margin: const EdgeInsetsDirectional.only(top: 2.0),
+          alignment: AlignmentDirectional.centerStart,
+          child: DefaultTextStyle.merge(
+            style: TextStyle(
+              color: Colors.red.defaultBrushFor(theme.brightness),
+              fontWeight: FontWeight.w500,
             ),
+            child: error == null ? Text("") : error,
           ),
+        ),
+          
       ]),
     );
   }
