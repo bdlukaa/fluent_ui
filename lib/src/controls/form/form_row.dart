@@ -47,9 +47,9 @@ class FormRow extends StatelessWidget {
             ),
           ),
         Container(
-          height: defalutFormRowTextHeight,
-          margin: const EdgeInsetsDirectional.only(top: 1.0),
-          alignment: AlignmentDirectional.centerStart,
+          height: defalutFormRowTextHeight,        // add defalutFormRowTextHeight
+          margin: const EdgeInsetsDirectional.only(top: 1.0),  // top: 2.0 -> top: 1.0
+          alignment: AlignmentDirectional.topStart,   // centerStart  ->  topStart
           child: DefaultTextStyle.merge(
             style: TextStyle(
               color: Colors.red.defaultBrushFor(theme.brightness),
