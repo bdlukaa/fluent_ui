@@ -7,6 +7,8 @@ const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
   6.0,
 );
 
+const double defalutFormRowTextHeight = 18;
+
 class FormRow extends StatelessWidget {
   const FormRow({
     super.key,
@@ -45,7 +47,8 @@ class FormRow extends StatelessWidget {
             ),
           ),
         Container(
-          margin: const EdgeInsetsDirectional.only(top: 2.0),
+          height: defalutFormRowTextHeight,
+          margin: const EdgeInsetsDirectional.only(top: 1.0),
           alignment: AlignmentDirectional.centerStart,
           child: DefaultTextStyle.merge(
             style: TextStyle(
