@@ -1,6 +1,8 @@
 ## [next]
 
 - fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
+- Added `reservedStripWidth` to `TabView` to ensure minimum drag area between tabs and footer, 
+  critical for window manipulation when used in title bar scenarios ([@1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
 
 ## 4.9.2
 
