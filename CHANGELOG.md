@@ -5,6 +5,7 @@
 - fix: Correctly unfocus `NumberBox` when user taps outside ([#1135](https://github.com/bdlukaa/fluent_ui/issues/1135))
 - fix: Do try to scroll Date and Time at build time ([#1117](https://github.com/bdlukaa/fluent_ui/issues/1117))
 - feat: Use a `Decoration` instead of `Color` in `NavigationAppBar` ([#1118](https://github.com/bdlukaa/fluent_ui/issues/1118))
+- feat: Add `EditableComboBox.inputFormatters` ([#1041](https://github.com/bdlukaa/fluent_ui/issues/1041))
 
 ## 4.9.2
 

@@ -34,6 +34,7 @@ class EditableComboBox<T> extends ComboBox<T> {
     required this.onFieldSubmitted,
     this.textController,
     this.onTextChanged,
+    this.inputFormatters,
     // When adding new arguments, consider adding similar arguments to
     // EditableComboboxFormField.
   });
@@ -75,6 +76,9 @@ class EditableComboBox<T> extends ComboBox<T> {
   ///
   ///   * [onChanged], which is called when the selected value changes.
   final ValueChanged<String>? onTextChanged;
+
+  /// {@macro flutter.widgets.editableText.inputFormatters}
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<ComboBox<T>> createState() => _EditableComboboxState<T>();
@@ -188,6 +192,7 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
           _setText(newText);
         },
         onChanged: widget.onTextChanged,
+        inputFormatters: widget.inputFormatters,
       ),
     );
   }
@@ -363,6 +368,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
     AlignmentGeometry alignment = AlignmentDirectional.centerStart,
     BorderRadius? borderRadius,
     required SubmitEditableCombobox onFieldSubmitted,
+    List<TextInputFormatter>? inputFormatters,
     // When adding new arguments, consider adding similar arguments to
     // EditableComboBox.
   }) : super(builder: (FormFieldState<T> field) {
@@ -399,6 +405,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
                     autofocus: autofocus,
                     popupColor: popupColor,
                     onFieldSubmitted: onFieldSubmitted,
+                    inputFormatters: inputFormatters,
                   ),
                 ),
               );
