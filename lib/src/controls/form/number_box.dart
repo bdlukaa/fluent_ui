@@ -564,7 +564,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       textDirection: widget.textDirection,
       onSubmitted: (_) => updateValue(),
       onTap: updateValue,
-      onTapOutside: (_) => updateValue(),
+      onTapOutside: (_) {
+        updateValue();
+        focusNode.unfocus();
+      },
       onEditingComplete: widget.onEditingComplete != null
           ? () {
               updateValue();
