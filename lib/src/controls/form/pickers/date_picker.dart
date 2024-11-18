@@ -262,10 +262,12 @@ class _DatePickerState extends State<DatePicker> {
   void didUpdateWidget(DatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selected != date) {
-      date = widget.selected ?? DateTime.now();
-      _monthController.jumpToItem(date.month - 1);
-      _dayController.jumpToItem(date.day - 1);
-      _yearController.jumpToItem(currentYear - startYear - 1);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        date = widget.selected ?? DateTime.now();
+        _monthController.jumpToItem(date.month - 1);
+        _dayController.jumpToItem(date.day - 1);
+        _yearController.jumpToItem(currentYear - startYear - 1);
+      });
     }
   }
 
@@ -789,12 +791,12 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
       ),
       YesNoPickerControl(
         onChanged: () {
-          widget.onChanged(localDate);
           Navigator.pop(context);
+          widget.onChanged(localDate);
         },
         onCancel: () {
-          widget.onCancel();
           Navigator.pop(context);
+          widget.onCancel();
         },
       ),
     ]);

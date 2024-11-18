@@ -166,16 +166,18 @@ class _TimePickerState extends State<TimePicker>
   void didUpdateWidget(TimePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selected != time) {
-      time = widget.selected ?? DateTime.now();
-      _hourController.jumpToItem(() {
-        var hour = time.hour - 1;
-        if (!widget.use24Format) {
-          hour -= 12;
-        }
-        return hour;
-      }());
-      _minuteController.jumpToItem(time.minute);
-      _amPmController.jumpToItem(_isPm ? 1 : 0);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        time = widget.selected ?? DateTime.now();
+        _hourController.jumpToItem(() {
+          var hour = time.hour - 1;
+          if (!widget.use24Format) {
+            hour -= 12;
+          }
+          return hour;
+        }());
+        _minuteController.jumpToItem(time.minute);
+        _amPmController.jumpToItem(_isPm ? 1 : 0);
+      });
     }
   }
 
