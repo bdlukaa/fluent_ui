@@ -650,7 +650,9 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
+    // The margin should include a top and a bottom
+    final maxHeight = constraints.maxHeight - margin * 2;
+    return constraints.loosen().copyWith(maxHeight: maxHeight);
   }
 
   @override
@@ -688,6 +690,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
     if (willOverflowY) {
       y = parentRect.top + parentRect.height - flyoutSize.height;
+      if (y < margin) y = margin;
     }
 
     return Offset(x, y);
