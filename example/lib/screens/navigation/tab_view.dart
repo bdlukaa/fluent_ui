@@ -233,6 +233,7 @@ TabView(
             height: 400,
             child: TabView(
               tabs: tabs!,
+              reservedStripWidth: 100,
               currentIndex: currentIndex,
               onChanged: (index) => setState(() => currentIndex = index),
               tabWidthBehavior: tabWidthBehavior,

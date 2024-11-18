@@ -73,6 +73,7 @@ class TabView extends StatefulWidget {
     this.tabWidthBehavior = TabWidthBehavior.equal,
     this.header,
     this.footer,
+    this.reservedStripWidth,
     this.stripBuilder,
     this.closeDelayDuration = const Duration(seconds: 1),
   });
@@ -170,6 +171,19 @@ class TabView extends StatefulWidget {
   /// Usually a [Text] widget.
   final Widget? footer;
 
+  /// The minimum width reserved at the end of the tab strip.
+  ///
+  /// This reserved space ensures a consistent drag area for window manipulation 
+  /// (e.g., dragging, resizing) even when many tabs are present. This is particularly 
+  /// crucial when `TabView` is used in a title bar.
+  ///
+  /// When using TabView in a title bar, this space ensures minimum drag area even
+  /// when many tabs are present. This is critical for window manipulation (dragging, etc)
+  /// as it guarantees a consistent drag target regardless of tab count.
+  ///
+  /// If `null`, no reserved width is enforced.
+  final double? reservedStripWidth;
+
   /// The builder for the strip that contains the tabs.
   final Widget Function(BuildContext context, Widget strip)? stripBuilder;
 
@@ -244,7 +258,8 @@ class TabView extends StatefulWidget {
         defaultValue: const Duration(seconds: 1),
       ))
       ..add(DoubleProperty('minTabWidth', minTabWidth, defaultValue: 80.0))
-      ..add(DoubleProperty('maxTabWidth', maxTabWidth, defaultValue: 240.0));
+      ..add(DoubleProperty('maxTabWidth', maxTabWidth, defaultValue: 240.0))
+      ..add(DoubleProperty('minFooterWidth', reservedStripWidth));
   }
 }
 
@@ -476,10 +491,11 @@ class _TabViewState extends State<TabView> {
                   'You can only create a TabView in a box with defined width',
                 );
 
-                preferredTabWidth =
-                    ((width - (widget.showNewButton ? _kButtonWidth : 0)) /
-                            widget.tabs.length)
-                        .clamp(widget.minTabWidth, widget.maxTabWidth);
+                preferredTabWidth = ((width -
+                            (widget.showNewButton ? _kButtonWidth : 0) -
+                            (widget.reservedStripWidth ?? 0)) /
+                        widget.tabs.length)
+                    .clamp(widget.minTabWidth, widget.maxTabWidth);
 
                 final Widget listView = Listener(
                   onPointerSignal: (PointerSignalEvent e) {
@@ -583,18 +599,22 @@ class _TabViewState extends State<TabView> {
                 }
 
                 final strip = Row(children: [
+                  // scroll buttons if needed
                   if (showScrollButtons)
                     direction == TextDirection.ltr
                         ? backwardButton()
                         : forwardButton(),
+                  // tabs area (flexible/expanded)
                   if (scrollable)
                     Expanded(child: listView)
                   else
                     Flexible(child: listView),
+                  // scroll buttons if needed
                   if (showScrollButtons)
                     direction == TextDirection.ltr
                         ? forwardButton()
                         : backwardButton(),
+                  // new tab button
                   if (widget.showNewButton)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(
@@ -624,6 +644,9 @@ class _TabViewState extends State<TabView> {
                         localizations.newTabLabel,
                       ),
                     ),
+                  // reserved strip width
+                  if (widget.reservedStripWidth != null)
+                    SizedBox(width: widget.reservedStripWidth),
                 ]);
 
                 if (widget.stripBuilder != null) {
