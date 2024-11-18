@@ -171,16 +171,17 @@ class TabView extends StatefulWidget {
   /// Usually a [Text] widget.
   final Widget? footer;
 
-  /// Minimum reserved width at the end of tab strip to ensure space for window controls.
-  /// This area will be excluded when laying out tabs.
+  /// The minimum width reserved at the end of the tab strip.
+  ///
+  /// This reserved space ensures a consistent drag area for window manipulation 
+  /// (e.g., dragging, resizing) even when many tabs are present. This is particularly 
+  /// crucial when `TabView` is used in a title bar.
   ///
   /// When using TabView in a title bar, this space ensures minimum drag area even
   /// when many tabs are present. This is critical for window manipulation (dragging, etc)
   /// as it guarantees a consistent drag target regardless of tab count.
   ///
-  /// The reserved space is placed after the new tab button (if present)
-  /// and before the footer (if present). When tabs expand, they will not
-  /// encroach on this reserved area.
+  /// If `null`, no reserved width is enforced.
   final double? reservedStripWidth;
 
   /// The builder for the strip that contains the tabs.
