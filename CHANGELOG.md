@@ -3,6 +3,7 @@
 - fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
 - feat: Add `TabView.reservedStripWidth`, which adds a minimum empty area between the tabs and the tab view footer ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))]
 - fix: Correctly unfocus `NumberBox` when user taps outside ([#1135](https://github.com/bdlukaa/fluent_ui/issues/1135))
+- fix: Do try to scroll Date and Time at build time ([#1117](https://github.com/bdlukaa/fluent_ui/issues/1117))
 
 ## 4.9.2
 
