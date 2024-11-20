@@ -117,10 +117,8 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.placeholder,
     this.placeholderStyle,
     this.style,
-    this.focusedDecoration,
-    this.unFocusedDecoration,
-    this.focusedForegroundDecoration,
-    this.unFocusedForegroundDecoration,
+    this.decoration,
+    this.foregroundDecoration,
     this.highlightColor,
     this.unfocusedColor,
     this.cursorColor,
@@ -159,10 +157,8 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.placeholder,
     this.placeholderStyle,
     this.style,
-    this.focusedDecoration,
-    this.unFocusedDecoration,
-    this.focusedForegroundDecoration,
-    this.unFocusedForegroundDecoration,
+    this.decoration,
+    this.foregroundDecoration,
     this.highlightColor,
     this.unfocusedColor,
     this.cursorColor,
@@ -247,22 +243,16 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// The style to use for the text being edited.
   final TextStyle? style;
 
-  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == true].
-  final BoxDecoration? focusedDecoration;
+  /// Controls the [BoxDecoration] of the box behind the text input.
+  ///
+  /// Defaults to having a rounded rectangle grey border and can be null to have
+  /// no box decoration.
+  final WidgetStateProperty<BoxDecoration>? decoration;
 
-
-  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
-  final BoxDecoration? unFocusedDecoration;
-
-  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == ture].
+  /// Controls the [BoxDecoration] of the box in front of the text input.
   ///
   /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? focusedForegroundDecoration;
-
-  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
-  ///
-  /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? unFocusedForegroundDecoration;
+  final WidgetStateProperty<BoxDecoration>? foregroundDecoration;
 
   /// The highlight color of the text box.
   ///
@@ -763,8 +753,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
               onChanged: _onChanged,
               onFieldSubmitted: (text) => _onSubmitted(),
               style: widget.style,
-              focusedDecoration: widget.focusedDecoration,
-              unFocusedDecoration: widget.unFocusedDecoration,
+              decoration: widget.decoration,
               highlightColor: widget.highlightColor,
               unfocusedColor: widget.unfocusedColor,
               cursorColor: widget.cursorColor,
@@ -796,10 +785,8 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
             onChanged: _onChanged,
             onSubmitted: (text) => _onSubmitted(),
             style: widget.style,
-            focusedDecoration: widget.focusedDecoration,
-            unFocusedDecoration: widget.unFocusedDecoration,
-            focusedForegroundDecoration: widget.focusedForegroundDecoration,
-            unFocusedForegroundDecoration: widget.unFocusedForegroundDecoration,
+            decoration: widget.decoration,
+            foregroundDecoration: widget.foregroundDecoration,
             highlightColor: widget.highlightColor,
             unfocusedColor: widget.unfocusedColor,
             cursorColor: widget.cursorColor,
