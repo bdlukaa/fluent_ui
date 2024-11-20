@@ -133,10 +133,8 @@ class TextBox extends StatefulWidget {
     super.key,
     this.controller,
     this.focusNode,
-    this.unFocusedDecoration,
-    this.focusedDecoration,
-    this.unFocusedForegroundDecoration,
-    this.focusedForegroundDecoration,
+    this.decoration,
+    this.foregroundDecoration,
     this.highlightColor,
     this.unfocusedColor,
     this.padding = kTextBoxPadding,
@@ -234,30 +232,16 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
-  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
+  /// Controls the [BoxDecoration] of the box behind the text input.
   ///
   /// Defaults to having a rounded rectangle grey border and can be null to have
   /// no box decoration.
-  final BoxDecoration? unFocusedDecoration;
+  final BoxDecoration? decoration;
 
-
-
-  /// Controls the [BoxDecoration] of the box behind the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == true].
-  ///
-  /// Defaults to having a rounded rectangle grey border and can be null to have
-  /// no box decoration.
-  final BoxDecoration? focusedDecoration;
-
-  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is UnFocused [focusNode.hasFocus == false].
+  /// Controls the [BoxDecoration] of the box in front of the text input.
   ///
   /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? unFocusedForegroundDecoration;
-
-
-  /// Controls the [BoxDecoration] of the box in front of the text input when the FocusNode of TextBox is Focused [focusNode.hasFocus == true].
-  ///
-  /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? focusedForegroundDecoration;
+  final BoxDecoration? foregroundDecoration;
 
   /// The highlight color of the text box.
   ///
@@ -583,7 +567,7 @@ class TextBox extends StatefulWidget {
           defaultValue: null))
       ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
           defaultValue: null))
-      ..add(DiagnosticsProperty<BoxDecoration>('decoration', unFocusedDecoration))
+      ..add(DiagnosticsProperty<BoxDecoration>('decoration', decoration))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
         'padding',
         padding,
@@ -1136,47 +1120,37 @@ class _TextBoxState extends State<TextBox>
           .merge(widget.placeholderStyle);
     }
 
-    final focusedForegroundDecoration = BoxDecoration(
+    final foregroundDecoration = BoxDecoration(
       border: Border(
         bottom: BorderSide(
-          color:  widget.highlightColor ?? themeData.accentColor.defaultBrushFor(themeData.brightness),
-          width: 2,
-        )
-      )
+          color: _effectiveFocusNode.hasFocus
+              ? widget.highlightColor ??
+                  themeData.accentColor.defaultBrushFor(
+                    themeData.brightness,
+                  )
+              : !enabled
+                  ? Colors.transparent
+                  : widget.unfocusedColor ??
+                      (themeData.brightness.isLight
+                          ? const Color.fromRGBO(0, 0, 0, 0.45)
+                          : const Color.fromRGBO(255, 255, 255, 0.54)),
+          width: _effectiveFocusNode.hasFocus ? 2 : 0,
+        ),
+      ),
     ).copyWith(
-      backgroundBlendMode: widget.focusedForegroundDecoration?.backgroundBlendMode,
-      border: widget.focusedForegroundDecoration?.border,
-      borderRadius: widget.focusedForegroundDecoration?.borderRadius,
-      boxShadow: widget.focusedForegroundDecoration?.boxShadow,
-      color: widget.focusedForegroundDecoration?.color,
-      gradient: widget.focusedForegroundDecoration?.gradient,
-      image: widget.focusedForegroundDecoration?.image,
-      shape: widget.focusedForegroundDecoration?.shape,
+      backgroundBlendMode: widget.foregroundDecoration?.backgroundBlendMode,
+      border: widget.foregroundDecoration?.border,
+      borderRadius: widget.foregroundDecoration?.borderRadius,
+      boxShadow: widget.foregroundDecoration?.boxShadow,
+      color: widget.foregroundDecoration?.color,
+      gradient: widget.foregroundDecoration?.gradient,
+      image: widget.foregroundDecoration?.image,
+      shape: widget.foregroundDecoration?.shape,
     );
 
-    final unFocusedForegroundDecoration = BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color:  !enabled? Colors.transparent: widget.unfocusedColor ??(themeData.brightness.isLight? const Color.fromRGBO(0, 0, 0, 0.45): const Color.fromRGBO(255, 255, 255, 0.54)),
-          width: 0,
-        )
-      )
-    ).copyWith(
-      backgroundBlendMode: widget.unFocusedForegroundDecoration?.backgroundBlendMode,
-      border: widget.unFocusedForegroundDecoration?.border,
-      borderRadius: widget.unFocusedForegroundDecoration?.borderRadius,
-      boxShadow: widget.unFocusedForegroundDecoration?.boxShadow,
-      color: widget.unFocusedForegroundDecoration?.color,
-      gradient: widget.unFocusedForegroundDecoration?.gradient,
-      image: widget.unFocusedForegroundDecoration?.image,
-      shape: widget.unFocusedForegroundDecoration?.shape,
-    );
-
-
-    final focusedRadius = widget.focusedDecoration?.borderRadius?.resolve(Directionality.of(context)) ?? BorderRadius.circular(4.0);
-    final unFocusedRadius = widget.unFocusedDecoration?.borderRadius?.resolve(Directionality.of(context)) ?? BorderRadius.circular(4.0);
-
-    var radius = _effectiveFocusNode.hasFocus ? focusedRadius : unFocusedRadius;
+    final radius =
+        widget.decoration?.borderRadius?.resolve(Directionality.of(context)) ??
+            BorderRadius.circular(4.0);
 
     return Semantics(
       enabled: enabled,
@@ -1209,32 +1183,48 @@ class _TextBoxState extends State<TextBox>
                 if (_effectiveFocusNode.hasFocus) {
                   states = {...states, WidgetState.focused};
                 }
-                var decoration = BoxDecoration(
-                  borderRadius: radius,
-                  border: (_effectiveFocusNode.hasFocus? widget.focusedDecoration?.border : widget.unFocusedDecoration?.border) ?? Border.all(color: themeData.resources.controlStrokeColorDefault),
-                  color: (_effectiveFocusNode.hasFocus? widget.focusedDecoration?.color : widget.unFocusedDecoration?.color) ?? backgroundColor(states),
-                  boxShadow: _effectiveFocusNode.hasFocus? widget.focusedDecoration?.boxShadow : widget.unFocusedDecoration?.boxShadow,
-                  gradient: _effectiveFocusNode.hasFocus? widget.focusedDecoration?.gradient : widget.unFocusedDecoration?.gradient,
-                  image: _effectiveFocusNode.hasFocus? widget.focusedDecoration?.image: widget.unFocusedDecoration?.image,
-                  shape: (_effectiveFocusNode.hasFocus? widget.focusedDecoration?.shape : widget.unFocusedDecoration?.shape)??BoxShape.rectangle,
-                );
+
                 return DecoratedBox(
-                  decoration: decoration,
+                  decoration: BoxDecoration(
+                    borderRadius: radius,
+                    border: Border.all(
+                      color: themeData.resources.controlStrokeColorDefault,
+                    ),
+                    color: backgroundColor(states),
+                  ).copyWith(
+                    backgroundBlendMode: widget.decoration?.backgroundBlendMode,
+                    border: widget.decoration?.border,
+
+                    /// This border radius can't be applied, otherwise the error "A borderRadius
+                    /// can only be given for a uniform Border." will be thrown. Instead,
+                    /// [radius] is already set to get the value from [widget.decoration?.borderRadius],
+                    /// if any.
+                    // borderRadius: widget.decoration?.borderRadius,
+                    boxShadow: widget.decoration?.boxShadow,
+                    color: widget.decoration?.color,
+                    gradient: widget.decoration?.gradient,
+                    image: widget.decoration?.image,
+                    shape: widget.decoration?.shape,
+                  ),
                   child: Container(
-                    foregroundDecoration: _effectiveFocusNode.hasFocus ? focusedForegroundDecoration : unFocusedForegroundDecoration,
-                    constraints: const BoxConstraints(minHeight: 32.0),
-                    child: _selectionGestureDetectorBuilder.buildGestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        child: Align(
-                          alignment: Alignment(-1.0, _textAlignVertical.y),
-                          child: SmallIconButton(
-                            child: _addTextDependentAttachments(
-                              paddedEditable,
-                              textStyle,
-                              placeholderStyle(states),
-                            ),
+                    foregroundDecoration: foregroundDecoration,
+                    constraints: const BoxConstraints(
+                      minHeight: 32.0,
+                    ),
+                    child:
+                        _selectionGestureDetectorBuilder.buildGestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: Align(
+                        alignment: Alignment(-1.0, _textAlignVertical.y),
+                        child: SmallIconButton(
+                          child: _addTextDependentAttachments(
+                            paddedEditable,
+                            textStyle,
+                            placeholderStyle(states),
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },
