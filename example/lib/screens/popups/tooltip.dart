@@ -106,6 +106,46 @@ class TooltipPage extends StatelessWidget with PageMixin {
             ),
           ),
         ),
+        subtitle(
+          content: const Text(
+            'Extra long tooltip content that wraps',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''Tooltip(
+  message:
+      List.generate(25, (_) => 'This is a really long tooltip! ')
+          .join(" "),
+  useMousePosition: false,
+  style: const TooltipThemeData(
+    maxWidth: 500,
+    preferBelow: true,
+    waitDuration: Duration(),
+  ),
+  child: IconButton(
+    icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+    onPressed: () {},
+  ),
+),''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Tooltip(
+              message:
+                  List.generate(25, (_) => 'This is a really long tooltip! ')
+                      .join(" "),
+              useMousePosition: false,
+              style: const TooltipThemeData(
+                maxWidth: 500,
+                preferBelow: true,
+                waitDuration: Duration(),
+              ),
+              child: IconButton(
+                icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

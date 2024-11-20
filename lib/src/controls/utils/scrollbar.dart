@@ -62,26 +62,23 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.didChangeDependencies();
   }
 
-  ButtonStates get _currentState {
-    if (_dragIsActive) {
-      return ButtonStates.pressing;
-    } else if (_hoverIsActive) {
-      return ButtonStates.hovering;
-    } else {
-      return ButtonStates.none;
-    }
+  Set<WidgetState> get _currentState {
+    return {
+      if (_dragIsActive) WidgetState.pressed,
+      if (_hoverIsActive) WidgetState.hovered,
+    };
   }
 
-  Color _trackColor(ButtonStates state) {
-    if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+  Color _trackColor(Set<WidgetState> state) {
+    if (state.isAllOf({WidgetState.hovered, WidgetState.pressed})) {
       return _scrollbarTheme.backgroundColor ?? Colors.transparent;
     }
     return Colors.transparent;
   }
 
-  Color _thumbColor(ButtonStates state) {
+  Color _thumbColor(Set<WidgetState> state) {
     Color? color;
-    if (state == ButtonStates.pressing) {
+    if (state.isPressed) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
@@ -142,6 +139,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressStart(localPosition);
     if (mounted) {
       setState(() => _dragIsActive = true);
+      _updateAnimation();
     }
   }
 
@@ -150,6 +148,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressEnd(localPosition, velocity);
     if (mounted) {
       setState(() => _dragIsActive = false);
+      _updateAnimation();
     }
   }
 
@@ -162,14 +161,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       await contractDelay;
       if (mounted) {
         setState(() => _hoverIsActive = true);
-        _hoverAnimationController.forward();
+        _updateAnimation();
       }
     } else if (_hoverIsActive) {
       await contractDelay;
       if (mounted) {
         // Pointer was, but is no longer over painted scrollbar.
-        await _hoverAnimationController.reverse();
         setState(() => _hoverIsActive = false);
+        _updateAnimation();
       }
     }
   }
@@ -179,7 +178,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleHoverExit(event);
     if (mounted) {
       setState(() => _hoverIsActive = false);
-      _hoverAnimationController.reverse();
+      _updateAnimation();
     }
   }
 
@@ -187,6 +186,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void dispose() {
     _hoverAnimationController.dispose();
     super.dispose();
+  }
+
+  void _updateAnimation() {
+    if (_currentState.isEmpty) {
+      _hoverAnimationController.reverse();
+    } else {
+      _hoverAnimationController.forward();
+    }
   }
 }
 

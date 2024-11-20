@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for English (`en`).
 class FluentLocalizationsEn extends FluentLocalizations {
-  FluentLocalizationsEn([String locale = 'en']) : super(locale);
+  FluentLocalizationsEn([super.locale = 'en']);
 
   @override
   String get backButtonTooltip => 'Back';

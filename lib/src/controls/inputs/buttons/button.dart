@@ -37,15 +37,15 @@ class Button extends BaseButton {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     return ButtonStyle(
-      shadowColor: ButtonState.all(theme.shadowColor),
-      padding: ButtonState.all(kDefaultButtonPadding),
-      shape: ButtonState.resolveWith((states) {
+      shadowColor: WidgetStatePropertyAll(theme.shadowColor),
+      padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
+      shape: WidgetStateProperty.resolveWith((states) {
         return ButtonThemeData.shapeBorder(context, states);
       }),
-      backgroundColor: ButtonState.resolveWith((states) {
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         return ButtonThemeData.buttonColor(context, states);
       }),
-      foregroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         return ButtonThemeData.buttonForegroundColor(context, states);
       }),
     );

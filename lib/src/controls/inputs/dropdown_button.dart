@@ -271,16 +271,16 @@ class DropDownButtonState extends State<DropDownButton> {
                       data: IconThemeData(
                         color: state.isDisabled
                             ? theme.resources.textFillColorDisabled
-                            : state.isPressing
+                            : state.isPressed
                                 ? theme.resources.textFillColorTertiary
-                                : state.isHovering
+                                : state.isHovered
                                     ? theme.resources.textFillColorSecondary
                                     : theme.resources.textFillColorPrimary,
                       ),
                       child: AnimatedSlide(
                         duration: theme.fastAnimationDuration,
                         curve: Curves.easeInCirc,
-                        offset: state.isPressing
+                        offset: state.isPressed
                             ? const Offset(0, 0.1)
                             : Offset.zero,
                         child: widget.trailing!,
@@ -323,7 +323,6 @@ class DropDownButtonState extends State<DropDownButton> {
     widget.onOpen?.call();
     await _flyoutController.showFlyout(
       barrierColor: Colors.transparent,
-      placementMode: FlyoutPlacementMode.auto,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
       ),
@@ -350,7 +349,7 @@ class DropDownButtonState extends State<DropDownButton> {
   ) {
     if (item is MenuFlyoutSubItem) {
       return _createSubMenuItem(item);
-    } else if (widget.closeAfterClick && item is MenuFlyoutItem) {
+    } else if (item is MenuFlyoutItem) {
       return _createMenuItem(item, context);
     } else {
       return item;
@@ -361,8 +360,8 @@ class DropDownButtonState extends State<DropDownButton> {
     return MenuFlyoutSubItem(
       key: item.key,
       text: item.text,
-      items: (context) => item.items
-          .call(context)
+      items: (context) => item
+          .items(context)
           .map((item) => transformItem(item, context))
           .toList(),
       leading: item.leading,
@@ -374,10 +373,8 @@ class DropDownButtonState extends State<DropDownButton> {
 
   MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
     return MenuFlyoutItem(
-      onPressed: () {
-        Navigator.of(context).pop();
-        item.onPressed?.call();
-      },
+      onPressed: item.onPressed,
+      closeAfterClick: widget.closeAfterClick,
       key: item.key,
       leading: item.leading,
       text: item.text,

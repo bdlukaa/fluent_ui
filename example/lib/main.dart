@@ -453,7 +453,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               : null;
           return NavigationPaneTheme(
             data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-              unselectedIconColor: ButtonState.resolveWith((states) {
+              unselectedIconColor: WidgetStateProperty.resolveWith((states) {
                 if (states.isDisabled) {
                   return ButtonThemeData.buttonColor(context, states);
                 }
@@ -711,7 +711,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         child: child,
       );
     },
-    routes: [
+    routes: <GoRoute>[
       /// Home
       GoRoute(path: '/', builder: (context, state) => const HomePage()),
 

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -9,6 +8,12 @@ import 'package:math_expressions/math_expressions.dart';
 
 const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
+
+typedef NumberBoxFormatFunction = String? Function(num? number);
+
+abstract interface class NumberBoxFormatter {
+  String format(dynamic number);
+}
 
 enum SpinButtonPlacementMode {
   /// Two buttons will be added as a suffix of the number box field. A button
@@ -96,7 +101,29 @@ class NumberBox<T extends num> extends StatefulWidget {
 
   /// The precision indicates the number of digits that's accepted for double
   /// value.
-  final int precision;
+  ///
+  /// If set, [pattern], [formatter] and [format] must be `null`.
+  ///
+  /// Default is 2.
+  final int? precision;
+
+  /// The parttern for the number box. The pattern is used to format the number
+  /// when the user inputs a value.
+  ///
+  /// If set, [precision], [formatter] and [format] must be `null`.
+  final String? pattern;
+
+  /// The formatter for the number box. The formatter is used to format the
+  /// number when the user inputs a value.
+  ///
+  /// If set, [pattern], [precision] and [format] must be `null`.
+  final NumberBoxFormatter? formatter;
+
+  /// The format function for the number box. The format function is used to
+  /// format the number when the user input a value.
+  ///
+  /// If set, [pattern], [formatter] and [precision] must be `null`.
+  final NumberBoxFormatFunction? format;
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
@@ -224,6 +251,15 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.textDirection}
   final TextDirection? textDirection;
 
+  /// The type of action button to use for the keyboard.
+  ///
+  /// Defaults to [TextInputAction.newline] if [keyboardType] is
+  /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
+  final TextInputAction? textInputAction;
+
+  /// {@macro flutter.widgets.editableText.onEditingComplete}
+  final VoidCallback? onEditingComplete;
+
   /// Creates a number box.
   const NumberBox({
     super.key,
@@ -235,7 +271,10 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
-    this.precision = 2,
+    this.precision,
+    this.pattern,
+    this.formatter,
+    this.format,
     this.min,
     this.max,
     this.allowExpressions = false,
@@ -264,7 +303,28 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.textDirection,
-  });
+    this.textInputAction,
+    this.onEditingComplete,
+  }) : assert((precision != null &&
+                pattern == null &&
+                formatter == null &&
+                format == null) ||
+            (precision == null &&
+                pattern != null &&
+                formatter == null &&
+                format == null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter != null &&
+                format == null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter == null &&
+                format != null) ||
+            (precision == null &&
+                pattern == null &&
+                formatter == null &&
+                format == null));
 
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();
@@ -273,13 +333,17 @@ class NumberBox<T extends num> extends StatefulWidget {
 class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
-  FocusNode? get focusNode => widget.focusNode ?? _internalNode;
+  FocusNode get focusNode => (widget.focusNode ?? _internalNode)!;
 
   OverlayEntry? _entry;
 
   bool _hasPrimaryFocus = false;
 
   late num? previousValidValue = widget.value;
+
+  // use dynamic to simulate duck typing
+  late final dynamic _formatter;
+  late final NumberBoxFormatFunction _format;
 
   final controller = TextEditingController();
 
@@ -295,28 +359,54 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.focusNode == null) {
       _internalNode ??= _createFocusNode();
     }
-    focusNode!.addListener(_handleFocusChanged);
+    focusNode.addListener(_handleFocusChanged);
 
+    if (widget.precision == null &&
+        widget.pattern == null &&
+        widget.formatter == null) {
+      _formatter = NumberFormat('#.${List.filled(2, '#').join()}') as dynamic;
+    }
+    if (widget.precision != null) {
+      final pattern = '#.${List.filled(widget.precision!, '#').join()}';
+      _formatter = NumberFormat(pattern) as dynamic;
+    }
+    if (widget.pattern != null) {
+      _formatter = NumberFormat(widget.pattern) as dynamic;
+    }
+    if (widget.formatter != null) {
+      _formatter = widget.formatter!;
+    }
+    if (widget.format != null) {
+      _format = widget.format!;
+    } else {
+      _format = (num? value) {
+        if (value == null) return null;
+        if (value is int) {
+          return value.toString();
+        }
+        return _formatter.format(value);
+      };
+    }
     controller.text = widget.value?.toString() ?? '';
-    super.initState();
   }
 
   @override
   void dispose() {
     _dismissOverlay();
-    focusNode!.removeListener(_handleFocusChanged);
+    focusNode.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
     controller.dispose();
     super.dispose();
   }
 
   void _handleFocusChanged() {
-    if (_hasPrimaryFocus != focusNode!.hasPrimaryFocus) {
+    if (_hasPrimaryFocus != focusNode.hasPrimaryFocus) {
       setState(() {
-        _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
+        _hasPrimaryFocus = focusNode.hasPrimaryFocus;
       });
 
       if (widget.mode == SpinButtonPlacementMode.compact) {
@@ -342,21 +432,23 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       if (widget.focusNode == null) {
         _internalNode ??= _createFocusNode();
       }
-      _hasPrimaryFocus = focusNode!.hasPrimaryFocus;
-      focusNode!.addListener(_handleFocusChanged);
+      _hasPrimaryFocus = focusNode.hasPrimaryFocus;
+      focusNode.addListener(_handleFocusChanged);
     }
 
     if (oldWidget.value != widget.value) {
-      if (widget.value != null) {
-        _updateController(widget.value!);
-      } else {
-        controller.text = '';
-      }
-    }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.value != null) {
+          _updateController(widget.value!);
+        } else {
+          controller.text = '';
+        }
 
-    if ((oldWidget.min != widget.min && widget.min != null) ||
-        (oldWidget.max != widget.max && widget.max != null)) {
-      updateValue();
+        if ((oldWidget.min != widget.min && widget.min != null) ||
+            (oldWidget.max != widget.max && widget.max != null)) {
+          updateValue();
+        }
+      });
     }
   }
 
@@ -471,10 +563,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       selectionWidthStyle: widget.selectionWidthStyle,
       textDirection: widget.textDirection,
       onSubmitted: (_) => updateValue(),
-      onEditingComplete: updateValue,
       onTap: updateValue,
-      onTapOutside: (_) => updateValue(),
+      onTapOutside: (_) {
+        updateValue();
+        focusNode.unfocus();
+      },
+      onEditingComplete: widget.onEditingComplete != null
+          ? () {
+              updateValue();
+              widget.onEditingComplete!();
+            }
+          : null,
       onChanged: widget.onTextChange,
+      textInputAction: widget.textInputAction,
     );
 
     return CompositedTransformTarget(
@@ -487,17 +588,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
           if (event.logicalKey == LogicalKeyboardKey.pageUp) {
             incrementLarge();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.pageDown) {
             decrementLarge();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             incrementSmall();
+            return KeyEventResult.handled;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
             decrementSmall();
-          } else {
-            return KeyEventResult.ignored;
+            return KeyEventResult.handled;
           }
 
-          return KeyEventResult.handled;
+          return KeyEventResult.ignored;
         },
         child: Listener(
           onPointerSignal: (event) {
@@ -600,15 +703,6 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     if (widget.onChanged != null) {
       widget.onChanged!(value as T?);
     }
-  }
-
-  String? _format(num? value) {
-    if (value == null) return null;
-    if (value is int) {
-      return value.toString();
-    }
-    final mul = pow(10, widget.precision);
-    return NumberFormat().format((value * mul).roundToDouble() / mul);
   }
 }
 

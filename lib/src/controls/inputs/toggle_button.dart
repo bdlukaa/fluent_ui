@@ -148,16 +148,16 @@ class ToggleButtonThemeData with Diagnosticable {
   factory ToggleButtonThemeData.standard(FluentThemeData theme) {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(
+        backgroundColor: WidgetStateProperty.resolveWith(
           (states) => ButtonThemeData.checkedInputColor(
             theme,
             states,
           ),
         ),
-        shape: ButtonState.resolveWith(
+        shape: WidgetStateProperty.resolveWith(
           (states) => FilledButton.shapeBorder(theme, states),
         ),
-        foregroundColor: ButtonState.resolveWith(
+        foregroundColor: WidgetStateProperty.resolveWith(
           (states) => FilledButton.foregroundColor(
             theme,
             states,

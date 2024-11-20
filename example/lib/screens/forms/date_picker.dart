@@ -12,6 +12,7 @@ class DatePickerPage extends StatefulWidget {
 class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
   DateTime? simpleTime;
   DateTime? hiddenTime;
+  DateTime? flexTime;
 
   bool showYear = true;
   bool showMonth = true;
@@ -102,6 +103,24 @@ DatePicker(
               selected: hiddenTime,
               onChanged: (v) => setState(() => hiddenTime = v),
               showYear: false,
+            ),
+          ),
+        ),
+        subtitle(content: const Text('A DatePicker with flex layout')),
+        CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  selected: selected,
+  fieldFlex: const [2, 3, 2], // Same order as fieldOrder
+  onChanged: (time) => setState(() => selected = time),
+),''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DatePicker(
+              selected: flexTime,
+              fieldFlex: const [2, 3, 2],
+              onChanged: (v) => setState(() => flexTime = v),
             ),
           ),
         ),

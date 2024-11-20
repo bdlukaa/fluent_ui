@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Modern Greek (`el`).
 class FluentLocalizationsEl extends FluentLocalizations {
-  FluentLocalizationsEl([String locale = 'el']) : super(locale);
+  FluentLocalizationsEl([super.locale = 'el']);
 
   @override
   String get backButtonTooltip => 'Πίσω';

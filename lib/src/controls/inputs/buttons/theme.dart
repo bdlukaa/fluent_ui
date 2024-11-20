@@ -15,21 +15,21 @@ class ButtonStyle with Diagnosticable {
     this.iconSize,
   });
 
-  final ButtonState<TextStyle?>? textStyle;
+  final WidgetStateProperty<TextStyle?>? textStyle;
 
-  final ButtonState<Color?>? backgroundColor;
+  final WidgetStateProperty<Color?>? backgroundColor;
 
-  final ButtonState<Color?>? foregroundColor;
+  final WidgetStateProperty<Color?>? foregroundColor;
 
-  final ButtonState<Color?>? shadowColor;
+  final WidgetStateProperty<Color?>? shadowColor;
 
-  final ButtonState<double?>? elevation;
+  final WidgetStateProperty<double?>? elevation;
 
-  final ButtonState<EdgeInsetsGeometry?>? padding;
+  final WidgetStateProperty<EdgeInsetsGeometry?>? padding;
 
-  final ButtonState<ShapeBorder?>? shape;
+  final WidgetStateProperty<ShapeBorder?>? shape;
 
-  final ButtonState<double?>? iconSize;
+  final WidgetStateProperty<double?>? iconSize;
 
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
@@ -47,31 +47,34 @@ class ButtonStyle with Diagnosticable {
 
   static ButtonStyle lerp(ButtonStyle? a, ButtonStyle? b, double t) {
     return ButtonStyle(
-      textStyle:
-          ButtonState.lerp(a?.textStyle, b?.textStyle, t, TextStyle.lerp),
-      backgroundColor: ButtonState.lerp(
+      textStyle: WidgetStateProperty.lerp<TextStyle?>(
+          a?.textStyle, b?.textStyle, t, TextStyle.lerp),
+      backgroundColor: WidgetStateProperty.lerp<Color?>(
           a?.backgroundColor, b?.backgroundColor, t, Color.lerp),
-      foregroundColor: ButtonState.lerp(
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
           a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
-      shadowColor:
-          ButtonState.lerp(a?.shadowColor, b?.shadowColor, t, Color.lerp),
-      elevation: ButtonState.lerp(a?.elevation, b?.elevation, t, lerpDouble),
-      padding:
-          ButtonState.lerp(a?.padding, b?.padding, t, EdgeInsetsGeometry.lerp),
-      shape: ButtonState.lerp(a?.shape, b?.shape, t, ShapeBorder.lerp),
-      iconSize: ButtonState.lerp(a?.iconSize, b?.iconSize, t, lerpDouble),
+      shadowColor: WidgetStateProperty.lerp<Color?>(
+          a?.shadowColor, b?.shadowColor, t, Color.lerp),
+      elevation: WidgetStateProperty.lerp<double?>(
+          a?.elevation, b?.elevation, t, lerpDouble),
+      padding: WidgetStateProperty.lerp<EdgeInsetsGeometry?>(
+          a?.padding, b?.padding, t, EdgeInsetsGeometry.lerp),
+      shape: WidgetStateProperty.lerp<ShapeBorder?>(
+          a?.shape, b?.shape, t, ShapeBorder.lerp),
+      iconSize: WidgetStateProperty.lerp<double?>(
+          a?.iconSize, b?.iconSize, t, lerpDouble),
     );
   }
 
   ButtonStyle copyWith({
-    ButtonState<TextStyle?>? textStyle,
-    ButtonState<Color?>? backgroundColor,
-    ButtonState<Color?>? foregroundColor,
-    ButtonState<Color?>? shadowColor,
-    ButtonState<double?>? elevation,
-    ButtonState<EdgeInsetsGeometry?>? padding,
-    ButtonState<ShapeBorder?>? shape,
-    ButtonState<double?>? iconSize,
+    WidgetStateProperty<TextStyle?>? textStyle,
+    WidgetStateProperty<Color?>? backgroundColor,
+    WidgetStateProperty<Color?>? foregroundColor,
+    WidgetStateProperty<Color?>? shadowColor,
+    WidgetStateProperty<double?>? elevation,
+    WidgetStateProperty<EdgeInsetsGeometry?>? padding,
+    WidgetStateProperty<ShapeBorder?>? shape,
+    WidgetStateProperty<double?>? iconSize,
   }) {
     return ButtonStyle(
       textStyle: textStyle ?? this.textStyle,
@@ -215,13 +218,13 @@ class ButtonThemeData with Diagnosticable {
   /// and state.
   static Color buttonColor(
     BuildContext context,
-    Set<ButtonStates> states, {
+    Set<WidgetState> states, {
     bool transparentWhenNone = false,
   }) {
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.controlFillColorTertiary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.controlFillColorSecondary;
     } else if (states.isDisabled) {
       return res.controlFillColorDisabled;
@@ -235,12 +238,10 @@ class ButtonThemeData with Diagnosticable {
   /// and state.
   static Color buttonForegroundColor(
     BuildContext context,
-    Set<ButtonStates> states,
+    Set<WidgetState> states,
   ) {
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
-      return res.textFillColorTertiary;
-    } else if (states.isHovering) {
+    if (states.isPressed) {
       return res.textFillColorSecondary;
     } else if (states.isDisabled) {
       return res.textFillColorDisabled;
@@ -249,40 +250,42 @@ class ButtonThemeData with Diagnosticable {
   }
 
   static ShapeBorder shapeBorder(
-      BuildContext context, Set<ButtonStates> states) {
+      BuildContext context, Set<WidgetState> states) {
     final theme = FluentTheme.of(context);
-    return states.isPressing || states.isDisabled
-        ? RoundedRectangleBorder(
-            side: BorderSide(
-              color: theme.resources.controlStrokeColorDefault,
-            ),
-            borderRadius: BorderRadius.circular(4.0),
-          )
-        : RoundedRectangleGradientBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            gradient: LinearGradient(
-              begin: const Alignment(0, 0),
-              end: const Alignment(0.0, 3),
-              colors: [
-                theme.resources.controlStrokeColorSecondary,
-                theme.resources.controlStrokeColorDefault,
-              ],
-              stops: const [0.3, 1.0],
-            ),
-          );
+    if (states.isPressed || states.isDisabled) {
+      return RoundedRectangleBorder(
+        side: BorderSide(
+          color: theme.resources.controlStrokeColorDefault,
+        ),
+        borderRadius: BorderRadius.circular(4.0),
+      );
+    } else {
+      return RoundedRectangleGradientBorder(
+        borderRadius: BorderRadius.circular(4.0),
+        gradient: LinearGradient(
+          begin: const Alignment(0, 0),
+          end: const Alignment(0.0, 3),
+          colors: [
+            theme.resources.controlStrokeColorSecondary,
+            theme.resources.controlStrokeColorDefault,
+          ],
+          stops: const [0.3, 1.0],
+        ),
+      );
+    }
   }
 
   /// Defines the default color used for inputs when checked, such as checkbox,
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
   static Color checkedInputColor(
-      FluentThemeData theme, Set<ButtonStates> states) {
+      FluentThemeData theme, Set<WidgetState> states) {
     return FilledButton.backgroundColor(theme, states);
   }
 
   static Color uncheckedInputColor(
     FluentThemeData theme,
-    Set<ButtonStates> states, {
+    Set<WidgetState> states, {
     bool transparentWhenNone = false,
     bool transparentWhenDisabled = false,
   }) {
@@ -291,8 +294,8 @@ class ButtonThemeData with Diagnosticable {
       if (transparentWhenDisabled) return res.subtleFillColorTransparent;
       return res.controlAltFillColorDisabled;
     }
-    if (states.isPressing) return res.subtleFillColorTertiary;
-    if (states.isHovering) return res.subtleFillColorSecondary;
+    if (states.isPressed) return res.subtleFillColorTertiary;
+    if (states.isHovered) return res.subtleFillColorSecondary;
     return transparentWhenNone
         ? res.subtleFillColorTransparent
         : res.controlAltFillColorSecondary;

@@ -76,7 +76,7 @@ class _CardHighlightState extends State<CardHighlight>
                     child: Button(
                       style: ButtonStyle(
                         backgroundColor: isCopying
-                            ? ButtonState.all(
+                            ? WidgetStatePropertyAll(
                                 theme.accentColor
                                     .defaultBrushFor(theme.brightness),
                               )

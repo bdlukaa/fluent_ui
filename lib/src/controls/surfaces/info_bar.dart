@@ -431,10 +431,11 @@ class InfoBarThemeData with Diagnosticable {
             return theme.resources.systemFillColorCritical;
         }
       },
-      actionStyle: ButtonStyle(
-        padding: ButtonState.all(const EdgeInsets.all(6)),
+      actionStyle: const ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
       ),
-      closeButtonStyle: ButtonStyle(iconSize: ButtonState.all(16.0)),
+      closeButtonStyle:
+          const ButtonStyle(iconSize: WidgetStatePropertyAll(16.0)),
     );
   }
 
@@ -472,6 +473,8 @@ class InfoBarThemeData with Diagnosticable {
     if (style == null) return this;
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
+      closeIconSize: style.closeIconSize ?? closeIconSize,
+      closeButtonStyle: style.closeButtonStyle ?? closeButtonStyle,
       icon: style.icon ?? icon,
       decoration: style.decoration ?? decoration,
       actionStyle: style.actionStyle ?? actionStyle,
@@ -486,6 +489,9 @@ class InfoBarThemeData with Diagnosticable {
     properties
       ..add(ObjectFlagProperty.has('icon', icon))
       ..add(IconDataProperty('closeIcon', closeIcon))
+      ..add(DoubleProperty('closeIconSize', closeIconSize))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'closeButtonStyle', closeButtonStyle))
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
       ..add(DiagnosticsProperty<ButtonStyle>(

@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Romanian Moldavian Moldovan (`ro`).
 class FluentLocalizationsRo extends FluentLocalizations {
-  FluentLocalizationsRo([String locale = 'ro']) : super(locale);
+  FluentLocalizationsRo([super.locale = 'ro']);
 
   @override
   String get backButtonTooltip => 'Înapoi';

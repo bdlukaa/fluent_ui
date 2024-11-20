@@ -74,8 +74,6 @@ class FluentApp extends StatefulWidget {
     this.localeResolutionCallback,
     this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
-    this.checkerboardRasterCacheImages = false,
-    this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
@@ -112,8 +110,6 @@ class FluentApp extends StatefulWidget {
     this.localeResolutionCallback,
     this.supportedLocales = FluentLocalizations.supportedLocales,
     this.showPerformanceOverlay = false,
-    this.checkerboardRasterCacheImages = false,
-    this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
@@ -285,12 +281,6 @@ class FluentApp extends StatefulWidget {
   ///
   ///  * <https://flutter.dev/debugging/#performanceoverlay>
   final bool showPerformanceOverlay;
-
-  /// Turns on checkerboarding of raster cache images.
-  final bool checkerboardRasterCacheImages;
-
-  /// Turns on checkerboarding of layers rendered to offscreen bitmaps.
-  final bool checkerboardOffscreenLayers;
 
   /// Turns on an overlay that shows the accessibility information
   /// reported by the framework.
@@ -518,8 +508,6 @@ class _FluentAppState extends State<FluentApp> {
         localeListResolutionCallback: widget.localeListResolutionCallback,
         supportedLocales: widget.supportedLocales,
         showPerformanceOverlay: widget.showPerformanceOverlay,
-        checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
-        checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
         showSemanticsDebugger: widget.showSemanticsDebugger,
         debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
         shortcuts: widget.shortcuts,
@@ -548,8 +536,6 @@ class _FluentAppState extends State<FluentApp> {
       localeListResolutionCallback: widget.localeListResolutionCallback,
       supportedLocales: widget.supportedLocales,
       showPerformanceOverlay: widget.showPerformanceOverlay,
-      checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
-      checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
       showSemanticsDebugger: widget.showSemanticsDebugger,
       debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
       shortcuts: widget.shortcuts,

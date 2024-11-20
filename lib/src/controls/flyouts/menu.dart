@@ -140,11 +140,14 @@ class _MenuFlyoutState extends State<MenuFlyout> {
 
             final itemBox =
                 subItem.currentContext!.findRenderObject() as RenderBox;
-            final itemRect = itemBox.localToGlobal(
-                  Offset.zero,
-                  ancestor: parent?.widget.root?.context.findRenderObject(),
-                ) &
-                itemBox.size;
+            final parentBox =
+                (parent?.widget.root?.context.findRenderObject() as RenderBox);
+            final translation = parentBox.getTransformTo(null).getTranslation();
+            final offset = Offset(translation[0], translation[1]);
+            final itemRect =
+                (itemBox.localToGlobal(Offset.zero, ancestor: parentBox) +
+                        offset) &
+                    itemBox.size;
 
             if (!itemRect.contains(event.position)) {
               state.close(menuInfo);
@@ -221,6 +224,10 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
 ///    separates items in a [MenuFlyout].
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
+///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
+///    change between two states, checked or unchecked
+///  * [RadioMenuFlyoutItem], which represents a menu item that is mutually
+///    exclusive with other radio menu items in its group
 class MenuFlyoutItem extends MenuFlyoutItemBase {
   /// Creates a menu flyout item
   MenuFlyoutItem({
@@ -230,6 +237,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
     this.trailing,
     required this.onPressed,
     this.selected = false,
+    this.closeAfterClick = true,
   });
 
   /// Displayed before [text].
@@ -240,12 +248,31 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   ///
   /// ![](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/contextmenu_rs2_icons.png)
   ///
-  /// Usually an [Icon] widget,
+  /// Usually an [Icon] widget.
   final Widget? leading;
+
+  /// The text displayed in this item.
+  ///
+  /// Usually a [Text] widget.
   final Widget text;
+
+  /// Displayed after [text].
+  ///
+  /// Usually an [Icon] widget.
   final Widget? trailing;
+
+  /// Called when the item is pressed.
+  ///
+  /// If `null`, the item will be marked as disabled.
   final VoidCallback? onPressed;
+
+  /// Whether this item is selected or not.
   final bool selected;
+
+  /// Whether to close the menu after the item is clicked.
+  ///
+  /// Defaults to `true`.
+  final bool closeAfterClick;
 
   bool _useIconPlaceholder = false;
 
@@ -268,10 +295,12 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
           data: const IconThemeData(size: 12.0),
           child: trailing ?? const SizedBox.shrink(),
         ),
-        onPressed: () {
-          onPressed?.call();
-          Navigator.maybePop(context);
-        },
+        onPressed: onPressed == null
+            ? null
+            : () {
+                if (closeAfterClick) Navigator.of(context).maybePop();
+                onPressed?.call();
+              },
       ),
     );
   }
@@ -285,6 +314,10 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
 ///  * [MenuFlyoutItem], a single item in the list of items
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
+///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
+///    change between two states, checked or unchecked
+///  * [RadioMenuFlyoutItem], which represents a menu item that is mutually
+///    exclusive with other radio menu items in its group
 class MenuFlyoutSeparator extends MenuFlyoutItemBase {
   /// Creates a menu flyout separator
   const MenuFlyoutSeparator({super.key});
@@ -303,6 +336,82 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
       ),
     );
   }
+}
+
+/// Represents an item in a [MenuFlyout] that a user can change between two
+/// states, checked or unchecked.
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+///  * [RadioMenuFlyoutItem], which represents a menu item that is mutually
+///    exclusive with other radio menu items in its group
+class ToggleMenuFlyoutItem extends MenuFlyoutItem {
+  /// The value of the toggle item.
+  final bool value;
+
+  /// Called when the value of the toggle item changes.
+  final ValueChanged<bool>? onChanged;
+
+  /// Creates a menu flyout item that can be toggled on and off.
+  ToggleMenuFlyoutItem({
+    required super.text,
+    super.trailing,
+    required this.value,
+    required this.onChanged,
+    super.closeAfterClick = false,
+  }) : super(
+          leading: Icon(
+            value ? FluentIcons.check_mark : null,
+            size: 12.0,
+          ),
+          onPressed: onChanged == null ? null : () => onChanged(!value),
+        );
+}
+
+/// Represents a menu item that is mutually exclusive with other radio menu
+/// items in its group
+///
+/// See also:
+///
+///  * [MenuFlyout], which displays a list of commands or options
+///  * [MenuFlyoutItem], a single item in the list of items
+///  * [MenuFlyoutSeparator], which represents a horizontal line that
+///    separates items in a [MenuFlyout].
+///  * [MenuFlyoutSubItem], which represents a menu item that displays a
+///    sub-menu in a [MenuFlyout]
+///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
+///    change between two states, checked or unchecked
+class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
+  /// The value of the item.
+  final T value;
+
+  /// The value of the group.
+  final T groupValue;
+
+  /// Called when the value of the item changes.
+  final ValueChanged<T>? onChanged;
+
+  /// Creates a radio menu item.
+  RadioMenuFlyoutItem({
+    required super.text,
+    super.trailing,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+    super.closeAfterClick = false,
+  }) : super(
+          leading: Icon(
+            value == groupValue ? FluentIcons.radio_bullet : null,
+            size: 12.0,
+          ),
+          onPressed: onChanged == null ? null : () => onChanged(value),
+        );
 }
 
 enum SubItemShowBehavior {
@@ -329,6 +438,10 @@ typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
 ///  * [MenuFlyoutItem], a single item in the list of items
 ///  * [MenuFlyoutSeparator], which represents a horizontal line that
 ///    separates items in a [MenuFlyout].
+///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
+///    change between two states, checked or unchecked
+///  * [RadioMenuFlyoutItem], which represents a menu item that is mutually
+///    exclusive with other radio menu items in its group
 class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// Creates a menu flyout sub item
   MenuFlyoutSubItem({
@@ -423,6 +536,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
       leading: widget.item.leading,
       selected: isShowing(menuInfo),
       trailing: widget.item.trailing,
+      closeAfterClick: false,
       onPressed: () {
         show(menuInfo);
       },
@@ -536,7 +650,9 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
+    // The margin should include a top and a bottom
+    final maxHeight = constraints.maxHeight - margin * 2;
+    return constraints.loosen().copyWith(maxHeight: maxHeight);
   }
 
   @override
@@ -574,6 +690,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
     if (willOverflowY) {
       y = parentRect.top + parentRect.height - flyoutSize.height;
+      if (y < margin) y = margin;
     }
 
     return Offset(x, y);

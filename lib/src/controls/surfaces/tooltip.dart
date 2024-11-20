@@ -210,6 +210,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   Offset? mousePosition;
   late TooltipTriggerMode triggerMode;
   late bool enableFeedback;
+  late double? maxWidth;
   late bool _isConcealed;
   late bool _forceRemoval;
   late bool _visible;
@@ -406,6 +407,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         verticalOffset: verticalOffset,
         preferBelow: preferBelow,
         displayHorizontally: widget.displayHorizontally,
+        maxWidth: maxWidth,
       ),
     );
     _entry = OverlayEntry(builder: (_) => overlay);
@@ -518,6 +520,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     hoverShowDuration = _defaultHoverShowDuration;
     triggerMode = widget.triggerMode ?? _defaultTriggerMode;
     enableFeedback = widget.enableFeedback ?? _defaultEnableFeedback;
+    maxWidth = tooltipTheme.maxWidth;
 
     Widget result = Semantics(
       label: excludeFromSemantics ? null : _tooltipMessage,
@@ -675,6 +678,9 @@ class TooltipThemeData with Diagnosticable {
   /// If null, [Typography.caption] is used
   final TextStyle? textStyle;
 
+  /// If non-null, the maximum width of the tooltip text before it wraps.
+  final double? maxWidth;
+
   const TooltipThemeData({
     this.height,
     this.verticalOffset,
@@ -685,6 +691,7 @@ class TooltipThemeData with Diagnosticable {
     this.showDuration,
     this.waitDuration,
     this.textStyle,
+    this.maxWidth,
   });
 
   factory TooltipThemeData.standard(FluentThemeData theme) {
@@ -749,6 +756,7 @@ class TooltipThemeData with Diagnosticable {
       verticalOffset: lerpDouble(a?.verticalOffset, b?.verticalOffset, t),
       waitDuration: lerpDuration(a?.waitDuration ?? Duration.zero,
           b?.waitDuration ?? Duration.zero, t),
+      maxWidth: lerpDouble(a?.maxWidth, b?.maxWidth, t),
     );
   }
 
@@ -764,6 +772,7 @@ class TooltipThemeData with Diagnosticable {
       textStyle: style.textStyle ?? textStyle,
       verticalOffset: style.verticalOffset ?? verticalOffset,
       waitDuration: style.waitDuration ?? waitDuration,
+      maxWidth: style.maxWidth ?? maxWidth,
     );
   }
 
@@ -787,7 +796,8 @@ class TooltipThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
       ..add(DiagnosticsProperty<Duration>('waitDuration', waitDuration))
       ..add(DiagnosticsProperty<Duration>('showDuration', showDuration))
-      ..add(DiagnosticsProperty<TextStyle>('textStyle', textStyle));
+      ..add(DiagnosticsProperty<TextStyle>('textStyle', textStyle))
+      ..add(DoubleProperty('maxWidth', maxWidth));
   }
 }
 
@@ -866,6 +876,7 @@ class _TooltipOverlay extends StatelessWidget {
     required this.verticalOffset,
     required this.preferBelow,
     this.displayHorizontally = false,
+    this.maxWidth,
   });
 
   final InlineSpan richMessage;
@@ -878,6 +889,7 @@ class _TooltipOverlay extends StatelessWidget {
   final double verticalOffset;
   final bool preferBelow;
   final bool displayHorizontally;
+  final double? maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -893,6 +905,7 @@ class _TooltipOverlay extends StatelessWidget {
             decoration: decoration,
             padding: padding,
             margin: margin,
+            constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
             child: Center(
               widthFactor: 1.0,
               heightFactor: 1.0,

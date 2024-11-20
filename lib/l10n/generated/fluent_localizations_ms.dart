@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Malay (`ms`).
 class FluentLocalizationsMs extends FluentLocalizations {
-  FluentLocalizationsMs([String locale = 'ms']) : super(locale);
+  FluentLocalizationsMs([super.locale = 'ms']);
 
   @override
   String get backButtonTooltip => 'Kembali';

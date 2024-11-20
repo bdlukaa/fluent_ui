@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Turkish (`tr`).
 class FluentLocalizationsTr extends FluentLocalizations {
-  FluentLocalizationsTr([String locale = 'tr']) : super(locale);
+  FluentLocalizationsTr([super.locale = 'tr']);
 
   @override
   String get backButtonTooltip => 'Geri';

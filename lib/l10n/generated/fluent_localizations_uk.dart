@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Ukrainian (`uk`).
 class FluentLocalizationsUk extends FluentLocalizations {
-  FluentLocalizationsUk([String locale = 'uk']) : super(locale);
+  FluentLocalizationsUk([super.locale = 'uk']);
 
   @override
   String get backButtonTooltip => 'Назад';

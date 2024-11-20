@@ -97,14 +97,14 @@ Offset horizontalPositionDependentBox({
   final fitsRight = target.dx - horizontalOffset - childSize.width >= margin;
   final tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
-  double x;
+  final double x;
   if (tooltipLeft) {
     x = math.min(target.dx + horizontalOffset, size.width - margin);
   } else {
     x = math.max(target.dx - horizontalOffset - childSize.width, margin);
   }
   // Vertical DIRECTION
-  double y;
+  final double y;
   if (size.height - margin * 2.0 < childSize.height) {
     y = (size.height - childSize.height) / 2.0;
   } else {

@@ -39,13 +39,13 @@ class FilledButton extends Button {
     final theme = FluentTheme.of(context);
 
     final def = ButtonStyle(
-      backgroundColor: ButtonState.resolveWith((states) {
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
         return backgroundColor(theme, states);
       }),
-      foregroundColor: ButtonState.resolveWith(
+      foregroundColor: WidgetStateProperty.resolveWith(
         (states) => foregroundColor(theme, states),
       ),
-      shape: ButtonState.resolveWith((states) {
+      shape: WidgetStateProperty.resolveWith((states) {
         return shapeBorder(theme, states);
       }),
     );
@@ -55,25 +55,24 @@ class FilledButton extends Button {
 
   static Color backgroundColor(
     FluentThemeData theme,
-    Set<ButtonStates> states,
+    Set<WidgetState> states,
   ) {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
-    } else if (states.isPressing) {
+    } else if (states.isPressed) {
       return theme.accentColor.tertiaryBrushFor(theme.brightness);
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return theme.accentColor.secondaryBrushFor(theme.brightness);
     } else {
       return theme.accentColor.defaultBrushFor(theme.brightness);
     }
   }
 
-  static Color foregroundColor(
-      FluentThemeData theme, Set<ButtonStates> states) {
+  static Color foregroundColor(FluentThemeData theme, Set<WidgetState> states) {
     final res = theme.resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.textOnAccentFillColorSecondary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.textOnAccentFillColorPrimary;
     } else if (states.isDisabled) {
       return res.textOnAccentFillColorDisabled;
@@ -82,8 +81,8 @@ class FilledButton extends Button {
   }
 
   static ShapeBorder shapeBorder(
-      FluentThemeData theme, Set<ButtonStates> states) {
-    return states.isPressing || states.isDisabled
+      FluentThemeData theme, Set<WidgetState> states) {
+    return states.isPressed || states.isDisabled
         ? RoundedRectangleBorder(
             side: BorderSide(
               color: theme.resources.controlFillColorTransparent,

@@ -1109,26 +1109,26 @@ class _TextBoxState extends State<TextBox>
       ),
     );
 
-    Color backgroundColor(Set<ButtonStates> states) {
+    Color backgroundColor(Set<WidgetState> states) {
       final res = FluentTheme.of(context).resources;
 
       if (!enabled) {
         return res.controlFillColorDisabled;
-      } else if (states.isPressing || states.isFocused) {
+      } else if (states.isPressed || states.isFocused) {
         return res.controlFillColorInputActive;
-      } else if (states.isHovering) {
+      } else if (states.isHovered) {
         return res.controlFillColorSecondary;
       } else {
         return res.controlFillColorDefault;
       }
     }
 
-    TextStyle placeholderStyle(Set<ButtonStates> states) {
+    TextStyle placeholderStyle(Set<WidgetState> states) {
       return textStyle
           .copyWith(
             color: !enabled
                 ? disabledColor
-                : (states.isPressing || states.isFocused)
+                : (states.isPressed || states.isFocused)
                     ? themeData.resources.textFillColorTertiary
                     : themeData.resources.textFillColorSecondary,
             fontWeight: FontWeight.w400,
@@ -1207,7 +1207,7 @@ class _TextBoxState extends State<TextBox>
                 // widgets below this can call `HoverButton.of(context).states.isFocused`
                 // and have the correct value
                 if (_effectiveFocusNode.hasFocus) {
-                  states = {...states, ButtonStates.focused};
+                  states = {...states, WidgetState.focused};
                 }
                 var decoration = BoxDecoration(
                   borderRadius: radius,

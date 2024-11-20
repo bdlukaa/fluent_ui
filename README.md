@@ -10,13 +10,16 @@
     <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
       <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7">
     </a>
-    <a title="Discord" href="https://discord.gg/674gpDQUVq">
-      <img src="https://img.shields.io/discord/809528329337962516?style=flat-square&label=discord&color=7289da&logo=discord&logoColor=white" />
+    <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
+      <img src="https://img.shields.io/badge/documentation---?style=flat-square&color=e88d0c" />
     </a>
   </div>
   <div>
-    <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
-      <img src="https://img.shields.io/badge/documentation---?style=flat-square&color=e88d0c" />
+    <a title="Discord" href="https://discord.gg/674gpDQUVq">
+      <img src="https://img.shields.io/discord/809528329337962516?style=flat-square&label=discord&color=7289da&logo=discord&logoColor=white" />
+    </a>
+    <a title="Patreon" href="https://www.patreon.com/bdlukaa">
+      <img src="https://img.shields.io/badge/sponsor-Patreon-FF424D?style=flat-square" />
     </a>
   </div>
   <br/>
@@ -42,7 +45,7 @@
 
 ### Content
 
-- [Motivation](#motivation)
+- [Motivation and ](#motivation-and-maintenance)
 - [Installation](#installation)
   - [Badge](#badge)
   - [Accent color](#accent-color)
@@ -51,16 +54,26 @@
   - [Contributing new localizations](#contributing-new-localizations)
   - [Acknowledgements](#acknowledgements)
 
-## Motivation
+## Motivation and maintenance
 
 Since Flutter has stable Windows support, it's necessary to have support to its UI guidelines to build apps with fidelity, the same way it has support for Material and Cupertino.
 See [this](https://github.com/flutter/flutter/issues/46481) for more info on the offical fluent ui support
 
 See also:
 
-  * [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
-  * [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
-  * [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
+- [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
+- [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
+- [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
+
+---
+
+This is an open-source package, which means that anyone can contribute to it. However, I, [bdlukaa](https://github.com/bdlukaa), am the only one actively maintaining it, so it may take some time to review and merge pull requests. If you want to support the project, you can [become a patron](https://www.patreon.com/bdlukaa):
+
+<div align="center">
+  <a title="Patreon" href="https://www.patreon.com/bdlukaa">
+    <img src="https://img.shields.io/badge/sponsor-Patreon-FF424D?style=flat-square" />
+  </a>
+</div>
 
 ## Installation
 
@@ -99,12 +112,11 @@ Add the following code to your `README.md` or to your website:
 <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
     src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
-  >
+  />
 </a>
 ```
 
 ---
-
 
 ### Accent color
 
@@ -136,6 +148,7 @@ FluentUI widgets currently supports out-of-the-box an wide number of languages, 
 - Bahasa Indonesia (@ekasetiawans)
 - Belarusian (@superkeka)
 - Czech (@morning4coffe-dev)
+- Croatian (@ZeroMolecule)
 - Dutch (@h3x4d3c1m4l)
 - English
 - French (@WinXaito)

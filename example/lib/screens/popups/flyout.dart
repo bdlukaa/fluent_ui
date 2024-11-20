@@ -20,6 +20,9 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   final menuController = FlyoutController();
   final menuAttachKey = GlobalKey();
 
+  final itemsController = FlyoutController();
+  final itemsAttachKey = GlobalKey();
+
   final contextController = FlyoutController();
   final contextAttachKey = GlobalKey();
 
@@ -309,7 +312,7 @@ FlyoutTarget(
                         ),
                         MenuFlyoutItem(
                           text: const Text('Select'),
-                          onPressed: Flyout.of(context).close,
+                          onPressed: null,
                         ),
                         const MenuFlyoutSeparator(),
                         MenuFlyoutSubItem(
@@ -343,6 +346,156 @@ FlyoutTarget(
                           ],
                         ),
                       ]);
+                    },
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            Text(menuController.isOpen ? 'Displaying' : ''),
+          ]),
+        ),
+        subtitle(content: const Text('Other Flyout Item Types')),
+        description(
+          content: const Text(
+            'The flyout can contain other flyout items like separators, '
+            'toggle and radio items.',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''final itemsController = FlyoutController();
+final itemsAttachKey = GlobalKey();
+
+FlyoutTarget(
+  controller: itemsController,
+  child: Button(
+    child: const Text('Show options'),
+    onPressed: () {
+      itemsController.showFlyout(
+        autoModeConfiguration: FlyoutAutoConfiguration(
+          preferredMode: $placementMode,
+        ),
+        barrierDismissible: $barrierDismissible,
+        dismissOnPointerMoveAway: $dismissOnPointerMoveAway,
+        dismissWithEsc: $dismissWithEsc,
+        navigatorKey: rootNavigatorKey.currentState,
+        builder: (context) {
+          var repeat = true;
+          var shuffle = false;
+
+          var radioIndex = 1;
+          return StatefulBuilder(builder: (context, setState) {
+            return MenuFlyout(items: [
+              MenuFlyoutItem(
+                text: const Text('Reset'),
+                onPressed: () {
+                  setState(() {
+                    repeat = false;
+                    shuffle = false;
+                  });
+                },
+              ),
+              const MenuFlyoutSeparator(),
+              ToggleMenuFlyoutItem(
+                text: const Text('Repeat'),
+                value: repeat,
+                onChanged: (v) {
+                  setState(() => repeat = v);
+                },
+              ),
+              ToggleMenuFlyoutItem(
+                text: const Text('Shuffle'),
+                value: shuffle,
+                onChanged: (v) {
+                  setState(() => shuffle = v);
+                },
+              ),
+              const MenuFlyoutSeparator(),
+              ...List.generate(3, (index) {
+                return RadioMenuFlyoutItem(
+                  text: Text([
+                    'Small icons',
+                    'Medium icons',
+                    'Large icons',
+                  ][index]),
+                  value: index,
+                  groupValue: radioIndex,
+                  onChanged: (v) {
+                    setState(() => radioIndex = index);
+                  },
+                );
+              }),
+            ]);
+          });
+        },
+      );
+    },
+  )
+)
+''',
+          child: Row(children: [
+            FlyoutTarget(
+              key: itemsAttachKey,
+              controller: itemsController,
+              child: Button(
+                child: const Text('Show options'),
+                onPressed: () {
+                  itemsController.showFlyout(
+                    autoModeConfiguration: FlyoutAutoConfiguration(
+                      preferredMode: placementMode,
+                    ),
+                    barrierDismissible: barrierDismissible,
+                    dismissOnPointerMoveAway: dismissOnPointerMoveAway,
+                    dismissWithEsc: dismissWithEsc,
+                    navigatorKey: rootNavigatorKey.currentState,
+                    builder: (context) {
+                      var repeat = true;
+                      var shuffle = false;
+
+                      var radioIndex = 1;
+                      return StatefulBuilder(builder: (context, setState) {
+                        return MenuFlyout(items: [
+                          MenuFlyoutItem(
+                            text: const Text('Reset'),
+                            onPressed: () {
+                              setState(() {
+                                repeat = false;
+                                shuffle = false;
+                              });
+                            },
+                          ),
+                          const MenuFlyoutSeparator(),
+                          ToggleMenuFlyoutItem(
+                            text: const Text('Repeat'),
+                            value: repeat,
+                            onChanged: (v) {
+                              setState(() => repeat = v);
+                            },
+                          ),
+                          ToggleMenuFlyoutItem(
+                            text: const Text('Shuffle'),
+                            value: shuffle,
+                            onChanged: (v) {
+                              setState(() => shuffle = v);
+                            },
+                          ),
+                          const MenuFlyoutSeparator(),
+                          ...List.generate(3, (index) {
+                            return RadioMenuFlyoutItem(
+                              text: Text([
+                                'Small icons',
+                                'Medium icons',
+                                'Large icons',
+                              ][index]),
+                              value: index,
+                              groupValue: radioIndex,
+                              onChanged: (v) {
+                                setState(() => radioIndex = index);
+                              },
+                            );
+                          }),
+                        ]);
+                      });
                     },
                   );
                 },
@@ -437,7 +590,6 @@ return GestureDetector(
               );
 
               void showFlyout(Offset position) {
-                print(position);
                 contextController.showFlyout(
                   barrierColor: Colors.black.withOpacity(0.1),
                   position: position,

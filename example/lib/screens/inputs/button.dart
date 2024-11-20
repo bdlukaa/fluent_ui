@@ -19,6 +19,7 @@ class ButtonPage extends StatefulWidget {
 class _ButtonPageState extends State<ButtonPage> with PageMixin {
   bool simpleDisabled = false;
   bool filledDisabled = false;
+  bool hyperlinkDisabled = false;
   bool iconDisabled = false;
   bool iconSmall = false;
   bool toggleDisabled = false;
@@ -43,7 +44,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           return IconButton(
             autofocus: splitButtonColor == color,
             style: ButtonStyle(
-              padding: ButtonState.all(
+              padding: WidgetStatePropertyAll(
                 EdgeInsets.all(4.0),
               ),
             ),
@@ -132,17 +133,34 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
     );
   },
 )''',
-          child: Link(
-            uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-            builder: (context, open) {
-              return HyperlinkButton(
-                onPressed: open,
-                child: Semantics(
-                  link: true,
-                  child: Text('Fluent UI homepage'),
-                ),
-              );
-            },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Link(
+                uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
+                builder: (context, open) {
+                  return Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: HyperlinkButton(
+                      onPressed: hyperlinkDisabled ? null : open,
+                      child: Semantics(
+                        link: true,
+                        child: Text('Fluent UI homepage'),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ToggleSwitch(
+                checked: hyperlinkDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    hyperlinkDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
           ),
         ),
         subtitle(
@@ -252,7 +270,7 @@ ToggleButton(
   items: [
     MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
     MenuFlyoutSeparator(),
-    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+    MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
     MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
   ],
 )''',
@@ -262,7 +280,7 @@ ToggleButton(
               items: [
                 MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
                 MenuFlyoutSeparator(),
-                MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+                MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
                 MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
               ],
             ),
@@ -325,7 +343,7 @@ SplitButton(
         return Button(
           autofocus: splitButtonColor == color,
           style: ButtonStyle(
-            padding: ButtonState.all(
+            padding: WidgetStatePropertyAll(
               EdgeInsets.all(4.0),
             ),
           ),

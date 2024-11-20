@@ -241,28 +241,28 @@ class CheckboxTheme extends InheritedTheme {
 @immutable
 class CheckboxThemeData with Diagnosticable {
   /// The decoration of the checkbox when it's checked
-  final ButtonState<Decoration?>? checkedDecoration;
+  final WidgetStateProperty<Decoration?>? checkedDecoration;
 
   /// The decoration of the checkbox when it's unchecked
-  final ButtonState<Decoration?>? uncheckedDecoration;
+  final WidgetStateProperty<Decoration?>? uncheckedDecoration;
 
   /// The decoration of the checkbox when it's in its third state
-  final ButtonState<Decoration?>? thirdstateDecoration;
+  final WidgetStateProperty<Decoration?>? thirdstateDecoration;
 
   /// The icon displayed in the checkbox when it's checked
   final IconData? icon;
 
   /// The color of the [icon] when the checkbox is checked
-  final ButtonState<Color?>? checkedIconColor;
+  final WidgetStateProperty<Color?>? checkedIconColor;
 
   /// The color of the [icon] when the checkbox is unchecked
-  final ButtonState<Color?>? uncheckedIconColor;
+  final WidgetStateProperty<Color?>? uncheckedIconColor;
 
   /// The color of the [icon] when the checkbox is in its third state
-  final ButtonState<Color?>? thirdstateIconColor;
+  final WidgetStateProperty<Color?>? thirdstateIconColor;
 
   /// The color of the content of the checkbox
-  final ButtonState<Color?>? foregroundColor;
+  final WidgetStateProperty<Color?>? foregroundColor;
 
   /// The padding around the checkbox
   final EdgeInsetsGeometry? padding;
@@ -287,10 +287,10 @@ class CheckboxThemeData with Diagnosticable {
   factory CheckboxThemeData.standard(FluentThemeData theme) {
     final BorderRadiusGeometry radius = BorderRadius.circular(6.0);
     return CheckboxThemeData(
-      foregroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         return states.isDisabled ? theme.resources.textFillColorDisabled : null;
       }),
-      checkedDecoration: ButtonState.resolveWith(
+      checkedDecoration: WidgetStateProperty.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
           border: Border.all(
@@ -301,14 +301,14 @@ class CheckboxThemeData with Diagnosticable {
           color: ButtonThemeData.checkedInputColor(theme, states),
         ),
       ),
-      uncheckedDecoration: ButtonState.resolveWith(
+      uncheckedDecoration: WidgetStateProperty.resolveWith(
         (states) => BoxDecoration(
           border: Border.all(
-            color: states.isDisabled || states.isPressing
+            color: states.isDisabled || states.isPressed
                 ? theme.resources.controlStrongStrokeColorDisabled
                 : theme.resources.controlStrongStrokeColorDefault,
           ),
-          color: ButtonState.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,
@@ -318,7 +318,7 @@ class CheckboxThemeData with Diagnosticable {
           borderRadius: radius,
         ),
       ),
-      thirdstateDecoration: ButtonState.resolveWith(
+      thirdstateDecoration: WidgetStateProperty.resolveWith(
         (states) => BoxDecoration(
           borderRadius: radius,
           border: Border.all(
@@ -329,10 +329,10 @@ class CheckboxThemeData with Diagnosticable {
           color: ButtonThemeData.checkedInputColor(theme, states),
         ),
       ),
-      checkedIconColor: ButtonState.resolveWith((states) {
+      checkedIconColor: WidgetStateProperty.resolveWith((states) {
         return FilledButton.foregroundColor(theme, states);
       }),
-      uncheckedIconColor: ButtonState.all(Colors.transparent),
+      uncheckedIconColor: const WidgetStatePropertyAll(Colors.transparent),
       icon: FluentIcons.check_mark,
     );
   }
@@ -347,19 +347,19 @@ class CheckboxThemeData with Diagnosticable {
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       icon: t < 0.5 ? a?.icon : b?.icon,
-      checkedIconColor: ButtonState.lerp(
+      checkedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
-      uncheckedIconColor: ButtonState.lerp(
+      uncheckedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.uncheckedIconColor, b?.uncheckedIconColor, t, Color.lerp),
-      thirdstateIconColor: ButtonState.lerp(
+      thirdstateIconColor: WidgetStateProperty.lerp<Color?>(
           a?.thirdstateIconColor, b?.thirdstateIconColor, t, Color.lerp),
-      checkedDecoration: ButtonState.lerp(
+      checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(
+      uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
-      thirdstateDecoration: ButtonState.lerp(
+      thirdstateDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.thirdstateDecoration, b?.thirdstateDecoration, t, Decoration.lerp),
-      foregroundColor: ButtonState.lerp(
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
           a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
@@ -384,36 +384,36 @@ class CheckboxThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'thirdstateDecoration',
         thirdstateDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'uncheckedDecoration',
         uncheckedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'checkedDecoration',
         checkedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
         'thirdstateIconColor',
         thirdstateIconColor,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
         'uncheckedIconColor',
         uncheckedIconColor,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Color?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
         'checkedIconColor',
         checkedIconColor,
       ))
       ..add(IconDataProperty('icon', icon))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'checkedDecoration',
         checkedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'uncheckedDecoration',
         uncheckedDecoration,
       ))

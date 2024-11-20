@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Bengali Bangla (`bn`).
 class FluentLocalizationsBn extends FluentLocalizations {
-  FluentLocalizationsBn([String locale = 'bn']) : super(locale);
+  FluentLocalizationsBn([super.locale = 'bn']);
 
   @override
   String get backButtonTooltip => 'পিছনে';

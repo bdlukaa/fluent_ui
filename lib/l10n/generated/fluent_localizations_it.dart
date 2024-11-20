@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Italian (`it`).
 class FluentLocalizationsIt extends FluentLocalizations {
-  FluentLocalizationsIt([String locale = 'it']) : super(locale);
+  FluentLocalizationsIt([super.locale = 'it']);
 
   @override
   String get backButtonTooltip => 'Indietro';

@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Tamil (`ta`).
 class FluentLocalizationsTa extends FluentLocalizations {
-  FluentLocalizationsTa([String locale = 'ta']) : super(locale);
+  FluentLocalizationsTa([super.locale = 'ta']);
 
   @override
   String get backButtonTooltip => 'பின்';

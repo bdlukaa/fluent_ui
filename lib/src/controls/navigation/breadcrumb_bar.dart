@@ -1,6 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
+typedef ChevronIconBuilder<T> = Widget Function(
+  BuildContext context,
+  int index,
+);
+
 class BreadcrumbItem<T> {
   /// The label of the item
   ///
@@ -80,12 +85,25 @@ class BreadcrumbBar<T> extends StatefulWidget {
   /// Called when an item is pressed.
   final ValueChanged<BreadcrumbItem<T>>? onItemPressed;
 
+  /// The builder for the chevron icon.
+  ///
+  /// The [index] is the index of the item in the list. If the index is -1,
+  /// the chevron is attached to the overflow button.
+  final ChevronIconBuilder chevronIconBuilder;
+
+  /// The size of the chevron icon.
+  ///
+  /// Defaults to 8.0
+  final double chevronIconSize;
+
   /// Creates a breadcrumb bar.
   const BreadcrumbBar({
     super.key,
     required this.items,
     this.overflowButtonBuilder = _defaultOverflowButtonBuilder,
     this.onItemPressed,
+    this.chevronIconBuilder = _defaultChevronBuilder,
+    this.chevronIconSize = 8.0,
   });
 
   /// The default overflow button builder.
@@ -108,6 +126,20 @@ class BreadcrumbBar<T> extends StatefulWidget {
           size: 12.0,
         );
       },
+    );
+  }
+
+  static Widget _defaultChevronBuilder(BuildContext context, int index) {
+    final theme = FluentTheme.of(context);
+    final textDirection = Directionality.of(context);
+    return Padding(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
+      child: Icon(
+        textDirection == TextDirection.ltr
+            ? FluentIcons.chevron_right
+            : FluentIcons.chevron_left,
+        color: theme.resources.textFillColorPrimary,
+      ),
     );
   }
 
@@ -164,22 +196,10 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
-    final theme = FluentTheme.of(context);
     final textDirection = Directionality.of(context);
 
     final isReversed = textDirection == TextDirection.rtl;
     final items = isReversed ? widget.items.reversed.toList() : widget.items;
-
-    final chevron = Padding(
-      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
-      child: Icon(
-        textDirection == TextDirection.ltr
-            ? FluentIcons.chevron_right
-            : FluentIcons.chevron_left,
-        size: 8.0,
-        color: theme.resources.textFillColorPrimary,
-      ),
-    );
 
     return _BreadcrumbBar(
       items: items,
@@ -194,7 +214,10 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
           controller: flyoutController,
           child: widget.overflowButtonBuilder(context, showFlyout),
         ),
-        chevron,
+        IconTheme.merge(
+          data: IconThemeData(size: widget.chevronIconSize),
+          child: widget.chevronIconBuilder(context, -1),
+        ),
       ]),
       children: List.generate(items.length, (index) {
         final item = items[index];
@@ -225,7 +248,13 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
         final isLastItem = isReversed ? index == 0 : index == items.length - 1;
         if (isLastItem) return label;
 
-        return Row(mainAxisSize: MainAxisSize.min, children: [label, chevron]);
+        return Row(mainAxisSize: MainAxisSize.min, children: [
+          label,
+          IconTheme.merge(
+            data: IconThemeData(size: widget.chevronIconSize),
+            child: widget.chevronIconBuilder(context, index),
+          ),
+        ]);
       }),
     );
   }

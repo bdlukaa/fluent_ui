@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Hebrew (`he`).
 class FluentLocalizationsHe extends FluentLocalizations {
-  FluentLocalizationsHe([String locale = 'he']) : super(locale);
+  FluentLocalizationsHe([super.locale = 'he']);
 
   @override
   String get backButtonTooltip => 'הקודם';

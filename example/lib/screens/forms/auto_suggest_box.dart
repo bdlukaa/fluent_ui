@@ -42,9 +42,9 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
 String? selectedCat;
 
 AutoSuggestBox<String>(
+  placeholder: 'Type a cat name',
   items: cats.map((cat) {
     return AutoSuggestBoxItem<String>(
-      placeholder: 'Type a cat name',
       value: cat,
       label: cat,
       onFocusChange: (focused) {

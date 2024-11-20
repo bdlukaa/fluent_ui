@@ -209,13 +209,13 @@ class RadioButtonTheme extends InheritedTheme {
 @immutable
 class RadioButtonThemeData with Diagnosticable {
   /// The decoration of the radio button when it's checked.
-  final ButtonState<BoxDecoration?>? checkedDecoration;
+  final WidgetStateProperty<BoxDecoration?>? checkedDecoration;
 
   /// The decoration of the radio button when it's unchecked.
-  final ButtonState<BoxDecoration?>? uncheckedDecoration;
+  final WidgetStateProperty<BoxDecoration?>? uncheckedDecoration;
 
   /// The color of the radio button's content.
-  final ButtonState<Color?>? foregroundColor;
+  final WidgetStateProperty<Color?>? foregroundColor;
 
   /// Creates a theme that can be used for [RadioButtonTheme]
   const RadioButtonThemeData({
@@ -226,15 +226,15 @@ class RadioButtonThemeData with Diagnosticable {
 
   factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
-      foregroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         return states.isDisabled ? theme.resources.textFillColorDisabled : null;
       }),
-      checkedDecoration: ButtonState.resolveWith((states) {
+      checkedDecoration: WidgetStateProperty.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
             color: ButtonThemeData.checkedInputColor(theme, states),
             width: !states.isDisabled
-                ? states.isHovering && !states.isPressing
+                ? states.isHovered && !states.isPressed
                     ? 3.4
                     : 5.0
                 : 4.0,
@@ -243,9 +243,9 @@ class RadioButtonThemeData with Diagnosticable {
           color: theme.resources.textOnAccentFillColorPrimary,
         );
       }),
-      uncheckedDecoration: ButtonState.resolveWith((states) {
+      uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return BoxDecoration(
-          color: ButtonState.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,
@@ -253,8 +253,8 @@ class RadioButtonThemeData with Diagnosticable {
             none: theme.resources.controlAltFillColorSecondary,
           ),
           border: Border.all(
-            width: states.isPressing ? 4.5 : 1,
-            color: ButtonState.forStates(
+            width: states.isPressed ? 4.5 : 1,
+            color: WidgetStateExtension.forStates<Color>(
               states,
               disabled: theme.resources.textFillColorDisabled,
               pressed: theme.accentColor.defaultBrushFor(theme.brightness),
@@ -273,11 +273,14 @@ class RadioButtonThemeData with Diagnosticable {
     double t,
   ) {
     return RadioButtonThemeData(
-      checkedDecoration: ButtonState.lerp(
+      checkedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
           a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
-          b?.uncheckedDecoration, t, BoxDecoration.lerp),
-      foregroundColor: ButtonState.lerp(
+      uncheckedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+          a?.uncheckedDecoration,
+          b?.uncheckedDecoration,
+          t,
+          BoxDecoration.lerp),
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
           a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
@@ -294,9 +297,9 @@ class RadioButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
           'checkedDecoration', checkedDecoration))
-      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
           'uncheckedDecoration', uncheckedDecoration))
       ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
   }

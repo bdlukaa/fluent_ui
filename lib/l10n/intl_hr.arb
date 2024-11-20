@@ -1,0 +1,127 @@
+{
+  "@@locale": "hr",
+  "backButtonTooltip": "Natrag",
+  "@backButtonTooltip": {
+    "description": "The tooltip for the back button on [NavigationAppBar]."
+  },
+  "closeButtonLabel": "Zatvori",
+  "@closeButtonLabel": {
+    "description": "Label for \"close\" buttons and menu items."
+  },
+  "searchLabel": "Pretraži",
+  "@searchLabel": {
+    "description": "Label for \"search\" text fields."
+  },
+  "closeNavigationTooltip": "Zatvori navigaciju",
+  "@closeNavigationTooltip": {
+    "description": "The tooltip for the toggle navigation button."
+  },
+  "openNavigationTooltip": "Otvori navigaciju",
+  "@openNavigationTooltip": {
+    "description": "The tooltip for the toogle navigation button."
+  },
+  "clickToSearch": "Kliknite za pretraživanje",
+  "@clickToSearch": {
+    "description": "The tooltip for the \"Click to Search\" button."
+  },
+  "modalBarrierDismissLabel": "Odbaci",
+  "@modalBarrierDismissLabel": {
+    "description": "Label read out by accessibility tools (TalkBack or VoiceOver) for a modal barrier to indicate that a tap dismisses the barrier. A modal barrier can for example be found behind an alert or popup to block user interaction with elements behind it."
+  },
+  "minimizeWindowTooltip": "Minimiziraj",
+  "@minimizeWindowTooltip": {
+    "description": "The tooltip used by the \"Minimize\" button on desktop windows."
+  },
+  "restoreWindowTooltip": "Vrati",
+  "@restoreWindowTooltip": {
+    "description": "The tooltip used by the \"Restore\" button on desktop windows."
+  },
+  "closeWindowTooltip": "Zatvori",
+  "@closeWindowTooltip": {
+    "description": "The tooltip used by the \"Close\" button on desktop windows."
+  },
+  "dialogLabel": "Dijalog",
+  "@dialogLabel": {
+    "description": "The dialog label."
+  },
+  "cutActionLabel": "Izreži",
+  "@cutActionLabel": {
+    "description": "The label for the cut action on the text selection controls."
+  },
+  "copyActionLabel": "Kopiraj",
+  "@copyActionLabel": {
+    "description": "The label for the copy action on the text selection controls."
+  },
+  "pasteActionLabel": "Zalijepi",
+  "@pasteActionLabel": {
+    "description": "The label for the paste button on the text selection controls."
+  },
+  "selectAllActionLabel": "Odaberi sve",
+  "@selectAllActionLabel": {
+    "description": "The label for the select all button on the text selection controls."
+  },
+  "newTabLabel": "Dodaj novi tab",
+  "@newTabLabel": {
+    "description": "The label used by [TabView]'s new button."
+  },
+  "closeTabLabelSuffix": "Zatvori tab",
+  "@closeTabLabelSuffix": {
+    "description": "The label used by [TabView]'s close button."
+  },
+  "scrollTabBackwardLabel": "Pomakni listu tabova unatrag",
+  "@scrollTabBackwardLabel": {
+    "description": "The label used by [TabView]'s scroll backward button."
+  },
+  "scrollTabForwardLabel": "Pomakni listu tabova unaprijed",
+  "@scrollTabForwardLabel": {
+    "description": "The label used by [TabView]'s scroll forward button."
+  },
+  "noResultsFoundLabel": "Nema pronađenih rezultata",
+  "@noResultsFoundLabel": {
+    "description": "The label used by [AutoSuggestBox] when the results can't be found."
+  },
+  "copyActionTooltip": "Kopiraj odabrani sadržaj u međuspremnik",
+  "@copyActionTooltip": {
+    "description": "The tooltip for the copy action on the text selection controls."
+  },
+  "cutActionTooltip": "Ukloni odabrani sadržaj i stavi ga u međuspremnik",
+  "@cutActionTooltip": {
+    "description": "The tooltip for the cut action on the text selection controls."
+  },
+  "pasteActionTooltip": "Umetni sadržaj međuspremnika na trenutnu lokaciju",
+  "@pasteActionTooltip": {
+    "description": "The tooltip for the paste action on the text selection controls."
+  },
+  "selectAllActionTooltip": "Odaberi sav sadržaj",
+  "@selectAllActionTooltip": {
+    "description": "The tooltip for the select all action on the text selection controls."
+  },
+  "hour": "sat",
+  "@hour": {
+    "description": "The text used by [TimePicker] for the hour field."
+  },
+  "minute": "minuta",
+  "@minute": {
+    "description": "The text used by [TimePicker] for the minute field."
+  },
+  "am": "AM",
+  "@am": {
+    "description": "The text used by [TimePicker] for the AM field."
+  },
+  "pm": "PM",
+  "@pm": {
+    "description": "The text used by [TimePicker] for the PM field."
+  },
+  "month": "mjesec",
+  "@month": {
+    "description": "The text used by [DatePicker] for the month field"
+  },
+  "day": "dan",
+  "@day": {
+    "description": "The text used by [DatePicker] for the day field"
+  },
+  "year": "godina",
+  "@year": {
+    "description": "The text used by [DatePicker] for the year field"
+  }
+}

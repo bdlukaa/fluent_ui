@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:window_manager/window_manager.dart';
 
 class TabViewPage extends StatefulWidget {
   const TabViewPage({super.key});
@@ -231,6 +233,7 @@ TabView(
             height: 400,
             child: TabView(
               tabs: tabs!,
+              reservedStripWidth: 100,
               currentIndex: currentIndex,
               onChanged: (index) => setState(() => currentIndex = index),
               tabWidthBehavior: tabWidthBehavior,
@@ -258,6 +261,11 @@ TabView(
                   }
                 });
               },
+              stripBuilder: kIsWeb
+                  ? null
+                  : (context, strip) {
+                      return DragToMoveArea(child: strip);
+                    },
             ),
           ),
         ),

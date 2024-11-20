@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 
 typedef ToggleSwitchKnobBuilder = Widget Function(
   BuildContext context,
-  Set<ButtonStates> states,
+  Set<WidgetState> states,
 );
 
 /// The toggle switch represents a physical switch that allows users to turn
@@ -190,7 +190,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               DefaultToggleSwitchKnob(
                 checked: widget.checked,
                 style: style,
-                states: _dragging ? {ButtonStates.pressing} : states,
+                states: _dragging ? {WidgetState.pressed} : states,
               ),
         );
         if (widget.content != null) {
@@ -239,7 +239,7 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
 
   final bool checked;
   final ToggleSwitchThemeData? style;
-  final Set<ButtonStates> states;
+  final Set<WidgetState> states;
 
   @override
   Widget build(BuildContext context) {
@@ -247,16 +247,15 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
-      margin: states.isHovering
+      margin: states.isHovered
           ? const EdgeInsets.all(1.0 + checkedFactor)
           : const EdgeInsets.symmetric(
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
       height: 18.0,
-      width: 12.0 +
-          (states.isHovering ? 2.0 : 0.0) +
-          (states.isPressing ? 5.0 : 0),
+      width:
+          12.0 + (states.isHovered ? 2.0 : 0.0) + (states.isPressed ? 5.0 : 0),
       decoration: checked
           ? style?.checkedKnobDecoration?.resolve(states)
           : style?.uncheckedKnobDecoration?.resolve(states),
@@ -329,16 +328,16 @@ class ToggleSwitchTheme extends InheritedTheme {
 @immutable
 class ToggleSwitchThemeData with Diagnosticable {
   /// The decoration of the knob when the switch is checked
-  final ButtonState<Decoration?>? checkedKnobDecoration;
+  final WidgetStateProperty<Decoration?>? checkedKnobDecoration;
 
   /// The decoration of the knob when the switch is unchecked
-  final ButtonState<Decoration?>? uncheckedKnobDecoration;
+  final WidgetStateProperty<Decoration?>? uncheckedKnobDecoration;
 
   /// The decoration of the switch when the it is checked
-  final ButtonState<Decoration?>? checkedDecoration;
+  final WidgetStateProperty<Decoration?>? checkedDecoration;
 
   /// The decoration of the switch when the it is unchecked
-  final ButtonState<Decoration?>? uncheckedDecoration;
+  final WidgetStateProperty<Decoration?>? uncheckedDecoration;
 
   /// The padding of the switch
   final EdgeInsetsGeometry? padding;
@@ -353,7 +352,7 @@ class ToggleSwitchThemeData with Diagnosticable {
   final Curve? animationCurve;
 
   /// The foreground color of the content of the switch
-  final ButtonState<Color?>? foregroundColor;
+  final WidgetStateProperty<Color?>? foregroundColor;
 
   /// Creates a theme that can be used for [ToggleSwitchTheme]
   const ToggleSwitchThemeData({
@@ -378,10 +377,10 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      foregroundColor: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
         return states.isDisabled ? theme.resources.textFillColorDisabled : null;
       }),
-      checkedDecoration: ButtonState.resolveWith((states) {
+      checkedDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultDecoration.copyWith(
           color: ButtonThemeData.checkedInputColor(theme, states),
           border: Border.all(
@@ -389,9 +388,9 @@ class ToggleSwitchThemeData with Diagnosticable {
           ),
         );
       }),
-      uncheckedDecoration: ButtonState.resolveWith((states) {
+      uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonState.forStates(
+          color: WidgetStateExtension.forStates<Color>(
             states,
             disabled: theme.resources.controlAltFillColorDisabled,
             pressed: theme.resources.controlAltFillColorQuarternary,
@@ -399,7 +398,7 @@ class ToggleSwitchThemeData with Diagnosticable {
             none: theme.resources.controlAltFillColorSecondary,
           ),
           border: Border.all(
-            color: ButtonState.forStates(
+            color: WidgetStateExtension.forStates<Color>(
               states,
               disabled: theme.resources.controlStrongFillColorDisabled,
               none: theme.resources.controlStrongFillColorDefault,
@@ -409,14 +408,14 @@ class ToggleSwitchThemeData with Diagnosticable {
       }),
       animationDuration: theme.fasterAnimationDuration,
       animationCurve: Curves.fastOutSlowIn,
-      checkedKnobDecoration: ButtonState.resolveWith((states) {
+      checkedKnobDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultKnobDecoration.copyWith(
           color: states.isDisabled
               ? theme.resources.textOnAccentFillColorDisabled
               : theme.resources.textOnAccentFillColorPrimary,
         );
       }),
-      uncheckedKnobDecoration: ButtonState.resolveWith((states) {
+      uncheckedKnobDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultKnobDecoration.copyWith(
           color: states.isDisabled
               ? theme.resources.textFillColorDisabled
@@ -437,15 +436,21 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
-      checkedKnobDecoration: ButtonState.lerp(a?.checkedKnobDecoration,
-          b?.checkedKnobDecoration, t, Decoration.lerp),
-      uncheckedKnobDecoration: ButtonState.lerp(a?.uncheckedKnobDecoration,
-          b?.uncheckedKnobDecoration, t, Decoration.lerp),
-      checkedDecoration: ButtonState.lerp(
+      checkedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+          a?.checkedKnobDecoration,
+          b?.checkedKnobDecoration,
+          t,
+          Decoration.lerp),
+      uncheckedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+          a?.uncheckedKnobDecoration,
+          b?.uncheckedKnobDecoration,
+          t,
+          Decoration.lerp),
+      checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(
+      uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
-      foregroundColor: ButtonState.lerp(
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
           a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
@@ -475,19 +480,19 @@ class ToggleSwitchThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve))
       ..add(DiagnosticsProperty<Duration?>(
           'animationDuration', animationDuration))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'checkedDecoration',
         checkedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'uncheckedDecoration',
         uncheckedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'checkedKnobDecoration',
         checkedKnobDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'uncheckedKnobDecoration',
         uncheckedKnobDecoration,
       ))

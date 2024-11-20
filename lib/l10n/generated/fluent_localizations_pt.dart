@@ -2,7 +2,7 @@ import 'fluent_localizations.dart';
 
 /// The translations for Portuguese (`pt`).
 class FluentLocalizationsPt extends FluentLocalizations {
-  FluentLocalizationsPt([String locale = 'pt']) : super(locale);
+  FluentLocalizationsPt([super.locale = 'pt']);
 
   @override
   String get backButtonTooltip => 'Voltar';

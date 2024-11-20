@@ -175,22 +175,25 @@ class ContentDialog extends StatelessWidget {
 /// widget can be safely removed from the tree before the dialog is closed.
 ///
 /// The `barrierDismissible` argument is used to indicate whether tapping on the
-/// barrier will dismiss the dialog. It is `true` by default and can not be `null`.
+/// barrier will dismiss the dialog. It is `false` by default.
+///
+/// The `dismissWithEsc` argument is used to indicate whether pressing the escape
+/// key will dismiss the dialog. It is `true` by default.
 ///
 /// The `barrierColor` argument is used to specify the color of the modal
 /// barrier that darkens everything below the dialog. If `null` the default color
-/// `Colors.black54` is used.
+/// faded black is used.
 ///
 /// The `useSafeArea` argument is used to indicate if the dialog should only
 /// display in 'safe' areas of the screen not used by the operating system
 /// (see [SafeArea] for more details). It is `true` by default, which means
 /// the dialog will not overlap operating system areas. If it is set to `false`
-/// the dialog will only be constrained by the screen size. It can not be `null`.
+/// the dialog will only be constrained by the screen size.
 ///
 /// The `useRootNavigator` argument is used to determine whether to push the
 /// dialog to the [Navigator] furthest from or nearest to the given `context`.
 /// By default, `useRootNavigator` is `true` and the dialog route created by
-/// this method is pushed to the root navigator. It can not be `null`.
+/// this method is pushed to the root navigator.
 ///
 /// The `routeSettings` argument is passed to [showGeneralDialog],
 /// see [RouteSettings] for details.

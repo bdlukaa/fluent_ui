@@ -71,7 +71,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   NavigationPane get pane {
-    return _InheritedNavigationView.of(context).pane!;
+    return InheritedNavigationView.of(context).pane!;
   }
 
   int get selectedIndex {
@@ -83,7 +83,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   Axis get axis {
-    if (_InheritedNavigationView.maybeOf(context)?.displayMode ==
+    if (InheritedNavigationView.maybeOf(context)?.displayMode ==
         PaneDisplayMode.top) {
       return Axis.vertical;
     }
@@ -91,11 +91,11 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   }
 
   int get itemIndex {
-    return _InheritedNavigationView.of(context).currentItemIndex;
+    return InheritedNavigationView.of(context).currentItemIndex;
   }
 
   int get previousItemIndex {
-    return _InheritedNavigationView.of(context).previousItemIndex;
+    return InheritedNavigationView.of(context).previousItemIndex;
   }
 
   PaneItem get item {

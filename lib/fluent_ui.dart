@@ -28,6 +28,7 @@ export 'package:flutter/material.dart'
         TextSelectionTheme,
         TextSelectionThemeData,
         SelectableText,
+        SelectionArea,
         ThemeExtension,
         TextMagnifier,
         AdaptiveTextSelectionToolbar;
