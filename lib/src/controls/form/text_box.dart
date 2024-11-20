@@ -236,12 +236,12 @@ class TextBox extends StatefulWidget {
   ///
   /// Defaults to having a rounded rectangle grey border and can be null to have
   /// no box decoration.
-  final BoxDecoration? decoration;
+  final WidgetStateProperty<BoxDecoration>? decoration;
 
   /// Controls the [BoxDecoration] of the box in front of the text input.
   ///
   /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? foregroundDecoration;
+  final WidgetStateProperty<BoxDecoration>? foregroundDecoration;
 
   /// The highlight color of the text box.
   ///
@@ -567,7 +567,10 @@ class TextBox extends StatefulWidget {
           defaultValue: null))
       ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
           defaultValue: null))
-      ..add(DiagnosticsProperty<BoxDecoration>('decoration', decoration))
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration>>(
+          'decoration', decoration))
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration>>(
+          'foregroundDecoration', foregroundDecoration))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
         'padding',
         padding,
@@ -1120,38 +1123,6 @@ class _TextBoxState extends State<TextBox>
           .merge(widget.placeholderStyle);
     }
 
-    final foregroundDecoration = BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: _effectiveFocusNode.hasFocus
-              ? widget.highlightColor ??
-                  themeData.accentColor.defaultBrushFor(
-                    themeData.brightness,
-                  )
-              : !enabled
-                  ? Colors.transparent
-                  : widget.unfocusedColor ??
-                      (themeData.brightness.isLight
-                          ? const Color.fromRGBO(0, 0, 0, 0.45)
-                          : const Color.fromRGBO(255, 255, 255, 0.54)),
-          width: _effectiveFocusNode.hasFocus ? 2 : 0,
-        ),
-      ),
-    ).copyWith(
-      backgroundBlendMode: widget.foregroundDecoration?.backgroundBlendMode,
-      border: widget.foregroundDecoration?.border,
-      borderRadius: widget.foregroundDecoration?.borderRadius,
-      boxShadow: widget.foregroundDecoration?.boxShadow,
-      color: widget.foregroundDecoration?.color,
-      gradient: widget.foregroundDecoration?.gradient,
-      image: widget.foregroundDecoration?.image,
-      shape: widget.foregroundDecoration?.shape,
-    );
-
-    final radius =
-        widget.decoration?.borderRadius?.resolve(Directionality.of(context)) ??
-            BorderRadius.circular(4.0);
-
     return Semantics(
       enabled: enabled,
       onTap: !enabled || widget.readOnly
@@ -1167,45 +1138,82 @@ class _TextBoxState extends State<TextBox>
       child: TextFieldTapRegion(
         child: IgnorePointer(
           ignoring: !enabled,
-          child: ClipRRect(
-            borderRadius: radius,
-            clipBehavior: widget.clipBehavior,
-            child: HoverButton(
-              focusEnabled: false,
-              forceEnabled: enabled,
-              hitTestBehavior: HitTestBehavior.translucent,
-              builder: (context, states) {
-                // Since we manage focus outside of the HoverButton (see focusEnabled: false)
-                // we need to add the focused state when the field is focused
-                //
-                // widgets below this can call `HoverButton.of(context).states.isFocused`
-                // and have the correct value
-                if (_effectiveFocusNode.hasFocus) {
-                  states = {...states, WidgetState.focused};
-                }
+          child: HoverButton(
+            focusEnabled: false,
+            forceEnabled: enabled,
+            hitTestBehavior: HitTestBehavior.translucent,
+            builder: (context, states) {
+              // Since we manage focus outside of the HoverButton (see focusEnabled: false)
+              // we need to add the focused state when the field is focused
+              //
+              // widgets below this can call `HoverButton.of(context).states.isFocused`
+              // and have the correct value
+              if (_effectiveFocusNode.hasFocus) {
+                states = {...states, WidgetState.focused};
+              }
 
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: radius,
-                    border: Border.all(
-                      color: themeData.resources.controlStrokeColorDefault,
-                    ),
-                    color: backgroundColor(states),
-                  ).copyWith(
-                    backgroundBlendMode: widget.decoration?.backgroundBlendMode,
-                    border: widget.decoration?.border,
-
-                    /// This border radius can't be applied, otherwise the error "A borderRadius
-                    /// can only be given for a uniform Border." will be thrown. Instead,
-                    /// [radius] is already set to get the value from [widget.decoration?.borderRadius],
-                    /// if any.
-                    // borderRadius: widget.decoration?.borderRadius,
-                    boxShadow: widget.decoration?.boxShadow,
-                    color: widget.decoration?.color,
-                    gradient: widget.decoration?.gradient,
-                    image: widget.decoration?.image,
-                    shape: widget.decoration?.shape,
+              final resolvedWidgetDecoration =
+                  widget.decoration?.resolve(states);
+              final radius = resolvedWidgetDecoration?.borderRadius
+                      ?.resolve(Directionality.of(context)) ??
+                  BorderRadius.circular(4.0);
+              final decoration = WidgetStateProperty.resolveWith((states) {
+                return BoxDecoration(
+                  borderRadius: radius,
+                  border: Border.all(
+                    color: themeData.resources.controlStrokeColorDefault,
                   ),
+                  color: backgroundColor(states),
+                );
+              }).resolve(states).copyWith(
+                    backgroundBlendMode:
+                        resolvedWidgetDecoration?.backgroundBlendMode,
+                    border: resolvedWidgetDecoration?.border,
+                    borderRadius: resolvedWidgetDecoration?.borderRadius,
+                    boxShadow: resolvedWidgetDecoration?.boxShadow,
+                    color: resolvedWidgetDecoration?.color,
+                    gradient: resolvedWidgetDecoration?.gradient,
+                    image: resolvedWidgetDecoration?.image,
+                    shape: resolvedWidgetDecoration?.shape,
+                  );
+
+              final resolvedWidgetForegroundDecoration =
+                  widget.foregroundDecoration?.resolve(states);
+              final foregroundDecoration =
+                  WidgetStateProperty.resolveWith((states) {
+                if (states.isFocused) {
+                  return BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: widget.highlightColor ??
+                            themeData.accentColor.defaultBrushFor(
+                              themeData.brightness,
+                            ),
+                        width: 2,
+                      ),
+                    ),
+                  );
+                }
+                return const BoxDecoration();
+              }).resolve(states).copyWith(
+                        backgroundBlendMode: resolvedWidgetForegroundDecoration
+                            ?.backgroundBlendMode,
+                        border: resolvedWidgetForegroundDecoration?.border,
+                        borderRadius:
+                            resolvedWidgetForegroundDecoration?.borderRadius,
+                        boxShadow:
+                            resolvedWidgetForegroundDecoration?.boxShadow,
+                        color: resolvedWidgetForegroundDecoration?.color,
+                        gradient: resolvedWidgetForegroundDecoration?.gradient,
+                        image: resolvedWidgetForegroundDecoration?.image,
+                        shape: resolvedWidgetForegroundDecoration?.shape,
+                      );
+
+              return ClipRRect(
+                borderRadius: radius,
+                clipBehavior: widget.clipBehavior,
+                child: DecoratedBox(
+                  decoration: decoration,
                   child: Container(
                     foregroundDecoration: foregroundDecoration,
                     constraints: const BoxConstraints(
@@ -1226,9 +1234,9 @@ class _TextBoxState extends State<TextBox>
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
