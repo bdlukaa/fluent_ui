@@ -6,6 +6,31 @@
 - fix: Do try to scroll Date and Time at build time ([#1117](https://github.com/bdlukaa/fluent_ui/issues/1117))
 - feat: Use a `Decoration` instead of `Color` in `NavigationAppBar` ([#1118](https://github.com/bdlukaa/fluent_ui/issues/1118))
 - feat: Add `EditableComboBox.inputFormatters` ([#1041](https://github.com/bdlukaa/fluent_ui/issues/1041))
+- **BREAKING** feat: `TextBox.decoration` and `TextBox.foregroundDecoration` are now of type `WidgetStateProperty` ([#987](https://github.com/bdlukaa/fluent_ui/pull/987))
+  
+  Before:
+  ```dart
+  TextBox(
+    decoration: BoxDecoration(
+      color: Colors.red,
+    ),
+    foregroundDecoration: BoxDecoration(
+      color: Colors.blue,
+    ),
+  ),
+  ```
+
+  After:
+  ```dart
+  TextBox(
+    decoration: WidgetStateProperty.all(BoxDecoration(
+      color: Colors.red,
+    )),
+    foregroundDecoration: WidgetStateProperty.all(BoxDecoration(
+      color: Colors.blue,
+    )),
+  ),
+  ```
 
 ## 4.9.2
 

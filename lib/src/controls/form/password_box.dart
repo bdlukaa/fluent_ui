@@ -123,12 +123,12 @@ class PasswordBox extends StatefulWidget {
   ///
   /// Defaults to having a rounded rectangle grey border and can be null to have
   /// no box decoration.
-  final BoxDecoration? decoration;
+  final WidgetStateProperty<BoxDecoration>? decoration;
 
   /// Controls the [BoxDecoration] of the box in front of the text input.
   ///
   /// If [highlightColor] is provided, this must not be provided
-  final BoxDecoration? foregroundDecoration;
+  final WidgetStateProperty<BoxDecoration>? foregroundDecoration;
 
   /// The highlight color of the text box.
   ///

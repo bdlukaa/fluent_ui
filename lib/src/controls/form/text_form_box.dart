@@ -121,7 +121,7 @@ class TextFormBox extends ControllableFormBox {
     MaxLengthEnforcement? maxLengthEnforcement,
     ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
-    BoxDecoration? decoration,
+    WidgetStateProperty<BoxDecoration>? decoration,
     bool enableIMEPersonalizedLearning = true,
     MouseCursor? mouseCursor,
     bool scribbleEnabled = true,
