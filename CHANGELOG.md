@@ -34,6 +34,7 @@
 - feat: Add `TabView.gestures`, which allows the manipulation of the tab gestures ([#1138](https://github.com/bdlukaa/fluent_ui/issues/1138))
 - feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
 - feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
+- fix: `TimePicker` hour offset
 
 ## 4.9.2
 
