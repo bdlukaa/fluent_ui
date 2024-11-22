@@ -70,7 +70,7 @@ export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/controls/navigation/breadcrumb_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
-export 'src/controls/navigation/tab_view.dart';
+export 'src/controls/navigation/tab_view/tab_view.dart';
 export 'src/controls/navigation/tree_view.dart';
 export 'src/controls/surfaces/calendar/calendar_view.dart';
 export 'src/controls/surfaces/card.dart';
