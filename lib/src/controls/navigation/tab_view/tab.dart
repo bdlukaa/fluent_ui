@@ -167,6 +167,7 @@ class Tab extends StatefulWidget {
     this.onClosed,
     this.semanticLabel,
     this.disabled = false,
+    this.gestures = const {},
   });
 
   /// the IconSource to be displayed within the tab.
@@ -209,6 +210,19 @@ class Tab extends StatefulWidget {
   ///
   /// If true, the tab will be greyed out.
   final bool disabled;
+
+  /// The gestures that this widget will attempt to recognize.
+  ///
+  /// This should be a map from [GestureRecognizer] subclasses to
+  /// [GestureRecognizerFactory] subclasses specialized with the same type.
+  ///
+  /// This value can be late-bound at layout time using
+  /// [RawGestureDetectorState.replaceGestureRecognizers].
+  ///
+  /// See also:
+  ///
+  ///   * [RawGestureDetector.gestures], which this value is passed to.
+  final Map<Type, GestureRecognizerFactory> gestures;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -285,6 +299,7 @@ class TabState extends State<Tab>
       key: widget.key,
       semanticLabel: widget.semanticLabel ?? text,
       onPressed: widget.disabled ? null : tab.onPressed,
+      gestures: widget.gestures,
       builder: (context, states) {
         // https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/TabView/TabView_themeresources.xaml#L15-L19
         final foregroundColor =

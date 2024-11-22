@@ -91,6 +91,10 @@ class HoverButton extends StatefulWidget {
   ///
   /// This value can be late-bound at layout time using
   /// [RawGestureDetectorState.replaceGestureRecognizers].
+  ///
+  /// See also:
+  ///
+  ///   * [RawGestureDetector.gestures], which this value is passed to.
   final Map<Type, GestureRecognizerFactory> gestures;
 
   /// When the button is focused and is actioned, with either the enter or space

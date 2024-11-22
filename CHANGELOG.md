@@ -31,6 +31,7 @@
     )),
   ),
   ```
+- feat: Add `TabView.gestures`, which allows the manipulation of the tab gestures ([#1138](https://github.com/bdlukaa/fluent_ui/issues/1138))
 
 ## 4.9.2
 
