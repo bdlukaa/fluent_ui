@@ -169,7 +169,7 @@ class DatePicker extends StatefulWidget {
   final List<int>? fieldFlex;
 
   @override
-  State<DatePicker> createState() => _DatePickerState();
+  State<DatePicker> createState() => DatePickerState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -210,7 +210,7 @@ class DatePicker extends StatefulWidget {
   }
 }
 
-class _DatePickerState extends State<DatePicker> {
+class DatePickerState extends State<DatePicker> {
   late DateTime date;
 
   late FixedExtentScrollController _monthController;
@@ -225,6 +225,8 @@ class _DatePickerState extends State<DatePicker> {
       return startYear + index;
     }).firstWhere((v) => v == date.year, orElse: () => 0);
   }
+
+  final _pickerKey = GlobalKey<PickerState>();
 
   @override
   void initState() {
@@ -275,6 +277,10 @@ class _DatePickerState extends State<DatePicker> {
     if (mounted) setState(() => date = newDate);
   }
 
+  void open() async {
+    await _pickerKey.currentState?.open();
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentLocalizations(context));
@@ -301,6 +307,7 @@ class _DatePickerState extends State<DatePicker> {
     );
 
     Widget picker = Picker(
+      key: _pickerKey,
       pickerContent: (context) {
         return _DatePickerContentPopUp(
           date: date,
@@ -769,7 +776,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     return Column(children: [
       Expanded(
         child: Stack(children: [
-          PickerHighlightTile(),
+          const PickerHighlightTile(),
           Row(mainAxisSize: MainAxisSize.min, children: [
             ...fieldMap.elementAt(0) ?? [],
             if (fieldMap.elementAt(1) != null) ...[

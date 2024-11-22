@@ -105,7 +105,7 @@ class TimePicker extends StatefulWidget {
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
   @override
-  State<TimePicker> createState() => _TimePickerState();
+  State<TimePicker> createState() => TimePickerState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -135,7 +135,7 @@ class TimePicker extends StatefulWidget {
   }
 }
 
-class _TimePickerState extends State<TimePicker>
+class TimePickerState extends State<TimePicker>
     with IntlScriptLocaleApplyMixin {
   late DateTime time;
 
@@ -146,6 +146,8 @@ class _TimePickerState extends State<TimePicker>
   late FixedExtentScrollController _amPmController;
 
   bool am = true;
+
+  final _pickerKey = GlobalKey<PickerState>();
 
   @override
   void initState() {
@@ -205,6 +207,10 @@ class _TimePickerState extends State<TimePicker>
 
   bool get _isPm => time.hour >= 12;
 
+  void open() {
+    _pickerKey.currentState?.open();
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -215,6 +221,7 @@ class _TimePickerState extends State<TimePicker>
     final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
     Widget picker = Picker(
+      key: _pickerKey,
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
         return _TimePickerContentPopup(
@@ -421,7 +428,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     return Column(children: [
       Expanded(
         child: Stack(children: [
-          PickerHighlightTile(),
+          const PickerHighlightTile(),
           Row(children: [
             Expanded(
               child: PickerNavigatorIndicator(

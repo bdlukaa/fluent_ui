@@ -43,9 +43,11 @@ Decoration kPickerDecorationBuilder(
   );
 }
 
-// ignore: non_constant_identifier_names
-Widget PickerHighlightTile() {
-  return Builder(builder: (context) {
+class PickerHighlightTile extends StatelessWidget {
+  const PickerHighlightTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final highlightTileColor = theme.accentColor.defaultBrushFor(
@@ -67,7 +69,7 @@ Widget PickerHighlightTile() {
         ),
       ),
     );
-  });
+  }
 }
 
 /// A widget used by [TimePicker] and [DateTime] to accept or deny the changes
@@ -318,10 +320,10 @@ class Picker extends StatefulWidget {
   final double pickerHeight;
 
   @override
-  State<Picker> createState() => _PickerState();
+  State<Picker> createState() => PickerState();
 }
 
-class _PickerState extends State<Picker> {
+class PickerState extends State<Picker> {
   late final GlobalKey _childKey = GlobalKey(debugLabel: '${widget.child} key');
 
   Future<void> open() {
