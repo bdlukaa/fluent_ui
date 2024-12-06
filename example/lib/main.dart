@@ -226,6 +226,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('DatePicker'),
       body: const SizedBox.shrink(),
     ),
+    PaneItem(
+      key: const ValueKey('/forms/color_picker'),
+      icon: const Icon(FluentIcons.color),
+      title: const Text('ColorPicker'),
+      body: const SizedBox.shrink(),
+    ),
     PaneItemHeader(header: const Text('Navigation')),
     PaneItem(
       key: const ValueKey('/navigation/navigation_view'),
@@ -815,6 +821,15 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         builder: (context, state) => DeferredWidget(
           forms.loadLibrary,
           () => forms.DatePickerPage(),
+        ),
+      ),
+
+      /// ColorPicker
+      GoRoute(
+        path: '/forms/color_picker',
+        builder: (context, state) => DeferredWidget(
+          forms.loadLibrary,
+          () => forms.ColorPickerPage(),
         ),
       ),
 
