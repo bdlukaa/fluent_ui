@@ -69,7 +69,7 @@ class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
       child: CustomPaint(
-        painter: ColorWheelPainter(
+        painter: _RingSpectrumPainter(
           colorState: widget.colorState,
           showLabel: _showLabel,
           theme: FluentTheme.of(context),
@@ -218,7 +218,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomPaint(
-          painter: ColorBoxPainter(
+          painter: _BoxSpectrumPainter(
             colorState: widget.colorState,
             showLabel: _showLabel,
             theme: theme,
@@ -281,12 +281,12 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
   }
 }
 
-/// Custom painter for the color wheel in the [ColorPicker].
+/// Custom painter for rendering a ring-shaped color spectrum.
 ///
-/// This painter draws a color wheel with saturation and hue gradients,
-/// and an indicator for the currently selected color. It also displays
-/// a label with the color name when the user interacts with the wheel.
-class ColorWheelPainter extends CustomPainter {
+/// This painter draws a ring-shaped gradient representing a spectrum of hues
+/// and saturations. It also supports displaying an indicator for the currently
+/// selected color and an optional label with the color name during interaction.
+class _RingSpectrumPainter extends CustomPainter {
   /// The current color state
   final ColorState colorState;
 
@@ -308,16 +308,8 @@ class ColorWheelPainter extends CustomPainter {
   /// The maximum allowed saturation value (0-100)
   final int maxSaturation;
 
-  /// Creates a new instance of [ColorWheelPainter].
-  ///
-  /// - [colorState]: The current color state.
-  /// - [showLabel]: Whether to show the color name label.
-  /// - [theme]: The theme data for styling.
-  /// - [minHue]: The minimum allowed hue value (0-360).
-  /// - [maxHue]: The maximum allowed hue value (0-360).
-  /// - [minSaturation]: The minimum allowed saturation value (0-100).
-  /// - [maxSaturation]: The maximum allowed saturation value (0-100).
-  ColorWheelPainter({
+  /// Creates a new instance of [_RingSpectrumPainter].
+  _RingSpectrumPainter({
     required this.colorState,
     required this.showLabel,
     required this.theme,
@@ -416,7 +408,7 @@ class ColorWheelPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant ColorWheelPainter oldDelegate) {
+  bool shouldRepaint(covariant _RingSpectrumPainter oldDelegate) {
     return colorState != oldDelegate.colorState ||
         showLabel != oldDelegate.showLabel ||
         theme != oldDelegate.theme;
@@ -497,12 +489,13 @@ class ColorWheelPainter extends CustomPainter {
   }
 }
 
-/// Custom painter for the color box in the [ColorPicker].
+/// Custom painter for rendering a box-shaped color spectrum.
 ///
-/// This painter draws a color box with hue and saturation gradients,
-/// and an indicator for the currently selected color. It also displays
-/// a label with the color name when the user interacts with the box.
-class ColorBoxPainter extends CustomPainter {
+/// This painter draws a rectangular color spectrum with gradients representing
+/// hue (left to right) and saturation (top to bottom). It also supports displaying
+/// an indicator for the currently selected color and an optional label with the
+/// color name during interaction.
+class _BoxSpectrumPainter extends CustomPainter {
   /// The current color state
   final ColorState colorState;
 
@@ -524,16 +517,8 @@ class ColorBoxPainter extends CustomPainter {
   /// The maximum allowed saturation value (0-100)
   final int maxSaturation;
 
-  /// Creates a new instance of [ColorBoxPainter].
-  ///
-  /// - [colorState]: The current color state.
-  /// - [showLabel]: Whether to show the color name label.
-  /// - [theme]: The theme data for styling.
-  /// - [minHue]: The minimum allowed hue value (0-360).
-  /// - [maxHue]: The maximum allowed hue value (0-360).
-  /// - [minSaturation]: The minimum allowed saturation value (0-100).
-  /// - [maxSaturation]: The maximum allowed saturation value (0-100).
-  ColorBoxPainter({
+  /// Creates a new instance of [_BoxSpectrumPainter].
+  _BoxSpectrumPainter({
     required this.colorState,
     required this.showLabel,
     required this.theme,
@@ -630,7 +615,7 @@ class ColorBoxPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant ColorBoxPainter oldDelegate) {
+  bool shouldRepaint(covariant _BoxSpectrumPainter oldDelegate) {
     return colorState != oldDelegate.colorState ||
         showLabel != oldDelegate.showLabel ||
         theme != oldDelegate.theme;
