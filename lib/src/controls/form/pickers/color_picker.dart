@@ -640,15 +640,20 @@ class _ColorSliders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final thumbColor = FluentTheme.of(context).resources.focusStrokeColorOuter;
+    // Determine if the sliders should be displayed horizontally or vertically
+    final bool isVertical = orientation != Axis.vertical;
+
     final sliders = [
-      if (isColorSliderVisible) _buildValueSlider(context),
+      if (isColorSliderVisible) _buildValueSlider(thumbColor, isVertical),
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
         orientation == Axis.vertical
             ? const SizedBox(height: ColorPickerSpacing.large)
             : const SizedBox(
                 width: ColorPickerSpacing.large,
               ),
-      if (isAlphaSliderVisible && isAlphaEnabled) _buildAlphaSlider(context),
+      if (isAlphaSliderVisible && isAlphaEnabled)
+        _buildAlphaSlider(thumbColor, isVertical),
     ];
 
     return orientation == Axis.horizontal
@@ -663,69 +668,25 @@ class _ColorSliders extends StatelessWidget {
   }
 
   /// Builds the value slider for the color picker.
-  Widget _buildValueSlider(BuildContext context) {
+  Widget _buildValueSlider(Color thumbColor, bool isVertical) {
     final colorName = colorState.guessColorName();
     final valueText =
         '${(colorState.value * 100).round()}% ${colorName.isNotEmpty ? "($colorName)" : ""}';
 
-    final verticalSlider = orientation == Axis.horizontal;
-    final width =
-        verticalSlider ? ColorPickerSizes.slider : ColorPickerSizes.maxWidth;
-    final height =
-        verticalSlider ? ColorPickerSizes.spectrum : ColorPickerSizes.slider;
-
     return SizedBox(
-      width: width,
-      height: height,
-      child: _buildValueSliderContent(
-          tooltipText: valueText, verticalSlider: verticalSlider),
-    );
-  }
-
-  /// Builds the alpha slider for the color picker.
-  Widget _buildAlphaSlider(BuildContext context) {
-    final opacityText = '${(colorState.alpha * 100).round()}% opacity';
-    final verticalSlider = orientation == Axis.horizontal;
-
-    final width = verticalSlider
-        ? ColorPickerSizes.slider
-        : ColorPickerSizes.spectrum +
-            ColorPickerSpacing.small +
-            ColorPickerSizes.preview;
-    final height =
-        verticalSlider ? ColorPickerSizes.spectrum : ColorPickerSizes.slider;
-
-    return SizedBox(
-      width: width,
-      height: height,
-      child: _buildAlphaSliderContent(
-          tooltipText: opacityText, verticalSlider: verticalSlider),
-    );
-  }
-
-  /// Builds the content for the value slider.
-  Widget _buildValueSliderContent({
-    required String tooltipText,
-    required bool verticalSlider,
-  }) {
-    return Tooltip(
-      message: tooltipText,
-      useMousePosition: true,
+      width: isVertical ? ColorPickerSizes.slider : ColorPickerSizes.maxWidth,
+      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
           children: [
-            // Slider has _trackSidePadding(10) on both sides, but the gradient
-            // fills the entire space. However, the visual difference is minimal, so keeping it simple for now.
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: verticalSlider
+                  begin: isVertical
                       ? Alignment.bottomCenter
                       : Alignment.centerLeft,
-                  end: verticalSlider
-                      ? Alignment.topCenter
-                      : Alignment.centerRight,
+                  end: isVertical ? Alignment.topCenter : Alignment.centerRight,
                   colors: [
                     const Color(0xFF000000),
                     HSVColor.fromAHSV(1, math.max(0, colorState.hue),
@@ -736,20 +697,18 @@ class _ColorSliders extends StatelessWidget {
               ),
             ),
             SliderTheme(
-              data: const SliderThemeData(
-                thumbRadius: WidgetStatePropertyAll(6),
-                trackHeight: WidgetStatePropertyAll(0.0),
-                inactiveColor: WidgetStatePropertyAll(Colors.transparent),
+              data: SliderThemeData(
+                activeColor: WidgetStatePropertyAll(thumbColor),
+                trackHeight: const WidgetStatePropertyAll(0.0),
               ),
               child: Slider(
-                vertical: verticalSlider,
-                value: colorState.value, // [0..1]
+                label: valueText,
+                vertical: isVertical,
+                value: colorState.value,
                 min: minValue / 100,
                 max: maxValue / 100,
-                onChanged: (value) {
-                  final newState = colorState.copyWith(value: value);
-                  onColorChanged(newState);
-                },
+                onChanged: (value) =>
+                    onColorChanged(colorState.copyWith(value: value)),
               ),
             ),
           ],
@@ -758,34 +717,31 @@ class _ColorSliders extends StatelessWidget {
     );
   }
 
-  /// Builds the content for the alpha slider.
-  Widget _buildAlphaSliderContent({
-    required String tooltipText,
-    required bool verticalSlider,
-  }) {
-    return Tooltip(
-      message: tooltipText,
-      useMousePosition: true,
+  /// Builds the alpha slider for the color picker.
+  Widget _buildAlphaSlider(Color thumbColor, bool isVertical) {
+    final opacityText = '${(colorState.alpha * 100).round()}% opacity';
+
+    return SizedBox(
+      width: isVertical
+          ? ColorPickerSizes.slider
+          : ColorPickerSizes.spectrum +
+              ColorPickerSpacing.small +
+              ColorPickerSizes.preview,
+      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
           children: [
             Positioned.fill(
-              child: CustomPaint(
-                painter: CheckerboardPainter(),
-              ),
+              child: CustomPaint(painter: CheckerboardPainter()),
             ),
-            // Slider has _trackSidePadding(10) on both sides, but the gradient
-            // fills the entire space. However, the visual difference is minimal, so keeping it simple for now.
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: verticalSlider
+                  begin: isVertical
                       ? Alignment.bottomCenter
                       : Alignment.centerLeft,
-                  end: verticalSlider
-                      ? Alignment.topCenter
-                      : Alignment.centerRight,
+                  end: isVertical ? Alignment.topCenter : Alignment.centerRight,
                   colors: [
                     colorState.toColor().withAlpha(0),
                     colorState.toColor().withAlpha(255),
@@ -794,20 +750,18 @@ class _ColorSliders extends StatelessWidget {
               ),
             ),
             SliderTheme(
-              data: const SliderThemeData(
-                thumbRadius: WidgetStatePropertyAll(6),
-                trackHeight: WidgetStatePropertyAll(0.0),
-                inactiveColor: WidgetStatePropertyAll(Colors.transparent),
+              data: SliderThemeData(
+                activeColor: WidgetStatePropertyAll(thumbColor),
+                trackHeight: const WidgetStatePropertyAll(0.0),
               ),
               child: Slider(
-                vertical: verticalSlider,
-                value: colorState.alpha, // [0..1]
-                min: 0.0,
-                max: 1.0,
-                onChanged: (value) {
-                  final newState = colorState.copyWith(alpha: value);
-                  onColorChanged(newState);
-                },
+                label: opacityText,
+                vertical: isVertical,
+                value: colorState.alpha,
+                min: 0,
+                max: 1,
+                onChanged: (value) =>
+                    onColorChanged(colorState.copyWith(alpha: value)),
               ),
             ),
           ],
