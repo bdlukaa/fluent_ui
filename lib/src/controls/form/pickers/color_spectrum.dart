@@ -428,7 +428,8 @@ class _RingSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection.ltr,
+      textDirection: dart.TextDirection
+          .ltr, // TODO: Update if color names support RTL languages in the future.
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
@@ -436,9 +437,15 @@ class _RingSpectrumPainter extends CustomPainter {
     final labelX = (position.dx - labelWidth / 2)
         .clamp(0, size.width - labelWidth)
         .toDouble();
-    final labelY = (position.dy - labelHeight - 30)
+    double labelY = (position.dy - labelHeight - 30)
         .clamp(0, size.height - labelHeight)
         .toDouble();
+
+    // Check if label would overlap the indicator and adjust position
+    final labelBottomY = labelY + labelHeight;
+    if (position.dy < labelBottomY) {
+      labelY = position.dy + labelHeight - 5;
+    }
 
     final rect = Rect.fromLTWH(labelX, labelY, labelWidth, labelHeight);
 
@@ -635,7 +642,8 @@ class _BoxSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection.ltr,
+      textDirection: dart.TextDirection
+          .ltr, // TODO: Update if color names support RTL languages in the future.
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
@@ -643,9 +651,15 @@ class _BoxSpectrumPainter extends CustomPainter {
     final labelX = (position.dx - labelWidth / 2)
         .clamp(0, size.width - labelWidth)
         .toDouble();
-    final labelY = (position.dy - labelHeight - 30)
+    double labelY = (position.dy - labelHeight - 30)
         .clamp(0, size.height - labelHeight)
         .toDouble();
+
+    // Check if label would overlap the indicator and adjust position
+    final labelBottomY = labelY + labelHeight;
+    if (position.dy < labelBottomY) {
+      labelY = position.dy + labelHeight - 5;
+    }
 
     final rect = Rect.fromLTWH(labelX, labelY, labelWidth, labelHeight);
 

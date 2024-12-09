@@ -300,10 +300,6 @@ class _ColorPickerState extends State<ColorPicker> {
         widget.isColorChannelTextInputVisible ||
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
 
-    final screenSize = MediaQuery.of(context).size;
-    double availableWidth = screenSize.width;
-    double availableHeight = screenSize.height;
-
     // Build the color picker layout based on orientation
     return widget.orientation == Axis.vertical
         ? Column(
