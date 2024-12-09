@@ -423,38 +423,14 @@ class ColorWheelPainter extends CustomPainter {
   }
 
   void _drawLabel(Canvas canvas, Size size, String text, Offset position) {
-    final tooltipTheme = theme.tooltipTheme;
-    final decoration = tooltipTheme.decoration;
-
-    // Get background color and border radius from decoration
-    Color backgroundColor;
-    if (theme.brightness == Brightness.dark) {
-      backgroundColor = const Color(0xE6000000); // 90% opaque black
-    } else {
-      backgroundColor = const Color(0xE6FFFFFF); // 90% opaque white
-    }
-
-    // Get text color based on theme brightness
-    final textColor =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
-    // Use tooltip theme's border radius or default
-    BorderRadius borderRadius = BorderRadius.circular(4.0);
-    if (decoration is BoxDecoration && decoration.borderRadius != null) {
-      borderRadius = decoration.borderRadius as BorderRadius;
-    }
-
-    final textStyle = (tooltipTheme.textStyle ??
-            theme.typography.caption ??
-            const TextStyle())
-        .copyWith(
-      fontSize: 12,
-      color: textColor,
-    );
+    final backgroundColor = theme.resources.controlSolidFillColorDefault;
+    final textColor = theme.resources.textFillColorPrimary;
+    final borderRadius = BorderRadius.circular(4.0);
+    const labelPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final textSpan = TextSpan(
       text: text,
-      style: textStyle,
+      style: TextStyle(color: textColor),
     );
 
     final textPainter = TextPainter(
@@ -462,9 +438,6 @@ class ColorWheelPainter extends CustomPainter {
       textAlign: TextAlign.left,
       textDirection: dart.TextDirection.ltr,
     )..layout();
-
-    final labelPadding = tooltipTheme.padding as EdgeInsets? ??
-        const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
     final labelHeight = textPainter.height + labelPadding.vertical;
@@ -600,7 +573,7 @@ class ColorBoxPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: [(1 - maxSaturation / 100), (1 - minSaturation / 100)],
-      colors: [
+      colors: const [
         Colors.transparent,
         Colors.white,
       ],
@@ -664,38 +637,14 @@ class ColorBoxPainter extends CustomPainter {
   }
 
   void _drawLabel(Canvas canvas, Size size, String text, Offset position) {
-    final tooltipTheme = theme.tooltipTheme;
-    final decoration = tooltipTheme.decoration;
-
-    // Get background color and border radius from decoration
-    Color backgroundColor;
-    if (theme.brightness == Brightness.dark) {
-      backgroundColor = const Color(0xE6000000); // 90% opaque black
-    } else {
-      backgroundColor = const Color(0xE6FFFFFF); // 90% opaque white
-    }
-
-    // Get text color based on theme brightness
-    final textColor =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
-    // Use tooltip theme's border radius or default
-    BorderRadius borderRadius = BorderRadius.circular(4.0);
-    if (decoration is BoxDecoration && decoration.borderRadius != null) {
-      borderRadius = decoration.borderRadius as BorderRadius;
-    }
-
-    final textStyle = (tooltipTheme.textStyle ??
-            theme.typography.caption ??
-            const TextStyle())
-        .copyWith(
-      fontSize: 12,
-      color: textColor,
-    );
+    final backgroundColor = theme.resources.controlSolidFillColorDefault;
+    final textColor = theme.resources.textFillColorPrimary;
+    final borderRadius = BorderRadius.circular(4.0);
+    const labelPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final textSpan = TextSpan(
       text: text,
-      style: textStyle,
+      style: TextStyle(color: textColor),
     );
 
     final textPainter = TextPainter(
@@ -703,9 +652,6 @@ class ColorBoxPainter extends CustomPainter {
       textAlign: TextAlign.left,
       textDirection: dart.TextDirection.ltr,
     )..layout();
-
-    final labelPadding = tooltipTheme.padding as EdgeInsets? ??
-        const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
     final labelHeight = textPainter.height + labelPadding.vertical;
