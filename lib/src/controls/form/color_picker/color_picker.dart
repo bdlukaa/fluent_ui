@@ -955,6 +955,7 @@ class _ColorInputs extends StatelessWidget {
 
   /// Builds the RGB input fields.
   Widget _buildRGBInputs() {
+    // TODO: localize color channel labels
     return Column(
       children: [
         if (isColorChannelTextInputVisible) ...{
@@ -1065,6 +1066,7 @@ class _ColorInputs extends StatelessWidget {
     required double min,
     required double max,
   }) {
+    // TODO: initial format issue of NumberBox not being applied.
     return Column(children: [
       const SizedBox(height: ColorPickerSpacing.small),
       Row(
@@ -1082,7 +1084,7 @@ class _ColorInputs extends StatelessWidget {
                 if (v == null || v.isNaN || v.isInfinite) return;
                 onChanged(v);
               },
-              format: (v) => v?.toInt().toString(),
+              format: (v) => v?.round().toString(),
             ),
           ),
           const SizedBox(width: 5),
