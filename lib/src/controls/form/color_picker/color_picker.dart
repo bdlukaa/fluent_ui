@@ -26,12 +26,16 @@ enum ColorMode {
 }
 
 /// Color picker spacing constants
-class ColorPickerSpacing {
+enum ColorPickerSpacing {
   /// Small spacing between widgets
-  static const double small = 12.0;
+  small(12.0),
 
   /// Large spacing between widgets
-  static const double large = 24.0;
+  large(24.0);
+  
+  final double size;
+  
+  const ColorPickerSpacing(this.size);
 }
 
 /// Color picker component sizing constants
