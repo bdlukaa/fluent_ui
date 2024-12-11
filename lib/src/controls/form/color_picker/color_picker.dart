@@ -199,66 +199,65 @@ class ColorPicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('color', color));
-    properties.add(EnumProperty<Axis>('orientation', orientation));
-    properties.add(EnumProperty<ColorSpectrumShape>(
-        'colorSpectrumShape', colorSpectrumShape));
-    properties.add(FlagProperty(
-      'isColorPreviewVisible',
-      value: isColorPreviewVisible,
-      defaultValue: true,
-      ifFalse: 'color preview hidden',
-    ));
-    properties.add(FlagProperty(
-      'isColorSliderVisible',
-      value: isColorSliderVisible,
-      defaultValue: true,
-      ifFalse: 'color slider hidden',
-    ));
-    properties.add(FlagProperty(
-      'isMoreButtonVisible',
-      value: isMoreButtonVisible,
-      defaultValue: true,
-      ifFalse: 'more button hidden',
-    ));
-    properties.add(FlagProperty(
-      'isHexInputVisible',
-      value: isHexInputVisible,
-      defaultValue: true,
-      ifFalse: 'hex input hidden',
-    ));
-    properties.add(FlagProperty(
-      'isColorChannelTextInputVisible',
-      value: isColorChannelTextInputVisible,
-      defaultValue: true,
-      ifFalse: 'color channel text input hidden',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaEnabled',
-      value: isAlphaEnabled,
-      defaultValue: true,
-      ifFalse: 'alpha disabled',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaSliderVisible',
-      value: isAlphaSliderVisible,
-      defaultValue: true,
-      ifFalse: 'alpha slider hidden',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaTextInputVisible',
-      value: isAlphaTextInputVisible,
-      defaultValue: true,
-      ifFalse: 'alpha text input hidden',
-    ));
-    properties.add(IntProperty('minHue', minHue, defaultValue: 0));
-    properties.add(IntProperty('maxHue', maxHue, defaultValue: 359));
     properties
-        .add(IntProperty('minSaturation', minSaturation, defaultValue: 0));
-    properties
-        .add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100));
-    properties.add(IntProperty('minValue', minValue, defaultValue: 0));
-    properties.add(IntProperty('maxValue', maxValue, defaultValue: 100));
+      ..add(ColorProperty('color', color))
+      ..add(EnumProperty<Axis>('orientation', orientation))
+      ..add(EnumProperty<ColorSpectrumShape>(
+          'colorSpectrumShape', colorSpectrumShape))
+      ..add(FlagProperty(
+        'isColorPreviewVisible',
+        value: isColorPreviewVisible,
+        defaultValue: true,
+        ifFalse: 'color preview hidden',
+      ))
+      ..add(FlagProperty(
+        'isColorSliderVisible',
+        value: isColorSliderVisible,
+        defaultValue: true,
+        ifFalse: 'color slider hidden',
+      ))
+      ..add(FlagProperty(
+        'isMoreButtonVisible',
+        value: isMoreButtonVisible,
+        defaultValue: true,
+        ifFalse: 'more button hidden',
+      ))
+      ..add(FlagProperty(
+        'isHexInputVisible',
+        value: isHexInputVisible,
+        defaultValue: true,
+        ifFalse: 'hex input hidden',
+      ))
+      ..add(FlagProperty(
+        'isColorChannelTextInputVisible',
+        value: isColorChannelTextInputVisible,
+        defaultValue: true,
+        ifFalse: 'color channel text input hidden',
+      ))
+      ..add(FlagProperty(
+        'isAlphaEnabled',
+        value: isAlphaEnabled,
+        defaultValue: true,
+        ifFalse: 'alpha disabled',
+      ))
+      ..add(FlagProperty(
+        'isAlphaSliderVisible',
+        value: isAlphaSliderVisible,
+        defaultValue: true,
+        ifFalse: 'alpha slider hidden',
+      ))
+      ..add(FlagProperty(
+        'isAlphaTextInputVisible',
+        value: isAlphaTextInputVisible,
+        defaultValue: true,
+        ifFalse: 'alpha text input hidden',
+      ))
+      ..add(IntProperty('minHue', minHue, defaultValue: 0))
+      ..add(IntProperty('maxHue', maxHue, defaultValue: 359))
+      ..add(IntProperty('minSaturation', minSaturation, defaultValue: 0))
+      ..add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100))
+      ..add(IntProperty('minValue', minValue, defaultValue: 0))
+      ..add(IntProperty('maxValue', maxValue, defaultValue: 100));
   }
 }
 
