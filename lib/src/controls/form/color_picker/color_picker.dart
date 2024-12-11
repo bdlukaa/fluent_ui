@@ -407,6 +407,7 @@ class _ColorPickerState extends State<ColorPicker> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // TODO: Localize for 'Less' and 'More' later
               Text(_isMoreExpanded ? 'Less' : 'More'),
               Icon(
                 _isMoreExpanded
