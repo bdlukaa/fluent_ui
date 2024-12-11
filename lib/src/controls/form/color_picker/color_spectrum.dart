@@ -721,34 +721,18 @@ class CheckerboardPainter extends CustomPainter {
     final width = size.width.toInt();
     final height = size.height.toInt();
 
-    for (int i = 0; i < width; i += (squareSize * 2)) {
-      for (int j = 0; j < height; j += (squareSize * 2)) {
-        // Draw dark squares
-        paint.color = const Color(0xFFD3D3D3); // Light gray
+    for (int i = 0; i < width; i += squareSize) {
+      for (int j = 0; j < height; j += squareSize) {
+        // Determine if this position should be a dark square
+        final isDarkSquare = (i ~/ squareSize + j ~/ squareSize) % 2 == 0;
+
+        paint.color = isDarkSquare
+            ? const Color(0xFFD3D3D3) // Light gray
+            : Colors.white;
+
         canvas.drawRect(
           Rect.fromLTWH(i.toDouble(), j.toDouble(), squareSize.toDouble(),
               squareSize.toDouble()),
-          paint,
-        );
-        canvas.drawRect(
-          Rect.fromLTWH(
-              (i + squareSize).toDouble(),
-              (j + squareSize).toDouble(),
-              squareSize.toDouble(),
-              squareSize.toDouble()),
-          paint,
-        );
-
-        // Draw light squares
-        paint.color = Colors.white;
-        canvas.drawRect(
-          Rect.fromLTWH((i + squareSize).toDouble(), j.toDouble(),
-              squareSize.toDouble(), squareSize.toDouble()),
-          paint,
-        );
-        canvas.drawRect(
-          Rect.fromLTWH(i.toDouble(), (j + squareSize).toDouble(),
-              squareSize.toDouble(), squareSize.toDouble()),
           paint,
         );
       }
