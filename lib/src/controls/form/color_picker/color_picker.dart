@@ -301,45 +301,48 @@ class _ColorPickerState extends State<ColorPicker> {
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
 
     // Build the color picker layout based on orientation
-    return widget.orientation == Axis.vertical
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSpectrumAndPreview(),
-              if (widget.isColorSliderVisible ||
-                  (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-                const SizedBox(height: ColorPickerSpacing.large),
-                _buildSliders(),
-              ],
-              if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
-                const SizedBox(height: ColorPickerSpacing.large),
-                _buildMoreButton(),
-              ],
-              if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
-                if (hasVisibleInputs) ...[
-                  const SizedBox(height: ColorPickerSpacing.large),
-                  _buildInputs(),
-                ],
-              ],
+    if (widget.orientation == Axis.vertical) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSpectrumAndPreview(),
+          if (widget.isColorSliderVisible ||
+              (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
+            const SizedBox(height: ColorPickerSpacing.large),
+            _buildSliders(),
+          ],
+          if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
+            const SizedBox(height: ColorPickerSpacing.large),
+            _buildMoreButton(),
+          ],
+          if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
+            if (hasVisibleInputs) ...[
+              const SizedBox(height: ColorPickerSpacing.large),
+              _buildInputs(),
             ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSpectrumAndPreview(),
-              if (widget.isColorSliderVisible ||
-                  (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-                const SizedBox(width: ColorPickerSpacing.large),
-                _buildSliders(),
-              ],
-              if (hasVisibleInputs) ...[
-                const SizedBox(width: ColorPickerSpacing.large),
-                _buildInputs(),
-              ],
-            ],
-          );
+          ],
+        ],
+      );
+    } else {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSpectrumAndPreview(),
+          if (widget.isColorSliderVisible ||
+              (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
+            const SizedBox(width: ColorPickerSpacing.large),
+            _buildSliders(),
+          ],
+          if (hasVisibleInputs) ...[
+            const SizedBox(width: ColorPickerSpacing.large),
+            _buildInputs(),
+          ],
+        ],
+      );
+    }
+    ;
   }
 
   /// Initializes the text controllers and focus nodes.
@@ -921,37 +924,39 @@ class _ColorInputs extends StatelessWidget {
           onSubmitted: _updateHexColor,
         ));
 
-    return orientation == Axis.vertical
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (isColorChannelTextInputVisible) ...[
-                modeSelector,
-              ],
-              if (isHexInputVisible) ...[
-                hexInput,
-              ],
-            ],
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isHexInputVisible) ...[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: hexInput,
-                ),
-                const SizedBox(height: ColorPickerSpacing.small),
-              ],
-              if (isColorChannelTextInputVisible) ...[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: modeSelector,
-                ),
-              ],
-            ],
-          );
+    if (orientation == Axis.vertical) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (isColorChannelTextInputVisible) ...[
+            modeSelector,
+          ],
+          if (isHexInputVisible) ...[
+            hexInput,
+          ],
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isHexInputVisible) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: hexInput,
+            ),
+            const SizedBox(height: ColorPickerSpacing.small),
+          ],
+          if (isColorChannelTextInputVisible) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: modeSelector,
+            ),
+          ],
+        ],
+      );
+    }
   }
 
   /// Builds the RGB input fields.
