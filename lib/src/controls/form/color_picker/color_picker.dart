@@ -26,34 +26,39 @@ enum ColorMode {
 }
 
 /// Color picker spacing constants
-enum ColorPickerSpacing {
+enum _ColorPickerSpacing {
   /// Small spacing between widgets
   small(12.0),
 
   /// Large spacing between widgets
   large(24.0);
-  
+
   final double size;
-  
-  const ColorPickerSpacing(this.size);
+
+  const _ColorPickerSpacing(this.size);
 }
 
 /// Color picker component sizing constants
-class ColorPickerSizes {
+enum _ColorPickerSizes {
   /// The size of the color spectrum widget
-  static const double spectrum = 336.0;
+  spectrum(336.0),
 
   /// The width of the color preview box
-  static const double preview = 44.0;
+  preview(44.0),
 
   /// The height of the sliders
-  static const double slider = 12.0;
+  slider(12.0),
 
   /// The width of the input boxes
-  static const double inputBox = 120.0;
+  inputBox(120.0);
 
-  /// The maximum width of the color spectrum and preview box
-  static double maxWidth = spectrum + ColorPickerSpacing.small + preview; // 392
+  final double size;
+
+  const _ColorPickerSizes(this.size);
+
+  /// Define the computed maxWidth as a static constant
+  static double get maxWidth =>
+      spectrum.size + _ColorPickerSpacing.small.size + preview.size;
 }
 
 /// Color Picker
@@ -313,16 +318,16 @@ class _ColorPickerState extends State<ColorPicker> {
           _buildSpectrumAndPreview(),
           if (widget.isColorSliderVisible ||
               (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-            const SizedBox(height: ColorPickerSpacing.large),
+            SizedBox(height: _ColorPickerSpacing.large.size),
             _buildSliders(),
           ],
           if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
-            const SizedBox(height: ColorPickerSpacing.large),
+            SizedBox(height: _ColorPickerSpacing.large.size),
             _buildMoreButton(),
           ],
           if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
             if (hasVisibleInputs) ...[
-              const SizedBox(height: ColorPickerSpacing.large),
+              SizedBox(height: _ColorPickerSpacing.large.size),
               _buildInputs(),
             ],
           ],
@@ -336,11 +341,11 @@ class _ColorPickerState extends State<ColorPicker> {
           _buildSpectrumAndPreview(),
           if (widget.isColorSliderVisible ||
               (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-            const SizedBox(width: ColorPickerSpacing.large),
+            SizedBox(width: _ColorPickerSpacing.large.size),
             _buildSliders(),
           ],
           if (hasVisibleInputs) ...[
-            const SizedBox(width: ColorPickerSpacing.large),
+            SizedBox(width: _ColorPickerSpacing.large.size),
             _buildInputs(),
           ],
         ],
@@ -397,7 +402,7 @@ class _ColorPickerState extends State<ColorPicker> {
   /// Builds the "More" button to expand the color picker inputs.
   Widget _buildMoreButton() {
     final moreButton = SizedBox(
-        width: ColorPickerSizes.inputBox,
+        width: _ColorPickerSizes.inputBox.size,
         child: Button(
           onPressed: () => setState(() => _isMoreExpanded = !_isMoreExpanded),
           child: Row(
@@ -415,7 +420,7 @@ class _ColorPickerState extends State<ColorPicker> {
         ));
 
     return SizedBox(
-      width: ColorPickerSizes.maxWidth,
+      width: _ColorPickerSizes.maxWidth,
       child: Align(
         alignment: Alignment.centerRight,
         child: moreButton,
@@ -526,14 +531,14 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: (orientation == Axis.horizontal) && !isColorPreviewVisible
-          ? ColorPickerSizes.spectrum
-          : ColorPickerSizes.maxWidth,
-      height: ColorPickerSizes.spectrum,
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.maxWidth,
+      height: _ColorPickerSizes.spectrum.size,
       child: isColorPreviewVisible
           ? Row(
               children: [
                 _buildSpectrum(),
-                const SizedBox(width: ColorPickerSpacing.small),
+                SizedBox(width: _ColorPickerSpacing.small.size),
                 _buildPreviewBox(context),
               ],
             )
@@ -543,8 +548,8 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
 
   Widget _buildSpectrum() {
     return SizedBox(
-      width: ColorPickerSizes.spectrum,
-      height: ColorPickerSizes.spectrum,
+      width: _ColorPickerSizes.spectrum.size,
+      height: _ColorPickerSizes.spectrum.size,
       child: colorSpectrumShape == ColorSpectrumShape.ring
           ? ColorRingSpectrum(
               colorState: colorState,
@@ -566,8 +571,8 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
   }
 
   Widget _buildPreviewBox(BuildContext context) {
-    const double width = ColorPickerSizes.preview;
-    const double height = ColorPickerSizes.spectrum;
+    double width = _ColorPickerSizes.preview.size;
+    double height = _ColorPickerSizes.spectrum.size;
     const double borderRadius = 4.0;
 
     final theme = FluentTheme.of(context);
@@ -651,9 +656,9 @@ class _ColorSliders extends StatelessWidget {
       if (isColorSliderVisible) _buildValueSlider(thumbColor, isVertical),
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
         orientation == Axis.vertical
-            ? const SizedBox(height: ColorPickerSpacing.large)
-            : const SizedBox(
-                width: ColorPickerSpacing.large,
+            ? SizedBox(height: _ColorPickerSpacing.large.size)
+            : SizedBox(
+                width: _ColorPickerSpacing.large.size,
               ),
       if (isAlphaSliderVisible && isAlphaEnabled)
         _buildAlphaSlider(thumbColor, isVertical),
@@ -677,8 +682,12 @@ class _ColorSliders extends StatelessWidget {
         '${(colorState.value * 100).round()}% ${colorName.isNotEmpty ? "($colorName)" : ""}';
 
     return SizedBox(
-      width: isVertical ? ColorPickerSizes.slider : ColorPickerSizes.maxWidth,
-      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
+      width: isVertical
+          ? _ColorPickerSizes.slider.size
+          : _ColorPickerSizes.maxWidth,
+      height: isVertical
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.slider.size,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
@@ -726,11 +735,13 @@ class _ColorSliders extends StatelessWidget {
 
     return SizedBox(
       width: isVertical
-          ? ColorPickerSizes.slider
-          : ColorPickerSizes.spectrum +
-              ColorPickerSpacing.small +
-              ColorPickerSizes.preview,
-      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
+          ? _ColorPickerSizes.slider.size
+          : _ColorPickerSizes.spectrum.size +
+              _ColorPickerSpacing.small.size +
+              _ColorPickerSizes.preview.size,
+      height: isVertical
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.slider.size,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
@@ -878,11 +889,11 @@ class _ColorInputs extends StatelessWidget {
 
         return orientation == Axis.vertical
             ? SizedBox(
-                width: ColorPickerSizes.maxWidth,
+                width: _ColorPickerSizes.maxWidth,
                 child: inputsContent,
               )
             : SizedBox(
-                height: ColorPickerSizes.spectrum,
+                height: _ColorPickerSizes.spectrum.size,
                 width: 200, // arbitrary width, but more than enough
                 child: inputsContent,
               );
@@ -907,7 +918,7 @@ class _ColorInputs extends StatelessWidget {
   /// Builds the color mode selector and hex input.
   Widget _buildColorModeAndHexInput(ColorMode colorMode) {
     final modeSelector = SizedBox(
-      width: ColorPickerSizes.inputBox,
+      width: _ColorPickerSizes.inputBox.size,
       child: ComboBox<ColorMode>(
         value: colorMode,
         items: colorModes.entries
@@ -921,7 +932,7 @@ class _ColorInputs extends StatelessWidget {
     );
 
     final hexInput = SizedBox(
-        width: ColorPickerSizes.inputBox,
+        width: _ColorPickerSizes.inputBox.size,
         child: TextBox(
           controller: hexController,
           placeholder: isAlphaEnabled ? '#AARRGGBB' : '#RRGGBB',
@@ -950,7 +961,7 @@ class _ColorInputs extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: hexInput,
             ),
-            const SizedBox(height: ColorPickerSpacing.small),
+            SizedBox(height: _ColorPickerSpacing.small.size),
           ],
           if (isColorChannelTextInputVisible) ...[
             Align(
@@ -1078,12 +1089,12 @@ class _ColorInputs extends StatelessWidget {
   }) {
     // TODO: initial format issue of NumberBox not being applied.
     return Column(children: [
-      const SizedBox(height: ColorPickerSpacing.small),
+      SizedBox(height: _ColorPickerSpacing.small.size),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            width: ColorPickerSizes.inputBox,
+            width: _ColorPickerSizes.inputBox.size,
             child: NumberBox<double>(
               value: value,
               min: min,
