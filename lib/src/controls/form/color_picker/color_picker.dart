@@ -906,6 +906,7 @@ class _ColorInputs extends StatelessWidget {
         items: colorModes.entries
             .map((e) => ComboBoxItem(value: e.value, child: Text(e.key)))
             .toList(),
+        isExpanded: true,
         onChanged: (value) {
           if (value != null) _colorModeNotifier.value = value;
         },
