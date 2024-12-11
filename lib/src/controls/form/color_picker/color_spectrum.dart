@@ -378,26 +378,32 @@ class _RingSpectrumPainter extends CustomPainter {
 
     // Draw indicator with current color and border
     // Calculate perceived brightness to determine stroke color
-    final rgb = ColorState.hsvToRgb(colorState.hue, colorState.saturation, 1.0);
-    final fillColor = Color.fromARGB(255, (rgb.$1 * 255).round(),
-        (rgb.$2 * 255).round(), (rgb.$3 * 255).round());
-    final double brightness = 0.299 * rgb.$1 + 0.587 * rgb.$2 + 0.114 * rgb.$3;
-    final strokeColor = brightness > 0.5 ? Colors.black : Colors.white;
+    final rgb = ColorState.hsvToRgb(
+        HsvComponents(colorState.hue, colorState.saturation, 1.0));
+    final fillColor = Color.fromARGB(255, (rgb.r * 255).round(),
+        (rgb.g * 255).round(), (rgb.b * 255).round());
+
+    // Compute relative luminance to determine optimal stroke color visibility
+    final relativeLuminance = ColorState.relativeLuminance(fillColor);
+    final brightness = (relativeLuminance + 0.05) * (relativeLuminance + 0.05);
+
+    // Choose stroke color based on background brightness
+    // Threshold: 0.30 (based on WinUI 3 ColorPicker testing)
+    // - Above threshold: black stroke for light backgrounds
+    // - Below threshold: white stroke for dark backgrounds
+    // Reference:
+    // - Flutter Material uses 0.15 threshold (https://api.flutter.dev/flutter/material/ThemeData/estimateBrightnessForColor.html)
+    // - This implementation follows WinUI 3's 0.30 threshold
+    final strokeColor = brightness > 0.30 ? Colors.black : Colors.white;
 
     // Draw white circle with black border for indicator
     canvas.drawCircle(
       indicatorOffset,
-      8,
+      7.5,
       Paint()
         ..color = strokeColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2,
-    );
-
-    canvas.drawCircle(
-      indicatorOffset,
-      7,
-      Paint()..color = fillColor,
     );
 
     // Draw color name label if needed
@@ -592,26 +598,32 @@ class _BoxSpectrumPainter extends CustomPainter {
 
     // Draw indicator with current color and white border
     // Calculate perceived brightness to determine stroke color
-    final rgb = ColorState.hsvToRgb(colorState.hue, colorState.saturation, 1.0);
-    final fillColor = Color.fromARGB(255, (rgb.$1 * 255).round(),
-        (rgb.$2 * 255).round(), (rgb.$3 * 255).round());
-    final double brightness = 0.299 * rgb.$1 + 0.587 * rgb.$2 + 0.114 * rgb.$3;
-    final strokeColor = brightness > 0.5 ? Colors.black : Colors.white;
+    final rgb = ColorState.hsvToRgb(
+        HsvComponents(colorState.hue, colorState.saturation, 1.0));
+    final fillColor = Color.fromARGB(255, (rgb.r * 255).round(),
+        (rgb.g * 255).round(), (rgb.b * 255).round());
+
+    // Compute relative luminance to determine optimal stroke color visibility
+    final relativeLuminance = ColorState.relativeLuminance(fillColor);
+    final brightness = (relativeLuminance + 0.05) * (relativeLuminance + 0.05);
+
+    // Choose stroke color based on background brightness
+    // Threshold: 0.30 (based on WinUI 3 ColorPicker testing)
+    // - Above threshold: black stroke for light backgrounds
+    // - Below threshold: white stroke for dark backgrounds
+    // Reference:
+    // - Flutter Material uses 0.15 threshold (https://api.flutter.dev/flutter/material/ThemeData/estimateBrightnessForColor.html)
+    // - This implementation follows WinUI 3's 0.30 threshold
+    final strokeColor = brightness > 0.30 ? Colors.black : Colors.white;
 
     // Draw white circle with black border for indicator
     canvas.drawCircle(
       Offset(x, y),
-      8,
+      7.5,
       Paint()
         ..color = strokeColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2,
-    );
-
-    canvas.drawCircle(
-      Offset(x, y),
-      7,
-      Paint()..color = fillColor,
     );
 
     // Draw color name label if needed
@@ -712,7 +724,7 @@ class _BoxSpectrumPainter extends CustomPainter {
 
 /// Custom painter for drawing a checkerboard pattern.
 ///
-/// This painter is used to represent transparency in the [ColorPicker]'s alpha slider.
+/// This painter is used to represent transparency in the [ColorPicker]'s alpha slider and preview box.
 class CheckerboardPainter extends CustomPainter {
   /// The theme data for styling
   final FluentThemeData theme;
@@ -749,5 +761,6 @@ class CheckerboardPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CheckerboardPainter oldDelegate) =>
+      theme != oldDelegate.theme;
 }

@@ -17,7 +17,7 @@ enum ColorSpectrumShape {
 }
 
 /// Defines the color mode used in the [ColorPicker].
-enum ColorMode {
+enum _ColorMode {
   /// RGB (Red, Green, Blue) color mode.
   rgb,
 
@@ -61,41 +61,27 @@ enum _ColorPickerSizes {
       spectrum.size + _ColorPickerSpacing.small.size + preview.size;
 }
 
-/// Color Picker
+/// A color picker is used to browse through and select colors.
+/// By default, it lets a user navigate through colors on a color
+/// spectrum, or specify a color in either Red-Green-Blue (RGB),
+/// Hue-Saturation-Value (HSV), or Hexadecimal text boxes.
 ///
-/// A comprehensive color picker implementation that supports both RGB and HSV color models,
-/// with wheel and box spectrum shapes. Integrates with Fluent UI's theming system for
-/// consistent look and feel.
+/// ![ColorPicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/color-picker-default.png)
 ///
-/// Features:
-/// - Color wheel and box spectrum modes
-/// - RGB and HSV color input modes
-/// - Alpha channel support
-/// - Hex color input
-/// - Real-time color name display
-/// - Theme-aware tooltips and UI elements
-/// - Value and alpha sliders
+/// See also:
 ///
-/// Example usage:
-/// ```dart
-/// ColorPicker(
-///   value: Colors.blue,
-///   onChanged: (Color color) {
-///     setState(() {
-///       _selectedColor = color;
-///     });
-///   },
-///   colorSpectrumShape: ColorSpectrumShape.ring,
-/// )
-/// ```
+///    * [ColorSpectrumShape], which defines the shape of the color spectrum.
+///    * <https://learn.microsoft.com/en-us/windows/apps/design/controls/color-picker>
 class ColorPicker extends StatefulWidget {
   /// The current color value
   final Color color;
 
-  /// Callback when the color value changes
+  /// Called when the color value changes.
   final ValueChanged<Color> onChanged;
 
   /// The orientation of the color picker layout
+  ///
+  /// Defaults to [Axis.vertical].
   final Axis orientation;
 
   /// Whether the color preview is visible
@@ -122,7 +108,9 @@ class ColorPicker extends StatefulWidget {
   /// Whether the alpha text input is visible
   final bool isAlphaTextInputVisible;
 
-  /// The shape of the color spectrum (ring or box)
+  /// The shape of the color spectrum.
+  ///
+  /// Defaults to [ColorSpectrumShape.ring].
   final ColorSpectrumShape colorSpectrumShape;
 
   /// The minimum allowed hue value (0-359)
@@ -143,26 +131,7 @@ class ColorPicker extends StatefulWidget {
   /// The maximum allowed value/brightness (0-100)
   final int maxValue;
 
-  /// Creates a new instance of [ColorPicker].
-  ///
-  /// - [color]: The current color value.
-  /// - [onChanged]: Callback when the color value changes.
-  /// - [orientation]: The orientation of the color picker layout. Defaults to [Axis.vertical].
-  /// - [colorSpectrumShape]: The shape of the color spectrum (ring or box). Defaults to [ColorSpectrumShape.ring].
-  /// - [isColorPreviewVisible]: Whether the color preview is visible. Defaults to true.
-  /// - [isColorSliderVisible]: Whether the color slider is visible. Defaults to true.
-  /// - [isMoreButtonVisible]: Whether the "More" button is visible. Defaults to true.
-  /// - [isHexInputVisible]: Whether the hex input is visible. Defaults to true.
-  /// - [isColorChannelTextInputVisible]: Whether the color channel text input is visible. Defaults to true.
-  /// - [isAlphaEnabled]: Whether the alpha channel is enabled. Defaults to true.
-  /// - [isAlphaSliderVisible]: Whether the alpha slider is visible. Defaults to true.
-  /// - [isAlphaTextInputVisible]: Whether the alpha text input is visible. Defaults to true.
-  /// - [minHue]: The minimum allowed hue value (0-359). Defaults to 0.
-  /// - [maxHue]: The maximum allowed hue value (0-359). Defaults to 359.
-  /// - [minSaturation]: The minimum allowed saturation value (0-100). Defaults to 0.
-  /// - [maxSaturation]: The maximum allowed saturation value (0-100). Defaults to 100.
-  /// - [minValue]: The minimum allowed value/brightness (0-100). Defaults to 0.
-  /// - [maxValue]: The maximum allowed value/brightness (0-100). Defaults to 100.
+  /// Creates a fluent-styled [ColorPicker].
   const ColorPicker({
     super.key,
     required this.color,
@@ -691,8 +660,11 @@ class _ColorSliders extends StatelessWidget {
   Widget _buildValueSlider(FluentThemeData theme, bool isVertical) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
     final colorName = colorState.guessColorName();
+
+    // Format the value text with color name
+    // TODO: Add localization support for "Value" text
     final valueText =
-        '${(colorState.value * 100).round()}% ${colorName.isNotEmpty ? "($colorName)" : ""}';
+        'Value ${(colorState.value * 100).round()}${colorName.isNotEmpty ? " ($colorName)" : ""}';
 
     return SizedBox(
       width: isVertical
@@ -803,13 +775,13 @@ class _ColorSliders extends StatelessWidget {
 /// A widget that displays the color inputs.
 class _ColorInputs extends StatelessWidget {
   /// Map of color modes (RGB and HSV)
-  static const Map<String, ColorMode> colorModes = {
-    'RGB': ColorMode.rgb,
-    'HSV': ColorMode.hsv,
+  static const Map<String, _ColorMode> colorModes = {
+    'RGB': _ColorMode.rgb,
+    'HSV': _ColorMode.hsv,
   };
 
   /// Internal ValueNotifier for color mode management
-  static final _colorModeNotifier = ValueNotifier<ColorMode>(ColorMode.rgb);
+  static final _colorModeNotifier = ValueNotifier<_ColorMode>(_ColorMode.rgb);
 
   /// The current color state
   final ColorState colorState;
@@ -884,7 +856,7 @@ class _ColorInputs extends StatelessWidget {
     // Update hex input whenever colorState changes
     _updateHexControllerText();
 
-    return ValueListenableBuilder<ColorMode>(
+    return ValueListenableBuilder<_ColorMode>(
       valueListenable: _colorModeNotifier,
       builder: (context, colorMode, _) {
         final inputsContent = Column(
@@ -895,7 +867,7 @@ class _ColorInputs extends StatelessWidget {
                 !isMoreButtonVisible ||
                 isMoreExpanded) ...[
               _buildColorModeAndHexInput(colorMode),
-              colorMode == ColorMode.rgb
+              colorMode == _ColorMode.rgb
                   ? _buildRGBInputs()
                   : _buildHSVInputs(),
             ],
@@ -931,10 +903,10 @@ class _ColorInputs extends StatelessWidget {
   }
 
   /// Builds the color mode selector and hex input.
-  Widget _buildColorModeAndHexInput(ColorMode colorMode) {
+  Widget _buildColorModeAndHexInput(_ColorMode colorMode) {
     final modeSelector = SizedBox(
       width: _ColorPickerSizes.inputBox.size,
-      child: ComboBox<ColorMode>(
+      child: ComboBox<_ColorMode>(
         value: colorMode,
         items: colorModes.entries
             .map((e) => ComboBoxItem(value: e.value, child: Text(e.key)))
@@ -1160,12 +1132,13 @@ class _ColorInputs extends StatelessWidget {
       final r = ((colorValue >> 16) & 0xFF) / 255.0;
       final g = ((colorValue >> 8) & 0xFF) / 255.0;
       final b = (colorValue & 0xFF) / 255.0;
+      final rgb = RgbComponents(r, g, b);
 
       // Convert RGB to HSV
-      final (h, s, v) = ColorState.rgbToHsv(r, g, b);
+      final hsv = ColorState.rgbToHsv(rgb);
 
       // Create new ColorState
-      final newState = ColorState(r, g, b, a, h, s, v);
+      final newState = ColorState(r, g, b, a, hsv.h, hsv.s, hsv.v);
       onColorChanged(newState);
     } catch (e) {
       debugPrint('Error parsing hex color: $e');

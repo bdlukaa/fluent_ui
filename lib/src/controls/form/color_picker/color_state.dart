@@ -4,6 +4,30 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 part "color_names.dart";
 
+/// Represents components of a color in the HSV (Hue, Saturation, Value) color space.
+final class HsvComponents {
+  const HsvComponents(this.h, this.s, this.v);
+  final double h;
+  final double s;
+  final double v;
+}
+
+/// Represents components of a color in the HSL (Hue, Saturation, Lightness) color space.
+final class HslComponents {
+  const HslComponents(this.h, this.s, this.l);
+  final double h;
+  final double s;
+  final double l;
+}
+
+/// Represents components of a color in the RGB (Red, Green, Blue) color space.
+final class RgbComponents {
+  const RgbComponents(this.r, this.g, this.b);
+  final double r;
+  final double g;
+  final double b;
+}
+
 /// A stateful representation of a color in both RGB and HSV color spaces.
 class ColorState extends ChangeNotifier {
   // RGB components (0-1)
@@ -55,8 +79,8 @@ class ColorState extends ChangeNotifier {
     final b = color.blue.toDouble() / 255;
     final a = color.alpha.toDouble() / 255;
 
-    final (h, s, v) = rgbToHsv(r, g, b);
-    return ColorState(r, g, b, a, h, s, v);
+    final hsv = rgbToHsv(RgbComponents(r, g, b));
+    return ColorState(r, g, b, a, hsv.h, hsv.s, hsv.v);
   }
 
   /// Sets the hue and updates the RGB values accordingly.
@@ -82,10 +106,10 @@ class ColorState extends ChangeNotifier {
       _green = 0;
       _blue = 0;
     } else {
-      final (r, g, b) = hsvToRgb(_hue, _saturation, _value);
-      _red = r;
-      _green = g;
-      _blue = b;
+      final rgb = hsvToRgb(HsvComponents(_hue, _saturation, _value));
+      _red = rgb.r;
+      _green = rgb.g;
+      _blue = rgb.b;
     }
 
     notifyListeners();
@@ -132,10 +156,10 @@ class ColorState extends ChangeNotifier {
       _blue = color.blue / 255;
       _alpha = color.alpha / 255;
 
-      final (h, s, v) = rgbToHsv(_red, _green, _blue);
-      _hue = h;
-      _saturation = s;
-      _value = v;
+      final hsv = rgbToHsv(RgbComponents(_red, _green, _blue));
+      _hue = hsv.h;
+      _saturation = hsv.s;
+      _value = hsv.v;
 
       notifyListeners();
     } catch (e) {
@@ -160,8 +184,8 @@ class ColorState extends ChangeNotifier {
   /// Guess the name of the color based on the current RGB values.
   String guessColorName() {
     try {
-      final rgb1 = (red: _red, green: _green, blue: _blue);
-      final hsl1 = rgbToHsl(_red, _green, _blue);
+      final rgb1 = RgbComponents(_red, _green, _blue);
+      final hsl1 = rgbToHsl(rgb1);
 
       double minDistance = double.infinity;
       String closestColorName = '';
@@ -174,8 +198,8 @@ class ColorState extends ChangeNotifier {
         final g = ((hexColor >> 8) & 0xFF) / 255.0;
         final b = (hexColor & 0xFF) / 255.0;
 
-        final rgb2 = (red: r, green: g, blue: b);
-        final hsl2 = rgbToHsl(r, g, b);
+        final rgb2 = RgbComponents(r, g, b);
+        final hsl2 = rgbToHsl(rgb2);
 
         final distance = _rgbHslDistance(rgb1, hsl1, rgb2, hsl2);
         if (distance < minDistance) {
@@ -256,19 +280,19 @@ class ColorState extends ChangeNotifier {
       final scaledG = _green / v;
       final scaledB = _blue / v;
 
-      final (h, s, tempV) = rgbToHsv(scaledR, scaledG, scaledB);
-      _hue = h;
-      _saturation = s;
+      final hsv = rgbToHsv(RgbComponents(scaledR, scaledG, scaledB));
+      _hue = hsv.h;
+      _saturation = hsv.s;
     }
     _value = v;
   }
 
   /// Updates the RGB values based on the current HSV values.
   void _recalculateRGBFromHSV() {
-    final (r, g, b) = hsvToRgb(_hue, _saturation, _value);
-    _red = r;
-    _green = g;
-    _blue = b;
+    final rgb = hsvToRgb(HsvComponents(_hue, _saturation, _value));
+    _red = rgb.r;
+    _green = rgb.g;
+    _blue = rgb.b;
   }
 
   /// Validates that all color values are within their valid ranges.
@@ -317,54 +341,54 @@ class ColorState extends ChangeNotifier {
   }
 
   /// Converts Color to HSV.
-  static (double h, double s, double l) colorToHsv(Color color) {
+  static HsvComponents colorToHsv(Color color) {
     final red = color.red / 255;
     final green = color.green / 255;
     final blue = color.blue / 255;
 
-    return rgbToHsv(red, green, blue);
+    return rgbToHsv(RgbComponents(red, green, blue));
   }
 
   /// Converts Color to HSL.
-  static (double h, double s, double l) colorToHsl(Color color) {
+  static HslComponents colorToHsl(Color color) {
     final red = color.red / 255;
     final green = color.green / 255;
     final blue = color.blue / 255;
 
-    return rgbToHsl(red, green, blue);
+    return rgbToHsl(RgbComponents(red, green, blue));
   }
 
   /// Converts RGB values to HSV.
-  static (double h, double s, double v) rgbToHsv(double r, double g, double b) {
-    final min = math.min(r, math.min(g, b));
-    final max = math.max(r, math.max(g, b));
+  static HsvComponents rgbToHsv(RgbComponents rgb) {
+    final min = math.min(rgb.r, math.min(rgb.g, rgb.b));
+    final max = math.max(rgb.r, math.max(rgb.g, rgb.b));
     final delta = max - min;
 
     final v = max;
     final s = max == 0 ? 0.0 : delta / max;
 
     if (delta == 0) {
-      return (0, s, v);
+      return HsvComponents(0, s, v);
     }
 
     double h;
-    if (max == r) {
-      h = (g - b) / delta;
-    } else if (max == g) {
-      h = 2 + (b - r) / delta;
+    if (max == rgb.r) {
+      h = (rgb.g - rgb.b) / delta;
+    } else if (max == rgb.g) {
+      h = 2 + (rgb.b - rgb.r) / delta;
     } else {
-      h = 4 + (r - g) / delta;
+      h = 4 + (rgb.r - rgb.g) / delta;
     }
     h *= 60;
     if (h < 0) h += 360;
 
-    return (h, s, v);
+    return HsvComponents(h, s, v);
   }
 
   /// Converts RGB values to HSL.
-  static (double h, double s, double l) rgbToHsl(double r, double g, double b) {
-    final max = math.max(r, math.max(g, b));
-    final min = math.min(r, math.min(g, b));
+  static HslComponents rgbToHsl(RgbComponents rgb) {
+    final max = math.max(rgb.r, math.max(rgb.g, rgb.b));
+    final min = math.min(rgb.r, math.min(rgb.g, rgb.b));
     final delta = max - min;
 
     // Calculate lightness
@@ -378,76 +402,80 @@ class ColorState extends ChangeNotifier {
     if (delta == 0) {
       h = 0.0; // achromatic (gray)
     } else {
-      if (max == r) {
-        h = ((g - b) / delta) % 6;
-      } else if (max == g) {
-        h = (b - r) / delta + 2.0;
+      if (max == rgb.r) {
+        h = ((rgb.g - rgb.b) / delta) % 6;
+      } else if (max == rgb.g) {
+        h = (rgb.b - rgb.r) / delta + 2.0;
       } else {
         // max == b
-        h = (r - g) / delta + 4.0;
+        h = (rgb.r - rgb.g) / delta + 4.0;
       }
       h *= 60;
       if (h < 0) h += 360;
     }
 
-    return (h, s, l);
+    return HslComponents(h, s, l);
   }
 
   /// Converts HSV values to RGB.
-  static (double r, double g, double b) hsvToRgb(double h, double s, double v) {
-    if (s <= 0) return (v, v, v); // achromatic (grey)
+  static RgbComponents hsvToRgb(HsvComponents hsv) {
+    if (hsv.s <= 0) {
+      return RgbComponents(hsv.v, hsv.v, hsv.v); // achromatic (grey)
+    }
 
-    h = (h % 360) / 60; // Normalize hue
-    final i = h.floor();
-    final f = h - i.toDouble();
-    final p = v * (1.0 - s);
-    final q = v * (1.0 - s * f);
-    final t = v * (1.0 - s * (1.0 - f));
+    final angle = (hsv.h % 360) / 60; // Normalize hue
+    final i = angle.floor();
+    final f = angle - i.toDouble();
+    final p = hsv.v * (1.0 - hsv.s);
+    final q = hsv.v * (1.0 - hsv.s * f);
+    final t = hsv.v * (1.0 - hsv.s * (1.0 - f));
 
     switch (i % 6) {
       case 0: // 0 <= h < 60
-        return (v, t, p);
+        return RgbComponents(hsv.v, t, p);
       case 1:
-        return (q, v, p);
+        return RgbComponents(q, hsv.v, p);
       case 2:
-        return (p, v, t);
+        return RgbComponents(p, hsv.v, t);
       case 3:
-        return (p, q, v);
+        return RgbComponents(p, q, hsv.v);
       case 4:
-        return (t, p, v);
+        return RgbComponents(t, p, hsv.v);
       default:
-        return (v, p, q);
+        return RgbComponents(hsv.v, p, q);
     }
   }
 
   /// Converts HSL values to RGB.
-  static (double r, double g, double b) hslToRgb(double h, double s, double l) {
-    if (s == 0) return (l, l, l); // achromatic (grey)
+  static RgbComponents hslToRgb(HslComponents hsl) {
+    if (hsl.s == 0) {
+      return RgbComponents(hsl.l, hsl.l, hsl.l); // achromatic (grey)
+    }
 
-    final q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
-    final p = 2.0 * l - q;
-    final r = _hueToRgb(p, q, h + 1.0 / 3.0);
-    final g = _hueToRgb(p, q, h);
-    final b = _hueToRgb(p, q, h - 1.0 / 3.0);
+    final q =
+        hsl.l < 0.5 ? hsl.l * (1.0 + hsl.s) : hsl.l + hsl.s - hsl.l * hsl.s;
+    final p = 2.0 * hsl.l - q;
+    final r = _hueToRgb(p, q, hsl.h + 1.0 / 3.0);
+    final g = _hueToRgb(p, q, hsl.h);
+    final b = _hueToRgb(p, q, hsl.h - 1.0 / 3.0);
 
-    return (r, g, b);
+    return RgbComponents(r, g, b);
   }
 
   /// Converts HSV values to HSL.
-  static (double h, double s, double l) hsvToHsl(double h, double s, double v) {
-    final hslH = h;
-    final hslL = v - v * s / 2.0;
-    final hslS =
-        (hslL == 0 || hslL == 1) ? 0.0 : (v - hslL) / math.min(hslL, 1 - hslL);
-    return (hslH, hslS, hslL);
+  static HslComponents hsvToHsl(HsvComponents hsv) {
+    final h = hsv.h;
+    final l = hsv.v - hsv.v * hsv.s / 2.0;
+    final s = (l == 0 || l == 1) ? 0.0 : (hsv.v - l) / math.min(l, 1 - l);
+    return HslComponents(h, s, l);
   }
 
   /// Converts HSL values to HSV.
-  static (double h, double s, double v) hslToHsv(double h, double s, double l) {
-    final hsvH = h;
-    final hsvV = l + s * math.min(l, 1 - l);
-    final hsvS = hsvV == 0 ? 0.0 : 2 * (1 - l / hsvV);
-    return (hsvH, hsvS, hsvV);
+  static HsvComponents hslToHsv(HslComponents hsl) {
+    final h = hsl.h;
+    final v = hsl.l + hsl.s * math.min(hsl.l, 1 - hsl.l);
+    final s = v == 0 ? 0.0 : 2 * (1 - hsl.l / v);
+    return HsvComponents(h, s, v);
   }
 
   /// Helper method for HSL to RGB conversion.
@@ -473,13 +501,12 @@ class ColorState extends ChangeNotifier {
   static double colorDistance(Color from, Color to) {
     // Normalize RGB values to range 0-1
     final fromRgb =
-        (red: from.red / 255, green: from.green / 255, blue: from.blue / 255);
-    final toRgb =
-        (red: to.red / 255, green: to.green / 255, blue: to.blue / 255);
+        RgbComponents(from.red / 255, from.green / 255, from.blue / 255);
+    final toRgb = RgbComponents(to.red / 255, to.green / 255, to.blue / 255);
 
     // Convert RGB to HSL
-    final fromHsl = rgbToHsl(fromRgb.red, fromRgb.green, fromRgb.blue);
-    final toHsl = rgbToHsl(toRgb.red, toRgb.green, toRgb.blue);
+    final fromHsl = rgbToHsl(fromRgb);
+    final toHsl = rgbToHsl(toRgb);
 
     // Calculate distance using _distanceBetween
     return _rgbHslDistance(fromRgb, fromHsl, toRgb, toHsl);
@@ -488,33 +515,63 @@ class ColorState extends ChangeNotifier {
   /// Get distance between two ColorState objects considering both RGB and HSL spaces
   static double colorStateDistance(ColorState from, ColorState to) {
     // Extract RGB values from ColorState objects
-    final fromRgb = (red: from.red, green: from.green, blue: from.blue);
-    final toRgb = (red: to.red, green: to.green, blue: to.blue);
+    final fromRgb = RgbComponents(from.red, from.green, from.blue);
+    final toRgb = RgbComponents(to.red, to.green, to.blue);
 
     // Extract HSL values from ColorState objects
-    final fromHsl = rgbToHsl(from.red, from.green, from.blue);
-    final toHsl = rgbToHsl(to.red, to.green, to.blue);
+    final fromHsl = rgbToHsl(fromRgb);
+    final toHsl = rgbToHsl(toRgb);
 
     // Calculate distance using _distanceBetween method
     return _rgbHslDistance(fromRgb, fromHsl, toRgb, toHsl);
   }
 
   /// Distance calculation between two colors in RGB and HSL spaces.
-  static double _rgbHslDistance(
-      ({double red, double green, double blue}) rgb1,
-      (double h, double s, double l) hsl1,
-      ({double red, double green, double blue}) rgb2,
-      (double h, double s, double l) hsl2) {
+  static double _rgbHslDistance(RgbComponents rgb1, HslComponents hsl1,
+      RgbComponents rgb2, HslComponents hsl2) {
+    final (r1, g1, b1) = (rgb1.r, rgb1.g, rgb1.b);
+    final (h1, s1, l1) = (hsl1.h, hsl1.s, hsl1.l);
+    final (r2, g2, b2) = (rgb2.r, rgb2.g, rgb2.b);
+    final (h2, s2, l2) = (hsl2.h, hsl2.s, hsl2.l);
+
     // RGB distance = (R1 - R2)^2 + (G1 - G2)^2 + (B1 - B2)^2
-    final rgbDiff = math.pow((rgb1.red - rgb2.red) * 255, 2) +
-        math.pow((rgb1.green - rgb2.green) * 255, 2) +
-        math.pow((rgb1.blue - rgb2.blue) * 255, 2);
+    final rgbDiff = math.pow((r1 - r2) * 255, 2) +
+        math.pow((g1 - g2) * 255, 2) +
+        math.pow((b1 - b2) * 255, 2);
 
     // HSL distance = ((H1 - H2)/360)^2 + (S1 - S2)^2 + (L1 - L2)^2
-    final hslDiff = math.pow((hsl1.$1 - hsl2.$1) / 360, 2) +
-        math.pow(hsl1.$2 - hsl2.$2, 2) +
-        math.pow(hsl1.$3 - hsl2.$3, 2);
+    final hslDiff = math.pow((h1 - h2) / 360, 2) +
+        math.pow(s1 - s2, 2) +
+        math.pow(l1 - l2, 2);
 
     return rgbDiff + (hslDiff * 2);
+  }
+
+  /// Calculates the relative luminance of a color, representing its perceived brightness
+  /// to the human eye.
+  ///
+  /// The human eye has different sensitivities to different colors. For example,
+  /// blue (0, 0, 255) appears much darker than green (0, 255, 0) even though they
+  /// have the same numeric intensity.
+  ///
+  /// Returns a value between 0 (darkest) and 1 (brightest).
+  static double relativeLuminance(Color color) {
+    final r = _standardToLinear(color.red / 255);
+    final g = _standardToLinear(color.green / 255);
+    final b = _standardToLinear(color.blue / 255);
+    return (r * 0.2126 + g * 0.7152 + b * 0.0722);
+  }
+
+  /// Converts a standard RGB color component to linear RGB color space.
+  ///
+  /// References:
+  /// - sRGB: https://en.wikipedia.org/wiki/SRGB
+  /// - WCAG 2.0: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+  static double _standardToLinear(double c) {
+    // https://en.wikipedia.org/wiki/SRGB
+    // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+    return c <= 0.03928
+        ? c / 12.92
+        : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
   }
 }
