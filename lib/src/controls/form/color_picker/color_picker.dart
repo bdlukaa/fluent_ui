@@ -26,30 +26,39 @@ enum ColorMode {
 }
 
 /// Color picker spacing constants
-class ColorPickerSpacing {
+enum _ColorPickerSpacing {
   /// Small spacing between widgets
-  static const double small = 12.0;
+  small(12.0),
 
   /// Large spacing between widgets
-  static const double large = 24.0;
+  large(24.0);
+
+  final double size;
+
+  const _ColorPickerSpacing(this.size);
 }
 
 /// Color picker component sizing constants
-class ColorPickerSizes {
+enum _ColorPickerSizes {
   /// The size of the color spectrum widget
-  static const double spectrum = 336.0;
+  spectrum(256.0),
 
   /// The width of the color preview box
-  static const double preview = 44.0;
+  preview(44.0),
 
   /// The height of the sliders
-  static const double slider = 12.0;
+  slider(12.0),
 
   /// The width of the input boxes
-  static const double inputBox = 120.0;
+  inputBox(120.0);
 
-  /// The maximum width of the color spectrum and preview box
-  static double maxWidth = spectrum + ColorPickerSpacing.small + preview; // 392
+  final double size;
+
+  const _ColorPickerSizes(this.size);
+
+  /// Define the computed maxWidth as a static constant
+  static double get maxWidth =>
+      spectrum.size + _ColorPickerSpacing.small.size + preview.size;
 }
 
 /// Color Picker
@@ -190,66 +199,65 @@ class ColorPicker extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('color', color));
-    properties.add(EnumProperty<Axis>('orientation', orientation));
-    properties.add(EnumProperty<ColorSpectrumShape>(
-        'colorSpectrumShape', colorSpectrumShape));
-    properties.add(FlagProperty(
-      'isColorPreviewVisible',
-      value: isColorPreviewVisible,
-      defaultValue: true,
-      ifFalse: 'color preview hidden',
-    ));
-    properties.add(FlagProperty(
-      'isColorSliderVisible',
-      value: isColorSliderVisible,
-      defaultValue: true,
-      ifFalse: 'color slider hidden',
-    ));
-    properties.add(FlagProperty(
-      'isMoreButtonVisible',
-      value: isMoreButtonVisible,
-      defaultValue: true,
-      ifFalse: 'more button hidden',
-    ));
-    properties.add(FlagProperty(
-      'isHexInputVisible',
-      value: isHexInputVisible,
-      defaultValue: true,
-      ifFalse: 'hex input hidden',
-    ));
-    properties.add(FlagProperty(
-      'isColorChannelTextInputVisible',
-      value: isColorChannelTextInputVisible,
-      defaultValue: true,
-      ifFalse: 'color channel text input hidden',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaEnabled',
-      value: isAlphaEnabled,
-      defaultValue: true,
-      ifFalse: 'alpha disabled',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaSliderVisible',
-      value: isAlphaSliderVisible,
-      defaultValue: true,
-      ifFalse: 'alpha slider hidden',
-    ));
-    properties.add(FlagProperty(
-      'isAlphaTextInputVisible',
-      value: isAlphaTextInputVisible,
-      defaultValue: true,
-      ifFalse: 'alpha text input hidden',
-    ));
-    properties.add(IntProperty('minHue', minHue, defaultValue: 0));
-    properties.add(IntProperty('maxHue', maxHue, defaultValue: 359));
     properties
-        .add(IntProperty('minSaturation', minSaturation, defaultValue: 0));
-    properties
-        .add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100));
-    properties.add(IntProperty('minValue', minValue, defaultValue: 0));
-    properties.add(IntProperty('maxValue', maxValue, defaultValue: 100));
+      ..add(ColorProperty('color', color))
+      ..add(EnumProperty<Axis>('orientation', orientation))
+      ..add(EnumProperty<ColorSpectrumShape>(
+          'colorSpectrumShape', colorSpectrumShape))
+      ..add(FlagProperty(
+        'isColorPreviewVisible',
+        value: isColorPreviewVisible,
+        defaultValue: true,
+        ifFalse: 'color preview hidden',
+      ))
+      ..add(FlagProperty(
+        'isColorSliderVisible',
+        value: isColorSliderVisible,
+        defaultValue: true,
+        ifFalse: 'color slider hidden',
+      ))
+      ..add(FlagProperty(
+        'isMoreButtonVisible',
+        value: isMoreButtonVisible,
+        defaultValue: true,
+        ifFalse: 'more button hidden',
+      ))
+      ..add(FlagProperty(
+        'isHexInputVisible',
+        value: isHexInputVisible,
+        defaultValue: true,
+        ifFalse: 'hex input hidden',
+      ))
+      ..add(FlagProperty(
+        'isColorChannelTextInputVisible',
+        value: isColorChannelTextInputVisible,
+        defaultValue: true,
+        ifFalse: 'color channel text input hidden',
+      ))
+      ..add(FlagProperty(
+        'isAlphaEnabled',
+        value: isAlphaEnabled,
+        defaultValue: true,
+        ifFalse: 'alpha disabled',
+      ))
+      ..add(FlagProperty(
+        'isAlphaSliderVisible',
+        value: isAlphaSliderVisible,
+        defaultValue: true,
+        ifFalse: 'alpha slider hidden',
+      ))
+      ..add(FlagProperty(
+        'isAlphaTextInputVisible',
+        value: isAlphaTextInputVisible,
+        defaultValue: true,
+        ifFalse: 'alpha text input hidden',
+      ))
+      ..add(IntProperty('minHue', minHue, defaultValue: 0))
+      ..add(IntProperty('maxHue', maxHue, defaultValue: 359))
+      ..add(IntProperty('minSaturation', minSaturation, defaultValue: 0))
+      ..add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100))
+      ..add(IntProperty('minValue', minValue, defaultValue: 0))
+      ..add(IntProperty('maxValue', maxValue, defaultValue: 100));
   }
 }
 
@@ -301,45 +309,47 @@ class _ColorPickerState extends State<ColorPicker> {
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
 
     // Build the color picker layout based on orientation
-    return widget.orientation == Axis.vertical
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSpectrumAndPreview(),
-              if (widget.isColorSliderVisible ||
-                  (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-                const SizedBox(height: ColorPickerSpacing.large),
-                _buildSliders(),
-              ],
-              if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
-                const SizedBox(height: ColorPickerSpacing.large),
-                _buildMoreButton(),
-              ],
-              if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
-                if (hasVisibleInputs) ...[
-                  const SizedBox(height: ColorPickerSpacing.large),
-                  _buildInputs(),
-                ],
-              ],
+    if (widget.orientation == Axis.vertical) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSpectrumAndPreview(),
+          if (widget.isColorSliderVisible ||
+              (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
+            SizedBox(height: _ColorPickerSpacing.large.size),
+            _buildSliders(),
+          ],
+          if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
+            SizedBox(height: _ColorPickerSpacing.large.size),
+            _buildMoreButton(),
+          ],
+          if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
+            if (hasVisibleInputs) ...[
+              SizedBox(height: _ColorPickerSpacing.large.size),
+              _buildInputs(),
             ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSpectrumAndPreview(),
-              if (widget.isColorSliderVisible ||
-                  (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
-                const SizedBox(width: ColorPickerSpacing.large),
-                _buildSliders(),
-              ],
-              if (hasVisibleInputs) ...[
-                const SizedBox(width: ColorPickerSpacing.large),
-                _buildInputs(),
-              ],
-            ],
-          );
+          ],
+        ],
+      );
+    } else {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSpectrumAndPreview(),
+          if (widget.isColorSliderVisible ||
+              (widget.isAlphaEnabled && widget.isAlphaSliderVisible)) ...[
+            SizedBox(width: _ColorPickerSpacing.large.size),
+            _buildSliders(),
+          ],
+          if (hasVisibleInputs) ...[
+            SizedBox(width: _ColorPickerSpacing.large.size),
+            _buildInputs(),
+          ],
+        ],
+      );
+    }
   }
 
   /// Initializes the text controllers and focus nodes.
@@ -390,12 +400,13 @@ class _ColorPickerState extends State<ColorPicker> {
   /// Builds the "More" button to expand the color picker inputs.
   Widget _buildMoreButton() {
     final moreButton = SizedBox(
-        width: ColorPickerSizes.inputBox,
+        width: _ColorPickerSizes.inputBox.size,
         child: Button(
           onPressed: () => setState(() => _isMoreExpanded = !_isMoreExpanded),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // TODO: Localize for 'Less' and 'More' later
               Text(_isMoreExpanded ? 'Less' : 'More'),
               Icon(
                 _isMoreExpanded
@@ -408,7 +419,7 @@ class _ColorPickerState extends State<ColorPicker> {
         ));
 
     return SizedBox(
-      width: ColorPickerSizes.maxWidth,
+      width: _ColorPickerSizes.maxWidth,
       child: Align(
         alignment: Alignment.centerRight,
         child: moreButton,
@@ -519,14 +530,14 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: (orientation == Axis.horizontal) && !isColorPreviewVisible
-          ? ColorPickerSizes.spectrum
-          : ColorPickerSizes.maxWidth,
-      height: ColorPickerSizes.spectrum,
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.maxWidth,
+      height: _ColorPickerSizes.spectrum.size,
       child: isColorPreviewVisible
           ? Row(
               children: [
                 _buildSpectrum(),
-                const SizedBox(width: ColorPickerSpacing.small),
+                SizedBox(width: _ColorPickerSpacing.small.size),
                 _buildPreviewBox(context),
               ],
             )
@@ -536,8 +547,8 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
 
   Widget _buildSpectrum() {
     return SizedBox(
-      width: ColorPickerSizes.spectrum,
-      height: ColorPickerSizes.spectrum,
+      width: _ColorPickerSizes.spectrum.size,
+      height: _ColorPickerSizes.spectrum.size,
       child: colorSpectrumShape == ColorSpectrumShape.ring
           ? ColorRingSpectrum(
               colorState: colorState,
@@ -559,38 +570,50 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
   }
 
   Widget _buildPreviewBox(BuildContext context) {
-    const double width = ColorPickerSizes.preview;
-    const double height = ColorPickerSizes.spectrum;
+    double width = _ColorPickerSizes.preview.size;
+    double height = _ColorPickerSizes.spectrum.size;
     const double borderRadius = 4.0;
+    const double borderWidth = 2.0;
 
     final theme = FluentTheme.of(context);
     final color = colorState.toColor();
 
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: theme.resources.dividerStrokeColorDefault,
-        ),
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius - 1),
-        child: Stack(
-          children: [
-            Positioned.fill(
+      child: Stack(
+        children: [
+          // Base checkerboard pattern
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
               child: CustomPaint(
-                painter: CheckerboardPainter(),
+                painter: CheckerboardPainter(
+                  theme: theme,
+                ),
               ),
             ),
-            Positioned.fill(
+          ),
+          // Color overlay
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
               child: Container(
                 color: color,
               ),
             ),
-          ],
-        ),
+          ),
+          // Border on top
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: theme.resources.dividerStrokeColorDefault,
+                width: borderWidth,
+              ),
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -636,20 +659,21 @@ class _ColorSliders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final thumbColor = FluentTheme.of(context).resources.focusStrokeColorOuter;
+    final theme = FluentTheme.of(context);
+
     // Determine if the sliders should be displayed horizontally or vertically
     final bool isVertical = orientation != Axis.vertical;
 
     final sliders = [
-      if (isColorSliderVisible) _buildValueSlider(thumbColor, isVertical),
+      if (isColorSliderVisible) _buildValueSlider(theme, isVertical),
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
         orientation == Axis.vertical
-            ? const SizedBox(height: ColorPickerSpacing.large)
-            : const SizedBox(
-                width: ColorPickerSpacing.large,
+            ? SizedBox(height: _ColorPickerSpacing.large.size)
+            : SizedBox(
+                width: _ColorPickerSpacing.large.size,
               ),
       if (isAlphaSliderVisible && isAlphaEnabled)
-        _buildAlphaSlider(thumbColor, isVertical),
+        _buildAlphaSlider(theme, isVertical),
     ];
 
     return orientation == Axis.horizontal
@@ -664,14 +688,19 @@ class _ColorSliders extends StatelessWidget {
   }
 
   /// Builds the value slider for the color picker.
-  Widget _buildValueSlider(Color thumbColor, bool isVertical) {
+  Widget _buildValueSlider(FluentThemeData theme, bool isVertical) {
+    final thumbColor = theme.resources.focusStrokeColorOuter;
     final colorName = colorState.guessColorName();
     final valueText =
         '${(colorState.value * 100).round()}% ${colorName.isNotEmpty ? "($colorName)" : ""}';
 
     return SizedBox(
-      width: isVertical ? ColorPickerSizes.slider : ColorPickerSizes.maxWidth,
-      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
+      width: isVertical
+          ? _ColorPickerSizes.slider.size
+          : _ColorPickerSizes.maxWidth,
+      height: isVertical
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.slider.size,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
@@ -714,22 +743,26 @@ class _ColorSliders extends StatelessWidget {
   }
 
   /// Builds the alpha slider for the color picker.
-  Widget _buildAlphaSlider(Color thumbColor, bool isVertical) {
-    final opacityText = '${(colorState.alpha * 100).round()}% opacity';
+  Widget _buildAlphaSlider(FluentThemeData theme, bool isVertical) {
+    final thumbColor = theme.resources.focusStrokeColorOuter;
+    final opacityText =
+        '${(colorState.alpha * 100).round()}% opacity'; // TODO: Localize
 
     return SizedBox(
       width: isVertical
-          ? ColorPickerSizes.slider
-          : ColorPickerSizes.spectrum +
-              ColorPickerSpacing.small +
-              ColorPickerSizes.preview,
-      height: isVertical ? ColorPickerSizes.spectrum : ColorPickerSizes.slider,
+          ? _ColorPickerSizes.slider.size
+          : _ColorPickerSizes.spectrum.size +
+              _ColorPickerSpacing.small.size +
+              _ColorPickerSizes.preview.size,
+      height: isVertical
+          ? _ColorPickerSizes.spectrum.size
+          : _ColorPickerSizes.slider.size,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Stack(
           children: [
             Positioned.fill(
-              child: CustomPaint(painter: CheckerboardPainter()),
+              child: CustomPaint(painter: CheckerboardPainter(theme: theme)),
             ),
             Container(
               decoration: BoxDecoration(
@@ -871,11 +904,11 @@ class _ColorInputs extends StatelessWidget {
 
         return orientation == Axis.vertical
             ? SizedBox(
-                width: ColorPickerSizes.maxWidth,
+                width: _ColorPickerSizes.maxWidth,
                 child: inputsContent,
               )
             : SizedBox(
-                height: ColorPickerSizes.spectrum,
+                height: _ColorPickerSizes.spectrum.size,
                 width: 200, // arbitrary width, but more than enough
                 child: inputsContent,
               );
@@ -900,12 +933,13 @@ class _ColorInputs extends StatelessWidget {
   /// Builds the color mode selector and hex input.
   Widget _buildColorModeAndHexInput(ColorMode colorMode) {
     final modeSelector = SizedBox(
-      width: ColorPickerSizes.inputBox,
+      width: _ColorPickerSizes.inputBox.size,
       child: ComboBox<ColorMode>(
         value: colorMode,
         items: colorModes.entries
             .map((e) => ComboBoxItem(value: e.value, child: Text(e.key)))
             .toList(),
+        isExpanded: true,
         onChanged: (value) {
           if (value != null) _colorModeNotifier.value = value;
         },
@@ -913,44 +947,46 @@ class _ColorInputs extends StatelessWidget {
     );
 
     final hexInput = SizedBox(
-        width: ColorPickerSizes.inputBox,
+        width: _ColorPickerSizes.inputBox.size,
         child: TextBox(
           controller: hexController,
           placeholder: isAlphaEnabled ? '#AARRGGBB' : '#RRGGBB',
           onSubmitted: _updateHexColor,
         ));
 
-    return orientation == Axis.vertical
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (isColorChannelTextInputVisible) ...[
-                modeSelector,
-              ],
-              if (isHexInputVisible) ...[
-                hexInput,
-              ],
-            ],
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isHexInputVisible) ...[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: hexInput,
-                ),
-                const SizedBox(height: ColorPickerSpacing.small),
-              ],
-              if (isColorChannelTextInputVisible) ...[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: modeSelector,
-                ),
-              ],
-            ],
-          );
+    if (orientation == Axis.vertical) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (isColorChannelTextInputVisible) ...[
+            modeSelector,
+          ],
+          if (isHexInputVisible) ...[
+            hexInput,
+          ],
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isHexInputVisible) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: hexInput,
+            ),
+            SizedBox(height: _ColorPickerSpacing.small.size),
+          ],
+          if (isColorChannelTextInputVisible) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: modeSelector,
+            ),
+          ],
+        ],
+      );
+    }
   }
 
   /// Builds the RGB input fields.
@@ -1068,12 +1104,12 @@ class _ColorInputs extends StatelessWidget {
   }) {
     // TODO: initial format issue of NumberBox not being applied.
     return Column(children: [
-      const SizedBox(height: ColorPickerSpacing.small),
+      SizedBox(height: _ColorPickerSpacing.small.size),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            width: ColorPickerSizes.inputBox,
+            width: _ColorPickerSizes.inputBox.size,
             child: NumberBox<double>(
               value: value,
               min: min,

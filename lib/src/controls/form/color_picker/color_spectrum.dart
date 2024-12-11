@@ -714,41 +714,34 @@ class _BoxSpectrumPainter extends CustomPainter {
 ///
 /// This painter is used to represent transparency in the [ColorPicker]'s alpha slider.
 class CheckerboardPainter extends CustomPainter {
+  /// The theme data for styling
+  final FluentThemeData theme;
+
+  const CheckerboardPainter({
+    required this.theme,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
-    const squareSize = 5;
+    const squareSize = 4; // GCF of Slider width(12) and Preview width(44)
     final paint = Paint();
     final width = size.width.toInt();
     final height = size.height.toInt();
 
-    for (int i = 0; i < width; i += (squareSize * 2)) {
-      for (int j = 0; j < height; j += (squareSize * 2)) {
-        // Draw dark squares
-        paint.color = const Color(0xFFD3D3D3); // Light gray
+    for (int i = 0; i < width; i += squareSize) {
+      for (int j = 0; j < height; j += squareSize) {
+        // Determine if this position should be a dark square
+        final isDarkSquare = (i ~/ squareSize + j ~/ squareSize) % 2 != 0;
+
+        paint.color = isDarkSquare
+            ? theme.brightness.isDark
+                ? const Color(0x20D8D8D8)
+                : const Color(0x20393939)
+            : Colors.transparent;
+
         canvas.drawRect(
           Rect.fromLTWH(i.toDouble(), j.toDouble(), squareSize.toDouble(),
               squareSize.toDouble()),
-          paint,
-        );
-        canvas.drawRect(
-          Rect.fromLTWH(
-              (i + squareSize).toDouble(),
-              (j + squareSize).toDouble(),
-              squareSize.toDouble(),
-              squareSize.toDouble()),
-          paint,
-        );
-
-        // Draw light squares
-        paint.color = Colors.white;
-        canvas.drawRect(
-          Rect.fromLTWH((i + squareSize).toDouble(), j.toDouble(),
-              squareSize.toDouble(), squareSize.toDouble()),
-          paint,
-        );
-        canvas.drawRect(
-          Rect.fromLTWH(i.toDouble(), (j + squareSize).toDouble(),
-              squareSize.toDouble(), squareSize.toDouble()),
           paint,
         );
       }
