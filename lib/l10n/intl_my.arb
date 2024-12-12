@@ -28,5 +28,14 @@
   "minute": "မိနစ်",
   "month": "လ",
   "day": "ရက်",
-  "year": "နှစ်"
+  "year": "နှစ်",
+  "redLabel": "အနီ",
+  "greenLabel": "အစိမ်း",
+  "blueLabel": "အပြာ",
+  "opacityLabel": "အကြည်လင်မှု",
+  "hueLabel": "အရောင်",
+  "saturationLabel": "ပြည့်ဝမှု",
+  "valueLabel": "တန်ဖိုး",
+  "moreText": "ပို၍",
+  "lessText": "လျှော့၍"
 }

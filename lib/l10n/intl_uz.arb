@@ -28,5 +28,14 @@
   "minute": "daqiqa",
   "month": "oy",
   "day": "kun",
-  "year": "yil"
+  "year": "yil",
+  "redLabel": "Qizil",
+  "greenLabel": "Yashil",
+  "blueLabel": "Ko'k",
+  "opacityLabel": "Shaffoflik",
+  "hueLabel": "Rang",
+  "saturationLabel": "To'yinganlik",
+  "valueLabel": "Qiymat",
+  "moreText": "Ko'proq",
+  "lessText": "Kamroq"
 }
