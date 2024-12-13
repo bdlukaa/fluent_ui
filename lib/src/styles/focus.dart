@@ -162,7 +162,7 @@ class FocusThemeData with Diagnosticable {
       secondaryBorder: BorderSide(
         color: theme.resources.focusStrokeColorInner,
       ),
-      glowColor: theme.accentColor.withOpacity(0.15),
+      glowColor: theme.accentColor.withValues(alpha: 0.15),
       glowFactor: 0.0,
       renderOutside: true,
     );

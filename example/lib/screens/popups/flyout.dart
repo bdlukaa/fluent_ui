@@ -531,7 +531,7 @@ return GestureDetector(
     );
 
     contextController.showFlyout(
-      barrierColor: Colors.black.withOpacity(0.1),
+      barrierColor: Colors.black.withValues(alpha: 0.1),
       position: position,
       builder: (context) {
         return FlyoutContent(
@@ -591,7 +591,7 @@ return GestureDetector(
 
               void showFlyout(Offset position) {
                 contextController.showFlyout(
-                  barrierColor: Colors.black.withOpacity(0.1),
+                  barrierColor: Colors.black.withValues(alpha: 0.1),
                   position: position,
                   barrierRecognizer: TapGestureRecognizer()
                     ..onTap = () {

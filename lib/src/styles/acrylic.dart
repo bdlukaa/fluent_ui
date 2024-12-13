@@ -154,12 +154,12 @@ class _AcrylicState extends State<Acrylic> {
           shadows: [
             /* The shadows were taken from the official FluentUI design kit on Figma */
             BoxShadow(
-              color: shadowColor.withOpacity(0.13),
+              color: shadowColor.withValues(alpha: 0.13),
               blurRadius: 0.9 * widget.elevation,
               offset: Offset(0, 0.4 * widget.elevation),
             ),
             BoxShadow(
-              color: shadowColor.withOpacity(0.11),
+              color: shadowColor.withValues(alpha: 0.11),
               blurRadius: 0.225 * widget.elevation,
               offset: Offset(0, 0.085 * widget.elevation),
             ),
@@ -382,7 +382,7 @@ class _AcrylicGuts extends StatelessWidget {
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: CustomPaint(
         painter: _AcrylicPainter(
-          tintColor: disabled ? tint.withOpacity(1.0) : tint,
+          tintColor: disabled ? tint.withValues(alpha: 1.0) : tint,
           luminosityColor: AcrylicHelper.getLuminosityColor(
             tint,
             disabled ? 1.0 : properties.luminosityAlpha,
@@ -422,9 +422,9 @@ class _AcrylicGuts extends StatelessWidget {
 }
 
 class _AcrylicPainter extends CustomPainter {
-  static final Color red = const Color(0xFFFF0000).withOpacity(0.12);
-  static final Color blue = const Color(0xFF00FF00).withOpacity(0.12);
-  static final Color green = const Color(0xFF0000FF).withOpacity(0.12);
+  static final Color red = const Color(0xFFFF0000).withValues(alpha: 0.12);
+  static final Color blue = const Color(0xFF00FF00).withValues(alpha: 0.12);
+  static final Color green = const Color(0xFF0000FF).withValues(alpha: 0.12);
 
   final Color luminosityColor;
   final Color tintColor;
@@ -443,7 +443,7 @@ class _AcrylicPainter extends CustomPainter {
       ..drawColor(green, BlendMode.saturation)
       ..drawColor(
         tintColor,
-        tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
+        tintColor.a == 1 ? BlendMode.srcIn : BlendMode.color,
       );
   }
 
@@ -459,18 +459,13 @@ class AcrylicHelper {
   static Color getEffectiveTintColor(Color color, double opacity) {
     // Update tintColor's alpha with the combined opacity value
     // If LuminosityOpacity was specified, we don't intervene into users parameters
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 
   static Color getLuminosityColor(Color tintColor, double? luminosityOpacity) {
     // If luminosity opacity is specified, just use the values as is
     if (luminosityOpacity != null) {
-      return Color.fromRGBO(
-        tintColor.red,
-        tintColor.green,
-        tintColor.blue,
-        luminosityOpacity.clamp(0.0, 1.0),
-      );
+      return tintColor.withValues(alpha: luminosityOpacity.clamp(0.0, 1.0));
     } else {
       // To create the Luminosity blend input color without luminosity opacity,
       // we're taking the TintColor input, converting to HSV, and clamping the V between these values
@@ -492,15 +487,11 @@ class AcrylicHelper {
       const luminosityOpacityRangeMax =
           maxLuminosityOpacity - minLuminosityOpacity;
       var mappedTintOpacity =
-          ((tintColor.alpha / 255.0) * luminosityOpacityRangeMax) +
+          ((tintColor.a / 255.0) * luminosityOpacityRangeMax) +
               minLuminosityOpacity;
 
-      // Finally, combine the luminosity opacity and the HsvV-clamped tint color
-      return Color.fromRGBO(
-        rgbLuminosityColor.red,
-        rgbLuminosityColor.green,
-        rgbLuminosityColor.blue,
-        math.min(mappedTintOpacity, 1.0),
+      return rgbLuminosityColor.withValues(
+        alpha: math.min(mappedTintOpacity, 1.0),
       );
     }
   }

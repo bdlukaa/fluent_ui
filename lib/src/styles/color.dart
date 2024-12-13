@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// A set of predefined colors used by Fluent UI widgets.
@@ -190,8 +192,8 @@ class ShadedColor extends ColorSwatch<int> {
   const ShadedColor(super.primary, super.swatch);
 
   @override
-  Color operator [](int index) {
-    return super[index]!;
+  Color operator [](int key) {
+    return super[key]!;
   }
 }
 
@@ -221,25 +223,28 @@ class AccentColor extends ColorSwatch<String> {
 
   /// Creates a new accent color.
   AccentColor(this.primary, this.swatch)
-      : super(swatch[primary]!.value, swatch);
+      : super(
+          swatch[primary]!.colorValue,
+          swatch,
+        );
 
   /// Creates a new accent color based on a swatch
   AccentColor.swatch(this.swatch)
       : primary = 'normal',
-        super(swatch['normal']!.value, swatch);
+        super(swatch['normal']!.colorValue, swatch);
 
   /// The darkest shade of the color.
-  Color get darkest => swatch['darkest'] ?? darker.withOpacity(0.7);
+  Color get darkest => swatch['darkest'] ?? darker.withValues(alpha: 0.7);
 
   /// The darker shade of the color.
   ///
   /// Usually used for shadows
-  Color get darker => swatch['darker'] ?? dark.withOpacity(0.8);
+  Color get darker => swatch['darker'] ?? dark.withValues(alpha: 0.8);
 
   /// The dark shade of the color.
   ///
   /// Usually used for the mouse press effect;
-  Color get dark => swatch['dark'] ?? normal.withOpacity(0.9);
+  Color get dark => swatch['dark'] ?? normal.withValues(alpha: 0.9);
 
   /// The default shade of the color.
   Color get normal => swatch['normal']!;
@@ -247,15 +252,15 @@ class AccentColor extends ColorSwatch<String> {
   /// The light shade of the color.
   ///
   /// Usually used for the mouse hover effect
-  Color get light => swatch['light'] ?? normal.withOpacity(0.9);
+  Color get light => swatch['light'] ?? normal.withValues(alpha: 0.9);
 
   /// The lighter shade of the color.
   ///
   /// Usually used for shadows
-  Color get lighter => swatch['lighter'] ?? light.withOpacity(0.8);
+  Color get lighter => swatch['lighter'] ?? light.withValues(alpha: 0.8);
 
   /// The lighest shade of the color
-  Color get lightest => swatch['lightest'] ?? lighter.withOpacity(0.7);
+  Color get lightest => swatch['lightest'] ?? lighter.withValues(alpha: 0.7);
 
   /// Lerp between two accent colors.
   static AccentColor lerp(AccentColor a, AccentColor b, double t) {
@@ -294,7 +299,7 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color secondaryBrushFor(Brightness brightness) {
-    return defaultBrushFor(brightness).withOpacity(0.9);
+    return defaultBrushFor(brightness).withValues(alpha: 0.9);
   }
 
   /// Get the tertiary brush for this accent color based on the brightness.
@@ -302,8 +307,20 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color tertiaryBrushFor(Brightness brightness) {
-    return defaultBrushFor(brightness).withOpacity(0.8);
+    return defaultBrushFor(brightness).withValues(alpha: 0.8);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AccentColor &&
+        other.primary == primary &&
+        mapEquals(other.swatch, swatch);
+  }
+
+  @override
+  int get hashCode => primary.hashCode ^ swatch.hashCode;
 }
 
 /// Extension methods to help dealing with colors.
@@ -360,10 +377,15 @@ extension ColorExtension on Color {
   Color lerpWith(Color color, double t) {
     return Color.lerp(this, color, t)!;
   }
-}
 
-class ColorConst extends Color {
-  const ColorConst.withOpacity(int value, double opacity)
-      : super(((((opacity * 0xff ~/ 1) & 0xff) << 24) | (0x00ffffff & value)) &
-            0xFFFFFFFF);
+  int get colorValue {
+    return _floatToInt8(a) << 24 |
+        _floatToInt8(r) << 16 |
+        _floatToInt8(g) << 8 |
+        _floatToInt8(b) << 0;
+  }
+
+  static int _floatToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
+  }
 }

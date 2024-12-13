@@ -414,7 +414,7 @@ class ContentDialogThemeData {
         // boxShadow: kElevationToShadow[1],
       ),
       actionsPadding: const EdgeInsets.all(20),
-      barrierColor: Colors.grey[200].withOpacity(0.8),
+      barrierColor: Colors.grey[200].withValues(alpha: 0.8),
       titleStyle: theme.typography.title,
       bodyStyle: theme.typography.body,
     );

@@ -392,7 +392,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           elevation: 4.0,
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
-            color: theme.menuColor.withOpacity(kMenuColorOpacity),
+            color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
             padding: const EdgeInsetsDirectional.only(
               top: 5.0,
               start: 5.0,

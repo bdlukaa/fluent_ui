@@ -441,7 +441,7 @@ class _FluentAppState extends State<FluentApp> {
           m.ThemeData(
             colorScheme: m.ColorScheme.fromSwatch(
               primarySwatch: m.MaterialColor(
-                themeData.accentColor.value,
+                themeData.accentColor.colorValue,
                 themeData.accentColor.swatch.map((key, color) {
                   colorValue -= 100;
                   return MapEntry(colorValue, color);

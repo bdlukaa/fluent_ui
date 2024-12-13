@@ -8,7 +8,7 @@ void main() {
   testWidgets(
     'ColorPicker - verifies initial state and preview visibility',
     (WidgetTester tester) async {
-      Color currentColor = Colors.blue;
+      Color currentColor = Colors.blue.normal;
 
       await tester.pumpWidget(
         StatefulBuilder(
@@ -32,7 +32,7 @@ void main() {
 
       // Check if initial color is preserved
       final initialColorState = currentColor;
-      expect(initialColorState, Colors.blue);
+      expect(initialColorState, Colors.blue.normal);
 
       // Find color preview container
       final preview = find.descendant(
@@ -47,8 +47,11 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
 
       // Verify the color value matches initial blue color
-      expect(currentColor.value, equals(Colors.blue.value),
-          reason: 'Color value should match initial blue color');
+      expect(
+        currentColor,
+        equals(Colors.blue.normal),
+        reason: 'Color value should match initial blue color',
+      );
     },
   );
 

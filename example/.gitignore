@@ -41,3 +41,8 @@ app.*.map.json
 
 /android/
 ios/
+
+# Flutter generated plugin files
+linux/flutter/generated_*
+macos/Flutter/GeneratedPluginRegistrant.*
+windows/flutter/generated_*

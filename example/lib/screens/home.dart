@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
                     shaderCallback: (rect) {
                       return LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.8),
+                          Colors.white.withValues(alpha: 0.8),
                           ...Colors.accentColors,
                         ],
                       ).createShader(rect);

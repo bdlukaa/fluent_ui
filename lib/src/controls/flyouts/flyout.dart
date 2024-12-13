@@ -82,7 +82,6 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.right:
         return isRtl ? FlyoutPlacementMode.left : this;
       case FlyoutPlacementMode.auto:
-      default:
         return this;
     }
   }
@@ -102,7 +101,6 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.right:
         return EdgeInsets.only(left: additionalOffset);
       case FlyoutPlacementMode.auto:
-      default:
         return EdgeInsets.all(additionalOffset);
     }
   }
@@ -140,9 +138,8 @@ enum FlyoutPlacementMode {
           maxHeight: rootSize.height._ensurePositive(),
         );
       case FlyoutPlacementMode.auto:
-      default:
-        throw Exception(
-          'Can not find the available space of auto mode',
+        throw UnsupportedError(
+          'It is not possible to find the available space of an auto mode',
         );
     }
   }
@@ -426,7 +423,6 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
           horizontalY,
         );
       case FlyoutPlacementMode.auto:
-      default:
         return targetOffset;
     }
   }
@@ -639,7 +635,7 @@ class FlyoutController with ChangeNotifier {
             assert(menus.length == keys.length);
 
             final barrier = ColoredBox(
-              color: barrierColor ?? Colors.black.withOpacity(0.3),
+              color: barrierColor ?? Colors.black.withValues(alpha: 0.3),
             );
 
             Widget box = Stack(children: [

@@ -40,7 +40,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
   @override
   Widget build(BuildContext context) {
     final menuColor =
-        FluentTheme.of(context).menuColor.withOpacity(kMenuColorOpacity);
+        FluentTheme.of(context).menuColor.withValues(alpha: kMenuColorOpacity);
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Acrylic')),

@@ -38,7 +38,7 @@ Decoration kPickerDecorationBuilder(
     color: ButtonThemeData.buttonColor(context, states),
     border: Border.all(
       width: 0.15,
-      color: theme.inactiveColor.withOpacity(0.2),
+      color: theme.inactiveColor.withValues(alpha: 0.2),
     ),
   );
 }

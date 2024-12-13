@@ -289,7 +289,7 @@ class PaneItem extends NavigationPaneItem {
               }
               return KeyedSubtree(key: itemKey, child: result);
             default:
-              throw '$mode is not a supported type';
+              throw UnsupportedError('$mode is not a supported type');
           }
         }
 
@@ -906,7 +906,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           controller: flyoutController,
           child: item,
         );
-      default:
+      case PaneDisplayMode.auto:
         return item;
     }
   }

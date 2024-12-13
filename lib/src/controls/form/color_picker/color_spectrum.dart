@@ -434,8 +434,8 @@ class _RingSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection
-          .ltr, // TODO: Update if color names support RTL languages in the future.
+      // TODO: Update if color names support RTL languages in the future.
+      textDirection: dart.TextDirection.ltr,
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
@@ -457,7 +457,7 @@ class _RingSpectrumPainter extends CustomPainter {
 
     // Draw background with shadow
     final shadow = BoxShadow(
-      color: Colors.black.withOpacity(0.1),
+      color: Colors.black.withValues(alpha: 0.1),
       blurRadius: 4,
       offset: const Offset(0, 2),
     );
@@ -654,8 +654,8 @@ class _BoxSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection
-          .ltr, // TODO: Update if color names support RTL languages in the future.
+      // TODO: Update if color names support RTL languages in the future.
+      textDirection: dart.TextDirection.ltr,
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
@@ -677,7 +677,7 @@ class _BoxSpectrumPainter extends CustomPainter {
 
     // Draw background with shadow
     final shadow = BoxShadow(
-      color: Colors.black.withOpacity(0.1),
+      color: Colors.black.withValues(alpha: 0.1),
       blurRadius: 4,
       offset: const Offset(0, 2),
     );
