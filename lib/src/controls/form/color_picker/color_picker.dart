@@ -725,44 +725,44 @@ class _ColorSliders extends StatelessWidget {
       height: isVertical
           ? _ColorPickerSizes.spectrum.size
           : _ColorPickerSizes.slider.size,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: CheckerboardPainter(theme: theme)),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: isVertical
-                      ? Alignment.bottomCenter
-                      : Alignment.centerLeft,
-                  end: isVertical ? Alignment.topCenter : Alignment.centerRight,
-                  colors: [
-                    colorState.toColor().withAlpha(0),
-                    colorState.toColor().withAlpha(255),
-                  ],
-                ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: CheckerboardPainter(theme: theme)),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              gradient: LinearGradient(
+                begin:
+                    isVertical ? Alignment.bottomCenter : Alignment.centerLeft,
+                end: isVertical ? Alignment.topCenter : Alignment.centerRight,
+                colors: [
+                  colorState.toColor().withAlpha(0),
+                  colorState.toColor().withAlpha(255),
+                ],
               ),
             ),
-            SliderTheme(
-              data: SliderThemeData(
-                activeColor: WidgetStatePropertyAll(thumbColor),
-                trackHeight: const WidgetStatePropertyAll(0.0),
-              ),
-              child: Slider(
-                label: opacityText,
-                vertical: isVertical,
-                value: colorState.alpha,
-                min: 0,
-                max: 1,
-                onChanged: (value) =>
-                    onColorChanged(colorState.copyWith(alpha: value)),
-              ),
+          ),
+          SliderTheme(
+            data: SliderThemeData(
+              activeColor: WidgetStatePropertyAll(thumbColor),
+              trackHeight: const WidgetStatePropertyAll(0.0),
+              thumbRadius: const WidgetStatePropertyAll(8.0),
+              thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
             ),
-          ],
-        ),
+            child: Slider(
+              label: opacityText,
+              vertical: isVertical,
+              value: colorState.alpha,
+              min: 0,
+              max: 1,
+              onChanged: (value) =>
+                  onColorChanged(colorState.copyWith(alpha: value)),
+            ),
+          ),
+        ],
       ),
     );
   }
