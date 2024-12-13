@@ -673,44 +673,40 @@ class _ColorSliders extends StatelessWidget {
       height: isVertical
           ? _ColorPickerSizes.spectrum.size
           : _ColorPickerSizes.slider.size,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: isVertical
-                      ? Alignment.bottomCenter
-                      : Alignment.centerLeft,
-                  end: isVertical ? Alignment.topCenter : Alignment.centerRight,
-                  colors: [
-                    const Color(0xFF000000),
-                    HSVColor.fromAHSV(1, math.max(0, colorState.hue),
-                            math.max(0, colorState.saturation), 1.0)
-                        .toColor(),
-                  ],
-                ),
-              ),
+      child: Stack(clipBehavior: Clip.none, children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: isVertical ? Alignment.bottomCenter : Alignment.centerLeft,
+              end: isVertical ? Alignment.topCenter : Alignment.centerRight,
+              colors: [
+                const Color(0xFF000000),
+                HSVColor.fromAHSV(1, math.max(0, colorState.hue),
+                        math.max(0, colorState.saturation), 1.0)
+                    .toColor(),
+              ],
             ),
-            SliderTheme(
-              data: SliderThemeData(
-                activeColor: WidgetStatePropertyAll(thumbColor),
-                trackHeight: const WidgetStatePropertyAll(0.0),
-              ),
-              child: Slider(
-                label: valueText,
-                vertical: isVertical,
-                value: colorState.value,
-                min: minValue / 100,
-                max: maxValue / 100,
-                onChanged: (value) =>
-                    onColorChanged(colorState.copyWith(value: value)),
-              ),
-            ),
-          ],
+            borderRadius: BorderRadius.circular(6),
+          ),
         ),
-      ),
+        SliderTheme(
+          data: SliderThemeData(
+            activeColor: WidgetStatePropertyAll(thumbColor),
+            trackHeight: const WidgetStatePropertyAll(0.0),
+            thumbRadius: const WidgetStatePropertyAll(8.0),
+            thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
+          ),
+          child: Slider(
+            label: valueText,
+            vertical: isVertical,
+            value: colorState.value,
+            min: minValue / 100,
+            max: maxValue / 100,
+            onChanged: (value) =>
+                onColorChanged(colorState.copyWith(value: value)),
+          ),
+        ),
+      ]),
     );
   }
 

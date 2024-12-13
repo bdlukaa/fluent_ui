@@ -289,11 +289,11 @@ class _SliderState extends State<Slider> {
           duration: theme.fastAnimationDuration,
           tween: Tween<double>(
             begin: 1.0,
-            end: states.isPressed || _sliding
-                ? 0.45
-                : states.isHovered
-                    ? 0.66
-                    : 0.5,
+            end: style.thumbBallInnerFactor?.resolve({
+                  ...states,
+                  if (_sliding) WidgetState.pressed,
+                }) ??
+                0.5,
           ),
           builder: (context, innerFactor, child) => m.SliderTheme(
             data: m.SliderThemeData(
@@ -630,6 +630,7 @@ class SliderThemeData with Diagnosticable {
   final Color? labelForegroundColor;
 
   final bool? useThumbBall;
+  final WidgetStateProperty<double?>? thumbBallInnerFactor;
 
   final WidgetStateProperty<Color?>? activeColor;
   final WidgetStateProperty<Color?>? inactiveColor;
@@ -646,6 +647,7 @@ class SliderThemeData with Diagnosticable {
     this.labelBackgroundColor,
     this.labelForegroundColor,
     this.useThumbBall,
+    this.thumbBallInnerFactor,
   });
 
   factory SliderThemeData.standard(FluentThemeData theme) {
@@ -665,6 +667,13 @@ class SliderThemeData with Diagnosticable {
       }),
       margin: EdgeInsets.zero,
       useThumbBall: true,
+      thumbBallInnerFactor: WidgetStateProperty.resolveWith((states) {
+        return states.isPressed
+            ? 0.45
+            : states.isHovered
+                ? 0.66
+                : 0.5;
+      }),
       labelBackgroundColor: theme.resources.controlSolidFillColorDefault,
       labelForegroundColor: theme.resources.textFillColorPrimary,
       trackHeight: const WidgetStatePropertyAll(3.75),
@@ -691,6 +700,8 @@ class SliderThemeData with Diagnosticable {
       labelForegroundColor:
           Color.lerp(a.labelForegroundColor, b.labelForegroundColor, t),
       useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
+      thumbBallInnerFactor: WidgetStateProperty.lerp<double?>(
+          a.thumbBallInnerFactor, b.thumbBallInnerFactor, t, lerpDouble),
     );
   }
 
@@ -705,6 +716,7 @@ class SliderThemeData with Diagnosticable {
       labelForegroundColor: style?.labelForegroundColor ?? labelForegroundColor,
       useThumbBall: style?.useThumbBall ?? useThumbBall,
       trackHeight: style?.trackHeight ?? trackHeight,
+      thumbBallInnerFactor: style?.thumbBallInnerFactor ?? thumbBallInnerFactor,
     );
   }
 
@@ -717,7 +729,9 @@ class SliderThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('activeColor', activeColor))
       ..add(DiagnosticsProperty('inactiveColor', inactiveColor))
       ..add(ColorProperty('labelBackgroundColor', labelBackgroundColor))
-      ..add(ColorProperty('labelForegroundColor', labelForegroundColor));
+      ..add(ColorProperty('labelForegroundColor', labelForegroundColor))
+      ..add(DiagnosticsProperty('useThumbBall', useThumbBall))
+      ..add(DiagnosticsProperty('thumbBallInnerFactor', thumbBallInnerFactor));
   }
 }
 
