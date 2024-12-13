@@ -84,8 +84,8 @@
         return ButtonState.forStates<Color>(
           states,
           disabled: Colors.grey,
-          hovered: Colors.white.withOpacity(0.8),
-          pressed: Colors.white.withOpacity(0.6),
+          hovered: Colors.white.withValues(alpha: 0.8),
+          pressed: Colors.white.withValues(alpha: 0.6),
         );
       }),
     ),
@@ -108,8 +108,8 @@
         return WidgetStateExtension.forStates<Color>(
           states,
           disabled: Colors.grey,
-          hovered: Colors.white.withOpacity(0.8),
-          pressed: Colors.white.withOpacity(0.6),
+          hovered: Colors.white.withValues(alpha: 0.8),
+          pressed: Colors.white.withValues(alpha: 0.6),
         );
       }),
     ),

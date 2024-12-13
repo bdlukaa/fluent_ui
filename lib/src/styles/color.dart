@@ -229,17 +229,17 @@ class AccentColor extends ColorSwatch<String> {
         super(swatch['normal']!.value, swatch);
 
   /// The darkest shade of the color.
-  Color get darkest => swatch['darkest'] ?? darker.withOpacity(0.7);
+  Color get darkest => swatch['darkest'] ?? darker.withValues(alpha: 0.7);
 
   /// The darker shade of the color.
   ///
   /// Usually used for shadows
-  Color get darker => swatch['darker'] ?? dark.withOpacity(0.8);
+  Color get darker => swatch['darker'] ?? dark.withValues(alpha: 0.8);
 
   /// The dark shade of the color.
   ///
   /// Usually used for the mouse press effect;
-  Color get dark => swatch['dark'] ?? normal.withOpacity(0.9);
+  Color get dark => swatch['dark'] ?? normal.withValues(alpha: 0.9);
 
   /// The default shade of the color.
   Color get normal => swatch['normal']!;
@@ -247,15 +247,15 @@ class AccentColor extends ColorSwatch<String> {
   /// The light shade of the color.
   ///
   /// Usually used for the mouse hover effect
-  Color get light => swatch['light'] ?? normal.withOpacity(0.9);
+  Color get light => swatch['light'] ?? normal.withValues(alpha: 0.9);
 
   /// The lighter shade of the color.
   ///
   /// Usually used for shadows
-  Color get lighter => swatch['lighter'] ?? light.withOpacity(0.8);
+  Color get lighter => swatch['lighter'] ?? light.withValues(alpha: 0.8);
 
   /// The lighest shade of the color
-  Color get lightest => swatch['lightest'] ?? lighter.withOpacity(0.7);
+  Color get lightest => swatch['lightest'] ?? lighter.withValues(alpha: 0.7);
 
   /// Lerp between two accent colors.
   static AccentColor lerp(AccentColor a, AccentColor b, double t) {
@@ -294,7 +294,7 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color secondaryBrushFor(Brightness brightness) {
-    return defaultBrushFor(brightness).withOpacity(0.9);
+    return defaultBrushFor(brightness).withValues(alpha: 0.9);
   }
 
   /// Get the tertiary brush for this accent color based on the brightness.
@@ -302,7 +302,7 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color tertiaryBrushFor(Brightness brightness) {
-    return defaultBrushFor(brightness).withOpacity(0.8);
+    return defaultBrushFor(brightness).withValues(alpha: 0.8);
   }
 }
 
@@ -363,7 +363,7 @@ extension ColorExtension on Color {
 }
 
 class ColorConst extends Color {
-  const ColorConst.withOpacity(int value, double opacity)
+  const ColorConst.withValues(alpha: int value, double opacity)
       : super(((((opacity * 0xff ~/ 1) & 0xff) << 24) | (0x00ffffff & value)) &
             0xFFFFFFFF);
 }

@@ -60,7 +60,7 @@ extension FluentLocalizationsExtension on FluentLocalizations {
     }
 
     if (!colorKey.startsWith('color')) {
-      colorKey = 'color' + colorKey;
+      colorKey = 'color$colorKey';
     }
 
     return switch (colorKey) {

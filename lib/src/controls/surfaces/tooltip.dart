@@ -717,7 +717,7 @@ class TooltipThemeData with Diagnosticable {
         final radius = BorderRadius.circular(4.0);
         final shadow = [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             offset: const Offset(1, 1),
             blurRadius: 10.0,
           ),

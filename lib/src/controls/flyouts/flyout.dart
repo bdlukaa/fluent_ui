@@ -639,7 +639,7 @@ class FlyoutController with ChangeNotifier {
             assert(menus.length == keys.length);
 
             final barrier = ColoredBox(
-              color: barrierColor ?? Colors.black.withOpacity(0.3),
+              color: barrierColor ?? Colors.black.withValues(alpha: 0.3),
             );
 
             Widget box = Stack(children: [

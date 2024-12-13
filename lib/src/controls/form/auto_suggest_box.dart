@@ -899,13 +899,13 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
             color: theme.resources.cardBackgroundFillColorDefault,
             shadows: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 offset: const Offset(-1, 1),
                 blurRadius: 2.0,
                 spreadRadius: 3.0,
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 offset: const Offset(1, 1),
                 blurRadius: 2.0,
                 spreadRadius: 3.0,

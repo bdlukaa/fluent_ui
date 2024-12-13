@@ -521,7 +521,7 @@ class SliderThumbShape extends m.SliderComponentShape {
         center - const Offset(0, 6),
         center + const Offset(0, 6),
         Paint()
-          ..color = color.withOpacity(activationAnimation.value)
+          ..color = color.withValues(alpha: activationAnimation.value)
           ..style = PaintingStyle.stroke
           ..strokeJoin = StrokeJoin.round
           ..strokeCap = StrokeCap.round
@@ -904,7 +904,7 @@ class _RectangularSliderValueIndicatorPathPainter {
 
     final trianglePath = Path()..close();
     final fillPaint = Paint()
-      ..color = backgroundPaintColor.withOpacity(opacity);
+      ..color = backgroundPaintColor.withValues(alpha: opacity);
     final upperRRect = RRect.fromRectAndRadius(
       upperRect,
       const Radius.circular(_upperRectRadius),
@@ -935,7 +935,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     if (vertical) canvas.rotate((ltr ? 1 : -1) * math.pi / 2);
     if (strokePaintColor != null) {
       final strokePaint = Paint()
-        ..color = strokePaintColor.withOpacity(opacity)
+        ..color = strokePaintColor.withValues(alpha: opacity)
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
       canvas.drawPath(trianglePath, strokePaint);
@@ -956,7 +956,7 @@ class _RectangularSliderValueIndicatorPathPainter {
       ..text = TextSpan(
         text: span.text,
         style: span.style
-            ?.copyWith(color: span.style?.color?.withOpacity(opacity)),
+            ?.copyWith(color: span.style?.color?.withValues(alpha: opacity)),
       )
       ..paint(canvas, labelOffset);
 

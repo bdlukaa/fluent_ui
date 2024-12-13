@@ -454,7 +454,7 @@ class _Icon extends StatelessWidget {
     final iconOpacity = iconTheme.opacity ?? 1.0;
     var iconColor = color ?? iconTheme.color!;
     if (iconOpacity != 1.0) {
-      iconColor = iconColor.withOpacity(iconColor.opacity * iconOpacity);
+      iconColor = iconColor.withValues(alpha: iconColor.opacity * iconOpacity);
     }
 
     Widget iconWidget = RichText(
