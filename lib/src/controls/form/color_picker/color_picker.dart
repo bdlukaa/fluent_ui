@@ -717,8 +717,8 @@ class _ColorSliders extends StatelessWidget {
   /// Builds the alpha slider for the color picker.
   Widget _buildAlphaSlider(FluentThemeData theme, bool isVertical) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
-    final opacityText =
-        '${(colorState.alpha * 100).round()}% opacity'; // TODO: Localize
+    // TODO: Localize
+    final opacityText = '${(colorState.alpha * 100).round()}% opacity';
 
     return SizedBox(
       width: isVertical
@@ -1074,7 +1074,6 @@ class _ColorInputs extends StatelessWidget {
     required double min,
     required double max,
   }) {
-    // TODO: initial format issue of NumberBox not being applied.
     return Column(children: [
       SizedBox(height: _ColorPickerSpacing.small.size),
       Row(

@@ -434,8 +434,8 @@ class _RingSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection
-          .ltr, // TODO: Update if color names support RTL languages in the future.
+      // TODO: Update if color names support RTL languages in the future.
+      textDirection: dart.TextDirection.ltr,
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
@@ -654,8 +654,8 @@ class _BoxSpectrumPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.left,
-      textDirection: dart.TextDirection
-          .ltr, // TODO: Update if color names support RTL languages in the future.
+      // TODO: Update if color names support RTL languages in the future.
+      textDirection: dart.TextDirection.ltr,
     )..layout();
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
