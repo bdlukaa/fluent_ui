@@ -511,6 +511,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     _entry = null;
   }
 
+  final _clearButtonKey = GlobalKey();
+  final _incrementButtonKey = GlobalKey();
+  final _decrementButtonKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -519,6 +523,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     final textFieldSuffix = <Widget>[
       if (widget.clearButton && _hasPrimaryFocus)
         IconButton(
+          key: _clearButtonKey,
           icon: const Icon(FluentIcons.clear),
           onPressed: _clearValue,
         ),
@@ -528,13 +533,16 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       case SpinButtonPlacementMode.inline:
         textFieldSuffix.addAll([
           IconButton(
+            key: _incrementButtonKey,
             icon: const Icon(FluentIcons.chevron_up),
             onPressed: widget.onChanged != null ? incrementSmall : null,
           ),
           IconButton(
+            key: _decrementButtonKey,
             icon: const Icon(FluentIcons.chevron_down),
             onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
+          const SizedBox(),
         ]);
         break;
       case SpinButtonPlacementMode.compact:
@@ -564,8 +572,13 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       controller: controller,
       keyboardType: widget.keyboardType,
       enabled: widget.onChanged != null,
-      suffix:
-          textFieldSuffix.isNotEmpty ? Row(children: textFieldSuffix) : null,
+      suffix: textFieldSuffix.isNotEmpty
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: textFieldSuffix,
+            )
+          : null,
       style: widget.style,
       textAlign: widget.textAlign ?? TextAlign.start,
       keyboardAppearance: widget.keyboardAppearance,
