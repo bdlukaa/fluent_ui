@@ -1,6 +1,5 @@
 ## [next]
 
-- feat: Add `ColorPicker` ([#1001](https://github.com/bdlukaa/fluent_ui/issues/1001)
 - fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
 - feat: Add `TabView.reservedStripWidth`, which adds a minimum empty area between the tabs and the tab view footer ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))]
 - fix: Correctly unfocus `NumberBox` when user taps outside ([#1135](https://github.com/bdlukaa/fluent_ui/issues/1135))
@@ -36,6 +35,8 @@
 - feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
 - feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
 - fix: `TimePicker` hour offset
+- feat: Add `ColorPicker` ([#1001](https://github.com/bdlukaa/fluent_ui/issues/1001))
+- fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153)) 
 
 ## 4.9.2
 

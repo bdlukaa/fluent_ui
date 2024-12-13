@@ -404,7 +404,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         return _formatter.format(value);
       };
     }
-    controller.text = widget.value?.toString() ?? '';
+
+    if (widget.value != null) _updateController(widget.value!);
   }
 
   @override
