@@ -557,7 +557,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             case NavigationIndicators.end:
               return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
-            default:
               return const StickyNavigationIndicator();
           }
         }(),
