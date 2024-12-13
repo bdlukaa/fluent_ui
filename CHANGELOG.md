@@ -38,6 +38,7 @@
 - feat: Add `ColorPicker` ([#1001](https://github.com/bdlukaa/fluent_ui/issues/1001))
 - fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153)) 
 - fix: `NumberBox` incrementing/decrementing when not focused ([#1124](https://github.com/bdlukaa/fluent_ui/issues/1124))
+- fix: `NumberBox` text is correctly when there are no visible actions ([#1150](https://github.com/bdlukaa/fluent_ui/issues/1150))
 
 ## 4.9.2
 

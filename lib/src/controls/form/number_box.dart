@@ -521,6 +521,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     assert(debugCheckHasOverlay(context));
 
     final textFieldSuffix = <Widget>[
+      // Ensure all modes have a suffix. This is necessary to ensure the text
+      // is aligned correctly when there are no suffix actions.
+      // See https://github.com/bdlukaa/fluent_ui/issues/1150
+      const SizedBox(),
       if (widget.clearButton && _hasPrimaryFocus)
         IconButton(
           key: _clearButtonKey,
