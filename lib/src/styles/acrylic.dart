@@ -443,7 +443,7 @@ class _AcrylicPainter extends CustomPainter {
       ..drawColor(green, BlendMode.saturation)
       ..drawColor(
         tintColor,
-        tintColor.opacity == 1 ? BlendMode.srcIn : BlendMode.color,
+        tintColor.a == 1 ? BlendMode.srcIn : BlendMode.color,
       );
   }
 
@@ -465,12 +465,7 @@ class AcrylicHelper {
   static Color getLuminosityColor(Color tintColor, double? luminosityOpacity) {
     // If luminosity opacity is specified, just use the values as is
     if (luminosityOpacity != null) {
-      return Color.fromRGBO(
-        tintColor.red,
-        tintColor.green,
-        tintColor.blue,
-        luminosityOpacity.clamp(0.0, 1.0),
-      );
+      return tintColor.withValues(alpha: luminosityOpacity.clamp(0.0, 1.0));
     } else {
       // To create the Luminosity blend input color without luminosity opacity,
       // we're taking the TintColor input, converting to HSV, and clamping the V between these values
@@ -492,15 +487,11 @@ class AcrylicHelper {
       const luminosityOpacityRangeMax =
           maxLuminosityOpacity - minLuminosityOpacity;
       var mappedTintOpacity =
-          ((tintColor.alpha / 255.0) * luminosityOpacityRangeMax) +
+          ((tintColor.a / 255.0) * luminosityOpacityRangeMax) +
               minLuminosityOpacity;
 
-      // Finally, combine the luminosity opacity and the HsvV-clamped tint color
-      return Color.fromRGBO(
-        rgbLuminosityColor.red,
-        rgbLuminosityColor.green,
-        rgbLuminosityColor.blue,
-        math.min(mappedTintOpacity, 1.0),
+      return rgbLuminosityColor.withValues(
+        alpha: math.min(mappedTintOpacity, 1.0),
       );
     }
   }

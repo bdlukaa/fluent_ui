@@ -92,7 +92,7 @@ export 'src/layout/dynamic_overflow.dart';
 export 'src/layout/page.dart';
 export 'src/navigation/route.dart';
 export 'src/styles/acrylic.dart';
-export 'src/styles/color.dart' hide ColorConst;
+export 'src/styles/color.dart';
 export 'src/styles/color_resources.dart';
 export 'src/styles/focus.dart';
 export 'src/styles/mica.dart';

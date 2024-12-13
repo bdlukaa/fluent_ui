@@ -74,10 +74,10 @@ class ColorState extends ChangeNotifier {
 
   /// Creates a [ColorState] from a [Color].
   static ColorState fromColor(Color color) {
-    final r = color.red.toDouble() / 255;
-    final g = color.green.toDouble() / 255;
-    final b = color.blue.toDouble() / 255;
-    final a = color.alpha.toDouble() / 255;
+    final r = color.r.toDouble() / 255;
+    final g = color.g.toDouble() / 255;
+    final b = color.b.toDouble() / 255;
+    final a = color.a.toDouble() / 255;
 
     final hsv = rgbToHsv(RgbComponents(r, g, b));
     return ColorState(r, g, b, a, hsv.h, hsv.s, hsv.v);
@@ -151,10 +151,10 @@ class ColorState extends ChangeNotifier {
       final colorText = text.length == 6 ? 'FF$text' : text;
       final color = Color(int.parse(colorText, radix: 16));
 
-      _red = color.red / 255;
-      _green = color.green / 255;
-      _blue = color.blue / 255;
-      _alpha = color.alpha / 255;
+      _red = color.r / 255;
+      _green = color.g / 255;
+      _blue = color.b / 255;
+      _alpha = color.a / 255;
 
       final hsv = rgbToHsv(RgbComponents(_red, _green, _blue));
       _hue = hsv.h;
@@ -220,7 +220,7 @@ class ColorState extends ChangeNotifier {
   /// If [includeAlpha] is true, the alpha channel will be included in the string.
   String toHexString(bool includeAlpha) {
     final colorValue =
-        toColor().value.toRadixString(16).padLeft(8, '0').toUpperCase();
+        toColor().colorValue.toRadixString(16).padLeft(8, '0').toUpperCase();
     return includeAlpha ? '#$colorValue' : '#${colorValue.substring(2)}';
   }
 
@@ -342,18 +342,18 @@ class ColorState extends ChangeNotifier {
 
   /// Converts Color to HSV.
   static HsvComponents colorToHsv(Color color) {
-    final red = color.red / 255;
-    final green = color.green / 255;
-    final blue = color.blue / 255;
+    final red = color.r / 255;
+    final green = color.g / 255;
+    final blue = color.b / 255;
 
     return rgbToHsv(RgbComponents(red, green, blue));
   }
 
   /// Converts Color to HSL.
   static HslComponents colorToHsl(Color color) {
-    final red = color.red / 255;
-    final green = color.green / 255;
-    final blue = color.blue / 255;
+    final red = color.r / 255;
+    final green = color.g / 255;
+    final blue = color.b / 255;
 
     return rgbToHsl(RgbComponents(red, green, blue));
   }
@@ -500,9 +500,8 @@ class ColorState extends ChangeNotifier {
   /// Get distance between two colors considering both RGB and HSL spaces
   static double colorDistance(Color from, Color to) {
     // Normalize RGB values to range 0-1
-    final fromRgb =
-        RgbComponents(from.red / 255, from.green / 255, from.blue / 255);
-    final toRgb = RgbComponents(to.red / 255, to.green / 255, to.blue / 255);
+    final fromRgb = RgbComponents(from.r / 255, from.g / 255, from.b / 255);
+    final toRgb = RgbComponents(to.r / 255, to.g / 255, to.b / 255);
 
     // Convert RGB to HSL
     final fromHsl = rgbToHsl(fromRgb);
@@ -556,9 +555,9 @@ class ColorState extends ChangeNotifier {
   ///
   /// Returns a value between 0 (darkest) and 1 (brightest).
   static double relativeLuminance(Color color) {
-    final r = _standardToLinear(color.red / 255);
-    final g = _standardToLinear(color.green / 255);
-    final b = _standardToLinear(color.blue / 255);
+    final r = _standardToLinear(color.r / 255);
+    final g = _standardToLinear(color.g / 255);
+    final b = _standardToLinear(color.b / 255);
     return (r * 0.2126 + g * 0.7152 + b * 0.0722);
   }
 

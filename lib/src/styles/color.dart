@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// A set of predefined colors used by Fluent UI widgets.
@@ -190,8 +192,8 @@ class ShadedColor extends ColorSwatch<int> {
   const ShadedColor(super.primary, super.swatch);
 
   @override
-  Color operator [](int index) {
-    return super[index]!;
+  Color operator [](int key) {
+    return super[key]!;
   }
 }
 
@@ -221,12 +223,15 @@ class AccentColor extends ColorSwatch<String> {
 
   /// Creates a new accent color.
   AccentColor(this.primary, this.swatch)
-      : super(swatch[primary]!.value, swatch);
+      : super(
+          swatch[primary]!.colorValue,
+          swatch,
+        );
 
   /// Creates a new accent color based on a swatch
   AccentColor.swatch(this.swatch)
       : primary = 'normal',
-        super(swatch['normal']!.value, swatch);
+        super(swatch['normal']!.colorValue, swatch);
 
   /// The darkest shade of the color.
   Color get darkest => swatch['darkest'] ?? darker.withValues(alpha: 0.7);
@@ -304,6 +309,18 @@ class AccentColor extends ColorSwatch<String> {
   Color tertiaryBrushFor(Brightness brightness) {
     return defaultBrushFor(brightness).withValues(alpha: 0.8);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AccentColor &&
+        other.primary == primary &&
+        mapEquals(other.swatch, swatch);
+  }
+
+  @override
+  int get hashCode => primary.hashCode ^ swatch.hashCode;
 }
 
 /// Extension methods to help dealing with colors.
@@ -360,10 +377,15 @@ extension ColorExtension on Color {
   Color lerpWith(Color color, double t) {
     return Color.lerp(this, color, t)!;
   }
-}
 
-class ColorConst extends Color {
-  const ColorConst.withValues(alpha: int value, double opacity)
-      : super(((((opacity * 0xff ~/ 1) & 0xff) << 24) | (0x00ffffff & value)) &
-            0xFFFFFFFF);
+  int get colorValue {
+    return _floatToInt8(a) << 24 |
+        _floatToInt8(r) << 16 |
+        _floatToInt8(g) << 8 |
+        _floatToInt8(b) << 0;
+  }
+
+  static int _floatToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
+  }
 }
