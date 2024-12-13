@@ -35,7 +35,7 @@
 - feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
 - feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
 - fix: `TimePicker` hour offset
-- feat: Add `ColorPicker` ([#1001](https://github.com/bdlukaa/fluent_ui/issues/1001))
+- feat: Add `ColorPicker` ([#1152](https://github.com/bdlukaa/fluent_ui/pull/1152))
 - fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153)) 
 - fix: `NumberBox` incrementing/decrementing when not focused ([#1124](https://github.com/bdlukaa/fluent_ui/issues/1124))
 - fix: `NumberBox` text is correctly when there are no visible actions ([#1150](https://github.com/bdlukaa/fluent_ui/issues/1150))
