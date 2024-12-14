@@ -40,6 +40,8 @@
   "valueLabel": "Giá trị",
   "moreText": "Thêm",
   "lessText": "Ít hơn",
+  "valueSliderTooltip": "Giá trị {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Độ mờ đục",
   "colorBlack": "Đen",
   "colorNavy": "Xanh dương đậm",
   "colorDarkBlue": "Xanh dương đậm",

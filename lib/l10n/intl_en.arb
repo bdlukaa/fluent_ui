@@ -160,6 +160,25 @@
   "@lessText": {
     "description": "Text for collapsing color picker options"
   },
+  "valueSliderTooltip": "Value {value} ({colorName})",
+  "@valueSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "colorName": {
+        "type": "String"
+      }
+    }
+  },
+  "alphaSliderTooltip": "{value}% opacity",
+  "@alphaSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
   "colorBlack": "Black",
   "@colorBlack": {
     "description": "The name of the color, Black."

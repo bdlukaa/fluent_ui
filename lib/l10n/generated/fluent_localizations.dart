@@ -409,6 +409,18 @@ abstract class FluentLocalizations {
   /// **'Less'**
   String get lessText;
 
+  /// No description provided for @valueSliderTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Value {value} ({colorName})'**
+  String valueSliderTooltip(int value, String colorName);
+
+  /// No description provided for @alphaSliderTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}% opacity'**
+  String alphaSliderTooltip(int value);
+
   /// The name of the color, Black.
   ///
   /// In en, this message translates to:

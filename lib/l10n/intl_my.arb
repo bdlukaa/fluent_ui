@@ -37,5 +37,7 @@
   "saturationLabel": "ပြည့်ဝမှု",
   "valueLabel": "တန်ဖိုး",
   "moreText": "ပို၍",
-  "lessText": "လျှော့၍"
+  "lessText": "လျှော့၍",
+  "valueSliderTooltip": "တန်ဖိုး {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% အလင်းပိတ်မှု"
 }

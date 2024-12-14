@@ -37,5 +37,7 @@
   "saturationLabel": "To'yinganlik",
   "valueLabel": "Qiymat",
   "moreText": "Ko'proq",
-  "lessText": "Kamroq"
+  "lessText": "Kamroq",
+  "valueSliderTooltip": "Qiymat {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Tiniqmaslik"
 }

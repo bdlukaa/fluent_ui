@@ -37,5 +37,7 @@
   "saturationLabel": "Насычанасць",
   "valueLabel": "Значэнне",
   "moreText": "Больш",
-  "lessText": "Менш"
+  "lessText": "Менш",
+  "valueSliderTooltip": "Значэнне {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Непразрыстасць"
 }

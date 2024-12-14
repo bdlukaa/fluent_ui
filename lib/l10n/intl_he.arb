@@ -133,6 +133,8 @@
   "valueLabel": "ערך",
   "moreText": "עוד",
   "lessText": "פחות",
+  "valueSliderTooltip": "({colorName}) {value} ערך",
+  "alphaSliderTooltip": "%{value} אטימות",
   "colorBlack": "שחור",
   "colorNavy": "כחול כהה",
   "colorDarkBlue": "כחול כהה",

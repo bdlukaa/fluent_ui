@@ -40,6 +40,8 @@
   "valueLabel": "Waarde",
   "moreText": "Meer",
   "lessText": "Minder",
+  "valueSliderTooltip": "Waarde {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Ondoorzichtigheid",
   "colorBlack": "Zwart",
   "colorNavy": "Donkerblauw",
   "colorDarkBlue": "Donkerblauw",

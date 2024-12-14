@@ -40,6 +40,8 @@
   "valueLabel": "Hodnota",
   "moreText": "Více",
   "lessText": "Méně",
+  "valueSliderTooltip": "Hodnota {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Neprůhlednost",
   "colorBlack": "Černá",
   "colorNavy": "Tmavě modrá",
   "colorDarkBlue": "Tmavě modrá",

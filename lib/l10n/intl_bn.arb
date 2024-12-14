@@ -40,6 +40,8 @@
   "valueLabel": "মান",
   "moreText": "আরও",
   "lessText": "কম",
+  "valueSliderTooltip": "মান {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% অস্বচ্ছতা",
   "colorBlack": "কালো",
   "colorNavy": "গাঢ় নীল",
   "colorDarkBlue": "গাঢ় নীল",

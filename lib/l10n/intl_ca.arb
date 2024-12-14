@@ -40,6 +40,8 @@
   "valueLabel": "Valor",
   "moreText": "Més",
   "lessText": "Menys",
+  "valueSliderTooltip": "Valor {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Opacitat",
   "colorBlack": "Negre",
   "colorNavy": "Blau fosc",
   "colorDarkBlue": "Blau fosc",

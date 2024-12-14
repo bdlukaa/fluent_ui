@@ -109,7 +109,7 @@ class FluentLocalizationsKo extends FluentLocalizations {
   String get blueLabel => '파랑';
 
   @override
-  String get opacityLabel => '투명도';
+  String get opacityLabel => '불투명도';
 
   @override
   String get hueLabel => '색상';
@@ -125,6 +125,16 @@ class FluentLocalizationsKo extends FluentLocalizations {
 
   @override
   String get lessText => '간단히';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '값 $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% 불투명도';
+  }
 
   @override
   String get colorBlack => '검정';

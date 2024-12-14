@@ -33,6 +33,8 @@
   "valueLabel": "Nilai",
   "moreText": "Lagi",
   "lessText": "Kurang",
+  "valueSliderTooltip": "Nilai {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Kelegapan",
   "colorBlack": "Hitam",
   "colorNavy": "Biru tua",
   "colorDarkBlue": "Biru tua",

@@ -40,6 +40,8 @@
   "valueLabel": "Değer",
   "moreText": "Daha Fazla",
   "lessText": "Daha Az",
+  "valueSliderTooltip": "Değer {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Opaklık",
   "colorBlack": "Siyah",
   "colorNavy": "Koyu mavi",
   "colorDarkBlue": "Koyu mavi",
