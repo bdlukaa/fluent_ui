@@ -62,6 +62,9 @@ class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+
     return GestureDetector(
       onPanStart: _handlePanStart,
       onPanUpdate: _handlePanUpdate,
@@ -72,7 +75,8 @@ class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
         painter: _RingSpectrumPainter(
           colorState: widget.colorState,
           showLabel: _showLabel,
-          theme: FluentTheme.of(context),
+          theme: theme,
+          localizations: localizations,
           minHue: widget.minHue,
           maxHue: widget.maxHue,
           minSaturation: widget.minSaturation,
@@ -203,6 +207,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
 
     return GestureDetector(
       onPanStart: _handlePanStart,
@@ -222,6 +227,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
             colorState: widget.colorState,
             showLabel: _showLabel,
             theme: theme,
+            localizations: localizations,
             minHue: widget.minHue,
             maxHue: widget.maxHue,
             minSaturation: widget.minSaturation,
@@ -296,6 +302,9 @@ class _RingSpectrumPainter extends CustomPainter {
   /// The theme data for styling
   final FluentThemeData theme;
 
+  /// The localizations for color names
+  final FluentLocalizations localizations;
+
   /// The minimum allowed hue value (0-360)
   final int minHue;
 
@@ -313,6 +322,7 @@ class _RingSpectrumPainter extends CustomPainter {
     required this.colorState,
     required this.showLabel,
     required this.theme,
+    required this.localizations,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -408,8 +418,9 @@ class _RingSpectrumPainter extends CustomPainter {
 
     // Draw color name label if needed
     if (showLabel) {
-      final colorName = colorState.guessColorName();
-      _drawLabel(canvas, size, colorName, indicatorOffset);
+      final colorKey = colorState.guessColorName();
+      final displayName = localizations.getColorDisplayName(colorKey);
+      _drawLabel(canvas, size, displayName, indicatorOffset);
     }
   }
 
@@ -433,8 +444,6 @@ class _RingSpectrumPainter extends CustomPainter {
 
     final textPainter = TextPainter(
       text: textSpan,
-      textAlign: TextAlign.left,
-      // TODO: Update if color names support RTL languages in the future.
       textDirection: dart.TextDirection.ltr,
     )..layout();
 
@@ -518,6 +527,9 @@ class _BoxSpectrumPainter extends CustomPainter {
   /// The theme data for styling
   final FluentThemeData theme;
 
+  /// The localizations for color names
+  final FluentLocalizations localizations;
+
   /// The minimum allowed hue value (0-360)
   final int minHue;
 
@@ -535,6 +547,7 @@ class _BoxSpectrumPainter extends CustomPainter {
     required this.colorState,
     required this.showLabel,
     required this.theme,
+    required this.localizations,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -628,8 +641,9 @@ class _BoxSpectrumPainter extends CustomPainter {
 
     // Draw color name label if needed
     if (showLabel) {
-      final colorName = colorState.guessColorName();
-      _drawLabel(canvas, size, colorName, Offset(x, y));
+      final colorKey = colorState.guessColorName();
+      final displayName = localizations.getColorDisplayName(colorKey);
+      _drawLabel(canvas, size, displayName, Offset(x, y));
     }
   }
 
@@ -653,8 +667,6 @@ class _BoxSpectrumPainter extends CustomPainter {
 
     final textPainter = TextPainter(
       text: textSpan,
-      textAlign: TextAlign.left,
-      // TODO: Update if color names support RTL languages in the future.
       textDirection: dart.TextDirection.ltr,
     )..layout();
 
