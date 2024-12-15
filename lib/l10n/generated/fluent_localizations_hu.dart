@@ -128,6 +128,16 @@ class FluentLocalizationsHu extends FluentLocalizations {
   String get lessText => 'Kevesebb';
 
   @override
+  String valueSliderTooltip(int value, String colorName) {
+    return 'Érték $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% Átlátszatlanság';
+  }
+
+  @override
   String get colorBlack => 'Fekete';
 
   @override

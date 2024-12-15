@@ -40,6 +40,8 @@
   "valueLabel": "Nilai",
   "moreText": "Lainnya",
   "lessText": "Sedikit",
+  "valueSliderTooltip": "Nilai {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Keburaman",
   "colorBlack": "Hitam",
   "colorNavy": "Biru gelap",
   "colorDarkBlue": "Biru gelap",

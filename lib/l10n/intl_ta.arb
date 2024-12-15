@@ -40,6 +40,8 @@
   "valueLabel": "மதிப்பு",
   "moreText": "மேலும்",
   "lessText": "குறைவாக",
+  "valueSliderTooltip": "மதிப்பு {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% ஒளிபுகாத்தன்மை",
   "colorBlack": "கருப்பு",
   "colorNavy": "அடர் நீலம்",
   "colorDarkBlue": "அடர் நீலம்",

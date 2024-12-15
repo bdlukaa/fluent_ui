@@ -109,7 +109,7 @@ class FluentLocalizationsAr extends FluentLocalizations {
   String get blueLabel => 'أزرق';
 
   @override
-  String get opacityLabel => 'الشفافية';
+  String get opacityLabel => 'معدل العتامة';
 
   @override
   String get hueLabel => 'التدرج';
@@ -125,6 +125,16 @@ class FluentLocalizationsAr extends FluentLocalizations {
 
   @override
   String get lessText => 'أقل';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '($colorName) $value القيمة';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '%$value معدل العتامة';
+  }
 
   @override
   String get colorBlack => 'أسود';

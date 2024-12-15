@@ -40,6 +40,8 @@
   "valueLabel": "Érték",
   "moreText": "Több",
   "lessText": "Kevesebb",
+  "valueSliderTooltip": "Érték {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Átlátszatlanság",
   "colorBlack": "Fekete",
   "colorNavy": "Sötétkék",
   "colorDarkBlue": "Sötétkék",

@@ -273,9 +273,21 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasDirectionality(context));
+
+    final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+
     final bool hasVisibleInputs = widget.isHexInputVisible ||
         widget.isColorChannelTextInputVisible ||
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
+
+    final bool showMoreButton = widget.isMoreButtonVisible && hasVisibleInputs;
+
+    final bool showInputs =
+        hasVisibleInputs && (!widget.isMoreButtonVisible || _isMoreExpanded);
 
     // Build the color picker layout based on orientation
     if (widget.orientation == Axis.vertical) {
@@ -289,15 +301,15 @@ class _ColorPickerState extends State<ColorPicker> {
             SizedBox(height: _ColorPickerSpacing.large.size),
             _buildSliders(),
           ],
-          if (widget.isMoreButtonVisible && hasVisibleInputs) ...[
+          if (showMoreButton) ...[
             SizedBox(height: _ColorPickerSpacing.large.size),
-            _buildMoreButton(),
+            _buildMoreButton(theme, localizations),
           ],
-          if (!widget.isMoreButtonVisible || _isMoreExpanded) ...[
-            if (hasVisibleInputs) ...[
+          if (showInputs) ...[
+            if (!widget.isMoreButtonVisible) ...[
               SizedBox(height: _ColorPickerSpacing.large.size),
-              _buildInputs(),
             ],
+            _buildInputs(),
           ],
         ],
       );
@@ -367,21 +379,44 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   /// Builds the "More" button to expand the color picker inputs.
-  Widget _buildMoreButton() {
+  Widget _buildMoreButton(
+      FluentThemeData theme, FluentLocalizations localizations) {
     final moreButton = SizedBox(
         width: _ColorPickerSizes.inputBox.size,
         child: Button(
+          style: ButtonStyle(
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.only(left: 8, right: 4, top: 8, bottom: 8),
+            ),
+            shape: const WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                side: BorderSide.none,
+              ),
+            ),
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            foregroundColor: WidgetStateColor.resolveWith((states) {
+              if (states.isPressed) {
+                return theme.resources.textFillColorTertiary;
+              }
+              if (states.isHovered || states.isFocused) {
+                return theme.resources.textFillColorSecondary;
+              }
+              return theme.resources.textFillColorPrimary;
+            }),
+          ),
           onPressed: () => setState(() => _isMoreExpanded = !_isMoreExpanded),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // TODO: Localize for 'Less' and 'More' later
-              Text(_isMoreExpanded ? 'Less' : 'More'),
+              Text(_isMoreExpanded
+                  ? localizations.lessText
+                  : localizations.moreText),
+              const SizedBox(width: 8),
               Icon(
                 _isMoreExpanded
                     ? FluentIcons.chevron_up
                     : FluentIcons.chevron_down,
-                size: 12,
+                size: 10,
               ),
             ],
           ),
@@ -629,12 +664,14 @@ class _ColorSliders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
 
     // Determine if the sliders should be displayed horizontally or vertically
     final bool isVertical = orientation != Axis.vertical;
 
     final sliders = [
-      if (isColorSliderVisible) _buildValueSlider(theme, isVertical),
+      if (isColorSliderVisible)
+        _buildValueSlider(theme, localizations, isVertical),
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
         orientation == Axis.vertical
             ? SizedBox(height: _ColorPickerSpacing.large.size)
@@ -642,7 +679,7 @@ class _ColorSliders extends StatelessWidget {
                 width: _ColorPickerSpacing.large.size,
               ),
       if (isAlphaSliderVisible && isAlphaEnabled)
-        _buildAlphaSlider(theme, isVertical),
+        _buildAlphaSlider(theme, localizations, isVertical),
     ];
 
     return orientation == Axis.horizontal
@@ -657,14 +694,17 @@ class _ColorSliders extends StatelessWidget {
   }
 
   /// Builds the value slider for the color picker.
-  Widget _buildValueSlider(FluentThemeData theme, bool isVertical) {
+  Widget _buildValueSlider(FluentThemeData theme,
+      FluentLocalizations localizations, bool isVertical) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
-    final colorName = colorState.guessColorName();
 
-    // Format the value text with color name
-    // TODO: Add localization support for "Value" text
-    final valueText =
-        'Value ${(colorState.value * 100).round()}${colorName.isNotEmpty ? " ($colorName)" : ""}';
+    final colorKey = colorState.guessColorName();
+    final displayName = localizations.getColorDisplayName(colorKey);
+
+    // Format the value text with color name : "Value 100 (Color Name)"
+    final valueText = localizations.valueSliderTooltip(
+        (colorState.value * 100).round(),
+        displayName.isNotEmpty ? displayName : "");
 
     return SizedBox(
       width: isVertical
@@ -711,10 +751,13 @@ class _ColorSliders extends StatelessWidget {
   }
 
   /// Builds the alpha slider for the color picker.
-  Widget _buildAlphaSlider(FluentThemeData theme, bool isVertical) {
+  Widget _buildAlphaSlider(FluentThemeData theme,
+      FluentLocalizations localizations, bool isVertical) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
-    // TODO: Localize
-    final opacityText = '${(colorState.alpha * 100).round()}% opacity';
+
+    // Format the opacity text : "100% opacity"
+    final opacityText =
+        localizations.alphaSliderTooltip((colorState.alpha * 100).round());
 
     return SizedBox(
       width: isVertical
@@ -849,6 +892,8 @@ class _ColorInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FluentLocalizations.of(context);
+
     // Update hex input whenever colorState changes
     _updateHexControllerText();
 
@@ -864,8 +909,8 @@ class _ColorInputs extends StatelessWidget {
                 isMoreExpanded) ...[
               _buildColorModeAndHexInput(colorMode),
               colorMode == _ColorMode.rgb
-                  ? _buildRGBInputs()
-                  : _buildHSVInputs(),
+                  ? _buildRGBInputs(localizations)
+                  : _buildHSVInputs(localizations),
             ],
           ],
         );
@@ -958,13 +1003,12 @@ class _ColorInputs extends StatelessWidget {
   }
 
   /// Builds the RGB input fields.
-  Widget _buildRGBInputs() {
-    // TODO: localize color channel labels
+  Widget _buildRGBInputs(FluentLocalizations localizations) {
     return Column(
       children: [
         if (isColorChannelTextInputVisible) ...{
           _buildNumberInput(
-            'Red',
+            localizations.redLabel,
             colorState.red * 255,
             (v) {
               final newState = colorState.copyWith(red: v / 255);
@@ -974,7 +1018,7 @@ class _ColorInputs extends StatelessWidget {
             max: 255,
           ),
           _buildNumberInput(
-            'Green',
+            localizations.greenLabel,
             colorState.green * 255,
             (v) {
               final newState = colorState.copyWith(green: v / 255);
@@ -984,7 +1028,7 @@ class _ColorInputs extends StatelessWidget {
             max: 255,
           ),
           _buildNumberInput(
-            'Blue',
+            localizations.blueLabel,
             colorState.blue * 255,
             (v) {
               final newState = colorState.copyWith(blue: v / 255);
@@ -996,7 +1040,7 @@ class _ColorInputs extends StatelessWidget {
         },
         if (isAlphaEnabled && isAlphaTextInputVisible) ...[
           _buildNumberInput(
-            'Opacity',
+            localizations.opacityLabel,
             colorState.alpha * 100,
             (v) {
               final newState = colorState.copyWith(alpha: v / 100);
@@ -1011,12 +1055,12 @@ class _ColorInputs extends StatelessWidget {
   }
 
   /// Builds the HSV input fields.
-  Widget _buildHSVInputs() {
+  Widget _buildHSVInputs(FluentLocalizations localizations) {
     return Column(
       children: [
         if (isColorChannelTextInputVisible) ...{
           _buildNumberInput(
-            'Hue',
+            localizations.hueLabel,
             colorState.hue,
             (v) {
               final newState = colorState.copyWith(hue: v);
@@ -1026,7 +1070,7 @@ class _ColorInputs extends StatelessWidget {
             max: maxHue.toDouble(),
           ),
           _buildNumberInput(
-            'Saturation',
+            localizations.saturationLabel,
             colorState.saturation * 100,
             (v) {
               final newState = colorState.copyWith(saturation: v / 100);
@@ -1036,7 +1080,7 @@ class _ColorInputs extends StatelessWidget {
             max: maxSaturation.toDouble(),
           ),
           _buildNumberInput(
-            'Value',
+            localizations.valueLabel,
             colorState.value * 100,
             (v) {
               final newState = colorState.copyWith(value: v / 100);
@@ -1048,7 +1092,7 @@ class _ColorInputs extends StatelessWidget {
         },
         if (isAlphaEnabled && isAlphaTextInputVisible) ...[
           _buildNumberInput(
-            'Opacity',
+            localizations.opacityLabel,
             colorState.alpha * 100,
             (v) {
               final newState = colorState.copyWith(alpha: v / 100);

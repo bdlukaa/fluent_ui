@@ -40,6 +40,8 @@
   "valueLabel": "मान",
   "moreText": "अधिक",
   "lessText": "कम",
+  "valueSliderTooltip": "मान {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% अपारदर्शिता",
   "colorBlack": "काला",
   "colorNavy": "गहरा नीला",
   "colorDarkBlue": "गहरा नीला",

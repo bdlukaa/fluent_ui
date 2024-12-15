@@ -129,6 +129,16 @@ class FluentLocalizationsKu extends FluentLocalizations {
   String get lessText => 'کەمتر';
 
   @override
+  String valueSliderTooltip(int value, String colorName) {
+    return 'Nirx $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% Tarî';
+  }
+
+  @override
   String get colorBlack => 'Black';
 
   @override

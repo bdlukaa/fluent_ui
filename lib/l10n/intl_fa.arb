@@ -40,6 +40,8 @@
   "valueLabel": "مقدار",
   "moreText": "بیشتر",
   "lessText": "کمتر",
+  "valueSliderTooltip": "({colorName}) {value} مقدار",
+  "alphaSliderTooltip": "%{value} تاری",
   "colorBlack": "مشکی",
   "colorNavy": "آبی تیره",
   "colorDarkBlue": "آبی تیره",

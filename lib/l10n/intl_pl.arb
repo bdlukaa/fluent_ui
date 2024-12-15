@@ -33,6 +33,8 @@
   "valueLabel": "Wartość",
   "moreText": "Więcej",
   "lessText": "Mniej",
+  "valueSliderTooltip": "Wartość {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Nieprzezroczystość",
   "colorBlack": "Czarny",
   "colorNavy": "Ciemnoniebieski",
   "colorDarkBlue": "Ciemnoniebieski",

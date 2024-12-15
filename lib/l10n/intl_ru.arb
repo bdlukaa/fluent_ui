@@ -33,6 +33,8 @@
   "valueLabel": "Значение",
   "moreText": "Больше",
   "lessText": "Меньше",
+  "valueSliderTooltip": "Значение {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Непрозрачность",
   "colorBlack": "Черный",
   "colorNavy": "Темно-синий",
   "colorDarkBlue": "Темно-синий",

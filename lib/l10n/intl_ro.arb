@@ -133,6 +133,8 @@
   "valueLabel": "Valoare",
   "moreText": "Mai mult",
   "lessText": "Mai puțin",
+  "valueSliderTooltip": "Valoare {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Opacitate",
   "colorBlack": "Negru",
   "colorNavy": "Albastru închis",
   "colorDarkBlue": "Albastru închis",

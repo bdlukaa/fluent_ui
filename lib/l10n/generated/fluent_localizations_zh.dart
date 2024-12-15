@@ -118,13 +118,23 @@ class FluentLocalizationsZh extends FluentLocalizations {
   String get saturationLabel => '饱和度';
 
   @override
-  String get valueLabel => '明度';
+  String get valueLabel => '值';
 
   @override
   String get moreText => '更多';
 
   @override
   String get lessText => '更少';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '值 $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% 不透明度';
+  }
 
   @override
   String get colorBlack => '黑色';
@@ -654,16 +664,26 @@ class FluentLocalizationsZhHant extends FluentLocalizationsZh {
   String get hueLabel => '色調';
 
   @override
-  String get saturationLabel => '飽和度';
+  String get saturationLabel => '彩度';
 
   @override
-  String get valueLabel => '明度';
+  String get valueLabel => '値';
 
   @override
   String get moreText => '更多';
 
   @override
   String get lessText => '更少';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '値 $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% 不透明度';
+  }
 
   @override
   String get colorBlack => '黑色';

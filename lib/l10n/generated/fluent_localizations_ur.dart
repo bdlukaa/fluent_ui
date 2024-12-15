@@ -130,6 +130,16 @@ class FluentLocalizationsUr extends FluentLocalizations {
   String get lessText => 'کم';
 
   @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '($colorName) $value قدر';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '%$value دھندلاپن';
+  }
+
+  @override
   String get colorBlack => 'سیاہ';
 
   @override

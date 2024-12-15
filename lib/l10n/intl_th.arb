@@ -40,6 +40,8 @@
   "valueLabel": "ค่า",
   "moreText": "เพิ่มเติม",
   "lessText": "น้อยลง",
+  "valueSliderTooltip": "ค่า {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% ความทึบ",
   "colorBlack": "ดำ",
   "colorNavy": "น้ำเงินเข้ม",
   "colorDarkBlue": "น้ำเงินเข้ม",

@@ -40,6 +40,8 @@
   "valueLabel": "Värde",
   "moreText": "Mer",
   "lessText": "Mindre",
+  "valueSliderTooltip": "Värde {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Opacitet",
   "colorBlack": "Svart",
   "colorNavy": "Mörkblå",
   "colorDarkBlue": "Mörkblå",

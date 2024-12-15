@@ -128,6 +128,16 @@ class FluentLocalizationsVi extends FluentLocalizations {
   String get lessText => 'Ít hơn';
 
   @override
+  String valueSliderTooltip(int value, String colorName) {
+    return 'Giá trị $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% Độ mờ đục';
+  }
+
+  @override
   String get colorBlack => 'Đen';
 
   @override

@@ -109,22 +109,32 @@ class FluentLocalizationsJa extends FluentLocalizations {
   String get blueLabel => '青';
 
   @override
-  String get opacityLabel => '透明度';
+  String get opacityLabel => '不透明度';
 
   @override
-  String get hueLabel => '色相';
+  String get hueLabel => '色合い';
 
   @override
   String get saturationLabel => '彩度';
 
   @override
-  String get valueLabel => '明度';
+  String get valueLabel => '値';
 
   @override
-  String get moreText => '詳細';
+  String get moreText => 'さらに表示';
 
   @override
-  String get lessText => '簡略';
+  String get lessText => '表示を減らす';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return '値 $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return '$value% 不透明度';
+  }
 
   @override
   String get colorBlack => '黒';

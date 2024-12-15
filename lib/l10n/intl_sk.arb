@@ -133,6 +133,8 @@
   "valueLabel": "Hodnota",
   "moreText": "Viac",
   "lessText": "Menej",
+  "valueSliderTooltip": "Hodnota {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Nepriehľadnosť",
   "colorBlack": "Čierna",
   "colorNavy": "Tmavomodrá",
   "colorDarkBlue": "Tmavomodrá",

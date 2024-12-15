@@ -121,13 +121,23 @@ class FluentLocalizationsDe extends FluentLocalizations {
   String get saturationLabel => 'Sättigung';
 
   @override
-  String get valueLabel => 'Helligkeit';
+  String get valueLabel => 'Wert';
 
   @override
   String get moreText => 'Mehr';
 
   @override
   String get lessText => 'Weniger';
+
+  @override
+  String valueSliderTooltip(int value, String colorName) {
+    return 'Wert $value ($colorName)';
+  }
+
+  @override
+  String alphaSliderTooltip(int value) {
+    return 'Deckkraft: $value%';
+  }
 
   @override
   String get colorBlack => 'Schwarz';

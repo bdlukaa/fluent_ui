@@ -40,6 +40,8 @@
   "valueLabel": "Τιμή",
   "moreText": "Περισσότερα",
   "lessText": "Λιγότερα",
+  "valueSliderTooltip": "Τιμή {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Αδιαφάνεια",
   "colorBlack": "Μαύρο",
   "colorNavy": "Σκούρο μπλε",
   "colorDarkBlue": "Σκούρο μπλε",

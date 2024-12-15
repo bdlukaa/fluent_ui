@@ -133,6 +133,8 @@
   "valueLabel": "Vrijednost",
   "moreText": "Više",
   "lessText": "Manje",
+  "valueSliderTooltip": "Vrijednost {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Neprozirnost",
   "colorBlack": "Crna",
   "colorNavy": "Tamnoplava",
   "colorDarkBlue": "Tamnoplava",

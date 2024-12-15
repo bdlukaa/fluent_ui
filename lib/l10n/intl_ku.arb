@@ -132,5 +132,7 @@
   "saturationLabel": "تێرایی",
   "valueLabel": "بەها",
   "moreText": "زیاتر",
-  "lessText": "کەمتر"
+  "lessText": "کەمتر",
+  "valueSliderTooltip": "Nirx {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Tarî"
 }

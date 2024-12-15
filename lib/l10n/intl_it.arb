@@ -40,6 +40,8 @@
   "valueLabel": "Valore",
   "moreText": "Più",
   "lessText": "Meno",
+  "valueSliderTooltip": "Valore {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Opacità",
   "colorBlack": "Nero",
   "colorNavy": "Blu scuro",
   "colorDarkBlue": "Blu scuro",

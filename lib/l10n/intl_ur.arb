@@ -40,6 +40,8 @@
   "valueLabel": "قدر",
   "moreText": "مزید",
   "lessText": "کم",
+  "valueSliderTooltip": "({colorName}) {value} قدر",
+  "alphaSliderTooltip": "%{value} دھندلاپن",
   "colorBlack": "سیاہ",
   "colorNavy": "گہرا نیلا",
   "colorDarkBlue": "گہرا نیلا",
