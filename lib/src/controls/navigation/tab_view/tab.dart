@@ -185,10 +185,10 @@ class Tab extends StatefulWidget {
   /// Usually an [Icon] widget.
   final Widget? closeIcon;
 
-  /// Called when clicking x-to-close button or when thec`Ctrl + T` or
+  /// Called when clicking x-to-close button or when the `Ctrl + T` or
   /// `Ctrl + F4` is executed
   ///
-  /// If null, the tab is not closeable
+  /// If null, the tab is not closeable and the close button will not be shown.
   final VoidCallback? onClosed;
 
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
@@ -405,7 +405,8 @@ class TabState extends State<Tab>
                             ),
                           ),
                         ),
-                      if (widget.closeIcon != null &&
+                      if (widget.onClosed != null &&
+                          widget.closeIcon != null &&
                           (tab.visibilityMode ==
                                   CloseButtonVisibilityMode.always ||
                               (tab.visibilityMode ==
