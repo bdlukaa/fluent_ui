@@ -1,3 +1,7 @@
+## [next]
+
+- fix: hide Tab's close button when `onClosed` is null
+
 ## 4.10.0
 
 - fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
