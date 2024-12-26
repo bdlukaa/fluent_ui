@@ -4,6 +4,7 @@ import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:window_manager/window_manager.dart';
 
 class TabViewPage extends StatefulWidget {
@@ -44,6 +45,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
     );
     return tab;
   }
+
+  int _secondaryIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +236,7 @@ TabView(
             height: 400,
             child: TabView(
               tabs: tabs!,
+              reservedStripWidth: 100,
               currentIndex: currentIndex,
               onChanged: (index) => setState(() => currentIndex = index),
               tabWidthBehavior: tabWidthBehavior,
@@ -268,7 +272,228 @@ TabView(
             ),
           ),
         ),
+        CardHighlight(
+          codeSnippet: '''
+class MyCustomTab extends Tab {
+  MyCustomTab({
+    super.key,
+    required super.body,
+    required super.text,
+  });
+
+  @override
+  State<Tab> createState() => MyCustomTabState();
+}
+
+class MyCustomTabState extends TabState {
+  late FlyoutController _flyoutController;
+  final _targetKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _flyoutController = FlyoutController();
+  }
+
+  void _showMenu(Offset position) {
+    _flyoutController.showFlyout(
+      position: position,
+      builder: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutItem(
+              onPressed: () {
+                debugPrint('Item 1 pressed');
+                Navigator.of(context).maybePop();
+              },
+              leading: const Icon(FluentIcons.add),
+              text: const Text('New tab'),
+            ),
+            MenuFlyoutItem(
+              onPressed: () {
+                debugPrint('Item 2 pressed');
+                Navigator.of(context).maybePop();
+              },
+              leading: const Icon(FluentIcons.refresh),
+              text: const Text('Refresh'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onSecondaryTapUp: (d) {
+        // This calculates the position of the flyout according to the parent navigator.
+        // See https://bdlukaa.github.io/fluent_ui/#/popups/flyout
+        final targetContext = _targetKey.currentContext;
+        if (targetContext == null) return;
+        final box = targetContext.findRenderObject() as RenderBox;
+        final position = box.localToGlobal(
+          d.localPosition,
+          ancestor: Navigator.of(context).context.findRenderObject(),
+        );
+
+        _showMenu(position);
+      },
+      child: FlyoutTarget(
+        key: _targetKey,
+        controller: _flyoutController,
+        child: super.build(context),
+      ),
+    );
+  }
+}
+
+TabView(
+  currentIndex: index,
+  onChanged: (index) => setState(() => this.index = index),
+  tabWidthBehavior: TabWidthBehavior.sizeToContent,
+  closeButtonVisibility: CloseButtonVisibilityMode.never,
+  tabs: <Tab>[
+    Tab(
+      text: const Text('Tab that recognizes secondary tap'),
+      body: Container(color: Colors.red),
+      gestures: {
+        TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<>(
+          () => TapGestureRecognizer(),
+          (TapGestureRecognizer instance) {
+            instance.onSecondaryTap = () {
+              debugPrint('Secondary tap recognized');
+              displayInfoBar(context, builder: (context, close) {
+                return const InfoBar(
+                  title: Text('Secondary tap recognized'),
+                  severity: InfoBarSeverity.success,
+                );
+              });
+            };
+          },
+        ),
+      },
+    ),
+    MyCustomTab(
+      text: const Text('Custom tab that opens menu on secondary tap'),
+      body: Container(color: Colors.blue),
+    ),
+  ],
+)
+''',
+          child: SizedBox(
+            height: 200,
+            child: TabView(
+              currentIndex: _secondaryIndex,
+              onChanged: (index) => setState(() => _secondaryIndex = index),
+              tabWidthBehavior: TabWidthBehavior.sizeToContent,
+              closeButtonVisibility: CloseButtonVisibilityMode.never,
+              tabs: <Tab>[
+                Tab(
+                  text: const Text('Tab that recognizes secondary tap'),
+                  body: Container(color: Colors.red),
+                  gestures: {
+                    TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                        TapGestureRecognizer>(
+                      () => TapGestureRecognizer(),
+                      (TapGestureRecognizer instance) {
+                        instance.onSecondaryTap = () {
+                          debugPrint('Secondary tap recognized');
+                          displayInfoBar(context, builder: (context, close) {
+                            return const InfoBar(
+                              title: Text('Secondary tap recognized'),
+                              severity: InfoBarSeverity.success,
+                            );
+                          });
+                        };
+                      },
+                    ),
+                  },
+                ),
+                MyCustomTab(
+                  text:
+                      const Text('Custom tab that opens menu on secondary tap'),
+                  body: Container(color: Colors.blue),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
+    );
+  }
+}
+
+class MyCustomTab extends Tab {
+  MyCustomTab({
+    super.key,
+    required super.body,
+    required super.text,
+  });
+
+  @override
+  State<Tab> createState() => MyCustomTabState();
+}
+
+class MyCustomTabState extends TabState {
+  late FlyoutController _flyoutController;
+  final _targetKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _flyoutController = FlyoutController();
+  }
+
+  void _showMenu(Offset position) {
+    _flyoutController.showFlyout(
+      position: position,
+      builder: (context) {
+        return MenuFlyout(
+          items: [
+            MenuFlyoutItem(
+              onPressed: () {
+                debugPrint('Item 1 pressed');
+                Navigator.of(context).maybePop();
+              },
+              leading: const Icon(FluentIcons.add),
+              text: const Text('New tab'),
+            ),
+            MenuFlyoutItem(
+              onPressed: () {
+                debugPrint('Item 2 pressed');
+                Navigator.of(context).maybePop();
+              },
+              leading: const Icon(FluentIcons.refresh),
+              text: const Text('Refresh'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onSecondaryTapUp: (d) {
+        // This calculates the position of the flyout according to the parent navigator.
+        // See https://bdlukaa.github.io/fluent_ui/#/popups/flyout
+        final targetContext = _targetKey.currentContext;
+        if (targetContext == null) return;
+        final box = targetContext.findRenderObject() as RenderBox;
+        final position = box.localToGlobal(
+          d.localPosition,
+          ancestor: Navigator.of(context).context.findRenderObject(),
+        );
+
+        _showMenu(position);
+      },
+      child: FlyoutTarget(
+        key: _targetKey,
+        controller: _flyoutController,
+        child: super.build(context),
+      ),
     );
   }
 }

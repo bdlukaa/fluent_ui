@@ -123,5 +123,16 @@
   "year": "ساڵ",
   "@year": {
     "description": "ئەو دەقەیەی کە لەلایەن [DatePicker] بۆ بواری ساڵ بەکارهاتووە"
-  }
+  },
+  "redLabel": "سوور",
+  "greenLabel": "سەوز",
+  "blueLabel": "شین",
+  "opacityLabel": "ڕوونی",
+  "hueLabel": "ڕەنگ",
+  "saturationLabel": "تێرایی",
+  "valueLabel": "بەها",
+  "moreText": "زیاتر",
+  "lessText": "کەمتر",
+  "valueSliderTooltip": "Nirx {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Tarî"
 }

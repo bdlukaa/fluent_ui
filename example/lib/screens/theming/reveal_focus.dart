@@ -45,7 +45,7 @@ class RevealFocusPage extends StatelessWidget with PageMixin {
               child: FocusTheme(
                 data: FocusThemeData(
                   borderRadius: BorderRadius.zero,
-                  // glowColor: theme.accentColor.withOpacity(0.2),
+                  // glowColor: theme.accentColor.withValues(alpha: 0.2),
                   glowFactor: 4.0,
                   primaryBorder: BorderSide(
                     width: 2.0,

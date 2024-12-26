@@ -119,7 +119,7 @@ class _CardHighlightState extends State<CardHighlight>
                 bottom: Radius.circular(6.0),
               ),
               child: SyntaxView(
-                code: widget.codeSnippet,
+                code: widget.codeSnippet.trim(),
                 syntaxTheme: getSyntaxTheme(theme),
               ),
             ),

@@ -14,10 +14,20 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
   DateTime? arrivalTime;
   DateTime? hhTime;
 
+  final timePickerKey = GlobalKey<TimePickerState>();
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('TimePicker')),
+      header: PageHeader(
+        title: const Text('TimePicker'),
+        commandBar: Button(
+          onPressed: () => setState(
+            () => simpleTime = arrivalTime = hhTime = null,
+          ),
+          child: const Text('Clear'),
+        ),
+      ),
       children: [
         const Text(
           'Use a TimePicker to let users set a time in your app, for example to '
@@ -37,13 +47,18 @@ TimePicker(
   selected: selected,
   onChanged: (time) => setState(() => selected = time),
 ),''',
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TimePicker(
+          child: Row(children: [
+            TimePicker(
+              key: timePickerKey,
               selected: simpleTime,
               onChanged: (time) => setState(() => simpleTime = time),
             ),
-          ),
+            const Spacer(),
+            Button(
+              onPressed: () => timePickerKey.currentState?.open(),
+              child: const Text('Show picker'),
+            ),
+          ]),
         ),
         subtitle(
           content: const Text(
@@ -59,15 +74,14 @@ TimePicker(
   header: 'Arrival time',
   minuteIncrement: 15,
 ),''',
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TimePicker(
+          child: Row(children: [
+            TimePicker(
               header: 'Arrival time',
               selected: arrivalTime,
               onChanged: (time) => setState(() => arrivalTime = time),
               minuteIncrement: 15,
             ),
-          ),
+          ]),
         ),
         subtitle(
           content: const Text(

@@ -338,7 +338,7 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
           borderRadius: BorderRadius.all(kComboBoxRadius),
         ),
         child: ColoredBox(
-          color: theme.menuColor.withOpacity(kMenuColorOpacity),
+          color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
           child: Semantics(
             scopesRoute: true,
             namesRoute: true,

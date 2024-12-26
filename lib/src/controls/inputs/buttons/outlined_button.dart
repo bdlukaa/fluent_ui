@@ -36,11 +36,12 @@ class OutlinedButton extends BaseButton {
       foregroundColor: WidgetStatePropertyAll(theme.inactiveColor),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
-          return theme.resources.controlFillColorDisabled.withOpacity(0.30);
+          return theme.resources.controlFillColorDisabled
+              .withValues(alpha: 0.30);
         } else if (states.isPressed) {
-          return theme.inactiveColor.withOpacity(0.25);
+          return theme.inactiveColor.withValues(alpha: 0.25);
         } else if (states.isHovered) {
-          return theme.inactiveColor.withOpacity(0.10);
+          return theme.inactiveColor.withValues(alpha: 0.10);
         } else {
           return Colors.transparent;
         }

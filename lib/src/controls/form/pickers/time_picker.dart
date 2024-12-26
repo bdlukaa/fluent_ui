@@ -105,7 +105,7 @@ class TimePicker extends StatefulWidget {
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
   @override
-  State<TimePicker> createState() => _TimePickerState();
+  State<TimePicker> createState() => TimePickerState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -135,7 +135,7 @@ class TimePicker extends StatefulWidget {
   }
 }
 
-class _TimePickerState extends State<TimePicker>
+class TimePickerState extends State<TimePicker>
     with IntlScriptLocaleApplyMixin {
   late DateTime time;
 
@@ -146,6 +146,8 @@ class _TimePickerState extends State<TimePicker>
   late FixedExtentScrollController _amPmController;
 
   bool am = true;
+
+  final _pickerKey = GlobalKey<PickerState>();
 
   @override
   void initState() {
@@ -166,16 +168,18 @@ class _TimePickerState extends State<TimePicker>
   void didUpdateWidget(TimePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selected != time) {
-      time = widget.selected ?? DateTime.now();
-      _hourController.jumpToItem(() {
-        var hour = time.hour - 1;
-        if (!widget.use24Format) {
-          hour -= 12;
-        }
-        return hour;
-      }());
-      _minuteController.jumpToItem(time.minute);
-      _amPmController.jumpToItem(_isPm ? 1 : 0);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        time = widget.selected ?? DateTime.now();
+        _hourController.jumpToItem(() {
+          var hour = time.hour;
+          if (!widget.use24Format) {
+            hour -= 12;
+          }
+          return hour;
+        }());
+        _minuteController.jumpToItem(time.minute);
+        _amPmController.jumpToItem(_isPm ? 1 : 0);
+      });
     }
   }
 
@@ -189,7 +193,7 @@ class _TimePickerState extends State<TimePicker>
     }
     _hourController = FixedExtentScrollController(
       initialItem: () {
-        var hour = time.hour - 1;
+        var hour = time.hour;
         if (!widget.use24Format) {
           hour -= 12;
         }
@@ -203,6 +207,10 @@ class _TimePickerState extends State<TimePicker>
 
   bool get _isPm => time.hour >= 12;
 
+  void open() {
+    _pickerKey.currentState?.open();
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -213,6 +221,7 @@ class _TimePickerState extends State<TimePicker>
     final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
     Widget picker = Picker(
+      key: _pickerKey,
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
         return _TimePickerContentPopup(
@@ -325,6 +334,8 @@ class _TimePickerState extends State<TimePicker>
   }
 }
 
+// Since hours goes from 0 to 23, it is not needed to add 1 to the index since
+// it already starts from 0.
 class _TimePickerContentPopup extends StatefulWidget {
   const _TimePickerContentPopup({
     required this.date,
@@ -419,7 +430,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     return Column(children: [
       Expanded(
         child: Stack(children: [
-          PickerHighlightTile(),
+          const PickerHighlightTile(),
           Row(children: [
             Expanded(
               child: PickerNavigatorIndicator(
@@ -440,8 +451,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                 child: ListWheelScrollView.useDelegate(
                   controller: widget.hourController,
                   childDelegate: ListWheelChildLoopingListDelegate(
-                    children: List.generate(hoursAmount, (index) {
-                      final hour = index + 1;
+                    children: List.generate(hoursAmount, (hour) {
                       final realHour = () {
                         if (!widget.use24Format && localDate.hour > 12) {
                           return hour + 12;
@@ -455,7 +465,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                             ? null
                             : () {
                                 widget.hourController.animateToItem(
-                                  index,
+                                  hour,
                                   duration: theme.mediumAnimationDuration,
                                   curve: theme.animationCurve,
                                 );
@@ -472,8 +482,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
                   itemExtent: kOneLineTileHeight,
                   diameterRatio: kPickerDiameterRatio,
                   physics: const FixedExtentScrollPhysics(),
-                  onSelectedItemChanged: (index) {
-                    var hour = index + 1;
+                  onSelectedItemChanged: (hour) {
                     if (!widget.use24Format && !isAm) {
                       hour += 12;
                     }

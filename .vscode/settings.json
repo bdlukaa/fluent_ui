@@ -1,0 +1,5 @@
+{
+    "dart.analysisExcludedFolders": [
+        "lib/l10n"
+    ]
+}

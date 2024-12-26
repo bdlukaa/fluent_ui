@@ -16,6 +16,29 @@ typedef DropDownButtonBuilder = Widget Function(
 ///
 /// ![DropDownButton Showcase](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
 ///
+/// ## Usage
+///
+/// ```dart
+/// DropDownButton(
+///   title: const Text('Select an option'),
+///   items: [
+///     MenuFlyoutItem(
+///       text: const Text('Option 1'),
+///       onPressed: () { /* Handle option 1 */ },
+///     ),
+///     MenuFlyoutSubItem(
+///       text: const Text('Submenu'),
+///       items: (context) => [
+///         MenuFlyoutItem(
+///           text: const Text('Suboption 1'),
+///           onPressed: () { /* Handle suboption 1 */ },
+///         ),
+///       ],
+///     ),
+///   ],
+/// )
+/// ```
+///
 /// See also:
 ///
 ///   * [Flyout], a light dismiss container that can show arbitrary UI as its
@@ -42,6 +65,7 @@ class DropDownButton extends StatefulWidget {
     this.onOpen,
     this.onClose,
     this.transitionBuilder = _defaultTransitionBuilder,
+    this.style,
   }) : assert(items.length > 0, 'You must provide at least one item');
 
   /// A builder for the button. If null, a [Button] with [leading], [title] and
@@ -118,7 +142,15 @@ class DropDownButton extends StatefulWidget {
   /// Called when the flyout is closed
   final VoidCallback? onClose;
 
+  /// The transition animation builder.
+  ///
+  /// See also:
+  ///
+  ///  * [FlyoutTransitionBuilder], which is the signature of this property
   final FlyoutTransitionBuilder transitionBuilder;
+
+  /// Customizes this button's appearance.
+  final ButtonStyle? style;
 
   @override
   State<DropDownButton> createState() => DropDownButtonState();
@@ -240,7 +272,6 @@ class DropDownButtonState extends State<DropDownButton> {
     assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
-
     return FlyoutTarget(
       controller: _flyoutController,
       child: Builder(builder: (context) {
@@ -255,6 +286,7 @@ class DropDownButtonState extends State<DropDownButton> {
           onPressed: widget.disabled ? null : open,
           autofocus: widget.autofocus,
           focusNode: widget.focusNode,
+          style: widget.style,
           child: Builder(builder: (context) {
             final state = HoverButton.of(context).states;
 
@@ -319,7 +351,6 @@ class DropDownButtonState extends State<DropDownButton> {
     bool dismissOnPointerMoveAway = false,
   }) async {
     if (_flyoutController.isOpen) return;
-
     widget.onOpen?.call();
     await _flyoutController.showFlyout(
       barrierColor: Colors.transparent,
@@ -335,15 +366,16 @@ class DropDownButtonState extends State<DropDownButton> {
         return MenuFlyout(
           color: widget.menuColor,
           shape: widget.menuShape,
-          items:
-              widget.items.map((item) => transformItem(item, context)).toList(),
+          items: widget.items
+              .map((item) => _transformItem(item, context))
+              .toList(),
         );
       },
     );
     widget.onClose?.call();
   }
 
-  MenuFlyoutItemBase transformItem(
+  MenuFlyoutItemBase _transformItem(
     MenuFlyoutItemBase item,
     BuildContext context,
   ) {
@@ -362,7 +394,7 @@ class DropDownButtonState extends State<DropDownButton> {
       text: item.text,
       items: (context) => item
           .items(context)
-          .map((item) => transformItem(item, context))
+          .map((item) => _transformItem(item, context))
           .toList(),
       leading: item.leading,
       trailing: item.trailing,

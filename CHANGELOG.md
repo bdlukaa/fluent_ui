@@ -1,6 +1,48 @@
 ## [next]
 
+- fix: hide Tab's close button when `onClosed` is null
+
+## 4.10.0
+
 - fix: Add missing properties (`closeIconSize`, `closeButtonStyle`) in `debugFillProperties` and `InfoBarThemeData.merge` ([#1128](https://github.com/bdlukaa/fluent_ui/issues/1128)
+- feat: Add `TabView.reservedStripWidth`, which adds a minimum empty area between the tabs and the tab view footer ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))]
+- fix: Correctly unfocus `NumberBox` when user taps outside ([#1135](https://github.com/bdlukaa/fluent_ui/issues/1135))
+- fix: Do try to scroll Date and Time at build time ([#1117](https://github.com/bdlukaa/fluent_ui/issues/1117))
+- feat: Use a `Decoration` instead of `Color` in `NavigationAppBar` ([#1118](https://github.com/bdlukaa/fluent_ui/issues/1118))
+- feat: Add `EditableComboBox.inputFormatters` ([#1041](https://github.com/bdlukaa/fluent_ui/issues/1041))
+- **BREAKING** feat: `TextBox.decoration` and `TextBox.foregroundDecoration` are now of type `WidgetStateProperty` ([#987](https://github.com/bdlukaa/fluent_ui/pull/987))
+  
+  Before:
+  ```dart
+  TextBox(
+    decoration: BoxDecoration(
+      color: Colors.red,
+    ),
+    foregroundDecoration: BoxDecoration(
+      color: Colors.blue,
+    ),
+  ),
+  ```
+
+  After:
+  ```dart
+  TextBox(
+    decoration: WidgetStateProperty.all(BoxDecoration(
+      color: Colors.red,
+    )),
+    foregroundDecoration: WidgetStateProperty.all(BoxDecoration(
+      color: Colors.blue,
+    )),
+  ),
+  ```
+- feat: Add `TabView.gestures`, which allows the manipulation of the tab gestures ([#1138](https://github.com/bdlukaa/fluent_ui/issues/1138))
+- feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
+- feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
+- fix: `TimePicker` hour offset
+- feat: Add `ColorPicker` ([#1152](https://github.com/bdlukaa/fluent_ui/pull/1152))
+- fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153)) 
+- fix: `NumberBox` incrementing/decrementing when not focused ([#1124](https://github.com/bdlukaa/fluent_ui/issues/1124))
+- fix: `NumberBox` text is correctly when there are no visible actions ([#1150](https://github.com/bdlukaa/fluent_ui/issues/1150))
 
 ## 4.9.2
 
@@ -49,8 +91,8 @@
         return ButtonState.forStates<Color>(
           states,
           disabled: Colors.grey,
-          hovered: Colors.white.withOpacity(0.8),
-          pressed: Colors.white.withOpacity(0.6),
+          hovered: Colors.white.withValues(alpha: 0.8),
+          pressed: Colors.white.withValues(alpha: 0.6),
         );
       }),
     ),
@@ -73,8 +115,8 @@
         return WidgetStateExtension.forStates<Color>(
           states,
           disabled: Colors.grey,
-          hovered: Colors.white.withOpacity(0.8),
-          pressed: Colors.white.withOpacity(0.6),
+          hovered: Colors.white.withValues(alpha: 0.8),
+          pressed: Colors.white.withValues(alpha: 0.6),
         );
       }),
     ),

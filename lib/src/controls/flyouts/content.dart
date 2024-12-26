@@ -79,7 +79,8 @@ class FlyoutContent extends StatelessWidget {
         child: Container(
           constraints: constraints,
           decoration: ShapeDecoration(
-            color: color ?? theme.menuColor.withOpacity(kMenuColorOpacity),
+            color:
+                color ?? theme.menuColor.withValues(alpha: kMenuColorOpacity),
             shape: resolvedShape,
           ),
           padding: padding,

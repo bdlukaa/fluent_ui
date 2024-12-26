@@ -861,7 +861,14 @@ class NavigationAppBar with Diagnosticable {
   final double height;
 
   /// The background color of this app bar.
+  ///
+  /// If this is provided, [decoration] must be null.
   final Color? backgroundColor;
+
+  /// The decoration of this app bar.
+  ///
+  /// If this is provided, [backgroundColor] must be null.
+  final Decoration? decoration;
 
   /// Creates a fluent-styled app bar.
   const NavigationAppBar({
@@ -872,7 +879,13 @@ class NavigationAppBar with Diagnosticable {
     this.automaticallyImplyLeading = true,
     this.height = _kDefaultAppBarHeight,
     this.backgroundColor,
-  });
+    this.decoration,
+  }) : assert(
+          (backgroundColor == null && decoration == null) ||
+              (backgroundColor != null && decoration == null) ||
+              (backgroundColor == null && decoration != null),
+          'Only one of backgroundColor or decoration can be provided',
+        );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -885,6 +898,7 @@ class NavigationAppBar with Diagnosticable {
         defaultValue: true,
       ))
       ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
       ..add(DoubleProperty(
         'height',
         height,
@@ -1035,6 +1049,7 @@ class _NavigationAppBar extends StatelessWidget {
 
     return Container(
       color: appBar.backgroundColor,
+      decoration: appBar.decoration,
       height: appBar.finalHeight(context),
       padding: EdgeInsetsDirectional.only(top: topPadding),
       child: result,

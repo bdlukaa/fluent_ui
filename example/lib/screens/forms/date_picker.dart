@@ -18,10 +18,20 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
   bool showMonth = true;
   bool showDay = true;
 
+  final datePickerKey = GlobalKey<DatePickerState>();
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('DatePicker')),
+      header: PageHeader(
+        title: const Text('DatePicker'),
+        commandBar: Button(
+          onPressed: () => setState(
+            () => simpleTime = hiddenTime = flexTime = null,
+          ),
+          child: const Text('Clear'),
+        ),
+      ),
       children: [
         const Text(
           'Use a DatePicker to let users set a date in your app, for example to '
@@ -97,14 +107,19 @@ DatePicker(
   onChanged: (time) => setState(() => selected = time),
   showYear: false,
 ),''',
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: DatePicker(
+          child: Row(children: [
+            DatePicker(
+              key: datePickerKey,
               selected: hiddenTime,
               onChanged: (v) => setState(() => hiddenTime = v),
               showYear: false,
             ),
-          ),
+            const Spacer(),
+            Button(
+              onPressed: () => datePickerKey.currentState?.open(),
+              child: const Text('Show picker'),
+            ),
+          ]),
         ),
         subtitle(content: const Text('A DatePicker with flex layout')),
         CardHighlight(
