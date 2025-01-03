@@ -1,0 +1,5 @@
+name: fluent_ui
+issueTracker: https://github.com/bdlukaa/fluent_ui/issues
+version: 0.0.1
+materialIconCodePoint: '0xe0b1'
+requiresConnection: true
