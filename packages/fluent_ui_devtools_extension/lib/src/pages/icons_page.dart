@@ -14,20 +14,23 @@ class _IconsPageState extends State<IconsPage> {
       FluentIcons.allIcons.entries.toList();
   final TextEditingController iconSearchController = TextEditingController();
 
-  List<MapEntry<String, IconData>> get displayIcons{
-    return icons.where((icon)=>icon.key.contains(iconSearchController.text)).toList();
+  List<MapEntry<String, IconData>> get displayIcons {
+    return icons
+        .where((icon) => icon.key.contains(iconSearchController.text))
+        .toList();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Fluent Icons"),
-        
         actions: [
           SizedBox(
               width: 250,
               child: DevToolsClearableTextField(
-                labelText: "Search",controller: iconSearchController,
+                labelText: "Search",
+                controller: iconSearchController,
                 onChanged: (p0) {
                   setState(() {});
                 },
@@ -38,13 +41,14 @@ class _IconsPageState extends State<IconsPage> {
         child: GridView.builder(
             itemCount: displayIcons.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              mainAxisSpacing: 5,crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                crossAxisSpacing: 5,
                 maxCrossAxisExtent: 250),
             itemBuilder: (context, index) {
               MapEntry<String, IconData> icon = displayIcons.elementAt(index);
               return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [Icon(icon.value), Text(icon.key)]);
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [Icon(icon.value), Text(icon.key)]);
             }),
       ),
     );

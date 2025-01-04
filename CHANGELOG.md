@@ -1,5 +1,6 @@
 ## [next]
 
+- feat: add support for showcasing and searching fluent icons in fluent ui devtools extension
 - fix: hide Tab's close button when `onClosed` is null
 
 ## 4.10.0

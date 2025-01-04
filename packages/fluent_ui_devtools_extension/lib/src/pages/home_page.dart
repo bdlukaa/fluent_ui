@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  DevToolsExtension(
+    return DevToolsExtension(
       child: IconsPage(),
     );
   }
