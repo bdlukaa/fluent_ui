@@ -9,6 +9,8 @@ environment:
 dependencies:
   devtools_app_shared: ^0.2.2
   devtools_extensions: ^0.2.2
+  fluent_ui:
+    path: ../../
   flutter:
     sdk: flutter
 

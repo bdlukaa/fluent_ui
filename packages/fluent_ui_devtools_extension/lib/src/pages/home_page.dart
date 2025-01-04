@@ -1,4 +1,5 @@
 import 'package:devtools_extensions/devtools_extensions.dart';
+import 'package:fluent_ui_devtools_extension/src/pages/icons_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,8 +7,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DevToolsExtension(
-      child: Placeholder(), // Build your extension here
+    return  DevToolsExtension(
+      child: IconsPage(),
     );
   }
 }
