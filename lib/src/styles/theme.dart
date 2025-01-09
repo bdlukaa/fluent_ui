@@ -199,6 +199,11 @@ class FluentThemeData with Diagnosticable {
   final Duration slowAnimationDuration;
   final Curve animationCurve;
 
+  /// See [EditableText.cursorOpacityAnimates]. Whether or not to have high
+  /// fidelity animation for the opacity of the blinking text cursor, at the
+  /// expense of higher CPU/GPU usage. Defaults to false (recommended).
+  final bool cursorOpacityAnimates;
+
   final Brightness brightness;
   final VisualDensity visualDensity;
 
@@ -243,6 +248,7 @@ class FluentThemeData with Diagnosticable {
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    bool? cursorOpacityAnimates,
     BottomNavigationThemeData? bottomNavigationTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
@@ -274,6 +280,7 @@ class FluentThemeData with Diagnosticable {
         ? const ResourceDictionary.light()
         : const ResourceDictionary.dark();
     animationCurve ??= standardCurve;
+    cursorOpacityAnimates ??= false;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
@@ -325,6 +332,7 @@ class FluentThemeData with Diagnosticable {
       mediumAnimationDuration: mediumAnimationDuration,
       slowAnimationDuration: slowAnimationDuration,
       animationCurve: animationCurve,
+      cursorOpacityAnimates: cursorOpacityAnimates,
       accentColor: accentColor,
       activeColor: activeColor,
       inactiveColor: inactiveColor,
@@ -369,6 +377,7 @@ class FluentThemeData with Diagnosticable {
     required this.mediumAnimationDuration,
     required this.slowAnimationDuration,
     required this.animationCurve,
+    required this.cursorOpacityAnimates,
     required this.brightness,
     required this.visualDensity,
     required this.scaffoldBackgroundColor,
@@ -432,6 +441,8 @@ class FluentThemeData with Diagnosticable {
       slowAnimationDuration:
           lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
       animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+      cursorOpacityAnimates:
+          t < 0.5 ? a.cursorOpacityAnimates : b.cursorOpacityAnimates,
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
@@ -499,6 +510,7 @@ class FluentThemeData with Diagnosticable {
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    bool? cursorOpacityAnimates,
     ButtonThemeData? buttonTheme,
     BottomNavigationThemeData? bottomNavigationTheme,
     CheckboxThemeData? checkboxTheme,
@@ -546,6 +558,8 @@ class FluentThemeData with Diagnosticable {
       slowAnimationDuration:
           slowAnimationDuration ?? this.slowAnimationDuration,
       animationCurve: animationCurve ?? this.animationCurve,
+      cursorOpacityAnimates:
+          cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
       bottomNavigationTheme:
           this.bottomNavigationTheme.merge(bottomNavigationTheme),
@@ -590,6 +604,8 @@ class FluentThemeData with Diagnosticable {
           'fastAnimationDuration', fastAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
           'fasterAnimationDuration', fasterAnimationDuration))
-      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve));
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty<bool>(
+          'cursorOpacityAnimates', cursorOpacityAnimates));
   }
 }
