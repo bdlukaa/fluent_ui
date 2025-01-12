@@ -176,6 +176,7 @@ class TextBox extends StatefulWidget {
     this.cursorHeight,
     this.cursorRadius = const Radius.circular(2.0),
     this.cursorColor,
+    this.cursorOpacityAnimates,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.keyboardAppearance,
@@ -447,6 +448,12 @@ class TextBox extends StatefulWidget {
   /// null, it uses the [FluentThemeData.inactiveColor] of the ambient theme.
   final Color? cursorColor;
 
+  /// When the widget has focus and the cursor should be blinking, indicates
+  /// whether or not to use high fidelity animation for the cursor's opacity,
+  /// or to just use simple blinking when the widget has focus.
+  /// Defaults to [FluentThemeData.cursorOpacityAnimates].
+  final bool? cursorOpacityAnimates;
+
   /// Controls how tall the selection highlight boxes are computed to be.
   ///
   /// See [ui.BoxHeightStyle] for details on available styles.
@@ -615,6 +622,8 @@ class TextBox extends StatefulWidget {
       ..add(DiagnosticsProperty<Radius>('cursorRadius', cursorRadius,
           defaultValue: null))
       ..add(ColorProperty('cursorColor', cursorColor, defaultValue: null))
+      ..add(DiagnosticsProperty<bool>(
+          'cursorOpacityAnimates', cursorOpacityAnimates))
       ..add(FlagProperty('selectionEnabled',
           value: selectionEnabled,
           defaultValue: true,
@@ -1008,6 +1017,8 @@ class _TextBoxState extends State<TextBox>
     final cursorColor = widget.cursorColor ??
         DefaultSelectionStyle.of(context).cursorColor ??
         themeData.inactiveColor;
+    final cursorOpacityAnimates =
+        widget.cursorOpacityAnimates ?? themeData.cursorOpacityAnimates;
 
     final selectionColor = DefaultSelectionStyle.of(context).selectionColor ??
         themeData.accentColor.normal;
@@ -1071,7 +1082,7 @@ class _TextBoxState extends State<TextBox>
             cursorHeight: widget.cursorHeight,
             cursorRadius: widget.cursorRadius,
             cursorColor: cursorColor,
-            cursorOpacityAnimates: true,
+            cursorOpacityAnimates: cursorOpacityAnimates,
             cursorOffset: cursorOffset,
             paintCursorAboveText: true,
             autocorrectionTextRectColor: selectionColor,
