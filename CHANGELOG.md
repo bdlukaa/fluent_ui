@@ -1,5 +1,6 @@
 ## [next]
 
+- feat: add support for showcasing and searching fluent icons in fluent ui devtools extension
 - fix: hide Tab's close button when `onClosed` is null
 - feat: Add `TextBox.cursorOpacityAnimates` (defaults to `FluentThemeData.cursorOpacityAnimates`, which defaults to `false`); default setting improves CPU/GPU efficiency while TextBox has focus ([#1164](https://github.com/bdlukaa/fluent_ui/issues/1164))
 
