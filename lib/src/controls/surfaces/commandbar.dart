@@ -541,7 +541,15 @@ class CommandBarButton extends CommandBarItem {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// The tooltip to show when the button is hovered over.
   final String? tooltip;
+
+  /// Whether the flyout will be closed after an item is tapped.
+  ///
+  /// This only affects items in secondary mode.
+  ///
+  /// Defaults to `true`.
+  final bool closeAfterClick;
 
   /// Creates a command bar button
   const CommandBarButton({
@@ -555,6 +563,7 @@ class CommandBarButton extends CommandBarItem {
     this.focusNode,
     this.autofocus = false,
     this.tooltip,
+    this.closeAfterClick = true,
   });
 
   @override
@@ -600,18 +609,19 @@ class CommandBarButton extends CommandBarItem {
         }
         return button;
       case CommandBarItemDisplayMode.inSecondary:
-        return Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
-          child: FlyoutListTile(
-            key: key,
-            onPressed: onPressed,
-            focusNode: focusNode,
-            autofocus: autofocus,
-            icon: icon,
-            text: label ?? const SizedBox.shrink(),
-            tooltip: tooltip,
-          ),
-        );
+        return MenuFlyoutItem(
+          key: key,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          leading: icon,
+          text: label ?? const SizedBox.shrink(),
+          trailing: () {
+            if (trailing != null) return trailing!;
+            if (tooltip != null) return Text(tooltip!);
+            return null;
+          }(),
+          closeAfterClick: closeAfterClick,
+        ).build(context);
     }
   }
 }

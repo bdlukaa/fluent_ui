@@ -12,27 +12,17 @@ class CommandBarsPage extends StatefulWidget {
 
 class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   final simpleCommandBarItems = <CommandBarItem>[
-    CommandBarBuilderItem(
-      builder: (context, mode, w) => Tooltip(
-        message: "Create something new!",
-        child: w,
-      ),
-      wrappedItem: CommandBarButton(
-        icon: const Icon(FluentIcons.add),
-        label: const Text('New'),
-        onPressed: () {},
-      ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.add),
+      label: const Text('New'),
+      tooltip: 'Create something new!',
+      onPressed: () {},
     ),
-    CommandBarBuilderItem(
-      builder: (context, mode, w) => Tooltip(
-        message: "Delete what is currently selected!",
-        child: w,
-      ),
-      wrappedItem: CommandBarButton(
-        icon: const Icon(FluentIcons.delete),
-        label: const Text('Delete'),
-        onPressed: () {},
-      ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Delete'),
+      tooltip: 'Delete what is currently selected!',
+      onPressed: () {},
     ),
     CommandBarButton(
       icon: const Icon(FluentIcons.archive),
@@ -140,27 +130,17 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
           codeSnippet: '''
 /// Define list of CommandBarItem
 final simpleCommandBarItems = <CommandBarItem>[
-  CommandBarBuilderItem(
-    builder: (context, mode, w) => Tooltip(
-      message: "Create something new!",
-      child: w,
-    ),
-    wrappedItem: CommandBarButton(
-      icon: const Icon(FluentIcons.add),
-      label: const Text('New'),
-      onPressed: () {},
-    ),
+  CommandBarButton(
+    icon: const Icon(FluentIcons.add),
+    label: const Text('New'),
+    tooltip: 'Create something new!',
+    onPressed: () {},
   ),
-  CommandBarBuilderItem(
-    builder: (context, mode, w) => Tooltip(
-      message: "Delete what is currently selected!",
-      child: w,
-    ),
-    wrappedItem: CommandBarButton(
-      icon: const Icon(FluentIcons.delete),
-      label: const Text('Delete'),
-      onPressed: () {},
-    ),
+  CommandBarButton(
+    icon: const Icon(FluentIcons.delete),
+    label: const Text('Delete'),
+    tooltip: 'Delete what is currently selected!',
+    onPressed: () {},
   ),
   CommandBarButton(
     icon: const Icon(FluentIcons.archive),

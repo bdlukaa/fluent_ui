@@ -64,7 +64,7 @@ class FlyoutContent extends StatelessWidget {
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.0),
           side: BorderSide(
-            width: 0.25,
+            width: 0.5,
             color: theme.inactiveBackgroundColor,
           ),
         );
@@ -94,7 +94,7 @@ class FlyoutContent extends StatelessWidget {
   }
 }
 
-/// A tile that is used inside of [FlyoutContent]
+/// A tile that is used inside of [FlyoutContent].
 ///
 /// See also:
 ///
@@ -105,6 +105,7 @@ class FlyoutListTile extends StatelessWidget {
   const FlyoutListTile({
     super.key,
     this.onPressed,
+    this.onLongPress,
     this.tooltip,
     this.icon,
     required this.text,
@@ -117,7 +118,11 @@ class FlyoutListTile extends StatelessWidget {
     this.showSelectedIndicator = true,
   });
 
+  /// Called when the tile is tapped or otherwise activated.
   final VoidCallback? onPressed;
+
+  /// Called when the tile is long-pressed.
+  final VoidCallback? onLongPress;
 
   /// The tile tooltip text
   final String? tooltip;
@@ -160,6 +165,7 @@ class FlyoutListTile extends StatelessWidget {
     return HoverButton(
       key: key,
       onPressed: onPressed,
+      onLongPress: onLongPress,
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
