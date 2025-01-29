@@ -1,7 +1,14 @@
 {
+  "ar": [
+    "seeMore",
+    "seeLess"
+  ],
+
   "be": [
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -142,7 +149,89 @@
     "colorWhite"
   ],
 
+  "bn": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ca": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "cs": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "de": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "el": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "es": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "fa": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "fr": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "he": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hi": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hr": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hu": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "id": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "it": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ja": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ko": [
+    "seeMore",
+    "seeLess"
+  ],
+
   "ku": [
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -290,12 +379,16 @@
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
   ],
 
   "my": [
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -434,6 +527,11 @@
     "colorLightYellow",
     "colorIvory",
     "colorWhite"
+  ],
+
+  "nl": [
+    "seeMore",
+    "seeLess"
   ],
 
   "pl": [
@@ -443,7 +541,14 @@
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ro": [
+    "seeMore",
+    "seeLess"
   ],
 
   "ru": [
@@ -453,17 +558,53 @@
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "sk": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "sv": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ta": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "th": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "tr": [
+    "seeMore",
+    "seeLess"
   ],
 
   "uk": [
     "am",
-    "pm"
+    "pm",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ur": [
+    "seeMore",
+    "seeLess"
   ],
 
   "uz": [
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -602,5 +743,20 @@
     "colorLightYellow",
     "colorIvory",
     "colorWhite"
+  ],
+
+  "vi": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "zh": [
+    "seeMore",
+    "seeLess"
+  ],
+
+  "zh_Hant": [
+    "seeMore",
+    "seeLess"
   ]
 }

@@ -102,6 +102,12 @@ class FluentLocalizationsRo extends FluentLocalizations {
   String get year => 'an';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Roșu';
 
   @override

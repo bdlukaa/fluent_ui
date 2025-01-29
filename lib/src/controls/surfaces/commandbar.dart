@@ -229,7 +229,9 @@ class _CommandBarState extends State<CommandBar> {
   }
 
   Widget _buildForPrimaryMode(
-      BuildContext context, CommandBarItemDisplayMode primaryMode) {
+    BuildContext context,
+    CommandBarItemDisplayMode primaryMode,
+  ) {
     final builtItems =
         widget.primaryItems.map((item) => item.build(context, primaryMode));
     Widget? overflowWidget;
@@ -242,13 +244,14 @@ class _CommandBarState extends State<CommandBar> {
         ...widget.secondaryItems,
       ];
 
-      void toggleSecondaryMenu() {
+      Future<void> toggleSecondaryMenu() async {
         if (secondaryFlyoutController.isOpen) {
           Navigator.of(context).pop();
+          if (mounted) setState(() {});
           return;
         }
 
-        secondaryFlyoutController.showFlyout(
+        final future = secondaryFlyoutController.showFlyout(
           buildTarget: true,
           autoModeConfiguration: FlyoutAutoConfiguration(
             preferredMode: FlyoutPlacementMode.bottomRight.resolve(
@@ -271,6 +274,11 @@ class _CommandBarState extends State<CommandBar> {
             );
           },
         );
+        // Update the widget to update the tooltip of the default overflow item
+        if (mounted) setState(() {});
+
+        await future;
+        if (mounted) setState(() {});
       }
 
       late CommandBarItem overflowItem;
@@ -279,6 +287,9 @@ class _CommandBarState extends State<CommandBar> {
       } else {
         overflowItem = CommandBarButton(
           onPressed: toggleSecondaryMenu,
+          tooltip: secondaryFlyoutController.isOpen
+              ? FluentLocalizations.of(context).seeLess
+              : FluentLocalizations.of(context).seeMore,
           icon: const Icon(FluentIcons.more),
         );
       }
@@ -524,6 +535,8 @@ class CommandBarButton extends CommandBarItem {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  final String? tooltip;
+
   /// Creates a command bar button
   const CommandBarButton({
     super.key,
@@ -535,6 +548,7 @@ class CommandBarButton extends CommandBarItem {
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
+    this.tooltip,
   });
 
   @override
@@ -546,7 +560,7 @@ class CommandBarButton extends CommandBarItem {
         final showIcon = icon != null;
         final showLabel = label != null &&
             (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon);
-        return IconButton(
+        final button = IconButton(
           key: key,
           onPressed: onPressed,
           onLongPress: onLongPress,
@@ -572,6 +586,13 @@ class CommandBarButton extends CommandBarItem {
             if (showLabel) label!,
           ]),
         );
+        if (tooltip != null) {
+          return Tooltip(
+            message: tooltip!,
+            child: button,
+          );
+        }
+        return button;
       case CommandBarItemDisplayMode.inSecondary:
         return Padding(
           padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
@@ -582,6 +603,7 @@ class CommandBarButton extends CommandBarItem {
             autofocus: autofocus,
             icon: icon,
             text: label ?? const SizedBox.shrink(),
+            tooltip: tooltip,
           ),
         );
     }

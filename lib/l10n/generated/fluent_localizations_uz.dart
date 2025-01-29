@@ -101,6 +101,12 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get year => 'yil';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Qizil';
 
   @override
