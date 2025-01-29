@@ -18,7 +18,7 @@ Iterable<int> _monthsInYear(
       yield current;
     }
   } else if (localDate.year == endDate.year) {
-    for (var current = endDate.month; current <= 12; current++) {
+    for (var current = 1; current <= endDate.month; current++) {
       yield current;
     }
   } else {
