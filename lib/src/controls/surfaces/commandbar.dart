@@ -242,8 +242,14 @@ class _CommandBarState extends State<CommandBar> {
         ...widget.secondaryItems,
       ];
 
-      void showSecondaryMenu() {
+      void toggleSecondaryMenu() {
+        if (secondaryFlyoutController.isOpen) {
+          Navigator.of(context).pop();
+          return;
+        }
+
         secondaryFlyoutController.showFlyout(
+          buildTarget: true,
           autoModeConfiguration: FlyoutAutoConfiguration(
             preferredMode: FlyoutPlacementMode.bottomRight.resolve(
               Directionality.of(context),
@@ -269,10 +275,10 @@ class _CommandBarState extends State<CommandBar> {
 
       late CommandBarItem overflowItem;
       if (widget.overflowItemBuilder != null) {
-        overflowItem = widget.overflowItemBuilder!(showSecondaryMenu);
+        overflowItem = widget.overflowItemBuilder!(toggleSecondaryMenu);
       } else {
         overflowItem = CommandBarButton(
-          onPressed: showSecondaryMenu,
+          onPressed: toggleSecondaryMenu,
           icon: const Icon(FluentIcons.more),
         );
       }
@@ -282,10 +288,7 @@ class _CommandBarState extends State<CommandBar> {
           allSecondaryItems.first is CommandBarSeparator) {
         allSecondaryItems.removeAt(0);
       }
-      overflowWidget = FlyoutTarget(
-        controller: secondaryFlyoutController,
-        child: overflowItem.build(context, primaryMode),
-      );
+      overflowWidget = overflowItem.build(context, primaryMode);
     }
 
     var listBuilder =
@@ -374,7 +377,7 @@ class _CommandBarState extends State<CommandBar> {
     if (widget._isExpanded) {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
-    return w;
+    return FlyoutTarget(controller: secondaryFlyoutController, child: w);
   }
 
   @override
