@@ -182,12 +182,57 @@ class CommandBar extends StatefulWidget {
                 : CrossAxisAlignment.center);
 
   @override
-  State<CommandBar> createState() => _CommandBarState();
+  State<CommandBar> createState() => CommandBarState();
 }
 
-class _CommandBarState extends State<CommandBar> {
+class CommandBarState extends State<CommandBar> {
   final secondaryFlyoutController = FlyoutController();
-  List<int> dynamicallyHiddenPrimaryItems = [];
+  List<int> _dynamicallyHiddenPrimaryItems = [];
+
+  List<CommandBarItem> get allSecondaryItems {
+    return <CommandBarItem>[
+      ..._dynamicallyHiddenPrimaryItems
+          .map((index) => widget.primaryItems[index]),
+      ...widget.secondaryItems,
+    ];
+  }
+
+  Future<void> toggleSecondaryMenu() async {
+    if (secondaryFlyoutController.isOpen) {
+      secondaryFlyoutController.close();
+      if (mounted) setState(() {});
+      return;
+    }
+
+    final future = secondaryFlyoutController.showFlyout(
+      buildTarget: true,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: FlyoutPlacementMode.bottomRight.resolve(
+          Directionality.of(context),
+        ),
+      ),
+      builder: (context) {
+        return FlyoutContent(
+          constraints: const BoxConstraints(maxWidth: 200.0),
+          padding: const EdgeInsetsDirectional.only(top: 8.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: allSecondaryItems.map((item) {
+              return item.build(
+                context,
+                CommandBarItemDisplayMode.inSecondary,
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+    // Update the widget to update the tooltip of the default overflow item
+    if (mounted) setState(() {});
+
+    await future;
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
@@ -238,49 +283,6 @@ class _CommandBarState extends State<CommandBar> {
 
     if (widget.secondaryItems.isNotEmpty ||
         widget.overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
-      var allSecondaryItems = [
-        ...dynamicallyHiddenPrimaryItems
-            .map((index) => widget.primaryItems[index]),
-        ...widget.secondaryItems,
-      ];
-
-      Future<void> toggleSecondaryMenu() async {
-        if (secondaryFlyoutController.isOpen) {
-          Navigator.of(context).pop();
-          if (mounted) setState(() {});
-          return;
-        }
-
-        final future = secondaryFlyoutController.showFlyout(
-          buildTarget: true,
-          autoModeConfiguration: FlyoutAutoConfiguration(
-            preferredMode: FlyoutPlacementMode.bottomRight.resolve(
-              Directionality.of(context),
-            ),
-          ),
-          builder: (context) {
-            return FlyoutContent(
-              constraints: const BoxConstraints(maxWidth: 200.0),
-              padding: const EdgeInsetsDirectional.only(top: 8.0),
-              child: ListView(
-                shrinkWrap: true,
-                children: allSecondaryItems.map((item) {
-                  return item.build(
-                    context,
-                    CommandBarItemDisplayMode.inSecondary,
-                  );
-                }).toList(),
-              ),
-            );
-          },
-        );
-        // Update the widget to update the tooltip of the default overflow item
-        if (mounted) setState(() {});
-
-        await future;
-        if (mounted) setState(() {});
-      }
-
       late CommandBarItem overflowItem;
       if (widget.overflowItemBuilder != null) {
         overflowItem = widget.overflowItemBuilder!(toggleSecondaryMenu);
@@ -364,7 +366,7 @@ class _CommandBarState extends State<CommandBar> {
                 }
                 return true;
               }());
-              dynamicallyHiddenPrimaryItems = hiddenItems;
+              _dynamicallyHiddenPrimaryItems = hiddenItems;
             });
           },
           children: builtItems.toList(),
@@ -442,7 +444,7 @@ enum CommandBarItemDisplayMode {
   ///
   /// Normally you would want to render an item in this visual context as a
   /// [ListTile].
-  inSecondary,
+  inSecondary;
 }
 
 /// An individual control displayed within a [CommandBar]. Sub-class this to
@@ -526,7 +528,11 @@ class CommandBarButton extends CommandBarItem {
 
   /// The trailing widget to use if this item is shown in the secondary menu
   final Widget? trailing;
+
+  /// The callback to call when the button is pressed.
   final VoidCallback? onPressed;
+
+  /// The callback to call when the button is long pressed.
   final VoidCallback? onLongPress;
 
   /// {@macro flutter.widgets.Focus.focusNode}
