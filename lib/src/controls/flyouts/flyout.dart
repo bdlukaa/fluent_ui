@@ -788,6 +788,12 @@ class FlyoutController with ChangeNotifier {
 
     return result;
   }
+
+  void close() {
+    _ensureAttached();
+    assert(_open);
+    Navigator.of(_attachState!.context).pop();
+  }
 }
 
 class _DismissAction extends DismissAction {
