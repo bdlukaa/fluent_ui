@@ -1,8 +1,9 @@
 ## [next]
 
-- fix: DatePicker selectable range matches the one beetween startDate and endDate [#1170](https://github.com/bdlukaa/fluent_ui/issues/1170)
 - fix: hide Tab's close button when `onClosed` is null
 - feat: Add `TextBox.cursorOpacityAnimates` (defaults to `FluentThemeData.cursorOpacityAnimates`, which defaults to `false`); default setting improves CPU/GPU efficiency while TextBox has focus ([#1164](https://github.com/bdlukaa/fluent_ui/issues/1164))
+- fix: `DatePicker` selectable range matches the one between `startDate` and `endDate`. [#1170](https://github.com/bdlukaa/fluent_ui/issues/1170)
+- fix: `ScaffoldPage` has a built-in color if no parent `NavigationView` is found. ([#1168](https://github.com/bdlukaa/fluent_ui/issues/1168))
 
 ## 4.10.0
 

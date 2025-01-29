@@ -41,15 +41,17 @@ class Mica extends StatelessWidget {
   /// The value is non-negative.
   final double elevation;
 
-  /// The color to paint the background area with. If null,
-  /// [FluentThemeData.micaBackgroundColor] is used.
+  /// The color to paint the background area with.
+  ///
+  /// If null, [FluentThemeData.micaBackgroundColor] is used.
   final Color? backgroundColor;
 
   /// The border radius applied to the area.
   final BorderRadius? borderRadius;
 
   /// The box shape applied to the area.
-  /// By default, the value of shape is [BoxShape.rectangle]
+  ///
+  /// Defaults to [BoxShape.rectangle].
   final BoxShape shape;
 
   @override
