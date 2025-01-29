@@ -245,7 +245,7 @@ class _CommandBarState extends State<CommandBar> {
       void showSecondaryMenu() {
         secondaryFlyoutController.showFlyout(
           autoModeConfiguration: FlyoutAutoConfiguration(
-            preferredMode: FlyoutPlacementMode.topRight.resolve(
+            preferredMode: FlyoutPlacementMode.bottomRight.resolve(
               Directionality.of(context),
             ),
           ),
