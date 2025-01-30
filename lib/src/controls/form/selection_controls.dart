@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -112,6 +110,10 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 
   @override
+  @Deprecated(
+    'Use `contextMenuBuilder` instead. '
+    'This feature was deprecated after v3.3.0-0.5.pre.',
+  )
   Widget buildToolbar(
     BuildContext context,
     Rect globalEditableRegion,
@@ -389,7 +391,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           anchor: anchor - localAdjustment,
         ),
         child: Acrylic(
-          elevation: 4.0,
+          // elevation: 4.0,
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
             color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
@@ -482,9 +484,8 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                   ),
                   Text(
                     shortcut,
-                    style: body.merge(TextStyle(
-                      fontSize: 12.0,
-                      color: theme.resources.controlStrokeColorDefault,
+                    style: body.merge(const TextStyle(
+                      fontSize: 10.0,
                       height: 0.7,
                     )),
                   ),

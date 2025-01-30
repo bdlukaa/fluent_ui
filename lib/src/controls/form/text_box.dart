@@ -563,7 +563,7 @@ class TextBox extends StatefulWidget {
 
   static Widget _defaultContextMenuBuilder(
       BuildContext context, EditableTextState editableTextState) {
-    return AdaptiveTextSelectionToolbar.editableText(
+    return FluentTextSelectionToolbar.editableText(
       editableTextState: editableTextState,
     );
   }
