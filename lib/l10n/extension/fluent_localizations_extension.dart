@@ -35,6 +35,9 @@ extension FluentLocalizationsExtension on FluentLocalizations {
   /// The select all shortcut label used by text selection controls.
   String get selectAllShortcut => '$_ctrlCmd+A';
 
+  /// The select all shortcut label used by text selection controls.
+  String get undoShortcut => '$_ctrlCmd+Z';
+
   /// Returns DisplayName of the color
   ///
   /// This method checks if the provided `colorKey` starts with 'color'.

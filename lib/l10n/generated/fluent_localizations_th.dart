@@ -52,6 +52,9 @@ class FluentLocalizationsTh extends FluentLocalizations {
   String get selectAllActionLabel => 'เลือกทั้งหมด';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'เพิ่มแท็บใหม่';
 
   @override
@@ -77,6 +80,9 @@ class FluentLocalizationsTh extends FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => 'เลือกเนื้อหาทั้งหมด';
+
+  @override
+  String get undoActionTooltip => 'Undo the last action';
 
   @override
   String get hour => 'ชั่วโมง';

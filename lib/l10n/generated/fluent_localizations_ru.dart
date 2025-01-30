@@ -52,6 +52,9 @@ class FluentLocalizationsRu extends FluentLocalizations {
   String get selectAllActionLabel => 'Выбрать все';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Новая вкладка';
 
   @override
@@ -77,6 +80,9 @@ class FluentLocalizationsRu extends FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => 'Выбрать все';
+
+  @override
+  String get undoActionTooltip => 'Undo the last action';
 
   @override
   String get hour => 'hour';

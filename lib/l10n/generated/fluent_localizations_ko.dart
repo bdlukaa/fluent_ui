@@ -52,6 +52,9 @@ class FluentLocalizationsKo extends FluentLocalizations {
   String get selectAllActionLabel => '전체선택';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => '새탭';
 
   @override
@@ -77,6 +80,9 @@ class FluentLocalizationsKo extends FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => '전체선택';
+
+  @override
+  String get undoActionTooltip => 'Undo the last action';
 
   @override
   String get hour => '시';

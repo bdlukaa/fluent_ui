@@ -52,6 +52,9 @@ class FluentLocalizationsSk extends FluentLocalizations {
   String get selectAllActionLabel => 'Vybrať všetko';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Pridať novú záložku';
 
   @override
@@ -79,6 +82,9 @@ class FluentLocalizationsSk extends FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => 'Vybrať všetok obsah';
+
+  @override
+  String get undoActionTooltip => 'Undo the last action';
 
   @override
   String get hour => 'hodina';

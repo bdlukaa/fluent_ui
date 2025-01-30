@@ -52,6 +52,9 @@ class FluentLocalizationsPt extends FluentLocalizations {
   String get selectAllActionLabel => 'Selecionar tudo';
 
   @override
+  String get undoActionLabel => 'Desfazer';
+
+  @override
   String get newTabLabel => 'Adicionar nova guia';
 
   @override
@@ -80,6 +83,9 @@ class FluentLocalizationsPt extends FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => 'Selecionar tudo';
+
+  @override
+  String get undoActionTooltip => 'Desfazer a última ação';
 
   @override
   String get hour => 'hora';

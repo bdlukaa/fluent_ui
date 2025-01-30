@@ -60,6 +60,10 @@
   "@selectAllActionLabel": {
     "description": "The label for the select all button on the text selection controls."
   },
+  "undoActionLabel": "Undo",
+  "@undoActionLabel": {
+    "description": "The label for the undo button on the text selection controls."
+  },
   "newTabLabel": "Add new tab",
   "@newTabLabel": {
     "description": "The label used by [TabView]'s new button."
@@ -95,6 +99,10 @@
   "selectAllActionTooltip": "Select all content",
   "@selectAllActionTooltip": {
     "description": "The tooltip for the select all action on the text selection controls."
+  },
+  "undoActionTooltip": "Undo the last action",
+  "@undoActionTooltip": {
+    "description": "The tooltip for the undo action on the text selection controls."
   },
   "hour": "hour",
   "@hour": {
