@@ -101,6 +101,12 @@ class FluentLocalizationsVi extends FluentLocalizations {
   String get year => 'năm';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Đỏ';
 
   @override

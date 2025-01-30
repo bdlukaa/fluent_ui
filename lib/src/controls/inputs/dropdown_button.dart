@@ -111,7 +111,7 @@ class DropDownButton extends StatefulWidget {
 
   /// Whether the flyout will be closed after an item is tapped.
   ///
-  /// This is only effective on items that are [MenuFlyoutItem]
+  /// This is only effective on items that are [MenuFlyoutItem].
   ///
   /// Defaults to `true`
   final bool closeAfterClick;

@@ -104,6 +104,12 @@ class FluentLocalizationsTa extends FluentLocalizations {
   String get year => 'ஆண்டு';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'சிவப்பு';
 
   @override

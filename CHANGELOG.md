@@ -4,6 +4,23 @@
 - feat: Add `TextBox.cursorOpacityAnimates` (defaults to `FluentThemeData.cursorOpacityAnimates`, which defaults to `false`); default setting improves CPU/GPU efficiency while TextBox has focus ([#1164](https://github.com/bdlukaa/fluent_ui/issues/1164))
 - fix: `DatePicker` selectable range matches the one between `startDate` and `endDate`. [#1170](https://github.com/bdlukaa/fluent_ui/issues/1170)
 - fix: `ScaffoldPage` has a built-in color if no parent `NavigationView` is found. ([#1168](https://github.com/bdlukaa/fluent_ui/issues/1168))
+- feat: Added `CommandBarButton.closeAfterClick` ([#1149](https://github.com/bdlukaa/fluent_ui/issues/1149))
+- feat: Added `FlyoutController.showFlyout.buildTarget` ([#1173](https://github.com/bdlukaa/fluent_ui/issues/1173))
+  Primary items of the command bar are now accessible through the secondary flyout.
+- fix: `CommandBar` secondary menu preferred placement mode ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+- feat: Added `FlyoutController.close` ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+- feat: `CommandBarState` is now accessible, making it possible to open/close the secondary flyout programmatically ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+  ```dart
+  final commandBarKey = GlobalKey<CommandBarState>();
+
+  CommandBar(
+    key: commandBarKey, 
+    ...,
+  ),
+  
+  commandBarKey.currentState?.toggleSecondaryMenu();
+  commandBarKey.currentState?.secondaryFlyoutController.close();
+  ```
 
 ## 4.10.0
 

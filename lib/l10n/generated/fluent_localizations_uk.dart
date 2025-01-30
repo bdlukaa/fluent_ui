@@ -100,6 +100,12 @@ class FluentLocalizationsUk extends FluentLocalizations {
   String get year => 'рік';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Червоний';
 
   @override

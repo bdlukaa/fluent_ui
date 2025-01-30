@@ -102,6 +102,12 @@ class FluentLocalizationsNl extends FluentLocalizations {
   String get year => 'jaar';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Rood';
 
   @override

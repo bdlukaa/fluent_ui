@@ -236,6 +236,8 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
     required this.text,
     this.trailing,
     required this.onPressed,
+    this.onLongPress,
+    this.focusNode,
     this.selected = false,
     this.closeAfterClick = true,
   });
@@ -265,6 +267,12 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   ///
   /// If `null`, the item will be marked as disabled.
   final VoidCallback? onPressed;
+
+  /// Called when the item is long pressed.
+  final VoidCallback? onLongPress;
+
+  /// The focus node of the item.
+  final FocusNode? focusNode;
 
   /// Whether this item is selected or not.
   final bool selected;
@@ -301,6 +309,8 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
                 if (closeAfterClick) Navigator.of(context).maybePop();
                 onPressed?.call();
               },
+        onLongPress: onLongPress,
+        focusNode: focusNode,
       ),
     );
   }

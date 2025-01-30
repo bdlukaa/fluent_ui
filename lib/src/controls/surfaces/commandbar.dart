@@ -182,12 +182,58 @@ class CommandBar extends StatefulWidget {
                 : CrossAxisAlignment.center);
 
   @override
-  State<CommandBar> createState() => _CommandBarState();
+  State<CommandBar> createState() => CommandBarState();
 }
 
-class _CommandBarState extends State<CommandBar> {
+class CommandBarState extends State<CommandBar> {
   final secondaryFlyoutController = FlyoutController();
-  List<int> dynamicallyHiddenPrimaryItems = [];
+  List<int> _dynamicallyHiddenPrimaryItems = [];
+
+  List<CommandBarItem> get allSecondaryItems {
+    return <CommandBarItem>[
+      ..._dynamicallyHiddenPrimaryItems
+          .map((index) => widget.primaryItems[index]),
+      ...widget.secondaryItems,
+    ];
+  }
+
+  Future<void> toggleSecondaryMenu() async {
+    if (secondaryFlyoutController.isOpen) {
+      secondaryFlyoutController.close();
+      if (mounted) setState(() {});
+      return;
+    }
+
+    final future = secondaryFlyoutController.showFlyout(
+      buildTarget: true,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: (widget.direction == Axis.horizontal
+                ? FlyoutPlacementMode.bottomRight
+                : FlyoutPlacementMode.right)
+            .resolve(Directionality.of(context)),
+      ),
+      builder: (context) {
+        return FlyoutContent(
+          constraints: const BoxConstraints(maxWidth: 200.0),
+          padding: const EdgeInsetsDirectional.only(top: 8.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: allSecondaryItems.map((item) {
+              return item.build(
+                context,
+                CommandBarItemDisplayMode.inSecondary,
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+    // Update the widget to update the tooltip of the default overflow item
+    if (mounted) setState(() {});
+
+    await future;
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
@@ -229,50 +275,25 @@ class _CommandBarState extends State<CommandBar> {
   }
 
   Widget _buildForPrimaryMode(
-      BuildContext context, CommandBarItemDisplayMode primaryMode) {
+    BuildContext context,
+    CommandBarItemDisplayMode primaryMode,
+  ) {
+    final theme = FluentTheme.of(context);
     final builtItems =
         widget.primaryItems.map((item) => item.build(context, primaryMode));
     Widget? overflowWidget;
 
     if (widget.secondaryItems.isNotEmpty ||
         widget.overflowBehavior == CommandBarOverflowBehavior.dynamicOverflow) {
-      var allSecondaryItems = [
-        ...dynamicallyHiddenPrimaryItems
-            .map((index) => widget.primaryItems[index]),
-        ...widget.secondaryItems,
-      ];
-
-      void showSecondaryMenu() {
-        secondaryFlyoutController.showFlyout(
-          autoModeConfiguration: FlyoutAutoConfiguration(
-            preferredMode: FlyoutPlacementMode.topRight.resolve(
-              Directionality.of(context),
-            ),
-          ),
-          builder: (context) {
-            return FlyoutContent(
-              constraints: const BoxConstraints(maxWidth: 200.0),
-              padding: const EdgeInsetsDirectional.only(top: 8.0),
-              child: ListView(
-                shrinkWrap: true,
-                children: allSecondaryItems.map((item) {
-                  return item.build(
-                    context,
-                    CommandBarItemDisplayMode.inSecondary,
-                  );
-                }).toList(),
-              ),
-            );
-          },
-        );
-      }
-
       late CommandBarItem overflowItem;
       if (widget.overflowItemBuilder != null) {
-        overflowItem = widget.overflowItemBuilder!(showSecondaryMenu);
+        overflowItem = widget.overflowItemBuilder!(toggleSecondaryMenu);
       } else {
         overflowItem = CommandBarButton(
-          onPressed: showSecondaryMenu,
+          onPressed: toggleSecondaryMenu,
+          tooltip: secondaryFlyoutController.isOpen
+              ? FluentLocalizations.of(context).seeLess
+              : FluentLocalizations.of(context).seeMore,
           icon: const Icon(FluentIcons.more),
         );
       }
@@ -282,10 +303,7 @@ class _CommandBarState extends State<CommandBar> {
           allSecondaryItems.first is CommandBarSeparator) {
         allSecondaryItems.removeAt(0);
       }
-      overflowWidget = FlyoutTarget(
-        controller: secondaryFlyoutController,
-        child: overflowItem.build(context, primaryMode),
-      );
+      overflowWidget = overflowItem.build(context, primaryMode);
     }
 
     var listBuilder =
@@ -350,7 +368,7 @@ class _CommandBarState extends State<CommandBar> {
                 }
                 return true;
               }());
-              dynamicallyHiddenPrimaryItems = hiddenItems;
+              _dynamicallyHiddenPrimaryItems = hiddenItems;
             });
           },
           children: builtItems.toList(),
@@ -374,7 +392,26 @@ class _CommandBarState extends State<CommandBar> {
     if (widget._isExpanded) {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
-    return w;
+    w = Container(
+      padding: const EdgeInsets.all(4.0),
+      decoration: ShapeDecoration(
+        color: secondaryFlyoutController.isOpen
+            ? theme.menuColor.withValues(alpha: kMenuColorOpacity)
+            : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(
+            width: 1,
+            color: secondaryFlyoutController.isOpen
+                ? theme.inactiveBackgroundColor
+                : Colors.transparent,
+          ),
+        ),
+      ),
+      child: w,
+    );
+
+    return FlyoutTarget(controller: secondaryFlyoutController, child: w);
   }
 
   @override
@@ -386,19 +423,25 @@ class _CommandBarState extends State<CommandBar> {
       final displayMode = (widget.isCompact ?? false)
           ? CommandBarItemDisplayMode.inPrimaryCompact
           : CommandBarItemDisplayMode.inPrimary;
-      return _buildForPrimaryMode(context, displayMode);
+      return Builder(builder: (context) {
+        return _buildForPrimaryMode(context, displayMode);
+      });
     } else {
       return LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth > widget.compactBreakpointWidth!) {
-          return _buildForPrimaryMode(
-            context,
-            CommandBarItemDisplayMode.inPrimary,
-          );
+          return Builder(builder: (context) {
+            return _buildForPrimaryMode(
+              context,
+              CommandBarItemDisplayMode.inPrimary,
+            );
+          });
         } else {
-          return _buildForPrimaryMode(
-            context,
-            CommandBarItemDisplayMode.inPrimaryCompact,
-          );
+          return Builder(builder: (context) {
+            return _buildForPrimaryMode(
+              context,
+              CommandBarItemDisplayMode.inPrimaryCompact,
+            );
+          });
         }
       });
     }
@@ -428,7 +471,7 @@ enum CommandBarItemDisplayMode {
   ///
   /// Normally you would want to render an item in this visual context as a
   /// [ListTile].
-  inSecondary,
+  inSecondary;
 }
 
 /// An individual control displayed within a [CommandBar]. Sub-class this to
@@ -512,7 +555,11 @@ class CommandBarButton extends CommandBarItem {
 
   /// The trailing widget to use if this item is shown in the secondary menu
   final Widget? trailing;
+
+  /// The callback to call when the button is pressed.
   final VoidCallback? onPressed;
+
+  /// The callback to call when the button is long pressed.
   final VoidCallback? onLongPress;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -520,6 +567,16 @@ class CommandBarButton extends CommandBarItem {
 
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
+
+  /// The tooltip to show when the button is hovered over.
+  final String? tooltip;
+
+  /// Whether the flyout will be closed after an item is tapped.
+  ///
+  /// This only affects items in secondary mode.
+  ///
+  /// Defaults to `true`.
+  final bool closeAfterClick;
 
   /// Creates a command bar button
   const CommandBarButton({
@@ -532,6 +589,8 @@ class CommandBarButton extends CommandBarItem {
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
+    this.tooltip,
+    this.closeAfterClick = true,
   });
 
   @override
@@ -543,7 +602,7 @@ class CommandBarButton extends CommandBarItem {
         final showIcon = icon != null;
         final showLabel = label != null &&
             (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon);
-        return IconButton(
+        final button = IconButton(
           key: key,
           onPressed: onPressed,
           onLongPress: onLongPress,
@@ -562,25 +621,34 @@ class CommandBarButton extends CommandBarItem {
           icon: Row(mainAxisSize: MainAxisSize.min, children: [
             if (showIcon)
               IconTheme.merge(
-                data: const IconThemeData(size: 16),
+                data: const IconThemeData(size: 16.0),
                 child: icon!,
               ),
             if (showIcon && showLabel) const SizedBox(width: 10),
             if (showLabel) label!,
           ]),
         );
+        if (tooltip != null) {
+          return Tooltip(
+            message: tooltip!,
+            child: button,
+          );
+        }
+        return button;
       case CommandBarItemDisplayMode.inSecondary:
-        return Padding(
-          padding: const EdgeInsetsDirectional.only(end: 8.0, start: 8.0),
-          child: FlyoutListTile(
-            key: key,
-            onPressed: onPressed,
-            focusNode: focusNode,
-            autofocus: autofocus,
-            icon: icon,
-            text: label ?? const SizedBox.shrink(),
-          ),
-        );
+        return MenuFlyoutItem(
+          key: key,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          leading: icon,
+          text: label ?? const SizedBox.shrink(),
+          trailing: () {
+            if (trailing != null) return trailing!;
+            if (tooltip != null) return Text(tooltip!);
+            return null;
+          }(),
+          closeAfterClick: closeAfterClick,
+        ).build(context);
     }
   }
 }
@@ -600,7 +668,6 @@ class CommandBarSeparator extends CommandBarItem {
     super.key,
     this.color,
     this.thickness,
-    this.direction = Axis.vertical,
   });
 
   /// Override the color used by the [Divider].
@@ -609,38 +676,34 @@ class CommandBarSeparator extends CommandBarItem {
   /// Override the separator thickness.
   final double? thickness;
 
-  /// The direction of the separator. Defaults to [Axis.vertical].
-  /// This attribute is opposite to [CommandBar. direction].
-  final Axis direction;
-
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
+    final parent = context.findAncestorWidgetOfExactType<CommandBar>();
+    final parentDirection = parent?.direction ?? Axis.horizontal;
+    final direction =
+        parentDirection == Axis.horizontal ? Axis.vertical : Axis.horizontal;
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:
         return CommandBarItemInPrimary(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: direction == Axis.vertical ? 28 : 0,
-              minWidth: direction == Axis.horizontal ? 28 : 0,
+              minWidth: direction == Axis.horizontal ? 24.0 : 0.0,
+              minHeight: direction == Axis.vertical ? 24.0 : 0.0,
             ),
             child: Divider(
               direction: direction,
               style: DividerThemeData(
                 thickness: thickness,
+                horizontalMargin: EdgeInsets.zero,
+                verticalMargin: EdgeInsets.zero,
                 decoration: color != null ? BoxDecoration(color: color) : null,
               ),
             ),
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
-        return Divider(
-          style: DividerThemeData(
-            thickness: thickness,
-            decoration: color != null ? BoxDecoration(color: color) : null,
-            horizontalMargin: const EdgeInsetsDirectional.only(bottom: 5.0),
-          ),
-        );
+        return const MenuFlyoutSeparator().build(context);
     }
   }
 }

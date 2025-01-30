@@ -102,6 +102,12 @@ class FluentLocalizationsHi extends FluentLocalizations {
   String get year => 'साल';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'लाल';
 
   @override

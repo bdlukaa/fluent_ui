@@ -124,6 +124,14 @@
   "@year": {
     "description": "The text used by [DatePicker] for the year field"
   },
+  "seeMore": "See more",
+  "@seeMore": {
+    "description": "The text used by [CommandBar] to show more items."
+  },
+  "seeLess": "See less",
+  "@seeLess": {
+    "description": "The text used by [CommandBar] to show less items."
+  },
   "redLabel": "Red",
   "@redLabel": {
     "description": "Label for red color component in color picker"

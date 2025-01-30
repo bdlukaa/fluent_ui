@@ -536,6 +536,11 @@ class FlyoutController with ChangeNotifier {
   /// barrier. It's useful when the flyout is used as a context menu and the
   /// barrier should be dismissed when the user clicks outside of the flyout.
   /// If this is provided, [barrierDismissible] is ignored.
+  ///
+  /// [buildTarget] is a flag that determines whether the target should be built
+  /// or not. This helps when the target needs to be tappable, like the
+  /// [CommandBar] or [MenuBar] widgets. Any context dependencies of the target
+  /// must be available globally. Defaults to false.
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -554,6 +559,7 @@ class FlyoutController with ChangeNotifier {
     Offset? position,
     RouteSettings? settings,
     GestureRecognizer? barrierRecognizer,
+    bool buildTarget = false,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
@@ -656,6 +662,11 @@ class FlyoutController with ChangeNotifier {
                     onTap: barrierDismissible ? navigator.pop : null,
                     child: barrier,
                   ),
+                ),
+              if (buildTarget)
+                Positioned.fromRect(
+                  rect: targetRect,
+                  child: _attachState!.build(context),
                 ),
               Positioned.fill(
                 child: SafeArea(
@@ -776,6 +787,16 @@ class FlyoutController with ChangeNotifier {
     notifyListeners();
 
     return result;
+  }
+
+  /// Closes the flyout.
+  ///
+  /// The flyout must be open, otherwise an error is thrown.
+  void close() {
+    _ensureAttached();
+    assert(_open);
+    if (!_open) return; // safe for release
+    Navigator.of(_attachState!.context).pop();
   }
 }
 

@@ -101,6 +101,12 @@ class FluentLocalizationsFa extends FluentLocalizations {
   String get year => 'سال';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'قرمز';
 
   @override

@@ -102,6 +102,12 @@ class FluentLocalizationsSk extends FluentLocalizations {
   String get year => 'rok';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Červená';
 
   @override

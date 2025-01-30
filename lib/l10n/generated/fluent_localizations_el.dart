@@ -103,6 +103,12 @@ class FluentLocalizationsEl extends FluentLocalizations {
   String get year => 'έτος';
 
   @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
   String get redLabel => 'Κόκκινο';
 
   @override

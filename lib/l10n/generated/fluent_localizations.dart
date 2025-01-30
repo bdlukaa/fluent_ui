@@ -355,6 +355,18 @@ abstract class FluentLocalizations {
   /// **'year'**
   String get year;
 
+  /// The text used by [CommandBar] to show more items.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// The text used by [CommandBar] to show less items.
+  ///
+  /// In en, this message translates to:
+  /// **'See less'**
+  String get seeLess;
+
   /// Label for red color component in color picker
   ///
   /// In en, this message translates to:
