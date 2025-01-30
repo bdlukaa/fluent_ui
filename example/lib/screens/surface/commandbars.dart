@@ -134,12 +134,13 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
                 child: InfoLabel(
                   label: 'Compact breakpoint width',
                   child: NumberBox<double>(
-                      value: compactBreakpointWidth,
-                      onChanged: (value) {
-                        setState(() {
-                          compactBreakpointWidth = value;
-                        });
-                      }),
+                    value: compactBreakpointWidth,
+                    onChanged: (value) {
+                      setState(() {
+                        compactBreakpointWidth = value;
+                      });
+                    },
+                  ),
                 ),
               ),
               InfoLabel(
@@ -219,18 +220,21 @@ CommandBar(${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compa
 ''',
           child: SizedBox(
             height: _vertical ? 400.0 : null,
-            child: CommandBar(
-              compactBreakpointWidth: compactBreakpointWidth,
-              direction: _vertical ? Axis.vertical : Axis.horizontal,
-              isCompact: _compact,
-              overflowBehavior: overflowBehavior,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-                const CommandBarSeparator(),
-                ...evenMoreCommandBarItems,
-              ],
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: CommandBar(
+                compactBreakpointWidth: compactBreakpointWidth,
+                direction: _vertical ? Axis.vertical : Axis.horizontal,
+                isCompact: _compact,
+                overflowBehavior: overflowBehavior,
+                primaryItems: [
+                  ...simpleCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...moreCommandBarItems,
+                  const CommandBarSeparator(),
+                  ...evenMoreCommandBarItems,
+                ],
+              ),
             ),
           ),
         ),

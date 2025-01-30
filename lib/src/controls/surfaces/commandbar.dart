@@ -423,19 +423,25 @@ class CommandBarState extends State<CommandBar> {
       final displayMode = (widget.isCompact ?? false)
           ? CommandBarItemDisplayMode.inPrimaryCompact
           : CommandBarItemDisplayMode.inPrimary;
-      return _buildForPrimaryMode(context, displayMode);
+      return Builder(builder: (context) {
+        return _buildForPrimaryMode(context, displayMode);
+      });
     } else {
       return LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth > widget.compactBreakpointWidth!) {
-          return _buildForPrimaryMode(
-            context,
-            CommandBarItemDisplayMode.inPrimary,
-          );
+          return Builder(builder: (context) {
+            return _buildForPrimaryMode(
+              context,
+              CommandBarItemDisplayMode.inPrimary,
+            );
+          });
         } else {
-          return _buildForPrimaryMode(
-            context,
-            CommandBarItemDisplayMode.inPrimaryCompact,
-          );
+          return Builder(builder: (context) {
+            return _buildForPrimaryMode(
+              context,
+              CommandBarItemDisplayMode.inPrimaryCompact,
+            );
+          });
         }
       });
     }
