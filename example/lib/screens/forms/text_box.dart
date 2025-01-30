@@ -90,6 +90,21 @@ class TextBoxPage extends StatelessWidget with PageMixin {
             maxLines: null,
           ),
         ),
+        subtitle(content: const Text('A big TextBox')),
+        const CardHighlight(
+          codeSnippet: '''SizedBox(
+  height: 200.0,
+  child: TextBox(
+    maxLines: null,
+  ),
+)''',
+          child: SizedBox(
+            height: 200.0,
+            child: TextBox(
+              maxLines: null,
+            ),
+          ),
+        ),
       ],
     );
   }
