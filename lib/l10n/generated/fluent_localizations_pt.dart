@@ -52,6 +52,9 @@ class FluentLocalizationsPt extends FluentLocalizations {
   String get selectAllActionLabel => 'Selecionar tudo';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Adicionar nova guia';
 
   @override

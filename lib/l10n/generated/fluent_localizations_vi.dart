@@ -52,6 +52,9 @@ class FluentLocalizationsVi extends FluentLocalizations {
   String get selectAllActionLabel => 'Chọn tất cả';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Thêm tab mới';
 
   @override

@@ -52,6 +52,9 @@ class FluentLocalizationsNl extends FluentLocalizations {
   String get selectAllActionLabel => 'Selecteer alles';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Open nieuw tabblad';
 
   @override

@@ -563,8 +563,16 @@ class TextBox extends StatefulWidget {
 
   static Widget _defaultContextMenuBuilder(
       BuildContext context, EditableTextState editableTextState) {
-    return FluentTextSelectionToolbar.editableText(
-      editableTextState: editableTextState,
+    final undoController = editableTextState.widget.undoController;
+    return FluentTextSelectionToolbar(
+      buttonItems: [
+        ...editableTextState.contextMenuButtonItems,
+        if (undoController != null)
+          UndoContextMenuButtonItem(
+            onPressed: () => undoController.undo(),
+          ),
+      ],
+      anchors: editableTextState.contextMenuAnchors,
     );
   }
 
@@ -712,6 +720,10 @@ class _TextBoxState extends State<TextBox>
   FocusNode get _effectiveFocusNode =>
       widget.focusNode ?? (_focusNode ??= FocusNode());
 
+  UndoHistoryController? _undoController;
+  UndoHistoryController get _effectiveUndoController =>
+      widget.undoController ?? (_undoController ??= UndoHistoryController());
+
   MaxLengthEnforcement get _effectiveMaxLengthEnforcement =>
       widget.maxLengthEnforcement ??
       LengthLimitingTextInputFormatter.getDefaultMaxLengthEnforcement();
@@ -762,6 +774,11 @@ class _TextBoxState extends State<TextBox>
       (widget.focusNode ?? _focusNode)?.addListener(_handleFocusChanged);
     }
     _effectiveFocusNode.canRequestFocus = widget.enabled;
+
+    if (widget.undoController != oldWidget.undoController) {
+      _undoController?.dispose();
+      _undoController = null;
+    }
   }
 
   @override
@@ -795,6 +812,7 @@ class _TextBoxState extends State<TextBox>
     _effectiveFocusNode.removeListener(_handleFocusChanged);
     _focusNode?.dispose();
     _controller?.dispose();
+    _undoController?.dispose();
     super.dispose();
   }
 
@@ -1023,12 +1041,12 @@ class _TextBoxState extends State<TextBox>
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        textSelectionControls ??= fluentTextSelectionControls;
+        // textSelectionControls ??= fluentTextSelectionControls;
         break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        textSelectionControls ??= fluentTextSelectionControls;
+        // textSelectionControls ??= fluentTextSelectionControls;
         handleDidGainAccessibilityFocus = () {
           // Automatically activate the TextField when it receives accessibility focus.
           if (!_effectiveFocusNode.hasFocus &&
@@ -1091,7 +1109,7 @@ class _TextBoxState extends State<TextBox>
           child: EditableText(
             key: editableTextKey,
             controller: controller,
-            undoController: widget.undoController,
+            undoController: _effectiveUndoController,
             readOnly: widget.readOnly || !enabled,
             showCursor: widget.showCursor,
             showSelectionHandles: _showSelectionHandles,

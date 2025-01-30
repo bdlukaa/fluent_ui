@@ -259,6 +259,12 @@ abstract class FluentLocalizations {
   /// **'Select all'**
   String get selectAllActionLabel;
 
+  /// The label for the undo button on the text selection controls.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoActionLabel;
+
   /// The label used by [TabView]'s new button.
   ///
   /// In en, this message translates to:

@@ -52,6 +52,9 @@ class FluentLocalizationsSv extends FluentLocalizations {
   String get selectAllActionLabel => 'Markera allt';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Ny flik';
 
   @override

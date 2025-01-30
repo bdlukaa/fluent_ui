@@ -15,6 +15,7 @@
   "copyActionLabel": "Copiar",
   "pasteActionLabel": "Colar",
   "selectAllActionLabel": "Selecionar tudo",
+  "undoActionLabel": "Desfazer",
   "newTabLabel": "Adicionar nova guia",
   "closeTabLabelSuffix": "Fechar guia",
   "scrollTabBackwardLabel": "Rolar para trás",

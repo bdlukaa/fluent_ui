@@ -52,6 +52,9 @@ class FluentLocalizationsMy extends FluentLocalizations {
   String get selectAllActionLabel => 'အားလုံးကိုရွေးမည်';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Tab အသစ်ထည့်မည်';
 
   @override

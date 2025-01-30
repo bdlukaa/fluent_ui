@@ -1,10 +1,12 @@
 {
   "ar": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "be": [
+    "undoActionLabel",
     "am",
     "pm",
     "seeMore",
@@ -150,86 +152,103 @@
   ],
 
   "bn": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ca": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "cs": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "de": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "el": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "es": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "fa": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "fr": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "he": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "hi": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "hr": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "hu": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "id": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "it": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ja": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ko": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ku": [
+    "undoActionLabel",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -373,6 +392,7 @@
   ],
 
   "ms": [
+    "undoActionLabel",
     "hour",
     "minute",
     "am",
@@ -385,6 +405,7 @@
   ],
 
   "my": [
+    "undoActionLabel",
     "am",
     "pm",
     "seeMore",
@@ -530,11 +551,13 @@
   ],
 
   "nl": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "pl": [
+    "undoActionLabel",
     "hour",
     "minute",
     "am",
@@ -546,12 +569,18 @@
     "seeLess"
   ],
 
+  "pt": [
+    "undoActionLabel"
+  ],
+
   "ro": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ru": [
+    "undoActionLabel",
     "hour",
     "minute",
     "am",
@@ -564,31 +593,37 @@
   ],
 
   "sk": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "sv": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "ta": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "th": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "tr": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "uk": [
+    "undoActionLabel",
     "am",
     "pm",
     "seeMore",
@@ -596,11 +631,13 @@
   ],
 
   "ur": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "uz": [
+    "undoActionLabel",
     "am",
     "pm",
     "seeMore",
@@ -746,16 +783,19 @@
   ],
 
   "vi": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "zh": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ],
 
   "zh_Hant": [
+    "undoActionLabel",
     "seeMore",
     "seeLess"
   ]

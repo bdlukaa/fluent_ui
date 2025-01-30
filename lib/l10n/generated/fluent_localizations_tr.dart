@@ -52,6 +52,9 @@ class FluentLocalizationsTr extends FluentLocalizations {
   String get selectAllActionLabel => 'Tümünü seç';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Yeni sekme ekle';
 
   @override

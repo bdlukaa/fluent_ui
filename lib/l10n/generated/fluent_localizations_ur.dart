@@ -52,6 +52,9 @@ class FluentLocalizationsUr extends FluentLocalizations {
   String get selectAllActionLabel => 'سب کچھ منتخب کریں';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'نیا ٹیب کھولیں۔';
 
   @override

@@ -52,6 +52,9 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get selectAllActionLabel => 'Barchasini belgilash';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Yangi oyna ochish';
 
   @override

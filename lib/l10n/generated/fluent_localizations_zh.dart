@@ -52,6 +52,9 @@ class FluentLocalizationsZh extends FluentLocalizations {
   String get selectAllActionLabel => '全选';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => '添加新标签';
 
   @override

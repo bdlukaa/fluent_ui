@@ -52,6 +52,9 @@ class FluentLocalizationsFr extends FluentLocalizations {
   String get selectAllActionLabel => 'Tout sélectionner';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Ajouter un nouvel onglet';
 
   @override

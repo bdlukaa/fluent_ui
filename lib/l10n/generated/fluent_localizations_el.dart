@@ -52,6 +52,9 @@ class FluentLocalizationsEl extends FluentLocalizations {
   String get selectAllActionLabel => 'Επιλογή όλων';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Προσθήκη νέας καρτέλας';
 
   @override

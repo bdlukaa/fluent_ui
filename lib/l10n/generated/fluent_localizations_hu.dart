@@ -52,6 +52,9 @@ class FluentLocalizationsHu extends FluentLocalizations {
   String get selectAllActionLabel => 'Mind kijelölése';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Lap hozzáadása';
 
   @override

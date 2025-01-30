@@ -52,6 +52,9 @@ class FluentLocalizationsAr extends FluentLocalizations {
   String get selectAllActionLabel => 'تحديد الكل';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'إضافة علامة تبويب جديدة';
 
   @override

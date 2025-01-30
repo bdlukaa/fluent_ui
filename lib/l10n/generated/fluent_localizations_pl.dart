@@ -52,6 +52,9 @@ class FluentLocalizationsPl extends FluentLocalizations {
   String get selectAllActionLabel => 'Zaznacz wszystko';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Nowa zakładka';
 
   @override

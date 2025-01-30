@@ -52,6 +52,9 @@ class FluentLocalizationsCs extends FluentLocalizations {
   String get selectAllActionLabel => 'Vybrat vše';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Přidat novou záložku';
 
   @override

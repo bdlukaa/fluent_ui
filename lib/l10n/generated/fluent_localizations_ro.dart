@@ -52,6 +52,9 @@ class FluentLocalizationsRo extends FluentLocalizations {
   String get selectAllActionLabel => 'Selectează totul';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Adăugați o filă nouă';
 
   @override

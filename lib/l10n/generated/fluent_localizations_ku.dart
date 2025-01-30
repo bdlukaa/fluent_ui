@@ -52,6 +52,9 @@ class FluentLocalizationsKu extends FluentLocalizations {
   String get selectAllActionLabel => 'دیاری کردنی هەموو';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'تابێکی نوێ زیاد بکە';
 
   @override

@@ -52,6 +52,9 @@ class FluentLocalizationsCa extends FluentLocalizations {
   String get selectAllActionLabel => 'Selecciona-ho tot';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Afegeix nova pestanya';
 
   @override

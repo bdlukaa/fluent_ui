@@ -52,6 +52,9 @@ class FluentLocalizationsSk extends FluentLocalizations {
   String get selectAllActionLabel => 'Vybrať všetko';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Pridať novú záložku';
 
   @override
