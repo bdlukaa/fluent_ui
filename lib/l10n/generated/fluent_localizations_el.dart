@@ -85,6 +85,9 @@ class FluentLocalizationsEl extends FluentLocalizations {
   String get selectAllActionTooltip => 'Επιλογή όλων';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'ώρα';
 
   @override

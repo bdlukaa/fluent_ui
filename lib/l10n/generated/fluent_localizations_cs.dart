@@ -83,6 +83,9 @@ class FluentLocalizationsCs extends FluentLocalizations {
   String get selectAllActionTooltip => 'Vybrat všechen obsah';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'hodina';
 
   @override

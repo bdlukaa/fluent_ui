@@ -84,6 +84,9 @@ class FluentLocalizationsId extends FluentLocalizations {
   String get selectAllActionTooltip => 'Pilih semua konten';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'jam';
 
   @override

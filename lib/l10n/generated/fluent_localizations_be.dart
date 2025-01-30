@@ -82,6 +82,9 @@ class FluentLocalizationsBe extends FluentLocalizations {
   String get selectAllActionTooltip => 'Абраць усё';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'гадзін';
 
   @override

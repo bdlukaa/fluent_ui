@@ -82,6 +82,9 @@ class FluentLocalizationsTh extends FluentLocalizations {
   String get selectAllActionTooltip => 'เลือกเนื้อหาทั้งหมด';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'ชั่วโมง';
 
   @override

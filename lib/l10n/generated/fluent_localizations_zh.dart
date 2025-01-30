@@ -82,6 +82,9 @@ class FluentLocalizationsZh extends FluentLocalizations {
   String get selectAllActionTooltip => '选择所有内容';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => '时';
 
   @override

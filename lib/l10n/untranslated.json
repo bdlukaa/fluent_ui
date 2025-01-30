@@ -1,12 +1,14 @@
 {
   "ar": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "be": [
     "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
     "seeMore",
@@ -153,102 +155,119 @@
 
   "bn": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ca": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "cs": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "de": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "el": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "es": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "fa": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "fr": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "he": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "hi": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "hr": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "hu": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "id": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "it": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ja": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ko": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ku": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -393,6 +412,7 @@
 
   "ms": [
     "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
@@ -406,6 +426,7 @@
 
   "my": [
     "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
     "seeMore",
@@ -552,12 +573,14 @@
 
   "nl": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "pl": [
     "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
@@ -569,18 +592,16 @@
     "seeLess"
   ],
 
-  "pt": [
-    "undoActionLabel"
-  ],
-
   "ro": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ru": [
     "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
@@ -594,36 +615,42 @@
 
   "sk": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "sv": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "ta": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "th": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "tr": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "uk": [
     "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
     "seeMore",
@@ -632,12 +659,14 @@
 
   "ur": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "uz": [
     "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
     "seeMore",
@@ -784,18 +813,21 @@
 
   "vi": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "zh": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ],
 
   "zh_Hant": [
     "undoActionLabel",
+    "undoActionTooltip",
     "seeMore",
     "seeLess"
   ]

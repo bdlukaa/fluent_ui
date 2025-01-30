@@ -84,6 +84,9 @@ class FluentLocalizationsMs extends FluentLocalizations {
   String get selectAllActionTooltip => 'Pilih semua kandungan';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'hour';
 
   @override

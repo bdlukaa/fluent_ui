@@ -83,6 +83,9 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get selectAllActionTooltip => 'Barchasini belgilash';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'soat';
 
   @override

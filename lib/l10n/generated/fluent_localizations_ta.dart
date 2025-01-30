@@ -86,6 +86,9 @@ class FluentLocalizationsTa extends FluentLocalizations {
       'அனைத்து உள்ளடக்கத்தையும் தேர்ந்தெடுக்கவும்';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'மணி';
 
   @override

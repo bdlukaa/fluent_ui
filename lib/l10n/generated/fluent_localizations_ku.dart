@@ -84,6 +84,9 @@ class FluentLocalizationsKu extends FluentLocalizations {
   String get selectAllActionTooltip => 'هەموو ناوەڕۆکەکان هەڵبژێرە';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'کاتژمێر';
 
   @override

@@ -1041,12 +1041,16 @@ class _TextBoxState extends State<TextBox>
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        // textSelectionControls ??= fluentTextSelectionControls;
+        textSelectionControls ??= FluentTextSelectionControls(
+          undoHistoryController: _effectiveUndoController,
+        );
         break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        // textSelectionControls ??= fluentTextSelectionControls;
+        textSelectionControls ??= FluentTextSelectionControls(
+          undoHistoryController: _effectiveUndoController,
+        );
         handleDidGainAccessibilityFocus = () {
           // Automatically activate the TextField when it receives accessibility focus.
           if (!_effectiveFocusNode.hasFocus &&

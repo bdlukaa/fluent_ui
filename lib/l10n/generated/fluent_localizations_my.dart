@@ -82,6 +82,9 @@ class FluentLocalizationsMy extends FluentLocalizations {
   String get selectAllActionTooltip => 'အားလုံးကိုရွေးမည်';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'နာရီ';
 
   @override

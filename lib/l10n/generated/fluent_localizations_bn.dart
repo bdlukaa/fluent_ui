@@ -83,6 +83,9 @@ class FluentLocalizationsBn extends FluentLocalizations {
   String get selectAllActionTooltip => 'সব সিলেক্ট করুন';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'ঘন্টা';
 
   @override

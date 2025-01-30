@@ -82,6 +82,9 @@ class FluentLocalizationsPl extends FluentLocalizations {
   String get selectAllActionTooltip => 'Zaznacz wszystko';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'hour';
 
   @override

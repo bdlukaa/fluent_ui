@@ -319,6 +319,12 @@ abstract class FluentLocalizations {
   /// **'Select all content'**
   String get selectAllActionTooltip;
 
+  /// The tooltip for the undo action on the text selection controls.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the last action'**
+  String get undoActionTooltip;
+
   /// The text used by [TimePicker] for the hour field.
   ///
   /// In en, this message translates to:

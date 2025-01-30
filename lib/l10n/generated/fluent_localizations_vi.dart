@@ -83,6 +83,9 @@ class FluentLocalizationsVi extends FluentLocalizations {
   String get selectAllActionTooltip => 'Chọn tất cả';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'giờ';
 
   @override

@@ -82,6 +82,9 @@ class FluentLocalizationsKo extends FluentLocalizations {
   String get selectAllActionTooltip => '전체선택';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => '시';
 
   @override

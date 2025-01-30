@@ -82,6 +82,9 @@ class FluentLocalizationsSv extends FluentLocalizations {
   String get selectAllActionTooltip => 'Markera allt';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'timme';
 
   @override

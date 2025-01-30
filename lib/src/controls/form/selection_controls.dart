@@ -179,7 +179,13 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-class _FluentTextSelectionControls extends TextSelectionControls {
+final fluentTextSelectionControls = FluentTextSelectionControls();
+
+class FluentTextSelectionControls extends TextSelectionControls {
+  final UndoHistoryController? undoHistoryController;
+
+  FluentTextSelectionControls({this.undoHistoryController});
+
   /// Fluent has no text selection handles.
   @override
   Size getHandleSize(double textLineHeight) {
@@ -210,6 +216,11 @@ class _FluentTextSelectionControls extends TextSelectionControls {
       handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
       handleSelectAll:
           canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
+      handleUndo: undoHistoryController == null
+          ? null
+          : undoHistoryController!.value.canUndo
+              ? () => undoHistoryController!.undo()
+              : null,
       selectionMidpoint: selectionMidpoint,
       lastSecondaryTapDownPosition: lastSecondaryTapDownPosition,
       textLineHeight: textLineHeight,
@@ -253,9 +264,6 @@ class _FluentTextSelectionControls extends TextSelectionControls {
 }
 
 // /// Text selection controls that loosely follows Fluent design conventions.
-final TextSelectionControls fluentTextSelectionControls =
-    _FluentTextSelectionControls();
-
 // Generates the child that's passed into FluentTextSelectionToolbar.
 class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   const _FluentTextSelectionControlsToolbar({
@@ -266,6 +274,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.handleCut,
     required this.handlePaste,
     required this.handleSelectAll,
+    required this.handleUndo,
     required this.selectionMidpoint,
     required this.textLineHeight,
     required this.lastSecondaryTapDownPosition,
@@ -278,6 +287,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   final VoidCallback? handleCut;
   final VoidCallback? handlePaste;
   final VoidCallback? handleSelectAll;
+  final VoidCallback? handleUndo;
   final Offset? lastSecondaryTapDownPosition;
   final Offset selectionMidpoint;
   final double textLineHeight;
@@ -395,6 +405,15 @@ class _FluentTextSelectionControlsToolbarState
         widget.handlePaste!,
       );
     }
+    if (widget.handleUndo != null) {
+      addToolbarButton(
+        localizations.undoActionLabel,
+        FluentIcons.undo,
+        localizations.undoShortcut,
+        localizations.undoActionTooltip,
+        widget.handleUndo!,
+      );
+    }
     if (widget.handleSelectAll != null) {
       addToolbarButton(
         localizations.selectAllActionLabel,
@@ -466,15 +485,12 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
             color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
-            padding: const EdgeInsetsDirectional.only(
-              top: 5.0,
-              start: 5.0,
-              end: 5.0,
-            ),
+            padding: const EdgeInsetsDirectional.all(5.0),
             child: SizedBox(
               width: _kToolbarWidth,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                spacing: 5.0,
                 children: children,
               ),
             ),

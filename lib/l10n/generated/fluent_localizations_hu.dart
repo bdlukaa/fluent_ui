@@ -83,6 +83,9 @@ class FluentLocalizationsHu extends FluentLocalizations {
   String get selectAllActionTooltip => 'Teljes tartalom kijelölése';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'óra';
 
   @override

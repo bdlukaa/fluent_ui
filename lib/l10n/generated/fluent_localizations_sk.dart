@@ -84,6 +84,9 @@ class FluentLocalizationsSk extends FluentLocalizations {
   String get selectAllActionTooltip => 'Vybrať všetok obsah';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'hodina';
 
   @override

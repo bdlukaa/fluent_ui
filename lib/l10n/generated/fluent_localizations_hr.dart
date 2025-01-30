@@ -84,6 +84,9 @@ class FluentLocalizationsHr extends FluentLocalizations {
   String get selectAllActionTooltip => 'Odaberi sav sadržaj';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'sat';
 
   @override
