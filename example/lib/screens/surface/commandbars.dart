@@ -126,6 +126,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
         Card(
           child: Wrap(
             spacing: 12.0,
+            runSpacing: 12.0,
             crossAxisAlignment: WrapCrossAlignment.end,
             children: [
               SizedBox(

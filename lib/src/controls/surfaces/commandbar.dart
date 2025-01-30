@@ -393,7 +393,7 @@ class CommandBarState extends State<CommandBar> {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
     w = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.all(4.0),
       decoration: ShapeDecoration(
         color: secondaryFlyoutController.isOpen
             ? theme.menuColor.withValues(alpha: kMenuColorOpacity)
@@ -662,7 +662,6 @@ class CommandBarSeparator extends CommandBarItem {
     super.key,
     this.color,
     this.thickness,
-    this.direction = Axis.vertical,
   });
 
   /// Override the color used by the [Divider].
@@ -671,25 +670,27 @@ class CommandBarSeparator extends CommandBarItem {
   /// Override the separator thickness.
   final double? thickness;
 
-  /// The direction of the separator. Defaults to [Axis.vertical].
-  /// This attribute is opposite to [CommandBar. direction].
-  final Axis direction;
-
   @override
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
+    final parent = context.findAncestorWidgetOfExactType<CommandBar>();
+    final parentDirection = parent?.direction ?? Axis.horizontal;
+    final direction =
+        parentDirection == Axis.horizontal ? Axis.vertical : Axis.horizontal;
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:
         return CommandBarItemInPrimary(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: direction == Axis.vertical ? 28 : 0,
-              minWidth: direction == Axis.horizontal ? 28 : 0,
+              minWidth: direction == Axis.horizontal ? 24.0 : 0.0,
+              minHeight: direction == Axis.vertical ? 24.0 : 0.0,
             ),
             child: Divider(
               direction: direction,
               style: DividerThemeData(
                 thickness: thickness,
+                horizontalMargin: EdgeInsets.zero,
+                verticalMargin: EdgeInsets.zero,
                 decoration: color != null ? BoxDecoration(color: color) : null,
               ),
             ),
