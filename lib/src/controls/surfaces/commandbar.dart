@@ -277,6 +277,7 @@ class CommandBarState extends State<CommandBar> {
     BuildContext context,
     CommandBarItemDisplayMode primaryMode,
   ) {
+    final theme = FluentTheme.of(context);
     final builtItems =
         widget.primaryItems.map((item) => item.build(context, primaryMode));
     Widget? overflowWidget;
@@ -390,6 +391,24 @@ class CommandBarState extends State<CommandBar> {
     if (widget._isExpanded) {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
+    w = Container(
+      decoration: ShapeDecoration(
+        color: secondaryFlyoutController.isOpen
+            ? theme.menuColor.withValues(alpha: kMenuColorOpacity)
+            : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(
+            width: 1,
+            color: secondaryFlyoutController.isOpen
+                ? theme.inactiveBackgroundColor
+                : Colors.transparent,
+          ),
+        ),
+      ),
+      child: w,
+    );
+
     return FlyoutTarget(controller: secondaryFlyoutController, child: w);
   }
 
@@ -594,7 +613,7 @@ class CommandBarButton extends CommandBarItem {
           icon: Row(mainAxisSize: MainAxisSize.min, children: [
             if (showIcon)
               IconTheme.merge(
-                data: const IconThemeData(size: 16),
+                data: const IconThemeData(size: 16.0),
                 child: icon!,
               ),
             if (showIcon && showLabel) const SizedBox(width: 10),

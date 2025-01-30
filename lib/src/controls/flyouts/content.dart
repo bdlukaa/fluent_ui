@@ -64,7 +64,7 @@ class FlyoutContent extends StatelessWidget {
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.0),
           side: BorderSide(
-            width: 0.5,
+            width: 1,
             color: theme.inactiveBackgroundColor,
           ),
         );
