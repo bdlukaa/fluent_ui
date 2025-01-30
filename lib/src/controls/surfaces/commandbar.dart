@@ -207,9 +207,10 @@ class CommandBarState extends State<CommandBar> {
     final future = secondaryFlyoutController.showFlyout(
       buildTarget: true,
       autoModeConfiguration: FlyoutAutoConfiguration(
-        preferredMode: FlyoutPlacementMode.bottomRight.resolve(
-          Directionality.of(context),
-        ),
+        preferredMode: (widget.direction == Axis.horizontal
+                ? FlyoutPlacementMode.bottomRight
+                : FlyoutPlacementMode.right)
+            .resolve(Directionality.of(context)),
       ),
       builder: (context) {
         return FlyoutContent(
