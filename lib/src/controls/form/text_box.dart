@@ -148,7 +148,6 @@ class TextBox extends StatefulWidget {
     this.suffixMode = OverlayVisibilityMode.always,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.clearButtonMode = OverlayVisibilityMode.never,
-    this.clearButtonSemanticLabel,
     TextInputType? keyboardType,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
@@ -330,12 +329,6 @@ class TextBox extends StatefulWidget {
   ///
   /// Defaults to [OverlayVisibilityMode.never].
   final OverlayVisibilityMode clearButtonMode;
-
-  /// The semantic label for the clear button used by screen readers.
-  ///
-  /// This will be used by screen reading software to identify the clear button
-  /// widget. Defaults to "Clear".
-  final String? clearButtonSemanticLabel;
 
   /// {@macro flutter.widgets.editableText.keyboardType}
   final TextInputType keyboardType;
