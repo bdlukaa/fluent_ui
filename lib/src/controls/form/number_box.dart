@@ -107,7 +107,7 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// Default is 2.
   final int? precision;
 
-  /// The parttern for the number box. The pattern is used to format the number
+  /// The pattern for the number box. The pattern is used to format the number
   /// when the user inputs a value.
   ///
   /// If set, [precision], [formatter] and [format] must be `null`.
@@ -294,7 +294,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.inputFormatters,
     this.placeholder,
     this.placeholderStyle,
-    this.cursorWidth = 1.5,
+    this.cursorWidth = 2.0,
     this.cursorRadius = const Radius.circular(2.0),
     this.cursorHeight,
     this.cursorColor,

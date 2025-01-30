@@ -172,7 +172,7 @@ class TextBox extends StatefulWidget {
     this.onTapOutside,
     this.inputFormatters,
     this.enabled,
-    this.cursorWidth = 1,
+    this.cursorWidth = 2.0,
     this.cursorHeight,
     this.cursorRadius = const Radius.circular(2.0),
     this.cursorColor,
