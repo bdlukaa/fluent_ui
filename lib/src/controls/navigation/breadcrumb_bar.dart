@@ -166,7 +166,9 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
     flyoutController.showFlyout(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
-        preferredMode: FlyoutPlacementMode.bottomCenter,
+        preferredMode: FlyoutPlacementMode.bottomCenter.resolve(
+          Directionality.of(context),
+        ),
       ),
       builder: (context) {
         return MenuFlyout(
