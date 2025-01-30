@@ -697,13 +697,7 @@ class CommandBarSeparator extends CommandBarItem {
           ),
         );
       case CommandBarItemDisplayMode.inSecondary:
-        return Divider(
-          style: DividerThemeData(
-            thickness: thickness,
-            decoration: color != null ? BoxDecoration(color: color) : null,
-            horizontalMargin: const EdgeInsetsDirectional.only(bottom: 5.0),
-          ),
-        );
+        return const MenuFlyoutSeparator().build(context);
     }
   }
 }
