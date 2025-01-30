@@ -789,9 +789,13 @@ class FlyoutController with ChangeNotifier {
     return result;
   }
 
+  /// Closes the flyout.
+  ///
+  /// The flyout must be open, otherwise an error is thrown.
   void close() {
     _ensureAttached();
     assert(_open);
+    if (!_open) return; // safe for release
     Navigator.of(_attachState!.context).pop();
   }
 }

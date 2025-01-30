@@ -11,6 +11,8 @@ class CommandBarsPage extends StatefulWidget {
 }
 
 class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
+  final key = GlobalKey<CommandBarState>();
+
   final simpleCommandBarItems = <CommandBarItem>[
     CommandBarButton(
       icon: const Icon(FluentIcons.add),
@@ -185,6 +187,12 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
                 },
                 content: const Text('Compact'),
               ),
+              Button(
+                onPressed: () {
+                  key.currentState?.toggleSecondaryMenu();
+                },
+                child: const Text('Toggle secondary menu'),
+              ),
             ],
           ),
         ),
@@ -194,8 +202,10 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''
-CommandBar(${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compactBreakpointWidth,' : ''}${_vertical ? '\n  direction: Axis.vertical,' : ''}${_compact ? '\n  isCompact: true,' : ''}
+          codeSnippet: '''final commandBarKey = GlobalKey<CommandBarState>();
+
+CommandBar(
+  key: commandBarKey, ${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compactBreakpointWidth,' : ''}${_vertical ? '\n  direction: Axis.vertical,' : ''}${_compact ? '\n  isCompact: true,' : ''}
   overflowBehavior: $overflowBehavior,
   primaryItems: [
     CommandBarButton(
@@ -216,13 +226,17 @@ CommandBar(${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compa
       },
     ),
   ],
-),
+);
+
+// To toggle the secondary menu
+commandBarKey.currentState?.toggleSecondaryMenu();
 ''',
           child: SizedBox(
             height: _vertical ? 400.0 : null,
             child: Align(
               alignment: AlignmentDirectional.topStart,
               child: CommandBar(
+                key: key,
                 compactBreakpointWidth: compactBreakpointWidth,
                 direction: _vertical ? Axis.vertical : Axis.horizontal,
                 isCompact: _compact,
