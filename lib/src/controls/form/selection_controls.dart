@@ -621,5 +621,5 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
 class UndoContextMenuButtonItem extends ContextMenuButtonItem {
   const UndoContextMenuButtonItem({
     required super.onPressed,
-  }) : super(type: ContextMenuButtonType.custom);
+  }) : super(type: ContextMenuButtonType.custom, label: 'Undo');
 }
