@@ -1299,8 +1299,19 @@ class _TextBoxState extends State<TextBox>
                       ),
                     ),
                   );
+                } else if (enabled) {
+                  return BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color:
+                            themeData.resources.controlStrongStrokeColorDefault,
+                        width: 1.25,
+                      ),
+                    ),
+                  );
+                } else {
+                  return const BoxDecoration();
                 }
-                return const BoxDecoration();
               }).resolve(states).copyWith(
                         backgroundBlendMode: resolvedWidgetForegroundDecoration
                             ?.backgroundBlendMode,
