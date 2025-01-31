@@ -374,7 +374,7 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
     super.trailing,
     required this.value,
     required this.onChanged,
-    super.closeAfterClick = false,
+    super.closeAfterClick,
   }) : super(
           leading: Icon(
             value ? FluentIcons.check_mark : null,
@@ -414,7 +414,7 @@ class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
     required this.value,
     required this.groupValue,
     required this.onChanged,
-    super.closeAfterClick = false,
+    super.closeAfterClick,
   }) : super(
           leading: Icon(
             value == groupValue ? FluentIcons.radio_bullet : null,
