@@ -1,0 +1,750 @@
+{
+    "@@locale": "ne",
+    "backButtonTooltip": "पछाडि",
+    "@backButtonTooltip": {
+        "description": "The tooltip for the back button on [NavigationAppBar]."
+    },
+    "closeButtonLabel": "बन्द गर्नुहोस्",
+    "@closeButtonLabel": {
+        "description": "Label for \"close\" buttons and menu items."
+    },
+    "searchLabel": "खोज्नुहोस्",
+    "@searchLabel": {
+        "description": "Label for \"search\" text fields."
+    },
+    "closeNavigationTooltip": "नेभिगेसन बन्द गर्नुहोस्",
+    "@closeNavigationTooltip": {
+        "description": "The tooltip for the toggle navigation button."
+    },
+    "openNavigationTooltip": "नेभिगेसन खोल्नुहोस्",
+    "@openNavigationTooltip": {
+        "description": "The tooltip for the toogle navigation button."
+    },
+    "clickToSearch": "खोज्न क्लिक गर्नुहोस्",
+    "@clickToSearch": {
+        "description": "The tooltip for the \"Click to Search\" button."
+    },
+    "modalBarrierDismissLabel": "खारेज गर्नुहोस्",
+    "@modalBarrierDismissLabel": {
+        "description": "Label read out by accessibility tools (TalkBack or VoiceOver) for a modal barrier to indicate that a tap dismisses the barrier. A modal barrier can for example be found behind an alert or popup to block user interaction with elements behind it."
+    },
+    "minimizeWindowTooltip": "न्यूनतम गर्नुहोस्",
+    "@minimizeWindowTooltip": {
+        "description": "The tooltip used by the \"Minimize\" button on desktop windows."
+    },
+    "restoreWindowTooltip": "पुनर्स्थापना गर्नुहोस्",
+    "@restoreWindowTooltip": {
+        "description": "The tooltip used by the \"Restore\" button on desktop windows."
+    },
+    "closeWindowTooltip": "बन्द गर्नुहोस्",
+    "@closeWindowTooltip": {
+        "description": "The tooltip used by the \"Close\" button on desktop windows."
+    },
+    "dialogLabel": "डायलग",
+    "@dialogLabel": {
+        "description": "The dialog label."
+    },
+    "cutActionLabel": "काट्नु",
+    "@cutActionLabel": {
+        "description": "The label for the cut action on the text selection controls."
+    },
+    "copyActionLabel": "प्रतिलिपि",
+    "@copyActionLabel": {
+        "description": "The label for the copy action on the text selection controls."
+    },
+    "pasteActionLabel": "टाँस्नुहोस्",
+    "@pasteActionLabel": {
+        "description": "The label for the paste button on the text selection controls."
+    },
+    "selectAllActionLabel": "सबै चयन गर्नुहोस्",
+    "@selectAllActionLabel": {
+        "description": "The label for the select all button on the text selection controls."
+    },
+    "undoActionLabel": "पूर्ववत गर्नुहोस्",
+    "@undoActionLabel": {
+        "description": "The label for the undo button on the text selection controls."
+    },
+    "newTabLabel": "नयाँ ट्याब थप्नुहोस्",
+    "@newTabLabel": {
+        "description": "The label used by [TabView]'s new button."
+    },
+    "closeTabLabelSuffix": "ट्याब बन्द गर्नुहोस्",
+    "@closeTabLabelSuffix": {
+        "description": "The label used by [TabView]'s close button."
+    },
+    "scrollTabBackwardLabel": "ट्याब सूची पछाडि स्क्रोल गर्नुहोस्",
+    "@scrollTabBackwardLabel": {
+        "description": "The label used by [TabView]'s scroll backward button."
+    },
+    "scrollTabForwardLabel": "ट्याब सूची अगाडि स्क्रोल गर्नुहोस्",
+    "@scrollTabForwardLabel": {
+        "description": "The label used by [TabView]'s scroll forward button."
+    },
+    "noResultsFoundLabel": "कुनै नतिजा फेला परेन",
+    "@noResultsFoundLabel": {
+        "description": "The label used by [AutoSuggestBox] when the results can't be found."
+    },
+    "copyActionTooltip": "चयन गरिएको सामग्री क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्",
+    "@copyActionTooltip": {
+        "description": "The tooltip for the copy action on the text selection controls."
+    },
+    "cutActionTooltip": "चयन गरिएको सामग्री हटाएर क्लिपबोर्डमा राख्नुहोस्",
+    "@cutActionTooltip": {
+        "description": "The tooltip for the cut action on the text selection controls."
+    },
+    "pasteActionTooltip": "क्लिपबोर्डको सामग्री हालको स्थानमा पेस्ट गर्नुहोस्",
+    "@pasteActionTooltip": {
+        "description": "The tooltip for the paste action on the text selection controls."
+    },
+    "selectAllActionTooltip": "सबै सामग्री चयन गर्नुहोस्",
+    "@selectAllActionTooltip": {
+        "description": "The tooltip for the select all action on the text selection controls."
+    },
+    "undoActionTooltip": "अन्तिम कार्य पूर्ववत गर्नुहोस्",
+    "@undoActionTooltip": {
+        "description": "The tooltip for the undo action on the text selection controls."
+    },
+    "hour": "घण्टा",
+    "@hour": {
+        "description": "The text used by [TimePicker] for the hour field."
+    },
+    "minute": "मिनेट",
+    "@minute": {
+        "description": "The text used by [TimePicker] for the minute field."
+    },
+    "am": "बिहान",
+    "@am": {
+        "description": "The text used by [TimePicker] for the AM field."
+    },
+    "pm": "बेलुका",
+    "@pm": {
+        "description": "The text used by [TimePicker] for the PM field."
+    },
+    "month": "महिना",
+    "@month": {
+        "description": "The text used by [DatePicker] for the month field"
+    },
+    "day": "दिन",
+    "@day": {
+        "description": "The text used by [DatePicker] for the day field"
+    },
+    "year": "वर्ष",
+    "@year": {
+        "description": "The text used by [DatePicker] for the year field"
+    },
+    "seeMore": "थप हेर्नुहोस्",
+    "@seeMore": {
+        "description": "The text used by [CommandBar] to show more items."
+    },
+    "seeLess": "कम हेर्नुहोस्",
+    "@seeLess": {
+        "description": "The text used by [CommandBar] to show less items."
+    },
+    "redLabel": "रातो",
+    "@redLabel": {
+        "description": "Label for red color component in color picker"
+    },
+    "greenLabel": "हरियो",
+    "@greenLabel": {
+        "description": "Label for green color component in color picker"
+    },
+    "blueLabel": "नीलो",
+    "@blueLabel": {
+        "description": "Label for blue color component in color picker"
+    },
+    "opacityLabel": "अपारदर्शिता",
+    "@opacityLabel": {
+        "description": "Label for opacity component in color picker"
+    },
+    "hueLabel": "रंग",
+    "@hueLabel": {
+        "description": "Label for hue component in color picker"
+    },
+    "saturationLabel": "सन्तृप्ति",
+    "@saturationLabel": {
+        "description": "Label for saturation component in color picker"
+    },
+    "valueLabel": "मान",
+    "@valueLabel": {
+        "description": "Label for value component in color picker"
+    },
+    "moreText": "थप",
+    "@moreText": {
+        "description": "Text for expanding color picker options"
+    },
+    "lessText": "कम",
+    "@lessText": {
+        "description": "Text for collapsing color picker options"
+    },
+    "valueSliderTooltip": "मान {value} ({colorName})",
+    "@valueSliderTooltip": {
+        "placeholders": {
+            "value": {
+                "type": "int"
+            },
+            "colorName": {
+                "type": "String"
+            }
+        }
+    },
+    "alphaSliderTooltip": "{value}% अपारदर्शिता",
+    "@alphaSliderTooltip": {
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "colorBlack": "कालो",
+    "@colorBlack": {
+        "description": "The name of the color, Black."
+    },
+    "colorNavy": "गाढा नीलो",
+    "@colorNavy": {
+        "description": "The name of the color, Navy."
+    },
+    "colorDarkBlue": "गाढा नीलो",
+    "@colorDarkBlue": {
+        "description": "The name of the color, Dark Blue."
+    },
+    "colorMediumBlue": "नीलो",
+    "@colorMediumBlue": {
+        "description": "The name of the color, Medium Blue."
+    },
+    "colorBlue": "नीलो",
+    "@colorBlue": {
+        "description": "The name of the color, Blue."
+    },
+    "colorDarkGreen": "गाढा हरियो",
+    "@colorDarkGreen": {
+        "description": "The name of the color, Dark Green."
+    },
+    "colorGreen": "गाढा हरियो",
+    "@colorGreen": {
+        "description": "The name of the color, Green."
+    },
+    "colorTeal": "गाढा हरियो-नीलो",
+    "@colorTeal": {
+        "description": "The name of the color, Teal."
+    },
+    "colorDarkCyan": "गाढा हरियो-नीलो",
+    "@colorDarkCyan": {
+        "description": "The name of the color, Dark Cyan."
+    },
+    "colorDeepSkyBlue": "गहिरो आकाशी नीलो",
+    "@colorDeepSkyBlue": {
+        "description": "The name of the color, Deep Sky Blue."
+    },
+    "colorDarkTurquoise": "एक्वा",
+    "@colorDarkTurquoise": {
+        "description": "The name of the color, Dark Turquoise."
+    },
+    "colorMediumSpringGreen": "हरियो",
+    "@colorMediumSpringGreen": {
+        "description": "The name of the color, Medium Spring Green."
+    },
+    "colorLime": "हरियो",
+    "@colorLime": {
+        "description": "The name of the color, Lime."
+    },
+    "colorSpringGreen": "हरियो",
+    "@colorSpringGreen": {
+        "description": "The name of the color, Spring Green."
+    },
+    "colorCyan": "एक्वा",
+    "@colorCyan": {
+        "description": "The name of the color, Cyan."
+    },
+    "colorMidnightBlue": "गाढा नीलो",
+    "@colorMidnightBlue": {
+        "description": "The name of the color, Midnight Blue."
+    },
+    "colorDodgerBlue": "नीलो",
+    "@colorDodgerBlue": {
+        "description": "The name of the color, Dodger Blue."
+    },
+    "colorLightSeaGreen": "हरियो-नीलो",
+    "@colorLightSeaGreen": {
+        "description": "The name of the color, Light Sea Green."
+    },
+    "colorForestGreen": "गाढा हरियो",
+    "@colorForestGreen": {
+        "description": "The name of the color, Forest Green."
+    },
+    "colorSeaGreen": "गाढा हरियो",
+    "@colorSeaGreen": {
+        "description": "The name of the color, Sea Green."
+    },
+    "colorDarkSlateGray": "गाढा हरियो-नीलो",
+    "@colorDarkSlateGray": {
+        "description": "The name of the color, Dark Slate Gray."
+    },
+    "colorLimeGreen": "हरियो",
+    "@colorLimeGreen": {
+        "description": "The name of the color, Lime Green."
+    },
+    "colorMediumSeaGreen": "हरियो",
+    "@colorMediumSeaGreen": {
+        "description": "The name of the color, Medium Sea Green."
+    },
+    "colorTurquoise": "हरियो-नीलो",
+    "@colorTurquoise": {
+        "description": "The name of the color, Turquoise."
+    },
+    "colorRoyalBlue": "नीलो",
+    "@colorRoyalBlue": {
+        "description": "The name of the color, Royal Blue."
+    },
+    "colorSteelBlue": "नीलो-खरानी रंग", 
+    "@colorSteelBlue": {
+        "description": "The name of the color, Steel Blue."
+    },
+    "colorDarkSlateBlue": "बैजनी",
+    "@colorDarkSlateBlue": {
+        "description": "The name of the color, Dark Slate Blue."
+    },
+    "colorMediumTurquoise": "हरियो-नीलो",
+    "@colorMediumTurquoise": {
+        "description": "The name of the color, Medium Turquoise."
+    },
+    "colorIndigo": "गाढा बैजनी",
+    "@colorIndigo": {
+        "description": "The name of the color, Indigo."
+    },
+    "colorDarkOliveGreen": "गाढा हरियो",
+    "@colorDarkOliveGreen": {
+        "description": "The name of the color, Dark Olive Green."
+    },
+    "colorCadetBlue": "हरियो-नीलो",
+    "@colorCadetBlue": {
+        "description": "The name of the color, Cadet Blue."
+    },
+    "colorCornflowerBlue": "नीलो",
+    "@colorCornflowerBlue": {
+        "description": "The name of the color, Cornflower Blue."
+    },
+    "colorMediumAquamarine": "हरियो",
+    "@colorMediumAquamarine": {
+        "description": "The name of the color, Medium Aquamarine."
+    },
+    "colorDimGray": "खरानी रंग",
+    "@colorDimGray": {
+        "description": "The name of the color, Dim Gray."
+    },
+    "colorSlateBlue": "बैजनी",
+    "@colorSlateBlue": {
+        "description": "The name of the color, Slate Blue."
+    },
+    "colorOliveDrab": "गाढा हरियो",
+    "@colorOliveDrab": {
+        "description": "The name of the color, Olive Drab."
+    },
+    "colorSlateGray": "नीलो-खरानी रंग",
+    "@colorSlateGray": {
+        "description": "The name of the color, Slate Gray."
+    },
+    "colorLightSlateGray": "नीलो-खरानी रंग",
+    "@colorLightSlateGray": {
+        "description": "The name of the color, Light Slate Gray."
+    },
+    "colorMediumSlateBlue": "हल्का नीलो",
+    "@colorMediumSlateBlue": {
+        "description": "The name of the color, Medium Slate Blue."
+    },
+    "colorLawnGreen": "हरियो",
+    "@colorLawnGreen": {
+        "description": "The name of the color, Lawn Green."
+    },
+    "colorChartreuse": "हरियो",
+    "@colorChartreuse": {
+        "description": "The name of the color, Chartreuse."
+    },
+    "colorAquamarine": "हल्का हरियो",
+    "@colorAquamarine": {
+        "description": "The name of the color, Aquamarine."
+    },
+    "colorMaroon": "गाढा रातो",
+    "@colorMaroon": {
+        "description": "The name of the color, Maroon."
+    },
+    "colorPurple": "गाढा बैजनी",
+    "@colorPurple": {
+        "description": "The name of the color, Purple."
+    },
+    "colorOlive": "गाढा पहेंलो",
+    "@colorOlive": {
+        "description": "The name of the color, Olive."
+    },
+    "colorGray": "खरानी रंग",
+    "@colorGray": {
+        "description": "The name of the color, Gray."
+    },
+    "colorSkyBlue": "हल्का फिरोजा",
+    "@colorSkyBlue": {
+        "description": "The name of the color, Sky Blue."
+    },
+    "colorLightSkyBlue": "हल्का नीलो",
+    "@colorLightSkyBlue": {
+        "description": "The name of the color, Light Sky Blue."
+    },
+    "colorBlueViolet": "बैजनी",
+    "@colorBlueViolet": {
+        "description": "The name of the color, Blue Violet."
+    },
+    "colorDarkRed": "गाढा रातो",
+    "@colorDarkRed": {
+        "description": "The name of the color, Dark Red."
+    },
+    "colorDarkMagenta": "गाढा बैजनी",
+    "@colorDarkMagenta": {
+        "description": "The name of the color, Dark Magenta."
+    },
+    "colorSaddleBrown": "खैरो",
+    "@colorSaddleBrown": {
+        "description": "The name of the color, Saddle Brown."
+    },
+    "colorDarkSeaGreen": "हरियो",
+    "@colorDarkSeaGreen": {
+        "description": "The name of the color, Dark Sea Green."
+    },
+    "colorLightGreen": "हल्का हरियो",
+    "@colorLightGreen": {
+        "description": "The name of the color, Light Green."
+    },
+    "colorMediumPurple": "लैभेन्डर",
+    "@colorMediumPurple": {
+        "description": "The name of the color, Medium Purple."
+    },
+    "colorDarkViolet": "बैजनी",
+    "@colorDarkViolet": {
+        "description": "The name of the color, Dark Violet."
+    },
+    "colorPaleGreen": "फीका हरियो",
+    "@colorPaleGreen": {
+        "description": "The name of the color, Pale Green."
+    },
+    "colorDarkOrchid": "बैजनी",
+    "@colorDarkOrchid": {
+        "description": "The name of the color, Dark Orchid."
+    },
+    "colorYellowGreen": "हरियो",
+    "@colorYellowGreen": {
+        "description": "The name of the color, Yellow Green."
+    },
+    "colorSienna": "ट्यान",
+    "@colorSienna": {
+        "description": "The name of the color, Sienna."
+    },
+    "colorBrown": "रातो",
+    "@colorBrown": {
+        "description": "The name of the color, Brown."
+    },
+    "colorDarkGray": "खरानी रंग",
+    "@colorDarkGray": {
+        "description": "The name of the color, Dark Gray."
+    },
+    "colorLightBlue": "आकाश निलो",
+    "@colorLightBlue": {
+        "description": "The name of the color, Light Blue."
+    },
+    "colorGreenYellow": "हरियो",
+    "@colorGreenYellow": {
+        "description": "The name of the color, Green Yellow."
+    },
+    "colorPaleTurquoise": "एक्वा",
+    "@colorPaleTurquoise": {
+        "description": "The name of the color, Pale Turquoise."
+    },
+    "colorLightSteelBlue": "बरफ नीलो",
+    "@colorLightSteelBlue": {
+        "description": "The name of the color, Light Steel Blue."
+    },
+    "colorPowderBlue": "आकाश निलो",
+    "@colorPowderBlue": {
+        "description": "The name of the color, Powder Blue."
+    },
+    "colorFirebrick": "रातो",
+    "@colorFirebrick": {
+        "description": "The name of the color, Firebrick."
+    },
+    "colorDarkGoldenrod": "गाढा पहेंलो",
+    "@colorDarkGoldenrod": {
+        "description": "The name of the color, Dark Goldenrod."
+    },
+    "colorMediumOrchid": "बैजनी",
+    "@colorMediumOrchid": {
+        "description": "The name of the color, Medium Orchid."
+    },
+    "colorRosyBrown": "कोरल",
+    "@colorRosyBrown": {
+        "description": "The name of the color, Rosy Brown."
+    },
+    "colorDarkKhaki": "ट्यान",
+    "@colorDarkKhaki": {
+        "description": "The name of the color, Dark Khaki."
+    },
+    "colorSilver": "हल्का खरानी रंग",
+    "@colorSilver": {
+        "description": "The name of the color, Silver."
+    },
+    "colorMediumVioletRed": "गुलाबी",
+    "@colorMediumVioletRed": {
+        "description": "The name of the color, Medium Violet Red."
+    },
+    "colorIndianRed": "रातो",
+    "@colorIndianRed": {
+        "description": "The name of the color, Indian Red."
+    },
+    "colorPeru": "ट्यान",
+    "@colorPeru": {
+        "description": "The name of the color, Peru."
+    },
+    "colorChocolate": "सुन्तला रंग",
+    "@colorChocolate": {
+        "description": "The name of the color, Chocolate."
+    },
+    "colorTan": "ट्यान",
+    "@colorTan": {
+        "description": "The name of the color, Tan."
+    },
+    "colorLightGray": "हल्का खरानी रंग",
+    "@colorLightGray": {
+        "description": "The name of the color, Light Gray."
+    },
+    "colorThistle": "लैभेन्डर",
+    "@colorThistle": {
+        "description": "The name of the color, Thistle."
+    },
+    "colorOrchid": "लैभेन्डर",
+    "@colorOrchid": {
+        "description": "The name of the color, Orchid."
+    },
+    "colorGoldenrod": "सुनौलो",
+    "@colorGoldenrod": {
+        "description": "The name of the color, Goldenrod."
+    },
+    "colorPaleVioletRed": "गुलाब रंग",
+    "@colorPaleVioletRed": {
+        "description": "The name of the color, Pale Violet Red."
+    },
+    "colorCrimson": "रातो",
+    "@colorCrimson": {
+        "description": "The name of the color, Crimson."
+    },
+    "colorGainsboro": "हल्का खरानी रंग",
+    "@colorGainsboro": {
+        "description": "The name of the color, Gainsboro."
+    },
+    "colorPlum": "गुलाबी",
+    "@colorPlum": {
+        "description": "The name of the color, Plum."
+    },
+    "colorBurlyWood": "ट्यान",
+    "@colorBurlyWood": {
+        "description": "The name of the color, Burly Wood."
+    },
+    "colorLightCyan": "आकाश निलो",
+    "@colorLightCyan": {
+        "description": "The name of the color, Light Cyan."
+    },
+    "colorLavender": "हल्का नीलो",
+    "@colorLavender": {
+        "description": "The name of the color, Lavender."
+    },
+    "colorDarkSalmon": "गुलाब रंग",
+    "@colorDarkSalmon": {
+        "description": "The name of the color, Dark Salmon."
+    },
+    "colorViolet": "लैभेन्डर",
+    "@colorViolet": {
+        "description": "The name of the color, Violet."
+    },
+    "colorPaleGoldenrod": "हल्का पहेंलो",
+    "@colorPaleGoldenrod": {
+        "description": "The name of the color, Pale Goldenrod."
+    },
+    "colorLightCoral": "गुलाब रंग",
+    "@colorLightCoral": {
+        "description": "The name of the color, Light Coral."
+    },
+    "colorKhaki": "हल्का पहेंलो",
+    "@colorKhaki": {
+        "description": "The name of the color, Khaki."
+    },
+    "colorAliceBlue": "सेतो",
+    "@colorAliceBlue": {
+        "description": "The name of the color, Alice Blue."
+    },
+    "colorHoneydew": "सेतो",
+    "@colorHoneydew": {
+        "description": "The name of the color, Honeydew."
+    },
+    "colorAzure": "सेतो",
+    "@colorAzure": {
+        "description": "The name of the color, Azure."
+    },
+    "colorSandyBrown": "हल्का सुन्तला रंग",
+    "@colorSandyBrown": {
+        "description": "The name of the color, Sandy Brown."
+    },
+    "colorWheat": "हल्का पहेंलो",
+    "@colorWheat": {
+        "description": "The name of the color, Wheat."
+    },
+    "colorBeige": "हल्का पहेंलो",
+    "@colorBeige": {
+        "description": "The name of the color, Beige."
+    },
+    "colorWhiteSmoke": "सेतो",
+    "@colorWhiteSmoke": {
+        "description": "The name of the color, White Smoke."
+    },
+    "colorMintCream": "सेतो",
+    "@colorMintCream": {
+        "description": "The name of the color, Mint Cream."
+    },
+    "colorGhostWhite": "सेतो",
+    "@colorGhostWhite": {
+        "description": "The name of the color, Ghost White."
+    },
+    "colorSalmon": "गुलाब रंग",
+    "@colorSalmon": {
+        "description": "The name of the color, Salmon."
+    },
+    "colorAntiqueWhite": "हल्का सुन्तला रंग",
+    "@colorAntiqueWhite": {
+        "description": "The name of the color, Antique White."
+    },
+    "colorLinen": "हल्का सुन्तला रंग",
+    "@colorLinen": {
+        "description": "The name of the color, Linen."
+    },
+    "colorLightGoldenrodYellow": "हल्का पहेंलो",
+    "@colorLightGoldenrodYellow": {
+        "description": "The name of the color, Light Goldenrod Yellow."
+    },
+    "colorOldLace": "सेतो",
+    "@colorOldLace": {
+        "description": "The name of the color, Old Lace."
+    },
+    "colorRed": "रातो",
+    "@colorRed": {
+        "description": "The name of the color, Red."
+    },
+    "colorMagenta": "बैजनी",
+    "@colorMagenta": {
+        "description": "The name of the color, Magenta."
+    },
+    "colorDeepPink": "गुलाबी",
+    "@colorDeepPink": {
+        "description": "The name of the color, Deep Pink."
+    },
+    "colorOrangeRed": "रातो",
+    "@colorOrangeRed": {
+        "description": "The name of the color, Orange Red."
+    },
+    "colorTomato": "रातो",
+    "@colorTomato": {
+        "description": "The name of the color, Tomato."
+    },
+    "colorHotPink": "गुलाबी",
+    "@colorHotPink": {
+        "description": "The name of the color, Hot Pink."
+    },
+    "colorCoral": "रातो",
+    "@colorCoral": {
+        "description": "The name of the color, Coral."
+    },
+    "colorDarkOrange": "सुन्तला रंग",
+    "@colorDarkOrange": {
+        "description": "The name of the color, Dark Orange."
+    },
+    "colorLightSalmon": "गुलाब रंग",
+    "@colorLightSalmon": {
+        "description": "The name of the color, Light Salmon."
+    },
+    "colorOrange": "सुनौलो",
+    "@colorOrange": {
+        "description": "The name of the color, Orange."
+    },
+    "colorLightPink": "गुलाबी",
+    "@colorLightPink": {
+        "description": "The name of the color, Light Pink."
+    },
+    "colorPink": "गुलाबी",
+    "@colorPink": {
+        "description": "The name of the color, Pink."
+    },
+    "colorGold": "सुनौलो",
+    "@colorGold": {
+        "description": "The name of the color, Gold."
+    },
+    "colorPeachPuff": "हल्का सुन्तला रंग",
+    "@colorPeachPuff": {
+        "description": "The name of the color, Peach Puff."
+    },
+    "colorNavajoWhite": "हल्का सुन्तला रंग",
+    "@colorNavajoWhite": {
+        "description": "The name of the color, Navajo White."
+    },
+    "colorMoccasin": "हल्का सुन्तला रंग",
+    "@colorMoccasin": {
+        "description": "The name of the color, Moccasin."
+    },
+    "colorBisque": "हल्का सुन्तला रंग",
+    "@colorBisque": {
+        "description": "The name of the color, Bisque."
+    },
+    "colorMistyRose": "गुलाबी",
+    "@colorMistyRose": {
+        "description": "The name of the color, Misty Rose."
+    },
+    "colorBlanchedAlmond": "हल्का सुन्तला रंग",
+    "@colorBlanchedAlmond": {
+        "description": "The name of the color, Blanched Almond."
+    },
+    "colorPapayaWhip": "हल्का सुन्तला रंग",
+    "@colorPapayaWhip": {
+        "description": "The name of the color, Papaya Whip."
+    },
+    "colorLavenderBlush": "सेतो",
+    "@colorLavenderBlush": {
+        "description": "The name of the color, Lavender Blush."
+    },
+    "colorSeaShell": "सेतो",
+    "@colorSeaShell": {
+        "description": "The name of the color, Sea Shell."
+    },
+    "colorCornsilk": "हल्का पहेंलो",
+    "@colorCornsilk": {
+        "description": "The name of the color, Cornsilk."
+    },
+    "colorLemonChiffon": "हल्का पहेंलो",
+    "@colorLemonChiffon": {
+        "description": "The name of the color, Lemon Chiffon."
+    },
+    "colorFloralWhite": "सेतो",
+    "@colorFloralWhite": {
+        "description": "The name of the color, Floral White."
+    },
+    "colorSnow": "सेतो",
+    "@colorSnow": {
+        "description": "The name of the color, Snow."
+    },
+    "colorYellow": "पहेंलो",
+    "@colorYellow": {
+        "description": "The name of the color, Yellow."
+    },
+    "colorLightYellow": "हल्का पहेंलो",
+    "@colorLightYellow": {
+        "description": "The name of the color, Light Yellow."
+    },
+    "colorIvory": "सेतो",
+    "@colorIvory": {
+        "description": "The name of the color, Ivory."
+    },
+    "colorWhite": "सेतो",
+    "@colorWhite": {
+        "description": "The name of the color, White."
+    }
+}
