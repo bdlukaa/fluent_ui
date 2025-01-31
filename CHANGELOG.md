@@ -24,7 +24,7 @@
 - fix: `TextBox` alignment no longer depend on decoration ([#1027](https://github.com/bdlukaa/fluent_ui/issues/1027))
 - feat: Added `TextBox.undoController` and implemented "Undo" action in toolbar options ([#1175](https://github.com/bdlukaa/fluent_ui/pull/1175))
 
-## 4.10.0
+## 4.10.1
 
 - feat: Added Nepali localization support
 
