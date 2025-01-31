@@ -569,6 +569,7 @@ class FlyoutController with ChangeNotifier {
 
     final theme = FluentTheme.of(context);
     transitionDuration ??= theme.fastAnimationDuration;
+    reverseTransitionDuration ??= transitionDuration;
 
     final navigator = navigatorKey ?? Navigator.of(context);
 
@@ -576,26 +577,20 @@ class FlyoutController with ChangeNotifier {
     final Size targetSize;
     final Rect targetRect;
 
-    if (position != null) {
-      targetOffset = position;
-      targetSize = Size.zero;
-      targetRect = Rect.zero;
-    } else {
-      final navigatorBox = navigator.context.findRenderObject() as RenderBox;
+    final navigatorBox = navigator.context.findRenderObject() as RenderBox;
 
-      final targetBox = context.findRenderObject() as RenderBox;
-      targetSize = targetBox.size;
-      targetOffset = targetBox.localToGlobal(
-            Offset.zero,
-            ancestor: navigatorBox,
-          ) +
-          Offset(0, targetSize.height);
-      targetRect = targetBox.localToGlobal(
-            Offset.zero,
-            ancestor: navigatorBox,
-          ) &
-          targetSize;
-    }
+    final targetBox = context.findRenderObject() as RenderBox;
+    targetSize = targetBox.size;
+    targetOffset = targetBox.localToGlobal(
+          Offset.zero,
+          ancestor: navigatorBox,
+        ) +
+        Offset(0, targetSize.height);
+    targetRect = targetBox.localToGlobal(
+          Offset.zero,
+          ancestor: navigatorBox,
+        ) &
+        targetSize;
 
     _open = true;
     notifyListeners();
@@ -672,7 +667,7 @@ class FlyoutController with ChangeNotifier {
                 child: SafeArea(
                   child: CustomSingleChildLayout(
                     delegate: _FlyoutPositionDelegate(
-                      targetOffset: targetOffset,
+                      targetOffset: position ?? targetOffset,
                       targetSize: position == null ? targetSize : Size.zero,
                       autoModeConfiguration: autoModeConfiguration,
                       placementMode: placementMode,
