@@ -23,6 +23,7 @@
   ```
 - fix: `TextBox` alignment no longer depend on decoration ([#1027](https://github.com/bdlukaa/fluent_ui/issues/1027))
 - feat: Added `TextBox.undoController` and implemented "Undo" action in toolbar options ([#1175](https://github.com/bdlukaa/fluent_ui/pull/1175))
+- feat: Handle `TextBox` context menu controls on mobile platforms ([#1022](https://github.com/bdlukaa/fluent_ui/issues/1022))
 - feat: Added Nepali localization support ([#1177](https://github.com/bdlukaa/fluent_ui/pull/1177))
 
 ## 4.10.0

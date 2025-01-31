@@ -35,22 +35,22 @@ enum OverlayVisibilityMode {
 
 class _TextBoxSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
-  _TextBoxSelectionGestureDetectorBuilder({
-    required _TextBoxState super.delegate,
-  }) : _state = delegate;
+  _TextBoxSelectionGestureDetectorBuilder({required _TextBoxState state})
+      : _state = state,
+        super(delegate: state);
 
   final _TextBoxState _state;
 
   @override
   void onSingleTapUp(TapDragUpDetails details) {
     super.onSingleTapUp(details);
-    _state._requestKeyboard();
     _state.widget.onTap?.call();
   }
 
   @override
   void onDragSelectionEnd(TapDragEndDetails details) {
     _state._requestKeyboard();
+    super.onDragSelectionEnd(details);
   }
 }
 
@@ -741,7 +741,7 @@ class _TextBoxState extends State<TextBox>
   void initState() {
     super.initState();
     _selectionGestureDetectorBuilder = _TextBoxSelectionGestureDetectorBuilder(
-      delegate: this,
+      state: this,
     );
     if (widget.controller == null) {
       _createLocalController();
@@ -867,7 +867,6 @@ class _TextBoxState extends State<TextBox>
         if (cause == SelectionChangedCause.longPress) {
           _editableText.bringIntoView(selection.extent);
         }
-        break;
     }
 
     switch (defaultTargetPlatform) {
@@ -1034,14 +1033,14 @@ class _TextBoxState extends State<TextBox>
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        textSelectionControls ??= FluentTextSelectionControls(
+        textSelectionControls ??= FluentTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
         break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        textSelectionControls ??= FluentTextSelectionControls(
+        textSelectionControls ??= FluentTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
         handleDidGainAccessibilityFocus = () {
@@ -1245,7 +1244,7 @@ class _TextBoxState extends State<TextBox>
           ignoring: !enabled,
           child: HoverButton(
             focusEnabled: false,
-            forceEnabled: enabled,
+            forceEnabled: false,
             hitTestBehavior: HitTestBehavior.translucent,
             builder: (context, states) {
               // Since we manage focus outside of the HoverButton (see focusEnabled: false)

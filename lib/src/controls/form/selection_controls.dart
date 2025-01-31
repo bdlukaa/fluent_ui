@@ -181,6 +181,15 @@ class FluentTextSelectionToolbar extends StatelessWidget {
 
 final fluentTextSelectionControls = FluentTextSelectionControls();
 
+/// Fluent styled text selection handle controls.
+///
+/// Specifically does not manage the toolbar, which is left to
+/// [EditableText.contextMenuBuilder].
+class FluentTextSelectionHandleControls extends FluentTextSelectionControls
+    with TextSelectionHandleControls {
+  FluentTextSelectionHandleControls({super.undoHistoryController});
+}
+
 class FluentTextSelectionControls extends TextSelectionControls {
   final UndoHistoryController? undoHistoryController;
 
@@ -430,7 +439,16 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     return _FluentTextSelectionToolbar(
-      anchor: widget.lastSecondaryTapDownPosition ?? midpointAnchor,
+      anchor: switch (defaultTargetPlatform) {
+        TargetPlatform.android ||
+        TargetPlatform.iOS ||
+        TargetPlatform.fuchsia =>
+          Offset(100, 100),
+        TargetPlatform.windows ||
+        TargetPlatform.macOS ||
+        TargetPlatform.linux =>
+          widget.lastSecondaryTapDownPosition ?? midpointAnchor,
+      },
       children: items,
     );
   }
@@ -464,8 +482,17 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     final theme = FluentTheme.of(context);
 
     final paddingAbove =
-        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding;
-    final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding * 3;
+    final localAdjustment = switch (defaultTargetPlatform) {
+      TargetPlatform.android ||
+      TargetPlatform.iOS ||
+      TargetPlatform.fuchsia =>
+        Offset.zero,
+      TargetPlatform.windows ||
+      TargetPlatform.macOS ||
+      TargetPlatform.linux =>
+        Offset(_kToolbarScreenPadding, paddingAbove),
+    };
 
     final radius = BorderRadius.circular(6.0);
 
