@@ -527,7 +527,11 @@ class FlyoutController with ChangeNotifier {
   ///
   /// [transitionDuration] configures the duration of the transition animation.
   /// By default, [FluentThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
-  /// to disable transitions at all
+  /// to disable transitions at all.
+  ///
+  /// [reverseTransitionDuration] configures the duration of the reverse transition
+  /// animation. By default, [transitionDuration] is used. Set to [Duration.zero]
+  /// to disable transitions at all.
   ///
   /// [position] lets you position the flyout anywhere on the screen, making it
   /// possible to create context menus. If provided, [placementMode] is ignored.
@@ -556,6 +560,7 @@ class FlyoutController with ChangeNotifier {
     NavigatorState? navigatorKey,
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
+    Duration? reverseTransitionDuration,
     Offset? position,
     RouteSettings? settings,
     GestureRecognizer? barrierRecognizer,
@@ -600,7 +605,7 @@ class FlyoutController with ChangeNotifier {
     final result = await navigator.push<T>(PageRouteBuilder<T>(
       opaque: false,
       transitionDuration: transitionDuration,
-      reverseTransitionDuration: transitionDuration,
+      reverseTransitionDuration: reverseTransitionDuration,
       settings: settings,
       fullscreenDialog: true,
       pageBuilder: (context, animation, secondary) {
