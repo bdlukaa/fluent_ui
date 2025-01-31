@@ -910,7 +910,9 @@ class _TextBoxState extends State<TextBox>
   // TextBox has top alignment by default, unless it has decoration
   // like a prefix or suffix, in which case it's aligned to the center.
   TextAlignVertical get _textAlignVertical {
-    return widget.textAlignVertical ?? TextAlignVertical.top;
+    if (widget.textAlignVertical != null) return widget.textAlignVertical!;
+    if (widget.maxLines == 1) return TextAlignVertical.center;
+    return TextAlignVertical.top;
   }
 
   Widget _addTextDependentAttachments(
