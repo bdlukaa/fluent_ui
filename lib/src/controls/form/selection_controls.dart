@@ -443,7 +443,7 @@ class _FluentTextSelectionControlsToolbarState
         TargetPlatform.android ||
         TargetPlatform.iOS ||
         TargetPlatform.fuchsia =>
-          Offset(100, 100),
+          const Offset(100, 100),
         TargetPlatform.windows ||
         TargetPlatform.macOS ||
         TargetPlatform.linux =>

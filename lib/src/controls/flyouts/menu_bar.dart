@@ -77,7 +77,6 @@ class _MenuBarState extends State<MenuBar> {
     if (_locked) return;
     _locked = true;
     final textDirection = Directionality.of(context);
-    final navigator = Navigator.of(context);
     item ??= widget.items.first;
 
     // Checks the position of the item itself. Context is the MenuBarItem button.
@@ -86,10 +85,8 @@ class _MenuBarState extends State<MenuBar> {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final position = renderBox.localToGlobal(
       Offset.zero,
-      ancestor: navigator.context.findRenderObject(),
+      ancestor: this.context.findRenderObject(),
     );
-    final size = renderBox.size;
-
     if (_controller.isOpen) {
       _controller.close();
       if (_currentOpenItem == item) {
@@ -110,26 +107,16 @@ class _MenuBarState extends State<MenuBar> {
     final resolvedBarMargin = barMargin.resolve(textDirection);
     final future = _controller.showFlyout(
       buildTarget: true,
-      placementMode: FlyoutPlacementMode.bottomLeft.resolve(textDirection),
+      placementMode: FlyoutPlacementMode.auto,
+      autoModeConfiguration: FlyoutAutoConfiguration(
+        preferredMode: FlyoutPlacementMode.bottomLeft.resolve(textDirection),
+      ),
+      additionalOffset: 0.0,
+      horizontalOffset: position.dx + resolvedBarMargin.left,
       reverseTransitionDuration: Duration.zero,
       barrierColor: Colors.transparent,
-      position: Offset(
-        position.dx + resolvedBarMargin.left,
-        position.dy + size.height - resolvedBarMargin.bottom,
-      ),
       builder: (context) {
         return MenuFlyout(items: item!.items);
-      },
-      transitionBuilder: (context, animation, placement, child) {
-        return ClipRect(
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.0, -1.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          ),
-        );
       },
     );
     setState(() {});
@@ -145,10 +132,17 @@ class _MenuBarState extends State<MenuBar> {
 
     final theme = FluentTheme.of(context);
 
-    return FlyoutTarget(
-      controller: _controller,
-      child: SizedBox(
-        height: 40.0,
+    return Container(
+      height: 40.0,
+      padding: EdgeInsetsDirectional.only(
+        top: barMargin.top,
+        bottom: barMargin.bottom,
+      ),
+      // align to the center so that the flyout is directly connected to the buttons
+      // not the bar.
+      alignment: AlignmentDirectional.centerStart,
+      child: FlyoutTarget(
+        controller: _controller,
         child: Row(children: [
           for (final item in widget.items)
             Builder(
@@ -169,7 +163,10 @@ class _MenuBarState extends State<MenuBar> {
                   builder: (context, states) {
                     return Container(
                       padding: barPadding,
-                      margin: barMargin,
+                      margin: EdgeInsetsDirectional.only(
+                        start: barMargin.start,
+                        end: barMargin.end,
+                      ),
                       decoration: BoxDecoration(
                         color: HyperlinkButton.backgroundColor(theme)
                             .resolve(states),
