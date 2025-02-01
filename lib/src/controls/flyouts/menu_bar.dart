@@ -59,6 +59,12 @@ class MenuBar extends StatefulWidget with Diagnosticable {
 class _MenuBarState extends State<MenuBar> {
   final _controller = FlyoutController();
 
+  static const barPadding = EdgeInsetsDirectional.symmetric(
+    horizontal: 10.0,
+    vertical: 4.0,
+  );
+  static const barMargin = EdgeInsetsDirectional.all(4.0);
+
   @override
   void dispose() {
     _controller.dispose();
@@ -101,15 +107,29 @@ class _MenuBarState extends State<MenuBar> {
 
     _locked = false;
     _currentOpenItem = item;
+    final resolvedBarMargin = barMargin.resolve(textDirection);
     final future = _controller.showFlyout(
       buildTarget: true,
       placementMode: FlyoutPlacementMode.bottomLeft.resolve(textDirection),
       reverseTransitionDuration: Duration.zero,
       barrierColor: Colors.transparent,
-      additionalOffset: 0.0,
-      position: Offset(position.dx, position.dy + size.height),
+      position: Offset(
+        position.dx + resolvedBarMargin.left,
+        position.dy + size.height - resolvedBarMargin.bottom,
+      ),
       builder: (context) {
         return MenuFlyout(items: item!.items);
+      },
+      transitionBuilder: (context, animation, placement, child) {
+        return ClipRect(
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, -1.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
       },
     );
     setState(() {});
@@ -148,11 +168,8 @@ class _MenuBarState extends State<MenuBar> {
                       : null,
                   builder: (context, states) {
                     return Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 10.0,
-                        vertical: 4.0,
-                      ),
-                      margin: const EdgeInsetsDirectional.all(4.0),
+                      padding: barPadding,
+                      margin: barMargin,
                       decoration: BoxDecoration(
                         color: HyperlinkButton.backgroundColor(theme)
                             .resolve(states),
