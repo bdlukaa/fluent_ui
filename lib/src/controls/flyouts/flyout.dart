@@ -514,7 +514,11 @@ class FlyoutController with ChangeNotifier {
   /// bounds of the closest [Navigator]. If false, the flyout may overflow the
   /// screen on all sides. Defaults to `true`
   ///
-  /// [additionalOffset] is the offset of the flyout around the attached target
+  /// [additionalOffset] is the offset of the flyout around the attached target.
+  /// This value can not be negative.
+  ///
+  /// [horizontalOffset] is the horizontal offset of the flyout around the
+  /// attached target. Defaults to 0.0.
   ///
   /// [margin] is the margin of the flyout to the root bounds
   ///
@@ -555,6 +559,7 @@ class FlyoutController with ChangeNotifier {
     bool forceAvailableSpace = false,
     bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
+    double horizontalOffset = 0.0,
     double margin = 8.0,
     Color? barrierColor,
     NavigatorState? navigatorKey,
@@ -590,7 +595,7 @@ class FlyoutController with ChangeNotifier {
           Offset.zero,
           ancestor: navigatorBox,
         ) +
-        Offset(0, targetSize.height);
+        Offset(horizontalOffset, targetSize.height);
     targetRect = targetBox.localToGlobal(
           Offset.zero,
           ancestor: navigatorBox,
@@ -611,28 +616,29 @@ class FlyoutController with ChangeNotifier {
       pageBuilder: (context, animation, secondary) {
         transitionBuilder ??= (context, animation, placementMode, flyout) {
           switch (placementMode) {
-            case FlyoutPlacementMode.bottomCenter:
-            case FlyoutPlacementMode.bottomLeft:
-            case FlyoutPlacementMode.bottomRight:
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -0.05),
-                  end: const Offset(0, 0),
-                ).animate(animation),
-                child: flyout,
-              );
             case FlyoutPlacementMode.topCenter:
             case FlyoutPlacementMode.topLeft:
             case FlyoutPlacementMode.topRight:
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0, 0.05),
+                  begin: const Offset(0, 0.15),
                   end: const Offset(0, 0),
                 ).animate(animation),
                 child: flyout,
               );
+            case FlyoutPlacementMode.bottomCenter:
+            case FlyoutPlacementMode.bottomLeft:
+            case FlyoutPlacementMode.bottomRight:
             default:
-              return flyout;
+              return ClipRect(
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, -0.15),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: flyout,
+                ),
+              );
           }
         };
 
