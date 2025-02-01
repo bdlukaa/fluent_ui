@@ -2,25 +2,38 @@
 
 - fix: hide Tab's close button when `onClosed` is null
 - feat: Add `TextBox.cursorOpacityAnimates` (defaults to `FluentThemeData.cursorOpacityAnimates`, which defaults to `false`); default setting improves CPU/GPU efficiency while TextBox has focus ([#1164](https://github.com/bdlukaa/fluent_ui/issues/1164))
-- fix: `DatePicker` selectable range matches the one between `startDate` and `endDate`. [#1170](https://github.com/bdlukaa/fluent_ui/issues/1170)
-- fix: `ScaffoldPage` has a built-in color if no parent `NavigationView` is found. ([#1168](https://github.com/bdlukaa/fluent_ui/issues/1168))
-- feat: Added `CommandBarButton.closeAfterClick` ([#1149](https://github.com/bdlukaa/fluent_ui/issues/1149))
+- fix: `DatePicker` selectable range matches the one between `startDate` and `endDate` ([#1170](https://github.com/bdlukaa/fluent_ui/issues/1170))
+- fix: `ScaffoldPage` has a built-in color if no parent `NavigationView` is found ([#1168](https://github.com/bdlukaa/fluent_ui/issues/1168))
 - feat: Added `FlyoutController.showFlyout.buildTarget` ([#1173](https://github.com/bdlukaa/fluent_ui/issues/1173))
+  
   Primary items of the command bar are now accessible through the secondary flyout.
-- fix: `CommandBar` secondary menu preferred placement mode ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+- feat: Added these options to `FlyoutController` ([#1178](https://github.com/bdlukaa/fluent_ui/pull/1178))
+  - `horizontalOffset`, which manipulates how the flyout will be positioned horizontally;
+  - `reverseTransitionDuration`, which sets the duration of the reverse transition;
+  - `transitionCurve`, which sets the curve of the transition;
 - feat: Added `FlyoutController.close` ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+- fix: Use the correct placement mode in transition when automatic mode is selected ([#1178](https://github.com/bdlukaa/fluent_ui/pull/1178))
+- feat: `FlyoutContent` and `MenuFlyout` now match their native counterparts ([#1178](https://github.com/bdlukaa/fluent_ui/pull/1178))
+- fix: Jitter when displaying flyouts and sub flyouts ([#1014](https://github.com/bdlukaa/fluent_ui/issues/1014))
+- fix: Menu sub items have the same transition as their parents ([#1178](https://github.com/bdlukaa/fluent_ui/pull/1178))
+- feat: Implemented [`MenuBar`](https://bdlukaa.github.io/fluent_ui/#/surfaces/menu_bar) ([#1107](https://github.com/bdlukaa/fluent_ui/issues/1107))
+- `SubItemShowBehavior` was renamed to `SubItemShowAction` ([#1178](https://github.com/bdlukaa/fluent_ui/pull/1178))
+- feat: Added `CommandBarButton.closeAfterClick` ([#1149](https://github.com/bdlukaa/fluent_ui/issues/1149))
+- fix: `CommandBar` secondary menu preferred placement mode ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
 - feat: `CommandBarState` is now accessible, making it possible to open/close the secondary flyout programmatically ([#1174](https://github.com/bdlukaa/fluent_ui/pull/1174))
+
   ```dart
   final commandBarKey = GlobalKey<CommandBarState>();
 
   CommandBar(
-    key: commandBarKey, 
+    key: commandBarKey,
     ...,
   ),
-  
+
   commandBarKey.currentState?.toggleSecondaryMenu();
   commandBarKey.currentState?.secondaryFlyoutController.close();
   ```
+
 - fix: `TextBox` alignment no longer depend on decoration ([#1027](https://github.com/bdlukaa/fluent_ui/issues/1027))
 - feat: Added `TextBox.undoController` and implemented "Undo" action in toolbar options ([#1175](https://github.com/bdlukaa/fluent_ui/pull/1175))
 - feat: Handle `TextBox` context menu controls on mobile platforms ([#1022](https://github.com/bdlukaa/fluent_ui/issues/1022))
@@ -36,8 +49,9 @@
 - feat: Use a `Decoration` instead of `Color` in `NavigationAppBar` ([#1118](https://github.com/bdlukaa/fluent_ui/issues/1118))
 - feat: Add `EditableComboBox.inputFormatters` ([#1041](https://github.com/bdlukaa/fluent_ui/issues/1041))
 - **BREAKING** feat: `TextBox.decoration` and `TextBox.foregroundDecoration` are now of type `WidgetStateProperty` ([#987](https://github.com/bdlukaa/fluent_ui/pull/987))
-  
+
   Before:
+
   ```dart
   TextBox(
     decoration: BoxDecoration(
@@ -50,6 +64,7 @@
   ```
 
   After:
+
   ```dart
   TextBox(
     decoration: WidgetStateProperty.all(BoxDecoration(
@@ -60,12 +75,13 @@
     )),
   ),
   ```
+
 - feat: Add `TabView.gestures`, which allows the manipulation of the tab gestures ([#1138](https://github.com/bdlukaa/fluent_ui/issues/1138))
 - feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
 - feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
 - fix: `TimePicker` hour offset
 - feat: Add `ColorPicker` ([#1152](https://github.com/bdlukaa/fluent_ui/pull/1152))
-- fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153)) 
+- fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153))
 - fix: `NumberBox` incrementing/decrementing when not focused ([#1124](https://github.com/bdlukaa/fluent_ui/issues/1124))
 - fix: `NumberBox` text is correctly when there are no visible actions ([#1150](https://github.com/bdlukaa/fluent_ui/issues/1150))
 
@@ -75,6 +91,7 @@
 - feat: Add `TabView.stripBuilder` ([#1106](https://github.com/bdlukaa/fluent_ui/issues/1106))
 - fix: Correctly apply `EditableComboBox.style` ([#1121](https://github.com/bdlukaa/fluent_ui/pull/1121))
 - feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
+
 * fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
 * fix: Correctly disable `DropDownButton` items if `onPressed` is not provided ([#1116](https://github.com/bdlukaa/fluent_ui/issues/1116#issuecomment-2347153074))
 * feat: Add `ToggleMenuFlyoutItem` and `RadioMenuFlyoutItem` ([#1108](https://github.com/bdlukaa/fluent_ui/issues/1108))
