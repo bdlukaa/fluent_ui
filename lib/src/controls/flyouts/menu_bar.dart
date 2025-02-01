@@ -141,7 +141,10 @@ class MenuBarState extends State<MenuBar> {
       reverseTransitionDuration: Duration.zero,
       barrierColor: Colors.transparent,
       builder: (context) {
-        return MenuFlyout(items: item!.items);
+        return TapRegion(
+          groupId: MenuBar,
+          child: MenuFlyout(items: item!.items),
+        );
       },
     );
     setState(() {});
@@ -205,77 +208,81 @@ class MenuBarState extends State<MenuBar> {
 
     final theme = FluentTheme.of(context);
 
-    return Container(
-      height: 40.0,
-      padding: EdgeInsetsDirectional.only(
-        top: barMargin.top,
-        bottom: barMargin.bottom,
-      ),
-      // align to the center so that the flyout is directly connected to the buttons
-      // not the bar.
-      alignment: AlignmentDirectional.centerStart,
-      child: FlyoutTarget(
-        controller: _controller,
-        child: Builder(builder: (context) {
-          // Do not use the [Flyout] object because it is only available for the
-          // flyout content. [MenuInfoProvider] is available for the entire Flyout
-          // popup. This is only available after [FlyoutTarget].
-          final flyout = MenuInfoProvider.maybeOf(context);
+    return TapRegion(
+      groupId: MenuBar,
+      onTapOutside: (_) => closeFlyout(),
+      child: Container(
+        height: 40.0,
+        padding: EdgeInsetsDirectional.only(
+          top: barMargin.top,
+          bottom: barMargin.bottom,
+        ),
+        // align to the center so that the flyout is directly connected to the buttons
+        // not the bar.
+        alignment: AlignmentDirectional.centerStart,
+        child: FlyoutTarget(
+          controller: _controller,
+          child: Builder(builder: (context) {
+            // Do not use the [Flyout] object because it is only available for the
+            // flyout content. [MenuInfoProvider] is available for the entire Flyout
+            // popup. This is only available after [FlyoutTarget].
+            final flyout = MenuInfoProvider.maybeOf(context);
 
-          /// The flyout menu bar must be invisible because it has transparent
-          /// components, which can lead to visual inconsistencies.
-          return Visibility.maintain(
-            visible: flyout == null,
-            child: Row(children: [
-              for (final item in widget.items)
-                Builder(
-                  key: _controller.isOpen ? null : _keyOf(item),
-                  builder: (context) {
-                    final isSelected = _currentOpenItem == item;
-                    return HoverButton(
-                      margin: EdgeInsetsDirectional.only(
-                        start: barMargin.start,
-                        end: barMargin.end,
-                      ),
-                      onPressed: () {
-                        _locked = false;
-                        _showFlyout(context, item);
-                      },
-                      onPointerEnter: _controller.isOpen
-                          ? (_) {
-                              if (_currentOpenItem != item) {
-                                _showFlyout(context, item);
-                              }
-                            }
-                          : null,
-                      onFocusChange: (focused) {
-                        if (focused && _controller.isOpen) {
+            /// The flyout menu bar must be invisible because it has transparent
+            /// components, which can lead to visual inconsistencies.
+            return Visibility.maintain(
+              visible: flyout == null,
+              child: Row(children: [
+                for (final item in widget.items)
+                  Builder(
+                    key: _controller.isOpen ? null : _keyOf(item),
+                    builder: (context) {
+                      final isSelected = _currentOpenItem == item;
+                      return HoverButton(
+                        margin: EdgeInsetsDirectional.only(
+                          start: barMargin.start,
+                          end: barMargin.end,
+                        ),
+                        onPressed: () {
+                          _locked = false;
                           _showFlyout(context, item);
-                        }
-                      },
-                      builder: (context, states) {
-                        if (isSelected) {
-                          states = {...states, WidgetState.hovered};
-                        }
-                        return FocusBorder(
-                          focused: states.isFocused,
-                          child: Container(
-                            padding: barPadding,
-                            decoration: BoxDecoration(
-                              color: HyperlinkButton.backgroundColor(theme)
-                                  .resolve(states),
-                              borderRadius: BorderRadius.circular(4.0),
+                        },
+                        onPointerEnter: _controller.isOpen
+                            ? (_) {
+                                if (_currentOpenItem != item) {
+                                  _showFlyout(context, item);
+                                }
+                              }
+                            : null,
+                        onFocusChange: (focused) {
+                          if (focused && _controller.isOpen) {
+                            _showFlyout(context, item);
+                          }
+                        },
+                        builder: (context, states) {
+                          if (isSelected) {
+                            states = {...states, WidgetState.hovered};
+                          }
+                          return FocusBorder(
+                            focused: states.isFocused,
+                            child: Container(
+                              padding: barPadding,
+                              decoration: BoxDecoration(
+                                color: HyperlinkButton.backgroundColor(theme)
+                                    .resolve(states),
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              child: Text(item.title),
                             ),
-                            child: Text(item.title),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-            ]),
-          );
-        }),
+                          );
+                        },
+                      );
+                    },
+                  ),
+              ]),
+            );
+          }),
+        ),
       ),
     );
   }
