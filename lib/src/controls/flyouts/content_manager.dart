@@ -18,17 +18,20 @@ class Flyout extends StatefulWidget {
   final Duration transitionDuration;
   final Duration reverseTransitionDuration;
 
+  final FlyoutTransitionBuilder transitionBuilder;
+
   /// Create a flyout.
   const Flyout({
     super.key,
     required this.builder,
-    this.root,
-    this.rootFlyout,
-    this.menuKey,
-    this.additionalOffset = 0.0,
-    this.margin = 0.0,
-    this.transitionDuration = Duration.zero,
-    this.reverseTransitionDuration = Duration.zero,
+    required this.root,
+    required this.rootFlyout,
+    required this.menuKey,
+    required this.additionalOffset,
+    required this.margin,
+    required this.transitionDuration,
+    required this.reverseTransitionDuration,
+    required this.transitionBuilder,
   });
 
   /// Gets the current flyout info
@@ -61,6 +64,9 @@ class FlyoutState extends State<Flyout> {
 
   /// The duration of the reverse transition animation
   Duration get reverseTransitionDuration => widget.reverseTransitionDuration;
+
+  /// The transition builder
+  FlyoutTransitionBuilder get transitionBuilder => widget.transitionBuilder;
 
   /// Closes the current open flyout.
   ///

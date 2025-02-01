@@ -671,11 +671,8 @@ class FlyoutController with ChangeNotifier {
           shouldConstrainToRootBounds: shouldConstrainToRootBounds,
           additionalOffset: additionalOffset,
           margin: margin,
-          transitionBuilder: transitionBuilder,
-          animation: CurvedAnimation(
-            curve: transitionCurve,
-            parent: animation,
-          ),
+          transitionBuilder: transitionBuilder!,
+          animation: CurvedAnimation(curve: transitionCurve, parent: animation),
           transitionDuration: transitionDuration,
           reverseTransitionDuration: reverseTransitionDuration,
           position: position,
@@ -756,7 +753,7 @@ class _FlyoutPage extends StatefulWidget {
   final bool shouldConstrainToRootBounds;
   final double additionalOffset;
   final double margin;
-  final FlyoutTransitionBuilder? transitionBuilder;
+  final FlyoutTransitionBuilder transitionBuilder;
   final Animation<double> animation;
   final Duration? transitionDuration;
   final Duration? reverseTransitionDuration;
@@ -839,6 +836,8 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                     reverseTransitionDuration:
                         widget.reverseTransitionDuration!,
                     root: widget.navigator,
+                    menuKey: null,
+                    transitionBuilder: widget.transitionBuilder,
                     builder: (context) {
                       FlyoutPlacementMode realPlacementMode =
                           widget.placementMode;

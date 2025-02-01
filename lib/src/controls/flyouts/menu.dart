@@ -603,11 +603,15 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
           additionalOffset: parent.additionalOffset,
           margin: parent.margin,
           transitionDuration: parent.transitionDuration,
+          reverseTransitionDuration: parent.reverseTransitionDuration,
+          transitionBuilder: parent.transitionBuilder,
           root: parent.widget.root,
           builder: (context) {
-            Widget w = FadeTransition(
-              opacity: transitionController,
-              child: MenuFlyout(
+            var w = parent.transitionBuilder.call(
+              context,
+              transitionController,
+              FlyoutPlacementMode.bottomCenter,
+              MenuFlyout(
                 key: menuKey,
                 color: menuFlyout?.color,
                 constraints: menuFlyout?.constraints,
