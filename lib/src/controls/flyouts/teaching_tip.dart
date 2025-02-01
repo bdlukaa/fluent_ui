@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 
 const kTeachingTipConstraints = BoxConstraints(
   minHeight: 40.0,
@@ -151,11 +150,11 @@ class _TeachingTipNonTargetedPositionDelegate
 class TeachingTip extends StatelessWidget {
   /// Creates a teaching tip
   const TeachingTip({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     this.buttons = const [],
-  }) : super(key: key);
+  });
 
   /// The title of the teaching tip
   ///
@@ -230,7 +229,7 @@ class TeachingTip extends StatelessWidget {
           ),
         ),
         child: Container(
-          color: theme.menuColor.withOpacity(0.6),
+          color: theme.menuColor.withValues(alpha: 0.6),
           padding: const EdgeInsets.all(12.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,

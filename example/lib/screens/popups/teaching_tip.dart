@@ -62,6 +62,32 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           content: const Text('Show a non-targeted TeachingTip with buttons'),
         ),
         CardHighlight(
+          codeSnippet: '''final teachingTip = TeachingTip(
+  title: Text('Change themes without hassle'),
+  subtitle: Text(
+    'It's easier to see control samples in both light and dark theme',
+  ),
+  buttons: <Widget>[
+    Button(
+      child: const Text('Toggle theme now'),
+      onPressed: () {
+        // toggle theme here
+
+        // then close the popup
+        Navigator.of(context).pop();
+      },
+    ),
+    Button(
+      child: const Text('Got it'),
+      onPressed: Navigator.of(context).pop,
+    ),
+  ],
+),
+
+showTeachingTip(
+  context: context,
+  teachingTip: teachingTip,
+);''',
           child: Row(children: [
             FlyoutTarget(
               controller: nonTargetedController,
@@ -90,8 +116,8 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
                           },
                         ),
                         Button(
-                          child: const Text('Got it'),
                           onPressed: Navigator.of(context).pop,
+                          child: const Text('Got it'),
                         ),
                       ],
                     ),
@@ -119,32 +145,6 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
               ),
             ),
           ]),
-          codeSnippet: '''final teachingTip = TeachingTip(
-  title: Text('Change themes without hassle'),
-  subtitle: Text(
-    'It's easier to see control samples in both light and dark theme',
-  ),
-  buttons: <Widget>[
-    Button(
-      child: const Text('Toggle theme now'),
-      onPressed: () {
-        // toggle theme here
-
-        // then close the popup
-        Navigator.of(context).pop();
-      },
-    ),
-    Button(
-      child: const Text('Got it'),
-      onPressed: Navigator.of(context).pop,
-    ),
-  ],
-),
-
-showTeachingTip(
-  context: context,
-  teachingTip: teachingTip,
-);''',
         ),
 //         subtitle(
 //           content: const Text('Show a targeted TeachingTip'),
