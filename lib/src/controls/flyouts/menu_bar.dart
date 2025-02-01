@@ -85,24 +85,6 @@ class MenuBarState extends State<MenuBar> {
     }
   }
 
-  MenuBarItem previous(MenuBarItem current) {
-    assert(widget.items.isNotEmpty);
-    final index = widget.items.indexOf(current);
-    if (index == 0) {
-      return widget.items.last;
-    }
-    return widget.items[index - 1];
-  }
-
-  MenuBarItem next(MenuBarItem current) {
-    assert(widget.items.isNotEmpty);
-    final index = widget.items.indexOf(current);
-    if (index == widget.items.length - 1) {
-      return widget.items.first;
-    }
-    return widget.items[index + 1];
-  }
-
   @override
   void dispose() {
     _controller.dispose();
@@ -237,7 +219,7 @@ class MenuBarState extends State<MenuBar> {
         child: Builder(builder: (context) {
           // Do not use the [Flyout] object because it is only available for the
           // flyout content. [MenuInfoProvider] is available for the entire Flyout
-          // popup.
+          // popup. This is only available after [FlyoutTarget].
           final flyout = MenuInfoProvider.maybeOf(context);
 
           /// The flyout menu bar must be invisible because it has transparent
