@@ -188,7 +188,7 @@ class _MenuScrollBehavior extends FluentScrollBehavior {
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
 ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
-abstract class MenuFlyoutItemBase {
+abstract class MenuFlyoutItemBase with Diagnosticable {
   final Key? key;
 
   const MenuFlyoutItemBase({this.key});
@@ -289,6 +289,29 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   bool _useIconPlaceholder = false;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty(
+      'selected',
+      value: selected,
+      ifTrue: 'selected',
+    ));
+    properties.add(FlagProperty(
+      'closeAfterClick',
+      value: closeAfterClick,
+      ifFalse: 'keeps open',
+    ));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
+    properties.add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode));
+    properties.add(DiagnosticsProperty<Widget?>('leading', leading));
+    properties.add(DiagnosticsProperty<Widget>('text', text));
+    properties.add(DiagnosticsProperty<Widget?>('trailing', trailing));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FlyoutListTile(
       margin: EdgeInsets.zero,
@@ -377,6 +400,14 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
           ),
           onPressed: onChanged == null ? null : () => onChanged(!value),
         );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('value', value));
+    properties.add(
+        ObjectFlagProperty<ValueChanged<bool>?>.has('onChanged', onChanged));
+  }
 }
 
 /// Represents a menu item that is mutually exclusive with other radio menu
@@ -392,7 +423,7 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
 ///    sub-menu in a [MenuFlyout]
 ///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
 ///    change between two states, checked or unchecked
-class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
+class RadioMenuFlyoutItem<T extends Object> extends MenuFlyoutItem {
   /// The value of the item.
   final T value;
 
@@ -417,16 +448,29 @@ class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
           ),
           onPressed: onChanged == null ? null : () => onChanged(value),
         );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<T>('value', value));
+    properties.add(DiagnosticsProperty<T>('groupValue', groupValue));
+    properties
+        .add(ObjectFlagProperty<ValueChanged<T>?>.has('onChanged', onChanged));
+  }
 }
 
-enum SubItemShowBehavior {
+@Deprecated('Use SubItemShowAction instead.')
+typedef SubItemShowBehavior = SubItemShowAction;
+
+/// Represents the action that will show the sub-menu in a [MenuFlyoutSubItem].
+enum SubItemShowAction {
   /// Whether the sub-menu will be shown on item press
   press,
 
   /// Whether the sub-menu will be shown on item hover
   ///
   /// This is the default behavior.
-  hover,
+  hover;
 }
 
 typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
@@ -455,7 +499,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     required super.text,
     super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
-    this.showBehavior = SubItemShowBehavior.hover,
+    this.showBehavior = SubItemShowAction.hover,
     this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
 
@@ -473,12 +517,12 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 
   /// Represent which user action will show the sub-menu.
   ///
-  /// Defaults to [SubItemShowBehavior.hover]
-  final SubItemShowBehavior showBehavior;
+  /// Defaults to [SubItemShowAction.hover]
+  final SubItemShowAction showBehavior;
 
   /// The sub-menu will be only shown after this delay
   ///
-  /// Only applied if [showBehavior] is [SubItemShowBehavior.hover]
+  /// Only applied if [showBehavior] is [SubItemShowAction.hover]
   final Duration showHoverDelay;
 
   bool disableAcyrlic = false;
@@ -555,7 +599,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
       },
     ).build(context);
 
-    if (widget.item.showBehavior == SubItemShowBehavior.hover) {
+    if (widget.item.showBehavior == SubItemShowAction.hover) {
       return MouseRegion(
         onEnter: (event) {
           showTimer = Timer(widget.item.showHoverDelay, () {

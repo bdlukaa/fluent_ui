@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// Represents a top-level menu in a [MenuBar] control.
-class MenuBarItem {
+class MenuBarItem with Diagnosticable {
   /// The text label of the menu.
   final String title;
 
@@ -24,6 +24,13 @@ class MenuBarItem {
 
   @override
   int get hashCode => Object.hash(title, items);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(IterableProperty<MenuFlyoutItemBase>('items', items));
+  }
 }
 
 /// Use a Menu Bar to show a set of multiple top-level menus in a horizontal row.

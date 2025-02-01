@@ -866,7 +866,7 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                         child: widget.builder(context),
                       );
 
-                      return widget.transitionBuilder!(
+                      return widget.transitionBuilder(
                         context,
                         widget.animation,
                         realPlacementMode,
