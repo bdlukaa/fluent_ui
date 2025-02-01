@@ -316,7 +316,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       key: const ValueKey('/popups/teaching_tip'),
       icon: const Icon(FluentIcons.field_filled),
-      title: const Text('Tooltip'),
+      title: const Text('Teaching Tip'),
       body: const SizedBox.shrink(),
     ),
     PaneItem(

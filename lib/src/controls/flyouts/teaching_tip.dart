@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 
 const kTeachingTipConstraints = BoxConstraints(
   minHeight: 40.0,
@@ -63,7 +62,7 @@ Future<T?> showTeachingTip<T extends Object?>({
   required WidgetBuilder builder,
   required FlyoutController flyoutController,
   Alignment? nonTargetedAlignment,
-  FlyoutPlacementMode placementMode = FlyoutPlacementMode.auto,
+  FlyoutPlacementMode placementMode = FlyoutPlacementMode.full,
   Duration? transitionDuration,
   FlyoutTransitionBuilder transitionBuilder =
       TeachingTip.defaultTransitionBuilder,
@@ -72,18 +71,14 @@ Future<T?> showTeachingTip<T extends Object?>({
 }) {
   return flyoutController.showFlyout<T>(
     placementMode: placementMode,
-    position: nonTargetedAlignment != null ? Offset.zero : null,
-    additionalOffset: 0.0,
     transitionDuration: transitionDuration,
     transitionBuilder: TeachingTip.defaultTransitionBuilder,
     builder: (context) {
       final teachingTip = builder(context);
 
       if (nonTargetedAlignment != null) {
-        return CustomSingleChildLayout(
-          delegate: _TeachingTipNonTargetedPositionDelegate(
-            alignment: nonTargetedAlignment,
-          ),
+        return Align(
+          alignment: nonTargetedAlignment,
           child: teachingTip,
         );
       }
@@ -91,46 +86,6 @@ Future<T?> showTeachingTip<T extends Object?>({
       return teachingTip;
     },
   );
-}
-
-class _TeachingTipNonTargetedPositionDelegate
-    extends SingleChildLayoutDelegate {
-  final Alignment alignment;
-
-  const _TeachingTipNonTargetedPositionDelegate({
-    required this.alignment,
-  });
-
-  @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return constraints.loosen();
-  }
-
-  @override
-  Offset getPositionForChild(Size rootSize, Size flyoutSize) {
-    var pos = alignment.alongSize(rootSize);
-
-    if (alignment.x == 0.0) {
-      pos = pos - Offset(flyoutSize.width / 2, 0.0);
-    }
-
-    if (alignment.y == 0.0) {
-      pos = pos - Offset(0.0, flyoutSize.height / 2);
-    }
-
-    /// Hardcoded margin because the flyout will always overflow
-    const margin = 16.0;
-
-    return Offset(
-      clampDouble(pos.dx, margin, rootSize.width - flyoutSize.width),
-      clampDouble(pos.dy, 0.0, rootSize.height - flyoutSize.height - margin),
-    );
-  }
-
-  @override
-  bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {
-    return true;
-  }
 }
 
 /// A teaching tip is a semi-persistent and content-rich flyout that provides
@@ -244,9 +199,9 @@ class TeachingTip extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0),
                   child: Row(
-                    children: List.generate(buttons.length, (index) {
+                    children: buttons.indexed.map<Widget>((element) {
+                      var (int index, Widget button) = element;
                       final isLast = buttons.length - 1 == index;
-                      final button = buttons[index];
                       if (isLast) return Expanded(child: button);
                       return Expanded(
                         child: Padding(
@@ -254,10 +209,7 @@ class TeachingTip extends StatelessWidget {
                           child: button,
                         ),
                       );
-                    }),
-                    // children: buttons.map((button) {
-                    //   return Expanded(child: button);
-                    // }).toList(),
+                    }).toList(),
                   ),
                 ),
             ],

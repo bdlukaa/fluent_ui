@@ -43,7 +43,9 @@ enum FlyoutPlacementMode {
 
   /// Preferred location is above the target element, with the right edge of
   /// flyout aligned with right edge of the target element.
-  topRight;
+  topRight,
+
+  full;
 
   /// Resolves this placement with the current text [direction]
   ///
@@ -67,6 +69,7 @@ enum FlyoutPlacementMode {
     switch (this) {
       case FlyoutPlacementMode.bottomCenter:
       case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.full:
         return this;
       case FlyoutPlacementMode.bottomLeft:
         return isRtl ? FlyoutPlacementMode.bottomRight : this;
@@ -100,6 +103,7 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.right:
         return EdgeInsets.only(left: additionalOffset);
       case FlyoutPlacementMode.auto:
+      case FlyoutPlacementMode.full:
         return EdgeInsets.all(additionalOffset);
     }
   }
@@ -111,6 +115,11 @@ enum FlyoutPlacementMode {
     double margin,
   ) {
     switch (this) {
+      case FlyoutPlacementMode.full:
+        return BoxConstraints(
+          maxWidth: rootSize.width._ensurePositive(),
+          maxHeight: rootSize.height._ensurePositive(),
+        );
       case FlyoutPlacementMode.bottomCenter:
       case FlyoutPlacementMode.bottomLeft:
       case FlyoutPlacementMode.bottomRight:
@@ -312,6 +321,13 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
         maxWidth: math.min(availableSpace.width, constraints.biggest.width),
         maxHeight: math.min(availableSpace.height, constraints.biggest.height),
       );
+    } else if (placementMode == FlyoutPlacementMode.full) {
+      return BoxConstraints(
+        minHeight: constraints.biggest.height - margin,
+        minWidth: constraints.biggest.width - margin,
+        maxWidth: constraints.biggest.width - margin,
+        maxHeight: constraints.biggest.height - margin,
+      );
     }
 
     return constraints.loosen();
@@ -429,6 +445,8 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
           ),
           horizontalY,
         );
+      case FlyoutPlacementMode.full:
+        return Offset(margin, margin);
       case FlyoutPlacementMode.auto:
         return targetOffset;
     }

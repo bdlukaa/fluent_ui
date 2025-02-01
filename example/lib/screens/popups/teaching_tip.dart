@@ -97,7 +97,7 @@ showTeachingTip(
                   showTeachingTip(
                     flyoutController: nonTargetedController,
                     nonTargetedAlignment: alignments[alignment],
-                    placementMode: placements[alignment]!,
+                    // placementMode: placements[alignment]!,
                     builder: (context) => TeachingTip(
                       title: const Text('Change themes without hassle'),
                       subtitle: const Text(
