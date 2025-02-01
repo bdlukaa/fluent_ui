@@ -670,9 +670,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size rootSize, Size flyoutSize) {
-    var x = parentRect.left +
-        parentRect.size.width -
-        kDefaultMenuItemMargin.horizontal / 2;
+    var x = parentRect.left + parentRect.size.width;
 
     // if the flyout will overflow the screen on the right
     final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
@@ -684,9 +682,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
     //
     // otherwise, we position the flyout at the end of the screen
     if (willOverflowX) {
-      final rightX = parentRect.left -
-          flyoutSize.width +
-          kDefaultMenuItemMargin.horizontal / 2;
+      final rightX = parentRect.left - flyoutSize.width;
       if (rightX > margin) {
         x = rightX;
       } else {
@@ -710,7 +706,9 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {
-    return true;
+  bool shouldRelayout(covariant _SubItemPositionDelegate oldDelegate) {
+    return oldDelegate.parentRect != parentRect ||
+        oldDelegate.parentSize != parentSize ||
+        oldDelegate.margin != margin;
   }
 }
